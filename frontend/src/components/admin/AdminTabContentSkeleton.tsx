@@ -16,7 +16,7 @@ export const AdminTabContentSkeleton: React.FC<AdminTabContentSkeletonProps> = (
       role="status"
       aria-busy="true"
       aria-label={loadingLabel}
-      className="rounded-3xl border border-slate-800 bg-slate-900/80 p-8 sm:p-12 space-y-4 w-full flex items-center justify-center min-h-[360px]"
+      className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-8 sm:p-12 space-y-4 w-full flex items-center justify-center min-h-[360px]"
     >
       <DbdSpinner
         size="lg"

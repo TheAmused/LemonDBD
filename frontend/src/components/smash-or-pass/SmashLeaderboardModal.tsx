@@ -166,8 +166,8 @@ const CandidateRow = React.memo<CandidateRowProps>(({
       aria-label={candidateAriaLabel}
       className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-3xl border transition-all duration-150 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0055] gap-3.5 sm:gap-4 ${
         hasUserSmashed
-          ? 'bg-gradient-to-r from-rose-950/40 via-zinc-900/90 to-zinc-950/90 border-[#ff0055]/50 shadow-[0_0_20px_rgba(255,0,85,0.15)] hover:border-[#ff0055]'
-          : 'bg-zinc-950/80 border-zinc-800/90 hover:border-zinc-700 hover:bg-zinc-900/90 hover:shadow-lg'
+          ? 'bg-gradient-to-r from-rose-50 via-white to-rose-50/60 dark:from-rose-950/40 dark:via-zinc-900/90 dark:to-zinc-950/90 border-[#ff0055]/50 shadow-[0_0_20px_rgba(255,0,85,0.15)] hover:border-[#ff0055]'
+          : 'bg-white dark:bg-zinc-950/80 border-slate-200 dark:border-zinc-800/90 hover:border-slate-300 dark:hover:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-900/90 hover:shadow-lg'
       }`}
     >
       {/* Left Section: Rank + Avatar + Details */}
@@ -181,7 +181,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
                 : index === 1
                   ? 'bg-gradient-to-br from-slate-100 via-slate-300 to-slate-400 text-zinc-950 shadow-[0_0_15px_rgba(226,232,240,0.5)] border border-white ring-2 ring-slate-300/30'
                   : 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 text-amber-100 shadow-[0_0_15px_rgba(180,83,9,0.5)] border border-amber-500 ring-2 ring-amber-600/30'
-              : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
+              : 'bg-slate-100 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 border border-slate-200 dark:border-zinc-800'
           }`}
         >
           {isTop3 ? (
@@ -192,7 +192,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
         </div>
 
         {/* Avatar Portrait */}
-        <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shrink-0 shadow-inner group-hover:border-pink-500/50 transition-colors">
+        <div className="relative h-13 w-13 sm:h-14 sm:w-14 rounded-2xl overflow-hidden bg-slate-100 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 shrink-0 shadow-inner group-hover:border-pink-500/50 transition-colors">
           <img
             src={avatarSrc}
             alt=""
@@ -209,7 +209,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           />
           {hasUserSmashed && (
             <div
-              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff0055] text-white shadow-[0_0_8px_rgba(255,0,85,0.9)] ring-2 ring-zinc-950"
+              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#ff0055] text-white shadow-[0_0_8px_rgba(255,0,85,0.9)] ring-2 ring-white dark:ring-zinc-950"
               title={rawSmashDict?.youSmashedThis || ''}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
@@ -221,7 +221,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
         {/* Details: Name + Icon-Only Badges */}
         <div className="min-w-0 text-left flex-1">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="text-sm sm:text-base font-black font-mono text-zinc-100 group-hover:text-white truncate">
+            <span className="text-sm sm:text-base font-black font-mono text-zinc-900 dark:text-zinc-100 group-hover:text-white truncate">
               {itemName}
             </span>
 
@@ -231,8 +231,8 @@ const CandidateRow = React.memo<CandidateRowProps>(({
               aria-label={isSurvivor ? survivorsLabel : killersLabel}
               className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
                 isSurvivor
-                  ? 'bg-[#00f5d4]/15 border-[#00f5d4]/40 text-[#00f5d4] shadow-[0_0_8px_rgba(0,245,212,0.25)]'
-                  : 'bg-[#ff0055]/15 border-[#ff0055]/40 text-pink-300 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
+                  ? 'bg-[#00f5d4]/15 border-[#00f5d4]/40 text-teal-700 dark:text-[#00f5d4] shadow-[0_0_8px_rgba(0,245,212,0.25)]'
+                  : 'bg-[#ff0055]/15 border-[#ff0055]/40 text-pink-700 dark:text-pink-300 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
               }`}
             >
               {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
@@ -251,34 +251,34 @@ const CandidateRow = React.memo<CandidateRowProps>(({
               <span
                 title={`${unratedLabel} - ${noVotesDesc}`}
                 aria-label={`${unratedLabel} - ${noVotesDesc}`}
-                className="flex h-6 w-6 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900/80 text-zinc-400 font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
+                className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-100 dark:bg-zinc-900/80 text-slate-500 dark:text-zinc-400 font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
               >
                 ?
               </span>
             )}
           </div>
 
-          <p className="text-xs text-zinc-400 font-sans italic line-clamp-1">
+          <p className="text-xs text-slate-500 dark:text-zinc-400 font-sans italic line-clamp-1">
             {itemSubtitle}
           </p>
         </div>
       </div>
 
       {/* Right Section: Visual Progress Bar + Smash Percentage + Vote Breakdown */}
-      <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-zinc-800/60">
+      <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-zinc-800/60">
         {/* Progress Bar */}
         <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
           <div className="flex items-center justify-between text-[11px] font-mono">
-            <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-[#ff0055]' : 'text-zinc-400'}`}>
-              <Heart className={`h-3 w-3 ${hasVotes ? 'fill-[#ff0055] text-[#ff0055]' : 'text-zinc-500'}`} />
+            <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-[#c40042] dark:text-[#ff0055]' : 'text-slate-500 dark:text-zinc-400'}`}>
+              <Heart className={`h-3 w-3 ${hasVotes ? 'fill-[#ff0055] text-[#c40042] dark:text-[#ff0055]' : 'text-slate-400 dark:text-zinc-500'}`} />
               {hasVotes ? `${smashRate}${percentSign}` : '—'}
             </span>
-            <span className="text-zinc-500">
+            <span className="text-slate-400 dark:text-zinc-500">
               {hasVotes ? `${100 - smashRate}${percentSign}` : '—'}
             </span>
           </div>
 
-          <div className="h-2 w-full rounded-full bg-zinc-800/80 overflow-hidden flex shadow-inner">
+          <div className="h-2 w-full rounded-full bg-slate-200 dark:bg-zinc-800/80 overflow-hidden flex shadow-inner">
             {hasVotes ? (
               <>
                 <div
@@ -287,27 +287,27 @@ const CandidateRow = React.memo<CandidateRowProps>(({
                 />
                 <div
                   style={{ width: `${Math.max(0, 100 - smashRate)}%` }}
-                  className="h-full bg-zinc-700/60"
+                  className="h-full bg-slate-300 dark:bg-zinc-700/60"
                 />
               </>
             ) : (
-              <div className="h-full w-full bg-zinc-800/60" />
+              <div className="h-full w-full bg-slate-200 dark:bg-zinc-800/60" />
             )}
           </div>
 
-          <span className="text-[10px] font-mono text-zinc-400 text-right">
+          <span className="text-[10px] font-mono text-slate-500 dark:text-zinc-400 text-right">
             {totalVotes.toLocaleString()} {votesWord}
           </span>
         </div>
 
         {/* Smashes / Passes Numeric Counts */}
         <div className="text-right font-mono text-xs shrink-0 min-w-[65px]">
-          <div className="flex items-center gap-1.5 justify-end text-[#ff0055] font-black">
+          <div className="flex items-center gap-1.5 justify-end text-[#c40042] dark:text-[#ff0055] font-black">
             <Heart className="h-3.5 w-3.5 fill-[#ff0055]" />
             <span>{smashCount}</span>
           </div>
-          <div className="flex items-center gap-1.5 justify-end text-zinc-500 text-[11px] font-semibold mt-0.5">
-            <ThumbsDown className="h-3 w-3 text-zinc-500" />
+          <div className="flex items-center gap-1.5 justify-end text-slate-400 dark:text-zinc-500 text-[11px] font-semibold mt-0.5">
+            <ThumbsDown className="h-3 w-3 text-slate-400 dark:text-zinc-500" />
             <span>{passCount}</span>
           </div>
         </div>
@@ -416,26 +416,26 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     () => ({
       godTier: {
         name: rawSmashDict?.tiers?.godTier || rawSmashDict?.godTier || 'God Tier',
-        style: 'border-[#ffd166]/50 bg-[#ffd166]/15 text-[#ffd166] shadow-[0_0_10px_rgba(255,209,102,0.3)]',
-        icon: <Sparkles className="h-3.5 w-3.5 text-[#ffd166]" aria-hidden="true" />,
+        style: 'border-[#ffd166]/50 bg-[#ffd166]/15 text-amber-700 dark:text-[#ffd166] shadow-[0_0_10px_rgba(255,209,102,0.3)]',
+        icon: <Sparkles className="h-3.5 w-3.5 text-amber-700 dark:text-[#ffd166]" aria-hidden="true" />,
         range: '>= 85%',
       },
       fatalAttraction: {
         name: rawSmashDict?.tiers?.fatalAttraction || rawSmashDict?.fatalAttraction || 'Fatal Attraction',
-        style: 'border-[#ff0055]/50 bg-[#ff0055]/15 text-pink-300 shadow-[0_0_10px_rgba(255,0,85,0.3)]',
-        icon: <Flame className="h-3.5 w-3.5 text-[#ff0055]" aria-hidden="true" />,
+        style: 'border-[#ff0055]/50 bg-[#ff0055]/15 text-pink-700 dark:text-pink-300 shadow-[0_0_10px_rgba(255,0,85,0.3)]',
+        icon: <Flame className="h-3.5 w-3.5 text-[#c40042] dark:text-[#ff0055]" aria-hidden="true" />,
         range: '65% - 84%',
       },
       friendzone: {
         name: rawSmashDict?.tiers?.friendzone || rawSmashDict?.friendzone || 'Friendzone',
-        style: 'border-[#00f5d4]/50 bg-[#00f5d4]/15 text-[#00f5d4] shadow-[0_0_10px_rgba(0,245,212,0.3)]',
-        icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" aria-hidden="true" />,
+        style: 'border-[#00f5d4]/50 bg-[#00f5d4]/15 text-teal-700 dark:text-[#00f5d4] shadow-[0_0_10px_rgba(0,245,212,0.3)]',
+        icon: <Shield className="h-3.5 w-3.5 text-teal-700 dark:text-[#00f5d4]" aria-hidden="true" />,
         range: '40% - 64%',
       },
       eldritchVoid: {
         name: rawSmashDict?.tiers?.eldritchVoid || rawSmashDict?.eldritchVoid || 'Eldritch Void',
-        style: 'border-purple-500/50 bg-purple-950/40 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]',
-        icon: <Skull className="h-3.5 w-3.5 text-purple-300" aria-hidden="true" />,
+        style: 'border-purple-500/50 bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.3)]',
+        icon: <Skull className="h-3.5 w-3.5 text-purple-700 dark:text-purple-300" aria-hidden="true" />,
         range: '< 40%',
       },
     }),
@@ -539,62 +539,62 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
   // Dropdown Options with Full Icon Coverage
   const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
-    { value: 'all', label: allRolesLabel, icon: <Users className="h-3.5 w-3.5 text-zinc-400" /> },
-    { value: 'Survivor', label: survivorsLabel, icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" /> },
-    { value: 'Killer', label: killersLabel, icon: <Skull className="h-3.5 w-3.5 text-[#ff0055]" /> },
+    { value: 'all', label: allRolesLabel, icon: <Users className="h-3.5 w-3.5 text-slate-500 dark:text-zinc-400" /> },
+    { value: 'Survivor', label: survivorsLabel, icon: <Shield className="h-3.5 w-3.5 text-teal-700 dark:text-[#00f5d4]" /> },
+    { value: 'Killer', label: killersLabel, icon: <Skull className="h-3.5 w-3.5 text-[#c40042] dark:text-[#ff0055]" /> },
   ];
 
   const genderOptions: DropdownOption<'all' | 'female' | 'male' | 'monster_other'>[] = [
-    { value: 'all', label: allGendersLabel, icon: <Sparkles className="h-3.5 w-3.5 text-zinc-400" /> },
+    { value: 'all', label: allGendersLabel, icon: <Sparkles className="h-3.5 w-3.5 text-slate-500 dark:text-zinc-400" /> },
     {
       value: 'female',
       label: femaleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-pink-400 text-xs">♀</span>,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-pink-600 dark:text-pink-400 text-xs">♀</span>,
     },
     {
       value: 'male',
       label: maleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-cyan-400 text-xs">♂</span>,
+      icon: <span className="flex h-3.5 w-3.5 items-center justify-center font-bold text-cyan-700 dark:text-cyan-400 text-xs">♂</span>,
     },
-    { value: 'monster_other', label: monstersLabel, icon: <Skull className="h-3.5 w-3.5 text-purple-400" /> },
+    { value: 'monster_other', label: monstersLabel, icon: <Skull className="h-3.5 w-3.5 text-purple-700 dark:text-purple-400" /> },
   ];
 
   const tierOptions: DropdownOption<'all' | TierKey>[] = [
-    { value: 'all', label: allTiersLabel, icon: <Layers className="h-3.5 w-3.5 text-zinc-400" /> },
+    { value: 'all', label: allTiersLabel, icon: <Layers className="h-3.5 w-3.5 text-slate-500 dark:text-zinc-400" /> },
     {
       value: 'godTier',
       label: tierMetadata.godTier.name,
       sublabel: tierMetadata.godTier.range,
-      icon: <Sparkles className="h-3.5 w-3.5 text-[#ffd166]" />,
+      icon: <Sparkles className="h-3.5 w-3.5 text-amber-700 dark:text-[#ffd166]" />,
     },
     {
       value: 'fatalAttraction',
       label: tierMetadata.fatalAttraction.name,
       sublabel: tierMetadata.fatalAttraction.range,
-      icon: <Flame className="h-3.5 w-3.5 text-[#ff0055]" />,
+      icon: <Flame className="h-3.5 w-3.5 text-[#c40042] dark:text-[#ff0055]" />,
     },
     {
       value: 'friendzone',
       label: tierMetadata.friendzone.name,
       sublabel: tierMetadata.friendzone.range,
-      icon: <Shield className="h-3.5 w-3.5 text-[#00f5d4]" />,
+      icon: <Shield className="h-3.5 w-3.5 text-teal-700 dark:text-[#00f5d4]" />,
     },
     {
       value: 'eldritchVoid',
       label: tierMetadata.eldritchVoid.name,
       sublabel: tierMetadata.eldritchVoid.range,
-      icon: <Skull className="h-3.5 w-3.5 text-purple-400" />,
+      icon: <Skull className="h-3.5 w-3.5 text-purple-700 dark:text-purple-400" />,
     },
   ];
 
   const sortOptions: DropdownOption<'smash_rate' | 'total_votes' | 'smash_count'>[] = [
-    { value: 'smash_rate', label: sortSmashRateLabel, icon: <Heart className="h-3.5 w-3.5 text-[#ff0055] fill-[#ff0055]" /> },
-    { value: 'total_votes', label: sortTotalVotesLabel, icon: <Users className="h-3.5 w-3.5 text-cyan-400" /> },
-    { value: 'smash_count', label: sortMostSmashesLabel, icon: <Flame className="h-3.5 w-3.5 text-amber-400" /> },
+    { value: 'smash_rate', label: sortSmashRateLabel, icon: <Heart className="h-3.5 w-3.5 text-[#c40042] dark:text-[#ff0055] fill-[#ff0055]" /> },
+    { value: 'total_votes', label: sortTotalVotesLabel, icon: <Users className="h-3.5 w-3.5 text-cyan-700 dark:text-cyan-400" /> },
+    { value: 'smash_count', label: sortMostSmashesLabel, icon: <Flame className="h-3.5 w-3.5 text-amber-700 dark:text-amber-400" /> },
   ];
 
   const headerBadge = editionName ? (
-    <span className="px-2.5 py-0.5 rounded-full bg-[#ff0055]/20 text-rose-300 border border-[#ff0055]/40 text-xs font-bold font-mono truncate max-w-[200px]">
+    <span className="px-2.5 py-0.5 rounded-full bg-[#ff0055]/20 text-rose-700 dark:text-rose-300 border border-[#ff0055]/40 text-xs font-bold font-mono truncate max-w-[200px]">
       {editionName}
     </span>
   ) : null;
@@ -605,31 +605,31 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       onClose={onClose}
       size="5xl"
       title={title}
-      icon={<Trophy className="h-6 w-6 text-[#ffd166]" />}
+      icon={<Trophy className="h-6 w-6 text-amber-700 dark:text-[#ffd166]" />}
       badge={headerBadge}
       centerTitle={true}
       className="h-[88vh] max-h-[850px] min-h-[480px]"
       bodyClassName="flex flex-col"
     >
       {/* SINGLE HORIZONTAL FILTER & SEARCH TOOLBAR */}
-      <div className="p-3.5 sm:p-4 bg-zinc-950/80 border-b border-zinc-800 shrink-0">
+      <div className="p-3.5 sm:p-4 bg-slate-50 dark:bg-zinc-950/80 border-b border-slate-200 dark:border-zinc-800 shrink-0">
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
           {/* 1. Search Bar */}
           <div className="relative flex-1 min-w-[140px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-zinc-500" aria-hidden="true" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="w-full pl-9 pr-8 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800 text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-[#ff0055] font-mono shadow-inner transition-colors"
+              className="w-full pl-9 pr-8 py-2 rounded-xl bg-white dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 text-xs text-zinc-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#ff0055] font-mono shadow-inner transition-colors"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-200 cursor-pointer p-0.5"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-zinc-500 hover:text-slate-700 dark:hover:text-zinc-200 cursor-pointer p-0.5"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -693,8 +693,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
               className={`flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
                 viewMode === 'grouped'
-                  ? 'bg-pink-500/20 border-pink-500/60 text-pink-300 shadow-[0_0_12px_rgba(255,0,85,0.35)]'
-                  : 'bg-zinc-900/90 border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700'
+                  ? 'bg-pink-500/20 border-pink-500/60 text-pink-700 dark:text-pink-300 shadow-[0_0_12px_rgba(255,0,85,0.35)]'
+                  : 'bg-white dark:bg-zinc-900/90 border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:border-slate-300 dark:hover:border-zinc-700'
               }`}
             >
               <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -717,18 +717,18 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       >
         {totalCommunityVotes === 0 && !searchQuery.trim() ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ff0055]/15 border border-[#ff0055]/30 text-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.3)]" aria-hidden="true">
-              <Heart className="h-8 w-8 fill-[#ff0055]/30 text-[#ff0055] animate-pulse" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#ff0055]/15 border border-[#ff0055]/30 text-[#c40042] dark:text-[#ff0055] shadow-[0_0_30px_rgba(255,0,85,0.3)]" aria-hidden="true">
+              <Heart className="h-8 w-8 fill-[#ff0055]/30 text-[#c40042] dark:text-[#ff0055] animate-pulse" />
             </div>
             <div className="space-y-1.5 max-w-md">
-              <h3 className="text-lg font-black text-zinc-100 font-mono">{noVotesTitle}</h3>
-              <p className="text-xs sm:text-sm text-zinc-400 font-sans">
+              <h3 className="text-lg font-black text-zinc-900 dark:text-zinc-100 font-mono">{noVotesTitle}</h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 font-sans">
                 {noVotesDesc}
               </p>
             </div>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="py-16 text-center text-xs sm:text-sm text-zinc-400 font-mono">
+          <div className="py-16 text-center text-xs sm:text-sm text-slate-500 dark:text-zinc-400 font-mono">
             {noMatchesText}
           </div>
         ) : viewMode === 'grouped' ? (

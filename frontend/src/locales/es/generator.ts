@@ -98,7 +98,14 @@ export default {
   crateOpenAnother: "Abrir Otra Caja",
   scatterPrompt: "Elige una. Tu elección le cuesta a la Entidad 1-2 de las demás. {count}/4 bloqueadas.",
   scatterComplete: "Tu build ha quedado bloqueada.",
-  jackpotLines: ["La Entidad aprueba.", "Cuatro de cuatro, impecable.", "La Niebla susurra tu nombre.", "Un juicio digno de recordar.", "Cuatro de cuatro. La Entidad está complacida.", "En algún lugar, un Asesino acaba de suspirar."],
+  jackpotLines: [
+    "La Entidad lo aprueba. El Asesino ya está llorando en el chat final.",
+    "¡Con esta build, tal vez Meg por fin toque un generador!",
+    "En algún lugar del sótano, Bubba acaba de soltar una lágrima.",
+    "Perfecto para soloQ: igual morirás en el primer gancho.",
+    "Listo para un chase de 5 motores (o caer en 10 segundos).",
+    "La Entidad está complacida. El Asesino está desinstalando el juego."
+  ],
   spinningPageWheel: "Girando Ruleta de Página para Casilla #{slot}...",
   landedPage: "¡Página {page} alcanzada! Cambiando a la Ruleta de Habilidad...",
   spinningPerkWheel: "Girando Ruleta de Habilidad (Página {page})...",

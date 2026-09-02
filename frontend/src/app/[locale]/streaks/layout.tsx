@@ -89,11 +89,11 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
           </StreaksDictProvider>
         ) : isAuthenticated ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-slate-900/60">
-              <MailWarning className="h-5 w-5 text-amber-500/70" />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-50 dark:bg-slate-900/60">
+              <MailWarning className="h-5 w-5 text-amber-500" />
             </div>
-            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-300">
+            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-800 dark:text-slate-300">
               {dict?.streaks?.verifyEmailToTrack || 'Verify your email to track challenges'}
             </h2>
             <button
@@ -109,14 +109,14 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
           </div>
         ) : (
 
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-orange-500/20 bg-slate-900/60">
-              <Lock className="h-5 w-5 text-orange-500/70" />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-orange-500/20 bg-orange-50 dark:bg-slate-900/60">
+              <Lock className="h-5 w-5 text-orange-500" />
             </div>
-            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-300">
+            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-800 dark:text-slate-300">
               {dict?.streaks?.loginToTrack || 'Log in to track your challenges'}
             </h2>
-            <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-slate-500">
+            <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-slate-500 dark:text-slate-500">
               {dict?.streaks?.loginToTrackDesc || 'Challenges use the killers and perks you own, so we need to know who you are first.'}
             </p>
             <button

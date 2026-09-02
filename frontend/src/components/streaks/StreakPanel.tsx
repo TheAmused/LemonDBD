@@ -83,7 +83,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           </div>
         )}
         {disabled ? (
-          <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+          <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
             <AlertTriangle className="h-3 w-3" />
             {dict?.streaks?.disabled || 'Disabled'}
           </span>

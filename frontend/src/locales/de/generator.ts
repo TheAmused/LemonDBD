@@ -98,7 +98,14 @@ export default {
   crateOpenAnother: "Weitere Kiste öffnen",
   scatterPrompt: "Wähle eins. Deine Wahl kostet der Entität 1-2 der anderen. {count}/4 gesichert.",
   scatterComplete: "Dein Loadout steht fest.",
-  jackpotLines: ["Die Entität ist zufrieden.", "Voller Erfolg.", "Der Nebel flüstert deinen Namen.", "Eine Prüfung für die Geschichtsbücher.", "Vier von vier. Die Entität ist erfreut.", "Irgendwo hat gerade ein Killer geseufzt."],
+  jackpotLines: [
+    "Die Entität ist entzückt. Der Killer weint bereits im Endgame-Chat.",
+    "Mit diesem Build fasst vielleicht sogar Meg mal einen Generator an!",
+    "Irgendwo im Keller hat Bubba gerade eine Träne vergossen.",
+    "Perfekt für Solo-Queue – du stirbst trotzdem am ersten Haken.",
+    "Bereit für 5-Gen-Loops (oder Down in den ersten 10 Sekunden).",
+    "Die Entität gibt ihren Segen. Der Killer deinstalliert das Spiel."
+  ],
   spinningPageWheel: "Seiten-Rad dreht sich für Slot #{slot}...",
   landedPage: "Seite {page} getroffen! Wechsel zum Talente-Rad...",
   spinningPerkWheel: "Talente-Rad dreht sich (Seite {page})...",

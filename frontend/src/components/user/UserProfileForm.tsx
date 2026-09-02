@@ -61,20 +61,27 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <div className="rounded-3xl border border-slate-800/80 bg-slate-900/70 p-5 sm:p-8 backdrop-blur-xl shadow-xl w-full">
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
-        <Key className="h-5 w-5 text-amber-400" />
-        <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-100">
-          {t.profileTitle || 'Account Credentials & Settings'}
-        </h2>
+    <div className="rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 p-5 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-xl w-full">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <Key className="h-5 w-5 text-amber-500 dark:text-amber-400" />
+        <div>
+          <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 font-mono">
+            {t.profileTitle || 'Account Credentials & Settings'}
+          </h2>
+          {t.profileSubtitle && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              {t.profileSubtitle}
+            </p>
+          )}
+        </div>
       </div>
 
       {statusMessage && (
         <div
           className={`mb-5 flex items-center gap-2.5 rounded-xl border p-3 text-xs shadow-sm ${
             statusMessage.type === 'success'
-              ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-              : 'border-red-500/30 bg-red-500/10 text-red-400'
+              ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+              : 'border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400'
           }`}
         >
           {statusMessage.type === 'success' ? (
@@ -88,7 +95,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
       <form onSubmit={handleUpdateProfile} className="space-y-4">
         <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">
             {dict?.user?.emailLabel || 'Email Address'}
           </label>
           <input
@@ -96,13 +103,13 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             required
             value={newEmail}
             onChange={(e) => setNewEmail(e.target.value)}
-            className="w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
+            className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">
               {t.newPassword || 'New Password (Optional)'}
             </label>
             <input
@@ -110,12 +117,12 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">
               {t.confirmPassword || 'Confirm New Password'}
             </label>
             <input
@@ -123,7 +130,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               placeholder={t.confirmPasswordPlaceholder || 'Repeat new password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
+              className="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all shadow-inner"
             />
           </div>
         </div>

@@ -9,9 +9,11 @@ import { PerkCard } from '@/components/PerkCard';
 
 // Matches PerkCard's own grid-view footprint exactly, so an empty/obscured
 // slot takes up the same space as a filled one and nothing jumps around.
-const SLOT_SIZE_CLASSES: Record<'default' | 'large', string> = {
+const SLOT_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot', string> = {
   default: 'h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-48 lg:w-48 xl:h-56 xl:w-56 2xl:h-64 2xl:w-64',
   large: 'h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 xl:h-72 xl:w-72',
+  fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
+  tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44',
 };
 
 export interface PerkSlotProps {
@@ -27,8 +29,8 @@ export interface PerkSlotProps {
   isActive?: boolean;
   announce?: boolean;
   /** 'large' is used by every mode's result grid; the Wheel's flanking
-   * loadout slots stay at 'default' so they don't crowd out the wheel. */
-  size?: 'default' | 'large';
+   * loadout slots stay at 'default'; 'tarot' fits inside tarot cards. */
+  size?: 'default' | 'large' | 'fill' | 'tarot';
   /** Persistent Blind Mode -- distinct from `isObscured` (the Chaos
    * "Curse of Blindness" mutator), which does NOT show the coordinate tag.
    * Blind Mode always shows it. */

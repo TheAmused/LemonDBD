@@ -218,7 +218,7 @@ export default function UserProfilePage() {
       >
         <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
           {/* Header Card with Interactive Avatar Upload */}
-          <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900/90 via-slate-900/60 to-slate-950/90 p-5 sm:p-8 backdrop-blur-xl shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/90 p-5 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-xl">
             <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
             <div className="absolute -left-12 -bottom-12 h-64 w-64 rounded-full bg-red-600/10 blur-3xl pointer-events-none" />
 
@@ -263,7 +263,7 @@ export default function UserProfilePage() {
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingAvatar}
-                    className="relative flex items-center gap-1 rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-300 hover:bg-slate-700 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
+                    className="relative flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
                   >
                     <Upload className="h-3 w-3 text-amber-500" />
                     <span>{dict?.user?.changeAvatar || 'Change'}</span>
@@ -285,7 +285,7 @@ export default function UserProfilePage() {
                 {avatarFeedback && (
                   <p
                     className={`text-[10px] font-semibold text-center mt-1 ${
-                      avatarFeedback.type === 'success' ? 'text-emerald-400' : 'text-rose-400'
+                      avatarFeedback.type === 'success' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
                     }`}
                   >
                     {avatarFeedback.text}
@@ -296,38 +296,37 @@ export default function UserProfilePage() {
               {/* User Profile Information */}
               <div className="flex-1 text-center sm:text-left space-y-2 w-full">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-100 font-mono">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
                     {user.username}
                   </h1>
                   <span
                     className={`rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border ${
                       user.role === 'admin'
-                        ? 'border-red-500/40 bg-red-600/20 text-red-400'
-                        : 'border-cyan-500/40 bg-cyan-600/20 text-cyan-400'
+                        ? 'border-red-500/40 bg-red-600/20 text-red-500 dark:text-red-400'
+                        : 'border-cyan-500/40 bg-cyan-600/20 text-cyan-600 dark:text-cyan-400'
                     }`}
                   >
                     {user.role}
                   </span>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-slate-400">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-slate-500" />
+                    <Mail className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                     {user.email}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                    <Calendar className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                     {dict?.user?.memberSince || 'Member since'}{' '}
                     {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
                   </span>
                 </div>
 
                 {user.role === 'admin' && (
-
                   <div className="pt-2">
                     <Link
                       href={`/${currentLocale}/admin`}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-600/10 px-4 py-2.5 text-xs font-bold text-red-400 hover:bg-red-600/20 transition-colors shadow-lg w-full sm:w-auto"
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-600/10 px-4 py-2.5 text-xs font-bold text-red-500 dark:text-red-400 hover:bg-red-600/20 transition-colors shadow-lg w-full sm:w-auto"
                     >
                       <Crown className="h-4 w-4" />
                       <span>{dict?.sidebar?.adminPanel || 'Admin Control Center'}</span>
@@ -339,15 +338,15 @@ export default function UserProfilePage() {
             </div>
           </div>
 
-              {/* Subtabs Switcher */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-800 pb-2">
+          {/* Subtabs Switcher */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
             <button
               type="button"
               onClick={() => setActiveSubTab('overview')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                 activeSubTab === 'overview'
-                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
               }`}
             >
               <User className="h-4 w-4" />
@@ -359,8 +358,8 @@ export default function UserProfilePage() {
               onClick={() => setActiveSubTab('bugs')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                 activeSubTab === 'bugs'
-                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
               }`}
             >
               <Bug className="h-4 w-4" />
@@ -385,44 +384,43 @@ export default function UserProfilePage() {
                   />
                 </div>
 
-                <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 backdrop-blur-xl shadow-xl space-y-4 w-full">
-                  <h2 className="text-base font-black uppercase tracking-wider text-slate-100 pb-2 border-b border-slate-800">
+                <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4 w-full">
+                  <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 pb-2 border-b border-slate-200 dark:border-slate-800">
                     {dict?.user?.quickShortcuts || 'Quick Shortcuts'}
                   </h2>
 
                   <div className="space-y-2">
-
                     <Link
                       href={`/${currentLocale}/streaks`}
-                      className="flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-xs font-bold text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-400 transition-all group shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-500 dark:hover:text-orange-400 transition-all group shadow-xs dark:shadow-sm"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Repeat className="h-4 w-4 text-orange-400" />
+                        <Repeat className="h-4 w-4 text-orange-500 dark:text-orange-400" />
                         <span>{dict?.sidebar?.streaks || 'Challenges'}</span>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-600 group-hover:text-orange-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-orange-500 dark:group-hover:text-orange-400 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
 
                     <Link
                       href={`/${currentLocale}/randomizer`}
-                      className="flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-xs font-bold text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-400 transition-all group shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-500 dark:hover:text-amber-400 transition-all group shadow-xs dark:shadow-sm"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Dices className="h-4 w-4 text-amber-400" />
+                        <Dices className="h-4 w-4 text-amber-500 dark:text-amber-400" />
                         <span>{dict?.sidebar?.generator || 'Perk Randomizer'}</span>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-600 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-amber-500 dark:group-hover:text-amber-400 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
 
                     <Link
                       href={`/${currentLocale}/maps`}
-                      className="flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/60 p-3 text-xs font-bold text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-400 transition-all group shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-500 dark:hover:text-cyan-400 transition-all group shadow-xs dark:shadow-sm"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Compass className="h-4 w-4 text-cyan-400" />
+                        <Compass className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
                         <span>{dict?.sidebar?.maps || 'Map Explorer'}</span>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
                 </div>

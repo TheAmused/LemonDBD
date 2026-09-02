@@ -33,7 +33,7 @@ export function useOwnedKillers() {
     } finally {
       setLoading(false);
     }
-  }, [token, user]);
+  }, [token, user?.id]);
 
   useEffect(() => {
     load();

@@ -1,5 +1,13 @@
 // frontend/src/services/mapApi.ts
 import { MapRealm, Realm } from '@/types/map';
+import { fetchCached, fetchJson } from '@/services/dataCache';
+
+/*
+ * Map data is static between patches, and the explorer re-requested all of it
+ * every time the page mounted. Routing these reads through the shared cache
+ * makes a return visit instant, while concurrent callers collapse onto a
+ * single request.
+ */
 
 const getApiBase = () => {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -10,21 +18,25 @@ const getApiBase = () => {
 
 const API_BASE = getApiBase();
 
-export async function fetchMaps(realm?: string, search?: string, source?: string): Promise<{ maps: MapRealm[] }> {
+/** Exported so callers can read the cache synchronously before rendering. */
+export function mapsCacheKey(search?: string, source?: string, realm?: string): string {
   const params = new URLSearchParams();
   if (realm) params.append('realm', realm);
   if (search) params.append('search', search);
   if (source) params.append('source', source);
+  return `${API_BASE}/maps?${params.toString()}`;
+}
 
-  const url = `${API_BASE}/maps?${params.toString()}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Failed to fetch maps');
-  return res.json();
+export function realmsCacheKey(): string {
+  return `${API_BASE}/maps/realms`;
+}
+
+export async function fetchMaps(realm?: string, search?: string, source?: string): Promise<{ maps: MapRealm[] }> {
+  const url = mapsCacheKey(search, source, realm);
+  return fetchCached(url, () => fetchJson<{ maps: MapRealm[] }>(url));
 }
 
 export async function fetchRealms(): Promise<{ realms: Realm[] }> {
-  const url = `${API_BASE}/maps/realms`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Failed to fetch realms');
-  return res.json();
+  const url = realmsCacheKey();
+  return fetchCached(url, () => fetchJson<{ realms: Realm[] }>(url));
 }

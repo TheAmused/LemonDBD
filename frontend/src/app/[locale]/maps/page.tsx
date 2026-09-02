@@ -8,12 +8,12 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { MapRealm } from '@/types/map';
 import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
@@ -28,9 +28,8 @@ function MapsPageInner() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const initialMapName = searchParams?.get('mapName') || '';
 
@@ -49,46 +48,10 @@ function MapsPageInner() {
     }
   }, [initialMapName]);
 
-  const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
 
   const backendBase = getBackendBaseUrl();
 
-  useEffect(() => {
-    getDictionary(locale)
-      .then((d) => {
-        setDict(d as any);
-        document.title = d?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer';
-      })
-      .catch((err: unknown) => console.error('Failed to load maps dictionary:', err));
-  }, [locale]);
-
-  useEffect(() => {
-    async function loadVaultStats() {
-      try {
-        const [perksRes, charsRes] = await Promise.all([
-          fetch(`${backendBase}/api/v1/perks?limit=1000`),
-          fetch(`${backendBase}/api/v1/characters`),
-        ]);
-        if (perksRes.ok) {
-          const pData = await perksRes.json();
-          const list: Perk[] = pData.data || [];
-          setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p) => p.category === 'Killer').length);
-        }
-        if (charsRes.ok) {
-          const cData = await charsRes.json();
-          setCharacterCount(cData.count || (cData.data || []).length);
-        }
-      } catch (err: unknown) {
-        console.error('Failed to load sidebar vault stats:', err);
-      }
-    }
-    loadVaultStats();
-  }, [backendBase]);
+  useDocumentTitle(dict?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer');
 
   const handleSelectCategory = () => {
     if (typeof window !== 'undefined') {
@@ -96,35 +59,18 @@ function MapsPageInner() {
     }
   };
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-[#0a0f18]/90 p-4 space-y-4 select-none animate-pulse" />
-        <main className="flex-1 w-full min-h-screen p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lg:pl-72">
-          <MapsPageSkeleton />
-        </main>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
         activeCategory="maps"
         onSelectCategory={handleSelectCategory}
         onOpenQuests={() => setIsQuestsOpen(true)}
-        totalPerksCount={totalPerksCount}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
       />
 
       <main
-        className={`flex-1 w-full min-h-screen transition-all duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full min-h-screen transition-[padding] duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lemon-shell-main"
       >
         <div className="flex items-center gap-1 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-1 w-fit">
           <button
@@ -193,9 +139,9 @@ export default function MapsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-          <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-[#0a0f18]/90 p-4 space-y-4 select-none animate-pulse" />
-          <main className="flex-1 w-full min-h-screen p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lg:pl-72">
+        <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+          <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200 dark:border-slate-800 bg-[#0a0f18]/90 p-4 space-y-4 select-none animate-pulse" />
+          <main className="flex-1 w-full min-h-screen p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lemon-shell-main">
             <MapsPageSkeleton />
           </main>
         </div>

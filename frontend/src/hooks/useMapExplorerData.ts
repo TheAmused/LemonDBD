@@ -3,7 +3,8 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { MapRealm, Realm } from '@/types/map';
-import { fetchMaps, fetchRealms } from '@/services/mapApi';
+import { fetchMaps, fetchRealms, mapsCacheKey, realmsCacheKey } from '@/services/mapApi';
+import { readCache } from '@/services/dataCache';
 
 const SEARCH_MIN_CHARS = 3;
 const SEARCH_DEBOUNCE_MS = 300;
@@ -69,11 +70,24 @@ export interface UseMapExplorerDataReturn {
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
   const { initialMapName = '', selectedMap, onAvailableMapsLoaded } = options;
 
-  const [maps, setMaps] = useState<MapRealm[]>([]);
-  const [realmImages, setRealmImages] = useState<Record<string, Realm>>({});
+  // Seed straight from the cache during the first render. Waiting for the
+  // effect below would repaint the spinner for a frame on every return visit,
+  // even though the data is already in memory.
+  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', 'hens333'))?.maps;
+
+  const [maps, setMaps] = useState<MapRealm[]>(cachedMaps ?? []);
+  const [realmImages, setRealmImages] = useState<Record<string, Realm>>(() => {
+    const cached = readCache<{ realms: Realm[] }>(realmsCacheKey())?.realms;
+    if (!cached) return {};
+    const byName: Record<string, Realm> = {};
+    cached.forEach((r) => {
+      byName[r.name] = r;
+    });
+    return byName;
+  });
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(cachedMaps === undefined);
   const [openMapId, setOpenMapId] = useState<string | null>(null);
   const lastHandledTargetRef = useRef<string | null>(null);
 
@@ -96,7 +110,11 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     let isCancelled = false;
     async function loadMaps() {
       try {
-        setLoading(true);
+        // Only show the spinner when there is genuinely nothing to display;
+        // a cached result should swap in without a loading flash.
+        if (readCache(mapsCacheKey(debouncedSearch, 'hens333')) === undefined) {
+          setLoading(true);
+        }
         const data = await fetchMaps(undefined, debouncedSearch, 'hens333');
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {

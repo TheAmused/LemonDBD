@@ -19,28 +19,136 @@
 
   body {
     background-color: var(--bg-primary);
-    @apply text-slate-900 dark:text-slate-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col font-sans transition-colors duration-300;
+    @apply text-slate-900 dark:text-slate-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col font-sans;
+  }
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * App shell geometry (sidebar + main gutter)
+ * ---------------------------------------------------------------------------
+ * The collapsed/expanded state used to live in React state seeded from
+ * localStorage inside a useEffect. That meant every navigation painted the
+ * expanded layout first and then animated 208px sideways once the effect ran.
+ *
+ * It is now driven by a `data-sidebar` attribute set on <html> by a blocking
+ * inline script in the locale layout, before first paint -- so the very first
+ * frame is already correct and nothing moves.
+ *
+ * These rules are deliberately unlayered so they win over the Tailwind
+ * padding utilities on the same element (`p-4 sm:p-6 lg:p-8`). If you need a
+ * different left gutter on a page, change it here, not with a `lg:pl-*` class.
+ */
+@media (min-width: 1024px) {
+  .lemon-shell-main {
+    padding-left: 18rem;
+  }
+
+  :root[data-sidebar='collapsed'] .lemon-shell-main {
+    padding-left: 5rem;
+  }
+
+  .lemon-shell-aside {
+    transform: translateX(0);
+  }
+
+  :root[data-sidebar='collapsed'] .lemon-shell-aside {
+    transform: translateX(-100%);
+  }
+}
+
+/* Collapse-toggle chevron, swapped by the same attribute so it is correct on
+   the first frame instead of flipping after hydration. */
+.lemon-sidebar-icon-collapsed {
+  display: none;
+}
+
+:root[data-sidebar='collapsed'] .lemon-sidebar-icon-collapsed {
+  display: block;
+}
+
+:root[data-sidebar='collapsed'] .lemon-sidebar-icon-expanded {
+  display: none;
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * DbdSpinner (the app-wide loading indicator)
+ * ---------------------------------------------------------------------------
+ * These four loops used to be framer-motion `animate` props. That put
+ * framer-motion in the chunk of every single `loading.tsx`, so the bundle the
+ * spinner was waiting on had to include the animation runtime before the
+ * spinner could appear -- and the loops were then driven from JS on the main
+ * thread, competing with hydration and data fetching for frames.
+ *
+ * As plain CSS the rotations and the opacity pulse are composited off the main
+ * thread and cost nothing to download. Reduced-motion is handled at the bottom
+ * of this block instead of by a hook, so it also works before hydration.
+ */
+@keyframes dbdSpinnerSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes dbdSpinnerSpinReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes dbdSpinnerPulse {
+  0%, 100% { transform: scale(0.92); }
+  50% { transform: scale(1.09); }
+}
+
+@keyframes dbdSpinnerLabelPulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.dbd-spinner-runes {
+  transform-origin: 80px 80px;
+  animation: dbdSpinnerSpinReverse 14s linear infinite;
+}
+
+.dbd-spinner-needle {
+  transform-origin: 80px 80px;
+  /* --dbd-needle-speed is set inline from the `needleSpeed` prop. */
+  animation: dbdSpinnerSpin var(--dbd-needle-speed, 1.3s) linear infinite;
+}
+
+.dbd-spinner-emblem {
+  /* Scale only. The glow used to be animated too (`filter: drop-shadow(...)`
+     interpolated every frame), which repaints the element continuously for a
+     effect that reads the same held static. */
+  animation: dbdSpinnerPulse 1.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dbd-spinner-label {
+  animation: dbdSpinnerLabelPulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dbd-spinner-runes,
+  .dbd-spinner-needle {
+    animation: dbdSpinnerLabelPulse 3s ease-in-out infinite;
+  }
+
+  .dbd-spinner-emblem {
+    animation: dbdSpinnerLabelPulse 2s ease-in-out infinite;
   }
 }
 
 /* Custom Dead by Daylight Aesthetic Effects */
-@keyframes fogMove {
-  0% {
-    background-position: 0% 0%;
-  }
-
-  50% {
-    background-position: 100% 100%;
-  }
-
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
+/*
+ * NOTE: this used to animate `background-position` on the radial-gradient
+ * (`fogMove 20s ease infinite`). Because `background-size` resolves to the
+ * element box, every percentage position computed to 0px -- the animation was
+ * visually a no-op while forcing a full-viewport, non-composited repaint on
+ * every frame of every page. Removed; the static gradient is what you saw.
+ */
 .dbd-fog-overlay {
   background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.04) 0%, transparent 78%);
-  animation: fogMove 20s ease infinite;
 }
 
 .dark .dbd-fog-overlay {

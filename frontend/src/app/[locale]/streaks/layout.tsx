@@ -9,12 +9,12 @@ import { Lock, MailWarning, Swords } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { RoleTabs } from '@/components/streaks/RoleTabs';
 import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
 import { StreaksDictProvider } from '@/context/StreaksDictContext';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 const QuestsModal = dynamic(() => import('@/components/QuestsModal').then((m) => m.QuestsModal), { ssr: false });
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
@@ -23,53 +23,17 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
   const pathname = usePathname();
-  const { isCollapsed } = useSidebarState();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
-  const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  useEffect(() => {
-    document.title = dict?.app?.streaksPageTitle || 'LemonDBD - Challenges';
-    getDictionary(locale)
-      .then(setDict)
-      .catch((err) => console.error('Failed to load streaks dictionary:', err));
-
-  }, [locale]);
-
-  useEffect(() => {
-    async function loadVaultStats() {
-      try {
-        const [perksRes, charsRes] = await Promise.all([
-          fetch(`${backendBase}/api/v1/perks?limit=1000`),
-          fetch(`${backendBase}/api/v1/characters`),
-        ]);
-        if (perksRes.ok) {
-          const pData = await perksRes.json();
-          const list = pData.data || [];
-          setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p: any) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p: any) => p.category === 'Killer').length);
-        }
-        if (charsRes.ok) {
-          const cData = await charsRes.json();
-          setCharacterCount(cData.count || (cData.data || []).length);
-        }
-      } catch (err) {
-        console.error('Failed to load sidebar vault stats:', err);
-      }
-    }
-    loadVaultStats();
-  }, [backendBase]);
+  useDocumentTitle(dict?.app?.streaksPageTitle || 'LemonDBD - Challenges');
 
   const handleSelectCategory = () => {
     if (typeof window !== 'undefined') {
@@ -86,37 +50,18 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
     .slice(2); // drop the locale and "streaks" segments
   const isPickerPage = segmentsAfterStreaks.length <= 1;
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-200 dark:border-slate-800 bg-[#0a0f18]/90 p-4 space-y-4 select-none animate-pulse" />
-        <main className="flex-1 w-full overflow-y-auto p-5 sm:p-7 lg:p-9 lg:pl-72">
-          <StreaksHubSkeleton />
-        </main>
-      </div>
-    );
-  }
-
-
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
         activeCategory="streaks"
         onSelectCategory={handleSelectCategory}
         onOpenQuests={() => setIsQuestsOpen(true)}
-        totalPerksCount={totalPerksCount}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-5 sm:p-7 lg:p-9 lemon-shell-main"
       >
         {isPickerPage && (
           <>

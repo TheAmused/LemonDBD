@@ -7,27 +7,21 @@ import { useParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { LemonIcon } from '@/components/LemonIcon';
 import { QuestsModal } from '@/components/QuestsModal';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
 import { DbdSpinner } from '@/components/DbdSpinner';
 import { useImagePrefetch } from '@/components/ImagePreloadProvider';
+import { useDictionary } from '@/context/DictionaryContext';
 
 function LandingContent() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
   const { prefetchImages } = useImagePrefetch();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    getDictionary(locale).then(setDict);
-  }, [locale]);
 
   // Warm up primary navigation assets in background idle time
   useEffect(() => {
@@ -37,21 +31,8 @@ function LandingContent() {
     ]);
   }, [prefetchImages]);
 
-  if (!dict) {
-    return (
-      <DbdSpinner
-        layout="fullscreen"
-        size="responsive"
-        accent="amber"
-        needleSpeed={1.3}
-        label="Entering LemonDBD Realm..."
-        sublabel="Initializing Dead by Daylight companion"
-      />
-    );
-  }
-
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="relative min-h-screen overflow-hidden bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <FogHeartbeatBackground />
 
       <Sidebar
@@ -62,9 +43,7 @@ function LandingContent() {
       />
 
       <main
-        className={`flex-1 w-full flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen transition-all duration-300 p-6 sm:p-10 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen transition-[padding] duration-300 p-6 sm:p-10 lemon-shell-main"
       >
         <div className="relative flex flex-col items-center text-center max-w-xl mx-auto z-10 py-12">
           {/* Ambient Glows */}

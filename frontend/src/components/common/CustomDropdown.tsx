@@ -87,14 +87,14 @@ export function CustomDropdown<T extends string = string>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={ariaLabel || selectedOption?.label}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800/90 hover:border-pink-500/50 hover:bg-zinc-900 text-xs font-mono font-bold text-zinc-200 transition-all cursor-pointer shadow-inner select-none ${
+        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-white dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800/90 hover:border-pink-500/50 hover:bg-slate-50 dark:hover:bg-zinc-900 text-xs font-mono font-bold text-slate-800 dark:text-zinc-200 transition-all cursor-pointer shadow-inner select-none ${
           isOpen ? 'border-[#ff0055]/60 bg-pink-950/20 text-white shadow-[0_0_12px_rgba(255,0,85,0.25)]' : ''
         } ${buttonClassName}`}
       >
-        {icon && <span className="text-zinc-400 shrink-0">{icon}</span>}
+        {icon && <span className="text-slate-500 dark:text-zinc-400 shrink-0">{icon}</span>}
         <span className="truncate">{selectedOption?.label}</span>
         <ChevronDown
-          className={`h-3.5 w-3.5 text-zinc-400 transition-transform duration-200 shrink-0 ${
+          className={`h-3.5 w-3.5 text-slate-500 dark:text-zinc-400 transition-transform duration-200 shrink-0 ${
             isOpen ? 'rotate-180 text-pink-400' : ''
           }`}
         />
@@ -111,7 +111,7 @@ export function CustomDropdown<T extends string = string>({
             role="listbox"
             className={`absolute top-full mt-1.5 ${
               align === 'right' ? 'right-0' : 'left-0'
-            } z-50 ${minWidthClass} max-h-60 overflow-y-auto rounded-2xl bg-[#0b0b10]/98 border border-pink-500/30 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.85)] backdrop-blur-2xl custom-scrollbar ${menuClassName}`}
+            } z-50 ${minWidthClass} max-h-60 overflow-y-auto rounded-2xl bg-white dark:bg-[#0b0b10]/98 border border-pink-500/30 p-1.5 shadow-[0_12px_40px_rgba(15,23,42,0.18)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.85)] backdrop-blur-2xl custom-scrollbar ${menuClassName}`}
           >
             {options.map((opt) => {
               const isSelected = opt.value === value;
@@ -125,14 +125,14 @@ export function CustomDropdown<T extends string = string>({
                   className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-mono font-bold transition-all text-left cursor-pointer ${
                     isSelected
                       ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.4)] font-black'
-                      : 'text-zinc-300 hover:text-white hover:bg-zinc-800/80'
+                      : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/80'
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     {opt.icon && <span className="shrink-0">{opt.icon}</span>}
                     <span className="truncate">{opt.label}</span>
                     {opt.sublabel && (
-                      <span className="text-[10px] text-zinc-400 font-normal truncate">
+                      <span className="text-[10px] text-slate-500 dark:text-zinc-400 font-normal truncate">
                         {opt.sublabel}
                       </span>
                     )}

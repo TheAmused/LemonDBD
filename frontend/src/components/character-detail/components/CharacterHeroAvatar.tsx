@@ -48,7 +48,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             onOpenModelModal();
           }
         }}
-        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-slate-800 bg-slate-950 shadow-2xl cursor-pointer hover:border-amber-500/60 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all duration-300 flex items-center justify-center"
+        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 shadow-lg dark:shadow-2xl cursor-pointer hover:border-amber-500/60 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all duration-300 flex items-center justify-center"
         title={t.view3DModel || ''}
         aria-label={heroAriaLabel}
       >
@@ -65,7 +65,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         ) : (
           <div className="flex flex-col items-center justify-center p-6 text-center text-slate-500">
             <User className="h-16 w-16 mb-2 opacity-50" />
-            <span className="text-xs font-mono font-bold text-slate-400">{character.name}</span>
+            <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">{character.name}</span>
           </div>
         )}
 

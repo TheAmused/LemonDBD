@@ -121,7 +121,7 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             onClick={closeOnBackdropClick ? onClose : undefined}
-            className="fixed inset-0 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 bg-slate-900/60 dark:bg-black/85 backdrop-blur-md"
             aria-hidden="true"
           />
 
@@ -132,12 +132,12 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative flex flex-col w-full ${maxWidthClass} overflow-hidden rounded-[28px] sm:rounded-[36px] border-2 border-pink-500/30 bg-[#09090d]/95 shadow-[0_0_80px_rgba(255,0,85,0.3)] text-zinc-100 font-mono z-10 ${className}`}
+            className={`relative flex flex-col w-full ${maxWidthClass} overflow-hidden rounded-[28px] sm:rounded-[36px] border-2 border-pink-500/30 bg-white dark:bg-[#09090d]/95 shadow-[0_0_60px_rgba(255,0,85,0.15)] dark:shadow-[0_0_80px_rgba(255,0,85,0.3)] text-zinc-900 dark:text-zinc-100 font-mono z-10 ${className}`}
           >
             {/* Header */}
             {hasHeader && (
               <div
-                className={`relative flex items-center justify-between border-b border-zinc-800 p-4 sm:p-5 bg-gradient-to-r from-zinc-950 via-zinc-900 to-rose-950/40 shrink-0 ${headerClassName}`}
+                className={`relative flex items-center justify-between border-b border-slate-200 dark:border-zinc-800 p-4 sm:p-5 bg-gradient-to-r from-slate-50 via-white to-rose-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-rose-950/40 shrink-0 ${headerClassName}`}
               >
                 {/* Left side balancer if centerTitle */}
                 {centerTitle ? (
@@ -152,21 +152,21 @@ export const Modal: React.FC<ModalProps> = ({
                   }`}
                 >
                   {icon && (
-                    <span className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400/20 to-yellow-600/20 text-[#ffd166] border border-[#ffd166]/40 shadow-[0_0_20px_rgba(255,209,102,0.3)] shrink-0">
+                    <span className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400/20 to-yellow-600/20 text-amber-600 dark:text-[#ffd166] border border-amber-500/40 dark:border-[#ffd166]/40 shadow-[0_0_20px_rgba(255,209,102,0.3)] shrink-0">
                       {icon}
                     </span>
                   )}
                   <div className={`min-w-0 ${centerTitle ? 'text-center' : 'text-left'}`}>
                     <div className={`flex items-center gap-2 flex-wrap ${centerTitle ? 'justify-center' : ''}`}>
                       {title && (
-                        <h2 className="text-base sm:text-xl md:text-2xl font-black font-mono text-zinc-100 tracking-tight">
+                        <h2 className="text-base sm:text-xl md:text-2xl font-black font-mono text-zinc-900 dark:text-zinc-100 tracking-tight">
                           {title}
                         </h2>
                       )}
                       {badge}
                     </div>
                     {subtitle && (
-                      <p className="text-xs text-zinc-400 font-mono mt-0.5 line-clamp-1">
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400 font-mono mt-0.5 line-clamp-1">
                         {subtitle}
                       </p>
                     )}
@@ -180,7 +180,7 @@ export const Modal: React.FC<ModalProps> = ({
                       type="button"
                       onClick={onClose}
                       aria-label={closeButtonAriaLabel}
-                      className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-zinc-900/90 border border-zinc-700/80 text-zinc-400 hover:text-white hover:border-pink-500 hover:bg-pink-950/50 hover:shadow-[0_0_15px_rgba(255,0,85,0.4)] transition-all cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+                      className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-700/80 text-slate-500 dark:text-zinc-400 hover:text-pink-700 dark:hover:text-white hover:border-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950/50 hover:shadow-[0_0_15px_rgba(255,0,85,0.4)] transition-all cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
                     >
                       <X className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                     </button>
@@ -197,7 +197,7 @@ export const Modal: React.FC<ModalProps> = ({
             {/* Footer */}
             {footer && (
               <div
-                className={`flex items-center justify-between border-t border-zinc-800 p-3.5 sm:px-6 bg-zinc-950/95 text-xs text-zinc-400 shrink-0 font-mono ${footerClassName}`}
+                className={`flex items-center justify-between border-t border-slate-200 dark:border-zinc-800 p-3.5 sm:px-6 bg-slate-50 dark:bg-zinc-950/95 text-xs text-slate-500 dark:text-zinc-400 shrink-0 font-mono ${footerClassName}`}
               >
                 {footer}
               </div>

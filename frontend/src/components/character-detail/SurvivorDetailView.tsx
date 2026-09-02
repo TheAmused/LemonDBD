@@ -86,13 +86,13 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
                   ? `• ${t.dlcLicensed || ''}`
                   : `• ${t.dlcOriginal || ''}`}
               </span>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-100 font-mono tracking-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (
-                <p className="text-xs sm:text-sm font-semibold text-slate-400 mt-0.5">
+                <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
                   {t.realName || ''}:{' '}
-                  <span className="text-slate-200">{character.real_name}</span>
+                  <span className="text-slate-700 dark:text-slate-200">{character.real_name}</span>
                 </p>
               )}
             </div>

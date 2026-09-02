@@ -324,20 +324,20 @@ function PerksContent() {
           ) : perks.length === 0 ? (
             <section
               aria-live="polite"
-              className="my-auto rounded-3xl bg-slate-900/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-slate-800"
+              className="my-auto rounded-3xl bg-white dark:bg-slate-900/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-slate-200 dark:border-slate-800"
             >
-              <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
-              <h2 className="text-lg font-extrabold text-slate-200">
+              <Shield className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-slate-200">
                 {dict?.empty?.title || 'No Perks Found'}
               </h2>
-              <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
                 {dict?.empty?.subtitle ||
                   'Try clearing your search query or switching ownership filters.'}
               </p>
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-700 dark:text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
               >
                 {dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters'}
               </button>

@@ -112,5 +112,9 @@ describe('Perks Vault Theme Support', () => {
       html.includes('dark:[&amp;_p]:text-slate-300') || html.includes('dark:[&_p]:text-slate-300'),
       'Must have child paragraph class override for dark mode'
     );
+    assert.ok(
+      html.includes('[&amp;_strong]:text-amber-700') || html.includes('[&_strong]:text-amber-700'),
+      'Must have child strong tag override for highlighted values in light mode'
+    );
   });
 });

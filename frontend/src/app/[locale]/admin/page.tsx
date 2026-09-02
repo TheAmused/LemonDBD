@@ -692,7 +692,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         message={
           <>
             {dict?.admin?.confirmDeleteUserPrefix || 'Are you sure you want to delete user'}{' '}
-            <strong className="font-bold text-slate-900 dark:text-white">{userPendingDeletion?.username}</strong>?
+            <strong className="font-bold text-amber-400">{userPendingDeletion?.username}</strong>?
             <br />
             {dict?.admin?.cannotBeUndone || 'This cannot be undone.'}
           </>

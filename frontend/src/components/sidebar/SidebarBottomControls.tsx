@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Bug, Coffee } from 'lucide-react';
+import { Sun, Moon, Laptop, Bug, Coffee } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 
 export const LANGUAGES: { code: string; label: string }[] = [
@@ -30,7 +30,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   onOpenBugModal,
   onOpenCoffeeModal,
 }) => {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
   const [isMounted, setIsMounted] = useState(false);
@@ -127,18 +127,55 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          aria-label={dict?.sidebar?.toggleTheme || 'Toggle Dark Mode'}
-          className="flex h-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        {/* 3-State Theme Switcher (Light / Dark / System) */}
+        <div
+          role="group"
+          aria-label={dict?.sidebar?.toggleTheme || 'Theme selector'}
+          className="flex h-8 items-center justify-between rounded-xl border border-slate-200 bg-slate-100/50 p-0.5 dark:border-slate-800 dark:bg-slate-900/50"
         >
-          {isMounted && resolvedTheme === 'dark' ? (
-            <Moon className="h-3.5 w-3.5 text-slate-300" />
-          ) : (
-            <Sun className="h-3.5 w-3.5 text-amber-500" />
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={() => setTheme('light')}
+            aria-label="Light mode" /* i18n-ignore */
+            aria-pressed={isMounted && theme === 'light'}
+            title="Light mode" /* i18n-ignore */
+            className={`flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer ${
+              isMounted && theme === 'light'
+                ? 'bg-white text-amber-500 shadow-xs dark:bg-slate-800 dark:text-amber-400'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+            }`}
+          >
+            <Sun className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setTheme('dark')}
+            aria-label="Dark mode" /* i18n-ignore */
+            aria-pressed={isMounted && theme === 'dark'}
+            title="Dark mode" /* i18n-ignore */
+            className={`flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer ${
+              isMounted && theme === 'dark'
+                ? 'bg-white text-cyan-500 shadow-xs dark:bg-slate-800 dark:text-cyan-400'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+            }`}
+          >
+            <Moon className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setTheme('system')}
+            aria-label="System theme" /* i18n-ignore */
+            aria-pressed={isMounted && theme === 'system'}
+            title="System theme" /* i18n-ignore */
+            className={`flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer ${
+              isMounted && theme === 'system'
+                ? 'bg-white text-slate-700 shadow-xs dark:bg-slate-800 dark:text-slate-200'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+            }`}
+          >
+            <Laptop className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Bug Report & Buy Coffee */}

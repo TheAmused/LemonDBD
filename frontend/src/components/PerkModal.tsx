@@ -101,15 +101,15 @@ export const PerkModal: React.FC<PerkModalProps> = ({
               <span
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-black uppercase tracking-wider ${
                   isSurvivor
-                    ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-rose-950/60 text-rose-400 border border-rose-500/30'
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 border border-emerald-500/30'
+                    : 'bg-rose-500/10 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-500/30'
                 }`}
               >
                 {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
                 {isSurvivor ? dict?.modal?.survivorPerk || 'Survivor Perk' : dict?.modal?.killerPerk || 'Killer Perk'}
               </span>
 
-              <div className="flex items-center gap-1.5 rounded-lg bg-slate-900/80 px-2.5 py-1 text-xs font-bold text-slate-200 border border-slate-800 shadow-sm">
+              <div className="flex items-center gap-1.5 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 dark:bg-slate-900/80 dark:text-slate-200 dark:border-slate-800 px-2.5 py-1 text-xs font-bold shadow-sm">
                 {avatarSrc && !avatarError ? (
                   <img
                     src={avatarSrc}
@@ -128,8 +128,8 @@ export const PerkModal: React.FC<PerkModalProps> = ({
               </div>
 
               {perk.alternate_name && (
-                <div className="flex items-center gap-1 rounded-lg bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-300 border border-amber-500/30">
-                  <Repeat className="h-3 w-3 text-amber-400" />
+                <div className="flex items-center gap-1 rounded-lg bg-amber-500/10 px-2.5 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                  <Repeat className="h-3 w-3 text-amber-600 dark:text-amber-400" />
                   <span>
                     {dict?.modal?.alias || 'Alias'}: {perk.alternate_name}
                   </span>
@@ -139,7 +139,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           </div>
         </div>
 
-        <div className="mt-6 border-t border-slate-800/80 pt-5">
+        <div className="mt-6 border-t border-slate-200 dark:border-slate-800/80 pt-5">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 font-mono">
               {dict?.modal?.perkDescription || 'Perk Description'}
@@ -148,7 +148,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
 
           <div
             id="perk-modal-description"
-            className="max-h-[360px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900"
+            className="max-h-[360px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-100 dark:scrollbar-track-slate-900"
           >
             <PerkDescription
               description={perk.description}

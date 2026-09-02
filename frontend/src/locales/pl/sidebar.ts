@@ -25,6 +25,7 @@ export default {
   switchLanguage: "Zmień język",
   toggleTheme: "Przełącz tryb ciemny",
   collapseSidebar: "Zwiń pasek boczny",
+  toggleSidebar: "Przełącz pasek boczny",
   expandSidebar: "Rozwiń pasek boczny",
   bugReportModalTitle: "Zgłoś problem / błąd",
   bugCategoryPerks: "Umiejętności i Dane Uczalnych",

@@ -13,7 +13,7 @@ export interface SidebarStatsCardProps {
   characterCount: number;
 }
 
-export const SidebarStatsCard: React.FC<SidebarStatsCardProps> = ({
+const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
   dict,
   totalPerksCount,
   survivorCount,
@@ -97,3 +97,6 @@ export const SidebarStatsCard: React.FC<SidebarStatsCardProps> = ({
   );
 };
 
+/** Memoised: the sidebar re-renders with every page, but these props
+    only change when the route or the dictionary does. */
+export const SidebarStatsCard = React.memo(SidebarStatsCardBase);

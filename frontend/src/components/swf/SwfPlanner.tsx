@@ -19,6 +19,7 @@ import {
   Sparkles,
   RefreshCw,
 } from 'lucide-react';
+import { fetchCached, fetchJson } from '@/services/dataCache';
 
 export interface PerkItem {
   id?: string;
@@ -112,9 +113,10 @@ export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
     async function loadPerks() {
       try {
         setLoadingPerks(true);
-        const res = await fetch(`${backendBase}/api/v1/perks?limit=1000`);
-        if (res.ok) {
-          const data = await res.json();
+        // Shared cache key -- free after any other page has loaded the vault.
+        const key = `${backendBase}/api/v1/perks?limit=1000`;
+        const data = await fetchCached<{ data?: PerkItem[] }>(key, () => fetchJson(key));
+        {
           const survivorOnly = (data.data || []).filter((p: PerkItem) => p.category === 'Survivor');
           setAllPerks(survivorOnly);
 

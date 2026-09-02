@@ -127,6 +127,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
               onClick={() => {
                 const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
                 if (saved === 'original') {
@@ -150,6 +151,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              prefetchHrefs={[`/${locale}/streaks/${role}/chaos-streak`]}
               onClick={() => {
                 const saved = getSavedChaosDifficulty();
                 if (saved) {
@@ -173,6 +175,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              prefetchHrefs={[`/${locale}/streaks/${role}/history-streak`]}
               onClick={() => {
                 const saved = getSavedHistoryMode();
                 if (saved) {
@@ -196,6 +199,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              prefetchHrefs={[`/${locale}/streaks/${role}/page-streak`]}
               onClick={() => {
                 if (hasSeenPageStreakIntro()) {
                   router.push(`/${locale}/streaks/${role}/page-streak`);

@@ -4,9 +4,7 @@
 import React, { useEffect, useState, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import {
   Trophy,
   Zap,
@@ -20,6 +18,8 @@ import type { Quest } from '@/types/quest';
 import type { Dictionary } from '@/locales/types';
 import { fetchQuests, claimQuest } from '@/services/questApi';
 import { DbdSpinner } from '@/components/DbdSpinner';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 interface QuestsPageProps {
   params: Promise<{ locale: string }>;
@@ -35,20 +35,14 @@ export default function QuestsPage({ params }: QuestsPageProps) {
   const resolvedParams = use(params);
   const router = useRouter();
   const locale = (resolvedParams?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [quests, setQuests] = useState<Quest[]>([]);
   const [filterCategory, setFilterCategory] = useState<'all' | 'daily' | 'weekly'>('all');
   const [loading, setLoading] = useState<boolean>(true);
   const [claimingId, setClaimingId] = useState<number | null>(null);
   const [claimedToast, setClaimedToast] = useState<string | null>(null);
 
-  // Vault Stats for Sidebar
-  const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -64,48 +58,7 @@ export default function QuestsPage({ params }: QuestsPageProps) {
     }
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-    getDictionary(locale).then((d) => {
-      if (isMounted) {
-        setDict(d);
-        document.title = d?.quests?.pageTitle || d?.app?.questsPageTitle || 'LemonDBD - Quests & Trials';
-      }
-    });
-    loadQuests();
-    return () => {
-      isMounted = false;
-    };
-  }, [locale, loadQuests]);
-
-  useEffect(() => {
-    let isMounted = true;
-    async function loadVaultStats() {
-      try {
-        const [perksRes, charsRes] = await Promise.all([
-          fetch(`${backendBase}/api/v1/perks?limit=1000`),
-          fetch(`${backendBase}/api/v1/characters`),
-        ]);
-        if (perksRes.ok && isMounted) {
-          const pData: { data?: PerkApiItem[]; pagination?: { total?: number } } = await perksRes.json();
-          const list = pData.data || [];
-          setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p) => p.category === 'Killer').length);
-        }
-        if (charsRes.ok && isMounted) {
-          const cData: { count?: number; data?: unknown[] } = await charsRes.json();
-          setCharacterCount(cData.count || (cData.data || []).length);
-        }
-      } catch (err: unknown) {
-        console.error('Failed to load sidebar vault stats:', err);
-      }
-    }
-    loadVaultStats();
-    return () => {
-      isMounted = false;
-    };
-  }, [backendBase]);
+  useDocumentTitle(dict?.quests?.pageTitle || dict?.app?.questsPageTitle || 'LemonDBD - Quests & Trials');
 
   const handleClaim = async (quest: Quest) => {
     if (quest.is_completed || quest.progress < quest.goal || claimingId !== null) return;
@@ -134,14 +87,6 @@ export default function QuestsPage({ params }: QuestsPageProps) {
     router.push(`/${locale}`);
   };
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center text-slate-500 dark:text-slate-400 font-mono" role="status">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-      </div>
-    );
-  }
-
   const filteredQuests = quests.filter((q) => {
     if (filterCategory === 'daily') return q.category === 'daily';
     if (filterCategory === 'weekly') return q.category === 'weekly';
@@ -155,21 +100,16 @@ export default function QuestsPage({ params }: QuestsPageProps) {
   const totalQuestsCompleted = quests.filter((q) => q.is_completed).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
         activeCategory="quests"
         onSelectCategory={handleSelectCategory}
-        totalPerksCount={totalPerksCount}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-5 sm:p-7 lg:p-9 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-          }`}
+        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-5 sm:p-7 lg:p-9 lemon-shell-main"
         id="main-quests-content"
       >
         {/* ── Atmospheric Hero Header ── */}

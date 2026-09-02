@@ -18,8 +18,10 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { DbdSpinner } from '@/components/DbdSpinner';
+import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
+import { useCachedData } from '@/hooks/useCachedData';
+import { fetchJson, invalidate } from '@/services/dataCache';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(
@@ -80,10 +82,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     bulkUpdateCharacterOwnership,
     bulkUpdatePerkOwnership,
   } = useAuth();
-  const { isCollapsed } = useSidebarState();
 
-  const [characters, setCharacters] = useState<CharacterItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+
   const [activeTab, setActiveTab] = useState<RoleCategory>('Survivor');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -125,24 +125,17 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
   const backendBase = getBackendBaseUrl();
 
-  useEffect(() => {
-    async function fetchCharacters() {
-      setLoading(true);
-      try {
-        const res = await fetch(`${backendBase}/api/v1/characters?lang=${locale}`);
-        if (res.ok) {
-          const data = await res.json();
-          setCharacters(data.data || []);
-        }
-      } catch (err: unknown) {
-        console.error('Failed to fetch characters:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
+  // Cached at module scope, so leaving the roster and coming back paints the
+  // grid on the first render instead of refetching and re-showing the spinner.
+  // /perks uses the same key for the roster, so whichever page you open first
+  // warms it for the other.
+  const charactersKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+  const { data: charactersResponse, loading: charactersLoading } = useCachedData<{
+    data?: CharacterItem[];
+  }>(charactersKey, () => fetchJson<{ data?: CharacterItem[] }>(charactersKey));
 
-    fetchCharacters();
-  }, [backendBase, locale]);
+  const characters = charactersResponse?.data ?? [];
+  const loading = charactersLoading;
 
   const handleCloseModal = useCallback(() => {
     setSelectedCharacter(null);
@@ -270,6 +263,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         return;
       }
 
+      // Ownership changes what the API returns for `is_owned` on perks and
+      // characters, so the cached copies of those reads are now wrong.
+      invalidate(`${backendBase}/api/v1/perks`);
+      invalidate(`${backendBase}/api/v1/characters`);
+
       handleCancelOwnershipMode();
       setShowSavedToast(true);
       window.setTimeout(() => setShowSavedToast(false), 2500);
@@ -396,15 +394,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
       {loading ? (
         <div className="w-full py-12 flex items-center justify-center">
-          <DbdSpinner
-            size="responsive"
-            layout="inline"
-            accent="emerald"
-            needleSpeed={1.4}
-            dict={dict}
-            label={dict?.characterDetail?.loading || 'Loading character list...'}
-            sublabel="Filtering survivor & killer roster"
-          />
+          {/* Same component the route-level loading.tsx renders, so the spinner
+              keeps one identity across the handover instead of being replaced by
+              a differently-labelled one. */}
+          <CharactersGridSkeleton dict={dict} />
         </div>
       ) : filteredCharacters.length === 0 ? (
         <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center bg-white/60 dark:bg-transparent">
@@ -429,15 +422,27 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
             const showLockedOverlay = !isOwned;
             const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
+            const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
 
             return (
               <div
                 key={`${char.name}-${idx}`}
+                // The card is a div (it contains its own buttons, so it cannot be
+                // an <a>), which means Next never prefetched the detail route and
+                // every click paid for a cold chunk + RSC fetch behind the
+                // loading spinner. Warm it on intent instead. Hover/focus rather
+                // than viewport, because this grid renders the whole roster.
+                onMouseEnter={() => {
+                  if (!ownershipMode) router.prefetch(detailHref);
+                }}
+                onFocus={() => {
+                  if (!ownershipMode) router.prefetch(detailHref);
+                }}
                 onClick={() => {
                   if (ownershipMode) {
                     if (char.id) handleToggleCharacterOwned(char.id);
                   } else {
-                    router.push(`/${locale}/characters/${getCharacterSlug(char.name)}`);
+                    router.push(detailHref);
                   }
                 }}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-800 hover:border-red-500/50 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 cursor-pointer touch-manipulation"
@@ -630,9 +635,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {/* Save Bar for Ownership Selection Mode */}
       {ownershipMode && (
         <div
-          className={`fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-md transition-all duration-300 ${
-            isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-          }`}
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-md transition-[padding] duration-300 lemon-shell-main"
         >
           {ownershipSaveError && (
             <p

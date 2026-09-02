@@ -8,8 +8,9 @@ import Link from 'next/link';
 import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { Locale } from '@/i18n/config';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { useAuth } from '@/context/AuthContext';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export default function ResetPasswordPage() {
   return (
@@ -26,17 +27,14 @@ function ResetPasswordContent() {
   const token = searchParams.get('token') || '';
   const { resetPassword } = useAuth();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
-  useEffect(() => {
-    document.title = dict?.app?.resetPasswordPageTitle || 'LemonDBD - Reset Password';
-    getDictionary(locale).then(setDict);
-  }, [locale]);
+  useDocumentTitle(dict?.app?.resetPasswordPageTitle || 'LemonDBD - Reset Password');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -2,7 +2,7 @@
 // frontend/src/components/Sidebar.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';
 import {
@@ -26,11 +26,10 @@ import {
   Heart,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
+import { useVaultStats } from '@/context/VaultStatsContext';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
-import { AuthModal } from './AuthModal';
-import { BugReportModal } from './sidebar/BugReportModal';
-import { BuyCoffeeModal } from './sidebar/BuyCoffeeModal';
+import dynamic from 'next/dynamic';
 import { SidebarNavLink } from './sidebar/SidebarNavLink';
 import { SidebarStatsCard } from './sidebar/SidebarStatsCard';
 import { SidebarUserSection } from './sidebar/SidebarUserSection';
@@ -38,12 +37,27 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 
+const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
+const BugReportModal = dynamic(
+  () => import('./sidebar/BugReportModal').then((m) => m.BugReportModal),
+  { ssr: false }
+);
+const BuyCoffeeModal = dynamic(
+  () => import('./sidebar/BuyCoffeeModal').then((m) => m.BuyCoffeeModal),
+  { ssr: false }
+);
+
 interface SidebarProps {
   currentLocale?: string;
   dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
   onOpenQuests?: () => void;
+  /**
+   * Vault-stat overrides. Pages that already hold the full perk list (e.g.
+   * /perks, /randomizer) pass their own numbers; everyone else omits these and
+   * gets the shared, fetched-once values from VaultStatsContext.
+   */
   totalPerksCount?: number;
   survivorCount?: number;
   killerCount?: number;
@@ -56,11 +70,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeCategory,
   onSelectCategory,
   onOpenQuests,
-  totalPerksCount = 0,
-  survivorCount = 0,
-  killerCount = 0,
-  characterCount = 0,
+  totalPerksCount,
+  survivorCount,
+  killerCount,
+  characterCount,
 }) => {
+  // Fetched once for the whole app instead of once per page. Fifteen files used
+  // to run `perks?limit=1000` in their own effect purely to fill this card.
+  const vaultStats = useVaultStats();
+  const stats = {
+    totalPerksCount: totalPerksCount ?? vaultStats.totalPerksCount,
+    survivorCount: survivorCount ?? vaultStats.survivorCount,
+    killerCount: killerCount ?? vaultStats.killerCount,
+    characterCount: characterCount ?? vaultStats.characterCount,
+  };
   const pathname = usePathname() || '';
   const params = useParams();
 
@@ -84,17 +107,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
   const [othersOpen, setOthersOpen] = useState(false);
 
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && mobileOpen) {
-        setMobileOpen(false);
-      }
+      if (e.key !== 'Escape') return;
+      setMobileOpen((open) => (open ? false : open));
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [mobileOpen]);
+  }, []);
 
-  const checkIsActive = (itemId: string, itemHref?: string): boolean => {
+  const checkIsActive = useCallback((itemId: string, itemHref?: string): boolean => {
     if (!pathname) return false;
 
     // Perk Randomizer: its own route now, not a tab on /perks
@@ -139,9 +163,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return false;
-  };
+  }, [pathname, currentLocale, activeCategory]);
 
-  const mainNavItems = [
+  // The nav arrays are ~15 object literals with icon refs and class strings.
+  // They were rebuilt on every render -- including every keystroke elsewhere on
+  // the page, since this component re-renders with its parent -- and handed to
+  // memoised children as fresh props, defeating the memoisation. They only
+  // actually depend on the dictionary and the locale.
+  const mainNavItems = useMemo(() => [
     {
       id: 'perks',
       label: dict?.filters?.perks || dict?.sidebar?.perks || 'Perks',
@@ -210,9 +239,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       href: undefined,
       comingSoon: true,
     },
-  ];
+  ], [dict, currentLocale]);
 
-  const otherNavItems = [
+  // Admin-only group; memoised for the same reason as above.
+  const otherNavItems = useMemo(() => [
     {
       id: 'guesser',
       label: dict?.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',
@@ -276,7 +306,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         'bg-amber-500/10 text-amber-400 border border-amber-500/20',
       href: `/${currentLocale}/quests`,
     },
-  ];
+  ], [dict, currentLocale]);
 
   const isOtherActive = otherNavItems.some((item) =>
     checkIsActive(item.id, item.href)
@@ -330,13 +360,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               isActive={!item.comingSoon && checkIsActive(item.id, item.href)}
               badge={item.comingSoon ? (dict?.sidebar?.soon || 'Soon') : undefined}
               badgeColor="bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20"
-              onClick={
-                item.comingSoon
-                  ? undefined
-                  : () => {
-                      setMobileOpen(false);
-                    }
-              }
+              onClick={item.comingSoon ? undefined : closeMobile}
             />
           ))}
 
@@ -398,10 +422,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                   <SidebarStatsCard
                     dict={dict}
-                    totalPerksCount={totalPerksCount}
-                    survivorCount={survivorCount}
-                    killerCount={killerCount}
-                    characterCount={characterCount}
+                    totalPerksCount={stats.totalPerksCount}
+                    survivorCount={stats.survivorCount}
+                    killerCount={stats.killerCount}
+                    characterCount={stats.characterCount}
                   />
                 </div>
               )}
@@ -450,32 +474,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Desktop Sidebar */}
       <aside
         aria-label={dict?.sidebar?.navAria || 'Sidebar Navigation'}
-        className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300 ${
-          isCollapsed ? '-translate-x-full' : 'translate-x-0'
-        }`}
+        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/80 transition-transform duration-300"
       >
         {renderSidebarContent()}
 
+        {/* The label is deliberately state-independent: the collapsed state is
+            applied to the DOM before hydration, so a state-derived label would
+            mismatch on the first render. One label true in both states avoids that. */}
         <button
           type="button"
           onClick={toggleSidebar}
-          title={
-            isCollapsed
-              ? (dict?.sidebar?.expandSidebar || 'Expand Navigation Sidebar')
-              : (dict?.sidebar?.collapseSidebar || 'Collapse Navigation Sidebar')
-          }
-          aria-label={
-            isCollapsed
-              ? (dict?.sidebar?.expandSidebar || 'Expand Navigation Sidebar')
-              : (dict?.sidebar?.collapseSidebar || 'Collapse Navigation Sidebar')
-          }
+          title={dict?.sidebar?.toggleSidebar || 'Toggle Navigation Sidebar'}
+          aria-label={dict?.sidebar?.toggleSidebar || 'Toggle Navigation Sidebar'}
+          aria-expanded={!isCollapsed}
           className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-slate-200 bg-white/95 text-slate-700 shadow-md hover:bg-slate-100 hover:w-7 hover:text-cyan-600 dark:border-slate-700/80 dark:bg-slate-900/95 dark:text-cyan-400 dark:shadow-2xl dark:shadow-slate-950/90 dark:hover:bg-slate-800 dark:hover:text-cyan-300 active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >
-          {isCollapsed ? (
-            <ChevronRight className="h-5 w-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
-          ) : (
-            <ChevronLeft className="h-5 w-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform" />
-          )}
+          {/* Both are rendered; globals.css shows the right one from the
+              pre-paint `data-sidebar` attribute, so the chevron is correct on
+              the first frame instead of flipping after hydration. */}
+          <ChevronRight
+            aria-hidden="true"
+            className="lemon-sidebar-icon-collapsed h-5 w-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform"
+          />
+          <ChevronLeft
+            aria-hidden="true"
+            className="lemon-sidebar-icon-expanded h-5 w-5 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform"
+          />
         </button>
       </aside>
 
@@ -533,23 +557,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       )}
 
-      {/* Global Modals */}
-      <AuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
-        dict={dict}
-      />
-      <BugReportModal
-        isOpen={bugModalOpen}
-        onClose={() => setBugModalOpen(false)}
-        dict={dict}
-      />
-      <BuyCoffeeModal
-        isOpen={coffeeModalOpen}
-        onClose={() => setCoffeeModalOpen(false)}
-        dict={dict}
-      />
+      {/* Global Modals -- mounted on demand, see the dynamic() imports above. */}
+      {authModalOpen && (
+        <AuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          verifyEmailFor={authModalIntent === 'verify' ? user?.email : undefined}
+          dict={dict}
+        />
+      )}
+      {bugModalOpen && (
+        <BugReportModal
+          isOpen={bugModalOpen}
+          onClose={() => setBugModalOpen(false)}
+          dict={dict}
+        />
+      )}
+      {coffeeModalOpen && (
+        <BuyCoffeeModal
+          isOpen={coffeeModalOpen}
+          onClose={() => setCoffeeModalOpen(false)}
+          dict={dict}
+        />
+      )}
     </>
   );
 };

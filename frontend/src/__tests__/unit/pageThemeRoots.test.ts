@@ -13,17 +13,18 @@ describe('Page Root Theme Wrapper Consistency', () => {
     'randomizer/page.tsx',
     'smash-or-pass/page.tsx',
     'user/page.tsx',
+    'characters/loading.tsx',
+    'characters/[slug]/loading.tsx',
+    'perks/loading.tsx',
+    'randomizer/loading.tsx',
+    'smash-or-pass/loading.tsx',
   ];
 
   for (const relPath of routes) {
     it(`${relPath} does not have hardcoded bg-[#070b12] without dark: variant`, () => {
       const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
       const content = fs.readFileSync(fullPath, 'utf-8');
-      assert.ok(
-        !content.includes('className="min-h-screen bg-[#070b12] text-slate-100') &&
-        !content.includes('className="h-dvh overflow-hidden bg-[#070b12] text-slate-100'),
-        `${relPath} still has raw hardcoded bg-[#070b12] text-slate-100`
-      );
+      assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
       assert.ok(
         content.includes('dark:bg-slate-950') && content.includes('dark:text-slate-100'),
         `${relPath} must include dark:bg-slate-950 dark:text-slate-100`

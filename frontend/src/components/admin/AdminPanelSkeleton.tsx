@@ -16,7 +16,7 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ dict, cl
       role="status"
       aria-busy="true"
       aria-label={loadingLabel}
-      className={`min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay ${className}`}
+      className={`min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300 ${className}`}
     >
       <div aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-slate-800/60 bg-slate-950/60" />
 

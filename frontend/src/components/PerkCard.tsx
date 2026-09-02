@@ -157,7 +157,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               {coordinateLabel && (
-                <span className="shrink-0 font-mono text-[10px] font-black text-amber-400/90">
+                <span className="shrink-0 font-mono text-[10px] font-black text-amber-700 dark:text-amber-400/90">
                   {coordinateLabel}
                 </span>
               )}

@@ -31,14 +31,21 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
       ? `${window.location.protocol}//${window.location.hostname}:5050`
       : 'https://localhost:5050';
 
+  const umamiUrl =
+    (process.env.NEXT_PUBLIC_UMAMI_URL && process.env.NEXT_PUBLIC_UMAMI_URL.trim() !== '')
+      ? process.env.NEXT_PUBLIC_UMAMI_URL.replace(/\/+$/, '')
+      : typeof window !== 'undefined'
+      ? `${window.location.protocol}//${window.location.hostname}:8117`
+      : 'https://localhost:8117';
+
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6 w-full">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6 w-full">
       <div className="flex items-center gap-3.5">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-600/20 border border-red-500/30 text-red-400 shadow-lg shadow-red-950/40">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-600/20 border border-red-500/30 text-red-500 dark:text-red-400 shadow-lg shadow-red-950/40">
           <Crown className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-100 font-mono">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
             {dict?.sidebar?.adminControlCenter || 'Admin Control Center'}
           </h1>
         </div>
@@ -50,9 +57,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           type="button"
           onClick={() => onOpenDbMaintenance('export')}
           title={dict?.admin?.exportBackupTitle || 'Export Database JSON Backup'}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
+          className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-slate-300 px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-sm"
         >
-          <Download className="h-3.5 w-3.5 text-blue-400" />
+          <Download className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400" />
           <span className="hidden md:inline">{dict?.admin?.export || 'Export'}</span>
         </button>
 
@@ -60,9 +67,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           type="button"
           onClick={() => onOpenDbMaintenance('import')}
           title={dict?.admin?.importBackupTitle || 'Restore Database JSON Backup'}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
+          className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-slate-300 px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-sm"
         >
-          <Upload className="h-3.5 w-3.5 text-emerald-400" />
+          <Upload className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
           <span className="hidden md:inline">{dict?.admin?.import || 'Import'}</span>
         </button>
 
@@ -71,9 +78,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           title={dict?.admin?.pgAdminTitle || 'Open pgAdmin Web Management (PostgreSQL DB Manager)'}
-          className="flex items-center justify-center gap-2 rounded-xl border border-indigo-500/40 bg-indigo-950/40 hover:bg-indigo-900/60 px-3.5 py-2 text-xs font-bold text-indigo-300 hover:text-white hover:border-indigo-400 transition-all cursor-pointer shadow-sm flex-1 sm:flex-initial"
+          className="flex items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 dark:border-indigo-500/40 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 dark:text-indigo-300 dark:hover:text-white px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-sm flex-1 sm:flex-initial"
         >
-          <Database className="h-3.5 w-3.5 text-indigo-400" />
+          <Database className="h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400" />
           <span>{dict?.admin?.pgAdmin || 'pgAdmin (DB)'}</span>
         </a>
 
@@ -96,21 +103,21 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           type="button"
           onClick={onRefreshData}
           title={dict?.admin?.refreshTitle || 'Refresh metrics'}
-          className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900/80 px-3.5 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
+          className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-slate-300 px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer shadow-sm"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           <span className="hidden sm:inline">{dict?.admin?.refresh || 'Refresh'}</span>
         </button>
 
-        {process.env.NEXT_PUBLIC_UMAMI_URL && (
+        {umamiUrl && (
           <a
-            href={process.env.NEXT_PUBLIC_UMAMI_URL}
+            href={umamiUrl}
             target="_blank"
             rel="noopener noreferrer"
             title={dict?.admin?.analyticsTitle || 'Open the Umami analytics dashboard (page views, feature usage)'}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors cursor-pointer shadow-sm"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-900/80 dark:hover:bg-slate-800 dark:text-slate-300 px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-sm"
           >
-            <LineChart className="h-3.5 w-3.5 text-cyan-400" />
+            <LineChart className="h-3.5 w-3.5 text-cyan-500 dark:text-cyan-400" />
             <span className="hidden md:inline">{dict?.admin?.analytics || 'Analytics'}</span>
           </a>
         )}

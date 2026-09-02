@@ -44,19 +44,19 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, loca
 
   if (status === 'disabled') {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-amber-500/30 bg-amber-950/20 p-12 text-center">
-        <AlertTriangle className="h-12 w-12 text-amber-400" />
-        <h1 className="text-lg font-extrabold text-slate-100">
+      <div className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-amber-500/30 bg-amber-50 dark:bg-amber-950/20 p-12 text-center">
+        <AlertTriangle className="h-12 w-12 text-amber-500 dark:text-amber-400" />
+        <h1 className="text-lg font-extrabold text-slate-800 dark:text-slate-100">
           {dict?.streaks?.temporarilyDisabled || 'This challenge was disabled temporarily.'}
         </h1>
         {reason && (
-          <p className="max-w-md text-sm text-slate-400">
+          <p className="max-w-md text-sm text-slate-600 dark:text-slate-400">
             {dict?.modal?.reasonLabel || 'Reason'}: {reason}
           </p>
         )}
         <Link
           href={`/${locale}/streaks/${role}`}
-          className="mt-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-xs font-bold text-slate-300 hover:border-amber-500/50 hover:text-amber-400 transition-colors"
+          className="mt-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-amber-500/50 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
         >
           {dict?.streaks?.backToKillerStreaks || 'Back to challenges'}
         </Link>

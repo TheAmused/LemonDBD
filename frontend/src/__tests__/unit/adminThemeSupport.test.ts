@@ -31,7 +31,21 @@ describe('Admin Theme Support', () => {
   it('AdminStatsGrid cards use light-compatible border and background', () => {
     const html = renderToStaticMarkup(
       React.createElement(AdminStatsGrid, {
-        stats: { total_users: 10, admin_count: 2, total_characters: 98, total_perks: 321, db_size: '12MB' },
+        stats: {
+          total_users: 10,
+          active_users: 8,
+          admin_count: 2,
+          total_characters: 98,
+          survivors_count: 50,
+          killers_count: 48,
+          total_perks: 321,
+          challenge_completions: {
+            gauntlet: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
+            chaos: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
+            history: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
+            page_streak: { total: { completed_runs: 0, unique_users: 0 }, by_variant: {} },
+          },
+        },
       })
     );
     assert.ok(html.includes('border-slate-200'), 'Stats cards must have border-slate-200');
@@ -50,6 +64,7 @@ describe('Admin Theme Support', () => {
             email: 'admin@test.com',
             role: 'admin',
             is_active: true,
+            created_at: '2026-01-01T00:00:00Z',
             owned_characters_count: 5,
             unlocked_perks_count: 20,
           },
@@ -140,10 +155,12 @@ describe('Admin Theme Support', () => {
       React.createElement(AdminChallengeStats, {
         stats: {
           total_users: 10,
+          active_users: 8,
           admin_count: 2,
           total_characters: 98,
+          survivors_count: 50,
+          killers_count: 48,
           total_perks: 321,
-          db_size: '12MB',
           challenge_completions: {
             gauntlet: { total: { completed_runs: 5, unique_users: 3 }, by_variant: {} },
             chaos: { total: { completed_runs: 2, unique_users: 2 }, by_variant: {} },

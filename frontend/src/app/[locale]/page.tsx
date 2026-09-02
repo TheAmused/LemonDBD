@@ -56,7 +56,7 @@ function LandingContent() {
           </div>
 
           {/* Badge */}
-          <div className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-amber-400 mb-5">
+          <div className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-5">
             <span>{dict?.landing?.welcomeBadge || 'Dead by Daylight Companion'}</span>
           </div>
 

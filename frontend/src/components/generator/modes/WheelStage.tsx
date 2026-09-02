@@ -650,72 +650,79 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     : `${dict?.generator?.spinWheelButton || 'Spin for Perk Slot'} #${activeSlotIdx + 1}`;
 
   return (
-    <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-4">
-      <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+    <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 py-1">
+      <p className="max-w-md text-center text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 px-3 line-clamp-2 sm:line-clamp-none">
         {dict?.generator?.spinOrRollPrompt ||
           'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
       </p>
 
-      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-center lg:gap-10 xl:gap-16">
-      <div className="order-2 grid grid-cols-2 gap-3 lg:order-1 lg:grid-cols-1 lg:gap-4">
-        {renderFlankSlot(0)}
-        {renderFlankSlot(1)}
-      </div>
+      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-2 sm:gap-3 lg:flex-row lg:items-center lg:justify-center lg:gap-8 xl:gap-12">
+        <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 lg:order-1 lg:grid-cols-1 lg:gap-3">
+          {renderFlankSlot(0)}
+          {renderFlankSlot(1)}
+        </div>
 
-      <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center lg:order-2">
-        <div className="relative flex items-center justify-center w-full">
-          <canvas
-            ref={particlesCanvasRef}
-            width={800}
-            height={800}
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-20 h-full w-full"
-          />
-          <div
-            className={`w-full max-w-[46vw] min-w-[180px] max-h-[38dvh] sm:max-w-[300px] sm:max-h-[46dvh] md:max-w-[380px] lg:max-w-[440px] lg:max-h-none xl:max-w-[500px] 2xl:max-w-[580px] aspect-square transition-all duration-500 ease-out transform ${
-              isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
-            }`}
-          >
+        <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center justify-center lg:order-2">
+          <div className="relative flex items-center justify-center w-full">
             <canvas
-              ref={wheelCanvasRef}
+              ref={particlesCanvasRef}
               width={800}
               height={800}
-              className={`h-full w-full ${
-                role === 'Survivor'
-                  ? 'drop-shadow-[0_0_30px_rgba(16,185,129,0.35)]'
-                  : 'drop-shadow-[0_0_30px_rgba(244,63,94,0.35)]'
-              }`}
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
+            <div
+              className={`w-full max-w-[40vw] min-w-[150px] max-h-[28dvh] sm:max-w-[260px] sm:max-h-[36dvh] md:max-w-[320px] lg:max-w-[380px] xl:max-w-[440px] 2xl:max-w-[500px] aspect-square transition-all duration-500 ease-out transform ${
+                isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
+              }`}
+            >
+              <canvas
+                ref={wheelCanvasRef}
+                width={800}
+                height={800}
+                className={`h-full w-full ${
+                  role === 'Survivor'
+                    ? 'drop-shadow-[0_0_24px_rgba(16,185,129,0.35)]'
+                    : 'drop-shadow-[0_0_24px_rgba(244,63,94,0.35)]'
+                }`}
+              />
+            </div>
           </div>
+
+          <DbdButton
+            role={role}
+            size="md"
+            onClick={handleStartSpin}
+            disabled={isSpinning || sortedPerks.length === 0}
+            className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
+          >
+            {spinButtonText}
+          </DbdButton>
+
+          {statusText && (
+            <p aria-live="polite" className={`mt-2 text-xs font-black text-amber-400 font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
+              {statusText}
+            </p>
+          )}
+
+          {flavorLine && (
+            <div
+              aria-live="polite"
+              className="mt-2 max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
+            >
+              {flavorLine}
+            </div>
+          )}
         </div>
 
-        <DbdButton
-          role={role}
-          size="md"
-          onClick={handleStartSpin}
-          disabled={isSpinning || sortedPerks.length === 0}
-          className="mt-3 sm:mt-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-          icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
-        >
-          {spinButtonText}
-        </DbdButton>
-
-        {statusText && (
-          <p aria-live="polite" className={`mt-3 text-xs font-black text-amber-400 font-mono ${reduceMotion ? '' : 'animate-pulse'}`}>
-            {statusText}
-          </p>
-        )}
-
-        <div aria-live="polite" className="mt-2 text-xs font-black text-amber-400 text-center">
-          {flavorLine}
+        <div className="order-3 grid grid-cols-2 gap-2 sm:gap-3 lg:order-3 lg:grid-cols-1 lg:gap-3">
+          {renderFlankSlot(2)}
+          {renderFlankSlot(3)}
         </div>
-      </div>
-
-      <div className="order-3 grid grid-cols-2 gap-3 lg:order-3 lg:grid-cols-1 lg:gap-4">
-        {renderFlankSlot(2)}
-        {renderFlankSlot(3)}
-      </div>
       </div>
     </div>
   );
 };
+
+

@@ -148,11 +148,11 @@
  * every frame of every page. Removed; the static gradient is what you saw.
  */
 .dbd-fog-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.04) 0%, transparent 78%);
+  background-image: radial-gradient(circle at 50% 50%, rgba(100, 116, 139, 0.05) 0%, transparent 78%);
 }
 
 .dark .dbd-fog-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
+  background-image: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
 }
 
 [data-placeholder]:empty:before {
@@ -542,6 +542,17 @@ strong {
   will-change: transform, opacity, filter;
 }
 
+@keyframes neonCockpitPulseLight {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.06), 0 12px 30px rgba(15, 23, 42, 0.10);
+    border-color: rgba(255, 0, 85, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 0, 85, 0.14), 0 12px 30px rgba(15, 23, 42, 0.12);
+    border-color: rgba(255, 0, 85, 0.45);
+  }
+}
+
 @keyframes neonCockpitPulse {
   0%, 100% {
     box-shadow: 0 0 25px rgba(255, 0, 85, 0.08), 0 20px 50px rgba(0, 0, 0, 0.85);
@@ -561,7 +572,13 @@ strong {
   animation: loreWatermarkDissolve 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* The cockpit dock glows against whatever canvas it sits on: a soft ash
+   shadow in light mode, the original black-and-neon bloom in dark. */
 .cockpit-neon-pulse {
+  animation: neonCockpitPulseLight 4s ease-in-out infinite;
+}
+
+.dark .cockpit-neon-pulse {
   animation: neonCockpitPulse 4s ease-in-out infinite;
 }
 
@@ -578,7 +595,8 @@ strong {
   .freeze-badge-in,
   .anim-lore-enter,
   .anim-watermark-enter,
-  .cockpit-neon-pulse {
+  .cockpit-neon-pulse,
+  .dark .cockpit-neon-pulse {
     animation: none;
   }
 }

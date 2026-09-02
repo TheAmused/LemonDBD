@@ -80,19 +80,19 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         <div className="lg:col-span-8 space-y-5">
           <header className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <span className="text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">
+              <span className="text-xs font-mono font-bold tracking-wider text-emerald-700 dark:text-emerald-400 uppercase">
                 {t.roleSurvivor || ''}{' '}
                 {character.is_licensed
                   ? `• ${t.dlcLicensed || ''}`
                   : `• ${t.dlcOriginal || ''}`}
               </span>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-100 font-mono tracking-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
                 {character.name}
               </h1>
               {character.real_name && character.real_name !== character.name && (
-                <p className="text-xs sm:text-sm font-semibold text-slate-400 mt-0.5">
+                <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
                   {t.realName || ''}:{' '}
-                  <span className="text-slate-200">{character.real_name}</span>
+                  <span className="text-slate-700 dark:text-slate-200">{character.real_name}</span>
                 </p>
               )}
             </div>
@@ -101,25 +101,25 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
               <button
                 type="button"
                 onClick={() => setIsLoreModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
               >
                 <BookOpen className="h-4 w-4" aria-hidden="true" />
                 <span>{t.viewLore || ''}</span>
               </button>
 
               {chapterName && (
-                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-400 select-none">
+                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-700 dark:text-amber-400 select-none">
                   <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   {chapterName}
                 </span>
               )}
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-400 select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-700 dark:text-blue-400 select-none">
                 <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
               </span>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-400 select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-700 dark:text-purple-400 select-none">
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
                   ? t.licensedFranchise || t.dlcLicensed || ''

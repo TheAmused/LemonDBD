@@ -354,10 +354,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             type="button"
             onClick={handleToggleOwnershipMode}
             disabled={ownershipLoading}
-            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold border transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation ${
+            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation ${
               ownershipMode
-                ? 'bg-amber-600 text-white border-amber-500 shadow-md shadow-amber-900/30'
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-amber-500/50 hover:text-amber-400'
+                ? 'bg-amber-600 text-white border border-amber-500 shadow-md shadow-amber-900/30'
+                : 'border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-amber-500/50 hover:text-amber-600 dark:hover:text-amber-400'
             }`}
           >
             {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
@@ -635,12 +635,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {/* Save Bar for Ownership Selection Mode */}
       {ownershipMode && (
         <div
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-md transition-[padding] duration-300 lemon-shell-main"
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 shadow-2xl backdrop-blur-md transition-[padding] duration-300 lemon-shell-main"
         >
           {ownershipSaveError && (
             <p
               role="alert"
-              className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-rose-400"
+              className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-rose-500 dark:text-rose-400"
             >
               {ownershipSaveError}
             </p>
@@ -650,13 +650,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               type="button"
               onClick={handleCancelOwnershipMode}
               disabled={ownershipSaving}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60 cursor-pointer"
+              className="px-5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors disabled:opacity-60 cursor-pointer"
             >
               {dict?.admin?.cancel || dict?.modal?.close || 'Cancel'}
             </button>
             <button
               type="button"
-
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
               className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"

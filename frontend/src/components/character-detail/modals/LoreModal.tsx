@@ -30,19 +30,19 @@ export const LoreModal: React.FC<LoreModalProps> = ({
       }}
     >
       <div
-        className="relative w-full max-w-2xl bg-slate-900 border border-purple-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-purple-300 dark:border-purple-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-purple-500/15 via-indigo-500/5 to-transparent flex items-center justify-between">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-purple-500/15 via-indigo-500/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-inner">
+            <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-700 dark:text-purple-400 shadow-inner">
               <BookOpen className="h-6 w-6" />
             </div>
             <div>
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-purple-400">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-purple-700 dark:text-purple-400">
                 {t.entityArchives || "The Entity's Archives"} {t.bulletSeparator || '•'} {t.codex || 'Codex'} #{character.id || 1}
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono mt-0.5">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono mt-0.5">
                 {character.name} {t.emDashSeparator || '—'} {t.loreTitle || 'Lore & Bio'}
               </h2>
             </div>
@@ -50,18 +50,18 @@ export const LoreModal: React.FC<LoreModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label={t.close || 'Close'}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto space-y-4 text-sm leading-relaxed font-sans text-slate-300">
-          <p className="italic text-slate-400 border-l-2 border-purple-500 pl-4 py-1">
+        <div className="p-6 overflow-y-auto space-y-4 text-sm leading-relaxed font-sans text-slate-700 dark:text-slate-300">
+          <p className="italic text-slate-600 dark:text-slate-400 border-l-2 border-purple-500 pl-4 py-1">
             {t.quoteOpen || '"'}{character.name} {t.emDashSeparator || '—'} {t.enteredTheFog || 'Entered The Fog.'}{t.quoteClose || '"'}
           </p>
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 text-sm leading-relaxed whitespace-pre-line text-slate-200 font-medium">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-sm leading-relaxed whitespace-pre-line text-slate-800 dark:text-slate-200 font-medium">
             {rawLoreText}
           </div>
         </div>

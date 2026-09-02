@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Bug, Coffee } from 'lucide-react';
+import { Sun, Moon, Laptop, Bug, Coffee } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 
 export const LANGUAGES: { code: string; label: string }[] = [
@@ -22,6 +22,9 @@ export interface SidebarBottomControlsProps {
   dict?: Dictionary;
   onOpenBugModal: () => void;
   onOpenCoffeeModal: () => void;
+  theme?: string;
+  setTheme?: (theme: string) => void;
+  mounted?: boolean;
 }
 
 export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
@@ -29,13 +32,23 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   dict,
   onOpenBugModal,
   onOpenCoffeeModal,
+  theme: propTheme,
+  setTheme: propSetTheme,
+  mounted: propMounted,
 }) => {
-  const { resolvedTheme, setTheme } = useTheme();
+  const themeContext = useTheme();
+  const theme = propTheme ?? themeContext.theme;
+  const setTheme = propSetTheme ?? themeContext.setTheme;
   const pathname = usePathname();
 
-  const [isMounted, setIsMounted] = useState(false);
+  const [clientMounted, setClientMounted] = useState(false);
+  const isMounted = propMounted ?? (propTheme !== undefined ? true : clientMounted);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
+
+  const lightLabel = dict?.sidebar?.themeLight || 'Light mode';
+  const darkLabel = dict?.sidebar?.themeDark || 'Dark mode';
+  const systemLabel = dict?.sidebar?.themeSystem || 'System theme';
 
   const currentLanguage =
     LANGUAGES.find((l) => l.code === currentLocale) ?? LANGUAGES[0];
@@ -57,7 +70,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   };
 
   useEffect(() => {
-    setIsMounted(true);
+    setClientMounted(true);
   }, []);
 
   useEffect(() => {
@@ -127,18 +140,55 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           )}
         </div>
 
-        <button
-          type="button"
-          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          aria-label={dict?.sidebar?.toggleTheme || 'Toggle Dark Mode'}
-          className="flex h-8 items-center justify-center rounded-xl border border-slate-200 bg-slate-100/50 text-slate-700 hover:bg-slate-200 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-300 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        {/* 3-State Theme Switcher (Light / Dark / System) */}
+        <div
+          role="group"
+          aria-label={dict?.sidebar?.toggleTheme || 'Theme selector'}
+          className="flex h-8 items-center justify-between rounded-xl border border-slate-200 bg-slate-100/50 p-0.5 dark:border-slate-800 dark:bg-slate-900/50"
         >
-          {isMounted && resolvedTheme === 'dark' ? (
-            <Moon className="h-3.5 w-3.5 text-slate-300" />
-          ) : (
-            <Sun className="h-3.5 w-3.5 text-amber-500" />
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={() => setTheme('light')}
+            aria-label={lightLabel} /* i18n-ignore */
+            aria-pressed={isMounted && theme === 'light'}
+            title={lightLabel} /* i18n-ignore */
+            className={`relative before:absolute before:-inset-1 before:content-[''] flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
+              isMounted && theme === 'light'
+                ? 'bg-white text-amber-500 shadow-xs dark:bg-slate-800 dark:text-amber-400'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+            }`}
+          >
+            <Sun className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setTheme('dark')}
+            aria-label={darkLabel} /* i18n-ignore */
+            aria-pressed={isMounted && theme === 'dark'}
+            title={darkLabel} /* i18n-ignore */
+            className={`relative before:absolute before:-inset-1 before:content-[''] flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
+              isMounted && theme === 'dark'
+                ? 'bg-white text-cyan-500 shadow-xs dark:bg-slate-800 dark:text-cyan-400'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+            }`}
+          >
+            <Moon className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setTheme('system')}
+            aria-label={systemLabel} /* i18n-ignore */
+            aria-pressed={isMounted && theme === 'system'}
+            title={systemLabel} /* i18n-ignore */
+            className={`relative before:absolute before:-inset-1 before:content-[''] flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
+              isMounted && theme === 'system'
+                ? 'bg-white text-slate-700 shadow-xs dark:bg-slate-800 dark:text-slate-200'
+                : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+            }`}
+          >
+            <Laptop className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Bug Report & Buy Coffee */}

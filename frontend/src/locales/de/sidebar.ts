@@ -75,4 +75,8 @@ export default {
   disabled: "Deaktiviert",
   bugReportModalSubtitle: 'Melde Fehler, Übersetzungsfehler oder Balance-Feedback direkt an die Entwickler.',
   coffeeSubtitle: 'Unterstütze unabhängige DBD-Analysen und Begleit-Tools',
+  themeLight: 'Heller Modus',
+  themeDark: 'Dunkler Modus',
+  themeSystem: 'Systemdesign',
 } as const;
+

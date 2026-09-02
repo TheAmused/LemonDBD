@@ -32,7 +32,7 @@ function LandingContent() {
   }, [prefetchImages]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="relative min-h-screen overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <FogHeartbeatBackground />
 
       <Sidebar
@@ -56,16 +56,16 @@ function LandingContent() {
           </div>
 
           {/* Badge */}
-          <div className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-amber-400 mb-5">
+          <div className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-5">
             <span>{dict?.landing?.welcomeBadge || 'Dead by Daylight Companion'}</span>
           </div>
 
           {/* Welcoming Words */}
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-100">
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-slate-100">
             {dict?.landing?.welcomeTitle || 'Welcome to LemonDBD'}
           </h1>
 
-          <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed font-medium max-w-md">
+          <p className="mt-4 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-medium max-w-md">
             {dict?.landing?.welcomeSubtitle ||
               'Your dedicated Dead by Daylight database, interactive map explorer, perk randomizer, and player companion.'}
           </p>

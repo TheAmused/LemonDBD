@@ -75,4 +75,8 @@ export default {
   disabled: "無効化中",
   bugReportModalSubtitle: 'バグ、翻訳の誤り、バランスに関するフィードバックを直接開発者に報告します。',
   coffeeSubtitle: '独立したDBD分析とツール開発をサポート',
+  themeLight: 'ライトモード',
+  themeDark: 'ダークモード',
+  themeSystem: 'システムテーマ',
 } as const;
+

@@ -72,9 +72,9 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
         borderActive: 'border-[#00f5d4]',
         glow: 'hover:shadow-[0_0_20px_rgba(0,245,212,0.35)]',
         glowActive: 'shadow-[0_0_30px_rgba(0,245,212,0.85)]',
-        text: 'text-[#00f5d4]',
-        bg: 'bg-cyan-950/20',
-        bgActive: 'bg-cyan-950/60',
+        text: 'text-teal-700 dark:text-[#00f5d4]',
+        bg: 'bg-cyan-50 dark:bg-cyan-950/20',
+        bgActive: 'bg-cyan-100 dark:bg-cyan-950/60',
         icon: <ArrowLeft className="h-4 w-4" />,
       },
     },
@@ -90,9 +90,9 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
         borderActive: 'border-emerald-400',
         glow: 'hover:shadow-[0_0_20px_rgba(52,211,153,0.35)]',
         glowActive: 'shadow-[0_0_30px_rgba(52,211,153,0.85)]',
-        text: 'text-emerald-300',
-        bg: 'bg-emerald-950/20',
-        bgActive: 'bg-emerald-950/60',
+        text: 'text-emerald-700 dark:text-emerald-300',
+        bg: 'bg-emerald-50 dark:bg-emerald-950/20',
+        bgActive: 'bg-emerald-100 dark:bg-emerald-950/60',
         icon: <ArrowUp className="h-4 w-4" />,
       },
     },
@@ -108,9 +108,9 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
         borderActive: 'border-[#ff0055]',
         glow: 'hover:shadow-[0_0_20px_rgba(255,0,85,0.4)]',
         glowActive: 'shadow-[0_0_30px_rgba(255,0,85,0.85)]',
-        text: 'text-[#ff0055]',
-        bg: 'bg-rose-950/20',
-        bgActive: 'bg-rose-950/60',
+        text: 'text-[#c40042] dark:text-[#ff0055]',
+        bg: 'bg-rose-50 dark:bg-rose-950/20',
+        bgActive: 'bg-rose-100 dark:bg-rose-950/60',
         icon: <ArrowRight className="h-4 w-4" />,
       },
     },
@@ -126,9 +126,9 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
         borderActive: 'border-purple-400',
         glow: 'hover:shadow-[0_0_20px_rgba(168,85,247,0.35)]',
         glowActive: 'shadow-[0_0_30px_rgba(168,85,247,0.85)]',
-        text: 'text-purple-300',
-        bg: 'bg-purple-950/20',
-        bgActive: 'bg-purple-950/60',
+        text: 'text-purple-700 dark:text-purple-300',
+        bg: 'bg-purple-50 dark:bg-purple-950/20',
+        bgActive: 'bg-purple-100 dark:bg-purple-950/60',
         icon: <RotateCcw className="h-4 w-4" />,
       },
     },
@@ -187,7 +187,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
   return (
     <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}
-      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-2xl bg-zinc-950/80 border border-zinc-800/60 shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 rounded-2xl bg-slate-100 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800/60 shadow-lg dark:shadow-2xl backdrop-blur-xl">
         {keycaps.map((cap) => {
           const isActive = activeKey === cap.id;
           const isReset = cap.id === 'reset';
@@ -204,7 +204,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               } ${
                 isActive
                   ? `translate-y-1 ${cap.colorTheme.bgActive} ${cap.colorTheme.borderActive} ${cap.colorTheme.glowActive} border-2`
-                  : `translate-y-0 ${cap.colorTheme.bg} ${cap.colorTheme.border} ${cap.colorTheme.glow} border bg-zinc-900/90 shadow-[0_4px_0_0_rgba(0,0,0,0.6)]`
+                  : `translate-y-0 ${cap.colorTheme.bg} ${cap.colorTheme.border} ${cap.colorTheme.glow} border bg-white dark:bg-zinc-900/90 shadow-[0_4px_0_0_rgba(148,163,184,0.5)] dark:shadow-[0_4px_0_0_rgba(0,0,0,0.6)]`
               } ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'active:translate-y-1'}`}
             >
               {/* Primary Key / Icon */}
@@ -214,7 +214,9 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
 
               {/* Sub-Legend Letter */}
               <span className={`text-[10px] font-bold font-mono tracking-wider transition-colors ${
-                isActive ? 'text-white' : 'text-zinc-400 group-hover:text-zinc-200'
+                isActive
+                  ? 'text-slate-900 dark:text-white'
+                  : 'text-slate-500 dark:text-zinc-400 group-hover:text-slate-900 dark:group-hover:text-zinc-200'
               }`}>
                 {cap.subKey}
               </span>
@@ -224,8 +226,8 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
       </div>
 
       {/* Instruction Subtitle */}
-      <div className="flex items-center gap-1.5 text-[11px] font-medium text-zinc-400 pt-0.5">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+      <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-zinc-400 pt-0.5">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
         <span>
           {dict?.smashOrPass?.controls?.hint || 'Użyj strzałek lub przeciągnij, aby zagłosować'}
         </span>

@@ -475,7 +475,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar currentLocale={currentLocale} dict={dict} activeCategory="admin" />
 
       <main
@@ -501,15 +501,15 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="alert"
               aria-live="polite"
               className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${actionMessage.type === 'success'
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-                  : 'border-red-500/30 bg-red-500/10 text-red-400'
+                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                  : 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-400'
                 }`}
             >
-              <span>{actionMessage.text}</span>
+              <span className="font-semibold">{actionMessage.text}</span>
               <button
                 type="button"
                 onClick={() => setActionMessage(null)}
-                className="text-slate-400 hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-slate-400"
+                className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-slate-400"
                 aria-label={dict?.admin?.closeSymbol || 'Close notification'}
               >
                 {dict?.admin?.closeSymbol || '×'}
@@ -518,15 +518,15 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
           )}
 
           {/* Subtab Switcher */}
-          <nav aria-label={dict?.admin?.adminSections || 'Admin Sections'} className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-800 pb-2">
+          <nav aria-label={dict?.admin?.adminSections || 'Admin Sections'} className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
             <button
               type="button"
               role="tab"
               aria-selected={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500 ${activeTab === 'users'
-                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
                 }`}
             >
               <Users className="h-4 w-4" />
@@ -541,8 +541,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               aria-selected={activeTab === 'bugs'}
               onClick={() => setActiveTab('bugs')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-rose-500 ${activeTab === 'bugs'
-                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
                 }`}
             >
               <Bug className="h-4 w-4" />
@@ -557,8 +557,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               aria-selected={activeTab === 'challenges'}
               onClick={() => setActiveTab('challenges')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-cyan-500 ${activeTab === 'challenges'
-                  ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                  ? 'bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
                 }`}
             >
               <ShieldAlert className="h-4 w-4" />
@@ -571,8 +571,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               aria-selected={activeTab === 'challenge_stats'}
               onClick={() => setActiveTab('challenge_stats')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 ${activeTab === 'challenge_stats'
-                  ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                  ? 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
                 }`}
             >
               <BarChart3 className="h-4 w-4" />
@@ -585,8 +585,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               aria-selected={activeTab === 'audit'}
               onClick={() => setActiveTab('audit')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-emerald-500 ${activeTab === 'audit'
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
                 }`}
             >
               <ScrollText className="h-4 w-4" />
@@ -692,7 +692,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         message={
           <>
             {dict?.admin?.confirmDeleteUserPrefix || 'Are you sure you want to delete user'}{' '}
-            <strong className="font-bold text-white">{userPendingDeletion?.username}</strong>?
+            <strong className="font-bold text-amber-400">{userPendingDeletion?.username}</strong>?
             <br />
             {dict?.admin?.cannotBeUndone || 'This cannot be undone.'}
           </>

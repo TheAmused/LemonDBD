@@ -211,38 +211,37 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl backdrop-blur-sm">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-300 mb-4">
-          <Power className="h-4 w-4 text-rose-400" />
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-5 shadow-sm dark:shadow-xl backdrop-blur-sm">
+        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-300 mb-4">
+          <Power className="h-4 w-4 text-rose-500 dark:text-rose-400" />
           {dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Kill Switches'}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {modes.map((setting) => (
-
             <div
               key={setting.mode}
               className={`rounded-xl border p-3.5 flex flex-col gap-2 ${
                 setting.is_enabled
-                  ? 'border-slate-800 bg-slate-950/50'
+                  ? 'border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/50'
                   : 'border-rose-500/30 bg-rose-500/[0.06]'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200">{MODE_LABELS[setting.mode]}</span>
+                <span className="text-xs font-bold text-slate-900 dark:text-slate-200">{MODE_LABELS[setting.mode]}</span>
                 <button
                   type="button"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
                   className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
                     setting.is_enabled
-                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
-                      : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
+                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20'
+                      : 'border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20'
                   }`}
                 >
                   {setting.is_enabled ? dict?.admin?.enabledLabel || 'Enabled' : dict?.admin?.disabledLabel || 'Disabled'}
                 </button>
               </div>
               {setting.disabled_reason && (
-                <p className="text-[10px] text-rose-300/80 leading-snug">{setting.disabled_reason}</p>
+                <p className="text-[10px] text-rose-600 dark:text-rose-300/80 leading-snug">{setting.disabled_reason}</p>
               )}
             </div>
           ))}
@@ -250,36 +249,34 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       </div>
 
       {/* Killers & Perks availability */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl backdrop-blur-sm">
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-5 shadow-sm dark:shadow-xl backdrop-blur-sm">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/50 p-1">
             <button
               type="button"
               onClick={() => setSubTab('killers')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'killers' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
+                subTab === 'killers' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'text-slate-600 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-300'
               }`}
             >
               <Skull className="h-3.5 w-3.5" /> {dict?.admin?.characters || 'Characters'}
             </button>
             <button
               type="button"
-
               onClick={() => setSubTab('perks')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'perks' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
+                subTab === 'perks' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'text-slate-600 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-300'
               }`}
             >
               <Sparkles className="h-3.5 w-3.5" /> {dict?.admin?.perks || 'Perks'}
             </button>
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
-
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-950/50 p-1">
             <button
               type="button"
               onClick={() => setRoleFilter('Survivor')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Survivor' ? 'bg-emerald-500/10 text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+                roleFilter === 'Survivor' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'text-slate-600 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-300'
               }`}
             >
               <Shield className="h-3.5 w-3.5" /> {dict?.admin?.roleSurvivor || 'Survivor'}
@@ -288,19 +285,19 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               type="button"
               onClick={() => setRoleFilter('Killer')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Killer' ? 'bg-rose-500/10 text-rose-400' : 'text-slate-500 hover:text-slate-300'
+                roleFilter === 'Killer' ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'text-slate-600 hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-300'
               }`}
             >
               <Skull className="h-3.5 w-3.5" /> {dict?.admin?.roleKiller || 'Killer'}
             </button>
           </div>
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
-              className="pl-7 pr-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              className="pl-7 pr-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-900 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </div>
         </div>
@@ -320,10 +317,10 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   c.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
-                    : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/50 hover:border-slate-400 dark:hover:border-slate-700'
                 }`}
               >
-                <div className="h-full w-full flex items-center justify-center bg-slate-900">
+                <div className="h-full w-full flex items-center justify-center bg-slate-100 dark:bg-slate-900">
                   {c.avatar_portrait_path ? (
                     <img
                       src={staticUrl(c.avatar_portrait_path)}
@@ -331,11 +328,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
                   ) : (
-                    <Skull className="h-8 w-8 text-slate-600" />
+                    <Skull className="h-8 w-8 text-slate-400 dark:text-slate-600" />
                   )}
                 </div>
                 <span
-                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white dark:border-slate-950 ${
                     c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
                   }`}
                 >
@@ -355,10 +352,10 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                 className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
                   p.is_disabled
                     ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
-                    : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950/50 hover:border-slate-400 dark:hover:border-slate-700'
                 }`}
               >
-                <div className="h-full w-full flex items-center justify-center bg-slate-900 p-1.5">
+                <div className="h-full w-full flex items-center justify-center bg-slate-100 dark:bg-slate-900 p-1.5">
                   {p.icon_local_path ? (
                     <img
                       src={staticUrl(p.icon_local_path)}
@@ -366,11 +363,11 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                       className={`h-full w-full object-contain ${p.is_disabled ? 'grayscale opacity-60' : ''}`}
                     />
                   ) : (
-                    <Sparkles className="h-6 w-6 text-slate-600" />
+                    <Sparkles className="h-6 w-6 text-slate-400 dark:text-slate-600" />
                   )}
                 </div>
                 <span
-                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
+                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white dark:border-slate-950 ${
                     p.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
                   }`}
                 >

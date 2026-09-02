@@ -74,8 +74,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
       interval: 4s
       timeout: 3s
-      retries: 5
-      start_period: 10s
+      retries: 10
+      start_period: 15s
     networks:
       - dbd_network
 
@@ -87,6 +87,12 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/umami
       DATABASE_TYPE: postgresql
       APP_SECRET: ${UMAMI_APP_SECRET:-change-this-to-a-random-secret-in-production}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/api/heartbeat').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 4s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
     expose:
       - "3000"
     depends_on:
@@ -132,6 +138,7 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
       - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
+      - UMAMI_PUBLIC_URL=${NEXT_PUBLIC_UMAMI_URL:-}
       - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
       # /api/umami-config (frontend/src/app/api/umami-config/route.ts)
       # self-provisions the Umami website over the internal Docker network

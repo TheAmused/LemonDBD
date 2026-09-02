@@ -169,14 +169,14 @@ export default function UserProfilePage() {
   if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
-        <div className="max-w-md w-full rounded-3xl border border-slate-800 bg-slate-950/90 p-8 backdrop-blur-xl shadow-2xl space-y-4">
+        <div className="max-w-md w-full rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100 p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-4">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30">
-            <LemonIcon className="h-10 w-10 text-amber-400" />
+            <LemonIcon className="h-10 w-10 text-amber-500 dark:text-amber-400" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-slate-100">
+          <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-slate-900 dark:text-slate-100">
             {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">
@@ -274,7 +274,7 @@ export default function UserProfilePage() {
                       onClick={handleResetAvatar}
                       disabled={isUploadingAvatar}
                       title={dict?.user?.removeAvatar || 'Reset to default icon'}
-                      className="relative flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
+                      className="relative flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
                     >
                       <Trash2 className="h-3 w-3" />
                       <span>{dict?.user?.removeAvatar || 'Reset'}</span>

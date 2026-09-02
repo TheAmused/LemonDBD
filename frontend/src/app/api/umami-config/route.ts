@@ -26,13 +26,6 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
-const UMAMI_INTERNAL_URL = process.env.UMAMI_INTERNAL_URL || 'http://umami:3000';
-const UMAMI_ADMIN_USERNAME = process.env.UMAMI_ADMIN_USERNAME || 'admin';
-const UMAMI_ADMIN_PASSWORD = process.env.UMAMI_ADMIN_PASSWORD || 'umami';
-const UMAMI_SITE_NAME = process.env.UMAMI_SITE_NAME || 'LemonDBD';
-const UMAMI_SITE_DOMAIN = process.env.UMAMI_SITE_DOMAIN || 'localhost';
-const PUBLIC_URL = process.env.NEXT_PUBLIC_UMAMI_URL || '';
-
 // In-memory cache for the life of this Node process -- avoids re-logging-in
 // and re-listing websites on every single page load, and de-dupes concurrent
 // first-requests into a single provisioning attempt.
@@ -45,20 +38,57 @@ interface UmamiWebsite {
   domain?: string;
 }
 
+function getSanitizedDomain(domain: string): string {
+  return domain
+    .trim()
+    .replace(/^https?:\/\//i, '')
+    .replace(/\/+$/, '');
+}
+
+export function getRuntimePublicUrl(): string {
+  // Read dynamically at request time to prevent Next.js build-time inlining
+  const raw =
+    process.env['UMAMI_PUBLIC_URL'] ||
+    process.env['NEXT_PUBLIC_UMAMI_URL'] ||
+    process.env.NEXT_PUBLIC_UMAMI_URL ||
+    '';
+  return raw.trim().replace(/\/+$/, '');
+}
+
 async function umamiFetch(path: string, init?: RequestInit) {
-  const res = await fetch(`${UMAMI_INTERNAL_URL}${path}`, {
+  const internalUrl = (
+    process.env['UMAMI_INTERNAL_URL'] ||
+    process.env.UMAMI_INTERNAL_URL ||
+    'http://umami:3000'
+  ).replace(/\/+$/, '');
+
+  const res = await fetch(`${internalUrl}${path}`, {
     ...init,
-    signal: AbortSignal.timeout(4000),
+    cache: 'no-store',
+    signal: AbortSignal.timeout(8000),
   });
-  if (!res.ok) throw new Error(`umami ${path} -> HTTP ${res.status}`);
+  if (!res.ok) {
+    const errorBody = await res.text().catch(() => '');
+    throw new Error(`umami ${path} -> HTTP ${res.status}${errorBody ? ` (${errorBody})` : ''}`);
+  }
   return res.json();
 }
 
-async function provisionWebsite(): Promise<string | null> {
+export async function provisionWebsite(): Promise<string | null> {
+  const adminUsername =
+    process.env['UMAMI_ADMIN_USERNAME'] || process.env.UMAMI_ADMIN_USERNAME || 'admin';
+  const adminPassword =
+    process.env['UMAMI_ADMIN_PASSWORD'] || process.env.UMAMI_ADMIN_PASSWORD || 'umami';
+  const siteName =
+    process.env['UMAMI_SITE_NAME'] || process.env.UMAMI_SITE_NAME || 'LemonDBD';
+  const rawDomain =
+    process.env['UMAMI_SITE_DOMAIN'] || process.env.UMAMI_SITE_DOMAIN || 'localhost';
+  const siteDomain = getSanitizedDomain(rawDomain);
+
   const login = await umamiFetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: UMAMI_ADMIN_USERNAME, password: UMAMI_ADMIN_PASSWORD }),
+    body: JSON.stringify({ username: adminUsername, password: adminPassword }),
   });
   const token = login?.token;
   if (!token) throw new Error('umami login returned no token');
@@ -66,29 +96,45 @@ async function provisionWebsite(): Promise<string | null> {
   const authHeaders = { Authorization: `Bearer ${token}` };
   const listing = await umamiFetch('/api/websites?pageSize=100', { headers: authHeaders });
   const sites: UmamiWebsite[] = Array.isArray(listing) ? listing : listing?.data || [];
-  const existing = sites.find((s) => s.domain === UMAMI_SITE_DOMAIN || s.name === UMAMI_SITE_NAME);
-  if (existing) return existing.id;
+  const existing = sites.find(
+    (s) =>
+      (s.domain && getSanitizedDomain(s.domain) === siteDomain) ||
+      (s.name && s.name.toLowerCase() === siteName.toLowerCase()),
+  );
+  if (existing?.id) return existing.id;
 
   const created = await umamiFetch('/api/websites', {
     method: 'POST',
     headers: { ...authHeaders, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: UMAMI_SITE_NAME, domain: UMAMI_SITE_DOMAIN }),
+    body: JSON.stringify({ name: siteName, domain: siteDomain }),
   });
-  return created?.id || null;
+
+  // Umami v2 wraps responses in { data: { id: "..." } }, while older versions return { id: "..." }
+  const websiteId =
+    created?.data?.id ||
+    created?.id ||
+    (created?.website && created.website.id) ||
+    null;
+  return websiteId;
 }
 
-async function getWebsiteId(): Promise<string | null> {
+export async function getWebsiteId(): Promise<string | null> {
   if (cachedWebsiteId) return cachedWebsiteId;
   if (!inFlight) {
     inFlight = provisionWebsite()
       .then((id) => {
-        cachedWebsiteId = id;
+        if (id) {
+          cachedWebsiteId = id;
+        }
         return id;
       })
       .catch((err) => {
         // Best-effort: Umami might just not be up yet right after a reset.
         // Don't cache the failure -- the next request tries again.
-        console.warn('[umami-config] provisioning failed, will retry next request:', err);
+        console.warn(
+          '[umami-config] website provisioning notice:',
+          err instanceof Error ? err.message : err,
+        );
         return null;
       })
       .finally(() => {
@@ -98,15 +144,25 @@ async function getWebsiteId(): Promise<string | null> {
   return inFlight;
 }
 
+/** Reset in-memory cache (for tests and clean restarts). */
+export function _resetUmamiConfigCache(): void {
+  cachedWebsiteId = null;
+  inFlight = null;
+}
+
 export async function GET() {
-  if (!PUBLIC_URL) {
+  const publicUrl = getRuntimePublicUrl();
+  if (!publicUrl) {
     // Tracking deliberately disabled (blank NEXT_PUBLIC_UMAMI_URL).
-    return NextResponse.json({ websiteId: '', url: '' }, { headers: { 'Cache-Control': 'no-store' } });
+    return NextResponse.json(
+      { websiteId: '', url: '' },
+      { headers: { 'Cache-Control': 'no-store' } },
+    );
   }
 
   const websiteId = (await getWebsiteId()) || '';
   return NextResponse.json(
-    { websiteId, url: PUBLIC_URL },
+    { websiteId, url: publicUrl },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 }

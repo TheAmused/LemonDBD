@@ -37,13 +37,13 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
 
   if (!addons || addons.length === 0) {
     return (
-      <section className="mt-8 rounded-3xl border border-slate-800 bg-slate-950/60 p-6 sm:p-8 backdrop-blur-md">
-        <div className="flex items-center gap-3 border-b border-slate-800/80 pb-4 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+      <section className="mt-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md">
+        <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800/80 pb-4 mb-6">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20">
             <Flame className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-lg font-black tracking-tight text-white font-mono flex items-center gap-2">
+            <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white font-mono flex items-center gap-2">
               {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
             </h3>
           </div>
@@ -56,16 +56,16 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
   }
 
   return (
-    <section className="mt-8 rounded-3xl border border-slate-800 bg-slate-950/60 p-6 sm:p-8 backdrop-blur-md">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-4 mb-6">
+    <section className="mt-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20">
             <Flame className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-lg font-black tracking-tight text-white font-mono flex items-center gap-2">
+            <h3 className="text-lg font-black tracking-tight text-slate-900 dark:text-white font-mono flex items-center gap-2">
               {t.equipmentTitleKiller || 'Killer Power Add-ons & Equipment'}
-              <span className="text-xs px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/30">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/30">
                 {addons.length}
               </span>
             </h3>

@@ -64,19 +64,19 @@ export const PerkModal: React.FC<PerkModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl rounded-3xl border border-slate-800 bg-[#0c121e]/95 p-6 sm:p-8 shadow-2xl text-slate-100 cursor-default animate-in zoom-in-95 duration-200 backdrop-blur-2xl"
+        className="relative w-full max-w-2xl rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0c121e]/95 p-6 sm:p-8 shadow-2xl text-slate-900 dark:text-slate-100 cursor-default animate-in zoom-in-95 duration-200 backdrop-blur-2xl"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label={dict?.modal?.close || 'Close perk modal'}
-          className="absolute right-5 top-5 rounded-full p-2 text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          className="absolute right-5 top-5 rounded-full p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pr-8">
-          <div className="relative flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 p-2.5 border border-slate-800 shadow-inner">
+          <div className="relative flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border border-slate-300 dark:from-slate-900 dark:to-slate-950 dark:border-slate-800 p-2.5 shadow-inner">
             {!imgError && iconSrc ? (
               <img
                 src={iconSrc}
@@ -92,7 +92,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           <div className="space-y-2">
             <h2
               id="perk-modal-title"
-              className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight leading-tight"
+              className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 tracking-tight leading-tight"
             >
               {perk.name}
             </h2>

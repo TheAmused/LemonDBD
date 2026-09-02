@@ -75,4 +75,8 @@ export default {
   disabled: "Disabled",
   bugReportModalSubtitle: 'Report bugs, translation issues, or balance feedback directly to the developers.',
   coffeeSubtitle: 'Fueling independent DBD analytics and companion development',
+  themeLight: 'Light mode',
+  themeDark: 'Dark mode',
+  themeSystem: 'System theme',
 } as const;
+

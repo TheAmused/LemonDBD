@@ -46,9 +46,9 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
-  const lightLabel = (dict?.sidebar as any)?.themeLight || 'Light mode';
-  const darkLabel = (dict?.sidebar as any)?.themeDark || 'Dark mode';
-  const systemLabel = (dict?.sidebar as any)?.themeSystem || 'System theme';
+  const lightLabel = dict?.sidebar?.themeLight || 'Light mode';
+  const darkLabel = dict?.sidebar?.themeDark || 'Dark mode';
+  const systemLabel = dict?.sidebar?.themeSystem || 'System theme';
 
   const currentLanguage =
     LANGUAGES.find((l) => l.code === currentLocale) ?? LANGUAGES[0];
@@ -152,7 +152,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-label={lightLabel} /* i18n-ignore */
             aria-pressed={isMounted && theme === 'light'}
             title={lightLabel} /* i18n-ignore */
-            className={`flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
+            className={`relative before:absolute before:-inset-1 before:content-[''] flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
               isMounted && theme === 'light'
                 ? 'bg-white text-amber-500 shadow-xs dark:bg-slate-800 dark:text-amber-400'
                 : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
@@ -166,7 +166,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-label={darkLabel} /* i18n-ignore */
             aria-pressed={isMounted && theme === 'dark'}
             title={darkLabel} /* i18n-ignore */
-            className={`flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
+            className={`relative before:absolute before:-inset-1 before:content-[''] flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
               isMounted && theme === 'dark'
                 ? 'bg-white text-cyan-500 shadow-xs dark:bg-slate-800 dark:text-cyan-400'
                 : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
@@ -180,7 +180,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-label={systemLabel} /* i18n-ignore */
             aria-pressed={isMounted && theme === 'system'}
             title={systemLabel} /* i18n-ignore */
-            className={`flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
+            className={`relative before:absolute before:-inset-1 before:content-[''] flex flex-1 h-full items-center justify-center rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400 ${
               isMounted && theme === 'system'
                 ? 'bg-white text-slate-700 shadow-xs dark:bg-slate-800 dark:text-slate-200'
                 : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'

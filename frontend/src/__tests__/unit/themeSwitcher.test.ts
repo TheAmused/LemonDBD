@@ -55,6 +55,21 @@ describe('SidebarBottomControls Theme Switcher', () => {
     );
   });
 
+  it('expands theme buttons tap target via pseudo-element for mobile accessibility', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(SidebarBottomControls, {
+        currentLocale: 'en',
+        onOpenBugModal: () => {},
+        onOpenCoffeeModal: () => {},
+      })
+    );
+
+    assert.ok(
+      html.includes('before:-inset-1'),
+      'Must expand tap target with before:-inset-1 pseudo-element'
+    );
+  });
+
   it('resolves active state correctly when theme is "light"', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {

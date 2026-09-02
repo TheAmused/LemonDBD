@@ -75,4 +75,8 @@ export default {
   disabled: "Desactivado",
   bugReportModalSubtitle: 'Informa de errores, problemas de traducción o comentarios de equilibrio a los desarrolladores.',
   coffeeSubtitle: 'Impulsando el análisis independiente y herramientas de DBD',
+  themeLight: 'Modo claro',
+  themeDark: 'Modo oscuro',
+  themeSystem: 'Tema del sistema',
 } as const;
+

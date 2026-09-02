@@ -7,7 +7,7 @@ export default function SmashOrPassLoading() {
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <div
         aria-hidden="true"
-        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-zinc-800/80 bg-zinc-950/95"
+        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-slate-200/80 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/60"
       />
       {/* Matches the sidebar's mobile header so nothing shifts vertically
           when the real Sidebar mounts. */}

@@ -25,6 +25,7 @@ export default {
   switchLanguage: "言語を切り替え",
   toggleTheme: "ダークモード切替",
   collapseSidebar: "ナビゲーションバーを折りたたむ",
+  toggleSidebar: "ナビゲーションバーを切り替え",
   expandSidebar: "ナビゲーションバーを展開",
   bugReportModalTitle: "問題・バグを報告",
   bugCategoryPerks: "パーク＆固有データ",

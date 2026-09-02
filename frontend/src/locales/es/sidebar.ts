@@ -25,6 +25,7 @@ export default {
   switchLanguage: "Cambiar Idioma",
   toggleTheme: "Alternar Modo Oscuro",
   collapseSidebar: "Contraer Barra Lateral",
+  toggleSidebar: "Alternar Barra Lateral",
   expandSidebar: "Expandir Barra Lateral",
   bugReportModalTitle: "Reportar un Problema / Error",
   bugCategoryPerks: "Datos de Habilidades y Enseñables",

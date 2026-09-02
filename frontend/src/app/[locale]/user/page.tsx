@@ -14,9 +14,7 @@ import { UserMetricsGrid, UserMetricsGridSkeleton } from '@/components/user/User
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/services/userProfileApi';
 import {
@@ -33,6 +31,8 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Modals are only needed once the user interacts (sign-in prompt, bug report
 // form) -- code-split them out of the initial /user bundle. `ssr: false`
@@ -57,10 +57,9 @@ const UserBugReportsList = dynamic(
 export default function UserProfilePage() {
   const params = useParams();
   const currentLocale = (params?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [activeSubTab, setActiveSubTab] = useState<'overview' | 'bugs'>('overview');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bugModalOpen, setBugModalOpen] = useState(false);
@@ -77,10 +76,7 @@ export default function UserProfilePage() {
   const [reportsTotalPages, setReportsTotalPages] = useState(1);
   const REPORTS_PER_PAGE = 10;
 
-  useEffect(() => {
-    document.title = dict?.app?.userPageTitle || 'LemonDBD - User Profile';
-    getDictionary(currentLocale).then(setDict);
-  }, [currentLocale]);
+  useDocumentTitle(dict?.app?.userPageTitle || 'LemonDBD - User Profile');
 
   const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
     if (!isAuthenticated) return;
@@ -218,9 +214,7 @@ export default function UserProfilePage() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
       >
         <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
           {/* Header Card with Interactive Avatar Upload */}

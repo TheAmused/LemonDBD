@@ -3,6 +3,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AlertTriangle, ArrowRight, type LucideIcon } from 'lucide-react';
 import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
 
@@ -21,6 +22,14 @@ interface StreakPanelBaseProps {
   disabled?: boolean;
   disabledReason?: string | null;
   dict?: Dictionary;
+  /**
+   * Routes this panel may navigate to. Panels that pick their destination at
+   * click time (from a saved difficulty/mode) render as a <button>, so Next
+   * cannot prefetch them the way it does the <Link> variant. Naming the
+   * candidates here lets the panel warm them on hover instead of paying for a
+   * cold route chunk behind the loading spinner after the click.
+   */
+  prefetchHrefs?: string[];
 }
 
 type StreakPanelProps = StreakPanelBaseProps &
@@ -41,7 +50,9 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   disabled,
   disabledReason,
   dict,
+  prefetchHrefs,
 }) => {
+  const router = useRouter();
   const [showDisabledModal, setShowDisabledModal] = useState(false);
   const hoverClasses = PANEL_HOVER_CLASSES[color];
   const body = (
@@ -118,9 +129,12 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   }
 
   if (onClick) {
+    const warm = () => prefetchHrefs?.forEach((h) => router.prefetch(h));
     return (
       <button
         onClick={onClick}
+        onMouseEnter={warm}
+        onFocus={warm}
         className={`group text-left ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${hoverClasses}`}
       >
         {body}

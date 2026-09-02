@@ -25,6 +25,7 @@ export default {
   switchLanguage: "Sprache wechseln",
   toggleTheme: "Dunkelmodus umschalten",
   collapseSidebar: "Navigationsleiste einklappen",
+  toggleSidebar: "Navigationsleiste umschalten",
   expandSidebar: "Navigationsleiste ausklappen",
   bugReportModalTitle: "Fehler oder Feedback melden",
   bugCategoryPerks: "Talente & Lehrtalent-Daten",

@@ -10,10 +10,8 @@ import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { Pagination } from '@/components/Pagination';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
 import { Shield } from 'lucide-react';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
 import {
   Perk,
@@ -28,6 +26,9 @@ import {
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useImagePrefetch } from '@/components/ImagePreloadProvider';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useCachedData } from '@/hooks/useCachedData';
+import { fetchCached, fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 const QuestsModal = dynamic(
@@ -35,18 +36,22 @@ const QuestsModal = dynamic(
   { ssr: false }
 );
 
+interface PerksResponse {
+  data?: Perk[];
+  pagination?: { total_pages: number; total: number };
+}
+
 const DEFAULT_PERKS_PER_PAGE = 15;
 
 function PerksContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
   const { user } = useAuth();
 
   const paramRole = searchParams ? searchParams.get('role') : null;
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForStats, setAllPerksForGenerator] = useState<Perk[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -113,10 +118,6 @@ function PerksContent() {
   const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
-    getDictionary(locale).then(setDict);
-  }, [locale]);
-
-  useEffect(() => {
     if (paramRole === 'Killer' || paramRole === 'Survivor') {
       setRole(paramRole);
     }
@@ -137,6 +138,13 @@ function PerksContent() {
 
   const { prefetchPerkIcons } = useImagePrefetch();
 
+  // Split into three independent cached reads.
+  //
+  // These used to be one Promise.all inside a single effect keyed on every
+  // filter, so paging or re-sorting re-downloaded the whole 1000-perk list and
+  // the entire character roster -- neither of which depends on page, sort,
+  // search or scope. Now only the paginated query re-runs; the other two are
+  // served from the module cache, including when you leave the page and return.
   const fetchPerks = useCallback(async () => {
     setLoading(true);
     try {
@@ -162,53 +170,14 @@ function PerksContent() {
         queryParams.append('user_id', user.id.toString());
       }
 
-      const allPerksUrl = new URLSearchParams({ limit: '1000', lang: locale });
-      if (user?.id) {
-        allPerksUrl.append('user_id', user.id.toString());
-      }
-
-      const [perksRes, allPerksRes, allCharsRes] = await Promise.all([
-        fetch(`${backendBase}/api/v1/perks?${queryParams.toString()}`),
-        fetch(`${backendBase}/api/v1/perks?${allPerksUrl.toString()}`),
-        fetch(`${backendBase}/api/v1/characters?lang=${locale}`),
-      ]);
-
-      if (perksRes.ok) {
-        const result = await perksRes.json();
-        const perkList = result.data || [];
-        setPerks(perkList);
-        prefetchPerkIcons(perkList);
-        if (result.pagination) {
-          setTotalPages(result.pagination.total_pages);
-          setTotalResults(result.pagination.total);
-        }
-      }
-
-      if (allCharsRes.ok) {
-        const acData = await allCharsRes.json();
-        const fetchedCharactersList: CharacterItem[] = acData.data || [];
-        setCharacterCount(fetchedCharactersList.length);
-      }
-
-      if (allPerksRes.ok) {
-        const gResult = await allPerksRes.json();
-        const fullList: Perk[] = gResult.data || [];
-        setAllPerksForGenerator(fullList);
-        prefetchPerkIcons(fullList.slice(0, 60));
-
-        setSurvivorCount(
-          fullList.filter((p) => p.category === 'Survivor').length
-        );
-        setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
-        setSurvivorOwnedCount(
-          fullList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length
-        );
-        setKillerOwnedCount(
-          fullList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length
-        );
-        setOwnedPerksCount(
-          fullList.filter((p) => p.is_owned !== false).length
-        );
+      const url = `${backendBase}/api/v1/perks?${queryParams.toString()}`;
+      const result = await fetchCached<PerksResponse>(url, () => fetchJson(url));
+      const perkList = result.data || [];
+      setPerks(perkList);
+      prefetchPerkIcons(perkList);
+      if (result.pagination) {
+        setTotalPages(result.pagination.total_pages);
+        setTotalResults(result.pagination.total);
       }
     } catch (err) {
       console.error('Failed fetching perks:', err);
@@ -225,12 +194,50 @@ function PerksContent() {
     page,
     limit,
     ownershipFilter,
-    user,
+    user?.id,
+    locale,
+    prefetchPerkIcons,
   ]);
 
   useEffect(() => {
     fetchPerks();
   }, [fetchPerks]);
+
+  // Vault-wide perk list: drives the stats row and the generator handoff. Keyed
+  // on locale + user only, so paging never touches it.
+  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${
+    user?.id ? `&user_id=${user.id}` : ''
+  }`;
+  const { data: allPerksResponse } = useCachedData<PerksResponse>(
+    allPerksKey,
+    () => fetchJson<PerksResponse>(allPerksKey)
+  );
+
+  const charactersKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+  const { data: charactersResponse } = useCachedData<{ data?: CharacterItem[] }>(
+    charactersKey,
+    () => fetchJson<{ data?: CharacterItem[] }>(charactersKey)
+  );
+
+  useEffect(() => {
+    const fullList: Perk[] = allPerksResponse?.data || [];
+    if (fullList.length === 0) return;
+    setAllPerksForGenerator(fullList);
+    prefetchPerkIcons(fullList.slice(0, 60));
+    setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
+    setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
+    setSurvivorOwnedCount(
+      fullList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length
+    );
+    setKillerOwnedCount(
+      fullList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length
+    );
+    setOwnedPerksCount(fullList.filter((p) => p.is_owned !== false).length);
+  }, [allPerksResponse, prefetchPerkIcons]);
+
+  useEffect(() => {
+    setCharacterCount((charactersResponse?.data || []).length);
+  }, [charactersResponse]);
 
   const handleResetFilters = () => {
     setSearch('');
@@ -248,19 +255,8 @@ function PerksContent() {
 
   const totalVaultPerks = allPerksForStats.length || totalResults;
 
-  if (!dict) {
-    return (
-      <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
-        <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lg:pl-72">
-          <PerksGridSkeleton />
-        </main>
-      </div>
-    );
-  }
-
   return (
-    <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -279,9 +275,7 @@ function PerksContent() {
           control reachable without ever having to scroll the whole page to
           find them again. */}
       <main
-        className={`flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden transition-all duration-300 p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden transition-[padding] duration-300 p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main"
       >
         <div className="shrink-0">
           <PerkFilters
@@ -414,9 +408,9 @@ export default function PerksPage() {
   return (
     <Suspense
       fallback={
-        <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-          <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
-          <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lg:pl-72">
+        <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+          <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+          <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main">
             <PerksGridSkeleton />
           </main>
         </div>

@@ -28,8 +28,16 @@ import {
   updateChangelogPost,
 } from '@/services/changelogApi';
 import { CHANGELOG_TAG_THEME } from './changelogTheme';
-import { ChangelogEditorModal } from './ChangelogEditorModal';
-import { ConfirmModal } from '@/components/ConfirmModal';
+import dynamic from 'next/dynamic';
+
+const ChangelogEditorModal = dynamic(
+  () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
+  { ssr: false }
+);
+const ConfirmModal = dynamic(
+  () => import('@/components/ConfirmModal').then((m) => m.ConfirmModal),
+  { ssr: false }
+);
 
 const LAST_SEEN_KEY = 'lemondbd_changelog_last_seen';
 const TOUCH_HOLD_MS = 220;
@@ -521,6 +529,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       {mounted &&
         createPortal(
           <>
+            {editorOpen && (
             <ChangelogEditorModal
               open={editorOpen}
               post={editingPost}
@@ -533,7 +542,9 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
               onSave={handleSave}
               onDelete={editingPost ? () => setPendingDeleteId(editingPost.id) : undefined}
             />
+            )}
 
+            {pendingDeleteId != null && (
             <ConfirmModal
               open={pendingDeleteId != null}
               title={t?.deleteConfirmTitle || 'Delete this entry?'}
@@ -542,6 +553,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
               onConfirm={handleDelete}
               onCancel={() => setPendingDeleteId(null)}
             />
+            )}
           </>,
           document.body
         )}

@@ -104,6 +104,53 @@ def list_characters():
     return jsonify({"count": len(characters), "data": characters}), 200
 
 
+@perks_bp.route("/api/v1/stats/summary", methods=["GET"])
+def stats_summary():
+    """Lightweight counts for the sidebar "vault stats" card.
+
+    Every frontend page used to render those four numbers by fetching
+    ``/api/v1/perks?limit=1000`` and counting categories in JavaScript -- the
+    entire perk table, serialized and shipped to the browser on every single
+    navigation, to display three integers. This does the same work as a few
+    grouped COUNT(*) queries and returns a payload of about 100 bytes.
+    """
+    from sqlalchemy import func, select
+
+    from app.core.extensions import db
+    from app.models import Character, Perk
+
+    perk_rows = db.session.execute(
+        select(Perk.category, func.count(Perk.id)).group_by(Perk.category)
+    ).all()
+    character_rows = db.session.execute(
+        select(Character.role, func.count(Character.id)).group_by(Character.role)
+    ).all()
+
+    def _pick(rows, wanted: str) -> int:
+        for key, count in rows:
+            if (key or "").lower() == wanted:
+                return int(count)
+        return 0
+
+    return (
+        jsonify(
+            {
+                "perks": {
+                    "total": sum(int(count) for _, count in perk_rows),
+                    "survivor": _pick(perk_rows, "survivor"),
+                    "killer": _pick(perk_rows, "killer"),
+                },
+                "characters": {
+                    "total": sum(int(count) for _, count in character_rows),
+                    "survivor": _pick(character_rows, "survivor"),
+                    "killer": _pick(character_rows, "killer"),
+                },
+            }
+        ),
+        200,
+    )
+
+
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])
 def get_character_detail(character_name: str):
     lang = _extract_lang()

@@ -1,7 +1,7 @@
 // frontend/src/context/AuthContext.tsx
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 export interface UserProfile {
   id: number;
@@ -326,32 +326,83 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
-        isLoading,
-        ownership,
-        login,
-        register,
-        logout,
-        resendVerification,
-        verifyEmail,
-        forgotPassword,
-        resetPassword,
-        refreshUser,
-        updateCharacterOwnership,
-        bulkUpdateCharacterOwnership,
-        updatePerkOwnership,
-        bulkUpdatePerkOwnership,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  // The handlers above are redefined on every render. Passing them straight
+  // into the provider value meant a brand-new object each time, so every
+  // `useAuth()` consumer in the tree -- the sidebar, every page -- re-rendered
+  // whenever anything in this provider changed. Route them through a ref so the
+  // exposed functions keep a stable identity while still calling the freshest
+  // closure (no stale `token`/`user` captures), and memoise the value on the
+  // auth state that consumers actually care about.
+  const handlersRef = useRef({
+    login,
+    register,
+    logout,
+    resendVerification,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
+    refreshUser,
+    updateCharacterOwnership,
+    bulkUpdateCharacterOwnership,
+    updatePerkOwnership,
+    bulkUpdatePerkOwnership,
+  });
+  handlersRef.current = {
+    login,
+    register,
+    logout,
+    resendVerification,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
+    refreshUser,
+    updateCharacterOwnership,
+    bulkUpdateCharacterOwnership,
+    updatePerkOwnership,
+    bulkUpdatePerkOwnership,
+  };
+
+  const actions = useMemo(
+    () => ({
+      login: (usernameOrEmail: string, password: string, extra?: Record<string, any>) =>
+        handlersRef.current.login(usernameOrEmail, password, extra),
+      register: (username: string, email: string, password: string, extra?: Record<string, any>) =>
+        handlersRef.current.register(username, email, password, extra),
+      logout: () => handlersRef.current.logout(),
+      resendVerification: (email: string) => handlersRef.current.resendVerification(email),
+      verifyEmail: (email: string, code: string) => handlersRef.current.verifyEmail(email, code),
+      forgotPassword: (email: string, extra?: Record<string, any>) =>
+        handlersRef.current.forgotPassword(email, extra),
+      resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) =>
+        handlersRef.current.resetPassword(token, newPassword, extra),
+      refreshUser: () => handlersRef.current.refreshUser(),
+      updateCharacterOwnership: (characterId: number, isOwned: boolean) =>
+        handlersRef.current.updateCharacterOwnership(characterId, isOwned),
+      bulkUpdateCharacterOwnership: (
+        updates: Array<{ character_id: number; is_owned: boolean }>
+      ) => handlersRef.current.bulkUpdateCharacterOwnership(updates),
+      updatePerkOwnership: (perkId: number, isUnlocked: boolean) =>
+        handlersRef.current.updatePerkOwnership(perkId, isUnlocked),
+      bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) =>
+        handlersRef.current.bulkUpdatePerkOwnership(updates),
+    }),
+    []
   );
+
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user,
+      token,
+      isAuthenticated: !!user,
+      isAdmin: user?.role === 'admin',
+      isLoading,
+      ownership,
+      ...actions,
+    }),
+    [user, token, isLoading, ownership, actions]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

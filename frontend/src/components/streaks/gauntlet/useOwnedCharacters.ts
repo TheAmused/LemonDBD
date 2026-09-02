@@ -50,7 +50,7 @@ export function useOwnedCharacters(role: Role, rosterLimit?: number) {
     } finally {
       setLoading(false);
     }
-  }, [token, user, role, rosterLimit]);
+  }, [token, user?.id, role, rosterLimit]);
 
   useEffect(() => {
     load();

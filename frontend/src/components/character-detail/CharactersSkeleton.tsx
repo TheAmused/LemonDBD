@@ -10,6 +10,7 @@ interface CharactersSkeletonProps {
   dict?: Dictionary | any;
   ariaLabel?: string;
   count?: number;
+  sublabel?: string;
 }
 
 /**
@@ -19,6 +20,7 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({
   className = '',
   dict,
   ariaLabel,
+  sublabel,
 }) => {
   const loadingLabel = ariaLabel || dict?.characterDetail?.loading || dict?.app?.loading || 'Loading characters...';
 
@@ -35,6 +37,7 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({
         accent="emerald"
         needleSpeed={1.4}
         label={loadingLabel}
+        sublabel={sublabel ?? 'Loading survivor & killer dossiers'}
         dict={dict}
       />
     </div>
@@ -48,6 +51,7 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({
   className = '',
   dict,
   ariaLabel,
+  sublabel,
 }) => {
   const loadingLabel = ariaLabel || dict?.characterDetail?.loading || dict?.app?.loading || 'Loading character details...';
 
@@ -64,6 +68,7 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({
         accent="blood"
         needleSpeed={1.3}
         label={loadingLabel}
+        sublabel={sublabel ?? 'Loading unique perks, power stats, and bio'}
         dict={dict}
       />
     </div>

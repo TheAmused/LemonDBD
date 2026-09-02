@@ -7,13 +7,14 @@ import { useParams } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import { useAuth } from '@/context/AuthContext';
 import { Perk, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useCachedData } from '@/hooks/useCachedData';
+import { fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 const QuestsModal = dynamic(
@@ -24,12 +25,15 @@ const QuestsModal = dynamic(
 function RandomizerContent() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
   const { user } = useAuth();
   const backendBase = getBackendBaseUrl();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [allPerks, setAllPerks] = useState<Perk[]>([]);
+  // GeneratorPage used to mount immediately with an empty perk list and then
+  // re-render once ~1000 perks landed, which reflowed the whole stage. Hold the
+  // (identical) skeleton until the data is in, so there is one transition.
+  const [perksLoading, setPerksLoading] = useState<boolean>(true);
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
@@ -38,60 +42,39 @@ function RandomizerContent() {
   const [characterCount, setCharacterCount] = useState<number>(0);
 
   useEffect(() => {
-    getDictionary(locale).then(setDict);
-  }, [locale]);
-
-  useEffect(() => {
     document.title = dict?.app?.perkRandomizerPageTitle || 'LemonDBD - Perk Randomizer';
   }, [dict]);
 
-  const fetchData = useCallback(async () => {
-    try {
-      const allPerksUrl = new URLSearchParams({ limit: '1000', lang: locale });
-      if (user?.id) {
-        allPerksUrl.append('user_id', user.id.toString());
-      }
+  // Both reads share their cache keys with /perks, so arriving here from the
+  // perk vault (or coming back to the randomizer later) needs no request at all.
+  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${
+    user?.id ? `&user_id=${user.id}` : ''
+  }`;
+  const { data: perksResponse, loading: perksFetching } = useCachedData<{ data?: Perk[] }>(
+    allPerksKey,
+    () => fetchJson<{ data?: Perk[] }>(allPerksKey)
+  );
 
-      const [perksRes, charsRes] = await Promise.all([
-        fetch(`${backendBase}/api/v1/perks?${allPerksUrl.toString()}`),
-        fetch(`${backendBase}/api/v1/characters?lang=${locale}`),
-      ]);
-
-      if (perksRes.ok) {
-        const result = await perksRes.json();
-        const fullList: Perk[] = result.data || [];
-        setAllPerks(fullList);
-        setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
-        setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
-      }
-
-      if (charsRes.ok) {
-        const data = await charsRes.json();
-        const list: CharacterItem[] = data.data || [];
-        setCharacterCount(list.length);
-      }
-    } catch (err) {
-      console.error('Failed fetching randomizer data:', err);
-    }
-  }, [backendBase, locale, user]);
+  const charactersKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+  const { data: charactersResponse } = useCachedData<{ data?: CharacterItem[] }>(
+    charactersKey,
+    () => fetchJson<{ data?: CharacterItem[] }>(charactersKey)
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    const fullList: Perk[] = perksResponse?.data || [];
+    setAllPerks(fullList);
+    setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
+    setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
+    setPerksLoading(perksFetching);
+  }, [perksResponse, perksFetching]);
 
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
-        <main className="flex-1 w-full min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72 flex flex-col items-center">
-          <RandomizerPageSkeleton />
-        </main>
-      </div>
-    );
-  }
+  useEffect(() => {
+    setCharacterCount((charactersResponse?.data || []).length);
+  }, [charactersResponse]);
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -104,13 +87,15 @@ function RandomizerContent() {
       />
 
       <main
-        className={`flex-1 w-full min-h-screen overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 flex flex-col ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 flex flex-col lemon-shell-main"
       >
-        <Suspense fallback={<RandomizerPageSkeleton dict={dict} />}>
-          <GeneratorPage allPerks={allPerks} onSelectPerk={setSelectedPerk} dict={dict} />
-        </Suspense>
+        {perksLoading ? (
+          <RandomizerPageSkeleton dict={dict} />
+        ) : (
+          <Suspense fallback={<RandomizerPageSkeleton dict={dict} />}>
+            <GeneratorPage allPerks={allPerks} onSelectPerk={setSelectedPerk} dict={dict} />
+          </Suspense>
+        )}
 
         {selectedPerk && (
           <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
@@ -131,9 +116,13 @@ export default function RandomizerPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col md:flex-row dbd-fog-overlay transition-colors duration-300">
-          <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
-          <main className="flex-1 w-full min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72 flex flex-col items-center">
+        <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+          <div
+            aria-hidden="true"
+            className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-slate-800 bg-[#0a0f18]/90"
+          />
+          <div aria-hidden="true" className="h-16 shrink-0 border-b border-slate-800/60 lg:hidden" />
+          <main className="flex-1 w-full min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 flex flex-col lemon-shell-main">
             <RandomizerPageSkeleton />
           </main>
         </div>

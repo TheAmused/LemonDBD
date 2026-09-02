@@ -1,5 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
@@ -83,6 +85,37 @@ describe('User Profile Theme Support', () => {
     assert.ok(reportHtml.includes('bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'), 'Category badge must support light/dark');
   });
 
+  it('UserBugReportsList status badges provide WCAG AA contrast in light and dark mode', () => {
+    for (const status of ['pending', 'in_progress', 'resolved', 'rejected'] as const) {
+      const html = renderToStaticMarkup(
+        React.createElement(UserBugReportsList, {
+          reports: [
+            {
+              id: 1,
+              title: `Report ${status}`,
+              message: 'Testing status contrast',
+              category: 'UI',
+              images: [],
+              status,
+              created_at: '2026-02-15T12:00:00Z',
+            },
+          ],
+          loading: false,
+          onOpenReportModal: () => {},
+        })
+      );
+      if (status === 'pending') {
+        assert.ok(html.includes('text-rose-600 dark:text-rose-400'), 'Pending badge must have contrast text');
+      } else if (status === 'in_progress') {
+        assert.ok(html.includes('text-amber-600 dark:text-amber-400'), 'In progress badge must have contrast text');
+      } else if (status === 'resolved') {
+        assert.ok(html.includes('text-emerald-600 dark:text-emerald-400'), 'Resolved badge must have contrast text');
+      } else if (status === 'rejected') {
+        assert.ok(html.includes('text-slate-600 dark:text-slate-400'), 'Closed badge must have contrast text');
+      }
+    }
+  });
+
   it('KillerDetailView and SurvivorDetailView support light and dark theme hero title and real name', () => {
     const killerHtml = renderToStaticMarkup(
       React.createElement(KillerDetailView, {
@@ -119,5 +152,29 @@ describe('User Profile Theme Support', () => {
     );
     assert.ok(survivorHtml.includes('text-slate-900 dark:text-slate-100 font-mono'), 'Survivor title must have theme classes');
     assert.ok(survivorHtml.includes('text-slate-700 dark:text-slate-200'), 'Survivor real name must have theme classes');
+  });
+
+  it('CharactersHub ownership button and save bar contain light and dark theme classes', () => {
+    const hubPath = path.resolve(__dirname, '../../components/CharactersHub.tsx');
+    const source = fs.readFileSync(hubPath, 'utf-8');
+    assert.ok(source.includes('border-slate-200'), 'CharactersHub must contain border-slate-200');
+    assert.ok(source.includes('dark:border-slate-800'), 'CharactersHub must contain dark:border-slate-800');
+    assert.ok(source.includes('bg-white'), 'CharactersHub must contain bg-white');
+    assert.ok(source.includes('dark:bg-slate-900'), 'CharactersHub must contain dark:bg-slate-900');
+  });
+
+  it('user/page.tsx unauthenticated prompt and avatar reset button support light and dark theme classes', () => {
+    const userPagePath = path.resolve(__dirname, '../../app/[locale]/user/page.tsx');
+    const source = fs.readFileSync(userPagePath, 'utf-8');
+    assert.ok(
+      source.includes('border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100'),
+      'Unauthenticated card must support light and dark theme'
+    );
+    assert.ok(
+      source.includes('bg-rose-50 dark:bg-rose-950/40') &&
+      source.includes('text-rose-600 dark:text-rose-400') &&
+      source.includes('hover:bg-rose-100 dark:hover:bg-rose-900/60'),
+      'Avatar reset button must support light and dark theme contrast'
+    );
   });
 });

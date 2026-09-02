@@ -25,6 +25,7 @@ export default {
   switchLanguage: "Switch Language",
   toggleTheme: "Toggle Dark Mode",
   collapseSidebar: "Collapse Navigation Sidebar",
+  toggleSidebar: "Toggle Navigation Sidebar",
   expandSidebar: "Expand Navigation Sidebar",
   bugReportModalTitle: "Report an Issue / Bug",
   bugCategoryPerks: "Perks & Teachable Data",

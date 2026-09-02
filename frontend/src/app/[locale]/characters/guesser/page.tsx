@@ -24,9 +24,10 @@ import {
 } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { QuestsModal } from '@/components/QuestsModal';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
+import { useDictionary } from '@/context/DictionaryContext';
+import { fetchCached, fetchJson } from '@/services/dataCache';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Interfaces matching backend models
 interface Character {
@@ -136,9 +137,8 @@ const MEME_QUESTIONS = [
 export default function GuesserPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   // Vault Stats for Sidebar
@@ -166,36 +166,34 @@ export default function GuesserPage() {
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   // Load Translations
-  useEffect(() => {
-    getDictionary(locale).then((d) => {
-      setDict(d);
-      document.title = d?.app?.guesserPageTitle || 'LemonDBD - Minigames & Guesser';
-    });
-  }, [locale]);
+  useDocumentTitle(dict?.app?.guesserPageTitle || 'LemonDBD - Minigames & Guesser');
 
   // Fetch Characters, Perks & Streaks Stats
   const loadStatsAndData = useCallback(async () => {
     try {
-      const [perksRes, charsRes, statsRes] = await Promise.all([
-        fetch(`${backendBase}/api/v1/perks?limit=1000`),
-        fetch(`${backendBase}/api/v1/characters`),
-        fetch(`${backendBase}/api/v1/guesser/stats`)
+      // Perks and the roster come from the shared cache (same keys the vault,
+      // roster and randomizer use). Only the guesser's own stats are live --
+      // those change every round, so they are fetched fresh each time.
+      const perksKey = `${backendBase}/api/v1/perks?limit=1000`;
+      const charsKey = `${backendBase}/api/v1/characters`;
+      const [pData, cData, statsRes] = await Promise.all([
+        fetchCached<any>(perksKey, () => fetchJson(perksKey)),
+        fetchCached<any>(charsKey, () => fetchJson(charsKey)),
+        fetch(`${backendBase}/api/v1/guesser/stats`),
       ]);
 
-      if (perksRes.ok) {
-        const pData = await perksRes.json();
-        const list = pData.data || [];
+      {
+        const list = pData?.data || [];
         setPerks(list);
-        setTotalPerksCount(pData.pagination?.total || list.length);
+        setTotalPerksCount(pData?.pagination?.total || list.length);
         setSurvivorCount(list.filter((p: any) => p.category === 'Survivor').length);
         setKillerCount(list.filter((p: any) => p.category === 'Killer').length);
       }
 
-      if (charsRes.ok) {
-        const cData = await charsRes.json();
-        const list = cData.data || [];
+      {
+        const list = cData?.data || [];
         setCharacters(list);
-        setCharacterCount(cData.count || list.length);
+        setCharacterCount(cData?.count || list.length);
       }
 
       if (statsRes.ok) {
@@ -653,18 +651,8 @@ export default function GuesserPage() {
     }
   };
 
-   if (!dict) {
-     return (
-       <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
-         <div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-       </div>
-     );
-   }
-
-
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col md:flex-row dbd-fog-overlay relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay relative overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-30 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-200 via-indigo-100/40 to-slate-100 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-950 z-0"></div>
 
       <Sidebar
@@ -680,9 +668,7 @@ export default function GuesserPage() {
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 z-10 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 z-10 lemon-shell-main"
       >
         <div className="max-w-5xl mx-auto space-y-6">
           

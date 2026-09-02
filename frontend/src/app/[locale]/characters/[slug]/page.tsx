@@ -15,9 +15,11 @@ import {
   CharacterItem,
   PerkItem,
 } from '@/components/character-detail/CharacterSubpageView';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useCachedData } from '@/hooks/useCachedData';
+import { fetchJson } from '@/services/dataCache';
 
 const QuestsModal = dynamic(
   () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
@@ -31,125 +33,53 @@ export default function CharacterDetailPage() {
   const rawSlug = params?.slug;
   const slug = (Array.isArray(rawSlug) ? rawSlug[0] : rawSlug || '') as string;
 
-  const { isCollapsed } = useSidebarState();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
-  const [detailData, setDetailData] = useState<CharacterDetailPayload | null>(null);
-  const [allCharacters, setAllCharacters] = useState<CharacterItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [notFound, setNotFound] = useState<boolean>(false);
 
-  // Vault Stats for Sidebar
-  const [totalPerksCount, setTotalPerksCount] = useState<number>(0);
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
 
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  useEffect(() => {
-    let isMounted = true;
-    getDictionary(locale)
-      .then((res) => {
-        if (isMounted) {
-          setDict(res);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to load dictionary:', err);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [locale]);
+  // Sibling roster for the breadcrumb's prev/next links. Same cache key the
+  // roster page uses, so arriving here from /characters costs nothing.
+  const rosterKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+  const { data: rosterResponse } = useCachedData<{ data?: CharacterItem[] }>(
+    rosterKey,
+    () => fetchJson<{ data?: CharacterItem[] }>(rosterKey)
+  );
+  const allCharacters = rosterResponse?.data ?? [];
 
-  // Load Vault stats & all characters list
+  // Per-slug detail, cached the same way. Revisiting a character you have
+  // already opened -- including via the prev/next breadcrumb links -- renders
+  // from cache on the first frame with no spinner at all.
+  const detailKey = slug
+    ? `${backendBase}/api/v1/characters/${encodeURIComponent(slug)}/detail?lang=${locale}`
+    : null;
+  const {
+    data: detailResponse,
+    loading,
+    error: detailError,
+  } = useCachedData<{ data?: CharacterDetailPayload }>(detailKey, () =>
+    fetchJson<{ data?: CharacterDetailPayload }>(detailKey as string)
+  );
+
+  const detailData = detailResponse?.data ?? null;
+
   useEffect(() => {
-    let isMounted = true;
-    async function loadVaultStats() {
-      try {
-        const [perksRes, charsRes] = await Promise.all([
-          fetch(`${backendBase}/api/v1/perks?limit=1000`),
-          fetch(`${backendBase}/api/v1/characters`),
-        ]);
-        if (!isMounted) return;
-        if (perksRes.ok) {
-          const pData = await perksRes.json();
-          const list: PerkItem[] = pData.data || [];
-          setTotalPerksCount(pData.pagination?.total || list.length);
-          setSurvivorCount(list.filter((p) => p.category === 'Survivor').length);
-          setKillerCount(list.filter((p) => p.category === 'Killer').length);
-        }
-        if (charsRes.ok) {
-          const cData = await charsRes.json();
-          const charList: CharacterItem[] = cData.data || [];
-          setAllCharacters(charList);
-          setCharacterCount(cData.count || charList.length);
-        }
-      } catch (err: unknown) {
-        console.error('Failed to load sidebar vault stats:', err);
-      }
+    if (detailError) {
+      console.error('Failed to fetch character detail:', detailError);
+      setNotFound(true);
+      return;
     }
-    loadVaultStats();
-    return () => {
-      isMounted = false;
-    };
-  }, [backendBase]);
-
-  // Fetch character details by slug
-  useEffect(() => {
-    if (!slug) return;
-    let isMounted = true;
-
-    async function fetchCharacterDetail() {
-      setLoading(true);
-      setNotFound(false);
-      try {
-        const cleanSlug = encodeURIComponent(slug);
-        const res = await fetch(`${backendBase}/api/v1/characters/${cleanSlug}/detail?lang=${locale}`);
-        if (!isMounted) return;
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.data && json.data.character) {
-            setDetailData(json.data);
-            if (typeof document !== 'undefined') {
-              document.title = `${json.data.character.name || 'Character'} - LemonDBD`;
-            }
-          } else {
-            setNotFound(true);
-          }
-        } else {
-          setNotFound(true);
-        }
-      } catch (err: unknown) {
-        console.error('Failed to fetch character detail:', err);
-        if (isMounted) {
-          setNotFound(true);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
+    if (detailResponse) {
+      setNotFound(!detailResponse.data?.character);
     }
+  }, [detailResponse, detailError]);
 
-    fetchCharacterDetail();
-    return () => {
-      isMounted = false;
-    };
-  }, [slug, backendBase, locale]);
-
-  if (!dict) {
-    return (
-      <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-        <aside className="hidden lg:flex w-72 flex-col shrink-0 border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
-        <main className="flex-1 w-full overflow-y-auto p-4 sm:p-6 lg:p-8 lg:pl-72">
-          <CharacterDetailSkeleton />
-        </main>
-      </div>
-    );
-  }
+  useDocumentTitle(
+    detailData?.character?.name ? `${detailData.character.name} - LemonDBD` : undefined
+  );
 
   const t = dict.characterDetail;
 
@@ -160,16 +90,10 @@ export default function CharacterDetailPage() {
         dict={dict}
         activeCategory="characters"
         onOpenQuests={() => setIsQuestsOpen(true)}
-        totalPerksCount={totalPerksCount}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
       />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${
-          isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
       >
         {loading ? (
           <CharacterDetailSkeleton dict={dict} />

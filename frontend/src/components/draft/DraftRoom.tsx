@@ -15,6 +15,7 @@ import {
 import { DraftRoom as DraftRoomType, DraftPhase } from '@/types/draft';
 import { createDraftRoom, getDraftRoom, processDraftAction } from '@/services/draftApi';
 import { Perk } from '@/components/PerkCard';
+import { fetchCached, fetchJson } from '@/services/dataCache';
 
 interface DraftRoomProps {
   initialRoomCode?: string;
@@ -44,19 +45,13 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
   const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
   // Fetch all perks for selection
+  // Shares its cache key with every other full-perk-list read in the app, so
+  // this is free once any of those pages has been visited this session.
   useEffect(() => {
-    async function loadPerks() {
-      try {
-        const res = await fetch(`${backendBase}/api/v1/perks?limit=1000`);
-        if (res.ok) {
-          const data = await res.json();
-          setAllPerks(data.data || []);
-        }
-      } catch (err) {
-        console.error('Failed to fetch perks for draft room:', err);
-      }
-    }
-    loadPerks();
+    const key = `${backendBase}/api/v1/perks?limit=1000`;
+    fetchCached<{ data?: unknown[] }>(key, () => fetchJson(key))
+      .then((data) => setAllPerks((data.data as never[]) || []))
+      .catch((err) => console.error('Failed to fetch perks for draft room:', err));
   }, [backendBase]);
 
   // Load existing room if room code in URL or passed

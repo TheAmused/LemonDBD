@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, Bug, Coffee } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
@@ -32,7 +32,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 }) => {
   const { resolvedTheme, setTheme } = useTheme();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   const [isMounted, setIsMounted] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
@@ -41,12 +40,20 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   const currentLanguage =
     LANGUAGES.find((l) => l.code === currentLocale) ?? LANGUAGES[0];
 
+  // Read the query string from the URL rather than useSearchParams().
+  //
+  // This component sits in the Sidebar, which every page renders, so an
+  // unsuspended useSearchParams() opted *every route in the app* out of static
+  // prerendering (and made the streaks routes fail the build outright once the
+  // layout stopped bailing out early on a null dictionary). The language menu
+  // only renders after a click, so `window.location.search` is always available
+  // where this is actually used, and it never runs during prerender.
   const redirectedPathName = (locale: string) => {
     if (!pathname) return '/';
     const segments = pathname.split('/');
     segments[1] = locale;
-    const query = searchParams?.toString();
-    return segments.join('/') + (query ? `?${query}` : '');
+    const query = typeof window !== 'undefined' ? window.location.search : '';
+    return segments.join('/') + query;
   };
 
   useEffect(() => {

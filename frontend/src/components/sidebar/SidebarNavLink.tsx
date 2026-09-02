@@ -18,7 +18,7 @@ export interface SidebarNavLinkProps {
   onClick?: () => void;
 }
 
-export const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({
+const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   id,
   label,
   icon: Icon,
@@ -75,3 +75,7 @@ export const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({
     </button>
   );
 };
+
+/** Memoised: the sidebar re-renders with every page, but these props
+    only change when the route or the dictionary does. */
+export const SidebarNavLink = React.memo(SidebarNavLinkBase);

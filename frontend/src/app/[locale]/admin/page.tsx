@@ -11,9 +11,7 @@ import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
-import { getDictionary } from '@/i18n/get-dictionary';
 import { Locale } from '@/i18n/config';
-import { useSidebarState } from '@/hooks/useSidebarState';
 import type { Dictionary } from '@/locales/types';
 import type {
   AdminStats,
@@ -23,6 +21,8 @@ import type {
   ActionMessage,
 } from '@/types/admin';
 import { Users, Bug, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 // Only the "Users" tab (and its create/toggle-role modal chain) is visible
 // on first paint. The other four admin subtabs, and every modal that only
@@ -66,10 +66,9 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   const resolvedParams = use(params);
   const router = useRouter();
   const currentLocale = (resolvedParams?.locale as Locale) || 'en';
-  const { isCollapsed } = useSidebarState();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
 
-  const [dict, setDict] = useState<Dictionary | null>(null);
+  const dict = useDictionary();
   const [activeTab, setActiveTab] = useState<AdminTab>('users');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [actionMessage, setActionMessage] = useState<ActionMessage | null>(null);
@@ -106,18 +105,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  useEffect(() => {
-    let isMounted = true;
-    getDictionary(currentLocale).then((d) => {
-      if (isMounted) {
-        setDict(d);
-        document.title = d?.app?.adminPageTitle || 'LemonDBD - Admin Control Center';
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, [currentLocale]);
+  useDocumentTitle(dict?.app?.adminPageTitle || 'LemonDBD - Admin Control Center');
 
   useEffect(() => {
     if (!isLoading && (!isAuthenticated || !isAdmin)) {
@@ -491,8 +479,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       <Sidebar currentLocale={currentLocale} dict={dict} activeCategory="admin" />
 
       <main
-        className={`flex-1 w-full overflow-y-auto transition-all duration-300 p-4 sm:p-6 lg:p-8 ${isCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-          }`}
+        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
         id="main-admin-content"
       >
         <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">

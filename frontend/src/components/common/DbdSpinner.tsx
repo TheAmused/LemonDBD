@@ -2,7 +2,9 @@
 // frontend/src/components/common/DbdSpinner.tsx
 
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+// Animations are plain CSS (see the `.dbd-spinner-*` rules in globals.css) so
+// this component -- which every route's loading.tsx renders -- does not drag
+// the framer-motion runtime into the very chunk the spinner waits on.
 import { LemonIcon } from '@/components/LemonIcon';
 import type { Dictionary } from '@/locales/types';
 
@@ -81,8 +83,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
   ariaLabel,
   minHeight,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
-
   // Resolve numerical or responsive dimension
   let dimension: number = 150;
   let isResponsive = false;
@@ -268,19 +268,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
           />
 
           {/* 2. Counter-Rotating Outer Rune Ring */}
-          <motion.g
-            animate={
-              shouldReduceMotion
-                ? { opacity: [0.4, 0.8, 0.4] }
-                : { rotate: -360 }
-            }
-            transition={
-              shouldReduceMotion
-                ? { duration: 3, repeat: Infinity, ease: 'easeInOut' }
-                : { duration: 14, repeat: Infinity, ease: 'linear' }
-            }
-            style={{ transformOrigin: '80px 80px' }}
-          >
+          <g className="dbd-spinner-runes">
             <circle
               cx="80"
               cy="80"
@@ -295,7 +283,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             <line x1="80" y1="148" x2="80" y2="154" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
             <line x1="6" y1="80" x2="12" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
             <line x1="148" y1="80" x2="154" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
-          </motion.g>
+          </g>
 
           {/* 3. Base Skill Check Track */}
           <circle
@@ -349,18 +337,9 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
           />
 
           {/* 7. Sweeping Skill Check Needle */}
-          <motion.g
-            animate={
-              shouldReduceMotion
-                ? { opacity: [0.6, 1, 0.6] }
-                : { rotate: 360 }
-            }
-            transition={
-              shouldReduceMotion
-                ? { duration: 2, repeat: Infinity, ease: 'easeInOut' }
-                : { duration: needleSpeed, repeat: Infinity, ease: 'linear' }
-            }
-            style={{ transformOrigin: '80px 80px' }}
+          <g
+            className="dbd-spinner-needle"
+            style={{ '--dbd-needle-speed': `${needleSpeed}s` } as React.CSSProperties}
           >
             <path
               d="M 80 80 L 80 18"
@@ -377,33 +356,17 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             />
 
             <circle cx="80" cy="80" r="6" fill={colorMap.needle} />
-          </motion.g>
+          </g>
         </svg>
 
         {/* 8. Pulsing Central Entity Emblem / LemonDBD Logo */}
         {showEmblem && (
-          <motion.div
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-            animate={
-              shouldReduceMotion
-                ? { opacity: [0.85, 1, 0.85] }
-                : {
-                    scale: [0.92, 1.09, 0.92],
-                    filter: [
-                      `drop-shadow(0 0 3px ${colorMap.glow})`,
-                      `drop-shadow(0 0 16px ${colorMap.glow})`,
-                      `drop-shadow(0 0 3px ${colorMap.glow})`,
-                    ],
-                  }
-            }
-            transition={{
-              duration: 1.6,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
+          <div
+            className="dbd-spinner-emblem absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ filter: `drop-shadow(0 0 10px ${colorMap.glow})` }}
           >
-            <LemonIcon size={emblemSize} className="filter drop-shadow-lg" />
-          </motion.div>
+            <LemonIcon size={emblemSize} />
+          </div>
         )}
       </div>
 
@@ -411,13 +374,11 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       {(label || sublabel || (layout !== 'compact' && resolvedLabel)) && (
         <div className="mt-5 flex flex-col items-center text-center space-y-1.5 max-w-sm sm:max-w-md px-2">
           {resolvedLabel && (
-            <motion.p
-              animate={{ opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-              className={`text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-md`}
+            <p
+              className={`dbd-spinner-label text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-md`}
             >
               {resolvedLabel}
-            </motion.p>
+            </p>
           )}
 
           {sublabel && (

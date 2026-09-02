@@ -168,7 +168,7 @@ export default function UserProfilePage() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay">
+      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
         <div className="max-w-md w-full rounded-3xl border border-slate-800 bg-slate-950/90 p-8 backdrop-blur-xl shadow-2xl space-y-4">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30">
             <LemonIcon className="h-10 w-10 text-amber-400" />
@@ -206,7 +206,7 @@ export default function UserProfilePage() {
   const hasCustomAvatar = Boolean(user.avatar_url && user.avatar_url !== 'default_avatar');
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={currentLocale}
         dict={dict}

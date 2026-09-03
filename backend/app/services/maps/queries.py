@@ -10,6 +10,7 @@ from app.core.json_provider import safe_json_loads
 from app.models import MapRealm, Realm
 from app.services.maps.data import SAMPLE_MAPS
 from app.services.maps.seeder import seed_maps_if_empty
+from app.services.translations.translation_service import SUPPORTED_LOCALES
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +37,20 @@ def fetch_maps(
                     stmt = stmt.where(func.lower(MapRealm.source) == source.lower())
                 if search and search.strip():
                     term = f"%{search.strip().lower()}%"
-                    stmt = stmt.where(
-                        or_(
-                            func.lower(MapRealm.name).ilike(term),
-                            func.lower(MapRealm.realm).ilike(term),
+                    conditions = [
+                        func.lower(MapRealm.name).ilike(term),
+                        func.lower(MapRealm.realm).ilike(term),
+                    ]
+                    for translated_lang in SUPPORTED_LOCALES:
+                        if translated_lang == "en":
+                            continue
+                        conditions.append(
+                            func.lower(MapRealm.translations[translated_lang]["name"].astext).ilike(term)
                         )
-                    )
+                        conditions.append(
+                            func.lower(MapRealm.translations[translated_lang]["realm"].astext).ilike(term)
+                        )
+                    stmt = stmt.where(or_(*conditions))
                 stmt = stmt.order_by(MapRealm.name.asc())
                 rows = db.session.scalars(stmt).unique().all()
                 # Only fall through to the legacy seed path if the table is fully unseeded.

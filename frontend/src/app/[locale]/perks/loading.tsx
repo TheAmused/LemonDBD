@@ -4,14 +4,12 @@ import { DbdSpinner } from '@/components/DbdSpinner';
 
 export default function PerksLoading() {
   return (
-    <div className="h-dvh overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <div
         aria-hidden="true"
-        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-slate-200/80 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/60"
+        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface/80 backdrop-blur-sm"
       />
-      {/* Matches the sidebar's mobile header so nothing shifts vertically
-          when the real Sidebar mounts. */}
-      <div aria-hidden="true" className="h-16 shrink-0 border-b border-slate-800/60 lg:hidden" />
+      <div aria-hidden="true" className="h-16 shrink-0 border-b border-border-color lg:hidden" />
       <main className="flex h-full min-h-0 w-full flex-1 flex-col items-center justify-center p-6 lemon-shell-main">
         <DbdSpinner
           size="responsive"

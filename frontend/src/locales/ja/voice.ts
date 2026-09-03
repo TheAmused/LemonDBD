@@ -26,5 +26,6 @@ export default {
   useNativeEngine: "標準 Web Speech API を使用",
   privacyNotice: "プライバシーに関する注記: ローカルクライアントモデルはすべての音声コマンドをブラウザ内・完全オフラインで処理します。",
   holdOrPress: "[V]キー長押し または マイクをクリック",
+  holdVToTalkHint: "{key} キーを押しながら話す、またはマイクをタップしてマップ名を話す",
   micBlocked: "マイクへのアクセスがブロックされています。マイクの使用を許可してください。",
 } as const;

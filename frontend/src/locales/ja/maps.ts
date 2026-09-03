@@ -74,6 +74,7 @@ export default {
   zoomOut25: '縮小 (-25%)',
   searchTextTab: '検索',
   searchVoiceTab: '音声',
+  searchModeAria: '検索モード',
   expandRealmAria: 'レルムを展開',
   collapseRealmAria: 'レルムを折りたたむ',
 } as const;

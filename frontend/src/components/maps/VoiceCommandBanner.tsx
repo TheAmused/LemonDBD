@@ -49,6 +49,11 @@ export interface VoiceCommandBannerProps {
   availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
   className?: string;
   dict?: Dictionary | any;
+  /** False when the banner is kept mounted but hidden (e.g. behind another
+   * mode's UI). Disables the "hold V to talk" hotkey and tears down any
+   * in-progress mic session -- both would otherwise keep responding while
+   * the banner isn't visible. Defaults to true. */
+  active?: boolean;
 }
 
 export type VoiceStatusState =
@@ -166,6 +171,28 @@ function playMatchSuccessSound() {
   }
 }
 
+const HOLD_KEY_HINT_FALLBACK = 'Hold {key} to talk, or tap the mic and say a map name';
+
+/** Splits a "...{key}..." hint string around the `{key}` placeholder and
+ * renders the key as a styled <kbd> chip inline, so it reads as part of
+ * the sentence rather than a separate control. */
+function renderHoldKeyHint(template: string | undefined, key: string): React.ReactNode {
+  const text = template || HOLD_KEY_HINT_FALLBACK;
+  const [before, after] = text.split('{key}');
+  if (after === undefined) {
+    return <span className="truncate">{text}</span>;
+  }
+  return (
+    <>
+      {before}
+      <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-amber-600 dark:text-amber-400 shadow-xs">
+        {key}
+      </kbd>
+      <span className="truncate">{after}</span>
+    </>
+  );
+}
+
 export function VoiceCommandBanner({
   locale = 'en',
   currentSource,
@@ -175,6 +202,7 @@ export function VoiceCommandBanner({
   availableMaps,
   className = '',
   dict,
+  active = true,
 }: VoiceCommandBannerProps) {
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatusState>('idle');
   const [liveTranscript, setLiveTranscript] = useState<string>('');
@@ -234,41 +262,56 @@ export function VoiceCommandBanner({
       setModelProgress(info);
     });
 
-    if (compat.recommendedEngine === 'client-model') {
-      initClientSpeechModel(locale);
-    }
-
     return () => {
       unsubscribe();
     };
-  }, [locale]);
-
-  useEffect(() => {
-    return () => {
-      isHoldingRef.current = false;
-      isListeningRef.current = false;
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.onstart = null;
-          recognitionRef.current.onresult = null;
-          recognitionRef.current.onerror = null;
-          recognitionRef.current.onend = null;
-          recognitionRef.current.abort();
-        } catch { }
-      }
-      if (audioSessionRef.current) {
-        try {
-          audioSessionRef.current.stop();
-        } catch { }
-      }
-      if (resetTimerRef.current) {
-        clearTimeout(resetTimerRef.current);
-      }
-      if (silenceTimerRef.current) {
-        clearTimeout(silenceTimerRef.current);
-      }
-    };
   }, []);
+
+  // Split out from the compat-detection effect above so a banner that's
+  // mounted-but-hidden (see the `active` prop doc) doesn't eagerly download
+  // the client speech model before the user has actually switched to voice
+  // mode -- it only loads once `active` first turns true.
+  useEffect(() => {
+    if (active && activeEngine === 'client-model') {
+      initClientSpeechModel(locale);
+    }
+  }, [active, activeEngine, locale]);
+
+  const cleanupListening = useCallback(() => {
+    isHoldingRef.current = false;
+    isListeningRef.current = false;
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.onstart = null;
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.onend = null;
+        recognitionRef.current.abort();
+      } catch { }
+    }
+    if (audioSessionRef.current) {
+      try {
+        audioSessionRef.current.stop();
+      } catch { }
+    }
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+    }
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+    }
+  }, []);
+
+  useEffect(() => cleanupListening, [cleanupListening]);
+
+  // Kept-mounted-but-hidden banners (see the `active` prop doc) must not
+  // keep listening once they're no longer the visible mode.
+  useEffect(() => {
+    if (!active) {
+      cleanupListening();
+      setVoiceStatus('idle');
+    }
+  }, [active, cleanupListening]);
 
   const executeMatch = useCallback((result: MatchResult) => {
     setMatchedResult(result);
@@ -683,6 +726,8 @@ export function VoiceCommandBanner({
   );
 
   useEffect(() => {
+    if (!active) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       const isInput =
@@ -729,7 +774,7 @@ export function VoiceCommandBanner({
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [startListening, stopListeningAndProcess]);
+  }, [active, startListening, stopListeningAndProcess]);
 
   const rawVoiceDict = (dict?.voice || {}) as Record<string, string>;
 
@@ -738,10 +783,10 @@ export function VoiceCommandBanner({
       badge: rawVoiceDict.idleReady || '',
       badgeClass:
         'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
-      dotClass: 'bg-cyan-500 dark:bg-cyan-400',
+      dotClass: 'bg-emerald-500 dark:bg-emerald-400',
       icon: Mic,
       buttonColor:
-        'bg-gradient-to-br from-cyan-600 via-cyan-700 to-blue-800 text-white shadow-cyan-900/30 ring-cyan-500/30 hover:from-cyan-500 hover:to-blue-700',
+        'bg-gradient-to-br from-[#2f6f7d] to-[#16394a] text-white shadow-slate-900/40 ring-slate-500/30 hover:brightness-110',
     },
     listening: {
       badge: rawVoiceDict.listeningSpeakNow || '',
@@ -802,12 +847,12 @@ export function VoiceCommandBanner({
   return (
     <section
       aria-label={dict?.maps?.voiceEngineAria || ''}
-      className={`relative overflow-hidden rounded-3xl border border-cyan-500/30 bg-white/95 dark:bg-slate-900/90 p-4 sm:p-5 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-cyan-950/20 dark:shadow-cyan-950/40 transition-all duration-300 ${className}`}
+      className={`relative flex w-full flex-col overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 px-3 sm:px-4 pt-3 sm:pt-4 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-slate-950/10 dark:shadow-slate-950/40 transition-all duration-300 ${className}`}
     >
-      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
 
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800/80">
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800/80">
         <div className="flex flex-wrap items-center gap-2">
           <div
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-black tracking-wide font-mono transition-all ${currentCfg.badgeClass}`}
@@ -825,13 +870,13 @@ export function VoiceCommandBanner({
                 : dict?.voice?.clientModelTooltip || ''
             }
             aria-label={dict?.voice?.viewEngineInfo || ''}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${activeEngine === 'web-speech'
-                ? 'border-cyan-500/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/20'
+            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${activeEngine === 'web-speech'
+                ? 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20'
                 : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
               }`}
           >
             {activeEngine === 'web-speech' ? (
-              <Globe className="h-3 w-3 text-cyan-500" aria-hidden="true" />
+              <Globe className="h-3 w-3 text-amber-500" aria-hidden="true" />
             ) : (
               <Cpu className="h-3 w-3 text-emerald-500" aria-hidden="true" />
             )}
@@ -855,7 +900,7 @@ export function VoiceCommandBanner({
             onClick={() => setSoundEnabled((prev) => !prev)}
             title={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
             aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
-            className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-500"
+            className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
           >
             {soundEnabled ? (
               <Volume2 className="h-3 w-3" aria-hidden="true" />
@@ -879,7 +924,7 @@ export function VoiceCommandBanner({
               onClick={() => onSourceChange('hens333')}
               aria-pressed={currentSource === 'hens333'}
               className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'hens333'
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-sm font-black'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm font-black'
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
             >
@@ -896,24 +941,12 @@ export function VoiceCommandBanner({
               <Lock className="h-2.5 w-2.5" aria-hidden="true" />
               {dict?.maps?.sourceLemonDbd || ''}
             </button>
-
-            <button
-              type="button"
-              onClick={() => onSourceChange('all')}
-              aria-pressed={currentSource === 'all'}
-              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'all'
-                  ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white shadow-sm font-black'
-                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-            >
-              {dict?.maps?.all || ''}
-            </button>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 my-3.5 flex flex-col items-center gap-3">
-        <div className="grid w-full grid-cols-3 items-center gap-4">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-2 py-3 sm:py-4">
+        <div className="flex w-full items-center justify-center gap-3 sm:gap-5">
           <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
             {[12, 22, 16, 28, 18, 32, 24, 14].map((h, i) => {
               const dynamicHeight =
@@ -921,7 +954,7 @@ export function VoiceCommandBanner({
                   ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
                   : voiceStatus === 'matched'
                     ? 24
-                    : 4;
+                    : h;
               return (
                 <span
                   key={`left-wave-${i}`}
@@ -932,12 +965,9 @@ export function VoiceCommandBanner({
                         ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
                         : 'none',
                   }}
-                  className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
-                      ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                      : voiceStatus === 'matched'
-                        ? 'bg-emerald-400'
-                        : 'bg-slate-300 dark:bg-slate-700/60'
-                    }`}
+                  className={`w-1 rounded-full transition-all duration-150 ${
+                    voiceStatus === 'matched' ? 'bg-emerald-400' : 'bg-gradient-to-t from-amber-500 to-emerald-400'
+                  }`}
                 />
               );
             })}
@@ -999,7 +1029,7 @@ export function VoiceCommandBanner({
               }}
               aria-label={currentCfg.badge || ''}
               aria-pressed={voiceStatus === 'listening'}
-              className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl shadow-xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-cyan-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
+              className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl shadow-xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
             >
               <StatusIcon
                 className={`h-5 w-5 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
@@ -1007,25 +1037,17 @@ export function VoiceCommandBanner({
               />
             </button>
 
-            {voiceStatus === 'idle' && (
-              <kbd
-                className="absolute left-full ml-2 rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1 py-0.2 text-[9px] font-mono text-cyan-600 dark:text-cyan-300 shadow-xs"
-                aria-hidden="true"
-              >
-                {dict?.maps?.keyV || 'V'}
-              </kbd>
-            )}
            </div>
           </div>
 
-          <div className="hidden sm:flex items-center justify-end gap-1 h-9 px-1" aria-hidden="true">
+          <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
             {[14, 24, 32, 18, 28, 16, 22, 12].map((h, i) => {
               const dynamicHeight =
                 voiceStatus === 'listening'
                   ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
                   : voiceStatus === 'matched'
                     ? 24
-                    : 4;
+                    : h;
               return (
                 <span
                   key={`right-wave-${i}`}
@@ -1036,12 +1058,9 @@ export function VoiceCommandBanner({
                         ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
                         : 'none',
                   }}
-                  className={`w-1 rounded-full transition-all duration-150 ${voiceStatus === 'listening'
-                      ? 'bg-gradient-to-t from-cyan-500 to-emerald-400'
-                      : voiceStatus === 'matched'
-                        ? 'bg-emerald-400'
-                        : 'bg-slate-300 dark:bg-slate-700/60'
-                    }`}
+                  className={`w-1 rounded-full transition-all duration-150 ${
+                    voiceStatus === 'matched' ? 'bg-emerald-400' : 'bg-gradient-to-t from-amber-500 to-emerald-400'
+                  }`}
                 />
               );
             })}
@@ -1134,11 +1153,9 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'idle' && (
-              <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
-                <span className="truncate">
-                  {rawVoiceDict.holdVToTalk || ''}
-                </span>
-              </div>
+              <p className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 font-mono">
+                {renderHoldKeyHint(rawVoiceDict.holdVToTalkHint, dict?.maps?.keyV || 'V')}
+              </p>
             )}
         </div>
       </div>

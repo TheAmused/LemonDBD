@@ -4,7 +4,7 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
   const timestamp = Date.now();
   const rand = Math.floor(Math.random() * 100000);
   const username = `k6_u_${vuId}_${iter}_${rand}`.substring(0, 30);
-  const email = `k6_${vuId}_${iter}_${timestamp}_${rand}@test.local`;
+  const email = `k6_${vuId}_${iter}_${timestamp}_${rand}@example.com`;
   const password = 'K6P@ssword123!';
 
   const startTime = Date.now();
@@ -15,6 +15,19 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
     email: email,
     password: password,
   }, { tags: { type: 'auth', operation: 'register' } });
+
+  let regToken = null;
+  if (regRes.status >= 200 && regRes.status < 300) {
+    try {
+      const regBody = typeof regRes.body === 'string' ? JSON.parse(regRes.body) : regRes.body;
+      regToken = regBody.token || regBody.access_token || (regBody.data && regBody.data.token) || null;
+    } catch (e) {
+      regToken = null;
+    }
+  } else {
+    authDuration.add(Date.now() - startTime);
+    return { username, email, token: null };
+  }
 
   // Login
   const loginRes = defaultClient.post('/api/v1/auth/login', {
@@ -33,6 +46,9 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
       token = null;
     }
   }
+
+  // Fall back to registration token if login response didn't contain token
+  token = token || regToken;
 
   return { username, email, token };
 }

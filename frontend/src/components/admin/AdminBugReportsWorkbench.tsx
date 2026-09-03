@@ -29,24 +29,24 @@ interface StatusConfigItem {
 
 const STATUS_CONFIG: Record<string, StatusConfigItem> = {
   pending: {
-    label: 'Pending Review',
-    badge: 'border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400',
+    label: 'Pending',
+    badge: 'border-rose-500/40 bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400',
     dot: 'bg-rose-500',
   },
   in_progress: {
     label: 'In Progress',
-    badge: 'border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400',
+    badge: 'border-amber-500/40 bg-amber-50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-400',
     dot: 'bg-amber-500',
   },
   resolved: {
     label: 'Resolved',
-    badge: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+    badge: 'border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400',
     dot: 'bg-emerald-500',
   },
   rejected: {
     label: 'Rejected',
-    badge: 'border-slate-300 dark:border-slate-500/40 bg-slate-100 dark:bg-slate-500/10 text-slate-600 dark:text-slate-400',
-    dot: 'bg-slate-500',
+    badge: 'border-border-color bg-bg-elevated text-text-secondary',
+    dot: 'bg-slate-400',
   },
 };
 
@@ -110,15 +110,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           type="button"
           onClick={() => onStatusFilterChange('pending')}
           aria-pressed={bugStatusFilter === 'pending'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-rose-500 ${bugStatusFilter === 'pending'
-              ? 'border-rose-500 bg-rose-500/10 shadow-md'
-              : 'border-rose-200 dark:border-rose-500/20 bg-rose-50/50 dark:bg-rose-950/20 hover:border-rose-300 dark:hover:border-rose-500/40'
-            }`}
+          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-red ${
+            bugStatusFilter === 'pending'
+              ? 'border-rose-500 bg-rose-100 text-rose-900 dark:bg-rose-500/20 dark:text-rose-300 shadow-sm ring-1 ring-rose-500/30'
+              : 'border-rose-200 bg-rose-50/70 text-rose-800 dark:border-rose-500/20 dark:bg-rose-950/20 dark:text-rose-400 hover:border-rose-300'
+          }`}
         >
-          <span className="text-xs font-bold uppercase text-rose-600 dark:text-rose-400 flex items-center gap-1.5">
+          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <HelpCircle className="h-4 w-4" /> {dict?.admin?.statusPending || dict?.admin?.pending || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400 font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black font-mono mt-1">
             {bugStats?.pending ?? 0}
           </p>
         </button>
@@ -127,15 +128,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           type="button"
           onClick={() => onStatusFilterChange('in_progress')}
           aria-pressed={bugStatusFilter === 'in_progress'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-amber-500 ${bugStatusFilter === 'in_progress'
-              ? 'border-amber-500 bg-amber-500/10 shadow-md'
-              : 'border-amber-200 dark:border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/20 hover:border-amber-300 dark:hover:border-amber-500/40'
-            }`}
+          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+            bugStatusFilter === 'in_progress'
+              ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-300 shadow-sm ring-1 ring-amber-500/30'
+              : 'border-amber-200 bg-amber-50/70 text-amber-800 dark:border-amber-500/20 dark:bg-amber-950/20 dark:text-amber-400 hover:border-amber-300'
+          }`}
         >
-          <span className="text-xs font-bold uppercase text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <Clock className="h-4 w-4" /> {dict?.admin?.statusInProgress || dict?.admin?.inProgress || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black font-mono mt-1">
             {bugStats?.in_progress ?? 0}
           </p>
         </button>
@@ -144,15 +146,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           type="button"
           onClick={() => onStatusFilterChange('resolved')}
           aria-pressed={bugStatusFilter === 'resolved'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-emerald-500 ${bugStatusFilter === 'resolved'
-              ? 'border-emerald-500 bg-emerald-500/10 shadow-md'
-              : 'border-emerald-200 dark:border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-950/20 hover:border-emerald-300 dark:hover:border-emerald-500/40'
-            }`}
+          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+            bugStatusFilter === 'resolved'
+              ? 'border-emerald-500 bg-emerald-100 text-emerald-900 dark:bg-emerald-500/20 dark:text-emerald-300 shadow-sm ring-1 ring-emerald-500/30'
+              : 'border-emerald-200 bg-emerald-50/70 text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-950/20 dark:text-emerald-400 hover:border-emerald-300'
+          }`}
         >
-          <span className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <CheckCircle className="h-4 w-4" /> {dict?.admin?.statusResolved || dict?.admin?.resolved || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black font-mono mt-1">
             {bugStats?.resolved ?? 0}
           </p>
         </button>
@@ -161,15 +164,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           type="button"
           onClick={() => onStatusFilterChange('all')}
           aria-pressed={bugStatusFilter === 'all'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-slate-500 ${bugStatusFilter === 'all'
-              ? 'border-slate-500 bg-slate-100 dark:bg-slate-800/50 shadow-md'
-              : 'border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
-            }`}
+          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-border-color ${
+            bugStatusFilter === 'all'
+              ? 'border-border-color bg-bg-elevated text-text-primary shadow-sm ring-1 ring-border-color'
+              : 'border-border-color bg-bg-surface text-text-secondary hover:border-border-subtle'
+          }`}
         >
-          <span className="text-xs font-bold uppercase text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+          <span className="text-xs font-bold uppercase flex items-center gap-1.5">
             <Bug className="h-4 w-4" /> {dict?.admin?.totalTickets || ''}
           </span>
-          <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-200 font-mono mt-1">
+          <p className="text-xl sm:text-2xl font-black text-text-primary font-mono mt-1">
             {bugStats?.total ?? 0}
           </p>
         </button>
@@ -178,22 +182,22 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
       {/* Master-Detail Split Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Pane: Ticket Feed */}
-        <div className="lg:col-span-5 flex flex-col rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 p-4 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-4">
-          <div className="flex flex-col gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm dark:shadow-2xl space-y-4">
+          <div className="flex flex-col gap-2.5 pb-3 border-b border-border-color">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
               <input
                 type="text"
                 aria-label={dict?.admin?.searchTicketsPlaceholder || ''}
                 value={bugSearch}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder={dict?.admin?.searchTicketsPlaceholder || ''}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/80 py-1.5 pl-9 pr-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-rose-500 focus:outline-none shadow-inner"
+                className="w-full rounded-xl border border-border-color bg-bg-primary py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
               />
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <label htmlFor="bug-status-filter-select" className="flex items-center gap-1 text-[11px] font-bold text-slate-600 dark:text-slate-400">
+              <label htmlFor="bug-status-filter-select" className="flex items-center gap-1 text-[11px] font-bold text-text-secondary">
                 <Filter className="h-3 w-3" />
                 <span>{dict?.admin?.filterLabel || ''}</span>
               </label>
@@ -201,7 +205,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 id="bug-status-filter-select"
                 value={bugStatusFilter}
                 onChange={(e) => onStatusFilterChange(e.target.value)}
-                className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/80 py-1 px-2.5 text-xs text-slate-900 dark:text-slate-200 focus:border-rose-500 focus:outline-none cursor-pointer [&>option]:bg-white [&>option]:text-slate-900 dark:[&>option]:bg-slate-900 dark:[&>option]:text-slate-100"
+                className="rounded-lg border border-border-color bg-bg-primary py-1.5 px-3 text-xs text-text-primary focus:border-accent-red focus:outline-none cursor-pointer"
               >
                 <option value="all">{dict?.admin?.statusAll || ''}</option>
                 <option value="pending">{dict?.admin?.statusPending || ''}</option>
@@ -214,11 +218,11 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
 
           <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
             {loading ? (
-              <div className="py-12 text-center text-xs text-slate-500 font-mono">
+              <div className="py-12 text-center text-xs text-text-muted font-mono">
                 {dict?.admin?.loadingTickets || ''}
               </div>
             ) : bugReports.length === 0 ? (
-              <div className="py-12 text-center text-xs text-slate-500 font-mono">
+              <div className="py-12 text-center text-xs text-text-muted font-mono">
                 {dict?.admin?.noBugReports || ''}
               </div>
             ) : (
@@ -240,15 +244,16 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                         onSelectBug(report.id);
                       }
                     }}
-                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-rose-500 ${isSelected
-                        ? 'border-rose-500/80 bg-rose-50 dark:bg-rose-950/30 shadow-md ring-1 ring-rose-500/20'
-                        : 'border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-950/40 hover:border-slate-300 dark:hover:border-slate-700'
-                      }`}
+                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer text-left space-y-2 focus:outline-none focus:ring-2 focus:ring-accent-red ${
+                      isSelected
+                        ? 'border-accent-red bg-rose-50/90 dark:bg-rose-950/30 shadow-sm ring-1 ring-accent-red/30'
+                        : 'border-border-subtle bg-bg-primary hover:border-border-color'
+                    }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-1.5">
                         <span className={`h-2 w-2 rounded-full ${cfg.dot}`} />
-                        <span className="font-mono text-xs font-black text-slate-700 dark:text-slate-300">
+                        <span className="font-mono text-xs font-black text-text-primary">
                           #{report.id}
                         </span>
                       </div>
@@ -259,21 +264,21 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">
+                    <h4 className="text-xs font-black text-text-primary truncate">
                       {report.title}
                     </h4>
 
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    <p className="text-[11px] text-text-secondary line-clamp-2 leading-relaxed">
                       {report.message}
                     </p>
 
-                    <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                      <span className="font-semibold text-slate-700 dark:text-slate-300 truncate max-w-[140px]">
+                    <div className="flex items-center justify-between text-[10px] text-text-muted pt-1">
+                      <span className="font-semibold text-text-secondary truncate max-w-[140px]">
                         {report.reporter_name}
                       </span>
                       <div className="flex items-center gap-2">
                         {report.images?.length > 0 && (
-                          <span className="flex items-center gap-0.5 text-slate-500 dark:text-slate-400">
+                          <span className="flex items-center gap-0.5 text-text-muted">
                             <ImageIcon className="h-3 w-3" />
                             {report.images.length}
                           </span>
@@ -288,8 +293,8 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           </div>
 
           {totalBugReports > 20 && (
-            <div className="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800 text-xs">
-              <span className="text-slate-600 dark:text-slate-400 text-[11px]">
+            <div className="flex items-center justify-between pt-3 border-t border-border-color text-xs">
+              <span className="text-text-secondary text-[11px]">
                 {dict?.admin?.pageLabel || ''} {bugPage} {dict?.admin?.ofLabel || ''}{' '}
                 {Math.ceil(totalBugReports / 20)}
               </span>
@@ -299,7 +304,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   onClick={() => onPageChange(Math.max(1, bugPage - 1))}
                   disabled={bugPage === 1}
                   aria-label={dict?.admin?.prevPage || ''}
-                  className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800 disabled:opacity-30 cursor-pointer focus:outline-none focus:ring-1 focus:ring-rose-500 shadow-sm"
+                  className="p-1.5 rounded-lg border border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated disabled:opacity-30 cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red shadow-xs"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
                 </button>
@@ -308,7 +313,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   onClick={() => onPageChange(bugPage + 1)}
                   disabled={bugPage * 20 >= totalBugReports}
                   aria-label={dict?.admin?.nextPage || ''}
-                  className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-transparent dark:text-slate-300 dark:hover:bg-slate-800 disabled:opacity-30 cursor-pointer focus:outline-none focus:ring-1 focus:ring-rose-500 shadow-sm"
+                  className="p-1.5 rounded-lg border border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated disabled:opacity-30 cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red shadow-xs"
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
@@ -320,26 +325,26 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
         {/* Right Pane: Ticket Inspector */}
         <div className="lg:col-span-7 sticky top-6">
           {selectedBug ? (
-            <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-5 sm:p-6 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div className="rounded-3xl border border-border-color bg-bg-surface p-5 sm:p-6 shadow-sm dark:shadow-2xl space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-rose-600 dark:text-rose-400">
+                    <span className="font-mono text-xs font-bold text-accent-red">
                       #{selectedBug.id}
                     </span>
-                    <span className="rounded-md bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-transparent px-2 py-0.5 text-[10px] font-bold">
+                    <span className="rounded-md bg-bg-elevated text-text-secondary border border-border-color px-2 py-0.5 text-[10px] font-bold">
                       {selectedBug.category}
                     </span>
-                    <span className="text-[11px] text-slate-500">
+                    <span className="text-[11px] text-text-muted">
                       {new Date(selectedBug.created_at).toLocaleString()}
                     </span>
                   </div>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
+                  <h3 className="text-base sm:text-lg font-black text-text-primary">
                     {selectedBug.title}
                   </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs text-text-secondary mt-0.5">
                     {dict?.admin?.reportedBy || ''}{' '}
-                    <strong className="text-slate-900 dark:text-slate-200">{selectedBug.reporter_name}</strong>{' '}
+                    <strong className="text-text-primary">{selectedBug.reporter_name}</strong>{' '}
                     ({selectedBug.reporter_email || dict?.admin?.noEmailProvided || ''})
                   </p>
                 </div>
@@ -349,7 +354,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     value={selectedBug.status}
                     aria-label={dict?.admin?.updateStatus || ''}
                     onChange={(e) => onUpdateBug(selectedBug.id, e.target.value)}
-                    className="rounded-xl px-3 py-1.5 text-xs font-black uppercase tracking-wider border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 focus:border-rose-500 focus:outline-none cursor-pointer shadow-sm [&>option]:bg-white [&>option]:text-slate-900 dark:[&>option]:bg-slate-900 dark:[&>option]:text-slate-100"
+                    className="rounded-xl px-3 py-1.5 text-xs font-black uppercase tracking-wider border border-border-color bg-bg-primary text-text-primary focus:border-accent-red focus:outline-none cursor-pointer shadow-xs"
                   >
                     <option value="pending">{dict?.admin?.statusPending || ''}</option>
                     <option value="in_progress">{dict?.admin?.statusInProgress || ''}</option>
@@ -362,7 +367,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     onClick={() => onDeleteBug(selectedBug.id)}
                     title={dict?.admin?.deleteBugReportTitle || ''}
                     aria-label={dict?.admin?.deleteBugReportTitle || ''}
-                    className="p-2 rounded-xl border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-rose-500"
+                    className="p-2 rounded-xl border border-rose-500/40 text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -370,17 +375,17 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               </div>
 
               <div className="space-y-2">
-                <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <h4 className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
                   {dict?.admin?.description || ''}
                 </h4>
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4 text-xs text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap min-h-[100px]">
+                <div className="rounded-2xl border border-border-color bg-bg-primary p-4 text-xs text-text-primary leading-relaxed whitespace-pre-wrap min-h-[100px]">
                   {selectedBug.message}
                 </div>
               </div>
 
               {selectedBug.images && selectedBug.images.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                  <h4 className="text-[11px] font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
                     <ImageIcon className="h-3.5 w-3.5" />
                     {dict?.admin?.attachmentsLabel || ''} ({selectedBug.images.length})
                   </h4>
@@ -392,7 +397,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={dict?.admin?.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
-                        className="group relative h-28 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-100 dark:bg-slate-950 shadow-sm transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-rose-500"
+                        className="group relative h-28 rounded-2xl border border-border-color overflow-hidden bg-bg-elevated shadow-xs transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-accent-red"
                       >
                         <img
                           src={imgUrl}
@@ -408,9 +413,9 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 </div>
               )}
 
-              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-                <label htmlFor={`dev-feedback-${selectedBug.id}`} className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                  <MessageSquare className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
+              <div className="space-y-2 pt-2 border-t border-border-color">
+                <label htmlFor={`dev-feedback-${selectedBug.id}`} className="text-[11px] font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
+                  <MessageSquare className="h-3.5 w-3.5 text-accent-amber" />
                   {dict?.admin?.devFeedbackLabel || ''}
                 </label>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
@@ -420,12 +425,12 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                     value={editingNotes[selectedBug.id] ?? ''}
                     onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}
                     placeholder={dict?.admin?.reasonPlaceholder || ''}
-                    className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-amber-500 focus:outline-none shadow-inner"
+                    className="flex-1 rounded-xl border border-border-color bg-bg-primary px-3.5 py-2 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
                   />
                   <button
                     type="button"
                     onClick={() => onUpdateBug(selectedBug.id)}
-                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 px-4 py-2 text-xs font-bold shadow-md shadow-amber-950/30 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-amber-400"
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover text-text-inverted px-4 py-2 text-xs font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-accent-amber"
                   >
                     <Save className="h-3.5 w-3.5" />
                     <span>{dict?.admin?.saveNote || dict?.user?.saveChanges || ''}</span>
@@ -434,7 +439,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               </div>
             </div>
           ) : (
-            <div className="rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center text-slate-400 dark:text-slate-500">
+            <div className="rounded-3xl border border-dashed border-border-color p-12 text-center text-text-muted">
               <Eye className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p className="text-xs font-medium">
                 {dict?.user?.noReportsSubtitle || ''}
@@ -446,3 +451,4 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
     </div>
   );
 };
+

@@ -1,3 +1,4 @@
+// frontend/src/locales/en/streaks.ts
 export default {
   streaksTitle: "Challenge & Streak Hub",
   backToKillerStreaks: "Back to killer streaks",

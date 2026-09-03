@@ -1,3 +1,4 @@
+// frontend/src/locales/es/streaks.ts
 export default {
   streaksTitle: "Centro de Desafíos y Rachas",
   backToKillerStreaks: "Volver a rachas de asesino",

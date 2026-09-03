@@ -1,3 +1,4 @@
+// frontend/src/locales/de/stats.ts
 export default {
   vaultStats: "Tresor-Statistiken",
   totalPerks: "Talente gesamt",

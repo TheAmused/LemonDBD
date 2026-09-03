@@ -1,3 +1,4 @@
+// frontend/src/components/generator/modes/LootCrateStage.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';

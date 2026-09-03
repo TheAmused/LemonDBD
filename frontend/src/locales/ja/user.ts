@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/user.ts
 export default {
   profileTitle: "ユーザープロフィール＆アカウント",
   tabOverview: "アカウント概要",

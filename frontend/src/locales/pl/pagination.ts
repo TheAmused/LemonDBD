@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/pagination.ts
 export default {
   showing: "Wyświetlanie",
   of: "z",

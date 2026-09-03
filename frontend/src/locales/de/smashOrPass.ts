@@ -1,3 +1,4 @@
+// frontend/src/locales/de/smashOrPass.ts
 export default {
   title: 'DBD Smash or Pass',
   pageTitle: 'Smash or Pass • Prüfungs-Dating & Charakter-Hub',

@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/card.ts
 export default {
   general: "Umiejętność ogólna",
   viewDetails: "Zbadaj umiejętność",

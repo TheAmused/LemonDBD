@@ -1,3 +1,4 @@
+// frontend/src/locales/en/smashOrPass.ts
 export default {
   title: 'DBD Smash or Pass',
   pageTitle: 'Smash or Pass • Trial Dating & Character Hub',

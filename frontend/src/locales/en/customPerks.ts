@@ -1,3 +1,4 @@
+// frontend/src/locales/en/customPerks.ts
 export default {
   conceptLab: "Studio & Concept Lab",
   designer: "Perk Designer",

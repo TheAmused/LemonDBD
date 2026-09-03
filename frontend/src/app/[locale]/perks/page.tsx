@@ -1,3 +1,4 @@
+// frontend/src/app/[locale]/perks/page.tsx
 'use client';
 import type { Dictionary } from '@/locales/types';
 

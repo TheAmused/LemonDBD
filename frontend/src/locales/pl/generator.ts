@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/generator.ts
 export default {
   title: "Generator Zestawów Umiejętności",
   subtitle: "Losuj umiejętności na podstawie współrzędnych ekwipunku w grze [Strona/Slot].",

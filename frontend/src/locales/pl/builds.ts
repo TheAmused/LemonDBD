@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/builds.ts
 export default {
   title: "Skarbiec Buildów Społeczności",
   subtitle: "Odkrywaj, udostępniaj i oceniaj turniejowe, memiczne i tematyczne zestawy umiejętności.",

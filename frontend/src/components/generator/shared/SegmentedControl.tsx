@@ -1,3 +1,4 @@
+// frontend/src/components/generator/shared/SegmentedControl.tsx
 'use client';
 
 import React from 'react';

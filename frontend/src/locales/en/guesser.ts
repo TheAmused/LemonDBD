@@ -1,3 +1,4 @@
+// frontend/src/locales/en/guesser.ts
 export default {
   navLink: "Guesser",
   title: "DBD Knowledge Guesser",

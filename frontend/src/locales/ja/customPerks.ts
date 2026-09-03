@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/customPerks.ts
 export default {
   conceptLab: "スタジオ＆コンセプト研究所",
   designer: "パークデザイナー",

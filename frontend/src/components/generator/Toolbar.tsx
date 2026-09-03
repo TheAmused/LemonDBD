@@ -1,3 +1,4 @@
+// frontend/src/components/generator/Toolbar.tsx
 'use client';
 
 import React from 'react';

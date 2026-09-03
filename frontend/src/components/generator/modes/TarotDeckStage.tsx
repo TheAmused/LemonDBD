@@ -1,3 +1,4 @@
+// frontend/src/components/generator/modes/TarotDeckStage.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';

@@ -1,3 +1,4 @@
+// frontend/src/locales/de/app.ts
 export default {
   title: "LemonDBD",
   syncWiki: "Wiki-Daten synchronisieren",

@@ -1,5 +1,4 @@
 'use client';
-// frontend/src/components/Pagination.tsx
 
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
@@ -48,7 +47,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       aria-label={dict?.pagination?.navAriaLabel || 'Pagination Navigation'}
       className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4 w-full"
     >
-      <div className="text-xs font-medium text-slate-500 dark:text-slate-400" aria-live="polite">
+      <div className="text-xs font-medium text-slate-600 dark:text-slate-400" aria-live="polite">
         {dict?.pagination?.showing || 'Showing'}{' '}
         <span className="font-bold text-slate-900 dark:text-slate-100">{startIdx}</span> -{' '}
         <span className="font-bold text-slate-900 dark:text-slate-100">{endIdx}</span>{' '}
@@ -59,14 +58,14 @@ export const Pagination: React.FC<PaginationProps> = ({
 
       <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3">
         <div className="flex items-center gap-2">
-          <label htmlFor="limit-select" className="text-xs font-medium text-slate-500 dark:text-slate-400">
+          <label htmlFor="limit-select" className="text-xs font-medium text-slate-600 dark:text-slate-400">
             {dict?.pagination?.perPage || 'Per page'}:
           </label>
           <select
             id="limit-select"
             value={limit}
             onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2.5 py-1 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer [&>option]:bg-white [&>option]:text-slate-900 dark:[&>option]:bg-slate-900 dark:[&>option]:text-slate-100"
+            className="rounded-lg border border-border-color bg-bg-surface px-2.5 py-1 text-xs font-semibold text-slate-900 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 cursor-pointer [&>option]:bg-bg-surface [&>option]:text-slate-900 dark:[&>option]:text-slate-100"
           >
             <option value={15}>15</option>
             <option value={30}>30</option>
@@ -81,7 +80,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             onClick={() => onPageChange(1)}
             disabled={page <= 1}
             aria-label={dict?.pagination?.firstPage || 'First Page'}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-slate-700 dark:text-slate-300 hover:bg-bg-primary disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
             <ChevronsLeft className="h-4 w-4" />
           </button>
@@ -90,7 +89,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             onClick={() => onPageChange(page - 1)}
             disabled={page <= 1}
             aria-label={dict?.pagination?.previous || 'Previous Page'}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-slate-700 dark:text-slate-300 hover:bg-bg-primary disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -104,7 +103,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             onClick={() => onPageChange(page + 1)}
             disabled={page >= safeTotalPages}
             aria-label={dict?.pagination?.next || 'Next Page'}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-slate-700 dark:text-slate-300 hover:bg-bg-primary disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -113,7 +112,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             onClick={() => onPageChange(safeTotalPages)}
             disabled={page >= safeTotalPages}
             aria-label={dict?.pagination?.lastPage || 'Last Page'}
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-slate-700 dark:text-slate-300 hover:bg-bg-primary disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
             <ChevronsRight className="h-4 w-4" />
           </button>
@@ -121,7 +120,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
         {safeTotalPages > 7 && (
           <form onSubmit={handleJumpSubmit} className="flex items-center gap-1.5">
-            <label htmlFor="jump-to-page" className="text-xs font-medium text-slate-500 dark:text-slate-400">
+            <label htmlFor="jump-to-page" className="text-xs font-medium text-slate-600 dark:text-slate-400">
               {dict?.pagination?.goTo || 'Go to'}:
             </label>
             <input
@@ -132,7 +131,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               value={jumpValue}
               onChange={(e) => setJumpValue(e.target.value)}
               placeholder={`${page}`}
-              className="w-9 [appearance:textfield] rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-1.5 py-1 text-center text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-9 [appearance:textfield] rounded-lg border border-border-color bg-bg-surface px-1.5 py-1 text-center text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-cyan-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </form>
         )}

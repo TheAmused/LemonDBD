@@ -59,7 +59,7 @@ export default function () {
       failedRequests !== undefined,
   });
 
-  // 5. Verify auth.js
+  // 5. Verify auth.js exports & helpers
   const sampleHeaders = getAuthHeaders('test-token-123');
   const emptyHeaders = getAuthHeaders(null);
   check(null, {
@@ -104,9 +104,9 @@ export default function () {
       mockSummary.includes('🍋'),
   });
 
-  // 8. Test live backend endpoint via defaultClient.get('/api/v1/health')
-  const res = defaultClient.get('/api/v1/health');
-  check(res, {
+  // 8. Test live backend endpoint with path normalization check (without leading slash)
+  const healthRes = defaultClient.get('api/v1/health');
+  check(healthRes, {
     'health check: status is 200': (r) => r.status === 200,
     'health check: response body is valid JSON': (r) => {
       try {
@@ -116,5 +116,14 @@ export default function () {
         return false;
       }
     },
+  });
+
+  // 9. Test live registration and login against stack
+  const authUser = registerAndLoginUser(__VU, __ITER);
+  check(authUser, {
+    'auth: live registerAndLoginUser returns valid token': (u) =>
+      u && typeof u.token === 'string' && u.token.length > 20,
+    'auth: live registerAndLoginUser returns valid credentials': (u) =>
+      u && typeof u.username === 'string' && u.email && u.email.endsWith('@example.com'),
   });
 }

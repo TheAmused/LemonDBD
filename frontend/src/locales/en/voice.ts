@@ -26,5 +26,6 @@ export default {
   useNativeEngine: "Use Native Web Speech API",
   privacyNotice: "Privacy Note: Local client-side model processes all voice commands entirely offline inside your browser.",
   holdOrPress: "Hold [V] or Click Mic",
+  holdVToTalkHint: "Hold {key} to talk, or tap the mic and say a map name",
   micBlocked: "Microphone blocked. Please grant mic permissions.",
 } as const;

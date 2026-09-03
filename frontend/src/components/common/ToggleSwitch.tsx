@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/common/ToggleSwitch.tsx
 
-import React from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 
 export interface ToggleSwitchOption<T extends string> {
@@ -57,29 +57,55 @@ export function ToggleSwitch<T extends string>({
   const padY = size === 'sm' ? 'py-1.5' : 'py-2';
   const textSize = size === 'sm' ? 'text-[11px]' : 'text-xs';
 
+  // A fixed 50%-width thumb only lines up when both options render to the
+  // same width -- as soon as one side is visibly longer, it undershoots and
+  // crowds that side's text. Measuring the actual active button instead.
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [thumbRect, setThumbRect] = useState<{ left: number; width: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const btn = buttonRefs.current[activeIndex];
+    if (!btn) return;
+
+    // A ResizeObserver (rather than depending on label/icon/size props)
+    // catches every actual width change -- including ones a caller's own
+    // re-render doesn't otherwise signal, like a count badge's digits
+    // changing -- without re-measuring on unrelated re-renders.
+    const measure = () => setThumbRect({ left: btn.offsetLeft, width: btn.offsetWidth });
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(btn);
+    return () => observer.disconnect();
+  }, [activeIndex]);
+
   return (
     <div
       role="radiogroup"
       aria-label={ariaLabel}
       className={cn(
-        'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-full border border-border-color bg-bg-primary p-1 shadow-inner',
+        'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-full border border-border-color bg-bg-elevated p-1 shadow-inner',
         className
       )}
     >
       <span
         aria-hidden="true"
+        style={thumbRect ? { left: thumbRect.left, width: thumbRect.width } : undefined}
         className={cn(
-          'absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-full shadow-md transition-transform duration-200 ease-out',
-          activeIndex === 1 ? 'translate-x-full' : 'translate-x-0',
+          'absolute inset-y-1 rounded-full shadow-md transition-[left,width] duration-200 ease-out',
+          !thumbRect && 'left-1 w-[calc(50%-4px)]',
+          !thumbRect && (activeIndex === 1 ? 'translate-x-full' : 'translate-x-0'),
           (activeIndex === 1 ? right.activeClassName : left.activeClassName) || DEFAULT_THUMB
         )}
       />
-      {options.map((opt) => {
+      {options.map((opt, i) => {
         const isActive = value === opt.value;
         const activeTextClass = opt.activeTextColor || 'text-text-inverted';
         return (
           <button
             key={opt.value}
+            ref={(el) => {
+              buttonRefs.current[i] = el;
+            }}
             type="button"
             role="radio"
             aria-checked={isActive}

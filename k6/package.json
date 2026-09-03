@@ -1,0 +1,12 @@
+﻿{
+  "name": "lemondbd-perf",
+  "version": "1.0.0",
+  "description": "LemonDBD k6 performance and load testing suites",
+  "scripts": {
+    "perf:smoke": "cd .. && k6 run k6/suites/smoke.js",
+    "perf:load": "cd .. && k6 run k6/suites/load.js",
+    "perf:stress": "cd .. && k6 run k6/suites/stress.js",
+    "perf:spike": "cd .. && k6 run k6/suites/spike.js",
+    "perf:soak": "cd .. && k6 run k6/suites/soak.js"
+  }
+}

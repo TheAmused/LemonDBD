@@ -42,7 +42,7 @@
 </head>
 <body>
   <div class="card">
-    <h1>🍋 ${title}</h1>
+    <h1>&#127819; ${title}</h1>
     <p>Generated at: ${new Date().toISOString()}</p>
     <div class="grid">
       <div class="stat"><div class="label">Total Requests</div><div class="value">${totalReqs}</div></div>

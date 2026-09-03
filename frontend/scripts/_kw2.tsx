@@ -1,3 +1,4 @@
+// frontend/scripts/_kw2.tsx
 import { renderToStaticMarkup } from 'react-dom/server';
 import { renderFormattedDbdText, TOKEN_REGEX } from '../src/utils/textFormatter';
 const t = 'Aury generatorów. Generatoren an. los generadores y totems. Hooked Survivors.';

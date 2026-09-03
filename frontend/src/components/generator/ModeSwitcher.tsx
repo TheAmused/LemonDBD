@@ -1,3 +1,4 @@
+// frontend/src/components/generator/ModeSwitcher.tsx
 'use client';
 
 import React from 'react';

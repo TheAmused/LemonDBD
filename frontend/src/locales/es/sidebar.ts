@@ -1,3 +1,4 @@
+// frontend/src/locales/es/sidebar.ts
 export default {
   perks: "Habilidades",
   challenges: "Desafíos",

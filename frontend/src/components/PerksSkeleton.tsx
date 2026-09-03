@@ -12,15 +12,12 @@ interface PerksSkeletonProps {
   count?: number;
 }
 
-/**
- * Universal DBD Skill Check Framer Motion Loading Spinner for Perks Vault (/perks).
- */
 export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({
   className = '',
   dict,
   ariaLabel,
 }) => {
-  const loadingLabel = ariaLabel || dict?.filters?.loadingPerks || dict?.app?.loading || 'Loading perks...';
+  const loadingLabel = ariaLabel || dict?.filters?.loadingPerks || dict?.app?.loading;
 
   return (
     <div
@@ -42,3 +39,4 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({
 };
 
 export default PerksGridSkeleton;
+

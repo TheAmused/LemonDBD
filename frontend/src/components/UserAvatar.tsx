@@ -104,7 +104,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
   const defaultBorder =
     borderClassName ||
-    'border border-amber-500/30 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/15 via-amber-500/5 to-slate-100 dark:to-slate-900 shadow-sm';
+    'border border-border-color bg-bg-primary text-text-primary shadow-xs';
 
   return (
     <div className={`relative inline-flex shrink-0 items-center justify-center ${className}`}>
@@ -114,7 +114,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         {isCustomAvatar ? (
           <img
             src={finalSrc}
-            alt={alt || user?.username || ''}
+            alt={alt || user?.username}
             onError={() => {
               console.warn('Avatar image failed to load from:', finalSrc);
               setImgError(true);
@@ -122,7 +122,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-amber-500 dark:text-amber-400 p-1">
+          <div className="flex h-full w-full items-center justify-center text-accent-amber p-1">
             <LemonIcon className={sizeConfig.icon} />
           </div>
         )}
@@ -130,7 +130,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
       {showAdminBadge && user?.role === 'admin' && (
         <span
-          className={`absolute flex items-center justify-center rounded-full bg-red-600 text-white shadow-md border border-red-400 ${sizeConfig.badge}`}
+          className={`absolute flex items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-xs border border-accent-red/40 ${sizeConfig.badge}`}
           title={adminTitle}
           aria-label={adminAriaLabel}
         >
@@ -140,3 +140,4 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     </div>
   );
 };
+

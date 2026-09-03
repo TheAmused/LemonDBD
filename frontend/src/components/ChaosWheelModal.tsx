@@ -202,28 +202,32 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-lg rounded-3xl border border-purple-500/30 bg-white dark:bg-slate-900 p-6 shadow-2xl text-slate-900 dark:text-slate-100 cursor-default animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-lg rounded-3xl border border-border-color bg-bg-surface p-6 shadow-2xl text-text-primary cursor-default animate-in zoom-in-95 duration-200 transition-colors"
       >
         <button
           type="button"
           onClick={onClose}
-          aria-label={dict?.modal?.close || 'Close modal'}
-          className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+          aria-label={dict?.modal?.close}
+          className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 dark:bg-purple-900/50 border border-purple-500/30 text-purple-600 dark:text-purple-300 shadow-sm" aria-hidden="true">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-600 dark:text-purple-400 shadow-xs" aria-hidden="true">
             <Skull className="h-6 w-6 animate-pulse" />
           </div>
           <div>
-            <h2 id="chaos-modal-title" className="text-lg font-black tracking-wide text-slate-900 dark:text-white">
-              {dict?.generator?.chaosWheelTitle || 'Chaos Wheel of Curses'}
-            </h2>
-            <p id="chaos-modal-desc" className="text-xs text-slate-600 dark:text-slate-400">
-              {dict?.generator?.chaosWheelDesc || 'Spin to apply a single trial Curse or Buff to your 4 perk loadout.'}
-            </p>
+            {dict?.generator?.chaosWheelTitle && (
+              <h2 id="chaos-modal-title" className="text-lg font-black tracking-wide text-text-primary">
+                {dict.generator.chaosWheelTitle}
+              </h2>
+            )}
+            {dict?.generator?.chaosWheelDesc && (
+              <p id="chaos-modal-desc" className="text-xs text-text-secondary">
+                {dict.generator.chaosWheelDesc}
+              </p>
+            )}
           </div>
         </div>
 
@@ -232,7 +236,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             ref={canvasRef}
             width={400}
             height={400}
-            aria-label={dict?.generator?.chaosWheelTitle || 'Chaos Wheel of Curses Canvas'}
+            aria-label={dict?.generator?.chaosWheelTitle}
             className="h-[300px] w-[300px] sm:h-[360px] sm:w-[360px] drop-shadow-[0_0_25px_rgba(147,51,234,0.3)]"
           />
 
@@ -242,15 +246,15 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             disabled={isSpinning}
             className={`mt-4 flex items-center gap-2 rounded-2xl px-6 py-3 font-extrabold text-sm shadow-lg transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
               isSpinning
-                ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+                ? 'bg-bg-elevated text-text-muted cursor-not-allowed'
                 : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/40'
             }`}
           >
             <Sparkles className={`h-4 w-4 ${isSpinning ? 'animate-spin' : ''}`} aria-hidden="true" />
             <span>
               {isSpinning
-                ? (dict?.generator?.spinningCurses || 'Spinning Chaos Curses...')
-                : (dict?.generator?.spinChaosWheel || 'Spin Chaos Wheel!')}
+                ? dict?.generator?.spinningCurses
+                : dict?.generator?.spinChaosWheel}
             </span>
           </button>
         </div>
@@ -258,7 +262,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
         {wonMutator && (
           <div
             aria-live="polite"
-            className={`mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all shadow-sm ${wonMutator.badgeBg} ${wonMutator.borderColor}`}
+            className="mt-4 rounded-2xl border p-4 backdrop-blur-sm transition-all shadow-xs border-border-color bg-bg-primary"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -269,14 +273,14 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
                   <h3 className={`text-sm font-extrabold ${wonMutator.textColor}`}>
                     {wonMutator.name}
                   </h3>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
+                  <p className="text-xs text-text-secondary mt-0.5">
                     {wonMutator.description}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
                 <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>{dict?.smashOrPass?.active || 'Active'}</span>
+                <span>{dict?.smashOrPass?.active}</span>
               </div>
             </div>
           </div>
@@ -286,9 +290,9 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl bg-slate-100 dark:bg-slate-800 px-5 py-2.5 font-bold text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+            className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-5 py-2.5 font-bold text-xs text-text-primary transition-colors cursor-pointer shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
           >
-            {dict?.modal?.done || dict?.generator?.done || 'Done'}
+            {dict?.modal?.done || dict?.generator?.done}
           </button>
         </div>
       </div>

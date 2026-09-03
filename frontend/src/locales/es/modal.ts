@@ -1,3 +1,4 @@
+// frontend/src/locales/es/modal.ts
 export default {
   close: "Cerrar",
   character: "Personaje Asociado",

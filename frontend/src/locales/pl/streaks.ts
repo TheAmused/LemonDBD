@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/streaks.ts
 export default {
   streaksTitle: "Centrum Wyzwań i Serii",
   backToKillerStreaks: "Powrót do serii zabójców",

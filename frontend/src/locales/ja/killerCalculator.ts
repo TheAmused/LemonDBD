@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/killerCalculator.ts
 export default {
   chaseStatus: "チェイス状態:",
   carryingSurvivor: "サバイバー担ぎ中:",

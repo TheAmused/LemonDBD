@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/PerkCard.tsx
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -58,21 +59,21 @@ export const PerkCard: React.FC<PerkCardProps> = ({
     Boolean(perk.is_generic_counterpart);
   const isOwned = perk.is_owned !== false;
 
-  const generalLabel = dict?.modal?.generalPerk || 'General Perk';
+  const generalLabel = dict?.modal?.generalPerk;
   const roleLabel =
     perk.category === 'Killer'
-      ? dict?.modal?.killerPerk || 'Killer Perk'
-      : dict?.modal?.survivorPerk || 'Survivor Perk';
+      ? dict?.modal?.killerPerk
+      : dict?.modal?.survivorPerk;
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setActiveHover({ item: perk, rect });
   };
   const handleMouseLeave = () => setActiveHover(null);
-  const ariaLabel = `${perk.name} - ${isGeneral ? generalLabel : perk.character}`;
+  const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
   const coordinateLabel = coordinate
-    ? `${dict?.generator?.coordOpenPage || '[P'}${coordinate.page}${dict?.generator?.coordSlot || '/S'}${coordinate.slot}${dict?.generator?.coordClose || ']'}`
+    ? `${dict?.generator?.coordOpenPage || '['}${coordinate.page}${dict?.generator?.coordSlot || '/'}${coordinate.slot}${dict?.generator?.coordClose || ']'}`
     : null;
 
   if (isBlind) {
@@ -81,14 +82,16 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         className={`relative flex flex-col items-center justify-center gap-2 p-2 ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
-          <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-amber-400/90">
+          <span className="absolute top-1 left-1 z-10 font-mono text-[10px] font-black text-accent-amber">
             {coordinateLabel}
           </span>
         )}
-        <HelpCircle className="h-10 w-10 text-slate-500" />
-        <span className="text-[11px] font-bold text-slate-500 text-center px-2">
-          {dict?.generator?.hiddenPerkLabel || 'Hidden — check in-game'}
-        </span>
+        <HelpCircle className="h-10 w-10 text-text-muted" />
+        {dict?.generator?.hiddenPerkLabel && (
+          <span className="text-[11px] font-bold text-text-muted text-center px-2">
+            {dict.generator.hiddenPerkLabel}
+          </span>
+        )}
       </div>
     );
   }
@@ -102,11 +105,12 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label={ariaLabel}
-          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-border-color bg-bg-surface px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-bg-primary hover:border-cyan-500/30 shadow-xs dark:shadow-none focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-border-color bg-bg-surface px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-bg-elevated hover:border-accent-amber/40 shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
         >
           <div
-            className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center ${perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
-              }`}
+            className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-border-color p-1 ${
+              perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
+            }`}
           >
             {!imgError && iconSrc ? (
               <img
@@ -118,13 +122,13 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                 decoding="async"
               />
             ) : (
-              <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-primary border border-border-color">
-                <ImageOff className="-rotate-45 h-5 w-5 text-slate-500" />
+              <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-border-color">
+                <ImageOff className="-rotate-45 h-5 w-5 text-text-muted" />
               </div>
             )}
 
             {avatarSrc && !avatarError && !isGeneral && (
-              <div className="absolute bottom-0 right-0 h-5 w-5 sm:h-6 sm:w-6 overflow-hidden rounded-full pointer-events-none bg-slate-950/80 shadow-lg border border-slate-800">
+              <div className="absolute bottom-0 right-0 h-5 w-5 sm:h-6 sm:w-6 overflow-hidden rounded-full pointer-events-none bg-slate-950 shadow-lg border border-border-color">
                 <img
                   src={avatarSrc}
                   alt={perk.character}
@@ -140,21 +144,22 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               {coordinateLabel && (
-                <span className="shrink-0 font-mono text-[10px] font-black text-amber-700 dark:text-amber-400/90">
+                <span className="shrink-0 font-mono text-[10px] font-black text-accent-amber">
                   {coordinateLabel}
                 </span>
               )}
-              <p className="truncate text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">{perk.name}</p>
+              <p className="truncate text-sm sm:text-base font-bold text-text-primary">{perk.name}</p>
             </div>
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">
-              {isGeneral ? generalLabel : perk.character} {'·'} {roleLabel}
+            <p className="truncate text-xs text-text-secondary">
+              {isGeneral ? generalLabel : perk.character}
+              {roleLabel && ` · ${roleLabel}`}
             </p>
           </div>
 
           {!perk.is_disabled && !isOwned && (
             <Lock
-              className="h-4 w-4 shrink-0 text-slate-400"
-              aria-label={dict?.modal?.unownedPerk || 'Unowned perk'}
+              className="h-4 w-4 shrink-0 text-text-muted"
+              aria-label={dict?.modal?.unownedPerk}
             />
           )}
         </button>
@@ -197,48 +202,53 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         aria-label={ariaLabel}
-        className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${size === 'tarot' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
-          } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
+        className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
+          size === 'tarot' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
+        } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
           <span
-            className={`absolute z-10 font-mono font-black pointer-events-none ${size === 'tarot'
-                ? 'top-0 left-0 text-[8px] sm:text-[9px] md:text-[10px] text-amber-300 bg-slate-950/80 px-1 py-0.5 rounded shadow-sm'
-                : 'top-1 left-1 text-[10px] text-amber-400/90'
-              }`}
+            className={`absolute z-10 font-mono font-black pointer-events-none ${
+              size === 'tarot'
+                ? 'top-0 left-0 text-[8px] sm:text-[9px] md:text-[10px] text-accent-amber bg-slate-950/80 px-1 py-0.5 rounded shadow-xs'
+                : 'top-1 left-1 text-[10px] text-accent-amber'
+            }`}
           >
             {coordinateLabel}
           </span>
         )}
 
         <div
-          className={`relative flex h-full w-full items-center justify-center ${perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
-            }`}
+          className={`relative flex h-full w-full items-center justify-center ${
+            perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
+          }`}
         >
           {!imgError && iconSrc ? (
             <img
               src={iconSrc}
               alt={perk.name}
               onError={() => setImgError(true)}
-              className={`h-full w-full object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] ${size === 'tarot'
-                  ? 'group-hover:drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]'
-                  : 'group-hover:drop-shadow-[0_0_18px_rgba(6,182,212,0.6)]'
-                } transition-all duration-200 pointer-events-none`}
+              className={`h-full w-full object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] ${
+                size === 'tarot'
+                  ? 'group-hover:drop-shadow-[0_0_12px_var(--accent-amber)]'
+                  : 'group-hover:drop-shadow-[0_0_18px_var(--accent-amber)]'
+              } transition-all duration-200 pointer-events-none`}
               loading="lazy"
               decoding="async"
             />
           ) : (
-            <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-primary border border-border-color">
-              <ImageOff className="-rotate-45 h-10 w-10 text-slate-500" />
+            <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-border-color">
+              <ImageOff className="-rotate-45 h-10 w-10 text-text-muted" />
             </div>
           )}
 
           {avatarSrc && !avatarError && !isGeneral && (
             <div
-              className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-slate-950/90 shadow-lg border border-slate-800 ${size === 'tarot'
+              className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-slate-950 shadow-lg border border-border-color ${
+                size === 'tarot'
                   ? 'h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10'
                   : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
-                }`}
+              }`}
             >
               <img
                 src={avatarSrc}
@@ -257,10 +267,10 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         ) : (
           !isOwned && (
             <div
-              className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 shadow-md border border-slate-800"
-              title={dict?.modal?.unownedPerk || 'Unowned perk'}
+              className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 shadow-xs border border-border-color"
+              title={dict?.modal?.unownedPerk}
             >
-              <Lock className="h-3.5 w-3.5 text-slate-400" />
+              <Lock className="h-3.5 w-3.5 text-text-muted" />
             </div>
           )
         )}
@@ -282,3 +292,4 @@ export const PerkCard: React.FC<PerkCardProps> = ({
     </div>
   );
 };
+

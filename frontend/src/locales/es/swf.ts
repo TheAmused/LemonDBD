@@ -1,3 +1,4 @@
+// frontend/src/locales/es/swf.ts
 export default {
   engineBadge: "Motor de Escuadrones SWF",
   pageTitle: "Planificador de Cargas para 4 Jugadores",

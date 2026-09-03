@@ -1,3 +1,4 @@
+// frontend/public/sw.js
 // Service Worker for LemonDBD - Ultimate Image & Backend Asset Cache
 // Cache-First Strategy for ALL Static & API Images (perks, avatars, maps, powers, tarot, badges)
 

@@ -6,8 +6,16 @@
 @theme {
   --color-bg-primary: var(--bg-primary);
   --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
   --color-border-color: var(--border-color);
+  --color-border-subtle: var(--border-subtle);
   --color-accent-red: var(--accent-red);
+  --color-accent-amber: var(--accent-amber);
+  --color-accent-amber-hover: var(--accent-amber-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverted: var(--text-inverted);
 }
 
 @layer base {
@@ -15,23 +23,55 @@
   :root,
   .light {
     color-scheme: light;
-    --bg-primary: #cbd5e1;
-    --bg-surface: #e2e8f0;
-    --border-color: #94a3b8;
+    --bg-primary: #eef2f6;
+    --bg-surface: #ffffff;
+    --bg-elevated: #e2e8f0;
+    --border-color: #cbd5e1;
+    --border-subtle: #e2e8f0;
     --accent-red: #dc2626;
+    --accent-amber: #d97706;
+    --accent-amber-hover: #b45309;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --text-inverted: #ffffff;
   }
 
   .dark {
     color-scheme: dark;
     --bg-primary: #030712;
     --bg-surface: #0b0f19;
+    --bg-elevated: #111827;
     --border-color: #1f293d;
+    --border-subtle: #111827;
     --accent-red: #ef4444;
+    --accent-amber: #f59e0b;
+    --accent-amber-hover: #fbbf24;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-inverted: #030712;
   }
 
   body {
     background-color: var(--bg-primary);
-    @apply text-slate-900 dark:text-slate-100 antialiased selection:bg-red-600 selection:text-white min-h-screen flex flex-col font-sans;
+    color: var(--text-primary);
+    @apply antialiased selection:bg-accent-red selection:text-text-inverted min-h-screen flex flex-col font-sans transition-colors duration-200;
+  }
+
+  /* High contrast inputs and form controls in light mode */
+  :root:not(.dark) input,
+  :root:not(.dark) select,
+  :root:not(.dark) textarea {
+    background-color: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1;
+  }
+
+  :root:not(.dark) input::placeholder,
+  :root:not(.dark) textarea::placeholder {
+    color: #64748b;
+    opacity: 1;
   }
 }
 
@@ -39,17 +79,6 @@
  * ---------------------------------------------------------------------------
  * App shell geometry (sidebar + main gutter)
  * ---------------------------------------------------------------------------
- * The collapsed/expanded state used to live in React state seeded from
- * localStorage inside a useEffect. That meant every navigation painted the
- * expanded layout first and then animated 208px sideways once the effect ran.
- *
- * It is now driven by a `data-sidebar` attribute set on <html> by a blocking
- * inline script in the locale layout, before first paint -- so the very first
- * frame is already correct and nothing moves.
- *
- * These rules are deliberately unlayered so they win over the Tailwind
- * padding utilities on the same element (`p-4 sm:p-6 lg:p-8`). If you need a
- * different left gutter on a page, change it here, not with a `lg:pl-*` class.
  */
 @media (min-width: 1024px) {
   .lemon-shell-main {
@@ -69,8 +98,6 @@
   }
 }
 
-/* Collapse-toggle chevron, swapped by the same attribute so it is correct on
-   the first frame instead of flipping after hydration. */
 .lemon-sidebar-icon-collapsed {
   display: none;
 }
@@ -87,15 +114,6 @@
  * ---------------------------------------------------------------------------
  * DbdSpinner (the app-wide loading indicator)
  * ---------------------------------------------------------------------------
- * These four loops used to be framer-motion `animate` props. That put
- * framer-motion in the chunk of every single `loading.tsx`, so the bundle the
- * spinner was waiting on had to include the animation runtime before the
- * spinner could appear -- and the loops were then driven from JS on the main
- * thread, competing with hydration and data fetching for frames.
- *
- * As plain CSS the rotations and the opacity pulse are composited off the main
- * thread and cost nothing to download. Reduced-motion is handled at the bottom
- * of this block instead of by a hook, so it also works before hydration.
  */
 @keyframes dbdSpinnerSpin {
   from {
@@ -148,14 +166,10 @@
 
 .dbd-spinner-needle {
   transform-origin: 80px 80px;
-  /* --dbd-needle-speed is set inline from the `needleSpeed` prop. */
   animation: dbdSpinnerSpin var(--dbd-needle-speed, 1.3s) linear infinite;
 }
 
 .dbd-spinner-emblem {
-  /* Scale only. The glow used to be animated too (`filter: drop-shadow(...)`
-     interpolated every frame), which repaints the element continuously for a
-     effect that reads the same held static. */
   animation: dbdSpinnerPulse 1.6s ease-in-out infinite;
   will-change: transform;
 }
@@ -176,25 +190,28 @@
   }
 }
 
-/* Custom Dead by Daylight Aesthetic Effects */
 /*
- * NOTE: this used to animate `background-position` on the radial-gradient
- * (`fogMove 20s ease infinite`). Because `background-size` resolves to the
- * element box, every percentage position computed to 0px -- the animation was
- * visually a no-op while forcing a full-viewport, non-composited repaint on
- * every frame of every page. Removed; the static gradient is what you saw.
+ * ---------------------------------------------------------------------------
+ * Dead by Daylight Atmosphere & Fog
+ * ---------------------------------------------------------------------------
  */
 .dbd-fog-overlay {
-  background-image: radial-gradient(circle at 50% 50%, rgba(100, 116, 139, 0.05) 0%, transparent 78%);
+  background-image: radial-gradient(circle at 50% 50%, transparent 20%, rgba(15, 23, 42, 0.05) 100%);
+  opacity: 1;
 }
 
 .dark .dbd-fog-overlay {
   background-image: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
+  opacity: 1;
+}
+
+.dbd-lemon-glow {
+  filter: drop-shadow(0 0 24px var(--accent-amber));
 }
 
 [data-placeholder]:empty:before {
   content: attr(data-placeholder);
-  color: rgb(100 116 139);
+  color: var(--text-muted);
   pointer-events: none;
 }
 
@@ -211,12 +228,12 @@
 }
 
 .dbd-heartbeat-vignette {
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(190, 30, 40, 0.35) 100%);
+  background: radial-gradient(ellipse at center, transparent 55%, var(--accent-red) 100%);
   animation: heartbeatPulse 1.2s ease-in-out infinite;
 }
 
 .dbd-heartbeat-vignette--static {
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(190, 30, 40, 0.5) 100%);
+  background: radial-gradient(ellipse at center, transparent 55%, var(--accent-red) 100%);
   animation: none;
 }
 
@@ -231,15 +248,15 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-800 rounded-full hover:bg-red-600 transition-colors;
+  @apply bg-border-color rounded-full hover:bg-accent-red transition-colors;
 }
 
 /* High-contrast perk stat highlights */
 strong {
-  @apply font-bold text-amber-600 dark:text-amber-400;
+  @apply font-bold text-accent-amber;
 }
 
-/* ---- Page streak animations ---- */
+/* Page streak animations */
 @keyframes psPageEnter {
   from {
     opacity: 0;
@@ -248,7 +265,6 @@ strong {
 
   to {
     opacity: 1;
-    transform: translateX(0);
   }
 }
 
@@ -288,11 +304,11 @@ strong {
 
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+    box-shadow: 0 0 0 0 transparent;
   }
 
   50% {
-    box-shadow: 0 0 0 6px rgba(52, 211, 153, .18);
+    box-shadow: 0 0 0 6px var(--accent-amber);
   }
 }
 
@@ -312,7 +328,7 @@ strong {
   animation: psCompletePulse 800ms ease-in-out 1;
 }
 
-/* Gauntlet target draw: the reel spinning, then settling on its pick. */
+/* Gauntlet target draw */
 @keyframes gnSpinFrame {
   from {
     opacity: .35;
@@ -340,15 +356,15 @@ strong {
 
 @keyframes gnLandGlow {
   0% {
-    box-shadow: 0 0 0 0 rgba(251, 191, 36, .55);
+    box-shadow: 0 0 0 0 var(--accent-amber);
   }
 
   70% {
-    box-shadow: 0 0 0 18px rgba(251, 191, 36, 0);
+    box-shadow: 0 0 0 18px transparent;
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+    box-shadow: 0 0 0 0 transparent;
   }
 }
 
@@ -492,29 +508,15 @@ strong {
   animation: chaosMarqueeGlow 2.4s ease-in-out infinite;
 }
 
-/* ========================================================================= */
-/* SHARED DBD-THEMED PRIMARY-ACTION BUTTON (Pull the Lever / Confirm / Roll / */
-/* Shuffle & Draw / Crack Open / Draw Again, across all 5 randomizer modes). */
-/* ========================================================================= */
 @keyframes dbdButtonPulse {
 
   0%,
   100% {
-    box-shadow: 0 0 0 0 transparent, 0 14px 30px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 0 0 0 transparent;
   }
 
   50% {
-    box-shadow: 0 0 28px 4px var(--dbd-btn-glow, rgba(245, 158, 11, 0.4)), 0 14px 30px rgba(0, 0, 0, 0.55);
-  }
-}
-
-@keyframes dbdButtonSweep {
-  0% {
-    transform: translateX(-160%) skewX(-20deg);
-  }
-
-  100% {
-    transform: translateX(360%) skewX(-20deg);
+    box-shadow: 0 0 28px 4px var(--accent-amber);
   }
 }
 
@@ -522,8 +524,6 @@ strong {
   animation: dbdButtonPulse 2.4s ease-in-out infinite;
 }
 
-/* Slot machine cabinet marquee bulbs (reused chaos-marquee-bulb keyframe, own class
-   so the two features' bulb rows can be styled/timed independently later). */
 .slot-cabinet-bulb {
   animation: chaosMarqueeGlow 2.2s ease-in-out infinite;
 }
@@ -569,7 +569,6 @@ strong {
 
   .dbd-btn-pulse {
     animation: none;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
   }
 
   .slot-cabinet-hum {
@@ -580,179 +579,4 @@ strong {
 
 .gn-name-in {
   animation: gnNameIn 260ms ease-out both;
-}
-
-/* ========================================================================= */
-/* SMASH OR PASS: SILKY ANIMATIONS & CARD QUEUE TRANSITIONS                  */
-/* ========================================================================= */
-@keyframes lorePodEnter {
-  0% {
-    opacity: 0;
-    transform: translateY(18px) scale(0.95);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes watermarkEnter {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.9);
-    filter: blur(8px);
-  }
-
-  50% {
-    opacity: 0.15;
-    filter: blur(2px);
-  }
-
-  100% {
-    opacity: 0.05;
-    transform: translateY(-50%) scale(1);
-    filter: blur(0px);
-  }
-}
-
-@keyframes cardQueuePromote {
-  0% {
-    transform: scale(0.93) translateY(18px);
-    opacity: 0.75;
-  }
-
-  100% {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes cardEntryReveal {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(36px);
-  }
-
-  100% {
-    opacity: 0.45;
-    transform: scale(0.86) translateY(28px);
-  }
-}
-
-.anim-card-queue-enter {
-  animation: cardEntryReveal 480ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
-}
-
-@keyframes loreDissolveEnter {
-  0% {
-    opacity: 0;
-    transform: scale(0.94) translateZ(-15px);
-    filter: blur(14px) brightness(1.5) contrast(1.2);
-  }
-
-  50% {
-    opacity: 0.8;
-    filter: blur(4px) brightness(1.2) contrast(1.1);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1) translateZ(0);
-    filter: blur(0px) brightness(1) contrast(1);
-  }
-}
-
-@keyframes loreWatermarkDissolve {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) scale(0.92);
-    filter: blur(24px) drop-shadow(0 0 25px rgba(255, 0, 85, 0.7));
-  }
-
-  60% {
-    opacity: 0.16;
-    filter: blur(6px) drop-shadow(0 0 10px rgba(255, 0, 85, 0.3));
-  }
-
-  100% {
-    opacity: 0.05;
-    transform: translateY(-50%) scale(1);
-    filter: blur(0px);
-  }
-}
-
-.anim-lore-dissolve {
-  animation: loreDissolveEnter 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: transform, opacity, filter;
-}
-
-.anim-watermark-dissolve {
-  animation: loreWatermarkDissolve 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  will-change: transform, opacity, filter;
-}
-
-@keyframes neonCockpitPulseLight {
-
-  0%,
-  100% {
-    box-shadow: 0 0 20px rgba(255, 0, 85, 0.06), 0 12px 30px rgba(15, 23, 42, 0.10);
-    border-color: rgba(255, 0, 85, 0.25);
-  }
-
-  50% {
-    box-shadow: 0 0 30px rgba(255, 0, 85, 0.14), 0 12px 30px rgba(15, 23, 42, 0.12);
-    border-color: rgba(255, 0, 85, 0.45);
-  }
-}
-
-@keyframes neonCockpitPulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 25px rgba(255, 0, 85, 0.08), 0 20px 50px rgba(0, 0, 0, 0.85);
-    border-color: rgba(255, 0, 85, 0.25);
-  }
-
-  50% {
-    box-shadow: 0 0 40px rgba(255, 0, 85, 0.18), 0 20px 50px rgba(0, 0, 0, 0.85);
-    border-color: rgba(255, 0, 85, 0.45);
-  }
-}
-
-.anim-lore-enter {
-  animation: loreDissolveEnter 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.anim-watermark-enter {
-  animation: loreWatermarkDissolve 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* The cockpit dock glows against whatever canvas it sits on: a soft ash
-   shadow in light mode, the original black-and-neon bloom in dark. */
-.cockpit-neon-pulse {
-  animation: neonCockpitPulseLight 4s ease-in-out infinite;
-}
-
-.dark .cockpit-neon-pulse {
-  animation: neonCockpitPulse 4s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-
-  .ps-page-enter,
-  .ps-page-reset,
-  .ps-rise,
-  .ps-complete-pulse,
-  .gn-spin-frame,
-  .gn-land-frame,
-  .gn-land-glow,
-  .gn-name-in,
-  .freeze-badge-in,
-  .anim-lore-enter,
-  .anim-watermark-enter,
-  .cockpit-neon-pulse,
-  .dark .cockpit-neon-pulse {
-    animation: none;
-  }
 }

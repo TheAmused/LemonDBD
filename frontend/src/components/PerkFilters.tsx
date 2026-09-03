@@ -165,7 +165,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
     {
       value: 'all',
-      activeClassName: 'bg-bg-elevated text-text-primary border border-border-color',
+      activeClassName: 'bg-accent-amber text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
@@ -197,12 +197,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'name',
       label: dict?.filters?.sortByName,
-      activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
+      activeClassName: 'bg-accent-amber text-text-inverted',
     },
     {
       value: 'character',
       label: dict?.filters?.sortByCharacter,
-      activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
+      activeClassName: 'bg-accent-amber text-text-inverted',
     },
   ];
 
@@ -211,13 +211,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       value: 'asc',
       icon: <ArrowUpAZ className="h-3.5 w-3.5" />,
       label: dict?.filters?.orderAsc,
-      activeClassName: 'bg-bg-surface text-accent-amber border border-border-color',
+      activeClassName: 'bg-accent-amber text-text-inverted',
     },
     {
       value: 'desc',
       icon: <ArrowDownZA className="h-3.5 w-3.5" />,
       label: dict?.filters?.orderDesc,
-      activeClassName: 'bg-bg-surface text-accent-amber border border-border-color',
+      activeClassName: 'bg-accent-amber text-text-inverted',
     },
   ];
 
@@ -241,7 +241,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           options={ownershipOptions}
         />
 
-        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-border-color bg-bg-primary/50 px-3.5 py-2 text-xs font-extrabold text-text-secondary shadow-inner">
+        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-border-color bg-bg-elevated/60 px-3.5 py-2 text-xs font-extrabold text-text-secondary shadow-inner">
           <input
             type="checkbox"
             checked={scope === 'general'}
@@ -282,7 +282,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             }}
             placeholder={dict?.filters?.searchPlaceholder}
             aria-label={dict?.filters?.searchPlaceholder}
-            className="w-full rounded-full border border-border-color bg-bg-primary/50 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-amber/20 transition-all"
+            className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-amber/20 transition-all"
           />
           {search && (
             <button
@@ -340,7 +340,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         <div
           role="group"
           aria-label={dict?.filters?.viewMode}
-          className="flex shrink-0 items-center rounded-full border border-border-color bg-bg-primary/50 p-1"
+          className="flex shrink-0 items-center rounded-full border border-border-color bg-bg-elevated/60 p-1"
         >
           <button
             type="button"

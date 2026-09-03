@@ -1,16 +1,28 @@
 /* frontend/src/app/globals.css */
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-surface: var(--bg-surface);
+  --color-border-color: var(--border-color);
+  --color-accent-red: var(--accent-red);
+}
 
 @layer base {
-  :root {
-    --bg-primary: #f8fafc;
-    --bg-surface: #ffffff;
-    --border-color: #e2e8f0;
+
+  :root,
+  .light {
+    color-scheme: light;
+    --bg-primary: #cbd5e1;
+    --bg-surface: #e2e8f0;
+    --border-color: #94a3b8;
     --accent-red: #dc2626;
   }
 
   .dark {
+    color-scheme: dark;
     --bg-primary: #030712;
     --bg-surface: #0b0f19;
     --border-color: #1f293d;
@@ -86,23 +98,47 @@
  * of this block instead of by a hook, so it also works before hydration.
  */
 @keyframes dbdSpinnerSpin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes dbdSpinnerSpinReverse {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
 }
 
 @keyframes dbdSpinnerPulse {
-  0%, 100% { transform: scale(0.92); }
-  50% { transform: scale(1.09); }
+
+  0%,
+  100% {
+    transform: scale(0.92);
+  }
+
+  50% {
+    transform: scale(1.09);
+  }
 }
 
 @keyframes dbdSpinnerLabelPulse {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .dbd-spinner-runes {
@@ -129,6 +165,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .dbd-spinner-runes,
   .dbd-spinner-needle {
     animation: dbdSpinnerLabelPulse 3s ease-in-out infinite;
@@ -162,6 +199,7 @@
 }
 
 @keyframes heartbeatPulse {
+
   0%,
   100% {
     opacity: 0.35;
@@ -283,7 +321,6 @@ strong {
 
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -344,75 +381,179 @@ strong {
 }
 
 @keyframes freezeBadgeIn {
-  from { opacity: 0; transform: scale(.85); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes chaosLeverPull {
-  0% { transform: rotate(0deg); }
-  35% { transform: rotate(32deg); }
-  62% { transform: rotate(-6deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  35% {
+    transform: rotate(32deg);
+  }
+
+  62% {
+    transform: rotate(-6deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 @keyframes chaosBadgePop {
-  from { transform: scale(.6); opacity: 0; }
-  60% { transform: scale(1.08); opacity: 1; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(.6);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes chaosMarqueeGlow {
-  0%, 100% { opacity: .35; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: .35;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes historyLockShake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  20% { transform: translateX(-2px) rotate(-8deg); }
-  40% { transform: translateX(2px) rotate(8deg); }
-  60% { transform: translateX(-2px) rotate(-6deg); }
-  80% { transform: translateX(2px) rotate(6deg); }
+
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+
+  20% {
+    transform: translateX(-2px) rotate(-8deg);
+  }
+
+  40% {
+    transform: translateX(2px) rotate(8deg);
+  }
+
+  60% {
+    transform: translateX(-2px) rotate(-6deg);
+  }
+
+  80% {
+    transform: translateX(2px) rotate(6deg);
+  }
 }
 
 @keyframes historyLockBreak {
-  0% { transform: scale(1) rotate(0deg); opacity: 1; }
-  40% { transform: scale(1.3) rotate(12deg); opacity: 1; }
-  100% { transform: scale(0.2) rotate(35deg); opacity: 0; }
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+
+  40% {
+    transform: scale(1.3) rotate(12deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.2) rotate(35deg);
+    opacity: 0;
+  }
 }
 
-.chaos-lever-pull { animation: chaosLeverPull 550ms cubic-bezier(.34, 1.56, .64, 1) both; }
-.chaos-badge-pop { animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both; }
-.chaos-marquee-bulb { animation: chaosMarqueeGlow 2.4s ease-in-out infinite; }
+.chaos-lever-pull {
+  animation: chaosLeverPull 550ms cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.chaos-badge-pop {
+  animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both;
+}
+
+.chaos-marquee-bulb {
+  animation: chaosMarqueeGlow 2.4s ease-in-out infinite;
+}
 
 /* ========================================================================= */
 /* SHARED DBD-THEMED PRIMARY-ACTION BUTTON (Pull the Lever / Confirm / Roll / */
 /* Shuffle & Draw / Crack Open / Draw Again, across all 5 randomizer modes). */
 /* ========================================================================= */
 @keyframes dbdButtonPulse {
-  0%, 100% { box-shadow: 0 0 0 0 transparent, 0 14px 30px rgba(0, 0, 0, 0.55); }
-  50% { box-shadow: 0 0 28px 4px var(--dbd-btn-glow, rgba(245, 158, 11, 0.4)), 0 14px 30px rgba(0, 0, 0, 0.55); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent, 0 14px 30px rgba(0, 0, 0, 0.55);
+  }
+
+  50% {
+    box-shadow: 0 0 28px 4px var(--dbd-btn-glow, rgba(245, 158, 11, 0.4)), 0 14px 30px rgba(0, 0, 0, 0.55);
+  }
 }
 
 @keyframes dbdButtonSweep {
-  0% { transform: translateX(-160%) skewX(-20deg); }
-  100% { transform: translateX(360%) skewX(-20deg); }
+  0% {
+    transform: translateX(-160%) skewX(-20deg);
+  }
+
+  100% {
+    transform: translateX(360%) skewX(-20deg);
+  }
 }
 
-.dbd-btn-pulse { animation: dbdButtonPulse 2.4s ease-in-out infinite; }
+.dbd-btn-pulse {
+  animation: dbdButtonPulse 2.4s ease-in-out infinite;
+}
 
 /* Slot machine cabinet marquee bulbs (reused chaos-marquee-bulb keyframe, own class
    so the two features' bulb rows can be styled/timed independently later). */
-.slot-cabinet-bulb { animation: chaosMarqueeGlow 2.2s ease-in-out infinite; }
+.slot-cabinet-bulb {
+  animation: chaosMarqueeGlow 2.2s ease-in-out infinite;
+}
 
 @keyframes slotCabinetHum {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 0.85; }
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
 }
-.slot-cabinet-hum { animation: slotCabinetHum 3.2s ease-in-out infinite; }
-.history-lock-shake { animation: historyLockShake 380ms ease-in-out; }
-.history-lock-break { animation: historyLockBreak 380ms cubic-bezier(.36, 0, .66, -0.56) forwards; }
+
+.slot-cabinet-hum {
+  animation: slotCabinetHum 3.2s ease-in-out infinite;
+}
+
+.history-lock-shake {
+  animation: historyLockShake 380ms ease-in-out;
+}
+
+.history-lock-break {
+  animation: historyLockBreak 380ms cubic-bezier(.36, 0, .66, -0.56) forwards;
+}
 
 @media (prefers-reduced-motion: reduce) {
+
   .chaos-lever-pull,
   .chaos-badge-pop,
   .history-lock-shake,
@@ -449,6 +590,7 @@ strong {
     opacity: 0;
     transform: translateY(18px) scale(0.95);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -461,10 +603,12 @@ strong {
     transform: translateY(-50%) scale(0.9);
     filter: blur(8px);
   }
+
   50% {
     opacity: 0.15;
     filter: blur(2px);
   }
+
   100% {
     opacity: 0.05;
     transform: translateY(-50%) scale(1);
@@ -477,6 +621,7 @@ strong {
     transform: scale(0.93) translateY(18px);
     opacity: 0.75;
   }
+
   100% {
     transform: scale(1) translateY(0);
     opacity: 1;
@@ -488,6 +633,7 @@ strong {
     opacity: 0;
     transform: scale(0.8) translateY(36px);
   }
+
   100% {
     opacity: 0.45;
     transform: scale(0.86) translateY(28px);
@@ -504,10 +650,12 @@ strong {
     transform: scale(0.94) translateZ(-15px);
     filter: blur(14px) brightness(1.5) contrast(1.2);
   }
+
   50% {
     opacity: 0.8;
     filter: blur(4px) brightness(1.2) contrast(1.1);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) translateZ(0);
@@ -521,10 +669,12 @@ strong {
     transform: translateY(-50%) scale(0.92);
     filter: blur(24px) drop-shadow(0 0 25px rgba(255, 0, 85, 0.7));
   }
+
   60% {
     opacity: 0.16;
     filter: blur(6px) drop-shadow(0 0 10px rgba(255, 0, 85, 0.3));
   }
+
   100% {
     opacity: 0.05;
     transform: translateY(-50%) scale(1);
@@ -543,10 +693,13 @@ strong {
 }
 
 @keyframes neonCockpitPulseLight {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(255, 0, 85, 0.06), 0 12px 30px rgba(15, 23, 42, 0.10);
     border-color: rgba(255, 0, 85, 0.25);
   }
+
   50% {
     box-shadow: 0 0 30px rgba(255, 0, 85, 0.14), 0 12px 30px rgba(15, 23, 42, 0.12);
     border-color: rgba(255, 0, 85, 0.45);
@@ -554,10 +707,13 @@ strong {
 }
 
 @keyframes neonCockpitPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 25px rgba(255, 0, 85, 0.08), 0 20px 50px rgba(0, 0, 0, 0.85);
     border-color: rgba(255, 0, 85, 0.25);
   }
+
   50% {
     box-shadow: 0 0 40px rgba(255, 0, 85, 0.18), 0 20px 50px rgba(0, 0, 0, 0.85);
     border-color: rgba(255, 0, 85, 0.45);

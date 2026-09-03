@@ -1,10 +1,6 @@
 ﻿'use client';
-// frontend/src/components/common/DbdSpinner.tsx
 
 import React from 'react';
-// Animations are plain CSS (see the `.dbd-spinner-*` rules in globals.css) so
-// this component -- which every route's loading.tsx renders -- does not drag
-// the framer-motion runtime into the very chunk the spinner waits on.
 import { LemonIcon } from '@/components/LemonIcon';
 import type { Dictionary } from '@/locales/types';
 
@@ -30,29 +26,17 @@ export interface DbdSpinnerCustomColors {
 }
 
 export interface DbdSpinnerProps {
-  /** Size variant or explicit pixel dimension */
   size?: DbdSpinnerSize;
-  /** Layout mode for positioning and backdrop */
   layout?: DbdSpinnerLayout;
-  /** Primary loading label text */
   label?: string;
-  /** Secondary subtitle / hint text */
   sublabel?: string;
-  /** Accent color scheme */
   accent?: DbdSpinnerAccent;
-  /** Custom color overrides for ultimate page uniqueness */
   customColors?: DbdSpinnerCustomColors;
-  /** Optional Dictionary object for automatic localized fallback */
   dict?: Dictionary | any;
-  /** Additional container CSS classes */
   className?: string;
-  /** Speed multiplier for the sweeping needle in seconds (default: 1.3) */
   needleSpeed?: number;
-  /** Whether to show the central LemonDBD emblem (default: true) */
   showEmblem?: boolean;
-  /** Custom accessible ARIA label override */
   ariaLabel?: string;
-  /** Explicit min-height style (e.g. '300px', '100%') */
   minHeight?: string | number;
 }
 
@@ -65,10 +49,6 @@ const SIZE_MAP: Record<'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl', number> = {
   '2xl': 360,
 };
 
-/**
- * Universal Dead by Daylight Skill Check Framer Motion Loading Spinner & Skeleton.
- * Single dynamic source of truth for all loading states across the frontend.
- */
 export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
   size = 'md',
   layout = 'inline',
@@ -83,7 +63,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
   ariaLabel,
   minHeight,
 }) => {
-  // Resolve numerical or responsive dimension
   let dimension: number = 150;
   let isResponsive = false;
 
@@ -96,7 +75,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     dimension = SIZE_MAP[size] || SIZE_MAP.md;
   }
 
-  // Resolve default localized text if none provided
   const resolvedLabel =
     label ||
     ariaLabel ||
@@ -105,14 +83,13 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     dict?.perks?.loading ||
     'Loading...';
 
-  // Accent theme color palettes
   const basePalettes: Record<DbdSpinnerAccent, DbdSpinnerCustomColors> = {
     crimson: {
       greatZone: '#ef4444',
       needle: '#f43f5e',
       glow: 'rgba(239, 68, 68, 0.75)',
       ring: 'rgba(244, 63, 94, 0.35)',
-      text: 'text-rose-400',
+      text: 'text-rose-600 dark:text-rose-400',
       baseTrack: '#1e293b',
     },
     amber: {
@@ -120,7 +97,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#fbbf24',
       glow: 'rgba(245, 158, 11, 0.75)',
       ring: 'rgba(251, 191, 36, 0.35)',
-      text: 'text-amber-400',
+      text: 'text-amber-600 dark:text-amber-400',
       baseTrack: '#1e293b',
     },
     emerald: {
@@ -128,7 +105,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#34d399',
       glow: 'rgba(16, 185, 129, 0.75)',
       ring: 'rgba(52, 211, 153, 0.35)',
-      text: 'text-emerald-400',
+      text: 'text-emerald-600 dark:text-emerald-400',
       baseTrack: '#1e293b',
     },
     cyan: {
@@ -136,7 +113,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#38bdf8',
       glow: 'rgba(6, 182, 212, 0.75)',
       ring: 'rgba(56, 189, 248, 0.35)',
-      text: 'text-cyan-400',
+      text: 'text-cyan-700 dark:text-cyan-400',
       baseTrack: '#1e293b',
     },
     violet: {
@@ -144,7 +121,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#a78bfa',
       glow: 'rgba(139, 92, 246, 0.75)',
       ring: 'rgba(167, 139, 250, 0.35)',
-      text: 'text-purple-400',
+      text: 'text-purple-600 dark:text-purple-400',
       baseTrack: '#1e293b',
     },
     blood: {
@@ -152,7 +129,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#991b1b',
       glow: 'rgba(220, 38, 38, 0.90)',
       ring: 'rgba(153, 27, 27, 0.40)',
-      text: 'text-red-500',
+      text: 'text-red-600 dark:text-red-500',
       baseTrack: '#170202',
     },
     gold: {
@@ -160,7 +137,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#fde047',
       glow: 'rgba(245, 158, 11, 0.85)',
       ring: 'rgba(253, 224, 71, 0.40)',
-      text: 'text-yellow-400',
+      text: 'text-yellow-600 dark:text-yellow-400',
       baseTrack: '#1e293b',
     },
     neon: {
@@ -168,7 +145,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#ff007f',
       glow: 'rgba(0, 255, 204, 0.85)',
       ring: 'rgba(255, 0, 127, 0.40)',
-      text: 'text-cyan-300',
+      text: 'text-cyan-600 dark:text-cyan-300',
       baseTrack: '#051b2c',
     },
   };
@@ -184,14 +161,13 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     baseTrack: customColors?.baseTrack || selectedPalette.baseTrack,
   };
 
-  // Layout wrapper classes
   const layoutClasses = {
     fullscreen:
       'fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070b12]/95 backdrop-blur-md dbd-fog-overlay p-6',
     page:
       'w-full min-h-[60vh] flex-1 flex flex-col items-center justify-center p-6 dbd-fog-overlay',
     card:
-      'w-full min-h-[260px] flex flex-col items-center justify-center p-6 rounded-3xl bg-slate-950/60 border border-slate-800/80 shadow-2xl',
+      'w-full min-h-[260px] flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-surface/80 border border-border-color shadow-2xl',
     inline:
       'w-full py-10 flex flex-col items-center justify-center',
     compact:
@@ -200,8 +176,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
 
   const uniqueId = React.useId().replace(/:/g, '');
   const filterId = `dbd-spinner-glow-${uniqueId}`;
-
-  // Emblem scale based on dial dimension
   const emblemSize = Math.max(20, Math.round(dimension * 0.31));
 
   return (
@@ -210,29 +184,26 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       aria-live="polite"
       aria-busy="true"
       aria-label={resolvedLabel}
-      className={`select-none text-slate-100 ${layoutClasses} ${className}`}
+      className={`select-none text-slate-900 dark:text-slate-100 ${layoutClasses} ${className}`}
       style={minHeight ? { minHeight } : undefined}
     >
       <div
-        className={`relative flex items-center justify-center ${
-          isResponsive
+        className={`relative flex items-center justify-center ${isResponsive
             ? 'w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96'
             : ''
-        }`}
+          }`}
         style={
           isResponsive
             ? undefined
             : { width: dimension, height: dimension }
         }
       >
-        {/* SVG Skill Check Dial */}
         <svg
           viewBox="0 0 160 160"
           className="w-full h-full overflow-visible"
           aria-hidden="true"
         >
           <defs>
-            {/* High-intensity Great Skill Check Glow Filter */}
             <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="3.5" result="blur" />
               <feMerge>
@@ -279,10 +250,10 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
               strokeDasharray="1 11"
               className="text-slate-500/70"
             />
-            <line x1="80" y1="6" x2="80" y2="12" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
-            <line x1="80" y1="148" x2="80" y2="154" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
-            <line x1="6" y1="80" x2="12" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
-            <line x1="148" y1="80" x2="154" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-400" />
+            <line x1="80" y1="6" x2="80" y2="12" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
+            <line x1="80" y1="148" x2="80" y2="154" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
+            <line x1="6" y1="80" x2="12" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
+            <line x1="148" y1="80" x2="154" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
           </g>
 
           {/* 3. Base Skill Check Track */}
@@ -297,7 +268,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             className="dark:stroke-slate-800"
           />
 
-          {/* 4. Good Success Zone Arc (White/Silver Zone ~65°) */}
+          {/* 4. Good Success Zone Arc */}
           <circle
             cx="80"
             cy="80"
@@ -311,7 +282,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             className="opacity-95"
           />
 
-          {/* 5. Great Skill Check Zone Arc (Glowing Crimson/Amber Zone ~16°) */}
+          {/* 5. Great Skill Check Zone Arc */}
           <circle
             cx="80"
             cy="80"
@@ -348,18 +319,16 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
               strokeLinecap="round"
               filter={`url(#${filterId})`}
             />
-
             <polygon
               points="80,12 85,24 75,24"
               fill={colorMap.needle}
               filter={`url(#${filterId})`}
             />
-
             <circle cx="80" cy="80" r="6" fill={colorMap.needle} />
           </g>
         </svg>
 
-        {/* 8. Pulsing Central Entity Emblem / LemonDBD Logo */}
+        {/* 8. Central Logo Emblem */}
         {showEmblem && (
           <div
             className="dbd-spinner-emblem absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -370,26 +339,25 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
         )}
       </div>
 
-      {/* 9. Optional Localized Label & Sublabel */}
+      {/* 9. Localized Label & Sublabel */}
       {(label || sublabel || (layout !== 'compact' && resolvedLabel)) && (
         <div className="mt-5 flex flex-col items-center text-center space-y-1.5 max-w-sm sm:max-w-md px-2">
           {resolvedLabel && (
             <p
-              className={`dbd-spinner-label text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-md`}
+              className={`dbd-spinner-label text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-sm`}
             >
               {resolvedLabel}
             </p>
           )}
 
           {sublabel && (
-            <p className="text-xs sm:text-sm text-slate-300/80 font-medium drop-shadow-sm">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/80 font-medium drop-shadow-sm">
               {sublabel}
             </p>
           )}
         </div>
       )}
 
-      {/* Screen Reader Announcement */}
       <span className="sr-only">{resolvedLabel}</span>
     </div>
   );

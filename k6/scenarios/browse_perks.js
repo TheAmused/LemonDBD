@@ -1,0 +1,56 @@
+import { sleep } from 'k6';
+import { defaultClient, browseDuration } from '../lib/http_client.js';
+
+function thinkTime(min, max) {
+  if (typeof __ENV !== 'undefined' && (__ENV.K6_FAST_TEST === 'true' || __ENV.K6_FAST_TEST === '1')) {
+    sleep(0.05);
+    return;
+  }
+  sleep(min + Math.random() * (max - min));
+}
+
+export function runScenario(client = defaultClient) {
+  const startTime = Date.now();
+  const tags = { type: 'api', scenario: 'browse' };
+
+  // 1. Fetch lightweight sidebar/vault stats summary
+  client.get('/api/v1/stats/summary', { tags: tags });
+
+  // 2. Explore survivor perks catalog
+  const survivorPerksRes = client.get('/api/v1/perks?limit=50&category=survivor', { tags: tags });
+
+  // 3. Multilingual killer perks exploration (Polish localization)
+  client.get('/api/v1/perks?limit=50&category=killer&lang=pl', { tags: tags });
+
+  // 4. Character roster index
+  client.get('/api/v1/characters', { tags: tags });
+
+  // 5. Inspect specific perk detail by identifier
+  let perkIdentifier = 'Sprint_Burst';
+  if (survivorPerksRes && survivorPerksRes.status === 200) {
+    try {
+      const parsed = typeof survivorPerksRes.body === 'string'
+        ? JSON.parse(survivorPerksRes.body)
+        : survivorPerksRes.body;
+      const perks = parsed.data || (Array.isArray(parsed) ? parsed : []);
+      if (perks.length > 0) {
+        const randomPerk = perks[Math.floor(Math.random() * perks.length)];
+        if (randomPerk && randomPerk.name) {
+          perkIdentifier = encodeURIComponent(randomPerk.name.replace(/\s+/g, '_'));
+        }
+      }
+    } catch (e) {
+      perkIdentifier = 'Sprint_Burst';
+    }
+  }
+
+  client.get(`/api/v1/perks/${perkIdentifier}`, { tags: tags });
+
+  browseDuration.add(Date.now() - startTime);
+  thinkTime(1.0, 2.5);
+}
+
+export const browsePerks = runScenario;
+export default function () {
+  runScenario();
+}

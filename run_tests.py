@@ -221,7 +221,7 @@ def main():
                     continue
 
                 res = run_command(
-                    f'k6 run -e K6_TIMEOUT=30s "k6/suites/{suite}.js"',
+                    f'"{k6_bin}" run -e K6_TIMEOUT=30s "k6/suites/{suite}.js"',
                     cwd=ROOT_DIR,
                     timeout=600,
                 )

@@ -163,6 +163,16 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     [N, normalizeIndex, rosters, onSelectRoster, onClose]
   );
 
+  // Closing the modal (X button, backdrop click, Escape) must always be able
+  // to dismiss it, regardless of which roster happens to be centered. Unlike
+  // commitSelection, this never validates against ENABLED_ROSTER_SLUGS, so
+  // browsing to a blocked/locked roster and then closing can't get stuck —
+  // it just discards the in-progress browse and falls back to whatever
+  // roster was selected before the modal was opened.
+  const handleClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
   const stepPrev = useCallback(
     (e?: React.MouseEvent | React.PointerEvent) => {
       if (e) {
@@ -204,13 +214,13 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
         commitSelection();
       } else if (e.key === 'Escape') {
         e.preventDefault();
-        commitSelection();
+        handleClose();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, commitSelection, stepPrev, stepNext]);
+  }, [isOpen, commitSelection, handleClose, stepPrev, stepNext]);
 
   const getRosterDisplayName = useCallback(
     (r: RosterItem) => {
@@ -333,7 +343,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="roster-select-title"
-      onClick={() => commitSelection()}
+      onClick={() => handleClose()}
       className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-900/70 dark:bg-black/90 backdrop-blur-2xl animate-in fade-in duration-250 select-none overflow-y-auto"
     >
       <div className="absolute inset-0 bg-gradient-radial from-pink-100/60 via-white/85 to-slate-200/95 dark:from-pink-950/30 dark:via-zinc-950/85 dark:to-black/95 pointer-events-none" aria-hidden="true" />
@@ -344,7 +354,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       >
         <button
           type="button"
-          onClick={() => commitSelection()}
+          onClick={() => handleClose()}
           className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-700/70 text-slate-500 dark:text-zinc-400 hover:text-pink-700 dark:hover:text-white hover:border-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950/50 hover:shadow-[0_0_20px_rgba(255,0,85,0.4)] transition-all cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
           aria-label={dict?.modal?.close || ''}
         >

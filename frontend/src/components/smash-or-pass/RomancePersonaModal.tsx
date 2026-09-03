@@ -66,7 +66,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
         badgeColor: 'from-slate-800 via-zinc-900 to-black',
         borderColor: 'border-zinc-700/60',
         glowColor: 'rgba(148, 163, 184, 0.2)',
-        icon: <Compass className="h-6 w-6 text-slate-300 animate-spin-slow" />,
+        icon: <Compass className="h-6 w-6 text-slate-200 animate-spin-slow" />,
         killerAffinity: 0,
         survivorAffinity: 0,
         smashRate: 0,
@@ -90,7 +90,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
     let badgeColor = 'from-purple-600 via-pink-600 to-rose-950';
     let borderColor = 'border-pink-500/60';
     let glowColor = 'rgba(236, 72, 153, 0.35)';
-    let archIcon = <Sparkles className="h-6 w-6 text-pink-300" />;
+    let archIcon = <Sparkles className="h-6 w-6 text-pink-700 dark:text-pink-300" />;
 
     if (smashedMonsters >= 2) {
       archKey = 'eldritchDevotee';
@@ -121,7 +121,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       badgeColor = 'from-slate-600 via-zinc-800 to-black';
       borderColor = 'border-slate-500/60';
       glowColor = 'rgba(100, 116, 139, 0.35)';
-      archIcon = <Zap className="h-6 w-6 text-slate-300" />;
+      archIcon = <Zap className="h-6 w-6 text-slate-200" />;
     }
 
     const arch = rawArchetypes[archKey] || {};
@@ -198,26 +198,26 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       onClose={onClose}
       size="xl"
       title={personaModalTitle}
-      icon={<Sparkles className="h-6 w-6 text-pink-400" />}
+      icon={<Sparkles className="h-6 w-6 text-pink-600 dark:text-pink-400" />}
       centerTitle={true}
       ariaLabel={personaModalTitle}
     >
       <div className="p-4 sm:p-6 space-y-5">
         {!hasVotes ? (
           /* Sleek, Non-Repetitive Empty State (Untapped Soul) */
-          <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-3xl bg-zinc-950/90 border border-zinc-800 space-y-4 shadow-inner">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-zinc-900 border border-zinc-700/80 text-pink-400 shadow-[0_0_25px_rgba(255,0,85,0.25)]">
-              <Compass className="h-8 w-8 text-pink-400" />
+          <div className="flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-zinc-950/90 border border-slate-200 dark:border-zinc-800 space-y-4 shadow-inner">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 text-pink-600 dark:text-pink-400 shadow-[0_0_25px_rgba(255,0,85,0.15)] dark:shadow-[0_0_25px_rgba(255,0,85,0.25)]">
+              <Compass className="h-8 w-8 text-pink-600 dark:text-pink-400" />
             </div>
 
             <div className="space-y-1.5 max-w-sm">
-              <h3 className="text-xl sm:text-2xl font-black font-mono text-zinc-100">
+              <h3 className="text-xl sm:text-2xl font-black font-mono text-zinc-900 dark:text-zinc-100">
                 {persona.title}
               </h3>
               <p className="text-xs text-pink-300/90 font-mono">
                 {persona.subtitle}
               </p>
-              <p className="text-xs sm:text-sm text-zinc-400 font-sans leading-relaxed pt-1">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 font-sans leading-relaxed pt-1">
                 {persona.description}
               </p>
             </div>
@@ -258,43 +258,43 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             {/* Dating Psychology Card */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2 shadow-inner">
-              <span className="font-bold text-pink-400 uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800 space-y-2 shadow-inner">
+              <span className="font-bold text-pink-600 dark:text-pink-400 uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5" />
                 {datingPsychologyLabel}
               </span>
-              <p className="text-zinc-300 leading-relaxed text-xs sm:text-sm font-sans">
+              <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed text-xs sm:text-sm font-sans">
                 {persona.description}
               </p>
             </div>
 
             {/* Telemetry Matrix */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono">
-              <div className="p-3.5 rounded-2xl bg-zinc-900/80 border border-zinc-800 flex flex-col justify-between gap-1 shadow-inner">
-                <span className="text-zinc-400 text-[11px]">{totalEvaluatedLabel}</span>
-                <span className="text-lg font-black text-zinc-100">
-                  {votes.length} <span className="text-xs font-normal text-zinc-400">{candidatesLabel}</span>
+              <div className="p-3.5 rounded-2xl bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 flex flex-col justify-between gap-1 shadow-inner">
+                <span className="text-slate-500 dark:text-zinc-400 text-[11px]">{totalEvaluatedLabel}</span>
+                <span className="text-lg font-black text-zinc-900 dark:text-zinc-100">
+                  {votes.length} <span className="text-xs font-normal text-slate-500 dark:text-zinc-400">{candidatesLabel}</span>
                 </span>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-zinc-900/80 border border-zinc-800 flex flex-col justify-between gap-1 shadow-inner">
-                <span className="text-zinc-400 text-[11px]">{smashRateLabel}</span>
-                <span className="text-lg font-black text-rose-400 flex items-center gap-1">
+              <div className="p-3.5 rounded-2xl bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 flex flex-col justify-between gap-1 shadow-inner">
+                <span className="text-slate-500 dark:text-zinc-400 text-[11px]">{smashRateLabel}</span>
+                <span className="text-lg font-black text-rose-700 dark:text-rose-400 flex items-center gap-1">
                   <Heart className="h-4 w-4 fill-rose-400" />
                   {persona.smashRate}{percentSign}
                 </span>
               </div>
 
               {persona.favoriteChar && (
-                <div className="col-span-2 sm:col-span-1 p-3.5 rounded-2xl bg-zinc-900/80 border border-zinc-800 flex items-center gap-3 shadow-inner">
+                <div className="col-span-2 sm:col-span-1 p-3.5 rounded-2xl bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 flex items-center gap-3 shadow-inner">
                   {favoriteCharAvatar && (
                     <div className="h-10 w-10 rounded-xl overflow-hidden bg-black border border-pink-500/40 shrink-0">
                       <img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
                     </div>
                   )}
                   <div className="min-w-0">
-                    <span className="text-zinc-400 text-[10px] block truncate">{firstSmashLabel}</span>
-                    <span className="text-xs font-bold text-white font-mono truncate block">
+                    <span className="text-slate-500 dark:text-zinc-400 text-[10px] block truncate">{firstSmashLabel}</span>
+                    <span className="text-xs font-bold text-zinc-900 dark:text-white font-mono truncate block">
                       {persona.favoriteChar.name}
                     </span>
                   </div>
@@ -303,20 +303,20 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             {/* Role Affinity Scale (Survivor vs Killer) */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2.5">
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800 space-y-2.5">
               <div className="flex justify-between items-center text-xs font-bold font-mono">
-                <span className="flex items-center gap-1.5 text-emerald-400">
+                <span className="flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
                   <Shield className="h-4 w-4" aria-hidden="true" />
                   <span>{survivorsLabel} ({persona.survivorAffinity}{percentSign})</span>
                 </span>
-                <span className="flex items-center gap-1.5 text-rose-400">
+                <span className="flex items-center gap-1.5 text-rose-700 dark:text-rose-400">
                   <Skull className="h-4 w-4" aria-hidden="true" />
                   <span>{killersLabel} ({persona.killerAffinity}{percentSign})</span>
                 </span>
               </div>
 
               <div
-                className="h-3 w-full bg-zinc-900 rounded-full overflow-hidden flex border border-zinc-800 shadow-inner"
+                className="h-3 w-full bg-slate-200 dark:bg-zinc-900 rounded-full overflow-hidden flex border border-slate-200 dark:border-zinc-800 shadow-inner"
                 role="progressbar"
                 aria-valuenow={persona.survivorAffinity}
                 aria-valuemin={0}
@@ -351,7 +351,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                     onClose();
                     onResetAll();
                   }}
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:border-pink-500 text-zinc-400 hover:text-white transition-all cursor-pointer shrink-0 shadow-md"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:border-pink-500 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shrink-0 shadow-md"
                   title={resetVotesLabel}
                   aria-label={resetVotesLabel}
                 >

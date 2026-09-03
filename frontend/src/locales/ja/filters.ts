@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/filters.ts
 export default {
   searchPlaceholder: "検索...",
   category: "カテゴリー",

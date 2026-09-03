@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/characterDetail.ts
 export default {
   backToCharacters: "キャラクター一覧に戻る",
   myCharacters: "マイキャラクター",

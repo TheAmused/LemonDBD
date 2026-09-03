@@ -55,7 +55,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
       setQuests((prev) =>
         prev.map((q) => (q.id === quest.id ? { ...q, is_completed: true, progress: q.goal } : q))
       );
-      setClaimedToast(`🎉 Claimed +${res.xp_reward || quest.xp_reward} XP for "${quest.title}"!`);
+      setClaimedToast(`+${res.xp_reward || quest.xp_reward} XP: ${quest.title}`);
       setTimeout(() => setClaimedToast(null), 4000);
     } catch (err: unknown) {
       console.error('Failed to claim quest:', err);
@@ -96,54 +96,60 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-2xl text-slate-900 dark:text-slate-100 animate-in zoom-in-95 duration-200 cursor-default"
+        className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-border-color bg-bg-surface shadow-2xl text-text-primary animate-in zoom-in-95 duration-200 cursor-default transition-colors"
       >
-        <div className="relative bg-gradient-to-r from-amber-500/10 via-slate-50 to-red-500/10 dark:from-amber-600/30 dark:via-slate-900 dark:to-red-600/20 p-6 border-b border-slate-200 dark:border-slate-800">
+        <div className="relative bg-bg-elevated/40 p-6 border-b border-border-color">
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-            aria-label={dict?.modal?.close || 'Close modal'}
+            className="absolute right-4 top-4 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+            aria-label={dict?.modal?.close}
           >
             <X className="h-5 w-5" />
           </button>
 
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 shadow-sm dark:shadow-lg dark:shadow-amber-950/50">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/30 text-accent-amber shadow-xs">
               <Trophy className="h-6 w-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 id="quests-modal-title" className="text-xl font-black tracking-wide text-slate-900 dark:text-white">
-                  {dict?.quests?.title || 'Trial Quests & Milestones'}
+                <h2 id="quests-modal-title" className="text-xl font-black tracking-wide text-text-primary">
+                  {dict?.quests?.title}
                 </h2>
-                <span className="rounded-full bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 px-2.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase">
-                  {dict?.quests?.xpSystem || 'XP System'}
-                </span>
+                {dict?.quests?.xpSystem && (
+                  <span className="rounded-full bg-accent-amber/15 border border-accent-amber/30 px-2.5 py-0.5 text-[10px] font-bold text-accent-amber uppercase">
+                    {dict.quests.xpSystem}
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
           <div className="mt-4 grid grid-cols-2 gap-3 pt-2">
-            <div className="flex items-center justify-between rounded-xl bg-white/80 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 p-3 shadow-sm">
+            <div className="flex items-center justify-between rounded-xl bg-bg-surface border border-border-color p-3 shadow-xs">
               <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-amber-500 dark:text-amber-400 animate-pulse" />
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  {dict?.stats?.totalXpClaimed || 'Total XP Claimed'}
-                </span>
+                <Zap className="h-4 w-4 text-accent-amber animate-pulse" />
+                {dict?.stats?.totalXpClaimed && (
+                  <span className="text-xs font-semibold text-text-secondary">
+                    {dict.stats.totalXpClaimed}
+                  </span>
+                )}
               </div>
-              <span className="text-sm font-black font-mono text-amber-700 dark:text-amber-400">
-                {dict?.quests?.xpPrefix || '+'}
-                {totalXpEarned} {dict?.quests?.xpSuffix || 'XP'}
+              <span className="text-sm font-black font-mono text-accent-amber">
+                {dict?.quests?.xpPrefix}
+                {totalXpEarned} {dict?.quests?.xpSuffix}
               </span>
             </div>
 
-            <div className="flex items-center justify-between rounded-xl bg-white/80 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 p-3 shadow-sm">
+            <div className="flex items-center justify-between rounded-xl bg-bg-surface border border-border-color p-3 shadow-xs">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  {dict?.stats?.completed || 'Completed'}
-                </span>
+                {dict?.stats?.completed && (
+                  <span className="text-xs font-semibold text-text-secondary">
+                    {dict.stats.completed}
+                  </span>
+                )}
               </div>
               <span className="text-sm font-black font-mono text-emerald-700 dark:text-emerald-400">
                 {totalQuestsCompleted} / {quests.length}
@@ -155,46 +161,48 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
         {claimedToast && (
           <div
             role="status"
-            className="bg-emerald-500/10 dark:bg-emerald-500/20 border-b border-emerald-500/30 px-6 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center gap-2 animate-in slide-in-from-top-2"
+            className="bg-emerald-50 text-emerald-800 border-b border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-500/30 px-6 py-2.5 text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2"
           >
             <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span>{claimedToast}</span>
           </div>
         )}
 
-        <div className="flex items-center gap-2 px-6 pt-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
+        <div className="flex items-center gap-2 px-6 pt-4 border-b border-border-color bg-bg-primary">
           <button
             type="button"
             onClick={() => setFilterCategory('all')}
-            className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${filterCategory === 'all'
-                ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 border-t-2 border-amber-500 shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+            className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
+              filterCategory === 'all'
+                ? 'bg-bg-surface text-accent-amber border-t-2 border-accent-amber shadow-xs'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
           >
-            {dict?.quests?.allQuestsPrefix || 'All Quests ('}
-            {quests.length})
+            <span>{dict?.quests?.allQuestsPrefix}</span> ({quests.length})
           </button>
           <button
             type="button"
             onClick={() => setFilterCategory('daily')}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${filterCategory === 'daily'
-                ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 border-t-2 border-amber-500 shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
+              filterCategory === 'daily'
+                ? 'bg-bg-surface text-accent-amber border-t-2 border-accent-amber shadow-xs'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
           >
             <Calendar className="h-3.5 w-3.5" />
-            {dict?.quests?.dailyQuests || 'Daily Quests'}
+            <span>{dict?.quests?.dailyQuests}</span>
           </button>
           <button
             type="button"
             onClick={() => setFilterCategory('weekly')}
-            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${filterCategory === 'weekly'
-                ? 'bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-400 border-t-2 border-amber-500 shadow-sm'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
+              filterCategory === 'weekly'
+                ? 'bg-bg-surface text-accent-amber border-t-2 border-accent-amber shadow-xs'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
           >
-            <Flame className="h-3.5 w-3.5 text-rose-500 dark:text-rose-400" />
-            {dict?.quests?.weeklyQuests || 'Weekly Quests'}
+            <Flame className="h-3.5 w-3.5 text-accent-red" />
+            <span>{dict?.quests?.weeklyQuests}</span>
           </button>
         </div>
 
@@ -206,13 +214,13 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                 layout="inline"
                 accent="violet"
                 needleSpeed={1.1}
-                label={dict?.quests?.loadingQuests || 'Decoding Entity Rituals...'}
+                label={dict?.quests?.loadingQuests}
                 dict={dict}
               />
             </div>
           ) : filteredQuests.length === 0 ? (
-            <div className="py-8 text-center text-xs text-slate-500 dark:text-slate-400">
-              {dict?.quests?.noQuestsFound || 'No quests found in this category.'}
+            <div className="py-8 text-center text-xs text-text-muted">
+              {dict?.quests?.noQuestsFound}
             </div>
           ) : (
             filteredQuests.map((quest) => {
@@ -222,81 +230,85 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
               return (
                 <div
                   key={quest.id}
-                  className={`rounded-2xl border p-4 transition-all shadow-sm ${quest.is_completed
-                      ? 'border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-950/40 opacity-75'
+                  className={`rounded-2xl border p-4 transition-all shadow-xs ${
+                    quest.is_completed
+                      ? 'border-border-color bg-bg-elevated/40 opacity-75'
                       : isReadyToClaim
-                        ? 'border-amber-500/40 bg-gradient-to-r from-amber-50/90 via-white to-white dark:from-amber-950/30 dark:via-slate-900 dark:to-slate-900 shadow-sm dark:shadow-amber-950/20'
-                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60'
-                    }`}
+                        ? 'border-accent-amber/50 bg-bg-surface shadow-xs'
+                        : 'border-border-color bg-bg-surface'
+                  }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider ${quest.category === 'weekly'
-                              ? 'bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 border border-purple-500/30'
-                              : 'bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30'
-                            }`}
+                          className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider ${
+                            quest.category === 'weekly'
+                              ? 'bg-purple-500/15 text-purple-700 dark:text-purple-400 border border-purple-500/30'
+                              : 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/30'
+                          }`}
                         >
                           {quest.category}
                         </span>
-                        <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">{quest.title}</h3>
+                        <h3 className="font-bold text-sm text-text-primary">{quest.title}</h3>
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">{quest.description}</p>
+                      <p className="text-xs text-text-secondary mb-3">{quest.description}</p>
 
                       <div className="space-y-1">
-                        <div className="flex justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400 font-mono">
-                          <span>{dict?.streaks?.runProgress || 'Progress'}</span>
+                        <div className="flex justify-between text-[11px] font-semibold text-text-muted font-mono">
+                          <span>{dict?.streaks?.runProgress}</span>
                           <span>
                             {quest.progress} / {quest.goal} ({pct}
                             {dict?.quests?.percentCloseParen || '%)'}
                           </span>
                         </div>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-bg-elevated">
                           <div
                             style={{ width: `${pct}%` }}
-                            className={`h-full transition-all duration-500 ${quest.is_completed
+                            className={`h-full transition-all duration-500 ${
+                              quest.is_completed
                                 ? 'bg-emerald-500'
                                 : isReadyToClaim
-                                  ? 'bg-gradient-to-r from-amber-500 to-emerald-400 animate-pulse'
-                                  : 'bg-amber-500'
-                              }`}
+                                  ? 'bg-accent-amber animate-pulse'
+                                  : 'bg-accent-amber'
+                            }`}
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex sm:flex-col items-center justify-between sm:items-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200 dark:border-slate-800">
-                      <div className="flex items-center gap-1 rounded-xl bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 text-xs font-black text-amber-700 dark:text-amber-400 shadow-sm">
+                    <div className="flex sm:flex-col items-center justify-between sm:items-end gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border-color">
+                      <div className="flex items-center gap-1 rounded-xl bg-accent-amber/15 border border-accent-amber/30 px-2.5 py-1 text-xs font-black text-accent-amber shadow-xs">
                         <Zap className="h-3.5 w-3.5" />
                         <span>
-                          {dict?.quests?.xpPrefix || '+'}
-                          {quest.xp_reward} {dict?.quests?.xpSuffix || 'XP'}
+                          {dict?.quests?.xpPrefix}
+                          {quest.xp_reward} {dict?.quests?.xpSuffix}
                         </span>
                       </div>
 
                       {quest.is_completed ? (
                         <div className="flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
                           <CheckCircle2 className="h-4 w-4" />
-                          <span>{dict?.sidebar?.claimed || 'Claimed'}</span>
+                          <span>{dict?.sidebar?.claimed}</span>
                         </div>
                       ) : (
                         <button
                           type="button"
                           onClick={() => handleClaim(quest)}
                           disabled={!isReadyToClaim || claimingId === quest.id}
-                          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${isReadyToClaim
-                              ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-900/40 hover:from-amber-400 hover:to-amber-500 animate-bounce'
-                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed opacity-60'
-                            }`}
+                          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            isReadyToClaim
+                              ? 'bg-accent-amber hover:bg-accent-amber-hover text-text-inverted shadow-md shadow-accent-amber/20 animate-bounce'
+                              : 'bg-bg-elevated text-text-muted cursor-not-allowed opacity-60'
+                          }`}
                         >
                           <Sparkles className="h-3.5 w-3.5" />
                           <span>
                             {claimingId === quest.id
-                              ? dict?.quests?.claiming || 'Claiming...'
+                              ? dict?.quests?.claiming
                               : isReadyToClaim
-                                ? dict?.quests?.claimReward || 'Claim Reward'
-                                : dict?.quests?.inProgress || 'In Progress'}
+                                ? dict?.quests?.claimReward
+                                : dict?.quests?.inProgress}
                           </span>
                         </button>
                       )}
@@ -308,16 +320,17 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           )}
         </div>
 
-        <div className="flex justify-end p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60">
+        <div className="flex justify-end p-4 border-t border-border-color bg-bg-primary">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400"
+            className="px-5 py-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary text-xs font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber shadow-xs"
           >
-            {dict?.modal?.close || 'Close'}
+            {dict?.modal?.close}
           </button>
         </div>
       </div>
     </div>
   );
 };
+

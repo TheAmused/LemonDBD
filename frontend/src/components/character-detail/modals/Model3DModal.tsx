@@ -32,19 +32,19 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
       }}
     >
       <div
-        className="relative w-full max-w-xl bg-slate-900 border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-xl bg-white dark:bg-slate-900 border border-amber-300 dark:border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-amber-500/15 via-orange-500/5 to-transparent flex items-center justify-between">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-amber-500/15 via-orange-500/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shadow-inner">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-700 dark:text-amber-400 shadow-inner">
               <Box className="h-6 w-6 animate-pulse" />
             </div>
             <div>
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-amber-400">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">
                 {t.highRes3dModelView || 'High-Res 3D Model View'}
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">
                 {character.name}
               </h2>
             </div>
@@ -52,7 +52,7 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label={t.close || 'Close'}
           >
             <X className="w-5 h-5" />
@@ -60,7 +60,7 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
         </div>
 
         <div className="p-6 flex flex-col items-center text-center space-y-4">
-          <div className="relative w-full max-w-[260px] aspect-[3/4] rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl">
+          <div className="relative w-full max-w-[260px] aspect-[3/4] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 shadow-lg dark:shadow-2xl">
             <img
               src={getAvatarUrl(backendBase, character, isSurvivor)}
               alt={character.name}
@@ -72,7 +72,7 @@ export const Model3DModal: React.FC<Model3DModalProps> = ({
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 max-w-md">
+          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md">
             {t.fullModelNotice || 'High-fidelity 3D model viewport slot. Currently displaying full portrait render.'}
           </p>
         </div>

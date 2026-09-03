@@ -1,3 +1,4 @@
+// frontend/scripts/_inspect.tsx
 import { renderToStaticMarkup } from 'react-dom/server';
 import fs from 'node:fs'; import path from 'node:path';
 import { renderFormattedDbdText } from '../src/utils/textFormatter';

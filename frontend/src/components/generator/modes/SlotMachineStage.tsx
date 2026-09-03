@@ -1,3 +1,4 @@
+// frontend/src/components/generator/modes/SlotMachineStage.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -405,7 +406,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
         {phase === 'idle' && (
         <>
-          <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+          <p className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
             {dict?.generator?.slotMachinePrompt ||
               'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
             {' '}
@@ -566,7 +567,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               newly-resized cells -- reels visibly resize/misalign the
               moment the spin ends. */}
           <div className={cn('flex flex-col items-center gap-3', phase !== 'awaiting' && 'invisible')}>
-            <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+            <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
               {confirmHint}
             </p>
             <DbdButton
@@ -584,7 +585,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
       {phase === 'complete' && (
         <>
-          <p className="text-sm font-bold text-slate-300 text-center sm:text-base">
+          <p className="text-sm font-bold text-slate-600 dark:text-slate-300 text-center sm:text-base">
             {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -625,9 +626,16 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       )}
       </div>
 
-      <div aria-live="polite" className="text-xs font-black text-amber-400 text-center">
-        {flavorLine}
-      </div>
+      {flavorLine && (
+        <div
+          aria-live="polite"
+          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
+        >
+          {flavorLine}
+        </div>
+      )}
     </div>
   );
 };
+
+

@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/CharactersHub.tsx
 
-import React, { useEffect, useState, useCallback, useMemo, Suspense } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import {
@@ -9,8 +9,6 @@ import {
   Skull,
   Search,
   X,
-  Sparkles,
-  Package,
   User,
   Lock,
   Check,
@@ -18,7 +16,6 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
-import { DbdSpinner } from '@/components/DbdSpinner';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson, invalidate } from '@/services/dataCache';
@@ -36,7 +33,6 @@ import {
   getCharacterSlug,
   getAssetUrl,
   getAvatarUrl as resolveAvatarUrl,
-  getRarityTileStyle,
 } from '@/components/character-detail/types';
 import { RoleCategory, PerkDictionary } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
@@ -83,7 +79,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     bulkUpdatePerkOwnership,
   } = useAuth();
 
-
   const [activeTab, setActiveTab] = useState<RoleCategory>('Survivor');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
@@ -105,10 +100,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     router.replace(`/${locale}/characters?role=${tab}`, { scroll: false });
   };
 
-  const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
-  const [detailLoading, setDetailLoading] = useState<boolean>(false);
-  const [detailData, setDetailData] = useState<CharacterDetailData | null>(null);
-
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
   const [verificationNoticeOpen, setVerificationNoticeOpen] = useState<boolean>(false);
@@ -125,10 +116,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
   const backendBase = getBackendBaseUrl();
 
-  // Cached at module scope, so leaving the roster and coming back paints the
-  // grid on the first render instead of refetching and re-showing the spinner.
-  // /perks uses the same key for the roster, so whichever page you open first
-  // warms it for the other.
   const charactersKey = `${backendBase}/api/v1/characters?lang=${locale}`;
   const { data: charactersResponse, loading: charactersLoading } = useCachedData<{
     data?: CharacterItem[];
@@ -136,21 +123,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
   const characters = charactersResponse?.data ?? [];
   const loading = charactersLoading;
-
-  const handleCloseModal = useCallback(() => {
-    setSelectedCharacter(null);
-    setDetailData(null);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedCharacter) {
-        handleCloseModal();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedCharacter, handleCloseModal]);
 
   const handleToggleOwnershipMode = async () => {
     if (ownershipMode) {
@@ -259,12 +231,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       const perksOk = perkUpdates.length === 0 || (await bulkUpdatePerkOwnership(perkUpdates));
 
       if (!charactersOk || !perksOk) {
-        setOwnershipSaveError('Failed to save all changes. Please try again.');
+        setOwnershipSaveError(dict?.characterDetail?.saveOwnershipError || null);
         return;
       }
 
-      // Ownership changes what the API returns for `is_owned` on perks and
-      // characters, so the cached copies of those reads are now wrong.
       invalidate(`${backendBase}/api/v1/perks`);
       invalidate(`${backendBase}/api/v1/characters`);
 
@@ -273,7 +243,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       window.setTimeout(() => setShowSavedToast(false), 2500);
     } catch (err: unknown) {
       console.error('Failed to save ownership changes:', err);
-      setOwnershipSaveError('Failed to save changes. Please try again.');
+      setOwnershipSaveError(dict?.characterDetail?.saveOwnershipError || null);
     } finally {
       setOwnershipSaving(false);
     }
@@ -305,20 +275,20 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   return (
     <div className={`space-y-6 ${ownershipMode ? 'pb-20' : ''}`}>
       <section
-        aria-label={dict?.characterDetail?.characterOverview || 'Character Filter Navigation'}
+        aria-label={dict?.characterDetail?.characterOverview}
         className="flex flex-col sm:flex-row gap-4 justify-between items-center"
       >
         <div
           role="group"
-          aria-label={dict?.filters?.category || 'Filter characters by role'}
-          className="relative flex items-center w-full sm:w-72 h-11 p-1 bg-slate-100/90 border border-slate-200 dark:bg-slate-900/90 dark:border-slate-800 rounded-2xl shadow-inner select-none"
+          aria-label={dict?.filters?.category}
+          className="relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-2xl shadow-inner select-none transition-colors"
         >
           <span
             aria-hidden="true"
             className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl shadow-md transition-transform duration-300 ease-out ${
               activeTab === 'Survivor'
                 ? 'translate-x-0 bg-emerald-600'
-                : 'translate-x-[calc(100%+8px)] bg-rose-600'
+                : 'translate-x-[calc(100%+8px)] bg-accent-red'
             }`}
           />
           <button
@@ -327,12 +297,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             aria-pressed={activeTab === 'Survivor'}
             className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
               activeTab === 'Survivor'
-                ? 'text-white'
-                : 'text-slate-600 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-400'
+                ? 'text-text-inverted'
+                : 'text-text-secondary hover:text-emerald-600'
             }`}
           >
             <Shield className="h-3.5 w-3.5" />
-            {dict?.filters?.survivor || 'Survivors'} ({survivorCount})
+            <span>{dict?.filters?.survivor}</span> ({survivorCount})
           </button>
           <button
             type="button"
@@ -340,12 +310,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             aria-pressed={activeTab === 'Killer'}
             className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
               activeTab === 'Killer'
-                ? 'text-white'
-                : 'text-slate-600 hover:text-rose-700 dark:text-slate-400 dark:hover:text-rose-400'
+                ? 'text-text-inverted'
+                : 'text-text-secondary hover:text-accent-red'
             }`}
           >
             <Skull className="h-3.5 w-3.5" />
-            {dict?.filters?.killer || 'Killers'} ({killerCount})
+            <span>{dict?.filters?.killer}</span> ({killerCount})
           </button>
         </div>
 
@@ -354,37 +324,39 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             type="button"
             onClick={handleToggleOwnershipMode}
             disabled={ownershipLoading}
-            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold border transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation ${
+            className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait touch-manipulation shadow-xs ${
               ownershipMode
-                ? 'bg-amber-600 text-white border-amber-500 shadow-md shadow-amber-900/30'
-                : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-amber-500/50 hover:text-amber-400'
+                ? 'bg-accent-amber text-text-inverted border border-accent-amber shadow-accent-amber/20'
+                : 'border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber/50 hover:text-accent-amber'
             }`}
           >
             {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
-            {ownershipLoading
-              ? dict?.app?.loading || 'Loading...'
-              : ownershipMode
-                ? dict?.characterDetail?.exitSelection || 'Exit Selection'
-                : dict?.characterDetail?.myCharacters || 'My Characters'}
+            <span>
+              {ownershipLoading
+                ? dict?.app?.loading
+                : ownershipMode
+                  ? dict?.characterDetail?.exitSelection
+                  : dict?.characterDetail?.myCharacters}
+            </span>
           </button>
         </div>
 
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
           <input
             type="text"
-            placeholder={dict?.filters?.filterByCharacter || 'Search by name...'}
-            aria-label={dict?.filters?.filterByCharacter || 'Search characters'}
+            placeholder={dict?.filters?.filterByCharacter}
+            aria-label={dict?.filters?.filterByCharacter}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-10 py-2.5 min-h-[44px] rounded-2xl border border-slate-200 bg-slate-100/90 text-xs font-semibold text-slate-900 placeholder-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all"
+            className="w-full pl-10 pr-10 py-2.5 min-h-[44px] rounded-2xl border border-border-color bg-bg-primary text-xs font-semibold text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red/50 transition-all shadow-inner"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              aria-label={dict?.filters?.clearSearch || 'Clear search query'}
-              className="absolute right-1 top-1/2 -translate-y-1/2 flex min-h-[40px] min-w-[40px] items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer touch-manipulation"
+              aria-label={dict?.filters?.clearSearch}
+              className="absolute right-1 top-1/2 -translate-y-1/2 flex min-h-[40px] min-w-[40px] items-center justify-center text-text-muted hover:text-text-primary cursor-pointer touch-manipulation"
             >
               <X className="h-4 w-4" />
             </button>
@@ -394,25 +366,25 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
       {loading ? (
         <div className="w-full py-12 flex items-center justify-center">
-          {/* Same component the route-level loading.tsx renders, so the spinner
-              keeps one identity across the handover instead of being replaced by
-              a differently-labelled one. */}
           <CharactersGridSkeleton dict={dict} />
         </div>
       ) : filteredCharacters.length === 0 ? (
-        <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center bg-white/60 dark:bg-transparent">
-          <User className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-300">
-            {dict?.empty?.title || 'No Characters Found'}
-          </h2>
-          <p className="mt-1 text-xs text-slate-500">
-            {dict?.characterDetail?.hubNoMatchingCharacters || 'No characters match your current filter or search query.'}
-          </p>
+        <div className="my-12 rounded-3xl border border-dashed border-border-color p-12 text-center bg-bg-surface">
+          <User className="mx-auto h-12 w-12 text-text-muted mb-3" />
+          {dict?.empty?.title && (
+            <h2 className="text-lg font-bold text-text-primary">
+              {dict.empty.title}
+            </h2>
+          )}
+          {dict?.characterDetail?.hubNoMatchingCharacters && (
+            <p className="mt-1 text-xs text-text-secondary">
+              {dict.characterDetail.hubNoMatchingCharacters}
+            </p>
+          )}
         </div>
       ) : (
-
         <section
-          aria-label={dict?.characterDetail?.characterOverview || 'Characters Roster Grid'}
+          aria-label={dict?.characterDetail?.characterOverview}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
@@ -427,11 +399,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             return (
               <div
                 key={`${char.name}-${idx}`}
-                // The card is a div (it contains its own buttons, so it cannot be
-                // an <a>), which means Next never prefetched the detail route and
-                // every click paid for a cold chunk + RSC fetch behind the
-                // loading spinner. Warm it on intent instead. Hover/focus rather
-                // than viewport, because this grid renders the whole roster.
                 onMouseEnter={() => {
                   if (!ownershipMode) router.prefetch(detailHref);
                 }}
@@ -445,20 +412,22 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     router.push(detailHref);
                   }
                 }}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/80 dark:hover:bg-slate-800 hover:border-red-500/50 shadow-sm hover:shadow-xl dark:shadow-none transition-all duration-300 cursor-pointer touch-manipulation"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation"
               >
                 <div className="absolute top-2 right-2 z-10">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${
                       isSurvivor
-                        ? 'bg-emerald-100 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/20 dark:text-emerald-300'
-                        : 'bg-rose-100 text-rose-700 border-rose-500/30 dark:bg-rose-500/20 dark:text-rose-300'
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border-emerald-500/30'
+                        : 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/80 dark:text-rose-300 dark:border-rose-500/30'
                     }`}
                   >
                     {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
-                    {isSurvivor
-                      ? dict?.characterDetail?.roleSurvivor || 'Survivor'
-                      : dict?.characterDetail?.roleKiller || 'Killer'}
+                    <span>
+                      {isSurvivor
+                        ? dict?.characterDetail?.roleSurvivor
+                        : dict?.characterDetail?.roleKiller}
+                    </span>
                   </span>
                 </div>
 
@@ -471,22 +440,22 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 )}
                 {ownershipMode && !isOwned && (
                   <div
-                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/80 border border-amber-500/40 text-amber-400 backdrop-blur-md"
-                    title={dict?.modal?.unownedPerk || 'Character Locked'}
+                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-surface border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md"
+                    title={dict?.modal?.unownedPerk}
                   >
                     <Lock className="h-3.5 w-3.5" />
                   </div>
                 )}
                 {ownershipMode && isOwned && (
                   <div
-                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 backdrop-blur-md"
-                    title={dict?.filters?.ownedOnly || 'Character Owned'}
+                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-xs"
+                    title={dict?.filters?.ownedOnly}
                   >
                     <Check className="h-3.5 w-3.5" />
                   </div>
                 )}
 
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
                   <img
                     src={avatarSrc}
                     alt={char.name}
@@ -499,12 +468,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       const target = e.target as HTMLImageElement;
                       if (!target.dataset.triedFallback) {
                         target.dataset.triedFallback = '1';
-                        // Backend writes avatars as WebP; retry that explicitly in case the
-                        // initial src (e.g. a stale DB path) pointed somewhere unexpected.
                         target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
                       } else if (target.dataset.triedFallback === '1') {
                         target.dataset.triedFallback = '2';
-                        // Legacy fallback: some pre-normalization assets may still only exist as .png.
                         target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.png`;
                       }
                     }}
@@ -524,11 +490,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   {ownershipMode && hasPartialPerks && (
                     <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/35 via-transparent to-transparent dark:from-slate-950/80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                 </div>
 
                 <div className="p-3.5 space-y-1">
-                  <h3 className="font-extrabold text-sm text-slate-900 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-1">
+                  <h3 className="font-extrabold text-sm text-text-primary group-hover:text-accent-red transition-colors line-clamp-1">
                     {char.name}
                   </h3>
                   {ownershipMode && !isOwned && (
@@ -538,9 +504,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         e.stopPropagation();
                         setPerksPopupCharacter(char);
                       }}
-                      className="mt-1 w-full rounded-lg border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-400 hover:bg-amber-500/20 transition-colors"
+                      className="mt-1 w-full rounded-lg border border-accent-amber/40 bg-accent-amber/10 px-2 py-1 text-[10px] font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
                     >
-                      {dict?.filters?.perks || 'Perks'} {perkStats.total > 0 ? `(${perkStats.unlocked}/${perkStats.total})` : ''}
+                      <span>{dict?.filters?.perks}</span>
+                      {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
                     </button>
                   )}
                 </div>
@@ -550,7 +517,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </section>
       )}
 
-      {/* Perks Popup for a Locked Character */}
       {perksPopupCharacter && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
@@ -560,31 +526,32 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         >
           <div
             onClick={() => setPerksPopupCharacter(null)}
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
           />
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl"
+            className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-border-color bg-bg-surface shadow-2xl text-text-primary transition-colors"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 p-5">
-              <h3 id="perks-popup-title" className="text-base font-bold text-slate-100">
-                {perksPopupCharacter.name} {dict?.filters?.perks || 'Perks'}
+            <div className="flex items-center justify-between border-b border-border-color p-5">
+              <h3 id="perks-popup-title" className="text-base font-bold text-text-primary">
+                {perksPopupCharacter.name} {dict?.filters?.perks}
               </h3>
               <button
                 type="button"
                 onClick={() => setPerksPopupCharacter(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                aria-label={dict?.modal?.close || 'Close perks popup'}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-bg-elevated text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+                aria-label={dict?.modal?.close}
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <p className="px-5 pt-4 text-[11px] text-slate-500">
-              {dict?.characterDetail?.togglePerkOwnershipHelp || 'Click a perk to toggle whether you own it.'}
-            </p>
+            {dict?.characterDetail?.togglePerkOwnershipHelp && (
+              <p className="px-5 pt-4 text-[11px] text-text-muted">
+                {dict.characterDetail.togglePerkOwnershipHelp}
+              </p>
+            )}
             <div className="p-5 space-y-2">
               {allPerks
-
                 .filter((p) => p.character_id === perksPopupCharacter.id)
                 .map((perk) => {
                   const isUnlocked = perkUnlockDraft[perk.perk_id] ?? true;
@@ -593,15 +560,15 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       key={perk.perk_id}
                       type="button"
                       onClick={() => handleTogglePerkUnlocked(perk.perk_id)}
-                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-xs font-semibold transition-all hover:scale-[1.02] active:scale-95 ${
+                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-xs font-semibold transition-all hover:scale-[1.01] active:scale-95 ${
                         isUnlocked
-                          ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300 hover:border-emerald-400/70'
-                          : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-amber-500/50'
+                          ? 'border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
+                          : 'border-border-color bg-bg-primary text-text-muted hover:border-accent-amber/50'
                       }`}
                     >
                       <div
-                        className={`h-16 w-16 shrink-0 rounded-lg border p-1.5 flex items-center justify-center bg-slate-900 ${
-                          isUnlocked ? 'border-emerald-500/30' : 'border-slate-800'
+                        className={`h-14 w-14 shrink-0 rounded-lg border p-1 flex items-center justify-center bg-slate-900 ${
+                          isUnlocked ? 'border-emerald-500/30' : 'border-border-color'
                         }`}
                       >
                         <img
@@ -612,35 +579,33 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                           }`}
                         />
                       </div>
-                      <span className="flex-1">{perk.name}</span>
+                      <span className="flex-1 text-text-primary">{perk.name}</span>
                       {isUnlocked ? (
-                        <Check className="h-4 w-4 shrink-0" />
+                        <Check className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
                       ) : (
-                        <Lock className="h-4 w-4 shrink-0" />
+                        <Lock className="h-4 w-4 shrink-0 text-text-muted" />
                       )}
                     </button>
                   );
                 })}
               {allPerks.filter((p) => p.character_id === perksPopupCharacter.id).length === 0 && (
-                <p className="text-xs text-slate-500 italic">
-                  {dict?.characterDetail?.noTeachablePerksForCharacter || dict?.characterDetail?.noPerks || 'No teachable perks for this character.'}
+                <p className="text-xs text-text-muted italic">
+                  {dict?.characterDetail?.noTeachablePerksForCharacter || dict?.characterDetail?.noPerks}
                 </p>
               )}
             </div>
-
           </div>
         </div>
       )}
 
-      {/* Save Bar for Ownership Selection Mode */}
       {ownershipMode && (
         <div
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-md transition-[padding] duration-300 lemon-shell-main"
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[padding] duration-300 lemon-shell-main"
         >
           {ownershipSaveError && (
             <p
               role="alert"
-              className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-rose-400"
+              className="px-5 sm:px-7 lg:px-9 pt-2 text-center text-[11px] font-semibold text-accent-red"
             >
               {ownershipSaveError}
             </p>
@@ -650,42 +615,39 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               type="button"
               onClick={handleCancelOwnershipMode}
               disabled={ownershipSaving}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors disabled:opacity-60 cursor-pointer"
+              className="px-5 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary transition-colors disabled:opacity-60 cursor-pointer border border-border-color bg-bg-surface hover:bg-bg-elevated"
             >
-              {dict?.admin?.cancel || dict?.modal?.close || 'Cancel'}
+              {dict?.admin?.cancel || dict?.modal?.close}
             </button>
             <button
               type="button"
-
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
-              className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md shadow-emerald-900/30 hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
+              className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-text-inverted shadow-md hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
             >
-              {ownershipSaving ? dict?.characterDetail?.saving || 'Saving...' : dict?.characterDetail?.accept || 'Accept'}
+              {ownershipSaving ? dict?.characterDetail?.saving : dict?.characterDetail?.accept}
             </button>
           </div>
         </div>
       )}
 
-      {/* Save confirmation toast */}
       {showSavedToast && (
         <div
           role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-white shadow-2xl shadow-emerald-900/50 ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
+          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <Check className="h-5 w-5" />
-          {dict?.characterDetail?.changesSaved || 'Changes saved'}
+          <span>{dict?.characterDetail?.changesSaved}</span>
         </div>
       )}
 
-      {/* Verification required notice */}
       {verificationNoticeOpen && user && (
         <div
           role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-amber-600 px-5 py-3 text-xs font-bold text-white shadow-2xl shadow-amber-900/50 ring-2 ring-amber-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
+          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 text-xs font-bold text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <MailWarning className="h-4 w-4 shrink-0" />
-          <span>{dict?.user?.verifyEmailRequired || 'Verify your email to manage your character collection.'}</span>
+          <span>{dict?.user?.verifyEmailRequired}</span>
           <button
             type="button"
             onClick={() => {
@@ -695,23 +657,22 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             }}
             className="rounded-lg bg-white/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-white/30 transition-colors cursor-pointer"
           >
-            {dict?.streaks?.verifyEmail || 'Verify email'}
+            {dict?.streaks?.verifyEmail}
           </button>
           <button
             type="button"
             onClick={() => setVerificationNoticeOpen(false)}
             className="text-[11px] font-black underline cursor-pointer"
           >
-            {dict?.characterDetail?.dismiss || dict?.modal?.close || 'Dismiss'}
+            {dict?.characterDetail?.dismiss || dict?.modal?.close}
           </button>
         </div>
       )}
 
-
       <DisabledReasonModal
         isOpen={disabledModalCharacter !== null}
         onClose={() => setDisabledModalCharacter(null)}
-        label={disabledModalCharacter?.name || ''}
+        label={disabledModalCharacter?.name ?? ''}
         reason={disabledModalCharacter?.disabled_reason}
       />
 
@@ -724,3 +685,4 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     </div>
   );
 };
+

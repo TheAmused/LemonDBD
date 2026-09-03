@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/draft.ts
 export default {
   draftTitle: "競技用ドラフトルーム",
   draftSubtitle: "パークの戦略的 1v1 BAN＆PICK エンジン",

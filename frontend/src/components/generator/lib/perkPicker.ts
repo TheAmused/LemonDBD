@@ -1,3 +1,4 @@
+// frontend/src/components/generator/lib/perkPicker.ts
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { EXHAUSTION_PERK_NAMES, MEME_PERK_NAMES, NEGATIVE_PERK_NAMES } from '@/constants/chaosMutators';

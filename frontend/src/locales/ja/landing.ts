@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/landing.ts
 export default {
   welcomeBadge: "Dead by Daylight コンパニオン",
   welcomeTitle: "LemonDBD へようこそ",

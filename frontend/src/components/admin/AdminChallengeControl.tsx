@@ -1,8 +1,8 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import type { Dictionary } from '@/locales/types';
 import { CheckCircle2, Power, Search, Shield, Skull, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
@@ -13,13 +13,6 @@ import {
 } from '@/types/admin';
 import { backendBase, staticUrl } from '@/utils/staticUrl';
 import { AdminReasonModal } from './AdminReasonModal';
-
-const MODE_LABELS: Record<ChallengeMode, string> = {
-  gauntlet: 'Gauntlet',
-  chaos: 'Chaos Streak',
-  history: 'History Streak',
-  page_streak: 'Page Streak',
-};
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -44,6 +37,13 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+  const MODE_LABELS: Record<ChallengeMode, string> = {
+    gauntlet: dict?.streaks?.gauntlet || 'Gauntlet',
+    chaos: dict?.streaks?.chaosStreak || 'Chaos Streak',
+    history: dict?.streaks?.historyStreak || 'History Streak',
+    page_streak: dict?.streaks?.pageStreak || 'Page Streak',
+  };
 
   const getToken = () => (typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null);
 
@@ -82,12 +82,10 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     }
   }, []);
 
-  // Modes don't depend on search, so they load once, not on every keystroke.
   useEffect(() => {
     loadModes();
   }, [loadModes]);
 
-  // Debounced so typing a search term doesn't fire a request per keystroke.
   useEffect(() => {
     const timer = setTimeout(() => loadRoster(search, roleFilter), 300);
     return () => clearTimeout(timer);
@@ -103,7 +101,10 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         body: JSON.stringify({ is_enabled: isEnabled, reason }),
       });
       if (res.ok) {
-        onActionMessage({ type: 'success', text: `${MODE_LABELS[mode]} is now ${isEnabled ? 'enabled' : 'disabled'}.` });
+        onActionMessage({
+          type: 'success',
+          text: `${MODE_LABELS[mode]} is now ${isEnabled ? 'enabled' : 'disabled'}.`,
+        });
         await loadModes();
       } else {
         const err = await res.json().catch(() => ({}));
@@ -162,8 +163,6 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     }
   };
 
-  // Disabling always confirms a reason through the modal. Re-enabling
-  // doesn't need one, so it applies immediately.
   const requestModeToggle = (mode: ChallengeMode, isEnabled: boolean) => {
     if (isEnabled) return applyModeToggle(mode, true, null);
     setPendingAction({ kind: 'mode', mode });
@@ -211,38 +210,37 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl backdrop-blur-sm">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-300 mb-4">
-          <Power className="h-4 w-4 text-rose-400" />
-          {dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Kill Switches'}
+      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200">
+        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary mb-4">
+          <Power className="h-4 w-4 text-accent-red" />
+          <span>{dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Switches'}</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {modes.map((setting) => (
-
             <div
               key={setting.mode}
-              className={`rounded-xl border p-3.5 flex flex-col gap-2 ${
+              className={`rounded-xl border p-3.5 flex flex-col gap-2 transition-colors ${
                 setting.is_enabled
-                  ? 'border-slate-800 bg-slate-950/50'
-                  : 'border-rose-500/30 bg-rose-500/[0.06]'
+                  ? 'border-border-color bg-bg-primary'
+                  : 'border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200">{MODE_LABELS[setting.mode]}</span>
+                <span className="text-xs font-bold text-text-primary">{MODE_LABELS[setting.mode]}</span>
                 <button
                   type="button"
                   onClick={() => requestModeToggle(setting.mode, !setting.is_enabled)}
                   className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-lg border cursor-pointer transition-colors ${
                     setting.is_enabled
-                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
-                      : 'border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20'
+                      ? 'border-emerald-500/40 bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400 hover:bg-emerald-200'
+                      : 'border-rose-500/40 bg-rose-100 text-rose-800 dark:bg-rose-500/10 dark:text-rose-400 hover:bg-rose-200'
                   }`}
                 >
                   {setting.is_enabled ? dict?.admin?.enabledLabel || 'Enabled' : dict?.admin?.disabledLabel || 'Disabled'}
                 </button>
               </div>
               {setting.disabled_reason && (
-                <p className="text-[10px] text-rose-300/80 leading-snug">{setting.disabled_reason}</p>
+                <p className="text-[10px] text-rose-700 dark:text-rose-300 font-medium leading-snug">{setting.disabled_reason}</p>
               )}
             </div>
           ))}
@@ -250,137 +248,147 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       </div>
 
       {/* Killers & Perks availability */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-xl backdrop-blur-sm">
+      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
+          <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
             <button
               type="button"
               onClick={() => setSubTab('killers')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'killers' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
+                subTab === 'killers'
+                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/30'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" /> {dict?.admin?.characters || 'Characters'}
+              <Skull className="h-3.5 w-3.5" />
+              <span>{dict?.admin?.characters || 'Characters'}</span>
             </button>
             <button
               type="button"
-
               onClick={() => setSubTab('perks')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                subTab === 'perks' ? 'bg-amber-500/10 text-amber-400' : 'text-slate-500 hover:text-slate-300'
+                subTab === 'perks'
+                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/30'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Sparkles className="h-3.5 w-3.5" /> {dict?.admin?.perks || 'Perks'}
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>{dict?.admin?.perks || 'Perks'}</span>
             </button>
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/50 p-1">
-
+          <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
             <button
               type="button"
               onClick={() => setRoleFilter('Survivor')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Survivor' ? 'bg-emerald-500/10 text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+                roleFilter === 'Survivor'
+                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Shield className="h-3.5 w-3.5" /> {dict?.admin?.roleSurvivor || 'Survivor'}
+              <Shield className="h-3.5 w-3.5" />
+              <span>{dict?.admin?.roleSurvivor || 'Survivor'}</span>
             </button>
             <button
               type="button"
               onClick={() => setRoleFilter('Killer')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
-                roleFilter === 'Killer' ? 'bg-rose-500/10 text-rose-400' : 'text-slate-500 hover:text-slate-300'
+                roleFilter === 'Killer'
+                  ? 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border border-rose-500/30'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" /> {dict?.admin?.roleKiller || 'Killer'}
+              <Skull className="h-3.5 w-3.5" />
+              <span>{dict?.admin?.roleKiller || 'Killer'}</span>
             </button>
           </div>
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
-              className="pl-7 pr-3 py-1.5 rounded-lg bg-slate-950/60 border border-slate-800 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              className="pl-7 pr-3 py-1.5 rounded-lg bg-bg-primary border border-border-color text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent-amber"
             />
           </div>
         </div>
 
         {characters.length === 0 && perks.length === 0 && loading ? (
-          <p className="text-xs text-slate-500 py-6 text-center">{dict?.admin?.loading || 'Loading...'}</p>
+          <p className="text-xs text-text-muted py-6 text-center font-mono">{dict?.admin?.loading || 'Loading...'}</p>
         ) : (
-        <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
-          {subTab === 'killers' ? (
-          <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
-            {characters.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => requestCharacterToggle(c)}
-                title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
-                className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
-                  c.is_disabled
-                    ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
-                    : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
-                }`}
-              >
-                <div className="h-full w-full flex items-center justify-center bg-slate-900">
-                  {c.avatar_portrait_path ? (
-                    <img
-                      src={staticUrl(c.avatar_portrait_path)}
-                      alt={c.name}
-                      className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
-                    />
-                  ) : (
-                    <Skull className="h-8 w-8 text-slate-600" />
-                  )}
-                </div>
-                <span
-                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
-                    c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
-                  }`}
-                >
-                  {c.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
-                </span>
-              </button>
-            ))}
+          <div className={`transition-opacity duration-150 ${loading ? 'opacity-50' : ''}`}>
+            {subTab === 'killers' ? (
+              <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-3 max-h-[480px] overflow-y-auto pr-1">
+                {characters.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => requestCharacterToggle(c)}
+                    title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
+                    className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
+                      c.is_disabled
+                        ? 'border-rose-500 bg-rose-500/10 hover:bg-rose-500/20'
+                        : 'border-border-color bg-slate-900 hover:border-slate-500'
+                    }`}
+                  >
+                    <div className="h-full w-full flex items-center justify-center bg-slate-900">
+                      {c.avatar_portrait_path ? (
+                        <img
+                          src={staticUrl(c.avatar_portrait_path)}
+                          alt={c.name}
+                          className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
+                        />
+                      ) : (
+                        <Skull className="h-8 w-8 text-slate-400" />
+                      )}
+                    </div>
+                    <span
+                      className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white dark:border-slate-950 ${
+                        c.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
+                      }`}
+                    >
+                      {c.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 max-h-[480px] overflow-y-auto pr-1">
+                {perks.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => requestPerkToggle(p)}
+                    title={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
+                    className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
+                      p.is_disabled
+                        ? 'border-rose-500 bg-rose-500/10 hover:bg-rose-500/20'
+                        : 'border-border-color bg-slate-900 hover:border-slate-500'
+                    }`}
+                  >
+                    <div className="h-full w-full flex items-center justify-center bg-slate-900 p-1.5">
+                      {p.icon_local_path ? (
+                        <img
+                          src={staticUrl(p.icon_local_path)}
+                          alt={p.name}
+                          className={`h-full w-full object-contain ${p.is_disabled ? 'grayscale opacity-60' : ''}`}
+                        />
+                      ) : (
+                        <Sparkles className="h-6 w-6 text-slate-400" />
+                      )}
+                    </div>
+                    <span
+                      className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white dark:border-slate-950 ${
+                        p.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
+                      }`}
+                    >
+                      {p.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 max-h-[480px] overflow-y-auto pr-1">
-            {perks.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => requestPerkToggle(p)}
-                title={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
-                className={`relative aspect-square rounded-xl border cursor-pointer transition-colors overflow-hidden ${
-                  p.is_disabled
-                    ? 'border-rose-500/40 bg-rose-500/[0.08] hover:bg-rose-500/[0.14]'
-                    : 'border-slate-800 bg-slate-950/50 hover:border-slate-700'
-                }`}
-              >
-                <div className="h-full w-full flex items-center justify-center bg-slate-900 p-1.5">
-                  {p.icon_local_path ? (
-                    <img
-                      src={staticUrl(p.icon_local_path)}
-                      alt={p.name}
-                      className={`h-full w-full object-contain ${p.is_disabled ? 'grayscale opacity-60' : ''}`}
-                    />
-                  ) : (
-                    <Sparkles className="h-6 w-6 text-slate-600" />
-                  )}
-                </div>
-                <span
-                  className={`absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-950 ${
-                    p.is_disabled ? 'bg-rose-500 text-white' : 'bg-emerald-500 text-white'
-                  }`}
-                >
-                  {p.is_disabled ? <XCircle className="h-3.5 w-3.5" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
-                </span>
-              </button>
-            ))}
-          </div>
-        )}
-        </div>
         )}
       </div>
 
@@ -396,3 +404,4 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     </div>
   );
 };
+

@@ -1,3 +1,4 @@
+// frontend/src/locales/es/voice.ts
 export default {
   engine: "Motor de Reconocimiento",
   engineNative: "Framework de Voz Web",

@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/swf.ts
 export default {
   engineBadge: "Kreator Drużyny SWF",
   pageTitle: "Planer Zestawów 4-Osobowej Drużyny",

@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/pagination.ts
 export default {
   showing: "表示中:",
   of: "/",

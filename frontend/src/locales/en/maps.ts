@@ -1,3 +1,4 @@
+// frontend/src/locales/en/maps.ts
 export default {
   searchPlaceholder: "Search...",
   searchAria: "Search map or realm",

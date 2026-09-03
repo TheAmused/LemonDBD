@@ -1,3 +1,4 @@
+// frontend/src/locales/de/voice.ts
 export default {
   engine: "Erkennungs-Engine",
   engineNative: "Web Speech Framework",

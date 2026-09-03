@@ -1,3 +1,4 @@
+// frontend/src/locales/en/swf.ts
 export default {
   engineBadge: "SWF Squad Team Engine",
   pageTitle: "4-Player Team Loadout Planner",

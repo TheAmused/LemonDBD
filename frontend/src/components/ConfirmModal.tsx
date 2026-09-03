@@ -6,12 +6,12 @@ import { AlertTriangle } from 'lucide-react';
 
 export interface ConfirmModalProps {
   open: boolean;
-  title: string;
-  message: React.ReactNode;
-  confirmLabel?: string;
+  title?: React.ReactNode;
+  message?: React.ReactNode;
+  confirmLabel?: React.ReactNode;
   confirmIcon?: React.ReactNode;
-  cancelLabel?: string;
-  busyLabel?: string;
+  cancelLabel?: React.ReactNode;
+  busyLabel?: React.ReactNode;
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
@@ -21,10 +21,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   open,
   title,
   message,
-  confirmLabel = 'Confirm',
+  confirmLabel,
   confirmIcon,
-  cancelLabel = 'Cancel',
-  busyLabel = 'Working...',
+  cancelLabel,
+  busyLabel,
   busy = false,
   onConfirm,
   onCancel,
@@ -43,41 +43,44 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <div
       onClick={onCancel}
-      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md cursor-pointer"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md cursor-pointer"
       role="dialog"
       aria-modal="true"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-rose-500/40 bg-gradient-to-b from-rose-500/10 via-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-rose-950/30 cursor-default"
+        className="relative w-full max-w-sm rounded-2xl border border-border-color bg-bg-surface p-8 text-center shadow-2xl text-text-primary cursor-default transition-colors"
       >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-rose-400/60 bg-rose-500/15 text-rose-400">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15 text-accent-red shadow-xs">
           <AlertTriangle className="h-8 w-8" />
         </div>
 
-        <h2 className="text-xl font-black tracking-tight text-white">{title}</h2>
-        <div className="mt-2 text-sm text-slate-300 leading-relaxed">{message}</div>
+        {title && <h2 className="text-xl font-black tracking-tight text-text-primary">{title}</h2>}
+        {message && <div className="mt-2 text-sm text-text-secondary leading-relaxed">{message}</div>}
 
         <div className="mt-6 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={busy}
-            className="flex-1 rounded-xl bg-slate-800 py-3 text-sm font-bold text-slate-200 transition-colors hover:bg-slate-700 disabled:opacity-50 cursor-pointer"
-          >
-            {cancelLabel}
-          </button>
+          {cancelLabel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              disabled={busy}
+              className="flex-1 rounded-xl border border-border-color bg-bg-surface py-3 text-sm font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
+            >
+              {cancelLabel}
+            </button>
+          )}
           <button
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-3 text-sm font-extrabold text-white shadow-lg shadow-rose-950/30 transition-colors hover:bg-rose-500 disabled:opacity-50 cursor-pointer"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red py-3 text-sm font-extrabold text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-red-600 disabled:opacity-50 cursor-pointer"
           >
             {!busy && confirmIcon}
-            {busy ? busyLabel : confirmLabel}
+            <span>{busy ? busyLabel : confirmLabel}</span>
           </button>
         </div>
       </div>
     </div>
   );
 };
+

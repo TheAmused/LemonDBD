@@ -1,3 +1,4 @@
+// frontend/src/components/generator/shared/SegmentedControl.tsx
 'use client';
 
 import React from 'react';
@@ -39,7 +40,7 @@ export function SegmentedControl<T extends string>({
       aria-label={ariaLabel}
       className={cn(
         'flex items-center overflow-x-auto',
-        bare ? 'gap-3' : 'gap-1 rounded-2xl bg-slate-900/50 p-1 shadow-inner',
+        bare ? 'gap-3' : 'gap-1 rounded-2xl bg-slate-200/80 dark:bg-slate-900/50 p-1 shadow-inner',
         className
       )}
     >
@@ -54,10 +55,10 @@ export function SegmentedControl<T extends string>({
             className={cn(
               'relative flex shrink-0 items-center gap-1.5 text-xs font-black tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[40px] sm:min-h-[44px]',
               bare
-                ? cn('pb-1.5 pt-1 px-1', isActive ? 'text-amber-400' : 'text-slate-500 hover:text-slate-300')
+                ? cn('pb-1.5 pt-1 px-1', isActive ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300')
                 : cn(
                     'rounded-xl px-3 py-2',
-                    isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-slate-100'
+                    isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                   )
             )}
           >

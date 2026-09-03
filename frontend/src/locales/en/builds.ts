@@ -1,3 +1,4 @@
+// frontend/src/locales/en/builds.ts
 export default {
   title: "Community Build Vault",
   subtitle: "Discover, share, and vote on competitive, meme, and thematic builds.",

@@ -1,3 +1,4 @@
+// frontend/src/components/generator/modes/TarotDeckStage.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';
@@ -136,7 +137,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-10">
-      <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+      <p className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
         {dict?.generator?.tarotTapToFlip ||
           'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
       </p>
@@ -199,7 +200,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                       visible for that frame. Not rendering it until flipped
                       removes the leak regardless of transform/timing. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl border-2 border-amber-500/25 bg-gradient-to-b from-slate-900 via-[#120a1c] to-slate-950 p-3"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-amber-500/30 bg-gradient-to-b from-slate-900 via-[#120a1c] to-slate-950 p-2 sm:p-2.5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
@@ -209,27 +210,28 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     {/* Inner card-stock border only -- no corner pips here.
                         PerkCard (rendered below via PerkSlot) already draws
                         its own top-left coordinate tag and bottom-right
-                        character portrait; pips in those same corners just
-                        overlapped and cluttered them. */}
-                    <span className="pointer-events-none absolute inset-2 rounded-xl border border-amber-500/15" />
+                        character portrait with size="tarot". */}
+                    <span className="pointer-events-none absolute inset-1 sm:inset-1.5 rounded-xl border border-amber-500/20" />
                     {card.flipped && (
                       <>
-                        <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em] text-amber-400/80">
-                          {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
-                        </span>
-                        <span className="relative z-10">
+                        <div className="relative z-10 pt-1 text-center">
+                          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-amber-400/90 drop-shadow">
+                            {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                          </span>
+                        </div>
+                        <div className="relative z-10 flex flex-1 items-center justify-center">
                           <PerkSlot
                             perk={card.slot.perk}
                             role={role}
                             page={card.slot.page}
                             slot={card.slot.slot}
-                            size="large"
+                            size="tarot"
                             isObscured={isObscured}
                             isBlind={isBlind}
                             onClick={onClick}
                             dict={dict}
                           />
-                        </span>
+                        </div>
                       </>
                     )}
                   </div>
@@ -252,9 +254,16 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
       </DbdButton>
 
-      <div aria-live="polite" className="text-xs font-black text-amber-400 text-center">
-        {flavorLine}
-      </div>
+      {flavorLine && (
+        <div
+          aria-live="polite"
+          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
+        >
+          {flavorLine}
+        </div>
+      )}
     </div>
   );
 };
+
+

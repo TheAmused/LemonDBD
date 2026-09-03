@@ -38,10 +38,12 @@ export function UmamiScript() {
 
   if (!config) return null;
 
+  const scriptSrc = `${config.url.replace(/\/+$/, '')}/script.js`;
+
   return (
     <Script
       strategy="afterInteractive"
-      src={`${config.url}/script.js`}
+      src={scriptSrc}
       data-website-id={config.websiteId}
     />
   );

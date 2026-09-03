@@ -1,8 +1,8 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminUserTable.tsx
 
 import React from 'react';
+import type { Dictionary } from '@/locales/types';
 import {
   Users,
   Search,
@@ -54,31 +54,31 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
   onDeleteUser,
 }) => {
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 sm:p-6 backdrop-blur-xl shadow-2xl space-y-6 w-full">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+    <div className="rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 backdrop-blur-xl shadow-xs space-y-6 w-full transition-colors duration-200">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-border-color">
         <div className="flex items-center gap-3">
-          <Users className="h-5 w-5 text-amber-400" />
-          <h2 className="text-base font-black uppercase tracking-wider text-slate-100 font-mono">
+          <Users className="h-5 w-5 text-accent-amber" />
+          <h2 className="text-base font-black uppercase tracking-wider text-text-primary font-mono">
             {dict?.admin?.title || 'User Accounts'} ({totalUsers})
           </h2>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           <div className="relative flex-1 sm:flex-initial">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
             <input
               type="text"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder={dict?.admin?.searchUserPlaceholder || 'Search username / email...'}
-              className="w-full sm:w-64 rounded-xl border border-slate-700 bg-slate-950/80 py-2 pl-9 pr-3 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500 focus:outline-none shadow-inner"
+              placeholder={dict?.admin?.searchUserPlaceholder || ''}
+              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-primary py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
             />
           </div>
 
           <select
             value={roleFilter}
             onChange={(e) => onRoleFilterChange(e.target.value)}
-            className="rounded-xl border border-slate-700 bg-slate-950/80 py-2 px-3 text-xs text-slate-200 focus:border-amber-500 focus:outline-none cursor-pointer shadow-inner [&>option]:bg-slate-900 [&>option]:text-slate-100"
+            className="rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-amber focus:outline-none cursor-pointer shadow-inner [&>option]:bg-bg-surface [&>option]:text-text-primary"
           >
             <option value="all">{dict?.admin?.allRoles || 'All Roles'}</option>
             <option value="admin">{dict?.admin?.admins || 'Admins'}</option>
@@ -88,7 +88,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
           <button
             type="button"
             onClick={onOpenCreateUser}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 px-3.5 py-2 text-xs font-bold text-slate-950 shadow-md shadow-amber-950/30 transition-all cursor-pointer font-sans"
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover px-3.5 py-2 text-xs font-bold text-text-inverted shadow-md shadow-accent-amber/20 hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans"
           >
             <UserPlus className="h-3.5 w-3.5" />
             <span>{dict?.admin?.createUser || 'Create User'}</span>
@@ -96,35 +96,35 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
         </div>
       </div>
 
-      {/* Mobile: stacked cards (no horizontal scroll / cramped 8-column table). */}
+      {/* Mobile view */}
       <div className="sm:hidden space-y-3 w-full">
         {users.length === 0 ? (
-          <div className="rounded-2xl border border-slate-800 bg-slate-950/40 py-8 text-center text-xs text-slate-500 font-mono">
-            {loading ? (dict?.admin?.loading || 'Loading users...') : (dict?.admin?.noUsers || 'No users found matching query.')}
+          <div className="rounded-2xl border border-border-color bg-bg-primary py-8 text-center text-xs text-text-muted font-mono">
+            {loading ? dict?.admin?.loading || 'Loading...' : dict?.admin?.noUsers || 'No users found.'}
           </div>
         ) : (
           users.map((u) => (
-            <div key={u.id} className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4 space-y-3">
+            <div key={u.id} className="rounded-2xl border border-border-color bg-bg-primary p-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
                   <UserAvatar user={u} size="xs" />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-slate-100 truncate">{u.username}</span>
+                      <span className="font-bold text-text-primary truncate">{u.username}</span>
                       {u.id === currentUserId && (
-                        <span className="shrink-0 rounded-md bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-amber-400">
+                        <span className="shrink-0 rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-accent-amber">
                           {dict?.admin?.you || 'You'}
                         </span>
                       )}
                     </div>
-                    <span className="block text-[11px] text-slate-500 font-mono truncate">{u.email}</span>
+                    <span className="block text-[11px] text-text-muted font-mono truncate">{u.email}</span>
                   </div>
                 </div>
                 <span
-                  className={`shrink-0 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider ${
+                  className={`shrink-0 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
                     u.role === 'admin'
-                      ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                      : 'bg-slate-800 text-slate-400 border border-slate-700'
+                      ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
+                      : 'bg-bg-elevated text-text-secondary border-border-color'
                   }`}
                 >
                   {u.role === 'admin' && <Crown className="h-2.5 w-2.5" />}
@@ -132,20 +132,20 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+              <div className="flex items-center justify-between text-[11px] text-text-secondary font-mono">
                 <span>#{u.id}</span>
                 <span>{dict?.admin?.thOwnedChars || 'Owned Chars'}: {u.owned_characters_count ?? 0}</span>
                 <span>{dict?.admin?.thUnlockedPerks || 'Unlocked Perks'}: {u.unlocked_perks_count ?? 0}</span>
               </div>
 
-              <div className="flex items-center justify-between pt-1 border-t border-slate-800/80">
+              <div className="flex items-center justify-between pt-1 border-t border-border-color">
                 {u.is_active ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">
                     <CheckCircle className="h-3.5 w-3.5" />
                     <span>{dict?.stats?.active || 'Active'}</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-red-400 font-semibold">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-rose-700 dark:text-rose-400 font-semibold">
                     <XCircle className="h-3.5 w-3.5" />
                     <span>{dict?.sidebar?.disabled || 'Disabled'}</span>
                   </span>
@@ -155,16 +155,18 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   <button
                     type="button"
                     onClick={() => onToggleRole(u)}
-                    title={u.role === 'admin' ? (dict?.admin?.demote || 'Demote to User') : (dict?.admin?.promote || 'Promote to Admin')}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-amber-500 hover:text-amber-400 transition-colors shadow-sm cursor-pointer"
+                    title={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
+                    aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
+                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
                   >
                     <Crown className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => onToggleActive(u)}
-                    title={u.is_active ? (dict?.admin?.disableAccount || 'Disable Account') : (dict?.admin?.enableAccount || 'Enable Account')}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-cyan-500 hover:text-cyan-400 transition-colors shadow-sm cursor-pointer"
+                    title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
+                    aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
+                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-xs cursor-pointer"
                   >
                     <Lock className="h-4 w-4" />
                   </button>
@@ -172,8 +174,9 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <button
                       type="button"
                       onClick={() => onDeleteUser(u)}
-                      title={dict?.admin?.deleteUserTitle || 'Delete User'}
-                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-red-500/20 bg-red-950/30 text-red-400 hover:bg-red-900/50 transition-colors shadow-sm cursor-pointer"
+                      title={dict?.admin?.deleteUserTitle || 'Delete'}
+                      aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
+                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-xs cursor-pointer"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -185,10 +188,10 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
         )}
       </div>
 
-      {/* Desktop/tablet: full data table (own horizontal scroll only as a safety net). */}
+      {/* Desktop view */}
       <div className="hidden sm:block overflow-x-auto w-full">
-        <table className="w-full text-left text-xs text-slate-300">
-          <thead className="border-b border-slate-800 bg-slate-950/50 text-[10px] uppercase font-black tracking-wider text-slate-400">
+        <table className="w-full text-left text-xs text-text-primary">
+          <thead className="border-b border-border-color bg-bg-primary text-[10px] uppercase font-black tracking-wider text-text-secondary">
             <tr>
               <th className="px-4 py-3">{dict?.admin?.thId || 'ID'}</th>
               <th className="px-4 py-3">{dict?.admin?.thUser || 'User'}</th>
@@ -200,53 +203,53 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               <th className="px-4 py-3 text-right">{dict?.admin?.thActions || 'Actions'}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-border-subtle">
             {users.length === 0 ? (
               <tr>
-                <td colSpan={8} className="py-8 text-center text-slate-500 font-mono">
-                  {loading ? (dict?.admin?.loading || 'Loading users...') : (dict?.admin?.noUsers || 'No users found matching query.')}
+                <td colSpan={8} className="py-8 text-center text-text-muted font-mono">
+                  {loading ? dict?.admin?.loading || 'Loading...' : dict?.admin?.noUsers || 'No users found.'}
                 </td>
               </tr>
             ) : (
               users.map((u) => (
-                <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="px-4 py-3 font-mono text-slate-500">#{u.id}</td>
-                  <td className="px-4 py-3 font-bold text-slate-100 flex items-center gap-2">
+                <tr key={u.id} className="hover:bg-bg-elevated/60 text-text-primary transition-colors">
+                  <td className="px-4 py-3 font-mono text-text-muted">#{u.id}</td>
+                  <td className="px-4 py-3 font-bold text-text-primary flex items-center gap-2">
                     <UserAvatar user={u} size="xs" />
                     <span className="truncate max-w-[120px]">{u.username}</span>
                     {u.id === currentUserId && (
-                      <span className="rounded-md bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-amber-400">
+                      <span className="rounded-md bg-accent-amber/15 border border-accent-amber/30 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-accent-amber">
                         {dict?.admin?.you || 'You'}
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-slate-400 font-mono">{u.email}</td>
+                  <td className="px-4 py-3 text-text-secondary font-mono">{u.email}</td>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider ${
+                      className={`inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border ${
                         u.role === 'admin'
-                          ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                          : 'bg-slate-800 text-slate-400 border border-slate-700'
+                          ? 'bg-accent-red/15 text-accent-red border-accent-red/30'
+                          : 'bg-bg-elevated text-text-secondary border-border-color'
                       }`}
                     >
                       {u.role === 'admin' && <Crown className="h-2.5 w-2.5" />}
                       {u.role}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-mono text-slate-200">
+                  <td className="px-4 py-3 font-mono text-text-primary">
                     {u.owned_characters_count ?? 0}
                   </td>
-                  <td className="px-4 py-3 font-mono text-slate-200">
+                  <td className="px-4 py-3 font-mono text-text-primary">
                     {u.unlocked_perks_count ?? 0}
                   </td>
                   <td className="px-4 py-3">
                     {u.is_active ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">
                         <CheckCircle className="h-3.5 w-3.5" />
                         <span>{dict?.stats?.active || 'Active'}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-red-400 font-semibold">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-rose-700 dark:text-rose-400 font-semibold">
                         <XCircle className="h-3.5 w-3.5" />
                         <span>{dict?.sidebar?.disabled || 'Disabled'}</span>
                       </span>
@@ -257,8 +260,9 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onToggleRole(u)}
-                        title={u.role === 'admin' ? (dict?.admin?.demote || 'Demote to User') : (dict?.admin?.promote || 'Promote to Admin')}
-                        className="relative rounded-lg border border-slate-700 bg-slate-800 p-1.5 text-slate-300 hover:border-amber-500 hover:text-amber-400 transition-colors shadow-sm cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        title={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
+                        aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
+                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2 before:content-['']"
                       >
                         <Crown className="h-3.5 w-3.5" />
                       </button>
@@ -266,8 +270,9 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onToggleActive(u)}
-                        title={u.is_active ? (dict?.admin?.disableAccount || 'Disable Account') : (dict?.admin?.enableAccount || 'Enable Account')}
-                        className="relative rounded-lg border border-slate-700 bg-slate-800 p-1.5 text-slate-300 hover:border-cyan-500 hover:text-cyan-400 transition-colors shadow-sm cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
+                        aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
+                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2 before:content-['']"
                       >
                         <Lock className="h-3.5 w-3.5" />
                       </button>
@@ -276,8 +281,9 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         <button
                           type="button"
                           onClick={() => onDeleteUser(u)}
-                          title={dict?.admin?.deleteUserTitle || 'Delete User'}
-                          className="relative rounded-lg border border-red-500/20 bg-red-950/30 p-1.5 text-red-400 hover:bg-red-900/50 transition-colors shadow-sm cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                          title={dict?.admin?.deleteUserTitle || 'Delete'}
+                          aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
+                          className="relative rounded-lg border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/30 p-1.5 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2 before:content-['']"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
@@ -292,8 +298,8 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       </div>
 
       {totalUsers > 15 && (
-        <div className="flex items-center justify-between pt-4 border-t border-slate-800 text-xs">
-          <span className="text-slate-400">
+        <div className="flex items-center justify-between pt-4 border-t border-border-color text-xs">
+          <span className="text-text-secondary">
             {dict?.pagination?.showing || 'Showing'} {(page - 1) * 15 + 1} {dict?.pagination?.to || 'to'} {Math.min(page * 15, totalUsers)} {dict?.pagination?.of || 'of'} {totalUsers}
           </span>
           <div className="flex items-center gap-2">
@@ -301,7 +307,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               type="button"
               onClick={() => onPageChange(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 font-semibold text-slate-300 disabled:opacity-40 hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
+              className="flex items-center gap-1 rounded-xl border border-border-color bg-bg-surface px-3 py-1.5 font-semibold text-text-primary disabled:opacity-40 hover:bg-bg-elevated transition-colors cursor-pointer shadow-xs"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>{dict?.pagination?.previous || 'Previous'}</span>
@@ -310,7 +316,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               type="button"
               onClick={() => onPageChange(page + 1)}
               disabled={page * 15 >= totalUsers}
-              className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 font-semibold text-slate-300 disabled:opacity-40 hover:bg-slate-700 transition-colors cursor-pointer shadow-sm"
+              className="flex items-center gap-1 rounded-xl border border-border-color bg-bg-surface px-3 py-1.5 font-semibold text-text-primary disabled:opacity-40 hover:bg-bg-elevated transition-colors cursor-pointer shadow-xs"
             >
               <span>{dict?.pagination?.next || 'Next'}</span>
               <ChevronRight className="h-4 w-4" />
@@ -321,3 +327,4 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
     </div>
   );
 };
+

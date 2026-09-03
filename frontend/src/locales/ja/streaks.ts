@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/streaks.ts
 export default {
   streaksTitle: "チャレンジ＆ストリークハブ",
   backToKillerStreaks: "キラーストリークに戻る",

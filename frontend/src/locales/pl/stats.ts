@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/stats.ts
 export default {
   vaultStats: "Statystyki Skarbca",
   totalPerks: "Wszystkie Umiejętności",

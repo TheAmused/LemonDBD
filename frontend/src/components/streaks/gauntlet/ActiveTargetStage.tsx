@@ -182,11 +182,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run || !run.current_loadout) {
     return (
-      <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-8 text-center backdrop-blur-md mb-8">
+      <div className="w-full bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center backdrop-blur-md mb-8">
         <div className="animate-spin text-amber-500 mx-auto w-8 h-8 mb-3 flex items-center justify-center">
           <RefreshCw className="w-8 h-8" />
         </div>
-        <p className="text-slate-400 text-sm">
+        <p className="text-slate-500 dark:text-slate-400 text-sm">
           {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
         </p>
       </div>

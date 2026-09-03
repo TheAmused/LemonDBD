@@ -38,10 +38,10 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
       }}
     >
       <div
-        className="relative w-full max-w-xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-rose-500/15 via-red-500/5 to-transparent flex items-center justify-between">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-rose-500/15 via-red-500/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3.5">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border-2 border-rose-500/50 flex items-center justify-center p-1.5 shadow-lg shadow-rose-950/40">
               {killerPower.icon_url || killerPower.icon_local_path ? (
@@ -61,10 +61,10 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
               )}
             </div>
             <div>
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-400">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-700 dark:text-rose-400">
                 {character.name} {t.bulletSeparator || '•'} {t.killerPower || 'Killer Power'}
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono mt-0.5">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono mt-0.5">
                 {killerPower.name}
               </h2>
             </div>
@@ -72,32 +72,32 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label={t.close || 'Close'}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="px-6 py-3 bg-slate-950/50 border-b border-slate-800/80 grid grid-cols-3 gap-2">
-          <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-center">
-            <span className="block text-[9px] font-mono font-bold uppercase text-slate-400">{t.movementSpeed || 'Speed'}</span>
-            <span className="block text-xs font-black text-slate-200 truncate">{killerSpeed}</span>
+        <div className="px-6 py-3 bg-slate-50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800/80 grid grid-cols-3 gap-2">
+          <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center">
+            <span className="block text-[9px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400">{t.movementSpeed || 'Speed'}</span>
+            <span className="block text-xs font-black text-slate-800 dark:text-slate-200 truncate">{killerSpeed}</span>
           </div>
-          <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-center">
-            <span className="block text-[9px] font-mono font-bold uppercase text-slate-400">{t.terrorRadius || 'Terror Radius'}</span>
-            <span className="block text-xs font-black text-rose-400 truncate">{killerTerrorRadius}</span>
+          <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center">
+            <span className="block text-[9px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400">{t.terrorRadius || 'Terror Radius'}</span>
+            <span className="block text-xs font-black text-rose-700 dark:text-rose-400 truncate">{killerTerrorRadius}</span>
           </div>
-          <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-center">
-            <span className="block text-[9px] font-mono font-bold uppercase text-slate-400">{t.height || 'Height'}</span>
-            <span className="block text-xs font-black text-slate-200 truncate">{killerHeight}</span>
+          <div className="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center">
+            <span className="block text-[9px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400">{t.height || 'Height'}</span>
+            <span className="block text-xs font-black text-slate-800 dark:text-slate-200 truncate">{killerHeight}</span>
           </div>
         </div>
 
-        <div className="p-6 overflow-y-auto space-y-4 text-sm text-slate-300 leading-relaxed">
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 space-y-2">
-            <span className="flex items-center gap-2 text-xs font-mono font-bold text-slate-400 uppercase mb-2">
-              <BookOpen className="h-3.5 w-3.5 text-rose-400" />
+        <div className="p-6 overflow-y-auto space-y-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-2">
+            <span className="flex items-center gap-2 text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">
+              <BookOpen className="h-3.5 w-3.5 text-rose-700 dark:text-rose-400" />
               {t.killerPowerDesc || 'Special ability and combat mechanics'}
             </span>
             <div className="space-y-2 text-sm sm:text-base leading-relaxed">

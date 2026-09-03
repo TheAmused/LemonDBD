@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/sidebar.ts
 export default {
   perks: "Umiejętności",
   challenges: "Wyzwania",
@@ -75,4 +76,8 @@ export default {
   disabled: "Wyłączone",
   bugReportModalSubtitle: 'Zgłaszaj błędy, literówki w tłumaczeniach i opinie bezpośrednio twórcom.',
   coffeeSubtitle: 'Wspieraj rozwój niezależnych narzędzi i bazy wiedzy DBD',
+  themeLight: 'Tryb jasny',
+  themeDark: 'Tryb ciemny',
+  themeSystem: 'Motyw systemowy',
 } as const;
+

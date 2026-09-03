@@ -121,25 +121,24 @@ param (
     [switch]$Down
 )
 ```
-When `-Perf` is supplied (e.g. `.\up.ps1 -Perf load` or `.\up.ps1 -Perf smoke`), the script verifies containers are UP, checks `k6` presence, and executes the specified K6 suite directly on the host.
+When `-Perf` is supplied:
+- If no argument is passed (or `-Perf "all"`), it runs every stage sequentially (`smoke` -> `load` -> `stress` -> `spike` -> `soak`).
+- If a specific stage is provided (e.g. `-Perf smoke` or `-Perf load`), it runs only that stage.
+The script verifies containers are UP, checks `k6` presence, and executes the target K6 suites directly on the host.
 
 ### 5.2 `up.sh`
 Add `-p | --perf [suite]` argument handling:
-```bash
--p|--perf)
-  PERF="$2"
-  shift 2
-  ;;
-```
-Executes the specified suite with `k6 run`.
+- Default when `--perf` has no argument (or `all`): runs every stage sequentially.
+- With argument: runs that specific stage.
 
 ### 5.3 `run_tests.py`
 Add `--perf` CLI argument:
 ```bash
-py run_tests.py --perf smoke
-py run_tests.py --perf load
+py run_tests.py --perf          # Runs all K6 performance stages sequentially
+py run_tests.py --perf smoke    # Runs smoke stage only
+py run_tests.py --perf load     # Runs load stage only
 ```
-Orchestrates execution of the K6 suite, checks return codes, parses metric outcomes, and incorporates results into the `TEST EXECUTION SUMMARY` table.
+When `--perf` is invoked without a sub-argument or with `all`, it executes all stages and tabulates every stage individually in the `TEST EXECUTION SUMMARY` table.
 
 ---
 

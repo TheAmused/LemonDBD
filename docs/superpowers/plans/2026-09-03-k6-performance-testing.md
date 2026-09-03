@@ -501,24 +501,24 @@ Verify:
 - `py run_tests.py --perf [smoke|load|stress]`
 
 - [ ] **Step 1: Update `up.ps1`**
-Add `[Alias("p")] [string]$Perf` parameter.
+Add `[Alias("p")] [string]$Perf = ""` parameter.
 After Gate 2 / container readiness check, if `$Perf` is specified:
-1. Verify `k6` executable is found in PATH (or alert user how to install/download).
-2. Resolve target suite (`smoke`, `load`, `stress`, `spike`, `soak`, default: `smoke`).
-3. Run `k6 run "k6/suites/$targetSuite.js"`.
-4. Check exit code and display success/failure banner.
+1. Verify `k6` executable is found in PATH.
+2. If `$Perf -eq "all"` or `$Perf -eq ""` (flag passed without value, or explicitly "all"), run all 5 stages sequentially (`smoke`, `load`, `stress`, `spike`, `soak`).
+3. If a specific stage is provided (`smoke`, `load`, `stress`, `spike`, `soak`), run only that stage.
+4. Check exit code across all executed stages and display success/failure banner.
 
 - [ ] **Step 2: Update `up.sh`**
 Add `-p|--perf` flag handling.
-Execute `k6 run k6/suites/$PERF.js` with equivalent checks and messaging.
+If no stage argument follows or `--perf all`, iterate through and execute all stages sequentially.
+If a stage argument is given, run only that stage.
 
 - [ ] **Step 3: Update `run_tests.py`**
-Add `--perf` CLI argument with optional suite selection (choices: `smoke`, `load`, `stress`, `spike`, `soak`, default `smoke`).
+Add `--perf` CLI argument with `nargs='?'`, `const='all'`, `default=None`, `choices=['all', 'smoke', 'load', 'stress', 'spike', 'soak']`.
 When `--perf` is provided:
-1. Check if `k6` or `k6.exe` exists in PATH.
-2. Execute `k6 run k6/suites/<suite>.js`.
-3. Capture duration, stdout, and exit code.
-4. Add entry to master `TEST EXECUTION SUMMARY` table.
+1. If `'all'`, execute each stage sequentially (`smoke`, `load`, `stress`, `spike`, `soak`).
+2. If a specific stage, execute only that stage.
+3. Tabulate each stage's status, duration, and metrics in the master `TEST EXECUTION SUMMARY` table.
 
 - [ ] **Step 4: Run tests to verify integration**
 `py run_tests.py --perf smoke`

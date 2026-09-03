@@ -1,14 +1,5 @@
-import { sleep } from 'k6';
-import { defaultClient, searchDuration } from '../lib/http_client.js';
+import { defaultClient, searchDuration, thinkTime } from '../lib/http_client.js';
 import { getRandomPerkQuery, getRandomCharacterQuery } from '../lib/data_generator.js';
-
-function thinkTime(min, max) {
-  if (typeof __ENV !== 'undefined' && (__ENV.K6_FAST_TEST === 'true' || __ENV.K6_FAST_TEST === '1')) {
-    sleep(0.05);
-    return;
-  }
-  sleep(min + Math.random() * (max - min));
-}
 
 export function runScenario(client = defaultClient) {
   const startTime = Date.now();

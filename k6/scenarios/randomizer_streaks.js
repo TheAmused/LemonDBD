@@ -1,13 +1,4 @@
-import { sleep } from 'k6';
-import { defaultClient } from '../lib/http_client.js';
-
-function thinkTime(min, max) {
-  if (typeof __ENV !== 'undefined' && (__ENV.K6_FAST_TEST === 'true' || __ENV.K6_FAST_TEST === '1')) {
-    sleep(0.05);
-    return;
-  }
-  sleep(min + Math.random() * (max - min));
-}
+import { defaultClient, thinkTime } from '../lib/http_client.js';
 
 export function runScenario(client = defaultClient) {
   const randomizerTags = { type: 'api', scenario: 'randomizer' };

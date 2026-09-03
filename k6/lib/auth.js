@@ -1,6 +1,6 @@
 ﻿import { defaultClient, authDuration } from './http_client.js';
 
-export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), iter = (typeof __ITER !== 'undefined' ? __ITER : 0)) {
+export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), iter = (typeof __ITER !== 'undefined' ? __ITER : 0), client = defaultClient) {
   const timestamp = Date.now();
   const rand = Math.floor(Math.random() * 100000);
   const username = `k6_u_${vuId}_${iter}_${rand}`.substring(0, 30);
@@ -10,7 +10,7 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
   const startTime = Date.now();
 
   // Register
-  const regRes = defaultClient.post('/api/v1/auth/register', {
+  const regRes = client.post('/api/v1/auth/register', {
     username: username,
     email: email,
     password: password,
@@ -30,7 +30,7 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
   }
 
   // Login
-  const loginRes = defaultClient.post('/api/v1/auth/login', {
+  const loginRes = client.post('/api/v1/auth/login', {
     username: username,
     password: password,
   }, { tags: { type: 'auth', operation: 'login' } });

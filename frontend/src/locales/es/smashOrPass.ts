@@ -1,3 +1,4 @@
+// frontend/src/locales/es/smashOrPass.ts
 export default {
   title: 'DBD Smash or Pass',
   pageTitle: 'Smash or Pass • Citas en la Niebla y Centro de Personajes',

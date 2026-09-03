@@ -1,3 +1,4 @@
+// frontend/src/locales/es/guesser.ts
 export default {
   navLink: "Adivinanzas",
   title: "Adivinanzas y Conocimiento de DBD",

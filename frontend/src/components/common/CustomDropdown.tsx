@@ -80,27 +80,25 @@ export function CustomDropdown<T extends string = string>({
 
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>
-      {/* Trigger Button */}
       <button
         type="button"
         onClick={handleToggle}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={ariaLabel || selectedOption?.label}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/90 border border-zinc-800/90 hover:border-pink-500/50 hover:bg-zinc-900 text-xs font-mono font-bold text-zinc-200 transition-all cursor-pointer shadow-inner select-none ${
-          isOpen ? 'border-[#ff0055]/60 bg-pink-950/20 text-white shadow-[0_0_12px_rgba(255,0,85,0.25)]' : ''
+        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color hover:border-accent-amber/50 hover:bg-bg-elevated text-xs font-mono font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
+          isOpen ? 'border-accent-amber bg-accent-amber/10 text-accent-amber shadow-xs' : ''
         } ${buttonClassName}`}
       >
-        {icon && <span className="text-zinc-400 shrink-0">{icon}</span>}
+        {icon && <span className="text-text-secondary shrink-0">{icon}</span>}
         <span className="truncate">{selectedOption?.label}</span>
         <ChevronDown
-          className={`h-3.5 w-3.5 text-zinc-400 transition-transform duration-200 shrink-0 ${
-            isOpen ? 'rotate-180 text-pink-400' : ''
+          className={`h-3.5 w-3.5 text-text-secondary transition-transform duration-200 shrink-0 ${
+            isOpen ? 'rotate-180 text-accent-amber' : ''
           }`}
         />
       </button>
 
-      {/* Animated Dropdown Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -111,7 +109,7 @@ export function CustomDropdown<T extends string = string>({
             role="listbox"
             className={`absolute top-full mt-1.5 ${
               align === 'right' ? 'right-0' : 'left-0'
-            } z-50 ${minWidthClass} max-h-60 overflow-y-auto rounded-2xl bg-[#0b0b10]/98 border border-pink-500/30 p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.85)] backdrop-blur-2xl custom-scrollbar ${menuClassName}`}
+            } z-50 ${minWidthClass} max-h-60 overflow-y-auto rounded-2xl bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${menuClassName}`}
           >
             {options.map((opt) => {
               const isSelected = opt.value === value;
@@ -124,15 +122,15 @@ export function CustomDropdown<T extends string = string>({
                   onClick={() => handleSelect(opt.value)}
                   className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-mono font-bold transition-all text-left cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.4)] font-black'
-                      : 'text-zinc-300 hover:text-white hover:bg-zinc-800/80'
+                      ? 'bg-accent-amber text-text-inverted font-black shadow-xs'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     {opt.icon && <span className="shrink-0">{opt.icon}</span>}
                     <span className="truncate">{opt.label}</span>
                     {opt.sublabel && (
-                      <span className="text-[10px] text-zinc-400 font-normal truncate">
+                      <span className="text-[10px] text-text-muted font-normal truncate">
                         {opt.sublabel}
                       </span>
                     )}
@@ -147,3 +145,4 @@ export function CustomDropdown<T extends string = string>({
     </div>
   );
 }
+

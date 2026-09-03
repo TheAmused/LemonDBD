@@ -12,7 +12,6 @@ import { AdminUserTable } from '@/components/admin/AdminUserTable';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
 import { Locale } from '@/i18n/config';
-import type { Dictionary } from '@/locales/types';
 import type {
   AdminStats,
   UserRow,
@@ -24,9 +23,6 @@ import { Users, Bug, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
-// Only the "Users" tab (and its create/toggle-role modal chain) is visible
-// on first paint. The other four admin subtabs, and every modal that only
-// opens on interaction, are code-split out of the initial /admin bundle.
 const AdminBugReportsWorkbench = dynamic(
   () => import('@/components/admin/AdminBugReportsWorkbench').then((m) => m.AdminBugReportsWorkbench),
   { ssr: false, loading: () => <AdminTabContentSkeleton /> }
@@ -54,7 +50,6 @@ const ScraperConfigModal = dynamic(
 const ConfirmModal = dynamic(() => import('@/components/ConfirmModal').then((m) => m.ConfirmModal), {
   ssr: false,
 });
-
 
 interface AdminPageProps {
   params: Promise<{ locale: string }>;
@@ -226,13 +221,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     if (!token) {
       setActionMessage({
         type: 'error',
-        text: dict?.admin?.tokenNotFound || 'Authentication token not found. Please log in again.',
+        text: dict?.admin?.tokenNotFound || 'Authentication token not found.',
       });
       return;
     }
 
     setIsSyncing(true);
-    setSyncStatus(dict?.admin?.scrapingWiki || 'Scraping wiki.gg...');
+    setSyncStatus(dict?.admin?.scrapingWiki || 'Syncing database...');
     try {
       const res = await fetch(`${API_BASE}/api/v1/scrape-and-seed`, {
         method: 'POST',
@@ -244,14 +239,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       if (res.ok) {
         const data: { characters_synced?: number; perks_synced?: number } = await res.json();
-        const charCount = data.characters_synced ?? 98;
-        const perkCount = data.perks_synced ?? 321;
-        const defaultMsg = `Database sync completed! Synced ${charCount} Characters and ${perkCount} Perks.`;
+        const charCount = data.characters_synced ?? 0;
+        const perkCount = data.perks_synced ?? 0;
         setActionMessage({
           type: 'success',
           text: dict?.admin?.syncSuccessMsg
             ? dict.admin.syncSuccessMsg.replace('{characters}', charCount.toString()).replace('{perks}', perkCount.toString())
-            : defaultMsg,
+            : `${charCount} characters and ${perkCount} perks synced successfully.`,
         });
       } else {
         const errorData: { error?: string; message?: string } = await res.json().catch(() => ({}));
@@ -261,7 +255,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         });
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error during scraper sync.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error during sync.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsSyncing(false);
@@ -285,12 +279,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         body: JSON.stringify({ role: newRole }),
       });
       if (res.ok) {
-        const updatedMsg = dict?.admin?.roleUpdated
-          ? dict.admin.roleUpdated.replace('{username}', targetUser.username).replace('{role}', newRole.toUpperCase())
-          : `Updated ${targetUser.username}'s role to ${newRole.toUpperCase()}.`;
         setActionMessage({
           type: 'success',
-          text: updatedMsg,
+          text: dict?.admin?.roleUpdated
+            ? dict.admin.roleUpdated.replace('{username}', targetUser.username).replace('{role}', newRole.toUpperCase())
+            : `${targetUser.username} role updated to ${newRole.toUpperCase()}.`,
         });
         await fetchAdminData();
       }
@@ -315,13 +308,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         body: JSON.stringify({ is_active: newActive }),
       });
       if (res.ok) {
-        const statusLabel = newActive ? 'ACTIVE' : 'SUSPENDED';
-        const msg = newActive
-          ? dict?.admin?.statusUpdatedActive?.replace('{username}', targetUser.username) || `${targetUser.username} is now ACTIVE.`
-          : dict?.admin?.statusUpdatedSuspended?.replace('{username}', targetUser.username) || `${targetUser.username} is now SUSPENDED.`;
         setActionMessage({
           type: 'success',
-          text: msg || `${targetUser.username} is now ${statusLabel}.`,
+          text: newActive
+            ? dict?.admin?.statusUpdatedActive?.replace('{username}', targetUser.username) || `${targetUser.username} is active.`
+            : dict?.admin?.statusUpdatedSuspended?.replace('{username}', targetUser.username) || `${targetUser.username} is suspended.`,
         });
         await fetchAdminData();
       }
@@ -350,7 +341,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.userDeletedSuccess?.replace('{username}', targetUser.username) || `User ${targetUser.username} deleted.`,
+          text: dict?.admin?.userDeletedSuccess?.replace('{username}', targetUser.username) || `${targetUser.username} deleted.`,
         });
         await fetchAdminData();
       }
@@ -385,7 +376,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.userCreatedSuccess?.replace('{username}', userData.username) || `User "${userData.username}" created successfully!`,
+          text: dict?.admin?.userCreatedSuccess?.replace('{username}', userData.username) || `${userData.username} created successfully.`,
         });
         setIsCreateUserOpen(false);
         await fetchAdminData();
@@ -425,12 +416,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.ticketUpdatedSuccess?.replace('{id}', reportId.toString()) || `Ticket #${reportId} updated successfully.`,
+          text: dict?.admin?.ticketUpdatedSuccess?.replace('{id}', reportId.toString()) || `Report #${reportId} updated.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Failed to update ticket.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Failed to update report.';
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -455,12 +446,12 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       if (res.ok) {
         setActionMessage({
           type: 'success',
-          text: dict?.admin?.ticketDeleteSuccess?.replace('{id}', reportId.toString()) || `Bug report #${reportId} deleted.`,
+          text: dict?.admin?.ticketDeleteSuccess?.replace('{id}', reportId.toString()) || `Report #${reportId} deleted.`,
         });
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.ticketDeleteFailed || 'Failed to delete bug report.';
+      const msg = err instanceof Error ? err.message : dict?.admin?.ticketDeleteFailed || 'Failed to delete report.';
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingBugReport(false);
@@ -469,13 +460,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   };
 
   if (!dict || isLoading || !isAuthenticated || !isAdmin) {
-    // Layout-matched skeleton instead of a bare spinner -- keeps CLS at
-    // zero once the real header/stats/table mount.
     return <AdminPanelSkeleton dict={dict} />;
   }
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200">
       <Sidebar currentLocale={currentLocale} dict={dict} activeCategory="admin" />
 
       <main
@@ -500,17 +489,18 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
             <div
               role="alert"
               aria-live="polite"
-              className={`flex items-center justify-between rounded-xl border p-4 text-xs shadow-sm ${actionMessage.type === 'success'
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-                  : 'border-red-500/30 bg-red-500/10 text-red-400'
-                }`}
+              className={`flex items-center justify-between rounded-xl border p-4 text-xs font-semibold shadow-xs ${
+                actionMessage.type === 'success'
+                  ? 'border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400'
+                  : 'border-rose-500/40 bg-rose-50 text-rose-800 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400'
+              }`}
             >
               <span>{actionMessage.text}</span>
               <button
                 type="button"
                 onClick={() => setActionMessage(null)}
-                className="text-slate-400 hover:text-slate-200 text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none focus:ring-1 focus:ring-slate-400"
-                aria-label={dict?.admin?.closeSymbol || 'Close notification'}
+                className="text-text-muted hover:text-text-primary text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none"
+                aria-label={dict?.admin?.closeSymbol || 'Close'}
               >
                 {dict?.admin?.closeSymbol || '×'}
               </button>
@@ -518,20 +508,24 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
           )}
 
           {/* Subtab Switcher */}
-          <nav aria-label={dict?.admin?.adminSections || 'Admin Sections'} className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-800 pb-2">
+          <nav
+            aria-label={dict?.admin?.adminSections || 'Admin Sections'}
+            className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-border-color pb-2"
+          >
             <button
               type="button"
               role="tab"
               aria-selected={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500 ${activeTab === 'users'
-                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-                }`}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+                activeTab === 'users'
+                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/40 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
+              }`}
             >
               <Users className="h-4 w-4" />
               <span>
-                {dict?.admin?.userDirectoryLabel || 'User Directory'} ({totalUsers})
+                {dict?.admin?.userDirectoryLabel || 'Users'} ({totalUsers})
               </span>
             </button>
 
@@ -540,10 +534,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'bugs'}
               onClick={() => setActiveTab('bugs')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-rose-500 ${activeTab === 'bugs'
-                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-                }`}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
+                activeTab === 'bugs'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
+              }`}
             >
               <Bug className="h-4 w-4" />
               <span>
@@ -556,10 +551,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'challenges'}
               onClick={() => setActiveTab('challenges')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-cyan-500 ${activeTab === 'challenges'
-                  ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-                }`}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+                activeTab === 'challenges'
+                  ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/40 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
+              }`}
             >
               <ShieldAlert className="h-4 w-4" />
               <span>{dict?.admin?.killSwitches || 'Kill Switches'}</span>
@@ -570,10 +566,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'challenge_stats'}
               onClick={() => setActiveTab('challenge_stats')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 ${activeTab === 'challenge_stats'
-                  ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-                }`}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+                activeTab === 'challenge_stats'
+                  ? 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border border-indigo-500/40 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
+              }`}
             >
               <BarChart3 className="h-4 w-4" />
               <span>{dict?.admin?.challengeStats || 'Challenge Stats'}</span>
@@ -584,10 +581,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'audit'}
               onClick={() => setActiveTab('audit')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-emerald-500 ${activeTab === 'audit'
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/40'
-                }`}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+                activeTab === 'audit'
+                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
+              }`}
             >
               <ScrollText className="h-4 w-4" />
               <span>{dict?.admin?.auditLog || 'Audit Log'}</span>
@@ -691,10 +689,10 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         title={dict?.admin?.deleteUserTitle || 'Delete user?'}
         message={
           <>
-            {dict?.admin?.confirmDeleteUserPrefix || 'Are you sure you want to delete user'}{' '}
-            <strong className="font-bold text-white">{userPendingDeletion?.username}</strong>?
+            {dict?.admin?.confirmDeleteUserPrefix || 'Delete'}{' '}
+            <strong className="font-bold text-accent-amber">{userPendingDeletion?.username}</strong>?
             <br />
-            {dict?.admin?.cannotBeUndone || 'This cannot be undone.'}
+            {dict?.admin?.cannotBeUndone || 'This action cannot be undone.'}
           </>
         }
         confirmLabel={dict?.admin?.delete || 'Delete'}
@@ -705,11 +703,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       <ConfirmModal
         open={bugReportPendingDeletion !== null}
-        title={dict?.admin?.deleteBugReportTitle || 'Delete bug report?'}
+        title={dict?.admin?.deleteBugReportTitle || 'Delete report?'}
         message={
           dict?.admin?.confirmDeleteBugReport
             ? dict.admin.confirmDeleteBugReport.replace('{id}', (bugReportPendingDeletion ?? 0).toString())
-            : `Are you sure you want to delete bug report #${bugReportPendingDeletion}?`
+            : `Delete report #${bugReportPendingDeletion}?`
         }
         confirmLabel={dict?.admin?.delete || 'Delete'}
         busy={isDeletingBugReport}
@@ -719,3 +717,4 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     </div>
   );
 }
+

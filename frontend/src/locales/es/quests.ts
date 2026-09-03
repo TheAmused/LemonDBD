@@ -1,3 +1,4 @@
+// frontend/src/locales/es/quests.ts
 export default {
   title: "Misiones y Logros de la Prueba",
   pageTitle: "LemonDBD - Misiones y Pruebas",

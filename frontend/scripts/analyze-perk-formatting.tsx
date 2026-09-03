@@ -1,3 +1,4 @@
+// frontend/scripts/analyze-perk-formatting.tsx
 /**
  * Diagnostic harness: runs renderFormattedDbdText over the real translation
  * corpus and reports formatting defects. Not part of the app build.

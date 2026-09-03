@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/voice.ts
 export default {
   engine: "音声認識エンジン",
   engineNative: "Web Speech フレームワーク",

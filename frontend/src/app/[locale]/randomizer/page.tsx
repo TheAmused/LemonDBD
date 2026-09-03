@@ -74,7 +74,7 @@ function RandomizerContent() {
   }, [charactersResponse]);
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -116,10 +116,10 @@ export default function RandomizerPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
           <div
             aria-hidden="true"
-            className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-slate-800 bg-[#0a0f18]/90"
+            className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-slate-200/80 bg-white/80 dark:border-slate-800/60 dark:bg-slate-950/60"
           />
           <div aria-hidden="true" className="h-16 shrink-0 border-b border-slate-800/60 lg:hidden" />
           <main className="flex-1 w-full min-h-screen overflow-y-auto p-4 sm:p-6 lg:p-8 flex flex-col lemon-shell-main">

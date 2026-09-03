@@ -1,3 +1,4 @@
+// frontend/src/locales/de/builds.ts
 export default {
   title: "Community-Build-Tresor",
   subtitle: "Entdecke, teile und bewerte kompetitive, spaßige und thematische Builds.",

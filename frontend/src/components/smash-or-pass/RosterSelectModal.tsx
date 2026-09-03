@@ -334,25 +334,25 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       aria-modal="true"
       aria-labelledby="roster-select-title"
       onClick={() => commitSelection()}
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-2xl animate-in fade-in duration-250 select-none overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-slate-900/70 dark:bg-black/90 backdrop-blur-2xl animate-in fade-in duration-250 select-none overflow-y-auto"
     >
-      <div className="absolute inset-0 bg-gradient-radial from-pink-950/30 via-zinc-950/85 to-black/95 pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-radial from-pink-100/60 via-white/85 to-slate-200/95 dark:from-pink-950/30 dark:via-zinc-950/85 dark:to-black/95 pointer-events-none" aria-hidden="true" />
 
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[1300px] h-[92vh] max-h-[860px] min-h-[580px] rounded-[32px] sm:rounded-[44px] bg-[#08080c]/95 border-2 border-pink-500/35 shadow-[0_0_90px_rgba(255,0,85,0.4)] p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between overflow-hidden animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-[1300px] h-[92vh] max-h-[860px] min-h-[580px] rounded-[32px] sm:rounded-[44px] bg-white/95 dark:bg-[#08080c]/95 border-2 border-pink-500/35 shadow-[0_0_60px_rgba(255,0,85,0.18)] dark:shadow-[0_0_90px_rgba(255,0,85,0.4)] p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between overflow-hidden animate-in zoom-in-95 duration-200"
       >
         <button
           type="button"
           onClick={() => commitSelection()}
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-zinc-900/90 border border-zinc-700/70 text-zinc-400 hover:text-white hover:border-pink-500 hover:bg-pink-950/50 hover:shadow-[0_0_20px_rgba(255,0,85,0.4)] transition-all cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+          className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-700/70 text-slate-500 dark:text-zinc-400 hover:text-pink-700 dark:hover:text-white hover:border-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950/50 hover:shadow-[0_0_20px_rgba(255,0,85,0.4)] transition-all cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
           aria-label={dict?.modal?.close || ''}
         >
           <X className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
         </button>
 
         <div className="text-center pt-1 sm:pt-2">
-          <h2 id="roster-select-title" className="text-xl sm:text-3xl md:text-4xl font-black font-mono tracking-[0.25em] sm:tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-pink-200 via-rose-100 to-white drop-shadow-[0_0_25px_rgba(255,0,85,0.8)] uppercase">
+          <h2 id="roster-select-title" className="text-xl sm:text-3xl md:text-4xl font-black font-mono tracking-[0.25em] sm:tracking-[0.35em] text-transparent bg-clip-text bg-gradient-to-r from-pink-700 via-rose-600 to-slate-900 dark:from-pink-200 dark:via-rose-100 dark:to-white drop-shadow-[0_0_25px_rgba(255,0,85,0.35)] dark:drop-shadow-[0_0_25px_rgba(255,0,85,0.8)] uppercase">
             {selectRosterTitle}
           </h2>
         </div>
@@ -376,7 +376,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             onClick={stepPrev}
-            className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-black/80 border border-pink-500/40 text-white shadow-[0_0_25px_rgba(255,0,85,0.4)] hover:bg-[#ff0055] hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-white/90 dark:bg-black/80 border border-pink-500/40 text-pink-700 dark:text-white shadow-[0_0_25px_rgba(255,0,85,0.2)] dark:shadow-[0_0_25px_rgba(255,0,85,0.4)] hover:bg-[#ff0055] hover:text-white hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
           >
             <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" aria-hidden="true" />
           </button>
@@ -389,7 +389,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             onClick={stepNext}
-            className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-black/80 border border-pink-500/40 text-white shadow-[0_0_25px_rgba(255,0,85,0.4)] hover:bg-[#ff0055] hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-white/90 dark:bg-black/80 border border-pink-500/40 text-pink-700 dark:text-white shadow-[0_0_25px_rgba(255,0,85,0.2)] dark:shadow-[0_0_25px_rgba(255,0,85,0.4)] hover:bg-[#ff0055] hover:text-white hover:border-pink-300 hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
           >
             <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" aria-hidden="true" />
           </button>
@@ -548,7 +548,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
         <div className="text-center pt-2 pb-1 space-y-2 sm:space-y-3">
           {rawSmash?.dwellHint && (
-            <p className="text-xs sm:text-sm md:text-base font-mono text-zinc-400 tracking-wide">
+            <p className="text-xs sm:text-sm md:text-base font-mono text-slate-500 dark:text-zinc-400 tracking-wide">
               {rawSmash.dwellHint}
             </p>
           )}
@@ -570,9 +570,9 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               <button
                 type="button"
                 disabled
-                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-500 font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase cursor-not-allowed opacity-75"
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-zinc-500 font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase cursor-not-allowed opacity-75"
               >
-                <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-zinc-500" aria-hidden="true" />
+                <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 dark:text-zinc-500" aria-hidden="true" />
                 <span>
                   {getRosterDisplayName(activeRosterInCenter)} ({dict?.smashOrPass?.comingSoon || 'Coming Soon'})
                 </span>

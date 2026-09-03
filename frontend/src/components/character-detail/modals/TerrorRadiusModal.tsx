@@ -34,19 +34,19 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
       }}
     >
       <div
-        className="relative w-full max-w-2xl bg-slate-900 border border-rose-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-rose-300 dark:border-rose-500/30 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 border-b border-slate-800 bg-gradient-to-r from-rose-500/15 via-red-500/5 to-transparent flex items-center justify-between">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-rose-500/15 via-red-500/5 to-transparent flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shadow-inner">
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-700 dark:text-rose-400 shadow-inner">
               <Radio className="h-6 w-6 animate-pulse" />
             </div>
             <div>
-              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-400">
+              <span className="text-[11px] font-mono font-black uppercase tracking-wider text-rose-700 dark:text-rose-400">
                 {character.name} {t.bulletSeparator || '•'} {t.acousticRange || 'Acoustic Range'}
               </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">
                 {t.terrorRadiusVisualizer || 'Terror Radius Visualizer'}
               </h2>
             </div>
@@ -54,14 +54,14 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label={t.close || 'Close'}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto space-y-6 text-sm text-slate-300">
+        <div className="p-6 overflow-y-auto space-y-6 text-sm text-slate-700 dark:text-slate-300">
           <div className="relative flex flex-col items-center justify-center p-6 rounded-3xl bg-slate-950 border border-rose-500/20 overflow-hidden">
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border border-dashed border-purple-500/30 flex items-start justify-center pt-1">
@@ -104,68 +104,68 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
               <span className="inline-block h-2 w-2 rounded-full bg-rose-500" />
               <span>
                 {t.currentBaseTerrorRadius || 'Current Base Terror Radius'}:{' '}
-                <strong className="text-rose-400">{killerTerrorRadius}</strong>
+                <strong className="text-rose-500 dark:text-rose-400">{killerTerrorRadius}</strong>
               </span>
             </div>
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xs font-mono font-black uppercase text-slate-400 tracking-wider">
+            <h3 className="text-xs font-mono font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">
               {t.heartbeatStages || 'Heartbeat Intensity Progression'}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="p-3 rounded-xl bg-red-950/30 border border-red-500/40">
-                <strong className="text-red-400 block mb-1">
+              <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-300 dark:border-red-500/40">
+                <strong className="text-red-700 dark:text-red-400 block mb-1">
                   {t.immediateThreat || '0 - 8 Metres (Immediate Chase)'}
                 </strong>
-                <p className="text-slate-300 text-[11px]">
+                <p className="text-slate-700 dark:text-slate-300 text-[11px]">
                   {t.immediateChaseDesc || 'Max heartbeat tempo, aggressive percussion, and direct visual red stain engagement.'}
                 </p>
               </div>
-              <div className="p-3 rounded-xl bg-rose-950/30 border border-rose-500/30">
-                <strong className="text-rose-400 block mb-1">
+              <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-300 dark:border-rose-500/30">
+                <strong className="text-rose-700 dark:text-rose-400 block mb-1">
                   {t.dangerZone || '8 - 16 Metres (Danger Zone)'}
                 </strong>
-                <p className="text-slate-300 text-[11px]">
+                <p className="text-slate-700 dark:text-slate-300 text-[11px]">
                   {t.dangerZoneDesc || 'Rapid heavy thumping heartbeat; killer is actively maneuvering around loops.'}
                 </p>
               </div>
-              <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/30">
-                <strong className="text-amber-400 block mb-1">
+              <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-500/30">
+                <strong className="text-amber-700 dark:text-amber-400 block mb-1">
                   {t.approaching || '16 - 24 Metres (Approaching)'}
                 </strong>
-                <p className="text-slate-300 text-[11px]">
+                <p className="text-slate-700 dark:text-slate-300 text-[11px]">
                   {t.approachingDesc || 'Rhythmic steady pulse indicating proximity to survivor objectives.'}
                 </p>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800">
-                <strong className="text-slate-300 block mb-1">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <strong className="text-slate-800 dark:text-slate-300 block mb-1">
                   {t.audibleRange || '24 - 32 Metres (Audible Range)'}
                 </strong>
-                <p className="text-slate-400 text-[11px]">
+                <p className="text-slate-600 dark:text-slate-400 text-[11px]">
                   {t.audibleRangeDesc || 'Initial faint audio cues signaling presence within the trial quadrant.'}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-2">
-            <span className="text-xs font-mono font-bold text-slate-400 uppercase">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2">
+            <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase">
               {t.survivorComparison || 'Survivor Speed Comparison'}
             </span>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-700 dark:text-slate-300">
               {t.survivorComparisonDesc || 'Survivor standard sprint speed is 4.0 m/s (100%).'}
             </p>
-            <div className="flex flex-wrap items-center gap-4 text-xs font-mono pt-1 text-slate-400">
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono pt-1 text-slate-600 dark:text-slate-400">
               <span>
-                {t.killerBase || 'Killer Base'}: <strong className="text-rose-400">{killerSpeed}</strong>
+                {t.killerBase || 'Killer Base'}: <strong className="text-rose-700 dark:text-rose-400">{killerSpeed}</strong>
               </span>
               <span>
-                {t.survivorSprint || 'Survivor Sprint'}: <strong className="text-emerald-400">{t.survivorSprintSpeed || '4.0 m/s (100%)'}</strong>
+                {t.survivorSprint || 'Survivor Sprint'}: <strong className="text-emerald-700 dark:text-emerald-400">{t.survivorSprintSpeed || '4.0 m/s (100%)'}</strong>
               </span>
               <span>
                 {t.straightGapClose || 'Straight Gap Close'}:{' '}
-                <strong className="text-amber-400">
+                <strong className="text-amber-700 dark:text-amber-400">
                   {t.approxSymbol || '~'}{(killerTRMeters / 4.6).toFixed(1)}{t.secondsUnit || 's'} {t.straightLine || 'straight line'}
                 </strong>
               </span>

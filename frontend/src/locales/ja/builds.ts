@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/builds.ts
 export default {
   title: "コミュニティビルド保管庫",
   subtitle: "ガチ構成からネタ構成、コンセプトビルドまで、みんなのパーク構成を探して共有・投票しよう。",

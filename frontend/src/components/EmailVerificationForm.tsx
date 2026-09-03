@@ -22,7 +22,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
   dict,
 }) => {
   const t = dict?.user;
-  const resolvedSubmitLabel = submitLabel || t?.verifyEmailAction || 'Verify';
+  const resolvedSubmitLabel = submitLabel || t?.verifyEmailAction;
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''));
   const [error, setError] = useState<string | null>(null);
@@ -83,7 +83,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
       await refreshUser();
       onVerified?.();
     } else {
-      setError(res.error || t?.invalidVerificationCode || 'Invalid verification code.');
+      setError(res.error || t?.invalidVerificationCode || null);
     }
   };
 
@@ -92,7 +92,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
     setError(null);
     const res = await resendVerification(email);
     if (!res.success) {
-      setError(res.error || t?.failedToResendCode || 'Failed to resend code.');
+      setError(res.error || t?.failedToResendCode || null);
     }
     setCooldown(RESEND_COOLDOWN_SECONDS);
   };
@@ -100,7 +100,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3">
       {error && (
-        <p role="alert" className="text-[11px] font-semibold text-red-600 dark:text-red-400">
+        <p role="alert" className="text-[11px] font-semibold text-accent-red">
           {error}
         </p>
       )}
@@ -117,28 +117,33 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
             value={digit}
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            aria-label={(t?.digitAriaLabel || 'Digit {n} of verification code').replace('{n}', String(index + 1))}
-            className="h-11 w-9 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/60 text-center font-mono text-base text-slate-900 dark:text-slate-100 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            aria-label={t?.digitAriaLabel?.replace('{n}', String(index + 1))}
+            className="h-11 w-9 rounded-lg border border-border-color bg-bg-primary text-center font-mono text-base text-text-primary focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber shadow-inner transition-colors"
           />
         ))}
       </div>
-      <button
-        type="submit"
-        disabled={verifying || code.length !== CODE_LENGTH}
-        className="w-full max-w-xs rounded-xl bg-amber-600 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-amber-500 disabled:opacity-50 transition-colors cursor-pointer"
-      >
-        {verifying ? t?.verifying || 'Verifying...' : resolvedSubmitLabel}
-      </button>
-      <button
-        type="button"
-        onClick={handleResend}
-        disabled={cooldown > 0}
-        className="text-[11px] font-bold underline text-amber-700 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 disabled:opacity-60 cursor-pointer"
-      >
-        {cooldown > 0
-          ? (t?.resendCodeIn || 'Resend code in {seconds}s').replace('{seconds}', String(cooldown))
-          : t?.resendCode || 'Resend code'}
-      </button>
+      {resolvedSubmitLabel && (
+        <button
+          type="submit"
+          disabled={verifying || code.length !== CODE_LENGTH}
+          className="w-full max-w-xs rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 transition-all cursor-pointer shadow-xs"
+        >
+          {verifying ? t?.verifying : resolvedSubmitLabel}
+        </button>
+      )}
+      {(t?.resendCodeIn || t?.resendCode) && (
+        <button
+          type="button"
+          onClick={handleResend}
+          disabled={cooldown > 0}
+          className="text-[11px] font-bold underline text-accent-amber hover:opacity-80 disabled:opacity-60 cursor-pointer"
+        >
+          {cooldown > 0
+            ? t?.resendCodeIn?.replace('{seconds}', String(cooldown))
+            : t?.resendCode}
+        </button>
+      )}
     </form>
   );
 };
+

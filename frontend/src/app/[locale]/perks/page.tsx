@@ -1,6 +1,6 @@
+// frontend/src/app/[locale]/perks/page.tsx
 'use client';
 import type { Dictionary } from '@/locales/types';
-// frontend/src/app/[locale]/perks/page.tsx
 
 import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
@@ -79,19 +79,9 @@ function PerksContent() {
   const [viewMode, setViewMode] = useState<ViewDisplayMode>('grid');
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
-  // The 5-column perk grid always shows exactly 3 rows worth of vertical
-  // space -- any extra rows (from a larger Pagination page size) should
-  // scroll at that *same* per-row height instead of squeezing everything
-  // to fit or collapsing to zero height. That per-row height can't be
-  // expressed as a CSS percentage of the grid's own box (that's a cyclic
-  // calculation -- the row height would depend on the height being solved
-  // for -- which is exactly what broke rows past the 15th item). So it's
-  // measured directly off the grid's own rendered height instead, the
-  // same ResizeObserver-based approach used for the slot machine's reel
-  // sizing.
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
-  const GRID_ROW_GAP_PX = 12; // matches the grid's gap-3 (0.75rem @ 16px root)
+  const GRID_ROW_GAP_PX = 12;
 
   const measureGridArea = useCallback((node: HTMLDivElement | null) => {
     if (gridResizeObserverRef.current) {
@@ -138,13 +128,6 @@ function PerksContent() {
 
   const { prefetchPerkIcons } = useImagePrefetch();
 
-  // Split into three independent cached reads.
-  //
-  // These used to be one Promise.all inside a single effect keyed on every
-  // filter, so paging or re-sorting re-downloaded the whole 1000-perk list and
-  // the entire character roster -- neither of which depends on page, sort,
-  // search or scope. Now only the paginated query re-runs; the other two are
-  // served from the module cache, including when you leave the page and return.
   const fetchPerks = useCallback(async () => {
     setLoading(true);
     try {
@@ -203,11 +186,8 @@ function PerksContent() {
     fetchPerks();
   }, [fetchPerks]);
 
-  // Vault-wide perk list: drives the stats row and the generator handoff. Keyed
-  // on locale + user only, so paging never touches it.
-  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${
-    user?.id ? `&user_id=${user.id}` : ''
-  }`;
+  const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}${user?.id ? `&user_id=${user.id}` : ''
+    }`;
   const { data: allPerksResponse } = useCachedData<PerksResponse>(
     allPerksKey,
     () => fetchJson<PerksResponse>(allPerksKey)
@@ -256,7 +236,7 @@ function PerksContent() {
   const totalVaultPerks = allPerksForStats.length || totalResults;
 
   return (
-    <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -269,11 +249,6 @@ function PerksContent() {
         characterCount={characterCount}
       />
 
-      {/* Fixed-height column: the filters bar (and, when present, the empty
-          state) never scroll away -- only the perk grid/list area below
-          them does, in its own contained region. That's what keeps every
-          control reachable without ever having to scroll the whole page to
-          find them again. */}
       <main
         className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden transition-[padding] duration-300 p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main"
       >
@@ -312,32 +287,26 @@ function PerksContent() {
           />
         </div>
 
-        {/* The scrollable perk grid/list lives strictly between the
-            filters bar above and the Pagination footer below -- Pagination
-            itself is a fixed shrink-0 sibling AFTER this scroll region, not
-            inside it, so it never ends up buried mid-scroll behind the
-            grid once a larger page size pushes the grid past 3 rows. */}
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
           {loading ? (
-            // Fixed 5x3 grid (grid-cols-5 and grid-rows-3 layout)
             <PerksGridSkeleton dict={dict} />
           ) : perks.length === 0 ? (
             <section
               aria-live="polite"
-              className="my-auto rounded-3xl bg-slate-900/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-slate-800"
+              className="my-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color"
             >
-              <Shield className="mx-auto h-12 w-12 text-slate-600 mb-3" />
-              <h2 className="text-lg font-extrabold text-slate-200">
+              <Shield className="mx-auto h-12 w-12 text-slate-500 dark:text-slate-500 mb-3" />
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-slate-200">
                 {dict?.empty?.title || 'No Perks Found'}
               </h2>
-              <p className="mt-1 text-xs text-slate-400 max-w-sm mx-auto">
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
                 {dict?.empty?.subtitle ||
                   'Try clearing your search query or switching ownership filters.'}
               </p>
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/30"
+                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-800 dark:text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/40"
               >
                 {dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters'}
               </button>
@@ -408,8 +377,8 @@ export default function PerksPage() {
   return (
     <Suspense
       fallback={
-        <div className="h-dvh overflow-hidden bg-[#070b12] text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-          <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-800 bg-[#0a0f18]/90 p-4 select-none animate-pulse" />
+        <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+          <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-border-color bg-bg-surface/80 p-4 select-none animate-pulse" />
           <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main">
             <PerksGridSkeleton />
           </main>

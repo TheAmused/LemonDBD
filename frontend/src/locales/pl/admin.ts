@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/admin.ts
 export default {
   killSwitches: "Blokady awaryjne",
   challengeStats: "Statystyki wyzwań",

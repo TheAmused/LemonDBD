@@ -1,3 +1,4 @@
+// frontend/src/locales/es/builds.ts
 export default {
   title: "Bóveda de Builds de la Comunidad",
   subtitle: "Descubre, comparte y vota por configuraciones competitivas, temáticas y de memes.",

@@ -1,3 +1,4 @@
+// frontend/scripts/_gap.tsx
 /** Inflected forms of known keywords that receive no highlight at all. */
 import fs from 'node:fs'; import path from 'node:path';
 import { renderToStaticMarkup } from 'react-dom/server';

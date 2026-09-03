@@ -26,9 +26,6 @@ import {
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
-/** Pure "is any filter non-default" check, pulled out of the component body
- * so it's unit-testable without rendering anything. Drives whether the
- * Reset button shows up at all. */
 export function computeHasActiveFilters(state: {
   search: string;
   scope: ScopeFilter;
@@ -63,13 +60,8 @@ interface PerkFiltersProps {
   dict?: PerkDictionary;
   onReset: () => void;
   locale?: string;
-  /** Live per-role counts across the whole vault (not just the current
-   * page) -- shown right on the Survivor/Killer switch itself. */
   survivorCount?: number;
   killerCount?: number;
-  /** Live counts for the currently selected role -- shown on the
-   * All/Owned ownership switch itself, same pattern as the role switch
-   * above it. */
   allCount?: number;
   ownedCount?: number;
 }
@@ -141,10 +133,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Survivor',
       icon: <Shield className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-gradient-to-r from-emerald-600 to-teal-700',
+      activeClassName: 'bg-emerald-600 text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.survivor || 'Survivors'}
+          {dict?.filters?.survivor && <span>{dict.filters.survivor}</span>}
           {typeof survivorCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {survivorCount}
@@ -156,10 +148,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Killer',
       icon: <Skull className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-gradient-to-r from-rose-700 to-red-800',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.killer || 'Killers'}
+          {dict?.filters?.killer && <span>{dict.filters.killer}</span>}
           {typeof killerCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {killerCount}
@@ -173,10 +165,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
     {
       value: 'all',
-      activeClassName: 'bg-gradient-to-r from-slate-700 to-slate-800',
+      activeClassName: 'bg-bg-elevated text-text-primary border border-border-color',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.allPerks || 'All'}
+          {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
           {typeof allCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {allCount}
@@ -187,10 +179,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
-      activeClassName: 'bg-gradient-to-r from-cyan-600 to-teal-700',
+      activeClassName: 'bg-accent-amber text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.ownedOnly || 'Owned'}
+          {dict?.filters?.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
           {typeof ownedCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {ownedCount}
@@ -204,13 +196,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const sortFieldOptions: readonly [ToggleSwitchOption<SortField>, ToggleSwitchOption<SortField>] = [
     {
       value: 'name',
-      label: dict?.filters?.sortByName || 'Name',
-      activeClassName: 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60',
+      label: dict?.filters?.sortByName,
+      activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
     },
     {
       value: 'character',
-      label: dict?.filters?.sortByCharacter || 'Character',
-      activeClassName: 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60',
+      label: dict?.filters?.sortByCharacter,
+      activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
     },
   ];
 
@@ -218,63 +210,50 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'asc',
       icon: <ArrowUpAZ className="h-3.5 w-3.5" />,
-      label: dict?.filters?.orderAsc || 'A-Z',
-      activeClassName: 'bg-white text-cyan-600 dark:bg-slate-800 dark:text-cyan-400 border border-slate-200 dark:border-slate-700/60',
+      label: dict?.filters?.orderAsc,
+      activeClassName: 'bg-bg-surface text-accent-amber border border-border-color',
     },
     {
       value: 'desc',
       icon: <ArrowDownZA className="h-3.5 w-3.5" />,
-      label: dict?.filters?.orderDesc || 'Z-A',
-      activeClassName: 'bg-white text-cyan-600 dark:bg-slate-800 dark:text-cyan-400 border border-slate-200 dark:border-slate-700/60',
+      label: dict?.filters?.orderDesc,
+      activeClassName: 'bg-bg-surface text-accent-amber border border-border-color',
     },
   ];
 
   return (
     <section
-      aria-label={dict?.filters?.filtersTitle || 'Perk Filters'}
-      className="relative z-30 flex w-full items-center gap-3 rounded-3xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800/80 dark:bg-slate-900/60 dark:shadow-xl dark:shadow-slate-950/40 sm:p-4 backdrop-blur-xl"
+      aria-label={dict?.filters?.filtersTitle}
+      className="relative z-30 flex w-full items-center gap-3 rounded-3xl border border-border-color bg-bg-surface/90 p-3 shadow-xs sm:p-4 backdrop-blur-xl transition-colors"
     >
-      {/* Every toggle, the General Only checkbox, and Reset all live in one
-          horizontally-scrollable cluster -- never wrapped onto a second
-          line, and never truncated: each switch is sized to its own
-          content (see ToggleSwitch), so a longer label in another locale
-          just makes that one switch wider instead of getting clipped. If
-          the cluster is ever wider than the available space it scrolls
-          sideways within itself, rather than wrapping the toolbar to a
-          second row or shrinking any label. */}
       <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-0.5 sm:gap-2.5 [scrollbar-width:thin]">
         <ToggleSwitch
-          ariaLabel={dict?.filters?.sortByRole || 'Filter by Role'}
+          ariaLabel={dict?.filters?.sortByRole || ''}
           value={role}
           onChange={setRole}
           options={roleOptions}
         />
 
         <ToggleSwitch
-          ariaLabel={dict?.filters?.ownershipFilter || 'Filter by Ownership'}
+          ariaLabel={dict?.filters?.ownershipFilter || ''}
           value={ownershipFilter}
           onChange={setOwnershipFilter}
           options={ownershipOptions}
         />
 
-        {/* "General Only" used to be its own two-way toggle (All Perks /
-            General Only) sitting right next to the ownership toggle above,
-            which meant two separate switches both nominally about "how much
-            of the pool" -- confusing, and one extra control. It's just a
-            single on/off narrowing filter, so it's a checkbox now. */}
-        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-extrabold text-slate-700 shadow-inner dark:border-slate-800/80 dark:bg-slate-950/80 dark:text-slate-300">
+        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-border-color bg-bg-primary/50 px-3.5 py-2 text-xs font-extrabold text-text-secondary shadow-inner">
           <input
             type="checkbox"
             checked={scope === 'general'}
             onChange={(e) => setScope(e.target.checked ? 'general' : 'all')}
-            className="h-3.5 w-3.5 shrink-0 rounded border-slate-400 accent-amber-500 dark:border-slate-600"
+            className="h-3.5 w-3.5 shrink-0 rounded border-border-color accent-accent-amber"
           />
-          <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-500 dark:text-amber-400" />
-          <span>{dict?.filters?.generalOnly || 'General Only'}</span>
+          <Sparkles className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
+          {dict?.filters?.generalOnly && <span>{dict.filters.generalOnly}</span>}
         </label>
 
         <ToggleSwitch
-          ariaLabel={dict?.filters?.sortFields || 'Sort Fields'}
+          ariaLabel={dict?.filters?.sortFields || ''}
           value={sortBy}
           onChange={setSortBy}
           options={sortFieldOptions}
@@ -282,21 +261,17 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         />
 
         <ToggleSwitch
-          ariaLabel={dict?.filters?.sortOrderLabel || 'Sort Direction'}
+          ariaLabel={dict?.filters?.sortOrderLabel || ''}
           value={order}
           onChange={setOrder}
           options={sortOrderOptions}
           size="sm"
         />
-
       </div>
 
-      {/* Search + view mode live outside the scrolling cluster above (not
-          scrolled away with it) so the search suggestions dropdown always
-          has room to open below it without being clipped. */}
       <div className="flex shrink-0 items-center gap-2.5">
         <div ref={searchDropdownRef} className="relative z-40 w-36 sm:w-64">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
           <input
             type="text"
             value={search}
@@ -305,11 +280,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               setSearch(e.target.value);
               setIsPerkSuggestionsOpen(true);
             }}
-            placeholder={
-              dict?.filters?.searchPlaceholder || 'Type perk name or alias...'
-            }
-            aria-label={dict?.filters?.searchPlaceholder || 'Search perks'}
-            className="w-full rounded-full border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950/80 py-2.5 pl-10 pr-9 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-500 focus:border-cyan-500 focus:bg-white dark:focus:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
+            placeholder={dict?.filters?.searchPlaceholder}
+            aria-label={dict?.filters?.searchPlaceholder}
+            className="w-full rounded-full border border-border-color bg-bg-primary/50 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-amber/20 transition-all"
           />
           {search && (
             <button
@@ -318,8 +291,8 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                 setSearch('');
                 setIsPerkSuggestionsOpen(false);
               }}
-              aria-label={dict?.filters?.clearSearch || 'Clear search text'}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
+              aria-label={dict?.filters?.clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
             >
               <X className="h-3 w-3" />
             </button>
@@ -328,7 +301,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
             <div
               role="listbox"
-              className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-2xl z-50 p-1.5 flex flex-col gap-1"
+              className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto rounded-2xl border border-border-color bg-bg-surface shadow-2xl z-50 p-1.5 flex flex-col gap-1"
             >
               {perkSuggestions.map((item, idx) => (
                 <button
@@ -340,22 +313,23 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                     setSearch(item.name);
                     setIsPerkSuggestionsOpen(false);
                   }}
-                  className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer transition-colors text-left w-full"
+                  className="flex items-center justify-between p-2 rounded-xl hover:bg-bg-elevated cursor-pointer transition-colors text-left w-full"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">
+                      <span className="text-xs font-black text-text-primary truncate">
                         {item.name}
                       </span>
                       {item.alternate_name && (
-                        <span className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold truncate">
-                          {dict?.filters?.aliasLabel || 'Alias:'} {item.alternate_name}
+                        <span className="text-[10px] text-accent-amber font-semibold truncate">
+                          {dict?.filters?.aliasLabel && `${dict.filters.aliasLabel} `}
+                          {item.alternate_name}
                         </span>
                       )}
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 shrink-0">
-                    {item.character || 'General'}
+                  <span className="text-[10px] font-bold text-text-muted shrink-0">
+                    {item.character || dict?.modal?.generalPerk}
                   </span>
                 </button>
               ))}
@@ -365,17 +339,17 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
         <div
           role="group"
-          aria-label={dict?.filters?.viewMode || 'View Mode Toggle'}
-          className="flex shrink-0 items-center rounded-full border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950/90 p-1"
+          aria-label={dict?.filters?.viewMode}
+          className="flex shrink-0 items-center rounded-full border border-border-color bg-bg-primary/50 p-1"
         >
           <button
             type="button"
             onClick={() => setViewMode('grid')}
-            aria-label={dict?.filters?.gridView || 'Grid View'}
+            aria-label={dict?.filters?.gridView}
             className={`rounded-full p-2 transition-all cursor-pointer ${
               viewMode === 'grid'
-                ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
-                : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+                ? 'bg-bg-surface text-accent-amber border border-border-color shadow-xs'
+                : 'text-text-muted hover:text-text-primary'
             }`}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -383,11 +357,11 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            aria-label={dict?.filters?.listView || 'List View'}
+            aria-label={dict?.filters?.listView}
             className={`rounded-full p-2 transition-all cursor-pointer ${
               viewMode === 'list'
-                ? 'bg-white text-cyan-600 border border-slate-200 shadow-sm dark:bg-cyan-500/20 dark:text-cyan-400 dark:border-cyan-500/30'
-                : 'text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300'
+                ? 'bg-bg-surface text-accent-amber border border-border-color shadow-xs'
+                : 'text-text-muted hover:text-text-primary'
             }`}
           >
             <List className="h-4 w-4" />
@@ -397,3 +371,4 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     </section>
   );
 };
+

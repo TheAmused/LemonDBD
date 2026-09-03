@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/guesser.ts
 export default {
   navLink: "クイズ",
   title: "DbD 知識力クイズ",

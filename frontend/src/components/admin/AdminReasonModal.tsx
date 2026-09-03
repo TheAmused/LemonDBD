@@ -1,8 +1,8 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminReasonModal.tsx
 
 import React, { useEffect, useState } from 'react';
+import type { Dictionary } from '@/locales/types';
 import { X, Ban } from 'lucide-react';
 
 export interface AdminReasonModalProps {
@@ -15,12 +15,6 @@ export interface AdminReasonModalProps {
   onConfirm: (reason: string) => void;
 }
 
-/**
- * Shared "why are you disabling this" prompt for the admin panel (challenge
- * modes, characters, perks). Replaces window.prompt() with something that
- * matches the rest of the admin UI and doesn't block on native browser
- * chrome.
- */
 export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
   isOpen,
   title,
@@ -51,57 +45,61 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
     <div
       onClick={onCancel}
       className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md cursor-pointer"
+      role="dialog"
+      aria-modal="true"
     >
       <div
-        className="relative w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden cursor-default"
+        className="relative w-full max-w-md bg-bg-surface border border-border-color rounded-2xl shadow-2xl overflow-hidden cursor-default transition-colors duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-950/50">
+        <div className="flex items-center justify-between p-5 border-b border-border-color bg-bg-primary">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400">
+            <div className="p-2 bg-accent-red/10 border border-accent-red/20 rounded-xl text-accent-red">
               <Ban className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-black text-white tracking-tight">{title}</h2>
-              {subtitle && <p className="text-xs text-slate-400">{subtitle}</p>}
+              <h2 className="text-base font-black text-text-primary tracking-tight">{title}</h2>
+              {subtitle && <p className="text-xs text-text-secondary">{subtitle}</p>}
             </div>
           </div>
           <button
+            type="button"
             onClick={onCancel}
-            className="p-1.5 text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+            aria-label={dict?.admin?.closeSymbol || 'Close'}
+            className="p-1.5 text-text-muted hover:text-text-primary bg-bg-elevated hover:bg-border-color rounded-lg transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <div className="p-5 space-y-3">
-          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            {dict?.admin?.reasonShownToPlayers || 'Reason (shown to players)'}
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+            {dict?.admin?.reasonShownToPlayers || 'Reason'}
           </label>
           <textarea
             value={reason}
-
             onChange={(e) => setReason(e.target.value)}
             rows={3}
             maxLength={255}
             autoFocus
-            placeholder={dict?.admin?.reasonPlaceholder || 'e.g. power is bugged, temporarily disabled while we fix it'}
-            className="w-full rounded-xl bg-slate-950/60 border border-slate-800 text-sm text-slate-100 placeholder:text-slate-600 p-3 focus:outline-none focus:ring-1 focus:ring-rose-500 resize-none"
+            placeholder={dict?.admin?.reasonPlaceholder || ''}
+            className="w-full rounded-xl bg-bg-primary border border-border-color text-sm text-text-primary placeholder:text-text-muted p-3 focus:outline-none focus:ring-2 focus:ring-accent-red resize-none"
           />
-          <p className="text-right text-[10px] text-slate-600">{reason.length}/255</p>
+          <p className="text-right text-[10px] text-text-muted font-mono">{reason.length}/255</p>
         </div>
 
-        <div className="p-4 border-t border-slate-800 bg-slate-950/40 flex justify-end gap-2">
+        <div className="p-4 border-t border-border-color bg-bg-primary flex justify-end gap-2">
           <button
+            type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary border border-border-color bg-bg-surface hover:bg-bg-elevated transition-colors cursor-pointer shadow-xs"
           >
             {dict?.admin?.cancel || 'Cancel'}
           </button>
           <button
+            type="button"
             onClick={() => onConfirm(reason.trim())}
-
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white transition-colors cursor-pointer shadow-md shadow-rose-500/20"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-accent-red hover:bg-red-600 text-text-inverted transition-all cursor-pointer shadow-md shadow-accent-red/20"
           >
             {confirmLabel}
           </button>
@@ -110,3 +108,4 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
     </div>
   );
 };
+

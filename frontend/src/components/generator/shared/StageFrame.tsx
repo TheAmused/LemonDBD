@@ -1,3 +1,4 @@
+// frontend/src/components/generator/shared/StageFrame.tsx
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
@@ -63,7 +64,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-3xl bg-slate-950/40 p-4 sm:p-6',
+        'relative overflow-hidden rounded-3xl bg-slate-100/80 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800/60 p-4 sm:p-6',
         className
       )}
     >

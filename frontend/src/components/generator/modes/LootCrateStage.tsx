@@ -1,3 +1,4 @@
+// frontend/src/components/generator/modes/LootCrateStage.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -205,7 +206,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-4">
       {(phase === 'closed' || phase === 'shaking') && (
         <>
-          <p className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+          <p className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
             {dict?.generator?.cratePrompt ||
               'A sealed Trial Offering awaits. Crack it open and the Entity scatters perks around the block for you to pick from.'}
           </p>
@@ -244,7 +245,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'scattering' && (
         <>
-          <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-300 sm:text-base">
+          <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
             {scatterPrompt}
           </p>
 
@@ -307,7 +308,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'complete' && (
         <>
-          <p className="text-sm font-bold text-slate-300 text-center sm:text-base">
+          <p className="text-sm font-bold text-slate-600 dark:text-slate-300 text-center sm:text-base">
             {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -347,9 +348,16 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
         </>
       )}
 
-      <div aria-live="polite" className="text-xs font-black text-amber-400 text-center">
-        {flavorLine}
-      </div>
+      {flavorLine && (
+        <div
+          aria-live="polite"
+          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
+        >
+          {flavorLine}
+        </div>
+      )}
     </div>
   );
 };
+
+

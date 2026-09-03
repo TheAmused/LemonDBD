@@ -1,3 +1,4 @@
+// frontend/src/locales/es/pagination.ts
 export default {
   showing: "Mostrando",
   of: "de",

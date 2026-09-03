@@ -1,3 +1,4 @@
+// frontend/src/locales/es/draft.ts
 export default {
   draftTitle: "Sala de Draft Competitivo",
   draftSubtitle: "Motor Estratégico 1v1 para Bloqueo y Selección de Habilidades",

@@ -301,11 +301,11 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     <div className="flex w-full flex-1 min-h-0 flex-col gap-4">
       {ownedOrAvailableCount === 0 ? (
         <section aria-live="polite" className="flex flex-col items-center justify-center gap-3 p-12 text-center">
-          <AlertTriangle className="h-12 w-12 text-amber-400 animate-bounce" />
-          <h2 className="text-lg font-black text-amber-200">
+          <AlertTriangle className="h-12 w-12 text-amber-500 dark:text-amber-400 animate-bounce" />
+          <h2 className="text-lg font-black text-amber-700 dark:text-amber-200">
             {dict?.generator?.noPerksTitle || `No Perks Available for ${role}`}
           </h2>
-          <p className="text-xs text-amber-300/80 max-w-md">
+          <p className="text-xs text-amber-600/80 dark:text-amber-300/80 max-w-md">
             {dict?.generator?.noPerksDesc ||
               'You don\'t own any unlocked perks for this role yet.'}
           </p>

@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/card.ts
 export default {
   general: "共通パーク",
   viewDetails: "パーク詳細を見る",

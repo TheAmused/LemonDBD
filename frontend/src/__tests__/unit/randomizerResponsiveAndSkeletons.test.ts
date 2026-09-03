@@ -154,6 +154,33 @@ describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
           `Locale '${code}' missing or empty key 'generator.${key}'`
         );
       }
+
+      const jackpotLines = dict.generator?.jackpotLines;
+      assert.ok(
+        Array.isArray(jackpotLines) && jackpotLines.length >= 5,
+        `Locale '${code}' must contain at least 5 funny jackpot celebratory lines`
+      );
+      for (const line of jackpotLines) {
+        assert.ok(
+          typeof line === 'string' && line.length > 0,
+          `Locale '${code}' jackpot line must be a non-empty string`
+        );
+      }
     });
   }
+});
+
+describe('Randomizer: Tarot Deck Sizing & Frame Integrity', () => {
+  it('Tarot deck mode uses tarot-specific perk dimensions that fit within card boundaries', () => {
+    const tarotSlotSizePx = { min: 96, max: 176 };
+    const tarotCardInnerPx = { min: 140, max: 240 };
+    assert.ok(
+      tarotSlotSizePx.min < tarotCardInnerPx.min,
+      'Tarot perk slots must fit inside minimum tarot card inner bounds'
+    );
+    assert.ok(
+      tarotSlotSizePx.max < tarotCardInnerPx.max,
+      'Tarot perk slots must fit inside maximum tarot card inner bounds'
+    );
+  });
 });

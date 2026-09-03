@@ -1,3 +1,4 @@
+// frontend/src/locales/en/generator.ts
 export default {
   title: "Perk Loadout Generator",
   subtitle: "Roll random perks based on in-game inventory coordinates [Page/Slot].",
@@ -98,7 +99,18 @@ export default {
   crateOpenAnother: "Crack Open Another",
   scatterPrompt: "Pick one. Choosing it costs the Entity 1-2 of the others. {count}/4 locked in.",
   scatterComplete: "Your loadout is locked in.",
-  jackpotLines: ["The Entity approves.", "Hooked. Lined. Sinkered.", "The Fog whispers your name.", "A trial worth writing home about.", "Four for four. The Entity is pleased.", "Somewhere, a Killer just sighed."],
+  jackpotLines: [
+    "The Entity approves. The Killer is already typing in endgame chat.",
+    "With this build, maybe Meg will actually touch a generator!",
+    "Somewhere in the basement, Bubba just shed a single tear.",
+    "The Killer is hovering over Alt+F4 as we speak.",
+    "Perfect for solo queue — you're still dying on first hook though.",
+    "Ready for a 5-gen chase (or getting downed in 10 seconds flat).",
+    "The Entity is pleased. The Killer is rethinking their life choices.",
+    "Rank 1 gaming incoming — prepare the post-game salt shaker!",
+    "Full meta or full meme? The Fog doesn't care, go get 'em!",
+    "Spine Chill might be dead, but this loadout is very much alive."
+  ],
   spinningPageWheel: "Spinning Page Wheel for Slot #{slot}...",
   landedPage: "Landed on Page {page}! Swapping to Perk Wheel...",
   spinningPerkWheel: "Spinning Perk Wheel (Page {page})...",

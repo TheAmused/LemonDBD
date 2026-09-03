@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# abc.py
 """
 Utility bundling target TSX components with hardcoded i18n strings
 into Markdown files grouped in batches of 5.

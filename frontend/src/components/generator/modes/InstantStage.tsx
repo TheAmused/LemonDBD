@@ -1,3 +1,4 @@
+// frontend/src/components/generator/modes/InstantStage.tsx
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';

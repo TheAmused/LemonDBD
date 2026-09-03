@@ -1,3 +1,4 @@
+# frontend/public/images/tarot/hentai.py
 """
 LemonDBD - Dead by Daylight Procedural Gothic Tarot Card Generator
 Renders ultra-detailed 480x720 Tarot cards with 3x supersampling (1440x2160)

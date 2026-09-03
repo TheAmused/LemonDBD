@@ -1,3 +1,4 @@
+// frontend/src/locales/es/killerCalculator.ts
 export default {
   chaseStatus: "Estado de Persecución:",
   carryingSurvivor: "Cargando Superviviente:",

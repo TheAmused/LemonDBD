@@ -1,3 +1,4 @@
+// frontend/src/locales/es/admin.ts
 export default {
   killSwitches: "Kill Switches",
   challengeStats: "Estadísticas de desafíos",

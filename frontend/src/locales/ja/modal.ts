@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/modal.ts
 export default {
   close: "閉じる",
   character: "該当キャラクター",

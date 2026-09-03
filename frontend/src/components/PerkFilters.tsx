@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/PerkFilters.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
 import {
@@ -132,10 +133,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Survivor',
       icon: <Shield className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white',
+      activeClassName: 'bg-emerald-600 text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.survivor || 'Survivors'}
+          {dict?.filters?.survivor && <span>{dict.filters.survivor}</span>}
           {typeof survivorCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {survivorCount}
@@ -147,10 +148,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Killer',
       icon: <Skull className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-gradient-to-r from-rose-700 to-red-800 text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.killer || 'Killers'}
+          {dict?.filters?.killer && <span>{dict.filters.killer}</span>}
           {typeof killerCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {killerCount}
@@ -164,10 +165,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
     {
       value: 'all',
-      activeClassName: 'bg-gradient-to-r from-slate-700 to-slate-800 text-white',
+      activeClassName: 'bg-bg-elevated text-text-primary border border-border-color',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.allPerks || 'All'}
+          {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
           {typeof allCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {allCount}
@@ -178,10 +179,10 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
-      activeClassName: 'bg-gradient-to-r from-cyan-600 to-teal-700 text-white',
+      activeClassName: 'bg-accent-amber text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
-          {dict?.filters?.ownedOnly || 'Owned'}
+          {dict?.filters?.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
           {typeof ownedCount === 'number' && (
             <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {ownedCount}
@@ -195,13 +196,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const sortFieldOptions: readonly [ToggleSwitchOption<SortField>, ToggleSwitchOption<SortField>] = [
     {
       value: 'name',
-      label: dict?.filters?.sortByName || 'Name',
-      activeClassName: 'bg-bg-surface text-slate-900 dark:text-slate-100 border border-border-color',
+      label: dict?.filters?.sortByName,
+      activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
     },
     {
       value: 'character',
-      label: dict?.filters?.sortByCharacter || 'Character',
-      activeClassName: 'bg-bg-surface text-slate-900 dark:text-slate-100 border border-border-color',
+      label: dict?.filters?.sortByCharacter,
+      activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
     },
   ];
 
@@ -209,50 +210,50 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'asc',
       icon: <ArrowUpAZ className="h-3.5 w-3.5" />,
-      label: dict?.filters?.orderAsc || 'A-Z',
-      activeClassName: 'bg-bg-surface text-cyan-700 dark:text-cyan-400 border border-border-color',
+      label: dict?.filters?.orderAsc,
+      activeClassName: 'bg-bg-surface text-accent-amber border border-border-color',
     },
     {
       value: 'desc',
       icon: <ArrowDownZA className="h-3.5 w-3.5" />,
-      label: dict?.filters?.orderDesc || 'Z-A',
-      activeClassName: 'bg-bg-surface text-cyan-700 dark:text-cyan-400 border border-border-color',
+      label: dict?.filters?.orderDesc,
+      activeClassName: 'bg-bg-surface text-accent-amber border border-border-color',
     },
   ];
 
   return (
     <section
-      aria-label={dict?.filters?.filtersTitle || 'Perk Filters'}
-      className="relative z-30 flex w-full items-center gap-3 rounded-3xl border border-border-color bg-bg-surface/90 p-3 shadow-sm dark:shadow-xl dark:shadow-slate-950/40 sm:p-4 backdrop-blur-xl"
+      aria-label={dict?.filters?.filtersTitle}
+      className="relative z-30 flex w-full items-center gap-3 rounded-3xl border border-border-color bg-bg-surface/90 p-3 shadow-xs sm:p-4 backdrop-blur-xl transition-colors"
     >
       <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-0.5 sm:gap-2.5 [scrollbar-width:thin]">
         <ToggleSwitch
-          ariaLabel={dict?.filters?.sortByRole || 'Filter by Role'}
+          ariaLabel={dict?.filters?.sortByRole || ''}
           value={role}
           onChange={setRole}
           options={roleOptions}
         />
 
         <ToggleSwitch
-          ariaLabel={dict?.filters?.ownershipFilter || 'Filter by Ownership'}
+          ariaLabel={dict?.filters?.ownershipFilter || ''}
           value={ownershipFilter}
           onChange={setOwnershipFilter}
           options={ownershipOptions}
         />
 
-        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-border-color bg-bg-primary/50 px-3.5 py-2 text-xs font-extrabold text-slate-800 shadow-inner dark:text-slate-300">
+        <label className="inline-flex shrink-0 cursor-pointer select-none items-center gap-2 whitespace-nowrap rounded-full border border-border-color bg-bg-primary/50 px-3.5 py-2 text-xs font-extrabold text-text-secondary shadow-inner">
           <input
             type="checkbox"
             checked={scope === 'general'}
             onChange={(e) => setScope(e.target.checked ? 'general' : 'all')}
-            className="h-3.5 w-3.5 shrink-0 rounded border-slate-400 accent-amber-500 dark:border-slate-600"
+            className="h-3.5 w-3.5 shrink-0 rounded border-border-color accent-accent-amber"
           />
-          <Sparkles className="h-3.5 w-3.5 shrink-0 text-amber-500 dark:text-amber-400" />
-          <span>{dict?.filters?.generalOnly || 'General Only'}</span>
+          <Sparkles className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
+          {dict?.filters?.generalOnly && <span>{dict.filters.generalOnly}</span>}
         </label>
 
         <ToggleSwitch
-          ariaLabel={dict?.filters?.sortFields || 'Sort Fields'}
+          ariaLabel={dict?.filters?.sortFields || ''}
           value={sortBy}
           onChange={setSortBy}
           options={sortFieldOptions}
@@ -260,7 +261,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         />
 
         <ToggleSwitch
-          ariaLabel={dict?.filters?.sortOrderLabel || 'Sort Direction'}
+          ariaLabel={dict?.filters?.sortOrderLabel || ''}
           value={order}
           onChange={setOrder}
           options={sortOrderOptions}
@@ -270,7 +271,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
       <div className="flex shrink-0 items-center gap-2.5">
         <div ref={searchDropdownRef} className="relative z-40 w-36 sm:w-64">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-500" />
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
           <input
             type="text"
             value={search}
@@ -279,11 +280,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               setSearch(e.target.value);
               setIsPerkSuggestionsOpen(true);
             }}
-            placeholder={
-              dict?.filters?.searchPlaceholder || 'Type perk name or alias...'
-            }
-            aria-label={dict?.filters?.searchPlaceholder || 'Search perks'}
-            className="w-full rounded-full border border-border-color bg-bg-primary/50 py-2.5 pl-10 pr-9 text-xs font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:border-cyan-500 focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all"
+            placeholder={dict?.filters?.searchPlaceholder}
+            aria-label={dict?.filters?.searchPlaceholder}
+            className="w-full rounded-full border border-border-color bg-bg-primary/50 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-amber/20 transition-all"
           />
           {search && (
             <button
@@ -292,8 +291,8 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                 setSearch('');
                 setIsPerkSuggestionsOpen(false);
               }}
-              aria-label={dict?.filters?.clearSearch || 'Clear search text'}
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-800"
+              aria-label={dict?.filters?.clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
             >
               <X className="h-3 w-3" />
             </button>
@@ -314,22 +313,23 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                     setSearch(item.name);
                     setIsPerkSuggestionsOpen(false);
                   }}
-                  className="flex items-center justify-between p-2 rounded-xl hover:bg-bg-primary/50 cursor-pointer transition-colors text-left w-full"
+                  className="flex items-center justify-between p-2 rounded-xl hover:bg-bg-elevated cursor-pointer transition-colors text-left w-full"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-black text-slate-900 dark:text-slate-100 truncate">
+                      <span className="text-xs font-black text-text-primary truncate">
                         {item.name}
                       </span>
                       {item.alternate_name && (
-                        <span className="text-[10px] text-amber-700 dark:text-amber-400 font-semibold truncate">
-                          {dict?.filters?.aliasLabel || 'Alias:'} {item.alternate_name}
+                        <span className="text-[10px] text-accent-amber font-semibold truncate">
+                          {dict?.filters?.aliasLabel && `${dict.filters.aliasLabel} `}
+                          {item.alternate_name}
                         </span>
                       )}
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
-                    {item.character || 'General'}
+                  <span className="text-[10px] font-bold text-text-muted shrink-0">
+                    {item.character || dict?.modal?.generalPerk}
                   </span>
                 </button>
               ))}
@@ -339,28 +339,30 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
         <div
           role="group"
-          aria-label={dict?.filters?.viewMode || 'View Mode Toggle'}
+          aria-label={dict?.filters?.viewMode}
           className="flex shrink-0 items-center rounded-full border border-border-color bg-bg-primary/50 p-1"
         >
           <button
             type="button"
             onClick={() => setViewMode('grid')}
-            aria-label={dict?.filters?.gridView || 'Grid View'}
-            className={`rounded-full p-2 transition-all cursor-pointer ${viewMode === 'grid'
-                ? 'bg-bg-surface text-cyan-700 border border-border-color shadow-sm dark:text-cyan-400'
-                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
+            aria-label={dict?.filters?.gridView}
+            className={`rounded-full p-2 transition-all cursor-pointer ${
+              viewMode === 'grid'
+                ? 'bg-bg-surface text-accent-amber border border-border-color shadow-xs'
+                : 'text-text-muted hover:text-text-primary'
+            }`}
           >
             <LayoutGrid className="h-4 w-4" />
           </button>
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            aria-label={dict?.filters?.listView || 'List View'}
-            className={`rounded-full p-2 transition-all cursor-pointer ${viewMode === 'list'
-                ? 'bg-bg-surface text-cyan-700 border border-border-color shadow-sm dark:text-cyan-400'
-                : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-              }`}
+            aria-label={dict?.filters?.listView}
+            className={`rounded-full p-2 transition-all cursor-pointer ${
+              viewMode === 'list'
+                ? 'bg-bg-surface text-accent-amber border border-border-color shadow-xs'
+                : 'text-text-muted hover:text-text-primary'
+            }`}
           >
             <List className="h-4 w-4" />
           </button>
@@ -369,3 +371,4 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     </section>
   );
 };
+

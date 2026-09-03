@@ -1,8 +1,8 @@
 'use client';
-import type { Dictionary } from '@/locales/types';
 // frontend/src/components/admin/AdminAuditLogView.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import type { Dictionary } from '@/locales/types';
 import { ScrollText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AdminAuditLogEntry } from '@/types/admin';
 import { backendBase } from '@/utils/staticUrl';
@@ -12,13 +12,13 @@ function authHeaders(token: string): HeadersInit {
 }
 
 const ACTION_COLORS: Record<string, string> = {
-  character_disabled: 'text-rose-600 dark:text-rose-400',
-  perk_disabled: 'text-rose-600 dark:text-rose-400',
-  challenge_mode_disabled: 'text-rose-600 dark:text-rose-400',
-  character_enabled: 'text-emerald-600 dark:text-emerald-400',
-  perk_enabled: 'text-emerald-600 dark:text-emerald-400',
-  challenge_mode_enabled: 'text-emerald-600 dark:text-emerald-400',
-  user_deleted: 'text-rose-600 dark:text-rose-400',
+  character_disabled: 'text-rose-700 dark:text-rose-400',
+  perk_disabled: 'text-rose-700 dark:text-rose-400',
+  challenge_mode_disabled: 'text-rose-700 dark:text-rose-400',
+  character_enabled: 'text-emerald-700 dark:text-emerald-400',
+  perk_enabled: 'text-emerald-700 dark:text-emerald-400',
+  challenge_mode_enabled: 'text-emerald-700 dark:text-emerald-400',
+  user_deleted: 'text-rose-700 dark:text-rose-400',
 };
 
 export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
@@ -66,47 +66,56 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 p-5 shadow-sm dark:shadow-xl backdrop-blur-sm">
+    <div className="rounded-2xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-300">
+        <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">
           <ScrollText className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
-          {dict?.admin?.auditLog || 'Admin Activity Log'}
+          <span>{dict?.admin?.auditLog || 'Activity Log'}</span>
         </h3>
-        <span className="text-[11px] text-slate-500 dark:text-slate-400">{total} {dict?.admin?.totalActionsLabel || 'total actions'}</span>
+        <span className="text-xs text-text-secondary font-medium">
+          {total} {dict?.admin?.totalActionsLabel || 'total actions'}
+        </span>
       </div>
 
       {loading ? (
-        <p className="text-xs text-slate-500 py-8 text-center">{dict?.admin?.loadingAuditLog || 'Loading audit log...'}</p>
+        <p className="text-xs text-text-muted py-8 text-center font-mono">
+          {dict?.admin?.loadingAuditLog || 'Loading activity...'}
+        </p>
       ) : logs.length === 0 ? (
-        <p className="text-xs text-slate-500 py-8 text-center">{dict?.admin?.noAuditLogs || 'No admin actions logged yet.'}</p>
+        <p className="text-xs text-text-muted py-8 text-center">
+          {dict?.admin?.noAuditLogs || 'No records found.'}
+        </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="text-left font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
-                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thAdmin || 'Admin'}</th>
-                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thAction || 'Action'}</th>
-                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thTarget || 'Target'}</th>
-                <th className="py-2 pr-3 font-semibold">{dict?.admin?.thReason || 'Reason'}</th>
-                <th className="py-2 font-semibold text-right">{dict?.admin?.thWhen || 'When'}</th>
+              <tr className="text-left font-mono uppercase tracking-wider text-text-secondary border-b border-border-color">
+                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAdmin || 'User'}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thAction || 'Action'}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thTarget || 'Target'}</th>
+                <th className="py-2.5 pr-3 font-bold">{dict?.admin?.thReason || 'Reason'}</th>
+                <th className="py-2.5 font-bold text-right">{dict?.admin?.thWhen || 'Time'}</th>
               </tr>
             </thead>
             <tbody>
               {logs.map((log) => (
-                <tr key={log.id} className="border-b border-slate-100 dark:border-slate-900 hover:bg-slate-50 dark:hover:bg-slate-950/40 text-slate-800 dark:text-slate-200">
-                  <td className="py-2.5 pr-3 font-bold text-slate-900 dark:text-slate-200 whitespace-nowrap">
-                    {log.admin_username || `user #${log.admin_user_id ?? '?'}`}
+                <tr
+                  key={log.id}
+                  className="border-b border-border-subtle hover:bg-bg-elevated/50 transition-colors text-text-primary"
+                >
+                  <td className="py-3 pr-3 font-bold whitespace-nowrap">
+                    {log.admin_username || `#${log.admin_user_id ?? '?'}`}
                   </td>
-                  <td className={`py-2.5 pr-3 font-mono whitespace-nowrap ${ACTION_COLORS[log.action] || 'text-slate-700 dark:text-slate-300'}`}>
+                  <td className={`py-3 pr-3 font-mono whitespace-nowrap font-semibold ${ACTION_COLORS[log.action] || 'text-text-secondary'}`}>
                     {log.action}
                   </td>
-                  <td className="py-2.5 pr-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                  <td className="py-3 pr-3 text-text-secondary whitespace-nowrap">
                     {log.target_type ? `${log.target_type}#${log.target_id}` : '-'}
                   </td>
-                  <td className="py-2.5 pr-3 text-slate-600 dark:text-slate-400 italic truncate max-w-[220px]">
+                  <td className="py-3 pr-3 text-text-secondary italic truncate max-w-[240px]">
                     {describeDetails(log) || '-'}
                   </td>
-                  <td className="py-2.5 text-right text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap">
+                  <td className="py-3 text-right text-text-muted font-mono whitespace-nowrap">
                     {new Date(log.created_at).toLocaleString()}
                   </td>
                 </tr>
@@ -117,28 +126,29 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
       )}
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-3 mt-4">
+        <div className="flex items-center justify-center gap-3 mt-5 pt-3 border-t border-border-color">
           <button
             type="button"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 dark:border-transparent dark:bg-slate-800/60 dark:hover:bg-slate-800 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+            className="p-2 rounded-lg border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
           >
-            <ChevronLeft className="h-3.5 w-3.5" />
+            <ChevronLeft className="h-4 w-4" />
           </button>
-          <span className="text-[11px] text-slate-600 dark:text-slate-400 font-mono">
+          <span className="text-xs text-text-secondary font-mono font-medium">
             {dict?.admin?.pageLabel || 'Page'} {page} {dict?.admin?.ofLabel || 'of'} {totalPages}
           </span>
           <button
             type="button"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="p-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 dark:border-transparent dark:bg-slate-800/60 dark:hover:bg-slate-800 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-sm"
+            className="p-2 rounded-lg border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
           >
-            <ChevronRight className="h-3.5 w-3.5" />
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       )}
     </div>
   );
 };
+

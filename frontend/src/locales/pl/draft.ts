@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/draft.ts
 export default {
   draftTitle: "Turniejowy Pokój Draftu",
   draftSubtitle: "Strategiczny silnik banowania i wybierania umiejętności 1v1",

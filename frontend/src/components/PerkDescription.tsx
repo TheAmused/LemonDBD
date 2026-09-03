@@ -23,8 +23,8 @@ export const PerkDescription: React.FC<PerkDescriptionProps> = ({
     <div
       className={
         isTooltip
-          ? 'space-y-1 text-xs text-slate-200'
-          : 'space-y-2.5 text-xs sm:text-sm leading-relaxed font-normal text-slate-700 dark:text-slate-300 [&_p]:text-slate-700 dark:[&_p]:text-slate-300 [&_li]:text-slate-700 dark:[&_li]:text-slate-300 [&_strong]:text-amber-700 dark:[&_strong]:text-amber-400 [&_b]:text-amber-700 dark:[&_b]:text-amber-400'
+          ? 'space-y-1 text-xs text-text-primary'
+          : 'space-y-2.5 text-xs sm:text-sm leading-relaxed font-normal text-text-secondary [&_p]:text-text-secondary [&_li]:text-text-secondary [&_strong]:text-accent-amber [&_strong]:font-bold [&_b]:text-accent-amber [&_b]:font-bold'
       }
     >
       {renderFormattedDbdText(description, {
@@ -34,3 +34,4 @@ export const PerkDescription: React.FC<PerkDescriptionProps> = ({
     </div>
   );
 };
+

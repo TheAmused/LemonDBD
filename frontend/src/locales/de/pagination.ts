@@ -1,3 +1,4 @@
+// frontend/src/locales/de/pagination.ts
 export default {
   showing: "Angezeigt werden",
   of: "von",

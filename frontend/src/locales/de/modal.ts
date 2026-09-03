@@ -1,3 +1,4 @@
+// frontend/src/locales/de/modal.ts
 export default {
   close: "Schließen",
   character: "Zugehöriger Charakter",

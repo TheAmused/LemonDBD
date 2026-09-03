@@ -7,14 +7,12 @@ interface LemonIconProps {
   alt?: string;
 }
 
-// Native aspect ratio of logo.webp (371x478), so the width/height hints below
-// keep the browser's layout reservation accurate instead of implying a square.
 const LOGO_ASPECT_RATIO = 478 / 371;
 
 export const LemonIcon: React.FC<LemonIconProps> = ({
   className = 'w-6 h-6',
   size,
-  alt = 'LemonDBD Logo',
+  alt = '',
 }) => {
   const dimension = size || 24;
 
@@ -30,3 +28,4 @@ export const LemonIcon: React.FC<LemonIconProps> = ({
     />
   );
 };
+

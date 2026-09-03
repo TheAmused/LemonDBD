@@ -1,3 +1,4 @@
+// frontend/src/components/user/UserProfileSkeleton.tsx
 'use client';
 import type { Dictionary } from '@/locales/types';
 import React from 'react';

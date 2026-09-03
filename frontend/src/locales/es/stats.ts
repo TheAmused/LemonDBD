@@ -1,3 +1,4 @@
+// frontend/src/locales/es/stats.ts
 export default {
   vaultStats: "Estadísticas de la Bóveda",
   totalPerks: "Habilidades Totales",

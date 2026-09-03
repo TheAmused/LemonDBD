@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/generator.ts
 export default {
   title: "パーク構成ジェネレーター",
   subtitle: "ゲーム内のインベントリ座標［ページ / スロット］に基づいてランダムにパークを抽選します。",

@@ -1,3 +1,4 @@
+// frontend/src/locales/es/characterDetail.ts
 export default {
   backToCharacters: "Volver a Personajes",
   myCharacters: "Mis Personajes",

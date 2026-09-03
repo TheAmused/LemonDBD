@@ -1,3 +1,4 @@
+// frontend/src/locales/de/draft.ts
 export default {
   draftTitle: "Kompetitiver Draft-Raum",
   draftSubtitle: "Strategische 1v1 Perk-Bann- & Pick-Engine",

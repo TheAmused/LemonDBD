@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/stats.ts
 export default {
   vaultStats: "保管庫の統計",
   totalPerks: "総パーク数",

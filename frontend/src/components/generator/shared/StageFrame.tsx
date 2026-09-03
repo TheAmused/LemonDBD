@@ -1,3 +1,4 @@
+// frontend/src/components/generator/shared/StageFrame.tsx
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';

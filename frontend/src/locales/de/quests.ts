@@ -1,3 +1,4 @@
+// frontend/src/locales/de/quests.ts
 export default {
   title: "Prüfungs-Quests & Meilensteine",
   pageTitle: "LemonDBD - Quests & Prüfungen",

@@ -1,3 +1,4 @@
+import { sleep } from 'k6';
 ﻿import http from 'k6/http';
 import { check } from 'k6';
 import { Trend, Counter } from 'k6/metrics';
@@ -108,3 +109,11 @@ export class ApiClient {
 export const defaultClient = new ApiClient();
 export const apiClient = defaultClient;
 export default defaultClient;
+
+export function thinkTime(min, max) {
+  if (typeof __ENV !== 'undefined' && (__ENV.K6_FAST_TEST === 'true' || __ENV.K6_FAST_TEST === '1')) {
+    sleep(0.05);
+    return;
+  }
+  sleep(min + Math.random() * (max - min));
+}

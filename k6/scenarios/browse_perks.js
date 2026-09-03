@@ -1,13 +1,4 @@
-import { sleep } from 'k6';
-import { defaultClient, browseDuration } from '../lib/http_client.js';
-
-function thinkTime(min, max) {
-  if (typeof __ENV !== 'undefined' && (__ENV.K6_FAST_TEST === 'true' || __ENV.K6_FAST_TEST === '1')) {
-    sleep(0.05);
-    return;
-  }
-  sleep(min + Math.random() * (max - min));
-}
+import { defaultClient, browseDuration, thinkTime } from '../lib/http_client.js';
 
 export function runScenario(client = defaultClient) {
   const startTime = Date.now();
@@ -26,7 +17,7 @@ export function runScenario(client = defaultClient) {
   client.get('/api/v1/characters', { tags: tags });
 
   // 5. Inspect specific perk detail by identifier
-  let perkIdentifier = 'Sprint_Burst';
+  let perkIdentifier = 'Sprint%20Burst';
   if (survivorPerksRes && survivorPerksRes.status === 200) {
     try {
       const parsed = typeof survivorPerksRes.body === 'string'
@@ -36,11 +27,11 @@ export function runScenario(client = defaultClient) {
       if (perks.length > 0) {
         const randomPerk = perks[Math.floor(Math.random() * perks.length)];
         if (randomPerk && randomPerk.name) {
-          perkIdentifier = encodeURIComponent(randomPerk.name.replace(/\s+/g, '_'));
+          perkIdentifier = encodeURIComponent(randomPerk.name);
         }
       }
     } catch (e) {
-      perkIdentifier = 'Sprint_Burst';
+      perkIdentifier = 'Sprint%20Burst';
     }
   }
 

@@ -190,7 +190,6 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
     'coffeeKofiTagline',
     'coffeePatreonTagline',
     'coffeeVisit',
-    'coffeeFooterNotice',
     'coffeeClose',
   ] as const;
 

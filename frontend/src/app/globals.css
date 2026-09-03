@@ -23,18 +23,35 @@
   :root,
   .light {
     color-scheme: light;
-    --bg-primary: #eef2f6;
+    --bg-primary: #eef0f2;
     --bg-surface: #ffffff;
-    --bg-elevated: #e2e8f0;
-    --border-color: #cbd5e1;
-    --border-subtle: #e2e8f0;
-    --accent-red: #dc2626;
-    --accent-amber: #d97706;
-    --accent-amber-hover: #b45309;
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --text-muted: #64748b;
+    --bg-elevated: #dfe3e7;
+    --border-color: #c7ccd1;
+    --border-subtle: #dde1e5;
+    --accent-red: #c0272d;
+    --accent-amber: #b3690a;
+    --accent-amber-hover: #8f5308;
+    --text-primary: #14171a;
+    --text-secondary: #454b52;
+    --text-muted: #767d85;
     --text-inverted: #ffffff;
+  }
+
+  /* A warmer, citrus-tinted alternative to the default light theme. */
+  .light-lemon {
+    color-scheme: light;
+    --bg-primary: #fdf8ec;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f7edc9;
+    --border-color: #e8d68c;
+    --border-subtle: #f3e7b8;
+    --accent-red: #c1272d;
+    --accent-amber: #9c5f00;
+    --accent-amber-hover: #7a4a00;
+    --text-primary: #221b06;
+    --text-secondary: #5c4f24;
+    --text-muted: #8f8256;
+    --text-inverted: #fffdf5;
   }
 
   .dark {
@@ -63,14 +80,14 @@
   :root:not(.dark) input,
   :root:not(.dark) select,
   :root:not(.dark) textarea {
-    background-color: #ffffff;
-    color: #0f172a;
-    border-color: #cbd5e1;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border-color: var(--border-color);
   }
 
   :root:not(.dark) input::placeholder,
   :root:not(.dark) textarea::placeholder {
-    color: #64748b;
+    color: var(--text-muted);
     opacity: 1;
   }
 }

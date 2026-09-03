@@ -294,13 +294,13 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         onClick={handleOpen}
         title={t?.triggerTitle || "What's New?"}
         aria-label={t?.triggerTitle || "What's New?"}
-        className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 text-slate-400 transition-all hover:border-amber-500/50 hover:text-amber-400 hover:bg-amber-500/10 cursor-pointer ${className}`}
+        className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-amber-500/50 hover:text-amber-400 hover:bg-amber-500/10 cursor-pointer ${className}`}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && (
           <span className="absolute -right-0.5 -top-0.5 flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-slate-950" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-bg-surface" />
           </span>
         )}
       </button>
@@ -317,18 +317,18 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-red-900/40 bg-[#0b0f16]/98 shadow-2xl shadow-black/70 cursor-default animate-in zoom-in-95 duration-200"
+              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-red-900/40 bg-bg-surface/98 shadow-2xl shadow-black/70 cursor-default animate-in zoom-in-95 duration-200"
             >
               {/* Heartbeat glow accent */}
               <div className="pointer-events-none absolute -top-16 right-0 h-48 w-48 rounded-full bg-red-600/10 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-16 left-0 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl" />
 
-              <div className="relative flex items-center justify-between border-b border-slate-800/80 px-6 py-5">
+              <div className="relative flex items-center justify-between border-b border-border-color px-6 py-5">
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-400 shadow-inner">
                     <Sparkles className="h-4 w-4" />
                   </span>
-                  <h2 id="whats-new-title" className="text-base font-black tracking-tight text-slate-100">
+                  <h2 id="whats-new-title" className="text-base font-black tracking-tight text-text-primary">
                     {t?.modalTitle || "What's New"}
                   </h2>
                 </div>
@@ -341,7 +341,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         setEditorOpen(true);
                       }}
                       title={t?.newEntry || 'New entry'}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 text-slate-300 hover:border-amber-500/50 hover:text-amber-400 cursor-pointer"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle text-text-secondary hover:border-amber-500/50 hover:text-amber-400 cursor-pointer"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
@@ -350,7 +350,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                     type="button"
                     onClick={() => setIsOpen(false)}
                     aria-label={t?.close || 'Close'}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-slate-100 cursor-pointer"
+                    className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-primary cursor-pointer"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -358,7 +358,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
               </div>
 
               {availableTags.length > 1 && (
-                <div className="relative flex flex-wrap gap-1.5 border-b border-slate-800/80 px-6 py-3">
+                <div className="relative flex flex-wrap gap-1.5 border-b border-border-color px-6 py-3">
                   <FilterChip
                     active={activeFilter === 'all'}
                     onClick={() => setActiveFilter('all')}
@@ -381,15 +381,15 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
 
               <div className="relative flex-1 overflow-y-auto px-6 py-5 space-y-3">
                 {loading && (
-                  <div className="flex items-center justify-center py-16 text-slate-500">
+                  <div className="flex items-center justify-center py-16 text-text-muted">
                     <Loader2 className="h-5 w-5 animate-spin" />
                   </div>
                 )}
 
                 {!loading && visiblePosts.length === 0 && (
                   <div className="flex flex-col items-center gap-2 py-16 text-center">
-                    <Skull className="h-6 w-6 text-slate-700" />
-                    <p className="text-xs font-medium text-slate-500">
+                    <Skull className="h-6 w-6 text-text-muted" />
+                    <p className="text-xs font-medium text-text-muted">
                       {t?.emptyState || 'Nothing new yet. Check back after the next Trial.'}
                     </p>
                   </div>
@@ -412,10 +412,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                       onPointerCancel={endDrag}
                       className={`rounded-2xl border transition-all ${
                         isDragging
-                          ? 'border-amber-500/60 bg-slate-900/80 shadow-lg shadow-amber-950/30 scale-[1.01] z-10 relative'
+                          ? 'border-amber-500/60 bg-bg-elevated/80 shadow-lg shadow-amber-950/30 scale-[1.01] z-10 relative'
                           : post.is_published
-                            ? 'border-slate-800 bg-slate-900/50'
-                            : 'border-dashed border-slate-700 bg-slate-900/20'
+                            ? 'border-border-color bg-bg-elevated/50'
+                            : 'border-dashed border-border-subtle bg-bg-elevated/20'
                       }`}
                     >
                       <div className="flex items-start gap-2 p-4">
@@ -426,7 +426,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                             aria-label={t?.dragToReorder || 'Drag to reorder'}
                             onPointerDown={(e) => beginDrag(e, post.id)}
                             style={{ touchAction: 'none' }}
-                            className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-800 hover:text-slate-300 cursor-grab active:cursor-grabbing ${
+                            className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
                               isDragging ? 'text-amber-400' : ''
                             }`}
                           >
@@ -448,17 +448,17 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                                 {theme.label}
                               </span>
                               {!post.is_published && (
-                                <span className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                                <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
                                   {t?.draftBadge || 'Draft'}
                                 </span>
                               )}
-                              <span className="text-[10px] font-bold uppercase tracking-wide text-slate-600">
+                              <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
                                 {formatDate(post.created_at)}
                               </span>
                             </div>
-                            <h3 className="mt-1.5 truncate text-sm font-black text-slate-100">{post.title}</h3>
+                            <h3 className="mt-1.5 truncate text-sm font-black text-text-primary">{post.title}</h3>
                           </div>
-                          <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-slate-500">
+                          <span className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-text-muted">
                             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                           </span>
                         </button>
@@ -471,11 +471,11 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         <div className="overflow-hidden">
                           <div className="px-4 pb-4 pl-[2.75rem]">
                             <div
-                              className="dbd-changelog-body text-xs leading-relaxed text-slate-400 [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-amber-400 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-sky-400 [&_a]:underline"
+                              className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-amber-400 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-sky-400 [&_a]:underline"
                               dangerouslySetInnerHTML={{ __html: post.content_html }}
                             />
                             <div className="mt-2.5 flex items-center justify-between gap-2">
-                              <span className="text-[10px] font-bold uppercase tracking-wide text-slate-600">
+                              <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
                                 {t?.byAuthor || 'by'} {post.author_name}
                               </span>
                               {isAdmin && (
@@ -573,7 +573,7 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
     className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold transition-all cursor-pointer ${
       active
         ? 'border-amber-500/50 bg-amber-500/10 text-amber-400'
-        : 'border-slate-800 text-slate-500 hover:text-slate-300'
+        : 'border-border-color text-text-muted hover:text-text-secondary'
     }`}
   >
     {dotClass && <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} />}
@@ -587,14 +587,14 @@ const IconButton: React.FC<{
   onClick: () => void;
   disabled?: boolean;
   hoverClass?: string;
-}> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-slate-200' }) => (
+}> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-text-secondary' }) => (
   <button
     type="button"
     title={label}
     aria-label={label}
     disabled={disabled}
     onClick={onClick}
-    className={`flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors cursor-pointer hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
+    className={`flex h-7 w-7 items-center justify-center rounded-md text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated disabled:opacity-30 disabled:cursor-not-allowed ${hoverClass}`}
   >
     <Icon className="h-3.5 w-3.5" />
   </button>

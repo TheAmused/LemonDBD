@@ -6,7 +6,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { SidebarBottomControls } from '@/components/sidebar/SidebarBottomControls';
 
 describe('SidebarBottomControls Theme Switcher', () => {
-  it('renders theme switcher with light, dark, and system options', () => {
+  it('renders a closed dropdown button with listbox semantics', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -15,12 +15,12 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.ok(html.includes('aria-label="Light mode"') || html.includes('aria-label="Light"'), 'Must have light mode control');
-    assert.ok(html.includes('aria-label="Dark mode"') || html.includes('aria-label="Dark"'), 'Must have dark mode control');
-    assert.ok(html.includes('aria-label="System theme"') || html.includes('aria-label="System"'), 'Must have system theme control');
+    assert.ok(html.includes('aria-haspopup="listbox"'), 'Must expose a listbox popup');
+    assert.ok(html.includes('aria-expanded="false"'), 'Must start closed');
+    assert.ok(html.includes('aria-label="Theme selector"'), 'Must have a default aria-label');
   });
 
-  it('renders theme switcher group role and uses dict toggleTheme aria-label when available', () => {
+  it('uses dict toggleTheme aria-label when available', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -34,44 +34,10 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.ok(html.includes('role="group"'), 'Must have role="group" for theme switcher');
     assert.ok(html.includes('aria-label="Custom Theme Selector"'), 'Must use custom dict toggleTheme');
-    assert.ok(html.includes('title="Light mode"'), 'Must have title for light mode');
-    assert.ok(html.includes('title="Dark mode"'), 'Must have title for dark mode');
-    assert.ok(html.includes('title="System theme"'), 'Must have title for system theme');
   });
 
-  it('includes focus ring styling classes on all 3 theme buttons', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(SidebarBottomControls, {
-        currentLocale: 'en',
-        onOpenBugModal: () => {},
-        onOpenCoffeeModal: () => {},
-      })
-    );
-
-    assert.ok(
-      html.includes('focus-visible:outline-none focus-visible:ring-1.5 focus-visible:ring-amber-500 dark:focus-visible:ring-cyan-400'),
-      'Must include focus ring classes on theme buttons'
-    );
-  });
-
-  it('expands theme buttons tap target via pseudo-element for mobile accessibility', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(SidebarBottomControls, {
-        currentLocale: 'en',
-        onOpenBugModal: () => {},
-        onOpenCoffeeModal: () => {},
-      })
-    );
-
-    assert.ok(
-      html.includes('before:-inset-1'),
-      'Must expand tap target with before:-inset-1 pseudo-element'
-    );
-  });
-
-  it('resolves active state correctly when theme is "light"', () => {
+  it('shows the current theme label on the closed button when theme is "light"', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -81,12 +47,23 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.match(html, /aria-label="Light mode"[^>]*aria-pressed="true"/, 'Light button must have aria-pressed="true"');
-    assert.match(html, /aria-label="Dark mode"[^>]*aria-pressed="false"/, 'Dark button must have aria-pressed="false"');
-    assert.match(html, /aria-label="System theme"[^>]*aria-pressed="false"/, 'System button must have aria-pressed="false"');
+    assert.ok(html.includes('Light mode'), 'Button must show the light mode label');
   });
 
-  it('resolves active state correctly when theme is "dark"', () => {
+  it('shows the current theme label on the closed button when theme is "light-lemon"', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(SidebarBottomControls, {
+        currentLocale: 'en',
+        theme: 'light-lemon',
+        onOpenBugModal: () => {},
+        onOpenCoffeeModal: () => {},
+      })
+    );
+
+    assert.ok(html.includes('Light mode (Lemon)'), 'Button must show the light-lemon mode label');
+  });
+
+  it('shows the current theme label on the closed button when theme is "dark"', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -96,12 +73,10 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.match(html, /aria-label="Light mode"[^>]*aria-pressed="false"/, 'Light button must have aria-pressed="false"');
-    assert.match(html, /aria-label="Dark mode"[^>]*aria-pressed="true"/, 'Dark button must have aria-pressed="true"');
-    assert.match(html, /aria-label="System theme"[^>]*aria-pressed="false"/, 'System button must have aria-pressed="false"');
+    assert.ok(html.includes('Dark mode'), 'Button must show the dark mode label');
   });
 
-  it('resolves active state correctly when theme is "system"', () => {
+  it('shows the current theme label on the closed button when theme is "system"', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -111,18 +86,30 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.match(html, /aria-label="Light mode"[^>]*aria-pressed="false"/, 'Light button must have aria-pressed="false"');
-    assert.match(html, /aria-label="Dark mode"[^>]*aria-pressed="false"/, 'Dark button must have aria-pressed="false"');
-    assert.match(html, /aria-label="System theme"[^>]*aria-pressed="true"/, 'System button must have aria-pressed="true"');
+    assert.ok(html.includes('System theme'), 'Button must show the system theme label');
   });
 
-  it('uses dictionary fallbacks for light, dark, and system labels when provided', () => {
+  it('falls back to the Laptop/system option when theme is unset or unrecognized', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(SidebarBottomControls, {
+        currentLocale: 'en',
+        theme: 'some-unknown-theme',
+        onOpenBugModal: () => {},
+        onOpenCoffeeModal: () => {},
+      })
+    );
+
+    assert.ok(html.includes('System theme'), 'Must fall back to the system option label');
+  });
+
+  it('uses dictionary fallbacks for light, light-lemon, dark, and system labels when provided', () => {
     const html = renderToStaticMarkup(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
         dict: {
           sidebar: {
             themeLight: 'Jasny',
+            themeLightLemon: 'Jasny (Cytryna)',
             themeDark: 'Ciemny',
             themeSystem: 'Systemowy',
           },
@@ -133,9 +120,6 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.ok(html.includes('aria-label="Jasny"'), 'Must render custom light label');
-    assert.ok(html.includes('aria-label="Ciemny"'), 'Must render custom dark label');
-    assert.ok(html.includes('aria-label="Systemowy"'), 'Must render custom system label');
-    assert.match(html, /aria-label="Ciemny"[^>]*aria-pressed="true"/, 'Active button must have aria-pressed="true" with custom label');
+    assert.ok(html.includes('Ciemny'), 'Must render custom dark label on the closed button');
   });
 });

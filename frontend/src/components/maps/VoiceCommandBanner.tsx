@@ -786,7 +786,7 @@ export function VoiceCommandBanner({
       dotClass: 'bg-emerald-500 dark:bg-emerald-400',
       icon: Mic,
       buttonColor:
-        'bg-gradient-to-br from-[#2f6f7d] to-[#16394a] text-white shadow-slate-900/40 ring-slate-500/30 hover:brightness-110',
+        'bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-amber-900/40 ring-amber-500/30 hover:brightness-110',
     },
     listening: {
       badge: rawVoiceDict.listeningSpeakNow || '',

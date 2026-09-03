@@ -12,7 +12,6 @@ import {
   X,
   ExternalLink,
   Sparkles,
-  Flame,
   Crown,
 } from 'lucide-react';
 
@@ -98,9 +97,9 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       url: kofiUrl,
       tagline: t.coffeeKofiTagline || '0% fee donations & one-time tips',
       accentColor:
-        'border-cyan-500/40 bg-cyan-500/10 text-cyan-400 hover:border-cyan-400 hover:bg-cyan-500/20',
+        'border-orange-500/40 bg-orange-500/10 text-orange-400 hover:border-orange-400 hover:bg-orange-500/20',
       buttonBg:
-        'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white',
+        'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white',
       icon: Heart,
     },
     {
@@ -160,7 +159,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
         <div className="fixed -bottom-20 -left-20 h-80 w-80 rounded-full bg-red-600/10 blur-[90px] pointer-events-none" />
 
         <div
-          className="relative w-full max-w-lg my-8 rounded-3xl border border-amber-500/40 bg-slate-950/95 p-6 sm:p-8 text-slate-100 backdrop-blur-2xl z-10 space-y-6 overflow-hidden"
+          className="relative w-full max-w-lg my-8 rounded-3xl border border-amber-500/40 bg-bg-surface p-6 sm:p-8 text-text-primary backdrop-blur-2xl z-10 space-y-6 overflow-hidden"
           style={{
             animation: isOpen
               ? 'entityCoffeeSpawn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, entityAuraAmber 4s ease-in-out infinite'
@@ -173,31 +172,26 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label={t.coffeeClose || 'Close'}
-            className="absolute right-4 top-4 rounded-xl p-2 text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition-colors cursor-pointer"
+            className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
 
-          <div className="flex items-center gap-3.5 border-b border-slate-800 pb-4">
-            <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 shadow-md shadow-amber-950/40">
+          <div className="flex items-center gap-3.5 border-b border-border-color pb-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 shadow-md shadow-amber-950/40">
               <Coffee className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500" />
-              </span>
             </div>
             <div>
               <h2
                 id="buy-coffee-modal-title"
-                className="text-lg font-black tracking-wider font-mono text-slate-100 flex items-center gap-2"
+                className="text-lg font-black tracking-wider font-mono text-text-primary flex items-center gap-2"
               >
                 <span>{t.coffeeTitle || 'Support LemonDBD'}</span>
-                <Flame className="h-4 w-4 text-amber-500" />
               </h2>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent p-4 text-xs text-slate-300 leading-relaxed space-y-1">
+          <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent p-4 text-xs text-text-secondary leading-relaxed space-y-1">
             <div className="flex items-center gap-1.5 font-bold text-amber-400 mb-1">
               <Sparkles className="h-4 w-4" />
               <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
@@ -217,14 +211,14 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                   className={`group flex items-center justify-between p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-slate-800 shadow-sm group-hover:scale-105 transition-transform">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color shadow-sm group-hover:scale-105 transition-transform">
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-black tracking-wide text-slate-100 font-mono">
+                      <h3 className="text-xs font-black tracking-wide text-text-primary font-mono">
                         {gateway.name}
                       </h3>
-                      <p className="text-[11px] text-slate-400">
+                      <p className="text-[11px] text-text-muted">
                         {gateway.tagline}
                       </p>
                     </div>
@@ -237,22 +231,11 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                       <span>{t.coffeeVisit || 'Visit'}</span>
                       <ExternalLink className="h-3 w-3" />
                     </span>
-                    <ExternalLink className="sm:hidden h-4 w-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
+                    <ExternalLink className="sm:hidden h-4 w-4 text-text-muted group-hover:text-amber-400 transition-colors" />
                   </div>
                 </a>
               );
             })}
-          </div>
-
-          <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-            <span>{t.coffeeFooterNotice || 'Free forever & community powered'}</span>
-            <button
-              type="button"
-              onClick={onClose}
-              className="hover:text-slate-300 transition-colors cursor-pointer"
-            >
-              {t.coffeeClose || 'Close'}
-            </button>
           </div>
         </div>
       </div>

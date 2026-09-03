@@ -1,3 +1,4 @@
+// frontend/src/locales/de/generator.ts
 export default {
   title: "Perk-Loadout-Generator",
   subtitle: "Würfle zufällige Talente basierend auf In-Game-Inventar-Koordinaten [Seite/Slot].",

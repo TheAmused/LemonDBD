@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/smashOrPass.ts
 export default {
   title: 'DBD Smash or Pass',
   pageTitle: 'Smash or Pass • 霧の試練デート＆キャラクターハブ',

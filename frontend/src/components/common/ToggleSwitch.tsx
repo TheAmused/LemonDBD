@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/common/ToggleSwitch.tsx
 
 import React from 'react';
 import { cn } from '@/utils/cn';
@@ -7,9 +8,7 @@ export interface ToggleSwitchOption<T extends string> {
   value: T;
   label: React.ReactNode;
   icon?: React.ReactNode;
-  /** Tailwind classes for the sliding thumb when this option is active. */
   activeClassName?: string;
-  /** Optional text color override for the button when active. Defaults to 'text-white'. */
   activeTextColor?: string;
 }
 
@@ -22,7 +21,7 @@ export interface ToggleSwitchProps<T extends string> {
   className?: string;
 }
 
-const DEFAULT_THUMB = 'bg-gradient-to-r from-slate-700 to-slate-800';
+const DEFAULT_THUMB = 'bg-accent-amber text-text-inverted';
 
 export function resolveActiveIndex<T extends string>(
   value: T,
@@ -49,7 +48,7 @@ export function ToggleSwitch<T extends string>({
       role="radiogroup"
       aria-label={ariaLabel}
       className={cn(
-        'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-full border border-border-color bg-bg-primary/50 p-1 shadow-inner dark:border-slate-800/80 dark:bg-slate-950/80',
+        'relative inline-flex shrink-0 min-w-0 select-none items-stretch rounded-full border border-border-color bg-bg-primary p-1 shadow-inner',
         className
       )}
     >
@@ -61,9 +60,9 @@ export function ToggleSwitch<T extends string>({
           (activeIndex === 1 ? right.activeClassName : left.activeClassName) || DEFAULT_THUMB
         )}
       />
-      {options.map((opt, i) => {
+      {options.map((opt) => {
         const isActive = value === opt.value;
-        const activeTextClass = opt.activeTextColor || 'text-white';
+        const activeTextClass = opt.activeTextColor || 'text-text-inverted';
         return (
           <button
             key={opt.value}
@@ -75,7 +74,7 @@ export function ToggleSwitch<T extends string>({
               'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 font-black transition-colors duration-200',
               padY,
               textSize,
-              isActive ? activeTextClass : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+              isActive ? activeTextClass : 'text-text-secondary hover:text-text-primary'
             )}
           >
             {opt.icon}
@@ -86,3 +85,4 @@ export function ToggleSwitch<T extends string>({
     </div>
   );
 }
+

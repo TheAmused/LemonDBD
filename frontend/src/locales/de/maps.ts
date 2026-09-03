@@ -1,3 +1,4 @@
+// frontend/src/locales/de/maps.ts
 export default {
   searchPlaceholder: "Suchen...",
   searchAria: "Karte oder Reich suchen",

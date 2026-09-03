@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/swf.ts
 export default {
   engineBadge: "SWFスクワッド連携エンジン",
   pageTitle: "4人チーム構成プランナー",

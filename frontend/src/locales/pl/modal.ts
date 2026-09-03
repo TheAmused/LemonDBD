@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/modal.ts
 export default {
   close: "Zamknij",
   character: "Powiązana postać",

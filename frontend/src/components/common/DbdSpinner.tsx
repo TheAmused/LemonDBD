@@ -1,4 +1,5 @@
-﻿'use client';
+'use client';
+// frontend/src/components/common/DbdSpinner.tsx
 
 import React from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
@@ -81,7 +82,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
     dict?.app?.loading ||
     dict?.characterDetail?.loading ||
     dict?.perks?.loading ||
-    'Loading...';
+    dict?.admin?.loading;
 
   const basePalettes: Record<DbdSpinnerAccent, DbdSpinnerCustomColors> = {
     crimson: {
@@ -97,7 +98,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#fbbf24',
       glow: 'rgba(245, 158, 11, 0.75)',
       ring: 'rgba(251, 191, 36, 0.35)',
-      text: 'text-amber-600 dark:text-amber-400',
+      text: 'text-accent-amber',
       baseTrack: '#1e293b',
     },
     emerald: {
@@ -105,7 +106,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#34d399',
       glow: 'rgba(16, 185, 129, 0.75)',
       ring: 'rgba(52, 211, 153, 0.35)',
-      text: 'text-emerald-600 dark:text-emerald-400',
+      text: 'text-emerald-700 dark:text-emerald-400',
       baseTrack: '#1e293b',
     },
     cyan: {
@@ -121,7 +122,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#a78bfa',
       glow: 'rgba(139, 92, 246, 0.75)',
       ring: 'rgba(167, 139, 250, 0.35)',
-      text: 'text-purple-600 dark:text-purple-400',
+      text: 'text-purple-700 dark:text-purple-400',
       baseTrack: '#1e293b',
     },
     blood: {
@@ -129,7 +130,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#991b1b',
       glow: 'rgba(220, 38, 38, 0.90)',
       ring: 'rgba(153, 27, 27, 0.40)',
-      text: 'text-red-600 dark:text-red-500',
+      text: 'text-red-700 dark:text-red-500',
       baseTrack: '#170202',
     },
     gold: {
@@ -137,7 +138,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#fde047',
       glow: 'rgba(245, 158, 11, 0.85)',
       ring: 'rgba(253, 224, 71, 0.40)',
-      text: 'text-yellow-600 dark:text-yellow-400',
+      text: 'text-accent-amber',
       baseTrack: '#1e293b',
     },
     neon: {
@@ -145,7 +146,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       needle: '#ff007f',
       glow: 'rgba(0, 255, 204, 0.85)',
       ring: 'rgba(255, 0, 127, 0.40)',
-      text: 'text-cyan-600 dark:text-cyan-300',
+      text: 'text-cyan-700 dark:text-cyan-300',
       baseTrack: '#051b2c',
     },
   };
@@ -163,11 +164,11 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
 
   const layoutClasses = {
     fullscreen:
-      'fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070b12]/95 backdrop-blur-md dbd-fog-overlay p-6',
+      'fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg-primary/95 backdrop-blur-md dbd-fog-overlay p-6',
     page:
       'w-full min-h-[60vh] flex-1 flex flex-col items-center justify-center p-6 dbd-fog-overlay',
     card:
-      'w-full min-h-[260px] flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-surface/80 border border-border-color shadow-2xl',
+      'w-full min-h-[260px] flex flex-col items-center justify-center p-6 rounded-3xl bg-bg-surface border border-border-color shadow-2xl',
     inline:
       'w-full py-10 flex flex-col items-center justify-center',
     compact:
@@ -184,14 +185,15 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       aria-live="polite"
       aria-busy="true"
       aria-label={resolvedLabel}
-      className={`select-none text-slate-900 dark:text-slate-100 ${layoutClasses} ${className}`}
+      className={`select-none text-text-primary ${layoutClasses} ${className}`}
       style={minHeight ? { minHeight } : undefined}
     >
       <div
-        className={`relative flex items-center justify-center ${isResponsive
+        className={`relative flex items-center justify-center ${
+          isResponsive
             ? 'w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96'
             : ''
-          }`}
+        }`}
         style={
           isResponsive
             ? undefined
@@ -226,7 +228,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             </radialGradient>
           </defs>
 
-          {/* 1. Atmospheric Ambient Outer Fog Ring */}
           <circle
             cx="80"
             cy="80"
@@ -238,7 +239,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             opacity="0.75"
           />
 
-          {/* 2. Counter-Rotating Outer Rune Ring */}
           <g className="dbd-spinner-runes">
             <circle
               cx="80"
@@ -248,15 +248,14 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
               stroke="currentColor"
               strokeWidth="1.5"
               strokeDasharray="1 11"
-              className="text-slate-500/70"
+              className="text-text-muted"
             />
-            <line x1="80" y1="6" x2="80" y2="12" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
-            <line x1="80" y1="148" x2="80" y2="154" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
-            <line x1="6" y1="80" x2="12" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
-            <line x1="148" y1="80" x2="154" y2="80" stroke="currentColor" strokeWidth="2" className="text-slate-500 dark:text-slate-400" />
+            <line x1="80" y1="6" x2="80" y2="12" stroke="currentColor" strokeWidth="2" className="text-text-secondary" />
+            <line x1="80" y1="148" x2="80" y2="154" stroke="currentColor" strokeWidth="2" className="text-text-secondary" />
+            <line x1="6" y1="80" x2="12" y2="80" stroke="currentColor" strokeWidth="2" className="text-text-secondary" />
+            <line x1="148" y1="80" x2="154" y2="80" stroke="currentColor" strokeWidth="2" className="text-text-secondary" />
           </g>
 
-          {/* 3. Base Skill Check Track */}
           <circle
             cx="80"
             cy="80"
@@ -265,24 +264,22 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             stroke={colorMap.baseTrack}
             strokeWidth="7.5"
             strokeLinecap="round"
-            className="dark:stroke-slate-800"
+            className="stroke-border-color dark:stroke-slate-800"
           />
 
-          {/* 4. Good Success Zone Arc */}
           <circle
             cx="80"
             cy="80"
             r="58"
             fill="none"
-            stroke="#f1f5f9"
+            stroke="currentColor"
             strokeWidth="7.5"
             strokeDasharray="66 298"
             strokeDashoffset="-210"
             strokeLinecap="round"
-            className="opacity-95"
+            className="text-slate-400 dark:text-slate-200 opacity-95"
           />
 
-          {/* 5. Great Skill Check Zone Arc */}
           <circle
             cx="80"
             cy="80"
@@ -296,7 +293,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             filter={`url(#${filterId})`}
           />
 
-          {/* 6. Central Hub Disc */}
           <circle
             cx="80"
             cy="80"
@@ -307,7 +303,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             className="shadow-2xl"
           />
 
-          {/* 7. Sweeping Skill Check Needle */}
           <g
             className="dbd-spinner-needle"
             style={{ '--dbd-needle-speed': `${needleSpeed}s` } as React.CSSProperties}
@@ -328,7 +323,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
           </g>
         </svg>
 
-        {/* 8. Central Logo Emblem */}
         {showEmblem && (
           <div
             className="dbd-spinner-emblem absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -339,28 +333,28 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
         )}
       </div>
 
-      {/* 9. Localized Label & Sublabel */}
       {(label || sublabel || (layout !== 'compact' && resolvedLabel)) && (
         <div className="mt-5 flex flex-col items-center text-center space-y-1.5 max-w-sm sm:max-w-md px-2">
           {resolvedLabel && (
             <p
-              className={`dbd-spinner-label text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-sm`}
+              className={`dbd-spinner-label text-base sm:text-lg font-black font-mono tracking-wider uppercase ${colorMap.text} drop-shadow-xs`}
             >
               {resolvedLabel}
             </p>
           )}
 
           {sublabel && (
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300/80 font-medium drop-shadow-sm">
+            <p className="text-xs sm:text-sm text-text-secondary font-medium drop-shadow-xs">
               {sublabel}
             </p>
           )}
         </div>
       )}
 
-      <span className="sr-only">{resolvedLabel}</span>
+      {resolvedLabel && <span className="sr-only">{resolvedLabel}</span>}
     </div>
   );
 };
 
 export default DbdSpinner;
+

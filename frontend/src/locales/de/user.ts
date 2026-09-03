@@ -1,3 +1,4 @@
+// frontend/src/locales/de/user.ts
 export default {
   profileTitle: "Benutzerprofil & Konto",
   tabOverview: "Konto-Übersicht",

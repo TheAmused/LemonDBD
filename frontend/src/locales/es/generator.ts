@@ -1,3 +1,4 @@
+// frontend/src/locales/es/generator.ts
 export default {
   title: "Generador de Builds Aleatorias",
   subtitle: "Genera habilidades aleatorias basadas en las coordenadas del inventario del juego [Página/Casilla].",

@@ -1,3 +1,4 @@
+// frontend/src/locales/pl/smashOrPass.ts
 export default {
   title: 'DBD Smash or Pass',
   pageTitle: 'Smash or Pass • Randki w Próbie i Galeria Postaci',

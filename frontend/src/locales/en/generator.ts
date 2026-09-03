@@ -1,3 +1,4 @@
+// frontend/src/locales/en/generator.ts
 export default {
   title: "Perk Loadout Generator",
   subtitle: "Roll random perks based on in-game inventory coordinates [Page/Slot].",

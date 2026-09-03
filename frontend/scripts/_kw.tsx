@@ -1,3 +1,4 @@
+// frontend/scripts/_kw.tsx
 import { renderToStaticMarkup } from 'react-dom/server';
 import { renderFormattedDbdText } from '../src/utils/textFormatter';
 const cases = [

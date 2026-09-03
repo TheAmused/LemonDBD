@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/quests.ts
 export default {
   title: "試練クエスト＆マイルストーン",
   pageTitle: "LemonDBD - クエスト＆試練",

@@ -1,3 +1,4 @@
+// frontend/scripts/_partial.tsx
 /** Finds keyword highlights that stop in the middle of an inflected word. */
 import fs from 'node:fs'; import path from 'node:path';
 import { renderToStaticMarkup } from 'react-dom/server';

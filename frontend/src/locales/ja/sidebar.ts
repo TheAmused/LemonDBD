@@ -1,3 +1,4 @@
+// frontend/src/locales/ja/sidebar.ts
 export default {
   perks: "パーク",
   challenges: "チャレンジ",

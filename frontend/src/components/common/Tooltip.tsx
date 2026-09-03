@@ -1,4 +1,5 @@
 'use client';
+// frontend/src/components/common/Tooltip.tsx
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -126,14 +127,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
               className
             )}
           >
-            <span className="relative block overflow-hidden rounded-lg border border-amber-500/40 dark:border-amber-500/25 bg-white dark:bg-slate-950/95 px-3.5 py-2.5 shadow-[0_12px_28px_rgba(15,23,42,0.18)] dark:shadow-[0_14px_34px_rgba(0,0,0,0.7)] backdrop-blur-sm">
-              <span className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:repeating-linear-gradient(45deg,#000_0,#000_1px,transparent_1px,transparent_10px)] dark:[background-image:repeating-linear-gradient(45deg,#fff_0,#fff_1px,transparent_1px,transparent_10px)]" />
-              <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-red-600/0 via-amber-500 to-red-600/0" />
-              <span className="relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-amber-800 dark:text-amber-400">
+            <span className="relative block overflow-hidden rounded-lg border border-accent-amber/40 bg-bg-surface px-3.5 py-2.5 shadow-lg backdrop-blur-sm">
+              <span className="pointer-events-none absolute inset-0 opacity-[0.03] [background-image:repeating-linear-gradient(45deg,currentColor_0,currentColor_1px,transparent_1px,transparent_10px)]" />
+              <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent-amber to-transparent" />
+              <span className="relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-accent-amber">
                 {title}
               </span>
               {description && (
-                <span className="relative mt-1 block whitespace-normal text-[11px] font-medium italic leading-snug text-slate-700 dark:text-slate-300">
+                <span className="relative mt-1 block whitespace-normal text-[11px] font-medium italic leading-snug text-text-secondary">
                   {`“${description}”`}
                 </span>
               )}
@@ -141,17 +142,17 @@ export const Tooltip: React.FC<TooltipProps> = ({
             {coords && (
               <span
                 aria-hidden="true"
-                className="absolute h-2.5 w-2.5 rotate-45 bg-white dark:bg-slate-950"
+                className="absolute h-2.5 w-2.5 rotate-45 bg-bg-surface border-border-color"
                 style={{
                   left: coords.arrowLeft - 5,
                   top: coords.side === 'top' ? '100%' : undefined,
                   bottom: coords.side === 'bottom' ? '100%' : undefined,
                   marginTop: coords.side === 'top' ? -5 : undefined,
                   marginBottom: coords.side === 'bottom' ? -5 : undefined,
-                  borderRight: coords.side === 'top' ? '1px solid rgba(217,119,6,0.4)' : undefined,
-                  borderBottom: coords.side === 'top' ? '1px solid rgba(217,119,6,0.4)' : undefined,
-                  borderLeft: coords.side === 'bottom' ? '1px solid rgba(217,119,6,0.4)' : undefined,
-                  borderTop: coords.side === 'bottom' ? '1px solid rgba(217,119,6,0.4)' : undefined,
+                  borderRight: coords.side === 'top' ? '1px solid var(--border-color)' : undefined,
+                  borderBottom: coords.side === 'top' ? '1px solid var(--border-color)' : undefined,
+                  borderLeft: coords.side === 'bottom' ? '1px solid var(--border-color)' : undefined,
+                  borderTop: coords.side === 'bottom' ? '1px solid var(--border-color)' : undefined,
                 }}
               />
             )}
@@ -161,3 +162,4 @@ export const Tooltip: React.FC<TooltipProps> = ({
     </span>
   );
 };
+

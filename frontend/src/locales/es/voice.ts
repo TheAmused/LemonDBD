@@ -25,5 +25,6 @@ export default {
   useNativeEngine: "Usar API Web Speech Nativa",
   privacyNotice: "Nota de Privacidad: El modelo local procesa todos los comandos de voz completamente desconectado dentro de tu navegador.",
   holdOrPress: "Mantén [V] o Haz Clic en el Micrófono",
+  holdVToTalkHint: "Mantén {key} para hablar, o toca el micrófono y di el nombre de un mapa",
   micBlocked: "Micrófono bloqueado. Por favor, concede permisos de micrófono.",
 } as const;

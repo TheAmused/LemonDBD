@@ -73,6 +73,7 @@ export default {
   zoomOut25: 'Zoom Out (-25%)',
   searchTextTab: 'Search',
   searchVoiceTab: 'Voice',
+  searchModeAria: 'Search mode',
   expandRealmAria: 'Expand realm',
   collapseRealmAria: 'Collapse realm',
 } as const;

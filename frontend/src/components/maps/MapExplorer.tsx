@@ -3,7 +3,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, ChevronDown } from 'lucide-react';
+import { Search, ImageOff, ChevronDown, MapPin } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
@@ -46,6 +46,12 @@ export interface MapExplorerProps {
   backendBase: string;
   dict?: Dictionary;
   hideSearch?: boolean;
+  /** Rendered in the same slot as the search header (e.g. a voice command
+   * banner) when `hideSearch` is true. Overlaid in the same grid cell as
+   * the search header -- see the render below -- so the taller of the two
+   * sets the slot's height instead of the shorter one collapsing to its
+   * own height and shifting the map grid below on every swap. */
+  voiceSlot?: React.ReactNode;
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
@@ -55,6 +61,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   backendBase,
   dict,
   hideSearch = false,
+  voiceSlot,
 }) => {
   const {
     maps,
@@ -75,6 +82,15 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
   const [realmFilter, setRealmFilter] = useState<string | null>(null);
   const columns = useRealmGridColumns();
+
+  // The full realm roster, independent of the current search text -- unlike
+  // groupedMapsByRealm (built from the search-filtered `maps` list), this
+  // doesn't shrink as soon as a query narrows results to fewer realms, so
+  // the filter chips stay put while searching instead of disappearing.
+  const allRealmNames = useMemo(
+    () => Object.keys(realmImages).sort((a, b) => a.localeCompare(b)),
+    [realmImages]
+  );
 
   useEffect(() => {
     if (hideSearch) {
@@ -207,19 +223,63 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      {!hideSearch && (
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
-            aria-label={dict?.maps?.searchAria || 'Search map or realm'}
-            className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
-          />
+      <div className="grid">
+        <div className={`[grid-area:1/1] flex flex-col justify-center space-y-6 ${hideSearch ? 'invisible' : 'visible'}`}>
+          <div className="relative w-full sm:max-w-lg sm:mx-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
+              aria-label={dict?.maps?.searchAria || 'Search map or realm'}
+              tabIndex={hideSearch ? -1 : undefined}
+              className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+          </div>
+
+          {allRealmNames.length > 1 && (
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                type="button"
+                tabIndex={hideSearch ? -1 : undefined}
+                onClick={() => setRealmFilter(null)}
+                aria-pressed={realmFilter === null}
+                className={`cursor-pointer rounded-full px-3 py-1 text-xs font-bold transition-colors ${
+                  realmFilter === null
+                    ? 'bg-amber-500 text-slate-950'
+                    : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+              >
+                {dict?.maps?.all || 'All'}
+              </button>
+              {allRealmNames.map((realm) => (
+                <button
+                  key={realm}
+                  type="button"
+                  tabIndex={hideSearch ? -1 : undefined}
+                  onClick={() => setRealmFilter(realm)}
+                  aria-pressed={realmFilter === realm}
+                  className={`cursor-pointer inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition-colors ${
+                    realmFilter === realm
+                      ? 'bg-amber-500 text-slate-950'
+                      : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <MapPin className="h-3 w-3" aria-hidden="true" />
+                  {realm}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+
+        {voiceSlot && (
+          <div className={`[grid-area:1/1] flex ${hideSearch ? 'visible' : 'invisible'}`}>
+            {voiceSlot}
+          </div>
+        )}
+      </div>
 
       {loading && (
         <div className="py-16 text-center text-xs text-slate-500 font-mono">
@@ -230,38 +290,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       {!loading && groupedMapsByRealm.length === 0 && (
         <div className="py-16 text-center text-xs text-slate-500 font-mono">
           {dict?.maps?.noMapsFound || 'No Maps Found'}
-        </div>
-      )}
-
-      {!hideSearch && !loading && groupedMapsByRealm.length > 1 && (
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => setRealmFilter(null)}
-            aria-pressed={realmFilter === null}
-            className={`rounded-full px-3 py-1 text-xs font-bold transition-colors ${
-              realmFilter === null
-                ? 'bg-amber-500 text-slate-950'
-                : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            {dict?.maps?.all || 'All'}
-          </button>
-          {groupedMapsByRealm.map(({ realm }) => (
-            <button
-              key={realm}
-              type="button"
-              onClick={() => setRealmFilter(realm)}
-              aria-pressed={realmFilter === realm}
-              className={`rounded-full px-3 py-1 text-xs font-bold transition-colors ${
-                realmFilter === realm
-                  ? 'bg-amber-500 text-slate-950'
-                  : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              {realm}
-            </button>
-          ))}
         </div>
       )}
 

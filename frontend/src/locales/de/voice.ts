@@ -25,5 +25,6 @@ export default {
   useNativeEngine: "Native Web Speech API nutzen",
   privacyNotice: "Datenschutz-Hinweis: Das lokale Client-Modell verarbeitet sämtliche Sprachbefehle komplett offline in deinem Browser.",
   holdOrPress: "Halte [V] oder klicke das Mikrofon",
+  holdVToTalkHint: "Halte {key} zum Sprechen, oder tippe das Mikrofon an und sag einen Kartennamen",
   micBlocked: "Mikrofon blockiert. Bitte erteile die Mikrofonberechtigung.",
 } as const;

@@ -5,7 +5,9 @@ import type { Dictionary } from '@/locales/types';
 import React, { Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
+import { Search, Mic } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
+import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
 import { Locale } from '@/i18n/config';
@@ -34,6 +36,7 @@ function MapsPageInner() {
   const initialMapName = searchParams?.get('mapName') || '';
 
   const [searchMode, setSearchMode] = useState<'text' | 'voice'>('text');
+
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
   const [selectedMap, setSelectedMap] = useState<{
     mapName: string;
@@ -51,7 +54,43 @@ function MapsPageInner() {
 
   const backendBase = getBackendBaseUrl();
 
+  const searchModeOptions: readonly [
+    ToggleSwitchOption<'text' | 'voice'>,
+    ToggleSwitchOption<'text' | 'voice'>,
+  ] = [
+    {
+      value: 'text',
+      icon: <Search className="h-4 w-4" aria-hidden="true" />,
+      activeClassName: 'bg-gradient-to-r from-amber-500 to-amber-600',
+      ariaLabel: dict?.maps?.searchTextTab || 'Search',
+    },
+    {
+      value: 'voice',
+      icon: <Mic className="h-4 w-4" aria-hidden="true" />,
+      activeClassName: 'bg-gradient-to-r from-amber-500 to-amber-600',
+      ariaLabel: dict?.maps?.searchVoiceTab || 'Voice',
+    },
+  ];
+
   useDocumentTitle(dict?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer');
+
+  const voiceBanner = (
+    <VoiceCommandBanner
+      locale={locale}
+      dict={dict}
+      currentSource="hens333"
+      onSourceChange={() => {}}
+      onSelectMap={(name) => {
+        setSelectedMap({ mapName: name, timestamp: Date.now() });
+      }}
+      onAction={() => {
+        // Voice zoom/fullscreen/close actions have no target in the
+        // realm-grid layout -- there's no single "active" map to apply them to.
+      }}
+      availableMaps={availableMaps}
+      active={searchMode === 'voice'}
+    />
+  );
 
   const handleSelectCategory = () => {
     if (typeof window !== 'undefined') {
@@ -72,51 +111,15 @@ function MapsPageInner() {
       <main
         className="flex-1 w-full min-h-screen transition-[padding] duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lemon-shell-main"
       >
-        <div className="flex items-center gap-1 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-1 w-fit">
-          <button
-            type="button"
-            onClick={() => setSearchMode('text')}
-            aria-pressed={searchMode === 'text'}
-            className={`rounded-xl px-4 py-2 min-h-[44px] touch-manipulation text-xs font-bold transition-colors cursor-pointer ${
-              searchMode === 'text'
-                ? 'bg-amber-500 text-slate-950 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            {dict?.maps?.searchTextTab || 'Search'}
-          </button>
-          <button
-            type="button"
-            onClick={() => setSearchMode('voice')}
-            aria-pressed={searchMode === 'voice'}
-            className={`rounded-xl px-4 py-2 min-h-[44px] touch-manipulation text-xs font-bold transition-colors cursor-pointer ${
-              searchMode === 'voice'
-                ? 'bg-amber-500 text-slate-950 shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            {dict?.maps?.searchVoiceTab || 'Voice'}
-          </button>
-        </div>
-
-        {searchMode === 'voice' && (
-          <VoiceCommandBanner
-            locale={locale}
-            dict={dict}
-            currentSource="hens333"
-            onSourceChange={() => {}}
-            onSelectMap={(name) => {
-              setSelectedMap({ mapName: name, timestamp: Date.now() });
-            }}
-            onAction={() => {
-              // Voice zoom/fullscreen/close actions have no target in the redesigned
-              // realm-grid layout (no single "active" map). Intentionally unwired
-              // pending a follow-up to re-home this behavior, matching how
-              // VariantSwitcherBar was deferred in the same redesign.
-            }}
-            availableMaps={availableMaps}
+        <div className="flex justify-center">
+          <ToggleSwitch
+            value={searchMode}
+            onChange={setSearchMode}
+            ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
+            options={searchModeOptions}
+            iconOnly
           />
-        )}
+        </div>
 
         <MapExplorer
           initialMapName={selectedMap.mapName}
@@ -127,6 +130,7 @@ function MapsPageInner() {
           backendBase={backendBase}
           dict={dict}
           hideSearch={searchMode === 'voice'}
+          voiceSlot={voiceBanner}
         />
 
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />

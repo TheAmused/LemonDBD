@@ -2,7 +2,8 @@
 """
 Master Test Runner for LemonDBD (Full Stack Test Orchestrator)
 Executes unit, live, and end-to-end multi-step workflow test suites across
-both Python Flask Backend (Pytest) and Next.js / TypeScript Frontend (tsx/node:test).
+both Python Flask Backend (Pytest) and Next.js / TypeScript Frontend (tsx/node:test),
+as well as K6 performance test suites.
 
 Usage:
   py run_tests.py                 # Runs all test suites (Backend + Frontend)
@@ -11,10 +12,13 @@ Usage:
   py run_tests.py --workflows     # Runs end-to-end multi-step workflow suites
   py run_tests.py --backend       # Runs backend suites only
   py run_tests.py --frontend      # Runs frontend suites only
+  py run_tests.py --perf          # Runs all K6 performance test suites
+  py run_tests.py --perf smoke    # Runs specific K6 performance test suite
 """
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -34,7 +38,7 @@ BACKEND_DIR = ROOT_DIR / "backend"
 FRONTEND_DIR = ROOT_DIR / "frontend"
 
 
-def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
+def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None, timeout: int = 120) -> Dict[str, Any]:
     merged_env = {**os.environ, **(env or {})}
     start_time = time.time()
     try:
@@ -48,7 +52,7 @@ def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None) -
             encoding="utf-8",
             errors="replace",
             stdin=subprocess.DEVNULL,
-            timeout=120,
+            timeout=timeout,
         )
         duration = round(time.time() - start_time, 2)
         return {
@@ -61,8 +65,8 @@ def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None) -
         return {
             "exit_code": 124,
             "stdout": te.stdout or "",
-            "stderr": "Execution timed out (120s limit).",
-            "duration": 120.0,
+            "stderr": f"Execution timed out ({timeout}s limit).",
+            "duration": float(timeout),
         }
     except Exception as e:
         return {
@@ -80,11 +84,20 @@ def main():
     parser.add_argument("--workflows", action="store_true", help="Run workflow test suites only")
     parser.add_argument("--backend", action="store_true", help="Run backend tests only")
     parser.add_argument("--frontend", action="store_true", help="Run frontend tests only")
+    parser.add_argument(
+        "--perf",
+        nargs="?",
+        const="all",
+        default=None,
+        choices=["all", "smoke", "load", "stress", "spike", "soak"],
+        help="Run K6 performance test suite(s). Defaults to 'all' if no stage specified.",
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="Show full stdout and stderr")
     args = parser.parse_args()
 
     # Default to running all if no category is specified
-    run_all_categories = not (args.unit or args.live or args.workflows)
+    has_explicit_category = args.unit or args.live or args.workflows or (args.perf is not None)
+    run_all_categories = not has_explicit_category
     run_unit = args.unit or run_all_categories
     run_live = args.live or run_all_categories
     run_workflows = args.workflows or run_all_categories
@@ -175,6 +188,53 @@ def main():
             "duration": res["duration"],
             "output": res["stdout"] or res["stderr"],
         })
+
+    # 6. Live Performance Tests (K6)
+    if args.perf:
+        k6_bin = shutil.which("k6") or shutil.which("k6.exe")
+        target_suites = ["smoke", "load", "stress", "spike", "soak"] if args.perf == "all" else [args.perf]
+        if not k6_bin:
+            print(f"[{RED}ERROR{RESET}] k6 binary was not found in PATH! Please install k6 to run performance tests.", flush=True)
+            for suite in target_suites:
+                suite_name = f"K6 {suite.capitalize()} Suite"
+                results.append({
+                    "name": suite_name,
+                    "tier": "Live Performance",
+                    "status": "FAILED",
+                    "duration": 0.0,
+                    "output": "k6 binary was not found in PATH. Please install k6.",
+                })
+        else:
+            for suite in target_suites:
+                suite_name = f"K6 {suite.capitalize()} Suite"
+                print(f"[{YELLOW}RUNNING{RESET}] K6 Performance Suite ({suite})...", flush=True)
+                suite_file = ROOT_DIR / "k6" / "suites" / f"{suite}.js"
+                if not suite_file.exists():
+                    print(f"[{RED}FAILED{RESET}] Suite file not found: {suite_file}", flush=True)
+                    results.append({
+                        "name": suite_name,
+                        "tier": "Live Performance",
+                        "status": "FAILED",
+                        "duration": 0.0,
+                        "output": f"Suite file not found: {suite_file}",
+                    })
+                    continue
+
+                res = run_command(
+                    f'k6 run -e K6_TIMEOUT=30s "k6/suites/{suite}.js"',
+                    cwd=ROOT_DIR,
+                    timeout=600,
+                )
+                status = "PASSED" if res["exit_code"] == 0 else "FAILED"
+                color = GREEN if status == "PASSED" else RED
+                print(f"[{color}{status}{RESET}] {suite_name} in {res['duration']}s", flush=True)
+                results.append({
+                    "name": suite_name,
+                    "tier": "Live Performance",
+                    "status": status,
+                    "duration": res["duration"],
+                    "output": res["stdout"] or res["stderr"],
+                })
 
     # Final Summary Table
     print(f"\n{BOLD}========================================================================{RESET}", flush=True)

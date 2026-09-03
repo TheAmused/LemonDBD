@@ -73,6 +73,7 @@ export default {
   zoomOut25: 'Oddal (-25%)',
   searchTextTab: 'Szukaj',
   searchVoiceTab: 'Głos',
+  searchModeAria: 'Tryb wyszukiwania',
   expandRealmAria: 'Rozwiń realm',
   collapseRealmAria: 'Zwiń realm',
 } as const;

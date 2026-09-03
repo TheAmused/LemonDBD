@@ -13,8 +13,15 @@ import { cn } from '@/utils/cn';
 
 export interface ToggleSwitchOption<T extends string> {
   value: T;
-  label: React.ReactNode;
+  /** Visible label. Omit for an icon-only option -- pass `ariaLabel`
+   * instead so the icon stays perfectly centered (a hidden label span
+   * still counts as a flex item and skews `gap`-based centering even at
+   * zero width). */
+  label?: React.ReactNode;
   icon?: React.ReactNode;
+  /** Accessible name for this option. Required when `label` is omitted;
+   * otherwise defaults to the visible label's text content. */
+  ariaLabel?: string;
   /** Tailwind classes for the sliding thumb when this option is active. */
   activeClassName?: string;
 }
@@ -27,6 +34,11 @@ export interface ToggleSwitchProps<T extends string> {
   ariaLabel: string;
   size?: 'sm' | 'md';
   className?: string;
+  /** Both options are icon-only (no `label`) -- renders each as a fixed
+   * square button instead of `size`'s proportional padding, so the icon
+   * sits dead-center instead of being pulled off-center by asymmetric
+   * horizontal/vertical padding. */
+  iconOnly?: boolean;
 }
 
 const DEFAULT_THUMB = 'bg-gradient-to-r from-slate-700 to-slate-800';
@@ -50,6 +62,7 @@ export function ToggleSwitch<T extends string>({
   ariaLabel,
   size = 'md',
   className,
+  iconOnly = false,
 }: ToggleSwitchProps<T>) {
   const [left, right] = options;
   const activeIndex = resolveActiveIndex(value, options);
@@ -89,16 +102,18 @@ export function ToggleSwitch<T extends string>({
             type="button"
             role="radio"
             aria-checked={isActive}
+            aria-label={opt.ariaLabel}
             onClick={() => onChange(opt.value)}
             className={cn(
-              'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 font-black transition-colors duration-200',
-              padY,
+              'relative z-10 flex cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full font-black transition-colors duration-200',
+              iconOnly ? 'h-9 w-9' : 'flex-1 px-3',
+              !iconOnly && padY,
               textSize,
               isActive ? 'text-white' : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
             )}
           >
             {opt.icon}
-            <span className="whitespace-nowrap">{opt.label}</span>
+            {opt.label != null && <span className="whitespace-nowrap">{opt.label}</span>}
           </button>
         );
       })}

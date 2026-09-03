@@ -73,6 +73,7 @@ export default {
   zoomOut25: 'Verkleinern (-25%)',
   searchTextTab: 'Suche',
   searchVoiceTab: 'Sprache',
+  searchModeAria: 'Suchmodus',
   expandRealmAria: 'Reich aufklappen',
   collapseRealmAria: 'Reich einklappen',
 } as const;

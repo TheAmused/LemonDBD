@@ -12,20 +12,61 @@
  * - Generic variant disambiguation pill groups
  * - Provider source switching ("Switch to Hens", "Zmien na Samoela", "Wszystkie mapy")
  * - Navigation action commands ("Zoom in", "Przybliz", "Fullscreen", "Pelny ekran", "Close", "Zamknij")
+ * - Locale-aware phonetic matching for all five UI locales (see utils/voicePhonetics.ts),
+ *   so accented pronunciations resolve without hand-written spellings
+ * - German, Spanish and Japanese vocabulary merged in from utils/mapVoiceLocaleAliases.ts
  * - Levenshtein fuzzy matching and token similarity scoring with full diacritic normalization
+ *
+ * Matching runs as an ordered tier list (see matchVoiceQuery); earlier tiers are
+ * strictly more trustworthy, and the accent-tolerant tiers only run once the
+ * literal ones have failed.
  */
+
+import {
+  MIN_PHONETIC_KEY_LENGTH,
+  MIN_SKELETON_KEY_LENGTH,
+  hasJapaneseScript,
+  phoneticKeySet,
+  phoneticSimilarity,
+  romanNumeralsToDigits,
+  toVoiceLocale,
+  type VoiceLocale,
+} from './voicePhonetics';
+import {
+  LOCALE_ACTION_COMMANDS,
+  LOCALE_FILLER_PREFIXES,
+  LOCALE_FILLER_SUFFIXES,
+  LOCALE_MAP_ALIASES,
+  LOCALE_SOURCE_COMMANDS,
+  LOCALE_VARIANT_GROUP_KEYWORDS,
+  type AliasLocale,
+} from './mapVoiceLocaleAliases';
+
+export type { VoiceLocale } from './voicePhonetics';
 
 export type MapSource = 'all' | 'hens333' | 'samoelcolt';
 
 export interface MatchResult {
+  /**
+   * Display name of the matched map. When a live map list is supplied this is
+   * the name the backend returned *for the active locale*, so on /de/maps it is
+   * "Verfallener Kuhstall", not "Fractured Cowshed".
+   */
   matchedMapName: string;
+  /**
+   * The English canonical name the matcher resolved to, always locale-invariant.
+   * Callers that need to look something up by map name - variant groups, a
+   * second matchVoiceQuery pass, an analytics event - must use this rather than
+   * matchedMapName, which changes with the UI language.
+   */
+  canonicalName: string;
   matchedMapId?: string;
   source: MapSource;
   confidence: number;
   isVariant: boolean;
   availableVariants?: string[];
   action?: 'navigate' | 'switch_source' | 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close';
-  actionPayload?: any;
+  actionPayload?: MapSource | string;
 }
 
 export interface MapDataEntry {
@@ -56,7 +97,18 @@ export function normalizeString(str: string): string {
  */
 export function normalizeForComparison(str: string): string {
   if (!str) return '';
-  return normalizeString(str).replace(/[^a-z0-9]/g, '');
+  // Kana and CJK ideographs are kept: stripping to [a-z0-9] silently reduced every
+  // Japanese transcript to the empty string, which made the whole ja locale
+  // unmatchable no matter what the dictionary contained.
+  //
+  // The katakana middle dot U+30FB and double hyphen U+30A0 are deliberately NOT
+  // kept: they are punctuation, and the backend writes localized names with them
+  // ("ガス・ヘヴン") while a recognizer transcript and this dictionary do not.
+  // Keeping them made those two spellings unequal for no phonetic reason.
+  return normalizeString(str).replace(
+    /[^a-z0-9\u3041-\u3096\u30a1-\u30fa\u30fc\u3400-\u4dbf\u4e00-\u9fff]/g,
+    ''
+  );
 }
 
 /**
@@ -1335,7 +1387,40 @@ const ACTION_COMMAND_RULES: ActionCommandRule[] = [
 // ─── Conversational Cleaning ──────────────────────────────────────────────────
 
 /**
- * Strips filler words and conversational phrases from spoken speech in English & Polish.
+ * English and Polish lead-ins. The de/es/ja equivalents live in
+ * mapVoiceLocaleAliases.ts and are appended by buildIndex().
+ */
+const BASE_FILLER_PREFIXES: string[] = [
+  // English conversational prefixes
+  'can you please show me the', 'can you please show me', 'can you please show',
+  'can you please open the', 'can you please open', 'can you please find',
+  'can you open the', 'can you open', 'can you show me the', 'can you show me',
+  'can you show the', 'can you show', 'can you find the', 'can you find',
+  'please navigate to the', 'please navigate to', 'please open the', 'please open',
+  'please show me the', 'please show me', 'please show the', 'please show',
+  'please find the', 'please find', 'navigate to the', 'navigate to',
+  'search for the', 'search for', 'look at the', 'look at', 'switch to the',
+  'go to the', 'go to', 'open the', 'open', 'show me the', 'show me', 'show the',
+  'show', 'find the', 'find', 'display the', 'display', 'view the', 'view', 'please',
+  // Polish conversational prefixes
+  'czy mozesz prosze pokazac mi', 'czy mozesz prosze pokazac', 'czy mozesz pokazac mi',
+  'czy mozesz pokazac', 'czy mozesz otworzyc', 'prosze nawiguj do', 'prosze przejdz do',
+  'prosze pokaz mi', 'prosze pokaz', 'prosze otworz', 'prosze wyswietl', 'prosze znajdz',
+  'prosze wlacz', 'prosze', 'proszę', 'pokaz mi', 'pokaz', 'otworz', 'wyswietl',
+  'znajdz', 'przejdz do', 'wlacz', 'nawiguj do', 'szukaj', 'zobacz',
+];
+
+const BASE_FILLER_SUFFIXES: string[] = [
+  'please', 'map', 'callout', 'callouts', 'diagram',
+  'prosze', 'mapa', 'mape', 'mapy', 'callouty',
+];
+
+/**
+ * Strips filler words and conversational phrases from spoken speech.
+ *
+ * Both loops now iterate a length-sorted list, so the longest matching filler is
+ * removed first. With the previous unsorted list a short prefix could win over a
+ * longer one and leave a fragment behind ("open the" vs "open").
  */
 function cleanSpokenQuery(spoken: string): string {
   let cleaned = normalizeString(spoken)
@@ -1343,88 +1428,22 @@ function cleanSpokenQuery(spoken: string): string {
     .replace(/\s+/g, ' ')
     .trim();
 
-  const leadingPrefixes = [
-    // English conversational prefixes
-    'can you please show me the',
-    'can you please show me',
-    'can you please show',
-    'can you please open the',
-    'can you please open',
-    'can you please find',
-    'can you open the',
-    'can you open',
-    'can you show me the',
-    'can you show me',
-    'can you show the',
-    'can you show',
-    'can you find the',
-    'can you find',
-    'please navigate to the',
-    'please navigate to',
-    'please open the',
-    'please open',
-    'please show me the',
-    'please show me',
-    'please show the',
-    'please show',
-    'please find the',
-    'please find',
-    'navigate to the',
-    'navigate to',
-    'search for the',
-    'search for',
-    'look at the',
-    'look at',
-    'switch to the',
-    'go to the',
-    'go to',
-    'open the',
-    'open',
-    'show me the',
-    'show me',
-    'show the',
-    'show',
-    'find the',
-    'find',
-    'display the',
-    'display',
-    'view the',
-    'view',
-    'please',
-    // Polish conversational prefixes
-    'czy mozesz prosze pokazac mi',
-    'czy mozesz prosze pokazac',
-    'czy mozesz pokazac mi',
-    'czy mozesz pokazac',
-    'czy mozesz otworzyc',
-    'prosze nawiguj do',
-    'prosze przejdz do',
-    'prosze pokaz mi',
-    'prosze pokaz',
-    'prosze otworz',
-    'prosze wyswietl',
-    'prosze znajdz',
-    'prosze wlacz',
-    'prosze',
-    'proszę',
-    'pokaz mi',
-    'pokaz',
-    'otworz',
-    'wyswietl',
-    'znajdz',
-    'przejdz do',
-    'wlacz',
-    'nawiguj do',
-    'szukaj',
-    'zobacz',
-  ];
+  const { prefixes, suffixes } = getIndex();
 
   let prefixChanged = true;
   while (prefixChanged) {
     prefixChanged = false;
-    for (const prefix of leadingPrefixes) {
+    for (const prefix of prefixes) {
       const normPrefix = normalizeString(prefix);
+      if (!normPrefix) continue;
+      // Japanese has no inter-word spaces, so its fillers are matched without the
+      // trailing separator that the latin locales require.
       if (cleaned.startsWith(normPrefix + ' ')) {
+        cleaned = cleaned.slice(normPrefix.length).trim();
+        prefixChanged = true;
+        break;
+      }
+      if (hasJapaneseScript(normPrefix) && cleaned.startsWith(normPrefix)) {
         cleaned = cleaned.slice(normPrefix.length).trim();
         prefixChanged = true;
         break;
@@ -1432,27 +1451,21 @@ function cleanSpokenQuery(spoken: string): string {
     }
   }
 
-  const trailingSuffixes = [
-    'please',
-    'map',
-    'callout',
-    'callouts',
-    'diagram',
-    'prosze',
-    'mapa',
-    'mape',
-    'mapy',
-    'callouty',
-  ];
-
   let changed = true;
   while (changed) {
     changed = false;
-    for (const suffix of trailingSuffixes) {
+    for (const suffix of suffixes) {
       const normSuffix = normalizeString(suffix);
+      if (!normSuffix) continue;
       if (cleaned.endsWith(' ' + normSuffix)) {
         cleaned = cleaned.slice(0, -(normSuffix.length + 1)).trim();
         changed = true;
+        break;
+      }
+      if (hasJapaneseScript(normSuffix) && cleaned.endsWith(normSuffix) && cleaned.length > normSuffix.length) {
+        cleaned = cleaned.slice(0, -normSuffix.length).trim();
+        changed = true;
+        break;
       }
     }
   }
@@ -1460,18 +1473,447 @@ function cleanSpokenQuery(spoken: string): string {
   return cleaned.trim();
 }
 
-// ─── Main Match Function ──────────────────────────────────────────────────────
+// ─── Locale-Merged Dictionary & Lookup Index ──────────────────────────────────
 
 /**
- * Matches a spoken voice query against DBD maps, provider switches, navigation actions,
- * and variant disambiguation engine.
+ * Everything below is derived from the literal tables above plus
+ * mapVoiceLocaleAliases.ts, and is built exactly once on first use.
+ *
+ * The previous implementation re-scanned every alias of every map on every
+ * keystroke of interim speech results — roughly 58 maps x ~15 aliases x 3
+ * candidate strings x a Levenshtein pass, several times per second while the user
+ * is still talking. Precomputing the normalized and phonetic forms into hash
+ * indexes turns the common cases (exact name, exact alias, exact phonetic key)
+ * into O(1) lookups and leaves the O(n) fuzzy scan as a last resort.
+ */
+
+interface AliasEntry {
+  /** Canonical map this alias resolves to. */
+  canonicalName: string;
+  /** normalizeForComparison() of the alias. */
+  norm: string;
+  /** Locale the alias was authored in; 'xx' for shared/proper-noun aliases. */
+  locale: VoiceLocale | 'xx';
+  isExplicitVariant: boolean;
+}
+
+interface VoiceIndex {
+  /** norm -> aliases (several maps can legitimately share an alias spelling). */
+  exact: Map<string, AliasEntry[]>;
+  /** Aliases sorted by normalized length, longest first, for substring matching. */
+  byLength: AliasEntry[];
+  /** phonetic key -> canonical names. */
+  phonetic: Map<string, Set<string>>;
+  /** consonant skeleton -> canonical names. */
+  skeleton: Map<string, Set<string>>;
+  /** Flattened alias list with phonetic keys attached, for the fuzzy fallback. */
+  all: Array<AliasEntry & { keys: string[] }>;
+  /** Explicit variant keywords, longest normalized form first. */
+  explicit: Array<{ norm: string; canonicalName: string }>;
+  /** Generic variant keywords, exact-match only. */
+  generic: Map<string, { defaultCanonical: string; variantGroupKey: string }>;
+  /** Provider switch keywords, exact-match only. */
+  source: Map<string, MapSource>;
+  /** Navigation keywords, exact-match only. */
+  action: Map<string, 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close'>;
+  /** Filler prefixes/suffixes, longest first. */
+  prefixes: string[];
+  suffixes: string[];
+}
+
+let indexCache: VoiceIndex | null = null;
+
+/**
+ * Aliases in CANONICAL_MAPS are a mix of English, Polish and proper nouns with no
+ * language at all. Tagging them by script/diacritic heuristics would be brittle,
+ * so they are tagged 'xx' (locale-agnostic) and only the aliases coming from
+ * mapVoiceLocaleAliases.ts carry a real locale tag. The tag is used purely as a
+ * tie-breaker, never as a filter — a German speaker must still be able to say the
+ * English name.
+ */
+function buildIndex(): VoiceIndex {
+  const exact = new Map<string, AliasEntry[]>();
+  const phonetic = new Map<string, Set<string>>();
+  const skeleton = new Map<string, Set<string>>();
+  const all: Array<AliasEntry & { keys: string[] }> = [];
+
+  const addPhonetic = (target: Map<string, Set<string>>, key: string, canonicalName: string) => {
+    let bucket = target.get(key);
+    if (!bucket) {
+      bucket = new Set<string>();
+      target.set(key, bucket);
+    }
+    bucket.add(canonicalName);
+  };
+
+  const addAlias = (
+    canonicalName: string,
+    alias: string,
+    locale: VoiceLocale | 'xx',
+    isExplicitVariant: boolean
+  ) => {
+    const norm = normalizeForComparison(alias);
+    if (!norm) return;
+
+    const entry: AliasEntry = { canonicalName, norm, locale, isExplicitVariant };
+
+    const bucket = exact.get(norm);
+    if (bucket) {
+      if (!bucket.some((e) => e.canonicalName === canonicalName)) bucket.push(entry);
+    } else {
+      exact.set(norm, [entry]);
+    }
+
+    // Index under every locale's fold so an alias authored in one language is
+    // still reachable from another locale's recognizer output.
+    const { keys, skeletons } = phoneticKeySet(alias);
+    for (const key of keys) {
+      if (key.length >= MIN_PHONETIC_KEY_LENGTH) addPhonetic(phonetic, key, canonicalName);
+    }
+    for (const skel of skeletons) {
+      if (skel.length >= MIN_SKELETON_KEY_LENGTH) addPhonetic(skeleton, skel, canonicalName);
+    }
+
+    all.push({ ...entry, keys });
+  };
+
+  for (const mapDef of CANONICAL_MAPS) {
+    const isVariant = !!mapDef.isExplicitVariant;
+    addAlias(mapDef.canonicalName, mapDef.canonicalName, 'xx', isVariant);
+    for (const alias of mapDef.aliases) addAlias(mapDef.canonicalName, alias, 'xx', isVariant);
+
+    const localized = LOCALE_MAP_ALIASES[mapDef.canonicalName];
+    if (localized) {
+      for (const loc of ['de', 'es', 'ja'] as AliasLocale[]) {
+        for (const alias of localized[loc] || []) addAlias(mapDef.canonicalName, alias, loc, isVariant);
+      }
+    }
+  }
+
+  // Explicit variant keywords: existing rules plus the localized aliases of any
+  // map those rules point at, so "vorschule drei" behaves like "preschool 3".
+  const explicitSeen = new Set<string>();
+  const explicit: Array<{ norm: string; canonicalName: string }> = [];
+  const pushExplicit = (keyword: string, canonicalName: string) => {
+    const norm = normalizeForComparison(keyword);
+    if (!norm) return;
+    const dedupe = `${norm}::${canonicalName}`;
+    if (explicitSeen.has(dedupe)) return;
+    explicitSeen.add(dedupe);
+    explicit.push({ norm, canonicalName });
+  };
+
+  for (const rule of EXPLICIT_VARIANT_RULES) {
+    for (const keyword of rule.keywords) pushExplicit(keyword, rule.canonicalName);
+    const localized = LOCALE_MAP_ALIASES[rule.canonicalName];
+    if (localized) {
+      for (const loc of ['de', 'es', 'ja'] as AliasLocale[]) {
+        for (const alias of localized[loc] || []) pushExplicit(alias, rule.canonicalName);
+      }
+    }
+  }
+  // Longest keyword first: this is what stops "badham i" from swallowing
+  // "badham iii" / "badham iv" the way the previous first-hit loop did.
+  explicit.sort((a, b) => b.norm.length - a.norm.length);
+
+  const generic = new Map<string, { defaultCanonical: string; variantGroupKey: string }>();
+  for (const rule of GENERIC_VARIANT_RULES) {
+    const payload = { defaultCanonical: rule.defaultCanonical, variantGroupKey: rule.variantGroupKey };
+    for (const keyword of rule.keywords) {
+      const norm = normalizeForComparison(keyword);
+      if (norm && !generic.has(norm)) generic.set(norm, payload);
+    }
+    const localized = LOCALE_VARIANT_GROUP_KEYWORDS[rule.variantGroupKey];
+    if (localized) {
+      for (const loc of ['de', 'es', 'ja'] as AliasLocale[]) {
+        for (const keyword of localized[loc] || []) {
+          const norm = normalizeForComparison(keyword);
+          if (norm && !generic.has(norm)) generic.set(norm, payload);
+        }
+      }
+    }
+  }
+
+  const source = new Map<string, MapSource>();
+  for (const rule of SOURCE_COMMAND_RULES) {
+    for (const keyword of rule.keywords) {
+      const norm = normalizeForComparison(keyword);
+      if (norm && !source.has(norm)) source.set(norm, rule.source);
+    }
+    const localized = LOCALE_SOURCE_COMMANDS[rule.source as keyof typeof LOCALE_SOURCE_COMMANDS];
+    if (localized) {
+      for (const loc of ['de', 'es', 'ja'] as AliasLocale[]) {
+        for (const keyword of localized[loc] || []) {
+          const norm = normalizeForComparison(keyword);
+          if (norm && !source.has(norm)) source.set(norm, rule.source);
+        }
+      }
+    }
+  }
+
+  const action = new Map<string, 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close'>();
+  for (const rule of ACTION_COMMAND_RULES) {
+    for (const keyword of rule.keywords) {
+      const norm = normalizeForComparison(keyword);
+      if (norm && !action.has(norm)) action.set(norm, rule.action);
+    }
+    const localized = LOCALE_ACTION_COMMANDS[rule.action];
+    if (localized) {
+      for (const loc of ['de', 'es', 'ja'] as AliasLocale[]) {
+        for (const keyword of localized[loc] || []) {
+          const norm = normalizeForComparison(keyword);
+          if (norm && !action.has(norm)) action.set(norm, rule.action);
+        }
+      }
+    }
+  }
+
+  const prefixes = [...BASE_FILLER_PREFIXES];
+  const suffixes = [...BASE_FILLER_SUFFIXES];
+  for (const loc of ['de', 'es', 'ja'] as AliasLocale[]) {
+    prefixes.push(...(LOCALE_FILLER_PREFIXES[loc] || []));
+    suffixes.push(...(LOCALE_FILLER_SUFFIXES[loc] || []));
+  }
+  prefixes.sort((a, b) => b.length - a.length);
+  suffixes.sort((a, b) => b.length - a.length);
+
+  const byLength = [...all].sort((a, b) => b.norm.length - a.norm.length);
+
+  return { exact, byLength, phonetic, skeleton, all, explicit, generic, source, action, prefixes, suffixes };
+}
+
+function getIndex(): VoiceIndex {
+  if (!indexCache) indexCache = buildIndex();
+  return indexCache;
+}
+
+/** Exposed for tests and for hot-reload safety; the index is otherwise immutable. */
+export function resetVoiceIndex(): void {
+  indexCache = null;
+}
+
+
+// ─── Live Map List Index ──────────────────────────────────────────────────────
+
+/**
+ * The backend localizes map names.
+ *
+ * GET /api/v1/maps resolves a language from the `lang` query parameter, the
+ * Referer path or Accept-Language, and MapRealm.to_dict() then substitutes the
+ * translated name and realm. So on /de/maps the list contains "Verfallener
+ * Kuhstall" and "Sprithimmel"; on /ja/maps, "フラクチャード・カウシェッド" and
+ * "ガス・ヘヴン"; on /pl/maps, "Spękana Obora".
+ *
+ * Two consequences, and both used to break voice navigation outside English:
+ *
+ *  1. Resolving a match to a map id by comparing the English canonical name
+ *     against `map.name` cannot work in any other locale. The map id is the only
+ *     locale-invariant handle, and it is built as `hens_<realm slug>_<map slug>`
+ *     from the English name, so it always ENDS with the canonical name's slug.
+ *
+ *  2. The localized names the backend actually ships are the ones players in
+ *     that locale read on screen and will therefore say out loud - and they are
+ *     not necessarily the ones in mapVoiceLocaleAliases.ts (the backend says
+ *     "Sprithimmel" for Gas Heaven; the static dictionary says "Benzinhimmel").
+ *     Indexing the live list makes whatever the backend calls a map matchable,
+ *     which is strictly more authoritative than any static table can be.
+ */
+interface RuntimeMapIndex {
+  /** normalizeForComparison(live name) -> maps carrying that name. */
+  byName: Map<string, MapDataEntry[]>;
+  /** Phonetic key of the live name -> maps. */
+  byPhonetic: Map<string, MapDataEntry[]>;
+  /** normalizeForComparison(map id) paired with its map. */
+  byIdSlug: Array<{ slug: string; map: MapDataEntry }>;
+  /** map id -> the English canonical name it corresponds to, where known. */
+  canonicalById: Map<string, string>;
+}
+
+/**
+ * Keyed by the array identity the caller passes in. The map list is fetched once
+ * and held in React state, so the same array arrives on every keystroke of
+ * interim speech results and the index is built once per fetch.
+ */
+const runtimeIndexCache = new WeakMap<object, RuntimeMapIndex>();
+
+function getRuntimeMapIndex(allMaps?: Array<MapDataEntry>): RuntimeMapIndex | null {
+  if (!allMaps || allMaps.length === 0) return null;
+
+  const cached = runtimeIndexCache.get(allMaps as unknown as object);
+  if (cached) return cached;
+
+  const byName = new Map<string, MapDataEntry[]>();
+  const byPhonetic = new Map<string, MapDataEntry[]>();
+  const byIdSlug: Array<{ slug: string; map: MapDataEntry }> = [];
+  const canonicalById = new Map<string, string>();
+
+  // Longest first so "Coal Tower II" is tested before "Coal Tower".
+  const canonicalSlugs = CANONICAL_MAPS.map((m) => ({
+    canonicalName: m.canonicalName,
+    slug: normalizeForComparison(m.canonicalName),
+  }))
+    .filter((entry) => entry.slug.length > 0)
+    .sort((a, b) => b.slug.length - a.slug.length);
+
+  const push = (target: Map<string, MapDataEntry[]>, key: string, map: MapDataEntry) => {
+    const bucket = target.get(key);
+    if (bucket) {
+      if (!bucket.some((m) => m.id === map.id)) bucket.push(map);
+    } else {
+      target.set(key, [map]);
+    }
+  };
+
+  for (const map of allMaps) {
+    if (!map || !map.id) continue;
+
+    const slug = normalizeForComparison(map.id);
+    if (slug) {
+      byIdSlug.push({ slug, map });
+      const canonical = canonicalSlugs.find((entry) => slug.endsWith(entry.slug));
+      if (canonical) canonicalById.set(map.id, canonical.canonicalName);
+    }
+
+    const norm = normalizeForComparison(map.name);
+    if (norm) push(byName, norm, map);
+
+    for (const key of phoneticKeySet(map.name || '').keys) {
+      if (key.length >= MIN_PHONETIC_KEY_LENGTH) push(byPhonetic, key, map);
+    }
+  }
+
+  const index: RuntimeMapIndex = { byName, byPhonetic, byIdSlug, canonicalById };
+  runtimeIndexCache.set(allMaps as unknown as object, index);
+  return index;
+}
+
+/** Prefers the caller's current provider, then hens333, then whatever is first. */
+function preferBySource(candidates: MapDataEntry[], currentSource: MapSource): MapDataEntry {
+  if (currentSource !== 'all') {
+    const preferred = candidates.find((m) => m.source?.toLowerCase() === currentSource.toLowerCase());
+    if (preferred) return preferred;
+  }
+  return candidates.find((m) => m.source?.toLowerCase() === 'hens333') || candidates[0];
+}
+
+/**
+ * Finds the live map for an English canonical name without ever comparing
+ * localized text: `hens_macmillan_estate_coal_tower` ends with `coaltower`.
+ *
+ * endsWith rather than includes is what keeps "Coal Tower" off "Coal Tower II"
+ * (`...coaltowerii` does not end with `coaltower`), which a containment test
+ * would have collapsed.
+ */
+function findLiveMapByCanonicalName(
+  index: RuntimeMapIndex | null,
+  canonicalName: string,
+  currentSource: MapSource
+): MapDataEntry | undefined {
+  if (!index) return undefined;
+  const target = normalizeForComparison(canonicalName);
+  if (!target) return undefined;
+
+  const exact = index.byName.get(target);
+  if (exact && exact.length > 0) return preferBySource(exact, currentSource);
+
+  const slugHits = index.byIdSlug.filter((entry) => entry.slug.endsWith(target));
+  if (slugHits.length > 0) return preferBySource(slugHits.map((e) => e.map), currentSource);
+
+  return undefined;
+}
+
+// ─── Main Match Function ──────────────────────────────────────────────────────
+
+export interface MatchOptions {
+  /** UI locale, used to pick the recognizer's phonetic fold and to break ties. */
+  locale?: string;
+}
+
+/** Confidence assigned by each tier, highest first. */
+const TIER_CONFIDENCE = {
+  exact: 1.0,
+  genericVariant: 0.98,
+  substring: 0.95,
+  phonetic: 0.92,
+  skeleton: 0.86,
+  phoneticFuzzy: 0.84,
+} as const;
+
+/** Below this, a fuzzy hit is treated as random speech rather than a map name. */
+const FUZZY_ACCEPT_THRESHOLD = 0.6;
+
+/** Phonetic-key similarity below this is noise; the reduced alphabet is small. */
+const PHONETIC_FUZZY_THRESHOLD = 0.82;
+
+/**
+ * Picks one canonical name out of a phonetic bucket. Buckets with more than one
+ * map are genuinely ambiguous (the fold is lossy by design), so they are only
+ * resolved when one candidate is clearly preferable — otherwise the caller falls
+ * through to a more precise tier.
+ */
+function resolveBucket(
+  bucket: Set<string> | undefined,
+  preferLocale: VoiceLocale,
+  normQuery: string
+): string | null {
+  if (!bucket || bucket.size === 0) return null;
+  if (bucket.size === 1) return [...bucket][0];
+
+  // Prefer the map that also has the closest surface-form alias in the query's
+  // locale; this is how "vorschule drei" beats a same-skeleton English alias.
+  const { all } = getIndex();
+  let best: string | null = null;
+  let bestScore = -1;
+  for (const canonicalName of bucket) {
+    for (const entry of all) {
+      if (entry.canonicalName !== canonicalName) continue;
+      let score = calculateSimilarity(entry.norm, normQuery);
+      if (entry.locale === preferLocale) score += 0.15;
+      if (score > bestScore) {
+        bestScore = score;
+        best = canonicalName;
+      }
+    }
+  }
+  return bestScore >= 0.5 ? best : null;
+}
+
+/**
+ * Matches a spoken voice query against DBD maps, provider switches, navigation
+ * actions, and the variant disambiguation engine.
+ *
+ * Tier order — earlier tiers are strictly more trustworthy than later ones:
+ *   1  provider switch commands (exact)
+ *   2  navigation commands (exact)
+ *   3  provider prefix + map ("hens blood lodge")
+ *  3b  live map list name, exact (authoritative for the active locale)
+ *   4  explicit variants (exact keyword)
+ *   5  generic variant groups (exact) -> opens the variant picker
+ *   6  canonical name / alias (exact)
+ *  6b  explicit variants (containment, longest keyword wins)
+ *   7  canonical name / alias (containment)
+ *  7c  live map list name, phonetic
+ *   8  phonetic key (exact)            <- accent tolerance starts here
+ *   9  consonant skeleton (exact)
+ *  10  phonetic key (fuzzy)
+ *  11  Levenshtein / token similarity  <- last resort
+ *
+ * @param spokenText    Raw transcript from Web Speech or the local Whisper model.
+ * @param currentSource Provider currently selected in the UI.
+ * @param allMaps       Live map list, used to resolve ids and the final source.
+ * @param options       `{ locale }` of the active UI locale. Optional: omitting it
+ *                      keeps the pre-locale behaviour and folds through English.
  */
 export function matchVoiceQuery(
   spokenText: string,
   currentSource: MapSource = 'all',
-  allMaps?: Array<MapDataEntry>
+  allMaps?: Array<MapDataEntry>,
+  options?: MatchOptions | string
 ): MatchResult | null {
   if (!spokenText || typeof spokenText !== 'string') return null;
+
+  const locale = toVoiceLocale(typeof options === 'string' ? options : options?.locale);
+  const index = getIndex();
 
   const rawLower = normalizeString(spokenText)
     .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, ' ')
@@ -1481,79 +1923,44 @@ export function matchVoiceQuery(
   if (!rawLower) return null;
 
   const cleanRaw = cleanSpokenQuery(rawLower);
-  const commandCandidates = [cleanRaw, rawLower].filter(Boolean);
+  const commandCandidates = uniqueStrings([cleanRaw, rawLower]);
 
-  // 1. Check Pure Source Switching Commands (exact string/normalized match)
-  for (const rule of SOURCE_COMMAND_RULES) {
-    for (const kw of rule.keywords) {
-      const normKw = normalizeForComparison(kw);
-      for (const text of commandCandidates) {
-        const normCmd = normalizeForComparison(text);
-        if (normCmd === normKw || text === normalizeString(kw)) {
-          return {
-            matchedMapName: '',
-            source: rule.source,
-            confidence: 1.0,
-            isVariant: false,
-            action: 'switch_source',
-            actionPayload: rule.source,
-          };
-        }
-      }
+  // 1. Provider switching commands.
+  for (const text of commandCandidates) {
+    const hit = index.source.get(normalizeForComparison(text));
+    if (hit) {
+      return {
+        matchedMapName: '',
+        canonicalName: '',
+        source: hit,
+        confidence: TIER_CONFIDENCE.exact,
+        isVariant: false,
+        action: 'switch_source',
+        actionPayload: hit,
+      };
     }
   }
 
-  // 2. Check Pure Action Navigation Commands (exact string/normalized match so "backwater swamp" isn't caught by "back")
-  for (const rule of ACTION_COMMAND_RULES) {
-    for (const kw of rule.keywords) {
-      const normKw = normalizeForComparison(kw);
-      for (const text of commandCandidates) {
-        const normCmd = normalizeForComparison(text);
-        if (normCmd === normKw || text === normalizeString(kw)) {
-          return {
-            matchedMapName: '',
-            source: currentSource,
-            confidence: 1.0,
-            isVariant: false,
-            action: rule.action,
-          };
-        }
-      }
+  // 2. Navigation commands. Kept exact so "backwater swamp" is not eaten by "back".
+  for (const text of commandCandidates) {
+    const hit = index.action.get(normalizeForComparison(text));
+    if (hit) {
+      return {
+        matchedMapName: '',
+        canonicalName: '',
+        source: currentSource,
+        confidence: TIER_CONFIDENCE.exact,
+        isVariant: false,
+        action: hit,
+      };
     }
   }
 
-  // 3. Check for Source Prefix followed by a Map query (e.g. "hens blood lodge", "samoel dead dawg", "wlacz hensa blood lodge")
+  // 3. Provider prefix followed by a map query ("hens blood lodge").
   let effectiveSource: MapSource = currentSource;
   let queryText = spokenText;
 
-  const sourcePrefixes: Array<{ prefix: string; source: MapSource }> = [
-    { prefix: 'switch to hens333', source: 'hens333' },
-    { prefix: 'switch to hens', source: 'hens333' },
-    { prefix: 'hens333 maps', source: 'hens333' },
-    { prefix: 'hens maps', source: 'hens333' },
-    { prefix: 'hens333', source: 'hens333' },
-    { prefix: 'hens', source: 'hens333' },
-    { prefix: 'zmien na hensa', source: 'hens333' },
-    { prefix: 'zmień na hensa', source: 'hens333' },
-    { prefix: 'wlacz hensa', source: 'hens333' },
-    { prefix: 'włącz hensa', source: 'hens333' },
-    { prefix: 'mapy hensa', source: 'hens333' },
-    { prefix: 'hensa', source: 'hens333' },
-    { prefix: 'switch to samoelcolt', source: 'samoelcolt' },
-    { prefix: 'switch to samoel', source: 'samoelcolt' },
-    { prefix: 'samoelcolt maps', source: 'samoelcolt' },
-    { prefix: 'samoel maps', source: 'samoelcolt' },
-    { prefix: 'samoelcolt', source: 'samoelcolt' },
-    { prefix: 'samoel', source: 'samoelcolt' },
-    { prefix: 'zmien na samoela', source: 'samoelcolt' },
-    { prefix: 'zmień na samoela', source: 'samoelcolt' },
-    { prefix: 'wlacz samoela', source: 'samoelcolt' },
-    { prefix: 'włącz samoela', source: 'samoelcolt' },
-    { prefix: 'mapy samoela', source: 'samoelcolt' },
-    { prefix: 'samoela', source: 'samoelcolt' },
-  ];
-
-  for (const sp of sourcePrefixes) {
+  for (const sp of SOURCE_PREFIXES) {
     const normPrefix = normalizeString(sp.prefix);
     if (rawLower.startsWith(normPrefix + ' ')) {
       effectiveSource = sp.source;
@@ -1562,140 +1969,247 @@ export function matchVoiceQuery(
     }
   }
 
-  // 4. Clean Spoken Text for Map Matching
   const clean = cleanSpokenQuery(queryText);
-  const candidateTexts = [clean, queryText, rawLower].filter(Boolean);
+  // romanNumeralsToDigits gives the variant tiers a second shot at "preschool iii"
+  // without depending on a hand-written "preschool iii" keyword existing.
+  const candidateTexts = uniqueStrings([
+    clean,
+    romanNumeralsToDigits(clean),
+    queryText,
+    rawLower,
+    romanNumeralsToDigits(rawLower),
+  ]);
+  const normCandidates = uniqueStrings(candidateTexts.map(normalizeForComparison));
 
-  // 5. Check for Explicit Variants first (e.g. "rpd east", "preschool 3", "rpd wschod", "badham trzy", "kol tauer 2")
-  for (const expRule of EXPLICIT_VARIANT_RULES) {
-    for (const kw of expRule.keywords) {
-      const normKw = normalizeForComparison(kw);
-      for (const text of candidateTexts) {
-        const normText = normalizeForComparison(text);
-        if (normText === normKw || text === normalizeString(kw) || normText.includes(normKw)) {
-          return createMapMatchResult(
-            expRule.canonicalName,
-            1.0,
-            true,
-            effectiveSource,
-            allMaps
-          );
-        }
+  // 3b. The live map list, in whatever language the backend returned it.
+  //
+  //     This runs ahead of the static dictionary because it is the more
+  //     authoritative source for the active locale: it is literally the text the
+  //     user is reading on the cards in front of them. On /de/maps that means
+  //     "Sprithimmel" resolves even though the static German aliases call the map
+  //     "Benzinhimmel"; on /ja/maps, "ガス・ヘヴン" resolves even though the static
+  //     Japanese aliases spell it "ガスヘブン".
+  const runtimeIndex = getRuntimeMapIndex(allMaps);
+  if (runtimeIndex) {
+    for (const norm of normCandidates) {
+      const hits = runtimeIndex.byName.get(norm);
+      if (hits && hits.length > 0) {
+        const live = preferBySource(hits, effectiveSource);
+        const canonical = runtimeIndex.canonicalById.get(live.id) || live.name;
+        return createMapMatchResult(canonical, TIER_CONFIDENCE.exact, false, effectiveSource, allMaps);
       }
     }
   }
 
-  // 6. Check Generic Multi-Variant Rules (e.g. "badham", "przedszkole", "rpd", "posterunek", "coal tower", "wieza weglowa")
-  for (const genRule of GENERIC_VARIANT_RULES) {
-    for (const kw of genRule.keywords) {
-      const normKw = normalizeForComparison(kw);
-      for (const text of candidateTexts) {
-        const normText = normalizeForComparison(text);
-        if (normText === normKw || text === normalizeString(kw)) {
-          const variants = MAP_VARIANT_GROUPS[genRule.variantGroupKey] || [];
-          return createMapMatchResult(
-            genRule.defaultCanonical,
-            0.98,
-            false,
-            effectiveSource,
-            allMaps,
-            variants
-          );
-        }
+  // 4. Explicit variants. index.explicit is sorted longest-first, so the first
+  //    keyword that matches is also the most specific one — this is the fix for
+  //    "badham iii"/"badham iv" previously resolving to Preschool I because the
+  //    shorter "badham i" was tested first.
+  for (const rule of index.explicit) {
+    if (normCandidates.some((text) => text === rule.norm)) {
+      return createMapMatchResult(rule.canonicalName, TIER_CONFIDENCE.exact, true, effectiveSource, allMaps);
+    }
+  }
+
+  // 5. Generic variant groups -> open the disambiguation pills.
+  for (const norm of normCandidates) {
+    const rule = index.generic.get(norm);
+    if (rule) {
+      return createMapMatchResult(
+        rule.defaultCanonical,
+        TIER_CONFIDENCE.genericVariant,
+        false,
+        effectiveSource,
+        allMaps,
+        MAP_VARIANT_GROUPS[rule.variantGroupKey] || []
+      );
+    }
+  }
+
+  // 6. Exact canonical name or alias.
+  for (const norm of normCandidates) {
+    const entries = index.exact.get(norm);
+    if (entries && entries.length > 0) {
+      const entry = pickPreferredEntry(entries, locale);
+      return createMapMatchResult(
+        entry.canonicalName,
+        TIER_CONFIDENCE.exact,
+        entry.isExplicitVariant,
+        effectiveSource,
+        allMaps
+      );
+    }
+  }
+
+  // 6b. Explicit variants by containment ("open badham 3 please" once the filler
+  //     stripper has missed something). This deliberately runs *after* the exact
+  //     alias tier: "mount ormond resort dwa" and "オーモンドレイクマイン" are exact
+  //     aliases of the second Ormond variant and of Ormond Lake Mine, but they
+  //     also contain the explicit keywords "mount ormond resort" and "オーモンド",
+  //     so running containment first resolved both to the wrong map.
+  for (const rule of index.explicit) {
+    if (normCandidates.some((text) => text.includes(rule.norm))) {
+      return createMapMatchResult(rule.canonicalName, TIER_CONFIDENCE.exact, true, effectiveSource, allMaps);
+    }
+  }
+
+  // 7a. The query contains an alias ("show me the gideon meat plant"). The longest
+  //     alias wins, so the most specific name is chosen rather than whichever map
+  //     happened to be declared earliest in CANONICAL_MAPS.
+  for (const entry of index.byLength) {
+    if (entry.norm.length < 4) break;
+    if (normCandidates.some((norm) => norm.length >= 4 && norm.includes(entry.norm))) {
+      return createMapMatchResult(
+        entry.canonicalName,
+        TIER_CONFIDENCE.substring,
+        entry.isExplicitVariant,
+        effectiveSource,
+        allMaps
+      );
+    }
+  }
+
+  // 7b. An alias contains the query (the user said a prefix, e.g. "azarov"). Here
+  //     the SHORTEST containing alias is the right answer: with longest-first,
+  //     "ゲーム" would resolve to Greenville Square's "ゲームセンター" (arcade)
+  //     instead of The Game.
+  for (let i = index.byLength.length - 1; i >= 0; i--) {
+    const entry = index.byLength[i];
+    if (entry.norm.length < 4) continue;
+    if (normCandidates.some((norm) => norm.length >= 4 && entry.norm.includes(norm))) {
+      return createMapMatchResult(
+        entry.canonicalName,
+        TIER_CONFIDENCE.substring,
+        entry.isExplicitVariant,
+        effectiveSource,
+        allMaps
+      );
+    }
+  }
+
+  // ── Accent-tolerant tiers ──────────────────────────────────────────────────
+  // Everything above compares letters. Everything below compares sounds, which is
+  // what lets a German saying "Coal Tower" and a Pole saying "kol tauer" land on
+  // the same map without either spelling being in the dictionary.
+
+  const querySets = candidateTexts.map((text) => phoneticKeySet(text, locale));
+  const queryKeys = uniqueStrings(querySets.flatMap((s) => s.keys));
+  const querySkeletons = uniqueStrings(querySets.flatMap((s) => s.skeletons));
+  const primaryNorm = normCandidates[0] || '';
+
+  // 7c. Phonetic match against the live localized names. Same reasoning as tier
+  //     3b, one tier lower: a German saying "Sprithimmel" with the vowel the
+  //     recognizer wrote as "Spritthimel" still lands on Gas Heaven.
+  if (runtimeIndex) {
+    for (const key of queryKeys) {
+      if (key.length < MIN_PHONETIC_KEY_LENGTH) continue;
+      const hits = runtimeIndex.byPhonetic.get(key);
+      if (hits && hits.length > 0) {
+        const live = preferBySource(hits, effectiveSource);
+        const canonical = runtimeIndex.canonicalById.get(live.id) || live.name;
+        return createMapMatchResult(canonical, TIER_CONFIDENCE.phonetic, false, effectiveSource, allMaps);
       }
     }
   }
 
-  // 7a. Check Exact Match across all Canonical Maps and Aliases
-  for (const mapDef of CANONICAL_MAPS) {
-    const allKeys = [mapDef.canonicalName, ...mapDef.aliases];
-    for (const key of allKeys) {
-      for (const text of candidateTexts) {
-        const normKey = normalizeForComparison(key);
-        const normText = normalizeForComparison(text);
+  // 8. Exact phonetic key.
+  for (const key of queryKeys) {
+    if (key.length < MIN_PHONETIC_KEY_LENGTH) continue;
+    const resolved = resolveBucket(index.phonetic.get(key), locale, primaryNorm);
+    if (resolved) {
+      return createMapMatchResult(resolved, TIER_CONFIDENCE.phonetic, false, effectiveSource, allMaps);
+    }
+  }
 
-        if (normText === normKey || text === normalizeString(key)) {
-          return createMapMatchResult(
-            mapDef.canonicalName,
-            1.0,
-            !!mapDef.isExplicitVariant,
-            effectiveSource,
-            allMaps
-          );
+  // 9. Exact consonant skeleton — vowels are the first thing an accent destroys.
+  for (const skel of querySkeletons) {
+    if (skel.length < MIN_SKELETON_KEY_LENGTH) continue;
+    const resolved = resolveBucket(index.skeleton.get(skel), locale, primaryNorm);
+    if (resolved) {
+      return createMapMatchResult(resolved, TIER_CONFIDENCE.skeleton, false, effectiveSource, allMaps);
+    }
+  }
+
+  // 10. Fuzzy over phonetic keys.
+  //
+  //     Edit distance cannot beat `threshold` when the two strings differ in
+  //     length by more than (1 - threshold) of the longer one, so the length gate
+  //     below skips the great majority of the ~1500 x N pairs without computing
+  //     anything. Without it the no-match path (which reaches this tier on every
+  //     interim speech result) cost ~10ms per call.
+  let phoneticBest: string | null = null;
+  let phoneticBestScore = 0;
+  for (const entry of index.all) {
+    for (const entryKey of entry.keys) {
+      if (entryKey.length < MIN_PHONETIC_KEY_LENGTH) continue;
+      for (const key of queryKeys) {
+        if (key.length < MIN_PHONETIC_KEY_LENGTH) continue;
+        if (!lengthsCanReach(key.length, entryKey.length, PHONETIC_FUZZY_THRESHOLD)) continue;
+        let score = phoneticSimilarity(key, entryKey);
+        if (score > 0 && entry.locale === locale) score += 0.02;
+        if (score > phoneticBestScore) {
+          phoneticBestScore = score;
+          phoneticBest = entry.canonicalName;
         }
       }
     }
   }
-
-  // 7b. Check Distinct Substring Match across all Canonical Maps and Aliases (e.g. "gideon meat plant", "dracula castle", "chata matki")
-  for (const mapDef of CANONICAL_MAPS) {
-    const allKeys = [mapDef.canonicalName, ...mapDef.aliases];
-    for (const key of allKeys) {
-      for (const text of candidateTexts) {
-        const normKey = normalizeForComparison(key);
-        const normText = normalizeForComparison(text);
-
-        if (
-          normKey.length >= 4 &&
-          (normText.includes(normKey) || (normKey.includes(normText) && normText.length >= 4))
-        ) {
-          return createMapMatchResult(
-            mapDef.canonicalName,
-            0.95,
-            !!mapDef.isExplicitVariant,
-            effectiveSource,
-            allMaps
-          );
-        }
-      }
-    }
+  if (phoneticBest && phoneticBestScore >= PHONETIC_FUZZY_THRESHOLD) {
+    return createMapMatchResult(
+      phoneticBest,
+      Math.min(TIER_CONFIDENCE.phoneticFuzzy, Number(phoneticBestScore.toFixed(2))),
+      false,
+      effectiveSource,
+      allMaps
+    );
   }
 
-  // 8. Fuzzy Levenshtein Distance & Token Similarity Search
-  let bestMap: CanonicalMapDefinition | null = null;
+  // 11. Levenshtein / token similarity over the raw alias surface forms.
+  let bestName: string | null = null;
+  let bestIsVariant = false;
   let bestScore = 0;
 
-  for (const mapDef of CANONICAL_MAPS) {
-    const candidateKeys = [mapDef.canonicalName, ...mapDef.aliases];
-    for (const key of candidateKeys) {
-      for (const text of candidateTexts) {
-        // Direct string similarity
-        const score = calculateSimilarity(text, key);
-        if (score > bestScore) {
-          bestScore = score;
-          bestMap = mapDef;
-        }
+  const tokenSets = candidateTexts.map((text) => text.split(' ').filter((t) => t.length > 2));
 
-        // Word token similarity
-        const textTokens = text.split(' ').filter((t) => t.length > 2);
-        const keyTokens = normalizeString(key).split(' ').filter((t) => t.length > 2);
+  for (const entry of index.all) {
+    for (let i = 0; i < candidateTexts.length; i++) {
+      const text = candidateTexts[i];
+      if (!lengthsCanReach(text.length, entry.norm.length, FUZZY_ACCEPT_THRESHOLD)) continue;
+      const score = calculateSimilarity(text, entry.norm);
+      if (score > bestScore) {
+        bestScore = score;
+        bestName = entry.canonicalName;
+        bestIsVariant = entry.isExplicitVariant;
+      }
 
-        if (textTokens.length > 0 && keyTokens.length > 0) {
-          let tokenMatches = 0;
-          for (const tt of textTokens) {
-            for (const kt of keyTokens) {
-              if (tt === kt || calculateSimilarity(tt, kt) >= 0.8) {
-                tokenMatches++;
-                break;
-              }
-            }
-          }
-          const tokenScore = (tokenMatches / Math.max(textTokens.length, keyTokens.length)) * 0.9;
-          if (tokenScore > bestScore) {
-            bestScore = tokenScore;
-            bestMap = mapDef;
+      const textTokens = tokenSets[i];
+      if (textTokens.length === 0) continue;
+      const keyTokens = entry.norm.length > 2 ? [entry.norm] : [];
+      if (keyTokens.length === 0) continue;
+
+      let tokenMatches = 0;
+      for (const tt of textTokens) {
+        for (const kt of keyTokens) {
+          if (tt === kt || calculateSimilarity(tt, kt) >= 0.8) {
+            tokenMatches++;
+            break;
           }
         }
+      }
+      const tokenScore = (tokenMatches / Math.max(textTokens.length, keyTokens.length)) * 0.9;
+      if (tokenScore > bestScore) {
+        bestScore = tokenScore;
+        bestName = entry.canonicalName;
+        bestIsVariant = entry.isExplicitVariant;
       }
     }
   }
 
-  // Minimum confidence threshold to reject random speech or irrelevant queries
-  if (bestMap && bestScore >= 0.60) {
+  if (bestName && bestScore >= FUZZY_ACCEPT_THRESHOLD) {
     return createMapMatchResult(
-      bestMap.canonicalName,
+      bestName,
       Math.min(1.0, Number(bestScore.toFixed(2))),
-      !!bestMap.isExplicitVariant,
+      bestIsVariant,
       effectiveSource,
       allMaps
     );
@@ -1703,6 +2217,69 @@ export function matchVoiceQuery(
 
   return null;
 }
+
+/**
+ * True when two strings of the given lengths could still reach `threshold`
+ * similarity. Edit distance is at least the length difference, so anything beyond
+ * (1 - threshold) * maxLen apart is unreachable and need not be scored.
+ */
+function lengthsCanReach(lenA: number, lenB: number, threshold: number): boolean {
+  const maxLen = Math.max(lenA, lenB);
+  if (maxLen === 0) return true;
+  return Math.abs(lenA - lenB) / maxLen <= 1 - threshold;
+}
+
+function uniqueStrings(values: Array<string | undefined | null>): string[] {
+  const out: string[] = [];
+  for (const value of values) {
+    if (value && !out.includes(value)) out.push(value);
+  }
+  return out;
+}
+
+/** Prefers an alias authored in the caller's locale, then an explicit variant. */
+function pickPreferredEntry(entries: AliasEntry[], locale: VoiceLocale): AliasEntry {
+  return (
+    entries.find((e) => e.locale === locale) ||
+    entries.find((e) => e.isExplicitVariant) ||
+    entries[0]
+  );
+}
+
+const SOURCE_PREFIXES: Array<{ prefix: string; source: MapSource }> = [
+  { prefix: 'switch to hens333', source: 'hens333' },
+  { prefix: 'switch to hens', source: 'hens333' },
+  { prefix: 'hens333 maps', source: 'hens333' },
+  { prefix: 'hens maps', source: 'hens333' },
+  { prefix: 'hens333', source: 'hens333' },
+  { prefix: 'hens', source: 'hens333' },
+  { prefix: 'zmien na hensa', source: 'hens333' },
+  { prefix: 'zmień na hensa', source: 'hens333' },
+  { prefix: 'wlacz hensa', source: 'hens333' },
+  { prefix: 'włącz hensa', source: 'hens333' },
+  { prefix: 'mapy hensa', source: 'hens333' },
+  { prefix: 'hensa', source: 'hens333' },
+  { prefix: 'wechsle zu hens', source: 'hens333' },
+  { prefix: 'hens karten', source: 'hens333' },
+  { prefix: 'cambiar a hens', source: 'hens333' },
+  { prefix: 'mapas de hens', source: 'hens333' },
+  { prefix: 'switch to samoelcolt', source: 'samoelcolt' },
+  { prefix: 'switch to samoel', source: 'samoelcolt' },
+  { prefix: 'samoelcolt maps', source: 'samoelcolt' },
+  { prefix: 'samoel maps', source: 'samoelcolt' },
+  { prefix: 'samoelcolt', source: 'samoelcolt' },
+  { prefix: 'samoel', source: 'samoelcolt' },
+  { prefix: 'zmien na samoela', source: 'samoelcolt' },
+  { prefix: 'zmień na samoela', source: 'samoelcolt' },
+  { prefix: 'wlacz samoela', source: 'samoelcolt' },
+  { prefix: 'włącz samoela', source: 'samoelcolt' },
+  { prefix: 'mapy samoela', source: 'samoelcolt' },
+  { prefix: 'samoela', source: 'samoelcolt' },
+  { prefix: 'wechsle zu samoel', source: 'samoelcolt' },
+  { prefix: 'samoel karten', source: 'samoelcolt' },
+  { prefix: 'cambiar a samoel', source: 'samoelcolt' },
+  { prefix: 'mapas de samoel', source: 'samoelcolt' },
+];
 
 // ─── Result Factory ───────────────────────────────────────────────────────────
 
@@ -1714,45 +2291,28 @@ function createMapMatchResult(
   allMaps?: Array<MapDataEntry>,
   customVariants?: string[]
 ): MatchResult {
-  const availableVariants = customVariants && customVariants.length > 0
-    ? customVariants
-    : getVariantsForMap(matchedMapName);
+  const availableVariants =
+    customVariants && customVariants.length > 0 ? customVariants : getVariantsForMap(matchedMapName);
 
+  const canonicalName = matchedMapName;
   let matchedMapId: string | undefined;
   let finalSource: MapSource = currentSource;
 
   if (allMaps && allMaps.length > 0) {
-    const targetNorm = normalizeForComparison(matchedMapName);
+    const index = getRuntimeMapIndex(allMaps);
 
-    // Try finding exact name and preferred source
-    let found: MapDataEntry | undefined;
+    // Exact live name, then the locale-invariant id slug. The slug pass is what
+    // makes this work at all on /de, /es, /pl and /ja, where `m.name` is a
+    // translation and can never equal the English canonical name.
+    let found = findLiveMapByCanonicalName(index, canonicalName, currentSource);
 
-    if (currentSource !== 'all') {
-      found = allMaps.find(
-        (m) =>
-          normalizeForComparison(m.name) === targetNorm &&
-          m.source?.toLowerCase() === currentSource.toLowerCase()
-      );
-    }
-
+    // Last resort: fuzzy over live names. Only meaningful when the backend name
+    // and the canonical name are both English (a map the dictionary knows under a
+    // slightly different spelling), so it stays behind the two exact passes.
     if (!found) {
-      // Find matching map from any source, prioritizing hens333 then samoelcolt
-      found = allMaps.find(
-        (m) =>
-          normalizeForComparison(m.name) === targetNorm &&
-          m.source?.toLowerCase() === 'hens333'
-      );
-    }
-
-    if (!found) {
-      found = allMaps.find((m) => normalizeForComparison(m.name) === targetNorm);
-    }
-
-    if (!found) {
-      // Fuzzy lookup within allMaps
       let bestMapScore = 0;
       for (const m of allMaps) {
-        const sim = calculateSimilarity(m.name, matchedMapName);
+        const sim = calculateSimilarity(m.name, canonicalName);
         if (sim > bestMapScore && sim >= 0.75) {
           bestMapScore = sim;
           found = m;
@@ -1762,6 +2322,8 @@ function createMapMatchResult(
 
     if (found) {
       matchedMapId = found.id;
+      // Display the name in the user's own language; canonicalName keeps the
+      // English handle for anything that has to look the map up again.
       matchedMapName = found.name;
       finalSource = (found.source as MapSource) || currentSource;
     }
@@ -1769,6 +2331,7 @@ function createMapMatchResult(
 
   return {
     matchedMapName,
+    canonicalName,
     matchedMapId,
     source: finalSource,
     confidence,

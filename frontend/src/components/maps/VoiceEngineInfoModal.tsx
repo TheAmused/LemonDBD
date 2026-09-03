@@ -14,9 +14,16 @@ import {
   Info,
   Laptop,
   DownloadCloud,
+  Gauge,
+  Languages,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import type { VoiceEngineType, ModelProgressInfo } from '@/services/clientSpeechModel';
+import type {
+  VoiceEngineType,
+  ModelProgressInfo,
+  ModelQuality,
+  ModelDescriptor,
+} from '@/services/clientSpeechModel';
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -27,6 +34,13 @@ export interface VoiceEngineInfoModalProps {
   hasNativeWebSpeech: boolean;
   modelProgress: ModelProgressInfo;
   onPreloadModel: () => void;
+  /** Which local checkpoint is selected: whisper-tiny ('fast') or -base ('accurate'). */
+  modelQuality?: ModelQuality;
+  onSelectModelQuality?: (quality: ModelQuality) => void;
+  /** The checkpoint the current locale + quality resolves to, for the size label. */
+  modelDescriptor?: ModelDescriptor;
+  /** BCP-47 tag the Web Speech recognizer is running with, e.g. "ja-JP". */
+  speechLocaleTag?: string;
   dict?: Dictionary | any;
 }
 
@@ -39,6 +53,10 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
   hasNativeWebSpeech,
   modelProgress,
   onPreloadModel,
+  modelQuality = 'fast',
+  onSelectModelQuality,
+  modelDescriptor,
+  speechLocaleTag,
   dict,
 }) => {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -202,6 +220,90 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               <span>{dict?.maps?.universalPrivateInBrowser || ''}</span>
             </div>
           </div>
+        </div>
+
+        {/* Engine recommendation. Informational only: the local model stays fully
+            usable and selected, this just tells the user what the trade-off is. */}
+        {!hasNativeWebSpeech && (
+          <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/10 dark:bg-cyan-500/5 p-4 space-y-1.5">
+            <div className="flex items-center gap-2 text-cyan-700 dark:text-cyan-400 font-extrabold text-xs font-mono">
+              <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>{t.recommendedBrowserTitle || ''}</span>
+            </div>
+            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+              {t.recommendedBrowserText || ''}
+            </p>
+          </div>
+        )}
+
+        {/* Recognition language + local model accuracy */}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 font-mono">
+              <Languages className="h-3.5 w-3.5 text-cyan-500" aria-hidden="true" />
+              {t.recognitionLanguage || ''}
+            </span>
+            <span className="rounded-full bg-slate-200/80 dark:bg-slate-800 px-2.5 py-0.5 text-xs font-bold text-slate-800 dark:text-slate-200 font-mono">
+              {speechLocaleTag || ''}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 pt-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500 font-mono">
+            <Gauge className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
+            <span>{t.accuracyTitle || ''}</span>
+          </div>
+
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+            role="radiogroup"
+            aria-label={t.accuracyTitle || ''}
+          >
+            {(['fast', 'accurate'] as const).map((quality) => {
+              const isSelected = modelQuality === quality;
+              const label = quality === 'fast' ? t.accuracyFast : t.accuracyAccurate;
+              const description = quality === 'fast' ? t.accuracyFastDesc : t.accuracyAccurateDesc;
+              const sizeMb = isSelected && modelDescriptor ? modelDescriptor.approxSizeMb : null;
+
+              return (
+                <button
+                  key={quality}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  disabled={!onSelectModelQuality}
+                  onClick={() => onSelectModelQuality?.(quality)}
+                  className={`rounded-2xl border p-3 text-left transition-all space-y-1.5 ${
+                    onSelectModelQuality ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
+                  } ${
+                    isSelected
+                      ? 'border-emerald-500/50 bg-emerald-500/5 dark:bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-black text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
+                      {label || ''}
+                    </span>
+                    {isSelected && (
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" aria-hidden="true" />
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {description || ''}
+                  </p>
+                  {sizeMb !== null && (
+                    <p className="text-[10px] font-bold text-slate-500 font-mono">
+                      {(t.modelSize || '').replace('{size}', String(sizeMb))}
+                    </p>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+            {t.accuracyNote || ''}
+          </p>
         </div>
 
         {/* Why Fallback Is Needed Box */}

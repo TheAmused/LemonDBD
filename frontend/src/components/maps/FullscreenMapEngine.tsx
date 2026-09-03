@@ -7,11 +7,19 @@ import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
 import { getMapImageSrc } from '@/utils/mapUtils';
 
+export interface MapZoomCommand {
+  action: 'zoom_in' | 'zoom_out' | string;
+  /** One zoom step is applied per new timestamp, so repeats are not swallowed. */
+  timestamp: number;
+}
+
 interface FullscreenMapEngineProps {
   mapId: string;
   onClose: () => void;
   availableMaps?: MapRealm[];
   backendBase: string;
+  /** Zoom issued from outside the engine (voice commands). */
+  zoomCommand?: MapZoomCommand | null;
   dict?: Dictionary;
 }
 
@@ -20,6 +28,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   onClose,
   availableMaps = [],
   backendBase,
+  zoomCommand = null,
   dict,
 }) => {
   const [imageFailed, setImageFailed] = useState<boolean>(false);
@@ -54,11 +63,24 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  const applyZoomStep = useCallback((factor: number) => {
+    setZoom((prev) => Math.min(Math.max(prev * factor, 0.5), 5.0));
+  }, []);
+
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-    setZoom((prev) => Math.min(Math.max(prev * zoomFactor, 0.5), 5.0));
+    applyZoomStep(e.deltaY < 0 ? 1.15 : 0.85);
   };
+
+  // Voice zoom uses a coarser step than the wheel: a spoken "zoom in" is a single
+  // deliberate command, where a wheel notch is one of many in a gesture.
+  const lastZoomCommandRef = useRef<number>(0);
+  useEffect(() => {
+    if (!zoomCommand || zoomCommand.timestamp === lastZoomCommandRef.current) return;
+    lastZoomCommandRef.current = zoomCommand.timestamp;
+    if (zoomCommand.action === 'zoom_in') applyZoomStep(1.4);
+    else if (zoomCommand.action === 'zoom_out') applyZoomStep(1 / 1.4);
+  }, [zoomCommand, applyZoomStep]);
 
   const isImageTarget = (target: EventTarget) => (target as HTMLElement).tagName === 'IMG';
 

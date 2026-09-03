@@ -211,3 +211,79 @@ test('VoiceCommandBanner Push-to-Talk and Mic button hold contracts', () => {
 
 
 
+
+// ── Voice -> map view wiring ──────────────────────────────────────────────────
+// These assert the wiring itself, because every link in the chain type-checks
+// while silently doing nothing: the maps page used to accept the matched map id
+// and drop it, and to accept navigation actions with an empty handler.
+
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const SRC_ROOT = join(process.cwd(), 'src');
+const read = (relativePath: string) => readFileSync(join(SRC_ROOT, relativePath), 'utf8');
+
+test('The maps page forwards the matched map id instead of only the name', () => {
+  const page = read('app/[locale]/maps/page.tsx');
+
+  assert.match(
+    page,
+    /onSelectMap=\{\(name,\s*mapId\)\s*=>/,
+    'onSelectMap must receive the map id; the name alone is locale-dependent'
+  );
+  assert.match(page, /mapId,/, 'the map id must be stored on the selection request');
+  assert.ok(
+    !/onSelectMap=\{\(name\)\s*=>/.test(page),
+    'onSelectMap must not go back to a name-only handler'
+  );
+});
+
+test('The maps page routes voice navigation actions to the explorer', () => {
+  const page = read('app/[locale]/maps/page.tsx');
+
+  assert.match(page, /onAction=\{\(action\)\s*=>/, 'onAction must take the action');
+  assert.match(page, /setViewCommand\(\{\s*action,\s*timestamp:/, 'the action must become a view command');
+  assert.match(page, /viewCommand=\{viewCommand\}/, 'the view command must reach MapExplorer');
+});
+
+test('MapExplorer acts on view commands and forwards zoom to the map engine', () => {
+  const explorer = read('components/maps/MapExplorer.tsx');
+
+  assert.match(explorer, /case 'close':/);
+  assert.match(explorer, /setOpenMapId\(null\)/);
+  assert.match(explorer, /case 'zoom_in':/);
+  assert.match(explorer, /zoomCommand=\{zoomCommand\}/, 'zoom must be forwarded to FullscreenMapEngine');
+
+  const engine = read('components/maps/FullscreenMapEngine.tsx');
+  assert.match(engine, /zoomCommand/, 'the engine must accept an external zoom command');
+  assert.match(engine, /lastZoomCommandRef/, 'repeated commands must fire again, not dedupe to one');
+});
+
+test('The browser recommendation is informational and dismissible, not a gate', () => {
+  const banner = read('components/maps/VoiceCommandBanner.tsx');
+
+  // Shown only where the native engine genuinely is not available.
+  assert.match(banner, /!browserInfo\.hasNativeWebSpeech/);
+  assert.match(banner, /browserHintDismissed/);
+  assert.match(banner, /dismissBrowserHint/);
+  // It must never disable or override the user's engine choice.
+  assert.ok(
+    !/showBrowserHint[\s\S]{0,200}setActiveEngine/.test(banner),
+    'the hint must not switch the engine on the user'
+  );
+
+  // And the copy exists in every locale rather than rendering blank.
+  const locales = ['en', 'pl', 'de', 'es', 'ja'];
+  for (const locale of locales) {
+    const dict = read(`locales/${locale}/voice.ts`);
+    for (const key of [
+      'recommendedBrowserHint',
+      'recommendedBrowserHintLink',
+      'recommendedBrowserTitle',
+      'recommendedBrowserText',
+      'dismissHint',
+    ]) {
+      assert.match(dict, new RegExp(`\\n  ${key}: "`), `${locale}/voice.ts is missing ${key}`);
+    }
+  }
+});

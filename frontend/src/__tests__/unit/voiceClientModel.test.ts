@@ -198,3 +198,71 @@ test('Multilingual translations dictionary coverage for voice recognition fallba
     assert.ok(dict.voice.statusReady, `Missing voice.statusReady in ${lang}.json`);
   }
 });
+
+// ── Model selection per locale ────────────────────────────────────────────────
+// The English-only Whisper checkpoints have no language tokens in their
+// vocabulary. Loading whisper-tiny.en for de/es/ja and then asking it to
+// transcribe German meant three of the five shipped locales could not be
+// recognised at all by the local engine.
+
+test('Every shipped locale except English resolves to a multilingual checkpoint', () => {
+  const { resolveModelDescriptor } = require('../../services/clientSpeechModel');
+
+  const english = resolveModelDescriptor('en', 'fast');
+  assert.strictEqual(english.multilingual, false);
+  assert.ok(english.name.endsWith('.en'));
+
+  for (const locale of ['pl', 'de', 'es', 'ja']) {
+    const descriptor = resolveModelDescriptor(locale, 'fast');
+    assert.strictEqual(descriptor.multilingual, true, `${locale} must use a multilingual model`);
+    assert.ok(!descriptor.name.endsWith('.en'), `${locale} must not use an English-only checkpoint`);
+    assert.ok(descriptor.approxSizeMb > 0);
+  }
+});
+
+test('Accuracy mode selects a larger checkpoint for the same locale', () => {
+  const { resolveModelDescriptor } = require('../../services/clientSpeechModel');
+
+  for (const locale of ['en', 'de', 'ja']) {
+    const fast = resolveModelDescriptor(locale, 'fast');
+    const accurate = resolveModelDescriptor(locale, 'accurate');
+    assert.notStrictEqual(fast.name, accurate.name, `${locale} must differ between modes`);
+    assert.ok(accurate.approxSizeMb > fast.approxSizeMb, `${locale} accurate mode must be the bigger model`);
+    assert.strictEqual(fast.multilingual, accurate.multilingual, `${locale} must keep its language support`);
+  }
+});
+
+test('Model quality is settable, idempotent and reported back', () => {
+  const { getModelQuality, setModelQuality } = require('../../services/clientSpeechModel');
+  const original = getModelQuality();
+
+  try {
+    assert.strictEqual(setModelQuality(original), false, 'setting the current value is a no-op');
+
+    const other = original === 'fast' ? 'accurate' : 'fast';
+    assert.strictEqual(setModelQuality(other), true);
+    assert.strictEqual(getModelQuality(), other);
+
+    // Unknown values are rejected rather than corrupting the setting.
+    assert.strictEqual(setModelQuality('enormous' as any), false);
+    assert.strictEqual(getModelQuality(), other);
+  } finally {
+    setModelQuality(original);
+  }
+});
+
+test('Speech recognition locale tags cover every shipped UI locale', () => {
+  const { SPEECH_LOCALE_TAGS, resolveSpeechLocaleTag } = require('../../components/maps/VoiceCommandBanner');
+  const { i18n } = require('../../i18n/config');
+
+  for (const locale of i18n.locales) {
+    assert.ok(SPEECH_LOCALE_TAGS[locale], `${locale} has no BCP-47 tag`);
+    assert.match(resolveSpeechLocaleTag(locale), /^[a-z]{2}-[A-Z]{2}$/);
+  }
+
+  // Japanese was the locale the old ternary chain forgot.
+  assert.strictEqual(resolveSpeechLocaleTag('ja'), 'ja-JP');
+  // Unknown locales fall back to English rather than to an empty tag.
+  assert.strictEqual(resolveSpeechLocaleTag('fr'), 'en-US');
+  assert.strictEqual(resolveSpeechLocaleTag(undefined), 'en-US');
+});

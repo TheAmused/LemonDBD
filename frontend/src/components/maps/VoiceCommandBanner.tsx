@@ -15,6 +15,7 @@ import {
   Info,
   ArrowRight,
   Lock,
+  X,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import {
@@ -29,7 +30,11 @@ import {
   initClientSpeechModel,
   transcribeClientAudio,
   subscribeModelProgress,
+  getModelQuality,
+  setModelQuality,
+  resolveModelDescriptor,
   VoiceEngineType,
+  ModelQuality,
   ModelProgressInfo,
   BrowserCompatibilityInfo,
 } from '@/services/clientSpeechModel';
@@ -56,6 +61,26 @@ export interface VoiceCommandBannerProps {
   active?: boolean;
 }
 
+/**
+ * BCP-47 tag handed to the Web Speech API, per shipped UI locale.
+ *
+ * This used to be an inline ternary chain covering pl/es/tr/fr/de. Two of those
+ * (tr, fr) are not shipped locales, and `ja` - which is - was missing, so every
+ * Japanese user got an en-US recognizer and could not be understood at all.
+ * Keeping the table next to i18n.locales makes that class of drift visible.
+ */
+export const SPEECH_LOCALE_TAGS: Record<string, string> = {
+  en: 'en-US',
+  pl: 'pl-PL',
+  es: 'es-ES',
+  de: 'de-DE',
+  ja: 'ja-JP',
+};
+
+export function resolveSpeechLocaleTag(locale?: string): string {
+  return SPEECH_LOCALE_TAGS[locale || 'en'] || SPEECH_LOCALE_TAGS.en;
+}
+
 export type VoiceStatusState =
   | 'idle'
   | 'listening'
@@ -80,6 +105,8 @@ interface SpeechRecognitionInstance extends EventTarget {
 
 interface SpeechRecognitionEvent {
   results: SpeechRecognitionResultList;
+  /** Index of the first result changed by this event. */
+  resultIndex?: number;
 }
 
 interface SpeechRecognitionErrorEvent {
@@ -92,6 +119,44 @@ type WindowWithSpeech = Window &
     webkitSpeechRecognition?: new () => SpeechRecognitionInstance;
     webkitAudioContext?: typeof AudioContext;
   };
+
+/**
+ * Runs every recognizer hypothesis through the matcher and returns the strongest
+ * result, scored as `matchConfidence * recognizerConfidence`.
+ *
+ * A hypothesis the recognizer is unsure about that maps exactly onto a map name
+ * should beat a confident hypothesis that only fuzzily resembles one - which is
+ * why both factors are multiplied rather than either being used alone.
+ */
+function pickBestMatch(
+  candidates: Array<{ transcript: string; confidence: number }>,
+  currentSource: MapSource,
+  availableMaps: Array<{ id: string; name: string; realm?: string; source?: string }> | undefined,
+  locale: string
+): MatchResult | null {
+  let best: MatchResult | null = null;
+  let bestScore = 0;
+
+  const seen = new Set<string>();
+  for (const candidate of candidates) {
+    const transcript = candidate.transcript?.trim();
+    if (!transcript || seen.has(transcript)) continue;
+    seen.add(transcript);
+
+    const match = matchVoiceQuery(transcript, currentSource, availableMaps, { locale });
+    if (!match) continue;
+
+    const score = match.confidence * candidate.confidence;
+    if (score > bestScore) {
+      bestScore = score;
+      best = match;
+    }
+  }
+
+  return best;
+}
+
+const BROWSER_HINT_STORAGE_KEY = 'lemondbd:voice:browserHintDismissed';
 
 let sharedAudioContext: AudioContext | null = null;
 
@@ -221,6 +286,41 @@ export function VoiceCommandBanner({
     progress: 0,
   });
   const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
+  const [modelQuality, setModelQualityState] = useState<ModelQuality>(() => getModelQuality());
+
+  /**
+   * One-line, dismissible note that the native Web Speech engine recognises map
+   * names noticeably better than the local model.
+   *
+   * Deliberately informational and opt-out: nothing is blocked, the local model
+   * stays selected, and once dismissed it does not come back. Shown only when
+   * this browser cannot use the native engine at all - telling a Chrome user to
+   * install Chrome would be noise.
+   */
+  const [browserHintDismissed, setBrowserHintDismissed] = useState<boolean>(true);
+
+  useEffect(() => {
+    try {
+      setBrowserHintDismissed(
+        window.localStorage?.getItem(BROWSER_HINT_STORAGE_KEY) === 'dismissed'
+      );
+    } catch {
+      // Storage blocked (private mode, site data off): show the hint, do not persist.
+      setBrowserHintDismissed(false);
+    }
+  }, []);
+
+  const dismissBrowserHint = useCallback(() => {
+    setBrowserHintDismissed(true);
+    try {
+      window.localStorage?.setItem(BROWSER_HINT_STORAGE_KEY, 'dismissed');
+    } catch {
+      // Non-fatal: the hint simply reappears next session.
+    }
+  }, []);
+
+  const showBrowserHint =
+    !browserHintDismissed && !browserInfo.hasNativeWebSpeech && activeEngine === 'client-model';
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
   const audioSessionRef = useRef<AudioCaptureSession | null>(null);
@@ -231,6 +331,8 @@ export function VoiceCommandBanner({
   const pendingMatchRef = useRef<MatchResult | null>(null);
   const isHoldingRef = useRef<boolean>(false);
   const holdStartTimeRef = useRef<number>(0);
+  // Read by callbacks that must not re-create themselves when the locale changes.
+  const localeRef = useRef<string>(locale);
   const mouseDownListeningStateRef = useRef<boolean>(false);
 
   const propsRef = useRef({
@@ -241,6 +343,10 @@ export function VoiceCommandBanner({
     availableMaps,
     soundEnabled,
   });
+
+  useEffect(() => {
+    localeRef.current = locale;
+  }, [locale]);
 
   useEffect(() => {
     propsRef.current = {
@@ -275,7 +381,24 @@ export function VoiceCommandBanner({
     if (active && activeEngine === 'client-model') {
       initClientSpeechModel(locale);
     }
-  }, [active, activeEngine, locale]);
+  }, [active, activeEngine, locale, modelQuality]);
+
+  /**
+   * Switching accuracy mode drops the cached pipeline in the service, so the new
+   * checkpoint has to be fetched. It is started eagerly here rather than lazily on
+   * the next utterance so the user sees the download progress bar they just opted
+   * into instead of a stall the first time they hold the mic.
+   */
+  const handleSelectModelQuality = useCallback(
+    (quality: ModelQuality) => {
+      if (!setModelQuality(quality)) return;
+      setModelQualityState(quality);
+      if (activeEngine === 'client-model') {
+        initClientSpeechModel(localeRef.current);
+      }
+    },
+    [activeEngine]
+  );
 
   const cleanupListening = useCallback(() => {
     isHoldingRef.current = false;
@@ -354,9 +477,12 @@ export function VoiceCommandBanner({
       if (isSoundOn) playMatchSuccessSound();
       triggerSelectMap(result.matchedMapName, result.matchedMapId, result.source);
 
+      // getVariantsForMap keys off the English canonical name. matchedMapName is
+      // the localized display name outside /en, so passing that here silently
+      // returned no variants and the disambiguation pills never appeared.
       const variants =
         result.availableVariants ||
-        getVariantsForMap(result.matchedMapName);
+        getVariantsForMap(result.canonicalName || result.matchedMapName);
       if (variants && variants.length > 1) {
         setDisambiguationVariants(variants);
       } else {
@@ -385,7 +511,8 @@ export function VoiceCommandBanner({
       const result = matchVoiceQuery(
         queryText,
         propsRef.current.currentSource,
-        propsRef.current.availableMaps
+        propsRef.current.availableMaps,
+        { locale: localeRef.current }
       );
 
       if (result) {
@@ -423,7 +550,8 @@ export function VoiceCommandBanner({
               const match = matchVoiceQuery(
                 cleanText,
                 propsRef.current.currentSource,
-                propsRef.current.availableMaps
+                propsRef.current.availableMaps,
+                { locale }
               );
               if (match) {
                 executeMatch(match);
@@ -459,7 +587,8 @@ export function VoiceCommandBanner({
         matchVoiceQuery(
           currentText,
           propsRef.current.currentSource,
-          propsRef.current.availableMaps
+          propsRef.current.availableMaps,
+          { locale }
         );
 
       if (match) {
@@ -561,18 +690,7 @@ export function VoiceCommandBanner({
         const recognition = new SpeechRec();
         recognitionRef.current = recognition;
 
-        recognition.lang =
-          locale === 'pl'
-            ? 'pl-PL'
-            : locale === 'es'
-              ? 'es-ES'
-              : locale === 'tr'
-                ? 'tr-TR'
-                : locale === 'de'
-                  ? 'de-DE'
-                  : locale === 'fr'
-                    ? 'fr-FR'
-                    : 'en-US';
+        recognition.lang = resolveSpeechLocaleTag(locale);
         recognition.interimResults = true;
         recognition.maxAlternatives = 5;
         recognition.continuous = true;
@@ -593,17 +711,33 @@ export function VoiceCommandBanner({
         recognition.onresult = (event: SpeechRecognitionEvent) => {
           let interimText = '';
           let finalText = '';
-          const alternatives: string[] = [];
+
+          // maxAlternatives is 5, but only final results carry more than one
+          // hypothesis. Collecting them with their recognizer confidence lets the
+          // matcher pick the best *combined* candidate instead of the previous
+          // behaviour: take whichever alternative happened to match first, in
+          // arbitrary order, and only when the top hypothesis matched nothing.
+          const alternatives: Array<{ transcript: string; confidence: number }> = [];
 
           for (let i = 0; i < event.results.length; i++) {
             const res = event.results[i];
             if (res.isFinal) {
               finalText += res[0].transcript + ' ';
+              for (let j = 0; j < res.length; j++) {
+                const alt = res[j];
+                if (!alt?.transcript) continue;
+                alternatives.push({
+                  transcript: alt.transcript,
+                  // Chrome reports confidence only on final results and sometimes
+                  // reports 0; fall back to a rank-derived prior so a missing
+                  // score never outranks a real one.
+                  confidence: typeof alt.confidence === 'number' && alt.confidence > 0
+                    ? alt.confidence
+                    : Math.max(0.1, 0.9 - j * 0.15),
+                });
+              }
             } else {
               interimText += res[0].transcript + ' ';
-            }
-            for (let j = 0; j < res.length; j++) {
-              alternatives.push(res[j].transcript);
             }
           }
 
@@ -611,25 +745,12 @@ export function VoiceCommandBanner({
           liveTranscriptRef.current = combinedTranscript;
           setLiveTranscript(combinedTranscript);
 
-          let bestMatch = matchVoiceQuery(
-            combinedTranscript,
+          const bestMatch = pickBestMatch(
+            [{ transcript: combinedTranscript, confidence: 1 }, ...alternatives],
             propsRef.current.currentSource,
-            propsRef.current.availableMaps
+            propsRef.current.availableMaps,
+            locale
           );
-
-          if (!bestMatch) {
-            for (const alt of alternatives) {
-              const altMatch = matchVoiceQuery(
-                alt,
-                propsRef.current.currentSource,
-                propsRef.current.availableMaps
-              );
-              if (altMatch) {
-                bestMatch = altMatch;
-                break;
-              }
-            }
-          }
 
           pendingMatchRef.current = bestMatch;
           setMatchedResult(bestMatch);
@@ -691,7 +812,8 @@ export function VoiceCommandBanner({
               matchVoiceQuery(
                 currentText,
                 propsRef.current.currentSource,
-                propsRef.current.availableMaps
+                propsRef.current.availableMaps,
+                { locale }
               );
 
             if (matchToExecute) {
@@ -852,8 +974,8 @@ export function VoiceCommandBanner({
       <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
 
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800/80">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800/80">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <div
             className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-black tracking-wide font-mono transition-all ${currentCfg.badgeClass}`}
           >
@@ -910,7 +1032,37 @@ export function VoiceCommandBanner({
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Sits between the status chips and the provider switcher and takes the
+            slack in the middle of the header, so it reads as a caption on the
+            engine badge it is about rather than as a banner of its own. It is
+            the only flex-1 child here, which is what centres it between the two
+            fixed-width groups. */}
+        {showBrowserHint && (
+          <div className="order-last flex w-full min-w-0 flex-1 items-center justify-center gap-1.5 text-center sm:order-none sm:w-auto">
+            <Info className="h-3.5 w-3.5 shrink-0 text-cyan-500" aria-hidden="true" />
+            <p className="min-w-0 text-[11px] leading-snug text-slate-500 dark:text-slate-400">
+              {rawVoiceDict.recommendedBrowserHint || ''}{' '}
+              <button
+                type="button"
+                onClick={() => setIsInfoModalOpen(true)}
+                className="cursor-pointer font-bold text-cyan-700 underline decoration-dotted underline-offset-2 transition-colors hover:text-cyan-600 dark:text-cyan-400 dark:hover:text-cyan-300 rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400"
+              >
+                {rawVoiceDict.recommendedBrowserHintLink || ''}
+              </button>
+            </p>
+            <button
+              type="button"
+              onClick={dismissBrowserHint}
+              aria-label={rawVoiceDict.dismissHint || ''}
+              title={rawVoiceDict.dismissHint || ''}
+              className="shrink-0 rounded-full p-0.5 text-slate-400 transition-colors hover:bg-slate-200/60 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          </div>
+        )}
+
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <div
             role="group"
             aria-label={dict?.maps?.providerAria || ''}
@@ -1196,6 +1348,10 @@ export function VoiceCommandBanner({
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
         onPreloadModel={() => initClientSpeechModel(locale)}
+        modelQuality={modelQuality}
+        onSelectModelQuality={handleSelectModelQuality}
+        modelDescriptor={resolveModelDescriptor(locale, modelQuality)}
+        speechLocaleTag={resolveSpeechLocaleTag(locale)}
         dict={dict}
       />
     </section>

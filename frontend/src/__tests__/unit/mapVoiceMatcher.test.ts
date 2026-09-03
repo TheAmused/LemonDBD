@@ -788,3 +788,372 @@ test('Ormond Lake Mine does not return mount_ormond resort variants', () => {
 
 
 
+
+// ── Regression: roman-numeral variants ────────────────────────────────────────
+// The explicit-variant tier used to return the first keyword that appeared as a
+// substring, in declaration order. "badham i" is declared before "badham iii", so
+// every roman-numeral Badham query above I resolved to Preschool I. The tier now
+// tests the longest keyword first.
+
+test('Roman numeral variants resolve to their own map, not the first declared one', () => {
+  const cases: Array<[string, string]> = [
+    ['badham i', 'Preschool I'],
+    ['badham ii', 'Preschool II'],
+    ['badham iii', 'Preschool III'],
+    ['badham iv', 'Preschool IIIV'],
+    ['badham v', 'Preschool V'],
+    ['preschool ii', 'Preschool II'],
+    ['preschool iii', 'Preschool III'],
+    ['preschool iiiv', 'Preschool IIIV'],
+    ['przedszkole iii', 'Preschool III'],
+    ['bedhem dwa', 'Preschool II'],
+  ];
+
+  for (const [spoken, expected] of cases) {
+    const result = matchVoiceQuery(spoken);
+    assert.ok(result, `"${spoken}" should match something`);
+    assert.strictEqual(result.matchedMapName, expected, `"${spoken}" resolved to ${result.matchedMapName}`);
+  }
+});
+
+test('Arabic and roman numerals agree for every Badham variant', () => {
+  for (const [arabic, roman] of [['1', 'i'], ['2', 'ii'], ['3', 'iii'], ['4', 'iv'], ['5', 'v']]) {
+    const byDigit = matchVoiceQuery(`badham ${arabic}`);
+    const byNumeral = matchVoiceQuery(`badham ${roman}`);
+    assert.ok(byDigit && byNumeral);
+    assert.strictEqual(byDigit.matchedMapName, byNumeral.matchedMapName);
+  }
+});
+
+// ── German ────────────────────────────────────────────────────────────────────
+
+test('German map names, variants, actions and provider switches resolve', () => {
+  const maps: Array<[string, string]> = [
+    ['kohleturm', 'Coal Tower'],
+    ['kohleturm 2', 'Coal Tower II'],
+    ['tankstelle', 'Gas Heaven'],
+    ['schrottplatz', "Wreckers' Yard"],
+    ['kuhstall', 'Fractured Cowshed'],
+    ['schlachthof', 'Rancid Abbatoir'],
+    ['das spiel', 'The Game'],
+    ['vorschule drei', 'Preschool III'],
+    ['polizeirevier westflugel', 'Police Station West Wing'],
+    ['midwich grundschule', 'Midwich Elementary School'],
+  ];
+  for (const [spoken, expected] of maps) {
+    const result = matchVoiceQuery(spoken, 'all', undefined, { locale: 'de' });
+    assert.ok(result, `"${spoken}" should match`);
+    assert.strictEqual(result.matchedMapName, expected, `"${spoken}" -> ${result.matchedMapName}`);
+  }
+
+  assert.strictEqual(matchVoiceQuery('vollbild', 'all', undefined, { locale: 'de' })?.action, 'fullscreen');
+  assert.strictEqual(matchVoiceQuery('schliessen', 'all', undefined, { locale: 'de' })?.action, 'close');
+  assert.strictEqual(matchVoiceQuery('reinzoomen', 'all', undefined, { locale: 'de' })?.action, 'zoom_in');
+
+  const allSources = matchVoiceQuery('alle karten', 'hens333', undefined, { locale: 'de' });
+  assert.strictEqual(allSources?.action, 'switch_source');
+  assert.strictEqual(allSources?.actionPayload, 'all');
+});
+
+test('German conversational lead-ins are stripped', () => {
+  const result = matchVoiceQuery('zeig mir bitte den kohleturm', 'all', undefined, { locale: 'de' });
+  assert.ok(result);
+  assert.strictEqual(result.matchedMapName, 'Coal Tower');
+});
+
+// ── Spanish ───────────────────────────────────────────────────────────────────
+
+test('Spanish map names, variants, actions and provider switches resolve', () => {
+  const maps: Array<[string, string]> = [
+    ['torre de carbon', 'Coal Tower'],
+    ['gasolinera', 'Gas Heaven'],
+    ['desguace', "Wreckers' Yard"],
+    ['matadero', 'Rancid Abbatoir'],
+    ['el juego', 'The Game'],
+    ['preescolar tres', 'Preschool III'],
+    ['comisaria ala este', 'Police Station East Wing'],
+    ['manicomio', 'Disturbed Ward'],
+    ['cantina', 'Dead Dawg Saloon'],
+  ];
+  for (const [spoken, expected] of maps) {
+    const result = matchVoiceQuery(spoken, 'all', undefined, { locale: 'es' });
+    assert.ok(result, `"${spoken}" should match`);
+    assert.strictEqual(result.matchedMapName, expected, `"${spoken}" -> ${result.matchedMapName}`);
+  }
+
+  assert.strictEqual(matchVoiceQuery('pantalla completa', 'all', undefined, { locale: 'es' })?.action, 'fullscreen');
+  assert.strictEqual(matchVoiceQuery('cerrar', 'all', undefined, { locale: 'es' })?.action, 'close');
+  assert.strictEqual(matchVoiceQuery('alejar', 'all', undefined, { locale: 'es' })?.action, 'zoom_out');
+});
+
+test('Spanish conversational lead-ins are stripped', () => {
+  const result = matchVoiceQuery('muestrame el matadero', 'all', undefined, { locale: 'es' });
+  assert.ok(result);
+  assert.strictEqual(result.matchedMapName, 'Rancid Abbatoir');
+});
+
+// ── Japanese ──────────────────────────────────────────────────────────────────
+// normalizeForComparison used to strip every non-[a-z0-9] character, which
+// reduced any Japanese transcript to the empty string. These would all have
+// returned null no matter what the dictionary contained.
+
+test('Japanese katakana and kanji map names resolve', () => {
+  const maps: Array<[string, string]> = [
+    ['コールタワー', 'Coal Tower'],
+    ['石炭塔', 'Coal Tower'],
+    ['警察署東棟', 'Police Station East Wing'],
+    ['警察署西棟', 'Police Station West Wing'],
+    ['幼稚園3', 'Preschool III'],
+    ['牛舎', 'Fractured Cowshed'],
+    ['屠殺場', 'Rancid Abbatoir'],
+    ['ゲーム', 'The Game'],
+    ['酒場', 'Dead Dawg Saloon'],
+    ['ノストロモ', 'Nostromo Wreckage'],
+  ];
+  for (const [spoken, expected] of maps) {
+    const result = matchVoiceQuery(spoken, 'all', undefined, { locale: 'ja' });
+    assert.ok(result, `"${spoken}" should match`);
+    assert.strictEqual(result.matchedMapName, expected, `"${spoken}" -> ${result.matchedMapName}`);
+  }
+});
+
+test('Japanese navigation and provider commands resolve', () => {
+  assert.strictEqual(matchVoiceQuery('全画面', 'all', undefined, { locale: 'ja' })?.action, 'fullscreen');
+  assert.strictEqual(matchVoiceQuery('閉じる', 'all', undefined, { locale: 'ja' })?.action, 'close');
+  assert.strictEqual(matchVoiceQuery('拡大', 'all', undefined, { locale: 'ja' })?.action, 'zoom_in');
+
+  const source = matchVoiceQuery('すべてのマップ', 'hens333', undefined, { locale: 'ja' });
+  assert.strictEqual(source?.action, 'switch_source');
+  assert.strictEqual(source?.actionPayload, 'all');
+});
+
+test('Japanese variant keywords open the disambiguation picker', () => {
+  const result = matchVoiceQuery('幼稚園', 'all', undefined, { locale: 'ja' });
+  assert.ok(result);
+  assert.ok(result.availableVariants);
+  assert.strictEqual(result.availableVariants.length, 5);
+});
+
+// ── Accent tolerance ──────────────────────────────────────────────────────────
+// None of these spellings exist in the dictionary. They resolve through the
+// phonetic tiers in utils/voicePhonetics.ts, which is the point: an accent no
+// longer needs a hand-written alias per map.
+
+test('Accented pronunciations resolve without a literal dictionary entry', () => {
+  const cases: Array<[string, string, string]> = [
+    ['kohl tauer', 'de', 'Coal Tower'],
+    ['gas heffen', 'de', 'Gas Heaven'],
+    ['ratched shop', 'en', 'Wretched Shop'],
+    ['dett dog salun', 'en', 'Dead Dawg Saloon'],
+    ['torre de karbon', 'es', 'Coal Tower'],
+  ];
+
+  for (const [spoken, locale, expected] of cases) {
+    const result = matchVoiceQuery(spoken, 'all', undefined, { locale });
+    assert.ok(result, `"${spoken}" (${locale}) should match`);
+    assert.strictEqual(result.matchedMapName, expected, `"${spoken}" -> ${result.matchedMapName}`);
+    assert.ok(result.confidence >= 0.8, `"${spoken}" matched at only ${result.confidence}`);
+  }
+});
+
+test('Phonetic tiers do not fire on unrelated speech', () => {
+  const noise = [
+    'hello how are you today',
+    'what is the weather like',
+    'asdfghjkl qwertyuiop',
+    'i need to go to the shop later',
+  ];
+  for (const spoken of noise) {
+    assert.strictEqual(matchVoiceQuery(spoken, 'all', undefined, { locale: 'en' }), null, `"${spoken}" should not match`);
+  }
+});
+
+// ── Backwards compatibility ───────────────────────────────────────────────────
+
+test('The locale argument is optional and accepts a bare locale string', () => {
+  const withoutLocale = matchVoiceQuery('coal tower');
+  const withObject = matchVoiceQuery('coal tower', 'all', undefined, { locale: 'de' });
+  const withString = matchVoiceQuery('coal tower', 'all', undefined, 'de');
+
+  assert.ok(withoutLocale && withObject && withString);
+  assert.strictEqual(withoutLocale.matchedMapName, 'Coal Tower');
+  assert.strictEqual(withObject.matchedMapName, 'Coal Tower');
+  assert.strictEqual(withString.matchedMapName, 'Coal Tower');
+});
+
+test('An unknown locale falls back to English rather than throwing', () => {
+  const result = matchVoiceQuery('coal tower', 'all', undefined, { locale: 'fr' });
+  assert.ok(result);
+  assert.strictEqual(result.matchedMapName, 'Coal Tower');
+});
+
+test('Longest alias wins when one alias contains another', () => {
+  // "ゲームセンター" (arcade, Greenville Square) contains "ゲーム" (The Game).
+  assert.strictEqual(matchVoiceQuery('ゲーム', 'all', undefined, { locale: 'ja' })?.matchedMapName, 'The Game');
+  assert.strictEqual(
+    matchVoiceQuery('ゲームセンター', 'all', undefined, { locale: 'ja' })?.matchedMapName,
+    'Greenville Square'
+  );
+});
+
+// ── Dictionary integrity ──────────────────────────────────────────────────────
+
+test('Every alias in every language resolves back to its own map', async () => {
+  const { CANONICAL_MAPS } = await import('@/utils/mapVoiceMatcher');
+  const { LOCALE_MAP_ALIASES } = await import('@/utils/mapVoiceLocaleAliases');
+
+  const deviations: string[] = [];
+  let checked = 0;
+
+  for (const mapDef of CANONICAL_MAPS) {
+    const localized = LOCALE_MAP_ALIASES[mapDef.canonicalName] || {};
+    const cases: Array<[string, string]> = [[mapDef.canonicalName, 'en']];
+    for (const alias of mapDef.aliases) cases.push([alias, 'en']);
+    for (const locale of ['de', 'es', 'ja'] as const) {
+      for (const alias of localized[locale] || []) cases.push([alias, locale]);
+    }
+
+    for (const [spoken, locale] of cases) {
+      checked++;
+      const result = matchVoiceQuery(spoken, 'all', undefined, { locale });
+      if (!result) {
+        deviations.push(`[${locale}] "${spoken}" matched nothing (expected ${mapDef.canonicalName})`);
+      } else if (result.matchedMapName !== mapDef.canonicalName) {
+        deviations.push(
+          `[${locale}] "${spoken}" -> ${result.matchedMapName} (expected ${mapDef.canonicalName})`
+        );
+      }
+    }
+  }
+
+  assert.ok(checked > 1500, `expected a substantial dictionary, only checked ${checked} aliases`);
+  assert.deepStrictEqual(deviations, [], `\n${deviations.join('\n')}\n`);
+});
+
+// ── Localized live map lists ──────────────────────────────────────────────────
+// GET /api/v1/maps translates `name` for the requested locale, so outside /en the
+// map list the matcher is handed contains no English names at all. Resolving a
+// match to a map id by comparing names therefore cannot work there, and without
+// an id the maps page had nothing to open — this is why voice navigation opened
+// the fullscreen view on /en only. Names below are the ones
+// backend/app/translations/translations.json actually ships.
+
+const liveMapList = (names: Record<string, string>) =>
+  Object.entries(names).map(([id, name]) => ({ id, name, realm: 'realm', source: 'hens333' }));
+
+const LIVE_EN = liveMapList({
+  hens_macmillan_estate_coal_tower: 'Coal Tower',
+  hens_macmillan_estate_coal_tower_ii: 'Coal Tower II',
+  hens_autohaven_wreckers_gas_heaven: 'Gas Heaven',
+  hens_coldwind_farm_fractured_cowshed: 'Fractured Cowshed',
+  hens_autohaven_wreckers_wreckers_yard: "Wreckers' Yard",
+  hens_badham_preschool_iii: 'Preschool III',
+});
+const LIVE_DE = liveMapList({
+  hens_macmillan_estate_coal_tower: 'Kohleturm',
+  hens_macmillan_estate_coal_tower_ii: 'Kohleturm II',
+  hens_autohaven_wreckers_gas_heaven: 'Sprithimmel',
+  hens_coldwind_farm_fractured_cowshed: 'Verfallener Kuhstall',
+  hens_autohaven_wreckers_wreckers_yard: 'Schrottplatz',
+  hens_badham_preschool_iii: 'Vorschule III',
+});
+const LIVE_ES = liveMapList({
+  hens_macmillan_estate_coal_tower: 'Torre de Carbón',
+  hens_autohaven_wreckers_gas_heaven: 'Gasolinera',
+  hens_coldwind_farm_fractured_cowshed: 'Establo en Ruinas',
+  hens_autohaven_wreckers_wreckers_yard: 'Desguace',
+});
+const LIVE_PL = liveMapList({
+  hens_macmillan_estate_coal_tower: 'Wieża Węglowa',
+  hens_autohaven_wreckers_gas_heaven: 'Stacja Paliw',
+  hens_coldwind_farm_fractured_cowshed: 'Spękana Obora',
+  hens_autohaven_wreckers_wreckers_yard: 'Podwórze Złomowiska',
+});
+const LIVE_JA = liveMapList({
+  hens_macmillan_estate_coal_tower: 'コール・タワー',
+  hens_macmillan_estate_coal_tower_ii: 'コール・タワー II',
+  hens_autohaven_wreckers_gas_heaven: 'ガス・ヘヴン',
+  hens_coldwind_farm_fractured_cowshed: 'フラクチャード・カウシェッド',
+  hens_autohaven_wreckers_wreckers_yard: 'レッカーズ・ヤード',
+});
+
+test('A match against a localized map list still yields a map id', () => {
+  const cases: Array<[string, typeof LIVE_DE, string, string]> = [
+    ['en', LIVE_EN, 'coal tower', 'hens_macmillan_estate_coal_tower'],
+    ['de', LIVE_DE, 'coal tower', 'hens_macmillan_estate_coal_tower'],
+    ['es', LIVE_ES, 'coal tower', 'hens_macmillan_estate_coal_tower'],
+    ['pl', LIVE_PL, 'coal tower', 'hens_macmillan_estate_coal_tower'],
+    ['ja', LIVE_JA, 'coal tower', 'hens_macmillan_estate_coal_tower'],
+    ['de', LIVE_DE, 'kohleturm', 'hens_macmillan_estate_coal_tower'],
+    ['es', LIVE_ES, 'gasolinera', 'hens_autohaven_wreckers_gas_heaven'],
+    ['pl', LIVE_PL, 'stacja benzynowa', 'hens_autohaven_wreckers_gas_heaven'],
+    ['ja', LIVE_JA, 'コールタワー', 'hens_macmillan_estate_coal_tower'],
+  ];
+
+  for (const [locale, maps, spoken, expectedId] of cases) {
+    const result = matchVoiceQuery(spoken, 'hens333', maps, { locale });
+    assert.ok(result, `[${locale}] "${spoken}" should match`);
+    assert.strictEqual(result.matchedMapId, expectedId, `[${locale}] "${spoken}" -> ${result.matchedMapId}`);
+  }
+});
+
+test('Names the backend ships for a locale resolve even when the static dictionary differs', () => {
+  // The backend calls Gas Heaven "Sprithimmel"; mapVoiceLocaleAliases says
+  // "Benzinhimmel"/"Tankstelle". Indexing the live list is what covers the gap.
+  const cases: Array<[string, typeof LIVE_DE, string, string]> = [
+    ['de', LIVE_DE, 'Sprithimmel', 'hens_autohaven_wreckers_gas_heaven'],
+    ['de', LIVE_DE, 'Verfallener Kuhstall', 'hens_coldwind_farm_fractured_cowshed'],
+    ['es', LIVE_ES, 'Establo en Ruinas', 'hens_coldwind_farm_fractured_cowshed'],
+    ['pl', LIVE_PL, 'Spękana Obora', 'hens_coldwind_farm_fractured_cowshed'],
+    ['pl', LIVE_PL, 'Podwórze Złomowiska', 'hens_autohaven_wreckers_wreckers_yard'],
+    ['ja', LIVE_JA, 'ガス・ヘヴン', 'hens_autohaven_wreckers_gas_heaven'],
+    ['ja', LIVE_JA, 'フラクチャード・カウシェッド', 'hens_coldwind_farm_fractured_cowshed'],
+    ['ja', LIVE_JA, 'レッカーズ・ヤード', 'hens_autohaven_wreckers_wreckers_yard'],
+  ];
+
+  for (const [locale, maps, spoken, expectedId] of cases) {
+    const result = matchVoiceQuery(spoken, 'hens333', maps, { locale });
+    assert.ok(result, `[${locale}] "${spoken}" should match`);
+    assert.strictEqual(result.matchedMapId, expectedId, `[${locale}] "${spoken}" -> ${result.matchedMapId}`);
+  }
+});
+
+test('canonicalName stays English while matchedMapName follows the locale', () => {
+  const result = matchVoiceQuery('coal tower', 'hens333', LIVE_DE, { locale: 'de' });
+  assert.ok(result);
+  assert.strictEqual(result.canonicalName, 'Coal Tower');
+  assert.strictEqual(result.matchedMapName, 'Kohleturm');
+
+  // canonicalName is what variant lookup and a second matcher pass must use.
+  assert.ok(getVariantsForMap(result.canonicalName).length > 0);
+  assert.strictEqual(getVariantsForMap(result.matchedMapName).length, 0);
+
+  const ja = matchVoiceQuery('gas heaven', 'hens333', LIVE_JA, { locale: 'ja' });
+  assert.ok(ja);
+  assert.strictEqual(ja.canonicalName, 'Gas Heaven');
+  assert.strictEqual(ja.matchedMapName, 'ガス・ヘヴン');
+});
+
+test('Numbered variants keep their own id against a localized list', () => {
+  const base = matchVoiceQuery('coal tower', 'hens333', LIVE_DE, { locale: 'de' });
+  const second = matchVoiceQuery('coal tower 2', 'hens333', LIVE_DE, { locale: 'de' });
+  const germanSecond = matchVoiceQuery('kohleturm 2', 'hens333', LIVE_DE, { locale: 'de' });
+
+  assert.strictEqual(base?.matchedMapId, 'hens_macmillan_estate_coal_tower');
+  assert.strictEqual(second?.matchedMapId, 'hens_macmillan_estate_coal_tower_ii');
+  assert.strictEqual(germanSecond?.matchedMapId, 'hens_macmillan_estate_coal_tower_ii');
+
+  const variant = matchVoiceQuery('vorschule drei', 'hens333', LIVE_DE, { locale: 'de' });
+  assert.strictEqual(variant?.matchedMapId, 'hens_badham_preschool_iii');
+  assert.strictEqual(variant?.canonicalName, 'Preschool III');
+});
+
+test('Command results carry an empty canonicalName rather than omitting it', () => {
+  const source = matchVoiceQuery('all maps', 'hens333');
+  assert.strictEqual(source?.action, 'switch_source');
+  assert.strictEqual(source?.canonicalName, '');
+
+  const action = matchVoiceQuery('fullscreen', 'hens333');
+  assert.strictEqual(action?.action, 'fullscreen');
+  assert.strictEqual(action?.canonicalName, '');
+});

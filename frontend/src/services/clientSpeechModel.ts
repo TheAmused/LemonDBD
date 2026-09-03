@@ -12,6 +12,62 @@
 
 export type VoiceEngineType = 'web-speech' | 'client-model';
 
+/**
+ * Which Whisper checkpoint the local engine downloads.
+ *
+ * 'fast'     whisper-tiny  (~40MB quantized) - the historical default.
+ * 'accurate' whisper-base  (~80MB quantized) - roughly 2x the download and
+ *            inference cost, noticeably better on proper nouns like
+ *            "Azarov's Resting Place" and on non-native accents.
+ */
+export type ModelQuality = 'fast' | 'accurate';
+
+export const MODEL_QUALITY_STORAGE_KEY = 'lemondbd:voice:modelQuality';
+
+export interface ModelDescriptor {
+  /** Hugging Face repo id passed to Transformers.js. */
+  name: string;
+  /** Approximate quantized download size, for the UI. */
+  approxSizeMb: number;
+  /** English-only checkpoints reject language tokens entirely. */
+  multilingual: boolean;
+}
+
+/**
+ * Model matrix.
+ *
+ * The previous implementation loaded `whisper-tiny.en` for every locale except
+ * Polish, then passed `language: 'spanish' | 'german'` to it. English-only Whisper
+ * checkpoints do not carry language tokens in their vocabulary, so German, Spanish
+ * and Japanese users were being transcribed by an English-only model with an
+ * option it cannot honour - the local engine was effectively dead in three of the
+ * five shipped locales.
+ */
+const MODEL_MATRIX: Record<ModelQuality, { english: ModelDescriptor; multilingual: ModelDescriptor }> = {
+  fast: {
+    english: { name: 'Xenova/whisper-tiny.en', approxSizeMb: 39, multilingual: false },
+    multilingual: { name: 'Xenova/whisper-tiny', approxSizeMb: 42, multilingual: true },
+  },
+  accurate: {
+    english: { name: 'Xenova/whisper-base.en', approxSizeMb: 78, multilingual: false },
+    multilingual: { name: 'Xenova/whisper-base', approxSizeMb: 82, multilingual: true },
+  },
+};
+
+/** Whisper language names, keyed by the app's UI locales. */
+const WHISPER_LANGUAGES: Record<string, string> = {
+  en: 'english',
+  pl: 'polish',
+  es: 'spanish',
+  de: 'german',
+  ja: 'japanese',
+};
+
+export function resolveModelDescriptor(locale: string = 'en', quality: ModelQuality = 'fast'): ModelDescriptor {
+  const tier = MODEL_MATRIX[quality] || MODEL_MATRIX.fast;
+  return !locale || locale === 'en' ? tier.english : tier.multilingual;
+}
+
 export type ModelLoadingStatus = 'unloaded' | 'downloading' | 'ready' | 'error';
 
 export interface ModelProgressInfo {
@@ -92,18 +148,28 @@ if (typeof window !== 'undefined') {
 
 let isBraveDetected = false;
 
+/**
+ * navigator.brave exists synchronously on Brave; navigator.brave.isBrave() only
+ * confirms it asynchronously. The previous code waited for the promise, so every
+ * call to isWebSpeechSupported() made before it resolved reported Brave as having
+ * working Web Speech - which it does not, and the user got a recognizer that
+ * silently fails. Treating the namespace itself as the signal is correct today
+ * (no other browser ships it) and the promise result still refines it.
+ */
 if (typeof window !== 'undefined' && (navigator as any).brave) {
+  isBraveDetected = true;
   try {
     const braveObj = (navigator as any).brave;
     if (typeof braveObj.isBrave === 'function') {
-      braveObj.isBrave().then((isBrave: boolean) => {
-        if (isBrave) {
-          isBraveDetected = true;
-          console.log('[ClientSpeechModel] Brave Browser detected! Recommending local client speech model.');
-        }
-      }).catch(() => {});
-    } else {
-      isBraveDetected = true;
+      braveObj
+        .isBrave()
+        .then((isBrave: boolean) => {
+          isBraveDetected = !!isBrave;
+          if (isBrave) {
+            console.log('[ClientSpeechModel] Brave Browser detected! Recommending local client speech model.');
+          }
+        })
+        .catch(() => {});
     }
   } catch {}
 }
@@ -388,12 +454,54 @@ export class AudioCaptureSession {
 // ─── In-Browser Client Speech Recognition Pipeline ──────────────────────────
 
 let cachedPipeline: any = null;
+/** Model the cached pipeline was built from; a change invalidates the cache. */
+let cachedModelName: string | null = null;
 let currentProgressInfo: ModelProgressInfo = {
   status: 'unloaded',
   progress: 0,
 };
 const progressListeners = new Set<ProgressCallback>();
 let isLocalBundleActive = false;
+let modelQuality: ModelQuality = 'fast';
+
+if (typeof window !== 'undefined') {
+  try {
+    const stored = window.localStorage?.getItem(MODEL_QUALITY_STORAGE_KEY);
+    if (stored === 'fast' || stored === 'accurate') modelQuality = stored;
+  } catch {
+    // Storage can throw in private mode / when site data is blocked; the default stands.
+  }
+}
+
+export function getModelQuality(): ModelQuality {
+  return modelQuality;
+}
+
+/**
+ * Switches the local engine between the tiny and base checkpoints.
+ * Returns true when the setting actually changed, in which case the cached
+ * pipeline has been dropped and the next transcription will download the new
+ * model. The already-downloaded one stays in CacheStorage, so switching back is
+ * free.
+ */
+export function setModelQuality(quality: ModelQuality): boolean {
+  if (quality !== 'fast' && quality !== 'accurate') return false;
+  if (quality === modelQuality) return false;
+
+  modelQuality = quality;
+  cachedPipeline = null;
+  cachedModelName = null;
+  broadcastProgress({ status: 'unloaded', progress: 0 });
+
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage?.setItem(MODEL_QUALITY_STORAGE_KEY, quality);
+    } catch {
+      // Non-fatal: the choice simply will not survive a reload.
+    }
+  }
+  return true;
+}
 
 function broadcastProgress(info: ModelProgressInfo) {
   currentProgressInfo = info;
@@ -458,9 +566,17 @@ async function loadTransformersStandalone(): Promise<any> {
  * Uses Transformers.js with direct Whisper-tiny models.
  */
 export async function initClientSpeechModel(locale: string = 'en'): Promise<any> {
-  if (cachedPipeline) {
+  const descriptor = resolveModelDescriptor(locale, modelQuality);
+
+  if (cachedPipeline && cachedModelName === descriptor.name) {
     broadcastProgress({ status: 'ready', progress: 100 });
     return cachedPipeline;
+  }
+
+  // Locale or quality changed under us: the old pipeline is the wrong model.
+  if (cachedPipeline && cachedModelName !== descriptor.name) {
+    cachedPipeline = null;
+    cachedModelName = null;
   }
 
   if (typeof window === 'undefined') return null;
@@ -503,10 +619,11 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       }
     }
 
-    const modelName =
-      locale === 'pl' ? 'Xenova/whisper-tiny' : 'Xenova/whisper-tiny.en';
+    const modelName = descriptor.name;
 
-    console.log(`[ClientSpeechModel] Initializing Whisper model (${modelName})...`);
+    console.log(
+      `[ClientSpeechModel] Initializing Whisper model (${modelName}, locale=${locale}, quality=${modelQuality})...`
+    );
 
     const progress_callback = (progressData: any) => {
       if (progressData && progressData.status === 'progress' && progressData.total) {
@@ -551,11 +668,13 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       });
     }
 
+    cachedModelName = modelName;
     broadcastProgress({ status: 'ready', progress: 100 });
     console.log(`[ClientSpeechModel] Whisper model ${modelName} initialized successfully in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
     console.warn('[ClientSpeechModel] Whisper pipeline initialization error:', err);
+    cachedModelName = null;
     broadcastProgress({
       status: 'error',
       progress: 0,
@@ -572,8 +691,10 @@ export async function transcribeClientAudio(
   audioData: Float32Array,
   locale: string = 'en'
 ): Promise<string> {
-  if (!audioData || audioData.length < 1600) {
-    console.log('[ClientSpeechModel] Audio too short (<100ms), skipping.');
+  // Whisper is unreliable below roughly a quarter second and a shorter clip is
+  // almost always an accidental key tap rather than a map name.
+  if (!audioData || audioData.length < 4000) {
+    console.log('[ClientSpeechModel] Audio too short (<250ms), skipping.');
     return '';
   }
 
@@ -589,24 +710,23 @@ export async function transcribeClientAudio(
         audioData.length
       );
 
-      const isEnglish = !locale || locale === 'en';
-      const options: Record<string, any> = {
-        chunk_length_s: 30,
-        stride_length_s: 5,
-      };
+      const descriptor = resolveModelDescriptor(locale, modelQuality);
+      const durationSeconds = audioData.length / 16000;
 
-      // Whisper English-only models (whisper-tiny.en) do NOT accept language tokens in vocabulary
-      if (!isEnglish) {
-        options.language =
-          locale === 'pl'
-            ? 'polish'
-            : locale === 'es'
-            ? 'spanish'
-            : locale === 'de'
-            ? 'german'
-            : locale === 'fr'
-            ? 'french'
-            : 'english';
+      const options: Record<string, any> = {};
+
+      // Chunking only pays for itself on audio longer than Whisper's 30s window.
+      // A two-second voice command was being run through a 30s chunker with a 5s
+      // stride, which is pure overhead on every single utterance.
+      if (durationSeconds > 28) {
+        options.chunk_length_s = 30;
+        options.stride_length_s = 5;
+      }
+
+      // Language tokens exist only in the multilingual checkpoints. Passing one to
+      // whisper-*.en is not just ignored, it can throw on tokenizer lookup.
+      if (descriptor.multilingual) {
+        options.language = WHISPER_LANGUAGES[locale] || 'english';
         options.task = 'transcribe';
       }
 

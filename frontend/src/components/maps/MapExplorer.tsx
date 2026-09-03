@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { Search, ImageOff, ChevronDown, MapPin } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
-import { useMapExplorerData } from '@/hooks/useMapExplorerData';
+import { useMapExplorerData, type SelectedMapRequest } from '@/hooks/useMapExplorerData';
 import { getMapImageSrc } from '@/utils/mapUtils';
 import { MapCard } from './MapCard';
 
@@ -39,13 +39,29 @@ function useRealmGridColumns(): number {
   return columns;
 }
 
+/**
+ * A navigation command issued from outside the explorer (today: voice).
+ * `timestamp` is what makes a repeated command fire again - saying "close" twice
+ * must close twice, and an unchanged object would be dropped as no-op state.
+ */
+export interface MapViewCommand {
+  action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close';
+  timestamp: number;
+}
+
 export interface MapExplorerProps {
   initialMapName?: string;
-  selectedMap?: { mapName: string; timestamp: number } | string;
+  selectedMap?: SelectedMapRequest | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   dict?: Dictionary;
   hideSearch?: boolean;
+  /**
+   * Zoom / fullscreen / close issued by voice. The explorer owns the open-map
+   * state and the map engine, so it is the only place that can act on these -
+   * the maps page used to receive them and drop them on the floor.
+   */
+  viewCommand?: MapViewCommand | null;
   /** Rendered in the same slot as the search header (e.g. a voice command
    * banner) when `hideSearch` is true. Overlaid in the same grid cell as
    * the search header -- see the render below -- so the taller of the two
@@ -61,6 +77,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   backendBase,
   dict,
   hideSearch = false,
+  viewCommand = null,
   voiceSlot,
 }) => {
   const {
@@ -78,6 +95,36 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     selectedMap,
     onAvailableMapsLoaded,
   });
+
+  // Forwarded to the map engine, which applies one zoom step per new timestamp.
+  const [zoomCommand, setZoomCommand] = useState<MapViewCommand | null>(null);
+  const lastViewCommandRef = useRef<number>(0);
+  const lastOpenedMapIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (openMapId) lastOpenedMapIdRef.current = openMapId;
+  }, [openMapId]);
+
+  useEffect(() => {
+    if (!viewCommand || viewCommand.timestamp === lastViewCommandRef.current) return;
+    lastViewCommandRef.current = viewCommand.timestamp;
+
+    switch (viewCommand.action) {
+      case 'close':
+        setOpenMapId(null);
+        break;
+      case 'fullscreen':
+        // "Fullscreen" with nothing open reopens the last map the user looked at;
+        // with a map already open it is a no-op rather than an error.
+        if (!openMapId && lastOpenedMapIdRef.current) setOpenMapId(lastOpenedMapIdRef.current);
+        break;
+      case 'zoom_in':
+      case 'zoom_out':
+        if (openMapId) setZoomCommand(viewCommand);
+        break;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewCommand]);
 
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
   const [realmFilter, setRealmFilter] = useState<string | null>(null);
@@ -378,6 +425,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
           availableMaps={maps}
           onClose={() => setOpenMapId(null)}
           backendBase={backendBase}
+          zoomCommand={zoomCommand}
           dict={dict}
         />
       )}

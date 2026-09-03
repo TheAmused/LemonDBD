@@ -9,9 +9,21 @@ import { readCache } from '@/services/dataCache';
 const SEARCH_MIN_CHARS = 3;
 const SEARCH_DEBOUNCE_MS = 300;
 
+/**
+ * A map selection request. `mapId` is set whenever the caller already knows which
+ * map it wants - voice navigation resolves one - and is the only locale-safe way
+ * to identify a map: the backend translates `name` per locale, so a name-only
+ * request cannot be resolved on /de, /es, /pl or /ja.
+ */
+export interface SelectedMapRequest {
+  mapName: string;
+  mapId?: string;
+  timestamp: number;
+}
+
 export interface UseMapExplorerDataOptions {
   initialMapName?: string;
-  selectedMap?: { mapName: string; timestamp: number } | string;
+  selectedMap?: SelectedMapRequest | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
 }
 
@@ -20,8 +32,13 @@ export function normalizeMapSearch(s: string): string {
   return s
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\u0142/gi, 'l')
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
+    // Kana and CJK ideographs survive; the katakana middle dot and the double
+    // hyphen do not, matching utils/mapVoiceMatcher.normalizeForComparison.
+    // Stripping to [a-z0-9] reduced every Japanese map name to '' , at which
+    // point every Japanese map compared equal to every other.
+    .replace(/[^a-z0-9\u3041-\u3096\u30a1-\u30fa\u30fc\u3400-\u4dbf\u4e00-\u9fff]/g, '');
 }
 
 export function groupMapsByRealmSorted(maps: MapRealm[]): { realm: string; maps: MapRealm[] }[] {
@@ -39,19 +56,54 @@ export function groupMapsByRealmSorted(maps: MapRealm[]): { realm: string; maps:
     .map((realm) => ({ realm, maps: grouped[realm] }));
 }
 
+/**
+ * Resolves a map from a spoken or typed name.
+ *
+ * Ordered from most to least certain. The previous single `find` mixed five
+ * conditions in one predicate, so a two-way `includes` on a short name could
+ * win over an exact match on a later map purely because of array order - and it
+ * checked containment before equality.
+ *
+ * The id-slug pass is what makes this work outside English: map ids are built as
+ * `hens_<realm slug>_<map slug>` from the English name and are never translated,
+ * so an English canonical name still finds its map on /de/maps where every
+ * `m.name` is German.
+ */
 export function findMapByName(maps: MapRealm[], targetMapName: string): MapRealm | undefined {
   if (!targetMapName || !targetMapName.trim() || !maps || maps.length === 0) return undefined;
-  const needle = targetMapName.toLowerCase().trim();
-  const normNeedle = normalizeMapSearch(needle);
+  const normNeedle = normalizeMapSearch(targetMapName);
+  if (!normNeedle) return undefined;
 
-  return maps.find(
-    (m) =>
-      m.name.toLowerCase().includes(needle) ||
-      needle.includes(m.name.toLowerCase()) ||
-      normalizeMapSearch(m.name) === normNeedle ||
-      normalizeMapSearch(m.name).includes(normNeedle) ||
-      normNeedle.includes(normalizeMapSearch(m.name))
-  );
+  const exact = maps.find((m) => normalizeMapSearch(m.name) === normNeedle);
+  if (exact) return exact;
+
+  // endsWith, not includes: `..._coal_tower_ii` must not answer to "Coal Tower".
+  const byId = maps.find((m) => normalizeMapSearch(m.id).endsWith(normNeedle));
+  if (byId) return byId;
+
+  // Containment, longest candidate first so the most specific name wins.
+  const contained = maps
+    .filter((m) => {
+      const normName = normalizeMapSearch(m.name);
+      if (normName.length < 4 || normNeedle.length < 4) return false;
+      return normNeedle.includes(normName) || normName.includes(normNeedle);
+    })
+    .sort((a, b) => normalizeMapSearch(b.name).length - normalizeMapSearch(a.name).length);
+
+  return contained[0];
+}
+
+/** Resolves by id first, falling back to the name. Ids are locale-invariant. */
+export function findMapForRequest(
+  maps: MapRealm[],
+  mapId: string | undefined,
+  mapName: string
+): MapRealm | undefined {
+  if (mapId) {
+    const byId = maps.find((m) => m.id === mapId);
+    if (byId) return byId;
+  }
+  return findMapByName(maps, mapName);
 }
 
 export interface UseMapExplorerDataReturn {
@@ -159,17 +211,19 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
 
   useEffect(() => {
     const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;
-    const targetMapName =
-      typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
-    if (!targetMapName || !targetMapName.trim() || maps.length === 0) return;
+    const isRequest = typeof rawTarget === 'object' && rawTarget !== null;
+    const targetMapName = isRequest ? rawTarget.mapName : rawTarget;
+    const targetMapId = isRequest ? rawTarget.mapId : undefined;
 
-    const targetKey =
-      typeof rawTarget === 'object' && rawTarget !== null
-        ? `${rawTarget.mapName}:${rawTarget.timestamp}`
-        : rawTarget;
+    if (!targetMapId && (!targetMapName || !targetMapName.trim())) return;
+    if (maps.length === 0) return;
+
+    const targetKey = isRequest
+      ? `${rawTarget.mapId || ''}:${rawTarget.mapName}:${rawTarget.timestamp}`
+      : rawTarget;
     if (lastHandledTargetRef.current === targetKey) return;
 
-    const match = findMapByName(maps, targetMapName);
+    const match = findMapForRequest(maps, targetMapId, targetMapName);
     if (match) {
       setOpenMapId(match.id);
       lastHandledTargetRef.current = targetKey;

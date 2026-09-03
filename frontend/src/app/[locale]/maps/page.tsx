@@ -8,7 +8,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
-import { MapExplorer } from '@/components/maps/MapExplorer';
+import { MapExplorer, type MapViewCommand } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
 import { Locale } from '@/i18n/config';
 import { MapRealm } from '@/types/map';
@@ -16,6 +16,7 @@ import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import type { SelectedMapRequest } from '@/hooks/useMapExplorerData';
 
 const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
@@ -38,13 +39,12 @@ function MapsPageInner() {
   const [searchMode, setSearchMode] = useState<'text' | 'voice'>('text');
 
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
-  const [selectedMap, setSelectedMap] = useState<{
-    mapName: string;
-    timestamp: number;
-  }>({
+  const [selectedMap, setSelectedMap] = useState<SelectedMapRequest>({
     mapName: initialMapName,
     timestamp: Date.now(),
   });
+  const [viewCommand, setViewCommand] = useState<MapViewCommand | null>(null);
+
   useEffect(() => {
     if (initialMapName) {
       setSelectedMap({ mapName: initialMapName, timestamp: Date.now() });
@@ -80,12 +80,15 @@ function MapsPageInner() {
       dict={dict}
       currentSource="hens333"
       onSourceChange={() => {}}
-      onSelectMap={(name) => {
-        setSelectedMap({ mapName: name, timestamp: Date.now() });
+      onSelectMap={(name, mapId) => {
+        // The id must be carried through. `name` is the map's name in the active
+        // locale (the backend translates it), so re-resolving from the name alone
+        // could not find the map on /de, /es, /pl or /ja and the fullscreen view
+        // simply never opened.
+        setSelectedMap({ mapName: name, mapId, timestamp: Date.now() });
       }}
-      onAction={() => {
-        // Voice zoom/fullscreen/close actions have no target in the
-        // realm-grid layout -- there's no single "active" map to apply them to.
+      onAction={(action) => {
+        setViewCommand({ action, timestamp: Date.now() });
       }}
       availableMaps={availableMaps}
       active={searchMode === 'voice'}
@@ -130,6 +133,7 @@ function MapsPageInner() {
           backendBase={backendBase}
           dict={dict}
           hideSearch={searchMode === 'voice'}
+          viewCommand={viewCommand}
           voiceSlot={voiceBanner}
         />
 

@@ -147,27 +147,13 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   fi
   echo -e "${GREEN}[PASS] All containers are UP and HEALTHY.${NC}"
 
-  # ====================================================================
-  # [GATE 3] Strict Mode: Live E2E Integration Tests
-  # ====================================================================
-  if [ "$STRICT" = true ]; then
-    echo -e "\n${MAGENTA}========================================================${NC}"
-    echo -e "${MAGENTA} [Gate 3] Strict Mode: Running Dual-Stack Live Tests     ${NC}"
-    echo -e "${MAGENTA}========================================================${NC}"
-
-    # [Gate 2b] The backend healthcheck (and --wait above) only proves gunicorn
-    # is answering HTTP -- it says nothing about the initial DBD data scrape,
-    # which runs in a background thread (see backend/run.py) precisely so it
-    # doesn't block startup. On a fresh `down -v` reset that scrape can still
-    # be filling the DB when the line above prints, and the live test suite
-    # below assumes 50+ real characters already exist -- so wait for that here
-    # instead of finding out via a wave of confusing 500s/empty-array failures.
+  # [Gate 2b] Initial DBD data scrape readiness check
+  # Wait for the initial character scrape to finish seeding the DB whenever
+  # containers were freshly started and we need live or perf testing.
+  if [ "$STRICT" = true ] || [ "$PERF" = true ]; then
     echo -e "\n${YELLOW}> Waiting for the initial character scrape to finish seeding the DB...${NC}"
-    # NOTE: this queries Postgres directly through `docker compose exec` instead
-    # of hitting the backend over the published host port -- the HTTP path was
-    # found to hang/timeout unpredictably right after a fresh `up --wait` on
-    # some Docker Desktop setups (the request never even reached gunicorn's
-    # access log), which is a host-networking quirk, not an application bug.
+    # NOTE: this queries Postgres directly through docker compose exec instead
+    # of hitting the backend over the published host port.
     PG_USER="${POSTGRES_USER:-postgres}"
     PG_DB="${POSTGRES_DB:-dbd_db}"
     SCRAPE_READY=false
@@ -186,8 +172,17 @@ if [ "$SKIP_UP_FLOW" = false ]; then
       sleep 3
     done
     if [ "$SCRAPE_READY" != true ]; then
-      echo -e "${RED}[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but live tests will likely fail. Check 'docker compose logs backend' for scrape errors.${NC}"
+      echo -e "${RED}[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but tests may fail. Check 'docker compose logs backend' for scrape errors.${NC}"
     fi
+  fi
+
+  # ====================================================================
+  # [GATE 3] Strict Mode: Live E2E Integration Tests
+  # ====================================================================
+  if [ "$STRICT" = true ]; then
+    echo -e "\n${MAGENTA}========================================================${NC}"
+    echo -e "${MAGENTA} [Gate 3] Strict Mode: Running Dual-Stack Live Tests     ${NC}"
+    echo -e "${MAGENTA}========================================================${NC}"
 
     # 3.1 Backend Live Tests
     echo -e "\n${YELLOW}> [1/2] Running Backend Live Tests (PostgreSQL Clone)...${NC}"
@@ -223,12 +218,14 @@ if [ "$PERF" = true ]; then
   ALL_SUITES=("smoke" "load" "stress" "spike" "soak")
   TARGET_SUITES=()
 
-  if [ -z "$PERF_SUITE" ] || [ "$PERF_SUITE" = "all" ]; then
+  CLEAN_SUITE=$(echo "$PERF_SUITE" | tr '[:upper:]' '[:lower:]')
+
+  if [ -z "$CLEAN_SUITE" ] || [ "$CLEAN_SUITE" = "all" ]; then
     TARGET_SUITES=("${ALL_SUITES[@]}")
   else
     VALID=false
     for s in "${ALL_SUITES[@]}"; do
-      if [ "$s" = "$PERF_SUITE" ]; then
+      if [ "$s" = "$CLEAN_SUITE" ]; then
         VALID=true
         break
       fi
@@ -237,7 +234,7 @@ if [ "$PERF" = true ]; then
       echo -e "\n${RED}[FAIL] Invalid perf suite '$PERF_SUITE'. Available suites: ${ALL_SUITES[*]}${NC}"
       exit 1
     fi
-    TARGET_SUITES=("$PERF_SUITE")
+    TARGET_SUITES=("$CLEAN_SUITE")
   fi
 
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

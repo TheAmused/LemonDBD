@@ -45,6 +45,9 @@ $skipUpFlow = $false
 if ($isPerfRequested -and -not $Strict) {
     try {
         $healthOut = & curl.exe -s --max-time 3 http://localhost/api/v1/health 2>$null
+        if (-not ($healthOut -and $healthOut -match '"status"\s*:\s*"healthy"')) {
+            $healthOut = & curl.exe -s --max-time 3 http://localhost:5000/api/v1/health 2>$null
+        }
         if ($healthOut -and $healthOut -match '"status"\s*:\s*"healthy"') {
             Write-Host ""
             Write-Host "[INFO] Containers are already running and healthy. Skipping build & startup." -ForegroundColor Cyan
@@ -137,33 +140,12 @@ if (-not $skipUpFlow) {
 
     Write-Host "[PASS] All containers are UP and HEALTHY." -ForegroundColor Green
 
-
-    # ====================================================================
-    # [GATE 3] Strict Mode: Live E2E Integration Tests
-    # ====================================================================
-    if ($Strict) {
-        Write-Host ""
-        Write-Host "========================================================" -ForegroundColor Magenta
-        Write-Host " [Gate 3] Strict Mode: Running Dual-Stack Live Tests     " -ForegroundColor Magenta
-        Write-Host "========================================================" -ForegroundColor Magenta
-
-        # [Gate 2b] The backend healthcheck (and --wait above) only proves
-        # gunicorn is answering HTTP -- it says nothing about the initial DBD
-        # data scrape, which runs in a background thread (see backend/run.py)
-        # precisely so it doesn't block startup. On a fresh `down -v` reset that
-        # scrape can still be filling the DB when the line above prints, and the
-        # live test suite below assumes 50+ real characters already exist -- so
-        # wait for that here instead of finding out via a wave of confusing
-        # 500s/empty-array failures.
+    # [Gate 2b] Initial DBD data scrape readiness check
+    # Wait for the initial character scrape to finish seeding the DB whenever
+    # containers were freshly started and we need live or perf testing.
+    if ($Strict -or $isPerfRequested) {
         Write-Host ""
         Write-Host "> Waiting for the initial character scrape to finish seeding the DB..." -ForegroundColor Yellow
-        # NOTE: this queries Postgres directly through `docker compose exec`
-        # instead of hitting the backend over the published host port. The HTTP
-        # path was found to hang/timeout unpredictably right after a fresh
-        # `up --wait` on Docker Desktop for Windows (the request never even
-        # reached gunicorn's access log), which is a host-networking quirk, not
-        # an application bug -- querying the DB in-network sidesteps it entirely
-        # and is also just a more direct check of the thing we actually care about.
         $pgUser = if ($env:POSTGRES_USER) { $env:POSTGRES_USER } else { "postgres" }
         $pgDb = if ($env:POSTGRES_DB) { $env:POSTGRES_DB } else { "dbd_db" }
         $scrapeReady = $false
@@ -189,8 +171,18 @@ if (-not $skipUpFlow) {
             Start-Sleep -Seconds 3
         }
         if (-not $scrapeReady) {
-            Write-Host "[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but live tests will likely fail. Check 'docker compose logs backend' for scrape errors." -ForegroundColor Red
+            Write-Host "[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but tests may fail. Check 'docker compose logs backend' for scrape errors." -ForegroundColor Red
         }
+    }
+
+    # ====================================================================
+    # [GATE 3] Strict Mode: Live E2E Integration Tests
+    # ====================================================================
+    if ($Strict) {
+        Write-Host ""
+        Write-Host "========================================================" -ForegroundColor Magenta
+        Write-Host " [Gate 3] Strict Mode: Running Dual-Stack Live Tests     " -ForegroundColor Magenta
+        Write-Host "========================================================" -ForegroundColor Magenta
 
         # 3.1 Backend Live Tests (PostgreSQL Clone)
         Write-Host ""

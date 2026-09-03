@@ -46,6 +46,7 @@ docker-compose.override.yml
 .coverage
 coverage/
 htmlcov/
+k6/reports/
 
 # ==========================================
 # Backend Service (/backend)

@@ -12,7 +12,9 @@ param (
     [Alias("s")]
     [switch]$Strict,
     [Alias("p")]
-    [string]$Perf = $null,
+    [switch]$Perf,
+    [Parameter(Position=0)]
+    [string]$PerfSuite = "all",
     [switch]$Down
 )
 
@@ -25,8 +27,10 @@ if ($Down) {
     exit 0
 }
 
+$isPerfRequested = $Perf -or $PSBoundParameters.ContainsKey('Perf') -or $PSBoundParameters.ContainsKey('PerfSuite')
+
 # Verify k6 is available in PATH if perf testing is requested
-if ($PSBoundParameters.ContainsKey('Perf')) {
+if ($isPerfRequested) {
     $k6Cmd = Get-Command k6 -ErrorAction SilentlyContinue
     if (-not $k6Cmd) {
         Write-Host ""
@@ -38,7 +42,7 @@ if ($PSBoundParameters.ContainsKey('Perf')) {
 
 # If user just wants -Perf and containers are already running & healthy, we don't have to teardown/rebuild
 $skipUpFlow = $false
-if ($PSBoundParameters.ContainsKey('Perf') -and -not $Strict) {
+if ($isPerfRequested -and -not $Strict) {
     try {
         $healthOut = & curl.exe -s --max-time 3 http://localhost/api/v1/health 2>$null
         if ($healthOut -and $healthOut -match '"status"\s*:\s*"healthy"') {
@@ -227,7 +231,7 @@ if (-not $skipUpFlow) {
 # ====================================================================
 # [GATE 4] K6 Performance Test Suite
 # ====================================================================
-if ($PSBoundParameters.ContainsKey('Perf')) {
+if ($isPerfRequested) {
     Write-Host ""
     Write-Host "========================================================" -ForegroundColor Magenta
     Write-Host " [Gate 4] Running K6 Performance Tests                  " -ForegroundColor Magenta
@@ -235,13 +239,13 @@ if ($PSBoundParameters.ContainsKey('Perf')) {
 
     $allSuites = @("smoke", "load", "stress", "spike", "soak")
     $targetSuites = @()
-    if ([string]::IsNullOrWhiteSpace($Perf) -or $Perf -eq "all" -or $Perf -eq "True" -or $Perf -eq "true") {
+    if ([string]::IsNullOrWhiteSpace($PerfSuite) -or $PerfSuite -eq "all") {
         $targetSuites = $allSuites
     } else {
-        $chosen = $Perf.ToLower().Trim()
+        $chosen = $PerfSuite.ToLower().Trim()
         if ($allSuites -notcontains $chosen) {
             Write-Host ""
-            Write-Host "[FAIL] Invalid perf suite '$Perf'. Available suites: $($allSuites -join ', ')" -ForegroundColor Red
+            Write-Host "[FAIL] Invalid perf suite '$PerfSuite'. Available suites: $($allSuites -join ', ')" -ForegroundColor Red
             exit 1
         }
         $targetSuites = @($chosen)

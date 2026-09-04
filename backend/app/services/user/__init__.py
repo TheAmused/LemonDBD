@@ -25,7 +25,9 @@ from app.services.user.avatar import (
 )
 from app.services.user.profile import (
     fetch_user_by_id,
+    get_or_create_user_showcase,
     modify_user_profile,
+    update_user_showcase,
 )
 
 __all__ = [
@@ -44,6 +46,8 @@ __all__ = [
     "reset_password_with_token",
     "fetch_user_by_id",
     "modify_user_profile",
+    "get_or_create_user_showcase",
+    "update_user_showcase",
     "list_all_users_paginated",
     "admin_modify_user",
     "admin_remove_user",

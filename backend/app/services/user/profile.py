@@ -1,9 +1,9 @@
-# backend/app/services/user/profile.py
+from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.security import hash_password
-from app.models import User
+from app.models import User, UserShowcase
 
 
 def fetch_user_by_id(user_id: int) -> User | None:
@@ -42,3 +42,82 @@ def modify_user_profile(
 
     db.session.commit()
     return user, None
+
+
+def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
+    """Retrieve or initialize player showcase record in database."""
+    user = db.session.get(User, user_id)
+    if not user:
+        return None
+
+    showcase = db.session.scalars(
+        select(UserShowcase).where(UserShowcase.user_id == user_id)
+    ).first()
+
+    if not showcase:
+        showcase = UserShowcase(
+            user_id=user_id,
+            player_title="The Fogwalker",
+            devotion_level=14,
+            grade_rank="Iridescent I",
+            survivor_main_character="Feng Min",
+            survivor_main_prestige=9,
+            survivor_perk_ids=[None, None, None, None],
+            killer_main_character="The Blight",
+            killer_main_prestige=7,
+            killer_perk_ids=[None, None, None, None],
+        )
+        db.session.add(showcase)
+        db.session.commit()
+
+    return showcase
+
+
+def update_user_showcase(
+    user_id: int, data: dict[str, Any]
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Update custom player showcase attributes in database."""
+    showcase = get_or_create_user_showcase(user_id)
+    if not showcase:
+        return None, "User not found."
+
+    if "player_title" in data and isinstance(data["player_title"], str):
+        showcase.player_title = data["player_title"].strip()[:100]
+
+    if "devotion_level" in data and isinstance(data["devotion_level"], (int, float)):
+        showcase.devotion_level = max(1, min(99, int(data["devotion_level"])))
+
+    if "grade_rank" in data and isinstance(data["grade_rank"], str):
+        showcase.grade_rank = data["grade_rank"].strip()[:50]
+
+    if "survivor_main" in data and isinstance(data["survivor_main"], dict):
+        sm = data["survivor_main"]
+        if "character_name" in sm and isinstance(sm["character_name"], str):
+            showcase.survivor_main_character = sm["character_name"].strip()[:100]
+        if "prestige" in sm and isinstance(sm["prestige"], (int, float)):
+            showcase.survivor_main_prestige = max(1, min(100, int(sm["prestige"])))
+        if "perk_ids" in sm and isinstance(sm["perk_ids"], list):
+            showcase.survivor_perk_ids = [
+                int(p) if p is not None and str(p).isdigit() else None
+                for p in sm["perk_ids"][:4]
+            ]
+            while len(showcase.survivor_perk_ids) < 4:
+                showcase.survivor_perk_ids.append(None)
+
+    if "killer_main" in data and isinstance(data["killer_main"], dict):
+        km = data["killer_main"]
+        if "character_name" in km and isinstance(km["character_name"], str):
+            showcase.killer_main_character = km["character_name"].strip()[:100]
+        if "prestige" in km and isinstance(km["prestige"], (int, float)):
+            showcase.killer_main_prestige = max(1, min(100, int(km["prestige"])))
+        if "perk_ids" in km and isinstance(km["perk_ids"], list):
+            showcase.killer_perk_ids = [
+                int(p) if p is not None and str(p).isdigit() else None
+                for p in km["perk_ids"][:4]
+            ]
+            while len(showcase.killer_perk_ids) < 4:
+                showcase.killer_perk_ids.append(None)
+
+    db.session.commit()
+    return showcase.to_dict(), None
+

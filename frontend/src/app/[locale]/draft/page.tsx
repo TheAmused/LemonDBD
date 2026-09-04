@@ -10,6 +10,7 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { getBackendBaseUrl } from '@/utils/api';
 
 function DraftContent({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const searchParams = useSearchParams();
@@ -26,7 +27,7 @@ export default function DraftPage() {
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.draftPageTitle || 'LemonDBD - Draft Mode');
 

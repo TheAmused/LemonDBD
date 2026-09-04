@@ -3,6 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { getBackendBaseUrl } from '@/utils/api';
 import {
   Users,
   Swords,
@@ -61,7 +62,7 @@ const DEFAULT_SURVIVORS: SurvivorBuild[] = [
 export const SwfPlanner: React.FC<SwfPlannerProps> = ({ dict }) => {
   const t: Record<string, string> = dict?.swf || {};
   const tModal: Record<string, string> = dict?.modal || {};
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   const roleConfig: Record<SquadRole, { icon: React.ElementType; label: string; color: string; bg: string; desc: string }> = {
     'Chaser': {

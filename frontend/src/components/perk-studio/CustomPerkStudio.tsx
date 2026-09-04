@@ -2,6 +2,7 @@
 // frontend/src/components/perk-studio/CustomPerkStudio.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { getBackendBaseUrl } from '@/utils/api';
 import {
   Wand2,
   Sparkles,
@@ -125,7 +126,7 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
   const [sortBy, setSortBy] = useState<string>('newest');
   const [upvotedIds, setUpvotedIds] = useState<Record<number, boolean>>({});
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   const fetchCommunityPerks = useCallback(async () => {
     setLoadingGallery(true);

@@ -1,7 +1,7 @@
 // frontend/src/services/userShowcaseApi.ts
 'use client';
 
-import type { UserShowcaseState } from '@/types/userShowcase';
+import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 const TOKEN_KEY = 'lemondbd_token';
@@ -40,7 +40,10 @@ export function mapBackendToShowcaseState(data: any): UserShowcaseState {
   const kPerks = Array.isArray(data.killer_main?.perk_ids) ? data.killer_main.perk_ids : [];
 
   return {
-    playerTitle: typeof data.player_title === 'string' && data.player_title ? data.player_title : 'The Fogwalker',
+    playerTitle:
+      typeof data.player_title === 'string' && (PLAYER_TITLES as readonly string[]).includes(data.player_title)
+        ? data.player_title
+        : 'The Camper',
     devotionLevel: typeof data.devotion_level === 'number' ? Math.max(1, Math.min(99, data.devotion_level)) : 14,
     gradeRank: typeof data.grade_rank === 'string' && data.grade_rank ? data.grade_rank : 'Iridescent I',
     survivorMain: {

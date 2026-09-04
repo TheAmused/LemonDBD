@@ -43,13 +43,13 @@ class TestUserShowcaseRoutes:
         res = client.get(f"/api/v1/users/{user.id}/showcase")
         assert res.status_code == 200
         data = res.get_json()["data"]
-        assert data["player_title"] == "The Fogwalker"
-        assert data["devotion_level"] == 14
-        assert data["grade_rank"] == "Iridescent I"
+        assert data["player_title"] == "The Camper"
+        assert data["devotion_level"] == 0
+        assert data["grade_rank"] == "Ash IV"
         assert data["survivor_main"]["character_name"] == "Feng Min"
-        assert data["survivor_main"]["prestige"] == 9
+        assert data["survivor_main"]["prestige"] == 1
         assert data["killer_main"]["character_name"] == "The Blight"
-        assert data["killer_main"]["prestige"] == 7
+        assert data["killer_main"]["prestige"] == 1
 
     def test_get_showcase_user_not_found(self, client: FlaskClient) -> None:
         res = client.get("/api/v1/users/999999/showcase")

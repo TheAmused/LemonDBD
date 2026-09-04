@@ -28,6 +28,7 @@ import { ModeSwitcher } from './ModeSwitcher';
 import { RoleToggle } from './shared/RoleToggle';
 import { motion } from 'framer-motion';
 import { StageFrame } from './shared/StageFrame';
+import { Pagination } from '@/components/Pagination';
 import type { ChaosMutator } from '../ChaosWheelModal';
 
 const ChaosWheelModal = dynamic(() => import('../ChaosWheelModal').then((m) => m.ChaosWheelModal), { ssr: false });
@@ -148,6 +149,15 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const totalPages = Math.max(1, Math.ceil(totalPlayableCount / PERKS_PER_PAGE));
   const lastPagePerks = totalPlayableCount % PERKS_PER_PAGE || (totalPlayableCount > 0 ? PERKS_PER_PAGE : 0);
 
+  const [generatorPage, setGeneratorPage] = useState<number>(1);
+
+  // Clamp generatorPage when pool size changes
+  useEffect(() => {
+    if (generatorPage > totalPages) {
+      setGeneratorPage(Math.max(1, totalPages));
+    }
+  }, [totalPages, generatorPage]);
+
   useEffect(() => {
     // Skip until real perk data has actually loaded -- allPerks/baseEligibleRolePerks
     // start empty before the fetch resolves, which used to read as "the pool just hit
@@ -167,6 +177,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
   const handleRoleChange = async (newRole: RoleCategory) => {
     setRole(newRole);
+    setGeneratorPage(1);
     setLoadout([null, null, null, null]);
     setRevealedSlots([false, false, false, false]);
     try {
@@ -398,6 +409,20 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             )}
             </motion.div>
           </StageFrame>
+
+          {totalPlayableCount > 0 && (
+            <div className="shrink-0 w-full px-4 sm:px-6 pb-2">
+              <Pagination
+                page={generatorPage}
+                totalPages={totalPages}
+                totalResults={totalPlayableCount}
+                limit={PERKS_PER_PAGE}
+                onPageChange={setGeneratorPage}
+                onLimitChange={() => {}}
+                dict={dict as any}
+              />
+            </div>
+          )}
         </>
       )}
 

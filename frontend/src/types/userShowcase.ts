@@ -15,16 +15,8 @@ export interface UserShowcaseState {
 }
 
 export const PLAYER_TITLES = [
-  'The Fogwalker',
-  'Apex Predator',
-  'Hex Cleanser',
-  'Basement Architect',
-  'Trial Champion',
-  'Devoted Survivor',
-  'Entity Whisperer',
-  'Loop God',
-  'The Merciless',
-  'Campfire Veteran',
+  'The Camper',
+  'The Slasher',
 ] as const;
 
 export type PlayerTitle = (typeof PLAYER_TITLES)[number];
@@ -42,7 +34,7 @@ export const GRADE_EMBLEMS = [
 export type GradeEmblem = (typeof GRADE_EMBLEMS)[number];
 
 export const DEFAULT_SHOWCASE_STATE: UserShowcaseState = {
-  playerTitle: 'The Fogwalker',
+  playerTitle: 'The Camper',
   devotionLevel: 0,
   gradeRank: 'Ash IV',
   survivorMain: {

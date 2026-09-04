@@ -292,4 +292,29 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
       'RandomizerLoading main container should be flush without outer gutter padding'
     );
   });
+
+  it('StageFrame contains static DBD heartbeat corner vignette', () => {
+    const stageFramePath = path.resolve(__dirname, '../../components/generator/shared/StageFrame.tsx');
+    const stageFrameContent = fs.readFileSync(stageFramePath, 'utf-8');
+
+    assert.ok(
+      stageFrameContent.includes('dbd-heartbeat-vignette--static'),
+      'StageFrame must include dbd-heartbeat-vignette--static corner glow overlay'
+    );
+  });
+
+  it('GeneratorPage renders Pagination component below StageFrame for navigable perk pages', () => {
+    const genPagePath = path.resolve(__dirname, '../../components/generator/GeneratorPage.tsx');
+    const genPageContent = fs.readFileSync(genPagePath, 'utf-8');
+
+    assert.ok(
+      genPageContent.includes("import { Pagination } from '@/components/Pagination';"),
+      'GeneratorPage must import Pagination component'
+    );
+    assert.ok(
+      genPageContent.includes('<Pagination'),
+      'GeneratorPage must render Pagination component'
+    );
+  });
 });
+

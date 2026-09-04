@@ -312,6 +312,17 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
       'GeneratorPage must not render out-of-place Pagination component'
     );
   });
+
+  it('StageFrame background does not have rounded corners', () => {
+    const stageFramePath = path.resolve(__dirname, '../../components/generator/shared/StageFrame.tsx');
+    const stageFrameContent = fs.readFileSync(stageFramePath, 'utf-8');
+
+    assert.ok(
+      !stageFrameContent.includes('rounded-3xl'),
+      'StageFrame should not have rounded-3xl corners on background'
+    );
+  });
 });
+
 
 

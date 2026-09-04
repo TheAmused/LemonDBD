@@ -64,7 +64,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-3xl bg-slate-100/90 dark:bg-[#0c0e14]/95 border border-slate-200 dark:border-border-color shadow-2xl p-4 sm:p-6 transition-colors duration-300',
+        'relative overflow-hidden bg-slate-100/90 dark:bg-[#0c0e14]/95 border border-slate-200 dark:border-border-color shadow-2xl p-4 sm:p-6 transition-colors duration-300',
         className
       )}
     >

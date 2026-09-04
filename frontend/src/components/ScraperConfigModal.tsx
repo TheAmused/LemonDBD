@@ -498,9 +498,7 @@ export function ScraperConfigModal({
                     <Download className="h-3.5 w-3.5" />
                   )}
                   <span>
-                    {isExporting
-                      ? dict?.admin?.exportingStatus
-                      : `Download Backup (${exportTargets.length})`}
+                    {isExporting ? dict?.admin?.exportingStatus : dict?.admin?.downloadBackup} ({exportTargets.length})
                   </span>
                 </button>
               </div>
@@ -728,9 +726,7 @@ export function ScraperConfigModal({
                     <Trash2 className="h-3.5 w-3.5" />
                   )}
                   <span>
-                    {isPurging
-                      ? dict?.admin?.purgingStatus || 'Purging...'
-                      : `Purge Selected (${purgeTargets.length})`}
+                    {isPurging ? dict?.admin?.purgingStatus : dict?.admin?.purgeSelected} ({purgeTargets.length})
                   </span>
                 </button>
               </div>

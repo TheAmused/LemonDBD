@@ -331,7 +331,7 @@ export default function UserProfilePage() {
 
                   <div className="space-y-2 flex-1 text-center sm:text-left">
                     <p className="text-xs text-slate-600 dark:text-slate-400">
-                      Upload a custom avatar (PNG, JPEG, WebP, max 10MB) or reset to the default icon.
+                      {dict?.user?.avatarHelpText || 'Upload a custom avatar (PNG, JPEG, WebP, max 10MB) or reset to the default icon.'}
                     </p>
                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
                       <button

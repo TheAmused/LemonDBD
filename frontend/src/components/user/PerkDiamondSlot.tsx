@@ -39,7 +39,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             : 'border-dashed border-slate-400/40 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-900/40 hover:border-amber-500/60 hover:bg-amber-500/5 hover:scale-105'
         }`}
         title={perk?.name || emptyLabel}
-        aria-label={perk ? `Slot ${slotIndex + 1}: ${perk.name}` : `Slot ${slotIndex + 1}: ${emptyLabel}`}
+        aria-label={perk?.name || emptyLabel}
       >
         {/* Un-rotated inside content */}
         <div className="-rotate-45 relative flex items-center justify-center w-full h-full pointer-events-none">

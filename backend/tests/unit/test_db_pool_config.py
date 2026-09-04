@@ -12,8 +12,8 @@ class TestDatabasePoolConfig:
     def test_default_production_pool_options(self) -> None:
         engine_options = Config.SQLALCHEMY_ENGINE_OPTIONS
         assert engine_options.get("pool_pre_ping") is True
-        assert engine_options.get("pool_size") == 10
-        assert engine_options.get("max_overflow") == 20
+        assert engine_options.get("pool_size") == 20
+        assert engine_options.get("max_overflow") == 30
         assert engine_options.get("pool_recycle") == 300
         assert engine_options.get("pool_timeout") == 30
 
@@ -44,8 +44,8 @@ class TestDatabasePoolConfig:
     @pytest.mark.parametrize(
         "var_name, default_val",
         [
-            ("DB_POOL_SIZE", 10),
-            ("DB_MAX_OVERFLOW", 20),
+            ("DB_POOL_SIZE", 20),
+            ("DB_MAX_OVERFLOW", 30),
             ("DB_POOL_RECYCLE", 300),
             ("DB_POOL_TIMEOUT", 30),
         ],

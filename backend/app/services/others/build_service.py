@@ -85,6 +85,8 @@ DEFAULT_BUILDS = [
 
 
 class BuildService:
+    _is_seeded: bool = False
+
     def __init__(self, db_service=None):
         self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
@@ -110,6 +112,9 @@ class BuildService:
         conn.close()
 
     def seed_builds_if_empty(self):
+        if BuildService._is_seeded:
+            return
+
         if self._use_sqlalchemy:
             try:
                 if current_app:
@@ -129,6 +134,7 @@ class BuildService:
                                 )
                             )
                         db.session.commit()
+                    BuildService._is_seeded = True
                     return
             except Exception as e:
                 logger.debug(f"SQLAlchemy seed_builds_if_empty fallback: {e}")

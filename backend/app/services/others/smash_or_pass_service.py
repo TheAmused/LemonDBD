@@ -72,12 +72,16 @@ EDITIONS: list[dict[str, Any]] = [
 
 class SmashOrPassService:
     """Service handling multi-roster Smash or Pass voting, feed generation, user persistence, and leaderboards."""
+    _is_seeded: bool = False
 
     def ensure_seeded(self) -> None:
+        if SmashOrPassService._is_seeded:
+            return
         try:
             count = db.session.scalar(select(func.count(Roster.id)))
             if not count or count == 0:
                 seed_smash_rosters()
+            SmashOrPassService._is_seeded = True
         except Exception as e:
             logger.debug(f"Smash-or-pass seed notice: {e}")
 

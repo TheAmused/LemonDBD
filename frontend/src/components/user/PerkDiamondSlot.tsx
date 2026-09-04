@@ -1,9 +1,6 @@
-// frontend/src/components/user/PerkDiamondSlot.tsx
-'use client';
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Sparkles } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 
@@ -25,6 +22,12 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   emptyLabel = 'Empty Slot',
   clearLabel = 'Clear Perk',
 }) => {
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [perk?.id]);
+
   const iconUrl = perk ? getPerkIconUrl(perk) : null;
 
   return (
@@ -35,25 +38,28 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
         onClick={onClick}
         className={`relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rotate-45 rounded-xl border-2 transition-all cursor-pointer shadow-md ${
           perk
-            ? 'border-purple-500/80 bg-gradient-to-br from-purple-900/90 via-slate-900 to-purple-950/90 hover:scale-105 hover:border-purple-400 hover:shadow-purple-500/20'
-            : 'border-dashed border-slate-400/40 dark:border-slate-700/60 bg-slate-100/60 dark:bg-slate-900/40 hover:border-amber-500/60 hover:bg-amber-500/5 hover:scale-105'
+            ? 'border-purple-500/80 bg-gradient-to-br from-purple-950/80 via-bg-surface to-purple-900/80 hover:scale-105 hover:border-purple-400 hover:shadow-purple-500/25'
+            : 'border-dashed border-border-color bg-bg-elevated/40 hover:border-accent-amber/60 hover:bg-accent-amber/5 hover:scale-105'
         }`}
         title={perk?.name || emptyLabel}
         aria-label={perk?.name || emptyLabel}
       >
         {/* Un-rotated inside content */}
         <div className="-rotate-45 relative flex items-center justify-center w-full h-full pointer-events-none">
-          {perk && iconUrl ? (
+          {perk && iconUrl && !imgError ? (
             <Image
               src={iconUrl}
               alt={perk.name}
               width={42}
               height={42}
               className="object-contain drop-shadow-md"
+              onError={() => setImgError(true)}
               unoptimized
             />
+          ) : perk ? (
+            <Sparkles className="h-5 w-5 text-purple-400" />
           ) : (
-            <Plus className="h-5 w-5 text-slate-400 dark:text-slate-500 group-hover:text-amber-500 transition-colors" />
+            <Plus className="h-5 w-5 text-text-muted group-hover:text-accent-amber transition-colors" />
           )}
         </div>
       </button>
@@ -67,14 +73,14 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             onClear(e);
           }}
           title={clearLabel}
-          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-rose-600 text-white shadow-md opacity-0 group-hover:opacity-100 hover:bg-rose-500 transition-all cursor-pointer"
+          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
         >
           <X className="h-3 w-3" />
         </button>
       )}
 
       {/* Label under diamond */}
-      <span className="mt-2 text-[10px] font-bold text-center max-w-[80px] truncate text-slate-600 dark:text-slate-400 group-hover:text-amber-500 dark:group-hover:text-amber-400 transition-colors">
+      <span className="mt-2.5 text-[10px] font-mono font-bold text-center max-w-[84px] truncate text-text-muted group-hover:text-accent-amber transition-colors">
         {perk ? perk.name : emptyLabel}
       </span>
     </div>

@@ -16,23 +16,23 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
   dict,
 }) => {
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-orange-500/30 bg-gradient-to-br from-orange-950/20 via-slate-900/80 to-slate-950/90 p-5 sm:p-6 backdrop-blur-xl shadow-xl space-y-4">
-      <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-orange-500/10 blur-3xl" />
+    <div className="relative overflow-hidden rounded-3xl border border-orange-500/35 bg-bg-surface p-5 sm:p-6 backdrop-blur-xl shadow-md space-y-4 text-text-primary">
+      <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-orange-500/10 blur-3xl opacity-30" />
 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-xl bg-orange-500/20 text-orange-400">
+          <div className="p-1.5 rounded-xl bg-orange-500/15 text-orange-500 dark:text-orange-400">
             <Trophy className="h-4 w-4" />
           </div>
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-200 font-mono">
+          <h3 className="text-xs font-black uppercase tracking-wider text-text-primary font-mono">
             {dict?.user?.streakRecords || 'Trial Trophies & Records'}
           </h3>
         </div>
 
         <Link
           href={`/${currentLocale}/streaks`}
-          className="inline-flex items-center gap-1 text-xs font-bold text-orange-400 hover:text-orange-300 transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-bold font-mono text-orange-500 dark:text-orange-400 hover:opacity-80 transition-opacity"
         >
           <span>{dict?.sidebar?.streaks || 'Challenges'}</span>
           <ChevronRight className="h-3 w-3" />
@@ -40,22 +40,22 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
       </div>
 
       {/* Streak Trophies Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
         {/* Gauntlet Mode */}
         <Link
           href={`/${currentLocale}/streaks/killer/gauntlet-streak`}
-          className="flex flex-col justify-between p-3.5 rounded-2xl border border-slate-800/80 bg-slate-950/60 hover:border-orange-500/40 hover:bg-orange-500/5 transition-all group shadow-xs"
+          className="flex flex-col justify-between p-4 rounded-2xl border border-border-color bg-bg-elevated/40 hover:border-orange-500/50 hover:bg-orange-500/5 transition-all group shadow-xs"
         >
-          <div className="flex items-center justify-between pb-2">
+          <div className="flex items-center justify-between pb-2.5">
             <div className="flex items-center gap-2">
-              <Skull className="h-4 w-4 text-red-400" />
-              <span className="text-xs font-extrabold uppercase text-slate-300 group-hover:text-orange-400 transition-colors">
+              <Skull className="h-4 w-4 text-accent-red" />
+              <span className="text-xs font-black font-mono uppercase text-text-primary group-hover:text-orange-500 transition-colors">
                 {dict?.user?.gauntletTitle || 'Gauntlet'}
               </span>
             </div>
-            <ChevronRight className="h-3 w-3 text-slate-600 group-hover:text-orange-400 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="h-3 w-3 text-text-muted group-hover:text-orange-500 group-hover:translate-x-0.5 transition-transform" />
           </div>
-          <p className="text-[11px] text-slate-400 leading-tight">
+          <p className="text-xs text-text-muted font-mono leading-relaxed">
             {dict?.user?.gauntletDesc || 'Consecutive trial victories without duplicate perks.'}
           </p>
         </Link>
@@ -63,18 +63,18 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
         {/* Chaos Shuffle Mode */}
         <Link
           href={`/${currentLocale}/streaks/killer/chaos-streak`}
-          className="flex flex-col justify-between p-3.5 rounded-2xl border border-slate-800/80 bg-slate-950/60 hover:border-amber-500/40 hover:bg-amber-500/5 transition-all group shadow-xs"
+          className="flex flex-col justify-between p-4 rounded-2xl border border-border-color bg-bg-elevated/40 hover:border-accent-amber/50 hover:bg-accent-amber/5 transition-all group shadow-xs"
         >
-          <div className="flex items-center justify-between pb-2">
+          <div className="flex items-center justify-between pb-2.5">
             <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-amber-400" />
-              <span className="text-xs font-extrabold uppercase text-slate-300 group-hover:text-amber-400 transition-colors">
+              <Zap className="h-4 w-4 text-accent-amber" />
+              <span className="text-xs font-black font-mono uppercase text-text-primary group-hover:text-accent-amber transition-colors">
                 {dict?.user?.chaosTitle || 'Chaos Shuffle'}
               </span>
             </div>
-            <ChevronRight className="h-3 w-3 text-slate-600 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="h-3 w-3 text-text-muted group-hover:text-accent-amber group-hover:translate-x-0.5 transition-transform" />
           </div>
-          <p className="text-[11px] text-slate-400 leading-tight">
+          <p className="text-xs text-text-muted font-mono leading-relaxed">
             {dict?.user?.chaosDesc || 'Randomized build surviving against unpredictable Entity odds.'}
           </p>
         </Link>
@@ -82,18 +82,18 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
         {/* Page Streak Mode */}
         <Link
           href={`/${currentLocale}/streaks/killer/page-streak`}
-          className="flex flex-col justify-between p-3.5 rounded-2xl border border-slate-800/80 bg-slate-950/60 hover:border-cyan-500/40 hover:bg-cyan-500/5 transition-all group shadow-xs"
+          className="flex flex-col justify-between p-4 rounded-2xl border border-border-color bg-bg-elevated/40 hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all group shadow-xs"
         >
-          <div className="flex items-center justify-between pb-2">
+          <div className="flex items-center justify-between pb-2.5">
             <div className="flex items-center gap-2">
-              <Repeat className="h-4 w-4 text-cyan-400" />
-              <span className="text-xs font-extrabold uppercase text-slate-300 group-hover:text-cyan-400 transition-colors">
+              <Repeat className="h-4 w-4 text-cyan-500" />
+              <span className="text-xs font-black font-mono uppercase text-text-primary group-hover:text-cyan-500 transition-colors">
                 {dict?.user?.pageStreakTitle || 'Page Streak'}
               </span>
             </div>
-            <ChevronRight className="h-3 w-3 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="h-3 w-3 text-text-muted group-hover:text-cyan-500 group-hover:translate-x-0.5 transition-transform" />
           </div>
-          <p className="text-[11px] text-slate-400 leading-tight">
+          <p className="text-xs text-text-muted font-mono leading-relaxed">
             {dict?.user?.pageStreakDesc || 'Progressive tier mastery unlocking all character teachables.'}
           </p>
         </Link>

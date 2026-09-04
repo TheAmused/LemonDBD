@@ -50,7 +50,7 @@ const RadialDial: React.FC<DialProps> = ({
   const strokeDashoffset = circumference - (Math.min(100, Math.max(0, percentage)) / 100) * circumference;
 
   return (
-    <div className="relative flex flex-col items-center rounded-2xl border border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/60 p-4 sm:p-5 backdrop-blur-xl shadow-md transition-all hover:border-slate-300 dark:hover:border-slate-700">
+    <div className="relative flex flex-col items-center rounded-3xl border border-border-color bg-bg-surface p-5 sm:p-6 backdrop-blur-md shadow-md transition-all hover:border-border-color/80 group">
       {/* Radial Gauge SVG */}
       <div className="relative flex items-center justify-center">
         <svg className="w-28 h-28 -rotate-90 transform" viewBox="0 0 96 96">
@@ -59,7 +59,7 @@ const RadialDial: React.FC<DialProps> = ({
             cx="48"
             cy="48"
             r={radius}
-            className="stroke-slate-200 dark:stroke-slate-800"
+            stroke="var(--bg-elevated)"
             strokeWidth="7"
             fill="transparent"
           />
@@ -80,21 +80,21 @@ const RadialDial: React.FC<DialProps> = ({
 
         {/* Center content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-base sm:text-lg font-black font-mono tracking-tight text-slate-900 dark:text-slate-100">
+          <div className="text-lg sm:text-xl font-black font-mono tracking-tight text-text-primary">
             {percentage}%
           </div>
-          <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+          <div className="text-xs font-mono text-text-muted">
             {count}/{total}
           </div>
         </div>
       </div>
 
       {/* Title & Icon below */}
-      <div className="flex items-center gap-1.5 mt-3">
-        <div className={`p-1 rounded-lg ${accentClass}`}>
+      <div className="flex items-center gap-2 mt-4">
+        <div className={`p-1.5 rounded-xl ${accentClass}`}>
           {icon}
         </div>
-        <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300">
+        <span className="text-xs font-black font-mono uppercase tracking-wider text-text-primary">
           {title}
         </span>
       </div>
@@ -118,8 +118,8 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-amber-500" />
+        <h2 className="text-sm font-black font-mono uppercase tracking-wider text-text-primary flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-accent-amber" />
           <span>{dict?.user?.vaultMastery || 'Vault Mastery'}</span>
         </h2>
       </div>
@@ -132,7 +132,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           total={survTotal}
           percentage={survPercent}
           colorHex="#06b6d4" // Cyan-500
-          accentClass="bg-cyan-500/10 text-cyan-500 dark:text-cyan-400"
+          accentClass="bg-cyan-500/15 text-cyan-500 dark:text-cyan-400"
           icon={<Shield className="h-3.5 w-3.5" />}
         />
 
@@ -143,7 +143,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           total={killerTotal}
           percentage={killerPercent}
           colorHex="#ef4444" // Red-500
-          accentClass="bg-red-500/10 text-red-500 dark:text-red-400"
+          accentClass="bg-accent-red/15 text-accent-red"
           icon={<Skull className="h-3.5 w-3.5" />}
         />
 
@@ -154,7 +154,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           total={perkTotal}
           percentage={perkPercent}
           colorHex="#f59e0b" // Amber-500
-          accentClass="bg-amber-500/10 text-amber-500 dark:text-amber-400"
+          accentClass="bg-accent-amber/15 text-accent-amber"
           icon={<Sparkles className="h-3.5 w-3.5" />}
         />
       </div>

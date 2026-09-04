@@ -114,14 +114,17 @@ export function generateHtmlSummary(data, options = {}) {
   countChecks(rootGroup);
   const checksRate = checksTotal > 0 ? (checksPassed / checksTotal) * 100 : 100;
 
-  // Architectural Tiers
+  // Architectural Tiers - Comprehensive tracking of all application elements
   const tiers = [
     { label: 'Overall HTTP Requests', metricKey: 'http_req_duration', type: 'baseline' },
+    { label: 'User Authentication & JWT', metricKey: 'auth_duration', type: 'auth' },
     { label: 'Frontend SSR Pages', metricKey: 'http_req_duration{type:ssr}', type: 'ssr' },
     { label: 'Static Assets (Nginx)', metricKey: 'http_req_duration{type:static}', type: 'static' },
     { label: 'Database Write Transactions', metricKey: 'http_req_duration{type:write}', type: 'write' },
     { label: 'Heavy Queries & Filters', metricKey: 'http_req_duration{type:query}', type: 'query' },
-    { label: 'User Authentication / Hashing', metricKey: 'auth_duration', type: 'auth' },
+    { label: 'Search & Autocomplete', metricKey: 'search_duration', type: 'search' },
+    { label: 'Smash or Pass Game & Votes', metricKey: 'vote_duration', type: 'vote' },
+    { label: 'Perk & Character Catalog', metricKey: 'browse_duration', type: 'browse' },
   ];
 
   const populatedTiers = tiers

@@ -36,6 +36,11 @@ export const MainCard: React.FC<MainCardProps> = ({
 }) => {
   const isSurvivor = role === 'Survivor';
   const [allPerks, setAllPerks] = useState<Perk[]>([]);
+  const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    setImgError(false);
+  }, [loadout.characterName]);
 
   // Pre-load perks mapping so slot icons render with images
   useEffect(() => {
@@ -65,16 +70,16 @@ export const MainCard: React.FC<MainCardProps> = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl border p-5 sm:p-6 backdrop-blur-xl shadow-xl flex flex-col justify-between space-y-6 ${
+      className={`relative overflow-hidden rounded-3xl border p-5 sm:p-6 backdrop-blur-xl shadow-md flex flex-col justify-between space-y-6 transition-all ${
         isSurvivor
-          ? 'border-cyan-500/30 bg-gradient-to-br from-cyan-950/20 via-slate-900/80 to-slate-950/90'
-          : 'border-red-500/30 bg-gradient-to-br from-red-950/20 via-slate-900/80 to-slate-950/90'
+          ? 'border-cyan-500/35 bg-bg-surface hover:border-cyan-500/50'
+          : 'border-accent-red/35 bg-bg-surface hover:border-accent-red/50'
       }`}
     >
       {/* Background Accent Glow */}
       <div
-        className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full blur-3xl ${
-          isSurvivor ? 'bg-cyan-500/10' : 'bg-red-600/10'
+        className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full blur-3xl opacity-20 ${
+          isSurvivor ? 'bg-cyan-500' : 'bg-accent-red'
         }`}
       />
 
@@ -83,12 +88,12 @@ export const MainCard: React.FC<MainCardProps> = ({
         <div className="flex items-center gap-2">
           <div
             className={`p-1.5 rounded-xl ${
-              isSurvivor ? 'bg-cyan-500/20 text-cyan-400' : 'bg-red-500/20 text-red-400'
+              isSurvivor ? 'bg-cyan-500/15 text-cyan-500 dark:text-cyan-400' : 'bg-accent-red/15 text-accent-red'
             }`}
           >
             {isSurvivor ? <Shield className="h-4 w-4" /> : <Skull className="h-4 w-4" />}
           </div>
-          <h3 className="text-xs font-black uppercase tracking-wider text-slate-300 font-mono">
+          <h3 className="text-xs font-black uppercase tracking-wider text-text-primary font-mono">
             {isSurvivor
               ? dict?.user?.survivorMain || 'Survivor Main'
               : dict?.user?.killerMain || 'Killer Main'}
@@ -96,27 +101,27 @@ export const MainCard: React.FC<MainCardProps> = ({
         </div>
 
         {/* Prestige Level Control */}
-        <div className="flex items-center gap-1.5 rounded-xl border border-red-500/30 bg-red-950/40 px-2 py-1 text-slate-100 shadow-xs">
-          <span className="text-[10px] font-black uppercase tracking-wider text-red-400">
+        <div className="flex items-center gap-1.5 rounded-xl border border-accent-red/40 bg-accent-red/10 px-2.5 py-1 text-text-primary shadow-xs">
+          <span className="text-[10px] font-black uppercase tracking-wider text-accent-red font-mono">
             {dict?.user?.prestige || 'Prestige'}
           </span>
           <button
             type="button"
             onClick={() => handlePrestigeDelta(-1)}
             disabled={loadout.prestige <= 1}
-            className="h-5 w-5 flex items-center justify-center rounded bg-slate-900/80 text-red-300 hover:bg-slate-800 disabled:opacity-40 cursor-pointer text-xs"
+            className="h-5 w-5 flex items-center justify-center rounded-lg bg-bg-surface text-accent-red hover:bg-bg-elevated disabled:opacity-30 cursor-pointer text-xs transition-colors"
             title={dict?.user?.decreasePrestige || 'Decrease Prestige'}
           >
             <Minus className="h-3 w-3" />
           </button>
-          <span className="font-mono text-xs font-black text-red-200 min-w-[20px] text-center">
+          <span className="font-mono text-xs font-black text-accent-red min-w-[20px] text-center">
             {loadout.prestige}
           </span>
           <button
             type="button"
             onClick={() => handlePrestigeDelta(1)}
             disabled={loadout.prestige >= 100}
-            className="h-5 w-5 flex items-center justify-center rounded bg-slate-900/80 text-red-300 hover:bg-slate-800 disabled:opacity-40 cursor-pointer text-xs"
+            className="h-5 w-5 flex items-center justify-center rounded-lg bg-bg-surface text-accent-red hover:bg-bg-elevated disabled:opacity-30 cursor-pointer text-xs transition-colors"
             title={dict?.user?.increasePrestige || 'Increase Prestige'}
           >
             <Plus className="h-3 w-3" />
@@ -129,23 +134,29 @@ export const MainCard: React.FC<MainCardProps> = ({
         {/* Character Portrait */}
         <div
           onClick={onOpenCharacterModal}
-          className="relative group w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-slate-700 hover:border-amber-400 cursor-pointer shadow-lg bg-slate-950 shrink-0 transition-all hover:scale-102"
+          className="relative group w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-amber cursor-pointer shadow-md bg-bg-elevated shrink-0 transition-all hover:scale-102"
         >
-          {avatarSrc ? (
+          {avatarSrc && !imgError ? (
             <Image
               src={avatarSrc}
               alt={loadout.characterName}
               fill
               sizes="96px"
               className="object-cover"
+              onError={() => setImgError(true)}
               unoptimized
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-500 font-bold text-lg">
-              {loadout.characterName.slice(0, 2).toUpperCase()}
+            <div className="w-full h-full flex flex-col items-center justify-center bg-bg-elevated text-text-muted font-bold font-mono">
+              <span className="text-xl tracking-wider text-text-primary">
+                {loadout.characterName.slice(0, 2).toUpperCase()}
+              </span>
+              <span className="text-[9px] font-mono text-text-muted">
+                {role.toUpperCase()}
+              </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] font-bold text-white uppercase tracking-wider backdrop-blur-xs">
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] font-bold text-white uppercase tracking-wider backdrop-blur-xs font-mono">
             {dict?.user?.changeMain || 'Change'}
           </div>
         </div>
@@ -153,44 +164,45 @@ export const MainCard: React.FC<MainCardProps> = ({
         {/* Character Info */}
         <div className="space-y-2 flex-1">
           <div>
-            <h4 className="text-base sm:text-lg font-black text-slate-100 font-mono tracking-wide line-clamp-1">
+            <h4 className="text-base sm:text-lg font-black text-text-primary font-mono tracking-wide line-clamp-1">
               {loadout.characterName}
             </h4>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-xs text-text-muted font-mono">
               {(dict?.user?.prestigeProgress || 'Prestige level {level} of 100').replace('{level}', String(loadout.prestige))}
             </p>
           </div>
           <button
             type="button"
             onClick={onOpenCharacterModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-200 text-xs font-bold transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-color bg-bg-elevated hover:border-accent-amber/50 text-text-primary text-xs font-bold transition-colors cursor-pointer font-mono"
           >
-            <UserCheck className="h-3.5 w-3.5 text-amber-400" />
-            <span>{dict?.user?.changeMain || 'Change Character'}</span>
+            <UserCheck className="h-3.5 w-3.5 text-accent-amber" />
+            <span>{dict?.user?.changeMain || 'Change Main'}</span>
           </button>
         </div>
       </div>
 
       {/* Diamond Perk Loadout Layout */}
-      <div className="relative z-10 pt-2 border-t border-slate-800/80">
+      <div className="relative z-10 pt-2 border-t border-border-color">
         <div className="flex items-center justify-between pb-3">
-          <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5 font-mono">
+          <span className="text-[11px] font-black uppercase tracking-wider text-text-muted flex items-center gap-1.5 font-mono">
             <Sparkles className="h-3 w-3 text-purple-400" />
             <span>{dict?.user?.signatureLoadout || '4-Perk Signature Loadout'}</span>
           </span>
-          <span className="text-[10px] text-slate-500 font-mono">
+          <span className="text-[10px] text-text-muted font-mono">
             {(dict?.user?.equippedCount || '{count}/4 equipped').replace('{count}', String(loadout.perkIds.filter(Boolean).length))}
           </span>
         </div>
 
-        {/* Iconic Dead by Daylight Diamond Perk Cluster:
-            Slot 0: Top
-            Slot 3: Left,  Slot 1: Right
-            Slot 2: Bottom
-        */}
-        <div className="flex flex-col items-center justify-center py-2">
+        {/* Iconic Dead by Daylight Diamond Perk Cluster */}
+        <div className="relative flex flex-col items-center justify-center py-2">
+          {/* Subtle diamond connector crosshairs */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="w-24 h-24 rotate-45 border border-border-color/25 rounded-2xl" />
+          </div>
+
           {/* Top Slot (Slot 0) */}
-          <div className="mb-2">
+          <div className="relative z-10 mb-2">
             <PerkDiamondSlot
               slotIndex={0}
               perk={perksBySlot[0]}
@@ -203,7 +215,7 @@ export const MainCard: React.FC<MainCardProps> = ({
           </div>
 
           {/* Middle Row: Left Slot (Slot 3) & Right Slot (Slot 1) */}
-          <div className="flex items-center justify-center gap-12 sm:gap-16 my-1">
+          <div className="relative z-10 flex items-center justify-center gap-10 sm:gap-14 my-1">
             <PerkDiamondSlot
               slotIndex={3}
               perk={perksBySlot[3]}
@@ -225,7 +237,7 @@ export const MainCard: React.FC<MainCardProps> = ({
           </div>
 
           {/* Bottom Slot (Slot 2) */}
-          <div className="mt-2">
+          <div className="relative z-10 mt-2">
             <PerkDiamondSlot
               slotIndex={2}
               perk={perksBySlot[2]}

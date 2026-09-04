@@ -170,29 +170,29 @@ export default function UserProfilePage() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
-        <div className="max-w-md w-full rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100 p-8 backdrop-blur-xl shadow-sm dark:shadow-2xl space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30">
-            <LemonIcon className="h-10 w-10 text-amber-500 dark:text-amber-400" />
+      <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
+        <div className="max-w-md w-full rounded-3xl border border-border-color bg-bg-surface text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/30">
+            <LemonIcon className="h-10 w-10 text-accent-amber" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-slate-900 dark:text-slate-100">
+          <h1 className="text-xl sm:text-2xl font-black tracking-wider font-mono text-text-primary">
             {dict?.user?.authRequiredTitle || 'Authentication Required'}
           </h1>
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <p className="text-xs text-text-secondary leading-relaxed">
             {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">
             <button
               type="button"
               onClick={() => setAuthModalOpen(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-red-600 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-950/40 hover:from-amber-400 hover:to-red-500 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-red py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-amber/20 hover:opacity-95 transition-all cursor-pointer font-mono"
             >
               <User className="h-4 w-4" />
               <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
             </button>
             <Link
               href={`/${currentLocale}`}
-              className="text-xs text-slate-400 hover:text-amber-400 transition-colors py-1"
+              className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1 font-mono"
             >
               {dict?.user?.returnToHome || 'Return to Home'}
             </Link>
@@ -207,7 +207,7 @@ export default function UserProfilePage() {
   const hasCustomAvatar = Boolean(user.avatar_url && user.avatar_url !== 'default_avatar');
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={currentLocale}
         dict={dict}
@@ -226,27 +226,27 @@ export default function UserProfilePage() {
           />
 
           {/* Tab Navigation: Dossier (Default), Account Sanctum, Bug Reports */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-border-color pb-2">
             <button
               type="button"
               onClick={() => setActiveTab('dossier')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
                 activeTab === 'dossier'
-                  ? 'bg-amber-500/15 text-amber-500 dark:text-amber-400 border border-amber-500/30 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
+                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/35 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
               }`}
             >
-              <Flame className="h-4 w-4 text-amber-500" />
+              <Flame className="h-4 w-4 text-accent-amber" />
               <span>{dict?.user?.tabDossier || 'Campfire Dossier'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('sanctum')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
                 activeTab === 'sanctum'
-                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
+                  ? 'bg-bg-surface text-text-primary border border-border-color shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
               }`}
             >
               <Settings className="h-4 w-4" />
@@ -256,10 +256,10 @@ export default function UserProfilePage() {
             <button
               type="button"
               onClick={() => setActiveTab('bugs')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
                 activeTab === 'bugs'
-                  ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/35 shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
               }`}
             >
               <Bug className="h-4 w-4" />
@@ -311,8 +311,8 @@ export default function UserProfilePage() {
           {activeTab === 'sanctum' && (
             <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
               {/* Avatar Management Card */}
-              <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 backdrop-blur-xl shadow-sm space-y-4">
-                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 pb-2 border-b border-slate-200 dark:border-slate-800">
+              <div className="rounded-3xl border border-border-color bg-bg-surface p-6 backdrop-blur-xl shadow-md space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-wider text-text-primary pb-2 border-b border-border-color font-mono">
                   {dict?.user?.changeAvatar || 'Avatar & Profile Picture'}
                 </h3>
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
@@ -322,7 +322,7 @@ export default function UserProfilePage() {
                       previewUrl={optimisticPreview}
                       size="xl"
                       showAdminBadge={true}
-                      borderClassName="border-2 border-amber-500/40"
+                      borderClassName="border-2 border-accent-amber/40"
                     />
                     <div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs">
                       <Camera className="h-5 w-5" />
@@ -330,7 +330,7 @@ export default function UserProfilePage() {
                   </div>
 
                   <div className="space-y-2 flex-1 text-center sm:text-left">
-                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                    <p className="text-xs text-text-secondary">
                       {dict?.user?.avatarHelpText || 'Upload a custom avatar (PNG, JPEG, WebP, max 10MB) or reset to the default icon.'}
                     </p>
                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
@@ -338,9 +338,9 @@ export default function UserProfilePage() {
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={isUploadingAvatar}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-color bg-bg-elevated text-xs font-bold text-text-primary hover:border-accent-amber/50 transition-colors cursor-pointer"
                       >
-                        <Upload className="h-3.5 w-3.5 text-amber-500" />
+                        <Upload className="h-3.5 w-3.5 text-accent-amber" />
                         <span>{dict?.user?.changeAvatar || 'Upload New Avatar'}</span>
                       </button>
 
@@ -349,7 +349,7 @@ export default function UserProfilePage() {
                           type="button"
                           onClick={handleResetAvatar}
                           disabled={isUploadingAvatar}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 text-xs font-bold text-rose-500 hover:bg-rose-500/20 transition-colors cursor-pointer"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                           <span>{dict?.user?.removeAvatar || 'Reset to Default'}</span>
@@ -360,8 +360,8 @@ export default function UserProfilePage() {
                       <p
                         className={`text-xs font-semibold pt-1 ${
                           avatarFeedback.type === 'success'
-                            ? 'text-emerald-500 dark:text-emerald-400'
-                            : 'text-rose-500 dark:text-rose-400'
+                            ? 'text-emerald-500'
+                            : 'text-rose-500'
                         }`}
                       >
                         {avatarFeedback.text}
@@ -382,43 +382,43 @@ export default function UserProfilePage() {
                 </div>
 
                 {/* Clean Quick Shortcuts (Zero 'Others' items, zero quests) */}
-                <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4 w-full h-fit">
-                  <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 pb-2 border-b border-slate-200 dark:border-slate-800">
+                <div className="rounded-3xl border border-border-color bg-bg-surface p-6 backdrop-blur-xl shadow-md space-y-4 w-full h-fit">
+                  <h2 className="text-base font-black uppercase tracking-wider text-text-primary pb-2 border-b border-border-color font-mono">
                     {dict?.user?.quickShortcuts || 'Quick Shortcuts'}
                   </h2>
 
                   <div className="space-y-2">
                     <Link
                       href={`/${currentLocale}/streaks`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-500 dark:hover:text-orange-400 transition-all group shadow-xs"
+                      className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs font-bold text-text-primary hover:border-accent-amber/40 hover:bg-accent-amber/10 hover:text-accent-amber transition-all group shadow-xs"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Repeat className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+                        <Repeat className="h-4 w-4 text-accent-amber" />
                         <span>{dict?.sidebar?.streaks || 'Challenges'}</span>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-orange-500 dark:group-hover:text-orange-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-accent-amber group-hover:translate-x-0.5 transition-transform" />
                     </Link>
 
                     <Link
                       href={`/${currentLocale}/randomizer`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-500 dark:hover:text-amber-400 transition-all group shadow-xs"
+                      className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs font-bold text-text-primary hover:border-accent-amber/40 hover:bg-accent-amber/10 hover:text-accent-amber transition-all group shadow-xs"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Dices className="h-4 w-4 text-amber-500 dark:text-amber-400" />
+                        <Dices className="h-4 w-4 text-accent-amber" />
                         <span>{dict?.sidebar?.generator || 'Perk Randomizer'}</span>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-amber-500 dark:group-hover:text-amber-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-accent-amber group-hover:translate-x-0.5 transition-transform" />
                     </Link>
 
                     <Link
                       href={`/${currentLocale}/maps`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-500 dark:hover:text-cyan-400 transition-all group shadow-xs"
+                      className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs font-bold text-text-primary hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-500 transition-all group shadow-xs"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Compass className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
+                        <Compass className="h-4 w-4 text-cyan-500" />
                         <span>{dict?.sidebar?.maps || 'Map Explorer'}</span>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-slate-400 dark:text-slate-600 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-transform" />
+                      <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-cyan-500 group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
                 </div>

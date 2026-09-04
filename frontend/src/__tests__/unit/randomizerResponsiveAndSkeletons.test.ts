@@ -166,8 +166,66 @@ describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
           `Locale '${code}' jackpot line must be a non-empty string`
         );
       }
+
+      const jackpotLinesKiller = (dict.generator as any)?.jackpotLinesKiller;
+      assert.ok(
+        Array.isArray(jackpotLinesKiller) && jackpotLinesKiller.length >= 5,
+        `Locale '${code}' must contain at least 5 funny killer jackpot celebratory lines`
+      );
+      for (const line of jackpotLinesKiller) {
+        assert.ok(
+          typeof line === 'string' && line.length > 0,
+          `Locale '${code}' killer jackpot line must be a non-empty string`
+        );
+      }
     });
   }
+
+  it('English jackpot lines contain no em dashes (—)', () => {
+    const survivorLines = enDict.generator.jackpotLines ?? [];
+    const killerLines = (enDict.generator as any).jackpotLinesKiller ?? [];
+
+    for (const line of survivorLines) {
+      assert.ok(!line.includes('—'), `Survivor line contains em dash: "${line}"`);
+    }
+    for (const line of killerLines) {
+      assert.ok(!line.includes('—'), `Killer line contains em dash: "${line}"`);
+    }
+  });
+});
+
+describe('Randomizer: Jackpot Celebration Role Branching', () => {
+  it('selects killer lines for Killer role and survivor lines for Survivor role', async () => {
+    const { getJackpotCelebrationLines } = await import(
+      '@/components/generator/shared/useJackpotCelebration'
+    );
+    const killerLines = getJackpotCelebrationLines(enDict, 'Killer');
+    assert.deepEqual(killerLines, (enDict.generator as any).jackpotLinesKiller);
+
+    const survivorLines = getJackpotCelebrationLines(enDict, 'Survivor');
+    assert.deepEqual(survivorLines, enDict.generator.jackpotLines);
+  });
+
+  it('falls back to default killer/survivor lines when dict is undefined', async () => {
+    const { getJackpotCelebrationLines } = await import(
+      '@/components/generator/shared/useJackpotCelebration'
+    );
+    const killerFallback = getJackpotCelebrationLines(undefined, 'Killer');
+    assert.ok(killerFallback.length >= 3);
+    assert.ok(
+      killerFallback.some(
+        (l) => l.toLowerCase().includes('entity') || l.toLowerCase().includes('hook') || l.toLowerCase().includes('fog')
+      )
+    );
+
+    const survivorFallback = getJackpotCelebrationLines(undefined, 'Survivor');
+    assert.ok(survivorFallback.length >= 3);
+    assert.ok(
+      survivorFallback.some(
+        (l) => l.toLowerCase().includes('entity') || l.toLowerCase().includes('fog') || l.toLowerCase().includes('hook')
+      )
+    );
+  });
 });
 
 describe('Randomizer: Tarot Deck Sizing & Frame Integrity', () => {

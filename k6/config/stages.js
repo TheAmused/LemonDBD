@@ -33,21 +33,21 @@ export const soakStages = [
 ];
 
 export const frontendStages = [
-  { target: 15, duration: '10s' },
-  { target: 25, duration: '30s' },
-  { target: 0, duration: '10s' },
+  { duration: '10s', target: 15 },
+  { duration: '30s', target: 25 },
+  { duration: '10s', target: 0 },
 ];
 
 export const writesStages = [
-  { target: 10, duration: '10s' },
-  { target: 20, duration: '30s' },
-  { target: 0, duration: '10s' },
+  { duration: '10s', target: 10 },
+  { duration: '30s', target: 20 },
+  { duration: '10s', target: 0 },
 ];
 
 export const queriesStages = [
-  { target: 15, duration: '10s' },
-  { target: 30, duration: '30s' },
-  { target: 0, duration: '10s' },
+  { duration: '10s', target: 15 },
+  { duration: '30s', target: 30 },
+  { duration: '10s', target: 0 },
 ];
 
 export const stages = {

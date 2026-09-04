@@ -1,4 +1,4 @@
-﻿import { defaultClient, thinkTime } from '../lib/http_client.js';
+import { defaultClient, thinkTime } from '../lib/http_client.js';
 import { frontendStages } from '../config/stages.js';
 import { frontendThresholds } from '../config/thresholds.js';
 import { generateHtmlSummary } from '../lib/report_helper.js';
@@ -10,16 +10,18 @@ export const options = {
   summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(90)', 'p(95)', 'p(99)'],
 };
 
+const ssrHeaders = { 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' };
+
 export default function () {
-  defaultClient.get('/', { tags: { type: 'ssr', page: 'home' } });
+  defaultClient.get('/', { headers: ssrHeaders, tags: { type: 'ssr', page: 'home' } });
   thinkTime(0.2, 0.4);
-  defaultClient.get('/perks', { tags: { type: 'ssr', page: 'perks' } });
+  defaultClient.get('/perks', { headers: ssrHeaders, tags: { type: 'ssr', page: 'perks' } });
   thinkTime(0.2, 0.5);
-  defaultClient.get('/characters', { tags: { type: 'ssr', page: 'characters' } });
+  defaultClient.get('/characters', { headers: ssrHeaders, tags: { type: 'ssr', page: 'characters' } });
   thinkTime(0.2, 0.4);
-  defaultClient.get('/randomizer', { tags: { type: 'ssr', page: 'generator' } });
+  defaultClient.get('/randomizer', { headers: ssrHeaders, tags: { type: 'ssr', page: 'generator' } });
   thinkTime(0.2, 0.4);
-  defaultClient.get('/smash-or-pass', { tags: { type: 'ssr', page: 'smash_or_pass' } });
+  defaultClient.get('/smash-or-pass', { headers: ssrHeaders, tags: { type: 'ssr', page: 'smash_or_pass' } });
   defaultClient.get('/favicon.ico', { tags: { type: 'static', asset: 'favicon' } });
   thinkTime(0.5, 1.0);
 }

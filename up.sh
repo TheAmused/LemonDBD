@@ -37,12 +37,20 @@ while [[ $# -gt 0 ]]; do
       fi
       ;;
     -v|--vus|-Vus)
-      PERF_VUS="$2"
-      shift 2
+      if [[ -n "${2:-}" && ! "$2" =~ ^- ]]; then
+        PERF_VUS="$2"
+        shift 2
+      else
+        shift 1
+      fi
       ;;
     -t|--duration|-Duration)
-      PERF_DURATION="$2"
-      shift 2
+      if [[ -n "${2:-}" && ! "$2" =~ ^- ]]; then
+        PERF_DURATION="$2"
+        shift 2
+      else
+        shift 1
+      fi
       ;;
     -h|--help)
       echo "Usage: ./up.sh [OPTIONS]"

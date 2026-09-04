@@ -29,8 +29,6 @@ export interface DbdButtonProps
   icon?: React.ReactNode;
   children: React.ReactNode;
   onClick?: () => void;
-  /** Idle ambient glow pulse. Default true; ignored while disabled. */
-  pulse?: boolean;
 }
 
 // Padding/type scale steps down on small screens instead of using one fixed
@@ -58,7 +56,7 @@ const ROLE_RING: Record<DbdButtonRole, string> = {
 };
 
 export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(function DbdButton(
-  { role, size = 'lg', icon, children, onClick, disabled, type = 'button', className, pulse = true, ...rest },
+  { role, size = 'lg', icon, children, onClick, disabled, type = 'button', className, ...rest },
   ref
 ) {
   const active = !disabled;
@@ -75,10 +73,7 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
         SIZE_STYLES[size],
         ROLE_RING[role],
         active
-          ? cn(
-              'cursor-pointer bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:via-amber-400 hover:to-red-500 active:scale-[0.97]',
-              pulse && 'dbd-btn-pulse'
-            )
+          ? 'cursor-pointer bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:via-amber-400 hover:to-red-500 active:scale-[0.97]'
           : 'cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 opacity-60',
         className
       )}

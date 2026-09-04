@@ -129,7 +129,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
           the scrollbar shows up *inside this box*, not on the page -- the
           mode's tabs/toolbar above it and the surrounding page chrome stay
           put either way. */}
-      <div className="relative z-10 flex h-full min-h-[380px] max-h-[calc(100dvh-9rem)] flex-col items-center justify-center overflow-y-auto sm:min-h-[440px] sm:max-h-[calc(100dvh-10rem)] lg:min-h-[520px] lg:max-h-[calc(100dvh-11rem)]">
+      <div className="relative z-10 flex h-full min-h-[380px] max-h-[min(calc(100dvh-9rem),620px)] flex-col items-center justify-center overflow-y-auto sm:min-h-[440px] sm:max-h-[min(calc(100dvh-10rem),660px)] lg:min-h-[520px] lg:max-h-[min(calc(100dvh-11rem),700px)]">
         {children}
       </div>
     </div>

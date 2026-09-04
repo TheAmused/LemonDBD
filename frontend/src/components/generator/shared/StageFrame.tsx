@@ -41,14 +41,14 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
       detectRetina: true,
       fullScreen: { enable: false },
       particles: {
-        number: { value: reduceMotion ? 0 : 28, density: { enable: true, width: 800, height: 800 } },
+        number: { value: reduceMotion ? 0 : 16, density: { enable: true, width: 900, height: 900 } },
         color: { value: particleColor },
         shape: { type: 'circle' },
-        opacity: { value: { min: 0.05, max: 0.25 } },
-        size: { value: { min: 1, max: 2.5 } },
+        opacity: { value: { min: 0.03, max: 0.15 } },
+        size: { value: { min: 1, max: 2 } },
         move: {
           enable: !reduceMotion,
-          speed: 0.6,
+          speed: 0.35,
           direction: 'none',
           random: true,
           straight: false,
@@ -64,7 +64,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-3xl bg-slate-100/80 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800/60 p-4 sm:p-6',
+        'relative overflow-hidden bg-white/80 dark:bg-[#0c0e14]/95 border-b border-border-color p-4 sm:p-6 transition-colors duration-300',
         className
       )}
     >
@@ -78,12 +78,25 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         </ParticlesProvider>
       </div>
 
+      {/* Role-Specific Atmospheric Top Mist */}
       <div
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute inset-0',
-          reduceMotion ? 'dbd-heartbeat-vignette--static' : 'dbd-heartbeat-vignette'
+          'pointer-events-none absolute inset-0 transition-opacity duration-500',
+          isSurvivor ? 'dbd-ambient-mist--survivor' : 'dbd-ambient-mist--killer'
         )}
+      />
+
+      {/* Cinematic Edge Vignette */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 dbd-cinematic-vignette"
+      />
+
+      {/* Dead by Daylight Static Heartbeat Corner Glow Vignette */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 dbd-heartbeat-vignette--static"
       />
 
       {/* A small floor so the stage never looks collapsed when totally

@@ -7,11 +7,35 @@ import { triggerDbdBurst } from '../lib/dbdBurst';
 import { Dictionary } from '@/locales/types';
 import { RoleCategory } from '@/types/perks';
 
-const DEFAULT_JACKPOT_LINES: readonly string[] = [
+export const DEFAULT_SURVIVOR_JACKPOT_LINES: readonly string[] = [
   'The Entity approves.',
   'Hooked. Lined. Sinkered.',
   'The Fog whispers your name.',
 ];
+
+export const DEFAULT_KILLER_JACKPOT_LINES: readonly string[] = [
+  'The Entity is pleased. 4K incoming.',
+  'No one escapes the Fog.',
+  'Hooks are primed. Let the hunt begin.',
+];
+
+export const DEFAULT_JACKPOT_LINES: readonly string[] = DEFAULT_SURVIVOR_JACKPOT_LINES;
+
+export function getJackpotCelebrationLines(
+  dict?: Dictionary,
+  role?: RoleCategory
+): readonly string[] {
+  if (role === 'Killer') {
+    const killerLines = dict?.generator?.jackpotLinesKiller;
+    return killerLines && killerLines.length > 0
+      ? killerLines
+      : DEFAULT_KILLER_JACKPOT_LINES;
+  }
+  const survivorLines = dict?.generator?.jackpotLines;
+  return survivorLines && survivorLines.length > 0
+    ? survivorLines
+    : DEFAULT_SURVIVOR_JACKPOT_LINES;
+}
 
 const FLAVOR_DISPLAY_MS = 4000;
 
@@ -33,7 +57,7 @@ export function useJackpotCelebration(dict?: Dictionary) {
    */
   const celebrate = useCallback(
     (role: RoleCategory, originEl?: HTMLElement | null) => {
-      const lines = dict?.generator?.jackpotLines || DEFAULT_JACKPOT_LINES;
+      const lines = getJackpotCelebrationLines(dict, role);
       const line = lines[Math.floor(Math.random() * lines.length)];
       setFlavorLine(line);
 

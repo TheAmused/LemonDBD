@@ -1,6 +1,8 @@
 // frontend/src/__tests__/unit/randomizerResponsiveAndSkeletons.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
@@ -126,7 +128,15 @@ describe('Randomizer: Responsive Touch Target & Accessibility Contracts', () => 
 });
 
 describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
-  const locales = [
+  type GeneratorLocaleDict = {
+    generator: {
+      [key: string]: unknown;
+      jackpotLines?: readonly string[];
+      jackpotLinesKiller?: readonly string[];
+    };
+  };
+
+  const locales: Array<{ code: string; dict: GeneratorLocaleDict }> = [
     { code: 'en', dict: enDict },
     { code: 'de', dict: deDict },
     { code: 'es', dict: esDict },
@@ -144,13 +154,13 @@ describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
 
   for (const { code, dict } of locales) {
     it(`Locale '${code}' contains all mandatory generator translation keys`, () => {
-      const g = dict.generator as unknown as Record<string, string>;
+      const g = dict.generator as Record<string, unknown>;
 
       assert.ok(g, `Locale '${code}' must contain generator section`);
 
       for (const key of requiredGeneratorKeys) {
         assert.ok(
-          typeof g[key] === 'string' && g[key].length > 0,
+          typeof g[key] === 'string' && (g[key] as string).length > 0,
           `Locale '${code}' missing or empty key 'generator.${key}'`
         );
       }
@@ -165,9 +175,71 @@ describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
           typeof line === 'string' && line.length > 0,
           `Locale '${code}' jackpot line must be a non-empty string`
         );
+        assert.ok(!line.includes('—'), `Locale '${code}' survivor line contains em dash: "${line}"`);
+      }
+
+      const jackpotLinesKiller = dict.generator?.jackpotLinesKiller;
+      assert.ok(
+        Array.isArray(jackpotLinesKiller) && jackpotLinesKiller.length >= 5,
+        `Locale '${code}' must contain at least 5 funny killer jackpot celebratory lines`
+      );
+      for (const line of jackpotLinesKiller) {
+        assert.ok(
+          typeof line === 'string' && line.length > 0,
+          `Locale '${code}' killer jackpot line must be a non-empty string`
+        );
+        assert.ok(!line.includes('—'), `Locale '${code}' killer line contains em dash: "${line}"`);
       }
     });
   }
+
+  it('All locale jackpot lines contain no em dashes (—)', () => {
+    for (const { code, dict } of locales) {
+      const survivorLines = dict.generator.jackpotLines ?? [];
+      const killerLines = dict.generator.jackpotLinesKiller ?? [];
+
+      for (const line of survivorLines) {
+        assert.ok(!line.includes('—'), `Locale '${code}' survivor line contains em dash: "${line}"`);
+      }
+      for (const line of killerLines) {
+        assert.ok(!line.includes('—'), `Locale '${code}' killer line contains em dash: "${line}"`);
+      }
+    }
+  });
+});
+
+describe('Randomizer: Jackpot Celebration Role Branching', () => {
+  it('selects killer lines for Killer role and survivor lines for Survivor role', async () => {
+    const { getJackpotCelebrationLines } = await import(
+      '@/components/generator/shared/useJackpotCelebration'
+    );
+    const killerLines = getJackpotCelebrationLines(enDict, 'Killer');
+    assert.deepEqual(killerLines, enDict.generator.jackpotLinesKiller);
+
+    const survivorLines = getJackpotCelebrationLines(enDict, 'Survivor');
+    assert.deepEqual(survivorLines, enDict.generator.jackpotLines);
+  });
+
+  it('falls back to default killer/survivor lines when dict is undefined', async () => {
+    const { getJackpotCelebrationLines } = await import(
+      '@/components/generator/shared/useJackpotCelebration'
+    );
+    const killerFallback = getJackpotCelebrationLines(undefined, 'Killer');
+    assert.ok(killerFallback.length >= 3);
+    assert.ok(
+      killerFallback.some(
+        (l) => l.toLowerCase().includes('entity') || l.toLowerCase().includes('hook') || l.toLowerCase().includes('fog')
+      )
+    );
+
+    const survivorFallback = getJackpotCelebrationLines(undefined, 'Survivor');
+    assert.ok(survivorFallback.length >= 3);
+    assert.ok(
+      survivorFallback.some(
+        (l) => l.toLowerCase().includes('entity') || l.toLowerCase().includes('fog') || l.toLowerCase().includes('hook')
+      )
+    );
+  });
 });
 
 describe('Randomizer: Tarot Deck Sizing & Frame Integrity', () => {
@@ -184,3 +256,73 @@ describe('Randomizer: Tarot Deck Sizing & Frame Integrity', () => {
     );
   });
 });
+
+describe('Randomizer: Viewport Padding & Layout Structure', () => {
+  it('Randomizer page and loading skeletons do not have outer p-4 sm:p-6 lg:p-8 padding', () => {
+    const pagePath = path.resolve(__dirname, '../../app/[locale]/randomizer/page.tsx');
+    const loadingPath = path.resolve(__dirname, '../../app/[locale]/randomizer/loading.tsx');
+
+    const pageContent = fs.readFileSync(pagePath, 'utf-8');
+    const loadingContent = fs.readFileSync(loadingPath, 'utf-8');
+
+    assert.ok(
+      !pageContent.includes('p-4 sm:p-6 lg:p-8'),
+      'Randomizer page.tsx should not contain outer p-4 sm:p-6 lg:p-8 padding'
+    );
+    assert.ok(
+      !loadingContent.includes('p-4 sm:p-6 lg:p-8'),
+      'Randomizer loading.tsx should not contain outer p-4 sm:p-6 lg:p-8 padding'
+    );
+    assert.ok(
+      pageContent.includes(
+        'className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 flex flex-col lemon-shell-main--flush"'
+      ),
+      'RandomizerContent main container should be flush without outer gutter padding'
+    );
+    assert.ok(
+      pageContent.includes(
+        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main--flush"'
+      ),
+      'RandomizerPage Suspense fallback main container should be flush without outer gutter padding'
+    );
+    assert.ok(
+      loadingContent.includes(
+        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main--flush"'
+      ),
+      'RandomizerLoading main container should be flush without outer gutter padding'
+    );
+  });
+
+  it('StageFrame contains static DBD heartbeat corner vignette', () => {
+    const stageFramePath = path.resolve(__dirname, '../../components/generator/shared/StageFrame.tsx');
+    const stageFrameContent = fs.readFileSync(stageFramePath, 'utf-8');
+
+    assert.ok(
+      stageFrameContent.includes('dbd-heartbeat-vignette--static'),
+      'StageFrame must include dbd-heartbeat-vignette--static corner glow overlay'
+    );
+  });
+
+  it('GeneratorPage does not render out-of-place Pagination on randomizer stage', () => {
+    const genPagePath = path.resolve(__dirname, '../../components/generator/GeneratorPage.tsx');
+    const genPageContent = fs.readFileSync(genPagePath, 'utf-8');
+
+    assert.ok(
+      !genPageContent.includes('<Pagination'),
+      'GeneratorPage must not render out-of-place Pagination component'
+    );
+  });
+
+  it('StageFrame background does not have rounded corners', () => {
+    const stageFramePath = path.resolve(__dirname, '../../components/generator/shared/StageFrame.tsx');
+    const stageFrameContent = fs.readFileSync(stageFramePath, 'utf-8');
+
+    assert.ok(
+      !stageFrameContent.includes('rounded-3xl'),
+      'StageFrame should not have rounded-3xl corners on background'
+    );
+  });
+});
+
+
+

@@ -79,7 +79,7 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
               'cursor-pointer bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:via-amber-400 hover:to-red-500 active:scale-[0.97]',
               pulse && 'dbd-btn-pulse'
             )
-          : 'cursor-not-allowed bg-slate-800 text-slate-500 opacity-60',
+          : 'cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 opacity-60',
         className
       )}
     >

@@ -45,6 +45,7 @@ from app.models.user import (
     User,
     UserCharacterOwnership,
     UserPerkOwnership,
+    UserShowcase,
 )
 
 __all__ = [
@@ -88,6 +89,7 @@ __all__ = [
     "User",
     "UserCharacterOwnership",
     "UserPerkOwnership",
+    "UserShowcase",
     "ChallengeModeSetting",
     "AdminAuditLog",
     "ChangelogPost",

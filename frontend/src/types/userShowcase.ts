@@ -36,22 +36,23 @@ export const GRADE_EMBLEMS = [
   'Silver I',
   'Bronze I',
   'Ash I',
+  'Ash IV',
 ] as const;
 
 export type GradeEmblem = (typeof GRADE_EMBLEMS)[number];
 
 export const DEFAULT_SHOWCASE_STATE: UserShowcaseState = {
   playerTitle: 'The Fogwalker',
-  devotionLevel: 14,
-  gradeRank: 'Iridescent I',
+  devotionLevel: 0,
+  gradeRank: 'Ash IV',
   survivorMain: {
     characterName: 'Feng Min',
-    prestige: 9,
+    prestige: 0,
     perkIds: [null, null, null, null],
   },
   killerMain: {
     characterName: 'The Blight',
-    prestige: 7,
+    prestige: 0,
     perkIds: [null, null, null, null],
   },
 };

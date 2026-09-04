@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Shield, Skull, Plus, Minus, UserCheck, Sparkles } from 'lucide-react';
+import { Shield, Skull, Sparkles } from 'lucide-react';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
@@ -63,11 +63,6 @@ export const MainCard: React.FC<MainCardProps> = ({
     role
   );
 
-  const handlePrestigeDelta = (delta: number) => {
-    const next = Math.max(1, Math.min(100, loadout.prestige + delta));
-    onPrestigeChange(next);
-  };
-
   return (
     <div
       className={`relative overflow-hidden rounded-3xl border p-5 sm:p-6 backdrop-blur-xl shadow-md flex flex-col justify-between space-y-6 transition-all ${
@@ -83,7 +78,7 @@ export const MainCard: React.FC<MainCardProps> = ({
         }`}
       />
 
-      {/* Top Bar: Role Label & Prestige Badge */}
+      {/* Top Bar: Role Label */}
       <div className="relative z-10 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div
@@ -99,42 +94,23 @@ export const MainCard: React.FC<MainCardProps> = ({
               : dict?.user?.killerMain || 'Killer Main'}
           </h3>
         </div>
-
-        {/* Prestige Level Control */}
-        <div className="flex items-center gap-1.5 rounded-xl border border-accent-red/40 bg-accent-red/10 px-2.5 py-1 text-text-primary shadow-xs">
-          <span className="text-[10px] font-black uppercase tracking-wider text-accent-red font-mono">
-            {dict?.user?.prestige || 'Prestige'}
-          </span>
-          <button
-            type="button"
-            onClick={() => handlePrestigeDelta(-1)}
-            disabled={loadout.prestige <= 1}
-            className="h-5 w-5 flex items-center justify-center rounded-lg bg-bg-surface text-accent-red hover:bg-bg-elevated disabled:opacity-30 cursor-pointer text-xs transition-colors"
-            title={dict?.user?.decreasePrestige || 'Decrease Prestige'}
-          >
-            <Minus className="h-3 w-3" />
-          </button>
-          <span className="font-mono text-xs font-black text-accent-red min-w-[20px] text-center">
-            {loadout.prestige}
-          </span>
-          <button
-            type="button"
-            onClick={() => handlePrestigeDelta(1)}
-            disabled={loadout.prestige >= 100}
-            className="h-5 w-5 flex items-center justify-center rounded-lg bg-bg-surface text-accent-red hover:bg-bg-elevated disabled:opacity-30 cursor-pointer text-xs transition-colors"
-            title={dict?.user?.increasePrestige || 'Increase Prestige'}
-          >
-            <Plus className="h-3 w-3" />
-          </button>
-        </div>
       </div>
 
-      {/* Center Row: Character Portrait & Selector */}
+      {/* Center Row: Character Portrait (Interactive) & Name */}
       <div className="relative z-10 flex items-center gap-4">
         {/* Character Portrait */}
         <div
+          role="button"
+          tabIndex={0}
           onClick={onOpenCharacterModal}
-          className="relative group w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-amber cursor-pointer shadow-md bg-bg-elevated shrink-0 transition-all hover:scale-102"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onOpenCharacterModal();
+            }
+          }}
+          title={dict?.user?.changeMain || 'Change Main'}
+          aria-label={dict?.user?.changeMain || 'Change Main'}
+          className="relative group w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-amber cursor-pointer shadow-md bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-amber"
         >
           {avatarSrc && !imgError ? (
             <Image
@@ -156,29 +132,19 @@ export const MainCard: React.FC<MainCardProps> = ({
               </span>
             </div>
           )}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] font-bold text-white uppercase tracking-wider backdrop-blur-xs font-mono">
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-[10px] font-bold text-white uppercase tracking-wider backdrop-blur-xs font-mono">
             {dict?.user?.changeMain || 'Change'}
           </div>
         </div>
 
         {/* Character Info */}
-        <div className="space-y-2 flex-1">
-          <div>
-            <h4 className="text-base sm:text-lg font-black text-text-primary font-mono tracking-wide line-clamp-1">
-              {loadout.characterName}
-            </h4>
-            <p className="text-xs text-text-muted font-mono">
-              {(dict?.user?.prestigeProgress || 'Prestige level {level} of 100').replace('{level}', String(loadout.prestige))}
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onOpenCharacterModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border-color bg-bg-elevated hover:border-accent-amber/50 text-text-primary text-xs font-bold transition-colors cursor-pointer font-mono"
-          >
-            <UserCheck className="h-3.5 w-3.5 text-accent-amber" />
-            <span>{dict?.user?.changeMain || 'Change Main'}</span>
-          </button>
+        <div className="space-y-1 flex-1">
+          <h4 className="text-base sm:text-lg font-black text-text-primary font-mono tracking-wide line-clamp-1">
+            {loadout.characterName}
+          </h4>
+          <p className="text-xs text-text-muted font-mono">
+            {isSurvivor ? (dict?.generator?.survivor || 'Survivor') : (dict?.generator?.killer || 'Killer')}
+          </p>
         </div>
       </div>
 

@@ -275,19 +275,19 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
     );
     assert.ok(
       pageContent.includes(
-        'className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 flex flex-col lemon-shell-main"'
+        'className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 flex flex-col lemon-shell-main--flush"'
       ),
       'RandomizerContent main container should be flush without outer gutter padding'
     );
     assert.ok(
       pageContent.includes(
-        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main"'
+        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main--flush"'
       ),
       'RandomizerPage Suspense fallback main container should be flush without outer gutter padding'
     );
     assert.ok(
       loadingContent.includes(
-        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main"'
+        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main--flush"'
       ),
       'RandomizerLoading main container should be flush without outer gutter padding'
     );

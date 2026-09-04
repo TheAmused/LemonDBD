@@ -14,7 +14,6 @@ import { Sidebar } from '@/components/Sidebar';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
-import { StreakTrophyCard } from '@/components/user/StreakTrophyCard';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
@@ -27,13 +26,13 @@ import {
   Flame,
   Settings,
   ChevronRight,
-  Dices,
-  Compass,
-  Repeat,
   Bug,
   Camera,
   Trash2,
   Upload,
+  Mail,
+  Calendar,
+  Crown,
 } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -215,7 +214,7 @@ export default function UserProfilePage() {
       />
 
       <main className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main">
-        <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
+        <div className="max-w-7xl 2xl:max-w-[1600px] w-full mx-auto space-y-6 sm:space-y-8">
           {/* Hidden avatar file input */}
           <input
             type="file"
@@ -301,15 +300,63 @@ export default function UserProfilePage() {
                 dict={dict}
                 locale={currentLocale}
               />
-
-              {/* Streak & Challenge Trophy Highlights */}
-              <StreakTrophyCard currentLocale={currentLocale} dict={dict} />
             </div>
           )}
 
-          {/* TAB 2: Account Sanctum (Security, Email, Password, Avatar & Clean Shortcuts) */}
+          {/* TAB 2: Account Sanctum (Account Details, Security, Password, Avatar) */}
           {activeTab === 'sanctum' && (
             <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
+              {/* Account Overview Header Card */}
+              <div className="rounded-3xl border border-border-color bg-bg-surface p-6 backdrop-blur-xl shadow-md space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-amber/15 border border-accent-amber/30 text-accent-amber">
+                      <User className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-black text-text-primary font-mono tracking-wide">
+                          {user.username}
+                        </h2>
+                        <span
+                          className={`rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border font-mono ${
+                            user.role === 'admin'
+                              ? 'border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs'
+                              : 'border-cyan-500/40 bg-cyan-500/15 text-cyan-500 dark:text-cyan-400'
+                          }`}
+                        >
+                          {user.role === 'admin' ? (dict?.user?.roleAdmin || 'Administrator') : (dict?.user?.roleUser || 'Standard Player')}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted font-mono pt-1">
+                        {user.email && (
+                          <span className="flex items-center gap-1.5">
+                            <Mail className="h-3.5 w-3.5 text-text-muted" />
+                            {user.email}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1.5">
+                          <Calendar className="h-3.5 w-3.5 text-text-muted" />
+                          {dict?.user?.memberSince || 'Member since'}{' '}
+                          {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {user.role === 'admin' && (
+                    <Link
+                      href={`/${currentLocale}/admin`}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-accent-red/30 bg-accent-red/10 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-colors font-mono"
+                    >
+                      <Crown className="h-3.5 w-3.5" />
+                      <span>{dict?.sidebar?.adminPanel || 'Admin Panel'}</span>
+                      <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+
               {/* Avatar Management Card */}
               <div className="rounded-3xl border border-border-color bg-bg-surface p-6 backdrop-blur-xl shadow-md space-y-4">
                 <h3 className="text-sm font-black uppercase tracking-wider text-text-primary pb-2 border-b border-border-color font-mono">
@@ -371,58 +418,12 @@ export default function UserProfilePage() {
                 </div>
               </div>
 
-              {/* Form & Shortcuts Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 w-full">
-                  <UserProfileForm
-                    initialEmail={user.email || ''}
-                    onRefreshUser={refreshUser}
-                    dict={dict}
-                  />
-                </div>
-
-                {/* Clean Quick Shortcuts (Zero 'Others' items, zero quests) */}
-                <div className="rounded-3xl border border-border-color bg-bg-surface p-6 backdrop-blur-xl shadow-md space-y-4 w-full h-fit">
-                  <h2 className="text-base font-black uppercase tracking-wider text-text-primary pb-2 border-b border-border-color font-mono">
-                    {dict?.user?.quickShortcuts || 'Quick Shortcuts'}
-                  </h2>
-
-                  <div className="space-y-2">
-                    <Link
-                      href={`/${currentLocale}/streaks`}
-                      className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs font-bold text-text-primary hover:border-accent-amber/40 hover:bg-accent-amber/10 hover:text-accent-amber transition-all group shadow-xs"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Repeat className="h-4 w-4 text-accent-amber" />
-                        <span>{dict?.sidebar?.streaks || 'Challenges'}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-accent-amber group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-
-                    <Link
-                      href={`/${currentLocale}/randomizer`}
-                      className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs font-bold text-text-primary hover:border-accent-amber/40 hover:bg-accent-amber/10 hover:text-accent-amber transition-all group shadow-xs"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Dices className="h-4 w-4 text-accent-amber" />
-                        <span>{dict?.sidebar?.generator || 'Perk Randomizer'}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-accent-amber group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-
-                    <Link
-                      href={`/${currentLocale}/maps`}
-                      className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/40 p-3 text-xs font-bold text-text-primary hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-500 transition-all group shadow-xs"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Compass className="h-4 w-4 text-cyan-500" />
-                        <span>{dict?.sidebar?.maps || 'Map Explorer'}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-cyan-500 group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              {/* User Credentials / Password Form (Full width without quick shortcuts) */}
+              <UserProfileForm
+                initialEmail={user.email || ''}
+                onRefreshUser={refreshUser}
+                dict={dict}
+              />
             </div>
           )}
 

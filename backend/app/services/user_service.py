@@ -12,6 +12,7 @@ from app.services.user import (
     fetch_admin_metrics,
     fetch_user_by_id,
     get_avatar_storage_directory,
+    get_or_create_user_showcase,
     list_all_users_paginated,
     modify_user_profile,
     process_and_save_avatar,
@@ -20,6 +21,7 @@ from app.services.user import (
     reset_password_with_token,
     retrieve_user_from_jwt,
     seed_default_admin_if_empty,
+    update_user_showcase,
     verify_email_code,
 )
 
@@ -114,3 +116,13 @@ class UserService:
 
     def reset_password(self, token: str, new_password: str) -> tuple[User | None, str | None]:
         return reset_password_with_token(token, new_password)
+
+    def get_user_showcase(self, user_id: int) -> dict[str, Any] | None:
+        showcase = get_or_create_user_showcase(user_id)
+        return showcase.to_dict() if showcase else None
+
+    def update_user_showcase(
+        self, user_id: int, data: dict[str, Any]
+    ) -> tuple[dict[str, Any] | None, str | None]:
+        return update_user_showcase(user_id, data)
+

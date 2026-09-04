@@ -1,7 +1,7 @@
 # backend/app/models/user.py
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.base import utcnow
@@ -73,6 +73,9 @@ class User(Base):
     )
     bug_reports: Mapped[list["BugReport"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
+    )
+    showcase: Mapped["UserShowcase | None"] = relationship(
+        back_populates="user", uselist=False, cascade="all, delete-orphan"
     )
 
     def to_dict(self, include_sensitive: bool = False) -> dict[str, Any]:
@@ -164,3 +167,52 @@ class UserPerkOwnership(Base):
             "is_unlocked": self.is_unlocked,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }
+
+
+class UserShowcase(Base):
+    __tablename__ = "user_showcases"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False, index=True
+    )
+    player_title: Mapped[str] = mapped_column(String(100), default="The Fogwalker", nullable=False)
+    devotion_level: Mapped[int] = mapped_column(Integer, default=14, nullable=False)
+    grade_rank: Mapped[str] = mapped_column(String(50), default="Iridescent I", nullable=False)
+    survivor_main_character: Mapped[str] = mapped_column(String(100), default="Feng Min", nullable=False)
+    survivor_main_prestige: Mapped[int] = mapped_column(Integer, default=9, nullable=False)
+    survivor_perk_ids: Mapped[list[Any]] = mapped_column(JSON, default=list, nullable=False)
+    killer_main_character: Mapped[str] = mapped_column(String(100), default="The Blight", nullable=False)
+    killer_main_prestige: Mapped[int] = mapped_column(Integer, default=7, nullable=False)
+    killer_perk_ids: Mapped[list[Any]] = mapped_column(JSON, default=list, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    user: Mapped["User"] = relationship(back_populates="showcase")
+
+    def to_dict(self) -> dict[str, Any]:
+        s_perks = list(self.survivor_perk_ids) if isinstance(self.survivor_perk_ids, list) else []
+        while len(s_perks) < 4:
+            s_perks.append(None)
+        k_perks = list(self.killer_perk_ids) if isinstance(self.killer_perk_ids, list) else []
+        while len(k_perks) < 4:
+            k_perks.append(None)
+
+        return {
+            "player_title": self.player_title,
+            "devotion_level": self.devotion_level,
+            "grade_rank": self.grade_rank,
+            "survivor_main": {
+                "character_name": self.survivor_main_character,
+                "prestige": self.survivor_main_prestige,
+                "perk_ids": s_perks[:4],
+            },
+            "killer_main": {
+                "character_name": self.killer_main_character,
+                "prestige": self.killer_main_prestige,
+                "perk_ids": k_perks[:4],
+            },
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+

@@ -57,7 +57,7 @@ while [[ $# -gt 0 ]]; do
       echo ""
       echo "Options:"
       echo "  -s, --strict            Fresh build (--no-cache) and runs dual-stack live tests"
-      echo "  -p, --perf [SUITE]      Run K6 performance test suite(s). Defaults to 'all' (smoke, load, stress, spike, soak, frontend, writes, queries, full)"
+      echo "  -p, --perf [SUITE]      Run K6 performance test suite(s). Defaults to 'all' (smoke, load, stress, spike, soak, frontend, writes, queries, streaks, full)"
       echo "  -v, --vus [NUM]         Number of virtual users (VUs) for K6 performance tests"
       echo "  -t, --duration [DUR]    Duration for K6 performance tests (e.g. '30s', '1m')"
       echo "  -d, --down              Stop and tear down Docker containers"
@@ -79,7 +79,7 @@ fi
 
 # Verify k6 is available in PATH if perf testing requested
 K6_CMD="k6"
-VALID_SUITES=("smoke" "load" "stress" "spike" "soak" "frontend" "writes" "queries" "full")
+VALID_SUITES=("smoke" "load" "stress" "spike" "soak" "frontend" "writes" "queries" "streaks" "full")
 if [ "$PERF" = true ]; then
   if ! command -v k6 &> /dev/null; then
     if command -v k6.exe &> /dev/null; then

@@ -6,80 +6,102 @@ import {
   browseDuration,
   authDuration,
 } from '../lib/http_client.js';
-import { registerAndLoginUser, getAuthHeaders } from '../lib/auth.js';
+import { registerUser, loginUser, registerAndLoginUser, getAuthHeaders } from '../lib/auth.js';
 import { generateHtmlSummary } from '../lib/report_helper.js';
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.2/index.js';
 import { getRandomPerkQuery, getRandomCharacterQuery, getRandomLocale } from '../lib/data_generator.js';
 
 // ====================================================================
-// Dynamic VU Allocation Across All 8 Distinct Architectural Workloads
+// Dynamic VU Allocation Across All 10 Distinct Architectural Workloads
 // ====================================================================
 const totalVus = parseInt(__ENV.TARGET_VUS || __ENV.VUS_COUNT || '40', 10);
 const duration = __ENV.TARGET_DURATION || '1m';
 
-// Split total VUs evenly across all 8 dedicated areas (minimum 1 VU per pool)
-const baseShare = Math.max(1, Math.floor(totalVus / 8));
-const authVus = parseInt(__ENV.AUTH_VUS || '', 10) || baseShare;
-const frontendVus = parseInt(__ENV.FRONTEND_VUS || '', 10) || baseShare;
-const writeVus = parseInt(__ENV.WRITE_VUS || '', 10) || baseShare;
-const queryVus = parseInt(__ENV.QUERY_VUS || '', 10) || baseShare;
-const searchVus = parseInt(__ENV.SEARCH_VUS || '', 10) || baseShare;
-const smashVus = parseInt(__ENV.SMASH_VUS || '', 10) || baseShare;
-const randomizerVus = parseInt(__ENV.RANDOMIZER_VUS || '', 10) || baseShare;
-const catalogVus = parseInt(__ENV.CATALOG_VUS || '', 10) || Math.max(1, totalVus - (authVus + frontendVus + writeVus + queryVus + searchVus + smashVus + randomizerVus));
+// User constraint: "Also if there is enough UVs then it should still lock max 5 users registering and 5 users login in."
+const authRegisterVus = parseInt(__ENV.AUTH_REGISTER_VUS || '', 10) || (totalVus >= 10 ? 5 : Math.max(1, Math.floor(totalVus / 2)));
+const authLoginVus = parseInt(__ENV.AUTH_LOGIN_VUS || '', 10) || (totalVus >= 10 ? 5 : Math.max(1, Math.floor(totalVus / 2)));
+
+// Remaining VUs distributed across the other 8 scenarios (streaks, frontend, writes, queries, search, smash, randomizer, catalog)
+const otherScenariosCount = 8;
+const remainingVus = Math.max(otherScenariosCount, totalVus - (authRegisterVus + authLoginVus));
+const baseShare = Math.floor(remainingVus / otherScenariosCount);
+let extraVus = remainingVus % otherScenariosCount;
+
+const streaksVus = parseInt(__ENV.STREAKS_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const frontendVus = parseInt(__ENV.FRONTEND_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const writeVus = parseInt(__ENV.WRITE_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const queryVus = parseInt(__ENV.QUERY_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const searchVus = parseInt(__ENV.SEARCH_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const smashVus = parseInt(__ENV.SMASH_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const randomizerVus = parseInt(__ENV.RANDOMIZER_VUS || '', 10) || (baseShare + (extraVus-- > 0 ? 1 : 0));
+const catalogVus = parseInt(__ENV.CATALOG_VUS || '', 10) || Math.max(1, totalVus - (authRegisterVus + authLoginVus + streaksVus + frontendVus + writeVus + queryVus + searchVus + smashVus + randomizerVus));
 
 export const options = {
   scenarios: {
-    // 1. User Authentication, Registration & Profile
-    auth_users: {
+    // 1. User Registration (Locked max 5 VUs when scaling)
+    auth_register_users: {
       executor: 'constant-vus',
-      vus: authVus,
+      vus: authRegisterVus,
       duration: duration,
-      exec: 'authScenario',
+      exec: 'authRegisterScenario',
     },
-    // 2. Next.js SSR Pages & Nginx Static Asset Delivery
+    // 2. User Logins (Locked max 5 VUs when scaling)
+    auth_login_users: {
+      executor: 'constant-vus',
+      vus: authLoginVus,
+      duration: duration,
+      exec: 'authLoginScenario',
+    },
+    // 3. Streaks & Challenges Pages (Specific Hub, Chaos, Gauntlet, History, Page Streaks)
+    streaks_challenges_browsers: {
+      executor: 'constant-vus',
+      vus: streaksVus,
+      duration: duration,
+      exec: 'streaksScenario',
+    },
+    // 4. Next.js SSR Core Pages & Nginx Static Asset Delivery
     frontend_browsers: {
       executor: 'constant-vus',
       vus: frontendVus,
       duration: duration,
       exec: 'frontendScenario',
     },
-    // 3. High-Concurrency Database Writes & Transactions
+    // 5. High-Concurrency Database Writes & Transactions
     write_bots: {
       executor: 'constant-vus',
       vus: writeVus,
       duration: duration,
       exec: 'writesScenario',
     },
-    // 4. Heavy 100-Item Catalog Filtering, Locale & Calculations
+    // 6. Heavy 100-Item Catalog Filtering, Locale & Calculations
     query_scanners: {
       executor: 'constant-vus',
       vus: queryVus,
       duration: duration,
       exec: 'queriesScenario',
     },
-    // 5. Keystroke Prefix Search & Suggestions Autocomplete
+    // 7. Keystroke Prefix Search & Suggestions Autocomplete
     search_bots: {
       executor: 'constant-vus',
       vus: searchVus,
       duration: duration,
       exec: 'searchScenario',
     },
-    // 6. Interactive Smash or Pass Game & Leaderboard
+    // 8. Interactive Smash or Pass Game & Leaderboard
     smash_or_pass_bots: {
       executor: 'constant-vus',
       vus: smashVus,
       duration: duration,
       exec: 'smashScenario',
     },
-    // 7. Perk Randomizer & Challenge Streak Engine
+    // 9. Perk Randomizer & Challenge Calculations
     randomizer_bots: {
       executor: 'constant-vus',
       vus: randomizerVus,
       duration: duration,
       exec: 'randomizerScenario',
     },
-    // 8. Deep Catalog & Character Roster Exploration
+    // 10. Deep Catalog & Character Roster Exploration
     catalog_browsers: {
       executor: 'constant-vus',
       vus: catalogVus,
@@ -103,20 +125,17 @@ export const options = {
 };
 
 // ==========================================
-// 1. User Authentication & Profile Worker
+// 1. User Registration Worker (Max 5 VUs)
 // ==========================================
-export function authScenario() {
+export function authRegisterScenario() {
   const vuId = typeof __VU !== 'undefined' ? __VU : 1;
   const iter = typeof __ITER !== 'undefined' ? __ITER : 0;
-  const tags = { type: 'api', scenario: 'auth' };
+  const tags = { type: 'api', scenario: 'auth_register' };
 
-  // Register & Login dynamic user
-  const authUser = registerAndLoginUser(vuId, iter, defaultClient);
-
-  // Authenticated profile verification
-  if (authUser && authUser.token) {
+  const reg = registerUser(vuId, iter, defaultClient);
+  if (reg && reg.token) {
     defaultClient.get('/api/v1/auth/me', {
-      headers: getAuthHeaders(authUser.token),
+      headers: getAuthHeaders(reg.token),
       tags: tags,
     });
   }
@@ -125,10 +144,72 @@ export function authScenario() {
 }
 
 // ==========================================
-// 2. Frontend SSR & Static Browsing Worker
+// 2. User Login Worker (Max 5 VUs)
+// ==========================================
+let loginAccounts = {};
+
+export function authLoginScenario() {
+  const vuId = typeof __VU !== 'undefined' ? __VU : 1;
+  const tags = { type: 'api', scenario: 'auth_login' };
+
+  if (!loginAccounts[vuId]) {
+    const initReg = registerUser(`login_vu_${vuId}`, 0, defaultClient);
+    if (initReg && initReg.status < 300) {
+      loginAccounts[vuId] = { username: initReg.username, password: initReg.password };
+    }
+  }
+
+  const account = loginAccounts[vuId];
+  if (account) {
+    const loginRes = loginUser(account.username, account.password, defaultClient);
+    if (loginRes && loginRes.token) {
+      defaultClient.get('/api/v1/auth/me', {
+        headers: getAuthHeaders(loginRes.token),
+        tags: tags,
+      });
+    }
+  }
+
+  thinkTime(0.5, 1.5);
+}
+
+// ==========================================
+// 3. Streaks & Challenges Pages Worker
 // ==========================================
 const ssrHeaders = { 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' };
 
+export function streaksScenario() {
+  // Hub
+  defaultClient.get('/streaks', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_hub' } });
+  thinkTime(0.1, 0.3);
+
+  // Challenge mode & API metadata
+  defaultClient.get('/streaks/challenge', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_challenge' } });
+  defaultClient.get('/api/v1/challenge-modes', { tags: { type: 'api', resource: 'challenge_modes' } });
+  thinkTime(0.1, 0.3);
+
+  // Killer Streaks (Chaos, Gauntlet, History, Page-Streak)
+  defaultClient.get('/streaks/killer/chaos-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_chaos' } });
+  thinkTime(0.1, 0.3);
+
+  defaultClient.get('/streaks/killer/gauntlet-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_gauntlet_killer' } });
+  thinkTime(0.1, 0.3);
+
+  defaultClient.get('/streaks/killer/history-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_history' } });
+  thinkTime(0.1, 0.3);
+
+  defaultClient.get('/streaks/killer/page-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_page_overview' } });
+  defaultClient.get('/streaks/killer/page-streak/trapper', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_page_trapper' } });
+  thinkTime(0.1, 0.3);
+
+  // Survivor Streaks
+  defaultClient.get('/streaks/survivor/gauntlet-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_gauntlet_surv' } });
+  thinkTime(0.2, 0.5);
+}
+
+// ==========================================
+// 4. Frontend SSR & Static Browsing Worker
+// ==========================================
 export function frontendScenario() {
   defaultClient.get('/', { headers: ssrHeaders, tags: { type: 'ssr', page: 'home' } });
   thinkTime(0.2, 0.4);
@@ -144,7 +225,7 @@ export function frontendScenario() {
 }
 
 // ==========================================
-// 3. High-Concurrency Database Writes Worker
+// 5. High-Concurrency Database Writes Worker
 // ==========================================
 let writeAuthToken = null;
 let entityList = [];
@@ -228,7 +309,7 @@ export function writesScenario() {
 }
 
 // ==========================================
-// 4. Heavy Query & Filtering Stress Worker
+// 6. Heavy Query & Filtering Stress Worker
 // ==========================================
 export function queriesScenario() {
   // Large 100-perk catalog queries
@@ -263,7 +344,7 @@ export function queriesScenario() {
 }
 
 // ==========================================
-// 5. Keystroke Prefix Search Autocomplete Worker
+// 7. Keystroke Prefix Search Autocomplete Worker
 // ==========================================
 export function searchScenario() {
   const startTime = Date.now();
@@ -285,7 +366,7 @@ export function searchScenario() {
 }
 
 // ==========================================
-// 6. Interactive Smash or Pass Game Worker
+// 8. Interactive Smash or Pass Game Worker
 // ==========================================
 let smashEntityList = [];
 
@@ -330,7 +411,7 @@ export function smashScenario() {
 }
 
 // ==========================================
-// 7. Perk Randomizer & Challenge Streak Worker
+// 9. Perk Randomizer & Challenge Streak Worker
 // ==========================================
 export function randomizerScenario() {
   const tags = { type: 'api', scenario: 'randomizer' };
@@ -350,7 +431,7 @@ export function randomizerScenario() {
 }
 
 // ==========================================
-// 8. Deep Catalog & Character Roster Exploration Worker
+// 10. Deep Catalog & Character Roster Exploration Worker
 // ==========================================
 export function catalogScenario() {
   const startTime = Date.now();
@@ -373,10 +454,12 @@ export function catalogScenario() {
 }
 
 // ==========================================
-// Fallback Default Function (Runs all 8 workloads in sequence)
+// Fallback Default Function (Runs all 10 workloads in sequence)
 // ==========================================
 export default function () {
-  authScenario();
+  authRegisterScenario();
+  authLoginScenario();
+  streaksScenario();
   frontendScenario();
   writesScenario();
   queriesScenario();
@@ -393,7 +476,7 @@ export function handleSummary(data) {
   return {
     'stdout': textSummary(data, { indent: ' ', enableColors: true }),
     'k6/reports/full-report.html': generateHtmlSummary(data, {
-      title: 'LemonDBD All-in-One Comprehensive Performance Report (All 8 Workload Areas)',
+      title: 'LemonDBD All-in-One Comprehensive Master Performance Report (All 10 Workload Areas)',
     }),
   };
 }

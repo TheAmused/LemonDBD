@@ -9,6 +9,7 @@ import {
   frontendThresholds,
   writesThresholds,
   queriesThresholds,
+  streaksThresholds,
   thresholds,
 } from '../config/thresholds.js';
 import {
@@ -20,10 +21,11 @@ import {
   frontendStages,
   writesStages,
   queriesStages,
+  streaksStages,
   stages,
 } from '../config/stages.js';
 import { ApiClient, defaultClient, browseDuration, searchDuration, voteDuration, authDuration, failedRequests } from './http_client.js';
-import { registerAndLoginUser, getAuthHeaders, authHelper } from './auth.js';
+import { registerUser, loginUser, registerAndLoginUser, getAuthHeaders, authHelper } from './auth.js';
 import { dataGenerator, PERK_SEARCH_QUERIES, CHARACTER_SEARCH_QUERIES, LOCALES, getRandomPerkQuery, getRandomCharacterQuery, getRandomLocale } from './data_generator.js';
 import { generateHtmlSummary } from './report_helper.js';
 
@@ -71,8 +73,13 @@ export function testSanity() {
       queriesThresholds.http_req_duration[0] === 'p(95)<300' &&
       Array.isArray(queriesThresholds['http_req_duration{type:query}']) &&
       queriesThresholds['http_req_duration{type:query}'][0] === 'p(95)<300',
+    'thresholds: streaks thresholds exist and have expected structure': () =>
+      Array.isArray(streaksThresholds.http_req_failed) &&
+      streaksThresholds.http_req_failed[0] === 'rate<0.01' &&
+      Array.isArray(streaksThresholds.http_req_duration) &&
+      streaksThresholds.http_req_duration[0] === 'p(95)<350',
     'thresholds: unified object has all keys': () =>
-      ['smoke', 'load', 'stress', 'spike', 'soak', 'frontend', 'writes', 'queries'].every((k) => k in thresholds),
+      ['smoke', 'load', 'stress', 'spike', 'soak', 'frontend', 'writes', 'queries', 'streaks'].every((k) => k in thresholds),
   });
 
   // 3. Verify stages.js
@@ -100,8 +107,14 @@ export function testSanity() {
       queriesStages[0].target === 15 && queriesStages[0].duration === '10s' &&
       queriesStages[1].target === 30 && queriesStages[1].duration === '30s' &&
       queriesStages[2].target === 0 && queriesStages[2].duration === '10s',
+    'stages: streaks stages exist and have expected structure': () =>
+      Array.isArray(streaksStages) &&
+      streaksStages.length === 3 &&
+      streaksStages[0].target === 15 && streaksStages[0].duration === '10s' &&
+      streaksStages[1].target === 25 && streaksStages[1].duration === '30s' &&
+      streaksStages[2].target === 0 && streaksStages[2].duration === '10s',
     'stages: unified object has all keys': () =>
-      ['smoke', 'load', 'stress', 'spike', 'soak', 'frontend', 'writes', 'queries'].every((k) => k in stages),
+      ['smoke', 'load', 'stress', 'spike', 'soak', 'frontend', 'writes', 'queries', 'streaks'].every((k) => k in stages),
   });
 
   // 4. Verify http_client.js
@@ -122,11 +135,16 @@ export function testSanity() {
   const sampleHeaders = getAuthHeaders('test-token-123');
   const emptyHeaders = getAuthHeaders(null);
   check(null, {
+    'auth: registerUser is function': () => typeof registerUser === 'function',
+    'auth: loginUser is function': () => typeof loginUser === 'function',
     'auth: registerAndLoginUser is function': () => typeof registerAndLoginUser === 'function',
     'auth: getAuthHeaders adds Bearer token': () => sampleHeaders['Authorization'] === 'Bearer test-token-123',
     'auth: getAuthHeaders returns empty object when null': () => Object.keys(emptyHeaders).length === 0,
     'auth: authHelper contains registerAndLoginUser and getAuthHeaders': () =>
-      typeof authHelper.registerAndLoginUser === 'function' && typeof authHelper.getAuthHeaders === 'function',
+      typeof authHelper.registerUser === 'function' &&
+      typeof authHelper.loginUser === 'function' &&
+      typeof authHelper.registerAndLoginUser === 'function' &&
+      typeof authHelper.getAuthHeaders === 'function',
   });
 
   // 6. Verify data_generator.js

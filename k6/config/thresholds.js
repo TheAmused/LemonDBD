@@ -46,6 +46,13 @@ export const queriesThresholds = {
   'http_req_duration{type:query}': ['p(95)<300'],
 };
 
+export const streaksThresholds = {
+  http_req_failed: ['rate<0.01'],
+  http_req_duration: ['p(95)<350'],
+  'http_req_duration{type:ssr}': ['p(95)<350'],
+  'http_req_duration{type:api}': ['p(95)<300'],
+};
+
 export const thresholds = {
   smoke: smokeThresholds,
   load: loadThresholds,
@@ -55,6 +62,7 @@ export const thresholds = {
   frontend: frontendThresholds,
   writes: writesThresholds,
   queries: queriesThresholds,
+  streaks: streaksThresholds,
 };
 
 export default thresholds;

@@ -1,6 +1,6 @@
-﻿import { defaultClient, authDuration } from './http_client.js';
+import { defaultClient, authDuration } from './http_client.js';
 
-export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), iter = (typeof __ITER !== 'undefined' ? __ITER : 0), client = defaultClient) {
+export function registerUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), iter = (typeof __ITER !== 'undefined' ? __ITER : 0), client = defaultClient) {
   const timestamp = Date.now();
   const rand = Math.floor(Math.random() * 100000);
   const username = `k6_u_${vuId}_${iter}_${rand}`.substring(0, 30);
@@ -8,28 +8,29 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
   const password = 'K6P@ssword123!';
 
   const startTime = Date.now();
-
-  // Register
   const regRes = client.post('/api/v1/auth/register', {
     username: username,
     email: email,
     password: password,
   }, { tags: { type: 'auth', operation: 'register' } });
 
-  let regToken = null;
+  authDuration.add(Date.now() - startTime);
+
+  let token = null;
   if (regRes.status >= 200 && regRes.status < 300) {
     try {
       const regBody = typeof regRes.body === 'string' ? JSON.parse(regRes.body) : regRes.body;
-      regToken = regBody.token || regBody.access_token || (regBody.data && regBody.data.token) || null;
+      token = regBody.token || regBody.access_token || (regBody.data && regBody.data.token) || null;
     } catch (e) {
-      regToken = null;
+      token = null;
     }
-  } else {
-    authDuration.add(Date.now() - startTime);
-    return { username, email, token: null };
   }
 
-  // Login
+  return { username, email, password, token, status: regRes.status };
+}
+
+export function loginUser(username, password = 'K6P@ssword123!', client = defaultClient) {
+  const startTime = Date.now();
   const loginRes = client.post('/api/v1/auth/login', {
     username: username,
     password: password,
@@ -47,10 +48,19 @@ export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU 
     }
   }
 
-  // Fall back to registration token if login response didn't contain token
-  token = token || regToken;
+  return { username, token, status: loginRes.status };
+}
 
-  return { username, email, token };
+export function registerAndLoginUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), iter = (typeof __ITER !== 'undefined' ? __ITER : 0), client = defaultClient) {
+  const reg = registerUser(vuId, iter, client);
+  if (!reg || reg.status >= 300) {
+    return { username: reg ? reg.username : '', email: reg ? reg.email : '', token: null };
+  }
+
+  const login = loginUser(reg.username, reg.password, client);
+  const token = login.token || reg.token;
+
+  return { username: reg.username, email: reg.email, token };
 }
 
 export function getAuthHeaders(token) {
@@ -59,6 +69,8 @@ export function getAuthHeaders(token) {
 
 export const registerAndLogin = registerAndLoginUser;
 export const authHelper = {
+  registerUser,
+  loginUser,
   registerAndLoginUser,
   registerAndLogin,
   getAuthHeaders,

@@ -89,7 +89,7 @@ def main():
         nargs="?",
         const="all",
         default=None,
-        choices=["all", "smoke", "load", "stress", "spike", "soak"],
+        choices=["all", "smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries"],
         help="Run K6 performance test suite(s). Defaults to 'all' if no stage specified.",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Show full stdout and stderr")
@@ -192,11 +192,21 @@ def main():
     # 6. Live Performance Tests (K6)
     if args.perf:
         k6_bin = shutil.which("k6") or shutil.which("k6.exe")
-        target_suites = ["smoke", "load", "stress", "spike", "soak"] if args.perf == "all" else [args.perf]
+        target_suites = ["smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries"] if args.perf == "all" else [args.perf]
+        suite_title_map = {
+            "smoke": "K6 Smoke Suite",
+            "load": "K6 Load Suite",
+            "stress": "K6 Stress Suite",
+            "spike": "K6 Spike Suite",
+            "soak": "K6 Soak Suite",
+            "frontend": "K6 Frontend Suite",
+            "writes": "K6 Writes Suite",
+            "queries": "K6 Queries Suite",
+        }
         if not k6_bin:
             print(f"[{RED}ERROR{RESET}] k6 binary was not found in PATH! Please install k6 to run performance tests.", flush=True)
             for suite in target_suites:
-                suite_name = f"K6 {suite.capitalize()} Suite"
+                suite_name = suite_title_map.get(suite, f"K6 {suite.capitalize()} Suite")
                 results.append({
                     "name": suite_name,
                     "tier": "Live Performance",
@@ -206,7 +216,7 @@ def main():
                 })
         else:
             for suite in target_suites:
-                suite_name = f"K6 {suite.capitalize()} Suite"
+                suite_name = suite_title_map.get(suite, f"K6 {suite.capitalize()} Suite")
                 print(f"[{YELLOW}RUNNING{RESET}] K6 Performance Suite ({suite})...", flush=True)
                 suite_file = ROOT_DIR / "k6" / "suites" / f"{suite}.js"
                 if not suite_file.exists():

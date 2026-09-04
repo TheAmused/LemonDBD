@@ -39,7 +39,7 @@ while [[ $# -gt 0 ]]; do
       echo ""
       echo "Options:"
       echo "  -s, --strict        Fresh build (--no-cache) and runs dual-stack live tests"
-      echo "  -p, --perf [SUITE]  Run K6 performance test suite(s). Defaults to 'all' (smoke, load, stress, spike, soak)"
+      echo "  -p, --perf [SUITE]  Run K6 performance test suite(s). Defaults to 'all' (smoke, load, stress, spike, soak, frontend, writes, queries)"
       echo "  -d, --down          Stop and tear down Docker containers"
       echo "  -h, --help          Show this help message"
       exit 0
@@ -59,6 +59,7 @@ fi
 
 # Verify k6 is available in PATH if perf testing requested
 K6_CMD="k6"
+VALID_SUITES=("smoke" "load" "stress" "spike" "soak" "frontend" "writes" "queries")
 if [ "$PERF" = true ]; then
   if ! command -v k6 &> /dev/null; then
     if command -v k6.exe &> /dev/null; then
@@ -66,6 +67,21 @@ if [ "$PERF" = true ]; then
     else
       echo -e "\n${RED}[FAIL] k6 executable was not found in PATH!${NC}"
       echo -e "${RED}Please install k6 to run performance tests.${NC}"
+      exit 1
+    fi
+  fi
+
+  CLEAN_SUITE=$(echo "$PERF_SUITE" | tr '[:upper:]' '[:lower:]')
+  if [ -n "$CLEAN_SUITE" ] && [ "$CLEAN_SUITE" != "all" ]; then
+    VALID=false
+    for s in "${VALID_SUITES[@]}"; do
+      if [ "$s" = "$CLEAN_SUITE" ]; then
+        VALID=true
+        break
+      fi
+    done
+    if [ "$VALID" = false ]; then
+      echo -e "\n${RED}[FAIL] Invalid perf suite '$PERF_SUITE'. Available suites: ${VALID_SUITES[*]}${NC}"
       exit 1
     fi
   fi
@@ -215,23 +231,22 @@ if [ "$PERF" = true ]; then
   echo -e "${MAGENTA} [Gate 4] Running K6 Performance Tests                  ${NC}"
   echo -e "${MAGENTA}========================================================${NC}"
 
-  ALL_SUITES=("smoke" "load" "stress" "spike" "soak")
   TARGET_SUITES=()
 
   CLEAN_SUITE=$(echo "$PERF_SUITE" | tr '[:upper:]' '[:lower:]')
 
   if [ -z "$CLEAN_SUITE" ] || [ "$CLEAN_SUITE" = "all" ]; then
-    TARGET_SUITES=("${ALL_SUITES[@]}")
+    TARGET_SUITES=("${VALID_SUITES[@]}")
   else
     VALID=false
-    for s in "${ALL_SUITES[@]}"; do
+    for s in "${VALID_SUITES[@]}"; do
       if [ "$s" = "$CLEAN_SUITE" ]; then
         VALID=true
         break
       fi
     done
     if [ "$VALID" = false ]; then
-      echo -e "\n${RED}[FAIL] Invalid perf suite '$PERF_SUITE'. Available suites: ${ALL_SUITES[*]}${NC}"
+      echo -e "\n${RED}[FAIL] Invalid perf suite '$PERF_SUITE'. Available suites: ${VALID_SUITES[*]}${NC}"
       exit 1
     fi
     TARGET_SUITES=("$CLEAN_SUITE")

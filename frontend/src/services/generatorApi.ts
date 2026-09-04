@@ -11,7 +11,9 @@ export interface GeneratorConfig {
   updated_at?: string;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+import { getBackendBaseUrl } from '@/utils/api';
+
+const BASE_URL = getBackendBaseUrl();
 const API_BASE = `${BASE_URL}/api/v1/generator`;
 
 async function handleResponse<T>(response: Response): Promise<T> {

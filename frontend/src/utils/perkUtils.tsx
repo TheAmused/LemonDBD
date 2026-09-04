@@ -11,9 +11,8 @@ export {
   renderFormattedDbdText,
 } from './textFormatter';
 
-export function getBackendBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-}
+import { getBackendBaseUrl, apiUrl } from './api';
+export { getBackendBaseUrl, apiUrl } from './api';
 
 export function sanitizePath(rawPath: string): string {
   return rawPath.replace(/^\/?(static\/)?/, '').replace(/%+/g, '');

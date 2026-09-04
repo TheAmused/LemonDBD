@@ -137,7 +137,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-10">
-      <p className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
+      <p className="max-w-lg text-center text-sm font-semibold text-slate-700 dark:text-slate-300 sm:text-base">
         {dict?.generator?.tarotTapToFlip ||
           'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
       </p>

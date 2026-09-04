@@ -59,7 +59,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         onClick={onClick}
         className={cn(
           SLOT_SIZE_CLASSES[size],
-          'flex flex-col items-center justify-center gap-1.5 rounded-2xl text-purple-400 cursor-pointer'
+          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-purple-400/50 dark:border-purple-800/60 bg-purple-50/50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-400 cursor-pointer shadow-xs transition-colors'
         )}
       >
         <EyeOff className="h-10 w-10 animate-pulse" />
@@ -75,11 +75,11 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
       <div
         className={cn(
           SLOT_SIZE_CLASSES[size],
-          'flex flex-col items-center justify-center gap-1.5 text-slate-600'
+          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-800/80 bg-slate-100/60 dark:bg-slate-900/20 text-slate-400 dark:text-slate-600 transition-colors shadow-xs'
         )}
       >
-        <ImageOff className="h-8 w-8" />
-        <span className="text-[11px] font-bold text-slate-500 text-center px-2">
+        <ImageOff className="h-8 w-8 text-slate-400 dark:text-slate-600" />
+        <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 text-center px-2">
           {dict?.generator?.emptySlot || 'Empty Slot'}
         </span>
       </div>

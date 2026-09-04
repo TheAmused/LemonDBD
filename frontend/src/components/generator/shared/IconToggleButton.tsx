@@ -8,34 +8,34 @@ export type IconButtonTone = 'amber' | 'cyan' | 'purple' | 'fuchsia' | 'red';
 
 const TONE_STYLES: Record<IconButtonTone, { text: string; activeBg: string; ring: string; bar: string }> = {
   amber: {
-    text: 'text-amber-400',
-    activeBg: 'bg-amber-500/10',
+    text: 'text-amber-700 dark:text-amber-400',
+    activeBg: 'bg-amber-500/15 dark:bg-amber-500/10',
     ring: 'hover:shadow-[0_0_0_1px_rgba(245,158,11,0.4),0_0_14px_rgba(245,158,11,0.22)]',
-    bar: 'from-transparent via-amber-400 to-transparent',
+    bar: 'from-transparent via-amber-600 dark:via-amber-400 to-transparent',
   },
   cyan: {
-    text: 'text-cyan-400',
-    activeBg: 'bg-cyan-500/10',
+    text: 'text-cyan-700 dark:text-cyan-400',
+    activeBg: 'bg-cyan-500/15 dark:bg-cyan-500/10',
     ring: 'hover:shadow-[0_0_0_1px_rgba(34,211,238,0.4),0_0_14px_rgba(34,211,238,0.22)]',
-    bar: 'from-transparent via-cyan-400 to-transparent',
+    bar: 'from-transparent via-cyan-600 dark:via-cyan-400 to-transparent',
   },
   purple: {
-    text: 'text-purple-400',
-    activeBg: 'bg-purple-500/10',
+    text: 'text-purple-700 dark:text-purple-400',
+    activeBg: 'bg-purple-500/15 dark:bg-purple-500/10',
     ring: 'hover:shadow-[0_0_0_1px_rgba(192,132,252,0.4),0_0_14px_rgba(192,132,252,0.22)]',
-    bar: 'from-transparent via-purple-400 to-transparent',
+    bar: 'from-transparent via-purple-600 dark:via-purple-400 to-transparent',
   },
   fuchsia: {
-    text: 'text-fuchsia-400',
-    activeBg: 'bg-fuchsia-500/10',
+    text: 'text-fuchsia-700 dark:text-fuchsia-400',
+    activeBg: 'bg-fuchsia-500/15 dark:bg-fuchsia-500/10',
     ring: 'hover:shadow-[0_0_0_1px_rgba(232,121,249,0.4),0_0_14px_rgba(232,121,249,0.22)]',
-    bar: 'from-transparent via-fuchsia-400 to-transparent',
+    bar: 'from-transparent via-fuchsia-600 dark:via-fuchsia-400 to-transparent',
   },
   red: {
-    text: 'text-red-400',
-    activeBg: 'bg-red-500/10',
+    text: 'text-red-700 dark:text-red-400',
+    activeBg: 'bg-red-500/15 dark:bg-red-500/10',
     ring: 'hover:shadow-[0_0_0_1px_rgba(248,113,113,0.4),0_0_14px_rgba(248,113,113,0.22)]',
-    bar: 'from-transparent via-red-400 to-transparent',
+    bar: 'from-transparent via-red-600 dark:via-red-400 to-transparent',
   },
 };
 
@@ -72,7 +72,7 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
       aria-label={label}
       aria-pressed={isActive}
       className={cn(
-        'group/btn relative flex items-center gap-2 overflow-hidden rounded-lg px-3.5 py-3 min-h-[44px] touch-manipulation text-slate-500 dark:text-slate-400 transition-all duration-200 cursor-pointer hover:text-slate-700 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800/50',
+        'group/btn relative flex items-center gap-2 overflow-hidden rounded-lg px-3.5 py-3 min-h-[44px] touch-manipulation text-slate-600 dark:text-slate-400 transition-all duration-200 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800/50 border border-slate-200/60 dark:border-white/5',
         // Notched top-left / bottom-right corners -- a small "trial sigil"
         // silhouette that reads as its own DBD-flavored shape instead of
         // the plain rounded rectangle used everywhere else in the toolbar.

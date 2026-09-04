@@ -1,7 +1,27 @@
-﻿import { check } from 'k6';
+import { check } from 'k6';
 import { getBaseUrl, getTimeout } from '../config/env.js';
-import { smokeThresholds, loadThresholds, stressThresholds, spikeThresholds, soakThresholds, thresholds } from '../config/thresholds.js';
-import { smokeStages, loadStages, stressStages, spikeStages, soakStages, stages } from '../config/stages.js';
+import {
+  smokeThresholds,
+  loadThresholds,
+  stressThresholds,
+  spikeThresholds,
+  soakThresholds,
+  frontendThresholds,
+  writesThresholds,
+  queriesThresholds,
+  thresholds,
+} from '../config/thresholds.js';
+import {
+  smokeStages,
+  loadStages,
+  stressStages,
+  spikeStages,
+  soakStages,
+  frontendStages,
+  writesStages,
+  queriesStages,
+  stages,
+} from '../config/stages.js';
 import { ApiClient, defaultClient, browseDuration, searchDuration, voteDuration, authDuration, failedRequests } from './http_client.js';
 import { registerAndLoginUser, getAuthHeaders, authHelper } from './auth.js';
 import { dataGenerator, PERK_SEARCH_QUERIES, CHARACTER_SEARCH_QUERIES, LOCALES, getRandomPerkQuery, getRandomCharacterQuery, getRandomLocale } from './data_generator.js';
@@ -16,7 +36,7 @@ export const options = {
   },
 };
 
-export default function () {
+export function testSanity() {
   // 1. Verify env.js
   check(null, {
     'env: getBaseUrl() returns string': () => typeof getBaseUrl() === 'string' && getBaseUrl().length > 0,
@@ -30,8 +50,31 @@ export default function () {
     'thresholds: stress thresholds exist': () => Array.isArray(stressThresholds.http_req_failed),
     'thresholds: spike thresholds exist': () => Array.isArray(spikeThresholds.http_req_failed),
     'thresholds: soak thresholds exist': () => Array.isArray(soakThresholds.http_req_failed),
+    'thresholds: frontend thresholds exist and have expected structure': () =>
+      Array.isArray(frontendThresholds.http_req_failed) &&
+      frontendThresholds.http_req_failed[0] === 'rate<0.01' &&
+      Array.isArray(frontendThresholds.http_req_duration) &&
+      frontendThresholds.http_req_duration[0] === 'p(95)<350' &&
+      Array.isArray(frontendThresholds['http_req_duration{type:ssr}']) &&
+      frontendThresholds['http_req_duration{type:ssr}'][0] === 'p(95)<350' &&
+      Array.isArray(frontendThresholds['http_req_duration{type:static}']) &&
+      frontendThresholds['http_req_duration{type:static}'][0] === 'p(95)<50',
+    'thresholds: writes thresholds exist and have expected structure': () =>
+      Array.isArray(writesThresholds.http_req_failed) &&
+      writesThresholds.http_req_failed[0] === 'rate<0.01' &&
+      Array.isArray(writesThresholds.http_req_duration) &&
+      writesThresholds.http_req_duration[0] === 'p(95)<400' &&
+      Array.isArray(writesThresholds['http_req_duration{type:write}']) &&
+      writesThresholds['http_req_duration{type:write}'][0] === 'p(95)<400',
+    'thresholds: queries thresholds exist and have expected structure': () =>
+      Array.isArray(queriesThresholds.http_req_failed) &&
+      queriesThresholds.http_req_failed[0] === 'rate<0.005' &&
+      Array.isArray(queriesThresholds.http_req_duration) &&
+      queriesThresholds.http_req_duration[0] === 'p(95)<300' &&
+      Array.isArray(queriesThresholds['http_req_duration{type:query}']) &&
+      queriesThresholds['http_req_duration{type:query}'][0] === 'p(95)<300',
     'thresholds: unified object has all keys': () =>
-      ['smoke', 'load', 'stress', 'spike', 'soak'].every((k) => k in thresholds),
+      ['smoke', 'load', 'stress', 'spike', 'soak', 'frontend', 'writes', 'queries'].every((k) => k in thresholds),
   });
 
   // 3. Verify stages.js
@@ -41,8 +84,26 @@ export default function () {
     'stages: stress stages exist': () => Array.isArray(stressStages) && stressStages.length > 0,
     'stages: spike stages exist': () => Array.isArray(spikeStages) && spikeStages.length > 0,
     'stages: soak stages exist': () => Array.isArray(soakStages) && soakStages.length > 0,
+    'stages: frontend stages exist and have expected structure': () =>
+      Array.isArray(frontendStages) &&
+      frontendStages.length === 3 &&
+      frontendStages[0].target === 15 && frontendStages[0].duration === '10s' &&
+      frontendStages[1].target === 25 && frontendStages[1].duration === '30s' &&
+      frontendStages[2].target === 0 && frontendStages[2].duration === '10s',
+    'stages: writes stages exist and have expected structure': () =>
+      Array.isArray(writesStages) &&
+      writesStages.length === 3 &&
+      writesStages[0].target === 10 && writesStages[0].duration === '10s' &&
+      writesStages[1].target === 20 && writesStages[1].duration === '30s' &&
+      writesStages[2].target === 0 && writesStages[2].duration === '10s',
+    'stages: queries stages exist and have expected structure': () =>
+      Array.isArray(queriesStages) &&
+      queriesStages.length === 3 &&
+      queriesStages[0].target === 15 && queriesStages[0].duration === '10s' &&
+      queriesStages[1].target === 30 && queriesStages[1].duration === '30s' &&
+      queriesStages[2].target === 0 && queriesStages[2].duration === '10s',
     'stages: unified object has all keys': () =>
-      ['smoke', 'load', 'stress', 'spike', 'soak'].every((k) => k in stages),
+      ['smoke', 'load', 'stress', 'spike', 'soak', 'frontend', 'writes', 'queries'].every((k) => k in stages),
   });
 
   // 4. Verify http_client.js
@@ -101,7 +162,7 @@ export default function () {
     'report_helper: generateHtmlSummary returns HTML': () =>
       typeof mockSummary === 'string' &&
       mockSummary.includes('<!DOCTYPE html>') &&
-      mockSummary.includes('🍋'),
+      (mockSummary.includes('&#127819;') || mockSummary.includes('🍋')),
   });
 
   // 8. Test live backend endpoint with path normalization check (without leading slash)
@@ -127,3 +188,5 @@ export default function () {
       u && typeof u.username === 'string' && u.email && u.email.endsWith('@example.com'),
   });
 }
+
+export default testSanity;

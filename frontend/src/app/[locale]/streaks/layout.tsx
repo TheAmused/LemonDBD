@@ -15,6 +15,7 @@ import { StreaksDictProvider } from '@/context/StreaksDictContext';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { getBackendBaseUrl } from '@/utils/api';
 
 const QuestsModal = dynamic(() => import('@/components/QuestsModal').then((m) => m.QuestsModal), { ssr: false });
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
@@ -31,7 +32,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.streaksPageTitle || 'LemonDBD - Challenges');
 

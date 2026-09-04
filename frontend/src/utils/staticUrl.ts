@@ -1,13 +1,6 @@
-// frontend/src/utils/staticUrl.ts
-export const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+import { getBackendBaseUrl, apiUrl, staticUrl, backendBase } from './api';
 
-/** Same URL shape used across the app: strip a leading `/` or `static/`, then prefix. */
-export function staticUrl(rawPath?: string | null): string | undefined {
-  if (!rawPath) return undefined;
-  if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) return rawPath;
-  const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
-  return `${backendBase}/static/${cleanPath}`;
-}
+export { getBackendBaseUrl, apiUrl, staticUrl, backendBase };
 
 /** name -> filesystem-safe slug, matching the backend's avatar filename convention. */
 export function sanitizeName(name: string): string {
@@ -25,7 +18,9 @@ export function sanitizeName(name: string): string {
  * Backend writes character avatars as WebP (see backend/app/services/image_conversion.py). */
 export function avatarUrlForCharacter(name: string, subDir: 'killers' | 'survivors' = 'killers'): string | undefined {
   if (!name) return undefined;
-  return `${backendBase}/static/avatars/${subDir}/${sanitizeName(name)}.webp`;
+  const base = getBackendBaseUrl();
+  const path = `/static/avatars/${subDir}/${sanitizeName(name)}.webp`;
+  return base ? `${base}${path}` : path;
 }
 
 /** Resolves a perk's icon: prefer the scraped local path, fall back to its

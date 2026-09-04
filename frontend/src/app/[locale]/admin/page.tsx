@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { getBackendBaseUrl } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { Sidebar } from '@/components/Sidebar';
 import { AdminHeader } from '@/components/admin/AdminHeader';
@@ -98,7 +99,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   const [bugReportPendingDeletion, setBugReportPendingDeletion] = useState<number | null>(null);
   const [isDeletingBugReport, setIsDeletingBugReport] = useState<boolean>(false);
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const API_BASE = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.adminPageTitle || 'LemonDBD - Admin Control Center');
 

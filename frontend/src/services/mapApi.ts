@@ -1,6 +1,7 @@
 // frontend/src/services/mapApi.ts
 import { MapRealm, Realm } from '@/types/map';
 import { fetchCached, fetchJson } from '@/services/dataCache';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 /*
  * Map data is static between patches, and the explorer re-requested all of it
@@ -10,10 +11,8 @@ import { fetchCached, fetchJson } from '@/services/dataCache';
  */
 
 const getApiBase = () => {
-  const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  if (!envUrl) return 'http://localhost:5000/api/v1';
-  if (envUrl.includes('/api/v1')) return envUrl;
-  return `${envUrl.replace(/\/$/, '')}/api/v1`;
+  const base = getBackendBaseUrl();
+  return base ? `${base}/api/v1` : '/api/v1';
 };
 
 const API_BASE = getApiBase();

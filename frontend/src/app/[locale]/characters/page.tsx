@@ -12,6 +12,7 @@ import { Locale } from '@/i18n/config';
 import { CharacterItem, PerkItem } from '@/components/character-detail/types';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { getBackendBaseUrl } from '@/utils/api';
 
 const QuestsModal = dynamic(
   () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
@@ -26,7 +27,7 @@ export default function CharactersPage() {
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle((dict?.app as any)?.charactersPageTitle || 'LemonDBD - Characters & Teachables');
 

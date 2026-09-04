@@ -10,6 +10,7 @@
     "perf:soak": "cd .. && k6 run k6/suites/soak.js",
     "perf:frontend": "cd .. && k6 run k6/suites/frontend.js",
     "perf:writes": "cd .. && k6 run k6/suites/writes.js",
-    "perf:queries": "cd .. && k6 run k6/suites/queries.js"
+    "perf:queries": "cd .. && k6 run k6/suites/queries.js",
+    "perf:full": "cd .. && k6 run k6/suites/full.js"
   }
 }

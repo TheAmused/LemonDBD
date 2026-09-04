@@ -9,6 +9,8 @@
     .\up.ps1 -Perf frontend
     .\up.ps1 -Perf writes
     .\up.ps1 -Perf queries
+    .\up.ps1 -Perf full
+    .\up.ps1 -Perf full -Vus 50 -Duration 1m
     .\up.ps1 -Down
 #>
 param (
@@ -18,6 +20,10 @@ param (
     [switch]$Perf,
     [Parameter(Position=0)]
     [string]$PerfSuite = "all",
+    [Alias("v")]
+    [int]$Vus = 0,
+    [Alias("d")]
+    [string]$Duration = "",
     [switch]$Down
 )
 
@@ -32,7 +38,7 @@ if ($Down) {
 
 $isPerfRequested = $Perf -or $PSBoundParameters.ContainsKey('Perf') -or $PSBoundParameters.ContainsKey('PerfSuite')
 
-$validSuites = @("smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries")
+$validSuites = @("smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "full")
 
 # Verify k6 is available in PATH if perf testing is requested
 if ($isPerfRequested) {
@@ -259,6 +265,13 @@ if ($isPerfRequested) {
     $perfResults = @()
     $anyPerfFailed = $false
     $env:K6_TIMEOUT = "30s"
+    if ($Vus -gt 0) {
+        $env:TARGET_VUS = "$Vus"
+        $env:VUS_COUNT = "$Vus"
+    }
+    if (-not [string]::IsNullOrWhiteSpace($Duration)) {
+        $env:TARGET_DURATION = "$Duration"
+    }
 
     foreach ($suite in $targetSuites) {
         $suiteRelPath = "k6/suites/$suite.js"

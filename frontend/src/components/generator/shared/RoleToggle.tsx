@@ -41,15 +41,15 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         aria-hidden="true"
         className={cn(
           'absolute top-1 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-all duration-200 ease-out',
-          isKiller ? 'left-[45px] bg-rose-500 text-slate-950' : 'left-1 bg-emerald-400 text-slate-950'
+          isKiller ? 'left-[45px] bg-rose-600 text-white' : 'left-1 bg-emerald-600 text-white'
         )}
       >
         {isKiller ? <Skull className="h-3.5 w-3.5" /> : <Shield className="h-3.5 w-3.5" />}
       </span>
-      <span className={cn('ml-1 text-[9px] font-black uppercase tracking-wide transition-opacity', isKiller ? 'opacity-30 text-emerald-300' : 'opacity-0')}>
+      <span className={cn('ml-1 text-[9px] font-black uppercase tracking-wide transition-opacity', isKiller ? 'opacity-60 text-emerald-700 dark:text-emerald-300' : 'opacity-0')}>
         S
       </span>
-      <span className={cn('ml-auto mr-1 text-[9px] font-black uppercase tracking-wide transition-opacity', isKiller ? 'opacity-0' : 'opacity-30 text-rose-300')}>
+      <span className={cn('ml-auto mr-1 text-[9px] font-black uppercase tracking-wide transition-opacity', isKiller ? 'opacity-0' : 'opacity-60 text-rose-700 dark:text-rose-300')}>
         K
       </span>
     </button>

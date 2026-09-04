@@ -180,19 +180,27 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                       onClick={handleDevotionSubmit}
                       className="text-[10px] bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded font-bold cursor-pointer hover:bg-amber-400"
                     >
-                      OK
+                      {dict?.user?.ok || 'OK'}
                     </button>
                   </div>
                 ) : (
                   <div
+                    role="button"
+                    tabIndex={0}
                     onClick={() => {
                       setTempDevotion(showcase.devotionLevel);
                       setIsEditingDevotion(true);
                     }}
-                    title="Click to edit devotion level"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setTempDevotion(showcase.devotionLevel);
+                        setIsEditingDevotion(true);
+                      }
+                    }}
+                    title={dict?.user?.editDevotionTitle || 'Click to edit devotion level'}
                     className="cursor-pointer text-sm font-black font-mono text-amber-200 hover:text-amber-100 flex items-center gap-1"
                   >
-                    <span>Lvl {showcase.devotionLevel}</span>
+                    <span>{dict?.user?.lvlPrefix || 'Lvl'} {showcase.devotionLevel}</span>
                     <span className="text-[10px] text-amber-400/60 group-hover:text-amber-300">✎</span>
                   </div>
                 )}
@@ -235,7 +243,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-rose-500/40 bg-rose-500/10 text-rose-300"
               >
                 <AlertCircle className="h-3 w-3 text-rose-400" />
-                <span>Offline (Cached)</span>
+                <span>{dict?.user?.offlineCached || 'Offline (Cached)'}</span>
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300">

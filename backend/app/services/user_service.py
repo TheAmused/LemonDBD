@@ -13,6 +13,7 @@ from app.services.user import (
     fetch_user_by_id,
     get_avatar_storage_directory,
     get_or_create_user_showcase,
+    get_user_showcase,
     list_all_users_paginated,
     modify_user_profile,
     process_and_save_avatar,
@@ -118,8 +119,7 @@ class UserService:
         return reset_password_with_token(token, new_password)
 
     def get_user_showcase(self, user_id: int) -> dict[str, Any] | None:
-        showcase = get_or_create_user_showcase(user_id)
-        return showcase.to_dict() if showcase else None
+        return get_user_showcase(user_id)
 
     def update_user_showcase(
         self, user_id: int, data: dict[str, Any]

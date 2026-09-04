@@ -44,6 +44,38 @@ def modify_user_profile(
     return user, None
 
 
+def get_user_showcase(user_id: int) -> dict[str, Any] | None:
+    """Retrieve player showcase record or return defaults without mutating database on GET."""
+    user = db.session.get(User, user_id)
+    if not user:
+        return None
+
+    showcase = db.session.scalars(
+        select(UserShowcase).where(UserShowcase.user_id == user_id)
+    ).first()
+
+    if showcase:
+        return showcase.to_dict()
+
+    # Pure read fallback: default representation without DB write
+    return {
+        "player_title": "The Fogwalker",
+        "devotion_level": 14,
+        "grade_rank": "Iridescent I",
+        "survivor_main": {
+            "character_name": "Feng Min",
+            "prestige": 9,
+            "perk_ids": [None, None, None, None],
+        },
+        "killer_main": {
+            "character_name": "The Blight",
+            "prestige": 7,
+            "perk_ids": [None, None, None, None],
+        },
+        "updated_at": None,
+    }
+
+
 def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
     """Retrieve or initialize player showcase record in database."""
     user = db.session.get(User, user_id)
@@ -68,7 +100,13 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
             killer_perk_ids=[None, None, None, None],
         )
         db.session.add(showcase)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            showcase = db.session.scalars(
+                select(UserShowcase).where(UserShowcase.user_id == user_id)
+            ).first()
 
     return showcase
 
@@ -77,9 +115,17 @@ def update_user_showcase(
     user_id: int, data: dict[str, Any]
 ) -> tuple[dict[str, Any] | None, str | None]:
     """Update custom player showcase attributes in database."""
-    showcase = get_or_create_user_showcase(user_id)
-    if not showcase:
+    user = db.session.get(User, user_id)
+    if not user:
         return None, "User not found."
+
+    showcase = db.session.scalars(
+        select(UserShowcase).where(UserShowcase.user_id == user_id)
+    ).first()
+
+    if not showcase:
+        showcase = UserShowcase(user_id=user_id)
+        db.session.add(showcase)
 
     if "player_title" in data and isinstance(data["player_title"], str):
         showcase.player_title = data["player_title"].strip()[:100]
@@ -97,12 +143,13 @@ def update_user_showcase(
         if "prestige" in sm and isinstance(sm["prestige"], (int, float)):
             showcase.survivor_main_prestige = max(1, min(100, int(sm["prestige"])))
         if "perk_ids" in sm and isinstance(sm["perk_ids"], list):
-            showcase.survivor_perk_ids = [
+            s_perks = [
                 int(p) if p is not None and str(p).isdigit() else None
                 for p in sm["perk_ids"][:4]
             ]
-            while len(showcase.survivor_perk_ids) < 4:
-                showcase.survivor_perk_ids.append(None)
+            while len(s_perks) < 4:
+                s_perks.append(None)
+            showcase.survivor_perk_ids = s_perks
 
     if "killer_main" in data and isinstance(data["killer_main"], dict):
         km = data["killer_main"]
@@ -111,13 +158,19 @@ def update_user_showcase(
         if "prestige" in km and isinstance(km["prestige"], (int, float)):
             showcase.killer_main_prestige = max(1, min(100, int(km["prestige"])))
         if "perk_ids" in km and isinstance(km["perk_ids"], list):
-            showcase.killer_perk_ids = [
+            k_perks = [
                 int(p) if p is not None and str(p).isdigit() else None
                 for p in km["perk_ids"][:4]
             ]
-            while len(showcase.killer_perk_ids) < 4:
-                showcase.killer_perk_ids.append(None)
+            while len(k_perks) < 4:
+                k_perks.append(None)
+            showcase.killer_perk_ids = k_perks
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as exc:
+        db.session.rollback()
+        return None, f"Database error: {str(exc)}"
+
     return showcase.to_dict(), None
 

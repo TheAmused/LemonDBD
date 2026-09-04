@@ -176,9 +176,9 @@ describe('Campfire Dossier: StreakTrophyCard', () => {
     );
 
     assert.ok(html.includes('/en/streaks'));
-    assert.ok(html.includes('/en/streaks/gauntlet'));
-    assert.ok(html.includes('/en/streaks/chaos'));
-    assert.ok(html.includes('/en/streaks/page'));
+    assert.ok(html.includes('/en/streaks/killer/gauntlet-streak'));
+    assert.ok(html.includes('/en/streaks/killer/chaos-streak'));
+    assert.ok(html.includes('/en/streaks/killer/page-streak'));
 
     // Assert strict omission of quests and "Others"
     assert.ok(!html.toLowerCase().includes('quest'));

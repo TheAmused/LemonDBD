@@ -159,6 +159,7 @@ export function useUserShowcase(
   showcaseRef.current = showcase;
   const prevUserIdRef = useRef(userId);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasUserModifiedRef = useRef(false);
 
   // Sync to database via API when authenticated
   const syncToDatabase = useCallback(
@@ -189,6 +190,7 @@ export function useUserShowcase(
 
     if (prevUserIdRef.current !== userId) {
       prevUserIdRef.current = userId;
+      hasUserModifiedRef.current = false;
       const loaded = loadStoredShowcase(userId);
       showcaseRef.current = loaded;
       setShowcase(loaded);
@@ -203,9 +205,12 @@ export function useUserShowcase(
     fetchUserShowcase(userId, controller.signal)
       .then((dbData) => {
         if (!cancelled && dbData) {
-          showcaseRef.current = dbData;
-          saveStoredShowcase(userId, dbData);
-          setShowcase(dbData);
+          // Do not overwrite if the user already made edits before the network response returned
+          if (!hasUserModifiedRef.current) {
+            showcaseRef.current = dbData;
+            saveStoredShowcase(userId, dbData);
+            setShowcase(dbData);
+          }
           setIsLoading(false);
         }
       })
@@ -221,16 +226,21 @@ export function useUserShowcase(
     };
   }, [userId]);
 
+  // Flush pending debounced database sync on unmount
   useEffect(() => {
     return () => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
+        if (userId && userId !== 'guest') {
+          syncToDatabase(userId, showcaseRef.current);
+        }
       }
     };
-  }, []);
+  }, [userId, syncToDatabase]);
 
   const updateState = useCallback(
     (updater: (prev: UserShowcaseState) => UserShowcaseState) => {
+      hasUserModifiedRef.current = true;
       const next = updater(showcaseRef.current);
       showcaseRef.current = next;
       saveStoredShowcase(userId, next);

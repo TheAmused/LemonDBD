@@ -90,7 +90,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
                 {dict?.user?.selectCharacter || 'Select Character'} ({role})
               </h2>
               <p className="text-xs text-slate-400">
-                Choose your primary {role.toLowerCase()} main to showcase at the Campfire.
+                {dict?.user?.chooseCharacterDesc || 'Choose your primary character to showcase at the Campfire.'}
               </p>
             </div>
           </div>
@@ -123,11 +123,13 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 space-y-3">
               <span className="h-8 w-8 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
-              <p className="text-xs text-slate-400 font-mono">Consulting the Fog...</p>
+              <p className="text-xs text-slate-400 font-mono">
+                {dict?.user?.loadingCharacters || 'Consulting the Fog...'}
+              </p>
             </div>
           ) : filteredCharacters.length === 0 ? (
             <div className="text-center py-16 text-slate-500 text-xs sm:text-sm">
-              No matching characters found.
+              {dict?.user?.noCharactersFound || 'No matching characters found.'}
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">

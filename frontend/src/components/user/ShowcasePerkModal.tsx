@@ -91,10 +91,10 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             </div>
             <div>
               <h2 id="perk-modal-title" className="text-base sm:text-lg font-black tracking-wide uppercase font-mono">
-                {dict?.user?.selectPerk || 'Select Perk'} ({role} - Slot {slotIndex + 1})
+                {dict?.user?.selectPerk || 'Select Perk'} ({role})
               </h2>
               <p className="text-xs text-slate-400">
-                Choose a perk to equip into your signature 4-perk diamond loadout.
+                {dict?.user?.choosePerkDesc || 'Choose a perk to equip into your signature 4-perk diamond loadout.'}
               </p>
             </div>
           </div>
@@ -141,11 +141,13 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
           {loading ? (
             <div className="flex flex-col items-center justify-center py-16 space-y-3">
               <span className="h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
-              <p className="text-xs text-slate-400 font-mono">Channeling teachable knowledge...</p>
+              <p className="text-xs text-slate-400 font-mono">
+                {dict?.user?.loadingPerks || 'Channeling teachable knowledge...'}
+              </p>
             </div>
           ) : filteredPerks.length === 0 ? (
             <div className="text-center py-16 text-slate-500 text-xs sm:text-sm">
-              No matching perks found.
+              {dict?.user?.noPerksFound || 'No matching perks found.'}
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -183,7 +185,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
                             unoptimized
                           />
                         ) : (
-                          <div className="text-[10px] font-bold text-purple-300">DBD</div>
+                          <Sparkles className="h-4 w-4 text-purple-300" />
                         )}
                       </div>
                     </div>

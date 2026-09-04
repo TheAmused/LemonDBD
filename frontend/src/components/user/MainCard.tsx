@@ -105,7 +105,7 @@ export const MainCard: React.FC<MainCardProps> = ({
             onClick={() => handlePrestigeDelta(-1)}
             disabled={loadout.prestige <= 1}
             className="h-5 w-5 flex items-center justify-center rounded bg-slate-900/80 text-red-300 hover:bg-slate-800 disabled:opacity-40 cursor-pointer text-xs"
-            title="Decrease Prestige"
+            title={dict?.user?.decreasePrestige || 'Decrease Prestige'}
           >
             <Minus className="h-3 w-3" />
           </button>
@@ -117,7 +117,7 @@ export const MainCard: React.FC<MainCardProps> = ({
             onClick={() => handlePrestigeDelta(1)}
             disabled={loadout.prestige >= 100}
             className="h-5 w-5 flex items-center justify-center rounded bg-slate-900/80 text-red-300 hover:bg-slate-800 disabled:opacity-40 cursor-pointer text-xs"
-            title="Increase Prestige"
+            title={dict?.user?.increasePrestige || 'Increase Prestige'}
           >
             <Plus className="h-3 w-3" />
           </button>
@@ -157,7 +157,7 @@ export const MainCard: React.FC<MainCardProps> = ({
               {loadout.characterName}
             </h4>
             <p className="text-[11px] text-slate-400">
-              Prestige level {loadout.prestige} of 100
+              {(dict?.user?.prestigeProgress || 'Prestige level {level} of 100').replace('{level}', String(loadout.prestige))}
             </p>
           </div>
           <button
@@ -176,10 +176,10 @@ export const MainCard: React.FC<MainCardProps> = ({
         <div className="flex items-center justify-between pb-3">
           <span className="text-[11px] font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5 font-mono">
             <Sparkles className="h-3 w-3 text-purple-400" />
-            <span>4-Perk Signature Loadout</span>
+            <span>{dict?.user?.signatureLoadout || '4-Perk Signature Loadout'}</span>
           </span>
           <span className="text-[10px] text-slate-500 font-mono">
-            {loadout.perkIds.filter(Boolean).length}/4 equipped
+            {(dict?.user?.equippedCount || '{count}/4 equipped').replace('{count}', String(loadout.perkIds.filter(Boolean).length))}
           </span>
         </div>
 

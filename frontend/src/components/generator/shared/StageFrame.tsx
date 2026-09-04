@@ -63,10 +63,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
 
   return (
     <div
-      className={cn(
-        'relative overflow-hidden rounded-3xl bg-slate-100/80 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800/60 p-4 sm:p-6',
-        className
-      )}
+      className={cn('relative overflow-hidden p-4 sm:p-6', className)}
     >
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         <ParticlesProvider init={registerEngine}>
@@ -80,10 +77,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
 
       <div
         aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute inset-0',
-          reduceMotion ? 'dbd-heartbeat-vignette--static' : 'dbd-heartbeat-vignette'
-        )}
+        className="pointer-events-none absolute inset-0 dbd-heartbeat-vignette"
       />
 
       {/* A small floor so the stage never looks collapsed when totally
@@ -116,7 +110,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
           the scrollbar shows up *inside this box*, not on the page -- the
           mode's tabs/toolbar above it and the surrounding page chrome stay
           put either way. */}
-      <div className="relative z-10 flex h-full min-h-[380px] max-h-[calc(100dvh-9rem)] flex-col items-center justify-center overflow-y-auto sm:min-h-[440px] sm:max-h-[calc(100dvh-10rem)] lg:min-h-[520px] lg:max-h-[calc(100dvh-11rem)]">
+      <div className="relative z-10 flex h-full min-h-[380px] max-h-[min(calc(100dvh-9rem),620px)] flex-col items-center justify-center overflow-y-auto sm:min-h-[440px] sm:max-h-[min(calc(100dvh-10rem),660px)] lg:min-h-[520px] lg:max-h-[min(calc(100dvh-11rem),700px)]">
         {children}
       </div>
     </div>

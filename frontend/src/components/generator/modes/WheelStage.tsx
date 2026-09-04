@@ -650,13 +650,13 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     : `${dict?.generator?.spinWheelButton || 'Spin for Perk Slot'} #${activeSlotIdx + 1}`;
 
   return (
-    <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 py-1">
+    <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 pt-3 pb-1 sm:pt-4">
       <p className="max-w-md text-center text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 px-3 line-clamp-2 sm:line-clamp-none">
         {dict?.generator?.spinOrRollPrompt ||
           'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
       </p>
 
-      <div className="flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-2 sm:gap-3 lg:flex-row lg:items-center lg:justify-center lg:gap-8 xl:gap-12">
+      <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 lg:flex-row lg:items-center lg:justify-center lg:gap-8 xl:gap-12">
         <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 lg:order-1 lg:grid-cols-1 lg:gap-3">
           {renderFlankSlot(0)}
           {renderFlankSlot(1)}
@@ -672,7 +672,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
             <div
-              className={`w-full max-w-[40vw] min-w-[150px] max-h-[28dvh] sm:max-w-[260px] sm:max-h-[36dvh] md:max-w-[320px] lg:max-w-[380px] xl:max-w-[440px] 2xl:max-w-[500px] aspect-square transition-all duration-500 ease-out transform ${
+              className={`w-full max-w-[44vw] min-w-[160px] max-h-[31dvh] sm:max-w-[285px] sm:max-h-[39dvh] md:max-w-[350px] lg:max-w-[415px] xl:max-w-[480px] 2xl:max-w-[545px] aspect-square transition-all duration-500 ease-out transform ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
               }`}
             >

@@ -42,12 +42,16 @@ function LandingContent() {
 
       <main className="flex-1 w-full flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen transition-[padding] duration-300 p-4 sm:p-8 lg:p-12 lemon-shell-main">
         <div className="relative flex flex-col items-center text-center w-full max-w-xl mx-auto z-10 py-8 sm:py-12">
-          {/* Ambient Glows */}
-          <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-accent-amber/15 blur-3xl" />
+          {/* Ambient Glow */}
           <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-accent-red/15 blur-3xl" />
 
           {/* Big Animated Lemon Icon */}
           <div className="relative mb-8 flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center rounded-3xl bg-gradient-to-br from-accent-amber/20 via-accent-amber/5 to-accent-red/20 border-2 border-accent-amber/40 p-6 shadow-2xl shadow-accent-amber/20 hover:scale-105 transition-transform duration-300 group">
+            {/* Halo sits directly behind the icon (an earlier sibling paints
+                first) instead of the old page-level glow blob, which was
+                anchored to the hero column's top edge and floated well
+                above the icon instead of forming a backdrop behind it. */}
+            <div className="pointer-events-none absolute -inset-6 rounded-full bg-accent-amber/20 blur-3xl" />
             <LemonIcon className="h-full w-full dbd-lemon-glow group-hover:rotate-6 transition-transform duration-300 animate-pulse" />
           </div>
 

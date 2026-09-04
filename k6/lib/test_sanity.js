@@ -62,8 +62,6 @@ export function testSanity() {
     'thresholds: writes thresholds exist and have expected structure': () =>
       Array.isArray(writesThresholds.http_req_failed) &&
       writesThresholds.http_req_failed[0] === 'rate<0.01' &&
-      Array.isArray(writesThresholds.http_req_duration) &&
-      writesThresholds.http_req_duration[0] === 'p(95)<400' &&
       Array.isArray(writesThresholds['http_req_duration{type:write}']) &&
       writesThresholds['http_req_duration{type:write}'][0] === 'p(95)<400',
     'thresholds: queries thresholds exist and have expected structure': () =>

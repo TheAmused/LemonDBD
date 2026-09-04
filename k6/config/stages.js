@@ -1,4 +1,4 @@
-﻿export const smokeStages = [
+export const smokeStages = [
   { duration: '5s', target: 2 },
   { duration: '15s', target: 2 },
   { duration: '5s', target: 0 },
@@ -32,12 +32,33 @@ export const soakStages = [
   { duration: '30s', target: 0 },
 ];
 
+export const frontendStages = [
+  { target: 15, duration: '10s' },
+  { target: 25, duration: '30s' },
+  { target: 0, duration: '10s' },
+];
+
+export const writesStages = [
+  { target: 10, duration: '10s' },
+  { target: 20, duration: '30s' },
+  { target: 0, duration: '10s' },
+];
+
+export const queriesStages = [
+  { target: 15, duration: '10s' },
+  { target: 30, duration: '30s' },
+  { target: 0, duration: '10s' },
+];
+
 export const stages = {
   smoke: smokeStages,
   load: loadStages,
   stress: stressStages,
   spike: spikeStages,
   soak: soakStages,
+  frontend: frontendStages,
+  writes: writesStages,
+  queries: queriesStages,
 };
 
 export default stages;

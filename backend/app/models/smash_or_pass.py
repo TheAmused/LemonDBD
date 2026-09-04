@@ -7,6 +7,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
     JSON,
     String,
@@ -172,6 +173,11 @@ class EntityStat(Base):
 
 class Vote(Base):
     __tablename__ = "votes"
+    __table_args__ = (
+        Index("idx_votes_entity_user", "entity_id", "user_id"),
+        Index("idx_votes_entity_session", "entity_id", "session_id"),
+        Index("idx_votes_entity_type", "entity_id", "vote_type"),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())

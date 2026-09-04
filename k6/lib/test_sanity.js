@@ -149,18 +149,39 @@ export function testSanity() {
 
   // 7. Verify report_helper.js
   const mockSummary = generateHtmlSummary({
+    state: { testRunDurationMs: 15400 },
     metrics: {
-      http_req_duration: { values: { 'p(95)': 12.34, 'p(99)': 23.45, avg: 10.5 } },
-      http_req_failed: { values: { rate: 0.0 } },
-      http_reqs: { values: { count: 42 } },
+      http_req_duration: {
+        values: { 'p(95)': 12.34, 'p(99)': 23.45, avg: 10.5, med: 9.8, min: 2.1, max: 45.0 },
+        thresholds: { 'p(95)<400': { ok: true } },
+      },
+      'http_req_duration{type:write}': {
+        values: { 'p(95)': 15.2, 'p(99)': 20.1, avg: 11.2, med: 10.5, max: 25.0 },
+        thresholds: { 'p(95)<400': { ok: true } },
+      },
+      http_req_failed: {
+        values: { rate: 0.0, fails: 0, passes: 42 },
+        thresholds: { 'rate<0.01': { ok: true } },
+      },
+      http_reqs: { values: { count: 42, rate: 4.2 } },
       vus_max: { values: { value: 5 } },
+      data_received: { values: { count: 50000 } },
+      data_sent: { values: { count: 12000 } },
     },
   });
   check(null, {
     'report_helper: generateHtmlSummary returns HTML': () =>
       typeof mockSummary === 'string' &&
       mockSummary.includes('<!DOCTYPE html>') &&
-      (mockSummary.includes('&#127819;') || mockSummary.includes('🍋')),
+      mockSummary.includes('&#127819;'),
+    'report_helper: includes executive status and KPI metrics': () =>
+      mockSummary.includes('PASSED') &&
+      mockSummary.includes('Total Requests') &&
+      mockSummary.includes('Max Concurrency'),
+    'report_helper: includes SLA threshold checklist and SVG chart': () =>
+      mockSummary.includes('SLA Threshold Compliance Checklist') &&
+      mockSummary.includes('<svg') &&
+      mockSummary.includes('Architectural Workload Breakdown'),
   });
 
   // 8. Test live backend endpoint with path normalization check (without leading slash)

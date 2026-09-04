@@ -29,11 +29,46 @@ describe('Theme CSS & Fog Overlay Rules', () => {
     );
 
     // Token assertions
-    assert.match(cssContent, /rgba\(100,\s*116,\s*139,\s*0\.05\)/, 'Must include light mode fog mist token');
+    assert.match(
+      cssContent,
+      /rgba\((?:100,\s*116,\s*139|15,\s*23,\s*42),\s*0\.05\)/,
+      'Must include light mode fog mist token'
+    );
     assert.match(cssContent, /rgba\(220,\s*38,\s*38,\s*0\.06\)/, 'Must include dark mode crimson aura token');
   });
 
   it('defines dark variant custom-variant for Tailwind v4', () => {
-    assert.ok(cssContent.includes('@custom-variant dark'));
+    assert.ok(
+      cssContent.includes('@variant dark') || cssContent.includes('@custom-variant dark'),
+      'Must define dark variant in Tailwind v4'
+    );
+  });
+
+  it('dbd-heartbeat-vignette--static defines static background, animation: none, and theme-aware opacities', () => {
+    assert.match(
+      cssContent,
+      /\.dbd-heartbeat-vignette--static\s*\{[^}]*background:\s*radial-gradient\(ellipse at center,\s*transparent 55%,\s*var\(--accent-red\)\s*100%\);/,
+      'Must define radial-gradient background on .dbd-heartbeat-vignette--static'
+    );
+    assert.match(
+      cssContent,
+      /\.dbd-heartbeat-vignette--static\s*\{[^}]*animation:\s*none;/,
+      'Must define animation: none on .dbd-heartbeat-vignette--static'
+    );
+    assert.match(
+      cssContent,
+      /\.dbd-heartbeat-vignette--static\s*\{[^}]*opacity:\s*0\.12;/,
+      'Must define light mode opacity: 0.12 on .dbd-heartbeat-vignette--static'
+    );
+    assert.match(
+      cssContent,
+      /\.dark\s+\.dbd-heartbeat-vignette--static\s*\{[^}]*opacity:\s*0\.4;/,
+      'Must define dark mode opacity: 0.4 on .dark .dbd-heartbeat-vignette--static'
+    );
+    assert.match(
+      cssContent,
+      /\.dbd-heartbeat-vignette--static\s*\{[^}]*transition:\s*opacity 150ms ease-in-out;/,
+      'Must define transition: opacity 150ms ease-in-out on .dbd-heartbeat-vignette--static'
+    );
   });
 });

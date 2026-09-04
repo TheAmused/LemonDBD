@@ -1,6 +1,8 @@
 // frontend/src/__tests__/unit/randomizerResponsiveAndSkeletons.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
@@ -251,6 +253,43 @@ describe('Randomizer: Tarot Deck Sizing & Frame Integrity', () => {
     assert.ok(
       tarotSlotSizePx.max < tarotCardInnerPx.max,
       'Tarot perk slots must fit inside maximum tarot card inner bounds'
+    );
+  });
+});
+
+describe('Randomizer: Viewport Padding & Layout Structure', () => {
+  it('Randomizer page and loading skeletons do not have outer p-4 sm:p-6 lg:p-8 padding', () => {
+    const pagePath = path.resolve(__dirname, '../../app/[locale]/randomizer/page.tsx');
+    const loadingPath = path.resolve(__dirname, '../../app/[locale]/randomizer/loading.tsx');
+
+    const pageContent = fs.readFileSync(pagePath, 'utf-8');
+    const loadingContent = fs.readFileSync(loadingPath, 'utf-8');
+
+    assert.ok(
+      !pageContent.includes('p-4 sm:p-6 lg:p-8'),
+      'Randomizer page.tsx should not contain outer p-4 sm:p-6 lg:p-8 padding'
+    );
+    assert.ok(
+      !loadingContent.includes('p-4 sm:p-6 lg:p-8'),
+      'Randomizer loading.tsx should not contain outer p-4 sm:p-6 lg:p-8 padding'
+    );
+    assert.ok(
+      pageContent.includes(
+        'className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 flex flex-col lemon-shell-main"'
+      ),
+      'RandomizerContent main container should be flush without outer gutter padding'
+    );
+    assert.ok(
+      pageContent.includes(
+        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main"'
+      ),
+      'RandomizerPage Suspense fallback main container should be flush without outer gutter padding'
+    );
+    assert.ok(
+      loadingContent.includes(
+        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main"'
+      ),
+      'RandomizerLoading main container should be flush without outer gutter padding'
     );
   });
 });

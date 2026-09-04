@@ -14,6 +14,23 @@ export const options = {
 let authToken = null;
 let entityList = [];
 
+function fetchEntities() {
+  const feedRes = defaultClient.get('/api/v1/smash-or-pass/rosters/canon/feed');
+  if (feedRes && feedRes.status === 200) {
+    try {
+      const parsed = typeof feedRes.body === 'string' ? JSON.parse(feedRes.body) : feedRes.body;
+      const feedData = parsed.data || parsed;
+      const entities = feedData.entities || (Array.isArray(feedData) ? feedData : []);
+      return entities
+        .map((e) => (typeof e === 'object' && e !== null ? e.id : e))
+        .filter((id) => id !== undefined && id !== null);
+    } catch (e) {
+      return [];
+    }
+  }
+  return [];
+}
+
 export default function () {
   // Setup / VU auth
   if (!authToken) {
@@ -21,36 +38,33 @@ export default function () {
     if (authResult && authResult.token) {
       authToken = authResult.token;
     }
+    entityList = fetchEntities();
+  }
 
-    const feedRes = defaultClient.get('/api/v1/smash-or-pass/rosters/canon/feed');
-    if (feedRes && feedRes.status === 200) {
-      try {
-        const parsed = typeof feedRes.body === 'string' ? JSON.parse(feedRes.body) : feedRes.body;
-        const feedData = parsed.data || parsed;
-        const entities = feedData.entities || (Array.isArray(feedData) ? feedData : []);
-        entityList = entities.map((e) => (typeof e === 'object' && e !== null ? e.id : e)).filter((id) => id !== undefined && id !== null);
-      } catch (e) {
-        entityList = [];
-      }
-    }
+  // Ensure entity feed recovery if empty
+  if (entityList.length === 0) {
+    entityList = fetchEntities();
   }
 
   // 1. Voting write:
-  const entityId =
-    entityList.length > 0
-      ? entityList[Math.floor(Math.random() * entityList.length)]
-      : Math.floor(Math.random() * 30) + 1;
-  const voteType = Math.random() < 0.5 ? 'smash' : 'pass';
+  if (entityList.length > 0) {
+    const entityId = entityList[Math.floor(Math.random() * entityList.length)];
+    const voteType = Math.random() < 0.5 ? 'smash' : 'pass';
 
-  defaultClient.post(
-    '/api/v1/smash-or-pass/vote',
-    JSON.stringify({
-      entity_id: entityId,
-      vote_type: voteType,
-      roster_slug: 'canon',
-    }),
-    { tags: { type: 'write', action: 'vote' } }
-  );
+    defaultClient.post(
+      '/api/v1/smash-or-pass/vote',
+      {
+        entity_id: entityId,
+        vote_type: voteType,
+        roster_slug: 'canon',
+        session_id: `k6_vu_${__VU}_${__ITER}`,
+      },
+      {
+        headers: getAuthHeaders(authToken),
+        tags: { type: 'write', action: 'vote' },
+      }
+    );
+  }
 
   // 2. Think time:
   thinkTime(0.1, 0.3);
@@ -58,7 +72,7 @@ export default function () {
   // 3. Custom Build write:
   defaultClient.post(
     '/api/v1/builds',
-    JSON.stringify({
+    {
       title: 'Perf Loadout ' + Date.now(),
       description: 'High concurrency write test loadout',
       role: 'Survivor',
@@ -66,7 +80,7 @@ export default function () {
       character_id: 'all',
       perks: ['Sprint Burst', 'Adrenaline'],
       author: 'VU_' + __VU,
-    }),
+    },
     {
       headers: getAuthHeaders(authToken),
       tags: { type: 'write', action: 'build' },

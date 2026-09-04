@@ -65,5 +65,10 @@ describe('Theme CSS & Fog Overlay Rules', () => {
       /\.dark\s+\.dbd-heartbeat-vignette--static\s*\{[^}]*opacity:\s*0\.4;/,
       'Must define dark mode opacity: 0.4 on .dark .dbd-heartbeat-vignette--static'
     );
+    assert.match(
+      cssContent,
+      /\.dbd-heartbeat-vignette--static\s*\{[^}]*transition:\s*opacity 150ms ease-in-out;/,
+      'Must define transition: opacity 150ms ease-in-out on .dbd-heartbeat-vignette--static'
+    );
   });
 });

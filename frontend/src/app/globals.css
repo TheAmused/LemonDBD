@@ -253,6 +253,7 @@
   background: radial-gradient(ellipse at center, transparent 55%, var(--accent-red) 100%);
   animation: none;
   opacity: 0.12;
+  transition: opacity 150ms ease-in-out;
 }
 
 .dark .dbd-heartbeat-vignette--static {

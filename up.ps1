@@ -29,6 +29,8 @@ if ($Down) {
 
 $isPerfRequested = $Perf -or $PSBoundParameters.ContainsKey('Perf') -or $PSBoundParameters.ContainsKey('PerfSuite')
 
+$validSuites = @("smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries")
+
 # Verify k6 is available in PATH if perf testing is requested
 if ($isPerfRequested) {
     $k6Cmd = Get-Command k6 -ErrorAction SilentlyContinue
@@ -37,6 +39,15 @@ if ($isPerfRequested) {
         Write-Host "[FAIL] k6 executable was not found in PATH!" -ForegroundColor Red
         Write-Host "Please install k6 to run performance tests." -ForegroundColor Red
         exit 1
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($PerfSuite) -and $PerfSuite -ne "all") {
+        $chosen = $PerfSuite.ToLower().Trim()
+        if ($validSuites -notcontains $chosen) {
+            Write-Host ""
+            Write-Host "[FAIL] Invalid perf suite '$PerfSuite'. Available suites: $($validSuites -join ', ')" -ForegroundColor Red
+            exit 1
+        }
     }
 }
 
@@ -229,15 +240,14 @@ if ($isPerfRequested) {
     Write-Host " [Gate 4] Running K6 Performance Tests                  " -ForegroundColor Magenta
     Write-Host "========================================================" -ForegroundColor Magenta
 
-    $allSuites = @("smoke", "load", "stress", "spike", "soak")
     $targetSuites = @()
     if ([string]::IsNullOrWhiteSpace($PerfSuite) -or $PerfSuite -eq "all") {
-        $targetSuites = $allSuites
+        $targetSuites = $validSuites
     } else {
         $chosen = $PerfSuite.ToLower().Trim()
-        if ($allSuites -notcontains $chosen) {
+        if ($validSuites -notcontains $chosen) {
             Write-Host ""
-            Write-Host "[FAIL] Invalid perf suite '$PerfSuite'. Available suites: $($allSuites -join ', ')" -ForegroundColor Red
+            Write-Host "[FAIL] Invalid perf suite '$PerfSuite'. Available suites: $($validSuites -join ', ')" -ForegroundColor Red
             exit 1
         }
         $targetSuites = @($chosen)

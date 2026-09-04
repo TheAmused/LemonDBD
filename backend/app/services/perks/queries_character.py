@@ -5,6 +5,7 @@ from typing import Any
 from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.orm import joinedload
 
+from app.core.cache import catalog_cache
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.models import Addon, Character, Item, Offering
@@ -15,6 +16,11 @@ logger = logging.getLogger(__name__)
 
 def fetch_characters(service, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
     """Retrieve character list ordered by canonical chapter release numbers."""
+    cache_key = ("fetch_characters", category.lower() if category else "all", lang)
+    cached = catalog_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
         stmt = select(Character).options(joinedload(Character.perks))
         if category and category.lower() != "all":
@@ -41,7 +47,9 @@ def fetch_characters(service, category: str | None = None, lang: str | None = No
                 f"of size {len(service._characters_cache)}"
             )
         if characters:
-            return [c.to_dict(lang=lang) for c in characters]
+            res = [c.to_dict(lang=lang) for c in characters]
+            catalog_cache.set(cache_key, res, ttl=120.0)
+            return res
     except Exception:
         logger.exception(
             f"[characters-query-check] Querying/serializing characters from "
@@ -68,6 +76,11 @@ def fetch_character_suggestions(
     limit: int = 15,
 ) -> list[dict[str, Any]]:
     """Autocomplete suggestions for characters by name or real name."""
+    cache_key = ("fetch_character_suggestions", query.strip().lower() if query else "", category.lower() if category else "all", limit)
+    cached = catalog_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
         stmt = select(Character)
         if category and category.lower() != "all":
@@ -85,7 +98,7 @@ def fetch_character_suggestions(
 
         stmt = stmt.order_by(Character.name.asc()).limit(limit)
         chars = db.session.scalars(stmt).all()
-        return [
+        res = [
             {
                 "id": c.id,
                 "name": c.name,
@@ -96,6 +109,8 @@ def fetch_character_suggestions(
             }
             for c in chars
         ]
+        catalog_cache.set(cache_key, res, ttl=120.0)
+        return res
     except Exception:
         q_clean = query.strip().lower()
         res = []
@@ -113,6 +128,7 @@ def fetch_character_suggestions(
                 })
             if len(res) >= limit:
                 break
+        catalog_cache.set(cache_key, res, ttl=60.0)
         return res
 
 
@@ -121,6 +137,11 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
     target_clean = character_name.strip().lower()
     target_slug = slugify(character_name)
     target_spaces = target_clean.replace("-", " ").replace("_", " ")
+
+    cache_key = ("fetch_character_detail", target_clean, lang)
+    cached = catalog_cache.get(cache_key)
+    if cached is not None:
+        return cached
 
     try:
         # Fast-path: attempt direct indexed SQL lookup on common canonical identifiers
@@ -301,7 +322,7 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
             offerings_list = [o.to_dict(lang=lang) for o in survivor_offerings]
             offerings_list.sort(key=get_rarity_sort_key)
 
-        return {
+        result = {
             "character": char_dict,
             "power": char_dict.get("power"),
             "perks": perks_list,
@@ -309,6 +330,8 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
             "items": items_list,
             "offerings": offerings_list,
         }
+        catalog_cache.set(cache_key, result, ttl=120.0)
+        return result
     except Exception as e:
         logger.error(f"Error getting character detail from DB: {e}", exc_info=True)
         return None

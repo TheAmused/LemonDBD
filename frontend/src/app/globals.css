@@ -99,7 +99,7 @@
  */
 @media (min-width: 1024px) {
   .lemon-shell-main {
-    padding-left: 18rem;
+    padding-left: 16rem;
   }
 
   :root[data-sidebar='collapsed'] .lemon-shell-main {
@@ -238,23 +238,6 @@
   content: attr(data-placeholder);
   color: var(--text-muted);
   pointer-events: none;
-}
-
-@keyframes heartbeatPulse {
-
-  0%,
-  100% {
-    opacity: 0.35;
-  }
-
-  50% {
-    opacity: 0.65;
-  }
-}
-
-.dbd-heartbeat-vignette {
-  background: radial-gradient(ellipse at center, transparent 55%, var(--accent-red) 100%);
-  animation: heartbeatPulse 1.2s ease-in-out infinite;
 }
 
 .dbd-heartbeat-vignette--static {
@@ -570,22 +553,6 @@ strong {
   animation: chaosMarqueeGlow 2.4s ease-in-out infinite;
 }
 
-@keyframes dbdButtonPulse {
-
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 transparent;
-  }
-
-  50% {
-    box-shadow: 0 0 28px 4px var(--accent-amber);
-  }
-}
-
-.dbd-btn-pulse {
-  animation: dbdButtonPulse 2.4s ease-in-out infinite;
-}
-
 .slot-cabinet-bulb {
   animation: chaosMarqueeGlow 2.2s ease-in-out infinite;
 }
@@ -627,10 +594,6 @@ strong {
   .slot-cabinet-bulb {
     animation: none;
     opacity: .7;
-  }
-
-  .dbd-btn-pulse {
-    animation: none;
   }
 
   .slot-cabinet-hum {

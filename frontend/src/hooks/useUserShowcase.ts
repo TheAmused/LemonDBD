@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   DEFAULT_SHOWCASE_STATE,
+  PLAYER_TITLES,
   type UserShowcaseState,
   type MainLoadout,
 } from '@/types/userShowcase';
@@ -54,7 +55,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
 
   return {
     playerTitle:
-      typeof p.playerTitle === 'string' && p.playerTitle.trim() !== ''
+      typeof p.playerTitle === 'string' && (PLAYER_TITLES as readonly string[]).includes(p.playerTitle)
         ? p.playerTitle
         : DEFAULT_SHOWCASE_STATE.playerTitle,
     devotionLevel:

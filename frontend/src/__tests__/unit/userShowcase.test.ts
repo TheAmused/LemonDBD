@@ -53,7 +53,7 @@ class MockLocalStorage implements Storage {
 
 describe('User Showcase: Constants & Default State', () => {
   it('DEFAULT_SHOWCASE_STATE defines valid default values', () => {
-    assert.equal(DEFAULT_SHOWCASE_STATE.playerTitle, 'The Fogwalker');
+    assert.equal(DEFAULT_SHOWCASE_STATE.playerTitle, 'The Camper');
     assert.equal(DEFAULT_SHOWCASE_STATE.devotionLevel, 0);
     assert.equal(DEFAULT_SHOWCASE_STATE.gradeRank, 'Ash IV');
 
@@ -66,18 +66,11 @@ describe('User Showcase: Constants & Default State', () => {
     assert.deepEqual(DEFAULT_SHOWCASE_STATE.killerMain.perkIds, [null, null, null, null]);
   });
 
-  it('PLAYER_TITLES contains the expected 10 showcase titles', () => {
-    assert.equal(PLAYER_TITLES.length, 10);
-    assert.ok(PLAYER_TITLES.includes('The Fogwalker'));
-    assert.ok(PLAYER_TITLES.includes('Apex Predator'));
-    assert.ok(PLAYER_TITLES.includes('Hex Cleanser'));
-    assert.ok(PLAYER_TITLES.includes('Basement Architect'));
-    assert.ok(PLAYER_TITLES.includes('Trial Champion'));
-    assert.ok(PLAYER_TITLES.includes('Devoted Survivor'));
-    assert.ok(PLAYER_TITLES.includes('Entity Whisperer'));
-    assert.ok(PLAYER_TITLES.includes('Loop God'));
-    assert.ok(PLAYER_TITLES.includes('The Merciless'));
-    assert.ok(PLAYER_TITLES.includes('Campfire Veteran'));
+  it('PLAYER_TITLES contains strictly The Camper and The Slasher', () => {
+    assert.equal(PLAYER_TITLES.length, 2);
+    assert.ok(PLAYER_TITLES.includes('The Camper'));
+    assert.ok(PLAYER_TITLES.includes('The Slasher'));
+    assert.deepEqual([...PLAYER_TITLES], ['The Camper', 'The Slasher']);
   });
 
   it('GRADE_EMBLEMS contains standard DBD emblems from Iridescent I to Ash I', () => {
@@ -124,7 +117,7 @@ describe('User Showcase: Storage Keys & Serialization', () => {
 
   it('mergeShowcaseState merges partial saved data gracefully with defaults', () => {
     const partial = {
-      playerTitle: 'Apex Predator',
+      playerTitle: 'The Slasher',
       survivorMain: {
         characterName: 'Claudette Morel',
         prestige: 50,
@@ -132,7 +125,7 @@ describe('User Showcase: Storage Keys & Serialization', () => {
       },
     };
     const merged = mergeShowcaseState(partial);
-    assert.equal(merged.playerTitle, 'Apex Predator');
+    assert.equal(merged.playerTitle, 'The Slasher');
     assert.equal(merged.devotionLevel, 0);
     assert.equal(merged.gradeRank, 'Ash IV');
     assert.equal(merged.survivorMain.characterName, 'Claudette Morel');
@@ -156,7 +149,7 @@ describe('User Showcase: Storage Keys & Serialization', () => {
 
   it('saveStoredShowcase and loadStoredShowcase roundtrip correctly', () => {
     const customState: UserShowcaseState = {
-      playerTitle: 'Hex Cleanser',
+      playerTitle: 'The Slasher',
       devotionLevel: 25,
       gradeRank: 'Gold I',
       survivorMain: {
@@ -211,7 +204,7 @@ describe('User Showcase: Hook & State Actions', () => {
 
   it('hook loads pre-existing showcase data from localStorage on mount', () => {
     const existing: UserShowcaseState = {
-      playerTitle: 'Loop God',
+      playerTitle: 'The Slasher',
       devotionLevel: 42,
       gradeRank: 'Iridescent II',
       survivorMain: {
@@ -237,7 +230,7 @@ describe('User Showcase: Hook & State Actions', () => {
     renderToStaticMarkup(React.createElement(TestComponent));
 
     assert.deepEqual(capturedHook.showcase, existing);
-    assert.equal(capturedHook.state.playerTitle, 'Loop God');
+    assert.equal(capturedHook.state.playerTitle, 'The Slasher');
   });
 
   it('action updaters mutate state and sync to localStorage', () => {
@@ -251,9 +244,9 @@ describe('User Showcase: Hook & State Actions', () => {
     renderToStaticMarkup(React.createElement(TestComponent));
 
     // Test title update
-    capturedHook.setPlayerTitle('Entity Whisperer');
+    capturedHook.setPlayerTitle('The Slasher');
     let stored = JSON.parse(mockStorage.getItem('lemondbd_showcase_updater_test_user')!);
-    assert.equal(stored.playerTitle, 'Entity Whisperer');
+    assert.equal(stored.playerTitle, 'The Slasher');
 
     // Test devotion update
     capturedHook.setDevotionLevel(77);
@@ -302,7 +295,7 @@ describe('User Showcase: Hook & State Actions', () => {
 describe('User Showcase: Database Serialization & Deserialization', () => {
   it('mapShowcaseStateToBackend converts frontend state to database schema format', () => {
     const frontendState: UserShowcaseState = {
-      playerTitle: 'Apex Predator',
+      playerTitle: 'The Slasher',
       devotionLevel: 25,
       gradeRank: 'Gold I',
       survivorMain: {
@@ -319,7 +312,7 @@ describe('User Showcase: Database Serialization & Deserialization', () => {
 
     const backendPayload = mapShowcaseStateToBackend(frontendState);
     assert.deepEqual(backendPayload, {
-      player_title: 'Apex Predator',
+      player_title: 'The Slasher',
       devotion_level: 25,
       grade_rank: 'Gold I',
       survivor_main: {
@@ -337,7 +330,7 @@ describe('User Showcase: Database Serialization & Deserialization', () => {
 
   it('mapBackendToShowcaseState converts database record to frontend UserShowcaseState', () => {
     const rawBackendData = {
-      player_title: 'Trial Champion',
+      player_title: 'The Slasher',
       devotion_level: 40,
       grade_rank: 'Silver I',
       survivor_main: {
@@ -354,7 +347,7 @@ describe('User Showcase: Database Serialization & Deserialization', () => {
     };
 
     const parsed = mapBackendToShowcaseState(rawBackendData);
-    assert.equal(parsed.playerTitle, 'Trial Champion');
+    assert.equal(parsed.playerTitle, 'The Slasher');
     assert.equal(parsed.devotionLevel, 40);
     assert.equal(parsed.gradeRank, 'Silver I');
     assert.equal(parsed.survivorMain.characterName, 'David King');

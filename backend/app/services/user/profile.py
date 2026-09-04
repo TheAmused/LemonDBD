@@ -59,17 +59,17 @@ def get_user_showcase(user_id: int) -> dict[str, Any] | None:
 
     # Pure read fallback: default representation without DB write
     return {
-        "player_title": "The Fogwalker",
-        "devotion_level": 14,
-        "grade_rank": "Iridescent I",
+        "player_title": "The Camper",
+        "devotion_level": 0,
+        "grade_rank": "Ash IV",
         "survivor_main": {
             "character_name": "Feng Min",
-            "prestige": 9,
+            "prestige": 1,
             "perk_ids": [None, None, None, None],
         },
         "killer_main": {
             "character_name": "The Blight",
-            "prestige": 7,
+            "prestige": 1,
             "perk_ids": [None, None, None, None],
         },
         "updated_at": None,
@@ -89,14 +89,14 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
     if not showcase:
         showcase = UserShowcase(
             user_id=user_id,
-            player_title="The Fogwalker",
-            devotion_level=14,
-            grade_rank="Iridescent I",
+            player_title="The Camper",
+            devotion_level=0,
+            grade_rank="Ash IV",
             survivor_main_character="Feng Min",
-            survivor_main_prestige=9,
+            survivor_main_prestige=1,
             survivor_perk_ids=[None, None, None, None],
             killer_main_character="The Blight",
-            killer_main_prestige=7,
+            killer_main_prestige=1,
             killer_perk_ids=[None, None, None, None],
         )
         db.session.add(showcase)

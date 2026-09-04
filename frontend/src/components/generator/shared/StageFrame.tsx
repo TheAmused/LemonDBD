@@ -93,6 +93,12 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         className="pointer-events-none absolute inset-0 dbd-cinematic-vignette"
       />
 
+      {/* Dead by Daylight Static Heartbeat Corner Glow Vignette */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 dbd-heartbeat-vignette--static"
+      />
+
       {/* A small floor so the stage never looks collapsed when totally
           empty -- the real anti-jank fix is each mode reserving its own
           footprint (e.g. an empty-slot grid before rolling) so it doesn't

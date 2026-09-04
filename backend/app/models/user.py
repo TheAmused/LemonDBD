@@ -176,7 +176,7 @@ class UserShowcase(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False, index=True
     )
-    player_title: Mapped[str] = mapped_column(String(100), default="The Fogwalker", nullable=False)
+    player_title: Mapped[str] = mapped_column(String(100), default="The Camper", nullable=False)
     devotion_level: Mapped[int] = mapped_column(Integer, default=14, nullable=False)
     grade_rank: Mapped[str] = mapped_column(String(50), default="Iridescent I", nullable=False)
     survivor_main_character: Mapped[str] = mapped_column(String(100), default="Feng Min", nullable=False)

@@ -59,7 +59,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
         : DEFAULT_SHOWCASE_STATE.playerTitle,
     devotionLevel:
       typeof p.devotionLevel === 'number' && Number.isFinite(p.devotionLevel)
-        ? Math.max(1, Math.min(99, Math.round(p.devotionLevel)))
+        ? Math.max(0, Math.min(99, Math.round(p.devotionLevel)))
         : DEFAULT_SHOWCASE_STATE.devotionLevel,
     gradeRank:
       typeof p.gradeRank === 'string' && p.gradeRank.trim() !== ''
@@ -74,7 +74,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
       prestige:
         typeof p.survivorMain?.prestige === 'number' &&
         Number.isFinite(p.survivorMain.prestige)
-          ? Math.max(1, Math.min(100, Math.round(p.survivorMain.prestige)))
+          ? Math.max(0, Math.min(100, Math.round(p.survivorMain.prestige)))
           : DEFAULT_SHOWCASE_STATE.survivorMain.prestige,
       perkIds: parsePerkIds(
         p.survivorMain?.perkIds,
@@ -90,7 +90,7 @@ export function mergeShowcaseState(partial?: unknown): UserShowcaseState {
       prestige:
         typeof p.killerMain?.prestige === 'number' &&
         Number.isFinite(p.killerMain.prestige)
-          ? Math.max(1, Math.min(100, Math.round(p.killerMain.prestige)))
+          ? Math.max(0, Math.min(100, Math.round(p.killerMain.prestige)))
           : DEFAULT_SHOWCASE_STATE.killerMain.prestige,
       perkIds: parsePerkIds(
         p.killerMain?.perkIds,
@@ -269,7 +269,7 @@ export function useUserShowcase(
     (level: number) => {
       updateState((prev) => ({
         ...prev,
-        devotionLevel: Math.max(1, Math.min(99, Math.round(level))),
+        devotionLevel: Math.max(0, Math.min(99, Math.round(level))),
       }));
     },
     [updateState]
@@ -298,7 +298,7 @@ export function useUserShowcase(
         ...prev,
         survivorMain: {
           ...prev.survivorMain,
-          prestige: Math.max(1, Math.min(100, Math.round(prestige))),
+          prestige: Math.max(0, Math.min(100, Math.round(prestige))),
         },
       }));
     },
@@ -336,7 +336,7 @@ export function useUserShowcase(
         ...prev,
         killerMain: {
           ...prev.killerMain,
-          prestige: Math.max(1, Math.min(100, Math.round(prestige))),
+          prestige: Math.max(0, Math.min(100, Math.round(prestige))),
         },
       }));
     },

@@ -20,7 +20,7 @@ describe('Campfire Dossier: CampfireHeader', () => {
     created_at: '2026-01-01T00:00:00Z',
   };
 
-  it('renders player username, title, devotion level, and grade rank', () => {
+  it('renders player username, title, and hides devotion, grade, email, and status badges', () => {
     const html = renderToStaticMarkup(
       React.createElement(CampfireHeader, {
         user: mockUser,
@@ -36,26 +36,10 @@ describe('Campfire Dossier: CampfireHeader', () => {
 
     assert.ok(html.includes('CampfireMaster'));
     assert.ok(html.includes('The Fogwalker'));
-    assert.ok(html.includes('Lvl 14'));
-    assert.ok(html.includes('Iridescent I'));
-    assert.ok(html.includes('Saved to Database'));
-  });
-
-  it('displays saving spinner when isSaving is true', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(CampfireHeader, {
-        user: mockUser,
-        showcase: DEFAULT_SHOWCASE_STATE,
-        isSaving: true,
-        saveError: null,
-        onTitleChange: () => {},
-        onDevotionChange: () => {},
-        onGradeRankChange: () => {},
-        currentLocale: 'en',
-      })
-    );
-
-    assert.ok(html.includes('Saving to Fog...'));
+    // Omitted / hidden per user mandate
+    assert.ok(!html.includes('Saved to Database'));
+    assert.ok(!html.includes('Lvl'));
+    assert.ok(!html.includes('master@fog.dbd'));
   });
 });
 
@@ -121,13 +105,13 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
 });
 
 describe('Campfire Dossier: MainCard', () => {
-  it('renders Survivor main card with character name, prestige, and 4 diamond slots', () => {
+  it('renders Survivor main card with character name and 4 diamond slots', () => {
     const html = renderToStaticMarkup(
       React.createElement(MainCard, {
         role: 'Survivor',
         loadout: {
           characterName: 'Feng Min',
-          prestige: 9,
+          prestige: 0,
           perkIds: [null, null, null, null],
         },
         onCharacterChange: () => {},
@@ -141,17 +125,17 @@ describe('Campfire Dossier: MainCard', () => {
 
     assert.ok(html.includes('Survivor Main'));
     assert.ok(html.includes('Feng Min'));
-    assert.ok(html.includes('9')); // prestige level
     assert.ok(html.includes('4-Perk Signature Loadout'));
+    assert.ok(!html.includes('Prestige level'));
   });
 
-  it('renders Killer main card with character name and prestige', () => {
+  it('renders Killer main card with character name', () => {
     const html = renderToStaticMarkup(
       React.createElement(MainCard, {
         role: 'Killer',
         loadout: {
           characterName: 'The Blight',
-          prestige: 7,
+          prestige: 0,
           perkIds: [null, null, null, null],
         },
         onCharacterChange: () => {},
@@ -165,7 +149,7 @@ describe('Campfire Dossier: MainCard', () => {
 
     assert.ok(html.includes('Killer Main'));
     assert.ok(html.includes('The Blight'));
-    assert.ok(html.includes('7')); // prestige level
+    assert.ok(!html.includes('Prestige level'));
   });
 });
 

@@ -54,15 +54,15 @@ class MockLocalStorage implements Storage {
 describe('User Showcase: Constants & Default State', () => {
   it('DEFAULT_SHOWCASE_STATE defines valid default values', () => {
     assert.equal(DEFAULT_SHOWCASE_STATE.playerTitle, 'The Fogwalker');
-    assert.equal(DEFAULT_SHOWCASE_STATE.devotionLevel, 14);
-    assert.equal(DEFAULT_SHOWCASE_STATE.gradeRank, 'Iridescent I');
+    assert.equal(DEFAULT_SHOWCASE_STATE.devotionLevel, 0);
+    assert.equal(DEFAULT_SHOWCASE_STATE.gradeRank, 'Ash IV');
 
     assert.equal(DEFAULT_SHOWCASE_STATE.survivorMain.characterName, 'Feng Min');
-    assert.equal(DEFAULT_SHOWCASE_STATE.survivorMain.prestige, 9);
+    assert.equal(DEFAULT_SHOWCASE_STATE.survivorMain.prestige, 0);
     assert.deepEqual(DEFAULT_SHOWCASE_STATE.survivorMain.perkIds, [null, null, null, null]);
 
     assert.equal(DEFAULT_SHOWCASE_STATE.killerMain.characterName, 'The Blight');
-    assert.equal(DEFAULT_SHOWCASE_STATE.killerMain.prestige, 7);
+    assert.equal(DEFAULT_SHOWCASE_STATE.killerMain.prestige, 0);
     assert.deepEqual(DEFAULT_SHOWCASE_STATE.killerMain.perkIds, [null, null, null, null]);
   });
 
@@ -81,7 +81,7 @@ describe('User Showcase: Constants & Default State', () => {
   });
 
   it('GRADE_EMBLEMS contains standard DBD emblems from Iridescent I to Ash I', () => {
-    assert.equal(GRADE_EMBLEMS.length, 6);
+    assert.equal(GRADE_EMBLEMS.length, 7);
     assert.deepEqual(GRADE_EMBLEMS, [
       'Iridescent I',
       'Iridescent II',
@@ -89,6 +89,7 @@ describe('User Showcase: Constants & Default State', () => {
       'Silver I',
       'Bronze I',
       'Ash I',
+      'Ash IV',
     ]);
   });
 });
@@ -132,12 +133,13 @@ describe('User Showcase: Storage Keys & Serialization', () => {
     };
     const merged = mergeShowcaseState(partial);
     assert.equal(merged.playerTitle, 'Apex Predator');
-    assert.equal(merged.devotionLevel, 14);
-    assert.equal(merged.gradeRank, 'Iridescent I');
+    assert.equal(merged.devotionLevel, 0);
+    assert.equal(merged.gradeRank, 'Ash IV');
     assert.equal(merged.survivorMain.characterName, 'Claudette Morel');
     assert.equal(merged.survivorMain.prestige, 50);
     assert.deepEqual(merged.survivorMain.perkIds, [101, 102, null, null]);
     assert.equal(merged.killerMain.characterName, 'The Blight');
+    assert.equal(merged.killerMain.prestige, 0);
   });
 
   it('clamps devotion level (1-99) and prestige levels (1-100)', () => {
@@ -149,7 +151,7 @@ describe('User Showcase: Storage Keys & Serialization', () => {
     const merged = mergeShowcaseState(outOfBounds);
     assert.equal(merged.devotionLevel, 99);
     assert.equal(merged.survivorMain.prestige, 100);
-    assert.equal(merged.killerMain.prestige, 1);
+    assert.equal(merged.killerMain.prestige, 0);
   });
 
   it('saveStoredShowcase and loadStoredShowcase roundtrip correctly', () => {

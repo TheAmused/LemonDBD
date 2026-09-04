@@ -3,6 +3,7 @@
 
 import type { Dictionary } from '@/locales/types';
 import React, { useState, useEffect, useRef } from 'react';
+import { getBackendBaseUrl } from '@/utils/api';
 import {
   Skull,
   Radio,
@@ -92,7 +93,7 @@ export const KillerCalculator: React.FC<KillerCalculatorProps> = ({ dict }) => {
   const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useEffect(() => {
     async function loadData() {

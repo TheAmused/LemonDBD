@@ -17,8 +17,16 @@ try:
         load_dotenv(backend_env, override=False)
     elif root_env.exists():
         load_dotenv(root_env, override=False)
+        target_env = os.getenv("ENV_FILE", ".env.dev")
+        target_path = ROOT_DIR / target_env
+        if target_path.exists():
+            load_dotenv(target_path, override=False)
     else:
-        load_dotenv()
+        dev_env = ROOT_DIR / ".env.dev"
+        if dev_env.exists():
+            load_dotenv(dev_env, override=False)
+        else:
+            load_dotenv()
 except ImportError:
     pass
 

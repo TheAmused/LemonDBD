@@ -20,6 +20,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
+import { getBackendBaseUrl } from '@/utils/api';
 
 const QuestsModal = dynamic(
   () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
@@ -39,7 +40,7 @@ export default function CharacterDetailPage() {
   const [notFound, setNotFound] = useState<boolean>(false);
 
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   // Sibling roster for the breadcrumb's prev/next links. Same cache key the
   // roster page uses, so arriving here from /characters costs nothing.

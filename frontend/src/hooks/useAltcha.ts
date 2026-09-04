@@ -2,6 +2,7 @@
 // frontend/src/hooks/useAltcha.ts
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 export interface AltchaChallenge {
   algorithm: string;
@@ -90,7 +91,7 @@ export function useAltcha(autoSolve: boolean = true) {
 
     try {
       setError(null);
-      const apiBase = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/+$/, '');
+      const apiBase = getBackendBaseUrl();
       const url = `${apiBase}/api/v1/auth/altcha-challenge`;
       const res = await fetch(url, { signal });
       if (!res.ok) throw new Error('Failed to fetch security challenge');

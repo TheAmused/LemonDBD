@@ -20,6 +20,7 @@ import { fetchQuests, claimQuest } from '@/services/questApi';
 import { DbdSpinner } from '@/components/DbdSpinner';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { getBackendBaseUrl } from '@/utils/api';
 
 interface QuestsPageProps {
   params: Promise<{ locale: string }>;
@@ -44,7 +45,7 @@ export default function QuestsPage({ params }: QuestsPageProps) {
   const [claimedToast, setClaimedToast] = useState<string | null>(null);
 
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   const loadQuests = useCallback(async () => {
     setLoading(true);

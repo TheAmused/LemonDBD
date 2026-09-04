@@ -11,6 +11,7 @@
 //    `error_code` to a localized dictionary string.
 
 import type { UserBugReport } from '@/types/userProfile';
+import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 const TOKEN_KEY = 'lemondbd_token';
 
@@ -31,7 +32,7 @@ function getToken(): string | null {
 }
 
 function apiBase(): string {
-  return process.env.NEXT_PUBLIC_API_URL || '';
+  return getBackendBaseUrl();
 }
 
 async function parseJsonSafely(res: Response): Promise<any> {

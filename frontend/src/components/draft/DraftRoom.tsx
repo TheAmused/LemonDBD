@@ -3,6 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { getBackendBaseUrl } from '@/utils/api';
 import {
   Trophy,
   Shield,
@@ -42,7 +43,7 @@ export const DraftRoom: React.FC<DraftRoomProps> = ({ initialRoomCode, dict }) =
   const [actionTypeModal, setActionTypeModal] = useState<'ban' | 'pick'>('ban');
   const [copiedToast, setCopiedToast] = useState<boolean>(false);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   // Fetch all perks for selection
   // Shares its cache key with every other full-perk-list read in the app, so

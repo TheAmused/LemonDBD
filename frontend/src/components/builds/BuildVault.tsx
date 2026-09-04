@@ -2,6 +2,7 @@
 // frontend/src/components/builds/BuildVault.tsx
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { getBackendBaseUrl } from '@/utils/api';
 import {
   Flame,
   Shield,
@@ -87,7 +88,7 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   const fetchBuilds = useCallback(async () => {
     setLoading(true);

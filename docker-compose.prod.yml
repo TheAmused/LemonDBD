@@ -1,0 +1,23 @@
+# docker-compose.prod.yml - Production overlay for LemonDBD
+include:
+  - path: docker-compose.base.yml
+    env_file: .env.prod
+
+services:
+  backend:
+    restart: unless-stopped
+
+  # Production-only WAF/IP-ban layer -- reads live nginx access logs and bans abusive IPs
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: dbd_crowdsec
+    restart: unless-stopped
+    environment:
+      COLLECTIONS: "crowdsecurity/nginx crowdsecurity/http-cve crowdsecurity/base-http-scenarios"
+      GID: "1000"
+    volumes:
+      - ./docker/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml:ro
+      - crowdsec_data:/var/lib/crowdsec/data
+      - nginx_logs:/var/log/nginx:ro
+    networks:
+      - dbd_network

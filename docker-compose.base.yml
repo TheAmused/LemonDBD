@@ -1,0 +1,185 @@
+# docker-compose.base.yml - Shared core services for LemonDBD
+services:
+  db:
+    image: postgres:alpine
+    container_name: dbd_db
+    restart: unless-stopped
+    command: postgres -c max_connections=200
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-dbd_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-dbd_db}"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - dbd_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dbd_backend
+    expose:
+      - "5000"
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+    volumes:
+      - backend_data:/app/data
+      - ./backend/app/static:/app/app/static
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - FLASK_DEBUG=${FLASK_DEBUG:-false}
+      - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
+      - GUNICORN_THREADS=${GUNICORN_THREADS:-8}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      - DB_POOL_SIZE=${DB_POOL_SIZE:-20}
+      - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-30}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USE_TLS=${MAIL_USE_TLS:-true}
+      - MAIL_USERNAME=${MAIL_USERNAME:-}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-}
+      - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER:-}
+      - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
+      - RATELIMIT_ENABLED=${RATELIMIT_ENABLED:-true}
+      - SCHEDULER_ENABLED=${SCHEDULER_ENABLED:-true}
+      - INITIAL_SCRAPE_ENABLED=${INITIAL_SCRAPE_ENABLED:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
+      interval: 4s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+    networks:
+      - dbd_network
+
+  umami:
+    image: docker.umami.is/umami-software/umami:postgresql-latest
+    container_name: dbd_umami
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: ${UMAMI_APP_SECRET:-change-this-to-a-random-secret-in-production}
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/api/heartbeat').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
+      interval: 4s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+    expose:
+      - "3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dbd_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: dbd_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@lemondbd.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'False'
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    expose:
+      - "80"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dbd_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
+        NEXT_PUBLIC_UMAMI_URL: ${NEXT_PUBLIC_UMAMI_URL:-}
+        NEXT_PUBLIC_PGADMIN_URL: ${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
+    container_name: dbd_frontend
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-https://localhost}
+      - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
+      - UMAMI_PUBLIC_URL=${NEXT_PUBLIC_UMAMI_URL:-}
+      - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
+      - UMAMI_INTERNAL_URL=http://umami:3000
+      - UMAMI_ADMIN_USERNAME=${UMAMI_ADMIN_USERNAME:-admin}
+      - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:-umami}
+      - UMAMI_SITE_NAME=${UMAMI_SITE_NAME:-LemonDBD}
+      - UMAMI_SITE_DOMAIN=${UMAMI_SITE_DOMAIN:-localhost}
+    depends_on:
+      backend:
+        condition: service_healthy
+      umami:
+        condition: service_started
+    networks:
+      - dbd_network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: dbd_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "${UMAMI_PORT:-8117}:8117"
+      - "${PGADMIN_PORT:-5050}:5050"
+    volumes:
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_started
+      umami:
+        condition: service_started
+      pgadmin:
+        condition: service_started
+    networks:
+      - dbd_network
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  backend_data:
+    driver: local
+  backend_static:
+    driver: local
+  nginx_logs:
+    driver: local
+  crowdsec_data:
+    driver: local
+
+networks:
+  dbd_network:
+    driver: bridge

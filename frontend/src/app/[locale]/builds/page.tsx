@@ -10,6 +10,7 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { getBackendBaseUrl } from '@/utils/api';
 
 export default function BuildsPage() {
   const params = useParams();
@@ -19,7 +20,7 @@ export default function BuildsPage() {
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.buildsPageTitle || 'LemonDBD - Community Builds');
 

@@ -53,9 +53,11 @@ interface AuthContextType {
   bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) => Promise<boolean>;
 }
 
+import { getBackendBaseUrl } from '@/utils/perkUtils';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE = getBackendBaseUrl();
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);

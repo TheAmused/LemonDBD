@@ -270,11 +270,14 @@
 
 /* Cinematic Stage Vignette & Atmospheric Mists */
 .dbd-cinematic-vignette {
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.25) 75%, rgba(0, 0, 0, 0.5) 100%);
+  background: none;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
 }
 
 .dark .dbd-cinematic-vignette {
+  opacity: 1;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(5, 7, 12, 0.45) 70%, rgba(2, 3, 6, 0.85) 100%);
 }
 

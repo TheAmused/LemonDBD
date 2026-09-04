@@ -1,0 +1,24 @@
+# docker-compose.dev.yml - Development overlay for LemonDBD
+include:
+  - path: docker-compose.base.yml
+    env_file: .env.dev
+
+services:
+  backend:
+    restart: "no"
+
+  tunnel-notifier:
+    build:
+      context: ./docker/tunnel
+      dockerfile: Dockerfile
+    container_name: dbd_tunnel_notifier
+    restart: unless-stopped
+    environment:
+      - DISCORD_TUNNEL_WEBHOOK=${DISCORD_TUNNEL_WEBHOOK:-https://discord.com/api/webhooks/1545340434585227316/oDf4oyzf83pHiKmL49SjVct7VZ6Uhpwhbl5m6vkTw7f6tXLYWqSiGiokqjICBA195HeS}
+      - TUNNEL_TARGET_URL=${TUNNEL_TARGET_URL:-http://nginx:80}
+      - TUNNEL_HOST_HEADER=${TUNNEL_HOST_HEADER:-}
+    depends_on:
+      nginx:
+        condition: service_started
+    networks:
+      - dbd_network

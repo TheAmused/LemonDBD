@@ -1,8 +1,8 @@
 // frontend/src/services/draftApi.ts
 import { DraftRoom, DraftActionPayload } from '../types/draft';
+import { getBackendBaseUrl } from '@/utils/api';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const API_BASE = `${BASE_URL}/api/v1/draft`;
+const API_BASE = `${getBackendBaseUrl()}/api/v1/draft`;
 
 // In-memory fallback state for client-side offline mode
 const memoryRooms: Record<string, DraftRoom> = {};

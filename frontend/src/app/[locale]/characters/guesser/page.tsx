@@ -28,6 +28,7 @@ import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { getBackendBaseUrl } from '@/utils/api';
 
 // Interfaces matching backend models
 interface Character {
@@ -163,7 +164,7 @@ export default function GuesserPage() {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [submittingStats, setSubmittingStats] = useState<boolean>(false);
 
-  const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const backendBase = getBackendBaseUrl();
 
   // Load Translations
   useDocumentTitle(dict?.app?.guesserPageTitle || 'LemonDBD - Minigames & Guesser');

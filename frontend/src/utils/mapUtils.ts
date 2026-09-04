@@ -1,7 +1,8 @@
 // frontend/src/utils/mapUtils.ts
 import type { MapRealm } from '@/types/map';
+import { getBackendBaseUrl } from '@/utils/api';
 
-const DEFAULT_BACKEND_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const DEFAULT_BACKEND_BASE = getBackendBaseUrl();
 
 /**
  * Resolves the displayable image source URL for a map realm.

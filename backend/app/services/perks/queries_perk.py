@@ -5,6 +5,7 @@ from typing import Any
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
 
+from app.core.cache import catalog_cache
 from app.core.extensions import db
 from app.models import Character, Perk, UserCharacterOwnership, UserPerkOwnership
 from app.services.perks.utils import normalize_search_key, slugify
@@ -228,6 +229,13 @@ def fetch_perks(
     lang: str | None = None,
 ) -> dict[str, Any]:
     """Execute paginated, sorted perk search with optional role and ownership filtering."""
+    cache_key = None
+    if user_id is None and not owned_only:
+        cache_key = ("fetch_perks", category, character, scope, search, sort_by, order, page, limit, lang)
+        cached_res = catalog_cache.get(cache_key)
+        if cached_res is not None:
+            return cached_res
+
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
 
@@ -363,7 +371,7 @@ def fetch_perks(
                 d["is_owned"] = True
                 paginated_data.append(d)
 
-        return {
+        result = {
             "data": paginated_data,
             "pagination": {
                 "total": total_count,
@@ -383,10 +391,16 @@ def fetch_perks(
                 "owned_only": owned_only,
             },
         }
+        if cache_key is not None:
+            catalog_cache.set(cache_key, result, ttl=60.0)
+        return result
     except Exception as e:
         logger.debug(f"Falling back to memory cache in get_perks: {e}")
 
-    return fetch_perks_fallback(service, category, character, scope, search, sort_by, order, page, limit, lang)
+    fallback_res = fetch_perks_fallback(service, category, character, scope, search, sort_by, order, page, limit, lang)
+    if cache_key is not None:
+        catalog_cache.set(cache_key, fallback_res, ttl=30.0)
+    return fallback_res
 
 
 def fetch_perk_suggestions(
@@ -397,6 +411,11 @@ def fetch_perk_suggestions(
     lang: str | None = None,
 ) -> list[dict[str, Any]]:
     """Autocomplete suggestions for perks by name."""
+    cache_key = ("fetch_perk_suggestions", query.strip().lower() if query else "", category.lower() if category else "all", limit, lang)
+    cached = catalog_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     try:
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
         if category and category.lower() != "all":
@@ -414,7 +433,7 @@ def fetch_perk_suggestions(
             ]
 
         candidates = sorted(candidates, key=lambda p: p.name.lower())[:limit]
-        return [
+        result = [
             {
                 "id": p.id,
                 "name": _localized_perk_name(p, lang),
@@ -426,6 +445,8 @@ def fetch_perk_suggestions(
             }
             for p in candidates
         ]
+        catalog_cache.set(cache_key, result, ttl=120.0)
+        return result
     except Exception:
         q_clean = query.strip().lower()
         res = []
@@ -444,6 +465,7 @@ def fetch_perk_suggestions(
                 })
             if len(res) >= limit:
                 break
+        catalog_cache.set(cache_key, res, ttl=60.0)
         return res
 
 
@@ -451,6 +473,11 @@ def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) 
     """Find a perk by canonical title or formatted slug."""
     target = identifier.lower().strip()
     target_slug = slugify(identifier)
+
+    cache_key = ("fetch_perk_by_identifier", target, lang)
+    cached = catalog_cache.get(cache_key)
+    if cached is not None:
+        return cached
 
     try:
         stmt = select(Perk).options(joinedload(Perk.character)).where(
@@ -463,7 +490,9 @@ def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) 
         )
         perk = db.session.scalars(stmt).first()
         if perk:
-            return perk.to_dict(lang=lang)
+            res = perk.to_dict(lang=lang)
+            catalog_cache.set(cache_key, res, ttl=120.0)
+            return res
     except Exception:
         pass
 
@@ -471,5 +500,6 @@ def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) 
         p_name = p.get("name", "").lower().strip()
         p_alt = p.get("alternate_name", "").lower().strip()
         if p_name == target or p_alt == target or slugify(p_name) == target_slug or slugify(p_alt) == target_slug:
+            catalog_cache.set(cache_key, p, ttl=120.0)
             return p
     return None

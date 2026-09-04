@@ -103,9 +103,18 @@ export default {
     "Die Entität ist entzückt. Der Killer weint bereits im Endgame-Chat.",
     "Mit diesem Build fasst vielleicht sogar Meg mal einen Generator an!",
     "Irgendwo im Keller hat Bubba gerade eine Träne vergossen.",
-    "Perfekt für Solo-Queue – du stirbst trotzdem am ersten Haken.",
+    "Perfekt für Solo-Queue - du stirbst trotzdem am ersten Haken.",
     "Bereit für 5-Gen-Loops (oder Down in den ersten 10 Sekunden).",
     "Die Entität gibt ihren Segen. Der Killer deinstalliert das Spiel."
+  ],
+  jackpotLinesKiller: [
+    "Die Entität ist hungrig. 4K im Anmarsch, die Kellerhaken sind bereit.",
+    "Lasst sie nur mit Taschenlampen klicken - hier entkommt niemand lebend.",
+    "Jemand landet im Keller, noch bevor der erste Generator fertig ist.",
+    "Die Entität verlangt Opfer und du lieferst ein Festmahl.",
+    "Endgame-Chat-Salz garantiert. Hol schon mal das Popcorn raus.",
+    "Keine Bodenluke für Überlebende. Vier Haken, vier Opfer.",
+    "Sie dachten, das SWF-Team gewinnt leicht? Großer Fehler."
   ],
   spinningPageWheel: "Seiten-Rad dreht sich für Slot #{slot}...",
   landedPage: "Seite {page} getroffen! Wechsel zum Talente-Rad...",

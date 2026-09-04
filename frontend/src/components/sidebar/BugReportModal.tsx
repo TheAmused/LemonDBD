@@ -2,6 +2,7 @@
 // frontend/src/components/sidebar/BugReportModal.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
+import { getBackendBaseUrl } from '@/utils/api';
 import { useParams, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
@@ -190,7 +191,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const backendBase = getBackendBaseUrl();
       const token =
         typeof window !== 'undefined'
           ? localStorage.getItem('lemondbd_token')

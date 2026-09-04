@@ -55,7 +55,7 @@ export function SegmentedControl<T extends string>({
             className={cn(
               'relative flex shrink-0 items-center gap-1.5 text-xs font-black tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[40px] sm:min-h-[44px]',
               bare
-                ? cn('pb-1.5 pt-1 px-1', isActive ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300')
+                ? cn('pb-1.5 pt-1 px-1', isActive ? 'text-amber-700 dark:text-amber-400' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200')
                 : cn(
                     'rounded-xl px-3 py-2',
                     isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
@@ -68,7 +68,7 @@ export function SegmentedControl<T extends string>({
               <span
                 aria-hidden="true"
                 className={cn(
-                  'absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-amber-400 transition-opacity duration-200',
+                  'absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-amber-600 dark:bg-amber-400 transition-opacity duration-200',
                   isActive ? 'opacity-100' : 'opacity-0'
                 )}
               />

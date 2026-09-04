@@ -1,7 +1,8 @@
 // frontend/src/services/questApi.ts
 import { Quest } from '../types/quest';
+import { getBackendBaseUrl } from '@/utils/api';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const BASE_URL = getBackendBaseUrl();
 const API_BASE = `${BASE_URL}/api/v1/quests`;
 
 const DEFAULT_LOCAL_QUESTS: Quest[] = [

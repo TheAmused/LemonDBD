@@ -416,3 +416,34 @@ def get_user_ownership_summary(user_id: int):
 
     summary = ownership_service.get_user_ownership_summary(user_id)
     return jsonify(summary), 200
+
+
+@users_bp.route("/users/<int:user_id>/showcase", methods=["GET"])
+def get_user_showcase(user_id: int):
+    """Retrieve custom player showcase data (title, devotion, mains, perks)."""
+    user = user_service.get_user_by_id(user_id)
+    if not user:
+        return jsonify({"error": "User not found.", "status": 404}), 404
+
+    data = user_service.get_user_showcase(user_id)
+    return jsonify({"status": "success", "data": data}), 200
+
+
+@users_bp.route("/users/<int:user_id>/showcase", methods=["PUT"])
+@login_required
+def update_user_showcase(user_id: int):
+    """Update custom player showcase attributes."""
+    curr = g.current_user
+    if curr.id != user_id and curr.role != "admin":
+        return jsonify({"error": "Unauthorized access to user profile.", "status": 403}), 403
+
+    user = user_service.get_user_by_id(user_id)
+    if not user:
+        return jsonify({"error": "User not found.", "status": 404}), 404
+
+    payload = request.get_json(silent=True) or {}
+    saved, err = user_service.update_user_showcase(user_id, payload)
+    if err:
+        return jsonify({"error": err, "status": 400}), 400
+
+    return jsonify({"status": "success", "data": saved}), 200

@@ -22,7 +22,8 @@ param (
     [string]$PerfSuite = "all",
     [Alias("v")]
     [int]$Vus = 0,
-    [Alias("d")]
+    [Alias("t")]
+    [Alias("dur")]
     [string]$Duration = "",
     [switch]$Down
 )

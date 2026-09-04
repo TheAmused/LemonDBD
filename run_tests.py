@@ -194,7 +194,7 @@ def main():
     # 6. Live Performance Tests (K6)
     if args.perf:
         k6_bin = shutil.which("k6") or shutil.which("k6.exe")
-        target_suites = ["smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries"] if args.perf == "all" else [args.perf]
+        target_suites = ["smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "full"] if args.perf == "all" else [args.perf]
         suite_title_map = {
             "smoke": "K6 Smoke Suite",
             "load": "K6 Load Suite",

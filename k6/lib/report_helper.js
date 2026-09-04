@@ -10,6 +10,16 @@ export function generateHtmlSummary(data, options = {}) {
   const state = (data && data.state) || {};
   const rootGroup = (data && data.root_group) || {};
 
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   function getMetricValue(name, stat) {
     if (metrics[name] && metrics[name].values) {
       const val = metrics[name].values[stat];
@@ -131,19 +141,19 @@ export function generateHtmlSummary(data, options = {}) {
     })
     .filter(Boolean);
 
-  // Determine overall status
-  const overallPassed = allThresholdsPassed && reqFailedRate < 0.05 && checksRate >= 99;
+  // Determine overall status (strictly require totalReqs > 0 so complete aborts fail)
+  const overallPassed = totalReqs > 0 && allThresholdsPassed && reqFailedRate < 0.05 && checksRate >= 99;
 
   // Generate SVG chart bars
   const maxTierP95 = Math.max(...populatedTiers.map(t => t.p95 || 0), 10);
   const svgChartBars = populatedTiers
     .map((t, idx) => {
       const y = 35 + idx * 55;
-      const widthP50 = Math.max(2, Math.min(480, (t.med / maxTierP95) * 480));
-      const widthP95 = Math.max(2, Math.min(480, (t.p95 / maxTierP95) * 480));
+      const widthP50 = Math.max(2, Math.min(580, (t.med / maxTierP95) * 580));
+      const widthP95 = Math.max(2, Math.min(580, (t.p95 / maxTierP95) * 580));
       return `
         <g class="bar-group">
-          <text x="10" y="${y - 8}" class="bar-label">${t.label}</text>
+          <text x="10" y="${y - 8}" class="bar-label">${escapeHtml(t.label)}</text>
           <text x="590" y="${y - 8}" class="bar-val" text-anchor="end">p95: ${t.p95.toFixed(1)}ms | med: ${t.med.toFixed(1)}ms</text>
           <!-- Background track -->
           <rect x="10" y="${y}" width="580" height="20" rx="4" fill="#1e293b" />
@@ -453,8 +463,8 @@ export function generateHtmlSummary(data, options = {}) {
         <tbody>
           ${populatedTiers.map(t => `
             <tr>
-              <td style="font-family: inherit; font-weight: 600;">${t.label}</td>
-              <td style="color: var(--text-muted);">${t.key}</td>
+              <td style="font-family: inherit; font-weight: 600;">${escapeHtml(t.label)}</td>
+              <td style="color: var(--text-muted);">${escapeHtml(t.key)}</td>
               <td>${formatMs(t.avg)}</td>
               <td>${formatMs(t.med)}</td>
               <td style="color: var(--accent-lemon); font-weight: 700;">${formatMs(t.p95)}</td>
@@ -493,8 +503,8 @@ export function generateHtmlSummary(data, options = {}) {
         <tbody>
           ${thresholdRows.map(r => `
             <tr>
-              <td style="font-family: inherit; font-weight: 600;">${r.metric}</td>
-              <td style="color: var(--accent-cyan);">${r.rule}</td>
+              <td style="font-family: inherit; font-weight: 600;">${escapeHtml(r.metric)}</td>
+              <td style="color: var(--accent-cyan);">${escapeHtml(r.rule)}</td>
               <td>
                 <span class="pill ${r.passed ? 'pill-pass' : 'pill-fail'}">
                   ${r.passed ? '&#10003; PASS' : '&#10007; FAIL'}

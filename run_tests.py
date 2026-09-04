@@ -89,7 +89,7 @@ def main():
         nargs="?",
         const="all",
         default=None,
-        choices=["all", "smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "full"],
+        choices=["all", "smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "streaks", "full"],
         help="Run K6 performance test suite(s). Defaults to 'all' if no stage specified.",
     )
     parser.add_argument("--vus", type=int, default=None, help="Number of virtual users (VUs) for K6 performance tests")
@@ -108,75 +108,72 @@ def main():
     run_frontend = not args.backend or args.frontend
 
     print(f"\n{BOLD}{CYAN}======================================================{RESET}", flush=True)
-    print(f"{BOLD}{CYAN}       LemonDBD Master Test Suite Orchestrator        {RESET}", flush=True)
+    print(f"{BOLD}{CYAN}         LEMONDBD AUTOMATED TEST SUITE RUNNER         {RESET}", flush=True)
     print(f"{BOLD}{CYAN}======================================================{RESET}\n", flush=True)
 
     results = []
 
     # 1. Backend Unit Tests
     if run_backend and run_unit:
-        print(f"[{YELLOW}RUNNING{RESET}] Backend Unit Tests (SQLite in-memory)...", flush=True)
-        res = run_command("py -m pytest tests/unit -q", cwd=BACKEND_DIR)
+        print(f"[{YELLOW}RUNNING{RESET}] Backend Unit Tests...", flush=True)
+        res = run_command("py -m pytest tests/unit", cwd=BACKEND_DIR)
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Backend Unit Tests in {res['duration']}s", flush=True)
+        print(f"[{color}{status}{RESET}] Backend Unit in {res['duration']}s", flush=True)
         results.append({
-            "name": "Backend Unit & Scrapers",
-            "tier": "Unit (SQLite Memory)",
+            "name": "Backend Unit Tests",
+            "tier": "Unit",
             "status": status,
             "duration": res["duration"],
             "output": res["stdout"] or res["stderr"],
         })
 
-    # 2. Backend Live API & Services
-    if run_backend and run_live:
-        print(f"[{YELLOW}RUNNING{RESET}] Backend Live API & Service Integration (PostgreSQL Clone)...", flush=True)
-        res = run_command(
-            "py -m pytest tests/live/api tests/live/services tests/live/test_live_smoke.py -q",
-            cwd=BACKEND_DIR,
-        )
-        status = "PASSED" if res["exit_code"] == 0 else "FAILED"
-        color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Backend Live Integration in {res['duration']}s", flush=True)
-        results.append({
-            "name": "Backend Live API & Services",
-            "tier": "Live (PostgreSQL Clone)",
-            "status": status,
-            "duration": res["duration"],
-            "output": res["stdout"] or res["stderr"],
-        })
-
-    # 3. Backend End-to-End Workflows
-    if run_backend and run_workflows:
-        print(f"[{YELLOW}RUNNING{RESET}] Backend Multi-Step End-to-End Workflows...", flush=True)
-        res = run_command("py -m pytest tests/live/workflows -q", cwd=BACKEND_DIR)
-        status = "PASSED" if res["exit_code"] == 0 else "FAILED"
-        color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Backend E2E Workflows in {res['duration']}s", flush=True)
-        results.append({
-            "name": "Backend E2E Workflows",
-            "tier": "Live Workflows",
-            "status": status,
-            "duration": res["duration"],
-            "output": res["stdout"] or res["stderr"],
-        })
-
-    # 4. Frontend Unit Tests
+    # 2. Frontend Unit Tests
     if run_frontend and run_unit:
-        print(f"[{YELLOW}RUNNING{RESET}] Frontend Unit Tests (Node/TSX)...", flush=True)
+        print(f"[{YELLOW}RUNNING{RESET}] Frontend Unit Tests...", flush=True)
         res = run_command("npm run test:unit", cwd=FRONTEND_DIR)
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Frontend Unit Tests in {res['duration']}s", flush=True)
+        print(f"[{color}{status}{RESET}] Frontend Unit in {res['duration']}s", flush=True)
         results.append({
-            "name": "Frontend Unit & Math/Voice",
-            "tier": "Unit (Node/TSX)",
+            "name": "Frontend Unit Tests",
+            "tier": "Unit",
             "status": status,
             "duration": res["duration"],
             "output": res["stdout"] or res["stderr"],
         })
 
-    # 5. Frontend Live API & Workflows
+    # 3. Backend Live Tests
+    if run_backend and run_live:
+        print(f"[{YELLOW}RUNNING{RESET}] Backend Live Integration Tests...", flush=True)
+        res = run_command("py -m pytest tests/live", cwd=BACKEND_DIR)
+        status = "PASSED" if res["exit_code"] == 0 else "FAILED"
+        color = GREEN if status == "PASSED" else RED
+        print(f"[{color}{status}{RESET}] Backend Live in {res['duration']}s", flush=True)
+        results.append({
+            "name": "Backend Live Integration",
+            "tier": "Live Stack",
+            "status": status,
+            "duration": res["duration"],
+            "output": res["stdout"] or res["stderr"],
+        })
+
+    # 4. Backend Workflow Tests
+    if run_backend and run_workflows:
+        print(f"[{YELLOW}RUNNING{RESET}] Backend Workflow Tests...", flush=True)
+        res = run_command("py -m pytest tests/live/workflows", cwd=BACKEND_DIR)
+        status = "PASSED" if res["exit_code"] == 0 else "FAILED"
+        color = GREEN if status == "PASSED" else RED
+        print(f"[{color}{status}{RESET}] Backend Workflows in {res['duration']}s", flush=True)
+        results.append({
+            "name": "Backend Multi-Step Workflows",
+            "tier": "Live Stack",
+            "status": status,
+            "duration": res["duration"],
+            "output": res["stdout"] or res["stderr"],
+        })
+
+    # 5. Frontend Live Tests
     if run_frontend and (run_live or run_workflows):
         print(f"[{YELLOW}RUNNING{RESET}] Frontend Live API & Multi-Step Workflows...", flush=True)
         res = run_command("npm run test:live", cwd=FRONTEND_DIR)
@@ -194,7 +191,7 @@ def main():
     # 6. Live Performance Tests (K6)
     if args.perf:
         k6_bin = shutil.which("k6") or shutil.which("k6.exe")
-        target_suites = ["smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "full"] if args.perf == "all" else [args.perf]
+        target_suites = ["smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "streaks", "full"] if args.perf == "all" else [args.perf]
         suite_title_map = {
             "smoke": "K6 Smoke Suite",
             "load": "K6 Load Suite",
@@ -204,6 +201,7 @@ def main():
             "frontend": "K6 Frontend Suite",
             "writes": "K6 Writes Suite",
             "queries": "K6 Queries Suite",
+            "streaks": "K6 Streaks Suite",
             "full": "K6 Comprehensive Suite",
         }
         if not k6_bin:

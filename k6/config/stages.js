@@ -50,6 +50,12 @@ export const queriesStages = [
   { duration: '10s', target: 0 },
 ];
 
+export const streaksStages = [
+  { duration: '10s', target: 15 },
+  { duration: '30s', target: 25 },
+  { duration: '10s', target: 0 },
+];
+
 export const stages = {
   smoke: smokeStages,
   load: loadStages,
@@ -59,6 +65,7 @@ export const stages = {
   frontend: frontendStages,
   writes: writesStages,
   queries: queriesStages,
+  streaks: streaksStages,
 };
 
 export default stages;

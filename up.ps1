@@ -39,7 +39,7 @@ if ($Down) {
 
 $isPerfRequested = $Perf -or $PSBoundParameters.ContainsKey('Perf') -or $PSBoundParameters.ContainsKey('PerfSuite')
 
-$validSuites = @("smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "full")
+$validSuites = @("smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "streaks", "full")
 
 # Verify k6 is available in PATH if perf testing is requested
 if ($isPerfRequested) {

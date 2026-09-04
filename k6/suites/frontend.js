@@ -22,6 +22,22 @@ export default function () {
   defaultClient.get('/randomizer', { headers: ssrHeaders, tags: { type: 'ssr', page: 'generator' } });
   thinkTime(0.2, 0.4);
   defaultClient.get('/smash-or-pass', { headers: ssrHeaders, tags: { type: 'ssr', page: 'smash_or_pass' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_hub' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/challenge', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_challenge' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/killer/chaos-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_chaos' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/killer/gauntlet-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_gauntlet_killer' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/killer/history-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_history' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/killer/page-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_page_killer' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/killer/page-streak/trapper', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_page_trapper' } });
+  thinkTime(0.2, 0.4);
+  defaultClient.get('/streaks/survivor/gauntlet-streak', { headers: ssrHeaders, tags: { type: 'ssr', page: 'streaks_gauntlet_surv' } });
   defaultClient.get('/favicon.ico', { tags: { type: 'static', asset: 'favicon' } });
   thinkTime(0.5, 1.0);
 }

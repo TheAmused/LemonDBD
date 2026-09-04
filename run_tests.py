@@ -89,9 +89,11 @@ def main():
         nargs="?",
         const="all",
         default=None,
-        choices=["all", "smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries"],
+        choices=["all", "smoke", "load", "stress", "spike", "soak", "frontend", "writes", "queries", "full"],
         help="Run K6 performance test suite(s). Defaults to 'all' if no stage specified.",
     )
+    parser.add_argument("--vus", type=int, default=None, help="Number of virtual users (VUs) for K6 performance tests")
+    parser.add_argument("--duration", type=str, default=None, help="Duration for K6 performance tests (e.g. '30s', '1m')")
     parser.add_argument("-v", "--verbose", action="store_true", help="Show full stdout and stderr")
     args = parser.parse_args()
 
@@ -202,6 +204,7 @@ def main():
             "frontend": "K6 Frontend Suite",
             "writes": "K6 Writes Suite",
             "queries": "K6 Queries Suite",
+            "full": "K6 Comprehensive Suite",
         }
         if not k6_bin:
             print(f"[{RED}ERROR{RESET}] k6 binary was not found in PATH! Please install k6 to run performance tests.", flush=True)
@@ -230,8 +233,14 @@ def main():
                     })
                     continue
 
+                env_flags = "-e K6_TIMEOUT=30s"
+                if args.vus:
+                    env_flags += f" -e TARGET_VUS={args.vus} -e VUS_COUNT={args.vus}"
+                if args.duration:
+                    env_flags += f" -e TARGET_DURATION={args.duration}"
+
                 res = run_command(
-                    f'"{k6_bin}" run -e K6_TIMEOUT=30s "k6/suites/{suite}.js"',
+                    f'"{k6_bin}" run {env_flags} "k6/suites/{suite}.js"',
                     cwd=ROOT_DIR,
                     timeout=600,
                 )

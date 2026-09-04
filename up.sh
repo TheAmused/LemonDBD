@@ -13,6 +13,8 @@ STRICT=false
 DOWN=false
 PERF=false
 PERF_SUITE=""
+PERF_VUS=""
+PERF_DURATION=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -34,14 +36,24 @@ while [[ $# -gt 0 ]]; do
         shift 1
       fi
       ;;
+    -v|--vus|-Vus)
+      PERF_VUS="$2"
+      shift 2
+      ;;
+    -t|--duration|-Duration)
+      PERF_DURATION="$2"
+      shift 2
+      ;;
     -h|--help)
       echo "Usage: ./up.sh [OPTIONS]"
       echo ""
       echo "Options:"
-      echo "  -s, --strict        Fresh build (--no-cache) and runs dual-stack live tests"
-      echo "  -p, --perf [SUITE]  Run K6 performance test suite(s). Defaults to 'all' (smoke, load, stress, spike, soak, frontend, writes, queries)"
-      echo "  -d, --down          Stop and tear down Docker containers"
-      echo "  -h, --help          Show this help message"
+      echo "  -s, --strict            Fresh build (--no-cache) and runs dual-stack live tests"
+      echo "  -p, --perf [SUITE]      Run K6 performance test suite(s). Defaults to 'all' (smoke, load, stress, spike, soak, frontend, writes, queries, full)"
+      echo "  -v, --vus [NUM]         Number of virtual users (VUs) for K6 performance tests"
+      echo "  -t, --duration [DUR]    Duration for K6 performance tests (e.g. '30s', '1m')"
+      echo "  -d, --down              Stop and tear down Docker containers"
+      echo "  -h, --help              Show this help message"
       exit 0
       ;;
     *)
@@ -59,7 +71,7 @@ fi
 
 # Verify k6 is available in PATH if perf testing requested
 K6_CMD="k6"
-VALID_SUITES=("smoke" "load" "stress" "spike" "soak" "frontend" "writes" "queries")
+VALID_SUITES=("smoke" "load" "stress" "spike" "soak" "frontend" "writes" "queries" "full")
 if [ "$PERF" = true ]; then
   if ! command -v k6 &> /dev/null; then
     if command -v k6.exe &> /dev/null; then
@@ -256,6 +268,13 @@ if [ "$PERF" = true ]; then
   ANY_PERF_FAILED=false
   PERF_RESULTS=()
   export K6_TIMEOUT="30s"
+  if [ -n "$PERF_VUS" ]; then
+    export TARGET_VUS="$PERF_VUS"
+    export VUS_COUNT="$PERF_VUS"
+  fi
+  if [ -n "$PERF_DURATION" ]; then
+    export TARGET_DURATION="$PERF_DURATION"
+  fi
 
   for suite in "${TARGET_SUITES[@]}"; do
     suite_rel_path="k6/suites/${suite}.js"

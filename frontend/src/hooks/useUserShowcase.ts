@@ -7,6 +7,10 @@ import {
   type UserShowcaseState,
   type MainLoadout,
 } from '@/types/userShowcase';
+import {
+  fetchUserShowcase,
+  updateUserShowcaseApi,
+} from '@/services/userShowcaseApi';
 
 export function getShowcaseStorageKey(userId?: number | string | null): string {
   return `lemondbd_showcase_${userId ?? 'guest'}`;
@@ -124,6 +128,9 @@ export function saveStoredShowcase(
 export interface UseUserShowcaseReturn {
   showcase: UserShowcaseState;
   state: UserShowcaseState;
+  isSaving: boolean;
+  isLoading: boolean;
+  saveError: string | null;
   setPlayerTitle: (title: string) => void;
   setDevotionLevel: (level: number) => void;
   setGradeRank: (rank: string) => void;
@@ -144,19 +151,83 @@ export function useUserShowcase(
   const [showcase, setShowcase] = useState<UserShowcaseState>(() =>
     loadStoredShowcase(userId)
   );
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const showcaseRef = useRef<UserShowcaseState>(showcase);
   showcaseRef.current = showcase;
   const prevUserIdRef = useRef(userId);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // When userId changes, reload state from storage
+  // Sync to database via API when authenticated
+  const syncToDatabase = useCallback(
+    (targetUserId: number | string, nextState: UserShowcaseState) => {
+      if (typeof window === 'undefined') return;
+      const storage = getLocalStorage();
+      const token = storage?.getItem('lemondbd_token');
+      if (!token) return; // Unauthenticated or mock; saved to storage
+
+      setIsSaving(true);
+      setSaveError(null);
+
+      updateUserShowcaseApi(targetUserId, nextState)
+        .then(() => {
+          setIsSaving(false);
+        })
+        .catch((err) => {
+          setIsSaving(false);
+          setSaveError(err instanceof Error ? err.message : 'Failed to save to database');
+        });
+    },
+    []
+  );
+
+  // On mount or userId change: load from storage and fetch from database if authenticated
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     if (prevUserIdRef.current !== userId) {
       prevUserIdRef.current = userId;
       const loaded = loadStoredShowcase(userId);
       showcaseRef.current = loaded;
       setShowcase(loaded);
     }
+
+    if (!userId || userId === 'guest') return;
+
+    let cancelled = false;
+    const controller = new AbortController();
+    setIsLoading(true);
+
+    fetchUserShowcase(userId, controller.signal)
+      .then((dbData) => {
+        if (!cancelled && dbData) {
+          showcaseRef.current = dbData;
+          saveStoredShowcase(userId, dbData);
+          setShowcase(dbData);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [userId]);
+
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const updateState = useCallback(
     (updater: (prev: UserShowcaseState) => UserShowcaseState) => {
@@ -164,8 +235,17 @@ export function useUserShowcase(
       showcaseRef.current = next;
       saveStoredShowcase(userId, next);
       setShowcase(next);
+
+      if (userId && userId !== 'guest') {
+        if (saveTimeoutRef.current) {
+          clearTimeout(saveTimeoutRef.current);
+        }
+        saveTimeoutRef.current = setTimeout(() => {
+          syncToDatabase(userId, next);
+        }, 300);
+      }
     },
-    [userId]
+    [userId, syncToDatabase]
   );
 
   const setPlayerTitle = useCallback(
@@ -313,6 +393,9 @@ export function useUserShowcase(
   return {
     showcase,
     state: showcase,
+    isSaving,
+    isLoading,
+    saveError,
     setPlayerTitle,
     setDevotionLevel,
     setGradeRank,

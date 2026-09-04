@@ -6,6 +6,9 @@
     .\up.ps1 -Strict
     .\up.ps1 -Perf
     .\up.ps1 -Perf smoke
+    .\up.ps1 -Perf frontend
+    .\up.ps1 -Perf writes
+    .\up.ps1 -Perf queries
     .\up.ps1 -Down
 #>
 param (

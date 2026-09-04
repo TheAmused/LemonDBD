@@ -107,6 +107,15 @@ export default {
     "Listo para un chase de 5 motores (o caer en 10 segundos).",
     "La Entidad está complacida. El Asesino está desinstalando el juego."
   ],
+  jackpotLinesKiller: [
+    "La Entidad está complacida. 4K en camino, los ganchos del sótano aguardan.",
+    "Que hagan clic con las linternas todo lo que quieran - nadie escapará.",
+    "Alguien acabará en el sótano antes de que reparen el primer motor.",
+    "La Entidad tiene hambre y tú vas a servir un banquete.",
+    "Lágrimas y sal en el chat postpartida. Prepara las palomitas.",
+    "Sin trampilla para los supervivientes. La Entidad exige las cuatro bajas.",
+    "¿Trajeron linternas y ofrendas de mapa? Grave error."
+  ],
   spinningPageWheel: "Girando Ruleta de Página para Casilla #{slot}...",
   landedPage: "¡Página {page} alcanzada! Cambiando a la Ruleta de Habilidad...",
   spinningPerkWheel: "Girando Ruleta de Habilidad (Página {page})...",

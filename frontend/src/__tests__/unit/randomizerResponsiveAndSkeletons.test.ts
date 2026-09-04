@@ -303,18 +303,15 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
     );
   });
 
-  it('GeneratorPage renders Pagination component below StageFrame for navigable perk pages', () => {
+  it('GeneratorPage does not render out-of-place Pagination on randomizer stage', () => {
     const genPagePath = path.resolve(__dirname, '../../components/generator/GeneratorPage.tsx');
     const genPageContent = fs.readFileSync(genPagePath, 'utf-8');
 
     assert.ok(
-      genPageContent.includes("import { Pagination } from '@/components/Pagination';"),
-      'GeneratorPage must import Pagination component'
-    );
-    assert.ok(
-      genPageContent.includes('<Pagination'),
-      'GeneratorPage must render Pagination component'
+      !genPageContent.includes('<Pagination'),
+      'GeneratorPage must not render out-of-place Pagination component'
     );
   });
 });
+
 

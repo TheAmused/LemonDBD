@@ -17,6 +17,10 @@ import {
   saveStoredShowcase,
   mergeShowcaseState,
 } from '@/hooks/useUserShowcase';
+import {
+  mapBackendToShowcaseState,
+  mapShowcaseStateToBackend,
+} from '@/services/userShowcaseApi';
 
 // In-memory mock storage for localStorage
 class MockLocalStorage implements Storage {
@@ -290,5 +294,72 @@ describe('User Showcase: Hook & State Actions', () => {
     capturedHook.resetShowcase();
     stored = JSON.parse(mockStorage.getItem('lemondbd_showcase_updater_test_user')!);
     assert.deepEqual(stored, DEFAULT_SHOWCASE_STATE);
+  });
+});
+
+describe('User Showcase: Database Serialization & Deserialization', () => {
+  it('mapShowcaseStateToBackend converts frontend state to database schema format', () => {
+    const frontendState: UserShowcaseState = {
+      playerTitle: 'Apex Predator',
+      devotionLevel: 25,
+      gradeRank: 'Gold I',
+      survivorMain: {
+        characterName: 'Meg Thomas',
+        prestige: 50,
+        perkIds: [1, 2, 3, 4],
+      },
+      killerMain: {
+        characterName: 'The Trapper',
+        prestige: 100,
+        perkIds: [5, 6, 7, 8],
+      },
+    };
+
+    const backendPayload = mapShowcaseStateToBackend(frontendState);
+    assert.deepEqual(backendPayload, {
+      player_title: 'Apex Predator',
+      devotion_level: 25,
+      grade_rank: 'Gold I',
+      survivor_main: {
+        character_name: 'Meg Thomas',
+        prestige: 50,
+        perk_ids: [1, 2, 3, 4],
+      },
+      killer_main: {
+        character_name: 'The Trapper',
+        prestige: 100,
+        perk_ids: [5, 6, 7, 8],
+      },
+    });
+  });
+
+  it('mapBackendToShowcaseState converts database record to frontend UserShowcaseState', () => {
+    const rawBackendData = {
+      player_title: 'Trial Champion',
+      devotion_level: 40,
+      grade_rank: 'Silver I',
+      survivor_main: {
+        character_name: 'David King',
+        prestige: 60,
+        perk_ids: [10, 20, 30, 40],
+      },
+      killer_main: {
+        character_name: 'The Oni',
+        prestige: 85,
+        perk_ids: [50, 60, 70, 80],
+      },
+      updated_at: '2026-09-04T12:00:00Z',
+    };
+
+    const parsed = mapBackendToShowcaseState(rawBackendData);
+    assert.equal(parsed.playerTitle, 'Trial Champion');
+    assert.equal(parsed.devotionLevel, 40);
+    assert.equal(parsed.gradeRank, 'Silver I');
+    assert.equal(parsed.survivorMain.characterName, 'David King');
+    assert.equal(parsed.survivorMain.prestige, 60);
+    assert.deepEqual(parsed.survivorMain.perkIds, [10, 20, 30, 40]);
+    assert.equal(parsed.killerMain.characterName, 'The Oni');
+    assert.equal(parsed.killerMain.prestige, 85);
+    assert.deepEqual(parsed.killerMain.perkIds, [50, 60, 70, 80]);
   });
 });

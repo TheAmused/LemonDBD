@@ -1,4 +1,5 @@
 'use client';
+
 import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/user/page.tsx
 
@@ -10,18 +11,21 @@ import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { UserAvatar } from '@/components/UserAvatar';
 import { Sidebar } from '@/components/Sidebar';
-import { UserMetricsGrid, UserMetricsGridSkeleton } from '@/components/user/UserMetricsGrid';
+import { CampfireHeader } from '@/components/user/CampfireHeader';
+import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
+import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
+import { StreakTrophyCard } from '@/components/user/StreakTrophyCard';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/services/userProfileApi';
+import { useUserShowcase } from '@/hooks/useUserShowcase';
 import {
   User,
-  Mail,
-  Calendar,
-  Crown,
+  Flame,
+  Settings,
   ChevronRight,
   Dices,
   Compass,
@@ -46,13 +50,12 @@ const BugReportModal = dynamic(
 );
 
 // The bug-reports subtab is not visible on first paint (default tab is
-// "overview"), so its list UI is fetched only when the user actually
+// "dossier"), so its list UI is fetched only when the user actually
 // switches to it.
 const UserBugReportsList = dynamic(
   () => import('@/components/user/UserBugReportsList').then((m) => m.UserBugReportsList),
   { ssr: false, loading: () => <UserBugReportsSkeleton /> }
 );
-
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -60,9 +63,12 @@ export default function UserProfilePage() {
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
   const dict = useDictionary();
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'bugs'>('overview');
+  const [activeTab, setActiveTab] = useState<'dossier' | 'sanctum' | 'bugs'>('dossier');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bugModalOpen, setBugModalOpen] = useState(false);
+
+  // Showcase state with database persistence
+  const showcaseHook = useUserShowcase(user?.id);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
@@ -98,8 +104,6 @@ export default function UserProfilePage() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    // Cancel a still-in-flight request from a prior page/tab switch so its
-    // (potentially stale) response can never overwrite a newer one.
     const controller = new AbortController();
     fetchMyReports(1, controller.signal);
     return () => controller.abort();
@@ -161,8 +165,6 @@ export default function UserProfilePage() {
   };
 
   if (!dict || isLoading) {
-    // Full layout-matched skeleton (header/metrics/tabs/columns) instead of
-    // a bare spinner -- keeps CLS at zero once the real content mounts.
     return <UserProfileSkeleton dict={dict} />;
   }
 
@@ -181,7 +183,6 @@ export default function UserProfilePage() {
           </p>
           <div className="flex flex-col gap-3 pt-2">
             <button
-
               type="button"
               onClick={() => setAuthModalOpen(true)}
               className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-red-600 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-amber-950/40 hover:from-amber-400 hover:to-red-500 transition-all cursor-pointer"
@@ -213,152 +214,51 @@ export default function UserProfilePage() {
         activeCategory="user"
       />
 
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
-      >
+      <main className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main">
         <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
-          {/* Header Card with Interactive Avatar Upload */}
-          <div className="relative overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/90 p-5 sm:p-8 backdrop-blur-xl shadow-sm dark:shadow-xl">
-            <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
-            <div className="absolute -left-12 -bottom-12 h-64 w-64 rounded-full bg-red-600/10 blur-3xl pointer-events-none" />
+          {/* Hidden avatar file input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleAvatarFileChange}
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            className="hidden"
+          />
 
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleAvatarFileChange}
-              accept="image/png,image/jpeg,image/webp,image/gif"
-              className="hidden"
-            />
-
-            <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6">
-              {/* Interactive Avatar */}
-              <div className="group relative flex flex-col items-center gap-2 shrink-0">
-                <div className="relative">
-                  <UserAvatar
-                    user={user}
-                    previewUrl={optimisticPreview}
-                    size="2xl"
-                    showAdminBadge={true}
-                    borderClassName="border-2 border-amber-500/40 shadow-xl shadow-amber-950/40"
-                  />
-                  {isUploadingAvatar && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-3xl bg-black/60 backdrop-blur-xs">
-                      <span className="h-6 w-6 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploadingAvatar}
-                    title={dict?.user?.changeAvatar || 'Upload Custom Avatar'}
-                    className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer"
-                  >
-                    <Camera className="h-6 w-6 drop-shadow-md" />
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-1.5 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploadingAvatar}
-                    className="relative flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 text-[10px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
-                  >
-                    <Upload className="h-3 w-3 text-amber-500" />
-                    <span>{dict?.user?.changeAvatar || 'Change'}</span>
-                  </button>
-                  {(hasCustomAvatar || optimisticPreview) && (
-                    <button
-                      type="button"
-                      onClick={handleResetAvatar}
-                      disabled={isUploadingAvatar}
-                      title={dict?.user?.removeAvatar || 'Reset to default icon'}
-                      className="relative flex items-center gap-1 rounded-lg border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer shadow-xs before:absolute before:-inset-3 before:content-['']"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                      <span>{dict?.user?.removeAvatar || 'Reset'}</span>
-                    </button>
-                  )}
-                </div>
-
-                {avatarFeedback && (
-                  <p
-                    className={`text-[10px] font-semibold text-center mt-1 ${
-                      avatarFeedback.type === 'success' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
-                    }`}
-                  >
-                    {avatarFeedback.text}
-                  </p>
-                )}
-              </div>
-
-              {/* User Profile Information */}
-              <div className="flex-1 text-center sm:text-left space-y-2 w-full">
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-slate-900 dark:text-slate-100 font-mono">
-                    {user.username}
-                  </h1>
-                  <span
-                    className={`rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border ${
-                      user.role === 'admin'
-                        ? 'border-red-500/40 bg-red-600/20 text-red-500 dark:text-red-400'
-                        : 'border-cyan-500/40 bg-cyan-600/20 text-cyan-600 dark:text-cyan-400'
-                    }`}
-                  >
-                    {user.role}
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-                  <span className="flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
-                    {user.email}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
-                    {dict?.user?.memberSince || 'Member since'}{' '}
-                    {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
-                  </span>
-                </div>
-
-                {user.role === 'admin' && (
-                  <div className="pt-2">
-                    <Link
-                      href={`/${currentLocale}/admin`}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-600/10 px-4 py-2.5 text-xs font-bold text-red-500 dark:text-red-400 hover:bg-red-600/20 transition-colors shadow-lg w-full sm:w-auto"
-                    >
-                      <Crown className="h-4 w-4" />
-                      <span>{dict?.sidebar?.adminPanel || 'Admin Control Center'}</span>
-                      <ChevronRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Subtabs Switcher */}
+          {/* Tab Navigation: Dossier (Default), Account Sanctum, Bug Reports */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
             <button
               type="button"
-              onClick={() => setActiveSubTab('overview')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeSubTab === 'overview'
-                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+              onClick={() => setActiveTab('dossier')}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === 'dossier'
+                  ? 'bg-amber-500/15 text-amber-500 dark:text-amber-400 border border-amber-500/30 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
               }`}
             >
-              <User className="h-4 w-4" />
-              <span>{dict?.user?.tabOverview || 'Overview & Settings'}</span>
+              <Flame className="h-4 w-4 text-amber-500" />
+              <span>{dict?.user?.tabDossier || 'Campfire Dossier'}</span>
             </button>
 
             <button
               type="button"
-              onClick={() => setActiveSubTab('bugs')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                activeSubTab === 'bugs'
-                  ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+              onClick={() => setActiveTab('sanctum')}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === 'sanctum'
+                  ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-700 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
+              }`}
+            >
+              <Settings className="h-4 w-4" />
+              <span>{dict?.user?.tabSanctum || 'Account Sanctum'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('bugs')}
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                activeTab === 'bugs'
+                  ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-900/40'
               }`}
             >
@@ -367,14 +267,111 @@ export default function UserProfilePage() {
             </button>
           </div>
 
-          {activeSubTab === 'overview' ? (
-            <>
-              {ownership === null ? (
-                <UserMetricsGridSkeleton />
-              ) : (
-                <UserMetricsGrid ownership={ownership} dict={dict} />
-              )}
+          {/* TAB 1: Campfire Dossier */}
+          {activeTab === 'dossier' && (
+            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
+              {/* Campfire Header Card */}
+              <CampfireHeader
+                user={user}
+                showcase={showcaseHook.showcase}
+                isSaving={showcaseHook.isSaving}
+                saveError={showcaseHook.saveError}
+                onTitleChange={showcaseHook.setPlayerTitle}
+                onDevotionChange={showcaseHook.setDevotionLevel}
+                onGradeRankChange={showcaseHook.setGradeRank}
+                dict={dict}
+                currentLocale={currentLocale}
+                previewUrl={optimisticPreview}
+                isUploadingAvatar={isUploadingAvatar}
+                onAvatarClick={() => fileInputRef.current?.click()}
+              />
 
+              {/* Vault Mastery Radial Dials */}
+              <VaultMasteryDials ownership={ownership} dict={dict} />
+
+              {/* Dual Mains Signature Showcase (Survivor & Killer with 4-Perk Diamond Loadouts) */}
+              <DualMainsShowcase
+                showcase={showcaseHook.showcase}
+                onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
+                onSurvivorPrestigeChange={showcaseHook.setSurvivorPrestige}
+                onSurvivorPerkChange={showcaseHook.setSurvivorPerk}
+                onKillerCharacterChange={showcaseHook.setKillerCharacter}
+                onKillerPrestigeChange={showcaseHook.setKillerPrestige}
+                onKillerPerkChange={showcaseHook.setKillerPerk}
+                dict={dict}
+                locale={currentLocale}
+              />
+
+              {/* Streak & Challenge Trophy Highlights */}
+              <StreakTrophyCard currentLocale={currentLocale} dict={dict} />
+            </div>
+          )}
+
+          {/* TAB 2: Account Sanctum (Security, Email, Password, Avatar & Clean Shortcuts) */}
+          {activeTab === 'sanctum' && (
+            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
+              {/* Avatar Management Card */}
+              <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 backdrop-blur-xl shadow-sm space-y-4">
+                <h3 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 pb-2 border-b border-slate-200 dark:border-slate-800">
+                  {dict?.user?.changeAvatar || 'Avatar & Profile Picture'}
+                </h3>
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+                  <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                    <UserAvatar
+                      user={user}
+                      previewUrl={optimisticPreview}
+                      size="xl"
+                      showAdminBadge={true}
+                      borderClassName="border-2 border-amber-500/40"
+                    />
+                    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs">
+                      <Camera className="h-5 w-5" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 flex-1 text-center sm:text-left">
+                    <p className="text-xs text-slate-600 dark:text-slate-400">
+                      Upload a custom avatar (PNG, JPEG, WebP, max 10MB) or reset to the default icon.
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploadingAvatar}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                      >
+                        <Upload className="h-3.5 w-3.5 text-amber-500" />
+                        <span>{dict?.user?.changeAvatar || 'Upload New Avatar'}</span>
+                      </button>
+
+                      {(hasCustomAvatar || optimisticPreview) && (
+                        <button
+                          type="button"
+                          onClick={handleResetAvatar}
+                          disabled={isUploadingAvatar}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span>{dict?.user?.removeAvatar || 'Reset to Default'}</span>
+                        </button>
+                      )}
+                    </div>
+                    {avatarFeedback && (
+                      <p
+                        className={`text-xs font-semibold pt-1 ${
+                          avatarFeedback.type === 'success'
+                            ? 'text-emerald-500 dark:text-emerald-400'
+                            : 'text-rose-500 dark:text-rose-400'
+                        }`}
+                      >
+                        {avatarFeedback.text}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Form & Shortcuts Grid */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 w-full">
                   <UserProfileForm
@@ -384,7 +381,8 @@ export default function UserProfilePage() {
                   />
                 </div>
 
-                <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4 w-full">
+                {/* Clean Quick Shortcuts (Zero 'Others' items, zero quests) */}
+                <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 p-6 backdrop-blur-xl shadow-sm dark:shadow-xl space-y-4 w-full h-fit">
                   <h2 className="text-base font-black uppercase tracking-wider text-slate-900 dark:text-slate-100 pb-2 border-b border-slate-200 dark:border-slate-800">
                     {dict?.user?.quickShortcuts || 'Quick Shortcuts'}
                   </h2>
@@ -392,7 +390,7 @@ export default function UserProfilePage() {
                   <div className="space-y-2">
                     <Link
                       href={`/${currentLocale}/streaks`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-500 dark:hover:text-orange-400 transition-all group shadow-xs dark:shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-orange-500/40 hover:bg-orange-500/10 hover:text-orange-500 dark:hover:text-orange-400 transition-all group shadow-xs"
                     >
                       <div className="flex items-center gap-2.5">
                         <Repeat className="h-4 w-4 text-orange-500 dark:text-orange-400" />
@@ -403,7 +401,7 @@ export default function UserProfilePage() {
 
                     <Link
                       href={`/${currentLocale}/randomizer`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-500 dark:hover:text-amber-400 transition-all group shadow-xs dark:shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-amber-500/40 hover:bg-amber-500/10 hover:text-amber-500 dark:hover:text-amber-400 transition-all group shadow-xs"
                     >
                       <div className="flex items-center gap-2.5">
                         <Dices className="h-4 w-4 text-amber-500 dark:text-amber-400" />
@@ -414,7 +412,7 @@ export default function UserProfilePage() {
 
                     <Link
                       href={`/${currentLocale}/maps`}
-                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-500 dark:hover:text-cyan-400 transition-all group shadow-xs dark:shadow-sm"
+                      className="flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-3 text-xs font-bold text-slate-700 dark:text-slate-300 hover:border-cyan-500/40 hover:bg-cyan-500/10 hover:text-cyan-500 dark:hover:text-cyan-400 transition-all group shadow-xs"
                     >
                       <div className="flex items-center gap-2.5">
                         <Compass className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
@@ -425,8 +423,11 @@ export default function UserProfilePage() {
                   </div>
                 </div>
               </div>
-            </>
-          ) : (
+            </div>
+          )}
+
+          {/* TAB 3: Bug Reports */}
+          {activeTab === 'bugs' && (
             <Suspense fallback={<UserBugReportsSkeleton dict={dict} />}>
               <UserBugReportsList
                 reports={myReports}
@@ -455,4 +456,3 @@ export default function UserProfilePage() {
     </div>
   );
 }
-

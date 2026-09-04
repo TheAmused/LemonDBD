@@ -252,6 +252,11 @@
 .dbd-heartbeat-vignette--static {
   background: radial-gradient(ellipse at center, transparent 55%, var(--accent-red) 100%);
   animation: none;
+  opacity: 0.12;
+}
+
+.dark .dbd-heartbeat-vignette--static {
+  opacity: 0.4;
 }
 
 /* Scrollbar Customization */

@@ -80,10 +80,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
 
       <div
         aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute inset-0',
-          reduceMotion ? 'dbd-heartbeat-vignette--static' : 'dbd-heartbeat-vignette'
-        )}
+        className="pointer-events-none absolute inset-0 dbd-heartbeat-vignette--static"
       />
 
       {/* A small floor so the stage never looks collapsed when totally

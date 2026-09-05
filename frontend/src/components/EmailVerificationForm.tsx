@@ -3,11 +3,12 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import type { UserProfile } from '@/context/AuthContext';
 import type { Dictionary } from '@/locales/types';
 
 interface EmailVerificationFormProps {
   email: string;
-  onVerified?: () => void;
+  onVerified?: (user?: UserProfile) => void;
   submitLabel?: string;
   dict?: Dictionary;
 }
@@ -81,7 +82,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
 
     if (res.success) {
       await refreshUser();
-      onVerified?.();
+      onVerified?.(res.user);
     } else {
       setError(res.error || t?.invalidVerificationCode || null);
     }

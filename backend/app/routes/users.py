@@ -347,6 +347,24 @@ def bulk_set_character_ownership(user_id: int):
     return jsonify({"status": "success", "data": result}), 200
 
 
+@users_bp.route("/users/<int:user_id>/onboarding/complete", methods=["POST"])
+@login_required
+def mark_user_onboarding_complete(user_id: int):
+    """Stamp the character-ownership onboarding wizard as done."""
+    curr = g.current_user
+    if curr.id != user_id and curr.role != "admin":
+        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+
+    user, err = user_service.mark_onboarding_complete(user_id)
+    if err:
+        return jsonify({"error": err, "status": 404}), 404
+
+    return jsonify({
+        "status": "success",
+        "user": UserResponse.model_validate(user).model_dump(),
+    }), 200
+
+
 @users_bp.route("/users/<int:user_id>/perks", methods=["GET"])
 @login_required
 def get_user_perks(user_id: int):

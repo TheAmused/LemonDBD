@@ -44,6 +44,18 @@ def modify_user_profile(
     return user, None
 
 
+def mark_onboarding_complete(user_id: int) -> tuple[User | None, str | None]:
+    """Stamp the character-ownership onboarding wizard as done for a user."""
+    user = db.session.get(User, user_id)
+    if not user:
+        return None, "User not found."
+
+    from app.models.base import utcnow
+    user.onboarding_completed_at = utcnow()
+    db.session.commit()
+    return user, None
+
+
 def get_user_showcase(user_id: int) -> dict[str, Any] | None:
     """Retrieve player showcase record or return defaults without mutating database on GET."""
     user = db.session.get(User, user_id)

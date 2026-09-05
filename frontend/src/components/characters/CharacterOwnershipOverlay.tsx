@@ -5,7 +5,7 @@ import { Lock, Check } from 'lucide-react';
 export interface CharacterOwnershipOverlayProps {
   isOwned: boolean;
   hasPartialPerks: boolean;
-  avatarSrc: string;
+  avatarSrc?: string;
   lockedTitle?: string;
   ownedTitle?: string;
 }
@@ -41,7 +41,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
           <Check className="h-3.5 w-3.5" />
         </div>
       )}
-      {showLockedOverlay && (
+      {showLockedOverlay && avatarSrc && (
         <img
           src={avatarSrc}
           alt=""

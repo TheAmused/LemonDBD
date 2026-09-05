@@ -8,6 +8,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl } from '@/components/character-detail/types';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
+import { invalidate } from '@/services/dataCache';
 
 export interface OnboardingCharacter {
   id: number;
@@ -188,6 +189,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     }));
     await bulkUpdateCharacterOwnership(characterUpdates);
     await bulkUpdatePerkOwnership(perkUpdates);
+    invalidate(`${backendBase}/api/v1/perks`);
+    invalidate(`${backendBase}/api/v1/characters`);
     await markOnboardingComplete();
     setSaving(false);
     onFinished();
@@ -293,8 +296,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         isOwned={isOwned}
                         hasPartialPerks={hasPartialPerks}
                         avatarSrc={resolveOnboardingAvatar(backendBase, c)}
-                        lockedTitle={c.name}
-                        ownedTitle={c.name}
+                        lockedTitle={dict?.modal?.unownedPerk}
+                        ownedTitle={dict?.filters?.ownedOnly}
                       />
                       <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-slate-950/70 px-1.5 py-0.5 text-[10px] font-bold text-white text-center">
                         {c.name}

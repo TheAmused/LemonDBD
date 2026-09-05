@@ -4,6 +4,7 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.core.security import hash_password
 from app.models import User, UserShowcase
+from app.models.base import utcnow
 
 
 def fetch_user_by_id(user_id: int) -> User | None:
@@ -50,7 +51,6 @@ def mark_onboarding_complete(user_id: int) -> tuple[User | None, str | None]:
     if not user:
         return None, "User not found."
 
-    from app.models.base import utcnow
     user.onboarding_completed_at = utcnow()
     db.session.commit()
     return user, None

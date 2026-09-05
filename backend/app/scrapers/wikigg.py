@@ -19,6 +19,7 @@ from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP, KNOWN_KILLER_POWE
 from app.scrapers.maps import FOLDER_REALM_MAP, OTHER_MAP_REALM_OVERRIDES
 from app.scrapers.types import (
     AddonData,
+    ChapterImageData,
     CharacterData,
     ItemData,
     KillerPowerData,
@@ -403,6 +404,15 @@ class WikiGGScraperDriver:
 
         return characters
 
+    def _extract_dlc_image_url(self, node) -> str | None:
+        """Finds the nearest banner/key-art <img> within a DLC catalog row or
+        heading-block, resolved to a high-res absolute URL. Returns None if the
+        node has no image (frontend falls back to a plain text header)."""
+        img_tag = node.find("img")
+        if not img_tag:
+            return None
+        return extract_high_res_url(img_tag, self.BASE_DOMAIN) or None
+
     def scrape_dlcs_from_wiki(self) -> list[dict[str, Any]]:
         dlcs: list[dict[str, Any]] = []
         seen_dlc_names = set()
@@ -450,6 +460,7 @@ class WikiGGScraperDriver:
                                 "release_year": year_num,
                                 "is_licensed": is_licensed,
                                 "characters": row_chars,
+                                "dlc_image_url": self._extract_dlc_image_url(tr),
                             })
 
                 is_under_licensed = False
@@ -479,6 +490,7 @@ class WikiGGScraperDriver:
                         date_str = ""
                         year_num = None
                         chars_added = []
+                        image_url = None
                         is_licensed = is_under_licensed or "™" in raw_title or "®" in raw_title
 
                         curr = node.find_next_sibling()
@@ -488,6 +500,9 @@ class WikiGGScraperDriver:
                             if d_parsed and not date_str:
                                 date_str = d_parsed
                                 year_num = y_parsed
+
+                            if not image_url:
+                                image_url = self._extract_dlc_image_url(curr)
 
                             if "auric cells" in txt.lower() and "iridescent" not in txt.lower():
                                 is_licensed = True
@@ -514,11 +529,32 @@ class WikiGGScraperDriver:
                                 "release_year": year_num,
                                 "is_licensed": is_licensed,
                                 "characters": chars_added,
+                                "dlc_image_url": image_url,
                             })
             except Exception as e:
                 logger.warning(f"Failed scraping DLC catalog from '{page}': {e}")
 
         return dlcs
+
+    def scrape_chapter_images(self) -> list["ChapterImageData"]:
+        """Wraps scrape_dlcs_from_wiki to produce banner-image records keyed by
+        the same canonical DLC/chapter name this app already stores on
+        Character.chapter_name, for entries where a banner image was found."""
+        results: list[ChapterImageData] = []
+        for dlc in self.scrape_dlcs_from_wiki():
+            image_url = dlc.get("dlc_image_url")
+            if not image_url:
+                continue
+            name = dlc["dlc_name"]
+            slug = sanitize_filename(name)
+            results.append(
+                ChapterImageData(
+                    name=name,
+                    banner_url=image_url,
+                    banner_local_path=f"chapters/{slug}.png",
+                )
+            )
+        return results
 
     def enrich_characters_from_pages(self, characters: list[CharacterData]) -> None:
         def norm_key(text: str) -> str:

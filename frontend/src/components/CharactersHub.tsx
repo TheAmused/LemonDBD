@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
+import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson, invalidate } from '@/services/dataCache';
@@ -385,7 +386,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       ) : (
         <section
           aria-label={dict?.characterDetail?.characterOverview}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 sm:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
             const isSurvivor = char.category?.toLowerCase() === 'survivor';
@@ -438,22 +439,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     position="top-2 left-2"
                   />
                 )}
-                {ownershipMode && !isOwned && (
-                  <div
-                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-surface border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md"
-                    title={dict?.modal?.unownedPerk}
-                  >
-                    <Lock className="h-3.5 w-3.5" />
-                  </div>
-                )}
-                {ownershipMode && isOwned && (
-                  <div
-                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-xs"
-                    title={dict?.filters?.ownedOnly}
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                  </div>
-                )}
 
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
                   <img
@@ -475,20 +460,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       }
                     }}
                   />
-                  {ownershipMode && showLockedOverlay && (
-                    <img
-                      src={avatarSrc}
-                      alt=""
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
-                      style={{ clipPath: hasPartialPerks ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
+                  {ownershipMode && (
+                    <CharacterOwnershipOverlay
+                      isOwned={isOwned}
+                      hasPartialPerks={hasPartialPerks}
+                      avatarSrc={avatarSrc}
+                      lockedTitle={dict?.modal?.unownedPerk}
+                      ownedTitle={dict?.filters?.ownedOnly}
                     />
-                  )}
-                  {ownershipMode && showLockedOverlay && !hasPartialPerks && (
-                    <div className="absolute inset-0 bg-slate-950/50" />
-                  )}
-                  {ownershipMode && hasPartialPerks && (
-                    <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                 </div>

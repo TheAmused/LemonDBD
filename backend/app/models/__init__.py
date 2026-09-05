@@ -8,6 +8,7 @@ Ensures SQLAlchemy registers all tables and polymorphic relationships upon packa
 from app.models.base import utcnow
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.changelog import ChangelogPost
+from app.models.chapter import Chapter
 from app.models.character import Character, Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.history import HistoryMatchLog, HistoryRun
@@ -50,6 +51,7 @@ from app.models.user import (
 
 __all__ = [
     "utcnow",
+    "Chapter",
     "Character",
     "ChaosRun",
     "ChaosMatchLog",

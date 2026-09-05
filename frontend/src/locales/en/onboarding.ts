@@ -1,0 +1,21 @@
+// frontend/src/locales/en/onboarding.ts
+export default {
+  pageTitle: "LemonDBD - Welcome, set up your roster",
+  heading: "Which characters do you already own?",
+  subheading: "Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.",
+  legendTitle: "How this works",
+  legendOwned: "Owned - fully available",
+  legendLocked: "Locked - not available yet",
+  legendPartial: "Partially unlocked - some perks unlocked by hand",
+  legendCustomizeHint: "Tap a locked character's Perks button to unlock individual perks without owning the whole character.",
+  ownChapterButton: "I own this chapter",
+  lockChapterButton: "I don't own this chapter",
+  perksButton: "Perks",
+  continueButton: "Continue",
+  skipButton: "Skip",
+  skipModalTitle: "Skip character setup?",
+  skipModalBody: "If you skip, only the free base-game characters will be unlocked for you. Everything else stays locked until you unlock it yourself from your Characters page later.",
+  skipModalConfirm: "Yes, skip for now",
+  skipModalCancel: "Go back",
+  savingLabel: "Saving...",
+};

@@ -27,6 +27,7 @@ from app.services.user.profile import (
     fetch_user_by_id,
     get_or_create_user_showcase,
     get_user_showcase,
+    mark_onboarding_complete,
     modify_user_profile,
     update_user_showcase,
 )
@@ -46,6 +47,7 @@ __all__ = [
     "request_password_reset",
     "reset_password_with_token",
     "fetch_user_by_id",
+    "mark_onboarding_complete",
     "modify_user_profile",
     "get_or_create_user_showcase",
     "get_user_showcase",

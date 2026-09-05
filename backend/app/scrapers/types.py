@@ -127,3 +127,10 @@ class RealmImageData:
     name: str
     image_url: str
     image_local_path: str
+
+
+@dataclass
+class ChapterImageData:
+    name: str
+    banner_url: str
+    banner_local_path: str

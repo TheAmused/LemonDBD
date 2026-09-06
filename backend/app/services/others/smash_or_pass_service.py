@@ -150,10 +150,22 @@ class SmashOrPassService:
         if not roster:
             return None
 
-        roster_info = next(
-            (r for r in self.get_rosters(active_only=False) if r["slug"] == roster_slug),
-            roster.to_dict(),
-        )
+        # Scoped to this one roster instead of calling get_rosters(), which
+        # selects every roster and aggregates votes across every entity in
+        # the database just to discard all but one row.
+        entity_count, roster_total_votes = db.session.execute(
+            select(
+                func.count(Entity.id),
+                func.coalesce(func.sum(EntityStat.total_votes), 0),
+            )
+            .select_from(Entity)
+            .outerjoin(EntityStat, Entity.id == EntityStat.entity_id)
+            .where(Entity.roster_id == roster.id, Entity.is_active.is_(True))
+        ).one()
+        roster_info = roster.to_dict()
+        roster_info["entity_count"] = int(entity_count or 0)
+        roster_info["character_count"] = int(entity_count or 0)
+        roster_info["total_votes"] = int(roster_total_votes or 0)
 
         voted_conditions = []
         if user_id is not None:
@@ -405,15 +417,15 @@ class SmashOrPassService:
     ) -> list[dict[str, Any]]:
         self.ensure_seeded()
         target_slug = roster_slug or edition or "canon"
-        roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
-        if not roster:
+        roster_id = db.session.scalar(select(Roster.id).where(Roster.slug == target_slug))
+        if roster_id is None:
             return []
 
         stmt = (
             select(Entity, EntityStat)
             .join(EntityStat, Entity.id == EntityStat.entity_id)
             .where(
-                Entity.roster_id == roster.id,
+                Entity.roster_id == roster_id,
                 Entity.is_active.is_(True),
             )
         )

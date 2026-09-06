@@ -38,12 +38,16 @@ class Roster(Base):
         DateTime(timezone=True), default=utcnow, nullable=False
     )
 
+    # Default (lazy) loading: nothing in the codebase reads `.entities` directly
+    # (entity queries always go through Entity/EntityStat selects of their own),
+    # so eager-loading it on every Roster fetch was pure cost. Cascade delete
+    # still works -- it only needs the collection at flush time, regardless of
+    # the read-time loading strategy.
     entities: Mapped[list["Entity"]] = relationship(
         "Entity",
         back_populates="roster",
         cascade="all, delete-orphan",
         order_by="Entity.order_index",
-        lazy="selectin",
     )
 
     def to_dict(self) -> dict[str, Any]:

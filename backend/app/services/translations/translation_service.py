@@ -16,6 +16,11 @@ from app.scrapers.utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
+# Keep in sync with the frontend's own locale list -- LANGUAGES in
+# frontend/src/components/sidebar/SidebarBottomControls.tsx and i18n.locales
+# in frontend/src/i18n/config.ts. No shared source of truth across the
+# Python/TypeScript boundary; a locale added to only one side means the
+# frontend can offer a language this backend rejects (or vice versa).
 SUPPORTED_LOCALES: list[str] = ["en", "pl", "de", "es", "ja"]
 
 # Strips layout-variant suffixes (e.g. "Coal Tower II" -> "Coal Tower") so variants share one translation.

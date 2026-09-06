@@ -9,6 +9,11 @@ import { useTheme } from 'next-themes';
 import { Sun, Moon, Laptop, Bug, Coffee, Citrus } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 
+// Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
+// backend/app/services/translations/translation_service.py. No shared
+// source of truth across the Python/TypeScript boundary; a locale added to
+// only one side means the backend can reject a language this list offers
+// (or vice versa).
 export const LANGUAGES: { code: string; label: string }[] = [
   { code: 'en', label: 'English' },
   { code: 'pl', label: 'Polski' },

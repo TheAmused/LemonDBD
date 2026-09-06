@@ -15,7 +15,9 @@ from app.services.user import (
     get_or_create_user_showcase,
     get_user_showcase,
     list_all_users_paginated,
+    mark_onboarding_complete,
     modify_user_profile,
+    set_preferred_language,
     process_and_save_avatar,
     request_password_reset,
     resend_verification_email,
@@ -73,6 +75,12 @@ class UserService:
         new_password: str | None = None,
     ) -> tuple[User | None, str | None]:
         return modify_user_profile(user_id, email, avatar_url, new_password)
+
+    def mark_onboarding_complete(self, user_id: int) -> tuple[User | None, str | None]:
+        return mark_onboarding_complete(user_id)
+
+    def set_preferred_language(self, user_id: int, language: str) -> tuple[User | None, str | None]:
+        return set_preferred_language(user_id, language)
 
     def save_user_avatar(self, user_id: int, file_storage) -> tuple[User | None, str | None]:
         return process_and_save_avatar(user_id, file_storage)

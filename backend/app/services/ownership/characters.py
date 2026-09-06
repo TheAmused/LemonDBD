@@ -29,6 +29,7 @@ def fetch_user_characters(
         for c in all_chars:
             d = c.to_dict(lang=lang)
             d["is_owned"] = True
+            d["is_free"] = (c.wiki_slug or "") in FREE_CHARACTER_SLUGS
             result.append(d)
         return result
 
@@ -41,6 +42,7 @@ def fetch_user_characters(
     for c in all_chars:
         d = c.to_dict(lang=lang)
         d["is_owned"] = owned_dict.get(c.id, True)
+        d["is_free"] = (c.wiki_slug or "") in FREE_CHARACTER_SLUGS
         result.append(d)
     return result
 

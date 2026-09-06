@@ -4,7 +4,7 @@ import { DbdSpinner } from '@/components/DbdSpinner';
 
 export default function PerksLoading() {
   return (
-    <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <div
         aria-hidden="true"
         className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface/80 backdrop-blur-sm"

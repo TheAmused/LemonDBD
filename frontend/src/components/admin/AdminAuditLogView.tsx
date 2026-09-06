@@ -66,7 +66,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
   };
 
   return (
-    <div className="rounded-2xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200">
+    <div className="rounded-2xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm backdrop-blur-sm transition-colors duration-200">
       <div className="flex items-center justify-between mb-4">
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">
           <ScrollText className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />

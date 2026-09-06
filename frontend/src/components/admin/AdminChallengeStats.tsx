@@ -61,7 +61,7 @@ export const AdminChallengeStats: React.FC<AdminChallengeStatsProps> = ({ stats,
         return (
           <div
             key={key}
-            className={`rounded-2xl border ${border} bg-bg-surface p-5 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200`}
+            className={`rounded-2xl border ${border} bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200`}
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">

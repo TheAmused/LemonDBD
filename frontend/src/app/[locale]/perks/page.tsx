@@ -236,7 +236,7 @@ function PerksContent() {
   const totalVaultPerks = allPerksForStats.length || totalResults;
 
   return (
-    <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -318,7 +318,7 @@ function PerksContent() {
                 className={
                   viewMode === 'list'
                     ? 'flex flex-col gap-2 w-full'
-                    : 'grid min-h-0 w-full flex-1 grid-cols-5 gap-3'
+                    : 'grid min-h-0 w-full flex-1 grid-cols-5 grid-rows-3 gap-3'
                 }
                 style={viewMode === 'grid' && rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
               >
@@ -377,7 +377,7 @@ export default function PerksPage() {
   return (
     <Suspense
       fallback={
-        <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+        <div className="h-dvh overflow-hidden bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
           <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-border-color bg-bg-surface/80 p-4 select-none animate-pulse" />
           <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main">
             <PerksGridSkeleton />

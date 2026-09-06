@@ -71,7 +71,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={dict?.admin?.searchUserPlaceholder || ''}
-              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-primary py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
+              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
             />
           </div>
 
@@ -191,7 +191,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
       {/* Desktop view */}
       <div className="hidden sm:block overflow-x-auto w-full">
         <table className="w-full text-left text-xs text-text-primary">
-          <thead className="border-b border-border-color bg-bg-primary text-[10px] uppercase font-black tracking-wider text-text-secondary">
+          <thead className="border-b border-border-color bg-bg-elevated text-[10px] uppercase font-black tracking-wider text-text-secondary">
             <tr>
               <th className="px-4 py-3">{dict?.admin?.thId || 'ID'}</th>
               <th className="px-4 py-3">{dict?.admin?.thUser || 'User'}</th>
@@ -262,7 +262,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         onClick={() => onToggleRole(u)}
                         title={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
                         aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
-                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2 before:content-['']"
+                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
                         <Crown className="h-3.5 w-3.5" />
                       </button>
@@ -272,7 +272,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         onClick={() => onToggleActive(u)}
                         title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
                         aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
-                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2 before:content-['']"
+                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
                         <Lock className="h-3.5 w-3.5" />
                       </button>
@@ -283,7 +283,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                           onClick={() => onDeleteUser(u)}
                           title={dict?.admin?.deleteUserTitle || 'Delete'}
                           aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
-                          className="relative rounded-lg border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/30 p-1.5 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2 before:content-['']"
+                          className="relative rounded-lg border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/30 p-1.5 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>

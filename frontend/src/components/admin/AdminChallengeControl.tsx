@@ -210,7 +210,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   return (
     <div className="space-y-6">
       {/* Challenge mode kill switches */}
-      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200">
+      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary mb-4">
           <Power className="h-4 w-4 text-accent-red" />
           <span>{dict?.admin?.challengeModeKillSwitches || 'Challenge Mode Switches'}</span>
@@ -248,7 +248,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
       </div>
 
       {/* Killers & Perks availability */}
-      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm dark:shadow-xl backdrop-blur-sm transition-colors duration-200">
+      <div className="rounded-2xl border border-border-color bg-bg-surface p-5 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2 rounded-xl border border-border-color bg-bg-elevated p-1">
             <button

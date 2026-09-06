@@ -80,6 +80,13 @@ def execute_sync_pipeline(
             logger.warning(f"Failed scraping realm images: {realm_err}")
             realms = []
 
+        try:
+            logger.info("Scraping chapter banner images from wiki.gg...")
+            chapters = wikigg_driver.scrape_chapter_images()
+        except Exception as chapter_err:
+            logger.warning(f"Failed scraping chapter banner images: {chapter_err}")
+            chapters = []
+
         if download_assets:
             total_downloads = (
                 len(perks)
@@ -89,6 +96,7 @@ def execute_sync_pipeline(
                 + len(maps)
                 + len(offerings)
                 + len(realms)
+                + len(chapters)
             )
             ScraperStateManager.update_status(
                 current_step="downloading_assets",
@@ -118,6 +126,7 @@ def execute_sync_pipeline(
                         maps=maps,
                         offerings=offerings,
                         realms=realms,
+                        chapters=chapters,
                         impersonate_browser=impersonate_browser,
                         max_concurrent_downloads=max_concurrent_downloads,
                         request_timeout=request_timeout,
@@ -135,6 +144,7 @@ def execute_sync_pipeline(
             maps=maps,
             offerings=offerings,
             realms=realms,
+            chapters=chapters,
         )
 
         try:

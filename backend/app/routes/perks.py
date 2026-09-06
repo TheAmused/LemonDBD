@@ -104,6 +104,17 @@ def list_characters():
     return jsonify({"count": len(characters), "data": characters}), 200
 
 
+@perks_bp.route("/api/v1/chapters", methods=["GET"])
+def list_chapters():
+    """Retrieve all chapter/DLC banner images for client-side name matching."""
+    from app.core.extensions import db
+    from app.models import Chapter
+    from sqlalchemy import select
+
+    rows = db.session.scalars(select(Chapter)).all()
+    return jsonify({"chapters": [r.to_dict() for r in rows]}), 200
+
+
 @perks_bp.route("/api/v1/stats/summary", methods=["GET"])
 def stats_summary():
     """Lightweight counts for the sidebar "vault stats" card.

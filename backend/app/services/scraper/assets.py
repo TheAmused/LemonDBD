@@ -5,7 +5,16 @@ from pathlib import Path
 
 from curl_cffi.requests import AsyncSession
 
-from app.scrapers.types import AddonData, CharacterData, ItemData, MapData, OfferingData, PerkData, RealmImageData
+from app.scrapers.types import (
+    AddonData,
+    ChapterImageData,
+    CharacterData,
+    ItemData,
+    MapData,
+    OfferingData,
+    PerkData,
+    RealmImageData,
+)
 from app.scrapers.utils import sanitize_filename
 from app.services.image_conversion import (
     composite_perk_diamond_frame,
@@ -93,6 +102,7 @@ async def download_all_assets(
     maps: list[MapData] | None = None,
     offerings: list[OfferingData] | None = None,
     realms: list[RealmImageData] | None = None,
+    chapters: list[ChapterImageData] | None = None,
     impersonate_browser: str = "chrome120",
     max_concurrent_downloads: int = 10,
     request_timeout: int = 30,
@@ -226,6 +236,21 @@ async def download_all_assets(
                             static_dir,
                             r.image_url,
                             r.image_local_path,
+                            timeout=request_timeout,
+                        )
+                    )
+
+        if chapters:
+            for ch in chapters:
+                if ch.banner_url and ch.banner_local_path:
+                    ch.banner_local_path = _to_webp_path(ch.banner_local_path)
+                    tasks.append(
+                        download_single_asset(
+                            client,
+                            semaphore,
+                            static_dir,
+                            ch.banner_url,
+                            ch.banner_local_path,
                             timeout=request_timeout,
                         )
                     )

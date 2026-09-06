@@ -404,7 +404,7 @@ class WikiGGScraperDriver:
 
         return characters
 
-    def _extract_dlc_image_url(self, node) -> str | None:
+    def _extract_dlc_image_url(self, node: Tag) -> str | None:
         """Finds the nearest banner/key-art <img> within a DLC catalog row or
         heading-block, resolved to a high-res absolute URL. Returns None if the
         node has no image (frontend falls back to a plain text header)."""

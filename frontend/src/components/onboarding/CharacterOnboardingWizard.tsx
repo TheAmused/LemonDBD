@@ -10,6 +10,7 @@ import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwne
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
 import { Switch } from '@/components/common/Switch';
 import { invalidate } from '@/services/dataCache';
+import { getChapterBannerSrc } from '@/utils/mapUtils';
 
 export interface ChapterBanner {
   banner_url: string | null;
@@ -69,6 +70,17 @@ export function groupCharactersByChapter(characters: OnboardingCharacter[]): Cha
  * uses, so the wizard's grid matches the Characters page exactly. The
  * ownership endpoint's own `avatar_url` is just `portrait_url`, which is
  * blank for most characters -- the helper derives the static avatar path. */
+/** Turns a chapter name into an id-safe token for the accordion header's
+ * `aria-controls`/panel `id` pair -- chapter names contain spaces and
+ * punctuation (e.g. "A Nightmare on Elm Street"), which are not valid inside
+ * an HTML id. */
+function slugifyChapterName(chapterName: string): string {
+  return chapterName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function resolveOnboardingAvatar(backendBase: string, c: OnboardingCharacter): string {
   return getAvatarUrl(
     backendBase,
@@ -279,14 +291,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       <div className="mx-auto max-w-5xl space-y-6">
         <header className="text-center space-y-2">
           <div className="flex items-center justify-between gap-4">
+            <div className="flex-1" aria-hidden="true" />
             <h1 className="text-2xl font-black">{t?.heading || 'Which characters do you already own?'}</h1>
-            <button
-              type="button"
-              onClick={() => setIsSkipModalOpen(true)}
-              className="shrink-0 rounded-xl border-2 border-accent-amber/60 bg-accent-amber/10 px-5 py-2.5 text-sm font-bold text-accent-amber cursor-pointer"
-            >
-              {t?.skipButton || 'Skip'}
-            </button>
+            <div className="flex flex-1 justify-end">
+              <button
+                type="button"
+                onClick={() => setIsSkipModalOpen(true)}
+                className="shrink-0 rounded-xl border-2 border-accent-amber/60 bg-accent-amber/10 px-5 py-2.5 text-sm font-bold text-accent-amber cursor-pointer"
+              >
+                {t?.skipButton || 'Skip'}
+              </button>
+            </div>
           </div>
           <p className="text-sm text-text-secondary max-w-2xl mx-auto">
             {t?.subheading ||
@@ -361,8 +376,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         {chapterGroups.map((group) => {
           const isExpanded = expandedChapter === group.chapterName;
           const banner = chapterBanners[group.chapterName];
+          const bannerSrc = getChapterBannerSrc(banner, backendBase);
           const chapterOwned = group.characters.every((c) => (ownershipDraft[c.id] ?? c.is_owned));
           const chapterSwitchLabel = `${t?.ownChapterButton || 'I own this chapter'}: ${group.chapterName}`;
+          const chapterPanelId = `chapter-panel-${slugifyChapterName(group.chapterName)}`;
           const toggleExpanded = () =>
             setExpandedChapter((prev) => (prev === group.chapterName ? null : group.chapterName));
 
@@ -379,13 +396,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   }
                 }}
                 aria-expanded={isExpanded}
-                aria-controls={`chapter-panel-${group.chapterName}`}
+                aria-controls={chapterPanelId}
                 className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-xl border border-border-color bg-bg-surface text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
               >
-                {banner?.banner_url ? (
+                {bannerSrc ? (
                   <div className="relative h-20 w-full overflow-hidden bg-slate-900">
                     <img
-                      src={banner.banner_url}
+                      src={bannerSrc}
                       alt=""
                       aria-hidden="true"
                       className="h-full w-full object-contain"
@@ -395,7 +412,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                       {group.chapterName}
                     </h3>
                     <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-3">
-                      <span onClick={(e) => e.stopPropagation()}>
+                      <span onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                         <Switch checked={chapterOwned} onChange={(checked) => toggleChapter(group, checked)} ariaLabel={chapterSwitchLabel} />
                       </span>
                       <ChevronDown
@@ -407,7 +424,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   <div className="flex w-full items-center justify-between px-4 py-3">
                     <h3 className="font-extrabold text-sm">{group.chapterName}</h3>
                     <div className="flex items-center gap-3">
-                      <span onClick={(e) => e.stopPropagation()}>
+                      <span onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                         <Switch checked={chapterOwned} onChange={(checked) => toggleChapter(group, checked)} ariaLabel={chapterSwitchLabel} />
                       </span>
                       <ChevronDown
@@ -419,7 +436,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               </div>
 
               {isExpanded && (
-              <div id={`chapter-panel-${group.chapterName}`} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+              <div id={chapterPanelId} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
               {group.characters.map((c) => {
                 const isOwned = ownershipDraft[c.id] ?? c.is_owned;
                 const perkStats = getCharacterPerkStats(c.id);

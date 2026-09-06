@@ -52,6 +52,33 @@ def to_png_bytes(image_bytes: bytes) -> bytes:
         return out_buf.getvalue()
 
 
+def trim_transparent_padding(image_bytes: bytes, padding: int = 12) -> bytes:
+    """Crop out fully-transparent padding around an image's actual content.
+
+    Some source images ship on a much larger canvas than their visible
+    content, which makes `object-fit: contain` scale the mostly-empty canvas
+    instead of the content. Crops to the alpha channel's bounding box (not a
+    whole-image getbbox(), since transparent areas can carry non-zero RGB)
+    plus a small margin. A no-op for an opaque image or one with no content.
+    """
+    with Image.open(io.BytesIO(image_bytes)) as img:
+        rgba = img.convert("RGBA")
+        alpha_bbox = rgba.split()[-1].getbbox()
+        if alpha_bbox is None:
+            return image_bytes
+        left, top, right, bottom = alpha_bbox
+        if (left, top, right, bottom) == (0, 0, rgba.width, rgba.height):
+            return image_bytes
+        left = max(0, left - padding)
+        top = max(0, top - padding)
+        right = min(rgba.width, right + padding)
+        bottom = min(rgba.height, bottom + padding)
+        cropped = rgba.crop((left, top, right, bottom))
+        out_buf = io.BytesIO()
+        cropped.save(out_buf, format="PNG")
+        return out_buf.getvalue()
+
+
 def is_webp(content: bytes) -> bool:
     return len(content) >= 12 and content[:4] == WEBP_MAGIC_RIFF and content[8:12] == WEBP_MAGIC_WEBP
 

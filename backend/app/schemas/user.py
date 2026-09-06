@@ -34,6 +34,7 @@ class UserResponse(UserBase):
     created_at: datetime | None = None
     updated_at: datetime | None = None
     onboarding_completed_at: datetime | None = None
+    preferred_language: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 

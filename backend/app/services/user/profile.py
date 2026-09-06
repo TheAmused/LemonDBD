@@ -56,6 +56,23 @@ def mark_onboarding_complete(user_id: int) -> tuple[User | None, str | None]:
     return user, None
 
 
+def set_preferred_language(user_id: int, language: str) -> tuple[User | None, str | None]:
+    """Set a user's preferred site language, chosen from the onboarding
+    wizard's language step (or any future settings UI)."""
+    from app.services.translations.translation_service import SUPPORTED_LOCALES
+
+    if language not in SUPPORTED_LOCALES:
+        return None, f"Unsupported language '{language}'."
+
+    user = db.session.get(User, user_id)
+    if not user:
+        return None, "User not found."
+
+    user.preferred_language = language
+    db.session.commit()
+    return user, None
+
+
 def get_user_showcase(user_id: int) -> dict[str, Any] | None:
     """Retrieve player showcase record or return defaults without mutating database on GET."""
     user = db.session.get(User, user_id)

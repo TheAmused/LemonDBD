@@ -65,3 +65,68 @@ def test_mark_onboarding_complete_rejects_other_users(client: FlaskClient) -> No
         f"/api/v1/users/{reg_b['user']['id']}/onboarding/complete", headers=headers_a
     )
     assert res.status_code == 403
+
+
+def test_set_preferred_language_endpoint(client: FlaskClient) -> None:
+    reg_res = client.post(
+        "/api/v1/auth/register",
+        json={
+            "username": "langpicker",
+            "email": "langpicker@example.com",
+            "password": "password123",
+        },
+    )
+    data = reg_res.get_json()
+    assert data["user"]["preferred_language"] is None
+
+    token = data["token"]
+    user_id = data["user"]["id"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    res = client.post(
+        f"/api/v1/users/{user_id}/language", json={"language": "pl"}, headers=headers
+    )
+    assert res.status_code == 200
+    assert res.get_json()["user"]["preferred_language"] == "pl"
+
+    me_res = client.get("/api/v1/auth/me", headers=headers)
+    assert me_res.get_json()["user"]["preferred_language"] == "pl"
+
+
+def test_set_preferred_language_rejects_unsupported_locale(client: FlaskClient) -> None:
+    reg_res = client.post(
+        "/api/v1/auth/register",
+        json={
+            "username": "badlangpicker",
+            "email": "badlangpicker@example.com",
+            "password": "password123",
+        },
+    )
+    data = reg_res.get_json()
+    headers = {"Authorization": f"Bearer {data['token']}"}
+
+    res = client.post(
+        f"/api/v1/users/{data['user']['id']}/language",
+        json={"language": "xx"},
+        headers=headers,
+    )
+    assert res.status_code == 400
+
+
+def test_set_preferred_language_rejects_other_users(client: FlaskClient) -> None:
+    reg_a = client.post(
+        "/api/v1/auth/register",
+        json={"username": "langA", "email": "langa@example.com", "password": "password123"},
+    ).get_json()
+    reg_b = client.post(
+        "/api/v1/auth/register",
+        json={"username": "langB", "email": "langb@example.com", "password": "password123"},
+    ).get_json()
+
+    headers_a = {"Authorization": f"Bearer {reg_a['token']}"}
+    res = client.post(
+        f"/api/v1/users/{reg_b['user']['id']}/language",
+        json={"language": "de"},
+        headers=headers_a,
+    )
+    assert res.status_code == 403

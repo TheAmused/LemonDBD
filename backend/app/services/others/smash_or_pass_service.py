@@ -70,6 +70,23 @@ EDITIONS: list[dict[str, Any]] = [
 ]
 
 
+def _enrich_with_stat(entity: Entity, stat: EntityStat | None, edition: str) -> dict[str, Any]:
+    """Serialize an Entity plus its EntityStat into the flat dict shape shared by
+    every vote/leaderboard/roster-browsing response (cast_vote, get_leaderboard,
+    get_characters_with_stats, get_character_stat)."""
+    d = entity.to_dict()
+    d["character_slug"] = entity.slug
+    d["character_name"] = entity.name
+    d["edition"] = edition
+    d["smash_count"] = stat.smash_count if stat else 0
+    d["pass_count"] = stat.pass_count if stat else 0
+    d["super_smash_count"] = stat.super_smash_count if stat else 0
+    d["total_votes"] = stat.total_votes if stat else 0
+    d["smash_rate"] = stat.smash_rate if stat else 0.0
+    d["chaos_rating"] = stat.chaos_rating if stat else 50.0
+    return d
+
+
 class SmashOrPassService:
     """Service handling multi-roster Smash or Pass voting, feed generation, user persistence, and leaderboards."""
     _is_seeded: bool = False
@@ -313,17 +330,7 @@ class SmashOrPassService:
             db.session.refresh(entity)
             db.session.refresh(stat)
 
-            res = entity.to_dict()
-            res["character_slug"] = entity.slug
-            res["character_name"] = entity.name
-            res["edition"] = target_slug
-            res["smash_count"] = stat.smash_count
-            res["pass_count"] = stat.pass_count
-            res["super_smash_count"] = stat.super_smash_count
-            res["total_votes"] = stat.total_votes
-            res["smash_rate"] = stat.smash_rate
-            res["chaos_rating"] = stat.chaos_rating
-            return res
+            return _enrich_with_stat(entity, stat, target_slug)
         except Exception as e:
             db.session.rollback()
             logger.error(f"Error recording smash-or-pass vote: {e}")
@@ -440,18 +447,9 @@ class SmashOrPassService:
             else:
                 tier = "Eldritch Void"
 
-            item = entity.to_dict()
+            item = _enrich_with_stat(entity, stat, target_slug)
             item["rank"] = rank
             item["tier"] = tier
-            item["character_slug"] = entity.slug
-            item["character_name"] = entity.name
-            item["edition"] = target_slug
-            item["smash_count"] = stat.smash_count
-            item["pass_count"] = stat.pass_count
-            item["super_smash_count"] = stat.super_smash_count
-            item["total_votes"] = stat.total_votes
-            item["smash_rate"] = stat.smash_rate
-            item["chaos_rating"] = stat.chaos_rating
             leaderboard.append(item)
 
         return leaderboard
@@ -593,21 +591,7 @@ class SmashOrPassService:
 
         stmt = stmt.order_by(Entity.order_index)
         entities = db.session.scalars(stmt).all()
-        result = []
-        for e in entities:
-            d = e.to_dict()
-            stat = e.stat
-            d["character_slug"] = e.slug
-            d["character_name"] = e.name
-            d["edition"] = edition
-            d["smash_count"] = stat.smash_count if stat else 0
-            d["pass_count"] = stat.pass_count if stat else 0
-            d["super_smash_count"] = stat.super_smash_count if stat else 0
-            d["total_votes"] = stat.total_votes if stat else 0
-            d["smash_rate"] = stat.smash_rate if stat else 0.0
-            d["chaos_rating"] = stat.chaos_rating if stat else 50.0
-            result.append(d)
-        return result
+        return [_enrich_with_stat(e, e.stat, edition) for e in entities]
 
     def get_character_stat(
         self, character_slug: str, edition: str = "canon"
@@ -626,18 +610,7 @@ class SmashOrPassService:
         )
         if not entity or not entity.stat:
             return None
-        d = entity.to_dict()
-        stat = entity.stat
-        d["character_slug"] = entity.slug
-        d["character_name"] = entity.name
-        d["edition"] = edition
-        d["smash_count"] = stat.smash_count
-        d["pass_count"] = stat.pass_count
-        d["super_smash_count"] = stat.super_smash_count
-        d["total_votes"] = stat.total_votes
-        d["smash_rate"] = stat.smash_rate
-        d["chaos_rating"] = stat.chaos_rating
-        return d
+        return _enrich_with_stat(entity, entity.stat, edition)
 
     def get_user_votes(
         self,

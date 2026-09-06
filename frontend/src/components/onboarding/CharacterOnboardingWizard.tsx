@@ -1,14 +1,20 @@
 'use client';
 // frontend/src/components/onboarding/CharacterOnboardingWizard.tsx
 import React, { useEffect, useMemo, useState } from 'react';
-import { Check, Lock, Loader2, X } from 'lucide-react';
+import { Check, ChevronDown, Lock, Loader2, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl } from '@/components/character-detail/types';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
+import { Switch } from '@/components/common/Switch';
 import { invalidate } from '@/services/dataCache';
+
+export interface ChapterBanner {
+  banner_url: string | null;
+  banner_local_path: string | null;
+}
 
 export interface OnboardingCharacter {
   id: number;
@@ -99,6 +105,32 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const [saving, setSaving] = useState(false);
   const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<OnboardingCharacter | null>(null);
+  const [chapterBanners, setChapterBanners] = useState<Record<string, ChapterBanner>>({});
+  const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Unlike the characters/perks fetch below, /api/v1/chapters is public and
+    // not scoped to the signed-in user, so it doesn't belong inside that
+    // user/token-gated effect -- it can run unconditionally on mount.
+    let cancelled = false;
+    fetch(`${backendBase}/api/v1/chapters`)
+      .then((res) => res.json())
+      .then((json: { chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }> }) => {
+        if (cancelled) return;
+        const byName: Record<string, ChapterBanner> = {};
+        (json.chapters || []).forEach((chapter) => {
+          byName[chapter.name] = {
+            banner_url: chapter.banner_url,
+            banner_local_path: chapter.banner_local_path,
+          };
+        });
+        setChapterBanners(byName);
+      })
+      .catch(() => setChapterBanners({}));
+    return () => {
+      cancelled = true;
+    };
+  }, [backendBase]);
 
   useEffect(() => {
     // Both GET endpoints are @login_required on the backend, so the bearer
@@ -295,28 +327,68 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           </p>
         </section>
 
-        {chapterGroups.map((group) => (
-          <section key={group.chapterName} className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="font-extrabold text-sm">{group.chapterName}</h3>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => toggleChapter(group, true)}
-                  className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 cursor-pointer"
-                >
-                  {t?.ownChapterButton || 'I own this chapter'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => toggleChapter(group, false)}
-                  className="rounded-lg border border-border-color bg-bg-elevated px-3 py-1 text-[11px] font-bold text-text-secondary cursor-pointer"
-                >
-                  {t?.lockChapterButton || "I don't own this chapter"}
-                </button>
+        {chapterGroups.map((group) => {
+          const isExpanded = expandedChapter === group.chapterName;
+          const banner = chapterBanners[group.chapterName];
+          const chapterOwned = group.characters.every((c) => (ownershipDraft[c.id] ?? c.is_owned));
+          const chapterSwitchLabel = `${t?.ownChapterButton || 'I own this chapter'}: ${group.chapterName}`;
+          const toggleExpanded = () =>
+            setExpandedChapter((prev) => (prev === group.chapterName ? null : group.chapterName));
+
+          return (
+            <section key={group.chapterName} className="space-y-3">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={toggleExpanded}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleExpanded();
+                  }
+                }}
+                aria-expanded={isExpanded}
+                aria-controls={`chapter-panel-${group.chapterName}`}
+                className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-xl border border-border-color bg-bg-surface text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+              >
+                {banner?.banner_url ? (
+                  <div className="relative h-20 w-full overflow-hidden bg-slate-900">
+                    <img
+                      src={banner.banner_url}
+                      alt=""
+                      aria-hidden="true"
+                      className="h-full w-full object-contain"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
+                    <h3 className="absolute bottom-2 left-3 text-sm font-extrabold text-white drop-shadow">
+                      {group.chapterName}
+                    </h3>
+                    <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-3">
+                      <span onClick={(e) => e.stopPropagation()}>
+                        <Switch checked={chapterOwned} onChange={(checked) => toggleChapter(group, checked)} ariaLabel={chapterSwitchLabel} />
+                      </span>
+                      <ChevronDown
+                        className={`h-5 w-5 text-white transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex w-full items-center justify-between px-4 py-3">
+                    <h3 className="font-extrabold text-sm">{group.chapterName}</h3>
+                    <div className="flex items-center gap-3">
+                      <span onClick={(e) => e.stopPropagation()}>
+                        <Switch checked={chapterOwned} onChange={(checked) => toggleChapter(group, checked)} ariaLabel={chapterSwitchLabel} />
+                      </span>
+                      <ChevronDown
+                        className={`h-5 w-5 text-text-secondary transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+
+              {isExpanded && (
+              <div id={`chapter-panel-${group.chapterName}`} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
               {group.characters.map((c) => {
                 const isOwned = ownershipDraft[c.id] ?? c.is_owned;
                 const perkStats = getCharacterPerkStats(c.id);
@@ -360,9 +432,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   </div>
                 );
               })}
-            </div>
-          </section>
-        ))}
+              </div>
+              )}
+            </section>
+          );
+        })}
 
         <div className="flex justify-end pt-4">
           <button

@@ -411,7 +411,7 @@ export default function UserProfilePage() {
                         type="button"
                         onClick={handleResetAvatar}
                         disabled={isUploadingAvatar}
-                        className="w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded-xl border border-rose-500/30 bg-rose-500/10 text-xs font-bold text-rose-500 hover:bg-rose-500/20 transition-all cursor-pointer font-mono"
+                        className="w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all cursor-pointer font-mono"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         <span>{dict?.user?.removeAvatar || 'Reset to Default'}</span>

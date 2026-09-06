@@ -1,18 +1,10 @@
 # backend/app/routes/others/draft.py
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
+from app.core.service_registry import make_service_getter
 from app.services.others.draft_service import DraftService
 
 draft_bp = Blueprint("draft", __name__, url_prefix="/api/v1/draft")
-_default_draft_service: DraftService | None = None
-
-
-def get_draft_service() -> DraftService:
-    if current_app and current_app.config.get("DRAFT_SERVICE"):
-        return current_app.config["DRAFT_SERVICE"]
-    global _default_draft_service
-    if _default_draft_service is None:
-        _default_draft_service = DraftService()
-    return _default_draft_service
+get_draft_service = make_service_getter("DRAFT_SERVICE", DraftService)
 
 
 @draft_bp.route("/create", methods=["POST"])

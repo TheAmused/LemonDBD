@@ -1,19 +1,11 @@
 # backend/app/routes/gauntlet_streak.py
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from app.core.security import login_required
+from app.core.service_registry import make_service_getter
 from app.services.gauntlet_service import GauntletService
 
 gauntlet_streak_bp = Blueprint("gauntlet_streak", __name__, url_prefix="/api/v1/gauntlet-streak")
-_default_service: GauntletService | None = None
-
-
-def get_gauntlet_service() -> GauntletService:
-    if current_app and current_app.config.get("GAUNTLET_SERVICE"):
-        return current_app.config["GAUNTLET_SERVICE"]
-    global _default_service
-    if _default_service is None:
-        _default_service = GauntletService()
-    return _default_service
+get_gauntlet_service = make_service_getter("GAUNTLET_SERVICE", GauntletService)
 
 
 def _clean_role(role: str | None) -> str | None:

@@ -1,21 +1,13 @@
 # backend/app/routes/history_streak.py
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from app.core.security import login_required
+from app.core.service_registry import make_service_getter
 from app.services.history_service import HistoryService
 
 history_streak_bp = Blueprint("history_streak", __name__, url_prefix="/api/v1/history-streak")
-_default_service: HistoryService | None = None
+get_history_service = make_service_getter("HISTORY_SERVICE", HistoryService)
 
 MODES = ("medium", "hell")
-
-
-def get_history_service() -> HistoryService:
-    if current_app and current_app.config.get("HISTORY_SERVICE"):
-        return current_app.config["HISTORY_SERVICE"]
-    global _default_service
-    if _default_service is None:
-        _default_service = HistoryService()
-    return _default_service
 
 
 def _clean_mode(mode: str | None) -> str | None:

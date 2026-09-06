@@ -1,18 +1,10 @@
 # backend/app/routes/others/builds.py
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
+from app.core.service_registry import make_service_getter
 from app.services.others.build_service import BuildService
 
 builds_bp = Blueprint("builds", __name__, url_prefix="/api/v1/builds")
-_default_build_service: BuildService | None = None
-
-
-def get_build_service() -> BuildService:
-    if current_app and current_app.config.get("BUILD_SERVICE"):
-        return current_app.config["BUILD_SERVICE"]
-    global _default_build_service
-    if _default_build_service is None:
-        _default_build_service = BuildService()
-    return _default_build_service
+get_build_service = make_service_getter("BUILD_SERVICE", BuildService)
 
 
 @builds_bp.route("/", methods=["GET"])

@@ -4,13 +4,11 @@ import pytest
 from app.scrapers.drivers import (
     BaseWikiDriver,
     WikiGGDriverDE,
-    WikiGGDriverEN,
     WikiGGDriverES,
     WikiGGDriverFR,
     WikiGGDriverIT,
     WikiGGDriverJP,
     WikiGGDriverPL,
-    WikiGGScraperDriver,
     LANGUAGE_DRIVERS,
 )
 from app.scrapers.types import AddonData, CharacterData, ItemData, PerkData
@@ -21,7 +19,6 @@ class TestModularDrivers:
     """Tests for multi-language wiki scraper drivers, URL generation, and HTML translation extractors."""
 
     def test_language_drivers_registry(self) -> None:
-        assert "en" in LANGUAGE_DRIVERS
         assert "pl" in LANGUAGE_DRIVERS
         assert "de" in LANGUAGE_DRIVERS
         assert "es" in LANGUAGE_DRIVERS
@@ -29,7 +26,7 @@ class TestModularDrivers:
         assert "jp" in LANGUAGE_DRIVERS
         assert "fr" in LANGUAGE_DRIVERS
         assert "it" in LANGUAGE_DRIVERS
-        assert LANGUAGE_DRIVERS["en"] is WikiGGDriverEN
+        assert "en" not in LANGUAGE_DRIVERS
         assert LANGUAGE_DRIVERS["pl"] is WikiGGDriverPL
         assert LANGUAGE_DRIVERS["de"] is WikiGGDriverDE
         assert LANGUAGE_DRIVERS["es"] is WikiGGDriverES
@@ -165,18 +162,3 @@ class TestModularDrivers:
         assert "de" in perks[0].translations
         assert perks[0].translations["de"]["name"] == "Abgehärtet"
         assert "Nachdem du ein Totem" in perks[0].translations["de"]["description"]
-
-    def test_wiki_gg_scraper_orchestrator_selective(self) -> None:
-        orchestrator = WikiGGScraperDriver()
-        orchestrator.scrape_characters_dynamically = MagicMock(return_value=[])
-        orchestrator.fetch_page_html = MagicMock(return_value="")
-        orchestrator.parse_perks = MagicMock(return_value=[])
-        orchestrator.parse_wiki_items = MagicMock(return_value=[])
-        orchestrator.parse_wiki_addons = MagicMock(return_value=[])
-        orchestrator.scrape_offerings = MagicMock(return_value=[])
-        orchestrator.scrape_translations = MagicMock()
-
-        orchestrator.scrape_all(languages=["pl", "de"])
-        orchestrator.scrape_translations.assert_called_once_with(
-            [], [], [], [], languages=["pl", "de"]
-        )

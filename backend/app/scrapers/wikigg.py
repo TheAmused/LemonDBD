@@ -234,10 +234,10 @@ class WikiGGScraperDriver:
         return res.text
 
     def fetch_lang_page_html(self, lang: str, page_title: str) -> str:
-        from app.scrapers.drivers import LANGUAGE_DRIVERS, WikiGGDriverEN
+        from app.scrapers.drivers import LANGUAGE_DRIVERS
         lang_key = lang.lower().strip()
         driver_cls = LANGUAGE_DRIVERS.get(lang_key)
-        if driver_cls and driver_cls is not WikiGGDriverEN:
+        if driver_cls:
             driver = driver_cls(base_dir=self.base_dir)
             return driver.fetch_page_html(page_title)
         return self.fetch_page_html(page_title)

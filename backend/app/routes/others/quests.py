@@ -1,18 +1,10 @@
 # backend/app/routes/others/quests.py
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
+from app.core.service_registry import make_service_getter
 from app.services.others.quest_service import QuestService
 
 quests_bp = Blueprint("quests", __name__, url_prefix="/api/v1/quests")
-_default_quest_service: QuestService | None = None
-
-
-def get_quest_service() -> QuestService:
-    if current_app and current_app.config.get("QUEST_SERVICE"):
-        return current_app.config["QUEST_SERVICE"]
-    global _default_quest_service
-    if _default_quest_service is None:
-        _default_quest_service = QuestService()
-    return _default_quest_service
+get_quest_service = make_service_getter("QUEST_SERVICE", QuestService)
 
 
 @quests_bp.route("/", methods=["GET"])

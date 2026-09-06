@@ -10,7 +10,7 @@ from typing import Any
 
 from curl_cffi import requests
 from flask import Blueprint, current_app, g, jsonify, request
-from sqlalchemy import desc, func, or_, select
+from sqlalchemy import case, desc, func, or_, select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
@@ -292,12 +292,21 @@ def admin_get_bug_reports():
     paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)
     reports = db.session.scalars(paginated_stmt).all()
 
+    total_count, pending_count, in_progress_count, resolved_count, rejected_count = db.session.execute(
+        select(
+            func.count(BugReport.id),
+            func.count(case((BugReport.status == "pending", 1))),
+            func.count(case((BugReport.status == "in_progress", 1))),
+            func.count(case((BugReport.status == "resolved", 1))),
+            func.count(case((BugReport.status == "rejected", 1))),
+        )
+    ).one()
     stats = {
-        "total": db.session.scalar(select(func.count(BugReport.id))) or 0,
-        "pending": db.session.scalar(select(func.count(BugReport.id)).where(BugReport.status == "pending")) or 0,
-        "in_progress": db.session.scalar(select(func.count(BugReport.id)).where(BugReport.status == "in_progress")) or 0,
-        "resolved": db.session.scalar(select(func.count(BugReport.id)).where(BugReport.status == "resolved")) or 0,
-        "rejected": db.session.scalar(select(func.count(BugReport.id)).where(BugReport.status == "rejected")) or 0,
+        "total": total_count or 0,
+        "pending": pending_count or 0,
+        "in_progress": in_progress_count or 0,
+        "resolved": resolved_count or 0,
+        "rejected": rejected_count or 0,
     }
 
     return jsonify({

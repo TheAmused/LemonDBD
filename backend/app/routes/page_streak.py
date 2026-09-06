@@ -1,20 +1,11 @@
 # backend/app/routes/page_streak.py
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from app.core.security import login_required
+from app.core.service_registry import make_service_getter
 from app.services.page_streak_service import PageStreakService
 
 page_streak_bp = Blueprint("page_streak", __name__, url_prefix="/api/v1/page-streak")
-_default_service: PageStreakService | None = None
-
-
-def get_page_streak_service() -> PageStreakService:
-    """Dependency injection helper for PageStreakService."""
-    if current_app and current_app.config.get("PAGE_STREAK_SERVICE"):
-        return current_app.config["PAGE_STREAK_SERVICE"]
-    global _default_service
-    if _default_service is None:
-        _default_service = PageStreakService()
-    return _default_service
+get_page_streak_service = make_service_getter("PAGE_STREAK_SERVICE", PageStreakService)
 
 
 @page_streak_bp.route("/roster", methods=["GET"])

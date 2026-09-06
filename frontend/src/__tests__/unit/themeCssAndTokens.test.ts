@@ -72,3 +72,23 @@ describe('Theme CSS & Fog Overlay Rules', () => {
     );
   });
 });
+
+describe('App shell sidebar gutter', () => {
+  const cssPath = path.resolve(__dirname, '../../app/globals.css');
+  const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+  it('reserves sidebar space on .lemon-shell-main with margin-left, not padding-left', () => {
+    // padding-left here would replace (not add to) the left component of a
+    // page's own p-N utility on the same element, leaving content flush
+    // against the sidebar with no gutter while the other three sides keep
+    // theirs -- margin and padding are independent properties, so only
+    // margin-left stacks correctly with a page's own padding.
+    const shellMainBlock = cssContent.match(/\.lemon-shell-main[^{]*\{[^}]*\}/g)?.join('\n') ?? '';
+    assert.match(shellMainBlock, /margin-left:\s*16rem/, '.lemon-shell-main must set margin-left: 16rem');
+    assert.doesNotMatch(
+      shellMainBlock,
+      /padding-left/,
+      '.lemon-shell-main must not use padding-left for sidebar clearance'
+    );
+  });
+});

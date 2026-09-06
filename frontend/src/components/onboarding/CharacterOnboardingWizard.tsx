@@ -107,6 +107,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<OnboardingCharacter | null>(null);
   const [chapterBanners, setChapterBanners] = useState<Record<string, ChapterBanner>>({});
   const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
+  const [view, setView] = useState<'intro' | 'roster'>('intro');
 
   useEffect(() => {
     // Unlike the characters/perks fetch below, /api/v1/chapters is public and
@@ -252,11 +253,41 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     );
   }
 
+  if (view === 'intro') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+        <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
+          <h1 className="text-xl font-black">{t?.introTitle || 'Welcome to LemonDBD'}</h1>
+          <p className="text-sm text-text-secondary">
+            {t?.introBody ||
+              'To tailor the site to your progress in the game, please mark which chapters, characters, and perks you already own.'}
+          </p>
+          <button
+            type="button"
+            onClick={() => setView('roster')}
+            className="w-full rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted cursor-pointer"
+          >
+            {t?.introContinueButton || 'Get Started'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8">
       <div className="mx-auto max-w-5xl space-y-6">
         <header className="text-center space-y-2">
-          <h1 className="text-2xl font-black">{t?.heading || 'Which characters do you already own?'}</h1>
+          <div className="flex items-center justify-between gap-4">
+            <h1 className="text-2xl font-black">{t?.heading || 'Which characters do you already own?'}</h1>
+            <button
+              type="button"
+              onClick={() => setIsSkipModalOpen(true)}
+              className="shrink-0 rounded-xl border-2 border-accent-amber/60 bg-accent-amber/10 px-5 py-2.5 text-sm font-bold text-accent-amber cursor-pointer"
+            >
+              {t?.skipButton || 'Skip'}
+            </button>
+          </div>
           <p className="text-sm text-text-secondary max-w-2xl mx-auto">
             {t?.subheading ||
               'Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.'}
@@ -449,14 +480,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           </button>
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={() => setIsSkipModalOpen(true)}
-        className="fixed bottom-4 right-4 rounded-xl border border-border-color bg-bg-surface px-4 py-2 text-xs font-bold text-text-secondary shadow-lg cursor-pointer"
-      >
-        {t?.skipButton || 'Skip'}
-      </button>
 
       {perksPopupCharacter && (
         <div

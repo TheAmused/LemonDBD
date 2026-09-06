@@ -182,7 +182,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
       {/* Master-Detail Split Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Pane: Ticket Feed */}
-        <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm dark:shadow-2xl space-y-4">
+        <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
           <div className="flex flex-col gap-2.5 pb-3 border-b border-border-color">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
@@ -325,7 +325,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
         {/* Right Pane: Ticket Inspector */}
         <div className="lg:col-span-7 sticky top-6">
           {selectedBug ? (
-            <div className="rounded-3xl border border-border-color bg-bg-surface p-5 sm:p-6 shadow-sm dark:shadow-2xl space-y-6">
+            <div className="rounded-3xl border border-border-color bg-bg-surface p-5 sm:p-6 shadow-sm space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border-color">
                 <div>
                   <div className="flex items-center gap-2 mb-1">

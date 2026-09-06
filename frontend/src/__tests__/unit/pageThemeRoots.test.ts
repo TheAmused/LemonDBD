@@ -27,8 +27,9 @@ describe('Page Root Theme Wrapper Consistency', () => {
       const content = fs.readFileSync(fullPath, 'utf-8');
       assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
       assert.ok(
-        content.includes('dark:bg-slate-950') && content.includes('dark:text-slate-100'),
-        `${relPath} must include dark:bg-slate-950 dark:text-slate-100`
+        (content.includes('dark:bg-slate-950') && content.includes('dark:text-slate-100')) ||
+        (content.includes('bg-bg-primary') && content.includes('text-text-primary')),
+        `${relPath} must include theme classes or semantic tokens`
       );
     });
   }

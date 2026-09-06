@@ -1,52 +1,26 @@
 # backend/app/scrapers/wikigg.py
 from __future__ import annotations
 
-import asyncio
 import html
 import logging
 import re
 import time
-import unicodedata
 from pathlib import Path
-from typing import Any
-from bs4 import BeautifulSoup, Tag
+from bs4 import Tag
 from curl_cffi import requests
-from curl_cffi.requests import AsyncSession
 
-from app.core.json_provider import safe_json_dumps
-from app.scrapers.constants import GENERIC_PERK_CANONICAL_MAP
 from app.scrapers.types import (
     AddonData,
-    ChapterImageData,
     CharacterData,
     ItemData,
-    KillerPowerData,
     OfferingData,
     PerkData,
 )
-from app.scrapers.utils import (
-    extract_slug_from_href,
-    normalize_name_key,
-)
+from app.scrapers.utils import normalize_name_key
 
 logger = logging.getLogger(__name__)
 
 PORTRAIT_PATTERN = re.compile(r"(?:^|/)(K|S)(\d+)[-_]", re.IGNORECASE)
-
-
-def extract_icon_token(src_or_alt: str) -> str:
-    if not src_or_alt:
-        return ""
-    m = re.search(r"(?:Full_)?Icon(?:Perks|Items|Addons|Addon|Powers|Help)_([^./?]+)", src_or_alt, re.IGNORECASE)
-    if m:
-        return re.sub(r"[^a-zA-Z0-9]", "", m.group(1)).lower()
-    m2 = re.search(r"(?:^|/)(K|S)(\d+)[-_]", src_or_alt, re.IGNORECASE)
-    if m2:
-        return f"{m2.group(1).upper()}{int(m2.group(2)):02d}"
-    fn = src_or_alt.split("/")[-1].split(".")[0]
-    fn = re.sub(r"^\d+px-", "", fn, flags=re.IGNORECASE)
-    fn = re.sub(r"^(?:Full_)?(?:Icon(?:Addon|Addons|Items|Perks|Powers)_)?", "", fn, flags=re.IGNORECASE)
-    return re.sub(r"[^a-zA-Z0-9]", "", fn).lower()
 
 
 MONTHS_REGEX_STR = (
@@ -179,7 +153,24 @@ def normalize_rarity_name(raw_rarity: str) -> str:
     return "Common"
 
 
-class WikiGGScraperDriver:
+from app.scrapers.wikigg_addons import WikiGGAddonsMixin
+from app.scrapers.wikigg_chapters import WikiGGChaptersMixin
+from app.scrapers.wikigg_characters import WikiGGCharactersMixin
+from app.scrapers.wikigg_items import WikiGGItemsMixin
+from app.scrapers.wikigg_offerings import WikiGGOfferingsMixin
+from app.scrapers.wikigg_perks import WikiGGPerksMixin
+from app.scrapers.wikigg_realms import WikiGGRealmsMixin
+
+
+class WikiGGScraperDriver(
+    WikiGGCharactersMixin,
+    WikiGGChaptersMixin,
+    WikiGGPerksMixin,
+    WikiGGItemsMixin,
+    WikiGGAddonsMixin,
+    WikiGGOfferingsMixin,
+    WikiGGRealmsMixin,
+):
     BASE_DOMAIN = "https://deadbydaylight.wiki.gg"
     API_URL = "https://deadbydaylight.wiki.gg/api.php"
     IMPERSONATE_BROWSER = "chrome120"

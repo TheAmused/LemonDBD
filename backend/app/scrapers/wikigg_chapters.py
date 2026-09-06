@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup, Tag
 
 from app.scrapers.types import ChapterImageData
 from app.scrapers.utils import extract_high_res_url, sanitize_filename
-from app.scrapers.wikigg import parse_date_and_year
+from app.scrapers.wikigg import logger, parse_date_and_year
 
 
 class WikiGGChaptersMixin:

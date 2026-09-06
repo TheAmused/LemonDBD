@@ -51,6 +51,9 @@ class User(Base):
     onboarding_completed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
+    preferred_language: Mapped[str | None] = mapped_column(
+        String(5), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -91,6 +94,7 @@ class User(Base):
             "is_active": self.is_active,
             "is_verified": self.is_verified,
             "onboarding_completed_at": self.onboarding_completed_at.isoformat() if self.onboarding_completed_at else None,
+            "preferred_language": self.preferred_language,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

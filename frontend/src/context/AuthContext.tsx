@@ -13,6 +13,7 @@ export interface UserProfile {
   is_verified: boolean;
   created_at?: string;
   onboarding_completed_at?: string | null;
+  preferred_language?: string | null;
 }
 
 export interface OwnershipSummary {
@@ -53,6 +54,7 @@ interface AuthContextType {
   updatePerkOwnership: (perkId: number, isUnlocked: boolean) => Promise<boolean>;
   bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) => Promise<boolean>;
   markOnboardingComplete: () => Promise<boolean>;
+  setPreferredLanguage: (language: string) => Promise<boolean>;
 }
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -348,6 +350,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const setPreferredLanguage = async (language: string): Promise<boolean> => {
+    if (!token || !user) return false;
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/users/${user.id}/language`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language }),
+      });
+      if (res.ok) {
+        await refreshUser();
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('Failed to set preferred language:', err);
+      return false;
+    }
+  };
+
   // The handlers above are redefined on every render. Passing them straight
   // into the provider value meant a brand-new object each time, so every
   // `useAuth()` consumer in the tree -- the sidebar, every page -- re-rendered
@@ -369,6 +390,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updatePerkOwnership,
     bulkUpdatePerkOwnership,
     markOnboardingComplete,
+    setPreferredLanguage,
   });
   handlersRef.current = {
     login,
@@ -384,6 +406,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updatePerkOwnership,
     bulkUpdatePerkOwnership,
     markOnboardingComplete,
+    setPreferredLanguage,
   };
 
   const actions = useMemo(
@@ -410,6 +433,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) =>
         handlersRef.current.bulkUpdatePerkOwnership(updates),
       markOnboardingComplete: () => handlersRef.current.markOnboardingComplete(),
+      setPreferredLanguage: (language: string) => handlersRef.current.setPreferredLanguage(language),
     }),
     []
   );

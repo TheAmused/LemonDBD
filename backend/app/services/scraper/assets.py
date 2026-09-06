@@ -20,6 +20,7 @@ from app.services.image_conversion import (
     composite_perk_diamond_frame,
     ensure_format_bytes,
     get_perk_frame_template as _get_perk_frame_template,
+    trim_transparent_padding,
 )
 from app.services.scraper.state import ScraperStateManager
 
@@ -54,6 +55,7 @@ async def download_single_asset(
     relative_path: str,
     timeout: int = 30,
     apply_perk_frame: bool = False,
+    trim_padding: bool = False,
 ) -> None:
     """Asynchronously download and persist an individual asset file."""
     if not url:
@@ -78,14 +80,20 @@ async def download_single_asset(
         try:
             response = await client.get(url, timeout=timeout)
             response.raise_for_status()
+            raw_content = response.content
+            if trim_padding:
+                try:
+                    raw_content = trim_transparent_padding(raw_content)
+                except Exception as trim_err:
+                    logger.warning(f"Could not trim padding for [{url}]: {trim_err}")
             if apply_perk_frame:
                 try:
-                    content = apply_perk_diamond_frame(response.content)
+                    content = apply_perk_diamond_frame(raw_content)
                 except Exception as frame_err:
                     logger.warning(f"Could not frame perk icon [{url}]: {frame_err}")
-                    content = normalise_image_bytes(response.content, relative_path)
+                    content = normalise_image_bytes(raw_content, relative_path)
             else:
-                content = normalise_image_bytes(response.content, relative_path)
+                content = normalise_image_bytes(raw_content, relative_path)
             destination.write_bytes(content)
         except Exception as err:
             logger.error(f"Download failed [{url}]: {err}")
@@ -252,6 +260,7 @@ async def download_all_assets(
                             ch.banner_url,
                             ch.banner_local_path,
                             timeout=request_timeout,
+                            trim_padding=True,
                         )
                     )
 

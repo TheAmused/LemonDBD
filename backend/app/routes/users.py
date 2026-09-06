@@ -365,6 +365,30 @@ def mark_user_onboarding_complete(user_id: int):
     }), 200
 
 
+@users_bp.route("/users/<int:user_id>/language", methods=["POST"])
+@login_required
+def set_user_preferred_language(user_id: int):
+    """Set the user's preferred site language (onboarding wizard's language step)."""
+    curr = g.current_user
+    if curr.id != user_id and curr.role != "admin":
+        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+
+    data = request.get_json(silent=True) or {}
+    language = data.get("language")
+    if not isinstance(language, str) or not language:
+        return jsonify({"error": "language is required.", "status": 400}), 400
+
+    user, err = user_service.set_preferred_language(user_id, language)
+    if err:
+        status = 404 if err == "User not found." else 400
+        return jsonify({"error": err, "status": status}), status
+
+    return jsonify({
+        "status": "success",
+        "user": UserResponse.model_validate(user).model_dump(),
+    }), 200
+
+
 @users_bp.route("/users/<int:user_id>/perks", methods=["GET"])
 @login_required
 def get_user_perks(user_id: int):

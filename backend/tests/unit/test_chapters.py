@@ -3,6 +3,8 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models import Chapter
+from app.scrapers.types import ChapterImageData
+from app.services.scraper.db_sync import sync_chapters_to_db
 
 
 def test_chapter_upsert_and_to_dict(db_session: Session) -> None:
@@ -28,6 +30,21 @@ def test_chapter_name_is_unique(db_session: Session) -> None:
     from sqlalchemy.exc import IntegrityError
     with pytest.raises(IntegrityError):
         db_session.flush()
+
+
+def test_sync_chapters_to_db_updates_existing_row_on_case_and_whitespace_drift(db_session: Session) -> None:
+    """A re-scrape whose wiki page text drifted in case/whitespace must
+    update the existing Chapter row, not silently create a duplicate."""
+    sync_chapters_to_db([
+        ChapterImageData(name="All-Kill", banner_url="https://example.com/a.png", banner_local_path="chapters/all_kill.png"),
+    ])
+    sync_chapters_to_db([
+        ChapterImageData(name="  all-kill  ", banner_url="https://example.com/b.png", banner_local_path="chapters/all_kill.png"),
+    ])
+
+    rows = db_session.scalars(select(Chapter)).all()
+    assert len(rows) == 1
+    assert rows[0].banner_url == "https://example.com/b.png"
 
 
 def test_list_chapters_route(client: FlaskClient, db_session: Session) -> None:

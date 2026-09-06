@@ -183,6 +183,7 @@ export interface PerkDictionary {
     sortFields?: string;
     sortOrderLabel?: string;
     category?: string;
+    perks?: string;
     [key: string]: string | undefined;
   };
   stats?: {
@@ -212,6 +213,9 @@ export interface PerkDictionary {
   characterDetail?: {
     characterOverview?: string;
     loading?: string;
+    togglePerkOwnershipHelp?: string;
+    noTeachablePerksForCharacter?: string;
+    noPerks?: string;
     [key: string]: string | undefined;
   };
   [key: string]: any;

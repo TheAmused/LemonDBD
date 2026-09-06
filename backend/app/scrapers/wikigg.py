@@ -27,7 +27,6 @@ from app.scrapers.types import (
     RealmImageData,
 )
 from app.scrapers.utils import (
-    clean_description_text,
     extract_high_res_url,
     extract_slug_from_href,
     normalize_name_key,

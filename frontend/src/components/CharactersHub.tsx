@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
+import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson, invalidate } from '@/services/dataCache';
@@ -31,7 +33,6 @@ import {
   AddonItem,
   EquipmentItem,
   getCharacterSlug,
-  getAssetUrl,
   getAvatarUrl as resolveAvatarUrl,
 } from '@/components/character-detail/types';
 import { RoleCategory, PerkDictionary } from '@/types/perks';
@@ -145,7 +146,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         fetch(`${backendBase}/api/v1/users/${user.id}/characters`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch(`${backendBase}/api/v1/users/${user.id}/perks`, {
+        fetch(`${backendBase}/api/v1/users/${user.id}/perks?lang=${locale}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -385,7 +386,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       ) : (
         <section
           aria-label={dict?.characterDetail?.characterOverview}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 sm:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
             const isSurvivor = char.category?.toLowerCase() === 'survivor';
@@ -438,22 +439,6 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     position="top-2 left-2"
                   />
                 )}
-                {ownershipMode && !isOwned && (
-                  <div
-                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-surface border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md"
-                    title={dict?.modal?.unownedPerk}
-                  >
-                    <Lock className="h-3.5 w-3.5" />
-                  </div>
-                )}
-                {ownershipMode && isOwned && (
-                  <div
-                    className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-xs"
-                    title={dict?.filters?.ownedOnly}
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                  </div>
-                )}
 
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
                   <img
@@ -475,20 +460,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       }
                     }}
                   />
-                  {ownershipMode && showLockedOverlay && (
-                    <img
-                      src={avatarSrc}
-                      alt=""
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
-                      style={{ clipPath: hasPartialPerks ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
+                  {ownershipMode && (
+                    <CharacterOwnershipOverlay
+                      isOwned={isOwned}
+                      hasPartialPerks={hasPartialPerks}
+                      avatarSrc={avatarSrc}
+                      lockedTitle={dict?.modal?.unownedPerk}
+                      ownedTitle={dict?.filters?.ownedOnly}
                     />
-                  )}
-                  {ownershipMode && showLockedOverlay && !hasPartialPerks && (
-                    <div className="absolute inset-0 bg-slate-950/50" />
-                  )}
-                  {ownershipMode && hasPartialPerks && (
-                    <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                 </div>
@@ -517,86 +496,16 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </section>
       )}
 
-      {perksPopupCharacter && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="perks-popup-title"
-        >
-          <div
-            onClick={() => setPerksPopupCharacter(null)}
-            className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
-          />
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-border-color bg-bg-surface shadow-2xl text-text-primary transition-colors"
-          >
-            <div className="flex items-center justify-between border-b border-border-color p-5">
-              <h3 id="perks-popup-title" className="text-base font-bold text-text-primary">
-                {perksPopupCharacter.name} {dict?.filters?.perks}
-              </h3>
-              <button
-                type="button"
-                onClick={() => setPerksPopupCharacter(null)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-bg-elevated text-text-muted hover:text-text-primary transition-colors cursor-pointer"
-                aria-label={dict?.modal?.close}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            {dict?.characterDetail?.togglePerkOwnershipHelp && (
-              <p className="px-5 pt-4 text-[11px] text-text-muted">
-                {dict.characterDetail.togglePerkOwnershipHelp}
-              </p>
-            )}
-            <div className="p-5 space-y-2">
-              {allPerks
-                .filter((p) => p.character_id === perksPopupCharacter.id)
-                .map((perk) => {
-                  const isUnlocked = perkUnlockDraft[perk.perk_id] ?? true;
-                  return (
-                    <button
-                      key={perk.perk_id}
-                      type="button"
-                      onClick={() => handleTogglePerkUnlocked(perk.perk_id)}
-                      className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-xs font-semibold transition-all hover:scale-[1.01] active:scale-95 ${
-                        isUnlocked
-                          ? 'border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
-                          : 'border-border-color bg-bg-primary text-text-muted hover:border-accent-amber/50'
-                      }`}
-                    >
-                      <div
-                        className={`h-14 w-14 shrink-0 rounded-lg border p-1 flex items-center justify-center bg-slate-900 ${
-                          isUnlocked ? 'border-emerald-500/30' : 'border-border-color'
-                        }`}
-                      >
-                        <img
-                          src={getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url)}
-                          alt={perk.name}
-                          className={`h-full w-full object-contain ${
-                            isUnlocked ? '' : 'grayscale opacity-50'
-                          }`}
-                        />
-                      </div>
-                      <span className="flex-1 text-text-primary">{perk.name}</span>
-                      {isUnlocked ? (
-                        <Check className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                      ) : (
-                        <Lock className="h-4 w-4 shrink-0 text-text-muted" />
-                      )}
-                    </button>
-                  );
-                })}
-              {allPerks.filter((p) => p.character_id === perksPopupCharacter.id).length === 0 && (
-                <p className="text-xs text-text-muted italic">
-                  {dict?.characterDetail?.noTeachablePerksForCharacter || dict?.characterDetail?.noPerks}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <PerksTogglePopup
+        character={perksPopupCharacter}
+        perks={allPerks}
+        isPerkUnlocked={(perkId) => perkUnlockDraft[perkId] ?? true}
+        onTogglePerk={handleTogglePerkUnlocked}
+        onClose={() => setPerksPopupCharacter(null)}
+        backendBase={backendBase}
+        perksLabel={dict?.filters?.perks}
+        dict={dict}
+      />
 
       {ownershipMode && (
         <div

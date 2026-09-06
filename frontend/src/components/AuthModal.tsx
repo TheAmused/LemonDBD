@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter, usePathname } from 'next/navigation';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAltcha } from '@/hooks/useAltcha';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
@@ -43,6 +44,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   dict,
 }) => {
   const { login, register, forgotPassword } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
   const {
     altchaPayload,
     isVerifying: isAltchaVerifying,
@@ -214,7 +217,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <EmailVerificationForm
               email={notice.email}
-              onVerified={onClose}
+              onVerified={(verifiedUser) => {
+                onClose();
+                if (verifiedUser && !verifiedUser.onboarding_completed_at) {
+                  const locale = pathname?.split('/')[1] || 'en';
+                  router.push(`/${locale}/welcome`);
+                }
+              }}
               submitLabel={
                 notice.type === 'register-success'
                   ? dict?.user?.verifyAndContinue

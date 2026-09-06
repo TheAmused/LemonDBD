@@ -24,6 +24,7 @@ import quests from './quests';
 import killerCalculator from './killerCalculator';
 import customPerks from './customPerks';
 import changelog from './changelog';
+import onboarding from './onboarding';
 
 const ja = {
   app,
@@ -51,6 +52,7 @@ const ja = {
   killerCalculator,
   customPerks,
   changelog,
+  onboarding,
 };
 
 export default ja;

@@ -4,6 +4,7 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.core.security import hash_password
 from app.models import User, UserShowcase
+from app.models.base import utcnow
 
 
 def fetch_user_by_id(user_id: int) -> User | None:
@@ -40,6 +41,34 @@ def modify_user_profile(
             return None, "New password must be at least 6 characters long."
         user.password_hash = hash_password(new_password)
 
+    db.session.commit()
+    return user, None
+
+
+def mark_onboarding_complete(user_id: int) -> tuple[User | None, str | None]:
+    """Stamp the character-ownership onboarding wizard as done for a user."""
+    user = db.session.get(User, user_id)
+    if not user:
+        return None, "User not found."
+
+    user.onboarding_completed_at = utcnow()
+    db.session.commit()
+    return user, None
+
+
+def set_preferred_language(user_id: int, language: str) -> tuple[User | None, str | None]:
+    """Set a user's preferred site language, chosen from the onboarding
+    wizard's language step (or any future settings UI)."""
+    from app.services.translations.translation_service import SUPPORTED_LOCALES
+
+    if language not in SUPPORTED_LOCALES:
+        return None, f"Unsupported language '{language}'."
+
+    user = db.session.get(User, user_id)
+    if not user:
+        return None, "User not found."
+
+    user.preferred_language = language
     db.session.commit()
     return user, None
 

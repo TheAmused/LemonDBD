@@ -94,6 +94,7 @@ frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 
 backend/app/static/avatars/
+backend/app/static/chapters/
 backend/app/static/icons/
 backend/app/static/maps/
 backend/app/static/realms/

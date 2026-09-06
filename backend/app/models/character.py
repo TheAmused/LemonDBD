@@ -45,8 +45,14 @@ class Character(Base):
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
 
+    # Default (lazy) loading: every real reader of `.perks` already opts in
+    # via `.options(joinedload(Character.perks))` at its own query site, so
+    # eager-loading it on every Character fetch elsewhere (ownership summary,
+    # admin lists, scrapers, translation sync) was pure cost. Cascade delete
+    # still works -- it only needs the collection at flush time, regardless
+    # of the read-time loading strategy.
     perks: Mapped[list["Perk"]] = relationship(
-        back_populates="character", cascade="all, delete-orphan", lazy="selectin"
+        back_populates="character", cascade="all, delete-orphan"
     )
 
     __mapper_args__ = {

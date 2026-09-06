@@ -98,20 +98,29 @@
  * ---------------------------------------------------------------------------
  */
 @media (min-width: 1024px) {
-  .lemon-shell-main {
-    padding-left: 16rem;
+  /* margin-left, not padding-left: this only needs to reserve horizontal
+     space for the fixed sidebar. Each page's own Tailwind p-N utilities on
+     this same element already provide that page's content gutter -- as a
+     padding-left, this rule would replace (not add to) that utility's left
+     component, leaving content flush against the sidebar with no gutter
+     while the other three sides keep theirs. margin and padding are
+     independent box-model properties, so they stack instead of competing.
+     Both classes share the same expanded-state value (the sidebar's width);
+     written as one rule rather than two identical ones, since two adjacent
+     rules with identical declarations got silently dropped by the CSS
+     minifier's rule-merging pass in testing -- this sidesteps that rather
+     than relying on the minifier to merge them back correctly. */
+  .lemon-shell-main,
+  .lemon-shell-main--flush {
+    margin-left: 16rem;
   }
 
   :root[data-sidebar='collapsed'] .lemon-shell-main {
-    padding-left: 5rem;
-  }
-
-  .lemon-shell-main--flush {
-    padding-left: 16rem;
+    margin-left: 5rem;
   }
 
   :root[data-sidebar='collapsed'] .lemon-shell-main--flush {
-    padding-left: 1.5rem;
+    margin-left: 1.5rem;
   }
 
   .lemon-shell-aside {

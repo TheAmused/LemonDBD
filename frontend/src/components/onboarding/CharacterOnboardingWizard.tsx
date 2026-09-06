@@ -145,6 +145,15 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   const chapterGroups = useMemo(() => groupCharactersByChapter(characters), [characters]);
 
+  /** The legend's example swatches show a real portrait rather than a
+   * placeholder icon, so it needs some loaded character to render -- Ace
+   * Visconti by convention, falling back to whichever character loaded
+   * first if he isn't present in a future dataset. */
+  const legendCharacter = useMemo(
+    () => characters.find((c) => c.name === 'Ace Visconti') ?? characters[0],
+    [characters]
+  );
+
   /** Whole-character toggle cascades to that character's teachable perks in
    * the draft too, mirroring the backend's own cascade in
    * mutate_character_ownership -- so a chapter-level "I own this" click
@@ -227,20 +236,56 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             {t?.legendTitle || 'How this works'}
           </h2>
           <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400">
-              <Check className="h-4 w-4" />
+            <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg border border-emerald-500/40 bg-emerald-500/20">
+              {legendCharacter && (
+                <img
+                  src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover object-top"
+                />
+              )}
+              <CharacterOwnershipOverlay
+                isOwned
+                hasPartialPerks={false}
+                avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+              />
             </span>
             {t?.legendOwned || 'Owned - fully available'}
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-bg-elevated border border-accent-amber text-accent-amber">
-              <Lock className="h-4 w-4" />
+            <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg border border-accent-amber bg-bg-elevated">
+              {legendCharacter && (
+                <img
+                  src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover object-top"
+                />
+              )}
+              <CharacterOwnershipOverlay
+                isOwned={false}
+                hasPartialPerks={false}
+                avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+              />
             </span>
             {t?.legendLocked || 'Locked - not available yet'}
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-bg-elevated border border-accent-amber text-accent-amber overflow-hidden">
-              <CharacterOwnershipOverlay isOwned={false} hasPartialPerks avatarSrc="" />
+            <span className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg border border-accent-amber bg-bg-elevated">
+              {legendCharacter && (
+                <img
+                  src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover object-top"
+                />
+              )}
+              <CharacterOwnershipOverlay
+                isOwned={false}
+                hasPartialPerks
+                avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+              />
             </span>
             {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
           </div>

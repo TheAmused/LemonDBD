@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { Locale } from '@/i18n/config';
 import {
   Trophy,
@@ -101,18 +101,15 @@ export default function QuestsPage({ params }: QuestsPageProps) {
   const totalQuestsCompleted = quests.filter((q) => q.is_completed).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="quests"
-        onSelectCategory={handleSelectCategory}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-5 sm:p-7 lg:p-9 lemon-shell-main"
-        id="main-quests-content"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="quests"
+      onSelectCategory={handleSelectCategory}
+      padding="spacious"
+      mainId="main-quests-content"
+      mainClassName="overflow-y-auto"
+    >
         {/* ── Atmospheric Hero Header ── */}
         <div className="mb-7 flex flex-col gap-4">
           <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-gradient-to-br from-amber-50/80 via-white to-slate-100 dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-sm dark:shadow-2xl">
@@ -359,7 +356,6 @@ export default function QuestsPage({ params }: QuestsPageProps) {
             })
           )}
         </div>
-      </main>
-    </div>
+    </PageShell>
   );
 }

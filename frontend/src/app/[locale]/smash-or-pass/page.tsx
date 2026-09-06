@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { SmashOrPassHub } from '@/components/smash-or-pass/SmashOrPassHub';
 import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
@@ -28,26 +28,21 @@ export default function SmashOrPassPage() {
   useDocumentTitle(dict?.app?.smashOrPassPageTitle || 'LemonDBD - Smash or Pass | Dead by Daylight Romance');
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict || ({} as Dictionary)}
-        activeCategory="smash-or-pass"
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
-      >
-        <React.Suspense fallback={<SmashHubSkeleton />}>
-          {dict ? (
-            <SmashOrPassHub dict={dict} locale={locale} />
-          ) : (
-            <SmashHubSkeleton />
-          )}
-        </React.Suspense>
-        {dict && <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />}
-      </main>
-    </div>
+    <PageShell
+      locale={locale}
+      dict={dict || ({} as Dictionary)}
+      activeCategory="smash-or-pass"
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      mainClassName="overflow-y-auto"
+    >
+      <React.Suspense fallback={<SmashHubSkeleton />}>
+        {dict ? (
+          <SmashOrPassHub dict={dict} locale={locale} />
+        ) : (
+          <SmashHubSkeleton />
+        )}
+      </React.Suspense>
+      {dict && <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />}
+    </PageShell>
   );
 }

@@ -1,6 +1,9 @@
 // frontend/src/locales/de/onboarding.ts
 export default {
   pageTitle: "LemonDBD - Welcome, set up your roster",
+  introTitle: "Welcome to LemonDBD",
+  introBody: "To tailor the site to your progress in the game, please mark which chapters, characters, and perks you already own.",
+  introContinueButton: "Get Started",
   heading: "Which characters do you already own?",
   subheading: "Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.",
   legendTitle: "How this works",

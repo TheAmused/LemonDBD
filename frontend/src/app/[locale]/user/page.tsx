@@ -10,7 +10,7 @@ import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { UserAvatar } from '@/components/UserAvatar';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
@@ -206,14 +206,12 @@ export default function UserProfilePage() {
   const hasCustomAvatar = Boolean(user.avatar_url && user.avatar_url !== 'default_avatar');
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={currentLocale}
-        dict={dict}
-        activeCategory="user"
-      />
-
-      <main className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main">
+    <PageShell
+      locale={currentLocale}
+      dict={dict}
+      activeCategory="user"
+      mainClassName="overflow-y-auto"
+    >
         <div className="max-w-7xl 2xl:max-w-[1600px] w-full mx-auto space-y-6 sm:space-y-8">
           {/* Hidden avatar file input */}
           <input
@@ -475,7 +473,6 @@ export default function UserProfilePage() {
             </Suspense>
           )}
         </div>
-      </main>
 
       <BugReportModal
         isOpen={bugModalOpen}
@@ -485,6 +482,6 @@ export default function UserProfilePage() {
         }}
         dict={dict}
       />
-    </div>
+    </PageShell>
   );
 }

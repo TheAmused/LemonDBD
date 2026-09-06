@@ -261,9 +261,11 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
   it('Randomizer page and loading skeletons do not have outer p-4 sm:p-6 lg:p-8 padding', () => {
     const pagePath = path.resolve(__dirname, '../../app/[locale]/randomizer/page.tsx');
     const loadingPath = path.resolve(__dirname, '../../app/[locale]/randomizer/loading.tsx');
+    const shellPath = path.resolve(__dirname, '../../components/layout/PageShell.tsx');
 
     const pageContent = fs.readFileSync(pagePath, 'utf-8');
     const loadingContent = fs.readFileSync(loadingPath, 'utf-8');
+    const shellContent = fs.readFileSync(shellPath, 'utf-8');
 
     assert.ok(
       !pageContent.includes('p-4 sm:p-6 lg:p-8'),
@@ -273,11 +275,17 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
       !loadingContent.includes('p-4 sm:p-6 lg:p-8'),
       'Randomizer loading.tsx should not contain outer p-4 sm:p-6 lg:p-8 padding'
     );
+    // RandomizerContent renders through the shared <PageShell>, which owns
+    // the flush/padded shell classes centrally -- verify the page opts into
+    // the flush variant, and that the shared shell defines flush as having
+    // no padding classes at all.
     assert.ok(
-      pageContent.includes(
-        'className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 flex flex-col lemon-shell-main--flush"'
-      ),
-      'RandomizerContent main container should be flush without outer gutter padding'
+      pageContent.includes('padding="flush"'),
+      'RandomizerContent must render its shell via <PageShell padding="flush">'
+    );
+    assert.ok(
+      /flush:\s*''/.test(shellContent),
+      "PageShell's flush padding variant must resolve to no padding classes"
     );
     assert.ok(
       pageContent.includes(

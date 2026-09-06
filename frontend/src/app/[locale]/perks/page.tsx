@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
@@ -236,22 +236,20 @@ function PerksContent() {
   const totalVaultPerks = allPerksForStats.length || totalResults;
 
   return (
-    <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="perks"
-        onSelectCategory={handleSelectCategoryFromSidebar}
-        onOpenQuests={() => setIsQuestsOpen(true)}
-        totalPerksCount={totalVaultPerks}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
-      />
-
-      <main
-        className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden transition-[padding] duration-300 p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="perks"
+      onSelectCategory={handleSelectCategoryFromSidebar}
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      totalPerksCount={totalVaultPerks}
+      survivorCount={survivorCount}
+      killerCount={killerCount}
+      characterCount={characterCount}
+      padding="tight"
+      outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      mainClassName="flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
+    >
         <div className="shrink-0">
           <PerkFilters
             search={search}
@@ -368,8 +366,7 @@ function PerksContent() {
             dict={dict}
           />
         )}
-      </main>
-    </div>
+    </PageShell>
   );
 }
 

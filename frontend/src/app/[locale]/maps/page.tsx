@@ -6,7 +6,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
@@ -99,18 +99,15 @@ function MapsPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="maps"
-        onSelectCategory={handleSelectCategory}
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main
-        className="flex-1 w-full min-h-screen transition-[padding] duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lemon-shell-main"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="maps"
+      onSelectCategory={handleSelectCategory}
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      customPadding="p-4 sm:p-6 lg:p-7"
+      mainClassName="min-h-screen flex flex-col gap-4"
+    >
         <div className="flex justify-center">
           <ToggleSwitch
             value={searchMode}
@@ -134,8 +131,7 @@ function MapsPageInner() {
         />
 
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-      </main>
-    </div>
+    </PageShell>
   );
 }
 

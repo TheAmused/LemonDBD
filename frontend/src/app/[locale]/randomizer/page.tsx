@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
 import { Locale } from '@/i18n/config';
@@ -74,21 +74,18 @@ function RandomizerContent() {
   }, [charactersResponse]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="generator"
-        onOpenQuests={() => setIsQuestsOpen(true)}
-        totalPerksCount={allPerks.length}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
-      />
-
-      <main
-        className="flex-1 w-full min-h-screen overflow-y-auto transition-[padding] duration-300 flex flex-col lemon-shell-main--flush"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="generator"
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      totalPerksCount={allPerks.length}
+      survivorCount={survivorCount}
+      killerCount={killerCount}
+      characterCount={characterCount}
+      padding="flush"
+      mainClassName="min-h-screen overflow-y-auto flex flex-col"
+    >
         {perksLoading ? (
           <RandomizerPageSkeleton dict={dict} />
         ) : (
@@ -107,8 +104,7 @@ function RandomizerContent() {
             dict={dict}
           />
         )}
-      </main>
-    </div>
+    </PageShell>
   );
 }
 

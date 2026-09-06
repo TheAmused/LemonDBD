@@ -188,8 +188,11 @@ def get_roster_leaderboard(slug: str):
     limit = request.args.get("limit", default=100, type=int)
 
     try:
-        roster_obj = db.session.scalar(select(Roster).where(Roster.slug == slug))
-        if not roster_obj:
+        # Column-only select: this is purely an existence check, and selecting
+        # the full ORM entity here would pull in the (unused) `entities`
+        # relationship for no reason.
+        roster_id = db.session.scalar(select(Roster.id).where(Roster.slug == slug))
+        if roster_id is None:
             return jsonify({"error": f"Roster '{slug}' not found"}), 404
 
         leaderboard = smash_service.get_leaderboard(

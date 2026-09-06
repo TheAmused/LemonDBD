@@ -105,7 +105,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label={ariaLabel}
-          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-border-color bg-bg-surface px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-bg-elevated hover:border-accent-amber/40 shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-amber-500/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
         >
           <div
             className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-border-color p-1 ${
@@ -144,11 +144,11 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               {coordinateLabel && (
-                <span className="shrink-0 font-mono text-[10px] font-black text-accent-amber">
+                <span className="shrink-0 font-mono text-[10px] font-black text-amber-700 dark:text-amber-400/90">
                   {coordinateLabel}
                 </span>
               )}
-              <p className="truncate text-sm sm:text-base font-bold text-text-primary">{perk.name}</p>
+              <p className="truncate text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">{perk.name}</p>
             </div>
             <p className="truncate text-xs text-text-secondary">
               {isGeneral ? generalLabel : perk.character}

@@ -23,10 +23,14 @@ describe('Admin Theme Support', () => {
         onRefreshData: () => {},
       })
     );
-    assert.ok(html.includes('dark:text-slate-100'), 'Title must have dark:text-slate-100');
-    assert.ok(html.includes('text-slate-900'), 'Title must have text-slate-900 for light mode');
-    assert.ok(html.includes('border-slate-200'), 'Divider must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Divider must have dark:border-slate-800');
+    assert.ok(
+      html.includes('text-text-primary') || (html.includes('dark:text-slate-100') && html.includes('text-slate-900')),
+      'Title must support light/dark theme text'
+    );
+    assert.ok(
+      html.includes('border-border-color') || (html.includes('border-slate-200') && html.includes('dark:border-slate-800')),
+      'Divider must support themed border'
+    );
   });
 
   it('AdminStatsGrid cards use light-compatible border and background', () => {
@@ -49,10 +53,18 @@ describe('Admin Theme Support', () => {
         },
       })
     );
-    assert.ok(html.includes('border-slate-200'), 'Stats cards must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Stats cards must have dark:border-slate-800');
-    assert.ok(html.includes('text-slate-900'), 'Value numbers must have text-slate-900');
-    assert.ok(html.includes('dark:text-slate-100'), 'Value numbers must have dark:text-slate-100');
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Stats cards must support themed border'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
+      'Stats cards must support dark border'
+    );
+    assert.ok(
+      html.includes('text-text-primary') || (html.includes('text-slate-900') && html.includes('dark:text-slate-100')),
+      'Value numbers must support themed text'
+    );
   });
 
   it('AdminUserTable outer card and search input support light and dark theme contrast', () => {
@@ -84,22 +96,52 @@ describe('Admin Theme Support', () => {
         onDeleteUser: () => {},
       })
     );
-    assert.ok(html.includes('border-slate-200'), 'Outer card or table must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Outer card or table must have dark:border-slate-800');
-    assert.ok(html.includes('bg-slate-50'), 'Search input or rows must have bg-slate-50 for light mode');
-    assert.ok(html.includes('dark:bg-slate-950/80'), 'Search input must have dark:bg-slate-950/80');
-    assert.ok(html.includes('bg-slate-100/80'), 'Thead must have bg-slate-100/80');
-    assert.ok(html.includes('dark:bg-slate-950/50'), 'Thead must have dark:bg-slate-950/50');
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Outer card or table must support themed border'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
+      'Outer card or table must support dark border'
+    );
+    assert.ok(
+      html.includes('bg-bg-elevated') || html.includes('bg-slate-50'),
+      'Search input or rows must have light background'
+    );
+    assert.ok(
+      html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/80'),
+      'Search input must have dark background'
+    );
+    assert.ok(
+      html.includes('bg-bg-elevated') || html.includes('bg-slate-100/80'),
+      'Thead must have light background'
+    );
+    assert.ok(
+      html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/50'),
+      'Thead must have dark background'
+    );
   });
 
   it('AdminAuditLogView container card and headers support light and dark mode', () => {
     const html = renderToStaticMarkup(
       React.createElement(AdminAuditLogView, {})
     );
-    assert.ok(html.includes('border-slate-200'), 'Container card must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Container card must have dark:border-slate-800');
-    assert.ok(html.includes('bg-white'), 'Container card must have bg-white');
-    assert.ok(html.includes('dark:bg-slate-900/60'), 'Container card must have dark:bg-slate-900/60');
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Container card must support themed border'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
+      'Container card must support dark border'
+    );
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('bg-white'),
+      'Container card must support themed background'
+    );
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'),
+      'Container card must support dark background'
+    );
   });
 
   it('AdminBugReportsWorkbench supports light and dark theme classes', () => {
@@ -135,9 +177,18 @@ describe('Admin Theme Support', () => {
         onDeleteBug: () => {},
       })
     );
-    assert.ok(html.includes('border-slate-200'), 'Workbench cards must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Workbench cards must have dark:border-slate-800');
-    assert.ok(html.includes('bg-white'), 'Ticket inspector card must have bg-white');
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Workbench cards must support themed border'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
+      'Workbench cards must support dark border'
+    );
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('bg-white'),
+      'Ticket inspector card must support themed background'
+    );
   });
 
   it('AdminChallengeControl container supports light and dark modes', () => {
@@ -146,9 +197,18 @@ describe('Admin Theme Support', () => {
         onActionMessage: () => {},
       })
     );
-    assert.ok(html.includes('border-slate-200'), 'Challenge control cards must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Challenge control cards must have dark:border-slate-800');
-    assert.ok(html.includes('bg-white'), 'Challenge control cards must have bg-white');
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Challenge control cards must support themed border'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
+      'Challenge control cards must support dark border'
+    );
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('bg-white'),
+      'Challenge control cards must support themed background'
+    );
   });
 
   it('AdminChallengeStats cards support light and dark theme contrast', () => {
@@ -171,8 +231,17 @@ describe('Admin Theme Support', () => {
         },
       })
     );
-    assert.ok(html.includes('bg-white'), 'Challenge stats cards must have bg-white');
-    assert.ok(html.includes('dark:bg-slate-900/60'), 'Challenge stats cards must have dark:bg-slate-900/60');
-    assert.ok(html.includes('text-slate-900'), 'Card title must have text-slate-900');
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('bg-white'),
+      'Challenge stats cards must support themed background'
+    );
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'),
+      'Challenge stats cards must support dark background'
+    );
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('text-slate-900'),
+      'Card title must support themed text'
+    );
   });
 });

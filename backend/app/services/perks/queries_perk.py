@@ -1,6 +1,7 @@
 # backend/app/services/perks/queries_perk.py
 import logging
 import math
+import re
 from typing import Any
 from sqlalchemy import and_, func, or_, select
 from sqlalchemy.orm import joinedload
@@ -11,6 +12,41 @@ from app.models import Character, Perk, UserCharacterOwnership, UserPerkOwnershi
 from app.services.perks.utils import normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
+
+
+def _is_postgres() -> bool:
+    return db.engine.dialect.name in ("postgresql", "postgres")
+
+
+def _perk_search_prefilter(query: str, lang: str | None):
+    """Postgres-only accent/punctuation-insensitive `WHERE` condition, built to
+    be a strict superset of what the existing Python-side `_text_matches` +
+    `normalize_search_key` pass keeps -- it narrows candidates fetched from
+    the DB, but `_text_matches` still runs afterwards as the exact filter, so
+    this can only ever exclude non-matches, never a real match. Returns None
+    when there's nothing meaningful to filter by (empty query) or the active
+    dialect can't run `unaccent()`/`regexp_replace()` (e.g. the SQLite the
+    unit test suite uses), in which case the caller falls back to fetching
+    every row, matching prior behavior exactly.
+    """
+    if not _is_postgres():
+        return None
+    norm_query = re.sub(r"[^a-z0-9]", "", query.lower())
+    if not norm_query:
+        return None
+    pattern = f"%{norm_query}%"
+
+    def normalized(col):
+        return func.regexp_replace(func.unaccent(func.lower(col)), r"[^a-zA-Z0-9]", "", "g")
+
+    conditions = [
+        normalized(Perk.name).ilike(pattern),
+        normalized(func.coalesce(Perk.alternate_name, "")).ilike(pattern),
+    ]
+    if lang:
+        localized_name = Perk.translations[lang]["name"].astext
+        conditions.append(normalized(func.coalesce(localized_name, "")).ilike(pattern))
+    return or_(*conditions)
 
 
 def _text_matches(haystack: str, query_lower: str, norm_query: str) -> bool:
@@ -420,6 +456,10 @@ def fetch_perk_suggestions(
         stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
         if category and category.lower() != "all":
             stmt = stmt.where(func.lower(Perk.category) == category.lower())
+
+        prefilter = _perk_search_prefilter(query, lang) if query and query.strip() else None
+        if prefilter is not None:
+            stmt = stmt.where(prefilter)
 
         candidates = db.session.scalars(stmt).unique().all()
 

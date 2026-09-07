@@ -18,6 +18,11 @@ from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugRepo
 from app.models.minigames import GeneratorSetting, GuesserStat, GeneratorDrawnPerk, DraftSession, ScraperSetting
 from app.models.admin import ChallengeModeSetting, AdminAuditLog
 from app.models.changelog import ChangelogPost
+from app.models.gauntlet import GauntletRun, GauntletMatchLog
+from app.models.chaos import ChaosRun, ChaosMatchLog
+from app.models.history import HistoryRun, HistoryMatchLog
+from app.models.page_streak import PageStreakRun, PageStreakPageLog
+from app.services.db.run_family_export import export_run_family, import_run_family
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 
 logger = logging.getLogger(__name__)
@@ -47,6 +52,10 @@ SUPPORTED_EXPORT_TARGETS = [
     "user_showcases",
     "admin_audit_logs",
     "changelog_posts",
+    "gauntlet_runs",
+    "chaos_runs",
+    "history_runs",
+    "page_streak_runs",
 ]
 
 
@@ -320,6 +329,10 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("user_showcases", UserShowcase),
     ("admin_audit_logs", AdminAuditLog),
     ("changelog_posts", ChangelogPost),
+    ("gauntlet_runs", GauntletRun),
+    ("chaos_runs", ChaosRun),
+    ("history_runs", HistoryRun),
+    ("page_streak_runs", PageStreakRun),
 ]
 
 
@@ -489,6 +502,15 @@ class DatabaseExportImportService:
             showcases = [sc for sc in db.session.scalars(select(UserShowcase)).all() if sc.user]
             export_data["user_showcases"] = [_serialize_user_showcase(sc) for sc in showcases]
             counts["user_showcases"] = len(export_data["user_showcases"])
+
+        if "gauntlet_runs" in target_set:
+            export_run_family(export_data, counts, "gauntlet_runs", GauntletRun, GauntletMatchLog, "match_logs")
+        if "chaos_runs" in target_set:
+            export_run_family(export_data, counts, "chaos_runs", ChaosRun, ChaosMatchLog, "match_logs")
+        if "history_runs" in target_set:
+            export_run_family(export_data, counts, "history_runs", HistoryRun, HistoryMatchLog, "match_logs")
+        if "page_streak_runs" in target_set:
+            export_run_family(export_data, counts, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs")
 
         return {
             "version": "1.0",
@@ -851,6 +873,23 @@ class DatabaseExportImportService:
                     created += 1
                 db.session.flush()
                 summary["changelog_posts"] = {"created": created, "updated": 0}
+
+            import_run_family(
+                data, target_keys, summary, "gauntlet_runs", GauntletRun, GauntletMatchLog, "match_logs",
+                run_natural_keys=["role", "game_mode"], user_map=user_map,
+            )
+            import_run_family(
+                data, target_keys, summary, "chaos_runs", ChaosRun, ChaosMatchLog, "match_logs",
+                run_natural_keys=["difficulty"], user_map=user_map,
+            )
+            import_run_family(
+                data, target_keys, summary, "history_runs", HistoryRun, HistoryMatchLog, "match_logs",
+                run_natural_keys=["mode"], user_map=user_map,
+            )
+            import_run_family(
+                data, target_keys, summary, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs",
+                run_natural_keys=["killer"], user_map=user_map,
+            )
 
             _upsert_entity(
                 data, target_keys, summary, "community_builds", CommunityBuild, "title",

@@ -1,7 +1,7 @@
 # backend/app/services/others/build_service.py
 import logging
 from flask import current_app
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, update
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
@@ -311,11 +311,15 @@ class BuildService:
         if self._use_sqlalchemy:
             try:
                 if current_app:
-                    b = db.session.get(CommunityBuild, int(build_id))
-                    if not b:
+                    result = db.session.execute(
+                        update(CommunityBuild)
+                        .where(CommunityBuild.id == int(build_id))
+                        .values(upvotes=CommunityBuild.upvotes + 1)
+                    )
+                    if result.rowcount == 0:
                         raise ValueError(f"Build with ID {build_id} not found.")
-                    b.upvotes = (b.upvotes or 0) + 1
                     db.session.commit()
+                    b = db.session.get(CommunityBuild, int(build_id))
                     return b.to_dict()
             except Exception as e:
                 logger.debug(f"SQLAlchemy upvote_build fallback: {e}")

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
+import { Pagination } from '@/components/Pagination';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -35,8 +36,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   onOpenReportModal,
   dict,
   t: propT,
+  total,
+  page = 1,
+  perPage = 10,
+  totalPages = 1,
+  onPageChange,
 }) => {
   const t: Record<string, string> = propT || dict?.user || {};
+  const totalCount = total ?? reports.length;
 
   const getStatusBadge = (status: UserBugReport['status']) => {
     switch (status) {
@@ -190,6 +197,18 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             </div>
           ))}
         </div>
+      )}
+
+      {!loading && reports.length > 0 && totalPages > 1 && onPageChange && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          totalResults={totalCount}
+          limit={perPage}
+          onPageChange={onPageChange}
+          onLimitChange={() => {}}
+          dict={dict as any}
+        />
       )}
     </div>
   );

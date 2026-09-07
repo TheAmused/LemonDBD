@@ -312,7 +312,7 @@ function PerksContent() {
                 className={
                   viewMode === 'list'
                     ? 'flex flex-col gap-2 w-full'
-                    : 'grid min-h-0 w-full flex-1 grid-cols-5 gap-3'
+                    : 'grid min-h-0 w-full flex-1 grid-cols-5 grid-rows-3 gap-3'
                 }
                 style={viewMode === 'grid' && rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
               >

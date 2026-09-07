@@ -10,7 +10,7 @@ import type { Dictionary } from '@/locales/types';
  */
 export type PageShellPadding = 'tight' | 'comfortable' | 'spacious' | 'flush';
 
-const PADDING_CLASSES: Record<PageShellPadding, string> = {
+export const PAGE_SHELL_PADDING_CLASSES: Record<PageShellPadding, string> = {
   tight: 'p-3 sm:p-4 lg:p-6',
   comfortable: 'p-4 sm:p-6 lg:p-8',
   spacious: 'p-5 sm:p-7 lg:p-9',
@@ -44,7 +44,7 @@ interface PageShellProps {
   children: ReactNode;
 }
 
-const DEFAULT_OUTER_CLASSNAME =
+export const DEFAULT_OUTER_CLASSNAME =
   'min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300';
 
 /**
@@ -79,7 +79,7 @@ export function PageShell({
   const shellClass = padding === 'flush' ? 'lemon-shell-main--flush' : 'lemon-shell-main';
   const mainClasses = [
     'flex-1 w-full transition-[padding] duration-300',
-    customPadding ?? PADDING_CLASSES[padding],
+    customPadding ?? PAGE_SHELL_PADDING_CLASSES[padding],
     shellClass,
     mainClassName,
   ]

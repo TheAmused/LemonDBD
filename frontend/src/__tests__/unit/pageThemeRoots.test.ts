@@ -75,8 +75,6 @@ describe('Page Root Theme Wrapper Consistency', () => {
   const legacySlateRoutes = [
     'characters/loading.tsx',
     'characters/[slug]/loading.tsx',
-    'perks/loading.tsx',
-    'randomizer/loading.tsx',
     'smash-or-pass/loading.tsx',
   ];
 
@@ -88,6 +86,28 @@ describe('Page Root Theme Wrapper Consistency', () => {
       assert.ok(
         content.includes('dark:bg-slate-950') && content.includes('dark:text-slate-100'),
         `${relPath} must include dark:bg-slate-950 dark:text-slate-100`
+      );
+    });
+  }
+
+  // These route-level loading.tsx files (and the maps/perks/randomizer
+  // page.tsx Suspense fallbacks above) render before PageShell/Sidebar ever
+  // mount, so they render through PageShellFallback -- PageShell's
+  // pre-hydration twin -- rather than <PageShell> itself.
+  const pageShellFallbackRoutes = ['maps/loading.tsx', 'perks/loading.tsx', 'randomizer/loading.tsx'];
+
+  for (const relPath of pageShellFallbackRoutes) {
+    it(`${relPath} renders through the shared <PageShellFallback>, not a raw hex background`, () => {
+      const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
+      const content = fs.readFileSync(fullPath, 'utf-8');
+      assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
+      assert.ok(
+        !content.includes('bg-slate-50') && !content.includes('dark:bg-slate-950'),
+        `${relPath} must not reintroduce the hardcoded slate background PageShellFallback replaced`
+      );
+      assert.ok(
+        content.includes('<PageShellFallback'),
+        `${relPath} must render through the shared <PageShellFallback> component`
       );
     });
   }

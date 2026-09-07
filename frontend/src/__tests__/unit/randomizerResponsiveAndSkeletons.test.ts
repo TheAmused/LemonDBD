@@ -287,17 +287,21 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
       /flush:\s*''/.test(shellContent),
       "PageShell's flush padding variant must resolve to no padding classes"
     );
+    // The Suspense fallback (page.tsx) and route-level loading.tsx both
+    // render through the shared PageShellFallback -- PageShell's
+    // pre-hydration twin -- with the same flush padding and main classes as
+    // the real <PageShell> call, instead of duplicating the shell markup.
     assert.ok(
-      pageContent.includes(
-        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main--flush"'
-      ),
-      'RandomizerPage Suspense fallback main container should be flush without outer gutter padding'
+      pageContent.includes('<PageShellFallback') &&
+        pageContent.includes('padding="flush"') &&
+        pageContent.includes('mainClassName="min-h-screen overflow-y-auto flex flex-col"'),
+      'RandomizerPage Suspense fallback must render <PageShellFallback padding="flush"> without outer gutter padding'
     );
     assert.ok(
-      loadingContent.includes(
-        'className="flex-1 w-full min-h-screen overflow-y-auto flex flex-col lemon-shell-main--flush"'
-      ),
-      'RandomizerLoading main container should be flush without outer gutter padding'
+      loadingContent.includes('<PageShellFallback') &&
+        loadingContent.includes('padding="flush"') &&
+        loadingContent.includes('mainClassName="min-h-screen overflow-y-auto flex flex-col"'),
+      'RandomizerLoading must render <PageShellFallback padding="flush"> without outer gutter padding'
     );
   });
 

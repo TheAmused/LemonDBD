@@ -237,7 +237,11 @@ def get_my_bug_reports():
         if user.username:
             conditions.append(func.lower(BugReport.reporter_name) == user.username.lower())
 
-        stmt = select(BugReport).where(or_(*conditions)).order_by(desc(BugReport.created_at))
+        stmt = (
+            select(BugReport)
+            .where(or_(*conditions))
+            .order_by(desc(BugReport.created_at), desc(BugReport.id))
+        )
 
         total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
         paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)
@@ -286,7 +290,7 @@ def admin_get_bug_reports():
             )
         )
 
-    stmt = stmt.order_by(desc(BugReport.created_at))
+    stmt = stmt.order_by(desc(BugReport.created_at), desc(BugReport.id))
 
     total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)

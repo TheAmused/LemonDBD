@@ -499,3 +499,29 @@ class TestDatabaseExportImportSettingsTables:
 
             assert db.session.scalars(select(PerkRule)).first().name == "Standard"
             assert db.session.scalars(select(UserShowcase)).first().user_id == user.id
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportAuditLogAndChangelog:
+    def test_export_import_audit_log_and_changelog_insert_only(self, export_import_app):
+        with export_import_app.app_context():
+            from app.models.admin import AdminAuditLog
+            from app.models.changelog import ChangelogPost
+
+            admin = db.session.scalars(select(User).where(User.username == "admin_test")).first()
+            db.session.add(AdminAuditLog(admin_user_id=admin.id, action="disable_character", target_type="character", target_id="1"))
+            db.session.add(ChangelogPost(title="Launch", content_html="<p>Hello</p>", author_id=admin.id, author_name="admin_test"))
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["admin_audit_logs", "changelog_posts"])
+            assert exported["counts"]["admin_audit_logs"] == 1
+            assert exported["counts"]["changelog_posts"] == 1
+            assert exported["data"]["admin_audit_logs"][0]["admin_username"] == "admin_test"
+
+            summary = DatabaseExportImportService.import_database(
+                exported, mode="merge", targets=["admin_audit_logs", "changelog_posts"]
+            )
+            assert summary["summary"]["admin_audit_logs"]["created"] == 1
+            assert summary["summary"]["changelog_posts"]["created"] == 1
+            assert len(db.session.scalars(select(AdminAuditLog)).all()) == 2
+            assert len(db.session.scalars(select(ChangelogPost)).all()) == 2

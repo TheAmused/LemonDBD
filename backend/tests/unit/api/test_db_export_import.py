@@ -393,3 +393,30 @@ class TestDatabaseExportImportAssetBundling:
             exported = result["data"]["characters"][0]
 
             assert "avatar_local_path_data" not in exported
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportOfferingsAndChapters:
+    def test_export_import_offerings_and_chapters_roundtrip(self, export_import_app):
+        with export_import_app.app_context():
+            from app.models.equipment import Offering
+            from app.models.chapter import Chapter
+            from sqlalchemy import delete as sa_delete
+
+            db.session.add(Offering(name="Bloody Party Streamers", category="Offering", role="Killer"))
+            db.session.add(Chapter(name="A Nightmare on Elm Street"))
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["offerings", "chapters"])
+            assert exported["counts"]["offerings"] == 1
+            assert exported["counts"]["chapters"] == 1
+
+            db.session.execute(sa_delete(Offering))
+            db.session.execute(sa_delete(Chapter))
+            db.session.commit()
+
+            summary = DatabaseExportImportService.import_database(exported, mode="merge", targets=["offerings", "chapters"])
+            assert summary["summary"]["offerings"]["created"] == 1
+            assert summary["summary"]["chapters"]["created"] == 1
+            assert db.session.scalars(select(Offering)).first().name == "Bloody Party Streamers"
+            assert db.session.scalars(select(Chapter)).first().name == "A Nightmare on Elm Street"

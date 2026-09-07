@@ -1,31 +1,22 @@
 # backend/app/routes/gauntlet_streak.py
-from flask import Blueprint, g, jsonify, request
+from flask import g, jsonify, request
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
+from app.core.streak_blueprint import make_streak_blueprint, make_value_cleaner
 from app.services.gauntlet_service import GauntletService
 
-gauntlet_streak_bp = Blueprint("gauntlet_streak", __name__, url_prefix="/api/v1/gauntlet-streak")
 get_gauntlet_service = make_service_getter("GAUNTLET_SERVICE", GauntletService)
+_clean_role = make_value_cleaner(("survivor", "killer"))
 
-
-def _clean_role(role: str | None) -> str | None:
-    if role not in ("survivor", "killer"):
-        return None
-    return role
-
-
-@gauntlet_streak_bp.route("/run", methods=["GET"])
-@login_required
-def get_run():
-    role = _clean_role(request.args.get("role"))
-    if not role:
-        return jsonify({"error": "Query parameter 'role' must be 'survivor' or 'killer'"}), 400
-    service = get_gauntlet_service()
-    try:
-        run = service.get_or_create_run(g.current_user.id, role)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-    return jsonify({"run": run}), 200
+gauntlet_streak_bp = make_streak_blueprint(
+    name="gauntlet_streak",
+    url_prefix="/api/v1/gauntlet-streak",
+    get_service=get_gauntlet_service,
+    param_name="role",
+    valid_values=("survivor", "killer"),
+    invalid_value_hint="'survivor' or 'killer'",
+    reveal_method="reveal_target",
+)
 
 
 @gauntlet_streak_bp.route("/result", methods=["POST"])
@@ -50,47 +41,3 @@ def submit_result():
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status
     return jsonify({"run": rolled_run, "previous_run": updated_run}), 200
-
-
-@gauntlet_streak_bp.route("/reveal", methods=["POST"])
-@login_required
-def reveal():
-    data = request.get_json(silent=True) or {}
-    run_id = data.get("run_id")
-    if not run_id:
-        return jsonify({"error": "Field 'run_id' is required"}), 400
-
-    service = get_gauntlet_service()
-    try:
-        run = service.reveal_target(g.current_user.id, run_id)
-    except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
-        return jsonify({"error": str(e)}), status
-    return jsonify({"run": run}), 200
-
-
-@gauntlet_streak_bp.route("/run/reset", methods=["POST"])
-@login_required
-def reset_run():
-    data = request.get_json(silent=True) or {}
-    role = _clean_role(data.get("role"))
-    if not role:
-        return jsonify({"error": "Field 'role' must be 'survivor' or 'killer'"}), 400
-
-    service = get_gauntlet_service()
-    try:
-        run = service.reset_run(g.current_user.id, role)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
-    return jsonify({"run": run}), 200
-
-
-@gauntlet_streak_bp.route("/stats", methods=["GET"])
-@login_required
-def get_stats():
-    role = _clean_role(request.args.get("role"))
-    if not role:
-        return jsonify({"error": "Query parameter 'role' must be 'survivor' or 'killer'"}), 400
-    service = get_gauntlet_service()
-    stats = service.get_stats(g.current_user.id, role)
-    return jsonify({"stats": stats}), 200

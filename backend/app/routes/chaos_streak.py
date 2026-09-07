@@ -1,49 +1,22 @@
 # backend/app/routes/chaos_streak.py
-from flask import Blueprint, g, jsonify, request
+from flask import g, jsonify, request
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
+from app.core.streak_blueprint import make_streak_blueprint, make_value_cleaner
 from app.services.chaos.constants import DIFFICULTIES
 from app.services.chaos_service import ChaosService
 
-chaos_streak_bp = Blueprint("chaos_streak", __name__, url_prefix="/api/v1/chaos-streak")
 get_chaos_service = make_service_getter("CHAOS_SERVICE", ChaosService)
+_clean_difficulty = make_value_cleaner(DIFFICULTIES)
 
-
-def _clean_difficulty(difficulty: str | None) -> str | None:
-    if difficulty not in DIFFICULTIES:
-        return None
-    return difficulty
-
-
-@chaos_streak_bp.route("/run", methods=["GET"])
-@login_required
-def get_run():
-    difficulty = _clean_difficulty(request.args.get("difficulty"))
-    if not difficulty:
-        return jsonify({"error": "Query parameter 'difficulty' must be one of easy, medium, hell"}), 400
-    service = get_chaos_service()
-    try:
-        run = service.get_or_create_run(g.current_user.id, difficulty)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-    return jsonify({"run": run}), 200
-
-
-@chaos_streak_bp.route("/reveal", methods=["POST"])
-@login_required
-def reveal():
-    data = request.get_json(silent=True) or {}
-    run_id = data.get("run_id")
-    if not run_id:
-        return jsonify({"error": "Field 'run_id' is required"}), 400
-
-    service = get_chaos_service()
-    try:
-        run = service.reveal(g.current_user.id, run_id)
-    except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
-        return jsonify({"error": str(e)}), status
-    return jsonify({"run": run}), 200
+chaos_streak_bp = make_streak_blueprint(
+    name="chaos_streak",
+    url_prefix="/api/v1/chaos-streak",
+    get_service=get_chaos_service,
+    param_name="difficulty",
+    valid_values=DIFFICULTIES,
+    invalid_value_hint="one of easy, medium, hell",
+)
 
 
 @chaos_streak_bp.route("/result", methods=["POST"])
@@ -65,30 +38,3 @@ def submit_result():
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status
     return jsonify({"run": run}), 200
-
-
-@chaos_streak_bp.route("/run/reset", methods=["POST"])
-@login_required
-def reset_run():
-    data = request.get_json(silent=True) or {}
-    difficulty = _clean_difficulty(data.get("difficulty"))
-    if not difficulty:
-        return jsonify({"error": "Field 'difficulty' must be one of easy, medium, hell"}), 400
-
-    service = get_chaos_service()
-    try:
-        run = service.reset_run(g.current_user.id, difficulty)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
-    return jsonify({"run": run}), 200
-
-
-@chaos_streak_bp.route("/stats", methods=["GET"])
-@login_required
-def get_stats():
-    difficulty = _clean_difficulty(request.args.get("difficulty"))
-    if not difficulty:
-        return jsonify({"error": "Query parameter 'difficulty' must be one of easy, medium, hell"}), 400
-    service = get_chaos_service()
-    stats = service.get_stats(g.current_user.id, difficulty)
-    return jsonify({"stats": stats}), 200

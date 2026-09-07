@@ -1,10 +1,7 @@
 // frontend/src/components/generator/shared/StageFrame.tsx
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import Particles, { ParticlesProvider } from '@tsparticles/react';
-import { loadSlim } from '@tsparticles/slim';
-import type { Engine, ISourceOptions } from '@tsparticles/engine';
+import React, { useEffect, useRef, useState } from 'react';
 import { RoleCategory } from '@/types/perks';
 import { cn } from '@/utils/cn';
 
@@ -21,12 +18,81 @@ interface StageFrameProps {
   topRight?: React.ReactNode;
 }
 
-async function registerEngine(engine: Engine): Promise<void> {
-  await loadSlim(engine);
+interface Ember {
+  x: number;
+  y: number;
+  size: number;
+  speedY: number;
+  speedX: number;
+  alpha: number;
+}
+
+const EMBER_COUNT = 28;
+
+/**
+ * Same ambient-ember look as smash-or-pass's InteractiveDragBackground
+ * (small circles drifting slowly upward, wrapping at the top) rather than
+ * the tsparticles library -- just the baseline embers, none of that
+ * component's drag/burst mechanics, which don't apply here.
+ */
+function useAmbientEmbers(canvasRef: React.RefObject<HTMLCanvasElement | null>, color: string, enabled: boolean) {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !enabled) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = canvas.clientWidth);
+    let height = (canvas.height = canvas.clientHeight);
+    let animationFrameId: number;
+
+    const handleResize = () => {
+      width = canvas.width = canvas.clientWidth;
+      height = canvas.height = canvas.clientHeight;
+    };
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(canvas);
+
+    const embers: Ember[] = Array.from({ length: EMBER_COUNT }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 3 + 1,
+      speedY: -(Math.random() * 0.4 + 0.15),
+      speedX: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.4 + 0.1,
+    }));
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      for (const e of embers) {
+        e.y += e.speedY;
+        e.x += e.speedX;
+        if (e.y < 0) {
+          e.y = height;
+          e.x = Math.random() * width;
+        }
+        ctx.save();
+        ctx.globalAlpha = e.alpha;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      animationFrameId = requestAnimationFrame(render);
+    };
+    render();
+
+    return () => {
+      resizeObserver.disconnect();
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [canvasRef, color, enabled]);
 }
 
 export const StageFrame: React.FC<StageFrameProps> = ({ role, children, className, topLeft, topRight }) => {
   const [reduceMotion, setReduceMotion] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -35,68 +101,34 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
   const isSurvivor = role === 'Survivor';
   const particleColor = isSurvivor ? '#10b981' : '#f43f5e';
 
-  const particleOptions: ISourceOptions = useMemo(
-    () => ({
-      fpsLimit: 60,
-      detectRetina: true,
-      fullScreen: { enable: false },
-      particles: {
-        number: { value: reduceMotion ? 0 : 16, density: { enable: true, width: 900, height: 900 } },
-        color: { value: particleColor },
-        shape: { type: 'circle' },
-        opacity: { value: { min: 0.03, max: 0.15 } },
-        size: { value: { min: 1, max: 2 } },
-        move: {
-          enable: !reduceMotion,
-          speed: 0.35,
-          direction: 'none',
-          random: true,
-          straight: false,
-          outModes: { default: 'out' },
-        },
-      },
-      interactivity: { events: { onHover: { enable: false }, onClick: { enable: false }, resize: true } },
-      background: { color: 'transparent' },
-    }),
-    [particleColor, reduceMotion]
-  );
+  useAmbientEmbers(canvasRef, particleColor, !reduceMotion);
 
   return (
     <div
       className={cn(
-        'relative overflow-hidden bg-white/80 dark:bg-[#0c0e14]/95 border-b border-border-color p-4 sm:p-6 transition-colors duration-300',
+        'relative z-0 overflow-hidden bg-white/80 dark:bg-[#0c0e14]/95 border-b border-border-color p-4 sm:p-6 transition-colors duration-300',
         className
       )}
     >
-      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        <ParticlesProvider init={registerEngine}>
-          <Particles
-            id="generator-stage-particles"
-            options={particleOptions}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
-          />
-        </ParticlesProvider>
-      </div>
-
-      {/* Role-Specific Atmospheric Top Mist */}
-      <div
+      <canvas
+        ref={canvasRef}
         aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute inset-0 transition-opacity duration-500',
-          isSurvivor ? 'dbd-ambient-mist--survivor' : 'dbd-ambient-mist--killer'
-        )}
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
       />
+
+      {/* Survivor-only Atmospheric Top Mist -- the killer variant was a red
+          glow and was removed in favor of the particle field above. */}
+      {isSurvivor && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 transition-opacity duration-500 dbd-ambient-mist--survivor"
+        />
+      )}
 
       {/* Cinematic Edge Vignette */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 dbd-cinematic-vignette"
-      />
-
-      {/* Dead by Daylight Static Heartbeat Corner Glow Vignette */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 dbd-heartbeat-vignette--static"
       />
 
       {/* A small floor so the stage never looks collapsed when totally

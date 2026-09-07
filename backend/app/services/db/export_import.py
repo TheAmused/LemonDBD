@@ -2,6 +2,7 @@
 import logging
 from collections.abc import Callable
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from sqlalchemy import delete, select
@@ -13,6 +14,7 @@ from app.models.map import MapRealm, MapTile, MapObjective, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
 from app.models.minigames import GeneratorSetting, GuesserStat
+from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +48,23 @@ def _parse_datetime(val: str | datetime | None) -> datetime | None:
         return None
 
 
+def _with_asset(row: dict[str, Any], path_field: str, static_dir: Path, include_assets: bool) -> None:
+    """Mutates `row` in place, adding `<path_field>_data` (base64 or None) when
+    `include_assets` is true and `row[path_field]` is a real path."""
+    if not include_assets:
+        return
+    row[f"{path_field}_data"] = read_asset_base64(static_dir, row.get(path_field) or None)
+
+
+def _power_icon_local_path(power_name: str | None) -> str | None:
+    """Mirrors Character.to_dict()'s computed (not stored) power icon path,
+    so export/import knows where the power icon actually lives on disk."""
+    if not power_name:
+        return None
+    p_clean = power_name.lower().replace(" ", "_").replace("'", "").replace("-", "_")
+    return f"icons/powers/{p_clean}.webp" if p_clean else None
+
+
 def _serialize_character(c: Character) -> dict[str, Any]:
     return {
         "name": c.name,
@@ -68,6 +87,7 @@ def _serialize_character(c: Character) -> dict[str, Any]:
         "power_name": c.power_name,
         "power_description": c.power_description,
         "power_icon_url": c.power_icon_url,
+        "power_icon_local_path": _power_icon_local_path(c.power_name),
         "movement_speed": c.movement_speed,
         "terror_radius": c.terror_radius,
         "terror_radius_meters": c.terror_radius_meters,
@@ -145,28 +165,39 @@ def _export_entity(
     name: str,
     model: type,
     serializer: Callable[[Any], dict[str, Any]],
+    asset_fields: list[str] | None = None,
+    static_dir: Path | None = None,
+    include_assets: bool = True,
 ) -> None:
-    """Select every row of `model` (ordered by id), serialize it, and record it under `name`."""
+    """Select every row of `model` (ordered by id), serialize it, and record it under
+    `name`. When `asset_fields` is given, each listed field (e.g. "icon_local_path")
+    gets a sibling "<field>_data" base64 payload read from `static_dir`."""
     rows = db.session.scalars(select(model).order_by(model.id)).all()
     serialized = [serializer(r) for r in rows]
+    if asset_fields and static_dir is not None:
+        for row in serialized:
+            for field in asset_fields:
+                _with_asset(row, field, static_dir, include_assets)
     export_data[name] = serialized
     counts[name] = len(serialized)
 
 
 # Entities whose export is "select all, serialize each row, store under one key" --
 # no nested collections, no cross-entity joins beyond a single to-one lookup.
-_SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]]]] = [
-    ("characters", Character, _serialize_character),
-    ("perks", Perk, _serialize_perk),
-    ("items", Item, _serialize_item),
-    ("addons", Addon, _serialize_addon),
-    ("users", User, _serialize_user),
-    ("community_builds", CommunityBuild, lambda b: b.to_dict()),
-    ("custom_perks", CustomPerk, lambda cp: cp.to_dict()),
-    ("daily_quests", DailyQuest, lambda q: q.to_dict()),
-    ("bug_reports", BugReport, lambda r: r.to_dict()),
-    ("generator_settings", GeneratorSetting, lambda s: s.to_dict()),
-    ("guesser_stats", GuesserStat, lambda gs: gs.to_dict()),
+# The 4th tuple element lists which serialized fields hold a static-dir-relative
+# image path and should get a base64 "<field>_data" sibling embedded.
+_SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], list[str]]] = [
+    ("characters", Character, _serialize_character, ["avatar_local_path", "power_icon_local_path"]),
+    ("perks", Perk, _serialize_perk, ["icon_local_path"]),
+    ("items", Item, _serialize_item, ["icon_local_path"]),
+    ("addons", Addon, _serialize_addon, ["icon_local_path"]),
+    ("users", User, _serialize_user, []),
+    ("community_builds", CommunityBuild, lambda b: b.to_dict(), []),
+    ("custom_perks", CustomPerk, lambda cp: cp.to_dict(), []),
+    ("daily_quests", DailyQuest, lambda q: q.to_dict(), []),
+    ("bug_reports", BugReport, lambda r: r.to_dict(), []),
+    ("generator_settings", GeneratorSetting, lambda s: s.to_dict(), []),
+    ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
 ]
 
 # Entities whose deletion in "replace" mode is a single unconditional DELETE, gated
@@ -198,13 +229,17 @@ def _upsert_entity(
     post_process: Callable[[Any, dict[str, Any]], None] | None = None,
     skip_none: bool = False,
     key_default: Any = None,
+    asset_fields: list[str] | None = None,
+    static_dir: Path | None = None,
 ) -> None:
     """Upsert every row in `data[name]` into `model`, keyed by `unique_field`.
 
     A missing row is created with `unique_field` plus whatever `defaults(row)`
     returns; an existing row only has `update_fields` (present in `row`) applied.
     `post_process` runs after field assignment, for cross-entity resolution
-    (e.g. perks resolving their owning character).
+    (e.g. perks resolving their owning character). When `asset_fields` is given,
+    each listed field's sibling "<field>_data" base64 payload (if present in
+    `row`) is decoded and written back to disk under `static_dir`.
     """
     if name not in target_keys or name not in data:
         return
@@ -239,6 +274,10 @@ def _upsert_entity(
         if post_process:
             post_process(obj, row)
 
+        if asset_fields and static_dir is not None:
+            for field in asset_fields:
+                write_asset_base64(static_dir, row.get(field), row.get(f"{field}_data"))
+
     db.session.flush()
     summary[name] = {"created": created, "updated": updated}
 
@@ -250,14 +289,15 @@ class DatabaseExportImportService:
     """
 
     @classmethod
-    def export_database(cls, targets: list[str] | None = None) -> dict[str, Any]:
+    def export_database(cls, targets: list[str] | None = None, include_assets: bool = True) -> dict[str, Any]:
         target_set: set[str] = set(targets) if targets else set(SUPPORTED_EXPORT_TARGETS)
         export_data: dict[str, Any] = {}
         counts: dict[str, int] = {}
+        static_dir = get_static_dir()
 
-        for name, model, serializer in _SIMPLE_EXPORT_TARGETS:
+        for name, model, serializer, asset_fields in _SIMPLE_EXPORT_TARGETS:
             if name in target_set:
-                _export_entity(export_data, counts, name, model, serializer)
+                _export_entity(export_data, counts, name, model, serializer, asset_fields, static_dir, include_assets)
 
         if "maps" in target_set:
             realms = db.session.scalars(select(MapRealm).order_by(MapRealm.id)).all()
@@ -305,11 +345,13 @@ class DatabaseExportImportService:
                     "tiles": tiles,
                     "objectives": objectives,
                 })
+            for row in map_list:
+                _with_asset(row, "callout_image_local_path", static_dir, include_assets)
             export_data["maps"] = map_list
             counts["maps"] = len(map_list)
 
         if "maps" in target_set or "realms" in target_set:
-            _export_entity(export_data, counts, "realms", Realm, _serialize_realm)
+            _export_entity(export_data, counts, "realms", Realm, _serialize_realm, ["image_local_path"], static_dir, include_assets)
 
         if "ownerships" in target_set:
             char_owns = db.session.scalars(select(UserCharacterOwnership)).all()
@@ -358,6 +400,7 @@ class DatabaseExportImportService:
         data: dict[str, Any] = payload.get("data", payload)
         target_keys = set(targets) if targets else set(data.keys())
         summary: dict[str, dict[str, int]] = {}
+        static_dir = get_static_dir()
 
         try:
             if mode == "replace":
@@ -386,6 +429,7 @@ class DatabaseExportImportService:
                     "terror_radius", "terror_radius_meters", "height", "translations",
                 ],
                 defaults=lambda row: {"role": row.get("role", "Survivor")},
+                asset_fields=["avatar_local_path", "power_icon_local_path"], static_dir=static_dir,
             )
 
             char_map: dict[str, int] = {}
@@ -410,16 +454,19 @@ class DatabaseExportImportService:
                     "category", "description", "icon_url", "icon_local_path", "translations",
                 ],
                 post_process=_resolve_perk_character,
+                asset_fields=["icon_local_path"], static_dir=static_dir,
             )
 
             _upsert_entity(
                 data, target_keys, summary, "items", Item, "name",
                 update_fields=["category", "role", "description", "icon_url", "icon_local_path", "rarity", "translations"],
+                asset_fields=["icon_local_path"], static_dir=static_dir,
             )
 
             _upsert_entity(
                 data, target_keys, summary, "addons", Addon, "name",
                 update_fields=["associated_target", "category", "description", "icon_url", "icon_local_path", "rarity", "translations"],
+                asset_fields=["icon_local_path"], static_dir=static_dir,
             )
 
             if "maps" in target_keys and "maps" in data:
@@ -478,6 +525,7 @@ class DatabaseExportImportService:
                                 floor=int(odata.get("floor", 1)),
                             )
                             db.session.add(obj)
+                    write_asset_base64(static_dir, mdata.get("callout_image_local_path"), mdata.get("callout_image_local_path_data"))
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
 
@@ -494,6 +542,7 @@ class DatabaseExportImportService:
                         "image_url": row.get("image_url", ""),
                         "image_local_path": row.get("image_local_path", ""),
                     },
+                    asset_fields=["image_local_path"], static_dir=static_dir,
                 )
 
             _upsert_entity(

@@ -570,3 +570,22 @@ class TestDatabaseExportImportSmashOrPass:
             restored_entity = db.session.scalars(select(Entity).where(Entity.slug == "ada_wong")).one()
             assert restored_entity.stat.smash_count == 5
             assert len(db.session.scalars(select(Vote).where(Vote.entity_id == restored_entity.id)).all()) == 1
+
+
+@pytest.mark.unit
+class TestDatabaseExportRouteIncludeAssets:
+    def test_export_route_supports_include_assets_false(self, client: FlaskClient, admin_token: str, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+
+        with export_import_app.app_context():
+            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char.avatar_local_path = "icons/characters/trapper.webp"
+            db.session.commit()
+
+        resp = client.get(
+            "/api/v1/admin/database/export?targets=characters&include_assets=false",
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 200
+        payload = resp.get_json()
+        assert "avatar_local_path_data" not in payload["data"]["characters"][0]

@@ -11,7 +11,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    SmashPassStat,
     Translation,
 )
 
@@ -239,28 +238,6 @@ def _seed_smash_rosters_impl():
                         chaos_rating=50.0,
                     )
                     db.session.add(stat)
-
-                # Ensure legacy SmashPassStat exists
-                leg_stat = db.session.scalar(
-                    select(SmashPassStat).where(
-                        SmashPassStat.character_slug == entity.slug,
-                        SmashPassStat.edition == r_data["slug"],
-                    )
-                )
-                if not leg_stat:
-                    leg_stat = SmashPassStat(
-                        character_slug=entity.slug,
-                        character_name=entity.name,
-                        role=entity.role,
-                        gender=entity.gender,
-                        edition=r_data["slug"],
-                        smash_count=0,
-                        pass_count=0,
-                        super_smash_count=0,
-                        total_votes=0,
-                        smash_rate=0.0,
-                    )
-                    db.session.add(leg_stat)
 
         # 3. Seed / Upsert Multi-Locale Translations
         for loc, kv_map in translations_map.items():

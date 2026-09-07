@@ -1,7 +1,7 @@
 // frontend/src/components/generator/shared/StageFrame.tsx
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { RoleCategory } from '@/types/perks';
 import { cn } from '@/utils/cn';
 
@@ -18,90 +18,8 @@ interface StageFrameProps {
   topRight?: React.ReactNode;
 }
 
-interface Ember {
-  x: number;
-  y: number;
-  size: number;
-  speedY: number;
-  speedX: number;
-  alpha: number;
-}
-
-const EMBER_COUNT = 28;
-
-/**
- * Same ambient-ember look as smash-or-pass's InteractiveDragBackground
- * (small circles drifting slowly upward, wrapping at the top) rather than
- * the tsparticles library -- just the baseline embers, none of that
- * component's drag/burst mechanics, which don't apply here.
- */
-function useAmbientEmbers(canvasRef: React.RefObject<HTMLCanvasElement | null>, color: string, enabled: boolean) {
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !enabled) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let width = (canvas.width = canvas.clientWidth);
-    let height = (canvas.height = canvas.clientHeight);
-    let animationFrameId: number;
-
-    const handleResize = () => {
-      width = canvas.width = canvas.clientWidth;
-      height = canvas.height = canvas.clientHeight;
-    };
-    const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(canvas);
-
-    const embers: Ember[] = Array.from({ length: EMBER_COUNT }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 3 + 1,
-      speedY: -(Math.random() * 0.4 + 0.15),
-      speedX: (Math.random() - 0.5) * 0.3,
-      alpha: Math.random() * 0.4 + 0.1,
-    }));
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height);
-      for (const e of embers) {
-        e.y += e.speedY;
-        e.x += e.speedX;
-        if (e.y < 0) {
-          e.y = height;
-          e.x = Math.random() * width;
-        }
-        ctx.save();
-        ctx.globalAlpha = e.alpha;
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-      animationFrameId = requestAnimationFrame(render);
-    };
-    render();
-
-    return () => {
-      resizeObserver.disconnect();
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [canvasRef, color, enabled]);
-}
-
 export const StageFrame: React.FC<StageFrameProps> = ({ role, children, className, topLeft, topRight }) => {
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  }, []);
-
   const isSurvivor = role === 'Survivor';
-  const particleColor = isSurvivor ? '#10b981' : '#f43f5e';
-
-  useAmbientEmbers(canvasRef, particleColor, !reduceMotion);
 
   return (
     <div
@@ -110,12 +28,6 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         className
       )}
     >
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-      />
-
       {/* Survivor-only Atmospheric Top Mist -- the killer variant was a red
           glow and was removed in favor of the particle field above. */}
       {isSurvivor && (

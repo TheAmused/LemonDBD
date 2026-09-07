@@ -1,5 +1,6 @@
 // frontend/src/components/layout/PageShell.tsx
 import type { ReactNode } from 'react';
+import { AmbientEmbers } from '@/components/layout/AmbientEmbers';
 import { Sidebar } from '@/components/Sidebar';
 import type { Dictionary } from '@/locales/types';
 
@@ -88,6 +89,7 @@ export function PageShell({
 
   return (
     <div className={outerClassName ?? DEFAULT_OUTER_CLASSNAME}>
+      <AmbientEmbers />
       {decoration}
       <Sidebar
         currentLocale={locale}

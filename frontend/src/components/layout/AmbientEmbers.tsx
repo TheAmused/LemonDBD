@@ -13,20 +13,20 @@ interface Ember {
 }
 
 interface AmbientEmbersProps {
-  /** Kept low by design -- this is a small background touch for every page,
-   * not the more prominent effect the randomizer used to have in isolation. */
+  /** A small background touch for every page -- noticeably present, but
+   * still well short of the randomizer's old standalone effect. */
   count?: number;
   className?: string;
 }
 
 /**
- * Sitewide, very low-density ember field (small circles drifting slowly
+ * Sitewide, low-density ember field (small circles drifting slowly
  * upward) rendered once in PageShell so every page gets the same subtle
  * atmosphere instead of it being a one-off confined to the randomizer's
  * stage box. Color follows the active theme's --accent-amber token so it
  * still reads correctly across light/light-lemon/dark.
  */
-export const AmbientEmbers: React.FC<AmbientEmbersProps> = ({ count = 14, className }) => {
+export const AmbientEmbers: React.FC<AmbientEmbersProps> = ({ count = 20, className }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -61,10 +61,10 @@ export const AmbientEmbers: React.FC<AmbientEmbersProps> = ({ count = 14, classN
     const embers: Ember[] = Array.from({ length: count }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      size: Math.random() * 1.5 + 0.8,
-      speedY: -(Math.random() * 0.15 + 0.05),
-      speedX: (Math.random() - 0.5) * 0.12,
-      alpha: Math.random() * 0.12 + 0.04,
+      size: Math.random() * 2 + 1,
+      speedY: -(Math.random() * 0.25 + 0.08),
+      speedX: (Math.random() - 0.5) * 0.18,
+      alpha: Math.random() * 0.22 + 0.08,
     }));
 
     const render = () => {

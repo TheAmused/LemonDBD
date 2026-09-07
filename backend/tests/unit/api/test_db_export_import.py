@@ -525,3 +525,48 @@ class TestDatabaseExportImportAuditLogAndChangelog:
             assert summary["summary"]["changelog_posts"]["created"] == 1
             assert len(db.session.scalars(select(AdminAuditLog)).all()) == 2
             assert len(db.session.scalars(select(ChangelogPost)).all()) == 2
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportSmashOrPass:
+    def test_export_import_smash_or_pass_roster_roundtrip(self, export_import_app):
+        with export_import_app.app_context():
+            from sqlalchemy import delete as sa_delete
+            from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote, Translation
+
+            roster = Roster(slug="canon", name_i18n_key="roster.canon.name", description_i18n_key="roster.canon.desc")
+            db.session.add(roster)
+            db.session.flush()
+            entity = Entity(roster_id=roster.id, slug="ada_wong", name="Ada Wong", role="Survivor")
+            db.session.add(entity)
+            db.session.flush()
+            db.session.add(EntityStat(entity_id=entity.id, smash_count=5, pass_count=1))
+            db.session.add(Vote(entity_id=entity.id, vote_type="smash", session_id="s1"))
+            db.session.add(Translation(locale="pl", key="roster.canon.name", value="Kanon"))
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["rosters", "smash_translations"])
+            assert exported["counts"]["rosters"] == 1
+            assert exported["counts"]["smash_translations"] == 1
+            roster_row = exported["data"]["rosters"][0]
+            assert roster_row["slug"] == "canon"
+            assert len(roster_row["entities"]) == 1
+            assert roster_row["entities"][0]["stat"]["smash_count"] == 5
+            assert len(roster_row["entities"][0]["votes"]) == 1
+
+            db.session.execute(sa_delete(Vote))
+            db.session.execute(sa_delete(EntityStat))
+            db.session.execute(sa_delete(Entity))
+            db.session.execute(sa_delete(Roster))
+            db.session.execute(sa_delete(Translation))
+            db.session.commit()
+
+            summary = DatabaseExportImportService.import_database(
+                exported, mode="merge", targets=["rosters", "smash_translations"]
+            )
+            assert summary["summary"]["rosters"]["created"] == 1
+            assert summary["summary"]["smash_translations"]["created"] == 1
+
+            restored_entity = db.session.scalars(select(Entity).where(Entity.slug == "ada_wong")).one()
+            assert restored_entity.stat.smash_count == 5
+            assert len(db.session.scalars(select(Vote).where(Vote.entity_id == restored_entity.id)).all()) == 1

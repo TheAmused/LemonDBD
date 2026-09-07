@@ -7,14 +7,16 @@ from typing import Any
 
 from sqlalchemy import delete, select
 from app.core.extensions import db
+from app.core.json_provider import safe_json_dumps
 from app.models.character import Character
-from app.models.perk import Perk
+from app.models.perk import Perk, PerkRule
 from app.models.equipment import Item, Addon, Offering
 from app.models.chapter import Chapter
 from app.models.map import MapRealm, MapTile, MapObjective, Realm
-from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
+from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
-from app.models.minigames import GeneratorSetting, GuesserStat
+from app.models.minigames import GeneratorSetting, GuesserStat, GeneratorDrawnPerk, DraftSession, ScraperSetting
+from app.models.admin import ChallengeModeSetting
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 
 logger = logging.getLogger(__name__)
@@ -36,6 +38,12 @@ SUPPORTED_EXPORT_TARGETS = [
     "bug_reports",
     "generator_settings",
     "guesser_stats",
+    "perk_rules",
+    "generator_drawn_perks",
+    "draft_sessions",
+    "scraper_settings",
+    "challenge_mode_settings",
+    "user_showcases",
 ]
 
 
@@ -140,6 +148,21 @@ def _serialize_addon(a: Addon) -> dict[str, Any]:
     }
 
 
+def _serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
+    return {
+        "username": sc.user.username if sc.user else None,
+        "player_title": sc.player_title,
+        "devotion_level": sc.devotion_level,
+        "grade_rank": sc.grade_rank,
+        "survivor_main_character": sc.survivor_main_character,
+        "survivor_main_prestige": sc.survivor_main_prestige,
+        "survivor_perk_ids": sc.survivor_perk_ids,
+        "killer_main_character": sc.killer_main_character,
+        "killer_main_prestige": sc.killer_main_prestige,
+        "killer_perk_ids": sc.killer_perk_ids,
+    }
+
+
 def _serialize_offering(o: Offering) -> dict[str, Any]:
     return {
         "name": o.name,
@@ -236,6 +259,11 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("bug_reports", BugReport, lambda r: r.to_dict(), []),
     ("generator_settings", GeneratorSetting, lambda s: s.to_dict(), []),
     ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
+    ("perk_rules", PerkRule, lambda pr: pr.to_dict(), []),
+    ("generator_drawn_perks", GeneratorDrawnPerk, lambda gd: gd.to_dict(), []),
+    ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
+    ("scraper_settings", ScraperSetting, lambda ss: ss.to_dict(), []),
+    ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
 ]
 
 # Entities whose deletion in "replace" mode is a single unconditional DELETE, gated
@@ -254,6 +282,12 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("characters", Character),
     ("generator_settings", GeneratorSetting),
     ("guesser_stats", GuesserStat),
+    ("perk_rules", PerkRule),
+    ("generator_drawn_perks", GeneratorDrawnPerk),
+    ("draft_sessions", DraftSession),
+    ("scraper_settings", ScraperSetting),
+    ("challenge_mode_settings", ChallengeModeSetting),
+    ("user_showcases", UserShowcase),
 ]
 
 
@@ -418,6 +452,11 @@ class DatabaseExportImportService:
             }
             counts["character_ownerships"] = len(export_data["ownerships"]["characters"])
             counts["perk_ownerships"] = len(export_data["ownerships"]["perks"])
+
+        if "user_showcases" in target_set:
+            showcases = [sc for sc in db.session.scalars(select(UserShowcase)).all() if sc.user]
+            export_data["user_showcases"] = [_serialize_user_showcase(sc) for sc in showcases]
+            counts["user_showcases"] = len(export_data["user_showcases"])
 
         return {
             "version": "1.0",
@@ -665,6 +704,89 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["character_ownerships"] = {"created": char_created, "updated": char_updated}
                 summary["perk_ownerships"] = {"created": perk_created, "updated": perk_updated}
+
+            if "perk_rules" in target_keys and "perk_rules" in data:
+                created = 0
+                for row in data["perk_rules"]:
+                    db.session.add(PerkRule(
+                        name=row.get("name", "Standard"),
+                        is_default=row.get("is_default", False),
+                        slot1_type=row.get("slot1_type", "character_own"),
+                        slot2_type=row.get("slot2_type", "character_own"),
+                        slot3_type=row.get("slot3_type", "general_role"),
+                        slot4_type=row.get("slot4_type", "any_role"),
+                    ))
+                    created += 1
+                db.session.flush()
+                summary["perk_rules"] = {"created": created, "updated": 0}
+
+            _upsert_entity(
+                data, target_keys, summary, "generator_drawn_perks", GeneratorDrawnPerk, "perk_name",
+                update_fields=["role"],
+                defaults=lambda row: {"role": row.get("role", "Survivor")},
+                post_process=lambda obj, row: setattr(
+                    obj, "drawn_at", _parse_datetime(row["drawn_at"]) or obj.drawn_at
+                ) if row.get("drawn_at") else None,
+            )
+
+            if "draft_sessions" in target_keys and "draft_sessions" in data:
+                created = 0
+                for row in data["draft_sessions"]:
+                    existing = db.session.scalar(select(DraftSession).where(DraftSession.room_code == row.get("room_code")))
+                    if existing:
+                        continue
+                    db.session.add(DraftSession(
+                        room_code=row.get("room_code"),
+                        phase=row.get("phase", "bans"),
+                        banned_perks=row.get("banned_perks_json") or safe_json_dumps(row.get("banned_perks", [])),
+                        picked_survivor_perks=row.get("picked_survivor_perks_json") or safe_json_dumps(row.get("picked_survivor_perks", [])),
+                        picked_killer_perks=row.get("picked_killer_perks_json") or safe_json_dumps(row.get("picked_killer_perks", [])),
+                    ))
+                    created += 1
+                db.session.flush()
+                summary["draft_sessions"] = {"created": created, "updated": 0}
+
+            if "scraper_settings" in target_keys and "scraper_settings" in data and data["scraper_settings"]:
+                row = data["scraper_settings"][0] if isinstance(data["scraper_settings"], list) else data["scraper_settings"]
+                existing_setting = db.session.scalars(select(ScraperSetting)).first()
+                was_new = existing_setting is None
+                if not existing_setting:
+                    existing_setting = ScraperSetting()
+                    db.session.add(existing_setting)
+                existing_setting.source = row.get("source", "wikigg")
+                existing_setting.fallback_to_wiki = row.get("fallback_to_wiki", False)
+                existing_setting.last_used_source = row.get("last_used_source", "wikigg")
+                existing_setting.last_run_timestamp = row.get("last_run_timestamp")
+                db.session.flush()
+                summary["scraper_settings"] = {"created": 1 if was_new else 0, "updated": 0 if was_new else 1}
+
+            _upsert_entity(
+                data, target_keys, summary, "challenge_mode_settings", ChallengeModeSetting, "mode",
+                update_fields=["is_enabled", "disabled_reason"],
+            )
+
+            if "user_showcases" in target_keys and "user_showcases" in data:
+                sc_created = sc_updated = 0
+                for row in data["user_showcases"]:
+                    u_id = user_map.get(row.get("username"))
+                    if not u_id:
+                        continue
+                    existing_showcase = db.session.scalar(select(UserShowcase).where(UserShowcase.user_id == u_id))
+                    if not existing_showcase:
+                        existing_showcase = UserShowcase(user_id=u_id)
+                        db.session.add(existing_showcase)
+                        sc_created += 1
+                    else:
+                        sc_updated += 1
+                    for field in [
+                        "player_title", "devotion_level", "grade_rank",
+                        "survivor_main_character", "survivor_main_prestige", "survivor_perk_ids",
+                        "killer_main_character", "killer_main_prestige", "killer_perk_ids",
+                    ]:
+                        if field in row:
+                            setattr(existing_showcase, field, row[field])
+                db.session.flush()
+                summary["user_showcases"] = {"created": sc_created, "updated": sc_updated}
 
             _upsert_entity(
                 data, target_keys, summary, "community_builds", CommunityBuild, "title",

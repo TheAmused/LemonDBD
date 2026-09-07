@@ -16,7 +16,8 @@ from app.models.map import MapRealm, MapTile, MapObjective, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
 from app.models.minigames import GeneratorSetting, GuesserStat, GeneratorDrawnPerk, DraftSession, ScraperSetting
-from app.models.admin import ChallengeModeSetting
+from app.models.admin import ChallengeModeSetting, AdminAuditLog
+from app.models.changelog import ChangelogPost
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,8 @@ SUPPORTED_EXPORT_TARGETS = [
     "scraper_settings",
     "challenge_mode_settings",
     "user_showcases",
+    "admin_audit_logs",
+    "changelog_posts",
 ]
 
 
@@ -163,6 +166,31 @@ def _serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
     }
 
 
+def _serialize_admin_audit_log(log: AdminAuditLog) -> dict[str, Any]:
+    admin_user = db.session.get(User, log.admin_user_id) if log.admin_user_id else None
+    return {
+        "admin_username": admin_user.username if admin_user else None,
+        "action": log.action,
+        "target_type": log.target_type,
+        "target_id": log.target_id,
+        "details": log.details,
+        "created_at": log.created_at.isoformat() if log.created_at else None,
+    }
+
+
+def _serialize_changelog_post(post: ChangelogPost) -> dict[str, Any]:
+    return {
+        "title": post.title,
+        "content_html": post.content_html,
+        "tag": post.tag,
+        "position": post.position,
+        "is_published": post.is_published,
+        "author_username": post.author.username if post.author else None,
+        "author_name": post.author_name,
+        "created_at": post.created_at.isoformat() if post.created_at else None,
+    }
+
+
 def _serialize_offering(o: Offering) -> dict[str, Any]:
     return {
         "name": o.name,
@@ -264,6 +292,8 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
     ("scraper_settings", ScraperSetting, lambda ss: ss.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
+    ("admin_audit_logs", AdminAuditLog, _serialize_admin_audit_log, []),
+    ("changelog_posts", ChangelogPost, _serialize_changelog_post, []),
 ]
 
 # Entities whose deletion in "replace" mode is a single unconditional DELETE, gated
@@ -288,6 +318,8 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("scraper_settings", ScraperSetting),
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
+    ("admin_audit_logs", AdminAuditLog),
+    ("changelog_posts", ChangelogPost),
 ]
 
 
@@ -787,6 +819,38 @@ class DatabaseExportImportService:
                             setattr(existing_showcase, field, row[field])
                 db.session.flush()
                 summary["user_showcases"] = {"created": sc_created, "updated": sc_updated}
+
+            if "admin_audit_logs" in target_keys and "admin_audit_logs" in data:
+                created = 0
+                for row in data["admin_audit_logs"]:
+                    admin_id = user_map.get(row.get("admin_username")) if row.get("admin_username") else None
+                    db.session.add(AdminAuditLog(
+                        admin_user_id=admin_id,
+                        action=row.get("action", "unknown"),
+                        target_type=row.get("target_type"),
+                        target_id=row.get("target_id"),
+                        details=row.get("details"),
+                    ))
+                    created += 1
+                db.session.flush()
+                summary["admin_audit_logs"] = {"created": created, "updated": 0}
+
+            if "changelog_posts" in target_keys and "changelog_posts" in data:
+                created = 0
+                for row in data["changelog_posts"]:
+                    author_id = user_map.get(row.get("author_username")) if row.get("author_username") else None
+                    db.session.add(ChangelogPost(
+                        title=row.get("title", "Untitled"),
+                        content_html=row.get("content_html", ""),
+                        tag=row.get("tag", "feature"),
+                        position=row.get("position", 0),
+                        is_published=row.get("is_published", True),
+                        author_id=author_id,
+                        author_name=row.get("author_name", "The Entity"),
+                    ))
+                    created += 1
+                db.session.flush()
+                summary["changelog_posts"] = {"created": created, "updated": 0}
 
             _upsert_entity(
                 data, target_keys, summary, "community_builds", CommunityBuild, "title",

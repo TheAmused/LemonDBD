@@ -23,6 +23,7 @@ from app.models.chaos import ChaosRun, ChaosMatchLog
 from app.models.history import HistoryRun, HistoryMatchLog
 from app.models.page_streak import PageStreakRun, PageStreakPageLog
 from app.services.db.run_family_export import export_run_family, import_run_family
+from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote, Translation
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 
 logger = logging.getLogger(__name__)
@@ -56,6 +57,8 @@ SUPPORTED_EXPORT_TARGETS = [
     "chaos_runs",
     "history_runs",
     "page_streak_runs",
+    "rosters",
+    "smash_translations",
 ]
 
 
@@ -172,6 +175,43 @@ def _serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
         "killer_main_character": sc.killer_main_character,
         "killer_main_prestige": sc.killer_main_prestige,
         "killer_perk_ids": sc.killer_perk_ids,
+    }
+
+
+def _serialize_smash_entity(e: Entity) -> dict[str, Any]:
+    return {
+        "slug": e.slug,
+        "name": e.name,
+        "role": e.role,
+        "gender": e.gender,
+        "media_url": e.media_url,
+        "media_type": e.media_type,
+        "metadata_json": e.get_metadata(),
+        "order_index": e.order_index,
+        "is_active": e.is_active,
+        "stat": e.stat.to_dict() if e.stat else None,
+        "votes": [
+            {
+                "session_id": v.session_id,
+                "vote_type": v.vote_type,
+                "created_at": v.created_at.isoformat() if v.created_at else None,
+            }
+            for v in e.votes
+        ],
+    }
+
+
+def _serialize_roster(r: Roster) -> dict[str, Any]:
+    return {
+        "slug": r.slug,
+        "name_i18n_key": r.name_i18n_key,
+        "description_i18n_key": r.description_i18n_key,
+        "cover_image_url": r.cover_image_url,
+        "theme_color": r.theme_color,
+        "category": r.category,
+        "is_nsfw": r.is_nsfw,
+        "is_active": r.is_active,
+        "entities": [_serialize_smash_entity(e) for e in r.entities],
     }
 
 
@@ -512,6 +552,14 @@ class DatabaseExportImportService:
         if "page_streak_runs" in target_set:
             export_run_family(export_data, counts, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs")
 
+        if "rosters" in target_set:
+            rosters = db.session.scalars(select(Roster).order_by(Roster.id)).all()
+            export_data["rosters"] = [_serialize_roster(r) for r in rosters]
+            counts["rosters"] = len(export_data["rosters"])
+
+        if "smash_translations" in target_set:
+            _export_entity(export_data, counts, "smash_translations", Translation, lambda t: t.to_dict(), [], static_dir, include_assets)
+
         return {
             "version": "1.0",
             "exported_at": datetime.now(timezone.utc).isoformat(),
@@ -546,6 +594,13 @@ class DatabaseExportImportService:
                     db.session.execute(delete(MapRealm))
                 if "maps" in target_keys or "realms" in target_keys:
                     db.session.execute(delete(Realm))
+                if "rosters" in target_keys:
+                    db.session.execute(delete(Vote))
+                    db.session.execute(delete(EntityStat))
+                    db.session.execute(delete(Entity))
+                    db.session.execute(delete(Roster))
+                if "smash_translations" in target_keys:
+                    db.session.execute(delete(Translation))
                 for key, model in _SIMPLE_DELETE_TARGETS:
                     if key in target_keys:
                         db.session.execute(delete(model))
@@ -890,6 +945,75 @@ class DatabaseExportImportService:
                 data, target_keys, summary, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs",
                 run_natural_keys=["killer"], user_map=user_map,
             )
+
+            if "rosters" in target_keys and "rosters" in data:
+                r_created = r_updated = 0
+                for r_row in data["rosters"]:
+                    roster_obj = db.session.scalar(select(Roster).where(Roster.slug == r_row.get("slug")))
+                    if not roster_obj:
+                        roster_obj = Roster(
+                            slug=r_row.get("slug"),
+                            name_i18n_key=r_row.get("name_i18n_key", ""),
+                            description_i18n_key=r_row.get("description_i18n_key", ""),
+                        )
+                        db.session.add(roster_obj)
+                        db.session.flush()
+                        r_created += 1
+                    else:
+                        r_updated += 1
+                    for field in ["name_i18n_key", "description_i18n_key", "cover_image_url", "theme_color", "category", "is_nsfw", "is_active"]:
+                        if field in r_row:
+                            setattr(roster_obj, field, r_row[field])
+
+                    for e_row in r_row.get("entities", []):
+                        entity_obj = db.session.scalar(
+                            select(Entity).where(Entity.roster_id == roster_obj.id, Entity.slug == e_row.get("slug"))
+                        )
+                        if not entity_obj:
+                            entity_obj = Entity(roster_id=roster_obj.id, slug=e_row.get("slug"), name=e_row.get("name", ""))
+                            db.session.add(entity_obj)
+                            db.session.flush()
+                        for field in ["name", "role", "gender", "media_url", "media_type", "order_index", "is_active"]:
+                            if field in e_row:
+                                setattr(entity_obj, field, e_row[field])
+                        if "metadata_json" in e_row:
+                            entity_obj.set_metadata(e_row["metadata_json"])
+
+                        stat_row = e_row.get("stat")
+                        if stat_row:
+                            stat_obj = db.session.scalar(select(EntityStat).where(EntityStat.entity_id == entity_obj.id))
+                            if not stat_obj:
+                                stat_obj = EntityStat(entity_id=entity_obj.id)
+                                db.session.add(stat_obj)
+                            for field in ["smash_count", "pass_count", "super_smash_count", "total_votes", "smash_rate", "chaos_rating"]:
+                                if field in stat_row:
+                                    setattr(stat_obj, field, stat_row[field])
+
+                        db.session.execute(delete(Vote).where(Vote.entity_id == entity_obj.id))
+                        for vote_row in e_row.get("votes", []):
+                            db.session.add(Vote(
+                                entity_id=entity_obj.id,
+                                session_id=vote_row.get("session_id"),
+                                vote_type=vote_row.get("vote_type", "smash"),
+                            ))
+                db.session.flush()
+                summary["rosters"] = {"created": r_created, "updated": r_updated}
+
+            if "smash_translations" in target_keys and "smash_translations" in data:
+                st_created = st_updated = 0
+                for row in data["smash_translations"]:
+                    existing_translation = db.session.scalar(
+                        select(Translation).where(Translation.locale == row.get("locale"), Translation.key == row.get("key"))
+                    )
+                    if not existing_translation:
+                        existing_translation = Translation(locale=row.get("locale"), key=row.get("key"), value=row.get("value", ""))
+                        db.session.add(existing_translation)
+                        st_created += 1
+                    else:
+                        existing_translation.value = row.get("value", existing_translation.value)
+                        st_updated += 1
+                db.session.flush()
+                summary["smash_translations"] = {"created": st_created, "updated": st_updated}
 
             _upsert_entity(
                 data, target_keys, summary, "community_builds", CommunityBuild, "title",

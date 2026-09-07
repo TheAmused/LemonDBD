@@ -170,6 +170,17 @@ def _serialize_realm(rb: Realm) -> dict[str, Any]:
     }
 
 
+def _user_avatar_relative_path(avatar_url: str | None) -> str | None:
+    """Mirrors app.services.user.avatar's file layout: an uploaded avatar's
+    `avatar_url` is `/api/v1/auth/avatar/file/<filename>`, stored on disk at
+    `uploads/avatars/<filename>` under the static dir. "default_avatar" (or
+    empty) means no uploaded file exists."""
+    if not avatar_url or avatar_url == "default_avatar":
+        return None
+    filename = avatar_url.rsplit("/", 1)[-1].split("?")[0]
+    return f"uploads/avatars/{filename}" if filename else None
+
+
 def _serialize_user(u: User) -> dict[str, Any]:
     return {
         "username": u.username,
@@ -177,6 +188,7 @@ def _serialize_user(u: User) -> dict[str, Any]:
         "password_hash": u.password_hash,
         "role": u.role,
         "avatar_url": u.avatar_url,
+        "avatar_relative_path": _user_avatar_relative_path(u.avatar_url),
         "is_active": u.is_active,
         "created_at": u.created_at.isoformat() if u.created_at else None,
         "updated_at": u.updated_at.isoformat() if u.updated_at else None,
@@ -217,7 +229,7 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("addons", Addon, _serialize_addon, ["icon_local_path"]),
     ("offerings", Offering, _serialize_offering, ["icon_local_path"]),
     ("chapters", Chapter, _serialize_chapter, ["banner_local_path"]),
-    ("users", User, _serialize_user, []),
+    ("users", User, _serialize_user, ["avatar_relative_path"]),
     ("community_builds", CommunityBuild, lambda b: b.to_dict(), []),
     ("custom_perks", CustomPerk, lambda cp: cp.to_dict(), []),
     ("daily_quests", DailyQuest, lambda q: q.to_dict(), []),
@@ -599,6 +611,7 @@ class DatabaseExportImportService:
                     user_obj, "created_at", _parse_datetime(row["created_at"]) or user_obj.created_at
                 ) if row.get("created_at") else None,
                 skip_none=True,
+                asset_fields=["avatar_relative_path"], static_dir=static_dir,
             )
 
             user_map: dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}

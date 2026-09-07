@@ -1,39 +1,23 @@
 # backend/app/routes/history_streak.py
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import g, jsonify, request
 from app.core.security import login_required
+from app.core.service_registry import make_service_getter
+from app.core.streak_blueprint import make_streak_blueprint
 from app.services.history_service import HistoryService
-
-history_streak_bp = Blueprint("history_streak", __name__, url_prefix="/api/v1/history-streak")
-_default_service: HistoryService | None = None
 
 MODES = ("medium", "hell")
 
+get_history_service = make_service_getter("HISTORY_SERVICE", HistoryService)
 
-def get_history_service() -> HistoryService:
-    if current_app and current_app.config.get("HISTORY_SERVICE"):
-        return current_app.config["HISTORY_SERVICE"]
-    global _default_service
-    if _default_service is None:
-        _default_service = HistoryService()
-    return _default_service
-
-
-def _clean_mode(mode: str | None) -> str | None:
-    return mode if mode in MODES else None
-
-
-@history_streak_bp.route("/run", methods=["GET"])
-@login_required
-def get_run():
-    mode = _clean_mode(request.args.get("mode"))
-    if not mode:
-        return jsonify({"error": "Query parameter 'mode' must be one of medium, hell"}), 400
-    service = get_history_service()
-    try:
-        run = service.get_or_create_run(g.current_user.id, mode)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-    return jsonify({"run": run}), 200
+history_streak_bp = make_streak_blueprint(
+    name="history_streak",
+    url_prefix="/api/v1/history-streak",
+    get_service=get_history_service,
+    param_name="mode",
+    valid_values=MODES,
+    invalid_value_hint="one of medium, hell",
+    has_reveal=False,
+)
 
 
 @history_streak_bp.route("/result", methods=["POST"])
@@ -55,30 +39,3 @@ def submit_result():
         status = 404 if "not found" in str(e).lower() else 400
         return jsonify({"error": str(e)}), status
     return jsonify({"run": run}), 200
-
-
-@history_streak_bp.route("/run/reset", methods=["POST"])
-@login_required
-def reset_run():
-    data = request.get_json(silent=True) or {}
-    mode = _clean_mode(data.get("mode"))
-    if not mode:
-        return jsonify({"error": "Field 'mode' must be one of medium, hell"}), 400
-
-    service = get_history_service()
-    try:
-        run = service.reset_run(g.current_user.id, mode)
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 404
-    return jsonify({"run": run}), 200
-
-
-@history_streak_bp.route("/stats", methods=["GET"])
-@login_required
-def get_stats():
-    mode = _clean_mode(request.args.get("mode"))
-    if not mode:
-        return jsonify({"error": "Query parameter 'mode' must be one of medium, hell"}), 400
-    service = get_history_service()
-    stats = service.get_stats(g.current_user.id, mode)
-    return jsonify({"stats": stats}), 200

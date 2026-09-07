@@ -2,15 +2,14 @@
 // frontend/src/app/[locale]/custom-perks/page.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { CustomPerkStudio } from '@/components/perk-studio/CustomPerkStudio';
 import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { getBackendBaseUrl } from '@/utils/api';
 
 export default function CustomPerksPage() {
   const params = useParams();
@@ -18,9 +17,6 @@ export default function CustomPerksPage() {
 
   const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
-
-
-  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.customPerksPageTitle || 'LemonDBD - Custom Perk Studio');
 
@@ -31,23 +27,19 @@ export default function CustomPerksPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="custom-perks"
-        onSelectCategory={handleSelectCategory}
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-5 sm:p-7 lg:p-9 lemon-shell-main"
-      >
-        <Suspense fallback={<div className="p-8 text-center text-slate-400 font-mono">{dict?.characterDetail?.loading || 'Loading...'}</div>}>
-          <CustomPerkStudio dict={dict} currentLocale={locale} />
-        </Suspense>
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-      </main>
-    </div>
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="custom-perks"
+      onSelectCategory={handleSelectCategory}
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      padding="spacious"
+      mainClassName="overflow-y-auto"
+    >
+      <Suspense fallback={<div className="p-8 text-center text-slate-400 font-mono">{dict?.characterDetail?.loading || 'Loading...'}</div>}>
+        <CustomPerkStudio dict={dict} currentLocale={locale} />
+      </Suspense>
+      <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+    </PageShell>
   );
 }

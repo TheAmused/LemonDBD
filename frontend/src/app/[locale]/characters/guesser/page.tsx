@@ -22,7 +22,7 @@ import {
   Compass,
   Sparkles
 } from 'lucide-react';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -653,24 +653,22 @@ export default function GuesserPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay relative overflow-hidden transition-colors duration-300">
-      <div className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-30 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-200 via-indigo-100/40 to-slate-100 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-950 z-0"></div>
-
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="guesser"
-        onSelectCategory={handleSelectCategory}
-        onOpenQuests={() => setIsQuestsOpen(true)}
-        totalPerksCount={totalPerksCount}
-        survivorCount={survivorCount}
-        killerCount={killerCount}
-        characterCount={characterCount}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 z-10 lemon-shell-main"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="guesser"
+      onSelectCategory={handleSelectCategory}
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      totalPerksCount={totalPerksCount}
+      survivorCount={survivorCount}
+      killerCount={killerCount}
+      characterCount={characterCount}
+      outerClassName="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay relative overflow-hidden transition-colors duration-300"
+      decoration={
+        <div className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-30 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-200 via-indigo-100/40 to-slate-100 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-950 z-0"></div>
+      }
+      mainClassName="overflow-y-auto z-10"
+    >
         <div className="max-w-5xl mx-auto space-y-6">
           
           {activeMode === 'dashboard' ? (
@@ -1435,7 +1433,6 @@ export default function GuesserPage() {
 
         </div>
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-      </main>
-    </div>
+    </PageShell>
   );
 }

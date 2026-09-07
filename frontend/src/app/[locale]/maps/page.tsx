@@ -6,7 +6,8 @@ import React, { Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
+import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
@@ -99,18 +100,15 @@ function MapsPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="maps"
-        onSelectCategory={handleSelectCategory}
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main
-        className="flex-1 w-full min-h-screen transition-[padding] duration-300 p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lemon-shell-main"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="maps"
+      onSelectCategory={handleSelectCategory}
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      customPadding="p-4 sm:p-6 lg:p-7"
+      mainClassName="min-h-screen flex flex-col gap-4"
+    >
         <div className="flex justify-center">
           <ToggleSwitch
             value={searchMode}
@@ -134,8 +132,7 @@ function MapsPageInner() {
         />
 
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-      </main>
-    </div>
+    </PageShell>
   );
 }
 
@@ -143,12 +140,11 @@ export default function MapsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-          <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-slate-200 dark:border-slate-800 bg-[#0a0f18]/90 p-4 space-y-4 select-none animate-pulse" />
-          <main className="flex-1 w-full min-h-screen p-4 sm:p-6 lg:p-7 flex flex-col gap-4 lemon-shell-main">
-            <MapsPageSkeleton />
-          </main>
-        </div>
+        <PageShellFallback
+          customPadding="p-4 sm:p-6 lg:p-7"
+          mainClassName="min-h-screen flex flex-col gap-4"
+          skeleton={<MapsPageSkeleton />}
+        />
       }
     >
       <MapsPageInner />

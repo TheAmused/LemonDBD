@@ -35,6 +35,16 @@ user_service = UserService()
 ownership_service = OwnershipService()
 
 
+def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[Response, int] | None:
+    """Return a 403 response if the current user is neither `user_id` nor an
+    admin, else None. Shared by every per-user route so the same access rule
+    (self or admin) can't drift between handlers."""
+    curr = g.current_user
+    if curr.id != user_id and curr.role != "admin":
+        return jsonify({"error": message, "status": 403}), 403
+    return None
+
+
 @users_bp.route("/users", methods=["GET"])
 @admin_required
 def list_users():
@@ -82,9 +92,8 @@ def create_user_by_admin():
 @login_required
 def get_user_detail(user_id: int):
     """Retrieve detailed user account and ownership information."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized access to user profile.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id, "Unauthorized access to user profile."):
+        return err_resp
 
     user = user_service.get_user_by_id(user_id)
     if not user:
@@ -289,9 +298,8 @@ def import_database():
 @login_required
 def get_user_characters(user_id: int):
     """Retrieve character ownership flags for a user."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized access to character ownership.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id, "Unauthorized access to character ownership."):
+        return err_resp
 
     # Ownership rows double as the identifier gauntlet/chaos runs match against,
     # so translation here is opt-in via an explicit `lang` param only -- never
@@ -311,9 +319,8 @@ def get_user_characters(user_id: int):
 @login_required
 def set_single_character_ownership(user_id: int):
     """Toggle or set character ownership for a single character."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     character_id = data.get("character_id")
@@ -333,9 +340,8 @@ def set_single_character_ownership(user_id: int):
 @login_required
 def bulk_set_character_ownership(user_id: int):
     """Bulk update character ownership states."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
@@ -351,9 +357,8 @@ def bulk_set_character_ownership(user_id: int):
 @login_required
 def mark_user_onboarding_complete(user_id: int):
     """Stamp the character-ownership onboarding wizard as done."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     user, err = user_service.mark_onboarding_complete(user_id)
     if err:
@@ -369,9 +374,8 @@ def mark_user_onboarding_complete(user_id: int):
 @login_required
 def set_user_preferred_language(user_id: int):
     """Set the user's preferred site language (onboarding wizard's language step)."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     language = data.get("language")
@@ -393,9 +397,8 @@ def set_user_preferred_language(user_id: int):
 @login_required
 def get_user_perks(user_id: int):
     """Retrieve perk unlock status for a specific user."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized access to perk ownership.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id, "Unauthorized access to perk ownership."):
+        return err_resp
 
     # Same opt-in-only rule as get_user_characters: perk `name` here is matched
     # against run-state build slots, so it must stay in the caller's control.
@@ -412,9 +415,8 @@ def get_user_perks(user_id: int):
 @login_required
 def set_single_perk_ownership(user_id: int):
     """Toggle or set perk unlock state for a single perk."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     perk_id = data.get("perk_id")
@@ -434,9 +436,8 @@ def set_single_perk_ownership(user_id: int):
 @login_required
 def bulk_set_perk_ownership(user_id: int):
     """Bulk update perk unlock states."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     data = request.get_json(silent=True) or {}
     updates = data.get("updates", [])
@@ -452,9 +453,8 @@ def bulk_set_perk_ownership(user_id: int):
 @login_required
 def get_user_ownership_summary(user_id: int):
     """Retrieve an aggregated overview of owned characters and unlocked perks."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id):
+        return err_resp
 
     summary = ownership_service.get_user_ownership_summary(user_id)
     return jsonify(summary), 200
@@ -475,9 +475,8 @@ def get_user_showcase(user_id: int):
 @login_required
 def update_user_showcase(user_id: int):
     """Update custom player showcase attributes."""
-    curr = g.current_user
-    if curr.id != user_id and curr.role != "admin":
-        return jsonify({"error": "Unauthorized access to user profile.", "status": 403}), 403
+    if err_resp := _self_or_admin_error(user_id, "Unauthorized access to user profile."):
+        return err_resp
 
     user = user_service.get_user_by_id(user_id)
     if not user:

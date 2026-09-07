@@ -45,6 +45,33 @@ class TestLivePerksAndEquipmentAPI:
         perk = data.get("data", data)
         assert "Sprint Burst" in perk["name"]
 
+    def test_live_perk_suggestions_sql_prefilter(self, live_client: FlaskClient) -> None:
+        """`fetch_perk_suggestions` filters at the SQL level (Postgres `unaccent`
+        + `regexp_replace`) before the existing Python-side exact match, instead
+        of fetching every perk on every request. This locks in that the two
+        stages still agree: a plain substring, an accent-insensitive localized
+        (Polish) match, and a no-match query."""
+        res = live_client.get("/api/v1/perks/suggestions?q=sprint")
+        assert res.status_code == 200
+        names = [p["name"] for p in res.get_json()["data"]]
+        assert "Sprint Burst" in names
+
+        # "Resilience" translates to "Zaradność" in Polish -- searching the
+        # accent-free "zaradnosc" must still find it via SQL-side unaccent(),
+        # and the response localizes the returned name to lang=pl.
+        res_pl = live_client.get("/api/v1/perks/suggestions?q=zaradnosc&lang=pl")
+        assert res_pl.status_code == 200
+        pl_names = [p["name"] for p in res_pl.get_json()["data"]]
+        assert "Zaradność" in pl_names
+
+        res_category = live_client.get("/api/v1/perks/suggestions?q=a&category=killer&limit=5")
+        assert res_category.status_code == 200
+        assert all(p["category"] == "Killer" for p in res_category.get_json()["data"])
+
+        res_none = live_client.get("/api/v1/perks/suggestions?q=zzznotarealperkzzz")
+        assert res_none.status_code == 200
+        assert res_none.get_json()["data"] == []
+
     def test_live_list_characters_and_details(self, live_client: FlaskClient) -> None:
         res = live_client.get("/api/v1/characters")
         assert res.status_code == 200

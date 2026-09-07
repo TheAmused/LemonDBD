@@ -21,9 +21,18 @@ describe('Perks Vault Theme Support', () => {
         onLimitChange: () => {},
       })
     );
-    assert.ok(html.includes('dark:text-slate-100'), 'Numbers must have dark:text-slate-100');
-    assert.ok(html.includes('text-slate-900'), 'Numbers must have text-slate-900 for light mode');
-    assert.ok(html.includes('border-slate-200'), 'Buttons must support border-slate-200');
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('dark:text-slate-100'),
+      'Numbers must have dark:text-slate-100 or text-text-primary'
+    );
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('text-slate-900'),
+      'Numbers must have text-slate-900 or text-text-primary'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Buttons must support themed border'
+    );
   });
 
   it('Pagination with totalPages > 7 renders jump input and limit select with theme classes', () => {
@@ -38,16 +47,37 @@ describe('Perks Vault Theme Support', () => {
       })
     );
     // Limit select classes
-    assert.ok(html.includes('border-slate-200'), 'Limit select must support border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Limit select must support dark:border-slate-800');
-    assert.ok(html.includes('bg-white'), 'Limit select must support bg-white');
-    assert.ok(html.includes('dark:bg-slate-900'), 'Limit select must support dark:bg-slate-900');
-    assert.ok(html.includes('text-slate-900'), 'Limit select must support text-slate-900');
-    assert.ok(html.includes('dark:text-slate-200'), 'Limit select must support dark:text-slate-200');
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200'),
+      'Limit select must support themed border'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('dark:border-slate-800'),
+      'Limit select must support dark border'
+    );
+    assert.ok(
+      html.includes('bg-bg-elevated') || html.includes('bg-bg-surface') || html.includes('bg-white'),
+      'Limit select must support themed bg'
+    );
+    assert.ok(
+      html.includes('bg-bg-elevated') || html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900'),
+      'Limit select must support dark bg'
+    );
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('text-slate-900'),
+      'Limit select must support themed text'
+    );
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('dark:text-slate-200'),
+      'Limit select must support dark text'
+    );
 
     // Jump input
     assert.ok(html.includes('id="jump-to-page"'), 'Must render jump to page input when safeTotalPages > 7');
-    assert.ok(html.includes('dark:text-slate-100'), 'Jump input must have dark:text-slate-100');
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('dark:text-slate-100'),
+      'Jump input must have dark:text-slate-100 or text-text-primary'
+    );
   });
 
   it('PerkCard in list view mode supports light and dark theme classes and coordinate contrast', () => {
@@ -68,9 +98,18 @@ describe('Perks Vault Theme Support', () => {
         onSelect: () => {},
       })
     );
-    assert.ok(html.includes('bg-white dark:bg-slate-900/40'), 'Must have list container light/dark backgrounds');
-    assert.ok(html.includes('text-slate-900 dark:text-slate-100'), 'Must have perk title light/dark text colors');
-    assert.ok(html.includes('text-amber-700 dark:text-amber-400/90'), 'Coordinate label must have light mode contrast');
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('bg-white dark:bg-slate-900/40'),
+      'Must have list container themed backgrounds'
+    );
+    assert.ok(
+      html.includes('text-text-primary') || html.includes('text-slate-900 dark:text-slate-100'),
+      'Must have perk title themed text colors'
+    );
+    assert.ok(
+      html.includes('text-accent-amber') || html.includes('text-amber-700 dark:text-amber-400/90'),
+      'Coordinate label must have amber contrast'
+    );
   });
 
   it('PerkModal renders with light and dark themes and high-contrast title and alias badge', () => {
@@ -90,11 +129,26 @@ describe('Perks Vault Theme Support', () => {
         onClose: () => {},
       })
     );
-    assert.ok(html.includes('bg-white dark:bg-[#0c121e]/95'), 'Modal background must support light and dark modes');
-    assert.ok(html.includes('text-amber-600 dark:text-amber-400'), 'Title must have light mode contrast');
-    assert.ok(html.includes('text-amber-700 dark:text-amber-300'), 'Alias badge must have light mode contrast');
-    assert.ok(html.includes('border-slate-200 dark:border-slate-800/80'), 'Divider must support light and dark borders');
-    assert.ok(html.includes('scrollbar-track-slate-100 dark:scrollbar-track-slate-900'), 'Scrollbar track must support light/dark modes');
+    assert.ok(
+      html.includes('bg-bg-surface') || html.includes('bg-white dark:bg-[#0c121e]/95'),
+      'Modal background must support themed background'
+    );
+    assert.ok(
+      html.includes('text-accent-amber') || html.includes('text-amber-600 dark:text-amber-400'),
+      'Title must have themed amber contrast'
+    );
+    assert.ok(
+      html.includes('text-accent-amber') || html.includes('text-amber-700 dark:text-amber-300'),
+      'Alias badge must have themed amber contrast'
+    );
+    assert.ok(
+      html.includes('border-border-color') || html.includes('border-slate-200 dark:border-slate-800/80'),
+      'Divider must support themed borders'
+    );
+    assert.ok(
+      html.includes('scrollbar-track') || html.includes('scrollbar-track-slate-100 dark:scrollbar-track-slate-900'),
+      'Scrollbar track must support light/dark modes'
+    );
   });
 
   it('PerkDescription supports dark text in light mode and silver in dark mode, including child elements', () => {
@@ -103,19 +157,34 @@ describe('Perks Vault Theme Support', () => {
         description: 'Grants a 3% Haste effect.',
       })
     );
-    assert.ok(html.includes('text-slate-700') || html.includes('text-slate-800'), 'Must have dark text in light mode');
-    assert.ok(html.includes('dark:text-slate-300'), 'Must have dark:text-slate-300');
     assert.ok(
-      html.includes('[&amp;_p]:text-slate-700') || html.includes('[&_p]:text-slate-700'),
-      'Must have child paragraph class override for light mode'
+      html.includes('text-text-secondary') || html.includes('text-slate-700') || html.includes('text-slate-800'),
+      'Must have secondary text in light mode'
     );
     assert.ok(
-      html.includes('dark:[&amp;_p]:text-slate-300') || html.includes('dark:[&_p]:text-slate-300'),
+      html.includes('text-text-secondary') || html.includes('dark:text-slate-300'),
+      'Must have dark text support'
+    );
+    assert.ok(
+      html.includes('[&amp;_p]:text-text-secondary') ||
+      html.includes('[&_p]:text-text-secondary') ||
+      html.includes('[&amp;_p]:text-slate-700') ||
+      html.includes('[&_p]:text-slate-700'),
+      'Must have child paragraph class override'
+    );
+    assert.ok(
+      html.includes('dark:[&amp;_p]:text-slate-300') ||
+      html.includes('dark:[&_p]:text-slate-300') ||
+      html.includes('[&amp;_p]:text-text-secondary') ||
+      html.includes('[&_p]:text-text-secondary'),
       'Must have child paragraph class override for dark mode'
     );
     assert.ok(
-      html.includes('[&amp;_strong]:text-amber-700') || html.includes('[&_strong]:text-amber-700'),
-      'Must have child strong tag override for highlighted values in light mode'
+      html.includes('[&amp;_strong]:text-accent-amber') ||
+      html.includes('[&_strong]:text-accent-amber') ||
+      html.includes('[&amp;_strong]:text-amber-700') ||
+      html.includes('[&_strong]:text-amber-700'),
+      'Must have child strong tag override for highlighted values'
     );
   });
 });

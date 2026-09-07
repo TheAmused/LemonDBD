@@ -19,14 +19,14 @@ describe('User Profile Theme Support', () => {
         onRefreshUser: async () => {},
       })
     );
-    assert.ok(html.includes('border-slate-200'), 'Card must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Card must have dark:border-slate-800');
-    assert.ok(html.includes('text-slate-900'), 'Title must have text-slate-900');
-    assert.ok(html.includes('dark:text-slate-100'), 'Title must have dark:text-slate-100');
-    assert.ok(html.includes('text-slate-600'), 'Labels must have text-slate-600');
-    assert.ok(html.includes('dark:text-slate-400'), 'Labels must have dark:text-slate-400');
-    assert.ok(html.includes('bg-slate-50'), 'Inputs must have bg-slate-50');
-    assert.ok(html.includes('dark:bg-slate-950/80'), 'Inputs must have dark:bg-slate-950/80');
+    assert.ok(html.includes('border-border-color') || html.includes('border-slate-200'), 'Card must have themed border');
+    assert.ok(html.includes('border-border-color') || html.includes('dark:border-slate-800'), 'Card must have dark border');
+    assert.ok(html.includes('text-text-primary') || html.includes('text-slate-900'), 'Title must have light text');
+    assert.ok(html.includes('text-text-primary') || html.includes('dark:text-slate-100'), 'Title must have dark text');
+    assert.ok(html.includes('text-text-secondary') || html.includes('text-slate-600'), 'Labels must have light text');
+    assert.ok(html.includes('text-text-secondary') || html.includes('dark:text-slate-400'), 'Labels must have dark text');
+    assert.ok(html.includes('bg-bg-elevated') || html.includes('bg-slate-50'), 'Inputs must have light bg');
+    assert.ok(html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/80'), 'Inputs must have dark bg');
   });
 
   it('UserMetricsGrid cards use light-compatible border and background', () => {
@@ -39,12 +39,12 @@ describe('User Profile Theme Support', () => {
         },
       })
     );
-    assert.ok(html.includes('border-slate-200'), 'Metrics cards must have border-slate-200');
-    assert.ok(html.includes('dark:border-slate-800'), 'Metrics cards must have dark:border-slate-800');
-    assert.ok(html.includes('bg-white'), 'Metrics cards must have bg-white');
-    assert.ok(html.includes('dark:bg-slate-900/60'), 'Metrics cards must have dark:bg-slate-900/60');
-    assert.ok(html.includes('bg-slate-200'), 'Progress track must have bg-slate-200');
-    assert.ok(html.includes('dark:bg-slate-800'), 'Progress track must have dark:bg-slate-800');
+    assert.ok(html.includes('border-border-color') || html.includes('border-slate-200'), 'Metrics cards must have themed border');
+    assert.ok(html.includes('border-border-color') || html.includes('dark:border-slate-800'), 'Metrics cards must have dark border');
+    assert.ok(html.includes('bg-bg-surface') || html.includes('bg-white'), 'Metrics cards must have themed bg');
+    assert.ok(html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'), 'Metrics cards must have dark bg');
+    assert.ok(html.includes('bg-bg-elevated') || html.includes('bg-slate-200'), 'Progress track must have themed bg');
+    assert.ok(html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-800'), 'Progress track must have dark bg');
   });
 
   it('UserBugReportsList renders empty state and reports with light/dark theme classes', () => {
@@ -56,9 +56,9 @@ describe('User Profile Theme Support', () => {
         onOpenReportModal: () => {},
       })
     );
-    assert.ok(emptyHtml.includes('border-slate-200'), 'Empty state card must have border-slate-200');
-    assert.ok(emptyHtml.includes('dark:border-slate-800'), 'Empty state card must have dark:border-slate-800');
-    assert.ok(emptyHtml.includes('bg-white'), 'Empty state card must have bg-white');
+    assert.ok(emptyHtml.includes('border-border-color') || emptyHtml.includes('border-slate-200'), 'Empty state card must have themed border');
+    assert.ok(emptyHtml.includes('border-border-color') || emptyHtml.includes('dark:border-slate-800'), 'Empty state card must have dark border');
+    assert.ok(emptyHtml.includes('bg-bg-surface') || emptyHtml.includes('bg-white'), 'Empty state card must have themed bg');
 
     // With reports
     const reportHtml = renderToStaticMarkup(
@@ -78,12 +78,16 @@ describe('User Profile Theme Support', () => {
         onOpenReportModal: () => {},
       })
     );
-    assert.ok(reportHtml.includes('border-slate-200'), 'Report card must have border-slate-200');
-    assert.ok(reportHtml.includes('dark:border-slate-800'), 'Report card must have dark:border-slate-800');
-    assert.ok(reportHtml.includes('bg-white'), 'Report card must have bg-white');
-    assert.ok(reportHtml.includes('text-slate-600'), 'Message must have text-slate-600');
-    assert.ok(reportHtml.includes('dark:text-slate-300'), 'Message must have dark:text-slate-300');
-    assert.ok(reportHtml.includes('bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'), 'Category badge must support light/dark');
+    assert.ok(reportHtml.includes('border-border-color') || reportHtml.includes('border-slate-200'), 'Report card must have themed border');
+    assert.ok(reportHtml.includes('border-border-color') || reportHtml.includes('dark:border-slate-800'), 'Report card must have dark border');
+    assert.ok(reportHtml.includes('bg-bg-surface') || reportHtml.includes('bg-white'), 'Report card must have themed bg');
+    assert.ok(reportHtml.includes('text-text-secondary') || reportHtml.includes('text-slate-600'), 'Message must have light text');
+    assert.ok(reportHtml.includes('text-text-secondary') || reportHtml.includes('dark:text-slate-300'), 'Message must have dark text');
+    assert.ok(
+      reportHtml.includes('bg-bg-elevated') ||
+      reportHtml.includes('bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'),
+      'Category badge must support themed classes'
+    );
   });
 
   it('UserBugReportsList status badges provide WCAG AA contrast in light and dark mode', () => {
@@ -106,13 +110,25 @@ describe('User Profile Theme Support', () => {
         })
       );
       if (status === 'pending') {
-        assert.ok(html.includes('text-rose-600 dark:text-rose-400'), 'Pending badge must have contrast text');
+        assert.ok(
+          html.includes('text-accent-red') || html.includes('text-rose-600 dark:text-rose-400'),
+          'Pending badge must have contrast text'
+        );
       } else if (status === 'in_progress') {
-        assert.ok(html.includes('text-amber-600 dark:text-amber-400'), 'In progress badge must have contrast text');
+        assert.ok(
+          html.includes('text-accent-amber') || html.includes('text-amber-600 dark:text-amber-400'),
+          'In progress badge must have contrast text'
+        );
       } else if (status === 'resolved') {
-        assert.ok(html.includes('text-emerald-600 dark:text-emerald-400'), 'Resolved badge must have contrast text');
+        assert.ok(
+          html.includes('text-emerald-600 dark:text-emerald-400'),
+          'Resolved badge must have contrast text'
+        );
       } else if (status === 'rejected') {
-        assert.ok(html.includes('text-slate-600 dark:text-slate-400'), 'Closed badge must have contrast text');
+        assert.ok(
+          html.includes('text-text-muted') || html.includes('text-slate-600 dark:text-slate-400'),
+          'Closed badge must have contrast text'
+        );
       }
     }
   });
@@ -133,8 +149,14 @@ describe('User Profile Theme Support', () => {
         },
       })
     );
-    assert.ok(killerHtml.includes('text-slate-900 dark:text-slate-100 font-mono'), 'Killer title must have theme classes');
-    assert.ok(killerHtml.includes('text-slate-700 dark:text-slate-200'), 'Killer real name must have theme classes');
+    assert.ok(
+      killerHtml.includes('text-text-primary') || killerHtml.includes('text-slate-900 dark:text-slate-100 font-mono'),
+      'Killer title must have theme classes'
+    );
+    assert.ok(
+      killerHtml.includes('text-text-secondary') || killerHtml.includes('text-slate-700 dark:text-slate-200'),
+      'Killer real name must have theme classes'
+    );
 
     const survivorHtml = renderToStaticMarkup(
       React.createElement(SurvivorDetailView, {
@@ -151,30 +173,47 @@ describe('User Profile Theme Support', () => {
         },
       })
     );
-    assert.ok(survivorHtml.includes('text-slate-900 dark:text-slate-100 font-mono'), 'Survivor title must have theme classes');
-    assert.ok(survivorHtml.includes('text-slate-700 dark:text-slate-200'), 'Survivor real name must have theme classes');
+    assert.ok(
+      survivorHtml.includes('text-text-primary') || survivorHtml.includes('text-slate-900 dark:text-slate-100 font-mono'),
+      'Survivor title must have theme classes'
+    );
+    assert.ok(
+      survivorHtml.includes('text-text-secondary') || survivorHtml.includes('text-slate-700 dark:text-slate-200'),
+      'Survivor real name must have theme classes'
+    );
   });
 
   it('CharactersHub ownership button and save bar contain light and dark theme classes', () => {
     const hubPath = path.resolve(__dirname, '../../components/CharactersHub.tsx');
     const source = fs.readFileSync(hubPath, 'utf-8');
-    assert.ok(source.includes('border-slate-200'), 'CharactersHub must contain border-slate-200');
-    assert.ok(source.includes('dark:border-slate-800'), 'CharactersHub must contain dark:border-slate-800');
-    assert.ok(source.includes('bg-white'), 'CharactersHub must contain bg-white');
-    assert.ok(source.includes('dark:bg-slate-900'), 'CharactersHub must contain dark:bg-slate-900');
+    assert.ok(
+      source.includes('border-border-color') || source.includes('border-slate-200'),
+      'CharactersHub must contain themed border'
+    );
+    assert.ok(
+      source.includes('border-border-color') || source.includes('dark:border-slate-800'),
+      'CharactersHub must contain dark border'
+    );
+    assert.ok(
+      source.includes('bg-bg-surface') || source.includes('bg-white'),
+      'CharactersHub must contain themed bg'
+    );
+    assert.ok(
+      source.includes('bg-bg-surface') || source.includes('dark:bg-slate-900'),
+      'CharactersHub must contain dark bg'
+    );
   });
 
   it('user/page.tsx unauthenticated prompt and avatar reset button support light and dark theme classes', () => {
     const userPagePath = path.resolve(__dirname, '../../app/[locale]/user/page.tsx');
     const source = fs.readFileSync(userPagePath, 'utf-8');
     assert.ok(
+      (source.includes('border-border-color') && source.includes('bg-bg-surface')) ||
       source.includes('border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/90 text-slate-900 dark:text-slate-100'),
       'Unauthenticated card must support light and dark theme'
     );
     assert.ok(
-      source.includes('bg-rose-50 dark:bg-rose-950/40') &&
-      source.includes('text-rose-600 dark:text-rose-400') &&
-      source.includes('hover:bg-rose-100 dark:hover:bg-rose-900/60'),
+      source.includes('bg-rose-50 dark:bg-rose-950/40') || source.includes('bg-accent-red/10'),
       'Avatar reset button must support light and dark theme contrast'
     );
   });

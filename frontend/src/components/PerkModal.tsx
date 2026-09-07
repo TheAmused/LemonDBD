@@ -64,7 +64,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-8 shadow-2xl text-text-primary cursor-default animate-in zoom-in-95 duration-200 backdrop-blur-2xl transition-colors"
+        className="relative w-full max-w-2xl rounded-3xl border border-border-color bg-white dark:bg-[#0c121e]/95 p-6 sm:p-8 shadow-2xl text-text-primary cursor-default animate-in zoom-in-95 duration-200 backdrop-blur-2xl transition-colors"
       >
         <button
           type="button"
@@ -92,7 +92,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           <div className="space-y-2">
             <h2
               id="perk-modal-title"
-              className="text-2xl sm:text-3xl font-black text-accent-amber tracking-tight leading-tight"
+              className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 tracking-tight leading-tight"
             >
               {perk.name}
             </h2>
@@ -128,7 +128,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
               </div>
 
               {perk.alternate_name && (
-                <div className="flex items-center gap-1 rounded-lg bg-accent-amber/10 px-2.5 py-1 text-xs font-bold text-accent-amber border border-accent-amber/30">
+                <div className="flex items-center gap-1 rounded-lg bg-accent-amber/10 px-2.5 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 border border-accent-amber/30">
                   <Repeat className="h-3 w-3 text-accent-amber" />
                   <span>
                     {dict?.modal?.alias && `${dict.modal.alias}: `}
@@ -140,7 +140,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           </div>
         </div>
 
-        <div className="mt-6 border-t border-border-color pt-5">
+        <div className="mt-6 border-t border-slate-200 dark:border-slate-800/80 pt-5">
           {dict?.modal?.perkDescription && (
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-[10px] font-black uppercase tracking-widest text-text-muted font-mono">
@@ -151,7 +151,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
 
           <div
             id="perk-modal-description"
-            className="max-h-[360px] overflow-y-auto pr-2 custom-scrollbar"
+            className="max-h-[360px] overflow-y-auto pr-2 custom-scrollbar scrollbar-track-slate-100 dark:scrollbar-track-slate-900"
           >
             <PerkDescription
               description={perk.description}

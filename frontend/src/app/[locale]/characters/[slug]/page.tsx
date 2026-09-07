@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { CharacterDetailSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import {
   CharacterSubpageView,
@@ -85,17 +85,13 @@ export default function CharacterDetailPage() {
   const t = dict.characterDetail;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="characters"
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="characters"
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      mainClassName="overflow-y-auto"
+    >
         {loading ? (
           <CharacterDetailSkeleton dict={dict} />
         ) : notFound || !detailData ? (
@@ -138,7 +134,6 @@ export default function CharacterDetailPage() {
             dict={dict}
           />
         )}
-      </main>
-    </div>
+    </PageShell>
   );
 }

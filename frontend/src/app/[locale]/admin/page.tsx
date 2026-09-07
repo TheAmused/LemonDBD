@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { getBackendBaseUrl } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminStatsGrid } from '@/components/admin/AdminStatsGrid';
 import { AdminUserTable } from '@/components/admin/AdminUserTable';
@@ -465,13 +465,13 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200">
-      <Sidebar currentLocale={currentLocale} dict={dict} activeCategory="admin" />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
-        id="main-admin-content"
-      >
+    <PageShell
+      locale={currentLocale}
+      dict={dict}
+      activeCategory="admin"
+      mainId="main-admin-content"
+      mainClassName="overflow-y-auto"
+    >
         <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
           <AdminHeader
             isSyncing={isSyncing}
@@ -664,7 +664,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
             </Suspense>
           )}
         </div>
-      </main>
 
       <AdminCreateUserModal
         isOpen={isCreateUserOpen}
@@ -715,7 +714,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         onConfirm={confirmDeleteBugReport}
         onCancel={() => setBugReportPendingDeletion(null)}
       />
-    </div>
+    </PageShell>
   );
 }
 

@@ -1,18 +1,10 @@
 # backend/app/routes/generator.py
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
+from app.core.service_registry import make_service_getter
 from app.services.generator_service import GeneratorService
 
 generator_bp = Blueprint("generator", __name__, url_prefix="/api/v1/generator")
-_default_service: GeneratorService | None = None
-
-
-def get_generator_service() -> GeneratorService:
-    if current_app and current_app.config.get("GENERATOR_SERVICE"):
-        return current_app.config["GENERATOR_SERVICE"]
-    global _default_service
-    if _default_service is None:
-        _default_service = GeneratorService()
-    return _default_service
+get_generator_service = make_service_getter("GENERATOR_SERVICE", GeneratorService)
 
 
 @generator_bp.route("/config", methods=["GET", "POST"])

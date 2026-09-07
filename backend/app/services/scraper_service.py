@@ -89,7 +89,7 @@ class ScraperService:
     def sync_game_dump_translations(self, locales: list[str] | None = None, translations_dir: Path | None = None) -> dict[str, Any]:
         return self.sync_translations(locales=locales, translations_dir=translations_dir)
 
-    def parse_character_page(self, html: str, page_category: str = "") -> list[CharacterData]:
+    def parse_character_page(self, html: str) -> list[CharacterData]:
         from bs4 import BeautifulSoup
         soup = BeautifulSoup(html, "html.parser")
         characters: list[CharacterData] = []

@@ -24,6 +24,7 @@ import {
   Sliders,
   type LucideIcon,
 } from 'lucide-react';
+import { EmptyState } from '@/components/EmptyState';
 import type { Dictionary } from '@/locales/types';
 
 export interface CustomPerk {
@@ -687,23 +688,26 @@ export const CustomPerkStudio: React.FC<CustomPerkStudioProps> = ({ dict, curren
               {dict?.app?.loadingPerks || ''}
             </div>
           ) : customPerks.length === 0 ? (
-            <div className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
-              <Sparkles className="h-8 w-8 text-slate-400 dark:text-slate-600 mx-auto" aria-hidden="true" />
-              <h3 className="text-base font-bold text-slate-800 dark:text-slate-300">
-                {dict?.empty?.title || ''}
-              </h3>
-              <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                {dict?.empty?.subtitle || ''}
-              </p>
-              <button
-                type="button"
-                onClick={() => setActiveTab('designer')}
-                className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500 transition-colors cursor-pointer shadow-md shadow-red-900/20"
-              >
-                <Plus className="h-4 w-4" aria-hidden="true" />
-                <span>{dict?.customPerks?.createNew || ''}</span>
-              </button>
-            </div>
+            <EmptyState
+              icon={Sparkles}
+              iconClassName="h-8 w-8 text-slate-400 dark:text-slate-600 mx-auto"
+              headingClassName="text-base font-bold text-slate-800 dark:text-slate-300"
+              subtitleClassName="text-xs text-slate-500 max-w-sm mx-auto"
+              className="bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3"
+              title={dict?.empty?.title || ''}
+              subtitle={dict?.empty?.subtitle || ''}
+              action={{
+                label: (
+                  <>
+                    <Plus className="h-4 w-4" aria-hidden="true" />
+                    <span>{dict?.customPerks?.createNew || ''}</span>
+                  </>
+                ),
+                onClick: () => setActiveTab('designer'),
+                className:
+                  'mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-500 transition-colors cursor-pointer shadow-md shadow-red-900/20',
+              }}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" role="list">
               {customPerks.map((perk) => {

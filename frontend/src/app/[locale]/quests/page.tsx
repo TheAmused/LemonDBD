@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { Locale } from '@/i18n/config';
 import {
   Trophy,
@@ -18,6 +18,7 @@ import type { Quest } from '@/types/quest';
 import type { Dictionary } from '@/locales/types';
 import { fetchQuests, claimQuest } from '@/services/questApi';
 import { DbdSpinner } from '@/components/DbdSpinner';
+import { EmptyState } from '@/components/EmptyState';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { getBackendBaseUrl } from '@/utils/api';
@@ -101,18 +102,15 @@ export default function QuestsPage({ params }: QuestsPageProps) {
   const totalQuestsCompleted = quests.filter((q) => q.is_completed).length;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="quests"
-        onSelectCategory={handleSelectCategory}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-5 sm:p-7 lg:p-9 lemon-shell-main"
-        id="main-quests-content"
-      >
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="quests"
+      onSelectCategory={handleSelectCategory}
+      padding="spacious"
+      mainId="main-quests-content"
+      mainClassName="overflow-y-auto"
+    >
         {/* ── Atmospheric Hero Header ── */}
         <div className="mb-7 flex flex-col gap-4">
           <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-gradient-to-br from-amber-50/80 via-white to-slate-100 dark:from-slate-900/90 dark:via-slate-900/60 dark:to-slate-950/90 p-6 sm:p-7 backdrop-blur-xl shadow-sm dark:shadow-2xl">
@@ -243,15 +241,15 @@ export default function QuestsPage({ params }: QuestsPageProps) {
               />
             </div>
           ) : filteredQuests.length === 0 ? (
-            <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm">
-              <Scroll className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-              <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-200">
-                {dict?.empty?.title || 'No Quests Found'}
-              </h3>
-              <p className="mt-1 text-xs text-slate-500 max-w-sm mx-auto">
-                {dict?.quests?.noQuestsDesc || 'No quests available in this category right now. Check back soon for new trial objectives!'}
-              </p>
-            </div>
+            <EmptyState
+              icon={Scroll}
+              headingClassName="text-lg font-extrabold text-slate-800 dark:text-slate-200"
+              title={dict?.empty?.title || 'No Quests Found'}
+              subtitle={
+                dict?.quests?.noQuestsDesc ||
+                'No quests available in this category right now. Check back soon for new trial objectives!'
+              }
+            />
           ) : (
             filteredQuests.map((quest) => {
               const isReadyToClaim = quest.progress >= quest.goal && !quest.is_completed;
@@ -359,7 +357,6 @@ export default function QuestsPage({ params }: QuestsPageProps) {
             })
           )}
         </div>
-      </main>
-    </div>
+    </PageShell>
   );
 }

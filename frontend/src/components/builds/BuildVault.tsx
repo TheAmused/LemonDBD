@@ -20,6 +20,7 @@ import {
   Filter,
 } from 'lucide-react';
 import { DbdSpinner } from '@/components/DbdSpinner';
+import { EmptyState } from '@/components/EmptyState';
 import type { Dictionary } from '@/locales/types';
 
 export interface Build {
@@ -348,15 +349,13 @@ export const BuildVault: React.FC<BuildVaultProps> = ({ dict, currentLocale = 'e
           />
         </div>
       ) : builds.length === 0 ? (
-        <div className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center">
-          <Flame className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-600 mb-3" />
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">
-            {dict?.empty?.title || ''}
-          </h3>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            {dict?.empty?.subtitle || ''}
-          </p>
-        </div>
+        <EmptyState
+          icon={Flame}
+          headingClassName="text-lg font-bold text-slate-800 dark:text-slate-200"
+          className="my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 p-12 text-center"
+          title={dict?.empty?.title || ''}
+          subtitle={dict?.empty?.subtitle || ''}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {builds.map((build) => {

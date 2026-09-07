@@ -6,7 +6,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    SmashPassStat,
     Translation,
 )
 from app.seeds.smash_roster_seeder import seed_smash_rosters
@@ -203,19 +202,6 @@ class TestSmashSeederService:
         assert res4["stat"]["super_smash_count"] == 1
         assert res4["stat"]["total_votes"] == 3
         assert res4["stat"]["smash_rate"] == 33.3
-
-        leg_stat = db_session.scalar(
-            select(SmashPassStat).where(
-                SmashPassStat.character_slug == "ada_wong",
-                SmashPassStat.edition == "canon",
-            )
-        )
-        assert leg_stat is not None
-        assert leg_stat.smash_count == 0
-        assert leg_stat.pass_count == 2
-        assert leg_stat.super_smash_count == 1
-        assert leg_stat.total_votes == 3
-        assert leg_stat.smash_rate == 33.3
 
     def test_service_cast_vote_by_entity_id(self, db_session: Session) -> None:
         seed_smash_rosters()

@@ -4,7 +4,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { LemonIcon } from '@/components/LemonIcon';
 import { QuestsModal } from '@/components/QuestsModal';
 import { i18n, type Locale } from '@/i18n/config';
@@ -30,17 +30,16 @@ function LandingContent() {
   }, [prefetchImages]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <FogHeartbeatBackground />
-
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory=""
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main className="flex-1 w-full flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen transition-[padding] duration-300 p-4 sm:p-8 lg:p-12 lemon-shell-main">
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory=""
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      outerClassName="relative min-h-screen overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      decoration={<FogHeartbeatBackground />}
+      customPadding="p-4 sm:p-8 lg:p-12"
+      mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
+    >
         <div className="relative flex flex-col items-center text-center w-full max-w-xl mx-auto z-10 py-8 sm:py-12">
           {/* Ambient Glow */}
           <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-accent-red/15 blur-3xl" />
@@ -91,8 +90,7 @@ function LandingContent() {
         </div>
 
         <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-      </main>
-    </div>
+    </PageShell>
   );
 }
 

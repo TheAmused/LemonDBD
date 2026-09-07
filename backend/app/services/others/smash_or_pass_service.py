@@ -9,8 +9,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    SmashPassStat,
-    SmashPassVote,
     Translation,
     Vote,
 )
@@ -68,6 +66,23 @@ EDITIONS: list[dict[str, Any]] = [
         "character_count": 10,
     },
 ]
+
+
+def _enrich_with_stat(entity: Entity, stat: EntityStat | None, edition: str) -> dict[str, Any]:
+    """Serialize an Entity plus its EntityStat into the flat dict shape shared by
+    every vote/leaderboard/roster-browsing response (cast_vote, get_leaderboard,
+    get_characters_with_stats, get_character_stat)."""
+    d = entity.to_dict()
+    d["character_slug"] = entity.slug
+    d["character_name"] = entity.name
+    d["edition"] = edition
+    d["smash_count"] = stat.smash_count if stat else 0
+    d["pass_count"] = stat.pass_count if stat else 0
+    d["super_smash_count"] = stat.super_smash_count if stat else 0
+    d["total_votes"] = stat.total_votes if stat else 0
+    d["smash_rate"] = stat.smash_rate if stat else 0.0
+    d["chaos_rating"] = stat.chaos_rating if stat else 50.0
+    return d
 
 
 class SmashOrPassService:
@@ -133,10 +148,22 @@ class SmashOrPassService:
         if not roster:
             return None
 
-        roster_info = next(
-            (r for r in self.get_rosters(active_only=False) if r["slug"] == roster_slug),
-            roster.to_dict(),
-        )
+        # Scoped to this one roster instead of calling get_rosters(), which
+        # selects every roster and aggregates votes across every entity in
+        # the database just to discard all but one row.
+        entity_count, roster_total_votes = db.session.execute(
+            select(
+                func.count(Entity.id),
+                func.coalesce(func.sum(EntityStat.total_votes), 0),
+            )
+            .select_from(Entity)
+            .outerjoin(EntityStat, Entity.id == EntityStat.entity_id)
+            .where(Entity.roster_id == roster.id, Entity.is_active.is_(True))
+        ).one()
+        roster_info = roster.to_dict()
+        roster_info["entity_count"] = int(entity_count or 0)
+        roster_info["character_count"] = int(entity_count or 0)
+        roster_info["total_votes"] = int(roster_total_votes or 0)
 
         voted_conditions = []
         if user_id is not None:
@@ -294,36 +321,11 @@ class SmashOrPassService:
             db.session.flush()
             stat = self.recalculate_stat_for_entity(entity.id)
 
-            try:
-                leg_stat = db.session.scalar(
-                    select(SmashPassStat).where(
-                        SmashPassStat.character_slug == entity.slug,
-                        SmashPassStat.edition == target_slug,
-                    )
-                )
-                if leg_stat and user_id is not None:
-                    leg_stat.smash_count = stat.smash_count
-                    leg_stat.pass_count = stat.pass_count
-                    leg_stat.super_smash_count = stat.super_smash_count
-                    leg_stat.calculate_rate()
-            except Exception:
-                pass
-
             db.session.commit()
             db.session.refresh(entity)
             db.session.refresh(stat)
 
-            res = entity.to_dict()
-            res["character_slug"] = entity.slug
-            res["character_name"] = entity.name
-            res["edition"] = target_slug
-            res["smash_count"] = stat.smash_count
-            res["pass_count"] = stat.pass_count
-            res["super_smash_count"] = stat.super_smash_count
-            res["total_votes"] = stat.total_votes
-            res["smash_rate"] = stat.smash_rate
-            res["chaos_rating"] = stat.chaos_rating
-            return res
+            return _enrich_with_stat(entity, stat, target_slug)
         except Exception as e:
             db.session.rollback()
             logger.error(f"Error recording smash-or-pass vote: {e}")
@@ -398,15 +400,15 @@ class SmashOrPassService:
     ) -> list[dict[str, Any]]:
         self.ensure_seeded()
         target_slug = roster_slug or edition or "canon"
-        roster = db.session.scalar(select(Roster).where(Roster.slug == target_slug))
-        if not roster:
+        roster_id = db.session.scalar(select(Roster.id).where(Roster.slug == target_slug))
+        if roster_id is None:
             return []
 
         stmt = (
             select(Entity, EntityStat)
             .join(EntityStat, Entity.id == EntityStat.entity_id)
             .where(
-                Entity.roster_id == roster.id,
+                Entity.roster_id == roster_id,
                 Entity.is_active.is_(True),
             )
         )
@@ -440,18 +442,9 @@ class SmashOrPassService:
             else:
                 tier = "Eldritch Void"
 
-            item = entity.to_dict()
+            item = _enrich_with_stat(entity, stat, target_slug)
             item["rank"] = rank
             item["tier"] = tier
-            item["character_slug"] = entity.slug
-            item["character_name"] = entity.name
-            item["edition"] = target_slug
-            item["smash_count"] = stat.smash_count
-            item["pass_count"] = stat.pass_count
-            item["super_smash_count"] = stat.super_smash_count
-            item["total_votes"] = stat.total_votes
-            item["smash_rate"] = stat.smash_rate
-            item["chaos_rating"] = stat.chaos_rating
             leaderboard.append(item)
 
         return leaderboard
@@ -515,30 +508,6 @@ class SmashOrPassService:
             for vote in votes:
                 db.session.delete(vote)
 
-            try:
-                leg_stmt = select(SmashPassVote).where(SmashPassVote.user_id == user_id)
-                if target_slug:
-                    leg_stmt = leg_stmt.where(SmashPassVote.edition == target_slug)
-                leg_votes = db.session.scalars(leg_stmt).all()
-                for lv in leg_votes:
-                    ls = db.session.scalar(
-                        select(SmashPassStat).where(
-                            SmashPassStat.character_slug == lv.character_slug,
-                            SmashPassStat.edition == lv.edition,
-                        )
-                    )
-                    if ls:
-                        if lv.vote_type == "smash":
-                            ls.smash_count = max(0, ls.smash_count - 1)
-                        elif lv.vote_type == "pass":
-                            ls.pass_count = max(0, ls.pass_count - 1)
-                        elif lv.vote_type == "super_smash":
-                            ls.super_smash_count = max(0, ls.super_smash_count - 1)
-                        ls.calculate_rate()
-                    db.session.delete(lv)
-            except Exception:
-                pass
-
             db.session.flush()
 
             for eid in affected_entity_ids:
@@ -593,21 +562,7 @@ class SmashOrPassService:
 
         stmt = stmt.order_by(Entity.order_index)
         entities = db.session.scalars(stmt).all()
-        result = []
-        for e in entities:
-            d = e.to_dict()
-            stat = e.stat
-            d["character_slug"] = e.slug
-            d["character_name"] = e.name
-            d["edition"] = edition
-            d["smash_count"] = stat.smash_count if stat else 0
-            d["pass_count"] = stat.pass_count if stat else 0
-            d["super_smash_count"] = stat.super_smash_count if stat else 0
-            d["total_votes"] = stat.total_votes if stat else 0
-            d["smash_rate"] = stat.smash_rate if stat else 0.0
-            d["chaos_rating"] = stat.chaos_rating if stat else 50.0
-            result.append(d)
-        return result
+        return [_enrich_with_stat(e, e.stat, edition) for e in entities]
 
     def get_character_stat(
         self, character_slug: str, edition: str = "canon"
@@ -626,18 +581,7 @@ class SmashOrPassService:
         )
         if not entity or not entity.stat:
             return None
-        d = entity.to_dict()
-        stat = entity.stat
-        d["character_slug"] = entity.slug
-        d["character_name"] = entity.name
-        d["edition"] = edition
-        d["smash_count"] = stat.smash_count
-        d["pass_count"] = stat.pass_count
-        d["super_smash_count"] = stat.super_smash_count
-        d["total_votes"] = stat.total_votes
-        d["smash_rate"] = stat.smash_rate
-        d["chaos_rating"] = stat.chaos_rating
-        return d
+        return _enrich_with_stat(entity, entity.stat, edition)
 
     def get_user_votes(
         self,
@@ -682,8 +626,6 @@ class SmashOrPassService:
         try:
             db.session.execute(delete(Vote))
             db.session.execute(delete(EntityStat))
-            db.session.execute(delete(SmashPassVote))
-            db.session.execute(delete(SmashPassStat))
             db.session.commit()
             seed_smash_rosters()
             return {

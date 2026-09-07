@@ -133,3 +133,25 @@ class TestWikiGGTranslations:
 
         assert "pl" in addons[0].translations
         assert addons[0].translations["pl"]["name"] == "Bateria"
+
+    def test_fetch_lang_page_html_dispatches_known_locale_and_falls_back_for_unknown(self) -> None:
+        """fetch_lang_page_html must route a registered locale (e.g. "pl") to
+        that locale's own driver, and fall back to self.fetch_page_html for
+        any language with no dedicated driver -- including "en", which has
+        no entry in LANGUAGE_DRIVERS since English is scraped directly."""
+        driver = WikiGGScraperDriver()
+        driver.fetch_page_html = MagicMock(return_value="<html>en-fallback</html>")
+
+        pl_driver_instance = MagicMock()
+        pl_driver_instance.fetch_page_html.return_value = "<html>pl-page</html>"
+        pl_driver_cls = MagicMock(return_value=pl_driver_instance)
+
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr("app.scrapers.drivers.LANGUAGE_DRIVERS", {"pl": pl_driver_cls})
+
+            assert driver.fetch_lang_page_html("pl", "Umiejętności") == "<html>pl-page</html>"
+            pl_driver_cls.assert_called_once_with(base_dir=driver.base_dir)
+            pl_driver_instance.fetch_page_html.assert_called_once_with("Umiejętności")
+
+            assert driver.fetch_lang_page_html("en", "Perks") == "<html>en-fallback</html>"
+            driver.fetch_page_html.assert_called_once_with("Perks")

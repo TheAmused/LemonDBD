@@ -574,9 +574,9 @@ test('SmashOrPass: Voting, Stats, Reset, and Revote Complete Lifecycle', async (
       );
 
       const postVoteLb = await fetchLeaderboard('canon');
-      const lbAda = postVoteLb.find((x: any) => x.slug === 'ada_wong');
-      const lbTrapper = postVoteLb.find((x: any) => x.slug === 'the_trapper');
-      const lbSable = postVoteLb.find((x: any) => x.slug === 'sable_ward');
+      const lbAda = postVoteLb.find((x: any) => x.slug === 'ada_wong')!;
+      const lbTrapper = postVoteLb.find((x: any) => x.slug === 'the_trapper')!;
+      const lbSable = postVoteLb.find((x: any) => x.slug === 'sable_ward')!;
 
       assert.strictEqual(lbAda.smash_rate, 100);
       assert.strictEqual(lbAda.tier, 'God Tier');
@@ -647,9 +647,9 @@ test('SmashOrPass: Voting, Stats, Reset, and Revote Complete Lifecycle', async (
       );
 
       const postRevoteLb = await fetchLeaderboard('canon');
-      const lbAda2 = postRevoteLb.find((x: any) => x.slug === 'ada_wong');
-      const lbTrapper2 = postRevoteLb.find((x: any) => x.slug === 'the_trapper');
-      const lbSable2 = postRevoteLb.find((x: any) => x.slug === 'sable_ward');
+      const lbAda2 = postRevoteLb.find((x: any) => x.slug === 'ada_wong')!;
+      const lbTrapper2 = postRevoteLb.find((x: any) => x.slug === 'the_trapper')!;
+      const lbSable2 = postRevoteLb.find((x: any) => x.slug === 'sable_ward')!;
 
       // Notice the flip: Trapper is now God Tier, Ada is Eldritch Void
       assert.strictEqual(lbTrapper2.smash_rate, 100);

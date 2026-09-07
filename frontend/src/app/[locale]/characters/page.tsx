@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useEffect, useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
-import { Sidebar } from '@/components/Sidebar';
+import { PageShell } from '@/components/layout/PageShell';
 import { CharactersHub } from '@/components/CharactersHub';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { Locale } from '@/i18n/config';
@@ -32,24 +32,19 @@ export default function CharactersPage() {
   useDocumentTitle((dict?.app as any)?.charactersPageTitle || 'LemonDBD - Characters & Teachables');
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-      <Sidebar
-        currentLocale={locale}
-        dict={dict}
-        activeCategory="characters"
-        onOpenQuests={() => setIsQuestsOpen(true)}
-      />
-
-      <main
-        className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-4 sm:p-6 lg:p-8 lemon-shell-main"
-      >
-        <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
-          <CharactersHub dict={dict} />
-        </Suspense>
-        {isQuestsOpen && (
-          <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-        )}
-      </main>
-    </div>
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="characters"
+      onOpenQuests={() => setIsQuestsOpen(true)}
+      mainClassName="overflow-y-auto"
+    >
+      <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
+        <CharactersHub dict={dict} />
+      </Suspense>
+      {isQuestsOpen && (
+        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
+      )}
+    </PageShell>
   );
 }

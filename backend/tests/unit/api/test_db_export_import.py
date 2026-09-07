@@ -420,3 +420,39 @@ class TestDatabaseExportImportOfferingsAndChapters:
             assert summary["summary"]["chapters"]["created"] == 1
             assert db.session.scalars(select(Offering)).first().name == "Bloody Party Streamers"
             assert db.session.scalars(select(Chapter)).first().name == "A Nightmare on Elm Street"
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportUserAvatars:
+    def test_export_import_roundtrips_uploaded_user_avatar_bytes(self, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+        avatar_dir = tmp_path / "uploads" / "avatars"
+        avatar_dir.mkdir(parents=True)
+        raw = b"user-avatar-bytes"
+        (avatar_dir / "avatar_u1_test.webp").write_bytes(raw)
+
+        with export_import_app.app_context():
+            user = db.session.scalars(select(User).where(User.username == "player_test")).first()
+            user.avatar_url = "/api/v1/auth/avatar/file/avatar_u1_test.webp"
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["users"])
+            row = next(u for u in exported["data"]["users"] if u["username"] == "player_test")
+            assert row["avatar_relative_path"] == "uploads/avatars/avatar_u1_test.webp"
+            assert row["avatar_relative_path_data"] == base64.b64encode(raw).decode("ascii")
+
+            (avatar_dir / "avatar_u1_test.webp").unlink()
+
+            DatabaseExportImportService.import_database(exported, mode="merge", targets=["users"])
+
+            assert (avatar_dir / "avatar_u1_test.webp").read_bytes() == raw
+
+    def test_export_skips_avatar_bytes_for_default_avatar(self, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+
+        with export_import_app.app_context():
+            exported = DatabaseExportImportService.export_database(targets=["users"])
+            row = next(u for u in exported["data"]["users"] if u["username"] == "admin_test")
+
+            assert row["avatar_relative_path"] is None
+            assert row["avatar_relative_path_data"] is None

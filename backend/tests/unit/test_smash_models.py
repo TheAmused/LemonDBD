@@ -6,8 +6,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    SmashPassStat,
-    SmashPassVote,
     Translation,
     Vote,
 )
@@ -210,34 +208,6 @@ class TestSmashModels:
         assert db_session.get(EntityStat, stat_id) is None
         assert db_session.get(Vote, vote_id) is None
 
-    def test_legacy_smash_pass_models(self, db_session: Session) -> None:
-        stat = SmashPassStat(
-            character_slug="meg_thomas",
-            character_name="Meg Thomas",
-            role="Survivor",
-            gender="female",
-            edition="canon",
-            smash_count=10,
-            pass_count=5,
-        )
-        db_session.add(stat)
-        db_session.commit()
-
-        assert stat.id is not None
-        stat.calculate_rate()
-        assert stat.smash_rate == 66.7
-
-        vote = SmashPassVote(
-            character_slug="meg_thomas",
-            vote_type="smash",
-            edition="canon",
-        )
-        db_session.add(vote)
-        db_session.commit()
-
-        assert vote.id is not None
-        assert vote.to_dict()["character_slug"] == "meg_thomas"
-
     def test_raw_sqlite_schema_init(self) -> None:
         conn = sqlite3.connect(":memory:")
         init_raw_sqlite_schema(conn)
@@ -251,7 +221,5 @@ class TestSmashModels:
         assert "entity_stats" in tables
         assert "votes" in tables
         assert "translations" in tables
-        assert "smash_pass_stats" in tables
-        assert "smash_pass_votes" in tables
 
         conn.close()

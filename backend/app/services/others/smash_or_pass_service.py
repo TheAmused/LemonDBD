@@ -9,8 +9,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    SmashPassStat,
-    SmashPassVote,
     Translation,
     Vote,
 )
@@ -323,21 +321,6 @@ class SmashOrPassService:
             db.session.flush()
             stat = self.recalculate_stat_for_entity(entity.id)
 
-            try:
-                leg_stat = db.session.scalar(
-                    select(SmashPassStat).where(
-                        SmashPassStat.character_slug == entity.slug,
-                        SmashPassStat.edition == target_slug,
-                    )
-                )
-                if leg_stat and user_id is not None:
-                    leg_stat.smash_count = stat.smash_count
-                    leg_stat.pass_count = stat.pass_count
-                    leg_stat.super_smash_count = stat.super_smash_count
-                    leg_stat.calculate_rate()
-            except Exception:
-                pass
-
             db.session.commit()
             db.session.refresh(entity)
             db.session.refresh(stat)
@@ -525,30 +508,6 @@ class SmashOrPassService:
             for vote in votes:
                 db.session.delete(vote)
 
-            try:
-                leg_stmt = select(SmashPassVote).where(SmashPassVote.user_id == user_id)
-                if target_slug:
-                    leg_stmt = leg_stmt.where(SmashPassVote.edition == target_slug)
-                leg_votes = db.session.scalars(leg_stmt).all()
-                for lv in leg_votes:
-                    ls = db.session.scalar(
-                        select(SmashPassStat).where(
-                            SmashPassStat.character_slug == lv.character_slug,
-                            SmashPassStat.edition == lv.edition,
-                        )
-                    )
-                    if ls:
-                        if lv.vote_type == "smash":
-                            ls.smash_count = max(0, ls.smash_count - 1)
-                        elif lv.vote_type == "pass":
-                            ls.pass_count = max(0, ls.pass_count - 1)
-                        elif lv.vote_type == "super_smash":
-                            ls.super_smash_count = max(0, ls.super_smash_count - 1)
-                        ls.calculate_rate()
-                    db.session.delete(lv)
-            except Exception:
-                pass
-
             db.session.flush()
 
             for eid in affected_entity_ids:
@@ -667,8 +626,6 @@ class SmashOrPassService:
         try:
             db.session.execute(delete(Vote))
             db.session.execute(delete(EntityStat))
-            db.session.execute(delete(SmashPassVote))
-            db.session.execute(delete(SmashPassStat))
             db.session.commit()
             seed_smash_rosters()
             return {

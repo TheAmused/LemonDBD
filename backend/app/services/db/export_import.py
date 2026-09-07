@@ -9,7 +9,8 @@ from sqlalchemy import delete, select
 from app.core.extensions import db
 from app.models.character import Character
 from app.models.perk import Perk
-from app.models.equipment import Item, Addon
+from app.models.equipment import Item, Addon, Offering
+from app.models.chapter import Chapter
 from app.models.map import MapRealm, MapTile, MapObjective, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
@@ -23,6 +24,8 @@ SUPPORTED_EXPORT_TARGETS = [
     "perks",
     "items",
     "addons",
+    "offerings",
+    "chapters",
     "maps",
     "realms",
     "users",
@@ -137,6 +140,27 @@ def _serialize_addon(a: Addon) -> dict[str, Any]:
     }
 
 
+def _serialize_offering(o: Offering) -> dict[str, Any]:
+    return {
+        "name": o.name,
+        "category": o.category,
+        "role": o.role,
+        "description": o.description,
+        "icon_url": o.icon_url,
+        "icon_local_path": o.icon_local_path,
+        "rarity": o.rarity,
+        "translations": o.translations or {},
+    }
+
+
+def _serialize_chapter(c: Chapter) -> dict[str, Any]:
+    return {
+        "name": c.name,
+        "banner_url": c.banner_url,
+        "banner_local_path": c.banner_local_path,
+    }
+
+
 def _serialize_realm(rb: Realm) -> dict[str, Any]:
     return {
         "name": rb.name,
@@ -191,6 +215,8 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("perks", Perk, _serialize_perk, ["icon_local_path"]),
     ("items", Item, _serialize_item, ["icon_local_path"]),
     ("addons", Addon, _serialize_addon, ["icon_local_path"]),
+    ("offerings", Offering, _serialize_offering, ["icon_local_path"]),
+    ("chapters", Chapter, _serialize_chapter, ["banner_local_path"]),
     ("users", User, _serialize_user, []),
     ("community_builds", CommunityBuild, lambda b: b.to_dict(), []),
     ("custom_perks", CustomPerk, lambda cp: cp.to_dict(), []),
@@ -209,6 +235,8 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("custom_perks", CustomPerk),
     ("daily_quests", DailyQuest),
     ("addons", Addon),
+    ("offerings", Offering),
+    ("chapters", Chapter),
     ("items", Item),
     ("perks", Perk),
     ("characters", Character),
@@ -467,6 +495,18 @@ class DatabaseExportImportService:
                 data, target_keys, summary, "addons", Addon, "name",
                 update_fields=["associated_target", "category", "description", "icon_url", "icon_local_path", "rarity", "translations"],
                 asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
+            _upsert_entity(
+                data, target_keys, summary, "offerings", Offering, "name",
+                update_fields=["category", "role", "description", "icon_url", "icon_local_path", "rarity", "translations"],
+                asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
+            _upsert_entity(
+                data, target_keys, summary, "chapters", Chapter, "name",
+                update_fields=["banner_url", "banner_local_path"],
+                asset_fields=["banner_local_path"], static_dir=static_dir,
             )
 
             if "maps" in target_keys and "maps" in data:

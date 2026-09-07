@@ -2,7 +2,7 @@
 import logging
 from typing import Any
 from flask import current_app
-from sqlalchemy import func, or_, select
+from sqlalchemy import func, or_, select, update
 
 from app.core.extensions import db
 from app.models import CustomPerk
@@ -234,11 +234,15 @@ class CustomPerkService:
         if self._use_sqlalchemy:
             try:
                 if current_app:
-                    cp = db.session.get(CustomPerk, int(perk_id))
-                    if not cp:
+                    result = db.session.execute(
+                        update(CustomPerk)
+                        .where(CustomPerk.id == int(perk_id))
+                        .values(upvotes=CustomPerk.upvotes + 1)
+                    )
+                    if result.rowcount == 0:
                         return None
-                    cp.upvotes = (cp.upvotes or 0) + 1
                     db.session.commit()
+                    cp = db.session.get(CustomPerk, int(perk_id))
                     return cp.to_dict()
             except Exception as e:
                 logger.debug(f"SQLAlchemy upvote_custom_perk fallback: {e}")

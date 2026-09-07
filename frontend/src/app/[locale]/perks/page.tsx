@@ -6,6 +6,7 @@ import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react
 import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
+import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
@@ -369,12 +370,12 @@ export default function PerksPage() {
   return (
     <Suspense
       fallback={
-        <div className="h-dvh overflow-hidden bg-bg-primary text-slate-900 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
-          <aside aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-border-color bg-bg-surface/80 p-4 select-none animate-pulse" />
-          <main className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden p-3 sm:p-4 lg:p-6 gap-3 sm:gap-4 lemon-shell-main">
-            <PerksGridSkeleton />
-          </main>
-        </div>
+        <PageShellFallback
+          outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+          padding="tight"
+          mainClassName="flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
+          skeleton={<PerksGridSkeleton />}
+        />
       }
     >
       <PerksContent />

@@ -130,3 +130,19 @@ def test_set_preferred_language_rejects_other_users(client: FlaskClient) -> None
         headers=headers_a,
     )
     assert res.status_code == 403
+
+
+def test_onboarding_flag_migration_is_idempotent(app) -> None:
+    from alembic.migration import MigrationContext
+    from alembic.operations import Operations
+    from migrations.versions import onboarding_flag_001
+
+    with app.app_context():
+        with db.engine.connect() as conn:
+            ctx = MigrationContext.configure(conn)
+            with Operations.context(ctx):
+                # The users table already has onboarding_completed_at from db.create_all().
+                # Running upgrade() multiple times must be a safe no-op without raising DuplicateColumn error.
+                onboarding_flag_001.upgrade()
+                onboarding_flag_001.upgrade()
+

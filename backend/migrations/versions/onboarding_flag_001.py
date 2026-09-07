@@ -5,6 +5,10 @@ Revision ID: onboarding_flag_001
 Revises: user_showcase_001
 Create Date: 2026-09-05 00:00:00.000000
 
+Idempotent: guarded with sqlalchemy.inspect so that create_app()'s
+unconditional db.create_all() (which already creates this column on a fresh
+database via the User model) doesn't cause upgrade() to fail with a
+duplicate column error.
 """
 from alembic import op
 import sqlalchemy as sa
@@ -16,13 +20,22 @@ branch_labels = None
 depends_on = None
 
 
+def _inspector():
+    return sa.inspect(op.get_bind())
+
+
 def upgrade():
-    with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.add_column(
-            sa.Column("onboarding_completed_at", sa.DateTime(timezone=True), nullable=True)
-        )
+    columns = {c["name"] for c in _inspector().get_columns("users")}
+    if "onboarding_completed_at" not in columns:
+        with op.batch_alter_table("users", schema=None) as batch_op:
+            batch_op.add_column(
+                sa.Column("onboarding_completed_at", sa.DateTime(timezone=True), nullable=True)
+            )
 
 
 def downgrade():
-    with op.batch_alter_table("users", schema=None) as batch_op:
-        batch_op.drop_column("onboarding_completed_at")
+    columns = {c["name"] for c in _inspector().get_columns("users")}
+    if "onboarding_completed_at" in columns:
+        with op.batch_alter_table("users", schema=None) as batch_op:
+            batch_op.drop_column("onboarding_completed_at")
+

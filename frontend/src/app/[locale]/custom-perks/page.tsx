@@ -2,7 +2,7 @@
 // frontend/src/app/[locale]/custom-perks/page.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { CustomPerkStudio } from '@/components/perk-studio/CustomPerkStudio';
@@ -10,7 +10,6 @@ import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { getBackendBaseUrl } from '@/utils/api';
 
 export default function CustomPerksPage() {
   const params = useParams();
@@ -18,9 +17,6 @@ export default function CustomPerksPage() {
 
   const dict = useDictionary();
   const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
-
-
-  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.customPerksPageTitle || 'LemonDBD - Custom Perk Studio');
 

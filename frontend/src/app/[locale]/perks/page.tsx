@@ -9,6 +9,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
+import { EmptyState } from '@/components/EmptyState';
 import { Pagination } from '@/components/Pagination';
 import { Locale } from '@/i18n/config';
 import { Shield } from 'lucide-react';
@@ -289,26 +290,20 @@ function PerksContent() {
           {loading ? (
             <PerksGridSkeleton dict={dict} />
           ) : perks.length === 0 ? (
-            <section
-              aria-live="polite"
-              className="my-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color"
-            >
-              <Shield className="mx-auto h-12 w-12 text-slate-500 dark:text-slate-500 mb-3" />
-              <h2 className="text-lg font-extrabold text-slate-900 dark:text-slate-200">
-                {dict?.empty?.title || 'No Perks Found'}
-              </h2>
-              <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
-                {dict?.empty?.subtitle ||
-                  'Try clearing your search query or switching ownership filters.'}
-              </p>
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 px-4 py-2 text-xs font-bold text-cyan-800 dark:text-cyan-300 hover:bg-cyan-500/30 transition-colors cursor-pointer shadow-sm border border-cyan-500/40"
-              >
-                {dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters'}
-              </button>
-            </section>
+            <EmptyState
+              variant="solid"
+              icon={Shield}
+              iconClassName="mx-auto h-12 w-12 text-slate-500 dark:text-slate-500 mb-3"
+              title={dict?.empty?.title || 'No Perks Found'}
+              subtitle={
+                dict?.empty?.subtitle ||
+                'Try clearing your search query or switching ownership filters.'
+              }
+              action={{
+                label: dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters',
+                onClick: handleResetFilters,
+              }}
+            />
           ) : (
             <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="flex min-h-0 flex-1 flex-col">
               <div

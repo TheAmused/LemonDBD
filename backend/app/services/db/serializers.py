@@ -108,7 +108,7 @@ def serialize_user_showcase(sc: UserShowcase) -> dict[str, Any]:
     }
 
 
-def serialize_smash_entity(e: Entity) -> dict[str, Any]:
+def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> dict[str, Any]:
     return {
         "slug": e.slug,
         "name": e.name,
@@ -122,6 +122,7 @@ def serialize_smash_entity(e: Entity) -> dict[str, Any]:
         "stat": e.stat.to_dict() if e.stat else None,
         "votes": [
             {
+                "username": username_by_user_id.get(v.user_id) if v.user_id else None,
                 "session_id": v.session_id,
                 "vote_type": v.vote_type,
                 "created_at": v.created_at.isoformat() if v.created_at else None,
@@ -131,7 +132,7 @@ def serialize_smash_entity(e: Entity) -> dict[str, Any]:
     }
 
 
-def serialize_roster(r: Roster) -> dict[str, Any]:
+def serialize_roster(r: Roster, username_by_user_id: dict[int, str]) -> dict[str, Any]:
     return {
         "slug": r.slug,
         "name_i18n_key": r.name_i18n_key,
@@ -141,7 +142,7 @@ def serialize_roster(r: Roster) -> dict[str, Any]:
         "category": r.category,
         "is_nsfw": r.is_nsfw,
         "is_active": r.is_active,
-        "entities": [serialize_smash_entity(e) for e in r.entities],
+        "entities": [serialize_smash_entity(e, username_by_user_id) for e in r.entities],
     }
 
 

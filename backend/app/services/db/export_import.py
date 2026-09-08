@@ -345,8 +345,9 @@ class DatabaseExportImportService:
             export_run_family(export_data, counts, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs")
 
         if "rosters" in target_set:
+            username_by_user_id = {u.id: u.username for u in db.session.scalars(select(User)).all()}
             rosters = db.session.scalars(select(Roster).order_by(Roster.id)).all()
-            export_data["rosters"] = [serialize_roster(r) for r in rosters]
+            export_data["rosters"] = [serialize_roster(r, username_by_user_id) for r in rosters]
             counts["rosters"] = len(export_data["rosters"])
 
         if "smash_translations" in target_set:
@@ -562,41 +563,41 @@ class DatabaseExportImportService:
                 char_created, char_updated = 0, 0
                 perk_created, perk_updated = 0, 0
 
+                existing_char_owns: dict[tuple[int, int], UserCharacterOwnership] = {
+                    (co.user_id, co.character_id): co
+                    for co in db.session.scalars(select(UserCharacterOwnership)).all()
+                }
                 for co_data in raw_owns.get("characters", []):
                     uname = co_data.get("username")
                     cname = co_data.get("character_name")
                     u_id = user_map.get(uname) if uname else None
                     c_id = char_map.get(cname.strip().lower()) if cname else None
                     if u_id and c_id:
-                        co = db.session.scalar(
-                            select(UserCharacterOwnership).where(
-                                UserCharacterOwnership.user_id == u_id,
-                                UserCharacterOwnership.character_id == c_id,
-                            )
-                        )
+                        co = existing_char_owns.get((u_id, c_id))
                         if not co:
                             co = UserCharacterOwnership(user_id=u_id, character_id=c_id)
                             db.session.add(co)
+                            existing_char_owns[(u_id, c_id)] = co
                             char_created += 1
                         else:
                             char_updated += 1
                         co.is_owned = co_data.get("is_owned", True)
 
+                existing_perk_owns: dict[tuple[int, int], UserPerkOwnership] = {
+                    (po.user_id, po.perk_id): po
+                    for po in db.session.scalars(select(UserPerkOwnership)).all()
+                }
                 for po_data in raw_owns.get("perks", []):
                     uname = po_data.get("username")
                     pname = po_data.get("perk_name")
                     u_id = user_map.get(uname) if uname else None
                     p_id = perk_map.get(pname.strip().lower()) if pname else None
                     if u_id and p_id:
-                        po = db.session.scalar(
-                            select(UserPerkOwnership).where(
-                                UserPerkOwnership.user_id == u_id,
-                                UserPerkOwnership.perk_id == p_id,
-                            )
-                        )
+                        po = existing_perk_owns.get((u_id, p_id))
                         if not po:
                             po = UserPerkOwnership(user_id=u_id, perk_id=p_id)
                             db.session.add(po)
+                            existing_perk_owns[(u_id, p_id)] = po
                             perk_created += 1
                         else:
                             perk_updated += 1
@@ -607,19 +608,27 @@ class DatabaseExportImportService:
                 summary["perk_ownerships"] = {"created": perk_created, "updated": perk_updated}
 
             if "perk_rules" in target_keys and "perk_rules" in data:
-                created = 0
+                created, updated = 0, 0
+                existing_rules: dict[str, PerkRule] = {
+                    pr.name: pr for pr in db.session.scalars(select(PerkRule)).all()
+                }
                 for row in data["perk_rules"]:
-                    db.session.add(PerkRule(
-                        name=row.get("name", "Standard"),
-                        is_default=row.get("is_default", False),
-                        slot1_type=row.get("slot1_type", "character_own"),
-                        slot2_type=row.get("slot2_type", "character_own"),
-                        slot3_type=row.get("slot3_type", "general_role"),
-                        slot4_type=row.get("slot4_type", "any_role"),
-                    ))
-                    created += 1
+                    name = row.get("name", "Standard")
+                    rule = existing_rules.get(name)
+                    if not rule:
+                        rule = PerkRule(name=name)
+                        db.session.add(rule)
+                        existing_rules[name] = rule
+                        created += 1
+                    else:
+                        updated += 1
+                    rule.is_default = row.get("is_default", False)
+                    rule.slot1_type = row.get("slot1_type", "character_own")
+                    rule.slot2_type = row.get("slot2_type", "character_own")
+                    rule.slot3_type = row.get("slot3_type", "general_role")
+                    rule.slot4_type = row.get("slot4_type", "any_role")
                 db.session.flush()
-                summary["perk_rules"] = {"created": created, "updated": 0}
+                summary["perk_rules"] = {"created": created, "updated": updated}
 
             _upsert_entity(
                 data, target_keys, summary, "generator_drawn_perks", GeneratorDrawnPerk, "perk_name",
@@ -783,11 +792,17 @@ class DatabaseExportImportService:
 
                         db.session.execute(delete(Vote).where(Vote.entity_id == entity_obj.id))
                         for vote_row in e_row.get("votes", []):
-                            db.session.add(Vote(
+                            vote_username = vote_row.get("username")
+                            vote = Vote(
                                 entity_id=entity_obj.id,
+                                user_id=user_map.get(vote_username) if vote_username else None,
                                 session_id=vote_row.get("session_id"),
                                 vote_type=vote_row.get("vote_type", "smash"),
-                            ))
+                            )
+                            created_at = _parse_datetime(vote_row.get("created_at"))
+                            if created_at:
+                                vote.created_at = created_at
+                            db.session.add(vote)
                 db.session.flush()
                 summary["rosters"] = {"created": r_created, "updated": r_updated}
 

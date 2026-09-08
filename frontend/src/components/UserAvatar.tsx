@@ -15,6 +15,7 @@ interface UserAvatarProps {
   className?: string;
   showAdminBadge?: boolean;
   borderClassName?: string;
+  shape?: 'circle' | 'rounded';
   previewUrl?: string | null;
   adminTitle?: string;
   adminAriaLabel?: string;
@@ -66,6 +67,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   className = '',
   showAdminBadge = false,
   borderClassName,
+  shape = 'rounded',
   previewUrl,
   adminTitle,
   adminAriaLabel,
@@ -73,6 +75,9 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 }) => {
   const [imgError, setImgError] = useState(false);
   const sizeConfig = SIZE_MAP[size] || SIZE_MAP.md;
+  const containerClasses = shape === 'circle'
+    ? sizeConfig.container.replace(/rounded-\S+/, 'rounded-full')
+    : sizeConfig.container;
 
   const rawAvatarUrl = previewUrl || user?.avatar_url;
 
@@ -109,7 +114,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   return (
     <div className={`relative inline-flex shrink-0 items-center justify-center ${className}`}>
       <div
-        className={`relative flex items-center justify-center overflow-hidden ${sizeConfig.container} ${defaultBorder}`}
+        className={`relative flex items-center justify-center overflow-hidden ${containerClasses} ${defaultBorder}`}
       >
         {isCustomAvatar ? (
           <img

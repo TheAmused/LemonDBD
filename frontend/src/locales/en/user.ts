@@ -140,4 +140,10 @@ export default {
   pageStreakTitle: "Page Streak",
   pageStreakDesc: "Progressive tier mastery unlocking all character teachables.",
   avatarHelpText: "Upload a custom avatar (PNG, JPEG, WebP, max 10MB) or reset to the default icon.",
+  dualMainsTitle: "Signature Loadouts",
+  dualMainsSubtitle: "Survivor & Killer",
+  hideLoadouts: "Hide Loadouts",
+  showLoadouts: "Show Loadouts",
+  accountSettingsSubtitle: "Manage your email address and password",
+  encryptedNotice: "Encrypted & Secure Credentials",
 } as const;

@@ -40,18 +40,23 @@ export const UserMetricsGridSkeleton: React.FC<{ className?: string; dict?: Dict
 );
 
 export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dict }) => {
-  const survPercent = ownership?.survivors?.percentage ?? 0;
-  const killerPercent = ownership?.killers?.percentage ?? 0;
-  const perkPercent = ownership?.perks?.percentage ?? 0;
-
   const survOwned = ownership?.survivors?.owned ?? 0;
   const survTotal = ownership?.survivors?.total ?? 54;
+  const survPercent =
+    ownership?.survivors?.percentage ??
+    (survTotal > 0 ? Math.round((survOwned / survTotal) * 100) : 0);
 
   const killerOwned = ownership?.killers?.owned ?? 0;
   const killerTotal = ownership?.killers?.total ?? 44;
+  const killerPercent =
+    ownership?.killers?.percentage ??
+    (killerTotal > 0 ? Math.round((killerOwned / killerTotal) * 100) : 0);
 
   const perkUnlocked = ownership?.perks?.unlocked ?? 0;
   const perkTotal = ownership?.perks?.total ?? 321;
+  const perkPercent =
+    ownership?.perks?.percentage ??
+    (perkTotal > 0 ? Math.round((perkUnlocked / perkTotal) * 100) : 0);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5 w-full">

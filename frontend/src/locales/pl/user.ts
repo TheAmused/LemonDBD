@@ -140,4 +140,10 @@ export default {
   pageStreakTitle: "Page Streak",
   pageStreakDesc: "Stopniowe mistrzostwo odblokowujące perki postaci.",
   avatarHelpText: "Prześlij własny awatar (PNG, JPEG, WebP, maks. 10 MB) lub zresetuj do ikony domyślnej.",
+  dualMainsTitle: "Główne Zestawy",
+  dualMainsSubtitle: "Ocalały i Zabójca",
+  hideLoadouts: "Ukryj Zestawy",
+  showLoadouts: "Pokaż Zestawy",
+  accountSettingsSubtitle: "Zarządzaj adresem e-mail i hasłem",
+  encryptedNotice: "Szyfrowane i Bezpieczne Dane",
 } as const;

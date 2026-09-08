@@ -41,10 +41,10 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
             "owned_survivor_characters_count": total_surv_chars,
             "total_killer_characters_count": total_kill_chars,
             "owned_killer_characters_count": total_kill_chars,
-            "killers": {"owned": total_kill_chars, "total": total_kill_chars},
-            "survivors": {"owned": total_surv_chars, "total": total_surv_chars},
-            "perks": {"owned": len(all_perks), "unlocked": len(all_perks), "total": len(all_perks)},
-            "characters": {"owned": len(all_characters), "total": len(all_characters)},
+            "killers": {"owned": total_kill_chars, "total": total_kill_chars, "percentage": 100.0 if total_kill_chars > 0 else 0.0},
+            "survivors": {"owned": total_surv_chars, "total": total_surv_chars, "percentage": 100.0 if total_surv_chars > 0 else 0.0},
+            "perks": {"owned": len(all_perks), "unlocked": len(all_perks), "total": len(all_perks), "percentage": 100.0 if len(all_perks) > 0 else 0.0},
+            "characters": {"owned": len(all_characters), "total": len(all_characters), "percentage": 100.0 if len(all_characters) > 0 else 0.0},
             "owned_perk_ids": [p.id for p in all_perks],
             "owned_perk_names": all_perk_names,
             "owned_character_ids": [c.id for c in all_characters],
@@ -103,6 +103,11 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
         1 for cid in owned_character_ids_set if cid in char_map and (char_map[cid].role or "Survivor").lower() == "killer"
     )
 
+    surv_percent = round((owned_surv_chars / total_surv_chars) * 100, 1) if total_surv_chars > 0 else 0.0
+    killer_percent = round((owned_kill_chars / total_kill_chars) * 100, 1) if total_kill_chars > 0 else 0.0
+    perk_percent = round((len(owned_perk_ids) / len(all_perks)) * 100, 1) if len(all_perks) > 0 else 0.0
+    char_percent = round((len(owned_character_ids_set) / len(all_characters)) * 100, 1) if len(all_characters) > 0 else 0.0
+
     return {
         "user_id": user_id,
         "total_perks_count": len(all_perks),
@@ -117,10 +122,10 @@ def calculate_ownership_summary(user_id: int | None = None) -> dict[str, Any]:
         "owned_survivor_characters_count": owned_surv_chars,
         "total_killer_characters_count": total_kill_chars,
         "owned_killer_characters_count": owned_kill_chars,
-        "killers": {"owned": owned_kill_chars, "total": total_kill_chars},
-        "survivors": {"owned": owned_surv_chars, "total": total_surv_chars},
-        "perks": {"owned": len(owned_perk_ids), "unlocked": len(owned_perk_ids), "total": len(all_perks)},
-        "characters": {"owned": len(owned_character_ids_set), "total": len(all_characters)},
+        "killers": {"owned": owned_kill_chars, "total": total_kill_chars, "percentage": killer_percent},
+        "survivors": {"owned": owned_surv_chars, "total": total_surv_chars, "percentage": surv_percent},
+        "perks": {"owned": len(owned_perk_ids), "unlocked": len(owned_perk_ids), "total": len(all_perks), "percentage": perk_percent},
+        "characters": {"owned": len(owned_character_ids_set), "total": len(all_characters), "percentage": char_percent},
         "owned_perk_ids": owned_perk_ids,
         "owned_perk_names": owned_perk_names,
         "owned_character_ids": list(owned_character_ids_set),

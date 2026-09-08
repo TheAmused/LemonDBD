@@ -88,13 +88,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           </div>
           <div>
             <h2 className="text-base sm:text-lg font-black uppercase tracking-wider text-text-primary font-mono">
-              {t.profileTitle}
+              {dict?.user?.tabSanctum || 'Account Settings & Security'}
             </h2>
-            {t.profileSubtitle && (
-              <p className="text-xs text-text-secondary mt-0.5 font-mono">
-                {t.profileSubtitle}
-              </p>
-            )}
+            <p className="text-xs text-text-secondary mt-0.5 font-mono">
+              {dict?.user?.accountSettingsSubtitle || 'Manage your email address and password'}
+            </p>
           </div>
         </div>
       </div>
@@ -208,7 +206,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border-color">
           <div className="flex items-center gap-2 text-xs text-text-muted font-mono">
             <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
-            <span>{dict?.user?.profileTitle || 'Encrypted Credentials'}</span>
+            <span>{dict?.user?.encryptedNotice || 'Encrypted & Secure Credentials'}</span>
           </div>
 
           <button

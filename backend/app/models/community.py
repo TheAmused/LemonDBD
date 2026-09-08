@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
+from app.core.json_provider import safe_json_loads, safe_json_dumps
 from app.models.base import utcnow
 
 if TYPE_CHECKING:
@@ -126,6 +126,14 @@ class BugReport(Base):
     )
 
     user: Mapped["User | None"] = relationship(back_populates="bug_reports")
+
+    @property
+    def images(self) -> list[str]:
+        return safe_json_loads(self.images_json, default=[])
+
+    @images.setter
+    def images(self, value: list[str]) -> None:
+        self.images_json = safe_json_dumps(value, default_val="[]")
 
     def to_dict(self) -> dict[str, Any]:
         return {

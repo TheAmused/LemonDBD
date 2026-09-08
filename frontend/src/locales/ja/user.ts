@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "焚き火の書類",
-  tabSanctum: "アカウントの聖域",
+  tabSanctum: "アカウント管理",
   playerTitle: "プレイヤータスク",
   devotion: "信仰度",
   gradeRank: "グレードランク",
@@ -140,4 +140,12 @@ export default {
   pageStreakTitle: "ページストリーク",
   pageStreakDesc: "全キャラクターの能力を解放する段階的マスタリー。",
   avatarHelpText: "カスタムアバター（PNG、JPEG、WebP、最大10MB）をアップロードするか、デフォルトアイコンにリセットします。",
+  dualMainsTitle: "シグネチャー構成",
+  dualMainsSubtitle: "サバイバー＆キラー",
+  hideLoadouts: "構成を非表示",
+  showLoadouts: "構成を表示",
+  accountSettingsSubtitle: "メールアドレスとパスワードを管理",
+  encryptedNotice: "暗号化された安全な認証情報",
+  searchPerksPrompt: "パークを検索するには3文字以上入力してください...",
+  searchPerksMinChars: "あと{count}文字入力してください...",
 } as const;

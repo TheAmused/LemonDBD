@@ -140,4 +140,10 @@ export default {
   pageStreakTitle: "Racha de Páginas",
   pageStreakDesc: "Maestría progresiva desbloqueando enseñanzas de personajes.",
   avatarHelpText: "Sube un avatar personalizado (PNG, JPEG, WebP, máx. 10 MB) o vuelve al icono predeterminado.",
+  dualMainsTitle: "Equipamientos Distintivos",
+  dualMainsSubtitle: "Superviviente y Asesino",
+  hideLoadouts: "Ocultar Equipamientos",
+  showLoadouts: "Mostrar Equipamientos",
+  accountSettingsSubtitle: "Administra tu dirección de correo y contraseña",
+  encryptedNotice: "Credenciales Encriptadas y Seguras",
 } as const;

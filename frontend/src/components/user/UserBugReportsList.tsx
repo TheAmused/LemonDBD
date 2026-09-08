@@ -16,6 +16,7 @@ import {
 import { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
 import { Pagination } from '@/components/Pagination';
+import { staticUrl } from '@/utils/api';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -171,22 +172,25 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     <ImageIcon className="h-3 w-3 text-accent-red" />
                     {t.attachments || 'Attachments'} ({report.images.length})
                   </span>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {report.images.map((imgUrl, i) => (
-                      <a
-                        key={i}
-                        href={imgUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative h-16 w-16 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:opacity-90 transition-opacity"
-                      >
-                        <img
-                          src={imgUrl}
-                          alt={`${t.attachments || 'Attachment'} ${i + 1}`}
-                          className="h-full w-full object-cover"
-                        />
-                      </a>
-                    ))}
+                  <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
+                    {report.images.map((imgUrl, i) => {
+                      const src = staticUrl(imgUrl) || imgUrl;
+                      return (
+                        <a
+                          key={i}
+                          href={src}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all cursor-pointer"
+                        >
+                          <img
+                            src={src}
+                            alt={`${t.attachments || 'Attachment'} ${i + 1}`}
+                            className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          />
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               )}

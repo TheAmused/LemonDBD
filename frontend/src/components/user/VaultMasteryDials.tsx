@@ -58,16 +58,20 @@ const RadialDial: React.FC<DialProps> = ({
 
   return (
     <div
-      className={`relative flex flex-col items-center border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
+      className={`relative flex flex-col items-center justify-between border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
         compact
-          ? 'rounded-2xl p-3 sm:p-4 min-w-[110px]'
-          : 'rounded-2xl sm:rounded-3xl p-4 sm:p-5 min-w-[125px] sm:min-w-[140px]'
+          ? 'aspect-square rounded-2xl p-2 sm:p-2.5 w-full min-w-0'
+          : 'aspect-square w-full sm:w-36 sm:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 lg:p-4'
       }`}
     >
       {/* Radial Gauge SVG */}
-      <div className="relative flex items-center justify-center">
+      <div className="relative flex items-center justify-center my-auto">
         <svg
-          className={`${compact ? 'w-22 h-22 sm:w-24 sm:h-24' : 'w-26 h-26 sm:w-30 sm:h-30'} -rotate-90 transform`}
+          className={`${
+            compact
+              ? 'w-16 h-16 sm:w-20 sm:h-20'
+              : 'w-16 h-16 xs:w-18 xs:h-18 sm:w-24 sm:h-24 lg:w-28 lg:h-28'
+          } -rotate-90 transform`}
           viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         >
           {/* Background circle track */}
@@ -98,26 +102,32 @@ const RadialDial: React.FC<DialProps> = ({
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <div
             className={`${
-              compact ? 'text-base sm:text-lg' : 'text-xl sm:text-2xl'
+              compact
+                ? 'text-xs sm:text-base'
+                : 'text-xs xs:text-sm sm:text-xl lg:text-2xl'
             } font-black font-mono tracking-tight text-text-primary`}
           >
             {percentage}%
           </div>
-          <div className={`${compact ? 'text-[11px]' : 'text-xs'} font-mono font-bold text-text-secondary`}>
+          <div
+            className={`${
+              compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs'
+            } font-mono font-bold text-text-secondary`}
+          >
             {count}/{total}
           </div>
         </div>
       </div>
 
       {/* Title & Icon below */}
-      <div className={`flex items-center gap-1.5 ${compact ? 'mt-2' : 'mt-3'}`}>
-        <div className={`rounded-lg ${compact ? 'p-1' : 'p-1.5'} ${accentClass}`}>
+      <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 mt-auto max-w-full">
+        <div className={`rounded-lg ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5'} ${accentClass} shrink-0`}>
           {icon}
         </div>
         <span
           className={`${
-            compact ? 'text-[11px]' : 'text-xs'
-          } font-black font-mono uppercase tracking-wider text-text-primary`}
+            compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs'
+          } font-black font-mono uppercase tracking-wider text-text-primary truncate`}
         >
           {title}
         </span>
@@ -154,15 +164,15 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
   return (
     <div className={`space-y-3 ${className}`}>
       {!hideTitle && (
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm sm:text-base font-black font-mono uppercase tracking-wider text-text-primary flex items-center gap-2">
+        <div className="flex items-center justify-center text-center">
+          <h2 className="text-xs sm:text-sm font-black font-mono uppercase tracking-widest text-text-primary flex items-center justify-center gap-2">
             <Sparkles className="h-4 w-4 text-accent-amber" />
             <span>{dict?.user?.vaultMastery || 'Vault Mastery'}</span>
           </h2>
         </div>
       )}
 
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         {/* Survivors Dial */}
         <RadialDial
           title={dict?.stats?.survivors || 'Survivors'}

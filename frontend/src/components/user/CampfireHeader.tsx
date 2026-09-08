@@ -61,35 +61,35 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
       <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6 sm:gap-8">
         {/* Left Column: Avatar & Player Identity */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left flex-1 min-w-0">
+        <div className="flex flex-col sm:flex-row items-center sm:items-center gap-6 sm:gap-7 text-center sm:text-left flex-1 min-w-0">
           {/* Avatar Column with feedback */}
           <div className="flex flex-col items-center shrink-0 gap-1.5">
-            {/* Circular avatar with single clean border and click-to-change hover */}
+            {/* Square-ish avatar with single clean border and click-to-change hover */}
             <div
               className="relative group cursor-pointer shrink-0"
               onClick={onAvatarClick}
               title={dict?.user?.changeAvatar || 'Change Avatar'}
               aria-label={dict?.user?.changeAvatar || 'Change Avatar'}
             >
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-accent-amber to-accent-red opacity-30 blur-xs group-hover:opacity-75 transition-opacity" />
-              <div className="relative rounded-full overflow-hidden p-0.5 border-2 border-accent-amber/60 bg-bg-surface shadow-md">
+              <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-accent-amber to-accent-red opacity-30 blur-xs group-hover:opacity-75 transition-opacity" />
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden p-0.5 border-2 border-accent-amber/60 bg-bg-surface shadow-md">
                 <UserAvatar
                   user={user}
                   previewUrl={previewUrl}
-                  size="2xl"
-                  shape="circle"
+                  size="3xl"
+                  shape="rounded"
                   showAdminBadge={true}
                   borderClassName="border-0"
                 />
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs rounded-full">
-                  <Camera className="h-5 w-5 mb-0.5 text-accent-amber" />
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs rounded-2xl sm:rounded-3xl">
+                  <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-amber" />
+                  <span className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider">
                     {dict?.user?.changeAvatar || 'Change'}
                   </span>
                 </div>
                 {isUploadingAvatar && (
-                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-full bg-black/60 backdrop-blur-xs">
-                    <span className="h-6 w-6 animate-spin rounded-full border-2 border-accent-amber border-t-transparent" />
+                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-black/60 backdrop-blur-xs">
+                    <span className="h-7 w-7 animate-spin rounded-full border-2 border-accent-amber border-t-transparent" />
                   </div>
                 )}
               </div>
@@ -162,8 +162,8 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Vault Mastery Radial Dials (Prominent) */}
-        <div className="flex flex-col items-center lg:items-end justify-center w-full lg:w-auto shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-border-color">
+        {/* Right Column: Vault Mastery Radial Dials (Prominent & Centered) */}
+        <div className="flex flex-col items-center justify-center w-full lg:w-auto shrink-0 pt-4 lg:pt-0 border-t lg:border-t-0 border-border-color">
           <VaultMasteryDials
             ownership={ownership}
             dict={dict}

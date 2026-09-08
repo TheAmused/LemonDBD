@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle, ChevronDown } from 'lucide-react';
 import { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError } from '@/services/userProfileApi';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 interface UserProfileFormProps {
   initialEmail: string;
@@ -21,7 +22,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   t: propT,
 }) => {
   const t: Record<string, string> = propT || dict?.user || {};
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_account', false);
 
   const [newEmail, setNewEmail] = useState(initialEmail);
   const [newPassword, setNewPassword] = useState('');
@@ -96,7 +97,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       {/* Header Button with DBD Banner */}
       <button
         type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
+        onClick={toggleExpanded}
         className="relative w-full flex items-center justify-between py-3.5 px-5 sm:py-4 sm:px-6 cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >

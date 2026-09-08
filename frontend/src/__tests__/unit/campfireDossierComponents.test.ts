@@ -44,6 +44,22 @@ describe('Campfire Dossier: CampfireHeader', () => {
     assert.ok(!html.includes('Lvl'));
     assert.ok(!html.includes('master@fog.dbd'));
   });
+
+  it('renders square-ish avatar container matching block height', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(CampfireHeader, {
+        user: mockUser,
+        showcase: DEFAULT_SHOWCASE_STATE,
+        isSaving: false,
+        saveError: null,
+        onTitleChange: () => {},
+        currentLocale: 'en',
+      })
+    );
+
+    assert.ok(html.includes('rounded-2xl') || html.includes('rounded-3xl'), 'Must use square-ish rounded borders');
+    assert.ok(html.includes('sm:h-36 sm:w-36') || html.includes('xl:h-44 xl:w-44'), 'Must size avatar to 3xl block height');
+  });
 });
 
 describe('Campfire Dossier: VaultMasteryDials', () => {
@@ -64,6 +80,23 @@ describe('Campfire Dossier: VaultMasteryDials', () => {
     assert.ok(html.includes('30/44'));
     assert.ok(html.includes('78%'));
     assert.ok(html.includes('250/321'));
+  });
+
+  it('renders square-ish completion dial cards matching block height and centered title', () => {
+    const mockOwnership = {
+      survivors: { owned: 40, total: 54, percentage: 74 },
+      killers: { owned: 30, total: 44, percentage: 68 },
+      perks: { unlocked: 250, total: 321, percentage: 78 },
+    };
+
+    const html = renderToStaticMarkup(
+      React.createElement(VaultMasteryDials, { ownership: mockOwnership })
+    );
+
+    assert.ok(html.includes('aspect-square'), 'Must render square-ish cards');
+    assert.ok(html.includes('sm:w-36 sm:h-36') || html.includes('xl:w-44 xl:h-44'), 'Must match block height with responsive sizing');
+    assert.ok(html.includes('rounded-3xl') || html.includes('rounded-2xl'), 'Must use square-ish rounded corners');
+    assert.ok(html.includes('justify-center'), 'Must center Vault Mastery title');
   });
 });
 

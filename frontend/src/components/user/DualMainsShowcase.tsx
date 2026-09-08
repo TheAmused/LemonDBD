@@ -6,6 +6,7 @@ import { ChevronDown } from 'lucide-react';
 import { MainCard } from './MainCard';
 import { ShowcaseCharacterModal } from './ShowcaseCharacterModal';
 import { ShowcasePerkModal } from './ShowcasePerkModal';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserShowcaseState } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
@@ -33,7 +34,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
   dict,
   locale = 'en',
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_loadouts', true);
 
   // Modal state for characters
   const [characterModalRole, setCharacterModalRole] = useState<RoleCategory | null>(null);
@@ -50,7 +51,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
       {/* Connected Header with Collapsible Drawer Toggle */}
       <button
         type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
+        onClick={toggleExpanded}
         className="relative w-full flex items-center justify-between py-3.5 px-5 sm:py-4 sm:px-6 cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >

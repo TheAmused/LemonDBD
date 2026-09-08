@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { UserBugReportsList } from './UserBugReportsList';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserBugReport } from '@/types/userProfile';
 import type { Dictionary } from '@/locales/types';
 
@@ -30,7 +31,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, toggleExpanded] = usePersistentDrawer('lemondbd_drawer_bugs', false);
 
   const getSubtitle = () => {
     if (total === 0) {
@@ -47,7 +48,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
       {/* Connected Header with Collapsible Drawer Toggle */}
       <button
         type="button"
-        onClick={() => setIsExpanded((prev) => !prev)}
+        onClick={toggleExpanded}
         className="relative w-full flex items-center justify-between py-3.5 px-5 sm:py-4 sm:px-6 cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >

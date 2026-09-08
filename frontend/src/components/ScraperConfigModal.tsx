@@ -41,15 +41,31 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'perks', label: 'Perks', desc: 'Survivor and Killer teachable & general perks', category: 'content' },
   { id: 'items', label: 'Items & Equipment', desc: 'Survivor items and tools', category: 'content' },
   { id: 'addons', label: 'Add-ons', desc: 'Killer power and survivor item add-ons', category: 'content' },
+  { id: 'offerings', label: 'Offerings', desc: 'Survivor and Killer offerings', category: 'content' },
+  { id: 'chapters', label: 'Chapters', desc: 'DLC chapters and banner art', category: 'content' },
   { id: 'maps', label: 'Maps & Callouts', desc: 'Map realms, tiles, and objective landmarks', category: 'content' },
-  { id: 'users', label: 'User Accounts', desc: 'Registered user profiles and roles', category: 'users' },
+  { id: 'perk_rules', label: 'Perk Slot Rules', desc: 'Randomizer slot type rule sets', category: 'settings' },
+  { id: 'users', label: 'User Accounts', desc: 'Registered user profiles, roles and avatars', category: 'users' },
   { id: 'ownerships', label: 'User Ownership Records', desc: 'Unlocked perks, character prestige and favorites', category: 'users' },
+  { id: 'user_showcases', label: 'Player Showcases', desc: 'Public profile mains and prestige display', category: 'users' },
   { id: 'community_builds', label: 'Community Builds', desc: 'User-created builds and upvotes', category: 'community' },
   { id: 'custom_perks', label: 'Custom Perks', desc: 'Community-designed custom perks', category: 'community' },
   { id: 'daily_quests', label: 'Daily Quests', desc: 'Daily challenges and completion states', category: 'community' },
   { id: 'bug_reports', label: 'Bug Reports', desc: 'Submitted bug reports and admin notes', category: 'community' },
+  { id: 'changelog_posts', label: 'Changelog Posts', desc: 'Published What is New feed entries', category: 'community' },
   { id: 'generator_settings', label: 'Generator Settings', desc: 'Perk generator defaults and timers', category: 'settings' },
+  { id: 'generator_drawn_perks', label: 'Generator Drawn Perks', desc: 'No-repeat draw history for the randomizer', category: 'settings' },
+  { id: 'draft_sessions', label: 'Draft Sessions', desc: 'Live perk draft room state', category: 'settings' },
+  { id: 'scraper_settings', label: 'Scraper Settings', desc: 'Data source configuration', category: 'settings' },
+  { id: 'challenge_mode_settings', label: 'Challenge Mode Toggles', desc: 'Site-wide enable and disable state per mode', category: 'settings' },
+  { id: 'admin_audit_logs', label: 'Admin Audit Log', desc: 'History of administrative actions', category: 'settings' },
   { id: 'guesser_stats', label: 'Guesser Stats', desc: 'Streaks and guesser game records', category: 'settings' },
+  { id: 'gauntlet_runs', label: 'Gauntlet Streak Runs', desc: 'In-progress and completed gauntlet streak history', category: 'community' },
+  { id: 'chaos_runs', label: 'Chaos Streak Runs', desc: 'In-progress and completed chaos streak history', category: 'community' },
+  { id: 'history_runs', label: 'History Streak Runs', desc: 'In-progress and completed history streak history', category: 'community' },
+  { id: 'page_streak_runs', label: 'Page Streak Runs', desc: 'In-progress and completed page streak history', category: 'community' },
+  { id: 'rosters', label: 'Smash or Pass Rosters', desc: 'Rosters, entities, stats and votes', category: 'community' },
+  { id: 'smash_translations', label: 'Smash or Pass Translations', desc: 'Localized roster and entity text', category: 'community' },
 ];
 
 const TARGET_KEY_MAP: Record<string, string> = {
@@ -57,15 +73,31 @@ const TARGET_KEY_MAP: Record<string, string> = {
   perks: 'Perks',
   items: 'Items',
   addons: 'Addons',
+  offerings: 'Offerings',
+  chapters: 'Chapters',
   maps: 'Maps',
+  perk_rules: 'PerkRules',
   users: 'Users',
   ownerships: 'Ownerships',
+  user_showcases: 'UserShowcases',
   community_builds: 'CommunityBuilds',
   custom_perks: 'CustomPerks',
   daily_quests: 'DailyQuests',
   bug_reports: 'BugReports',
+  changelog_posts: 'ChangelogPosts',
   generator_settings: 'GeneratorSettings',
+  generator_drawn_perks: 'GeneratorDrawnPerks',
+  draft_sessions: 'DraftSessions',
+  scraper_settings: 'ScraperSettings',
+  challenge_mode_settings: 'ChallengeModeSettings',
+  admin_audit_logs: 'AdminAuditLogs',
   guesser_stats: 'GuesserStats',
+  gauntlet_runs: 'GauntletRuns',
+  chaos_runs: 'ChaosRuns',
+  history_runs: 'HistoryRuns',
+  page_streak_runs: 'PageStreakRuns',
+  rosters: 'Rosters',
+  smash_translations: 'SmashTranslations',
 };
 
 export function ScraperConfigModal({
@@ -476,16 +508,7 @@ export function ScraperConfigModal({
                 })}
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-border-color">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  disabled={isExporting}
-                  className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
-                >
-                  {dict?.admin?.cancel}
-                </button>
-
+              <div className="flex items-center justify-end pt-3">
                 <button
                   type="button"
                   onClick={handleExecuteExport}
@@ -614,16 +637,7 @@ export function ScraperConfigModal({
                 </div>
               )}
 
-              <div className="flex items-center justify-between pt-3 border-t border-border-color">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  disabled={isImporting}
-                  className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
-                >
-                  {dict?.admin?.close}
-                </button>
-
+              <div className="flex items-center justify-end pt-3">
                 <button
                   type="button"
                   onClick={handleExecuteImport}

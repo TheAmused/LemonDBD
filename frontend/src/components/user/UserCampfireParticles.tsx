@@ -1,4 +1,4 @@
-﻿// frontend/src/components/user/UserCampfireParticles.tsx
+// frontend/src/components/user/UserCampfireParticles.tsx
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -50,7 +50,7 @@ export const UserCampfireParticles: React.FC = () => {
 
     const baseOpacityMult = isDark ? 0.65 : isLemon ? 0.45 : 0.28;
     const particleCount = typeof window !== 'undefined'
-      ? (window.innerWidth < 768 ? 24 : window.innerWidth < 1440 ? 38 : 50)
+      ? (window.innerWidth < 768 ? 24 : window.innerWidth < 1440 ? 38 : window.innerWidth < 2560 ? 55 : 85)
       : 38;
 
     let width = (canvas.width = window.innerWidth);

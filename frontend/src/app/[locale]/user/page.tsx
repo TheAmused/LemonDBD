@@ -194,7 +194,7 @@ export default function UserProfilePage() {
       mainClassName="overflow-y-auto relative"
     >
         <UserCampfireParticles />
-        <div className="relative z-10 max-w-7xl 2xl:max-w-[1600px] w-full mx-auto space-y-6 sm:space-y-8">
+        <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-[1700px] 3xl:max-w-[2000px] w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
           {/* Hidden avatar file input */}
           <input
             type="file"
@@ -237,13 +237,6 @@ export default function UserProfilePage() {
             </div>
           )}
 
-          {/* Account Credentials, Security & Password Change */}
-          <UserProfileForm
-            initialEmail={user.email || ''}
-            onRefreshUser={refreshUser}
-            dict={dict}
-          />
-
           {/* Dual Mains Signature Showcase (Survivor & Killer Loadouts) - Drawer */}
           <DualMainsShowcase
             showcase={showcaseHook.showcase}
@@ -257,18 +250,28 @@ export default function UserProfilePage() {
             locale={currentLocale}
           />
 
-          {/* My Bug Reports - Drawer under Signature Loadouts */}
-          <UserBugReportsDrawer
-            reports={myReports}
-            loading={loadingReports}
-            onOpenReportModal={() => setBugModalOpen(true)}
-            dict={dict}
-            total={reportsTotal}
-            page={reportsPage}
-            perPage={REPORTS_PER_PAGE}
-            totalPages={reportsTotalPages}
-            onPageChange={handleReportsPageChange}
-          />
+          {/* Account Management & My Bug Reports - 2-Column Grid on 2xl+ (2560x1440 / 4K), Stacked on Laptop/Mobile */}
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6 sm:gap-8 items-start">
+            {/* Account Credentials, Security & Password Change */}
+            <UserProfileForm
+              initialEmail={user.email || ''}
+              onRefreshUser={refreshUser}
+              dict={dict}
+            />
+
+            {/* My Bug Reports - Drawer under Signature Loadouts */}
+            <UserBugReportsDrawer
+              reports={myReports}
+              loading={loadingReports}
+              onOpenReportModal={() => setBugModalOpen(true)}
+              dict={dict}
+              total={reportsTotal}
+              page={reportsPage}
+              perPage={REPORTS_PER_PAGE}
+              totalPages={reportsTotalPages}
+              onPageChange={handleReportsPageChange}
+            />
+          </div>
         </div>
 
       <BugReportModal

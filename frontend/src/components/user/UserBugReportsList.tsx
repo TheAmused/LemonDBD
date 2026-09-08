@@ -28,6 +28,7 @@ interface UserBugReportsListProps {
   perPage?: number;
   totalPages?: number;
   onPageChange?: (page: number) => void;
+  hideHeading?: boolean;
 }
 
 export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
@@ -41,6 +42,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   perPage = 10,
   totalPages = 1,
   onPageChange,
+  hideHeading = false,
 }) => {
   const t: Record<string, string> = propT || dict?.user || {};
   const totalCount = total ?? reports.length;
@@ -80,21 +82,29 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   };
 
   return (
-    <div className="space-y-6 w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-base sm:text-lg font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
-            <Bug className="h-5 w-5 text-accent-red" />
-            <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
-          </h2>
-        </div>
+    <div className="space-y-3.5 w-full">
+      <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color">
+        {!hideHeading ? (
+          <div>
+            <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
+              <Bug className="h-4 w-4 text-accent-red" />
+              <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
+            </h2>
+          </div>
+        ) : (
+          <div className="text-xs font-mono font-bold text-text-secondary">
+            {dict?.user?.myBugReportsCount
+              ? dict.user.myBugReportsCount.replace('{count}', String(totalCount))
+              : `${totalCount}`}
+          </div>
+        )}
 
         <button
           type="button"
           onClick={onOpenReportModal}
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-red-700 hover:opacity-90 px-4 py-2.5 text-xs font-bold text-text-inverted shadow-md shadow-accent-red/20 transition-all cursor-pointer w-full sm:w-auto font-mono"
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-red to-red-700 hover:opacity-90 px-3.5 py-1.5 text-xs font-bold text-text-inverted shadow-sm shadow-accent-red/20 transition-all cursor-pointer font-mono"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-3.5 w-3.5" />
           <span>{t.reportNewBug || 'Report New Bug'}</span>
         </button>
       </div>
@@ -102,11 +112,11 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       {loading ? (
         <UserBugReportsSkeleton dict={dict} count={3} />
       ) : reports.length === 0 ? (
-        <div className="rounded-3xl border-2 border-dashed border-border-color bg-bg-surface p-8 sm:p-12 text-center space-y-3 shadow-sm">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-red/10 text-accent-red">
-            <Bug className="h-6 w-6" />
+        <div className="rounded-2xl border-2 border-dashed border-border-color bg-bg-surface p-6 sm:p-8 text-center space-y-2.5 shadow-sm">
+          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/10 text-accent-red">
+            <Bug className="h-5 w-5" />
           </div>
-          <h3 className="text-base font-black text-text-primary font-mono">
+          <h3 className="text-sm sm:text-base font-black text-text-primary font-mono">
             {t.noReportsTitle || 'No Bug Reports Submitted'}
           </h3>
           <p className="text-xs text-text-secondary max-w-sm mx-auto">
@@ -116,18 +126,18 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
           <button
             type="button"
             onClick={onOpenReportModal}
-            className="inline-flex items-center gap-2 rounded-xl border border-accent-red/30 bg-accent-red/10 px-4 py-2 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-colors cursor-pointer font-mono"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-accent-red/30 bg-accent-red/10 px-3.5 py-1.5 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-colors cursor-pointer font-mono"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>{t.submitBugReport || 'Submit a Bug Report'}</span>
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           {reports.map((report) => (
             <div
               key={report.id}
-              className="rounded-3xl border border-border-color bg-bg-surface p-5 sm:p-6 backdrop-blur-xl shadow-md text-text-primary space-y-4"
+              className="rounded-2xl border border-border-color bg-bg-surface p-4 text-text-primary space-y-3 shadow-xs"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border-color pb-3">
                 <div className="space-y-1">

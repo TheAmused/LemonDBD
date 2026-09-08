@@ -7,6 +7,9 @@ import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { PerkDiamondSlot } from '@/components/user/PerkDiamondSlot';
 import { MainCard } from '@/components/user/MainCard';
+import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
+import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
+import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { StreakTrophyCard } from '@/components/user/StreakTrophyCard';
 import { DEFAULT_SHOWCASE_STATE } from '@/types/userShowcase';
 import type { Perk } from '@/types/perks';
@@ -170,5 +173,77 @@ describe('Campfire Dossier: StreakTrophyCard', () => {
     assert.ok(!html.includes('draft'));
     assert.ok(!html.includes('swf'));
     assert.ok(!html.includes('killer-calculator'));
+  });
+});
+
+describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () => {
+  it('DualMainsShowcase has centered text, no SlidersHorizontal icon, no Show Loadouts button, and smooth drawer grid animation', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(DualMainsShowcase, {
+        showcase: DEFAULT_SHOWCASE_STATE,
+        onSurvivorCharacterChange: () => {},
+        onSurvivorPrestigeChange: () => {},
+        onSurvivorPerkChange: () => {},
+        onKillerCharacterChange: () => {},
+        onKillerPrestigeChange: () => {},
+        onKillerPerkChange: () => {},
+      })
+    );
+
+    // Centered text
+    assert.ok(html.includes('text-center'), 'Must center the header text');
+    assert.ok(html.includes('Signature Loadouts'));
+    assert.ok(html.includes('Feng Min • The Blight'));
+
+    // No icons or clumsy buttons in header
+    assert.ok(!html.includes('Show Loadouts'), 'Must not have separate Show Loadouts button');
+    assert.ok(!html.includes('Hide Loadouts'), 'Must not have separate Hide Loadouts button');
+    assert.ok(!html.includes('lucide-sliders-horizontal'), 'Must not render sliders icon');
+
+    // Smooth drawer animation classes
+    assert.ok(html.includes('grid-rows-[1fr]'), 'Must support expanding grid transition');
+    assert.ok(html.includes('transition-[grid-template-rows,opacity]'), 'Must use smooth grid transition');
+  });
+
+  it('UserBugReportsDrawer has centered text, no icons in header, and smooth drawer grid animation', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(UserBugReportsDrawer, {
+        reports: [],
+        loading: false,
+        onOpenReportModal: () => {},
+        total: 0,
+        page: 1,
+        perPage: 10,
+        totalPages: 1,
+        onPageChange: () => {},
+      })
+    );
+
+    // Centered text
+    assert.ok(html.includes('text-center'), 'Must center header text in Bug Reports drawer');
+    assert.ok(html.includes('My Bug Reports'));
+
+    // Smooth drawer grid animation (collapsed by default)
+    assert.ok(html.includes('grid-rows-[0fr]'), 'Must start in collapsed 0fr grid state');
+    assert.ok(html.includes('transition-[grid-template-rows,opacity]'), 'Must use smooth grid transition');
+  });
+
+  it('UserProfileForm renders as Account Management drawer with centered header and banner', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(UserProfileForm, {
+        initialEmail: 'test@lemondbd.com',
+        onRefreshUser: async () => {},
+      })
+    );
+
+    // Header has Account Management and centered text
+    assert.ok(html.includes('text-center'), 'Must center header text in Account Management drawer');
+    assert.ok(html.includes('Account Management'), 'Must display Account Management title');
+    assert.ok(!html.includes('Account Sanctum'), 'Must not display legacy Account Sanctum title');
+    assert.ok(html.includes('banner_account.jpg'), 'Must display account banner image');
+
+    // Smooth drawer grid animation
+    assert.ok(html.includes('grid-rows-[0fr]'), 'Must start in collapsed 0fr grid state');
+    assert.ok(html.includes('transition-[grid-template-rows,opacity]'), 'Must use smooth grid transition');
   });
 });

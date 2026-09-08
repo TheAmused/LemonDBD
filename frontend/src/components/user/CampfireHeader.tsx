@@ -4,7 +4,6 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Flame,
   Crown,
   ChevronRight,
   Sparkles,
@@ -13,6 +12,7 @@ import {
 } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
 import type { Dictionary } from '@/locales/types';
@@ -62,7 +62,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
       <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-center justify-between gap-6 sm:gap-8">
         {/* Left Column: Avatar & Player Identity */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left flex-1 min-w-0">
-          {/* Avatar Column with reset button & feedback */}
+          {/* Avatar Column with feedback */}
           <div className="flex flex-col items-center shrink-0 gap-1.5">
             {/* Circular avatar with single clean border and click-to-change hover */}
             <div
@@ -93,9 +93,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   </div>
                 )}
               </div>
-              <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-md">
-                <Flame className="h-3.5 w-3.5" />
-              </div>
             </div>
 
             {avatarFeedback && (
@@ -115,41 +112,27 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary font-mono truncate">
                 {user.username}
               </h1>
-              <span
-                className={`rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border font-mono ${
-                  user.role === 'admin'
-                    ? 'border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs'
-                    : 'border-cyan-500/40 bg-cyan-500/15 text-cyan-500 dark:text-cyan-400'
-                }`}
-              >
-                {user.role === 'admin'
-                  ? (dict?.user?.roleAdmin || 'Administrator')
-                  : (dict?.user?.roleUser || 'Standard Player')}
-              </span>
+              {user.role === 'admin' && (
+                <span className="rounded-xl px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border font-mono border-accent-red/40 bg-accent-red/15 text-accent-red shadow-xs">
+                  {dict?.user?.roleAdmin || 'Administrator'}
+                </span>
+              )}
             </div>
 
-            {/* Selectable Player Title Plaque */}
+            {/* Selectable Player Title Plaque via CustomDropdown */}
             <div className="flex items-center justify-center sm:justify-start">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-accent-amber/35 bg-accent-amber/10 text-accent-amber text-xs sm:text-sm font-mono font-bold tracking-wide shadow-xs">
-                <Sparkles className="h-3.5 w-3.5 shrink-0" />
-                <div className="relative inline-block">
-                  <select
-                    value={showcase.playerTitle}
-                    onChange={(e) => onTitleChange(e.target.value)}
-                    className="appearance-none bg-transparent text-accent-amber font-mono font-bold tracking-wider text-xs sm:text-sm pr-5 cursor-pointer focus:outline-none"
-                    aria-label={dict?.user?.playerTitle || 'Player Title'}
-                  >
-                    {PLAYER_TITLES.map((title) => (
-                      <option key={title} value={title} className="bg-bg-surface text-text-primary">
-                        « {title} »
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-accent-amber">
-                    <ChevronRight className="h-3 w-3 rotate-90" />
-                  </div>
-                </div>
-              </div>
+              <CustomDropdown
+                value={showcase.playerTitle}
+                onChange={onTitleChange}
+                options={PLAYER_TITLES.map((title) => ({
+                  value: title,
+                  label: `« ${title} »`,
+                }))}
+                icon={<Sparkles className="h-3.5 w-3.5 text-accent-amber" />}
+                buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-mono font-bold tracking-wide"
+                menuClassName="bg-bg-surface border-border-color shadow-xl"
+                ariaLabel={dict?.user?.playerTitle || 'Player Title'}
+              />
             </div>
 
             {/* Account Metadata: Member Since, Admin Panel Link */}
@@ -179,12 +162,12 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Vault Mastery Radial Dials */}
+        {/* Right Column: Vault Mastery Radial Dials (Prominent) */}
         <div className="flex flex-col items-center lg:items-end justify-center w-full lg:w-auto shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-border-color">
           <VaultMasteryDials
             ownership={ownership}
             dict={dict}
-            compact={true}
+            compact={false}
             hideTitle={false}
           />
         </div>

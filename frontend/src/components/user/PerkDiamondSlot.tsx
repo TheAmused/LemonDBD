@@ -80,9 +80,13 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
       )}
 
       {/* Label under diamond */}
-      <span className="mt-2.5 text-[10px] font-mono font-bold text-center max-w-[84px] truncate text-text-muted group-hover:text-accent-amber transition-colors">
-        {perk ? perk.name : emptyLabel}
-      </span>
+      {perk ? (
+        <span className="mt-2 text-[10px] font-mono font-bold text-center max-w-[84px] truncate text-text-muted group-hover:text-accent-amber transition-colors">
+          {perk.name}
+        </span>
+      ) : (
+        <span className="sr-only">{emptyLabel}</span>
+      )}
     </div>
   );
 };

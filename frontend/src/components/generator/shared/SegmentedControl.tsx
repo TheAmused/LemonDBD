@@ -8,6 +8,7 @@ import { Tooltip } from '@/components/common/Tooltip';
 export interface SegmentedOption<T extends string> {
   value: T;
   label: string;
+  shortLabel?: string;
   icon?: React.ReactNode;
   /** Optional richer hover/focus tooltip (title defaults to `label` if omitted). */
   tooltip?: { title?: string; description: string };
@@ -39,8 +40,8 @@ export function SegmentedControl<T extends string>({
       role="group"
       aria-label={ariaLabel}
       className={cn(
-        'flex items-center overflow-x-auto',
-        bare ? 'gap-3' : 'gap-1 rounded-2xl bg-slate-200/80 dark:bg-slate-900/50 p-1 shadow-inner',
+        'grid grid-cols-5 w-full lg:flex lg:w-auto items-center',
+        bare ? 'gap-0.5 sm:gap-1.5 p-1 rounded-2xl bg-bg-surface/90 border border-border-color/60 shadow-xs backdrop-blur-md' : 'gap-1 rounded-2xl bg-bg-elevated p-1 shadow-inner border border-border-color',
         className
       )}
     >
@@ -53,22 +54,23 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             aria-pressed={isActive}
             className={cn(
-              'relative flex shrink-0 items-center gap-1.5 text-xs font-black tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[40px] sm:min-h-[44px]',
+              'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 text-[10px] xs:text-[11px] sm:text-xs 2xl:text-sm min-[1800px]:text-base font-black tracking-wide sm:tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[42px] 2xl:min-h-[48px] select-none text-center',
               bare
-                ? cn('pb-1.5 pt-1 px-1', isActive ? 'text-amber-700 dark:text-amber-400' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200')
+                ? cn('pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5', isActive ? 'text-amber-600 dark:text-amber-400 font-extrabold' : 'text-text-secondary hover:text-text-primary')
                 : cn(
-                    'rounded-xl px-3 py-2',
-                    isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                    'rounded-xl px-2 sm:px-3 2xl:px-4 py-1.5 sm:py-2 2xl:py-2.5',
+                    isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-text-secondary hover:text-text-primary'
                   )
             )}
           >
             {opt.icon}
-            <span>{opt.label}</span>
+            <span className={opt.shortLabel ? 'hidden sm:inline' : ''}>{opt.label}</span>
+            {opt.shortLabel && <span className="inline sm:hidden">{opt.shortLabel}</span>}
             {bare && (
               <span
                 aria-hidden="true"
                 className={cn(
-                  'absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-amber-600 dark:bg-amber-400 transition-opacity duration-200',
+                  'absolute inset-x-0 bottom-0 h-[2.5px] rounded-full bg-amber-600 dark:bg-amber-400 transition-opacity duration-200',
                   isActive ? 'opacity-100' : 'opacity-0'
                 )}
               />

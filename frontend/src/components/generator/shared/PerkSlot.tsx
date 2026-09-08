@@ -10,11 +10,12 @@ import { PerkCard } from '@/components/PerkCard';
 
 // Matches PerkCard's own grid-view footprint exactly, so an empty/obscured
 // slot takes up the same space as a filled one and nothing jumps around.
-const SLOT_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot', string> = {
-  default: 'h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-48 lg:w-48 xl:h-56 xl:w-56 2xl:h-64 2xl:w-64',
-  large: 'h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 lg:h-64 lg:w-64 xl:h-72 xl:w-72',
+const SLOT_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compact', string> = {
+  default: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44 2xl:h-52 2xl:w-52 min-[1800px]:h-60 min-[1800px]:w-60',
+  large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 min-[1800px]:h-68 min-[1800px]:w-68',
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
-  tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44',
+  tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44 2xl:h-52 2xl:w-52 min-[1800px]:h-60 min-[1800px]:w-60',
+  compact: 'h-[78px] w-[78px] xs:h-[84px] xs:w-[84px] sm:h-24 sm:w-24 md:h-26 md:w-26',
 };
 
 export interface PerkSlotProps {
@@ -30,8 +31,8 @@ export interface PerkSlotProps {
   isActive?: boolean;
   announce?: boolean;
   /** 'large' is used by every mode's result grid; the Wheel's flanking
-   * loadout slots stay at 'default'; 'tarot' fits inside tarot cards. */
-  size?: 'default' | 'large' | 'fill' | 'tarot';
+   * loadout slots stay at 'default'; 'tarot' fits inside tarot cards; 'compact' for mobile scatter. */
+  size?: 'default' | 'large' | 'fill' | 'tarot' | 'compact';
   /** Persistent Blind Mode -- distinct from `isObscured` (the Chaos
    * "Curse of Blindness" mutator), which does NOT show the coordinate tag.
    * Blind Mode always shows it. */
@@ -59,7 +60,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         onClick={onClick}
         className={cn(
           SLOT_SIZE_CLASSES[size],
-          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-purple-400/50 dark:border-purple-800/60 bg-purple-50/50 dark:bg-purple-950/20 text-purple-700 dark:text-purple-400 cursor-pointer shadow-xs transition-colors'
+          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-purple-400/50 dark:border-purple-800/60 bg-purple-50/90 dark:bg-purple-950/70 text-purple-700 dark:text-purple-400 cursor-pointer shadow-xs transition-colors backdrop-blur-xs'
         )}
       >
         <EyeOff className="h-10 w-10 animate-pulse" />
@@ -75,7 +76,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
       <div
         className={cn(
           SLOT_SIZE_CLASSES[size],
-          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-800/80 bg-slate-100/60 dark:bg-slate-900/20 text-slate-400 dark:text-slate-600 transition-colors shadow-xs'
+          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-slate-400 dark:text-slate-500 transition-colors shadow-xs backdrop-blur-xs'
         )}
       >
         <ImageOff className="h-8 w-8 text-slate-400 dark:text-slate-600" />

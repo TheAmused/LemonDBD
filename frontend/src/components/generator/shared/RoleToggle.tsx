@@ -22,36 +22,42 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
   const isKiller = role === 'Killer';
 
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={isKiller}
-      aria-label={
-        isKiller
-          ? dict?.generator?.roleToggleToSurvivor || 'Switch to Survivor perks'
-          : dict?.generator?.roleToggleToKiller || 'Switch to Killer perks'
-      }
-      onClick={() => onChange(isKiller ? 'Survivor' : 'Killer')}
+    <div
+      role="group"
+      aria-label={dict?.generator?.selectRole || 'Select Role'}
       className={cn(
-        'relative flex h-8 w-[76px] shrink-0 items-center rounded-full border border-slate-300/60 dark:border-white/10 bg-slate-200/80 dark:bg-slate-950/70 px-1 cursor-pointer transition-colors duration-200 touch-manipulation',
+        'inline-flex items-center rounded-xl border border-border-color bg-bg-elevated p-1 shadow-inner shrink-0',
         className
       )}
     >
-      <span
-        aria-hidden="true"
+      <button
+        type="button"
+        onClick={() => onChange('Survivor')}
+        aria-pressed={!isKiller}
         className={cn(
-          'absolute top-1 flex h-6 w-6 items-center justify-center rounded-full shadow-md transition-all duration-200 ease-out',
-          isKiller ? 'left-[45px] bg-rose-600 text-white' : 'left-1 bg-emerald-600 text-white'
+          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-lg text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
+          !isKiller
+            ? 'bg-emerald-600 text-white shadow-xs font-black'
+            : 'text-text-secondary hover:text-text-primary'
         )}
       >
-        {isKiller ? <Skull className="h-3.5 w-3.5" /> : <Shield className="h-3.5 w-3.5" />}
-      </span>
-      <span className={cn('ml-1 text-[9px] font-black uppercase tracking-wide transition-opacity', isKiller ? 'opacity-60 text-emerald-700 dark:text-emerald-300' : 'opacity-0')}>
-        S
-      </span>
-      <span className={cn('ml-auto mr-1 text-[9px] font-black uppercase tracking-wide transition-opacity', isKiller ? 'opacity-0' : 'opacity-60 text-rose-700 dark:text-rose-300')}>
-        K
-      </span>
-    </button>
+        <Shield className="h-4 w-4 sm:h-5 w-5 shrink-0" />
+        <span>{dict?.generator?.survivor || 'Survivor'}</span>
+      </button>
+      <button
+        type="button"
+        onClick={() => onChange('Killer')}
+        aria-pressed={isKiller}
+        className={cn(
+          'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-lg text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
+          isKiller
+            ? 'bg-rose-600 text-white shadow-xs font-black'
+            : 'text-text-secondary hover:text-text-primary'
+        )}
+      >
+        <Skull className="h-4 w-4 sm:h-5 w-5 shrink-0" />
+        <span>{dict?.generator?.killer || 'Killer'}</span>
+      </button>
+    </div>
   );
 };

@@ -116,11 +116,11 @@
   }
 
   :root[data-sidebar='collapsed'] .lemon-shell-main {
-    margin-left: 5rem;
+    margin-left: 0;
   }
 
   :root[data-sidebar='collapsed'] .lemon-shell-main--flush {
-    margin-left: 1.5rem;
+    margin-left: 0;
   }
 
   .lemon-shell-aside {
@@ -129,6 +129,7 @@
 
   :root[data-sidebar='collapsed'] .lemon-shell-aside {
     transform: translateX(-100%);
+    border-right-width: 0;
   }
 }
 

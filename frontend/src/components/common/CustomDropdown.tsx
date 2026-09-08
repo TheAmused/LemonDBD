@@ -90,7 +90,9 @@ export function CustomDropdown<T extends string = string>({
           isOpen ? 'border-accent-amber bg-accent-amber/10 text-accent-amber shadow-xs' : ''
         } ${buttonClassName}`}
       >
-        {icon && <span className="text-text-secondary shrink-0">{icon}</span>}
+        {(icon || selectedOption?.icon) && (
+          <span className="text-text-secondary shrink-0">{icon || selectedOption?.icon}</span>
+        )}
         <span className="truncate">{selectedOption?.label}</span>
         <ChevronDown
           className={`h-3.5 w-3.5 text-text-secondary transition-transform duration-200 shrink-0 ${

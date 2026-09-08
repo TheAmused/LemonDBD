@@ -13,6 +13,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
+import { FlavorPill } from '../shared/FlavorPill';
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -136,14 +137,14 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 py-10">
-      <p className="max-w-lg text-center text-sm font-semibold text-slate-700 dark:text-slate-300 sm:text-base">
+    <div className="flex flex-col items-center justify-center gap-2 sm:gap-6 py-2 sm:py-6">
+      <p className="max-w-lg text-center text-xs sm:text-base font-semibold text-text-secondary">
         {dict?.generator?.tarotTapToFlip ||
           'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
       </p>
 
       {cards ? (
-        <div ref={resultsRef} className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div ref={resultsRef} className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 min-[1800px]:gap-12">
           {cards.map((card, idx) => {
             const { isObscured, onClick } = getSlotInteraction(
               idx,
@@ -157,7 +158,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
             return (
               <div key={idx} style={{ perspective: '1200px' }}>
                 <motion.div
-                  className="relative h-52 w-40 sm:h-64 sm:w-48 md:h-72 md:w-56 lg:h-80 lg:w-64 xl:h-96 xl:w-72"
+                  className="relative h-44 w-32 xs:h-48 xs:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-64 lg:w-44 xl:h-72 xl:w-48 2xl:h-88 2xl:w-60 min-[1800px]:h-96 min-[1800px]:w-68"
                   style={{ transformStyle: 'preserve-3d' }}
                   animate={{
                     rotateY: card.flipped ? 180 : 0,
@@ -187,35 +188,21 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                   {/* Front face: still dressed as the same tarot card,
                       dark card stock, amber frame, corner pips, just
                       revealing the perk in its center window instead of
-                      turning into a bare icon.
-
-                      The actual perk content only mounts once `card.flipped`
-                      is true. Rendering it unconditionally here (relying on
-                      backfaceVisibility + the 3D transform alone to hide it)
-                      let the new perk flash into view for a frame whenever a
-                      fresh, unflipped card reused this same DOM slot (e.g.
-                      shuffling right after a flip) -- the combined rotation
-                      briefly passes through "facing the viewer" before the
-                      flip-back settles, so the still-mounted image was
-                      visible for that frame. Not rendering it until flipped
-                      removes the leak regardless of transform/timing. */}
+                      turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-amber-500/30 bg-gradient-to-b from-slate-900 via-[#120a1c] to-slate-950 p-2 sm:p-2.5"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-amber-500/30 bg-gradient-to-b from-slate-100 via-amber-50/50 to-white dark:from-slate-900 dark:via-[#120a1c] dark:to-slate-950 p-2 sm:p-2.5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
                       pointerEvents: card.flipped ? 'auto' : 'none',
                     }}
                   >
-                    {/* Inner card-stock border only -- no corner pips here.
-                        PerkCard (rendered below via PerkSlot) already draws
-                        its own top-left coordinate tag and bottom-right
-                        character portrait with size="tarot". */}
+                    {/* Inner card-stock border only */}
                     <span className="pointer-events-none absolute inset-1 sm:inset-1.5 rounded-xl border border-amber-500/20" />
                     {card.flipped && (
                       <>
                         <div className="relative z-10 pt-1 text-center">
-                          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-amber-400/90 drop-shadow">
+                          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400 drop-shadow-xs">
                             {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                           </span>
                         </div>
@@ -241,7 +228,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           })}
         </div>
       ) : (
-        <Layers className="h-16 w-16 text-slate-600" />
+        <Layers className="h-16 w-16 text-text-muted" />
       )}
 
       <DbdButton
@@ -254,14 +241,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
       </DbdButton>
 
-      {flavorLine && (
-        <div
-          aria-live="polite"
-          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
-        >
-          {flavorLine}
-        </div>
-      )}
+      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

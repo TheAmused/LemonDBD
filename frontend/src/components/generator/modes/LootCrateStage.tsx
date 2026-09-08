@@ -13,6 +13,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
+import { FlavorPill } from '../shared/FlavorPill';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -206,7 +207,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-4">
       {(phase === 'closed' || phase === 'shaking') && (
         <>
-          <p className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
+          <p className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
             {dict?.generator?.cratePrompt ||
               'A sealed Trial Offering awaits. Crack it open and the Entity scatters perks around the block for you to pick from.'}
           </p>
@@ -231,12 +232,12 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             />
           </motion.button>
           {phase === 'closed' && (
-            <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+            <p className="text-xs font-black uppercase tracking-wide text-text-muted">
               {dict?.generator?.crateTapToOpen || 'Tap the Trial Offering'}
             </p>
           )}
           {phase === 'shaking' && (
-            <p aria-live="polite" className="text-xs font-black uppercase tracking-wide text-amber-400 animate-pulse">
+            <p aria-live="polite" className="text-xs font-black uppercase tracking-wide text-amber-600 dark:text-amber-400 animate-pulse">
               {dict?.generator?.crateOpening || 'Cracking Open...'}
             </p>
           )}
@@ -245,16 +246,66 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'scattering' && (
         <>
-          <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
+          <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
             {scatterPrompt}
           </p>
 
-          {/* Explicit min-height floor (not just flex-1/min-h-0) -- relying
-              purely on the flex chain to hand this box a real height left it
-              able to collapse to near-zero in some viewport/flex-basis
-              combinations, which read as "nothing happened" after opening
-              the crate since the scattered perks had no box to lay out in. */}
-          <div className="relative h-full min-h-[260px] w-full flex-1 sm:min-h-[320px]">
+          {/* Mobile & Tablet (< md): Centered balanced offerings and 4-slot loadout tray */}
+          <div className="flex flex-col items-center justify-center flex-1 w-full my-auto gap-3.5 md:hidden">
+            {/* 4-Slot Loadout Progress Tray */}
+            <div className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 rounded-2xl bg-bg-surface/90 border border-border-color shadow-xs backdrop-blur-sm">
+              {[0, 1, 2, 3].map((slotIdx) => {
+                const locked = lockedItems[slotIdx];
+                return locked ? (
+                  <div key={`mob-tray-locked-${locked.id}`} className="relative">
+                    <div className="rounded-xl ring-2 ring-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.35)]">
+                      <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" dict={dict} />
+                    </div>
+                    <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow">
+                      <Lock className="h-3 w-3" />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    key={`mob-tray-empty-${slotIdx}`}
+                    className="flex flex-col items-center justify-center w-[74px] h-[74px] xs:w-[84px] xs:h-[84px] rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
+                  >
+                    <span className="text-xs font-mono font-bold opacity-40">#{slotIdx + 1}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Scattered Offerings: Symmetrically Centered Flex Wrap */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 w-full max-w-sm sm:max-w-md mx-auto py-1">
+              <AnimatePresence>
+                {scatterPool.map((item) => (
+                  <motion.div
+                    key={`mob-scatter-${item.id}`}
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3 }}
+                    transition={{ duration: 0.2 }}
+                    whileTap={{ scale: 0.94 }}
+                    className="cursor-pointer shrink-0"
+                  >
+                    <PerkSlot
+                      perk={item.perk}
+                      role={role}
+                      page={item.page}
+                      slot={item.slot}
+                      size="compact"
+                      onClick={() => handlePick(item)}
+                      dict={dict}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Desktop (>= md): Cinematic absolute scatter field */}
+          <div className="relative h-full min-h-[320px] w-full flex-1 hidden md:block">
             {lockedItems.map((item) => (
               <motion.div
                 key={`locked-${item.id}`}
@@ -287,10 +338,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                   transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
                   whileHover={reduceMotion ? undefined : { scale: item.scale * 1.08, rotate: 0, zIndex: 20 }}
                 >
-                  {/* Full visibility during selection is deliberate: Blind
-                      Mode and the Curse of Blindness only obscure the final
-                      locked-in result grid below -- hiding the options here
-                      would make "pick one" a meaningless coin flip. */}
                   <PerkSlot
                     perk={item.perk}
                     role={role}
@@ -308,7 +355,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'complete' && (
         <>
-          <p className="text-sm font-bold text-slate-600 dark:text-slate-300 text-center sm:text-base">
+          <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
             {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -348,14 +395,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
         </>
       )}
 
-      {flavorLine && (
-        <div
-          aria-live="polite"
-          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
-        >
-          {flavorLine}
-        </div>
-      )}
+      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

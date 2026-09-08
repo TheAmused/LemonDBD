@@ -48,7 +48,7 @@ export default {
   disablePerkSubtitle: "Nie będzie oferowana w nowych pulach/stronach wyzwań.",
   selectAll: "Zaznacz Wszystko",
   deselectAll: "Odznacz Wszystko",
-  downloadBackup: "Pobierz Kopię Zapasową ({count})",
+  downloadBackup: "Pobierz Kopię Zapasową",
   exportingStatus: "Eksportowanie...",
   purgeSelected: "Wyczyść Zaznaczone ({count})",
   purgingStatus: "Czyszczenie...",

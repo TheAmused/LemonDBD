@@ -48,7 +48,7 @@ export default {
   disablePerkSubtitle: "Wird in neuen Herausforderungspools/-seiten nicht mehr angeboten.",
   selectAll: "Alle Auswählen",
   deselectAll: "Alle Abwählen",
-  downloadBackup: "Backup Herunterladen ({count})",
+  downloadBackup: "Backup Herunterladen",
   exportingStatus: "Wird exportiert...",
   purgeSelected: "Auswahl Löschen ({count})",
   purgingStatus: "Wird gelöscht...",

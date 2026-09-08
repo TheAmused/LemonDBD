@@ -1,4 +1,5 @@
 # backend/tests/unit/api/test_db_export_import.py
+import base64
 import io
 import json
 import pytest
@@ -13,6 +14,8 @@ from app.models.character import Character
 from app.models.map import Realm
 from app.models.perk import Perk
 from app.models.user import User
+from app.services.db import export_import as export_import_module
+from app.services.db.export_import import DatabaseExportImportService
 
 
 @pytest.fixture
@@ -329,3 +332,260 @@ class TestDatabaseExportImport:
 
         assert db.session.scalars(select(Realm).where(Realm.name == "Springwood")).first() is None
         assert db.session.scalars(select(Realm).where(Realm.name == "Yamaoka Estate")).first() is not None
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportAssetBundling:
+    """Tests for base64-embedded image bytes on export/import (Task 2)."""
+
+    def test_export_embeds_character_avatar_bytes(self, export_import_app, monkeypatch, tmp_path):
+        icon_dir = tmp_path / "icons" / "characters"
+        icon_dir.mkdir(parents=True)
+        raw = b"fake-avatar-bytes"
+        (icon_dir / "trapper.webp").write_bytes(raw)
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+
+        with export_import_app.app_context():
+            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char.avatar_local_path = "icons/characters/trapper.webp"
+            db.session.commit()
+
+            result = DatabaseExportImportService.export_database(targets=["characters"])
+            exported = result["data"]["characters"][0]
+
+            assert exported["avatar_local_path"] == "icons/characters/trapper.webp"
+            assert exported["avatar_local_path_data"] == base64.b64encode(raw).decode("ascii")
+
+    def test_import_restores_character_avatar_file(self, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+        raw = b"restored-avatar-bytes"
+        payload = {
+            "data": {
+                "characters": [
+                    {
+                        "name": "The Trapper",
+                        "role": "Killer",
+                        "avatar_local_path": "icons/characters/trapper.webp",
+                        "avatar_local_path_data": base64.b64encode(raw).decode("ascii"),
+                    }
+                ]
+            }
+        }
+
+        with export_import_app.app_context():
+            DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
+
+            written = tmp_path / "icons" / "characters" / "trapper.webp"
+            assert written.read_bytes() == raw
+
+    def test_export_omits_asset_bytes_when_include_assets_false(self, export_import_app, monkeypatch, tmp_path):
+        icon_dir = tmp_path / "icons" / "characters"
+        icon_dir.mkdir(parents=True)
+        (icon_dir / "trapper.webp").write_bytes(b"bytes")
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+
+        with export_import_app.app_context():
+            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char.avatar_local_path = "icons/characters/trapper.webp"
+            db.session.commit()
+
+            result = DatabaseExportImportService.export_database(targets=["characters"], include_assets=False)
+            exported = result["data"]["characters"][0]
+
+            assert "avatar_local_path_data" not in exported
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportOfferingsAndChapters:
+    def test_export_import_offerings_and_chapters_roundtrip(self, export_import_app):
+        with export_import_app.app_context():
+            from app.models.equipment import Offering
+            from app.models.chapter import Chapter
+            from sqlalchemy import delete as sa_delete
+
+            db.session.add(Offering(name="Bloody Party Streamers", category="Offering", role="Killer"))
+            db.session.add(Chapter(name="A Nightmare on Elm Street"))
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["offerings", "chapters"])
+            assert exported["counts"]["offerings"] == 1
+            assert exported["counts"]["chapters"] == 1
+
+            db.session.execute(sa_delete(Offering))
+            db.session.execute(sa_delete(Chapter))
+            db.session.commit()
+
+            summary = DatabaseExportImportService.import_database(exported, mode="merge", targets=["offerings", "chapters"])
+            assert summary["summary"]["offerings"]["created"] == 1
+            assert summary["summary"]["chapters"]["created"] == 1
+            assert db.session.scalars(select(Offering)).first().name == "Bloody Party Streamers"
+            assert db.session.scalars(select(Chapter)).first().name == "A Nightmare on Elm Street"
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportUserAvatars:
+    def test_export_import_roundtrips_uploaded_user_avatar_bytes(self, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+        avatar_dir = tmp_path / "uploads" / "avatars"
+        avatar_dir.mkdir(parents=True)
+        raw = b"user-avatar-bytes"
+        (avatar_dir / "avatar_u1_test.webp").write_bytes(raw)
+
+        with export_import_app.app_context():
+            user = db.session.scalars(select(User).where(User.username == "player_test")).first()
+            user.avatar_url = "/api/v1/auth/avatar/file/avatar_u1_test.webp"
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["users"])
+            row = next(u for u in exported["data"]["users"] if u["username"] == "player_test")
+            assert row["avatar_relative_path"] == "uploads/avatars/avatar_u1_test.webp"
+            assert row["avatar_relative_path_data"] == base64.b64encode(raw).decode("ascii")
+
+            (avatar_dir / "avatar_u1_test.webp").unlink()
+
+            DatabaseExportImportService.import_database(exported, mode="merge", targets=["users"])
+
+            assert (avatar_dir / "avatar_u1_test.webp").read_bytes() == raw
+
+    def test_export_skips_avatar_bytes_for_default_avatar(self, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+
+        with export_import_app.app_context():
+            exported = DatabaseExportImportService.export_database(targets=["users"])
+            row = next(u for u in exported["data"]["users"] if u["username"] == "admin_test")
+
+            assert row["avatar_relative_path"] is None
+            assert row["avatar_relative_path_data"] is None
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportSettingsTables:
+    def test_export_import_settings_tables_roundtrip(self, export_import_app):
+        with export_import_app.app_context():
+            from sqlalchemy import delete as sa_delete
+            from app.models.perk import PerkRule
+            from app.models.minigames import GeneratorDrawnPerk, DraftSession, ScraperSetting
+            from app.models.admin import ChallengeModeSetting
+            from app.models.user import UserShowcase
+
+            user = db.session.scalars(select(User).where(User.username == "player_test")).first()
+            db.session.add(PerkRule(name="Standard", is_default=True))
+            db.session.add(GeneratorDrawnPerk(role="Survivor", perk_name="Adrenaline"))
+            db.session.add(DraftSession(room_code="ABC123"))
+            db.session.add(ScraperSetting(source="wikigg"))
+            db.session.add(ChallengeModeSetting(mode="gauntlet", is_enabled=True))
+            db.session.add(UserShowcase(user_id=user.id, player_title="The Camper"))
+            db.session.commit()
+
+            targets = [
+                "perk_rules", "generator_drawn_perks", "draft_sessions",
+                "scraper_settings", "challenge_mode_settings", "user_showcases",
+            ]
+            exported = DatabaseExportImportService.export_database(targets=targets)
+            for t in targets:
+                assert exported["counts"][t] == 1
+
+            db.session.execute(sa_delete(PerkRule))
+            db.session.execute(sa_delete(GeneratorDrawnPerk))
+            db.session.execute(sa_delete(DraftSession))
+            db.session.execute(sa_delete(ScraperSetting))
+            db.session.execute(sa_delete(ChallengeModeSetting))
+            db.session.execute(sa_delete(UserShowcase))
+            db.session.commit()
+
+            summary = DatabaseExportImportService.import_database(exported, mode="merge", targets=targets)
+            for t in targets:
+                assert summary["summary"][t]["created"] == 1
+
+            assert db.session.scalars(select(PerkRule)).first().name == "Standard"
+            assert db.session.scalars(select(UserShowcase)).first().user_id == user.id
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportAuditLogAndChangelog:
+    def test_export_import_audit_log_and_changelog_insert_only(self, export_import_app):
+        with export_import_app.app_context():
+            from app.models.admin import AdminAuditLog
+            from app.models.changelog import ChangelogPost
+
+            admin = db.session.scalars(select(User).where(User.username == "admin_test")).first()
+            db.session.add(AdminAuditLog(admin_user_id=admin.id, action="disable_character", target_type="character", target_id="1"))
+            db.session.add(ChangelogPost(title="Launch", content_html="<p>Hello</p>", author_id=admin.id, author_name="admin_test"))
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["admin_audit_logs", "changelog_posts"])
+            assert exported["counts"]["admin_audit_logs"] == 1
+            assert exported["counts"]["changelog_posts"] == 1
+            assert exported["data"]["admin_audit_logs"][0]["admin_username"] == "admin_test"
+
+            summary = DatabaseExportImportService.import_database(
+                exported, mode="merge", targets=["admin_audit_logs", "changelog_posts"]
+            )
+            assert summary["summary"]["admin_audit_logs"]["created"] == 1
+            assert summary["summary"]["changelog_posts"]["created"] == 1
+            assert len(db.session.scalars(select(AdminAuditLog)).all()) == 2
+            assert len(db.session.scalars(select(ChangelogPost)).all()) == 2
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportSmashOrPass:
+    def test_export_import_smash_or_pass_roster_roundtrip(self, export_import_app):
+        with export_import_app.app_context():
+            from sqlalchemy import delete as sa_delete
+            from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote, Translation
+
+            roster = Roster(slug="canon", name_i18n_key="roster.canon.name", description_i18n_key="roster.canon.desc")
+            db.session.add(roster)
+            db.session.flush()
+            entity = Entity(roster_id=roster.id, slug="ada_wong", name="Ada Wong", role="Survivor")
+            db.session.add(entity)
+            db.session.flush()
+            db.session.add(EntityStat(entity_id=entity.id, smash_count=5, pass_count=1))
+            db.session.add(Vote(entity_id=entity.id, vote_type="smash", session_id="s1"))
+            db.session.add(Translation(locale="pl", key="roster.canon.name", value="Kanon"))
+            db.session.commit()
+
+            exported = DatabaseExportImportService.export_database(targets=["rosters", "smash_translations"])
+            assert exported["counts"]["rosters"] == 1
+            assert exported["counts"]["smash_translations"] == 1
+            roster_row = exported["data"]["rosters"][0]
+            assert roster_row["slug"] == "canon"
+            assert len(roster_row["entities"]) == 1
+            assert roster_row["entities"][0]["stat"]["smash_count"] == 5
+            assert len(roster_row["entities"][0]["votes"]) == 1
+
+            db.session.execute(sa_delete(Vote))
+            db.session.execute(sa_delete(EntityStat))
+            db.session.execute(sa_delete(Entity))
+            db.session.execute(sa_delete(Roster))
+            db.session.execute(sa_delete(Translation))
+            db.session.commit()
+
+            summary = DatabaseExportImportService.import_database(
+                exported, mode="merge", targets=["rosters", "smash_translations"]
+            )
+            assert summary["summary"]["rosters"]["created"] == 1
+            assert summary["summary"]["smash_translations"]["created"] == 1
+
+            restored_entity = db.session.scalars(select(Entity).where(Entity.slug == "ada_wong")).one()
+            assert restored_entity.stat.smash_count == 5
+            assert len(db.session.scalars(select(Vote).where(Vote.entity_id == restored_entity.id)).all()) == 1
+
+
+@pytest.mark.unit
+class TestDatabaseExportRouteIncludeAssets:
+    def test_export_route_supports_include_assets_false(self, client: FlaskClient, admin_token: str, export_import_app, monkeypatch, tmp_path):
+        monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
+
+        with export_import_app.app_context():
+            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char.avatar_local_path = "icons/characters/trapper.webp"
+            db.session.commit()
+
+        resp = client.get(
+            "/api/v1/admin/database/export?targets=characters&include_assets=false",
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert resp.status_code == 200
+        payload = resp.get_json()
+        assert "avatar_local_path_data" not in payload["data"]["characters"][0]

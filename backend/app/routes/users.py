@@ -229,9 +229,10 @@ def export_database():
     """Export complete or selective database entities as JSON."""
     targets_param = request.args.get("targets")
     targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
+    include_assets = request.args.get("include_assets", "true").lower() not in ["false", "0", "no"]
 
     try:
-        data = DatabaseExportImportService.export_database(targets=targets)
+        data = DatabaseExportImportService.export_database(targets=targets, include_assets=include_assets)
         download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
         if download:
             timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")

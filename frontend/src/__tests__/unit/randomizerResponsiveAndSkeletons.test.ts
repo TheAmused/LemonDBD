@@ -305,13 +305,13 @@ describe('Randomizer: Viewport Padding & Layout Structure', () => {
     );
   });
 
-  it('StageFrame contains static DBD heartbeat corner vignette', () => {
+  it('StageFrame no longer renders the removed red heartbeat corner vignette', () => {
     const stageFramePath = path.resolve(__dirname, '../../components/generator/shared/StageFrame.tsx');
     const stageFrameContent = fs.readFileSync(stageFramePath, 'utf-8');
 
     assert.ok(
-      stageFrameContent.includes('dbd-heartbeat-vignette--static'),
-      'StageFrame must include dbd-heartbeat-vignette--static corner glow overlay'
+      !stageFrameContent.includes('dbd-heartbeat-vignette--static'),
+      'StageFrame must not include the removed dbd-heartbeat-vignette--static red glow overlay'
     );
   });
 

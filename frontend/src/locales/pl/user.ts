@@ -146,4 +146,6 @@ export default {
   showLoadouts: "Pokaż Zestawy",
   accountSettingsSubtitle: "Zarządzaj adresem e-mail i hasłem",
   encryptedNotice: "Szyfrowane i Bezpieczne Dane",
+  searchPerksPrompt: "Wpisz co najmniej 3 znaki, aby wyszukać umiejętności...",
+  searchPerksMinChars: "Wpisz jeszcze {count} znak(i), aby wyszukać...",
 } as const;

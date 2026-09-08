@@ -55,10 +55,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-7 2xl:p-9 backdrop-blur-xl shadow-md text-text-primary">
-      {/* Campfire atmospheric ambient glow */}
-      <div className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 2xl:h-96 2xl:w-96 rounded-full bg-accent-amber/15 blur-3xl" />
-      <div className="pointer-events-none absolute -left-20 -bottom-20 h-80 w-80 2xl:h-96 2xl:w-96 rounded-full bg-accent-red/15 blur-3xl" />
-
       <div className="relative z-10 grid grid-cols-1 xl:grid-cols-12 gap-6 sm:gap-8 items-center">
         {/* Left Column: Avatar & Player Identity (5 cols on xl+) */}
         <div className="xl:col-span-5 2xl:col-span-5 flex flex-col sm:flex-row items-center gap-5 sm:gap-7 text-center sm:text-left min-w-0 w-full justify-center xl:justify-start">
@@ -163,7 +159,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
         </div>
 
         {/* Right Column: Vault Mastery Radial Dials (7 cols on xl+) */}
-        <div className="xl:col-span-7 2xl:col-span-7 flex flex-col items-center justify-center w-full pt-6 xl:pt-0 border-t xl:border-t-0 xl:border-l border-border-color/60 xl:pl-6 2xl:pl-8">
+        <div className="xl:col-span-7 2xl:col-span-7 flex flex-col items-center justify-center w-full pt-6 xl:pt-0 border-t xl:border-t-0 border-border-color">
           <VaultMasteryDials
             ownership={ownership}
             dict={dict}

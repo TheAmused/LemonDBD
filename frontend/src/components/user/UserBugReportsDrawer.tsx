@@ -44,12 +44,12 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
   };
 
   return (
-    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors">
+    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Connected Header with Collapsible Drawer Toggle */}
       <button
         type="button"
         onClick={toggleExpanded}
-        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 cursor-pointer group select-none overflow-hidden transition-colors text-left"
+        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[72px] sm:min-h-[80px] cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >
         {/* Atmospheric DBD Banner Backdrop */}
@@ -85,7 +85,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="p-4 sm:p-5 border-t border-border-color">
+          <div className="p-4 sm:p-6 2xl:p-8 border-t border-border-color">
             <UserBugReportsList
               reports={reports}
               loading={loading}

@@ -146,4 +146,6 @@ export default {
   showLoadouts: "Builds Anzeigen",
   accountSettingsSubtitle: "Verwalte deine E-Mail-Adresse und dein Passwort",
   encryptedNotice: "Verschlüsselte & Sichere Anmeldedaten",
+  searchPerksPrompt: "Mindestens 3 Zeichen eingeben, um Talente zu suchen...",
+  searchPerksMinChars: "Noch {count} Zeichen eingeben, um zu suchen...",
 } as const;

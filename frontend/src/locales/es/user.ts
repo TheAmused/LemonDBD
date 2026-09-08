@@ -146,4 +146,6 @@ export default {
   showLoadouts: "Mostrar Equipamientos",
   accountSettingsSubtitle: "Administra tu dirección de correo y contraseña",
   encryptedNotice: "Credenciales Encriptadas y Seguras",
+  searchPerksPrompt: "Escribe al menos 3 caracteres para buscar habilidades...",
+  searchPerksMinChars: "Escribe {count} caracteres más para buscar...",
 } as const;

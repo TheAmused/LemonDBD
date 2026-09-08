@@ -74,13 +74,17 @@ export const MainCard: React.FC<MainCardProps> = ({
     >
       {/* Background Accent Glow */}
       <div
-        className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full blur-3xl opacity-20 ${
-          isSurvivor ? 'bg-cyan-500' : 'bg-accent-red'
+        className={`pointer-events-none absolute -top-16 h-48 w-48 rounded-full blur-3xl opacity-20 ${
+          isSurvivor ? '-left-16 bg-cyan-500' : '-right-16 bg-accent-red'
         }`}
       />
 
-      {/* Side-by-side: Left = Bigger Character Avatar & Name; Right = Diamond Perk Loadout */}
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-around gap-4 sm:gap-6">
+      {/* Side-by-side: Survivor (Left = Avatar, Right = Perks) vs Killer (Left = Perks, Right = Avatar) */}
+      <div
+        className={`relative z-10 flex flex-col sm:flex-row items-center justify-around gap-4 sm:gap-6 ${
+          !isSurvivor ? 'sm:flex-row-reverse' : ''
+        }`}
+      >
         {/* Left: Bigger Character Portrait & Name */}
         <div className="flex flex-col items-center text-center gap-3 shrink-0">
           <div

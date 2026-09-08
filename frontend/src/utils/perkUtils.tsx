@@ -40,6 +40,26 @@ export function getPerkIconUrl(
   return perk.icon_url || null;
 }
 
+export const CHARACTER_AVATAR_NAME_MAP: Record<string, string> = {
+  'william_bill_overbeck': 'bill_overbeck',
+  'bill_overbeck': 'bill_overbeck',
+  'bill': 'bill_overbeck',
+  'william_overbeck': 'bill_overbeck',
+  'leon_s_kennedy': 'leon_scott_kennedy',
+  'leon_s._kennedy': 'leon_scott_kennedy',
+  'leon_scott_kennedy': 'leon_scott_kennedy',
+  'leon': 'leon_scott_kennedy',
+  'aestri_yazar': 'the_troupe',
+  'aestri': 'the_troupe',
+  'baermar_uraz': 'the_troupe',
+  'the_troupe': 'the_troupe',
+  'detective_tapp': 'david_tapp',
+  'david_tapp': 'david_tapp',
+  'ashley_j_williams': 'ash_williams',
+  'ashley_j._williams': 'ash_williams',
+  'ash_williams': 'ash_williams',
+};
+
 export function getCharacterAvatarUrl(
   perk?: Pick<
     Perk,
@@ -61,8 +81,9 @@ export function getCharacterAvatarUrl(
     const role = (perk.category as RoleCategory) || fallbackRole || 'Survivor';
     const subDir = role === 'Survivor' ? 'survivors' : 'killers';
     const sanitized = sanitizeCharacterNameForAvatar(perk.character);
+    const mapped = CHARACTER_AVATAR_NAME_MAP[sanitized] || sanitized;
     // Backend writes character avatars as WebP (see backend/app/services/image_conversion.py).
-    rawPath = `avatars/${subDir}/${sanitized}.webp`;
+    rawPath = `avatars/${subDir}/${mapped}.webp`;
   }
 
   if (!rawPath) return null;
@@ -71,4 +92,51 @@ export function getCharacterAvatarUrl(
 
 export function formatPerkSlug(name: string): string {
   return name.toLowerCase().replace(/[\s\-/]+/g, '_');
+}
+
+export function normalizeSearchText(text: string): string {
+  return (text || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+export function matchesPerkSearch(
+  perk: Perk,
+  query: string,
+  role?: RoleCategory | string
+): boolean {
+  if (role) {
+    const pRole = (perk.category || '').toLowerCase();
+    if (pRole !== role.toLowerCase()) return false;
+  }
+  const cleanQuery = normalizeSearchText(query);
+  if (!cleanQuery) return true;
+
+  const name = normalizeSearchText(perk.name || '');
+  if (name.includes(cleanQuery)) return true;
+
+  const altName = normalizeSearchText(perk.alternate_name || '');
+  if (altName.includes(cleanQuery)) return true;
+
+  const charName = normalizeSearchText(perk.character || '');
+  if (charName.includes(cleanQuery)) return true;
+
+  const realName = normalizeSearchText(perk.character_real_name || '');
+  if (realName.includes(cleanQuery)) return true;
+
+  const isGeneralPerk =
+    !perk.character ||
+    perk.character.toLowerCase() === 'general' ||
+    Boolean(perk.is_generic_counterpart);
+
+  if (
+    isGeneralPerk &&
+    ['general', 'ogoln', 'allgemein', 'comun'].some((kw) => cleanQuery.includes(kw))
+  ) {
+    return true;
+  }
+
+  return false;
 }

@@ -89,8 +89,7 @@ export function PageShell({
 
   return (
     <div className={outerClassName ?? DEFAULT_OUTER_CLASSNAME}>
-      <AmbientEmbers />
-      {decoration}
+      {decoration ?? <AmbientEmbers />}
       <Sidebar
         currentLocale={locale}
         dict={dict}

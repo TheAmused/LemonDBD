@@ -12,6 +12,7 @@ import { isPerkBlockedByMutator, filterPerksByMutator } from '../lib/perkPicker'
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
+import { FlavorPill } from '../shared/FlavorPill';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -651,18 +652,18 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
   return (
     <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 pt-3 pb-1 sm:pt-4">
-      <p className="max-w-md text-center text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300 px-3 line-clamp-2 sm:line-clamp-none">
+      <p className="max-w-md text-center text-xs sm:text-sm font-bold text-text-secondary px-3 line-clamp-2 sm:line-clamp-none">
         {dict?.generator?.spinOrRollPrompt ||
           'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
       </p>
 
-      <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 lg:flex-row lg:items-center lg:justify-center lg:gap-8 xl:gap-12">
-        <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 lg:order-1 lg:grid-cols-1 lg:gap-3">
+      <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 xl:flex-row xl:items-center xl:justify-center xl:gap-6 2xl:gap-14 min-[1800px]:gap-20">
+        <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 xl:order-1 xl:grid-cols-1 xl:gap-4 2xl:gap-6 min-[1800px]:gap-8">
           {renderFlankSlot(0)}
           {renderFlankSlot(1)}
         </div>
 
-        <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center justify-center lg:order-2">
+        <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center justify-center xl:order-2">
           <div className="relative flex items-center justify-center w-full">
             <canvas
               ref={particlesCanvasRef}
@@ -672,7 +673,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
             <div
-              className={`w-full max-w-[44vw] min-w-[160px] max-h-[31dvh] sm:max-w-[285px] sm:max-h-[39dvh] md:max-w-[350px] lg:max-w-[415px] xl:max-w-[480px] 2xl:max-w-[545px] aspect-square transition-all duration-500 ease-out transform ${
+              className={`w-full max-w-[62vw] min-w-[200px] max-h-[36dvh] sm:max-w-[285px] sm:max-h-[38dvh] md:max-w-[320px] lg:max-w-[340px] xl:max-w-[390px] 2xl:max-w-[500px] min-[1800px]:max-w-[580px] min-[1800px]:max-h-[48dvh] aspect-square transition-all duration-500 ease-out transform ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
               }`}
             >
@@ -701,22 +702,15 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           </DbdButton>
 
           {statusText && (
-            <p aria-live="polite" className={`mt-2 text-xs font-black text-amber-400 font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
+            <p aria-live="polite" className={`mt-2 text-xs font-black text-amber-600 dark:text-amber-400 font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
               {statusText}
             </p>
           )}
 
-          {flavorLine && (
-            <div
-              aria-live="polite"
-              className="mt-2 max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
-            >
-              {flavorLine}
-            </div>
-          )}
+          <FlavorPill flavorLine={flavorLine} className="mt-2" />
         </div>
 
-        <div className="order-3 grid grid-cols-2 gap-2 sm:gap-3 lg:order-3 lg:grid-cols-1 lg:gap-3">
+        <div className="order-3 grid grid-cols-2 gap-2 sm:gap-3 xl:order-3 xl:grid-cols-1 xl:gap-4 2xl:gap-6 min-[1800px]:gap-8">
           {renderFlankSlot(2)}
           {renderFlankSlot(3)}
         </div>

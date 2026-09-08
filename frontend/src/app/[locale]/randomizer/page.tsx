@@ -22,6 +22,10 @@ const QuestsModal = dynamic(
   () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
   { ssr: false }
 );
+const CampfireParticles = dynamic(
+  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
+  { ssr: false }
+);
 
 function RandomizerContent() {
   const params = useParams();
@@ -85,8 +89,11 @@ function RandomizerContent() {
       killerCount={killerCount}
       characterCount={characterCount}
       padding="flush"
-      mainClassName="min-h-screen overflow-y-auto flex flex-col"
+      decoration={<span className="hidden" />}
+      mainClassName="min-h-screen overflow-y-auto flex flex-col relative"
     >
+      <CampfireParticles />
+      <div className="relative z-10 flex flex-col flex-1 min-h-0">
         {perksLoading ? (
           <RandomizerPageSkeleton dict={dict} />
         ) : (
@@ -105,6 +112,7 @@ function RandomizerContent() {
             dict={dict}
           />
         )}
+      </div>
     </PageShell>
   );
 }

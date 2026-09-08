@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Rows3, Lock, Sparkles, Ban } from 'lucide-react';
+import { Rows3, Lock, Sparkles, Ban, Check, Plus } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -17,6 +17,7 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
 import { DbdButton } from '../shared/DbdButton';
+import { FlavorPill } from '../shared/FlavorPill';
 
 export interface SlotMachineStageProps {
   role: RoleCategory;
@@ -57,8 +58,10 @@ interface Reel {
   landedPerk: Perk | null;
   /** Current vertical offset of the scrolling strip, in px (0 = reset, TARGET_Y = landed). */
   translateY: number;
+  /** Current horizontal offset of the scrolling strip on mobile, in px (0 = reset, TARGET_X = landed). */
+  translateX: number;
   /** Bumped every spin so the scrolling strip remounts fresh at
-   * translateY(0) with no transition, instead of visibly rewinding from
+   * translateY(0)/translateX(0) with no transition, instead of visibly rewinding from
    * wherever the last spin left it. */
   spinToken: number;
   spinDurationMs: number;
@@ -101,11 +104,22 @@ function cellFor(perk: Perk | null, pool: Perk[]): StripCell {
   return { perk, ...coordFor(perk, pool) };
 }
 
-function buildStrip(pool: Perk[], landedPerk: Perk | null, broken: boolean): StripCell[] {
-  const filler: StripCell[] = Array.from({ length: STRIP_FILLER }, () => cellFor(randomPerk(pool), pool));
+function buildStrip(pool: Perk[], landedPerk: Perk | null, broken: boolean, mobile: boolean = false): StripCell[] {
   const finalCell: StripCell = broken ? { perk: null, broken: true } : cellFor(landedPerk, pool);
-  const after: StripCell[] = Array.from({ length: 2 }, () => cellFor(randomPerk(pool), pool));
-  return [...filler, finalCell, ...after];
+  if (mobile) {
+    // For mobile horizontal spin from LEFT to RIGHT:
+    // Window displays 3 cells. Payline is at index 1 (center).
+    // translateX starts at -(STRIP_FILLER * cellPx) and animates to 0 (translating to the right!).
+    // At translateX = 0, finalCell sits precisely in the center payline.
+    const before: StripCell[] = [cellFor(randomPerk(pool), pool)];
+    const filler: StripCell[] = Array.from({ length: STRIP_FILLER }, () => cellFor(randomPerk(pool), pool));
+    return [...before, finalCell, ...filler];
+  } else {
+    // Desktop vertical spin down-to-up:
+    const filler: StripCell[] = Array.from({ length: STRIP_FILLER }, () => cellFor(randomPerk(pool), pool));
+    const after: StripCell[] = Array.from({ length: 2 }, () => cellFor(randomPerk(pool), pool));
+    return [...filler, finalCell, ...after];
+  }
 }
 
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
@@ -127,6 +141,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const [cycleIndex, setCycleIndex] = useState(0);
   const [selected, setSelected] = useState<DrawnSlot[]>([]);
   const [cellPx, setCellPx] = useState(104);
+  const [isMobile, setIsMobile] = useState(false);
 
   const reelsRef = useRef<Reel[]>([]);
   const reelAreaRef = useRef<HTMLDivElement | null>(null);
@@ -145,22 +160,13 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     phaseRef.current = phase;
   }, [phase]);
 
-  // Measures the actual reel area (real ResizeObserver, not a Tailwind
-  // breakpoint guess) and derives a cell size that fills it in both axes --
-  // capped by height/3 (so three stacked cells fit the window) and by
-  // width/REEL_COUNT (so eight reels fit across without overflowing), then
-  // clamped to a sane min/max so it never gets comically tiny or huge.
-  //
-  // The measurement box below is mounted for the component's entire
-  // lifetime (not just while reels are visible) so cellPx is already
-  // correct *before* the first "Pull the Lever" click -- otherwise the
-  // very first spin's target offset gets computed off the stale default
-  // (104px) while the reels themselves render at the freshly-measured
-  // size, and the strip lands mis-scrolled relative to the payline. Size
-  // changes are ignored while a spin is actively in flight (`spinning`)
-  // so an in-progress animation's target never gets invalidated mid-flight
-  // by a resize; a resize during that window is picked up as soon as the
-  // spin settles into `awaiting`.
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     const el = reelAreaRef.current;
     if (!el) return;
@@ -168,11 +174,21 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     const compute = () => {
       if (phaseRef.current === 'spinning') return;
       const rect = el.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      const byHeight = Math.floor(rect.height / 3);
-      const byWidth = Math.floor((rect.width - (REEL_COUNT - 1) * REEL_GAP_PX) / REEL_COUNT);
-      const next = Math.max(REEL_MIN_PX, Math.min(REEL_MAX_PX, byHeight, byWidth));
-      setCellPx((prev) => (Math.abs(prev - next) > 1 ? next : prev));
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+
+      if (mobile) {
+        const availWidth = rect.width > 0 ? rect.width : window.innerWidth;
+        const boundedW = Math.min(availWidth, 420);
+        const cellW = Math.max(64, Math.min(76, Math.floor((boundedW - 130) / 3)));
+        setCellPx((prev) => (Math.abs(prev - cellW) > 1 ? cellW : prev));
+      } else {
+        if (rect.width === 0 || rect.height === 0) return;
+        const byHeight = Math.floor(rect.height / 3);
+        const byWidth = Math.floor((rect.width - (REEL_COUNT - 1) * REEL_GAP_PX) / REEL_COUNT);
+        const next = Math.max(REEL_MIN_PX, Math.min(REEL_MAX_PX, byHeight, byWidth));
+        setCellPx((prev) => (Math.abs(prev - next) > 1 ? next : prev));
+      }
     };
 
     compute();
@@ -185,18 +201,26 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     };
   }, []);
 
-  // Re-measure the instant a spin finishes, in case a resize landed while
-  // it was in flight and got deliberately ignored above.
   useEffect(() => {
     if (phase === 'spinning') return;
     const el = reelAreaRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    const byHeight = Math.floor(rect.height / 3);
-    const byWidth = Math.floor((rect.width - (REEL_COUNT - 1) * REEL_GAP_PX) / REEL_COUNT);
-    const next = Math.max(REEL_MIN_PX, Math.min(REEL_MAX_PX, byHeight, byWidth));
-    setCellPx((prev) => (Math.abs(prev - next) > 1 ? next : prev));
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+
+    if (mobile) {
+      const availWidth = rect.width > 0 ? rect.width : window.innerWidth;
+      const boundedW = Math.min(availWidth, 420);
+      const cellW = Math.max(64, Math.min(76, Math.floor((boundedW - 130) / 3)));
+      setCellPx((prev) => (Math.abs(prev - cellW) > 1 ? cellW : prev));
+    } else {
+      if (rect.width === 0 || rect.height === 0) return;
+      const byHeight = Math.floor(rect.height / 3);
+      const byWidth = Math.floor((rect.width - (REEL_COUNT - 1) * REEL_GAP_PX) / REEL_COUNT);
+      const next = Math.max(REEL_MIN_PX, Math.min(REEL_MAX_PX, byHeight, byWidth));
+      setCellPx((prev) => (Math.abs(prev - next) > 1 ? next : prev));
+    }
   }, [phase]);
 
   useEffect(() => {
@@ -205,14 +229,13 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     };
   }, []);
 
-  /** Spins exactly the reels in `targetReels` (already carrying the right
-   * `broken` flag) down to whatever perk `finalMap` decided for them, then
-   * calls `onAllDone` once every one of them has visually landed. */
-  const targetY = -(FINAL_INDEX - 1) * cellPx;
-
   const spinReels = (targetReels: Reel[], finalMap: Map<number, Perk | null>, onAllDone: () => void) => {
     const ids = targetReels.map((r) => r.id);
     setSpinningIds(new Set(ids));
+
+    const mobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const desktopTarget = -(FINAL_INDEX - 1) * cellPx;
+    const mobileStart = -(STRIP_FILLER * cellPx);
 
     setReels((prev) =>
       prev.map((r) => {
@@ -220,9 +243,17 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         if (idx === -1) return r;
         const match = targetReels[idx];
         const landedPerk = match.broken ? null : finalMap.get(r.id) ?? null;
-        const strip = buildStrip(activePlayablePerks, landedPerk, match.broken);
+        const strip = buildStrip(activePlayablePerks, landedPerk, match.broken, mobile);
         const spinDurationMs = reduceMotion ? 220 : 900 + idx * 180;
-        return { ...match, strip, translateY: 0, spinToken: r.spinToken + 1, landedPerk, spinDurationMs };
+        return {
+          ...match,
+          strip,
+          translateY: 0,
+          translateX: mobile ? mobileStart : 0,
+          spinToken: r.spinToken + 1,
+          landedPerk,
+          spinDurationMs,
+        };
       })
     );
 
@@ -233,13 +264,19 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
     pendingDoneRef.current = { remaining: new Set(ids), onAllDone };
 
-    // Double rAF: lets the browser paint the translateY(0)+fresh-strip reset
-    // (committed via the bumped spinToken remount key) *before* we set the
-    // target translateY, so the transition actually has something to
-    // animate from instead of jumping straight there.
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        setReels((prev) => prev.map((r) => (ids.includes(r.id) ? { ...r, translateY: targetY } : r)));
+        setReels((prev) =>
+          prev.map((r) =>
+            ids.includes(r.id)
+              ? {
+                  ...r,
+                  translateX: 0, // Animates rightwards to 0 on mobile!
+                  translateY: mobile ? 0 : desktopTarget, // Animates upwards to desktopTarget on desktop!
+                }
+              : r
+          )
+        );
       });
     });
   };
@@ -297,6 +334,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       strip: [],
       landedPerk: null,
       translateY: 0,
+      translateX: 0,
       spinToken: 0,
       spinDurationMs: 900,
     }));
@@ -396,8 +434,8 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             .replace('{max}', String(range.max));
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-4">
-      <div className="relative flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-4">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2 sm:gap-4 py-1 sm:py-4">
+      <div className="relative flex w-full flex-1 min-h-0 flex-col items-center justify-center gap-2 sm:gap-4">
         {/* Permanently-mounted, invisible measurement box -- always the
             same box the reel row occupies once phase is spinning/awaiting,
             so cellPx is measured continuously and is already correct
@@ -406,7 +444,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
         {phase === 'idle' && (
         <>
-          <p className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
+          <p className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
             {dict?.generator?.slotMachinePrompt ||
               'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
             {' '}
@@ -427,135 +465,317 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
       {(phase === 'spinning' || phase === 'awaiting') && (
         <>
-          <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-black uppercase tracking-wide text-amber-400 sm:text-base">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-black uppercase tracking-wide text-amber-600 dark:text-amber-400">
             <span>{(dict?.generator?.slotCycleLabel || 'Cycle {cycle}/3').replace('{cycle}', String(cycleIndex + 1))}</span>
-            <span className="text-slate-600">{'•'}</span>
+            <span className="text-text-muted">{'•'}</span>
             <span>{(dict?.generator?.slotLockedCount || '{count}/4 Locked').replace('{count}', String(selected.length))}</span>
           </div>
 
-          <div className="flex w-full flex-1 min-h-0 flex-nowrap items-center justify-center gap-3 overflow-x-auto px-1 pb-2">
-            {reels.map((reel) => {
-              const isStaged = staged.has(reel.id);
-              const isSpinning = spinningIds.has(reel.id);
-              const isClickable = phase === 'awaiting' && !reel.locked && !reel.broken && !isSpinning;
-              const landedBroken = reel.broken && !isSpinning;
+          {isMobile ? (
+            /* Mobile Layout: 8 Vertically Stacked Reel Rows with Horizontal Left-to-Right Spin */
+            <div className="flex flex-col gap-2 w-full max-w-md mx-auto px-1">
+              {reels.map((reel) => {
+                const isStaged = staged.has(reel.id);
+                const isSpinning = spinningIds.has(reel.id);
+                const isClickable = phase === 'awaiting' && !reel.locked && !reel.broken && !isSpinning;
+                const landedBroken = reel.broken && !isSpinning;
 
-              const reelWindow = (
-                <div
-                  role={isClickable ? 'button' : undefined}
-                  tabIndex={isClickable ? 0 : undefined}
-                  onClick={isClickable ? () => toggleStage(reel.id) : undefined}
-                  onKeyDown={
-                    isClickable
-                      ? (e) => {
-                          if (e.key === 'Enter' || e.key === ' ') toggleStage(reel.id);
-                        }
-                      : undefined
-                  }
-                  className={cn(
-                    'relative overflow-hidden rounded-lg border-2 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 shadow-inner transition-colors duration-200',
-                    isClickable && 'cursor-pointer',
-                    reel.locked
-                      ? 'border-amber-500 shadow-[0_0_16px_rgba(245,158,11,0.35)]'
-                      : isStaged
-                        ? 'border-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.3)]'
-                        : landedBroken
-                          ? 'border-red-700/70'
-                          : 'border-slate-700/50'
-                  )}
-                  // Explicit pixel width instead of `w-full` -- the broken
-                  // reel is the only one wrapped in <Tooltip>, whose
-                  // trigger element is `inline-flex` (shrink-to-fit). That
-                  // breaks a `w-full` child's percentage-width resolution,
-                  // so it rendered narrower than every other (unwrapped)
-                  // reel despite sharing the same cellPx-wide column. An
-                  // absolute pixel width can't be affected by whatever
-                  // wraps it.
-                  style={{ height: cellPx * 3, width: cellPx }}
-                >
+                const mobileWindow = (
                   <div
-                    key={reel.spinToken}
-                    onTransitionEnd={(e) => handleReelTransitionEnd(reel.id, e)}
-                    className="flex flex-col ease-[cubic-bezier(0.13,0.82,0.22,1)]"
-                    style={{
-                      transform: `translateY(${reel.translateY}px)`,
-                      transition: reel.strip.length ? `transform ${reel.spinDurationMs}ms cubic-bezier(0.13,0.82,0.22,1)` : 'none',
-                    }}
-                  >
-                    {reel.strip.map((cell, i) => {
-                      const coordLabel =
-                        cell.perk && cell.page !== undefined && cell.slot !== undefined
-                          ? `${dict?.generator?.coordOpenPage || '[P'}${cell.page}${dict?.generator?.coordSlot || '/S'}${cell.slot}${dict?.generator?.coordClose || ']'}`
-                          : null;
-                      return (
-                        <div
-                          key={i}
-                          className="relative flex shrink-0 items-center justify-center"
-                          style={{ height: cellPx }}
-                        >
-                          {cell.broken ? (
-                            <Ban className="text-red-500" style={{ height: cellPx * 0.58, width: cellPx * 0.58 }} />
-                          ) : cell.perk ? (
-                            <img
-                              src={getPerkIconUrl(cell.perk, backendBase) || ''}
-                              alt=""
-                              className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]"
-                              style={{ height: cellPx * 0.62, width: cellPx * 0.62 }}
-                              loading="lazy"
-                            />
-                          ) : (
-                            <div className="rounded-md bg-slate-800/60" style={{ height: cellPx * 0.62, width: cellPx * 0.62 }} />
-                          )}
-                          {coordLabel && (
-                            <span
-                              className="pointer-events-none absolute left-0.5 top-0.5 z-10 whitespace-nowrap font-mono font-black text-amber-400/90"
-                              style={{ fontSize: Math.max(7, Math.min(11, cellPx * 0.09)) }}
-                            >
-                              {coordLabel}
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-black/70 via-transparent to-black/70" />
-
-                  {reel.locked && (
-                    <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
-                      <Lock className="h-3.5 w-3.5" />
-                    </div>
-                  )}
-                </div>
-              );
-
-              return (
-                <div key={reel.id} className="flex shrink-0 flex-col items-center gap-1.5" style={{ width: cellPx }}>
-                  {landedBroken ? (
-                    <Tooltip
-                      title={dict?.generator?.slotJammedTitle || 'Jammed'}
-                      description={
-                        dict?.generator?.slotJammedDesc ||
-                        'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
-                      }
-                    >
-                      {reelWindow}
-                    </Tooltip>
-                  ) : (
-                    reelWindow
-                  )}
-                  <span
+                    role={isClickable ? 'button' : undefined}
+                    tabIndex={isClickable ? 0 : undefined}
+                    onClick={isClickable ? () => toggleStage(reel.id) : undefined}
+                    onKeyDown={
+                      isClickable
+                        ? (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') toggleStage(reel.id);
+                          }
+                        : undefined
+                    }
                     className={cn(
-                      'text-[10px] font-black uppercase tracking-wide',
-                      reel.locked ? 'text-amber-400' : landedBroken ? 'text-red-500' : 'text-slate-600'
+                      'relative overflow-hidden rounded-xl border-2 shadow-inner transition-colors duration-200 shrink-0',
+                      'bg-gradient-to-r from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
+                      isClickable && 'cursor-pointer',
+                      reel.locked
+                        ? 'border-amber-500 shadow-[0_0_14px_rgba(245,158,11,0.35)]'
+                        : isStaged
+                        ? 'border-emerald-500 shadow-[0_0_14px_rgba(16,185,129,0.35)]'
+                        : landedBroken
+                        ? 'border-red-500/70 shadow-[0_0_14px_rgba(239,68,68,0.25)]'
+                        : 'border-border-color hover:border-amber-500/40'
+                    )}
+                    style={{ height: cellPx, width: cellPx * 3 }}
+                  >
+                    {/* Horizontal Moving Strip (Animates Left to Right) */}
+                    <div
+                      key={reel.spinToken}
+                      onTransitionEnd={(e) => handleReelTransitionEnd(reel.id, e)}
+                      className="flex flex-row ease-[cubic-bezier(0.13,0.82,0.22,1)]"
+                      style={{
+                        transform: `translateX(${reel.translateX}px)`,
+                        transition: reel.strip.length
+                          ? `transform ${reel.spinDurationMs}ms cubic-bezier(0.13,0.82,0.22,1)`
+                          : 'none',
+                      }}
+                    >
+                      {reel.strip.map((cell, i) => {
+                        const coordLabel =
+                          cell.perk && cell.page !== undefined && cell.slot !== undefined
+                            ? `${dict?.generator?.coordOpenPage || '[P'}${cell.page}${dict?.generator?.coordSlot || '/S'}${cell.slot}${dict?.generator?.coordClose || ']'}`
+                            : null;
+                        return (
+                          <div
+                            key={i}
+                            className="relative flex shrink-0 items-center justify-center"
+                            style={{ width: cellPx, height: cellPx }}
+                          >
+                            {cell.broken ? (
+                              <Ban className="text-red-500" style={{ height: cellPx * 0.65, width: cellPx * 0.65 }} />
+                            ) : cell.perk ? (
+                              <img
+                                src={getPerkIconUrl(cell.perk, backendBase) || ''}
+                                alt=""
+                                className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]"
+                                style={{ height: cellPx * 0.72, width: cellPx * 0.72 }}
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div
+                                className="rounded-md bg-bg-elevated border border-border-color"
+                                style={{ height: cellPx * 0.65, width: cellPx * 0.65 }}
+                              />
+                            )}
+                            {coordLabel && (
+                              <span
+                                className="pointer-events-none absolute left-1 top-1 z-10 whitespace-nowrap font-mono font-black text-amber-600 dark:text-amber-400 drop-shadow-xs"
+                                style={{ fontSize: Math.max(8, Math.min(11, cellPx * 0.12)) }}
+                              >
+                                {coordLabel}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Center Payline Target Box */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-y-0 z-10 border-x-2 border-amber-500/70 bg-amber-500/10 shadow-[0_0_10px_rgba(245,158,11,0.2)]"
+                      style={{ left: cellPx, width: cellPx }}
+                    />
+
+                    {/* Left and Right Vignette Gradients */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-r from-bg-surface/85 via-transparent to-bg-surface/85"
+                    />
+                  </div>
+                );
+
+                return (
+                  <div
+                    key={reel.id}
+                    className={cn(
+                      'flex items-center justify-between gap-2 p-1.5 rounded-xl border transition-all duration-200 w-full',
+                      reel.locked
+                        ? 'bg-amber-500/10 border-amber-500/60 shadow-xs'
+                        : isStaged
+                        ? 'bg-emerald-500/10 border-emerald-500/60 shadow-xs'
+                        : landedBroken
+                        ? 'bg-red-500/10 border-red-500/50'
+                        : 'bg-bg-elevated/40 border-border-color hover:bg-bg-elevated/70'
                     )}
                   >
-                    {reel.locked ? (dict?.generator?.slotLockedLabel || 'Locked') : landedBroken ? (dict?.generator?.slotBrokenLabel || 'Broken') : `#${reel.id + 1}`}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                    {/* Reel Identifier / Status Badge */}
+                    <div className="flex flex-col items-center justify-center w-14 sm:w-16 shrink-0">
+                      <span
+                        className={cn(
+                          'text-[11px] sm:text-xs font-black uppercase tracking-wider text-center',
+                          reel.locked
+                            ? 'text-amber-600 dark:text-amber-400'
+                            : landedBroken
+                            ? 'text-red-500'
+                            : isStaged
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : 'text-text-secondary'
+                        )}
+                      >
+                        {reel.locked
+                          ? (dict?.generator?.slotLockedLabel || '')
+                          : landedBroken
+                          ? (dict?.generator?.slotBrokenLabel || '')
+                          : `#${reel.id + 1}`}
+                      </span>
+                      {reel.locked ? (
+                        <Lock className="h-4 w-4 text-amber-500 mt-0.5" />
+                      ) : landedBroken ? (
+                        <Ban className="h-4 w-4 text-red-500 mt-0.5" />
+                      ) : null}
+                    </div>
+
+                    {/* Horizontal Reel Window */}
+                    {landedBroken ? (
+                      <Tooltip
+                        title={dict?.generator?.slotJammedTitle || 'Jammed'}
+                        description={
+                          dict?.generator?.slotJammedDesc ||
+                          'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
+                        }
+                      >
+                        {mobileWindow}
+                      </Tooltip>
+                    ) : (
+                      mobileWindow
+                    )}
+
+                    {/* Action / Lock Target Button */}
+                    <div className="shrink-0 flex items-center justify-center w-11 sm:w-12">
+                      {isClickable ? (
+                        <button
+                          type="button"
+                          onClick={() => toggleStage(reel.id)}
+                          className={cn(
+                            'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all cursor-pointer touch-manipulation border shadow-xs',
+                            isStaged
+                              ? 'bg-emerald-500 text-white border-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+                              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary'
+                          )}
+                          aria-label={`#${reel.id + 1}`}
+                        >
+                          {isStaged ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+                        </button>
+                      ) : reel.locked ? (
+                        <div className="h-10 w-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                          <Lock className="h-5 w-5" />
+                        </div>
+                      ) : (
+                        <div className="h-10 w-10" />
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Desktop Layout: 8 Vertical Columns Side-by-Side */
+            <div className="grid grid-cols-4 md:grid-cols-8 items-center justify-items-center justify-center gap-1.5 sm:gap-2.5 w-full max-w-full px-1">
+              {reels.map((reel) => {
+                const isStaged = staged.has(reel.id);
+                const isSpinning = spinningIds.has(reel.id);
+                const isClickable = phase === 'awaiting' && !reel.locked && !reel.broken && !isSpinning;
+                const landedBroken = reel.broken && !isSpinning;
+
+                const reelWindow = (
+                  <div
+                    role={isClickable ? 'button' : undefined}
+                    tabIndex={isClickable ? 0 : undefined}
+                    onClick={isClickable ? () => toggleStage(reel.id) : undefined}
+                    onKeyDown={
+                      isClickable
+                        ? (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') toggleStage(reel.id);
+                          }
+                        : undefined
+                    }
+                    className={cn(
+                      'relative overflow-hidden rounded-lg border-2 shadow-inner transition-colors duration-200',
+                      'bg-gradient-to-b from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
+                      isClickable && 'cursor-pointer',
+                      reel.locked
+                        ? 'border-amber-500 shadow-[0_0_16px_rgba(245,158,11,0.4)]'
+                        : isStaged
+                          ? 'border-emerald-500 shadow-[0_0_16px_rgba(16,185,129,0.35)]'
+                          : landedBroken
+                            ? 'border-red-500/70 shadow-[0_0_16px_rgba(239,68,68,0.25)]'
+                            : 'border-border-color hover:border-border-color/80'
+                    )}
+                    style={{ height: cellPx * 3, width: cellPx }}
+                  >
+                    <div
+                      key={reel.spinToken}
+                      onTransitionEnd={(e) => handleReelTransitionEnd(reel.id, e)}
+                      className="flex flex-col ease-[cubic-bezier(0.13,0.82,0.22,1)]"
+                      style={{
+                        transform: `translateY(${reel.translateY}px)`,
+                        transition: reel.strip.length ? `transform ${reel.spinDurationMs}ms cubic-bezier(0.13,0.82,0.22,1)` : 'none',
+                      }}
+                    >
+                      {reel.strip.map((cell, i) => {
+                        const coordLabel =
+                          cell.perk && cell.page !== undefined && cell.slot !== undefined
+                            ? `${dict?.generator?.coordOpenPage || '[P'}${cell.page}${dict?.generator?.coordSlot || '/S'}${cell.slot}${dict?.generator?.coordClose || ']'}`
+                            : null;
+                        return (
+                          <div
+                            key={i}
+                            className="relative flex shrink-0 items-center justify-center"
+                            style={{ height: cellPx }}
+                          >
+                            {cell.broken ? (
+                              <Ban className="text-red-500" style={{ height: cellPx * 0.58, width: cellPx * 0.58 }} />
+                            ) : cell.perk ? (
+                              <img
+                                src={getPerkIconUrl(cell.perk, backendBase) || ''}
+                                alt=""
+                                className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]"
+                                style={{ height: cellPx * 0.62, width: cellPx * 0.62 }}
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="rounded-md bg-bg-elevated border border-border-color" style={{ height: cellPx * 0.62, width: cellPx * 0.62 }} />
+                            )}
+                            {coordLabel && (
+                              <span
+                                className="pointer-events-none absolute left-0.5 top-0.5 z-10 whitespace-nowrap font-mono font-black text-amber-600 dark:text-amber-400 drop-shadow-xs"
+                                style={{ fontSize: Math.max(7, Math.min(11, cellPx * 0.09)) }}
+                              >
+                                {coordLabel}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-bg-surface/85 via-transparent to-bg-surface/85" />
+
+                    {reel.locked && (
+                      <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
+                        <Lock className="h-3.5 w-3.5" />
+                      </div>
+                    )}
+                  </div>
+                );
+
+                return (
+                  <div key={reel.id} className="flex shrink-0 flex-col items-center gap-1.5" style={{ width: cellPx }}>
+                    {landedBroken ? (
+                      <Tooltip
+                        title={dict?.generator?.slotJammedTitle || 'Jammed'}
+                        description={
+                          dict?.generator?.slotJammedDesc ||
+                          'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
+                        }
+                      >
+                        {reelWindow}
+                      </Tooltip>
+                    ) : (
+                      reelWindow
+                    )}
+                    <span
+                      className={cn(
+                        'text-[10px] font-black uppercase tracking-wide',
+                        reel.locked ? 'text-amber-600 dark:text-amber-400' : landedBroken ? 'text-red-500' : 'text-text-muted'
+                      )}
+                    >
+                      {reel.locked ? (dict?.generator?.slotLockedLabel || 'Locked') : landedBroken ? (dict?.generator?.slotBrokenLabel || 'Broken') : `#${reel.id + 1}`}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Always mounted (just visibility-toggled) while spinning or
               awaiting, instead of only rendering during 'awaiting' -- this
@@ -566,8 +786,8 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               lands and desyncs the already-scrolled strip from its
               newly-resized cells -- reels visibly resize/misalign the
               moment the spin ends. */}
-          <div className={cn('flex flex-col items-center gap-3', phase !== 'awaiting' && 'invisible')}>
-            <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-slate-600 dark:text-slate-300 sm:text-base">
+          <div className={cn('flex flex-col items-center gap-1.5 sm:gap-3', phase !== 'awaiting' && 'invisible')}>
+            <p aria-live="polite" className="max-w-lg text-center text-xs sm:text-base font-bold text-text-secondary">
               {confirmHint}
             </p>
             <DbdButton
@@ -585,7 +805,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
       {phase === 'complete' && (
         <>
-          <p className="text-sm font-bold text-slate-600 dark:text-slate-300 text-center sm:text-base">
+          <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
             {dict?.generator?.scatterComplete || 'Your loadout is locked in.'}
           </p>
           <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -626,14 +846,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       )}
       </div>
 
-      {flavorLine && (
-        <div
-          aria-live="polite"
-          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
-        >
-          {flavorLine}
-        </div>
-      )}
+      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

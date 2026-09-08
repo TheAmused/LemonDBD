@@ -49,7 +49,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
       <button
         type="button"
         onClick={toggleExpanded}
-        className="relative w-full flex items-center justify-between py-3.5 px-5 sm:py-4 sm:px-6 cursor-pointer group select-none overflow-hidden transition-colors text-left"
+        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >
         {/* Atmospheric DBD Banner Backdrop */}
@@ -62,16 +62,16 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
             {dict?.user?.tabBugReports || 'My Bug Reports'}
           </h2>
-          <p className="text-[11px] text-text-secondary mt-0.5 font-mono">
+          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
             {getSubtitle()}
           </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown
-            className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
+            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
               isExpanded ? 'rotate-180' : 'rotate-0'
             }`}
           />

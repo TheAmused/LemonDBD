@@ -61,7 +61,7 @@ const RadialDial: React.FC<DialProps> = ({
       className={`relative flex flex-col items-center justify-between border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
         compact
           ? 'aspect-square rounded-2xl p-2 sm:p-2.5 w-full min-w-0'
-          : 'aspect-square w-full sm:w-36 sm:h-36 lg:w-40 lg:h-40 xl:w-44 xl:h-44 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3.5 lg:p-4'
+          : 'aspect-square w-full sm:w-32 sm:h-32 md:w-36 md:h-36 xl:w-32 xl:h-32 2xl:w-40 2xl:h-40 3xl:w-44 3xl:h-44 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 lg:p-3.5 2xl:p-4'
       }`}
     >
       {/* Radial Gauge SVG */}
@@ -70,7 +70,7 @@ const RadialDial: React.FC<DialProps> = ({
           className={`${
             compact
               ? 'w-16 h-16 sm:w-20 sm:h-20'
-              : 'w-16 h-16 xs:w-18 xs:h-18 sm:w-24 sm:h-24 lg:w-28 lg:h-28'
+              : 'w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 xl:w-20 xl:h-20 2xl:w-26 2xl:h-26'
           } -rotate-90 transform`}
           viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         >
@@ -104,14 +104,14 @@ const RadialDial: React.FC<DialProps> = ({
             className={`${
               compact
                 ? 'text-xs sm:text-base'
-                : 'text-xs xs:text-sm sm:text-xl lg:text-2xl'
+                : 'text-xs xs:text-sm sm:text-lg md:text-xl xl:text-lg 2xl:text-2xl'
             } font-black font-mono tracking-tight text-text-primary`}
           >
             {percentage}%
           </div>
           <div
             className={`${
-              compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs'
+              compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs 2xl:text-sm'
             } font-mono font-bold text-text-secondary`}
           >
             {count}/{total}
@@ -121,12 +121,12 @@ const RadialDial: React.FC<DialProps> = ({
 
       {/* Title & Icon below */}
       <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 mt-auto max-w-full">
-        <div className={`rounded-lg ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5'} ${accentClass} shrink-0`}>
+        <div className={`rounded-lg ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5 2xl:p-2'} ${accentClass} shrink-0`}>
           {icon}
         </div>
         <span
           className={`${
-            compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs'
+            compact ? 'text-[9px] sm:text-[10px]' : 'text-[9px] xs:text-[10px] sm:text-xs 2xl:text-sm'
           } font-black font-mono uppercase tracking-wider text-text-primary truncate`}
         >
           {title}

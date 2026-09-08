@@ -98,7 +98,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       <button
         type="button"
         onClick={toggleExpanded}
-        className="relative w-full flex items-center justify-between py-3.5 px-5 sm:py-4 sm:px-6 cursor-pointer group select-none overflow-hidden transition-colors text-left"
+        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >
         {/* Atmospheric DBD Banner Backdrop */}
@@ -111,16 +111,16 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-amber transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-amber transition-colors">
             {dict?.user?.tabSanctum || 'Account Management'}
           </h2>
-          <p className="text-[11px] text-text-secondary mt-0.5 font-mono">
+          <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
             {dict?.user?.accountSettingsSubtitle || 'Manage your email address and password'}
           </p>
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown
-            className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-amber transition-transform duration-300 ease-in-out ${
+            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-amber transition-transform duration-300 ease-in-out ${
               isExpanded ? 'rotate-180' : 'rotate-0'
             }`}
           />
@@ -134,11 +134,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="p-4 sm:p-5 border-t border-border-color space-y-4">
+          <div className="p-4 sm:p-6 2xl:p-8 border-t border-border-color space-y-4">
             {/* Status Feedback Banner */}
             {statusMessage && (
               <div
-                className={`flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm font-mono ${
+                className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm font-mono ${
                   statusMessage.type === 'success'
                     ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                     : 'border-accent-red/30 bg-accent-red/10 text-accent-red'
@@ -153,7 +153,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               </div>
             )}
 
-            <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <form onSubmit={handleUpdateProfile} className="max-w-2xl mx-auto space-y-4 sm:space-y-5">
               {/* Email Address */}
               <div className="space-y-1.5">
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary font-mono">

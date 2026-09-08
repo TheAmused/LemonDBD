@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "Akta przy Ognisku",
-  tabSanctum: "Sanktuarium Konta",
+  tabSanctum: "Zarządzanie Kontem",
   playerTitle: "Tytuł Gracza",
   devotion: "Dewocja",
   gradeRank: "Ranga Oceny",
@@ -140,4 +140,12 @@ export default {
   pageStreakTitle: "Page Streak",
   pageStreakDesc: "Stopniowe mistrzostwo odblokowujące perki postaci.",
   avatarHelpText: "Prześlij własny awatar (PNG, JPEG, WebP, maks. 10 MB) lub zresetuj do ikony domyślnej.",
+  dualMainsTitle: "Główne Zestawy",
+  dualMainsSubtitle: "Ocalały i Zabójca",
+  hideLoadouts: "Ukryj Zestawy",
+  showLoadouts: "Pokaż Zestawy",
+  accountSettingsSubtitle: "Zarządzaj adresem e-mail i hasłem",
+  encryptedNotice: "Szyfrowane i Bezpieczne Dane",
+  searchPerksPrompt: "Wpisz co najmniej 3 znaki, aby wyszukać umiejętności...",
+  searchPerksMinChars: "Wpisz jeszcze {count} znak(i), aby wyszukać...",
 } as const;

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Search, Trash2, Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
-import { getBackendBaseUrl, getPerkIconUrl } from '@/utils/perkUtils';
+import { getBackendBaseUrl, getPerkIconUrl, matchesPerkSearch } from '@/utils/perkUtils';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 
@@ -102,6 +102,12 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (isOpen) {
+      setSearch('');
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const backendBase = getBackendBaseUrl();
@@ -121,22 +127,13 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       });
   }, [isOpen, locale]);
 
-  const filteredPerks = useMemo(() => {
-    const roleNormalized = role.toLowerCase();
-    const query = search.trim().toLowerCase();
+  const cleanQuery = search.trim();
+  const isSearchActive = cleanQuery.length >= 3;
 
-    return perks
-      .filter((p) => {
-        const pRole = (p.category || '').toLowerCase();
-        return pRole === roleNormalized;
-      })
-      .filter((p) => {
-        if (!query) return true;
-        const nameMatch = p.name.toLowerCase().includes(query);
-        const charMatch = p.character ? p.character.toLowerCase().includes(query) : false;
-        return nameMatch || charMatch;
-      });
-  }, [perks, role, search]);
+  const filteredPerks = useMemo(() => {
+    if (!isSearchActive) return [];
+    return perks.filter((p) => matchesPerkSearch(p, cleanQuery, role));
+  }, [perks, role, cleanQuery, isSearchActive]);
 
   return (
     <Modal
@@ -187,8 +184,22 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
               {dict?.user?.loadingPerks || 'Channeling teachable knowledge...'}
             </p>
           </div>
+        ) : !isSearchActive ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/25">
+              <Search className={`h-6 w-6 text-purple-400 ${cleanQuery.length > 0 ? 'animate-pulse' : ''}`} />
+            </div>
+            <p className="text-xs sm:text-sm font-mono text-text-secondary">
+              {cleanQuery.length === 0
+                ? dict?.user?.searchPerksPrompt || 'Type at least 3 characters to search perks...'
+                : (dict?.user?.searchPerksMinChars || 'Type {count} more character(s) to search...').replace(
+                    '{count}',
+                    String(3 - cleanQuery.length)
+                  )}
+            </p>
+          </div>
         ) : filteredPerks.length === 0 ? (
-          <div className="text-center py-16 text-text-muted text-xs sm:text-sm">
+          <div className="text-center py-16 text-text-muted text-xs sm:text-sm font-mono">
             {dict?.user?.noPerksFound || 'No matching perks found.'}
           </div>
         ) : (

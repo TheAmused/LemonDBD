@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "Lagerfeuer-Dossier",
-  tabSanctum: "Konto-Sanktum",
+  tabSanctum: "Kontoverwaltung",
   playerTitle: "Spielertitel",
   devotion: "Hingabe",
   gradeRank: "Rangstufe",
@@ -140,4 +140,12 @@ export default {
   pageStreakTitle: "Page Streak",
   pageStreakDesc: "Fortschreitende Meisterung aller Charakter-Lehren.",
   avatarHelpText: "Eigenen Avatar hochladen (PNG, JPEG, WebP, max. 10 MB) oder auf Standard zurücksetzen.",
+  dualMainsTitle: "Signatur-Builds",
+  dualMainsSubtitle: "Überlebender & Killer",
+  hideLoadouts: "Builds Ausblenden",
+  showLoadouts: "Builds Anzeigen",
+  accountSettingsSubtitle: "Verwalte deine E-Mail-Adresse und dein Passwort",
+  encryptedNotice: "Verschlüsselte & Sichere Anmeldedaten",
+  searchPerksPrompt: "Mindestens 3 Zeichen eingeben, um Talente zu suchen...",
+  searchPerksMinChars: "Noch {count} Zeichen eingeben, um zu suchen...",
 } as const;

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Search, UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
-import { getBackendBaseUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
+import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 
@@ -28,10 +28,22 @@ const CharacterGridItem: React.FC<{
   onClose: () => void;
 }> = ({ char, role, isSelected, onSelect, onClose }) => {
   const [imgError, setImgError] = useState(false);
-  const avatarSrc = getCharacterAvatarUrl(
-    { character: char.name, category: role },
-    role
-  );
+  const [useFallback, setUseFallback] = useState(false);
+
+  const primaryAvatarSrc = char.avatar_local_path
+    ? `${getBackendBaseUrl()}/static/${char.avatar_local_path.replace(/^\/?(static\/)?/, '')}`
+    : getCharacterAvatarUrl(
+        {
+          character: char.name,
+          character_avatar_path: char.avatar_local_path,
+          category: role,
+        },
+        role
+      );
+
+  const activeSrc = useFallback
+    ? char.portrait_url || null
+    : primaryAvatarSrc || char.portrait_url || null;
 
   return (
     <button
@@ -48,14 +60,20 @@ const CharacterGridItem: React.FC<{
     >
       {/* Character Avatar */}
       <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-border-color group-hover:border-accent-amber/60 transition-colors bg-bg-elevated mb-2">
-        {avatarSrc && !imgError ? (
+        {activeSrc && !imgError ? (
           <Image
-            src={avatarSrc}
+            src={activeSrc}
             alt={char.name}
             fill
             sizes="56px"
             className="object-cover"
-            onError={() => setImgError(true)}
+            onError={() => {
+              if (!useFallback && char.portrait_url && primaryAvatarSrc !== char.portrait_url) {
+                setUseFallback(true);
+              } else {
+                setImgError(true);
+              }
+            }}
             unoptimized
           />
         ) : (
@@ -115,7 +133,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
 
   const filteredCharacters = useMemo(() => {
     const roleNormalized = role.toLowerCase();
-    const query = search.trim().toLowerCase();
+    const query = normalizeSearchText(search);
 
     return characters
       .filter((c) => {
@@ -124,8 +142,8 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       })
       .filter((c) => {
         if (!query) return true;
-        const nameMatch = c.name.toLowerCase().includes(query);
-        const realNameMatch = c.real_name ? c.real_name.toLowerCase().includes(query) : false;
+        const nameMatch = normalizeSearchText(c.name).includes(query);
+        const realNameMatch = c.real_name ? normalizeSearchText(c.real_name).includes(query) : false;
         return nameMatch || realNameMatch;
       });
   }, [characters, role, search]);

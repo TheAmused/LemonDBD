@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "Dossier de la Fogata",
-  tabSanctum: "Santuario de Cuenta",
+  tabSanctum: "Gestión de Cuenta",
   playerTitle: "Título de Jugador",
   devotion: "Devoción",
   gradeRank: "Grado de Rango",
@@ -140,4 +140,12 @@ export default {
   pageStreakTitle: "Racha de Páginas",
   pageStreakDesc: "Maestría progresiva desbloqueando enseñanzas de personajes.",
   avatarHelpText: "Sube un avatar personalizado (PNG, JPEG, WebP, máx. 10 MB) o vuelve al icono predeterminado.",
+  dualMainsTitle: "Equipamientos Distintivos",
+  dualMainsSubtitle: "Superviviente y Asesino",
+  hideLoadouts: "Ocultar Equipamientos",
+  showLoadouts: "Mostrar Equipamientos",
+  accountSettingsSubtitle: "Administra tu dirección de correo y contraseña",
+  encryptedNotice: "Credenciales Encriptadas y Seguras",
+  searchPerksPrompt: "Escribe al menos 3 caracteres para buscar habilidades...",
+  searchPerksMinChars: "Escribe {count} caracteres más para buscar...",
 } as const;

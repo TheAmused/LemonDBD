@@ -9,30 +9,20 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
-import { UserAvatar } from '@/components/UserAvatar';
 import { PageShell } from '@/components/layout/PageShell';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
-import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
+import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
+import { UserCampfireParticles } from '@/components/user/UserCampfireParticles';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/services/userProfileApi';
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import {
   User,
-  Flame,
-  Settings,
-  ChevronRight,
-  Bug,
-  Camera,
   Trash2,
-  Upload,
-  Mail,
-  Calendar,
-  Crown,
 } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -48,21 +38,12 @@ const BugReportModal = dynamic(
   { ssr: false }
 );
 
-// The bug-reports subtab is not visible on first paint (default tab is
-// "dossier"), so its list UI is fetched only when the user actually
-// switches to it.
-const UserBugReportsList = dynamic(
-  () => import('@/components/user/UserBugReportsList').then((m) => m.UserBugReportsList),
-  { ssr: false, loading: () => <UserBugReportsSkeleton /> }
-);
-
 export default function UserProfilePage() {
   const params = useParams();
   const currentLocale = (params?.locale as Locale) || 'en';
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
   const dict = useDictionary();
-  const [activeTab, setActiveTab] = useState<'dossier' | 'sanctum' | 'bugs'>('dossier');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bugModalOpen, setBugModalOpen] = useState(false);
 
@@ -210,9 +191,10 @@ export default function UserProfilePage() {
       locale={currentLocale}
       dict={dict}
       activeCategory="user"
-      mainClassName="overflow-y-auto"
+      mainClassName="overflow-y-auto relative"
     >
-        <div className="max-w-7xl 2xl:max-w-[1600px] w-full mx-auto space-y-6 sm:space-y-8">
+        <UserCampfireParticles />
+        <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-[1700px] 3xl:max-w-[2000px] w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
           {/* Hidden avatar file input */}
           <input
             type="file"
@@ -222,256 +204,71 @@ export default function UserProfilePage() {
             className="hidden"
           />
 
-          {/* Tab Navigation: Dossier (Default), Account Sanctum, Bug Reports */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-border-color pb-2">
-            <button
-              type="button"
-              onClick={() => setActiveTab('dossier')}
-              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
-                activeTab === 'dossier'
-                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/35 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
-              }`}
-            >
-              <Flame className="h-4 w-4 text-accent-amber" />
-              <span>{dict?.user?.tabDossier || 'Campfire Dossier'}</span>
-            </button>
+          {/* Campfire Header Card (Avatar + Info + Vault Mastery) */}
+          <CampfireHeader
+            user={user}
+            showcase={showcaseHook.showcase}
+            ownership={ownership}
+            isSaving={showcaseHook.isSaving}
+            saveError={showcaseHook.saveError}
+            onTitleChange={showcaseHook.setPlayerTitle}
+            onDevotionChange={showcaseHook.setDevotionLevel}
+            onGradeRankChange={showcaseHook.setGradeRank}
+            dict={dict}
+            currentLocale={currentLocale}
+            previewUrl={optimisticPreview}
+            isUploadingAvatar={isUploadingAvatar}
+            onAvatarClick={() => fileInputRef.current?.click()}
+            avatarFeedback={avatarFeedback}
+          />
 
-            <button
-              type="button"
-              onClick={() => setActiveTab('sanctum')}
-              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
-                activeTab === 'sanctum'
-                  ? 'bg-bg-surface text-text-primary border border-border-color shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
-              }`}
-            >
-              <Settings className="h-4 w-4" />
-              <span>{dict?.user?.tabSanctum || 'Account Sanctum'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('bugs')}
-              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
-                activeTab === 'bugs'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/35 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
-              }`}
-            >
-              <Bug className="h-4 w-4" />
-              <span>{dict?.user?.tabBugReports || 'My Bug Reports'} ({reportsTotal})</span>
-            </button>
-          </div>
-
-          {/* TAB 1: Campfire Dossier */}
-          {activeTab === 'dossier' && (
-            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
-              {/* Campfire Header Card */}
-              <CampfireHeader
-                user={user}
-                showcase={showcaseHook.showcase}
-                isSaving={showcaseHook.isSaving}
-                saveError={showcaseHook.saveError}
-                onTitleChange={showcaseHook.setPlayerTitle}
-                onDevotionChange={showcaseHook.setDevotionLevel}
-                onGradeRankChange={showcaseHook.setGradeRank}
-                dict={dict}
-                currentLocale={currentLocale}
-                previewUrl={optimisticPreview}
-                isUploadingAvatar={isUploadingAvatar}
-                onAvatarClick={() => fileInputRef.current?.click()}
-              />
-
-              {/* Vault Mastery Radial Dials */}
-              <VaultMasteryDials ownership={ownership} dict={dict} />
-
-              {/* Dual Mains Signature Showcase (Survivor & Killer with 4-Perk Diamond Loadouts) */}
-              <DualMainsShowcase
-                showcase={showcaseHook.showcase}
-                onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
-                onSurvivorPrestigeChange={showcaseHook.setSurvivorPrestige}
-                onSurvivorPerkChange={showcaseHook.setSurvivorPerk}
-                onKillerCharacterChange={showcaseHook.setKillerCharacter}
-                onKillerPrestigeChange={showcaseHook.setKillerPrestige}
-                onKillerPerkChange={showcaseHook.setKillerPerk}
-                dict={dict}
-                locale={currentLocale}
-              />
+          {/* Reset to Default Avatar Action when custom avatar is active */}
+          {(hasCustomAvatar || optimisticPreview) && (
+            <div className="flex justify-end -mt-2 sm:-mt-4">
+              <button
+                type="button"
+                onClick={handleResetAvatar}
+                disabled={isUploadingAvatar}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all cursor-pointer font-mono"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>{dict?.user?.removeAvatar || 'Reset to Default Avatar'}</span>
+              </button>
             </div>
           )}
 
-          {/* TAB 2: Account Sanctum (Dual-Column Asymmetric Master-Detail Layout) */}
-          {activeTab === 'sanctum' && (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start animate-in fade-in duration-200">
-              {/* Left Column: Sanctum Identity & Avatar Shrine (4 cols) */}
-              <div className="lg:col-span-5 xl:col-span-4 space-y-6">
-                <div className="rounded-3xl border border-border-color bg-bg-surface p-6 backdrop-blur-xl shadow-xl space-y-6 relative overflow-hidden">
-                  {/* Atmospheric Glow */}
-                  <div className="pointer-events-none absolute -top-12 -left-12 h-36 w-36 rounded-full bg-accent-amber/10 blur-3xl" />
+          {/* 1. TOP BLOCK: Account Management */}
+          <UserProfileForm
+            initialEmail={user.email || ''}
+            onRefreshUser={refreshUser}
+            dict={dict}
+          />
 
-                  {/* Section Title */}
-                  <div className="relative z-10 flex items-center justify-between pb-3 border-b border-border-color">
-                    <div className="flex items-center gap-2">
-                      <Flame className="h-4 w-4 text-accent-amber" />
-                      <h3 className="text-xs font-black uppercase tracking-wider text-text-primary font-mono">
-                        {dict?.user?.tabSanctum || 'Account Sanctum'}
-                      </h3>
-                    </div>
-                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full border border-border-color bg-bg-elevated text-text-muted">
-                      {dict?.user?.tabOverview || 'Profile'}
-                    </span>
-                  </div>
+          {/* 2. MIDDLE BLOCK: Dual Mains Signature Showcase (Survivor & Killer Loadouts) */}
+          <DualMainsShowcase
+            showcase={showcaseHook.showcase}
+            onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
+            onSurvivorPrestigeChange={showcaseHook.setSurvivorPrestige}
+            onSurvivorPerkChange={showcaseHook.setSurvivorPerk}
+            onKillerCharacterChange={showcaseHook.setKillerCharacter}
+            onKillerPrestigeChange={showcaseHook.setKillerPrestige}
+            onKillerPerkChange={showcaseHook.setKillerPerk}
+            dict={dict}
+            locale={currentLocale}
+          />
 
-                  {/* Avatar Shrine */}
-                  <div className="relative z-10 flex flex-col items-center text-center space-y-3 pt-1">
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => fileInputRef.current?.click()}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click();
-                      }}
-                      className="relative group cursor-pointer rounded-2xl overflow-hidden border-2 border-accent-amber/40 shadow-xl bg-bg-elevated flex items-center justify-center transition-transform hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-amber"
-                      title={dict?.user?.changeAvatar || 'Change Avatar'}
-                      aria-label={dict?.user?.changeAvatar || 'Change Avatar'}
-                    >
-                      <UserAvatar
-                        user={user}
-                        previewUrl={optimisticPreview}
-                        size="xl"
-                        showAdminBadge={false}
-                        borderClassName="border-0"
-                      />
-                      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs">
-                        <Camera className="h-6 w-6 mb-1 text-accent-amber" />
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider">
-                          {dict?.user?.changeAvatar || 'Change'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 w-full">
-                      <h2 className="text-lg font-black text-text-primary font-mono tracking-wide truncate">
-                        {user.username}
-                      </h2>
-                      <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wider border font-mono">
-                        <span
-                          className={
-                            user.role === 'admin'
-                              ? 'text-accent-red'
-                              : 'text-cyan-500 dark:text-cyan-400'
-                          }
-                        >
-                          {user.role === 'admin' ? (dict?.user?.roleAdmin || 'Administrator') : (dict?.user?.roleUser || 'Standard Player')}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Metadata List */}
-                  <div className="relative z-10 border-t border-border-color pt-4 space-y-2.5 text-xs font-mono">
-                    <div className="flex items-center justify-between text-text-secondary">
-                      <span className="flex items-center gap-2 text-text-muted">
-                        <Mail className="h-3.5 w-3.5" />
-                        <span>{dict?.user?.emailLabel || 'Email'}</span>
-                      </span>
-                      <span className="text-text-primary truncate max-w-[170px]" title={user.email || ''}>
-                        {user.email || '-'}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-text-secondary">
-                      <span className="flex items-center gap-2 text-text-muted">
-                        <Calendar className="h-3.5 w-3.5" />
-                        <span>{dict?.user?.memberSince || 'Member since'}</span>
-                      </span>
-                      <span className="text-text-primary">
-                        {user.created_at ? new Date(user.created_at).toLocaleDateString() : '2026'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Avatar Actions */}
-                  <div className="relative z-10 border-t border-border-color pt-4 space-y-2">
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploadingAvatar}
-                      className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-border-color bg-bg-elevated text-xs font-bold text-text-primary hover:border-accent-amber hover:text-accent-amber transition-all cursor-pointer font-mono"
-                    >
-                      <Upload className="h-3.5 w-3.5 text-accent-amber" />
-                      <span>{dict?.user?.changeAvatar || 'Upload Avatar'}</span>
-                    </button>
-
-                    {(hasCustomAvatar || optimisticPreview) && (
-                      <button
-                        type="button"
-                        onClick={handleResetAvatar}
-                        disabled={isUploadingAvatar}
-                        className="w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all cursor-pointer font-mono"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        <span>{dict?.user?.removeAvatar || 'Reset to Default'}</span>
-                      </button>
-                    )}
-
-                    {avatarFeedback && (
-                      <p
-                        className={`text-xs font-semibold text-center pt-1 ${
-                          avatarFeedback.type === 'success'
-                            ? 'text-emerald-500'
-                            : 'text-rose-500'
-                        }`}
-                      >
-                        {avatarFeedback.text}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Admin Launch Button */}
-                  {user.role === 'admin' && (
-                    <div className="relative z-10 border-t border-border-color pt-4">
-                      <Link
-                        href={`/${currentLocale}/admin`}
-                        className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-accent-red/30 bg-accent-red/10 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-all font-mono"
-                      >
-                        <Crown className="h-3.5 w-3.5" />
-                        <span>{dict?.sidebar?.adminPanel || 'Admin Panel'}</span>
-                        <ChevronRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Column: Credentials, Security & Settings (8 cols) */}
-              <div className="lg:col-span-7 xl:col-span-8">
-                <UserProfileForm
-                  initialEmail={user.email || ''}
-                  onRefreshUser={refreshUser}
-                  dict={dict}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: Bug Reports */}
-          {activeTab === 'bugs' && (
-            <Suspense fallback={<UserBugReportsSkeleton dict={dict} />}>
-              <UserBugReportsList
-                reports={myReports}
-                loading={loadingReports}
-                onOpenReportModal={() => setBugModalOpen(true)}
-                dict={dict}
-                total={reportsTotal}
-                page={reportsPage}
-                perPage={REPORTS_PER_PAGE}
-                totalPages={reportsTotalPages}
-                onPageChange={handleReportsPageChange}
-              />
-            </Suspense>
-          )}
+          {/* 3. BOTTOM BLOCK: My Bug Reports */}
+          <UserBugReportsDrawer
+            reports={myReports}
+            loading={loadingReports}
+            onOpenReportModal={() => setBugModalOpen(true)}
+            dict={dict}
+            total={reportsTotal}
+            page={reportsPage}
+            perPage={REPORTS_PER_PAGE}
+            totalPages={reportsTotalPages}
+            onPageChange={handleReportsPageChange}
+          />
         </div>
 
       <BugReportModal

@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "Campfire Dossier",
-  tabSanctum: "Account Sanctum",
+  tabSanctum: "Account Management",
   playerTitle: "Player Title",
   devotion: "Devotion",
   gradeRank: "Grade Rank",

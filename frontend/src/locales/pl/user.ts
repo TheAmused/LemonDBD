@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "Akta przy Ognisku",
-  tabSanctum: "Sanktuarium Konta",
+  tabSanctum: "Zarządzanie Kontem",
   playerTitle: "Tytuł Gracza",
   devotion: "Dewocja",
   gradeRank: "Ranga Oceny",

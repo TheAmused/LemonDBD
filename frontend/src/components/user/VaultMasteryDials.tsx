@@ -50,24 +50,24 @@ const RadialDial: React.FC<DialProps> = ({
   icon,
   compact = false,
 }) => {
-  const radius = compact ? 30 : 38;
+  const radius = compact ? 34 : 40;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (Math.min(100, Math.max(0, percentage)) / 100) * circumference;
-  const viewBoxSize = compact ? 76 : 96;
+  const viewBoxSize = compact ? 88 : 100;
   const center = viewBoxSize / 2;
 
   return (
     <div
-      className={`relative flex flex-col items-center border border-border-color bg-bg-surface backdrop-blur-md shadow-xs transition-all hover:border-accent-amber/40 group ${
+      className={`relative flex flex-col items-center border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
         compact
-          ? 'rounded-2xl p-3 sm:p-3.5 min-w-[100px] sm:min-w-[115px]'
-          : 'rounded-3xl p-5 sm:p-6 shadow-md'
+          ? 'rounded-2xl p-3 sm:p-4 min-w-[110px]'
+          : 'rounded-2xl sm:rounded-3xl p-4 sm:p-5 min-w-[125px] sm:min-w-[140px]'
       }`}
     >
       {/* Radial Gauge SVG */}
       <div className="relative flex items-center justify-center">
         <svg
-          className={`${compact ? 'w-20 h-20' : 'w-28 h-28'} -rotate-90 transform`}
+          className={`${compact ? 'w-22 h-22 sm:w-24 sm:h-24' : 'w-26 h-26 sm:w-30 sm:h-30'} -rotate-90 transform`}
           viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         >
           {/* Background circle track */}
@@ -76,7 +76,7 @@ const RadialDial: React.FC<DialProps> = ({
             cy={center}
             r={radius}
             stroke="var(--bg-elevated)"
-            strokeWidth={compact ? '5' : '7'}
+            strokeWidth={compact ? '6' : '7'}
             fill="transparent"
           />
           {/* Progress circle */}
@@ -85,7 +85,7 @@ const RadialDial: React.FC<DialProps> = ({
             cy={center}
             r={radius}
             stroke={colorHex}
-            strokeWidth={compact ? '5' : '7'}
+            strokeWidth={compact ? '6' : '7'}
             strokeDasharray={circumference}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
@@ -98,25 +98,25 @@ const RadialDial: React.FC<DialProps> = ({
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <div
             className={`${
-              compact ? 'text-sm sm:text-base' : 'text-lg sm:text-xl'
+              compact ? 'text-base sm:text-lg' : 'text-xl sm:text-2xl'
             } font-black font-mono tracking-tight text-text-primary`}
           >
             {percentage}%
           </div>
-          <div className={`${compact ? 'text-[10px]' : 'text-xs'} font-mono text-text-muted`}>
+          <div className={`${compact ? 'text-[11px]' : 'text-xs'} font-mono font-bold text-text-secondary`}>
             {count}/{total}
           </div>
         </div>
       </div>
 
       {/* Title & Icon below */}
-      <div className={`flex items-center gap-1.5 ${compact ? 'mt-2' : 'mt-4'}`}>
+      <div className={`flex items-center gap-1.5 ${compact ? 'mt-2' : 'mt-3'}`}>
         <div className={`rounded-lg ${compact ? 'p-1' : 'p-1.5'} ${accentClass}`}>
           {icon}
         </div>
         <span
           className={`${
-            compact ? 'text-[10px]' : 'text-xs'
+            compact ? 'text-[11px]' : 'text-xs'
           } font-black font-mono uppercase tracking-wider text-text-primary`}
         >
           {title}
@@ -152,17 +152,17 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
     (perkTotal > 0 ? Math.round((perkUnlocked / perkTotal) * 100) : 0);
 
   return (
-    <div className={`space-y-2.5 ${className}`}>
+    <div className={`space-y-3 ${className}`}>
       {!hideTitle && (
         <div className="flex items-center justify-between">
-          <h2 className="text-xs sm:text-sm font-black font-mono uppercase tracking-wider text-text-primary flex items-center gap-2">
+          <h2 className="text-sm sm:text-base font-black font-mono uppercase tracking-wider text-text-primary flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-accent-amber" />
             <span>{dict?.user?.vaultMastery || 'Vault Mastery'}</span>
           </h2>
         </div>
       )}
 
-      <div className={`grid ${compact ? 'grid-cols-3 gap-2.5 sm:gap-3' : 'grid-cols-1 sm:grid-cols-3 gap-4'}`}>
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {/* Survivors Dial */}
         <RadialDial
           title={dict?.stats?.survivors || 'Survivors'}

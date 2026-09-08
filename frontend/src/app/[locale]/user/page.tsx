@@ -13,7 +13,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
+import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
@@ -21,8 +21,6 @@ import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/servic
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import {
   User,
-  Flame,
-  Bug,
   Trash2,
 } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -39,21 +37,12 @@ const BugReportModal = dynamic(
   { ssr: false }
 );
 
-// The bug-reports subtab is not visible on first paint (default tab is
-// "dossier"), so its list UI is fetched only when the user actually
-// switches to it.
-const UserBugReportsList = dynamic(
-  () => import('@/components/user/UserBugReportsList').then((m) => m.UserBugReportsList),
-  { ssr: false, loading: () => <UserBugReportsSkeleton /> }
-);
-
 export default function UserProfilePage() {
   const params = useParams();
   const currentLocale = (params?.locale as Locale) || 'en';
   const { user, isAuthenticated, isLoading, ownership, refreshUser } = useAuth();
 
   const dict = useDictionary();
-  const [activeTab, setActiveTab] = useState<'dossier' | 'bugs'>('dossier');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [bugModalOpen, setBugModalOpen] = useState(false);
 
@@ -213,109 +202,71 @@ export default function UserProfilePage() {
             className="hidden"
           />
 
-          {/* Tab Navigation: Dossier (Default), Bug Reports */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-border-color pb-2">
-            <button
-              type="button"
-              onClick={() => setActiveTab('dossier')}
-              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
-                activeTab === 'dossier'
-                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/35 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
-              }`}
-            >
-              <Flame className="h-4 w-4 text-accent-amber" />
-              <span>{dict?.user?.tabDossier || 'Campfire Dossier'}</span>
-            </button>
+          {/* Campfire Header Card (Avatar + Info + Vault Mastery) */}
+          <CampfireHeader
+            user={user}
+            showcase={showcaseHook.showcase}
+            ownership={ownership}
+            isSaving={showcaseHook.isSaving}
+            saveError={showcaseHook.saveError}
+            onTitleChange={showcaseHook.setPlayerTitle}
+            onDevotionChange={showcaseHook.setDevotionLevel}
+            onGradeRankChange={showcaseHook.setGradeRank}
+            dict={dict}
+            currentLocale={currentLocale}
+            previewUrl={optimisticPreview}
+            isUploadingAvatar={isUploadingAvatar}
+            onAvatarClick={() => fileInputRef.current?.click()}
+            avatarFeedback={avatarFeedback}
+          />
 
-            <button
-              type="button"
-              onClick={() => setActiveTab('bugs')}
-              className={`min-h-[44px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap font-mono ${
-                activeTab === 'bugs'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/35 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60 border border-transparent'
-              }`}
-            >
-              <Bug className="h-4 w-4" />
-              <span>{dict?.user?.tabBugReports || 'My Bug Reports'} ({reportsTotal})</span>
-            </button>
-          </div>
-
-          {/* TAB 1: Campfire Dossier & Account */}
-          {activeTab === 'dossier' && (
-            <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-200">
-              {/* Campfire Header Card (Avatar + Info + Vault Mastery) */}
-              <CampfireHeader
-                user={user}
-                showcase={showcaseHook.showcase}
-                ownership={ownership}
-                isSaving={showcaseHook.isSaving}
-                saveError={showcaseHook.saveError}
-                onTitleChange={showcaseHook.setPlayerTitle}
-                onDevotionChange={showcaseHook.setDevotionLevel}
-                onGradeRankChange={showcaseHook.setGradeRank}
-                dict={dict}
-                currentLocale={currentLocale}
-                previewUrl={optimisticPreview}
-                isUploadingAvatar={isUploadingAvatar}
-                onAvatarClick={() => fileInputRef.current?.click()}
-                avatarFeedback={avatarFeedback}
-              />
-
-              {/* Reset to Default Avatar Action when custom avatar is active */}
-              {(hasCustomAvatar || optimisticPreview) && (
-                <div className="flex justify-end -mt-2 sm:-mt-4">
-                  <button
-                    type="button"
-                    onClick={handleResetAvatar}
-                    disabled={isUploadingAvatar}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all cursor-pointer font-mono"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    <span>{dict?.user?.removeAvatar || 'Reset to Default Avatar'}</span>
-                  </button>
-                </div>
-              )}
-
-              {/* Account Credentials, Security & Password Change */}
-              <UserProfileForm
-                initialEmail={user.email || ''}
-                onRefreshUser={refreshUser}
-                dict={dict}
-              />
-
-              {/* Dual Mains Signature Showcase (Survivor & Killer Loadouts) - at the bottom */}
-              <DualMainsShowcase
-                showcase={showcaseHook.showcase}
-                onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
-                onSurvivorPrestigeChange={showcaseHook.setSurvivorPrestige}
-                onSurvivorPerkChange={showcaseHook.setSurvivorPerk}
-                onKillerCharacterChange={showcaseHook.setKillerCharacter}
-                onKillerPrestigeChange={showcaseHook.setKillerPrestige}
-                onKillerPerkChange={showcaseHook.setKillerPerk}
-                dict={dict}
-                locale={currentLocale}
-              />
+          {/* Reset to Default Avatar Action when custom avatar is active */}
+          {(hasCustomAvatar || optimisticPreview) && (
+            <div className="flex justify-end -mt-2 sm:-mt-4">
+              <button
+                type="button"
+                onClick={handleResetAvatar}
+                disabled={isUploadingAvatar}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all cursor-pointer font-mono"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>{dict?.user?.removeAvatar || 'Reset to Default Avatar'}</span>
+              </button>
             </div>
           )}
 
-          {/* TAB 3: Bug Reports */}
-          {activeTab === 'bugs' && (
-            <Suspense fallback={<UserBugReportsSkeleton dict={dict} />}>
-              <UserBugReportsList
-                reports={myReports}
-                loading={loadingReports}
-                onOpenReportModal={() => setBugModalOpen(true)}
-                dict={dict}
-                total={reportsTotal}
-                page={reportsPage}
-                perPage={REPORTS_PER_PAGE}
-                totalPages={reportsTotalPages}
-                onPageChange={handleReportsPageChange}
-              />
-            </Suspense>
-          )}
+          {/* Account Credentials, Security & Password Change */}
+          <UserProfileForm
+            initialEmail={user.email || ''}
+            onRefreshUser={refreshUser}
+            dict={dict}
+          />
+
+          {/* Dual Mains Signature Showcase (Survivor & Killer Loadouts) - Drawer */}
+          <DualMainsShowcase
+            showcase={showcaseHook.showcase}
+            onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
+            onSurvivorPrestigeChange={showcaseHook.setSurvivorPrestige}
+            onSurvivorPerkChange={showcaseHook.setSurvivorPerk}
+            onKillerCharacterChange={showcaseHook.setKillerCharacter}
+            onKillerPrestigeChange={showcaseHook.setKillerPrestige}
+            onKillerPerkChange={showcaseHook.setKillerPerk}
+            dict={dict}
+            locale={currentLocale}
+          />
+
+          {/* My Bug Reports - Drawer under Signature Loadouts */}
+          <UserBugReportsDrawer
+            reports={myReports}
+            loading={loadingReports}
+            onOpenReportModal={() => setBugModalOpen(true)}
+            dict={dict}
+            total={reportsTotal}
+            page={reportsPage}
+            perPage={REPORTS_PER_PAGE}
+            totalPages={reportsTotalPages}
+            onPageChange={handleReportsPageChange}
+          />
         </div>
 
       <BugReportModal

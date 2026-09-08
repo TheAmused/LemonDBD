@@ -98,7 +98,7 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabDossier: "焚き火の書類",
-  tabSanctum: "アカウントの聖域",
+  tabSanctum: "アカウント管理",
   playerTitle: "プレイヤータスク",
   devotion: "信仰度",
   gradeRank: "グレードランク",

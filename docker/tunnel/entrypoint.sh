@@ -1,6 +1,8 @@
 #!/bin/sh
 
 DISCORD_WEBHOOK="${DISCORD_TUNNEL_WEBHOOK:-https://discord.com/api/webhooks/1545340434585227316/oDf4oyzf83pHiKmL49SjVct7VZ6Uhpwhbl5m6vkTw7f6tXLYWqSiGiokqjICBA195HeS}"
+WEBHOOK_ENABLED_RAW="${DISCORD_TUNNEL_WEBHOOK_ENABLED:-${DISCORD_TUNNEL_NOTIFY_ENABLED:-${TUNNEL_WEBHOOK_ENABLED:-false}}}"
+WEBHOOK_ENABLED=$(echo "$WEBHOOK_ENABLED_RAW" | tr '[:upper:]' '[:lower:]')
 TUNNEL_URL="${TUNNEL_TARGET_URL:-http://nginx:80}"
 HOST_HEADER="${TUNNEL_HOST_HEADER:-}"
 
@@ -10,6 +12,7 @@ echo " Target: $TUNNEL_URL"
 if [ -n "$HOST_HEADER" ]; then
   echo " Host Header: $HOST_HEADER"
 fi
+echo " Discord Notification Enabled: $WEBHOOK_ENABLED"
 echo "=========================================================="
 
 # Start cloudflared in the background and log output
@@ -38,14 +41,20 @@ if [ -n "$URL" ]; then
   echo "=========================================================="
   echo ""
 
-  # Send URL to Discord
-  if [ -n "$DISCORD_WEBHOOK" ]; then
-    echo "Firing Discord Webhook notification..."
-    curl -s -H "Content-Type: application/json" \
-         -X POST \
-         -d "{\"content\": \"🚀 **New Dev Server URL:** $URL\"}" \
-         "$DISCORD_WEBHOOK"
-    echo "Discord notification dispatched."
+  # Send URL to Discord if enabled
+  if [ "$WEBHOOK_ENABLED" = "true" ] || [ "$WEBHOOK_ENABLED" = "1" ] || [ "$WEBHOOK_ENABLED" = "yes" ]; then
+    if [ -n "$DISCORD_WEBHOOK" ]; then
+      echo "Firing Discord Webhook notification..."
+      curl -s -H "Content-Type: application/json" \
+           -X POST \
+           -d "{\"content\": \"🚀 **New Dev Server URL:** $URL\"}" \
+           "$DISCORD_WEBHOOK"
+      echo "Discord notification dispatched."
+    else
+      echo "Discord webhook notification skipped: DISCORD_TUNNEL_WEBHOOK is empty."
+    fi
+  else
+    echo "Discord webhook notification disabled (DISCORD_TUNNEL_WEBHOOK_ENABLED=$WEBHOOK_ENABLED_RAW). Skipping."
   fi
 else
   echo "[ERROR] Failed to acquire Cloudflare Tunnel URL after $MAX_RETRIES retries."

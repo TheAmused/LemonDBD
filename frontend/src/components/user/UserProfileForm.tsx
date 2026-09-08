@@ -93,12 +93,12 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
   };
 
   return (
-    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors">
+    <div className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
       {/* Header Button with DBD Banner */}
       <button
         type="button"
         onClick={toggleExpanded}
-        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 cursor-pointer group select-none overflow-hidden transition-colors text-left"
+        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[72px] sm:min-h-[80px] cursor-pointer group select-none overflow-hidden transition-colors text-left"
         aria-expanded={isExpanded}
       >
         {/* Atmospheric DBD Banner Backdrop */}
@@ -153,95 +153,97 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               </div>
             )}
 
-            <form onSubmit={handleUpdateProfile} className="max-w-2xl mx-auto space-y-4 sm:space-y-5">
-              {/* Email Address */}
-              <div className="space-y-1.5">
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary font-mono">
-                  {dict?.user?.emailLabel || 'Email Address'}
-                </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
-                    <Mail className="h-4 w-4" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner font-mono"
-                  />
-                </div>
-              </div>
-
-              {/* Password Management */}
-              <div className="space-y-3 pt-3 border-t border-border-color">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase tracking-wider text-text-primary flex items-center gap-2 font-mono">
-                    <Lock className="h-3.5 w-3.5 text-accent-amber" />
-                    <span>{dict?.user?.passwordLabel || 'Password'}</span>
-                  </span>
-                  <span className="text-[11px] text-text-muted font-mono">
-                    {t.passwordPlaceholder || 'Leave blank to keep current'}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {/* New Password Input */}
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
-                      {t.newPassword || 'New Password'}
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showNewPassword ? 'text' : 'password'}
-                        placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner font-mono"
-                      />
-                      <button
-                        type="button"
-                        tabIndex={-1}
-                        onClick={() => setShowNewPassword((prev) => !prev)}
-                        className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
-                      >
-                        {showNewPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                      </button>
+            <form onSubmit={handleUpdateProfile} className="max-w-2xl w-full mx-auto space-y-4 sm:space-y-5">
+              <div className="space-y-4 sm:space-y-5">
+                {/* Email Address */}
+                <div className="space-y-1.5">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                    {dict?.user?.emailLabel || 'Email Address'}
+                  </label>
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
+                      <Mail className="h-4 w-4" />
                     </div>
+                    <input
+                      type="email"
+                      required
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner font-mono"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Management */}
+                <div className="space-y-3 pt-3 border-t border-border-color">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black uppercase tracking-wider text-text-primary flex items-center gap-2 font-mono">
+                      <Lock className="h-3.5 w-3.5 text-accent-amber" />
+                      <span>{dict?.user?.passwordLabel || 'Password'}</span>
+                    </span>
+                    <span className="text-[11px] text-text-muted font-mono">
+                      {t.passwordPlaceholder || 'Leave blank to keep current'}
+                    </span>
                   </div>
 
-                  {/* Confirm Password Input */}
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
-                      {t.confirmPassword || 'Confirm New Password'}
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder={t.confirmPasswordPlaceholder || 'Repeat new password'}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
-                          passwordsMatch
-                            ? 'border-emerald-500/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                            : 'border-border-color focus:border-accent-amber focus:ring-1 focus:ring-accent-amber'
-                        }`}
-                      />
-                      <button
-                        type="button"
-                        tabIndex={-1}
-                        onClick={() => setShowConfirmPassword((prev) => !prev)}
-                        className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
-                      >
-                        {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                      </button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {/* New Password Input */}
+                    <div className="space-y-1">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                        {t.newPassword || 'New Password'}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showNewPassword ? 'text' : 'password'}
+                          placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner font-mono"
+                        />
+                        <button
+                          type="button"
+                          tabIndex={-1}
+                          onClick={() => setShowNewPassword((prev) => !prev)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
+                        >
+                          {showNewPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Confirm Password Input */}
+                    <div className="space-y-1">
+                      <label className="block text-[10px] font-bold uppercase tracking-wider text-text-secondary font-mono">
+                        {t.confirmPassword || 'Confirm New Password'}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          placeholder={t.confirmPasswordPlaceholder || 'Repeat new password'}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
+                            passwordsMatch
+                              ? 'border-emerald-500/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
+                              : 'border-border-color focus:border-accent-amber focus:ring-1 focus:ring-accent-amber'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          tabIndex={-1}
+                          onClick={() => setShowConfirmPassword((prev) => !prev)}
+                          className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-muted hover:text-text-primary cursor-pointer"
+                        >
+                          {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Action Button */}
-              <div className="pt-2 flex items-center justify-end border-t border-border-color">
+              <div className="pt-3 flex items-center justify-end border-t border-border-color">
                 <button
                   type="submit"
                   disabled={isUpdating}

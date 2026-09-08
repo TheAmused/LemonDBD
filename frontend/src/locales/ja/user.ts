@@ -146,4 +146,6 @@ export default {
   showLoadouts: "構成を表示",
   accountSettingsSubtitle: "メールアドレスとパスワードを管理",
   encryptedNotice: "暗号化された安全な認証情報",
+  searchPerksPrompt: "パークを検索するには3文字以上入力してください...",
+  searchPerksMinChars: "あと{count}文字入力してください...",
 } as const;

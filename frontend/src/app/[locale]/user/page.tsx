@@ -237,7 +237,14 @@ export default function UserProfilePage() {
             </div>
           )}
 
-          {/* Dual Mains Signature Showcase (Survivor & Killer Loadouts) - Drawer */}
+          {/* 1. TOP BLOCK: Account Management */}
+          <UserProfileForm
+            initialEmail={user.email || ''}
+            onRefreshUser={refreshUser}
+            dict={dict}
+          />
+
+          {/* 2. MIDDLE BLOCK: Dual Mains Signature Showcase (Survivor & Killer Loadouts) */}
           <DualMainsShowcase
             showcase={showcaseHook.showcase}
             onSurvivorCharacterChange={showcaseHook.setSurvivorCharacter}
@@ -250,28 +257,18 @@ export default function UserProfilePage() {
             locale={currentLocale}
           />
 
-          {/* Account Management & My Bug Reports - 2-Column Grid on 2xl+ (2560x1440 / 4K), Stacked on Laptop/Mobile */}
-          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6 sm:gap-8 items-start">
-            {/* Account Credentials, Security & Password Change */}
-            <UserProfileForm
-              initialEmail={user.email || ''}
-              onRefreshUser={refreshUser}
-              dict={dict}
-            />
-
-            {/* My Bug Reports - Drawer under Signature Loadouts */}
-            <UserBugReportsDrawer
-              reports={myReports}
-              loading={loadingReports}
-              onOpenReportModal={() => setBugModalOpen(true)}
-              dict={dict}
-              total={reportsTotal}
-              page={reportsPage}
-              perPage={REPORTS_PER_PAGE}
-              totalPages={reportsTotalPages}
-              onPageChange={handleReportsPageChange}
-            />
-          </div>
+          {/* 3. BOTTOM BLOCK: My Bug Reports */}
+          <UserBugReportsDrawer
+            reports={myReports}
+            loading={loadingReports}
+            onOpenReportModal={() => setBugModalOpen(true)}
+            dict={dict}
+            total={reportsTotal}
+            page={reportsPage}
+            perPage={REPORTS_PER_PAGE}
+            totalPages={reportsTotalPages}
+            onPageChange={handleReportsPageChange}
+          />
         </div>
 
       <BugReportModal

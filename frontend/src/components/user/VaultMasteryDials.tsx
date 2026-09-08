@@ -61,7 +61,7 @@ const RadialDial: React.FC<DialProps> = ({
       className={`relative flex flex-col items-center justify-between border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
         compact
           ? 'aspect-square rounded-2xl p-2 sm:p-2.5 w-full min-w-0'
-          : 'aspect-square w-full sm:w-32 sm:h-32 md:w-36 md:h-36 xl:w-32 xl:h-32 2xl:w-40 2xl:h-40 3xl:w-44 3xl:h-44 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 lg:p-3.5 2xl:p-4'
+          : 'aspect-square w-full sm:w-36 sm:h-36 xl:w-36 xl:h-36 2xl:w-44 2xl:h-44 rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 lg:p-3.5 2xl:p-4'
       }`}
     >
       {/* Radial Gauge SVG */}

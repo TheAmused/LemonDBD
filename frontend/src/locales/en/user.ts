@@ -146,4 +146,6 @@ export default {
   showLoadouts: "Show Loadouts",
   accountSettingsSubtitle: "Manage your email address and password",
   encryptedNotice: "Encrypted & Secure Credentials",
+  searchPerksPrompt: "Type at least 3 characters to search perks...",
+  searchPerksMinChars: "Type {count} more character(s) to search...",
 } as const;

@@ -11,7 +11,7 @@ interface UserAvatarProps {
     avatar_url?: string | null;
     role?: string;
   } | null;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   className?: string;
   showAdminBadge?: boolean;
   borderClassName?: string;
@@ -58,6 +58,12 @@ const SIZE_MAP = {
     icon: 'h-14 w-14',
     badge: 'h-7 w-7 -top-2 -right-2',
     badgeIcon: 'h-4 w-4',
+  },
+  '3xl': {
+    container: 'h-28 w-28 xs:h-32 xs:w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 xl:h-44 xl:w-44 rounded-2xl sm:rounded-3xl',
+    icon: 'h-16 w-16 xs:h-18 xs:w-18 sm:h-20 sm:w-20 md:h-22 md:w-22 xl:h-24 xl:w-24',
+    badge: 'h-6 w-6 sm:h-7 sm:w-7 xl:h-8 xl:w-8 -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 xl:-top-2.5 xl:-right-2.5',
+    badgeIcon: 'h-3.5 w-3.5 sm:h-4 sm:w-4 xl:h-4.5 xl:w-4.5',
   },
 } as const;
 

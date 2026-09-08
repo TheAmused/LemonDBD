@@ -15,6 +15,7 @@ import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
+import { UserCampfireParticles } from '@/components/user/UserCampfireParticles';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/services/userProfileApi';
@@ -190,9 +191,10 @@ export default function UserProfilePage() {
       locale={currentLocale}
       dict={dict}
       activeCategory="user"
-      mainClassName="overflow-y-auto"
+      mainClassName="overflow-y-auto relative"
     >
-        <div className="max-w-7xl 2xl:max-w-[1600px] w-full mx-auto space-y-6 sm:space-y-8">
+        <UserCampfireParticles />
+        <div className="relative z-10 max-w-7xl 2xl:max-w-[1600px] w-full mx-auto space-y-6 sm:space-y-8">
           {/* Hidden avatar file input */}
           <input
             type="file"

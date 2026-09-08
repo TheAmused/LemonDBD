@@ -48,7 +48,7 @@ export default {
   disablePerkSubtitle: "No se ofrecerá en nuevos grupos/páginas de desafíos.",
   selectAll: "Seleccionar Todo",
   deselectAll: "Deseleccionar Todo",
-  downloadBackup: "Descargar Copia de Seguridad ({count})",
+  downloadBackup: "Descargar Copia de Seguridad",
   exportingStatus: "Exportando...",
   purgeSelected: "Purgar Seleccionados ({count})",
   purgingStatus: "Purgando...",

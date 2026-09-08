@@ -508,16 +508,7 @@ export function ScraperConfigModal({
                 })}
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-border-color">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  disabled={isExporting}
-                  className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
-                >
-                  {dict?.admin?.cancel}
-                </button>
-
+              <div className="flex items-center justify-end pt-3">
                 <button
                   type="button"
                   onClick={handleExecuteExport}
@@ -646,16 +637,7 @@ export function ScraperConfigModal({
                 </div>
               )}
 
-              <div className="flex items-center justify-between pt-3 border-t border-border-color">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  disabled={isImporting}
-                  className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
-                >
-                  {dict?.admin?.close}
-                </button>
-
+              <div className="flex items-center justify-end pt-3">
                 <button
                   type="button"
                   onClick={handleExecuteImport}

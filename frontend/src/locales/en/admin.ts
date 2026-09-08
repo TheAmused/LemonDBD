@@ -48,7 +48,7 @@ export default {
   disablePerkSubtitle: "Won't be offered in new challenge pools/pages.",
   selectAll: "Select All",
   deselectAll: "Deselect All",
-  downloadBackup: "Download Backup ({count})",
+  downloadBackup: "Download Backup",
   exportingStatus: "Exporting...",
   purgeSelected: "Purge Selected ({count})",
   purgingStatus: "Purging...",

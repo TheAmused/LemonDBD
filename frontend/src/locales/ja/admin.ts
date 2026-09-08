@@ -48,7 +48,7 @@ export default {
   disablePerkSubtitle: "新しいチャレンジプール／ページで提供されなくなります。",
   selectAll: "すべて選択",
   deselectAll: "すべて解除",
-  downloadBackup: "バックアップをダウンロード ({count})",
+  downloadBackup: "バックアップをダウンロード",
   exportingStatus: "エクスポート中...",
   purgeSelected: "選択項目を消去 ({count})",
   purgingStatus: "消去中...",

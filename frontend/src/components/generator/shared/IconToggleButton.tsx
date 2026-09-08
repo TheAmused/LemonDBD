@@ -72,7 +72,7 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
       aria-label={label}
       aria-pressed={isActive}
       className={cn(
-        'group/btn relative flex items-center gap-2 overflow-hidden rounded-lg px-3.5 py-3 min-h-[44px] touch-manipulation text-slate-600 dark:text-slate-400 transition-all duration-200 cursor-pointer hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/70 dark:hover:bg-slate-800/50 border border-slate-200/60 dark:border-white/5',
+        'group/btn relative flex items-center justify-center gap-1.5 overflow-hidden rounded-xl px-2.5 py-2 min-h-[42px] min-w-[42px] sm:min-h-[44px] sm:min-w-[44px] touch-manipulation text-text-secondary transition-all duration-200 cursor-pointer bg-bg-surface hover:text-text-primary hover:bg-bg-elevated border border-border-color shadow-xs',
         // Notched top-left / bottom-right corners -- a small "trial sigil"
         // silhouette that reads as its own DBD-flavored shape instead of
         // the plain rounded rectangle used everywhere else in the toolbar.
@@ -83,11 +83,11 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
       )}
     >
       {icon}
-      {badge !== undefined && <span className="text-[11px] font-black">{badge}</span>}
+      {badge !== undefined && <span className="text-xs font-black">{badge}</span>}
       <span
         aria-hidden="true"
         className={cn(
-          'pointer-events-none absolute inset-x-1.5 bottom-0.5 h-px bg-gradient-to-r opacity-0 transition-opacity duration-200 group-hover/btn:opacity-100',
+          'pointer-events-none absolute inset-x-1.5 bottom-0.5 h-0.5 bg-gradient-to-r opacity-0 transition-opacity duration-200 group-hover/btn:opacity-100',
           isActive && 'opacity-100',
           t.bar
         )}

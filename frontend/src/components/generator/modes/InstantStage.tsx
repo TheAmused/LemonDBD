@@ -13,6 +13,7 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud } from '@/utils/perkAudio';
+import { FlavorPill } from '../shared/FlavorPill';
 
 export interface InstantStageProps {
   role: RoleCategory;
@@ -73,8 +74,8 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-6 py-10">
-      <p className="max-w-lg text-center text-sm font-semibold text-slate-700 dark:text-slate-300 sm:text-base">
+    <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 py-2 sm:py-6">
+      <p className="max-w-lg text-center text-sm font-semibold text-text-secondary sm:text-base">
         {dict?.generator?.instantRollPrompt ||
           'Rolls all four perks at once, instantly. Page and slot are decided the moment you click.'}
       </p>
@@ -126,14 +127,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
         })}
       </div>
 
-      {flavorLine && (
-        <div
-          aria-live="polite"
-          className="max-w-xs sm:max-w-md mx-auto px-3.5 py-1 rounded-full bg-amber-950/70 border border-amber-500/40 text-xs sm:text-sm font-black text-amber-300 text-center shadow-md animate-fade-in break-words"
-        >
-          {flavorLine}
-        </div>
-      )}
+      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

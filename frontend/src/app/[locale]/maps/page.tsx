@@ -62,14 +62,14 @@ function MapsPageInner() {
     {
       value: 'text',
       icon: <Search className="h-4 w-4" aria-hidden="true" />,
+      label: dict?.maps?.searchTextTab || 'Search',
       activeClassName: 'bg-gradient-to-r from-amber-500 to-amber-600',
-      ariaLabel: dict?.maps?.searchTextTab || 'Search',
     },
     {
       value: 'voice',
       icon: <Mic className="h-4 w-4" aria-hidden="true" />,
+      label: dict?.maps?.searchVoiceTab || 'Voice',
       activeClassName: 'bg-gradient-to-r from-amber-500 to-amber-600',
-      ariaLabel: dict?.maps?.searchVoiceTab || 'Voice',
     },
   ];
 
@@ -115,7 +115,6 @@ function MapsPageInner() {
             onChange={setSearchMode}
             ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
             options={searchModeOptions}
-            iconOnly
           />
         </div>
 

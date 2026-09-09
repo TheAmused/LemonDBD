@@ -13,11 +13,11 @@ test('CharacterOnboardingWizard is exported as a function component', () => {
   assert.strictEqual(typeof CharacterOnboardingWizard, 'function');
 });
 
-test('groupCharactersByChapter groups and orders by release_number', () => {
+test('groupCharactersByChapter groups and orders by release_date', () => {
   const chars: OnboardingCharacter[] = [
-    { id: 3, name: 'C', chapter_name: 'Chapter Two', release_number: 2, is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
-    { id: 1, name: 'A', chapter_name: 'Base Game', release_number: 1, is_owned: true, is_free: true, role: 'Survivor', category: 'Survivor' },
-    { id: 2, name: 'B', chapter_name: 'Base Game', release_number: 1, is_owned: true, is_free: true, role: 'Killer', category: 'Killer' },
+    { id: 3, name: 'C', chapter_name: 'Chapter Two', release_number: 2, release_date: '2 June 2018', is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
+    { id: 1, name: 'A', chapter_name: 'Base Game', release_number: 1, release_date: '14 June 2016', is_owned: true, is_free: true, role: 'Survivor', category: 'Survivor' },
+    { id: 2, name: 'B', chapter_name: 'Base Game', release_number: 1, release_date: '14 June 2016', is_owned: true, is_free: true, role: 'Killer', category: 'Killer' },
   ];
   const groups = groupCharactersByChapter(chars);
   assert.strictEqual(groups.length, 2);
@@ -26,20 +26,61 @@ test('groupCharactersByChapter groups and orders by release_number', () => {
   assert.strictEqual(groups[1].chapterName, 'Chapter Two');
 });
 
+test('groupCharactersByChapter sorts by the latest release_date seen in the chapter, not just the first character encountered', () => {
+  const chars: OnboardingCharacter[] = [
+    // The killer (first in list) is missing release_date -- only the
+    // survivor listed after it carries the real value.
+    { id: 1, name: 'Missing Killer', chapter_name: 'Newest Chapter', release_number: null, release_date: null, is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
+    { id: 2, name: 'Real Survivor', chapter_name: 'Newest Chapter', release_number: 30, release_date: '30 January 2024', is_owned: false, is_free: false, role: 'Survivor', category: 'Survivor' },
+    { id: 3, name: 'Old Killer', chapter_name: 'Base Game', release_number: 1, release_date: '14 June 2016', is_owned: true, is_free: true, role: 'Killer', category: 'Killer' },
+  ];
+  const groups = groupCharactersByChapter(chars);
+  assert.strictEqual(groups.length, 2);
+  assert.strictEqual(groups[0].chapterName, 'Base Game');
+  assert.strictEqual(groups[1].chapterName, 'Newest Chapter');
+});
+
+test('groupCharactersByChapter handles the scraper\'s year-only release_date fallback', () => {
+  // parse_date_and_year (backend) falls back to a bare 4-digit year string
+  // when it can't find a full day-month-year date on the wiki page.
+  const chars: OnboardingCharacter[] = [
+    { id: 1, name: 'Old Killer', chapter_name: 'Base Game', release_number: 1, release_date: '2016', is_owned: true, is_free: true, role: 'Killer', category: 'Killer' },
+    { id: 2, name: 'Newer Survivor', chapter_name: 'Later Chapter', release_number: 10, release_date: '20 May 2019', is_owned: false, is_free: false, role: 'Survivor', category: 'Survivor' },
+  ];
+  const groups = groupCharactersByChapter(chars);
+  assert.strictEqual(groups.length, 2);
+  assert.strictEqual(groups[0].chapterName, 'Base Game');
+  assert.strictEqual(groups[1].chapterName, 'Later Chapter');
+});
+
+test('groupCharactersByChapter sorts by release_date even when a misleading release_number disagrees', () => {
+  // Regression case: Chucky's release_number (34) ties with Forged in Fog's,
+  // even though Chucky's release_date is a full year later -- release_number
+  // isn't reliable across chapters, release_date is what must win.
+  const chars: OnboardingCharacter[] = [
+    { id: 1, name: 'Vittorio Toscano', chapter_name: 'Forged in Fog', release_number: 34, release_date: '22 November 2022', is_owned: false, is_free: false, role: 'Survivor', category: 'Survivor' },
+    { id: 2, name: 'The Good Guy', chapter_name: 'Chucky', release_number: 34, release_date: '28 November 2023', is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
+  ];
+  const groups = groupCharactersByChapter(chars);
+  assert.strictEqual(groups.length, 2);
+  assert.strictEqual(groups[0].chapterName, 'Forged in Fog');
+  assert.strictEqual(groups[1].chapterName, 'Chucky');
+});
+
 test('groupCharactersByChapter falls back to "Base Game" for a null chapter_name', () => {
   const chars: OnboardingCharacter[] = [
-    { id: 1, name: 'A', chapter_name: null, release_number: null, is_owned: true, is_free: false, role: 'Survivor', category: 'Survivor' },
+    { id: 1, name: 'A', chapter_name: null, release_number: null, release_date: null, is_owned: true, is_free: false, role: 'Survivor', category: 'Survivor' },
   ];
   const groups = groupCharactersByChapter(chars);
   assert.strictEqual(groups.length, 1);
   assert.strictEqual(groups[0].chapterName, 'Base Game');
-  assert.strictEqual(groups[0].releaseNumber, 0);
+  assert.strictEqual(groups[0].releaseTimestamp, 0);
 });
 
 test('groupCharactersByChapter, called with free characters already filtered out, drops a chapter whose entire cast was free', () => {
   const chars: OnboardingCharacter[] = [
-    { id: 1, name: 'The Nurse', chapter_name: 'Last Breath Chapter', release_number: 5, is_owned: true, is_free: true, role: 'Killer', category: 'Killer' },
-    { id: 2, name: 'Ace Visconti', chapter_name: 'Shattered Bloodline', release_number: 6, is_owned: false, is_free: false, role: 'Survivor', category: 'Survivor' },
+    { id: 1, name: 'The Nurse', chapter_name: 'Last Breath Chapter', release_number: 5, release_date: '14 June 2016', is_owned: true, is_free: true, role: 'Killer', category: 'Killer' },
+    { id: 2, name: 'Ace Visconti', chapter_name: 'Shattered Bloodline', release_number: 6, release_date: '11 April 2017', is_owned: false, is_free: false, role: 'Survivor', category: 'Survivor' },
   ];
   const groups = groupCharactersByChapter(chars.filter((c) => !c.is_free));
   assert.strictEqual(groups.length, 1);

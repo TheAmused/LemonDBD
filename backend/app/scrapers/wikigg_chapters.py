@@ -7,8 +7,13 @@ from typing import Any
 from bs4 import BeautifulSoup, Tag
 
 from app.scrapers.types import ChapterImageData
-from app.scrapers.utils import extract_high_res_url, sanitize_filename
+from app.scrapers.utils import extract_high_res_url, normalize_name_key, sanitize_filename
 from app.scrapers.wikigg import logger, parse_date_and_year
+
+# The wiki's own MediaWiki page title for its homepage (confirmed via
+# action=query&meta=siteinfo&siprop=general -> "mainpage") -- not "Main_Page",
+# which the site doesn't actually use as its title.
+HOMEPAGE_TITLE = "Dead by Daylight Wiki"
 
 
 class WikiGGChaptersMixin:
@@ -146,16 +151,56 @@ class WikiGGChaptersMixin:
 
         return dlcs
 
+    def scrape_chapter_capsule_images(self) -> dict[str, str]:
+        """Scrapes the homepage's "Chapter DLC" gallery (a `dlcCapsule` grid
+        under a `categoryLabel` div reading "Chapter DLC", between the
+        "Downloadable Content" and "Retired Clothing Pack" categories) for
+        each chapter's illustrated capsule art -- a single page fetch covering
+        every chapter, unlike the small text-logo scraped from the DLC
+        catalog tables in scrape_dlcs_from_wiki. Returns a dict keyed by
+        normalize_name_key(chapter name) so callers can match it against
+        scrape_dlcs_from_wiki's own dlc_name without assuming the two sources
+        format names identically."""
+        capsules: dict[str, str] = {}
+        try:
+            html_doc = self.fetch_page_html(HOMEPAGE_TITLE)
+            soup = BeautifulSoup(html_doc, "html.parser")
+            label = next(
+                (d for d in soup.find_all("div", class_="categoryLabel")
+                 if d.get_text(strip=True) == "Chapter DLC"),
+                None,
+            )
+            category_dlcs = label.find_next_sibling("div", class_="categoryDlcs") if label else None
+            if not category_dlcs:
+                logger.warning("Could not find the homepage's 'Chapter DLC' capsule gallery")
+                return capsules
+
+            for capsule in category_dlcs.find_all("div", class_="dlcCapsule"):
+                img_tag = capsule.find("img")
+                link_tag = capsule.find("div", class_="dlcLink")
+                name = link_tag.get_text(strip=True) if link_tag else None
+                image_url = extract_high_res_url(img_tag, self.BASE_DOMAIN) if img_tag else None
+                if name and image_url:
+                    capsules[normalize_name_key(name)] = image_url
+        except Exception as e:
+            logger.warning(f"Failed scraping homepage chapter capsule gallery: {e}")
+        return capsules
+
     def scrape_chapter_images(self) -> list["ChapterImageData"]:
         """Wraps scrape_dlcs_from_wiki to produce banner-image records keyed by
         the same canonical DLC/chapter name this app already stores on
-        Character.chapter_name, for entries where a banner image was found."""
+        Character.chapter_name, for entries where a banner image was found.
+
+        Prefers the homepage's illustrated capsule art (scrape_chapter_capsule_images)
+        over the small text-logo scraped from the DLC catalog tables, falling
+        back to the logo for any chapter the capsule gallery doesn't cover."""
+        capsules = self.scrape_chapter_capsule_images()
         results: list[ChapterImageData] = []
         for dlc in self.scrape_dlcs_from_wiki():
-            image_url = dlc.get("dlc_image_url")
+            name = dlc["dlc_name"]
+            image_url = capsules.get(normalize_name_key(name)) or dlc.get("dlc_image_url")
             if not image_url:
                 continue
-            name = dlc["dlc_name"]
             slug = sanitize_filename(name)
             results.append(
                 ChapterImageData(

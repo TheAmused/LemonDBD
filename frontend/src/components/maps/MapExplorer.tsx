@@ -7,6 +7,7 @@ import { Search, ImageOff, ChevronDown, MapPin } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
+import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 import { getMapImageSrc } from '@/utils/mapUtils';
 import { MapCard } from './MapCard';
 
@@ -24,20 +25,6 @@ const REALM_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
 
 // Must match the panel wrapper's transition-duration below.
 const PANEL_EXIT_MS = 300;
-
-function useRealmGridColumns(): number {
-  const [columns, setColumns] = useState(2);
-  useEffect(() => {
-    function computeColumns() {
-      const match = REALM_GRID_BREAKPOINTS.find((bp) => window.innerWidth >= bp.minWidth);
-      setColumns(match ? match.columns : 2);
-    }
-    computeColumns();
-    window.addEventListener('resize', computeColumns);
-    return () => window.removeEventListener('resize', computeColumns);
-  }, []);
-  return columns;
-}
 
 export interface MapExplorerProps {
   initialMapName?: string;
@@ -81,7 +68,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
   const [realmFilter, setRealmFilter] = useState<string | null>(null);
-  const columns = useRealmGridColumns();
+  const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 2);
 
   // The full realm roster, independent of the current search text -- unlike
   // groupedMapsByRealm (built from the search-filtered `maps` list), this

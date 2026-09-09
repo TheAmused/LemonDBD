@@ -10,9 +10,8 @@ import {
   CheckCircle2,
   VolumeX,
   RefreshCw,
-  Cpu,
+  Brain,
   Globe,
-  Info,
   ArrowRight,
   Lock,
 } from 'lucide-react';
@@ -185,7 +184,7 @@ function renderHoldKeyHint(template: string | undefined, key: string): React.Rea
   return (
     <>
       {before}
-      <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-amber-600 dark:text-amber-400 shadow-xs">
+      <kbd className="rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[11px] font-mono text-amber-600 dark:text-amber-400 shadow-xs">
         {key}
       </kbd>
       <span className="truncate">{after}</span>
@@ -781,8 +780,6 @@ export function VoiceCommandBanner({
   const statusConfig = {
     idle: {
       badge: rawVoiceDict.idleReady || '',
-      badgeClass:
-        'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300',
       dotClass: 'bg-emerald-500 dark:bg-emerald-400',
       icon: Mic,
       buttonColor:
@@ -790,8 +787,6 @@ export function VoiceCommandBanner({
     },
     listening: {
       badge: rawVoiceDict.listeningSpeakNow || '',
-      badgeClass:
-        'bg-rose-500/20 border-rose-500/50 text-rose-700 dark:text-rose-300 animate-pulse',
       dotClass: 'bg-rose-500 animate-ping',
       icon: Volume2,
       buttonColor:
@@ -799,8 +794,6 @@ export function VoiceCommandBanner({
     },
     processing: {
       badge: rawVoiceDict.processingAudio || '',
-      badgeClass:
-        'bg-amber-500/20 border-amber-500/50 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500 animate-pulse',
       icon: RefreshCw,
       buttonColor:
@@ -808,8 +801,6 @@ export function VoiceCommandBanner({
     },
     matched: {
       badge: rawVoiceDict.matchedExecuting || '',
-      badgeClass:
-        'bg-emerald-500/20 border-emerald-500/50 text-emerald-800 dark:text-emerald-300',
       dotClass: 'bg-emerald-500',
       icon: CheckCircle2,
       buttonColor:
@@ -817,8 +808,6 @@ export function VoiceCommandBanner({
     },
     nomatch: {
       badge: rawVoiceDict.noMatchTryAgain || '',
-      badgeClass:
-        'bg-amber-500/20 border-amber-500/40 text-amber-800 dark:text-amber-300',
       dotClass: 'bg-amber-500',
       icon: MicOff,
       buttonColor:
@@ -826,8 +815,6 @@ export function VoiceCommandBanner({
     },
     error: {
       badge: rawVoiceDict.micErrorCheckPermission || '',
-      badgeClass:
-        'bg-red-500/20 border-red-500/50 text-red-800 dark:text-red-300',
       dotClass: 'bg-red-500',
       icon: AlertCircle,
       buttonColor:
@@ -845,22 +832,20 @@ export function VoiceCommandBanner({
     : '';
 
   return (
+    // From `md` up the controls row is lifted out of the flow so the mic cluster
+    // centres against the whole panel rather than the space left under it; the
+    // min-height is what keeps the centred cluster clear of those controls.
+    // Below `md` the controls wrap to a second line and would collide, so they
+    // stay in the flow there.
     <section
       aria-label={dict?.maps?.voiceEngineAria || ''}
-      className={`relative flex w-full flex-col overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 px-3 sm:px-4 pt-3 sm:pt-4 backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-slate-950/10 dark:shadow-slate-950/40 transition-all duration-300 ${className}`}
+      className={`relative flex w-full flex-col overflow-hidden rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 px-3 sm:px-4 py-3 sm:py-4 md:min-h-[14.5rem] backdrop-blur-xl shadow-xl dark:shadow-2xl shadow-slate-950/10 dark:shadow-slate-950/40 transition-all duration-300 ${className}`}
     >
       <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
 
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800/80">
+      <div className="relative z-20 flex flex-col sm:flex-row items-center justify-between gap-2 md:absolute md:inset-x-4 md:top-4">
         <div className="flex flex-wrap items-center gap-2">
-          <div
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-black tracking-wide font-mono transition-all ${currentCfg.badgeClass}`}
-          >
-            <span className={`h-2 w-2 rounded-full ${currentCfg.dotClass}`} aria-hidden="true" />
-            <span>{currentCfg.badge}</span>
-          </div>
-
           <button
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
@@ -870,22 +855,22 @@ export function VoiceCommandBanner({
                 : dict?.voice?.clientModelTooltip || ''
             }
             aria-label={dict?.voice?.viewEngineInfo || ''}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${activeEngine === 'web-speech'
+            className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13px] font-bold font-mono transition-all cursor-pointer shadow-sm hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${activeEngine === 'web-speech'
                 ? 'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20'
                 : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
               }`}
           >
             {activeEngine === 'web-speech' ? (
-              <Globe className="h-3 w-3 text-amber-500" aria-hidden="true" />
+              <Globe className="h-4 w-4 text-amber-500" aria-hidden="true" />
             ) : (
-              <Cpu className="h-3 w-3 text-emerald-500" aria-hidden="true" />
+              <Brain className="h-4 w-4 text-emerald-500" aria-hidden="true" />
             )}
             <span>
               {activeEngine === 'web-speech'
                 ? rawVoiceDict.engineNativeBadge || ''
                 : rawVoiceDict.engineClientBadge || ''}
             </span>
-            <Info className="h-3 w-3 opacity-70 hover:opacity-100" aria-hidden="true" />
+            <span className={`h-2.5 w-2.5 rounded-full ${currentCfg.dotClass}`} aria-hidden="true" />
           </button>
 
           {modelProgress.status === 'downloading' && (
@@ -900,12 +885,12 @@ export function VoiceCommandBanner({
             onClick={() => setSoundEnabled((prev) => !prev)}
             title={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
             aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
-            className="flex h-6 w-6 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 transition hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
           >
             {soundEnabled ? (
-              <Volume2 className="h-3 w-3" aria-hidden="true" />
+              <Volume2 className="h-4 w-4" aria-hidden="true" />
             ) : (
-              <VolumeX className="h-3 w-3 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+              <VolumeX className="h-4 w-4 text-slate-400 dark:text-slate-500" aria-hidden="true" />
             )}
           </button>
         </div>
@@ -914,16 +899,16 @@ export function VoiceCommandBanner({
           <div
             role="group"
             aria-label={dict?.maps?.providerAria || ''}
-            className="flex items-center gap-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-0.5"
+            className="flex items-center gap-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-100/90 dark:bg-slate-950/80 p-1"
           >
-            <span className="px-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+            <span className="px-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono">
               {dict?.maps?.sourceLabel || ''}
             </span>
             <button
               type="button"
               onClick={() => onSourceChange('hens333')}
               aria-pressed={currentSource === 'hens333'}
-              className={`rounded-lg px-2 py-0.5 text-[11px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'hens333'
+              className={`rounded-full px-3 py-1 text-[13px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'hens333'
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-sm font-black'
                   : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
@@ -936,22 +921,22 @@ export function VoiceCommandBanner({
               disabled
               title={dict?.maps?.lemonDbdSourceLocked || ''}
               aria-disabled="true"
-              className="flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-extrabold font-mono text-slate-400 dark:text-slate-600 cursor-not-allowed"
+              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-extrabold font-mono text-slate-400 dark:text-slate-600 cursor-not-allowed"
             >
-              <Lock className="h-2.5 w-2.5" aria-hidden="true" />
+              <Lock className="h-3 w-3" aria-hidden="true" />
               {dict?.maps?.sourceLemonDbd || ''}
             </button>
           </div>
         </div>
       </div>
 
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-2 py-3 sm:py-4">
+      <div className="relative z-10 mt-3 flex flex-1 flex-col items-center justify-center gap-2 md:mt-0">
         <div className="flex w-full items-center justify-center gap-3 sm:gap-5">
-          <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
-            {[12, 22, 16, 28, 18, 32, 24, 14].map((h, i) => {
+          <div className="hidden sm:flex items-center gap-1.5 h-16 px-1" aria-hidden="true">
+            {[7, 14, 24, 36, 46, 34, 20, 12].map((h, i) => {
               const dynamicHeight =
                 voiceStatus === 'listening'
-                  ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                  ? Math.max(8, Math.min(54, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
                   : voiceStatus === 'matched'
                     ? 24
                     : h;
@@ -965,8 +950,8 @@ export function VoiceCommandBanner({
                         ? `pulse ${(0.4 + (i % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
                         : 'none',
                   }}
-                  className={`w-1 rounded-full transition-all duration-150 ${
-                    voiceStatus === 'matched' ? 'bg-emerald-400' : 'bg-gradient-to-t from-amber-500 to-emerald-400'
+                  className={`w-1.5 rounded-full transition-all duration-150 ${
+                    voiceStatus === 'matched' ? 'bg-emerald-400' : 'bg-gradient-to-t from-emerald-600 to-emerald-300'
                   }`}
                 />
               );
@@ -977,8 +962,8 @@ export function VoiceCommandBanner({
            <div className="relative inline-flex items-center justify-center">
             {voiceStatus === 'listening' && (
               <>
-                <span className="absolute h-16 w-16 animate-ping rounded-full bg-rose-500/20 pointer-events-none" aria-hidden="true" />
-                <span className="absolute h-20 w-20 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms] pointer-events-none" aria-hidden="true" />
+                <span className="absolute h-20 w-20 animate-ping rounded-full bg-rose-500/20 pointer-events-none" aria-hidden="true" />
+                <span className="absolute h-24 w-24 animate-ping rounded-full bg-rose-500/10 [animation-delay:200ms] pointer-events-none" aria-hidden="true" />
               </>
             )}
 
@@ -1029,10 +1014,10 @@ export function VoiceCommandBanner({
               }}
               aria-label={currentCfg.badge || ''}
               aria-pressed={voiceStatus === 'listening'}
-              className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl shadow-xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
+              className={`relative z-10 flex h-16 w-16 items-center justify-center rounded-[1.4rem] shadow-xl transition-all duration-200 focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-400/50 cursor-pointer active:scale-95 hover:scale-105 select-none ${currentCfg.buttonColor}`}
             >
               <StatusIcon
-                className={`h-5 w-5 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
+                className={`h-7 w-7 ${voiceStatus === 'listening' ? 'animate-bounce' : ''}`}
                 aria-hidden="true"
               />
             </button>
@@ -1040,11 +1025,11 @@ export function VoiceCommandBanner({
            </div>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1 h-9 px-1" aria-hidden="true">
-            {[14, 24, 32, 18, 28, 16, 22, 12].map((h, i) => {
+          <div className="hidden sm:flex items-center gap-1.5 h-16 px-1" aria-hidden="true">
+            {[12, 20, 34, 46, 36, 24, 14, 7].map((h, i) => {
               const dynamicHeight =
                 voiceStatus === 'listening'
-                  ? Math.max(8, Math.min(36, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
+                  ? Math.max(8, Math.min(54, Math.round(h * (0.6 + (audioLevel / 100) * 1.2))))
                   : voiceStatus === 'matched'
                     ? 24
                     : h;
@@ -1058,8 +1043,8 @@ export function VoiceCommandBanner({
                         ? `pulse ${(0.4 + ((i + 2) % 4) * 0.12).toFixed(2)}s ease-in-out infinite alternate`
                         : 'none',
                   }}
-                  className={`w-1 rounded-full transition-all duration-150 ${
-                    voiceStatus === 'matched' ? 'bg-emerald-400' : 'bg-gradient-to-t from-amber-500 to-emerald-400'
+                  className={`w-1.5 rounded-full transition-all duration-150 ${
+                    voiceStatus === 'matched' ? 'bg-emerald-400' : 'bg-gradient-to-t from-amber-600 to-amber-300'
                   }`}
                 />
               );
@@ -1067,7 +1052,7 @@ export function VoiceCommandBanner({
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-[340px]" aria-live="polite">
+        <div className="flex flex-col items-center max-w-[420px]" aria-live="polite">
             {voiceStatus === 'listening' && (
               <div className="flex flex-col text-center items-center">
                 <div className="flex items-center gap-2">
@@ -1153,7 +1138,7 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'idle' && (
-              <p className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 font-mono">
+              <p className="flex items-center gap-1 text-[13px] text-slate-500 dark:text-slate-400 font-mono">
                 {renderHoldKeyHint(rawVoiceDict.holdVToTalkHint, dict?.maps?.keyV || 'V')}
               </p>
             )}

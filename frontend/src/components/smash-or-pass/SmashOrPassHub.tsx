@@ -325,11 +325,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     loadRosters();
   }, [loadRosters]);
 
+  // Must stay separate from the vote sync below: `loadFeed` reshuffles the deck, and
+  // `syncVotes` is rebuilt on every auth transition, so sharing one effect reordered the
+  // deck under the user on load.
   useEffect(() => {
     loadFeed();
     loadLeaderboard();
+  }, [loadFeed, loadLeaderboard]);
+
+  useEffect(() => {
     syncVotes(selectedRosterSlug);
-  }, [loadFeed, loadLeaderboard, syncVotes, selectedRosterSlug]);
+  }, [syncVotes, selectedRosterSlug]);
 
   // Auto-resume audio on first user gesture if user has audio enabled
   useEffect(() => {

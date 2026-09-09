@@ -51,6 +51,8 @@ interface CharacterMetadataContainer {
   i18n?: Record<string, CharacterMetadataLocale>;
 }
 
+const FLIP_HALF_MS = 190;
+
 interface CharacterCardProps {
   character: EntityItem;
   onVote: (type: 'smash' | 'pass', origin?: { x: number; y: number }) => void;
@@ -77,6 +79,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   dict,
 }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
+  const [turn, setTurn] = useState<'settled' | 'out' | 'far'>('settled');
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [tilt, setTilt] = useState<{ x: number; y: number; glossX: number; glossY: number }>({
@@ -101,8 +104,28 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   useEffect(() => {
     setIsFlipped(false);
+    setTurn('settled');
     setIsZoomed(false);
   }, [character.slug, character.id]);
+
+  const startFlip = useCallback(() => {
+    setTurn((t) => (t === 'settled' ? 'out' : t));
+  }, []);
+
+  useEffect(() => {
+    if (turn === 'out') {
+      const timer = setTimeout(() => {
+        setIsFlipped((v) => !v);
+        setTurn('far');
+      }, FLIP_HALF_MS);
+      return () => clearTimeout(timer);
+    }
+    if (turn === 'far') {
+      // Next frame, so the jump to the far edge paints before the return is animated.
+      const raf = requestAnimationFrame(() => setTurn('settled'));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [turn]);
 
   const charTitle =
     locMeta.title ||
@@ -351,19 +374,20 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           </div>
         )}
 
+        {/* Turns in two 90deg halves so the faces themselves stay untransformed: Firefox
+         * neither paints nor hit-tests a rotated face here, as their overflow and
+         * backdrop-filter flatten them out of any 3D context. */}
         <div
           style={{
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            transition: 'transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+            transform:
+              turn === 'out' ? 'rotateY(90deg)' : turn === 'far' ? 'rotateY(-90deg)' : 'rotateY(0deg)',
+            transition: turn === 'far' ? 'none' : `transform ${FLIP_HALF_MS}ms ease-in-out`,
           }}
           className="relative h-full w-full"
         >
           {/* FRONT FACE */}
           <div
             style={{
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
               pointerEvents: isFlipped ? 'none' : 'auto',
               visibility: isFlipped ? 'hidden' : 'visible',
               boxShadow: isSmashDrag
@@ -420,7 +444,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   SmashSounds.playFlipSound();
-                  setIsFlipped(true);
+                  startFlip();
                 }}
                 title={rawSmashDict?.flipToDatingProfile || ''}
                 aria-label={rawSmashDict?.flipToDatingProfile || ''}
@@ -484,9 +508,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           {/* BACK FACE */}
           <div
             style={{
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)',
               pointerEvents: isFlipped ? 'auto' : 'none',
               visibility: isFlipped ? 'visible' : 'hidden',
             }}
@@ -500,7 +521,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 onClick={(e) => {
                   e.stopPropagation();
                   SmashSounds.playFlipSound();
-                  setIsFlipped(false);
+                  startFlip();
                 }}
                 title={rawSmashDict?.flipBack || ''}
                 aria-label={rawSmashDict?.flipBack || ''}

@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/onboarding/CharacterOnboardingWizard.tsx
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Loader2 } from 'lucide-react';
@@ -11,11 +11,11 @@ import { getAvatarUrl } from '@/components/character-detail/types';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
-import { Switch } from '@/components/common/Switch';
 import { invalidate } from '@/services/dataCache';
 import { getChapterBannerSrc } from '@/utils/mapUtils';
 import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
+import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 
 /** Skipped to directly after a language-triggered locale redirect, so the
  * wizard resumes on the roster instead of showing the intro/language steps
@@ -27,6 +27,14 @@ const POST_LANGUAGE_REDIRECT_KEY = 'onboarding_view_after_language_redirect';
 /** Ace Visconti, by convention -- matched by wiki_slug (stable across
  * locales) rather than his display name, which is translated. */
 const LEGEND_CHARACTER_WIKI_SLUG = 'Ace_Visconti';
+
+// Must mirror the grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5
+// classes on the chapter grid below.
+const CHAPTER_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
+  { minWidth: 1280, columns: 5 },
+  { minWidth: 1024, columns: 3 },
+  { minWidth: 640, columns: 2 },
+];
 
 /** Prefers the visitor's browser language if it's one of ours, else falls
  * back to whichever locale the wizard is already being viewed in. */
@@ -48,6 +56,7 @@ export interface OnboardingCharacter {
   category: string;
   chapter_name: string | null;
   release_number: number | null;
+  release_date: string | null;
   is_owned: boolean;
   is_free: boolean;
   wiki_slug?: string;
@@ -67,13 +76,54 @@ export interface OnboardingPerk {
 
 export interface ChapterGroup {
   chapterName: string;
-  releaseNumber: number;
+  releaseTimestamp: number;
   characters: OnboardingCharacter[];
+}
+
+const MONTH_NAMES = [
+  'january', 'february', 'march', 'april', 'may', 'june',
+  'july', 'august', 'september', 'october', 'november', 'december',
+];
+
+/** Parses the backend scraper's `release_date` format -- always either
+ * "<day> <Month name> <year>" (e.g. "14 June 2016") or, in its year-only
+ * fallback case, a bare 4-digit year -- into a UTC timestamp for sorting.
+ * Hand-rolled rather than `Date.parse(release_date)`: that string isn't
+ * ISO-8601, and per spec, non-ISO date-string parsing is
+ * implementation-defined, so relying on it risks a browser/engine that
+ * parses it differently (or not at all) silently mis-sorting that chapter
+ * instead of erroring loudly. Returns 0 (sorts first) when unparseable. */
+function parseReleaseDate(dateStr: string | null | undefined): number {
+  if (!dateStr) return 0;
+  const trimmed = dateStr.trim();
+
+  const dayMonthYear = /^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/.exec(trimmed);
+  if (dayMonthYear) {
+    const day = Number(dayMonthYear[1]);
+    const monthIndex = MONTH_NAMES.indexOf(dayMonthYear[2].toLowerCase());
+    const year = Number(dayMonthYear[3]);
+    if (monthIndex !== -1) return Date.UTC(year, monthIndex, day);
+  }
+
+  const yearOnly = /^(\d{4})$/.exec(trimmed);
+  if (yearOnly) return Date.UTC(Number(yearOnly[1]), 0, 1);
+
+  return 0;
 }
 
 /** Groups characters by `chapter_name` (falling back to "Base Game" for
  * null, matching the backend's own default in Character.to_dict), ordered
- * by each chapter's `release_number` ascending. */
+ * by each chapter's real release date ascending.
+ *
+ * Sorts by `release_date` (an actual calendar date), not `release_number` --
+ * release_number is meant to be a sequential release index but isn't
+ * reliable across chapters (e.g. Chucky's single character carries
+ * release_number 34, same as Forged in Fog, even though Chucky actually
+ * released a full year later per its release_date; the two fields disagree
+ * for reasons that look like a scraper data-quality issue rather than
+ * anything this grouping can correct for). release_date is read off every
+ * character in the group and the latest one wins, for the same reason
+ * described below for why a single first-seen character isn't enough. */
 export function groupCharactersByChapter(characters: OnboardingCharacter[]): ChapterGroup[] {
   const byChapter = new Map<string, ChapterGroup>();
 
@@ -82,14 +132,22 @@ export function groupCharactersByChapter(characters: OnboardingCharacter[]): Cha
     if (!byChapter.has(chapterName)) {
       byChapter.set(chapterName, {
         chapterName,
-        releaseNumber: c.release_number ?? 0,
+        releaseTimestamp: 0,
         characters: [],
       });
     }
-    byChapter.get(chapterName)!.characters.push(c);
+    const group = byChapter.get(chapterName)!;
+    // A chapter's killer and survivor don't always both have this populated
+    // (scraper gaps), so it's read off every character in the group rather
+    // than just whichever happens to be first.
+    const parsed = parseReleaseDate(c.release_date);
+    if (parsed > group.releaseTimestamp) {
+      group.releaseTimestamp = parsed;
+    }
+    group.characters.push(c);
   }
 
-  return Array.from(byChapter.values()).sort((a, b) => a.releaseNumber - b.releaseNumber);
+  return Array.from(byChapter.values()).sort((a, b) => a.releaseTimestamp - b.releaseTimestamp);
 }
 
 /** Turns a chapter name into an id-safe token for the accordion header's
@@ -164,6 +222,54 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const [chapterBanners, setChapterBanners] = useState<Record<string, ChapterBanner>>({});
   const [translatedChapterNames, setTranslatedChapterNames] = useState<Record<string, string>>({});
   const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
+  // A chapter's expand panel only ever occupies a grid row while it's
+  // mounted -- see chapterRowEndIndex below -- so it can't just track
+  // `expandedChapter` directly: the panel's own row position is keyed off
+  // `renderedChapter`, which framer-motion's `onExitComplete` (not a guessed
+  // setTimeout) keeps mounted for exactly as long as the close animation
+  // actually takes. Switching straight from one open chapter to another
+  // (different row) goes through pendingChapterOpenRef so the old panel gets
+  // to fully close before the new one's row position takes over.
+  const [renderedChapter, setRenderedChapter] = useState<string | null>(null);
+  const pendingChapterOpenRef = useRef<string | null>(null);
+
+  const toggleChapterExpanded = (chapterName: string) => {
+    setExpandedChapter((prev) => {
+      if (prev === chapterName) {
+        pendingChapterOpenRef.current = null;
+        return null;
+      }
+      // Also queues (rather than opening immediately) while something is
+      // still mounted-but-closing (renderedChapter set, expandedChapter
+      // already null) -- e.g. chapter A is closing after B was clicked,
+      // and C gets clicked before A's exit animation finishes. Gating on
+      // `prev` alone would open C right away, forcing A's still-animating
+      // panel (whose row position is keyed off renderedChapter) to get
+      // yanked out from under framer-motion instead of finishing its exit.
+      if (prev !== null || renderedChapter !== null) {
+        pendingChapterOpenRef.current = chapterName;
+        return null;
+      }
+      pendingChapterOpenRef.current = null;
+      return chapterName;
+    });
+  };
+
+  useEffect(() => {
+    if (expandedChapter !== null) setRenderedChapter(expandedChapter);
+    // When expandedChapter goes null, renderedChapter is left as-is --
+    // handleChapterPanelExitComplete clears it once the close transition
+    // genuinely finishes, and opens any pending chapter at that point.
+  }, [expandedChapter]);
+
+  const handleChapterPanelExitComplete = () => {
+    setRenderedChapter(null);
+    if (pendingChapterOpenRef.current) {
+      const next = pendingChapterOpenRef.current;
+      pendingChapterOpenRef.current = null;
+      setExpandedChapter(next);
+    }
+  };
   const [view, setView] = useState<'intro' | 'language' | 'roster'>(() =>
     typeof window !== 'undefined' && sessionStorage.getItem(POST_LANGUAGE_REDIRECT_KEY) ? 'roster' : 'intro'
   );
@@ -283,6 +389,41 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     () => groupCharactersByChapter(characters.filter((c) => !c.is_free)),
     [characters]
   );
+
+  // Chapters can legitimately disappear between renders (e.g. a refetch of
+  // /users/{id}/characters returning a different roster) -- without this,
+  // `renderedChapter`/`expandedChapter` referencing a now-gone chapter would
+  // drive chapterRowEndIndex below to a permanent -1, so the expand panel's
+  // AnimatePresence host stops rendering, its onExitComplete never fires,
+  // renderedChapter never clears, and every future chapter click gets stuck
+  // queued in pendingChapterOpenRef instead of opening.
+  useEffect(() => {
+    const stillExists = (name: string | null) =>
+      name === null || chapterGroups.some((g) => g.chapterName === name);
+    if (!stillExists(expandedChapter) || !stillExists(renderedChapter)) {
+      setExpandedChapter(null);
+      setRenderedChapter(null);
+      pendingChapterOpenRef.current = null;
+    }
+  }, [chapterGroups, expandedChapter, renderedChapter]);
+
+  // Needed so the expand panel below can be placed after the last card of
+  // its row instead of right after whichever card was clicked -- otherwise
+  // the other cards sharing that row get shoved onto a new row too (there's
+  // no room left for a full-width item mid-row), which reads as unrelated
+  // cards randomly jumping instead of the row smoothly growing.
+  const chapterColumns = useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 1);
+  const renderedGroup = renderedChapter
+    ? chapterGroups.find((g) => g.chapterName === renderedChapter)
+    : undefined;
+  const renderedChapterIndex = renderedGroup ? chapterGroups.indexOf(renderedGroup) : -1;
+  const chapterRowEndIndex =
+    renderedChapterIndex === -1
+      ? -1
+      : Math.min(
+          chapterColumns * (Math.floor(renderedChapterIndex / chapterColumns) + 1) - 1,
+          chapterGroups.length - 1
+        );
 
   /** The legend's example swatches show a real portrait -- Ace Visconti by
    * convention, matched by wiki_slug since `name` is translated and
@@ -429,7 +570,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8">
-      <div className="mx-auto max-w-5xl space-y-6">
+      <div className="mx-auto max-w-5xl 2xl:max-w-[90rem] space-y-6">
         <header className="text-center space-y-2">
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1" aria-hidden="true" />
@@ -524,72 +665,109 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           </button>
         </div>
 
-        {chapterGroups.map((group) => {
-          const isExpanded = expandedChapter === group.chapterName;
-          const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
-          const bannerSrc = getChapterBannerSrc(banner, backendBase);
-          const chapterOwned = group.characters.every((c) => (ownershipDraft[c.id] ?? c.is_owned));
-          // Display only -- expandedChapter/aria-id/banner lookups all key off
-          // the canonical group.chapterName above, never this localized text.
-          const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
-          const chapterSwitchLabel = `${t?.ownChapterButton || 'I own this chapter'}: ${chapterDisplayName}`;
-          const chapterPanelId = `chapter-panel-${slugifyChapterName(group.chapterName)}`;
-          const toggleExpanded = () =>
-            setExpandedChapter((prev) => (prev === group.chapterName ? null : group.chapterName));
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {chapterGroups.map((group, index) => {
+            const isExpanded = expandedChapter === group.chapterName;
+            const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
+            const bannerSrc = getChapterBannerSrc(banner, backendBase);
+            const chapterOwned = group.characters.every((c) => (ownershipDraft[c.id] ?? c.is_owned));
+            // Display only -- expandedChapter/aria-id/banner lookups all key off
+            // the canonical group.chapterName above, never this localized text.
+            const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
+            const chapterSwitchLabel = `${t?.ownChapterButton || 'I own this chapter'}: ${chapterDisplayName}`;
+            const chapterPanelId = `chapter-panel-${slugifyChapterName(group.chapterName)}`;
 
-          return (
-            <section key={group.chapterName} className="space-y-3">
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={toggleExpanded}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleExpanded();
-                  }
-                }}
-                aria-expanded={isExpanded}
-                aria-controls={chapterPanelId}
-                className="group relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-xl border border-border-color bg-bg-surface text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
-              >
-                {/* Fixed-size box (not just object-contain) so every banner
-                    reads at the same visual weight regardless of its source
-                    image's native aspect ratio, which varies widely. */}
-                <div className="flex w-full items-center gap-3 px-3 py-2.5">
-                  <h3 className="flex-1 truncate font-extrabold text-sm">{chapterDisplayName}</h3>
-                  {bannerSrc && (
-                    <img
-                      src={bannerSrc}
-                      alt=""
-                      aria-hidden="true"
-                      className="h-16 w-44 shrink-0 object-contain"
-                    />
-                  )}
-                  <div className="flex flex-1 shrink-0 items-center justify-end gap-3">
-                    <span onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                      <Switch checked={chapterOwned} onChange={(checked) => toggleChapter(group, checked)} ariaLabel={chapterSwitchLabel} />
-                    </span>
-                    <ChevronDown
-                      className={`h-5 w-5 text-text-secondary transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <AnimatePresence initial={false}>
-                {isExpanded && (
-                  <motion.div
-                    key={chapterPanelId}
-                    id={chapterPanelId}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                    className="overflow-hidden"
+            return (
+              <React.Fragment key={group.chapterName}>
+                <div className={`flex flex-col overflow-hidden rounded-2xl border-2 bg-bg-surface ${isExpanded ? 'border-accent-amber' : 'border-border-color'}`}>
+                  <button
+                    type="button"
+                    onClick={() => toggleChapterExpanded(group.chapterName)}
+                    aria-expanded={isExpanded}
+                    aria-controls={chapterPanelId}
+                    className="group relative flex aspect-video w-full items-center justify-center overflow-hidden bg-bg-elevated cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
                   >
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                      {group.characters.map((c) => {
+                    {bannerSrc ? (
+                      // object-cover, not object-contain -- these are ~616x353
+                      // (16:9-ish) capsule art from wiki.gg, so contain-fitted
+                      // into a differently-proportioned box left visible
+                      // letterboxing on the sides, reading as a small floating
+                      // image rather than art that fills the card.
+                      <img
+                        src={bannerSrc}
+                        alt=""
+                        aria-hidden="true"
+                        className={`h-full w-full object-cover transition-[filter] duration-200 ${chapterOwned ? '' : 'grayscale'}`}
+                      />
+                    ) : (
+                      <span className="px-2 text-center text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
+                    )}
+                    {/* Same washed-out treatment as a locked character card
+                        (CharacterOwnershipOverlay) -- grayscale image plus a
+                        dark scrim, cleared once the chapter is marked owned. */}
+                    {!chapterOwned && <div className="absolute inset-0 bg-slate-950/50" />}
+                    <ChevronDown
+                      className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {/* The whole footer toggles ownership, not just the small
+                      switch -- Switch renders its own <button>, so it can't
+                      be nested here; its visuals are reproduced on a plain
+                      <span> instead. */}
+                  <button
+                    type="button"
+                    onClick={() => toggleChapter(group, !chapterOwned)}
+                    role="switch"
+                    aria-checked={chapterOwned}
+                    aria-label={chapterSwitchLabel}
+                    className="flex w-full items-center justify-between gap-2 border-t border-border-color px-3 py-2.5 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+                  >
+                    <h3 className="flex-1 truncate text-sm font-extrabold">{chapterDisplayName}</h3>
+                    <span
+                      aria-hidden="true"
+                      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+                        chapterOwned ? 'bg-accent-amber' : 'bg-bg-elevated border border-border-color'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                          chapterOwned ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </span>
+                  </button>
+                </div>
+
+                {/* Placed after the last card of the *row*, not right after
+                    whichever card was clicked -- otherwise the other cards
+                    sharing that row have nowhere to go but a new row of
+                    their own, which reads as unrelated cards randomly
+                    jumping instead of the row smoothly growing beneath
+                    itself. Wrapping div only mounts for as long as a chapter
+                    in this row is expanding/expanded/collapsing
+                    (`renderedGroup`); AnimatePresence/motion.div do the
+                    actual measured-height enter/exit animation. */}
+                {index === chapterRowEndIndex && renderedGroup && (
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    {/* No initial={false} here on purpose -- unlike a
+                        persistently-mounted AnimatePresence, this one is
+                        conditionally rendered (mounts exactly when a chapter
+                        in this row starts expanding), so initial={false}
+                        would skip the enter animation on every single open,
+                        not just on page load. */}
+                    <AnimatePresence onExitComplete={handleChapterPanelExitComplete}>
+                      {expandedChapter === renderedGroup.chapterName && (
+                        <motion.div
+                          key={`chapter-panel-${slugifyChapterName(renderedGroup.chapterName)}`}
+                          id={`chapter-panel-${slugifyChapterName(renderedGroup.chapterName)}`}
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.25, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3 rounded-2xl border border-border-color bg-bg-surface p-3">
+                      {renderedGroup.characters.map((c) => {
                         const isOwned = ownershipDraft[c.id] ?? c.is_owned;
                         const perkStats = getCharacterPerkStats(c.id);
                         const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
@@ -632,13 +810,16 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                           </div>
                         );
                       })}
-                    </div>
-                  </motion.div>
+                      </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 )}
-              </AnimatePresence>
-            </section>
-          );
-        })}
+              </React.Fragment>
+            );
+          })}
+        </div>
 
         <div className="h-4" />
       </div>

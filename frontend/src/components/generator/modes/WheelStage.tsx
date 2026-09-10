@@ -673,7 +673,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
             <div
-              className={`w-full max-w-[62vw] min-w-[200px] max-h-[36dvh] sm:max-w-[285px] sm:max-h-[38dvh] md:max-w-[320px] lg:max-w-[340px] xl:max-w-[390px] 2xl:max-w-[500px] min-[1800px]:max-w-[580px] min-[1800px]:max-h-[48dvh] aspect-square transition-all duration-500 ease-out transform ${
+              className={`w-full max-w-[62vw] min-w-[200px] max-h-[36dvh] sm:max-w-[285px] sm:max-h-[38dvh] md:max-w-[320px] lg:max-w-[350px] xl:max-w-[430px] 2xl:max-w-[530px] min-[1800px]:max-w-[620px] min-[1800px]:max-h-[50dvh] aspect-square transition-all duration-500 ease-out transform ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
               }`}
             >

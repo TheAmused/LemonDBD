@@ -2,6 +2,7 @@
 // frontend/src/components/common/ToggleSwitch.tsx
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { cn } from '@/utils/cn';
 
 export interface ToggleSwitchOption<T extends string> {
@@ -11,11 +12,18 @@ export interface ToggleSwitchOption<T extends string> {
   /** Tailwind classes for the sliding thumb when this option is active. */
   activeClassName?: string;
   activeTextColor?: string;
+  /**
+   * Renders this option as a real link instead of a state button, so
+   * navigation keeps native anchor semantics (ctrl/cmd-click, middle-click,
+   * "open in new tab", and working without JS) for options that switch
+   * pages rather than plain in-place state.
+   */
+  href?: string;
 }
 
 export interface ToggleSwitchProps<T extends string> {
   value: T;
-  options: readonly [ToggleSwitchOption<T>, ToggleSwitchOption<T>];
+  options: readonly ToggleSwitchOption<T>[];
   onChange: (value: T) => void;
   ariaLabel: string;
   size?: 'sm' | 'md';
@@ -26,9 +34,10 @@ const DEFAULT_THUMB = 'bg-accent-amber text-text-inverted';
 
 export function resolveActiveIndex<T extends string>(
   value: T,
-  options: readonly [ToggleSwitchOption<T>, ToggleSwitchOption<T>]
-): 0 | 1 {
-  return value === options[1].value ? 1 : 0;
+  options: readonly ToggleSwitchOption<T>[]
+): number {
+  const index = options.findIndex((opt) => opt.value === value);
+  return index === -1 ? 0 : index;
 }
 
 export function ToggleSwitch<T extends string>({
@@ -39,7 +48,6 @@ export function ToggleSwitch<T extends string>({
   size = 'md',
   className,
 }: ToggleSwitchProps<T>) {
-  const [left, right] = options;
   const activeIndex = resolveActiveIndex(value, options);
   const padY = size === 'sm' ? 'py-1.5' : 'py-2';
   const textSize = size === 'sm' ? 'text-[11px]' : 'text-xs';
@@ -47,7 +55,7 @@ export function ToggleSwitch<T extends string>({
   // A fixed 50%-width thumb only lines up when both options render to the
   // same width -- as soon as one side is visibly longer, it undershoots and
   // crowds that side's text. Measuring the actual active button instead.
-  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const buttonRefs = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
   const [thumbRect, setThumbRect] = useState<{ left: number; width: number } | null>(null);
 
   useLayoutEffect(() => {
@@ -79,14 +87,38 @@ export function ToggleSwitch<T extends string>({
         style={thumbRect ? { left: thumbRect.left, width: thumbRect.width } : undefined}
         className={cn(
           'absolute inset-y-1 rounded-full shadow-md transition-[left,width] duration-200 ease-out',
-          !thumbRect && 'left-1 w-[calc(50%-4px)]',
-          !thumbRect && (activeIndex === 1 ? 'translate-x-full' : 'translate-x-0'),
-          (activeIndex === 1 ? right.activeClassName : left.activeClassName) || DEFAULT_THUMB
+          !thumbRect && 'opacity-0',
+          options[activeIndex]?.activeClassName || DEFAULT_THUMB
         )}
       />
       {options.map((opt, i) => {
         const isActive = value === opt.value;
         const activeTextClass = opt.activeTextColor || 'text-text-inverted';
+        const optionClassName = cn(
+          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 font-black transition-colors duration-200',
+          padY,
+          textSize,
+          isActive ? activeTextClass : 'text-text-secondary hover:text-text-primary'
+        );
+
+        if (opt.href) {
+          return (
+            <Link
+              key={opt.value}
+              ref={(el) => {
+                buttonRefs.current[i] = el;
+              }}
+              href={opt.href}
+              aria-current={isActive ? 'page' : undefined}
+              onClick={() => onChange(opt.value)}
+              className={optionClassName}
+            >
+              {opt.icon}
+              <span className="whitespace-nowrap">{opt.label}</span>
+            </Link>
+          );
+        }
+
         return (
           <button
             key={opt.value}
@@ -97,12 +129,7 @@ export function ToggleSwitch<T extends string>({
             role="radio"
             aria-checked={isActive}
             onClick={() => onChange(opt.value)}
-            className={cn(
-              'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 font-black transition-colors duration-200',
-              padY,
-              textSize,
-              isActive ? activeTextClass : 'text-text-secondary hover:text-text-primary'
-            )}
+            className={optionClassName}
           >
             {opt.icon}
             <span className="whitespace-nowrap">{opt.label}</span>

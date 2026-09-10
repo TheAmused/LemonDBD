@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "exported_at": "2026-09-10T12:16:35.293430+00:00",
+  "source": "LemonDBD",
+  "target": "perk_rules",
+  "count": 1,
+  "perk_rules": [
+    {
+      "id": 1,
+      "name": "Default Balanced (2 Own, 1 General, 1 Any)",
+      "is_default": true,
+      "slot1_type": "character_own",
+      "slot2_type": "character_own",
+      "slot3_type": "general_role",
+      "slot4_type": "any_role",
+      "created_at": "2026-09-07T18:14:19.541216+00:00"
+    }
+  ],
+  "data": {
+    "perk_rules": [
+      {
+        "id": 1,
+        "name": "Default Balanced (2 Own, 1 General, 1 Any)",
+        "is_default": true,
+        "slot1_type": "character_own",
+        "slot2_type": "character_own",
+        "slot3_type": "general_role",
+        "slot4_type": "any_role",
+        "created_at": "2026-09-07T18:14:19.541216+00:00"
+      }
+    ]
+  }
+}

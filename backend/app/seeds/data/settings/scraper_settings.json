@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "exported_at": "2026-09-10T12:16:35.296171+00:00",
+  "source": "LemonDBD",
+  "target": "scraper_settings",
+  "count": 1,
+  "scraper_settings": [
+    {
+      "source": "wikigg",
+      "fallback_to_wiki": false,
+      "last_used_source": "wikigg",
+      "last_run_timestamp": "2026-09-07T18:14:48.795914+00:00"
+    }
+  ],
+  "data": {
+    "scraper_settings": [
+      {
+        "source": "wikigg",
+        "fallback_to_wiki": false,
+        "last_used_source": "wikigg",
+        "last_run_timestamp": "2026-09-07T18:14:48.795914+00:00"
+      }
+    ]
+  }
+}

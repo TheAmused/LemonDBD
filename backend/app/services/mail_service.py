@@ -16,13 +16,6 @@ _ACCENT = "#d97706"
 _LOGO_CID = "lemondbd-logo"
 _LOGO_PATH = Path(__file__).resolve().parent.parent / "static" / "email" / "logo.png"
 
-# flask_mail registers utf-8 with body_encoding=None at import time (falling
-# back to 7bit/8bit), but some receiving mail servers re-wrap 8bit bodies
-# into quoted-printable in transit, and a soft line break can land inside
-# one of the verification-code <td style="..."> attributes, corrupting it.
-# Forcing base64 body encoding is immune to that: decoders always
-# concatenate every line before decoding, so no wrap point can ever fall
-# mid-tag.
 _BASE64_CHARSET = Charset("utf-8")
 _BASE64_CHARSET.body_encoding = BASE64
 

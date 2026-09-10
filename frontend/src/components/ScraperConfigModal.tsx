@@ -136,6 +136,8 @@ export function ScraperConfigModal({
   const [importSuccess, setImportSuccess] = useState<string | null>(null);
   const [importSummary, setImportSummary] = useState<Record<string, { created: number; updated: number }> | null>(null);
   const [showReplaceConfirm, setShowReplaceConfirm] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const dragCounterRef = useRef<number>(0);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Purge State
@@ -229,28 +231,102 @@ export function ScraperConfigModal({
     }
   };
 
+  const processSelectedFile = (file: File) => {
+    const isJsonExt = file.name.toLowerCase().endsWith('.json');
+    const isJsonMime = file.type === 'application/json' || file.type === 'text/json';
+    if (!isJsonExt && !isJsonMime) {
+      setImportError(dict?.admin?.invalidJsonFile || 'Please select a valid .json file.');
+      setImportFile(null);
+      setImportJsonText('');
+      return;
+    }
+
+    setImportFile(file);
+    setImportError(null);
+    setImportSuccess(null);
+    setImportSummary(null);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      try {
+        const parsed = JSON.parse(text);
+        if (typeof parsed !== 'object' || parsed === null) {
+          throw new Error('Invalid JSON structure: expected an object.');
+        }
+        setImportJsonText(text);
+      } catch (jsonErr: any) {
+        setImportError(jsonErr?.message || dict?.admin?.invalidJsonFile || 'Invalid JSON file.');
+        setImportFile(null);
+        setImportJsonText('');
+      }
+    };
+    reader.onerror = () => {
+      setImportError(dict?.admin?.networkError || 'Failed to read file.');
+      setImportFile(null);
+      setImportJsonText('');
+    };
+    reader.readAsText(file);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImportFile(file);
-      setImportError(null);
-      setImportSuccess(null);
-      setImportSummary(null);
+      processSelectedFile(file);
+    }
+    e.target.value = '';
+  };
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const text = event.target?.result as string;
-        try {
-          JSON.parse(text);
-          setImportJsonText(text);
-        } catch (jsonErr: any) {
-          setImportError(jsonErr.message || 'Invalid JSON file.');
-          setImportFile(null);
-        }
-      };
-      reader.readAsText(file);
+  const handleClearFile = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setImportFile(null);
+    setImportJsonText('');
+    setImportError(null);
+    setImportSuccess(null);
+    setImportSummary(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current += 1;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+    if (!isDragging) setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current -= 1;
+    if (dragCounterRef.current <= 0) {
+      dragCounterRef.current = 0;
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current = 0;
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      processSelectedFile(files[0]);
+    }
+  };
+
 
   const handleExecuteImport = () => {
     if (!importFile && !importJsonText) {
@@ -377,6 +453,8 @@ export function ScraperConfigModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="db-modal-title"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => e.preventDefault()}
       >
         <div
           className="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
@@ -554,24 +632,70 @@ export function ScraperConfigModal({
               />
 
               <div
+                role="button"
+                tabIndex={0}
+                aria-label={dict?.admin?.clickOrDragBackup || 'Upload JSON backup file'}
                 onClick={() => fileInputRef.current?.click()}
-                className="flex flex-col items-center justify-center p-5 rounded-2xl border-2 border-dashed border-border-color bg-bg-primary hover:border-emerald-500 transition-all cursor-pointer text-center group"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    fileInputRef.current?.click();
+                  }
+                }}
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center group select-none ${
+                  isDragging
+                    ? 'border-emerald-500 bg-emerald-500/20 ring-4 ring-emerald-500/30 scale-[1.01] shadow-xl'
+                    : 'border-border-color bg-bg-primary hover:border-emerald-500 hover:bg-bg-elevated/40'
+                }`}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform mb-2">
-                  <FileJson className="h-6 w-6" />
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all mb-2 ${
+                    isDragging
+                      ? 'bg-emerald-500/25 text-emerald-400 scale-125 ring-2 ring-emerald-500/40 animate-pulse'
+                      : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110'
+                  }`}
+                >
+                  <FileJson className="h-7 w-7" />
                 </div>
-                {importFile ? (
+
+                {isDragging ? (
                   <div>
-                    <p className="text-xs font-bold text-text-primary">{importFile.name}</p>
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
+                    <p className="text-sm font-black text-emerald-600 dark:text-emerald-400 animate-bounce">
+                      {dict?.admin?.dropFilePrompt || 'Drop the .json backup file here...'}
+                    </p>
+                  </div>
+                ) : importFile ? (
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-center gap-2">
+                      <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" title={importFile.name}>
+                        {importFile.name}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleClearFile}
+                        className="rounded-full p-1 text-text-muted hover:bg-accent-red/20 hover:text-accent-red transition-colors cursor-pointer"
+                        title={dict?.admin?.removeFile || 'Remove file'}
+                        aria-label={dict?.admin?.removeFile || 'Remove file'}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
                       {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
+                    </p>
+                    <p className="text-[10px] text-text-muted hover:text-text-secondary transition-colors">
+                      {dict?.admin?.changeFile || 'Click or drag another file to replace'}
                     </p>
                   </div>
                 ) : (
                   <div>
                     <p className="text-xs font-bold text-text-secondary">
                       {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
-                      <span className="text-emerald-600 dark:text-emerald-400 font-mono">.json</span>{' '}
+                      <span className="text-emerald-600 dark:text-emerald-400 font-mono font-black">.json</span>{' '}
                       {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
                     </p>
                   </div>

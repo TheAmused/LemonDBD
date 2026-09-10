@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, ArrowRight, type LucideIcon } from 'lucide-react';
+import { AlertTriangle, type LucideIcon } from 'lucide-react';
 import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
 
 const DisabledReasonModal = dynamic(
@@ -55,17 +55,24 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   const router = useRouter();
   const [showDisabledModal, setShowDisabledModal] = useState(false);
   const hoverClasses = PANEL_HOVER_CLASSES[color];
+  const watermark = image?.replace(/\.jpg$/, '-watermark.png');
   const body = (
     <>
       {image && (
-        <img
-          src={image}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          decoding="async"
-          className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 rounded-2xl object-cover opacity-[0.18] dark:opacity-[0.35] [mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
-        />
+        <>
+          <div
+            aria-hidden="true"
+            className="dark:hidden pointer-events-none absolute -right-6 -bottom-6 h-44 w-44 rounded-full bg-black/90 blur-xl"
+          />
+          <img
+            src={watermark}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+            className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 object-cover opacity-100 dark:opacity-70 dark:[mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
+          />
+        </>
       )}
 
       <div className="relative flex items-start justify-between gap-3">
@@ -91,9 +98,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           <span className="rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             {dict?.streaks?.comingSoon || 'Coming soon.'}
           </span>
-        ) : (
-          <ArrowRight className={`h-4 w-4 ${accent} transition-transform group-hover:translate-x-1`} />
-        )}
+        ) : null}
       </div>
 
       <h3 className={`relative mt-4 text-sm font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>

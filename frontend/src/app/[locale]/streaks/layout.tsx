@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, usePathname } from 'next/navigation';
-import { Lock, MailWarning, Swords } from 'lucide-react';
+import { Lock, MailWarning } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { RoleTabs } from '@/components/streaks/RoleTabs';
 import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
@@ -65,20 +65,9 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         className="flex-1 w-full overflow-y-auto transition-[padding] duration-300 p-5 sm:p-7 lg:p-9 lemon-shell-main"
       >
         {isPickerPage && (
-          <>
-            <header className="mb-6 flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500 border border-orange-500/20">
-                <Swords className="h-4 w-4" />
-              </span>
-              <h1 className="text-2xl font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
-                {dict?.sidebar?.challenges || 'Challenges'}
-              </h1>
-            </header>
-
-            <div className="mb-6">
-              <RoleTabs locale={locale} dict={dict} />
-            </div>
-          </>
+          <div className="mb-6">
+            <RoleTabs locale={locale} dict={dict} />
+          </div>
         )}
 
         {authLoading ? (

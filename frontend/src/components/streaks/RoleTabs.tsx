@@ -3,67 +3,60 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Shield, Skull, Puzzle } from 'lucide-react';
+import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
 
 interface RoleTabsProps {
   locale: string;
   dict?: Dictionary;
 }
 
+type StreakRole = 'survivor' | 'killer' | 'challenge';
+
+const ROLE_IDS: readonly StreakRole[] = ['survivor', 'killer', 'challenge'];
+
+const noop = () => {};
+
 export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
   const pathname = usePathname();
 
-  const tabs = [
+  const activeRole: StreakRole =
+    ROLE_IDS.find((id) => pathname?.startsWith(`/${locale}/streaks/${id}`)) ?? 'survivor';
+
+  const survivorLabel = dict?.characterDetail?.roleSurvivor || 'Survivor';
+  const killerLabel = dict?.characterDetail?.roleKiller || 'Killer';
+
+  const options: readonly ToggleSwitchOption<StreakRole>[] = [
     {
-      id: 'survivor',
-      label: dict?.characterDetail?.roleSurvivor || 'Survivor',
-      icon: Shield,
-      active: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/40 shadow-sm',
-      hover: 'hover:border-emerald-500/50 hover:text-emerald-700 dark:hover:text-emerald-400',
-      ring: 'focus:ring-emerald-500',
+      value: 'survivor',
+      href: `/${locale}/streaks/survivor`,
+      icon: <Shield className="h-3.5 w-3.5" />,
+      label: survivorLabel,
+      activeClassName: 'bg-emerald-600 text-text-inverted',
     },
     {
-      id: 'killer',
-      label: dict?.characterDetail?.roleKiller || 'Killer',
-      icon: Skull,
-      active: 'bg-rose-500/15 text-rose-700 dark:text-rose-400 border-rose-500/40 shadow-sm',
-      hover: 'hover:border-rose-500/50 hover:text-rose-700 dark:hover:text-rose-400',
-      ring: 'focus:ring-rose-500',
+      value: 'killer',
+      href: `/${locale}/streaks/killer`,
+      icon: <Skull className="h-3.5 w-3.5" />,
+      label: killerLabel,
+      activeClassName: 'bg-rose-600 text-text-inverted',
     },
     {
-      id: 'challenge',
-      label: `${dict?.characterDetail?.roleSurvivor || 'Survivor'}/${dict?.characterDetail?.roleKiller || 'Killer'}`,
-      icon: Puzzle,
-      active: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border-cyan-500/40 shadow-sm',
-      hover: 'hover:border-cyan-500/50 hover:text-cyan-700 dark:hover:text-cyan-400',
-      ring: 'focus:ring-cyan-500',
+      value: 'challenge',
+      href: `/${locale}/streaks/challenge`,
+      icon: <Puzzle className="h-3.5 w-3.5" />,
+      label: `${survivorLabel}/${killerLabel}`,
+      activeClassName: 'bg-cyan-600 text-text-inverted',
     },
   ];
 
   return (
-    <nav aria-label={dict?.streaks?.streakRoleTabs || 'Streak Role Tabs'} className="flex items-center gap-2">
-      {tabs.map((tab) => {
-        const Icon = tab.icon;
-        const isActive = pathname?.startsWith(`/${locale}/streaks/${tab.id}`) ?? false;
-
-        return (
-          <Link
-            key={tab.id}
-            href={`/${locale}/streaks/${tab.id}`}
-            aria-current={isActive ? 'page' : undefined}
-            className={`flex items-center gap-2 rounded-xl border px-4 py-2 min-h-[44px] touch-manipulation text-xs font-bold transition-all focus:outline-none focus:ring-2 ${tab.ring} ${
-              isActive
-                ? tab.active
-                : `border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400 dark:hover:bg-slate-900/80 shadow-sm ${tab.hover}`
-            }`}
-          >
-            <Icon className="h-3.5 w-3.5" />
-            <span>{tab.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <ToggleSwitch
+      ariaLabel={dict?.streaks?.streakRoleTabs || 'Streak Role Tabs'}
+      value={activeRole}
+      onChange={noop}
+      options={options}
+    />
   );
 };

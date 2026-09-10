@@ -1,6 +1,7 @@
 # backend/app/services/mail_service.py
 import html
 import logging
+from email.charset import BASE64, Charset
 from pathlib import Path
 
 from flask import current_app
@@ -15,14 +16,8 @@ _ACCENT = "#d97706"
 _LOGO_CID = "lemondbd-logo"
 _LOGO_PATH = Path(__file__).resolve().parent.parent / "static" / "email" / "logo.png"
 
-
-def _greeting_name(user: User) -> str:
-    """Render the greeting name, neutralizing Gmail's auto-link styling for email-shaped usernames."""
-    safe_username = html.escape(user.username)
-    if "@" in user.username:
-        safe_email = html.escape(user.email)
-        return f'<a href="mailto:{safe_email}" style="color:#0f172a; text-decoration:none;">{safe_username}</a>'
-    return safe_username
+_BASE64_CHARSET = Charset("utf-8")
+_BASE64_CHARSET.body_encoding = BASE64
 
 
 def _attach_logo(message: Message) -> None:
@@ -39,6 +34,15 @@ def _attach_logo(message: Message) -> None:
                 )
     except OSError as err:
         logger.warning(f"Could not attach email logo: {err}")
+
+
+def _greeting_name(user: User) -> str:
+    """Render the greeting name, neutralizing Gmail's auto-link styling for email-shaped usernames."""
+    safe_username = html.escape(user.username)
+    if "@" in user.username:
+        safe_email = html.escape(user.email)
+        return f'<a href="mailto:{safe_email}" style="color:#0f172a; text-decoration:none;">{safe_username}</a>'
+    return safe_username
 
 
 def _email_shell(preheader: str, body_html: str) -> str:
@@ -118,6 +122,7 @@ def send_verification_email(user: User) -> None:
                 "Enter it in LemonDBD to verify your email. This code expires in 24 hours."
             ),
             html=_email_shell(f"Your verification code: {user.verification_code}", body_html),
+            charset=_BASE64_CHARSET,
         )
         _attach_logo(message)
         mail.send(message)
@@ -159,6 +164,7 @@ def send_password_reset_email(user: User) -> None:
                 "This link expires in 1 hour. If you didn't request this, you can ignore this email."
             ),
             html=_email_shell("Reset your LemonDBD password", body_html),
+            charset=_BASE64_CHARSET,
         )
         _attach_logo(message)
         mail.send(message)

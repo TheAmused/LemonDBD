@@ -101,6 +101,43 @@ describe('Admin Database Backup: Drag and Drop Import Modal', () => {
       assert.ok(admin.invalidJsonFile && typeof admin.invalidJsonFile === 'string', `${name} missing invalidJsonFile`);
       assert.ok(admin.removeFile && typeof admin.removeFile === 'string', `${name} missing removeFile`);
       assert.ok(admin.changeFile && typeof admin.changeFile === 'string', `${name} missing changeFile`);
+      assert.ok(admin.groupContent && typeof admin.groupContent === 'string', `${name} missing groupContent`);
+      assert.ok(admin.groupUsers && typeof admin.groupUsers === 'string', `${name} missing groupUsers`);
+      assert.ok(admin.groupCommunity && typeof admin.groupCommunity === 'string', `${name} missing groupCommunity`);
+      assert.ok(admin.groupSettings && typeof admin.groupSettings === 'string', `${name} missing groupSettings`);
     }
+  });
+
+  it('renders export modal with organized group headers and target counts in Polish', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(ScraperConfigModal, {
+        isOpen: true,
+        onClose: () => {},
+        initialTab: 'export',
+        dict: plDict as any,
+      })
+    );
+
+    assert.ok(html.includes('Zawartość gry'), 'Must render Polish content group header');
+    assert.ok(html.includes('Użytkownicy i konta'), 'Must render Polish users group header');
+    assert.ok(html.includes('Społeczność i serie'), 'Must render Polish community group header');
+    assert.ok(html.includes('Konfiguracja i system'), 'Must render Polish settings group header');
+    assert.ok(html.includes('7/7'), 'Must show initial 7/7 selected content count badge');
+  });
+
+  it('renders purge modal with organized group headers and target counts in English', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(ScraperConfigModal, {
+        isOpen: true,
+        onClose: () => {},
+        initialTab: 'purge',
+        dict: enDict as any,
+      })
+    );
+
+    assert.ok(html.includes('Game Content'), 'Must render English content group header');
+    assert.ok(html.includes('Users &amp; Accounts') || html.includes('Users & Accounts'), 'Must render English users group header');
+    assert.ok(html.includes('Community &amp; Streaks') || html.includes('Community & Streaks'), 'Must render English community group header');
+    assert.ok(html.includes('Configuration &amp; System') || html.includes('Configuration & System'), 'Must render English settings group header');
   });
 });

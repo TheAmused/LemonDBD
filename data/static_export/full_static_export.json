@@ -7,7 +7,7 @@
     "characters": 98,
     "perks": 321,
     "items": 58,
-    "addons": 936,
+    "addons": 935,
     "offerings": 96,
     "chapters": 69,
     "maps": 58,
@@ -46672,37 +46672,6 @@
             "pl": {
               "name": "Namagnesowane kajdany",
               "description": "„Ci, którzy nie pójdą do schronienia, zostaną zamknięci głęboko pod ziemią, z dala od przewodniego światła gwiazd” – Wizje Gerhardta, rozdział 6\nZa każdym razem, gdy wygnasz ocalałego z najmniejszą liczbą faz haka, zyskujesz żeton, do maksymalnie 5.\nZa każdym razem, gdy wejdziesz w stan Gorliwości, twoja Gorliwość będzie trwała o 10% dłużej za żeton."
-            }
-          }
-        },
-        {
-          "name": "Logwood Dye",
-          "associated_target": "The Trapper",
-          "category": "Killer",
-          "description": "A natural dark brown dye used to coat the Bear Trap.<br><li><b>Darkens Bear Traps moderately</b>.</li>",
-          "icon_url": null,
-          "icon_local_path": "icons/addons/logwood_dye.png",
-          "rarity": "Rare",
-          "translations": {
-            "de": {
-              "name": "Blauholz-Farbstoff",
-              "description": "Ein natürlicher dunkelbrauner Farbstoff zum Beschichten der Bärenfalle.<br><li><b>Dunkelt Bärenfallen mäßig ab</b>.</li>"
-            },
-            "en": {
-              "name": "Logwood Dye",
-              "description": "A natural dark brown dye used to coat the Bear Trap.<br><li><b>Darkens Bear Traps moderately</b>.</li>"
-            },
-            "es": {
-              "name": "Tinte de palo de campeche",
-              "description": "Un tinte natural marrón oscuro utilizado para recubrir la trampa para osos.<br><li><b>Oscurece moderadamente las trampas para osos</b>.</li>"
-            },
-            "ja": {
-              "name": "ログウッドの染料",
-              "description": "トラバサミをコーティングするための濃褐色の天然染料。<br><li><b>トラバサミの色がそこそこ暗くなる</b>。</li>"
-            },
-            "pl": {
-              "name": "Barwnik z modrzewia",
-              "description": "Naturalny ciemnobrązowy barwnik używany do powlekania pułapek na niedźwiedzie.<br><li><b>Umiarkowanie przyciemnia pułapki na niedźwiedzie</b>.</li>"
             }
           }
         }
@@ -139884,37 +139853,6 @@
           "pl": {
             "name": "Namagnesowane kajdany",
             "description": "„Ci, którzy nie pójdą do schronienia, zostaną zamknięci głęboko pod ziemią, z dala od przewodniego światła gwiazd” – Wizje Gerhardta, rozdział 6\nZa każdym razem, gdy wygnasz ocalałego z najmniejszą liczbą faz haka, zyskujesz żeton, do maksymalnie 5.\nZa każdym razem, gdy wejdziesz w stan Gorliwości, twoja Gorliwość będzie trwała o 10% dłużej za żeton."
-          }
-        }
-      },
-      {
-        "name": "Logwood Dye",
-        "associated_target": "The Trapper",
-        "category": "Killer",
-        "description": "A natural dark brown dye used to coat the Bear Trap.<br><li><b>Darkens Bear Traps moderately</b>.</li>",
-        "icon_url": null,
-        "icon_local_path": "icons/addons/logwood_dye.png",
-        "rarity": "Rare",
-        "translations": {
-          "de": {
-            "name": "Blauholz-Farbstoff",
-            "description": "Ein natürlicher dunkelbrauner Farbstoff zum Beschichten der Bärenfalle.<br><li><b>Dunkelt Bärenfallen mäßig ab</b>.</li>"
-          },
-          "en": {
-            "name": "Logwood Dye",
-            "description": "A natural dark brown dye used to coat the Bear Trap.<br><li><b>Darkens Bear Traps moderately</b>.</li>"
-          },
-          "es": {
-            "name": "Tinte de palo de campeche",
-            "description": "Un tinte natural marrón oscuro utilizado para recubrir la trampa para osos.<br><li><b>Oscurece moderadamente las trampas para osos</b>.</li>"
-          },
-          "ja": {
-            "name": "ログウッドの染料",
-            "description": "トラバサミをコーティングするための濃褐色の天然染料。<br><li><b>トラバサミの色がそこそこ暗くなる</b>。</li>"
-          },
-          "pl": {
-            "name": "Barwnik z modrzewia",
-            "description": "Naturalny ciemnobrązowy barwnik używany do powlekania pułapek na niedźwiedzie.<br><li><b>Umiarkowanie przyciemnia pułapki na niedźwiedzie</b>.</li>"
           }
         }
       }

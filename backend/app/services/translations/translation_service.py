@@ -222,16 +222,7 @@ class TranslationService:
             trans = i_val.get("translations", {})
             matched = item_exact_map.get(i_name.strip().lower()) or item_map.get(simplify_lookup_key(i_name))
             if not matched:
-                matched = Item(
-                    name=i_val.get("name", i_name),
-                    category=i_val.get("category", "Item"),
-                    role=i_val.get("role", "Survivor"),
-                    description=i_val.get("translations", {}).get("en", {}).get("description", ""),
-                    translations=i_val.get("translations", {}),
-                )
-                db.session.add(matched)
-                item_map[simplify_lookup_key(i_name)] = matched
-                item_exact_map[i_name.strip().lower()] = matched
+                continue
             else:
                 if i_val.get("category"):
                     matched.category = i_val.get("category")
@@ -266,21 +257,8 @@ class TranslationService:
                 or addon_map.get(simplify_lookup_key(a_name))
             )
             if not matched:
-                matched = Addon(
-                    name=a_val.get("name", a_name),
-                    associated_target=a_val.get("associated_target", ""),
-                    category=a_val.get("category", "Killer"),
-                    rarity=a_val.get("rarity", "Common"),
-                    description=a_val.get("translations", {}).get("en", {}).get("description", ""),
-                    icon_local_path=f"icons/addons/{sanitize_filename(a_val.get('name', a_name))}.png",
-                    translations=a_val.get("translations", {}),
-                )
-                db.session.add(matched)
-                addon_map[simplify_lookup_key(a_name)] = matched
-                addon_exact_map[a_low] = matched
+                continue
             else:
-                if not matched.icon_local_path:
-                    matched.icon_local_path = f"icons/addons/{sanitize_filename(a_val.get('name', a_name))}.png"
                 if a_val.get("associated_target"):
                     matched.associated_target = a_val.get("associated_target")
                 if a_val.get("category"):
@@ -369,18 +347,7 @@ class TranslationService:
         for o_name, o_val in offerings_data.items():
             matched = offering_exact_map.get(o_name.strip().lower()) or offering_map.get(simplify_lookup_key(o_name))
             if not matched:
-                matched = Offering(
-                    name=o_val.get("name", o_name),
-                    category=o_val.get("category", "Offering"),
-                    role=o_val.get("role", "All"),
-                    description=o_val.get("translations", {}).get("en", {}).get("description", ""),
-                    icon_url=o_val.get("icon_url", ""),
-                    icon_local_path=o_val.get("icon_local_path", ""),
-                    rarity=o_val.get("rarity", "Common"),
-                    translations=o_val.get("translations", {}),
-                )
-                db.session.add(matched)
-                offering_map[simplify_lookup_key(o_name)] = matched
+                continue
             else:
                 if o_val.get("name") and matched.name != o_val.get("name"):
                     matched.name = o_val.get("name")

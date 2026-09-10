@@ -131,6 +131,16 @@
     transform: translateX(-100%);
     border-right-width: 0;
   }
+
+  /* Center fixed modal overlays within the usable content area when sidebar is open */
+  .lemon-modal-overlay-sidebar-aware {
+    padding-left: 16rem;
+    transition: padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  :root[data-sidebar='collapsed'] .lemon-modal-overlay-sidebar-aware {
+    padding-left: 0;
+  }
 }
 
 .lemon-sidebar-icon-collapsed {

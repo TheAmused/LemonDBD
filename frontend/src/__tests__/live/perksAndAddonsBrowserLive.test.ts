@@ -46,30 +46,25 @@ test("Live Frontend Workflow: Character Catalog, Addons & Generator Integration"
     "Content-Type": "application/json",
   };
 
-  // Configure generator
+  // Verify generator endpoints are decoupled and return 404
   const configRes = await fetch(`${API_BASE}/api/v1/generator/config`, {
     method: "POST",
     headers: playerHeaders,
     body: JSON.stringify({ role: "Killer", mode: "random", lock_perks: false }),
   });
-  assert.strictEqual(configRes.status, 200);
+  assert.strictEqual(configRes.status, 404);
 
-  // Draw perks
   const drawRes = await fetch(`${API_BASE}/api/v1/generator/draw`, {
     method: "POST",
     headers: playerHeaders,
     body: JSON.stringify({ role: "Killer", perks: ["A Nurse's Calling", "Thanatophobia"] }),
   });
-  assert.strictEqual(drawRes.status, 200);
-  const drawn = (await drawRes.json()).drawn_perks;
-  assert.ok(drawn.length >= 2);
+  assert.strictEqual(drawRes.status, 404);
 
-  // Reset drawn perks
   const resetRes = await fetch(`${API_BASE}/api/v1/generator/reset`, {
     method: "POST",
     headers: playerHeaders,
     body: JSON.stringify({ role: "Killer" }),
   });
-  assert.strictEqual(resetRes.status, 200);
-  assert.strictEqual((await resetRes.json()).drawn_perks.length, 0);
+  assert.strictEqual(resetRes.status, 404);
 });

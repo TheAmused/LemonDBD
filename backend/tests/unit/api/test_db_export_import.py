@@ -464,13 +464,12 @@ class TestDatabaseExportImportSettingsTables:
         with export_import_app.app_context():
             from sqlalchemy import delete as sa_delete
             from app.models.perk import PerkRule
-            from app.models.minigames import GeneratorDrawnPerk, DraftSession, ScraperSetting
+            from app.models.minigames import DraftSession, ScraperSetting
             from app.models.admin import ChallengeModeSetting
             from app.models.user import UserShowcase
 
             user = db.session.scalars(select(User).where(User.username == "player_test")).first()
             db.session.add(PerkRule(name="Standard", is_default=True))
-            db.session.add(GeneratorDrawnPerk(role="Survivor", perk_name="Adrenaline"))
             db.session.add(DraftSession(room_code="ABC123"))
             db.session.add(ScraperSetting(source="wikigg"))
             db.session.add(ChallengeModeSetting(mode="gauntlet", is_enabled=True))
@@ -478,7 +477,7 @@ class TestDatabaseExportImportSettingsTables:
             db.session.commit()
 
             targets = [
-                "perk_rules", "generator_drawn_perks", "draft_sessions",
+                "perk_rules", "draft_sessions",
                 "scraper_settings", "challenge_mode_settings", "user_showcases",
             ]
             exported = DatabaseExportImportService.export_database(targets=targets)
@@ -486,7 +485,6 @@ class TestDatabaseExportImportSettingsTables:
                 assert exported["counts"][t] == 1
 
             db.session.execute(sa_delete(PerkRule))
-            db.session.execute(sa_delete(GeneratorDrawnPerk))
             db.session.execute(sa_delete(DraftSession))
             db.session.execute(sa_delete(ScraperSetting))
             db.session.execute(sa_delete(ChallengeModeSetting))
@@ -589,3 +587,186 @@ class TestDatabaseExportRouteIncludeAssets:
         assert resp.status_code == 200
         payload = resp.get_json()
         assert "avatar_local_path_data" not in payload["data"]["characters"][0]
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportGroupsAndUpsertHardening:
+    def test_export_database_organized_into_groups(self, export_import_app):
+        with export_import_app.app_context():
+            exported = DatabaseExportImportService.export_database()
+            assert "groups" in exported
+            assert "data" in exported
+            assert "content" in exported["groups"]
+            assert "users" in exported["groups"]
+
+            content_group = exported["groups"]["content"]
+            assert "characters" in content_group
+            assert "perks" in content_group
+            assert len(content_group["characters"]) == len(exported["data"]["characters"])
+
+            users_group = exported["groups"]["users"]
+            assert "users" in users_group
+            assert len(users_group["users"]) == len(exported["data"]["users"])
+
+    def test_import_database_from_grouped_payload(self, export_import_app):
+        with export_import_app.app_context():
+            payload = {
+                "version": "1.0",
+                "groups": {
+                    "content": {
+                        "characters": [
+                            {"name": "Grouped Dwight", "role": "Survivor", "wiki_slug": "grouped-dwight"}
+                        ]
+                    }
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
+            assert summary["summary"]["characters"]["created"] == 1
+            char = db.session.scalar(select(Character).where(Character.name == "Grouped Dwight"))
+            assert char is not None
+            assert char.wiki_slug == "grouped-dwight"
+
+    def test_import_database_upsert_characters_by_wiki_slug(self, export_import_app):
+        with export_import_app.app_context():
+            char = Character(name="Old Trapper Name", wiki_slug="unique-trapper-slug", role="Killer")
+            db.session.add(char)
+            db.session.commit()
+
+            payload = {
+                "data": {
+                    "characters": [
+                        {
+                            "name": "Updated Trapper Name",
+                            "wiki_slug": "unique-trapper-slug",
+                            "role": "Killer",
+                            "movement_speed": "4.6 m/s"
+                        }
+                    ]
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
+            assert summary["summary"]["characters"]["updated"] == 1
+            assert summary["summary"]["characters"]["created"] == 0
+
+            updated_char = db.session.scalar(select(Character).where(Character.wiki_slug == "unique-trapper-slug"))
+            assert updated_char.name == "Updated Trapper Name"
+            assert updated_char.movement_speed == "4.6 m/s"
+
+    def test_import_database_upsert_users_safe_email_conflict(self, export_import_app):
+        with export_import_app.app_context():
+            u1 = User(username="user_alpha", email="alpha@conflict.com", password_hash="h1", role="user")
+            u2 = User(username="user_beta", email="beta@conflict.com", password_hash="h2", role="user")
+            db.session.add_all([u1, u2])
+            db.session.commit()
+
+            # Attempt to update user_beta with user_alpha's email; should gracefully avoid IntegrityError
+            payload = {
+                "data": {
+                    "users": [
+                        {
+                            "username": "user_beta",
+                            "email": "alpha@conflict.com",
+                            "role": "admin"
+                        }
+                    ]
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["users"])
+            assert summary["summary"]["users"]["updated"] == 1
+
+            reloaded_beta = db.session.scalar(select(User).where(User.username == "user_beta"))
+            assert reloaded_beta.role == "admin"
+            # Email was protected from causing a unique constraint crash
+            assert reloaded_beta.email == "beta@conflict.com"
+
+    def test_import_database_upsert_draft_sessions(self, export_import_app):
+        with export_import_app.app_context():
+            from app.models.minigames import DraftSession
+            session = DraftSession(
+                room_code="ROOM_TEST_UPSERT",
+                phase="bans",
+                banned_perks="[]",
+                picked_survivor_perks="[]",
+                picked_killer_perks="[]",
+            )
+            db.session.add(session)
+            db.session.commit()
+
+            payload = {
+                "data": {
+                    "draft_sessions": [
+                        {
+                            "room_code": "ROOM_TEST_UPSERT",
+                            "phase": "picks",
+                            "banned_perks": ["Sprint Burst"],
+                        }
+                    ]
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["draft_sessions"])
+            assert summary["summary"]["draft_sessions"]["updated"] == 1
+            assert summary["summary"]["draft_sessions"]["created"] == 0
+
+            reloaded_session = db.session.scalar(
+                select(DraftSession).where(DraftSession.room_code == "ROOM_TEST_UPSERT")
+            )
+            assert reloaded_session.phase == "picks"
+            assert "Sprint Burst" in reloaded_session.banned_perks
+
+    def test_import_database_partial_perks_update_descriptions_only(self, export_import_app):
+        with export_import_app.app_context():
+            # Setup: ensure 2 existing perks with baseline data
+            p1 = db.session.scalar(select(Perk).where(Perk.name == "Brutal Strength"))
+            p1.description = "Original Brutal Strength Description"
+            p1.category = "Killer"
+
+            p2 = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
+            if not p2:
+                p2 = Perk(name="Sprint Burst", category="Survivor", description="Original Sprint Burst Description")
+                db.session.add(p2)
+            else:
+                p2.description = "Original Sprint Burst Description"
+
+            # Baseline 3rd perk that shouldn't be touched
+            p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))
+            if not p3:
+                p3 = Perk(name="Dead Hard", category="Survivor", description="Original Dead Hard Description")
+                db.session.add(p3)
+
+            db.session.commit()
+
+            # User edits ONLY the 2 perks with updated descriptions in a partial .json
+            partial_payload = {
+                "perks": [
+                    {
+                        "name": "Brutal Strength",
+                        "description": "Custom updated description for Brutal Strength."
+                    },
+                    {
+                        "name": "Sprint Burst",
+                        "description": "Custom updated description for Sprint Burst."
+                    }
+                ]
+            }
+
+            # Import in merge mode (default)
+            summary = DatabaseExportImportService.import_database(partial_payload, mode="merge", targets=["perks"])
+
+            assert summary["status"] == "success"
+            assert summary["summary"]["perks"]["updated"] == 2
+            assert summary["summary"]["perks"]["created"] == 0
+
+            # Verify the 2 perks have the new descriptions
+            reloaded_p1 = db.session.scalar(select(Perk).where(Perk.name == "Brutal Strength"))
+            assert reloaded_p1.description == "Custom updated description for Brutal Strength."
+            assert reloaded_p1.category == "Killer"  # Category was preserved untouched!
+
+            reloaded_p2 = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
+            assert reloaded_p2.description == "Custom updated description for Sprint Burst."
+            assert reloaded_p2.category == "Survivor"  # Preserved untouched!
+
+            # Verify untouched perks in the database are intact
+            reloaded_p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))
+            assert reloaded_p3.description == "Original Dead Hard Description"
+
+

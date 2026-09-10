@@ -20,21 +20,23 @@ function getAudioContext(): AudioContext | null {
 }
 
 export function getAudioEnabled(): boolean {
-  if (typeof window === 'undefined') return true;
+  if (typeof window === 'undefined' || !window.localStorage) return true;
   try {
-    const item = localStorage.getItem(AUDIO_KEY);
-    return item === null ? true : item === 'true';
+    const item = window.localStorage.getItem(AUDIO_KEY);
+    if (item === null) return true;
+    return item !== 'false';
   } catch {
     return true;
   }
 }
 
 export function setAudioEnabled(enabled: boolean): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !window.localStorage) return;
   try {
-    localStorage.setItem(AUDIO_KEY, enabled ? 'true' : 'false');
+    window.localStorage.setItem(AUDIO_KEY, enabled ? 'true' : 'false');
   } catch {}
 }
+
 
 export function playReelTick(pitchMultiplier = 1.0): void {
   if (!getAudioEnabled()) return;

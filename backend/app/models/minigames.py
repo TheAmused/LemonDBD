@@ -1,62 +1,11 @@
 # backend/app/models/minigames.py
 from datetime import datetime
 from typing import Any
-from sqlalchemy import Boolean, DateTime, Float, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads
 from app.models.base import utcnow
-
-
-class GeneratorSetting(Base):
-    __tablename__ = "generator_settings"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    role: Mapped[str] = mapped_column(String(20), default="Survivor", nullable=False)
-    gen_mode: Mapped[str] = mapped_column(String(20), default="instant", nullable=False)
-    no_repeat_perks: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    total_pages: Mapped[int] = mapped_column(Integer, default=12, nullable=False)
-    perks_per_page: Mapped[int] = mapped_column(Integer, default=15, nullable=False)
-    last_page_perks: Mapped[int] = mapped_column(Integer, default=8, nullable=False)
-    spin_duration_sec: Mapped[float] = mapped_column(Float, default=3.0, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "role": self.role,
-            "gen_mode": self.gen_mode,
-            "no_repeat_perks": 1 if self.no_repeat_perks else 0,
-            "total_pages": self.total_pages,
-            "perks_per_page": self.perks_per_page,
-            "last_page_perks": self.last_page_perks,
-            "spin_duration_sec": self.spin_duration_sec,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
-
-class GeneratorDrawnPerk(Base):
-    __tablename__ = "generator_drawn_perks"
-    __table_args__ = (
-        UniqueConstraint("role", "perk_name", name="uq_drawn_role_perk"),
-    )
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    role: Mapped[str] = mapped_column(String(20), nullable=False)
-    perk_name: Mapped[str] = mapped_column(String(150), nullable=False)
-    drawn_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "role": self.role,
-            "perk_name": self.perk_name,
-            "drawn_at": self.drawn_at.isoformat() if self.drawn_at else None,
-        }
 
 
 class DraftSession(Base):

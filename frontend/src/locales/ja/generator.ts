@@ -56,6 +56,8 @@ export default {
   emptyCoordinate: "［-/-］",
   spinChaosWheel: 'カオスホイールを回す！',
   spinningCurses: 'カオス呪いをスピン中...',
+  clearMutator: '解除',
+  clearMutatorTooltip: '有効な呪いを解除',
   modeSlot: "スロットマシン",
   modeTarot: "タロットデッキ",
   modeCrate: "ルートクレート",

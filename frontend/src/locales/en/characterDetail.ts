@@ -152,6 +152,7 @@ export default {
   highRes3dModelView: "High-Res 3D Model View",
   interactive3dMeshEngineWip: "Interactive 3D Mesh Engine (WIP)",
   configRosterDesc: "Click character avatar buttons to toggle them in your Perk Randomizer pool.",
+  noCharactersFound: "No Characters Found",
   hubNoMatchingCharacters: "No characters match your current filter or search query.",
   togglePerkOwnershipHelp: "Click a perk to toggle whether you own it.",
   changesSaved: "Changes saved",

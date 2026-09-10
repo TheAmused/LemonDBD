@@ -152,6 +152,7 @@ export default {
   highRes3dModelView: "Widok Modelu 3D Wysokiej Rozdzielczości",
   interactive3dMeshEngineWip: "Interaktywny Silnik Siatek 3D (W Toku)",
   configRosterDesc: "Klikaj awatary postaci, aby przełączać je w puli Losownika Umiejętności.",
+  noCharactersFound: "Nie znaleziono postaci",
   hubNoMatchingCharacters: "Brak postaci pasujących do wybranych filtrów lub wyszukiwania.",
   togglePerkOwnershipHelp: "Kliknij umiejętność, aby przełączyć stan posiadania.",
   changesSaved: "Zmiany zapisane",

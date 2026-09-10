@@ -97,10 +97,8 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
                 pass
             return
 
-        from app.seeds.smash_roster_seeder import seed_smash_rosters
-        from app.seeds.user_seeder import seed_default_users
+        from app.seeds.static_db_seeder import seed_from_static_json
         from app.services.db_service import DatabaseService
-        from app.services.scraper_service import ScraperService
 
         is_pg = False
         try:
@@ -122,16 +120,12 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
                 if acquired:
                     try:
                         DatabaseService().init_db()
-                        seed_default_users()
-                        ScraperService().seed_canonical_characters()
-                        seed_smash_rosters()
+                        seed_from_static_json()
                     finally:
                         conn.execute(text("SELECT pg_advisory_unlock(8882026);"))
         else:
             DatabaseService().init_db()
-            seed_default_users()
-            ScraperService().seed_canonical_characters()
-            seed_smash_rosters()
+            seed_from_static_json()
 
     with flask_app.app_context():
         try:

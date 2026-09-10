@@ -19,16 +19,16 @@ logger = logging.getLogger(__name__)
 
 
 def seed_canonical_characters_initial(wikigg_driver: WikiGGScraperDriver) -> None:
-    """Startup check that seeds initial game data directly into PostgreSQL if characters table is empty."""
+    """Startup check that seeds initial game data from static JSON if characters table is empty.
+    Wiki.gg scraper is disabled."""
     try:
         existing = db.session.scalars(select(Character)).first()
         if existing:
             return
 
-        logger.info("Initializing full PostgreSQL database and downloading assets from wiki.gg...")
-        from app.services.scraper_service import ScraperService
-        scraper = ScraperService()
-        scraper.run_sync_pipeline(download_assets=True)
+        logger.info("[seeder] Characters table empty. Seeding from offline static JSON...")
+        from app.seeds.static_db_seeder import seed_from_static_json
+        seed_from_static_json()
     except Exception as e:
         logger.warning(f"Could not auto-seed characters on startup: {e}")
 

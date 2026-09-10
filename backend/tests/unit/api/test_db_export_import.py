@@ -713,3 +713,60 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             assert reloaded_session.phase == "picks"
             assert "Sprint Burst" in reloaded_session.banned_perks
 
+    def test_import_database_partial_perks_update_descriptions_only(self, export_import_app):
+        with export_import_app.app_context():
+            # Setup: ensure 2 existing perks with baseline data
+            p1 = db.session.scalar(select(Perk).where(Perk.name == "Brutal Strength"))
+            p1.description = "Original Brutal Strength Description"
+            p1.category = "Killer"
+
+            p2 = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
+            if not p2:
+                p2 = Perk(name="Sprint Burst", category="Survivor", description="Original Sprint Burst Description")
+                db.session.add(p2)
+            else:
+                p2.description = "Original Sprint Burst Description"
+
+            # Baseline 3rd perk that shouldn't be touched
+            p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))
+            if not p3:
+                p3 = Perk(name="Dead Hard", category="Survivor", description="Original Dead Hard Description")
+                db.session.add(p3)
+
+            db.session.commit()
+
+            # User edits ONLY the 2 perks with updated descriptions in a partial .json
+            partial_payload = {
+                "perks": [
+                    {
+                        "name": "Brutal Strength",
+                        "description": "Custom updated description for Brutal Strength."
+                    },
+                    {
+                        "name": "Sprint Burst",
+                        "description": "Custom updated description for Sprint Burst."
+                    }
+                ]
+            }
+
+            # Import in merge mode (default)
+            summary = DatabaseExportImportService.import_database(partial_payload, mode="merge", targets=["perks"])
+
+            assert summary["status"] == "success"
+            assert summary["summary"]["perks"]["updated"] == 2
+            assert summary["summary"]["perks"]["created"] == 0
+
+            # Verify the 2 perks have the new descriptions
+            reloaded_p1 = db.session.scalar(select(Perk).where(Perk.name == "Brutal Strength"))
+            assert reloaded_p1.description == "Custom updated description for Brutal Strength."
+            assert reloaded_p1.category == "Killer"  # Category was preserved untouched!
+
+            reloaded_p2 = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
+            assert reloaded_p2.description == "Custom updated description for Sprint Burst."
+            assert reloaded_p2.category == "Survivor"  # Preserved untouched!
+
+            # Verify untouched perks in the database are intact
+            reloaded_p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))
+            assert reloaded_p3.description == "Original Dead Hard Description"
+
+

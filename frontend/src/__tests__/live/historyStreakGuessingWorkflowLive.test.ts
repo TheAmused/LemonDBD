@@ -17,6 +17,17 @@ test("Live Frontend Workflow: History Streak Guessing Game", async () => {
     "Content-Type": "application/json",
   };
 
-  const runRes = await fetch(`${API_BASE}/api/v1/history-streak/run?mode=medium`, { headers });
+  let runRes = await fetch(`${API_BASE}/api/v1/history-streak/run?mode=medium`, { headers });
+  if (runRes.status !== 200) {
+    // Retry briefly if concurrent killswitch test temporarily disabled the mode
+    for (let attempt = 0; attempt < 8 && runRes.status !== 200; attempt++) {
+      await new Promise((r) => setTimeout(r, 400));
+      runRes = await fetch(`${API_BASE}/api/v1/history-streak/run?mode=medium`, { headers });
+    }
+  }
+  if (runRes.status !== 200) {
+    const errText = await runRes.text();
+    assert.fail(`History streak returned status ${runRes.status}: ${errText}`);
+  }
   assert.strictEqual(runRes.status, 200);
 });

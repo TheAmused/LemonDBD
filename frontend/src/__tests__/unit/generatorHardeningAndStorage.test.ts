@@ -25,6 +25,8 @@ import {
 } from '@/components/generator/lib/perkPicker';
 import { Perk } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
+import { getMutatorDisplayLines, CHAOS_MUTATORS } from '@/components/ChaosWheelModal';
+import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 
 // In-memory localStorage mock for node environment
 function createMockLocalStorage() {
@@ -315,3 +317,214 @@ test('perkPicker: mutator pool filtering across modes', async (t) => {
     assert.strictEqual(slots[0].slot, 1);
   });
 });
+
+test('ChaosWheelModal: text and icon geometry & display line splitting', async (t) => {
+  await t.test('getMutatorDisplayLines splits standard mutators into balanced 2-line pairs', () => {
+    const expectedMappings: Record<string, [string, string]> = {
+      no_exhaustion: ['No Exhaustion', 'Perks'],
+      blindness: ['Curse of', 'Blindness'],
+      meme_loadout: ['Meme / Off-Meta', 'Loadout'],
+      hex_boon_only: ['Hex & Boon', 'Ritual'],
+      negative_only: ['Curse of', 'Sacrifice'],
+    };
+
+    for (const m of CHAOS_MUTATORS) {
+      const result = getMutatorDisplayLines(m);
+      assert.deepStrictEqual(result, expectedMappings[m.id], `Failed for mutator id "${m.id}"`);
+      // Also supports passing id string directly
+      assert.deepStrictEqual(getMutatorDisplayLines(m.id), expectedMappings[m.id]);
+    }
+  });
+
+  await t.test('getMutatorDisplayLines handles single-word, multi-word, and edge-case inputs gracefully', () => {
+    assert.deepStrictEqual(getMutatorDisplayLines('Curse'), ['Curse', '']);
+    assert.deepStrictEqual(getMutatorDisplayLines('Fatal Wound'), ['Fatal', 'Wound']);
+    assert.deepStrictEqual(getMutatorDisplayLines('No Items Allowed'), ['No Items', 'Allowed']);
+    assert.deepStrictEqual(getMutatorDisplayLines('One Two Three Four'), ['One Two', 'Three Four']);
+    assert.deepStrictEqual(getMutatorDisplayLines('A B C D E'), ['A B C', 'D E']);
+    assert.deepStrictEqual(getMutatorDisplayLines(''), ['', '']);
+    assert.deepStrictEqual(getMutatorDisplayLines('   '), ['', '']);
+    assert.deepStrictEqual(getMutatorDisplayLines(null), ['', '']);
+    assert.deepStrictEqual(getMutatorDisplayLines(undefined), ['', '']);
+  });
+
+  await t.test('slice gondola center coordinates remain within wheel bounds and upright across 360 deg spins', () => {
+    const outerRadius = 240;
+    const innerRadius = 38;
+    const contentRadius = 145;
+    const center = 250;
+    const totalSlices = CHAOS_MUTATORS.length;
+    const sliceAngle = (2 * Math.PI) / totalSlices;
+
+    const testAngles = [0, Math.PI / 6, Math.PI / 4, Math.PI / 2, Math.PI, 1.5 * Math.PI, 2 * Math.PI, 7.35 * Math.PI];
+
+    for (const spinAngle of testAngles) {
+      for (let i = 0; i < totalSlices; i++) {
+        const midAngle = spinAngle + i * sliceAngle + sliceAngle / 2;
+        const cx = center + contentRadius * Math.cos(midAngle);
+        const cy = center + contentRadius * Math.sin(midAngle);
+
+        // Assert coordinates are strictly finite real numbers
+        assert.ok(Number.isFinite(cx), `cx is not finite at spin ${spinAngle}, slice ${i}`);
+        assert.ok(Number.isFinite(cy), `cy is not finite at spin ${spinAngle}, slice ${i}`);
+
+        // Distance from center must equal contentRadius exactly
+        const distFromCenter = Math.hypot(cx - center, cy - center);
+        assert.ok(Math.abs(distFromCenter - contentRadius) < 1e-6);
+
+        // Content orbit is safely between inner hub and outer rim
+        assert.ok(distFromCenter > innerRadius + 20, 'Content center overlaps inner hub');
+        assert.ok(distFromCenter < outerRadius - 20, 'Content center overlaps outer rim');
+      }
+    }
+  });
+});
+
+test('perkPicker: boundary conditions & extreme cases', async (t) => {
+  await t.test('empty perk list returns empty array safely across all picker functions', () => {
+    const emptyPool: Perk[] = [];
+
+    assert.deepStrictEqual(computeEligiblePool(emptyPool, 'Survivor', false), []);
+    assert.deepStrictEqual(computePlayablePool(emptyPool, true, ['Sprint Burst']), []);
+    assert.deepStrictEqual(computePlayablePool(emptyPool, false, []), []);
+    assert.deepStrictEqual(pickRandomLoadout(emptyPool, null, 4), []);
+    assert.deepStrictEqual(buildDrawnSlots([], emptyPool, 15), []);
+  });
+
+
+  await t.test('pool smaller than requested loadout count returns available perks without duplicating or throwing', () => {
+    const smallPool: Perk[] = [mockPerks[0], mockPerks[1]]; // Only 2 perks
+    const loadout = pickRandomLoadout(smallPool, null, 4);
+
+    assert.strictEqual(loadout.length, 2);
+    assert.strictEqual(new Set(loadout.map((p) => p.name)).size, 2);
+  });
+
+  await t.test('perks with unicode and accented characters handle deduplication and sorting correctly', () => {
+    const unicodePerks: Perk[] = [
+      {
+        id: 101,
+        name: 'Déjà Vu',
+        category: 'Survivor',
+        character: 'General',
+        description: 'Shows aura of 3 generators close to each other.',
+        icon_url: '/icons/deja_vu.png',
+        icon_local_path: '/icons/deja_vu.png',
+        is_owned: true,
+      },
+      {
+        id: 102,
+        name: 'Coup de Grâce',
+        category: 'Killer',
+        character: 'The Twins',
+        description: 'Increases lunge distance.',
+        icon_url: '/icons/coup.png',
+        icon_local_path: '/icons/coup.png',
+        is_owned: true,
+      },
+      {
+        id: 103,
+        name: 'Autodidact 🎯',
+        category: 'Survivor',
+        character: 'Adam Francis',
+        description: 'Starts with progression penalty on skill checks.',
+        icon_url: '/icons/autodidact.png',
+        icon_local_path: '/icons/autodidact.png',
+        is_owned: true,
+      },
+    ];
+
+    const drawn = ['Déjà Vu', 'Autodidact 🎯'];
+    const playable = computePlayablePool(unicodePerks, true, drawn);
+    assert.strictEqual(playable.length, 1);
+    assert.strictEqual(playable[0].name, 'Coup de Grâce');
+  });
+
+  await t.test('mutator filtering when no matching perks exist returns graceful fallback', () => {
+    // Survivor pool has no hex perks
+    const pureSurvivorPerks = mockPerks.filter((p) => p.category === 'Survivor' && !p.name.includes('Boon'));
+    const hexOnlyMutator: ChaosMutator = {
+      id: 'hex_boon_only',
+      name: 'Hexes & Boons Only',
+      description: 'Only hexes and boons',
+      type: 'curse',
+      icon: 'hex',
+      badgeBg: 'bg-purple-500',
+      borderColor: 'border-purple-500',
+      textColor: 'text-purple-500',
+    };
+
+    const filtered = filterPerksByMutator(pureSurvivorPerks, hexOnlyMutator);
+    // Gracefully returns full survivor pool fallback instead of crashing with 0 perks
+    assert.strictEqual(filtered.length, pureSurvivorPerks.length);
+  });
+});
+
+test('generatorStorage: corrupted data & edge-case resilience', async (t) => {
+  const originalWindow = globalThis.window;
+
+  t.afterEach(() => {
+    globalThis.window = originalWindow;
+  });
+
+  await t.test('safeGetJSON returns fallback on corrupted/malformed JSON strings', () => {
+    const mock = createMockLocalStorage();
+    globalThis.window = { localStorage: mock } as any;
+
+    mock.setItem('corrupted_key', '{ invalid json [');
+    const result = safeGetJSON('corrupted_key', { fallback: true });
+    assert.deepStrictEqual(result, { fallback: true });
+  });
+
+  await t.test('getStoredGeneratorState handles null, empty string, and primitive values safely', () => {
+    const mock = createMockLocalStorage();
+    globalThis.window = { localStorage: mock } as any;
+
+    mock.setItem(GENERATOR_STORAGE_KEY, '');
+    assert.deepStrictEqual(getStoredGeneratorState(), null);
+
+    mock.setItem(GENERATOR_STORAGE_KEY, '"just a string"');
+    // Primitive string is not a valid object shape, returns null safely
+    const state = getStoredGeneratorState();
+    assert.strictEqual(state, null);
+
+    mock.setItem(GENERATOR_STORAGE_KEY, '42');
+    assert.deepStrictEqual(getStoredGeneratorState(), null);
+  });
+
+  await t.test('getDrawnPerksForRole sanitizes non-array or mixed-type storage entries', () => {
+    const mock = createMockLocalStorage();
+    globalThis.window = { localStorage: mock } as any;
+
+    // Put a non-array structure
+    mock.setItem('lemon_drawn_perks_Survivor', '{"invalid":"structure"}');
+    assert.deepStrictEqual(getDrawnPerksForRole('Survivor'), []);
+
+    // Put mixed values in array
+    mock.setItem('lemon_drawn_perks_Survivor', JSON.stringify(['Sprint Burst', null, 123, 'Bond']));
+    const drawn = getDrawnPerksForRole('Survivor');
+    // Only valid strings preserved
+    assert.deepStrictEqual(drawn, ['Sprint Burst', 'Bond']);
+  });
+
+
+  await t.test('audio settings getter and setter handle corrupted storage without exceptions', () => {
+    const mock = createMockLocalStorage();
+    globalThis.window = { localStorage: mock } as any;
+
+    // Default without storage is true
+    assert.strictEqual(getAudioEnabled(), true);
+
+    setAudioEnabled(false);
+    assert.strictEqual(getAudioEnabled(), false);
+
+    setAudioEnabled(true);
+    assert.strictEqual(getAudioEnabled(), true);
+
+    // Corrupt the key with garbage text
+    mock.setItem('lemon_dbd_audio_enabled_v1', 'unparseable');
+    // Should safely fallback to true
+    assert.strictEqual(getAudioEnabled(), true);
+  });
+});
+

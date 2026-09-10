@@ -174,15 +174,14 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.strokeStyle = '#a3232f';
         ctx.stroke();
 
-        ctx.save();
-        ctx.translate(centerX, centerY);
         const midAngle = angle + sliceAngle / 2;
-        ctx.rotate(midAngle);
-
         const badgeRadiusPos = radius - 75;
+        const bx = centerX + Math.cos(midAngle) * badgeRadiusPos;
+        const by = centerY + Math.sin(midAngle) * badgeRadiusPos;
 
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(badgeRadiusPos, 0, 28, 0, Math.PI * 2);
+        ctx.arc(bx, by, 28, 0, Math.PI * 2);
         ctx.fillStyle = '#0f172a';
         ctx.fill();
         ctx.lineWidth = 3.5;
@@ -193,8 +192,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.fillStyle = '#f59e0b';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`P${i + 1}`, badgeRadiusPos, 1);
-
+        ctx.fillText(`P${i + 1}`, bx, by + 1);
         ctx.restore();
       }
 

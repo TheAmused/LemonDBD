@@ -22,6 +22,7 @@ import { CharactersGridSkeleton } from '@/components/character-detail/Characters
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson, invalidate } from '@/services/dataCache';
 
+import { EmptyState } from '@/components/EmptyState';
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
@@ -370,19 +371,28 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           <CharactersGridSkeleton dict={dict} />
         </div>
       ) : filteredCharacters.length === 0 ? (
-        <div className="my-12 rounded-3xl border border-dashed border-border-color p-12 text-center bg-bg-surface">
-          <User className="mx-auto h-12 w-12 text-text-muted mb-3" />
-          {dict?.empty?.title && (
-            <h2 className="text-lg font-bold text-text-primary">
-              {dict.empty.title}
-            </h2>
-          )}
-          {dict?.characterDetail?.hubNoMatchingCharacters && (
-            <p className="mt-1 text-xs text-text-secondary">
-              {dict.characterDetail.hubNoMatchingCharacters}
-            </p>
-          )}
-        </div>
+        <EmptyState
+          variant="dashed"
+          icon={User}
+          className="my-8 sm:my-12 rounded-3xl border border-dashed border-border-color p-8 sm:p-12 text-center bg-bg-surface backdrop-blur-sm shadow-sm"
+          iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
+          headingClassName="text-lg font-bold text-text-primary"
+          subtitleClassName="mt-1 text-xs text-text-secondary max-w-sm mx-auto"
+          title={dict?.characterDetail?.noCharactersFound || dict?.empty?.charactersTitle || 'No Characters Found'}
+          subtitle={
+            dict?.characterDetail?.hubNoMatchingCharacters ||
+            dict?.empty?.charactersSubtitle ||
+            'No characters match your current filter or search query.'
+          }
+          action={
+            searchQuery
+              ? {
+                  label: dict?.app?.resetFilters || dict?.filters?.resetAllFilters || 'Reset Filters',
+                  onClick: () => setSearchQuery(''),
+                }
+              : undefined
+          }
+        />
       ) : (
         <section
           aria-label={dict?.characterDetail?.characterOverview}

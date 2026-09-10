@@ -121,6 +121,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         flipped: false,
       }))
     );
+    onRollComplete(slots);
   };
 
   const handleFlip = (idx: number) => {

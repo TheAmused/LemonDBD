@@ -24,9 +24,9 @@ interface EmptyStateProps {
 
 const VARIANT_WRAPPER_CLASSNAME: Record<'solid' | 'dashed', string> = {
   solid:
-    'my-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color',
+    'mt-4 sm:mt-6 mb-auto rounded-3xl bg-bg-surface p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm w-full border border-border-color',
   dashed:
-    'my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm shadow-sm',
+    'my-8 sm:my-12 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-8 sm:p-12 text-center backdrop-blur-sm shadow-sm',
 };
 
 const DEFAULT_ACTION_CLASSNAME =

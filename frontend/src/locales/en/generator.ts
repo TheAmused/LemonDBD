@@ -56,6 +56,8 @@ export default {
   emptyCoordinate: "[-/-]",
   spinChaosWheel: 'Spin Chaos Wheel!',
   spinningCurses: 'Spinning Chaos Curses...',
+  clearMutator: 'Clear',
+  clearMutatorTooltip: 'Remove active curse',
   modeSlot: "Slot Machine",
   modeTarot: "Tarot Deck",
   modeCrate: "Loot Crate",

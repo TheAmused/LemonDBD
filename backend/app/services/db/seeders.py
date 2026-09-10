@@ -1,13 +1,13 @@
 # backend/app/services/db/seeders.py
 import logging
 from sqlalchemy import select, text
-from app.models import GeneratorSetting, GuesserStat, PerkRule
+from app.models import GuesserStat, PerkRule
 
 logger = logging.getLogger(__name__)
 
 # Tables seeded below with an explicit id=1 -- Postgres never advances a
 # sequence for an explicit-id insert, so it must be synced manually.
-_EXPLICIT_ID_SEEDED_TABLES = ["perk_rules", "generator_settings"]
+_EXPLICIT_ID_SEEDED_TABLES = ["perk_rules"]
 
 
 def _sync_id_sequences(db) -> None:
@@ -42,17 +42,6 @@ def seed_default_configs(db) -> None:
                     slot2_type="character_own",
                     slot3_type="general_role",
                     slot4_type="any_role",
-                )
-            )
-
-        gen_setting = db.session.get(GeneratorSetting, 1)
-        if not gen_setting:
-            db.session.add(
-                GeneratorSetting(
-                    id=1,
-                    role="Survivor",
-                    gen_mode="instant",
-                    no_repeat_perks=True,
                 )
             )
 

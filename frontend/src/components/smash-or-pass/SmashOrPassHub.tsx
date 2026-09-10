@@ -50,6 +50,7 @@ import {
 } from '@/services/smashApi';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { decodeArchetypeShare, type SharedArchetypePayload } from '@/utils/smashPersona';
 
 // Dynamic client-side imports for heavy visual layers and interactive modals
 const SmashAnimations = dynamic(
@@ -173,7 +174,26 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const [rosterSwitchEffect, setRosterSwitchEffect] = useState<string | null>(null);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
+  const [sharedPayload, setSharedPayload] = useState<SharedArchetypePayload | null>(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
+
+  // Decode Shared Archetype from URL query parameters if present
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const encodedArchetype = searchParams.get('shared_archetype');
+      if (encodedArchetype) {
+        const decoded = decodeArchetypeShare(encodedArchetype);
+        if (decoded) {
+          setSharedPayload(decoded);
+          setIsPersonaOpen(true);
+        }
+      }
+    } catch (e) {
+      console.debug('Failed to decode shared_archetype query parameter:', e);
+    }
+  }, []);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
   const [selectedStatCharacter, setSelectedStatCharacter] = useState<EntityItem | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(SmashSounds.getIsMuted());
@@ -1294,8 +1314,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
       <RomancePersonaModal
         isOpen={isPersonaOpen}
-        onClose={() => setIsPersonaOpen(false)}
+        onClose={() => {
+          setIsPersonaOpen(false);
+          setSharedPayload(null);
+        }}
         votes={voteHistory as any}
+        sharedPayload={sharedPayload}
         onResetAll={() => setIsResetConfirmOpen(true)}
         locale={locale}
         dict={dict}

@@ -3,4 +3,6 @@ export default {
   title: "No se Encontraron Habilidades",
   subtitle: "Intenta ajustar tus términos de búsqueda o combinaciones de filtros.",
   loading: "Cargando Habilidades...",
+  charactersTitle: "No se encontraron personajes",
+  charactersSubtitle: "Intenta ajustar tus términos de búsqueda o combinaciones de filtros.",
 } as const;

@@ -174,15 +174,14 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.strokeStyle = '#a3232f';
         ctx.stroke();
 
-        ctx.save();
-        ctx.translate(centerX, centerY);
         const midAngle = angle + sliceAngle / 2;
-        ctx.rotate(midAngle);
-
         const badgeRadiusPos = radius - 75;
+        const bx = centerX + Math.cos(midAngle) * badgeRadiusPos;
+        const by = centerY + Math.sin(midAngle) * badgeRadiusPos;
 
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(badgeRadiusPos, 0, 28, 0, Math.PI * 2);
+        ctx.arc(bx, by, 28, 0, Math.PI * 2);
         ctx.fillStyle = '#0f172a';
         ctx.fill();
         ctx.lineWidth = 3.5;
@@ -193,8 +192,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.fillStyle = '#f59e0b';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(`P${i + 1}`, badgeRadiusPos, 1);
-
+        ctx.fillText(`P${i + 1}`, bx, by + 1);
         ctx.restore();
       }
 
@@ -673,7 +671,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
             <div
-              className={`w-full max-w-[62vw] min-w-[200px] max-h-[36dvh] sm:max-w-[285px] sm:max-h-[38dvh] md:max-w-[320px] lg:max-w-[340px] xl:max-w-[390px] 2xl:max-w-[500px] min-[1800px]:max-w-[580px] min-[1800px]:max-h-[48dvh] aspect-square transition-all duration-500 ease-out transform ${
+              className={`w-full max-w-[62vw] min-w-[200px] max-h-[36dvh] sm:max-w-[285px] sm:max-h-[38dvh] md:max-w-[320px] lg:max-w-[350px] xl:max-w-[430px] 2xl:max-w-[530px] min-[1800px]:max-w-[620px] min-[1800px]:max-h-[50dvh] aspect-square transition-all duration-500 ease-out transform ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
               }`}
             >

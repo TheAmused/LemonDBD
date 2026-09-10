@@ -1,7 +1,7 @@
 // frontend/src/components/generator/GeneratorPage.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import {
@@ -9,20 +9,22 @@ import {
   DrawnSlot,
   RoleCategory,
   GeneratorMode,
-  GeneratorStoredState,
 } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
-import {
-  fetchGeneratorConfig,
-  updateGeneratorConfig,
-  fetchDrawnPerks,
-  addDrawnPerks,
-  resetDrawnPerks,
-} from '@/services/generatorApi';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
+import {
+  GeneratorStoredState,
+  getStoredGeneratorState,
+  saveStoredGeneratorState,
+  getDrawnPerksForRole,
+  saveDrawnPerksForRole,
+  clearDrawnPerksForRole,
+  getActiveMutatorForRole,
+  saveActiveMutatorForRole,
+} from './lib/generatorStorage';
 import { Toolbar } from './Toolbar';
 import { ModeSwitcher } from './ModeSwitcher';
 import { RoleToggle } from './shared/RoleToggle';
@@ -44,7 +46,6 @@ interface GeneratorPageProps {
   dict?: Dictionary;
 }
 
-const STORAGE_KEY = 'lemon_dbd_generator_v8';
 const PERKS_PER_PAGE = 15;
 const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
 const FULL_LOADOUT_SIZE = 4;
@@ -79,58 +80,40 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   useEffect(() => {
     setAudioEnabledState(getAudioEnabled());
 
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved) as Partial<GeneratorStoredState>;
-        if (parsed.role) setRole(parsed.role);
-        if (parsed.genMode) setGenMode(parsed.genMode);
-        if (typeof parsed.noRepeatPerks === 'boolean') setNoRepeatPerks(parsed.noRepeatPerks);
-        if (typeof parsed.spinDurationSec === 'number') setSpinDurationSec(parsed.spinDurationSec);
-        if (Array.isArray(parsed.loadout)) setLoadout(parsed.loadout);
-        if (typeof parsed.activeSlotIdx === 'number') setActiveSlotIdx(parsed.activeSlotIdx);
-        if (typeof parsed.blindMode === 'boolean') setBlindMode(parsed.blindMode);
-      }
-    } catch (e) {
-      console.error('Failed loading generator state from localStorage:', e);
+    const saved = getStoredGeneratorState();
+    if (saved) {
+      if (saved.role) setRole(saved.role);
+      if (saved.genMode) setGenMode(saved.genMode);
+      if (typeof saved.noRepeatPerks === 'boolean') setNoRepeatPerks(saved.noRepeatPerks);
+      if (typeof saved.spinDurationSec === 'number') setSpinDurationSec(saved.spinDurationSec);
+      if (Array.isArray(saved.loadout)) setLoadout(saved.loadout);
+      if (typeof saved.activeSlotIdx === 'number') setActiveSlotIdx(saved.activeSlotIdx);
+      if (typeof saved.blindMode === 'boolean') setBlindMode(saved.blindMode);
+      if (saved.activeMutator) setActiveMutator(saved.activeMutator);
     }
   }, []);
 
   useEffect(() => {
-    fetchGeneratorConfig()
-      .then((config) => {
-        if (config.role === 'Survivor' || config.role === 'Killer') setRole(config.role);
-        if (config.gen_mode && KNOWN_MODES.includes(config.gen_mode as GeneratorMode)) {
-          setGenMode(config.gen_mode as GeneratorMode);
-        }
-        if (typeof config.no_repeat_perks !== 'undefined') setNoRepeatPerks(Boolean(config.no_repeat_perks));
-        if (config.spin_duration_sec) setSpinDurationSec(config.spin_duration_sec);
-      })
-      .catch((e) => console.error('Failed fetching generator config from backend API:', e));
-  }, []);
+    // 1. Restore local drawn perks immediately so all modes and tabs share state instantly
+    setDrawnPerks(getDrawnPerksForRole(role));
 
-  useEffect(() => {
-    fetchDrawnPerks(role)
-      .then(setDrawnPerks)
-      .catch((e) => console.error('Failed fetching drawn perks from backend API:', e));
+    // 2. Restore active mutator (curse) for this role so it persists until reset
+    setActiveMutator(getActiveMutatorForRole(role));
   }, [role]);
 
   useEffect(() => {
-    try {
-      const payload: GeneratorStoredState = {
-        role,
-        genMode,
-        noRepeatPerks,
-        spinDurationSec,
-        loadout,
-        activeSlotIdx,
-        blindMode,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    } catch (e) {
-      console.error('Failed saving generator state to localStorage:', e);
-    }
-  }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx, blindMode]);
+    const payload: GeneratorStoredState = {
+      role,
+      genMode,
+      noRepeatPerks,
+      spinDurationSec,
+      loadout,
+      activeSlotIdx,
+      blindMode,
+      activeMutator,
+    };
+    saveStoredGeneratorState(payload);
+  }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx, blindMode, activeMutator]);
 
   const baseEligibleRolePerks = useMemo(
     () => computeEligiblePool(allPerks, role, Boolean(user)),
@@ -165,75 +148,57 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     prevPlayableCountRef.current = totalPlayableCount;
   }, [totalPlayableCount, noRepeatPerks, baseEligibleRolePerks.length]);
 
-  const handleRoleChange = async (newRole: RoleCategory) => {
+  const handleRoleChange = useCallback((newRole: RoleCategory) => {
     setRole(newRole);
     setLoadout([null, null, null, null]);
     setRevealedSlots([false, false, false, false]);
-    try {
-      await updateGeneratorConfig({ role: newRole });
-    } catch (e) {
-      console.error('Failed updating role in backend:', e);
-    }
-  };
+  }, []);
 
-  const handleGenModeChange = async (newMode: GeneratorMode) => {
+  const handleGenModeChange = useCallback((newMode: GeneratorMode) => {
     setGenMode(newMode);
-    try {
-      await updateGeneratorConfig({ gen_mode: newMode });
-    } catch (e) {
-      console.error('Failed updating gen_mode in backend:', e);
-    }
-  };
+  }, []);
 
-  const handleToggleNoRepeat = async () => {
-    const nextVal = !noRepeatPerks;
-    setNoRepeatPerks(nextVal);
-    try {
-      await updateGeneratorConfig({ no_repeat_perks: nextVal ? 1 : 0 });
-    } catch (e) {
-      console.error('Failed updating no_repeat_perks in backend:', e);
-    }
-  };
+  const handleToggleNoRepeat = useCallback(() => {
+    setNoRepeatPerks((prev) => !prev);
+  }, []);
 
-  const handleToggleAudio = () => {
-    const next = !audioEnabled;
-    setAudioEnabledState(next);
-    setAudioEnabled(next);
-  };
+  const handleToggleAudio = useCallback(() => {
+    setAudioEnabledState((prev) => {
+      const next = !prev;
+      setAudioEnabled(next);
+      return next;
+    });
+  }, []);
 
-  const handleToggleBlindMode = () => {
+  const handleToggleBlindMode = useCallback(() => {
     setBlindMode((prev) => !prev);
-  };
+  }, []);
 
-  const handleResetAllLoadoutAndWheels = async () => {
+  const handleSelectMutator = useCallback((m: ChaosMutator | null) => {
+    setActiveMutator(m);
+    saveActiveMutatorForRole(role, m);
+  }, [role]);
+
+  const handleResetAllLoadoutAndWheels = useCallback(() => {
     setLoadout([null, null, null, null]);
     setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
     setActiveMutator(null);
-    try {
-      const updatedDrawn = await resetDrawnPerks(role);
-      setDrawnPerks(updatedDrawn);
-    } catch (err) {
-      console.error('Failed resetting drawn perks via backend API:', err);
-      setDrawnPerks([]);
-    }
-  };
+    saveActiveMutatorForRole(role, null);
+    setDrawnPerks([]);
+    clearDrawnPerksForRole(role);
+  }, [role]);
 
   /** Just the drawn-perk memory, from the low-pool warning modal's Reset
    * button -- keeps the current loadout/mutator intact rather than wiping
    * the whole board, since all the player actually needs is the pool back. */
-  const handleResetDrawnPerksOnly = async () => {
-    try {
-      const updatedDrawn = await resetDrawnPerks(role);
-      setDrawnPerks(updatedDrawn);
-    } catch (err) {
-      console.error('Failed resetting drawn perks via backend API:', err);
-      setDrawnPerks([]);
-    }
+  const handleResetDrawnPerksOnly = useCallback(() => {
+    setDrawnPerks([]);
+    clearDrawnPerksForRole(role);
     setShowLowPoolWarning(false);
-  };
+  }, [role]);
 
-  const handleWheelWinSlot = async (wonData: DrawnSlot) => {
+  const handleWheelWinSlot = useCallback((wonData: DrawnSlot) => {
     setLoadout((prev) => {
       const next = [...prev];
       next[activeSlotIdx] = wonData;
@@ -241,39 +206,42 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     });
     setActiveSlotIdx((prev) => (prev + 1) % 4);
 
-    if (wonData.perk) {
-      try {
-        const updatedDrawn = await addDrawnPerks(role, [wonData.perk.name]);
-        setDrawnPerks(updatedDrawn);
-      } catch (err) {
-        console.error('Failed saving drawn perk from wheel to backend API:', err);
-      }
+    // ONLY add to drawnPerks if no-repeat mode is actually ON!
+    if (noRepeatPerks && wonData.perk) {
+      const perkName = wonData.perk.name;
+      setDrawnPerks((prev) => {
+        const next = Array.from(new Set([...prev, perkName]));
+        saveDrawnPerksForRole(role, next);
+        return next;
+      });
     }
-  };
+  }, [activeSlotIdx, noRepeatPerks, role]);
 
-  const handleBatchRollComplete = async (slots: DrawnSlot[]) => {
+  const handleBatchRollComplete = useCallback((slots: DrawnSlot[]) => {
     setLoadout([slots[0] || null, slots[1] || null, slots[2] || null, slots[3] || null]);
     setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
 
-    const names = slots.map((s) => s.perk?.name).filter((n): n is string => Boolean(n));
-    if (names.length > 0) {
-      try {
-        const updatedDrawn = await addDrawnPerks(role, names);
-        setDrawnPerks(updatedDrawn);
-      } catch (err) {
-        console.error('Failed saving drawn perks to backend API:', err);
+    // ONLY add to drawnPerks if no-repeat mode is actually ON!
+    if (noRepeatPerks) {
+      const names = slots.map((s) => s.perk?.name).filter((n): n is string => Boolean(n));
+      if (names.length > 0) {
+        setDrawnPerks((prev) => {
+          const next = Array.from(new Set([...prev, ...names]));
+          saveDrawnPerksForRole(role, next);
+          return next;
+        });
       }
     }
-  };
+  }, [noRepeatPerks, role]);
 
-  const handleRevealSlot = (idx: number) => {
+  const handleRevealSlot = useCallback((idx: number) => {
     setRevealedSlots((prev) => {
       const next = [...prev];
       next[idx] = true;
       return next;
     });
-  };
+  }, []);
 
   const topLeft = <ModeSwitcher mode={genMode} onChange={handleGenModeChange} dict={dict} />;
 
@@ -405,9 +373,10 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         isOpen={isChaosModalOpen}
         onClose={() => setIsChaosModalOpen(false)}
         onSelectMutator={(m) => {
-          setActiveMutator(m);
+          handleSelectMutator(m);
           setIsChaosModalOpen(false);
         }}
+        onClearMutator={() => handleSelectMutator(null)}
         activeMutator={activeMutator}
         dict={dict}
       />

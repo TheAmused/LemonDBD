@@ -56,6 +56,8 @@ export default {
   emptyCoordinate: "[-/-]",
   spinChaosWheel: 'Zakręć Kołem Chaosu!',
   spinningCurses: 'Losowanie Klątw Chaosu...',
+  clearMutator: 'Usuń',
+  clearMutatorTooltip: 'Usuń aktywną klątwę',
   modeSlot: "Automat do Gier",
   modeTarot: "Talia Tarota",
   modeCrate: "Skrzynia Łupów",

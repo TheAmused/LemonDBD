@@ -102,8 +102,13 @@ export function saveActiveMutatorForRole(role: RoleCategory, mutator: ChaosMutat
 }
 
 export function getStoredGeneratorState(): Partial<GeneratorStoredState> | null {
-  return safeGetJSON<Partial<GeneratorStoredState> | null>(GENERATOR_STORAGE_KEY, null);
+  const state = safeGetJSON<Partial<GeneratorStoredState> | null>(GENERATOR_STORAGE_KEY, null);
+  if (state && typeof state === 'object' && !Array.isArray(state)) {
+    return state;
+  }
+  return null;
 }
+
 
 export function saveStoredGeneratorState(state: GeneratorStoredState): boolean {
   return safeSetJSON(GENERATOR_STORAGE_KEY, state);

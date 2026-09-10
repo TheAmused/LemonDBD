@@ -19,8 +19,10 @@ interface ChaosWheelModalProps {
   dict?: Dictionary;
 }
 
-function getMutatorDisplayLines(m: ChaosMutator): [string, string] {
-  switch (m.id) {
+export function getMutatorDisplayLines(m: ChaosMutator | string | null | undefined): [string, string] {
+  if (!m) return ['', ''];
+  const id = typeof m === 'string' ? m : m.id;
+  switch (id) {
     case 'no_exhaustion':
       return ['No Exhaustion', 'Perks'];
     case 'blindness':
@@ -32,15 +34,18 @@ function getMutatorDisplayLines(m: ChaosMutator): [string, string] {
     case 'negative_only':
       return ['Curse of', 'Sacrifice'];
     default: {
-      const parts = m.name.split(' ');
+      const rawName = (typeof m === 'string' ? m : m.name || '').trim();
+      if (!rawName) return ['', ''];
+      const parts = rawName.split(/\s+/).filter(Boolean);
       if (parts.length > 2) {
         const mid = Math.ceil(parts.length / 2);
         return [parts.slice(0, mid).join(' '), parts.slice(mid).join(' ')];
       }
-      return [parts[0] || m.name, parts.slice(1).join(' ')];
+      return [parts[0] || rawName, parts.slice(1).join(' ')];
     }
   }
 }
+
 
 export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
   isOpen,
@@ -104,47 +109,31 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.strokeStyle = m.type === 'curse' ? '#9333ea' : '#10b981';
       ctx.stroke();
 
-      ctx.save();
-      ctx.translate(center, center);
       const midAngle = startAngle + sliceAngle / 2;
-      ctx.rotate(midAngle);
-
-      const normalizedAngle = ((midAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-      const isLeft = normalizedAngle > Math.PI / 2 && normalizedAngle < (3 * Math.PI) / 2;
-
       const [line1, line2] = getMutatorDisplayLines(m);
       const iconFontSize = Math.round(22 * scale);
-      const textFontSize = Math.round(13 * scale);
-      const iconOffset = 192 * scale;
-      const labelOffset = 120 * scale;
+      const textFontSize = Math.round(12.5 * scale);
+      const contentRadius = 145 * scale;
 
-      if (isLeft) {
-        ctx.rotate(Math.PI);
-        // Outer icon
-        ctx.font = `${iconFontSize}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(m.icon, -iconOffset, 0);
+      const cx = center + Math.cos(midAngle) * contentRadius;
+      const cy = center + Math.sin(midAngle) * contentRadius;
 
-        // Label lines centered between hub and outer icon
-        ctx.font = `bold ${textFontSize}px system-ui, -apple-system, sans-serif`;
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillText(line1, -labelOffset, -8 * scale);
-        ctx.fillText(line2, -labelOffset, 10 * scale);
-      } else {
-        // Outer icon
-        ctx.font = `${iconFontSize}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(m.icon, iconOffset, 0);
+      ctx.save();
+      // Draw icon - Always faces the user upright (no rotation)
+      ctx.font = `${iconFontSize}px "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(m.icon, cx, cy - 18 * scale);
 
-        // Label lines centered between hub and outer icon
-        ctx.font = `bold ${textFontSize}px system-ui, -apple-system, sans-serif`;
-        ctx.fillStyle = '#f8fafc';
-        ctx.fillText(line1, labelOffset, -8 * scale);
-        ctx.fillText(line2, labelOffset, 10 * scale);
+      // Draw label lines - Always faces the user upright (no rotation)
+      ctx.font = `bold ${textFontSize}px system-ui, -apple-system, sans-serif`;
+      ctx.fillStyle = '#f8fafc';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(line1, cx, cy + 4 * scale);
+      if (line2) {
+        ctx.fillText(line2, cx, cy + 18 * scale);
       }
-
       ctx.restore();
     }
 

@@ -316,7 +316,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Bottom Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
               {isSharedView ? (
-                <>
                   <button
                     type="button"
                     onClick={onClose}
@@ -325,16 +324,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                     <Gamepad2 className="h-4 w-4" />
                     <span>{playToDiscoverLabel}</span>
                   </button>
-
-                  <button
-                    type="button"
-                    onClick={handleShare}
-                    className="flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:border-pink-500 text-slate-700 dark:text-zinc-200 font-bold font-mono text-xs sm:text-sm transition-all cursor-pointer shadow-md"
-                  >
-                    {copied ? <Check className="h-4 w-4 text-emerald-500 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
-                    <span>{copied ? copiedToClipboardLabel : shareArchetypeLabel}</span>
-                  </button>
-                </>
               ) : (
                 <>
                   <button

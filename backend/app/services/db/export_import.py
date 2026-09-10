@@ -33,36 +33,49 @@ from app.services.db.serializers import (
 
 logger = logging.getLogger(__name__)
 
+TARGET_GROUPS: dict[str, list[str]] = {
+    "content": [
+        "characters",
+        "perks",
+        "items",
+        "addons",
+        "offerings",
+        "chapters",
+        "maps",
+        "realms",
+    ],
+    "users": [
+        "users",
+        "ownerships",
+        "user_showcases",
+    ],
+    "community": [
+        "community_builds",
+        "custom_perks",
+        "daily_quests",
+        "bug_reports",
+        "changelog_posts",
+        "gauntlet_runs",
+        "chaos_runs",
+        "history_runs",
+        "page_streak_runs",
+        "rosters",
+        "smash_translations",
+    ],
+    "settings": [
+        "perk_rules",
+        "draft_sessions",
+        "scraper_settings",
+        "challenge_mode_settings",
+        "admin_audit_logs",
+        "guesser_stats",
+    ],
+}
+
 SUPPORTED_EXPORT_TARGETS = [
-    "characters",
-    "perks",
-    "items",
-    "addons",
-    "offerings",
-    "chapters",
-    "maps",
-    "realms",
-    "users",
-    "ownerships",
-    "community_builds",
-    "custom_perks",
-    "daily_quests",
-    "bug_reports",
-    "guesser_stats",
-    "perk_rules",
-    "draft_sessions",
-    "scraper_settings",
-    "challenge_mode_settings",
-    "user_showcases",
-    "admin_audit_logs",
-    "changelog_posts",
-    "gauntlet_runs",
-    "chaos_runs",
-    "history_runs",
-    "page_streak_runs",
-    "rosters",
-    "smash_translations",
+    target for targets in TARGET_GROUPS.values() for target in targets
 ]
+
 
 
 def _parse_datetime(val: str | datetime | None) -> datetime | None:
@@ -347,11 +360,19 @@ class DatabaseExportImportService:
         if "smash_translations" in target_set:
             _export_entity(export_data, counts, "smash_translations", Translation, lambda t: t.to_dict(), [], static_dir, include_assets)
 
+        # Organize export into semantic groups
+        grouped_data: dict[str, dict[str, Any]] = {}
+        for group_name, entities in TARGET_GROUPS.items():
+            group_slice = {k: export_data[k] for k in entities if k in export_data}
+            if group_slice:
+                grouped_data[group_name] = group_slice
+
         return {
             "version": "1.0",
             "exported_at": datetime.now(timezone.utc).isoformat(),
             "source": "LemonDBD",
             "counts": counts,
+            "groups": grouped_data,
             "data": export_data,
         }
 
@@ -365,7 +386,17 @@ class DatabaseExportImportService:
         if not isinstance(payload, dict):
             raise ValueError("Invalid JSON payload: root must be an object.")
 
-        data: dict[str, Any] = payload.get("data", payload)
+        # Extract entities from grouped format, flat 'data' format, or root payload
+        data: dict[str, Any] = {}
+        if "groups" in payload and isinstance(payload["groups"], dict):
+            for group_dict in payload["groups"].values():
+                if isinstance(group_dict, dict):
+                    data.update(group_dict)
+        if "data" in payload and isinstance(payload["data"], dict):
+            data.update(payload["data"])
+        if not data:
+            data = payload
+
         target_keys = set(targets) if targets else set(data.keys())
         summary: dict[str, dict[str, int]] = {}
         static_dir = get_static_dir()
@@ -393,19 +424,54 @@ class DatabaseExportImportService:
                         db.session.execute(delete(model))
                 db.session.flush()
 
-            _upsert_entity(
-                data, target_keys, summary, "characters", Character, "name",
-                update_fields=[
-                    "role", "code_prefix", "portrait_url", "real_name", "short_name",
-                    "wiki_slug", "avatar_local_path", "release_number", "chapter_name",
-                    "chapter_number", "dlc_type", "is_licensed", "release_year",
-                    "release_date", "dlc_counterparts", "lore", "power_name",
-                    "power_description", "power_icon_url", "movement_speed",
-                    "terror_radius", "terror_radius_meters", "height", "translations",
-                ],
-                defaults=lambda row: {"role": row.get("role", "Survivor")},
-                asset_fields=["avatar_local_path", "power_icon_local_path"], static_dir=static_dir,
-            )
+            if "characters" in target_keys and "characters" in data:
+                c_created, c_updated = 0, 0
+                for row in data["characters"]:
+                    name = row.get("name")
+                    wiki_slug = row.get("wiki_slug")
+                    if not name and not wiki_slug:
+                        continue
+
+                    char_obj = None
+                    if name:
+                        char_obj = db.session.scalar(select(Character).where(Character.name == name))
+                    if not char_obj and wiki_slug:
+                        char_obj = db.session.scalar(select(Character).where(Character.wiki_slug == wiki_slug))
+
+                    if not char_obj:
+                        char_obj = Character(
+                            name=name or wiki_slug,
+                            role=row.get("role", "Survivor"),
+                        )
+                        db.session.add(char_obj)
+                        c_created += 1
+                    else:
+                        c_updated += 1
+
+                    if name:
+                        name_conflict = db.session.scalar(
+                            select(Character).where(Character.name == name, Character.id != char_obj.id)
+                        )
+                        if not name_conflict:
+                            char_obj.name = name
+
+                    for k in [
+                        "role", "code_prefix", "portrait_url", "real_name", "short_name",
+                        "wiki_slug", "avatar_local_path", "release_number", "chapter_name",
+                        "chapter_number", "dlc_type", "is_licensed", "release_year",
+                        "release_date", "dlc_counterparts", "lore", "power_name",
+                        "power_description", "power_icon_url", "movement_speed",
+                        "terror_radius", "terror_radius_meters", "height", "translations",
+                    ]:
+                        if k in row:
+                            setattr(char_obj, k, row[k])
+
+                    if static_dir is not None:
+                        for field in ["avatar_local_path", "power_icon_local_path"]:
+                            write_asset_base64(static_dir, row.get(field), row.get(f"{field}_data"))
+
+                db.session.flush()
+                summary["characters"] = {"created": c_created, "updated": c_updated}
 
             char_map: dict[str, int] = {}
             for c in db.session.scalars(select(Character)).all():
@@ -532,22 +598,49 @@ class DatabaseExportImportService:
                     asset_fields=["image_local_path"], static_dir=static_dir,
                 )
 
-            _upsert_entity(
-                data, target_keys, summary, "users", User, "username",
-                update_fields=["email", "password_hash", "role", "avatar_url", "is_active"],
-                defaults=lambda row: {
-                    "email": row.get("email", f"{row.get('username')}@lemondbd.com"),
-                    "password_hash": row.get("password_hash", ""),
-                    "role": row.get("role", "user"),
-                    "avatar_url": row.get("avatar_url", "default_avatar"),
-                    "is_active": row.get("is_active", True),
-                },
-                post_process=lambda user_obj, row: setattr(
-                    user_obj, "created_at", _parse_datetime(row["created_at"]) or user_obj.created_at
-                ) if row.get("created_at") else None,
-                skip_none=True,
-                asset_fields=["avatar_relative_path"], static_dir=static_dir,
-            )
+            if "users" in target_keys and "users" in data:
+                u_created, u_updated = 0, 0
+                for row in data["users"]:
+                    username = row.get("username")
+                    if not username:
+                        continue
+                    user_obj = db.session.scalar(select(User).where(User.username == username))
+                    candidate_email = row.get("email") or f"{username}@lemondbd.com"
+                    email_conflict = db.session.scalar(
+                        select(User).where(User.email == candidate_email, User.username != username)
+                    )
+
+                    if not user_obj:
+                        final_email = candidate_email
+                        if email_conflict:
+                            final_email = f"{username}_{int(datetime.now(timezone.utc).timestamp())}@lemondbd.com"
+                        user_obj = User(
+                            username=username,
+                            email=final_email,
+                            password_hash=row.get("password_hash", ""),
+                            role=row.get("role", "user"),
+                            avatar_url=row.get("avatar_url", "default_avatar"),
+                            is_active=row.get("is_active", True),
+                        )
+                        db.session.add(user_obj)
+                        u_created += 1
+                    else:
+                        if not email_conflict:
+                            user_obj.email = candidate_email
+                        for field in ["password_hash", "role", "avatar_url", "is_active"]:
+                            if field in row and row[field] is not None:
+                                setattr(user_obj, field, row[field])
+                        u_updated += 1
+
+                    if row.get("created_at"):
+                        parsed_dt = _parse_datetime(row["created_at"])
+                        if parsed_dt:
+                            user_obj.created_at = parsed_dt
+
+                    write_asset_base64(static_dir, row.get("avatar_relative_path"), row.get("avatar_relative_path_data"))
+
+                db.session.flush()
+                summary["users"] = {"created": u_created, "updated": u_updated}
 
             user_map: dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}
             perk_map: dict[str, int] = {p.name.strip().lower(): p.id for p in db.session.scalars(select(Perk)).all()}
@@ -626,21 +719,33 @@ class DatabaseExportImportService:
 
 
             if "draft_sessions" in target_keys and "draft_sessions" in data:
-                created = 0
+                ds_created, ds_updated = 0, 0
                 for row in data["draft_sessions"]:
-                    existing = db.session.scalar(select(DraftSession).where(DraftSession.room_code == row.get("room_code")))
-                    if existing:
+                    room_code = row.get("room_code")
+                    if not room_code:
                         continue
-                    db.session.add(DraftSession(
-                        room_code=row.get("room_code"),
-                        phase=row.get("phase", "bans"),
-                        banned_perks=row.get("banned_perks_json") or safe_json_dumps(row.get("banned_perks", [])),
-                        picked_survivor_perks=row.get("picked_survivor_perks_json") or safe_json_dumps(row.get("picked_survivor_perks", [])),
-                        picked_killer_perks=row.get("picked_killer_perks_json") or safe_json_dumps(row.get("picked_killer_perks", [])),
-                    ))
-                    created += 1
+                    existing = db.session.scalar(select(DraftSession).where(DraftSession.room_code == room_code))
+                    phase = row.get("phase", "bans")
+                    banned = row.get("banned_perks_json") or safe_json_dumps(row.get("banned_perks", []))
+                    picked_surv = row.get("picked_survivor_perks_json") or safe_json_dumps(row.get("picked_survivor_perks", []))
+                    picked_kill = row.get("picked_killer_perks_json") or safe_json_dumps(row.get("picked_killer_perks", []))
+                    if not existing:
+                        db.session.add(DraftSession(
+                            room_code=room_code,
+                            phase=phase,
+                            banned_perks=banned,
+                            picked_survivor_perks=picked_surv,
+                            picked_killer_perks=picked_kill,
+                        ))
+                        ds_created += 1
+                    else:
+                        existing.phase = phase
+                        existing.banned_perks = banned
+                        existing.picked_survivor_perks = picked_surv
+                        existing.picked_killer_perks = picked_kill
+                        ds_updated += 1
                 db.session.flush()
-                summary["draft_sessions"] = {"created": created, "updated": 0}
+                summary["draft_sessions"] = {"created": ds_created, "updated": ds_updated}
 
             if "scraper_settings" in target_keys and "scraper_settings" in data and data["scraper_settings"]:
                 row = data["scraper_settings"][0] if isinstance(data["scraper_settings"], list) else data["scraper_settings"]

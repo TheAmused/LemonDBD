@@ -17,6 +17,10 @@ import {
   CheckCircle2,
   ShieldCheck,
   RotateCcw,
+  Users,
+  Layers,
+  Settings,
+  Globe,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { ConfirmModal } from '@/components/ConfirmModal';
@@ -53,8 +57,6 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'daily_quests', label: 'Daily Quests', desc: 'Daily challenges and completion states', category: 'community' },
   { id: 'bug_reports', label: 'Bug Reports', desc: 'Submitted bug reports and admin notes', category: 'community' },
   { id: 'changelog_posts', label: 'Changelog Posts', desc: 'Published What is New feed entries', category: 'community' },
-  { id: 'generator_settings', label: 'Generator Settings', desc: 'Perk generator defaults and timers', category: 'settings' },
-  { id: 'generator_drawn_perks', label: 'Generator Drawn Perks', desc: 'No-repeat draw history for the randomizer', category: 'settings' },
   { id: 'draft_sessions', label: 'Draft Sessions', desc: 'Live perk draft room state', category: 'settings' },
   { id: 'scraper_settings', label: 'Scraper Settings', desc: 'Data source configuration', category: 'settings' },
   { id: 'challenge_mode_settings', label: 'Challenge Mode Toggles', desc: 'Site-wide enable and disable state per mode', category: 'settings' },
@@ -85,8 +87,6 @@ const TARGET_KEY_MAP: Record<string, string> = {
   daily_quests: 'DailyQuests',
   bug_reports: 'BugReports',
   changelog_posts: 'ChangelogPosts',
-  generator_settings: 'GeneratorSettings',
-  generator_drawn_perks: 'GeneratorDrawnPerks',
   draft_sessions: 'DraftSessions',
   scraper_settings: 'ScraperSettings',
   challenge_mode_settings: 'ChallengeModeSettings',
@@ -99,6 +99,13 @@ const TARGET_KEY_MAP: Record<string, string> = {
   rosters: 'Rosters',
   smash_translations: 'SmashTranslations',
 };
+
+const TARGET_GROUPS_CONFIG = [
+  { key: 'content' as const, labelKey: 'groupContent' as const, fallbackLabel: 'Game Content', icon: Layers },
+  { key: 'users' as const, labelKey: 'groupUsers' as const, fallbackLabel: 'Users & Accounts', icon: Users },
+  { key: 'community' as const, labelKey: 'groupCommunity' as const, fallbackLabel: 'Community & Streaks', icon: Globe },
+  { key: 'settings' as const, labelKey: 'groupSettings' as const, fallbackLabel: 'Configuration & System', icon: Settings },
+];
 
 export function ScraperConfigModal({
   isOpen,
@@ -172,6 +179,26 @@ export function ScraperConfigModal({
       setPurgeTargets([]);
     } else {
       setPurgeTargets(ALL_TARGETS.map((t) => t.id));
+    }
+  };
+
+  const toggleGroupExport = (groupKey: TargetItem['category']) => {
+    const groupTargetIds = ALL_TARGETS.filter((t) => t.category === groupKey).map((t) => t.id);
+    const allSelected = groupTargetIds.every((id) => exportTargets.includes(id));
+    if (allSelected) {
+      setExportTargets((prev) => prev.filter((id) => !groupTargetIds.includes(id)));
+    } else {
+      setExportTargets((prev) => Array.from(new Set([...prev, ...groupTargetIds])));
+    }
+  };
+
+  const toggleGroupPurge = (groupKey: TargetItem['category']) => {
+    const groupTargetIds = ALL_TARGETS.filter((t) => t.category === groupKey).map((t) => t.id);
+    const allSelected = groupTargetIds.every((id) => purgeTargets.includes(id));
+    if (allSelected) {
+      setPurgeTargets((prev) => prev.filter((id) => !groupTargetIds.includes(id)));
+    } else {
+      setPurgeTargets((prev) => Array.from(new Set([...prev, ...groupTargetIds])));
     }
   };
 
@@ -557,29 +584,62 @@ export function ScraperConfigModal({
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-                {localizedTargets.map((target) => {
-                  const isSelected = exportTargets.includes(target.id);
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                {TARGET_GROUPS_CONFIG.map((group) => {
+                  const groupTargets = localizedTargets.filter((t) => t.category === group.key);
+                  const selectedInGroup = groupTargets.filter((t) => exportTargets.includes(t.id));
+                  const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
+                  const GroupIcon = group.icon;
+                  const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
+
                   return (
-                    <div
-                      key={target.id}
-                      onClick={() => toggleExportTarget(target.id)}
-                      className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                        isSelected
-                          ? 'border-blue-500/50 bg-blue-500/10 text-blue-900 dark:text-blue-200'
-                          : 'border-border-color bg-bg-primary hover:border-border-subtle'
-                      }`}
-                    >
-                      <div className="pt-0.5">
-                        {isSelected ? (
-                          <CheckSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                        ) : (
-                          <Square className="h-4 w-4 text-text-muted" />
-                        )}
+                    <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
+                          <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
+                            {groupLabel}
+                          </span>
+                          <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
+                            {selectedInGroup.length}/{groupTargets.length}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleGroupExport(group.key)}
+                          className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
+                        >
+                          {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
+                        </button>
                       </div>
-                      <div>
-                        <p className="text-xs font-bold">{target.label}</p>
-                        <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {groupTargets.map((target) => {
+                          const isSelected = exportTargets.includes(target.id);
+                          return (
+                            <div
+                              key={target.id}
+                              onClick={() => toggleExportTarget(target.id)}
+                              className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                                isSelected
+                                  ? 'border-blue-500/50 bg-blue-500/10 text-blue-900 dark:text-blue-200'
+                                  : 'border-border-color bg-bg-surface hover:border-border-subtle'
+                              }`}
+                            >
+                              <div className="pt-0.5">
+                                {isSelected ? (
+                                  <CheckSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                ) : (
+                                  <Square className="h-4 w-4 text-text-muted" />
+                                )}
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold">{target.label}</p>
+                                <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
@@ -813,29 +873,62 @@ export function ScraperConfigModal({
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-                {localizedTargets.map((target) => {
-                  const isSelected = purgeTargets.includes(target.id);
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                {TARGET_GROUPS_CONFIG.map((group) => {
+                  const groupTargets = localizedTargets.filter((t) => t.category === group.key);
+                  const selectedInGroup = groupTargets.filter((t) => purgeTargets.includes(t.id));
+                  const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
+                  const GroupIcon = group.icon;
+                  const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
+
                   return (
-                    <div
-                      key={target.id}
-                      onClick={() => togglePurgeTarget(target.id)}
-                      className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                        isSelected
-                          ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
-                          : 'border-border-color bg-bg-primary hover:border-border-subtle'
-                      }`}
-                    >
-                      <div className="pt-0.5">
-                        {isSelected ? (
-                          <Square className="h-4 w-4 text-accent-red" />
-                        ) : (
-                          <Square className="h-4 w-4 text-text-muted" />
-                        )}
+                    <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
+                          <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
+                            {groupLabel}
+                          </span>
+                          <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
+                            {selectedInGroup.length}/{groupTargets.length}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleGroupPurge(group.key)}
+                          className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
+                        >
+                          {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
+                        </button>
                       </div>
-                      <div>
-                        <p className="text-xs font-bold">{target.label}</p>
-                        <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {groupTargets.map((target) => {
+                          const isSelected = purgeTargets.includes(target.id);
+                          return (
+                            <div
+                              key={target.id}
+                              onClick={() => togglePurgeTarget(target.id)}
+                              className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                                isSelected
+                                  ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
+                                  : 'border-border-color bg-bg-surface hover:border-border-subtle'
+                              }`}
+                            >
+                              <div className="pt-0.5">
+                                {isSelected ? (
+                                  <Square className="h-4 w-4 text-accent-red" />
+                                ) : (
+                                  <Square className="h-4 w-4 text-text-muted" />
+                                )}
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold">{target.label}</p>
+                                <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
@@ -864,7 +957,9 @@ export function ScraperConfigModal({
                     <Trash2 className="h-3.5 w-3.5" />
                   )}
                   <span>
-                    {isPurging ? dict?.admin?.purgingStatus : dict?.admin?.purgeSelected} ({purgeTargets.length})
+                    {isPurging
+                      ? dict?.admin?.purgingStatus || 'Purging...'
+                      : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace('{count}', String(purgeTargets.length))}
                   </span>
                 </button>
               </div>

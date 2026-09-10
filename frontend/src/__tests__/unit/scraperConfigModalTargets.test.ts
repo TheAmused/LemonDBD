@@ -3,6 +3,9 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('ScraperConfigModal export/import targets', () => {
   const modalPath = path.resolve(__dirname, '../../components/ScraperConfigModal.tsx');
@@ -14,7 +17,6 @@ describe('ScraperConfigModal export/import targets', () => {
     'perk_rules',
     'user_showcases',
     'changelog_posts',
-    'generator_drawn_perks',
     'draft_sessions',
     'scraper_settings',
     'challenge_mode_settings',
@@ -45,8 +47,20 @@ describe('ScraperConfigModal export/import targets', () => {
     }
   });
 
-  it('ALL_TARGETS has grown to cover every full-database export target (29 total)', () => {
+  it('ALL_TARGETS covers all 27 supported database targets', () => {
     const idMatches = modalContent.match(/id:\s*'[a-z_]+'/g) || [];
-    assert.equal(idMatches.length, 29, 'ALL_TARGETS should contain 29 target entries after this task');
+    assert.equal(idMatches.length, 27, 'ALL_TARGETS should contain exactly 27 target entries');
+  });
+
+  it('TARGET_GROUPS_CONFIG organizes targets into content, users, community, and settings', () => {
+    assert.ok(modalContent.includes("key: 'content'"), 'Must include content group');
+    assert.ok(modalContent.includes("key: 'users'"), 'Must include users group');
+    assert.ok(modalContent.includes("key: 'community'"), 'Must include community group');
+    assert.ok(modalContent.includes("key: 'settings'"), 'Must include settings group');
+  });
+
+  it('provides group-level toggle functions toggleGroupExport and toggleGroupPurge', () => {
+    assert.ok(modalContent.includes('toggleGroupExport'), 'Must include toggleGroupExport');
+    assert.ok(modalContent.includes('toggleGroupPurge'), 'Must include toggleGroupPurge');
   });
 });

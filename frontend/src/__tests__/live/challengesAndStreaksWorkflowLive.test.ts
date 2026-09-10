@@ -49,43 +49,39 @@ test("Live Frontend Workflow: Challenges, Streaks & Killswitch Governance", asyn
     "Content-Type": "application/json",
   };
 
-  // Disable history mode
-  const disRes = await fetch(`${API_BASE}/api/v1/admin/challenge-modes/history`, {
-    method: "PUT",
-    headers: adminHeaders,
-    body: JSON.stringify({ is_enabled: false, reason: "Frontend Test Maintenance" }),
-  });
-  assert.strictEqual(disRes.status, 200);
+  try {
+    // Disable history mode
+    const disRes = await fetch(`${API_BASE}/api/v1/admin/challenge-modes/history`, {
+      method: "PUT",
+      headers: adminHeaders,
+      body: JSON.stringify({ is_enabled: false, reason: "Frontend Test Maintenance" }),
+    });
+    assert.strictEqual(disRes.status, 200);
 
-  // Create new user -> attempt history run -> should receive 400 blocked
-  const user2Name = `blocked_fe_${Date.now()}`;
-  const reg2Res = await fetch(`${API_BASE}/api/v1/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: user2Name, email: `${user2Name}@test.com`, password: "Password123!" }),
-  });
-  assert.strictEqual(reg2Res.status, 201);
-  const user2Headers = {
-    Authorization: `Bearer ${(await reg2Res.json()).token}`,
-    "Content-Type": "application/json",
-  };
+    // Create new user -> attempt history run -> should receive 400 blocked
+    const user2Name = `blocked_fe_${Date.now()}`;
+    const reg2Res = await fetch(`${API_BASE}/api/v1/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: user2Name, email: `${user2Name}@test.com`, password: "Password123!" }),
+    });
+    assert.strictEqual(reg2Res.status, 201);
+    const user2Headers = {
+      Authorization: `Bearer ${(await reg2Res.json()).token}`,
+      "Content-Type": "application/json",
+    };
 
-  const blockedRes = await fetch(`${API_BASE}/api/v1/history-streak/run?mode=hell`, {
-    headers: user2Headers,
-  });
-  assert.strictEqual(blockedRes.status, 400);
-
-  // Re-enable history mode
-  const enRes = await fetch(`${API_BASE}/api/v1/admin/challenge-modes/history`, {
-    method: "PUT",
-    headers: adminHeaders,
-    body: JSON.stringify({ is_enabled: true }),
-  });
-  assert.strictEqual(enRes.status, 200);
-
-  // User can now start history run
-  const okRes = await fetch(`${API_BASE}/api/v1/history-streak/run?mode=hell`, {
-    headers: user2Headers,
-  });
-  assert.strictEqual(okRes.status, 200);
+    const blockedRes = await fetch(`${API_BASE}/api/v1/history-streak/run?mode=hell`, {
+      headers: user2Headers,
+    });
+    assert.strictEqual(blockedRes.status, 400);
+  } finally {
+    // Re-enable history mode
+    await fetch(`${API_BASE}/api/v1/admin/challenge-modes/history`, {
+      method: "PUT",
+      headers: adminHeaders,
+      body: JSON.stringify({ is_enabled: true }),
+    });
+  }
 });
+

@@ -587,3 +587,129 @@ class TestDatabaseExportRouteIncludeAssets:
         assert resp.status_code == 200
         payload = resp.get_json()
         assert "avatar_local_path_data" not in payload["data"]["characters"][0]
+
+
+@pytest.mark.unit
+class TestDatabaseExportImportGroupsAndUpsertHardening:
+    def test_export_database_organized_into_groups(self, export_import_app):
+        with export_import_app.app_context():
+            exported = DatabaseExportImportService.export_database()
+            assert "groups" in exported
+            assert "data" in exported
+            assert "content" in exported["groups"]
+            assert "users" in exported["groups"]
+
+            content_group = exported["groups"]["content"]
+            assert "characters" in content_group
+            assert "perks" in content_group
+            assert len(content_group["characters"]) == len(exported["data"]["characters"])
+
+            users_group = exported["groups"]["users"]
+            assert "users" in users_group
+            assert len(users_group["users"]) == len(exported["data"]["users"])
+
+    def test_import_database_from_grouped_payload(self, export_import_app):
+        with export_import_app.app_context():
+            payload = {
+                "version": "1.0",
+                "groups": {
+                    "content": {
+                        "characters": [
+                            {"name": "Grouped Dwight", "role": "Survivor", "wiki_slug": "grouped-dwight"}
+                        ]
+                    }
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
+            assert summary["summary"]["characters"]["created"] == 1
+            char = db.session.scalar(select(Character).where(Character.name == "Grouped Dwight"))
+            assert char is not None
+            assert char.wiki_slug == "grouped-dwight"
+
+    def test_import_database_upsert_characters_by_wiki_slug(self, export_import_app):
+        with export_import_app.app_context():
+            char = Character(name="Old Trapper Name", wiki_slug="unique-trapper-slug", role="Killer")
+            db.session.add(char)
+            db.session.commit()
+
+            payload = {
+                "data": {
+                    "characters": [
+                        {
+                            "name": "Updated Trapper Name",
+                            "wiki_slug": "unique-trapper-slug",
+                            "role": "Killer",
+                            "movement_speed": "4.6 m/s"
+                        }
+                    ]
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
+            assert summary["summary"]["characters"]["updated"] == 1
+            assert summary["summary"]["characters"]["created"] == 0
+
+            updated_char = db.session.scalar(select(Character).where(Character.wiki_slug == "unique-trapper-slug"))
+            assert updated_char.name == "Updated Trapper Name"
+            assert updated_char.movement_speed == "4.6 m/s"
+
+    def test_import_database_upsert_users_safe_email_conflict(self, export_import_app):
+        with export_import_app.app_context():
+            u1 = User(username="user_alpha", email="alpha@conflict.com", password_hash="h1", role="user")
+            u2 = User(username="user_beta", email="beta@conflict.com", password_hash="h2", role="user")
+            db.session.add_all([u1, u2])
+            db.session.commit()
+
+            # Attempt to update user_beta with user_alpha's email; should gracefully avoid IntegrityError
+            payload = {
+                "data": {
+                    "users": [
+                        {
+                            "username": "user_beta",
+                            "email": "alpha@conflict.com",
+                            "role": "admin"
+                        }
+                    ]
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["users"])
+            assert summary["summary"]["users"]["updated"] == 1
+
+            reloaded_beta = db.session.scalar(select(User).where(User.username == "user_beta"))
+            assert reloaded_beta.role == "admin"
+            # Email was protected from causing a unique constraint crash
+            assert reloaded_beta.email == "beta@conflict.com"
+
+    def test_import_database_upsert_draft_sessions(self, export_import_app):
+        with export_import_app.app_context():
+            from app.models.minigames import DraftSession
+            session = DraftSession(
+                room_code="ROOM_TEST_UPSERT",
+                phase="bans",
+                banned_perks="[]",
+                picked_survivor_perks="[]",
+                picked_killer_perks="[]",
+            )
+            db.session.add(session)
+            db.session.commit()
+
+            payload = {
+                "data": {
+                    "draft_sessions": [
+                        {
+                            "room_code": "ROOM_TEST_UPSERT",
+                            "phase": "picks",
+                            "banned_perks": ["Sprint Burst"],
+                        }
+                    ]
+                }
+            }
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["draft_sessions"])
+            assert summary["summary"]["draft_sessions"]["updated"] == 1
+            assert summary["summary"]["draft_sessions"]["created"] == 0
+
+            reloaded_session = db.session.scalar(
+                select(DraftSession).where(DraftSession.room_code == "ROOM_TEST_UPSERT")
+            )
+            assert reloaded_session.phase == "picks"
+            assert "Sprint Burst" in reloaded_session.banned_perks
+

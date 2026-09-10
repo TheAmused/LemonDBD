@@ -56,6 +56,8 @@ export default {
   emptyCoordinate: "[-/-]",
   spinChaosWheel: '¡Girar Rueda del Caos!',
   spinningCurses: 'Girando Maldiciones del Caos...',
+  clearMutator: 'Quitar',
+  clearMutatorTooltip: 'Eliminar maldición activa',
   modeSlot: "Tragamonedas",
   modeTarot: "Baraja de Tarot",
   modeCrate: "Caja de Botín",

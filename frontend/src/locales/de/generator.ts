@@ -56,6 +56,8 @@ export default {
   emptyCoordinate: "[-/-]",
   spinChaosWheel: 'Chaos-Rad drehen!',
   spinningCurses: 'Chaos-Flüche werden gedreht...',
+  clearMutator: 'Entfernen',
+  clearMutatorTooltip: 'Aktiven Fluch entfernen',
   modeSlot: "Spielautomat",
   modeTarot: "Tarot-Deck",
   modeCrate: "Beutekiste",

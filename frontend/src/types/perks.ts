@@ -66,6 +66,7 @@ export interface GeneratorStoredState {
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
   blindMode: boolean;
+  activeMutator?: any;
 }
 
 export interface GeneratorConfigResponse {

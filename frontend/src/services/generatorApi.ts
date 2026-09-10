@@ -25,7 +25,9 @@ async function handleResponse<T>(response: Response): Promise<T> {
 }
 
 export async function fetchGeneratorConfig(): Promise<GeneratorConfig> {
-  const response = await fetch(`${API_BASE}/config`);
+  const response = await fetch(`${API_BASE}/config`, {
+    credentials: 'include',
+  });
   const data = await handleResponse<{ config: GeneratorConfig }>(response);
   return data.config;
 }
@@ -35,6 +37,7 @@ export async function updateGeneratorConfig(
 ): Promise<GeneratorConfig> {
   const response = await fetch(`${API_BASE}/config`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -45,7 +48,9 @@ export async function updateGeneratorConfig(
 }
 
 export async function fetchDrawnPerks(role: string): Promise<string[]> {
-  const response = await fetch(`${API_BASE}/drawn?role=${encodeURIComponent(role)}`);
+  const response = await fetch(`${API_BASE}/drawn?role=${encodeURIComponent(role)}`, {
+    credentials: 'include',
+  });
   const data = await handleResponse<{ drawn_perks: string[] }>(response);
   return data.drawn_perks;
 }
@@ -56,6 +61,7 @@ export async function addDrawnPerks(
 ): Promise<string[]> {
   const response = await fetch(`${API_BASE}/draw`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -68,6 +74,7 @@ export async function addDrawnPerks(
 export async function resetDrawnPerks(role?: string): Promise<string[]> {
   const response = await fetch(`${API_BASE}/reset`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },

@@ -13,13 +13,6 @@ import {
 } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
-import {
-  fetchGeneratorConfig,
-  updateGeneratorConfig,
-  fetchDrawnPerks,
-  addDrawnPerks,
-  resetDrawnPerks,
-} from '@/services/generatorApi';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
@@ -98,19 +91,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   }, []);
 
   useEffect(() => {
-    fetchGeneratorConfig()
-      .then((config) => {
-        if (config.role === 'Survivor' || config.role === 'Killer') setRole(config.role);
-        if (config.gen_mode && KNOWN_MODES.includes(config.gen_mode as GeneratorMode)) {
-          setGenMode(config.gen_mode as GeneratorMode);
-        }
-        if (typeof config.no_repeat_perks !== 'undefined') setNoRepeatPerks(Boolean(config.no_repeat_perks));
-        if (config.spin_duration_sec) setSpinDurationSec(config.spin_duration_sec);
-      })
-      .catch((e) => console.error('Failed fetching generator config from backend API:', e));
-  }, []);
-
-  useEffect(() => {
     // 1. Restore local drawn perks immediately so all modes and tabs share state instantly
     let localDrawn: string[] = [];
     try {
@@ -120,35 +100,20 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         if (Array.isArray(parsed)) localDrawn = parsed;
       }
     } catch {}
-    if (localDrawn.length > 0) {
-      setDrawnPerks(localDrawn);
-    }
+    setDrawnPerks(localDrawn);
 
     // 2. Restore active mutator (curse) for this role so it persists until reset
+    let localMutator: ChaosMutator | null = null;
     try {
       const savedMutatorRaw = localStorage.getItem(`lemon_active_mutator_${role}`);
       if (savedMutatorRaw) {
         const parsed = JSON.parse(savedMutatorRaw);
         if (parsed && typeof parsed === 'object' && parsed.id) {
-          setActiveMutator(parsed);
+          localMutator = parsed;
         }
       }
     } catch {}
-
-    // 3. Sync with backend API
-    fetchDrawnPerks(role)
-      .then((backendDrawn) => {
-        if (Array.isArray(backendDrawn)) {
-          setDrawnPerks((prev) => {
-            const merged = Array.from(new Set([...prev, ...backendDrawn]));
-            try {
-              localStorage.setItem(`lemon_drawn_perks_${role}`, JSON.stringify(merged));
-            } catch {}
-            return merged;
-          });
-        }
-      })
-      .catch((e) => console.warn('Backend drawn perks fetch failed, relying on local storage:', e));
+    setActiveMutator(localMutator);
   }, [role]);
 
   useEffect(() => {
@@ -202,34 +167,18 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     prevPlayableCountRef.current = totalPlayableCount;
   }, [totalPlayableCount, noRepeatPerks, baseEligibleRolePerks.length]);
 
-  const handleRoleChange = async (newRole: RoleCategory) => {
+  const handleRoleChange = (newRole: RoleCategory) => {
     setRole(newRole);
     setLoadout([null, null, null, null]);
     setRevealedSlots([false, false, false, false]);
-    try {
-      await updateGeneratorConfig({ role: newRole });
-    } catch (e) {
-      console.error('Failed updating role in backend:', e);
-    }
   };
 
-  const handleGenModeChange = async (newMode: GeneratorMode) => {
+  const handleGenModeChange = (newMode: GeneratorMode) => {
     setGenMode(newMode);
-    try {
-      await updateGeneratorConfig({ gen_mode: newMode });
-    } catch (e) {
-      console.error('Failed updating gen_mode in backend:', e);
-    }
   };
 
-  const handleToggleNoRepeat = async () => {
-    const nextVal = !noRepeatPerks;
-    setNoRepeatPerks(nextVal);
-    try {
-      await updateGeneratorConfig({ no_repeat_perks: nextVal ? 1 : 0 });
-    } catch (e) {
-      console.error('Failed updating no_repeat_perks in backend:', e);
-    }
+  const handleToggleNoRepeat = () => {
+    setNoRepeatPerks((prev) => !prev);
   };
 
   const handleToggleAudio = () => {
@@ -253,7 +202,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     } catch {}
   };
 
-  const handleResetAllLoadoutAndWheels = async () => {
+  const handleResetAllLoadoutAndWheels = () => {
     setLoadout([null, null, null, null]);
     setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
@@ -262,36 +211,20 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     try {
       localStorage.removeItem(`lemon_drawn_perks_${role}`);
     } catch {}
-
-    try {
-      const updatedDrawn = await resetDrawnPerks(role);
-      setDrawnPerks(updatedDrawn || []);
-    } catch (err) {
-      console.warn('Failed resetting drawn perks via backend API, cleared locally:', err);
-      setDrawnPerks([]);
-    }
   };
 
   /** Just the drawn-perk memory, from the low-pool warning modal's Reset
    * button -- keeps the current loadout/mutator intact rather than wiping
    * the whole board, since all the player actually needs is the pool back. */
-  const handleResetDrawnPerksOnly = async () => {
+  const handleResetDrawnPerksOnly = () => {
     setDrawnPerks([]);
     try {
       localStorage.removeItem(`lemon_drawn_perks_${role}`);
     } catch {}
-
-    try {
-      const updatedDrawn = await resetDrawnPerks(role);
-      setDrawnPerks(updatedDrawn || []);
-    } catch (err) {
-      console.warn('Failed resetting drawn perks via backend API, cleared locally:', err);
-      setDrawnPerks([]);
-    }
     setShowLowPoolWarning(false);
   };
 
-  const handleWheelWinSlot = async (wonData: DrawnSlot) => {
+  const handleWheelWinSlot = (wonData: DrawnSlot) => {
     setLoadout((prev) => {
       const next = [...prev];
       next[activeSlotIdx] = wonData;
@@ -299,7 +232,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     });
     setActiveSlotIdx((prev) => (prev + 1) % 4);
 
-    if (wonData.perk) {
+    // ONLY add to drawnPerks if no-repeat mode is actually ON!
+    if (noRepeatPerks && wonData.perk) {
       const perkName = wonData.perk.name;
       setDrawnPerks((prev) => {
         const next = Array.from(new Set([...prev, perkName]));
@@ -308,46 +242,25 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         } catch {}
         return next;
       });
-
-      try {
-        const updatedDrawn = await addDrawnPerks(role, [perkName]);
-        if (Array.isArray(updatedDrawn) && updatedDrawn.length > 0) {
-          setDrawnPerks(updatedDrawn);
-          try {
-            localStorage.setItem(`lemon_drawn_perks_${role}`, JSON.stringify(updatedDrawn));
-          } catch {}
-        }
-      } catch (err) {
-        console.warn('Failed saving drawn perk from wheel to backend API, preserved locally:', err);
-      }
     }
   };
 
-  const handleBatchRollComplete = async (slots: DrawnSlot[]) => {
+  const handleBatchRollComplete = (slots: DrawnSlot[]) => {
     setLoadout([slots[0] || null, slots[1] || null, slots[2] || null, slots[3] || null]);
     setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
 
-    const names = slots.map((s) => s.perk?.name).filter((n): n is string => Boolean(n));
-    if (names.length > 0) {
-      setDrawnPerks((prev) => {
-        const next = Array.from(new Set([...prev, ...names]));
-        try {
-          localStorage.setItem(`lemon_drawn_perks_${role}`, JSON.stringify(next));
-        } catch {}
-        return next;
-      });
-
-      try {
-        const updatedDrawn = await addDrawnPerks(role, names);
-        if (Array.isArray(updatedDrawn) && updatedDrawn.length > 0) {
-          setDrawnPerks(updatedDrawn);
+    // ONLY add to drawnPerks if no-repeat mode is actually ON!
+    if (noRepeatPerks) {
+      const names = slots.map((s) => s.perk?.name).filter((n): n is string => Boolean(n));
+      if (names.length > 0) {
+        setDrawnPerks((prev) => {
+          const next = Array.from(new Set([...prev, ...names]));
           try {
-            localStorage.setItem(`lemon_drawn_perks_${role}`, JSON.stringify(updatedDrawn));
+            localStorage.setItem(`lemon_drawn_perks_${role}`, JSON.stringify(next));
           } catch {}
-        }
-      } catch (err) {
-        console.warn('Failed saving drawn perks to backend API, preserved locally:', err);
+          return next;
+        });
       }
     }
   };

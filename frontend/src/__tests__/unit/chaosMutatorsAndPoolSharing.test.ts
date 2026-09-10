@@ -125,6 +125,60 @@ test('Cross-Mode Pool Sharing: perks drawn in Mode A are excluded in Modes B, C,
   assert.strictEqual(playablePool.length, 16);
 });
 
+test('No-Repeat Toggle: turning off no-repeat restores full pool for rolls while keeping drawn memory intact for when toggled back on', () => {
+  const masterPool: Perk[] = Array.from({ length: 50 }, (_, i) => makePerk({ name: `Perk ${i + 1}` }));
+
+  let noRepeatPerks = true;
+  let drawnPerks: string[] = [];
+
+  // Simulate rolling 30 perks with no-repeat ON
+  for (let round = 0; round < 6; round++) {
+    const currentPlayable = computePlayablePool(masterPool, noRepeatPerks, drawnPerks);
+    const picks = pickRandomLoadout(currentPlayable, null, 5);
+    if (noRepeatPerks) {
+      drawnPerks = Array.from(new Set([...drawnPerks, ...picks.map((p) => p.name)]));
+    }
+  }
+  assert.strictEqual(drawnPerks.length, 30);
+
+  // Pool while noRepeat is ON has only 20 perks left
+  let poolWithNoRepeat = computePlayablePool(masterPool, noRepeatPerks, drawnPerks);
+  assert.strictEqual(poolWithNoRepeat.length, 20);
+
+  // User toggles no-repeat mode OFF
+  noRepeatPerks = false;
+
+  // With no-repeat OFF, pool MUST contain ALL 50 perks (including the 30 already drawn)
+  let poolWithoutNoRepeat = computePlayablePool(masterPool, noRepeatPerks, drawnPerks);
+  assert.strictEqual(poolWithoutNoRepeat.length, 50);
+  for (const drawnName of drawnPerks) {
+    assert.ok(
+      poolWithoutNoRepeat.some((p) => p.name === drawnName),
+      `Full pool must include previously drawn perk ${drawnName} when no-repeat is off`
+    );
+  }
+
+  // Rolls performed while no-repeat is OFF must NOT add to drawnPerks
+  const freeRollPicks = pickRandomLoadout(poolWithoutNoRepeat, null, 4);
+  if (noRepeatPerks) {
+    drawnPerks = Array.from(new Set([...drawnPerks, ...freeRollPicks.map((p) => p.name)]));
+  }
+  assert.strictEqual(drawnPerks.length, 30, 'Rolls made while no-repeat is off must not contaminate drawn perks memory');
+
+  // User toggles no-repeat mode back ON
+  noRepeatPerks = true;
+
+  // Pool immediately resumes excluding the 30 drawn perks
+  let poolRestored = computePlayablePool(masterPool, noRepeatPerks, drawnPerks);
+  assert.strictEqual(poolRestored.length, 20);
+  for (const drawnName of drawnPerks) {
+    assert.ok(
+      !poolRestored.some((p) => p.name === drawnName),
+      `Restored no-repeat pool must exclude ${drawnName}`
+    );
+  }
+});
+
 test('Mutator Application: No Exhaustion mutator works across all roll modes', () => {
   const mixedPool: Perk[] = [
     exhaustionPerk,

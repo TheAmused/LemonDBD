@@ -15,7 +15,7 @@ from app.models.chapter import Chapter
 from app.models.map import MapRealm, MapTile, MapObjective, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
-from app.models.minigames import GeneratorSetting, GuesserStat, GeneratorDrawnPerk, DraftSession, ScraperSetting
+from app.models.minigames import DraftSession, GuesserStat, ScraperSetting
 from app.models.admin import ChallengeModeSetting, AdminAuditLog
 from app.models.changelog import ChangelogPost
 from app.models.gauntlet import GauntletRun, GauntletMatchLog
@@ -48,10 +48,8 @@ SUPPORTED_EXPORT_TARGETS = [
     "custom_perks",
     "daily_quests",
     "bug_reports",
-    "generator_settings",
     "guesser_stats",
     "perk_rules",
-    "generator_drawn_perks",
     "draft_sessions",
     "scraper_settings",
     "challenge_mode_settings",
@@ -126,10 +124,8 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("custom_perks", CustomPerk, lambda cp: cp.to_dict(), []),
     ("daily_quests", DailyQuest, lambda q: q.to_dict(), []),
     ("bug_reports", BugReport, lambda r: r.to_dict(), []),
-    ("generator_settings", GeneratorSetting, lambda s: s.to_dict(), []),
     ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
     ("perk_rules", PerkRule, lambda pr: pr.to_dict(), []),
-    ("generator_drawn_perks", GeneratorDrawnPerk, lambda gd: gd.to_dict(), []),
     ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
     ("scraper_settings", ScraperSetting, lambda ss: ss.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
@@ -151,10 +147,8 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("items", Item),
     ("perks", Perk),
     ("characters", Character),
-    ("generator_settings", GeneratorSetting),
     ("guesser_stats", GuesserStat),
     ("perk_rules", PerkRule),
-    ("generator_drawn_perks", GeneratorDrawnPerk),
     ("draft_sessions", DraftSession),
     ("scraper_settings", ScraperSetting),
     ("challenge_mode_settings", ChallengeModeSetting),
@@ -630,14 +624,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["perk_rules"] = {"created": created, "updated": updated}
 
-            _upsert_entity(
-                data, target_keys, summary, "generator_drawn_perks", GeneratorDrawnPerk, "perk_name",
-                update_fields=["role"],
-                defaults=lambda row: {"role": row.get("role", "Survivor")},
-                post_process=lambda obj, row: setattr(
-                    obj, "drawn_at", _parse_datetime(row["drawn_at"]) or obj.drawn_at
-                ) if row.get("drawn_at") else None,
-            )
 
             if "draft_sessions" in target_keys and "draft_sessions" in data:
                 created = 0
@@ -858,12 +844,6 @@ class DatabaseExportImportService:
                     "reporter_name": row.get("reporter_name", "Anonymous"),
                     "message": row.get("message", ""),
                 },
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "generator_settings", GeneratorSetting, "role",
-                update_fields=["gen_mode", "no_repeat_perks", "total_pages", "perks_per_page", "last_page_perks", "spin_duration_sec"],
-                key_default="Survivor",
             )
 
             _upsert_entity(

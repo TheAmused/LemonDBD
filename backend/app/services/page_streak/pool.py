@@ -1,19 +1,12 @@
-# backend/app/services/page_streak/pool.py
 from typing import Any
-from sqlalchemy import select
 
-from app.core.extensions import db
-from app.models import GeneratorSetting
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak.helpers import DEFAULT_PERKS_PER_PAGE
 from app.services.perk_service import PerkService
 
 
 def get_configured_perks_per_page() -> int:
-    """Read the active perks_per_page value from database configuration."""
-    setting = db.session.scalars(select(GeneratorSetting).where(GeneratorSetting.id == 1)).first()
-    if setting and setting.perks_per_page:
-        return int(setting.perks_per_page)
+    """Read the active perks_per_page value."""
     return DEFAULT_PERKS_PER_PAGE
 
 

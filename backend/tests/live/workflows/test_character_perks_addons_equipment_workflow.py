@@ -55,20 +55,3 @@ class TestCharacterPerksAddonsEquipmentWorkflow:
         )
         assert bulk_res.status_code == 200
 
-        config_res = client.post(
-            "/api/v1/generator/config",
-            json={"role": "Killer", "mode": "random", "lock_perks": False},
-        )
-        assert config_res.status_code == 200
-
-        draw_res = client.post(
-            "/api/v1/generator/draw",
-            json={"role": "Killer", "perks": ["A Nurse's Calling", "Thanatophobia"]},
-        )
-        assert draw_res.status_code == 200
-        drawn = draw_res.get_json()["drawn_perks"]
-        assert len(drawn) >= 2
-
-        reset_res = client.post("/api/v1/generator/reset", json={"role": "Killer"})
-        assert reset_res.status_code == 200
-        assert len(reset_res.get_json()["drawn_perks"]) == 0

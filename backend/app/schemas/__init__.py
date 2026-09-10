@@ -67,10 +67,6 @@ from app.schemas.map import (
 from app.schemas.minigames import (
     DraftSessionBase,
     DraftSessionResponse,
-    GeneratorDrawnPerkBase,
-    GeneratorDrawnPerkResponse,
-    GeneratorSettingBase,
-    GeneratorSettingResponse,
     GuesserStatBase,
     GuesserStatResponse,
 )
@@ -155,10 +151,6 @@ __all__ = [
     "PageStreakRunResponse",
     "PageStreakPageLogBase",
     "PageStreakPageLogResponse",
-    "GeneratorSettingBase",
-    "GeneratorSettingResponse",
-    "GeneratorDrawnPerkBase",
-    "GeneratorDrawnPerkResponse",
     "DraftSessionBase",
     "DraftSessionResponse",
     "GuesserStatBase",

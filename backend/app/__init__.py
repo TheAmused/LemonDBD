@@ -145,7 +145,6 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.chaos_streak import chaos_streak_bp
     from app.routes.changelog import changelog_bp
     from app.routes.gauntlet_streak import gauntlet_streak_bp
-    from app.routes.generator import generator_bp
     from app.routes.history_streak import history_streak_bp
     from app.routes.maps import maps_bp
     from app.routes.others.builds import builds_bp
@@ -163,7 +162,6 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(users_bp)
     flask_app.register_blueprint(perks_bp)
-    flask_app.register_blueprint(generator_bp)
     flask_app.register_blueprint(draft_bp)
     flask_app.register_blueprint(quests_bp)
     flask_app.register_blueprint(synergy_bp)

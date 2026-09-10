@@ -113,26 +113,6 @@ INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type
 SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
 WHERE NOT EXISTS (SELECT 1 FROM perk_rules WHERE id = 1);
 
-CREATE TABLE IF NOT EXISTS generator_settings (
-    id INTEGER PRIMARY KEY CHECK (id = 1),
-    role TEXT NOT NULL DEFAULT 'Survivor',
-    gen_mode TEXT NOT NULL DEFAULT 'instant',
-    no_repeat_perks BOOLEAN NOT NULL DEFAULT 1,
-    total_pages INTEGER NOT NULL DEFAULT 12,
-    perks_per_page INTEGER NOT NULL DEFAULT 15,
-    last_page_perks INTEGER NOT NULL DEFAULT 8,
-    spin_duration_sec REAL NOT NULL DEFAULT 3.0,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS generator_drawn_perks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    role TEXT NOT NULL,
-    perk_name TEXT NOT NULL,
-    drawn_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(role, perk_name)
-);
-
 CREATE TABLE IF NOT EXISTS draft_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     room_code TEXT UNIQUE NOT NULL,
@@ -255,9 +235,6 @@ CREATE TABLE IF NOT EXISTS page_streak_page_logs (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (run_id) REFERENCES page_streak_runs(id) ON DELETE CASCADE
 );
-
-INSERT OR IGNORE INTO generator_settings (id, role, gen_mode, no_repeat_perks)
-VALUES (1, 'Survivor', 'instant', 1);
 
 CREATE TABLE IF NOT EXISTS guesser_stats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

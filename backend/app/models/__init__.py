@@ -26,8 +26,6 @@ from app.models.gauntlet import (
 from app.models.map import MapObjective, MapRealm, MapTile, Realm
 from app.models.minigames import (
     DraftSession,
-    GeneratorDrawnPerk,
-    GeneratorSetting,
     GuesserStat,
     ScraperSetting,
 )
@@ -68,8 +66,6 @@ __all__ = [
     "MapObjective",
     "GauntletRun",
     "GauntletMatchLog",
-    "GeneratorSetting",
-    "GeneratorDrawnPerk",
     "ScraperSetting",
     "PageStreakRun",
     "PageStreakPageLog",

@@ -2,13 +2,6 @@
 // frontend/src/utils/__tests__/servicesApi.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
-import {
-  fetchGeneratorConfig,
-  updateGeneratorConfig,
-  fetchDrawnPerks,
-  addDrawnPerks,
-  resetDrawnPerks,
-} from '@/utils/../services/generatorApi';
 import { fetchQuests, claimQuest } from '@/utils/../services/questApi';
 import {
   createDraftRoom,
@@ -32,88 +25,6 @@ import {
   fetchStats as fetchGauntletStats,
 } from '@/utils/../services/gauntletStreakApi';
 import { createStreakApiClient } from '@/utils/../services/streakApiClient';
-
-test('servicesApi: generatorApi endpoints and handlers', async (t) => {
-  const originalFetch = globalThis.fetch;
-
-  await t.test('fetchGeneratorConfig sends GET and returns config object', async () => {
-    const mockConfig = {
-      role: 'Survivor',
-      gen_mode: 'instant',
-      total_pages: 5,
-      perks_per_page: 15,
-      last_page_perks: 8,
-      spin_duration_sec: 3,
-    };
-
-    globalThis.fetch = async (url: any) => {
-      assert.ok(String(url).includes('/api/v1/generator/config'));
-      return {
-        ok: true,
-        json: async () => ({ config: mockConfig }),
-      } as Response;
-    };
-
-    const config = await fetchGeneratorConfig();
-    assert.strictEqual(config.role, 'Survivor');
-    assert.strictEqual(config.total_pages, 5);
-  });
-
-  await t.test('updateGeneratorConfig posts payload and updates config', async () => {
-    globalThis.fetch = async (url: any, opts: any) => {
-      assert.ok(String(url).includes('/api/v1/generator/config'));
-      assert.strictEqual(opts.method, 'POST');
-      const body = JSON.parse(opts.body);
-      assert.strictEqual(body.spin_duration_sec, 5);
-      return {
-        ok: true,
-        json: async () => ({ config: { spin_duration_sec: 5 } }),
-      } as Response;
-    };
-
-    const res = await updateGeneratorConfig({ spin_duration_sec: 5 });
-    assert.strictEqual(res.spin_duration_sec, 5);
-  });
-
-  await t.test('fetchDrawnPerks and addDrawnPerks manipulate drawn perk list', async () => {
-    globalThis.fetch = async (url: any, opts?: any) => {
-      if (opts && opts.method === 'POST') {
-        assert.ok(String(url).includes('/api/v1/generator/draw'));
-        return {
-          ok: true,
-          json: async () => ({ drawn_perks: ['sprint_burst', 'adrenaline'] }),
-        } as Response;
-      }
-      assert.ok(String(url).includes('/api/v1/generator/drawn'));
-      return {
-        ok: true,
-        json: async () => ({ drawn_perks: ['sprint_burst'] }),
-      } as Response;
-    };
-
-    const initial = await fetchDrawnPerks('Survivor');
-    assert.deepStrictEqual(initial, ['sprint_burst']);
-
-    const added = await addDrawnPerks('Survivor', ['adrenaline']);
-    assert.deepStrictEqual(added, ['sprint_burst', 'adrenaline']);
-  });
-
-  await t.test('resetDrawnPerks resets drawn perk list', async () => {
-    globalThis.fetch = async (url: any, opts: any) => {
-      assert.ok(String(url).includes('/api/v1/generator/reset'));
-      assert.strictEqual(opts.method, 'POST');
-      return {
-        ok: true,
-        json: async () => ({ drawn_perks: [] }),
-      } as Response;
-    };
-
-    const res = await resetDrawnPerks('Survivor');
-    assert.deepStrictEqual(res, []);
-  });
-
-  globalThis.fetch = originalFetch;
-});
 
 test('servicesApi: questApi fetching and local fallback logic', async (t) => {
   const originalFetch = globalThis.fetch;

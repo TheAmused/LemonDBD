@@ -14,18 +14,22 @@ import {
   Zap,
   Compass,
   ArrowRight,
+  Gamepad2,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { EntityItem } from '@/types/smashOrPass';
 import { Modal } from '@/components/common/Modal';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-
-interface VoteRecord {
-  character: EntityItem;
-  vote: 'smash' | 'pass' | 'super_smash';
-  timestamp: number;
-}
+import {
+  calculateRomancePersona,
+  reconstructSharedPersona,
+  buildArchetypeShareUrl,
+  copyTextWithFallback,
+  type VoteRecord,
+  type SharedArchetypePayload,
+  type RomancePersonaResult,
+} from '@/utils/smashPersona';
 
 interface PersonaArchetypeEntry {
   title?: string;
@@ -37,6 +41,7 @@ interface RomancePersonaModalProps {
   isOpen: boolean;
   onClose: () => void;
   votes: VoteRecord[];
+  sharedPayload?: SharedArchetypePayload | null;
   onResetAll?: () => void;
   locale?: string;
   dict?: Dictionary | any;
@@ -46,6 +51,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   isOpen,
   onClose,
   votes,
+  sharedPayload,
   onResetAll,
   locale = 'en',
   dict,
@@ -54,115 +60,58 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const backendBase = getBackendBaseUrl();
   const rawSmash = dict?.smashOrPass;
 
-  const persona = useMemo(() => {
+  const persona: RomancePersonaResult = useMemo(() => {
     const rawArchetypes = (rawSmash?.personaArchetypes || {}) as Record<string, PersonaArchetypeEntry>;
-
-    if (votes.length === 0) {
-      const untapped = rawArchetypes.untappedSoul || {};
-      return {
-        title: untapped.title || 'The Untapped Soul',
-        subtitle: untapped.subtitle || 'Your trial desires remain veiled in the Fog.',
-        description: untapped.desc || 'Evaluate candidates to unlock your psychological profile, dating analysis, and affinity balance.',
-        badgeColor: 'from-slate-800 via-zinc-900 to-black',
-        borderColor: 'border-zinc-700/60',
-        glowColor: 'rgba(148, 163, 184, 0.2)',
-        icon: <Compass className="h-6 w-6 text-slate-200 animate-spin-slow" />,
-        killerAffinity: 0,
-        survivorAffinity: 0,
-        smashRate: 0,
-        favoriteChar: null,
-      };
+    if (sharedPayload) {
+      return reconstructSharedPersona(sharedPayload, rawArchetypes);
     }
+    return calculateRomancePersona(votes, rawArchetypes);
+  }, [votes, sharedPayload, rawSmash]);
 
-    const smashes = votes.filter((v) => v.vote === 'smash' || v.vote === 'super_smash');
-    const total = votes.length;
-    const smashRate = Math.round((smashes.length / total) * 100);
+  const handleShare = async () => {
+    if (typeof window === 'undefined') return;
 
-    const smashedKillers = smashes.filter((v) => v.character.role === 'Killer').length;
-    const smashedSurvivors = smashes.filter((v) => v.character.role === 'Survivor').length;
-    const smashedMonsters = smashes.filter((v) => v.character.gender === 'monster_other').length;
+    const shareUrl = buildArchetypeShareUrl(window.location.href, {
+      k: persona.archKey,
+      r: persona.smashRate,
+      s: persona.survivorAffinity,
+      ka: persona.killerAffinity,
+      v: persona.totalVotes,
+      fn: persona.favoriteChar?.name,
+      fs: persona.favoriteChar?.slug,
+      fr: persona.favoriteChar?.role,
+      fm: persona.favoriteChar?.media_url || undefined,
+    });
 
-    const totalSmashedRoles = smashedKillers + smashedSurvivors;
-    const killerAffinity = totalSmashedRoles > 0 ? Math.round((smashedKillers / totalSmashedRoles) * 100) : 50;
-    const survivorAffinity = 100 - killerAffinity;
+    const shareTitle = `${rawSmash?.modals?.personaTitle || 'Trial Romance Archetype'}: ${persona.title}`;
+    const shareText = `"${persona.title}" (${persona.smashRate}% Smash Rate) in Dead by Daylight Smash or Pass!`;
 
-    let archKey = 'fogRomantic';
-    let badgeColor = 'from-purple-600 via-pink-600 to-rose-950';
-    let borderColor = 'border-pink-500/60';
-    let glowColor = 'rgba(236, 72, 153, 0.35)';
-    let archIcon = <Sparkles className="h-6 w-6 text-pink-700 dark:text-pink-300" />;
-
-    if (smashedMonsters >= 2) {
-      archKey = 'eldritchDevotee';
-      badgeColor = 'from-indigo-600 via-purple-700 to-slate-950';
-      borderColor = 'border-purple-500/60';
-      glowColor = 'rgba(168, 85, 247, 0.35)';
-      archIcon = <Skull className="h-6 w-6 text-purple-300" />;
-    } else if (killerAffinity >= 75) {
-      archKey = 'redStainAddict';
-      badgeColor = 'from-rose-600 via-red-700 to-zinc-950';
-      borderColor = 'border-red-500/60';
-      glowColor = 'rgba(239, 68, 68, 0.35)';
-      archIcon = <Flame className="h-6 w-6 text-red-300" />;
-    } else if (survivorAffinity >= 75) {
-      archKey = 'campfireSoulmate';
-      badgeColor = 'from-emerald-500 via-teal-700 to-zinc-950';
-      borderColor = 'border-teal-500/60';
-      glowColor = 'rgba(20, 184, 166, 0.35)';
-      archIcon = <Shield className="h-6 w-6 text-emerald-300" />;
-    } else if (smashRate >= 85) {
-      archKey = 'entitysParamour';
-      badgeColor = 'from-pink-500 via-rose-600 to-purple-950';
-      borderColor = 'border-pink-500/60';
-      glowColor = 'rgba(255, 0, 85, 0.35)';
-      archIcon = <Heart className="h-6 w-6 text-rose-300 fill-rose-300" />;
-    } else if (smashRate <= 20) {
-      archKey = 'coldHeartedPragmatist';
-      badgeColor = 'from-slate-600 via-zinc-800 to-black';
-      borderColor = 'border-slate-500/60';
-      glowColor = 'rgba(100, 116, 139, 0.35)';
-      archIcon = <Zap className="h-6 w-6 text-slate-200" />;
-    }
-
-    const arch = rawArchetypes[archKey] || {};
-    const title = arch.title || 'Fog Romantic';
-    const subtitle = arch.subtitle || 'A balanced lover drawn to the thrill and warmth of the realm.';
-    const description = arch.desc || 'You find equal passion in heart-pounding killer chases and intimate campfire bonds.';
-
-    return {
-      title,
-      subtitle,
-      description,
-      badgeColor,
-      borderColor,
-      glowColor,
-      icon: archIcon,
-      killerAffinity,
-      survivorAffinity,
-      smashRate,
-      favoriteChar: smashes[0]?.character || null,
-    };
-  }, [votes, rawSmash]);
-
-  const handleShare = () => {
     if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator
-        .share({
-          title: `${rawSmash?.modals?.personaTitle || 'Trial Romance Archetype'}: ${persona.title}`,
-          text: `"${persona.title}" (${persona.smashRate}% Smash Rate) in Dead by Daylight Smash or Pass!`,
-          url: window.location.href,
-        })
-        .catch(() => {});
-    } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard.writeText(
-        `"${persona.title}" (${persona.smashRate}% Smash Rate) - ${window.location.href}`
-      );
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // User dismissed native share or not allowed, fallback to clipboard
+      }
+    }
+
+    const fullShareString = `${shareText} - ${shareUrl}`;
+    const success = await copyTextWithFallback(fullShareString);
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
   };
 
-  const personaModalTitle = rawSmash?.modals?.personaTitle || 'Trial Romance Archetype';
+  const isSharedView = Boolean(persona.isShared);
+  const personaModalTitle = isSharedView
+    ? rawSmash?.modals?.sharedPersonaTitle || (locale === 'pl' ? 'Udostępniony Archetyp Randkowy' : 'Shared Romance Archetype')
+    : rawSmash?.modals?.personaTitle || 'Trial Romance Archetype';
+
   const survivorsLabel = rawSmash?.filters?.survivors || 'Survivors';
   const killersLabel = rawSmash?.filters?.killers || 'Killers';
   const datingPsychologyLabel = rawSmash?.datingPsychology || 'Dating Psychology Breakdown';
@@ -175,8 +124,30 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const smashRateLabel = rawSmash?.statsDetail?.smashRate || 'Smash Rate';
   const firstSmashLabel = rawSmash?.statsDetail?.firstSmash || 'First Smash';
   const startVotingLabel = rawSmash?.startVoting || 'Start Rating Candidates';
+  const playToDiscoverLabel = rawSmash?.playToDiscover || (locale === 'pl' ? 'Zagraj i Odkryj Swój Archetyp!' : 'Play & Discover Yours!');
+  const sharedResultBadge = rawSmash?.sharedBadge || (locale === 'pl' ? 'Udostępniony Wynik Znajomego' : "Friend's Shared Result");
 
-  const hasVotes = votes.length > 0;
+  const hasVotes = persona.totalVotes > 0 || isSharedView;
+
+  const renderIcon = (name: RomancePersonaResult['iconName']) => {
+    switch (name) {
+      case 'compass':
+        return <Compass className="h-6 w-6 text-slate-200 animate-spin-slow" />;
+      case 'skull':
+        return <Skull className="h-6 w-6 text-purple-300" />;
+      case 'flame':
+        return <Flame className="h-6 w-6 text-red-300" />;
+      case 'shield':
+        return <Shield className="h-6 w-6 text-emerald-300" />;
+      case 'heart':
+        return <Heart className="h-6 w-6 text-rose-300 fill-rose-300" />;
+      case 'zap':
+        return <Zap className="h-6 w-6 text-slate-200" />;
+      case 'sparkles':
+      default:
+        return <Sparkles className="h-6 w-6 text-pink-700 dark:text-pink-300" />;
+    }
+  };
 
   const favoriteCharAvatar = persona.favoriteChar
     ? persona.favoriteChar.media_url?.startsWith('http') || persona.favoriteChar.media_url?.startsWith('/static')
@@ -185,8 +156,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
           backendBase,
           {
             name: persona.favoriteChar.name,
-            category: persona.favoriteChar.role,
-            avatar_local_path: `avatars/${persona.favoriteChar.role === 'Survivor' ? 'survivors' : 'killers'}/${persona.favoriteChar.slug}.png`,
+            category: (persona.favoriteChar.role || 'Survivor') as any,
+            avatar_local_path: `avatars/${persona.favoriteChar.role === 'Survivor' ? 'survivors' : 'killers'}/${persona.favoriteChar.slug || 'unknown'}.png`,
           },
           persona.favoriteChar.role === 'Survivor'
         )
@@ -232,13 +203,22 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </button>
           </div>
         ) : (
-          /* Unlocked Archetype View */
+          /* Unlocked / Shared Archetype View */
           <>
             {/* Thematic Hero Banner */}
             <div
               className={`relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-white shadow-2xl transition-all`}
               style={{ boxShadow: `0 0 40px ${persona.glowColor}` }}
             >
+              {isSharedView && (
+                <div className="mb-2">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 border border-white/25 text-[11px] font-mono font-bold tracking-wider text-pink-200 backdrop-blur-md shadow-sm">
+                    <Sparkles className="h-3 w-3 text-pink-400" />
+                    {sharedResultBadge}
+                  </span>
+                </div>
+              )}
+
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1 min-w-0">
                   <h3 className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-white drop-shadow-md">
@@ -252,7 +232,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 </div>
 
                 <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-black/40 border border-white/20 backdrop-blur-md shrink-0 shadow-lg">
-                  {persona.icon}
+                  {renderIcon(persona.iconName)}
                 </div>
               </div>
             </div>
@@ -273,7 +253,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
               <div className="p-3.5 rounded-2xl bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 flex flex-col justify-between gap-1 shadow-inner">
                 <span className="text-slate-500 dark:text-zinc-400 text-[11px]">{totalEvaluatedLabel}</span>
                 <span className="text-lg font-black text-zinc-900 dark:text-zinc-100">
-                  {votes.length} <span className="text-xs font-normal text-slate-500 dark:text-zinc-400">{candidatesLabel}</span>
+                  {persona.totalVotes} <span className="text-xs font-normal text-slate-500 dark:text-zinc-400">{candidatesLabel}</span>
                 </span>
               </div>
 
@@ -334,29 +314,53 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             {/* Bottom Actions */}
-            <div className="flex items-center gap-3 pt-2">
-              <button
-                type="button"
-                onClick={handleShare}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-[#ff0055] hover:from-rose-500 hover:to-pink-500 text-white font-black font-mono text-xs sm:text-sm transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)] cursor-pointer active:scale-98"
-              >
-                {copied ? <Check className="h-4 w-4 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
-                <span>{copied ? copiedToClipboardLabel : shareArchetypeLabel}</span>
-              </button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              {isSharedView ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-[#ff0055] hover:from-rose-500 hover:to-pink-500 text-white font-black font-mono text-xs sm:text-sm transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)] cursor-pointer active:scale-98"
+                  >
+                    <Gamepad2 className="h-4 w-4" />
+                    <span>{playToDiscoverLabel}</span>
+                  </button>
 
-              {onResetAll && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    onResetAll();
-                  }}
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:border-pink-500 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shrink-0 shadow-md"
-                  title={resetVotesLabel}
-                  aria-label={resetVotesLabel}
-                >
-                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                </button>
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    className="flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:border-pink-500 text-slate-700 dark:text-zinc-200 font-bold font-mono text-xs sm:text-sm transition-all cursor-pointer shadow-md"
+                  >
+                    {copied ? <Check className="h-4 w-4 text-emerald-500 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
+                    <span>{copied ? copiedToClipboardLabel : shareArchetypeLabel}</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-[#ff0055] hover:from-rose-500 hover:to-pink-500 text-white font-black font-mono text-xs sm:text-sm transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)] cursor-pointer active:scale-98"
+                  >
+                    {copied ? <Check className="h-4 w-4 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
+                    <span>{copied ? copiedToClipboardLabel : shareArchetypeLabel}</span>
+                  </button>
+
+                  {onResetAll && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        onResetAll();
+                      }}
+                      className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:border-pink-500 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer shrink-0 shadow-md"
+                      title={resetVotesLabel}
+                      aria-label={resetVotesLabel}
+                    >
+                      <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </>

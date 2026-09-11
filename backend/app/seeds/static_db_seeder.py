@@ -58,7 +58,6 @@ def _sync_all_postgres_sequences() -> None:
             "map_objectives",
             "users",
             "perk_rules",
-            "scraper_settings",
             "rosters",
             "seed_update_logs",
         ]
@@ -104,16 +103,25 @@ def load_static_seed_payload(data_dir: Path) -> dict[str, Any]:
         folder = data_dir / sub
         if not folder.exists():
             continue
-        for json_file in sorted(folder.glob("*.json")):
+        for json_file in sorted(folder.rglob("*.json")):
             try:
                 with open(json_file, "r", encoding="utf-8") as f:
                     file_data = json.load(f)
                 target = file_data.get("target") or json_file.stem
+                items = None
                 # Support clean format: { "target": "perks", "perks": [...] }
                 if target in file_data:
-                    combined_data[target] = file_data[target]
+                    items = file_data[target]
                 elif "data" in file_data and isinstance(file_data["data"], dict) and target in file_data["data"]:
-                    combined_data[target] = file_data["data"][target]
+                    items = file_data["data"][target]
+
+                if items is not None:
+                    if isinstance(items, list):
+                        if target not in combined_data:
+                            combined_data[target] = []
+                        combined_data[target].extend(items)
+                    else:
+                        combined_data[target] = items
             except Exception as read_err:
                 logger.warning(f"[static_seeder] Error reading {json_file}: {read_err}")
 
@@ -224,8 +232,8 @@ def apply_pending_updates() -> dict[str, Any]:
             subfolder = data_dir / sub
             if not subfolder.exists():
                 continue
-            for json_file in sorted(subfolder.glob("*.json")):
-                rel_id = f"seed:{sub}/{json_file.name}"
+            for json_file in sorted(subfolder.rglob("*.json")):
+                rel_id = f"seed:{json_file.relative_to(data_dir).as_posix()}"
                 current_hash = compute_file_hash(json_file)
 
                 existing_log = db.session.scalar(
@@ -298,8 +306,8 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
             subfolder = data_dir / sub
             if not subfolder.exists():
                 continue
-            for json_file in subfolder.glob("*.json"):
-                rel_id = f"seed:{sub}/{json_file.name}"
+            for json_file in sorted(subfolder.rglob("*.json")):
+                rel_id = f"seed:{json_file.relative_to(data_dir).as_posix()}"
                 try:
                     chash = compute_file_hash(json_file)
                     _record_file_update(rel_id, chash, {"initial": True})

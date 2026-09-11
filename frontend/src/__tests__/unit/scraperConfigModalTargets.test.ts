@@ -18,7 +18,6 @@ describe('ScraperConfigModal export/import targets', () => {
     'user_showcases',
     'changelog_posts',
     'draft_sessions',
-    'scraper_settings',
     'challenge_mode_settings',
     'admin_audit_logs',
     'gauntlet_runs',
@@ -47,9 +46,9 @@ describe('ScraperConfigModal export/import targets', () => {
     }
   });
 
-  it('ALL_TARGETS covers all 27 supported database targets', () => {
+  it('ALL_TARGETS covers all 26 supported database targets', () => {
     const idMatches = modalContent.match(/id:\s*'[a-z_]+'/g) || [];
-    assert.equal(idMatches.length, 27, 'ALL_TARGETS should contain exactly 27 target entries');
+    assert.equal(idMatches.length, 26, 'ALL_TARGETS should contain exactly 26 target entries');
   });
 
   it('TARGET_GROUPS_CONFIG organizes targets into content, users, community, and settings', () => {

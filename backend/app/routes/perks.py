@@ -8,7 +8,6 @@ from flask import Blueprint, current_app, jsonify, request, send_from_directory
 
 from app.core.extensions import db
 from app.core.security import admin_required, get_current_user
-from app.models.minigames import ScraperSetting
 from app.seeds.static_db_seeder import seed_from_static_json
 from app.services.perk_service import PerkService
 from app.services.translations import TranslationService
@@ -266,34 +265,6 @@ def get_scrape_status():
         "last_used_source": "offline_static_json",
     }), 200
 
-
-@perks_bp.route("/api/v1/scrape/config", methods=["GET"])
-@admin_required
-def get_scrape_config():
-    setting = db.session.scalar(select(ScraperSetting).order_by(ScraperSetting.id.desc()))
-    if not setting:
-        return jsonify({"source": "offline_static_json", "fallback_to_wiki": False}), 200
-    return jsonify(setting.to_dict()), 200
-
-
-@perks_bp.route("/api/v1/scrape/config", methods=["POST"])
-@admin_required
-def update_scrape_config():
-    data = request.get_json(silent=True) or {}
-    setting = db.session.scalar(select(ScraperSetting).order_by(ScraperSetting.id.desc()))
-    if not setting:
-        setting = ScraperSetting(
-            source=data.get("source", "offline_static_json"),
-            fallback_to_wiki=bool(data.get("fallback_to_wiki", False)),
-        )
-        db.session.add(setting)
-    else:
-        if "source" in data:
-            setting.source = data["source"]
-        if "fallback_to_wiki" in data:
-            setting.fallback_to_wiki = bool(data["fallback_to_wiki"])
-    db.session.commit()
-    return jsonify({"message": "Configuration updated successfully", "config": setting.to_dict()}), 200
 
 
 @perks_bp.route("/api/v1/scrape/translations/game-dumps", methods=["POST"])

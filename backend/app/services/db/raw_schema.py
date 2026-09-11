@@ -5,16 +5,6 @@ import sqlite3
 logger = logging.getLogger(__name__)
 
 SQLITE_FALLBACK_DDL = """
-CREATE TABLE IF NOT EXISTS perk_rules (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    is_default BOOLEAN NOT NULL DEFAULT 0,
-    slot1_type TEXT NOT NULL DEFAULT 'character_own',
-    slot2_type TEXT NOT NULL DEFAULT 'character_own',
-    slot3_type TEXT NOT NULL DEFAULT 'general_role',
-    slot4_type TEXT NOT NULL DEFAULT 'any_role',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 CREATE TABLE IF NOT EXISTS gauntlet_runs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -108,10 +98,6 @@ CREATE TABLE IF NOT EXISTS history_match_logs (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (run_id) REFERENCES history_runs(id) ON DELETE CASCADE
 );
-
-INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type, slot4_type)
-SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
-WHERE NOT EXISTS (SELECT 1 FROM perk_rules WHERE id = 1);
 
 CREATE TABLE IF NOT EXISTS draft_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -304,13 +290,6 @@ CREATE TABLE IF NOT EXISTS votes (
     FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS translations (
-    id TEXT PRIMARY KEY,
-    locale TEXT NOT NULL,
-    key TEXT NOT NULL,
-    value TEXT NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 """
 
 

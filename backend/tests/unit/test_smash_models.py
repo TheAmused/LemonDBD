@@ -200,6 +200,7 @@ class TestSmashModels:
         assert "entities" in tables
         assert "entity_stats" in tables
         assert "votes" in tables
-        assert "translations" in tables
+        assert "translations" not in tables
+        assert "perk_rules" not in tables
 
         conn.close()

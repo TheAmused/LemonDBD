@@ -29,7 +29,7 @@ from app.models.minigames import (
     GuesserStat,
 )
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
-from app.models.perk import Perk, PerkRule
+from app.models.perk import Perk
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
@@ -54,7 +54,6 @@ __all__ = [
     "Survivor",
     "Killer",
     "Perk",
-    "PerkRule",
     "Item",
     "Addon",
     "Offering",

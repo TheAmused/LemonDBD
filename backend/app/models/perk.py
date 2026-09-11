@@ -70,30 +70,3 @@ class Perk(Base):
             "is_disabled": self.is_disabled,
             "disabled_reason": self.disabled_reason,
         }
-
-
-class PerkRule(Base):
-    __tablename__ = "perk_rules"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(150), nullable=False)
-    is_default: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    slot1_type: Mapped[str] = mapped_column(String(50), default="character_own", nullable=False)
-    slot2_type: Mapped[str] = mapped_column(String(50), default="character_own", nullable=False)
-    slot3_type: Mapped[str] = mapped_column(String(50), default="general_role", nullable=False)
-    slot4_type: Mapped[str] = mapped_column(String(50), default="any_role", nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "name": self.name,
-            "is_default": self.is_default,
-            "slot1_type": self.slot1_type,
-            "slot2_type": self.slot2_type,
-            "slot3_type": self.slot3_type,
-            "slot4_type": self.slot4_type,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }

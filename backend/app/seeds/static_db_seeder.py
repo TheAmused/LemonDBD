@@ -57,7 +57,6 @@ def _sync_all_postgres_sequences() -> None:
             "map_tiles",
             "map_objectives",
             "users",
-            "perk_rules",
             "rosters",
             "seed_update_logs",
         ]

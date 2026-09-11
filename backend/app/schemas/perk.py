@@ -29,18 +29,3 @@ class PerkResponse(PerkBase):
 
     model_config = ConfigDict(from_attributes=True)
 
-
-class PerkRuleBase(BaseModel):
-    name: str = Field(..., max_length=150)
-    is_default: bool = False
-    slot1_type: str = "character_own"
-    slot2_type: str = "character_own"
-    slot3_type: str = "general_role"
-    slot4_type: str = "any_role"
-
-
-class PerkRuleResponse(PerkRuleBase):
-    id: int
-    created_at: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)

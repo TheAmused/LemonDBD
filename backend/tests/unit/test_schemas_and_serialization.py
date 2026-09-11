@@ -15,7 +15,7 @@ from app.schemas.gauntlet import GauntletRunCreate, GauntletRunResponse
 from app.schemas.chaos import ChaosRunResponse
 from app.schemas.history import HistoryRunResponse
 from app.schemas.page_streak import PageStreakRunCreate, PageStreakRunResponse
-from app.schemas.perk import PerkBase, PerkResponse, PerkRuleResponse
+from app.schemas.perk import PerkBase, PerkResponse
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 

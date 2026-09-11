@@ -9,7 +9,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
     Vote,
 )
 from app.seeds.smash_roster_seeder import seed_smash_rosters
@@ -520,14 +519,6 @@ class SmashOrPassService:
             logger.error(f"Error resetting user votes: {e}")
             raise e
 
-    def get_translations(self, locale: str = "en") -> dict[str, str]:
-        self.ensure_seeded()
-        stmt = select(Translation).where(Translation.locale == locale)
-        trans = db.session.scalars(stmt).all()
-        if not trans and locale != "en":
-            stmt_en = select(Translation).where(Translation.locale == "en")
-            trans = db.session.scalars(stmt_en).all()
-        return {t.key: t.value for t in trans}
 
     def get_editions(self) -> list[dict[str, Any]]:
         return self.get_rosters(active_only=True)

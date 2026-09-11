@@ -6,7 +6,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
     Vote,
 )
 from app.services.db.raw_schema import init_raw_sqlite_schema
@@ -155,25 +154,6 @@ class TestSmashModels:
         assert vote_dict["session_id"] == "session_abc123"
         assert vote_dict["vote_type"] == "super_smash"
         assert vote_dict["user_id"] == 1
-
-    def test_translation_model(self, db_session: Session) -> None:
-        translation = Translation(
-            locale="pl",
-            key="smashOrPass.rosters.canon.name",
-            value="Kanon Mgły",
-        )
-        db_session.add(translation)
-        db_session.commit()
-
-        assert translation.id is not None
-        assert translation.locale == "pl"
-        assert translation.key == "smashOrPass.rosters.canon.name"
-        assert translation.value == "Kanon Mgły"
-
-        t_dict = translation.to_dict()
-        assert t_dict["locale"] == "pl"
-        assert t_dict["key"] == "smashOrPass.rosters.canon.name"
-        assert t_dict["value"] == "Kanon Mgły"
 
     def test_cascade_delete(self, db_session: Session) -> None:
         roster = Roster(

@@ -11,83 +11,20 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
 )
 
 logger = logging.getLogger(__name__)
 
 ROSTERS_DIR = Path(__file__).resolve().parent / "data" / "smash_or_pass" / "rosters"
 
-# Default fallback translations for UI keys
-DEFAULT_GLOBAL_TRANSLATIONS: Dict[str, Dict[str, str]] = {
-    "en": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Rate Dead by Daylight candidates, discover your Trial Romance Archetype, and vote.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Leaderboard",
-        "smashOrPass.tiers.godTier": "God Tier",
-        "smashOrPass.tiers.fatalAttraction": "Fatal Attraction",
-        "smashOrPass.tiers.friendzone": "Friendzone",
-        "smashOrPass.tiers.eldritchVoid": "Eldritch Void",
-    },
-    "pl": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Oceń kandydatów Dead by Daylight, odkryj swój Archetyp Randkowy Próby i głosuj.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Tabela Wyników",
-        "smashOrPass.tiers.godTier": "Boski Poziom",
-        "smashOrPass.tiers.fatalAttraction": "Fatalne Zauroczenie",
-        "smashOrPass.tiers.friendzone": "Strefa Przyjaźni",
-        "smashOrPass.tiers.eldritchVoid": "Przedwieczna Pustka",
-    },
-    "es": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Califica a los candidatos de Dead by Daylight y descubre tu Arquetipo.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Clasificación",
-        "smashOrPass.tiers.godTier": "Nivel Dios",
-        "smashOrPass.tiers.fatalAttraction": "Atracción Fatal",
-        "smashOrPass.tiers.friendzone": "Zona de Amigos",
-        "smashOrPass.tiers.eldritchVoid": "Vacío Primigenio",
-    },
-    "de": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Bewerte Dead by Daylight Charaktere und finde deinen Romanzen-Archetyp.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Rangliste",
-        "smashOrPass.tiers.godTier": "Götter-Stufe",
-        "smashOrPass.tiers.fatalAttraction": "Fatale Anziehung",
-        "smashOrPass.tiers.friendzone": "Friendzone",
-        "smashOrPass.tiers.eldritchVoid": "Eldritch-Leere",
-    },
-    "ja": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Dead by Daylightのキャラクターを評価し、ロマンスの原型を見つけよう。",
-        "smashOrPass.ui.smash": "スマッシュ",
-        "smashOrPass.ui.pass": "パス",
-        "smashOrPass.ui.leaderboard": "リーダーボード",
-        "smashOrPass.tiers.godTier": "神ティア",
-        "smashOrPass.tiers.fatalAttraction": "致命的魅力",
-        "smashOrPass.tiers.friendzone": "フレンドゾーン",
-        "smashOrPass.tiers.eldritchVoid": "狂気の虚無",
-    },
-}
 
-
-def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List[Dict[str, Any]]], Dict[str, Dict[str, str]]]:
+def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List[Dict[str, Any]]]]:
     """
     Dynamically scans and loads all roster definitions from backend/app/seeds/data/smash_or_pass/rosters/*.json
-    Returns (rosters_list, entities_by_roster_map, translations_map).
+    Returns (rosters_list, entities_by_roster_map).
     """
     rosters_list: List[Dict[str, Any]] = []
     entities_by_roster: Dict[str, List[Dict[str, Any]]] = {}
-    translations_map: Dict[str, Dict[str, str]] = {
-        lang: dict(kvs) for lang, kvs in DEFAULT_GLOBAL_TRANSLATIONS.items()
-    }
 
     target_dir = ROSTERS_DIR
     if not target_dir.exists():
@@ -96,7 +33,7 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
             target_dir = fallback
         else:
             logger.warning(f"Rosters directory does not exist: {ROSTERS_DIR}")
-            return rosters_list, entities_by_roster, translations_map
+            return rosters_list, entities_by_roster
 
     # Sort JSON files (canon first, then alphabetically)
     json_files = sorted(
@@ -129,45 +66,14 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
                 clean_r = {k: v for k, v in r_data.items() if k != "entities"}
                 rosters_list.append(clean_r)
 
-            # Merge translations if present in file
-            file_translations = data.get("translations", {})
-            for lang, kv_pairs in file_translations.items():
-                if lang not in translations_map:
-                    translations_map[lang] = {}
-                translations_map[lang].update(kv_pairs)
-
         except Exception as e:
             logger.error(f"Error loading roster JSON file {file_path}: {e}")
 
-    # Load dedicated smash translations if available
-    trans_files = [
-        target_dir.parent / "smash_translations.json",
-        Path(__file__).resolve().parent / "data" / "smash_or_pass" / "smash_translations.json",
-        Path(__file__).resolve().parent.parent.parent / "data" / "static_export" / "smash_or_pass" / "smash_translations.json",
-    ]
-    for trans_file in trans_files:
-        if trans_file.exists():
-            try:
-                with open(trans_file, "r", encoding="utf-8") as f:
-                    st_data = json.load(f)
-                trans_items = st_data.get("smash_translations", [])
-                for item in trans_items:
-                    loc = item.get("locale")
-                    key = item.get("key")
-                    val = item.get("value")
-                    if loc and key and val is not None:
-                        if loc not in translations_map:
-                            translations_map[loc] = {}
-                        translations_map[loc][key] = val
-                break
-            except Exception as te:
-                logger.error(f"Error loading smash translations from {trans_file}: {te}")
-
-    return rosters_list, entities_by_roster, translations_map
+    return rosters_list, entities_by_roster
 
 
 # Dynamically load data for module-level access
-ROSTERS_SEED_DATA, ENTITIES_BY_ROSTER, TRANSLATIONS_DATA = load_rosters_from_json_files()
+ROSTERS_SEED_DATA, ENTITIES_BY_ROSTER = load_rosters_from_json_files()
 
 
 def seed_smash_rosters():
@@ -196,7 +102,7 @@ def ensure_roster_assets(static_dir: Path | None = None) -> None:
 def _seed_smash_rosters_impl():
     try:
         ensure_roster_assets()
-        rosters_list, entities_by_roster, translations_map = load_rosters_from_json_files()
+        rosters_list, entities_by_roster = load_rosters_from_json_files()
 
         # 1. Seed / Upsert Rosters
         for r_data in rosters_list:
@@ -277,25 +183,6 @@ def _seed_smash_rosters_impl():
                     )
                     db.session.add(stat)
 
-        # 3. Seed / Upsert Multi-Locale Translations
-        for loc, kv_map in translations_map.items():
-            for key, value in kv_map.items():
-                trans = db.session.scalar(
-                    select(Translation).where(
-                        Translation.locale == loc,
-                        Translation.key == key,
-                    )
-                )
-                if not trans:
-                    trans = Translation(
-                        id=str(uuid.uuid4()),
-                        locale=loc,
-                        key=key,
-                        value=value,
-                    )
-                    db.session.add(trans)
-                else:
-                    trans.value = value
 
         db.session.commit()
         logger.info(f"Successfully seeded all {len(rosters_list)} rosters from JSON files into the database.")

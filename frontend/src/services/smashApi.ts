@@ -243,27 +243,6 @@ export async function resetUserVotes(
 }
 
 /**
- * Fetch dynamic key-value translations dictionary from the backend for the given locale.
- */
-export async function fetchDynamicTranslations(locale: string): Promise<Record<string, string>> {
-  const backendBase = getBackendBaseUrl();
-  const url = `${backendBase}/api/v1/smash-or-pass/translations?locale=${encodeURIComponent(locale)}`;
-  try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-    const data = await handleResponse<{ data: Record<string, string>; locale: string }>(response);
-    return data.data || {};
-  } catch (err) {
-    console.warn(`Could not fetch dynamic translations for locale '${locale}':`, err);
-    return {};
-  }
-}
-
-/**
  * Fetch all votes cast by the current user/session for stats persistence and hydration.
  */
 export async function fetchUserVotes(

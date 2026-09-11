@@ -543,7 +543,7 @@ class TestDatabaseExportImportSmashOrPass:
     def test_export_import_smash_or_pass_roster_roundtrip(self, export_import_app):
         with export_import_app.app_context():
             from sqlalchemy import delete as sa_delete
-            from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote, Translation
+            from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote
 
             roster = Roster(slug="canon", name_i18n_key="roster.canon.name", description_i18n_key="roster.canon.desc")
             db.session.add(roster)
@@ -553,12 +553,10 @@ class TestDatabaseExportImportSmashOrPass:
             db.session.flush()
             db.session.add(EntityStat(entity_id=entity.id, smash_count=5, pass_count=1))
             db.session.add(Vote(entity_id=entity.id, vote_type="smash", session_id="s1"))
-            db.session.add(Translation(locale="pl", key="roster.canon.name", value="Kanon"))
             db.session.commit()
 
-            exported = DatabaseExportImportService.export_database(targets=["rosters", "smash_translations"])
+            exported = DatabaseExportImportService.export_database(targets=["rosters"])
             assert exported["counts"]["rosters"] == 1
-            assert exported["counts"]["smash_translations"] == 1
             roster_row = _flat(exported)["rosters"][0]
             assert roster_row["slug"] == "canon"
             assert len(roster_row["entities"]) == 1
@@ -569,14 +567,12 @@ class TestDatabaseExportImportSmashOrPass:
             db.session.execute(sa_delete(EntityStat))
             db.session.execute(sa_delete(Entity))
             db.session.execute(sa_delete(Roster))
-            db.session.execute(sa_delete(Translation))
             db.session.commit()
 
             summary = DatabaseExportImportService.import_database(
-                exported, mode="merge", targets=["rosters", "smash_translations"]
+                exported, mode="merge", targets=["rosters"]
             )
             assert summary["summary"]["rosters"]["created"] == 1
-            assert summary["summary"]["smash_translations"]["created"] == 1
 
             restored_entity = db.session.scalars(select(Entity).where(Entity.slug == "ada_wong")).one()
             assert restored_entity.stat.smash_count == 5

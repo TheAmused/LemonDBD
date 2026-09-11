@@ -14,7 +14,7 @@ from app.models.equipment import Item, Addon, Offering
 from app.models.chapter import Chapter
 from app.models.map import MapRealm, Realm
 from app.models.user import User
-from app.models.smash_or_pass import Roster, Entity, Translation
+from app.models.smash_or_pass import Roster, Entity
 from app.services.db.serializers import (
     serialize_character, serialize_perk, serialize_item, serialize_addon, serialize_offering,
     serialize_chapter, serialize_realm, serialize_user,
@@ -174,8 +174,6 @@ def main():
                 extra_meta={"roster_slug": r.slug, "entity_count": len(r.entities)}
             )
 
-        smash_translations = [t.to_dict() for t in db.session.scalars(select(Translation).order_by(Translation.id)).all()]
-        save_json_file(OUTPUT_DIR / "smash_or_pass" / "smash_translations.json", "smash_translations", smash_translations)
 
         # 4. CORE USERS (Admin lemon & default user only)
         print("\n--- Exporting Core Users Only (lemon & user) ---")
@@ -213,7 +211,6 @@ static_export/
 │   ├── maps.json               ({len(maps_list)} maps with tiles and callouts)
 │   └── realms.json             ({len(realms)} realms and banners)
 ├── smash_or_pass/
-│   ├── smash_translations.json ({len(smash_translations)} UI and archetype translations)
 │   └── rosters/                (Individual roster files)
 │       ├── canon.json
 │       ├── anime_manga.json

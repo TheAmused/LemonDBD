@@ -34,7 +34,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
     Vote,
 )
 from app.models.user import (
@@ -76,7 +75,6 @@ __all__ = [
     "Entity",
     "EntityStat",
     "Vote",
-    "Translation",
     "BugReport",
     "User",
     "UserCharacterOwnership",

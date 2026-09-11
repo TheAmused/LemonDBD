@@ -332,16 +332,6 @@ def reset_user_votes():
         return jsonify({"error": str(e)}), 500
 
 
-@smash_or_pass_bp.route("/translations", methods=["GET"])
-def get_translations():
-    """Retrieve dynamic translations dictionary for a given locale."""
-    locale = request.args.get("locale", "en")
-    try:
-        translations = smash_service.get_translations(locale=locale)
-        return jsonify({"data": translations, "locale": locale}), 200
-    except Exception as e:
-        logger.error(f"Error fetching translations for locale '{locale}': {e}")
-        return jsonify({"error": str(e)}), 500
 
 
 @smash_or_pass_bp.route("/editions", methods=["GET"])

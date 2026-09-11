@@ -23,7 +23,6 @@ static_export/
 ???   ????????? maps.json               (58 maps with tiles and callouts)
 ???   ????????? realms.json             (21 realms and banners)
 ├── smash_or_pass/
-│   ├── smash_translations.json (155 UI and archetype translations)
 │   └── rosters/                (Individual roster files)
 │       ├── canon.json
 │       ├── anime_manga.json
@@ -35,8 +34,7 @@ static_export/
 │   └── perk_rules.json         (1 standard perk slot rule)
 └── users/
     ├── admin_lemon.json        (Admin 'lemon' user record)
-    ├── default_user.json       (Default 'user' record)
-    └── users.json              (Combined core users)
+    └── default_user.json       (Default 'user' record)
 ```
 
 ## How to Import

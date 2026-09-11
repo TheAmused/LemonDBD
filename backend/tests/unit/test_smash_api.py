@@ -458,43 +458,6 @@ class TestSmashOrPassAPI:
         assert res_admin.get_json()["data"]["reset_count"] == 1
         assert len(service.get_user_votes(user2.id, "canon")) == 0
 
-    @pytest.mark.parametrize(
-        "locale, expected_tier_str",
-        [
-            ("en", "God Tier"),
-            ("ja", "神ティア"),
-        ],
-    )
-    def test_get_translations_smash_route(
-        self, app: Flask, locale: str, expected_tier_str: str
-    ) -> None:
-        client = app.test_client()
-        res = client.get(f"/api/v1/smash-or-pass/translations?locale={locale}")
-        assert res.status_code == 200
-        data = res.get_json()
-        assert data["locale"] == locale
-        assert data["data"]["smashOrPass.tiers.godTier"] == expected_tier_str
-
-    @pytest.mark.parametrize(
-        "locale, expected_tier_str",
-        [
-            ("en", "God Tier"),
-            ("ja", "神ティア"),
-            ("es", "Nivel Dios"),
-            ("de", "Götter-Stufe"),
-            ("pl", "Boski Poziom"),
-        ],
-    )
-    def test_global_i18n_dynamic_endpoint(
-        self, app: Flask, locale: str, expected_tier_str: str
-    ) -> None:
-        client = app.test_client()
-        res = client.get(f"/api/v1/i18n/{locale}")
-        assert res.status_code == 200
-        data = res.get_json()
-        assert data["locale"] == locale
-        assert data["data"]["smashOrPass.tiers.godTier"] == expected_tier_str
-
     def test_legacy_routes_backward_compatibility(
         self, app: Flask, db_session: Session
     ) -> None:

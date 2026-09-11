@@ -23,7 +23,7 @@ from app.models.chaos import ChaosRun, ChaosMatchLog
 from app.models.history import HistoryRun, HistoryMatchLog
 from app.models.page_streak import PageStreakRun, PageStreakPageLog
 from app.services.db.run_family_export import export_run_family, import_run_family
-from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote, Translation
+from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 from app.services.db.serializers import (
     serialize_character, serialize_perk, serialize_item, serialize_addon, serialize_realm,
@@ -60,7 +60,6 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "history_runs",
         "page_streak_runs",
         "rosters",
-        "smash_translations",
     ],
     "settings": [
         "perk_rules",
@@ -361,8 +360,6 @@ class DatabaseExportImportService:
             export_data["rosters"] = [serialize_roster(r, username_by_user_id) for r in rosters]
             counts["rosters"] = len(export_data["rosters"])
 
-        if "smash_translations" in target_set:
-            _export_entity(export_data, counts, "smash_translations", Translation, lambda t: t.to_dict(), [], static_dir, include_assets)
 
         # Organize export into semantic groups
         grouped_data: dict[str, dict[str, Any]] = {}
@@ -420,8 +417,6 @@ class DatabaseExportImportService:
                     db.session.execute(delete(EntityStat))
                     db.session.execute(delete(Entity))
                     db.session.execute(delete(Roster))
-                if "smash_translations" in target_keys:
-                    db.session.execute(delete(Translation))
                 for key, model in _SIMPLE_DELETE_TARGETS:
                     if key in target_keys:
                         db.session.execute(delete(model))
@@ -890,21 +885,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["rosters"] = {"created": r_created, "updated": r_updated}
 
-            if "smash_translations" in target_keys and "smash_translations" in data:
-                st_created = st_updated = 0
-                for row in data["smash_translations"]:
-                    existing_translation = db.session.scalar(
-                        select(Translation).where(Translation.locale == row.get("locale"), Translation.key == row.get("key"))
-                    )
-                    if not existing_translation:
-                        existing_translation = Translation(locale=row.get("locale"), key=row.get("key"), value=row.get("value", ""))
-                        db.session.add(existing_translation)
-                        st_created += 1
-                    else:
-                        existing_translation.value = row.get("value", existing_translation.value)
-                        st_updated += 1
-                db.session.flush()
-                summary["smash_translations"] = {"created": st_created, "updated": st_updated}
 
             _upsert_entity(
                 data, target_keys, summary, "community_builds", CommunityBuild, "title",

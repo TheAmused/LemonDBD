@@ -40,7 +40,6 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
     fetchLeaderboard,
     resetSessionVotes,
     resetUserVotes,
-    fetchDynamicTranslations,
     fetchUserVotes,
     syncSessionVotes,
   } = await import('../../services/smashApi');
@@ -226,24 +225,6 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
       const res = await resetUserVotes('canon');
       assert.strictEqual(res.status, 'success');
       assert.strictEqual(res.reset_count, 5);
-    } finally {
-      globalThis.fetch = originalFetch;
-    }
-  });
-
-  await t.test('fetchDynamicTranslations requests translation dictionary', async () => {
-    const originalFetch = globalThis.fetch;
-    globalThis.fetch = async (url: any) => {
-      assert.ok(String(url).includes('/translations') || String(url).includes('/api/v1/i18n'));
-      return {
-        ok: true,
-        json: async () => ({ data: { 'smashOrPass.ui.smash': 'スマッシュ' } }),
-      } as any;
-    };
-
-    try {
-      const dict = await fetchDynamicTranslations('ja');
-      assert.strictEqual(dict['smashOrPass.ui.smash'], 'スマッシュ');
     } finally {
       globalThis.fetch = originalFetch;
     }

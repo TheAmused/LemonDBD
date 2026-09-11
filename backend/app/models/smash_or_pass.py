@@ -209,26 +209,3 @@ class Vote(Base):
             "vote_type": self.vote_type,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
-
-
-class Translation(Base):
-    __tablename__ = "translations"
-
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
-    )
-    locale: Mapped[str] = mapped_column(String(10), index=True, nullable=False)
-    key: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
-    value: Mapped[str] = mapped_column(Text, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, str | None]:
-        return {
-            "id": self.id,
-            "locale": self.locale,
-            "key": self.key,
-            "value": self.value,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }

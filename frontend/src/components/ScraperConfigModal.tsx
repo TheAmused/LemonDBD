@@ -66,7 +66,6 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'history_runs', label: 'History Streak Runs', desc: 'In-progress and completed history streak history', category: 'community' },
   { id: 'page_streak_runs', label: 'Page Streak Runs', desc: 'In-progress and completed page streak history', category: 'community' },
   { id: 'rosters', label: 'Smash or Pass Rosters', desc: 'Rosters, entities, stats and votes', category: 'community' },
-  { id: 'smash_translations', label: 'Smash or Pass Translations', desc: 'Localized roster and entity text', category: 'community' },
 ];
 
 const TARGET_KEY_MAP: Record<string, string> = {
@@ -95,7 +94,6 @@ const TARGET_KEY_MAP: Record<string, string> = {
   history_runs: 'HistoryRuns',
   page_streak_runs: 'PageStreakRuns',
   rosters: 'Rosters',
-  smash_translations: 'SmashTranslations',
 };
 
 const TARGET_GROUPS_CONFIG = [

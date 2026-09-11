@@ -14,7 +14,8 @@
       "avatar_relative_path": null,
       "is_active": true,
       "created_at": "2026-09-07T18:14:20.057046+00:00",
-      "updated_at": "2026-09-07T18:14:20.057050+00:00"
+      "updated_at": "2026-09-07T18:14:20.057050+00:00",
+      "is_verified": true
     },
     {
       "username": "user",
@@ -25,33 +26,8 @@
       "avatar_relative_path": null,
       "is_active": true,
       "created_at": "2026-09-07T18:14:20.133288+00:00",
-      "updated_at": "2026-09-07T18:14:20.133292+00:00"
+      "updated_at": "2026-09-07T18:14:20.133292+00:00",
+      "is_verified": true
     }
-  ],
-  "data": {
-    "users": [
-      {
-        "username": "lemon",
-        "email": "lemon@lemondbd.com",
-        "password_hash": "scrypt:32768:8:1$EaTSz2tDfkdAIwRP$104dc57adc1f4030d82798990c2dae4b172223f6f8046bc81f462e3f523cb70677d77a107ac1561db546ea4edae11bf800f2903d81e499eb3f0d026123999360",
-        "role": "admin",
-        "avatar_url": "default_avatar",
-        "avatar_relative_path": null,
-        "is_active": true,
-        "created_at": "2026-09-07T18:14:20.057046+00:00",
-        "updated_at": "2026-09-07T18:14:20.057050+00:00"
-      },
-      {
-        "username": "user",
-        "email": "survivor@lemondbd.com",
-        "password_hash": "scrypt:32768:8:1$4NZxWeWFcwURLsko$eb6d2e080e13c4c86fc5dda26a7e093b6bdb54abed78e13656df3434f08ecc8e857e1acd1d6b6715d73fa52a31e73947ea7e1a14b57d360f75c24e77dd627548",
-        "role": "user",
-        "avatar_url": "default_avatar",
-        "avatar_relative_path": null,
-        "is_active": true,
-        "created_at": "2026-09-07T18:14:20.133288+00:00",
-        "updated_at": "2026-09-07T18:14:20.133292+00:00"
-      }
-    ]
-  }
+  ]
 }

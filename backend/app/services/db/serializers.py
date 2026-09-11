@@ -221,6 +221,7 @@ def serialize_user(u: User) -> dict[str, Any]:
         "avatar_url": u.avatar_url,
         "avatar_relative_path": user_avatar_relative_path(u.avatar_url),
         "is_active": u.is_active,
+        "is_verified": u.is_verified,
         "created_at": u.created_at.isoformat() if u.created_at else None,
         "updated_at": u.updated_at.isoformat() if u.updated_at else None,
     }

@@ -18,6 +18,18 @@ from app.services.db import export_import as export_import_module
 from app.services.db.export_import import DatabaseExportImportService
 
 
+def _flat(exported: dict) -> dict:
+    """Flatten an export payload's groups into a single dict for easy assertions.
+    Supports the current groups-only format and legacy data-key format."""
+    if "groups" in exported:
+        result: dict = {}
+        for group_dict in exported["groups"].values():
+            if isinstance(group_dict, dict):
+                result.update(group_dict)
+        return result
+    return exported.get("data", exported)
+
+
 @pytest.fixture
 def export_import_app() -> Flask:
     test_app = create_app()
@@ -92,11 +104,13 @@ class TestDatabaseExportImport:
         assert res.status_code == 200
         data = res.get_json()
         assert data["version"] == "1.0"
-        assert "data" in data
-        assert "characters" in data["data"]
-        assert "perks" in data["data"]
-        assert len(data["data"]["characters"]) >= 1
-        assert any(c["name"] == "The Trapper" for c in data["data"]["characters"])
+        assert "groups" in data
+        assert "data" not in data, "export should no longer include a redundant flat 'data' key"
+        assert "content" in data["groups"]
+        assert "characters" in data["groups"]["content"]
+        assert "perks" in data["groups"]["content"]
+        assert len(data["groups"]["content"]["characters"]) >= 1
+        assert any(c["name"] == "The Trapper" for c in data["groups"]["content"]["characters"])
 
     def test_export_database_selective(self, client: FlaskClient, admin_token: str) -> None:
         res = client.get(
@@ -105,8 +119,9 @@ class TestDatabaseExportImport:
         )
         assert res.status_code == 200
         data = res.get_json()
-        assert "perks" in data["data"]
-        assert "characters" not in data["data"]
+        assert "groups" in data
+        assert "perks" in data["groups"].get("content", {})
+        assert "characters" not in data["groups"].get("content", {})
 
     def test_export_database_download_header(self, client: FlaskClient, admin_token: str) -> None:
         res = client.get(
@@ -237,10 +252,10 @@ class TestDatabaseExportImport:
         )
         assert res.status_code == 200
         data = res.get_json()
-        assert "realms" in data["data"]
+        assert "realms" in data["groups"]["content"]
         assert data["counts"]["realms"] == 1
-        assert data["data"]["realms"][0]["name"] == "Autohaven Wreckers"
-        assert data["data"]["realms"][0]["image_local_path"] == "realms/autohaven_wreckers.png"
+        assert data["groups"]["content"]["realms"][0]["name"] == "Autohaven Wreckers"
+        assert data["groups"]["content"]["realms"][0]["image_local_path"] == "realms/autohaven_wreckers.png"
 
     def test_import_database_merge_restores_realms_under_maps_target_only(
         self, client: FlaskClient, admin_token: str
@@ -351,7 +366,7 @@ class TestDatabaseExportImportAssetBundling:
             db.session.commit()
 
             result = DatabaseExportImportService.export_database(targets=["characters"])
-            exported = result["data"]["characters"][0]
+            exported = _flat(result)["characters"][0]
 
             assert exported["avatar_local_path"] == "icons/characters/trapper.webp"
             assert exported["avatar_local_path_data"] == base64.b64encode(raw).decode("ascii")
@@ -390,7 +405,7 @@ class TestDatabaseExportImportAssetBundling:
             db.session.commit()
 
             result = DatabaseExportImportService.export_database(targets=["characters"], include_assets=False)
-            exported = result["data"]["characters"][0]
+            exported = _flat(result)["characters"][0]
 
             assert "avatar_local_path_data" not in exported
 
@@ -437,7 +452,7 @@ class TestDatabaseExportImportUserAvatars:
             db.session.commit()
 
             exported = DatabaseExportImportService.export_database(targets=["users"])
-            row = next(u for u in exported["data"]["users"] if u["username"] == "player_test")
+            row = next(u for u in _flat(exported)["users"] if u["username"] == "player_test")
             assert row["avatar_relative_path"] == "uploads/avatars/avatar_u1_test.webp"
             assert row["avatar_relative_path_data"] == base64.b64encode(raw).decode("ascii")
 
@@ -452,7 +467,7 @@ class TestDatabaseExportImportUserAvatars:
 
         with export_import_app.app_context():
             exported = DatabaseExportImportService.export_database(targets=["users"])
-            row = next(u for u in exported["data"]["users"] if u["username"] == "admin_test")
+            row = next(u for u in _flat(exported)["users"] if u["username"] == "admin_test")
 
             assert row["avatar_relative_path"] is None
             assert row["avatar_relative_path_data"] is None
@@ -514,7 +529,7 @@ class TestDatabaseExportImportAuditLogAndChangelog:
             exported = DatabaseExportImportService.export_database(targets=["admin_audit_logs", "changelog_posts"])
             assert exported["counts"]["admin_audit_logs"] == 1
             assert exported["counts"]["changelog_posts"] == 1
-            assert exported["data"]["admin_audit_logs"][0]["admin_username"] == "admin_test"
+            assert _flat(exported)["admin_audit_logs"][0]["admin_username"] == "admin_test"
 
             summary = DatabaseExportImportService.import_database(
                 exported, mode="merge", targets=["admin_audit_logs", "changelog_posts"]
@@ -546,7 +561,7 @@ class TestDatabaseExportImportSmashOrPass:
             exported = DatabaseExportImportService.export_database(targets=["rosters", "smash_translations"])
             assert exported["counts"]["rosters"] == 1
             assert exported["counts"]["smash_translations"] == 1
-            roster_row = exported["data"]["rosters"][0]
+            roster_row = _flat(exported)["rosters"][0]
             assert roster_row["slug"] == "canon"
             assert len(roster_row["entities"]) == 1
             assert roster_row["entities"][0]["stat"]["smash_count"] == 5
@@ -586,7 +601,7 @@ class TestDatabaseExportRouteIncludeAssets:
         )
         assert resp.status_code == 200
         payload = resp.get_json()
-        assert "avatar_local_path_data" not in payload["data"]["characters"][0]
+        assert "avatar_local_path_data" not in _flat(payload)["characters"][0]
 
 
 @pytest.mark.unit
@@ -595,18 +610,16 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
         with export_import_app.app_context():
             exported = DatabaseExportImportService.export_database()
             assert "groups" in exported
-            assert "data" in exported
+            assert "data" not in exported, "export_database should no longer return a redundant flat 'data' key"
             assert "content" in exported["groups"]
             assert "users" in exported["groups"]
 
             content_group = exported["groups"]["content"]
             assert "characters" in content_group
             assert "perks" in content_group
-            assert len(content_group["characters"]) == len(exported["data"]["characters"])
 
             users_group = exported["groups"]["users"]
             assert "users" in users_group
-            assert len(users_group["users"]) == len(exported["data"]["users"])
 
     def test_import_database_from_grouped_payload(self, export_import_app):
         with export_import_app.app_context():

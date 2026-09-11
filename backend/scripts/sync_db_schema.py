@@ -82,6 +82,13 @@ def main() -> int:
         upgrade()
         logger.info("Migrations applied / schema up to date.")
 
+        try:
+            from app.seeds.static_db_seeder import apply_pending_updates
+            logger.info("Checking for pending database updates...")
+            apply_pending_updates()
+        except Exception as upd_err:
+            logger.warning(f"Notice during update scan: {upd_err}")
+
     return 0
 
 

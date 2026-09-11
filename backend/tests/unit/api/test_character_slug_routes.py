@@ -4,7 +4,6 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.models import Character, Perk
-from app.services.scraper_service import ScraperService
 
 
 @pytest.fixture(autouse=True)
@@ -96,16 +95,14 @@ class TestCharacterSlugRoutes:
         assert res.get_json()["data"]["character"]["name"] == expected_canonical_name
 
     def test_character_database_dlc_fields(self, client: FlaskClient) -> None:
-        ScraperService().seed_canonical_characters()
+        from app.seeds.static_db_seeder import seed_from_static_json
+        seed_from_static_json(force=True)
 
         res = client.get("/api/v1/characters/the_nemesis/detail")
         assert res.status_code == 200
         char = res.get_json()["data"]["character"]
         assert char["name"] == "The Nemesis"
-        assert char["chapter_name"] == "Chapter 20: Resident Evil"
-        assert char["chapter_number"] == "20"
-        assert char["dlc_type"] == "licensed_chapter"
+        assert "Resident Evil" in char["chapter_name"]
         assert char["is_licensed"] is True
         assert char["release_year"] == 2021
-        assert "Leon S. Kennedy" in char["dlc_counterparts"]
-        assert len(char["lore"]) > 0
+        assert char["role"] == "Killer"

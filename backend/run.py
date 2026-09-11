@@ -8,7 +8,6 @@ from app.core.config import Config
 from app.core.extensions import db
 from app.models.character import Character
 from app.services.perk_service import PerkService
-from app.services.scraper_service import ScraperService
 
 logger = logging.getLogger(__name__)
 app = create_app()

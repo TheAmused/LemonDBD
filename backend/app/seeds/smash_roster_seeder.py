@@ -16,7 +16,7 @@ from app.models.smash_or_pass import (
 
 logger = logging.getLogger(__name__)
 
-ROSTERS_DIR = Path(__file__).resolve().parent / "rosters"
+ROSTERS_DIR = Path(__file__).resolve().parent / "data" / "smash_or_pass" / "rosters"
 
 # Default fallback translations for UI keys
 DEFAULT_GLOBAL_TRANSLATIONS: Dict[str, Dict[str, str]] = {
@@ -80,7 +80,7 @@ DEFAULT_GLOBAL_TRANSLATIONS: Dict[str, Dict[str, str]] = {
 
 def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List[Dict[str, Any]]], Dict[str, Dict[str, str]]]:
     """
-    Dynamically scans and loads all roster definitions from backend/app/seeds/rosters/*.json
+    Dynamically scans and loads all roster definitions from backend/app/seeds/data/smash_or_pass/rosters/*.json
     Returns (rosters_list, entities_by_roster_map, translations_map).
     """
     rosters_list: List[Dict[str, Any]] = []
@@ -89,13 +89,18 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
         lang: dict(kvs) for lang, kvs in DEFAULT_GLOBAL_TRANSLATIONS.items()
     }
 
-    if not ROSTERS_DIR.exists():
-        logger.warning(f"Rosters directory does not exist: {ROSTERS_DIR}")
-        return rosters_list, entities_by_roster, translations_map
+    target_dir = ROSTERS_DIR
+    if not target_dir.exists():
+        fallback = Path(__file__).resolve().parent.parent.parent / "data" / "static_export" / "smash_or_pass" / "rosters"
+        if fallback.exists():
+            target_dir = fallback
+        else:
+            logger.warning(f"Rosters directory does not exist: {ROSTERS_DIR}")
+            return rosters_list, entities_by_roster, translations_map
 
     # Sort JSON files (canon first, then alphabetically)
     json_files = sorted(
-        ROSTERS_DIR.glob("*.json"),
+        target_dir.glob("*.json"),
         key=lambda p: (0 if p.stem == "canon" else 1, p.stem),
     )
 
@@ -104,15 +109,27 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            r_data = data.get("roster")
-            if not r_data or not r_data.get("slug"):
-                continue
+            raw_rosters = []
+            if "rosters" in data and isinstance(data["rosters"], list):
+                raw_rosters = data["rosters"]
+            elif "roster" in data and isinstance(data["roster"], dict):
+                legacy_r = dict(data["roster"])
+                if "entities" in data and "entities" not in legacy_r:
+                    legacy_r["entities"] = data["entities"]
+                raw_rosters = [legacy_r]
 
-            slug = r_data["slug"]
-            rosters_list.append(r_data)
-            entities_by_roster[slug] = data.get("entities", [])
+            for r_data in raw_rosters:
+                slug = r_data.get("slug")
+                if not slug:
+                    continue
 
-            # Merge translations
+                entities_list = r_data.get("entities", [])
+                entities_by_roster[slug] = entities_list
+
+                clean_r = {k: v for k, v in r_data.items() if k != "entities"}
+                rosters_list.append(clean_r)
+
+            # Merge translations if present in file
             file_translations = data.get("translations", {})
             for lang, kv_pairs in file_translations.items():
                 if lang not in translations_map:
@@ -121,6 +138,30 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
 
         except Exception as e:
             logger.error(f"Error loading roster JSON file {file_path}: {e}")
+
+    # Load dedicated smash translations if available
+    trans_files = [
+        target_dir.parent / "smash_translations.json",
+        Path(__file__).resolve().parent / "data" / "smash_or_pass" / "smash_translations.json",
+        Path(__file__).resolve().parent.parent.parent / "data" / "static_export" / "smash_or_pass" / "smash_translations.json",
+    ]
+    for trans_file in trans_files:
+        if trans_file.exists():
+            try:
+                with open(trans_file, "r", encoding="utf-8") as f:
+                    st_data = json.load(f)
+                trans_items = st_data.get("smash_translations", [])
+                for item in trans_items:
+                    loc = item.get("locale")
+                    key = item.get("key")
+                    val = item.get("value")
+                    if loc and key and val is not None:
+                        if loc not in translations_map:
+                            translations_map[loc] = {}
+                        translations_map[loc][key] = val
+                break
+            except Exception as te:
+                logger.error(f"Error loading smash translations from {trans_file}: {te}")
 
     return rosters_list, entities_by_roster, translations_map
 
@@ -145,14 +186,11 @@ def seed_smash_rosters():
 
 def ensure_roster_assets(static_dir: Path | None = None) -> None:
     """Ensures roster covers and special cosmetic avatars exist in static avatars dir."""
-    try:
-        if static_dir is None:
-            static_dir = Path(__file__).resolve().parent.parent / "static"
-        from app.scrapers.roster_images import RosterImageScraperDriver
-        driver = RosterImageScraperDriver(timeout=10)
-        driver.sync_all_rosters(static_dir)
-    except Exception as e:
-        logger.debug(f"Non-critical asset sync check: {e}")
+    if static_dir is None:
+        static_dir = Path(__file__).resolve().parent.parent / "static"
+    rosters_dir = static_dir / "avatars" / "rosters"
+    if not rosters_dir.exists():
+        logger.debug(f"[smash_seeder] Roster assets directory notice: {rosters_dir} not found")
 
 
 def _seed_smash_rosters_impl():
@@ -206,7 +244,7 @@ def _seed_smash_rosters_impl():
                         gender=e_data.get("gender", "female"),
                         media_url=e_data.get("media_url"),
                         media_type="image",
-                        metadata_json=e_data.get("metadata", {}),
+                        metadata_json=e_data.get("metadata_json") or e_data.get("metadata") or {},
                         order_index=idx,
                         is_active=True,
                     )
@@ -217,7 +255,7 @@ def _seed_smash_rosters_impl():
                     entity.role = e_data.get("role", entity.role)
                     entity.gender = e_data.get("gender", entity.gender)
                     entity.media_url = e_data.get("media_url")
-                    entity.metadata_json = e_data.get("metadata", entity.metadata_json)
+                    entity.metadata_json = e_data.get("metadata_json") or e_data.get("metadata", entity.metadata_json)
                     entity.order_index = idx
                     entity.is_active = True
                     db.session.flush()

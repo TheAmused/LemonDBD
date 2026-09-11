@@ -88,11 +88,9 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
   const [selectedBugId, setSelectedBugId] = useState<number | null>(null);
   const [editingNotes, setEditingNotes] = useState<Record<number, string>>({});
 
-  // Modals & Scraper State
+  // Modals & Maintenance State
   const [isConfigOpen, setIsConfigOpen] = useState<boolean>(false);
   const [modalTab, setModalTab] = useState<'export' | 'import' | 'purge'>('export');
-  const [isSyncing, setIsSyncing] = useState<boolean>(false);
-  const [syncStatus, setSyncStatus] = useState<string>('');
   const [isCreateUserOpen, setIsCreateUserOpen] = useState<boolean>(false);
   const [userPendingDeletion, setUserPendingDeletion] = useState<UserRow | null>(null);
   const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false);
@@ -215,55 +213,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       }
     }
   }, [isAuthenticated, isAdmin, activeTab, fetchAdminData, fetchBugReports]);
-
-  const handleTriggerSync = async () => {
-    if (isSyncing) return;
-    const token = getAuthToken();
-    if (!token) {
-      setActionMessage({
-        type: 'error',
-        text: dict?.admin?.tokenNotFound || 'Authentication token not found.',
-      });
-      return;
-    }
-
-    setIsSyncing(true);
-    setSyncStatus(dict?.admin?.scrapingWiki || 'Syncing database...');
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/scrape-and-seed`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (res.ok) {
-        const data: { characters_synced?: number; perks_synced?: number } = await res.json();
-        const charCount = data.characters_synced ?? 0;
-        const perkCount = data.perks_synced ?? 0;
-        setActionMessage({
-          type: 'success',
-          text: dict?.admin?.syncSuccessMsg
-            ? dict.admin.syncSuccessMsg.replace('{characters}', charCount.toString()).replace('{perks}', perkCount.toString())
-            : `${charCount} characters and ${perkCount} perks synced successfully.`,
-        });
-      } else {
-        const errorData: { error?: string; message?: string } = await res.json().catch(() => ({}));
-        setActionMessage({
-          type: 'error',
-          text: errorData.error || errorData.message || dict?.admin?.syncFailedMsg || 'Scraper failed to sync data.',
-        });
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error during sync.';
-      setActionMessage({ type: 'error', text: msg });
-    } finally {
-      setIsSyncing(false);
-      setSyncStatus('');
-      await fetchAdminData();
-    }
-  };
 
   const handleToggleRole = async (targetUser: UserRow) => {
     const token = getAuthToken();
@@ -474,14 +423,11 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     >
         <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
           <AdminHeader
-            isSyncing={isSyncing}
-            syncStatus={syncStatus}
             isLoading={loadingData || loadingBugs}
             onOpenDbMaintenance={(tab) => {
               if (tab) setModalTab(tab);
               setIsConfigOpen(true);
             }}
-            onTriggerSync={handleTriggerSync}
             onRefreshData={() => (activeTab === 'users' ? fetchAdminData() : fetchBugReports())}
             dict={dict}
           />

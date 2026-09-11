@@ -6,10 +6,14 @@ from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 
+from app.core.extensions import db
 from app.core.security import admin_required, get_current_user
+from app.models.minigames import ScraperSetting
+from app.seeds.static_db_seeder import seed_from_static_json
 from app.services.perk_service import PerkService
-from app.services.scraper_service import ScraperService
+from app.services.translations import TranslationService
 from app.utils.lang import extract_lang as _extract_lang
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
@@ -212,8 +216,7 @@ def list_addons():
 
 def _run_background_scrape(app, override_source=None, override_fallback=None):
     with app.app_context():
-        scraper = ScraperService()
-        scraper.run_sync_pipeline(override_source=override_source, override_fallback=override_fallback)
+        seed_from_static_json(force=True)
         perk_service.reload_data()
 
 
@@ -221,73 +224,76 @@ def _run_background_scrape(app, override_source=None, override_fallback=None):
 @perks_bp.route("/api/v1/scrape-and-seed", methods=["POST"])
 @admin_required
 def scrape_and_seed():
-    """Trigger synchronous scrape pipeline (Admin only)."""
-    data = request.get_json(silent=True) or {}
-    source = data.get("source")
-    fallback = data.get("fallback")
-    if fallback is None:
-        fallback = data.get("fallback_to_wiki")
-
-    scraper = ScraperService()
+    """Trigger synchronous database seed/update from offline static JSON (Admin only)."""
     try:
-        stats = scraper.run_sync_pipeline(override_source=source, override_fallback=fallback)
+        res = seed_from_static_json(force=True)
         perk_service.reload_data()
+        summary = res.get("initial_seed") or {}
         return jsonify({
             "status": "success",
-            "characters_synced": stats.get("characters_synced", stats.get("total_characters", 0)),
-            "perks_synced": stats.get("perks_synced", stats.get("total_perks", 0)),
-            "items_synced": stats.get("items_synced", stats.get("total_items", 0)),
-            "addons_synced": stats.get("addons_synced", stats.get("total_addons", 0)),
-            "metrics": stats,
+            "characters_synced": summary.get("characters", {}).get("created", 0) + summary.get("characters", {}).get("updated", 0),
+            "perks_synced": summary.get("perks", {}).get("created", 0) + summary.get("perks", {}).get("updated", 0),
+            "items_synced": summary.get("items", {}).get("created", 0) + summary.get("items", {}).get("updated", 0),
+            "addons_synced": summary.get("addons", {}).get("created", 0) + summary.get("addons", {}).get("updated", 0),
+            "metrics": summary,
         }), 200
     except Exception as e:
-        logger.error(f"Scrape-and-seed pipeline error: {e}")
+        logger.error(f"Seeder execution error: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @perks_bp.route("/api/v1/scrape", methods=["POST"])
 @admin_required
 def trigger_scrape():
-    """Trigger asynchronous background scraping task (Admin only)."""
-    status = ScraperService.get_status()
-    if status.get("is_running"):
-        return jsonify({"message": "Scrape task is already in progress", "status": status}), 409
-
-    data = request.get_json(silent=True) or {}
-    source = data.get("source")
-    fallback = data.get("fallback")
-    if fallback is None:
-        fallback = data.get("fallback_to_wiki")
-
+    """Trigger asynchronous background seeding task from static JSON (Admin only)."""
     thread = threading.Thread(
         target=_run_background_scrape,
         args=(current_app._get_current_object(),),
-        kwargs={"override_source": source, "override_fallback": fallback},
         daemon=True,
     )
     thread.start()
-    return jsonify({"message": "Scrape task initiated in background"}), 202
+    return jsonify({"message": "Seed task initiated in background"}), 202
 
 
 @perks_bp.route("/api/v1/scrape/status", methods=["GET"])
 def get_scrape_status():
-    return jsonify(ScraperService.get_status()), 200
+    return jsonify({
+        "is_running": False,
+        "current_step": "idle",
+        "progress": 100,
+        "total": 100,
+        "status": "completed",
+        "last_used_source": "offline_static_json",
+    }), 200
 
 
 @perks_bp.route("/api/v1/scrape/config", methods=["GET"])
 @admin_required
 def get_scrape_config():
-    scraper = ScraperService()
-    return jsonify(asdict(scraper.load_config())), 200
+    setting = db.session.scalar(select(ScraperSetting).order_by(ScraperSetting.id.desc()))
+    if not setting:
+        return jsonify({"source": "offline_static_json", "fallback_to_wiki": False}), 200
+    return jsonify(setting.to_dict()), 200
 
 
 @perks_bp.route("/api/v1/scrape/config", methods=["POST"])
 @admin_required
 def update_scrape_config():
     data = request.get_json(silent=True) or {}
-    scraper = ScraperService()
-    updated = scraper.save_config(data)
-    return jsonify({"message": "Configuration updated successfully", "config": asdict(updated)}), 200
+    setting = db.session.scalar(select(ScraperSetting).order_by(ScraperSetting.id.desc()))
+    if not setting:
+        setting = ScraperSetting(
+            source=data.get("source", "offline_static_json"),
+            fallback_to_wiki=bool(data.get("fallback_to_wiki", False)),
+        )
+        db.session.add(setting)
+    else:
+        if "source" in data:
+            setting.source = data["source"]
+        if "fallback_to_wiki" in data:
+            setting.fallback_to_wiki = bool(data["fallback_to_wiki"])
+    db.session.commit()
+    return jsonify({"message": "Configuration updated successfully", "config": setting.to_dict()}), 200
 
 
 @perks_bp.route("/api/v1/scrape/translations/game-dumps", methods=["POST"])
@@ -297,8 +303,8 @@ def sync_game_dump_translations_route():
     try:
         data = request.get_json(silent=True) or {}
         locales = data.get("locales") or ["en", "pl", "de", "es", "ja"]
-        scraper = ScraperService()
-        result = scraper.sync_game_dump_translations(locales=locales)
+        trans_service = TranslationService()
+        result = trans_service.sync_all_locales_to_db(locales=locales)
         return jsonify({
             "status": "success",
             "message": "Game dump translations successfully synchronized to database",

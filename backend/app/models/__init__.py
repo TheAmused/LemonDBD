@@ -6,7 +6,7 @@ Ensures SQLAlchemy registers all tables and polymorphic relationships upon packa
 """
 
 from app.models.base import utcnow
-from app.models.admin import AdminAuditLog, ChallengeModeSetting
+from app.models.admin import AdminAuditLog, ChallengeModeSetting, SeedUpdateLog
 from app.models.changelog import ChangelogPost
 from app.models.chapter import Chapter
 from app.models.character import Character, Killer, Survivor
@@ -86,5 +86,6 @@ __all__ = [
     "UserShowcase",
     "ChallengeModeSetting",
     "AdminAuditLog",
+    "SeedUpdateLog",
     "ChangelogPost",
 ]

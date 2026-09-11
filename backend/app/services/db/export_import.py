@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, select
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.models.character import Character
@@ -214,7 +214,14 @@ def _upsert_entity(
                 continue
             key_val = key_default
 
-        obj = db.session.scalar(select(model).where(getattr(model, unique_field) == key_val))
+        if isinstance(key_val, str):
+            clean_str = key_val.strip()
+            where_clause = func.lower(func.trim(getattr(model, unique_field))) == clean_str.lower()
+            key_val = clean_str
+        else:
+            where_clause = getattr(model, unique_field) == key_val
+
+        obj = db.session.scalar(select(model).where(where_clause))
         if not obj:
             extra = defaults(row) if defaults else {}
             obj = model(**{unique_field: key_val}, **extra)
@@ -373,7 +380,6 @@ class DatabaseExportImportService:
             "source": "LemonDBD",
             "counts": counts,
             "groups": grouped_data,
-            "data": export_data,
         }
 
     @classmethod
@@ -621,15 +627,18 @@ class DatabaseExportImportService:
                             role=row.get("role", "user"),
                             avatar_url=row.get("avatar_url", "default_avatar"),
                             is_active=row.get("is_active", True),
+                            is_verified=row.get("is_verified", True if username in ("lemon", "user") else False),
                         )
                         db.session.add(user_obj)
                         u_created += 1
                     else:
                         if not email_conflict:
                             user_obj.email = candidate_email
-                        for field in ["password_hash", "role", "avatar_url", "is_active"]:
+                        for field in ["password_hash", "role", "avatar_url", "is_active", "is_verified"]:
                             if field in row and row[field] is not None:
                                 setattr(user_obj, field, row[field])
+                        if username in ("lemon", "user"):
+                            user_obj.is_verified = True
                         u_updated += 1
 
                     if row.get("created_at"):

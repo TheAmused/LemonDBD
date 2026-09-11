@@ -12,7 +12,15 @@ from app.models.character import Character
 from app.models.equipment import Addon, Item, Offering
 from app.models.map import MapRealm, Realm
 from app.models.perk import Perk
-from app.scrapers.utils import sanitize_filename
+
+
+def sanitize_filename(name: str) -> str:
+    clean_str = name.lower().strip()
+    clean_str = re.sub(r"[\s\-/]+", "_", clean_str)
+    clean_str = re.sub(r'[\\/*?:"<>|®™\'%#.,!+&]', "", clean_str)
+    clean_str = re.sub(r"_+", "_", clean_str)
+    return clean_str.strip("_")
+
 
 logger = logging.getLogger(__name__)
 

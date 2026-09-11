@@ -11,15 +11,5 @@
       "last_used_source": "wikigg",
       "last_run_timestamp": "2026-09-07T18:14:48.795914+00:00"
     }
-  ],
-  "data": {
-    "scraper_settings": [
-      {
-        "source": "wikigg",
-        "fallback_to_wiki": false,
-        "last_used_source": "wikigg",
-        "last_run_timestamp": "2026-09-07T18:14:48.795914+00:00"
-      }
-    ]
-  }
+  ]
 }

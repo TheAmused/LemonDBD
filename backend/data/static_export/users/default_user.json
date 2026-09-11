@@ -16,20 +16,5 @@
       "created_at": "2026-09-07T18:14:20.133288+00:00",
       "updated_at": "2026-09-07T18:14:20.133292+00:00"
     }
-  ],
-  "data": {
-    "users": [
-      {
-        "username": "user",
-        "email": "survivor@lemondbd.com",
-        "password_hash": "scrypt:32768:8:1$4NZxWeWFcwURLsko$eb6d2e080e13c4c86fc5dda26a7e093b6bdb54abed78e13656df3434f08ecc8e857e1acd1d6b6715d73fa52a31e73947ea7e1a14b57d360f75c24e77dd627548",
-        "role": "user",
-        "avatar_url": "default_avatar",
-        "avatar_relative_path": null,
-        "is_active": true,
-        "created_at": "2026-09-07T18:14:20.133288+00:00",
-        "updated_at": "2026-09-07T18:14:20.133292+00:00"
-      }
-    ]
-  }
+  ]
 }

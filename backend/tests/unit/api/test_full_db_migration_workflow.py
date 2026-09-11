@@ -54,7 +54,7 @@ def test_full_export_then_wipe_then_import_restores_everything(seeded_app: Flask
 
         static_dir = export_import_module.get_static_dir()
         icon_path = static_dir / "icons" / "characters" / "trapper.webp"
-        assert exported["data"]["characters"][0]["avatar_local_path_data"] == base64.b64encode(icon_path.read_bytes()).decode("ascii")
+        assert exported["groups"]["content"]["characters"][0]["avatar_local_path_data"] == base64.b64encode(icon_path.read_bytes()).decode("ascii")
 
         # Wipe: drop every row and delete the asset file, simulating a brand-new target instance.
         icon_path.unlink()

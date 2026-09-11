@@ -44,9 +44,6 @@ def save_json_file(path: Path, entity_name: str, items: list, extra_meta: dict =
         "target": entity_name,
         "count": len(items),
         entity_name: items,
-        "data": {
-            entity_name: items
-        }
     }
     if extra_meta:
         payload.update(extra_meta)
@@ -200,81 +197,11 @@ def main():
             save_json_file(OUTPUT_DIR / "users" / "default_user.json", "users", default_user)
         save_json_file(OUTPUT_DIR / "users" / "users.json", "users", all_core_users)
 
-        # 5. MASTER FULL BUNDLE
-        print("\n--- Generating Master Full Bundle ---")
-        full_counts = {
-            "characters": len(characters),
-            "perks": len(perks),
-            "items": len(items),
-            "addons": len(addons),
-            "offerings": len(offerings),
-            "chapters": len(chapters),
-            "maps": len(maps_list),
-            "realms": len(realms),
-            "perk_rules": len(perk_rules),
-            "scraper_settings": len(scraper_settings),
-            "rosters": len(serialized_rosters),
-            "smash_entities": sum(len(r["entities"]) for r in serialized_rosters),
-            "smash_translations": len(smash_translations),
-            "users": len(all_core_users),
-        }
-
-        full_export = {
-            "version": "1.0",
-            "exported_at": datetime.now(timezone.utc).isoformat(),
-            "source": "LemonDBD",
-            "description": "Static database records export (no user ownerships, no smash votes, no challenge streaks, only core static game elements)",
-            "counts": full_counts,
-            "groups": {
-                "content": {
-                    "characters": characters,
-                    "perks": perks,
-                    "items": items,
-                    "addons": addons,
-                    "offerings": offerings,
-                    "chapters": chapters,
-                    "maps": maps_list,
-                    "realms": realms,
-                },
-                "smash_or_pass": {
-                    "rosters": serialized_rosters,
-                    "smash_translations": smash_translations,
-                },
-                "settings": {
-                    "perk_rules": perk_rules,
-                    "scraper_settings": scraper_settings,
-                },
-                "users": {
-                    "users": all_core_users,
-                },
-            },
-            "data": {
-                "characters": characters,
-                "perks": perks,
-                "items": items,
-                "addons": addons,
-                "offerings": offerings,
-                "chapters": chapters,
-                "maps": maps_list,
-                "realms": realms,
-                "rosters": serialized_rosters,
-                "smash_translations": smash_translations,
-                "perk_rules": perk_rules,
-                "scraper_settings": scraper_settings,
-                "users": all_core_users,
-            }
-        }
-
-        master_path = OUTPUT_DIR / "full_static_export.json"
-        with open(master_path, "w", encoding="utf-8") as f:
-            json.dump(clean_dict(full_export), f, indent=2, ensure_ascii=False)
-        print(f"  [Saved] full_static_export.json ({master_path.stat().st_size:,} bytes)")
-
-        # 6. README.md Documentation
+        # 5. README.md Documentation
         readme_content = f"""# LemonDBD - Static Database Export
 Exported at: {datetime.now(timezone.utc).isoformat()}
 
-This directory contains clean, static database records for LemonDBD.
+This directory contains clean, modular static database records for LemonDBD.
 It completely excludes:
 - User-generated accounts (only admin `lemon` and default `user` are retained)
 - User perk and character ownerships (0 ownerships)
@@ -308,19 +235,19 @@ static_export/
 ├── settings/
 │   ├── perk_rules.json         ({len(perk_rules)} standard perk slot rule)
 │   └── scraper_settings.json   ({len(scraper_settings)} wiki scraper configuration)
-├── users/
-│   ├── admin_lemon.json        (Admin 'lemon' user record)
-│   ├── default_user.json       (Default 'user' record)
-│   └── users.json              (Combined core users)
-└── full_static_export.json     (Master unified bundle with all groups)
+└── users/
+    ├── admin_lemon.json        (Admin 'lemon' user record)
+    ├── default_user.json       (Default 'user' record)
+    └── users.json              (Combined core users)
 ```
 
 ## How to Import
-Each file is formatted with standard LemonDBD export headers (`version`, `target`, `count`, `data`),
+Each file is formatted with standard LemonDBD export headers (`version`, `target`, `count`, and the entity key),
 making them directly importable via:
-1. **Admin Panel UI**: Settings -> Database -> Import (upload any individual `.json` file or `full_static_export.json`)
+1. **Admin Panel UI**: Settings -> Database -> Import (upload any individual `.json` file)
 2. **API Endpoint**: `POST /api/v1/admin/db/import`
 3. **Python Service**: `DatabaseExportImportService.import_database(payload)`
+4. **Updates Drop Folder**: Drop any `.json` file into `seeds/updates/` or `data/updates/`
 """
         with open(OUTPUT_DIR / "README.md", "w", encoding="utf-8") as f:
             f.write(readme_content)

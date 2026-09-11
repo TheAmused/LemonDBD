@@ -478,27 +478,24 @@ class TestDatabaseExportImportSettingsTables:
     def test_export_import_settings_tables_roundtrip(self, export_import_app):
         with export_import_app.app_context():
             from sqlalchemy import delete as sa_delete
-            from app.models.perk import PerkRule
             from app.models.minigames import DraftSession
             from app.models.admin import ChallengeModeSetting
             from app.models.user import UserShowcase
 
             user = db.session.scalars(select(User).where(User.username == "player_test")).first()
-            db.session.add(PerkRule(name="Standard", is_default=True))
             db.session.add(DraftSession(room_code="ABC123"))
             db.session.add(ChallengeModeSetting(mode="gauntlet", is_enabled=True))
             db.session.add(UserShowcase(user_id=user.id, player_title="The Camper"))
             db.session.commit()
 
             targets = [
-                "perk_rules", "draft_sessions",
+                "draft_sessions",
                 "challenge_mode_settings", "user_showcases",
             ]
             exported = DatabaseExportImportService.export_database(targets=targets)
             for t in targets:
                 assert exported["counts"][t] == 1
 
-            db.session.execute(sa_delete(PerkRule))
             db.session.execute(sa_delete(DraftSession))
             db.session.execute(sa_delete(ChallengeModeSetting))
             db.session.execute(sa_delete(UserShowcase))
@@ -508,7 +505,6 @@ class TestDatabaseExportImportSettingsTables:
             for t in targets:
                 assert summary["summary"][t]["created"] == 1
 
-            assert db.session.scalars(select(PerkRule)).first().name == "Standard"
             assert db.session.scalars(select(UserShowcase)).first().user_id == user.id
 
 

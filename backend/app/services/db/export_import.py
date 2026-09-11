@@ -9,7 +9,7 @@ from sqlalchemy import delete, func, select
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
 from app.models.character import Character
-from app.models.perk import Perk, PerkRule
+from app.models.perk import Perk
 from app.models.equipment import Item, Addon, Offering
 from app.models.chapter import Chapter
 from app.models.map import MapRealm, MapTile, MapObjective, Realm
@@ -62,7 +62,6 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "rosters",
     ],
     "settings": [
-        "perk_rules",
         "draft_sessions",
         "challenge_mode_settings",
         "admin_audit_logs",
@@ -136,7 +135,6 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("daily_quests", DailyQuest, lambda q: q.to_dict(), []),
     ("bug_reports", BugReport, lambda r: r.to_dict(), []),
     ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
-    ("perk_rules", PerkRule, lambda pr: pr.to_dict(), []),
     ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
     ("admin_audit_logs", AdminAuditLog, serialize_admin_audit_log, []),
@@ -158,7 +156,6 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("perks", Perk),
     ("characters", Character),
     ("guesser_stats", GuesserStat),
-    ("perk_rules", PerkRule),
     ("draft_sessions", DraftSession),
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
@@ -694,29 +691,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["character_ownerships"] = {"created": char_created, "updated": char_updated}
                 summary["perk_ownerships"] = {"created": perk_created, "updated": perk_updated}
-
-            if "perk_rules" in target_keys and "perk_rules" in data:
-                created, updated = 0, 0
-                existing_rules: dict[str, PerkRule] = {
-                    pr.name: pr for pr in db.session.scalars(select(PerkRule)).all()
-                }
-                for row in data["perk_rules"]:
-                    name = row.get("name", "Standard")
-                    rule = existing_rules.get(name)
-                    if not rule:
-                        rule = PerkRule(name=name)
-                        db.session.add(rule)
-                        existing_rules[name] = rule
-                        created += 1
-                    else:
-                        updated += 1
-                    rule.is_default = row.get("is_default", False)
-                    rule.slot1_type = row.get("slot1_type", "character_own")
-                    rule.slot2_type = row.get("slot2_type", "character_own")
-                    rule.slot3_type = row.get("slot3_type", "general_role")
-                    rule.slot4_type = row.get("slot4_type", "any_role")
-                db.session.flush()
-                summary["perk_rules"] = {"created": created, "updated": updated}
 
 
             if "draft_sessions" in target_keys and "draft_sessions" in data:

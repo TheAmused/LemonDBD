@@ -81,8 +81,6 @@ from app.schemas.perk import (
     PerkBase,
     PerkCreate,
     PerkResponse,
-    PerkRuleBase,
-    PerkRuleResponse,
 )
 from app.schemas.smash_or_pass import (
     EntityResponse,
@@ -118,8 +116,6 @@ __all__ = [
     "PerkBase",
     "PerkCreate",
     "PerkResponse",
-    "PerkRuleBase",
-    "PerkRuleResponse",
     "ItemBase",
     "ItemResponse",
     "AddonBase",

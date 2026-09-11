@@ -9,7 +9,7 @@ from sqlalchemy import select
 from app import create_app
 from app.core.extensions import db
 from app.models.character import Character
-from app.models.perk import Perk, PerkRule
+from app.models.perk import Perk
 from app.models.equipment import Item, Addon, Offering
 from app.models.chapter import Chapter
 from app.models.map import MapRealm, Realm
@@ -130,11 +130,6 @@ def main():
             })
         save_json_file(OUTPUT_DIR / "content" / "maps.json", "maps", maps_list)
 
-        # 2. SETTINGS (no scraper_settings — scraper is gone)
-        print("\n--- Exporting Settings ---")
-        perk_rules = [pr.to_dict() for pr in db.session.scalars(select(PerkRule).order_by(PerkRule.id)).all()]
-        save_json_file(OUTPUT_DIR / "settings" / "perk_rules.json", "perk_rules", perk_rules)
-
         # 3. SMASH OR PASS — individual per-roster files only (no combined rosters.json duplicate)
         print("\n--- Exporting Smash or Pass (Zero Votes) ---")
         rosters_db = db.session.scalars(select(Roster).order_by(Roster.id)).all()
@@ -218,8 +213,6 @@ static_export/
 │       ├── gothic_eldritch.json
 │       ├── hooked_on_you.json
 │       └── legendary_cosplay.json
-├── settings/
-│   └── perk_rules.json         ({len(perk_rules)} standard perk slot rule)
 └── users/
     ├── admin_lemon.json        (Admin 'lemon' user record)
     └── default_user.json       (Default 'user' record)

@@ -15,7 +15,7 @@ from app.models.chapter import Chapter
 from app.models.map import MapRealm, MapTile, MapObjective, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
-from app.models.minigames import DraftSession, GuesserStat, ScraperSetting
+from app.models.minigames import DraftSession, GuesserStat
 from app.models.admin import ChallengeModeSetting, AdminAuditLog
 from app.models.changelog import ChangelogPost
 from app.models.gauntlet import GauntletRun, GauntletMatchLog
@@ -65,7 +65,6 @@ TARGET_GROUPS: dict[str, list[str]] = {
     "settings": [
         "perk_rules",
         "draft_sessions",
-        "scraper_settings",
         "challenge_mode_settings",
         "admin_audit_logs",
         "guesser_stats",
@@ -140,7 +139,6 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
     ("perk_rules", PerkRule, lambda pr: pr.to_dict(), []),
     ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
-    ("scraper_settings", ScraperSetting, lambda ss: ss.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
     ("admin_audit_logs", AdminAuditLog, serialize_admin_audit_log, []),
     ("changelog_posts", ChangelogPost, serialize_changelog_post, []),
@@ -163,7 +161,6 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("guesser_stats", GuesserStat),
     ("perk_rules", PerkRule),
     ("draft_sessions", DraftSession),
-    ("scraper_settings", ScraperSetting),
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
     ("admin_audit_logs", AdminAuditLog),
@@ -756,19 +753,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["draft_sessions"] = {"created": ds_created, "updated": ds_updated}
 
-            if "scraper_settings" in target_keys and "scraper_settings" in data and data["scraper_settings"]:
-                row = data["scraper_settings"][0] if isinstance(data["scraper_settings"], list) else data["scraper_settings"]
-                existing_setting = db.session.scalars(select(ScraperSetting)).first()
-                was_new = existing_setting is None
-                if not existing_setting:
-                    existing_setting = ScraperSetting()
-                    db.session.add(existing_setting)
-                existing_setting.source = row.get("source", "wikigg")
-                existing_setting.fallback_to_wiki = row.get("fallback_to_wiki", False)
-                existing_setting.last_used_source = row.get("last_used_source", "wikigg")
-                existing_setting.last_run_timestamp = row.get("last_run_timestamp")
-                db.session.flush()
-                summary["scraper_settings"] = {"created": 1 if was_new else 0, "updated": 0 if was_new else 1}
 
             _upsert_entity(
                 data, target_keys, summary, "challenge_mode_settings", ChallengeModeSetting, "mode",

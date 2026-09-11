@@ -14,7 +14,6 @@ from app.models.equipment import Item, Addon, Offering
 from app.models.chapter import Chapter
 from app.models.map import MapRealm, Realm
 from app.models.user import User
-from app.models.minigames import ScraperSetting
 from app.models.smash_or_pass import Roster, Entity, Translation
 from app.services.db.serializers import (
     serialize_character, serialize_perk, serialize_item, serialize_addon, serialize_offering,
@@ -131,15 +130,12 @@ def main():
             })
         save_json_file(OUTPUT_DIR / "content" / "maps.json", "maps", maps_list)
 
-        # 2. SETTINGS
+        # 2. SETTINGS (no scraper_settings — scraper is gone)
         print("\n--- Exporting Settings ---")
         perk_rules = [pr.to_dict() for pr in db.session.scalars(select(PerkRule).order_by(PerkRule.id)).all()]
         save_json_file(OUTPUT_DIR / "settings" / "perk_rules.json", "perk_rules", perk_rules)
 
-        scraper_settings = [ss.to_dict() for ss in db.session.scalars(select(ScraperSetting).order_by(ScraperSetting.id)).all()]
-        save_json_file(OUTPUT_DIR / "settings" / "scraper_settings.json", "scraper_settings", scraper_settings)
-
-        # 3. SMASH OR PASS (Static Rosters & Translations - NO VOTES)
+        # 3. SMASH OR PASS — individual per-roster files only (no combined rosters.json duplicate)
         print("\n--- Exporting Smash or Pass (Zero Votes) ---")
         rosters_db = db.session.scalars(select(Roster).order_by(Roster.id)).all()
         serialized_rosters = []
@@ -171,15 +167,12 @@ def main():
                 ]
             }
             serialized_rosters.append(roster_dict)
-            # Also save individual roster file
             save_json_file(
                 OUTPUT_DIR / "smash_or_pass" / "rosters" / f"{r.slug}.json",
                 "rosters",
                 [roster_dict],
                 extra_meta={"roster_slug": r.slug, "entity_count": len(r.entities)}
             )
-
-        save_json_file(OUTPUT_DIR / "smash_or_pass" / "rosters.json", "rosters", serialized_rosters)
 
         smash_translations = [t.to_dict() for t in db.session.scalars(select(Translation).order_by(Translation.id)).all()]
         save_json_file(OUTPUT_DIR / "smash_or_pass" / "smash_translations.json", "smash_translations", smash_translations)
@@ -189,13 +182,10 @@ def main():
         core_users = db.session.scalars(select(User).where(User.username.in_(["lemon", "user"]))).all()
         lemon_user = [serialize_user(u) for u in core_users if u.username == "lemon"]
         default_user = [serialize_user(u) for u in core_users if u.username == "user"]
-        all_core_users = [serialize_user(u) for u in core_users]
-
         if lemon_user:
             save_json_file(OUTPUT_DIR / "users" / "admin_lemon.json", "users", lemon_user)
         if default_user:
             save_json_file(OUTPUT_DIR / "users" / "default_user.json", "users", default_user)
-        save_json_file(OUTPUT_DIR / "users" / "users.json", "users", all_core_users)
 
         # 5. README.md Documentation
         readme_content = f"""# LemonDBD - Static Database Export
@@ -223,7 +213,6 @@ static_export/
 │   ├── maps.json               ({len(maps_list)} maps with tiles and callouts)
 │   └── realms.json             ({len(realms)} realms and banners)
 ├── smash_or_pass/
-│   ├── rosters.json            ({len(serialized_rosters)} rosters containing {sum(len(r['entities']) for r in serialized_rosters)} entities, zero votes)
 │   ├── smash_translations.json ({len(smash_translations)} UI and archetype translations)
 │   └── rosters/                (Individual roster files)
 │       ├── canon.json
@@ -233,12 +222,10 @@ static_export/
 │       ├── hooked_on_you.json
 │       └── legendary_cosplay.json
 ├── settings/
-│   ├── perk_rules.json         ({len(perk_rules)} standard perk slot rule)
-│   └── scraper_settings.json   ({len(scraper_settings)} wiki scraper configuration)
+│   └── perk_rules.json         ({len(perk_rules)} standard perk slot rule)
 └── users/
     ├── admin_lemon.json        (Admin 'lemon' user record)
-    ├── default_user.json       (Default 'user' record)
-    └── users.json              (Combined core users)
+    └── default_user.json       (Default 'user' record)
 ```
 
 ## How to Import

@@ -479,21 +479,20 @@ class TestDatabaseExportImportSettingsTables:
         with export_import_app.app_context():
             from sqlalchemy import delete as sa_delete
             from app.models.perk import PerkRule
-            from app.models.minigames import DraftSession, ScraperSetting
+            from app.models.minigames import DraftSession
             from app.models.admin import ChallengeModeSetting
             from app.models.user import UserShowcase
 
             user = db.session.scalars(select(User).where(User.username == "player_test")).first()
             db.session.add(PerkRule(name="Standard", is_default=True))
             db.session.add(DraftSession(room_code="ABC123"))
-            db.session.add(ScraperSetting(source="wikigg"))
             db.session.add(ChallengeModeSetting(mode="gauntlet", is_enabled=True))
             db.session.add(UserShowcase(user_id=user.id, player_title="The Camper"))
             db.session.commit()
 
             targets = [
                 "perk_rules", "draft_sessions",
-                "scraper_settings", "challenge_mode_settings", "user_showcases",
+                "challenge_mode_settings", "user_showcases",
             ]
             exported = DatabaseExportImportService.export_database(targets=targets)
             for t in targets:
@@ -501,7 +500,6 @@ class TestDatabaseExportImportSettingsTables:
 
             db.session.execute(sa_delete(PerkRule))
             db.session.execute(sa_delete(DraftSession))
-            db.session.execute(sa_delete(ScraperSetting))
             db.session.execute(sa_delete(ChallengeModeSetting))
             db.session.execute(sa_delete(UserShowcase))
             db.session.commit()

@@ -27,7 +27,6 @@ from app.models.map import MapObjective, MapRealm, MapTile, Realm
 from app.models.minigames import (
     DraftSession,
     GuesserStat,
-    ScraperSetting,
 )
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.perk import Perk, PerkRule
@@ -66,7 +65,6 @@ __all__ = [
     "MapObjective",
     "GauntletRun",
     "GauntletMatchLog",
-    "ScraperSetting",
     "PageStreakRun",
     "PageStreakPageLog",
     "DraftSession",

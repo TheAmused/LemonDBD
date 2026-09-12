@@ -42,7 +42,6 @@ export default {
   loadingKillers: "Loading your killers...",
   retry: "Retry",
   loadingRoster: "Loading roster…",
-  resetRunPrompt: "Reset the run if you want to go through it again.",
   chaosRulesTitle: "Chaos Streak Rules",
   chaosStreak: "Chaos Streak",
   chaosVictoryTitle: "You won the Chaos Streak",

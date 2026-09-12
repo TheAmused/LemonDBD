@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Trophy, RotateCcw } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -120,13 +120,22 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           />
 
           {run.status === 'completed' ? (
-            <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
-              <p className="text-sm font-extrabold text-emerald-400">
+            <div className="mb-8 mt-6 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+                <Trophy className="h-8 w-8" />
+              </div>
+              <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                 {dict?.streaks?.pageStreakVictoryPrefix || 'You won the Page Streak on'} {killerDisplayName}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                {dict?.streaks?.resetRunPrompt || 'Reset the run if you want to go through it again.'}
-              </p>
+              </h2>
+              <button
+                type="button"
+                onClick={() => setConfirmingReset(true)}
+                disabled={busy}
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+              >
+                <RotateCcw className="h-4 w-4" />
+                {dict?.streaks?.startNewRun || 'Start a new run'}
+              </button>
             </div>
           ) : (
             <>

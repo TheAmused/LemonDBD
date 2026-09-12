@@ -42,7 +42,6 @@ export default {
   loadingKillers: "Ładowanie Twoich zabójców...",
   retry: "Ponów",
   loadingRoster: "Ładowanie listy postaci…",
-  resetRunPrompt: "Zresetuj podejście, jeśli chcesz przejść je ponownie.",
   chaosRulesTitle: "Zasady Serii Chaosu",
   chaosStreak: "Seria Chaosu",
   chaosVictoryTitle: "Wygrałeś: Seria Chaosu",

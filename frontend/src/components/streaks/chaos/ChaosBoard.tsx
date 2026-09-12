@@ -262,11 +262,12 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               </div>
             </div>
 
-            {/* Fixed to the viewport so it's always reachable without scrolling
-                through the (potentially long) killer roster above to reach it. */}
-            <div className="fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
-              {!acceptedKillerId ? (
-                <div className="pointer-events-auto flex items-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xl p-3">
+            {/* Same fixed sidebar-aware bottom bar as the character ownership
+                editor (CharactersHub), so this is always reachable without
+                scrolling through the (potentially long) killer roster above. */}
+            <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md lemon-shell-main">
+              <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
+                {!acceptedKillerId ? (
                   <button
                     type="button"
                     onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
@@ -275,27 +276,27 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                   >
                     {dict?.streaks?.acceptPick || ''}
                   </button>
-                </div>
-              ) : (
-                <div className="pointer-events-auto flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xl p-3">
-                  <button
-                    type="button"
-                    onClick={() => handleResult('win')}
-                    disabled={busy}
-                    className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-                  >
-                    {dict?.streaks?.winMatch || ''}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleResult('loss')}
-                    disabled={busy}
-                    className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-                  >
-                    {dict?.streaks?.loseMatch || ''}
-                  </button>
-                </div>
-              )}
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleResult('win')}
+                      disabled={busy}
+                      className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    >
+                      {dict?.streaks?.winMatch || ''}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleResult('loss')}
+                      disabled={busy}
+                      className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    >
+                      {dict?.streaks?.loseMatch || ''}
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </>
         )}

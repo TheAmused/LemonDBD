@@ -82,7 +82,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         </span>
       ) : null}
 
-      <div className="relative flex flex-1 items-center justify-center text-center">
+      <div className="relative flex flex-1 items-center pr-24 sm:pr-28">
         <h3 className={`text-lg sm:text-xl font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
           {title}
         </h3>

@@ -245,7 +245,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   key={realm}
                   type="button"
                   tabIndex={hideSearch ? -1 : undefined}
-                  onClick={() => setRealmFilter(realm)}
+                  onClick={() => setRealmFilter((prev) => (prev === realm ? null : realm))}
                   aria-pressed={realmFilter === realm}
                   className={`cursor-pointer inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition-colors ${
                     realmFilter === realm

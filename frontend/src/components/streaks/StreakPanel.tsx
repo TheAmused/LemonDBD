@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, type LucideIcon } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
 
 const DisabledReasonModal = dynamic(
@@ -14,8 +14,6 @@ const DisabledReasonModal = dynamic(
 
 interface StreakPanelBaseProps {
   title: string;
-  icon: LucideIcon;
-  accent: string;
   accentBorder: string;
   color: PanelColor;
   image?: string;
@@ -39,8 +37,6 @@ type StreakPanelProps = StreakPanelBaseProps &
 
 export const StreakPanel: React.FC<StreakPanelProps> = ({
   title,
-  icon: Icon,
-  accent,
   accentBorder,
   color,
   image,
@@ -75,39 +71,26 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         </>
       )}
 
-      <div className="relative flex items-start justify-between gap-3">
-        {image ? (
-          <img
-            src={image}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className={`h-11 w-11 rounded-xl border ${accentBorder} object-cover shadow-sm`}
-          />
-        ) : (
-          <div className={`flex h-11 w-11 items-center justify-center rounded-xl border ${accentBorder} bg-slate-100 dark:bg-slate-900/60 shadow-sm`}>
-            <Icon className={`h-5 w-5 ${accent}`} />
-          </div>
-        )}
-        {disabled ? (
-          <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-            <AlertTriangle className="h-3 w-3" />
-            {dict?.streaks?.disabled || 'Disabled'}
-          </span>
-        ) : comingSoon ? (
-          <span className="rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            {dict?.streaks?.comingSoon || 'Coming soon.'}
-          </span>
-        ) : null}
-      </div>
+      {disabled ? (
+        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+          <AlertTriangle className="h-3 w-3" />
+          {dict?.streaks?.disabled || 'Disabled'}
+        </span>
+      ) : comingSoon ? (
+        <span className="absolute right-3 top-3 z-10 rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          {dict?.streaks?.comingSoon || 'Coming soon.'}
+        </span>
+      ) : null}
 
-      <h3 className={`relative mt-4 text-sm font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
-        {title}
-      </h3>
+      <div className="relative flex flex-1 items-center justify-center text-center">
+        <h3 className={`text-lg sm:text-xl font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
+          {title}
+        </h3>
+      </div>
     </>
   );
 
-  const base = `relative flex h-full min-h-[48px] touch-manipulation flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
+  const base = `relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
 
   if (disabled) {
     return (

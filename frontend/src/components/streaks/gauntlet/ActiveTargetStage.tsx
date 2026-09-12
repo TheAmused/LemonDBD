@@ -25,28 +25,6 @@ export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacte
   return staticUrl(owned) || avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') || null;
 };
 
-const KILLER_SEND_OFFS = [
-  'Good luck out there.',
-  'The fog is waiting.',
-  'Make it count.',
-  'Go get them.',
-  'Your trial awaits.',
-  'Time to earn it.',
-  'Bring them home.',
-  'Good hunting.',
-  'Off you go.',
-  'Earn it.',
-];
-
-const SURVIVOR_SEND_OFFS = [
-  'Good luck out there.',
-  'Try not to die.',
-  'Run for it.',
-  'Your trial awaits.',
-  'Off you go.',
-  'Earn it.',
-];
-
 const perkIconFor = (perk: Perk) => perkIconUrl(perk);
 
 export interface ActiveTargetStageProps {
@@ -149,15 +127,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const { displayName: reelName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
   const reelDisplayName = reelName != null ? characterDisplayName(reelName) : null;
 
-  const sendOffPool = role === 'killer' ? KILLER_SEND_OFFS : SURVIVOR_SEND_OFFS;
-  const [sendOff, setSendOff] = useState<string>(sendOffPool[0]);
-
   const beginDraw = useCallback(
     (onDone: () => void) => {
-      setSendOff(sendOffPool[Math.floor(Math.random() * sendOffPool.length)]);
       startDraw(onDone);
     },
-    [startDraw, sendOffPool]
+    [startDraw]
   );
 
   const isRevealed = Boolean(run?.target_revealed);
@@ -216,18 +190,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
 
         {drawing ? (
-          <>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
-              {reelDisplayName ?? ' '}
-            </h2>
-            <p
-              className={`h-6 text-base font-bold text-amber-600 dark:text-amber-400 ${
-                phase === 'landed' ? 'gn-name-in' : ''
-              }`}
-            >
-              {phase === 'landed' ? sendOff : ' '}
-            </p>
-          </>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
+            {reelDisplayName ?? ' '}
+          </h2>
         ) : (
           <>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">
@@ -453,7 +418,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
+      <div className="space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             type="button"

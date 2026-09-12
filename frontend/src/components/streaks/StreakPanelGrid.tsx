@@ -13,8 +13,12 @@ import {
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
+import { fetchRoster as fetchPageStreakRoster } from '@/services/pageStreakApi';
+import { RosterEntry } from '@/types/pageStreak';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useAuth } from '@/context/AuthContext';
 import { useChallengeCompletionStatus } from './useChallengeCompletionStatus';
+import { isHardestTierCompleted, CHAOS_DIFFICULTY_ORDER, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 
 const GauntletModeModal = dynamic(
   () => import('./gauntlet/GauntletModeModal').then((m) => m.GauntletModeModal),
@@ -59,6 +63,7 @@ interface StreakPanelGridProps {
 export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }) => {
   const router = useRouter();
   const dict = useStreaksDict();
+  const { token } = useAuth();
 
   const panels = useMemo(() => {
     if (role === 'killer') return getKillerStreakPanels(dict);
@@ -76,12 +81,28 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const chaosCompletedVariants = completionStatus.chaos ?? [];
   const historyCompletedVariants = completionStatus.history ?? [];
   const gauntletCardCompleted = gauntletCompletedVariants.includes(`${role}_original`);
-  const chaosCardCompleted = chaosCompletedVariants.includes('hell');
-  const historyCardCompleted = historyCompletedVariants.includes('hell');
+  const chaosCardCompleted = isHardestTierCompleted(CHAOS_DIFFICULTY_ORDER, chaosCompletedVariants);
+  const historyCardCompleted = isHardestTierCompleted(HISTORY_MODE_ORDER, historyCompletedVariants);
+  const [pageStreakRoster, setPageStreakRoster] = useState<RosterEntry[]>([]);
+  const pageStreakCompletedKillers = completionStatus.page_streak ?? [];
+  // Unlike the other modes' single variant, Page Streak has no card-level
+  // trophy condition to read off the status map alone -- it only "counts" as
+  // done once every currently owned killer has been cleared, so this needs
+  // the roster too.
+  const pageStreakCardCompleted =
+    pageStreakRoster.length > 0 &&
+    pageStreakRoster.every((entry) => pageStreakCompletedKillers.includes(entry.killer));
 
   useEffect(() => {
     fetchChallengeModeStatus().then(setModeStatus);
   }, []);
+
+  useEffect(() => {
+    if (!token) return;
+    fetchPageStreakRoster(token)
+      .then(setPageStreakRoster)
+      .catch((err) => console.error('Failed to load page streak roster:', err));
+  }, [token]);
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -133,7 +154,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
               onClick={() => {
                 const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
-                if (saved === 'original') {
+                if (saved === 'original' && !gauntletCardCompleted) {
                   router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
                 } else {
                   setIsModeModalOpen(true);
@@ -156,7 +177,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               prefetchHrefs={[`/${locale}/streaks/${role}/chaos-streak`]}
               onClick={() => {
                 const saved = getSavedChaosDifficulty();
-                if (saved) {
+                if (saved && !chaosCompletedVariants.includes(saved)) {
                   router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${saved}`);
                 } else {
                   setIsChaosModeModalOpen(true);
@@ -179,7 +200,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               prefetchHrefs={[`/${locale}/streaks/${role}/history-streak`]}
               onClick={() => {
                 const saved = getSavedHistoryMode();
-                if (saved) {
+                if (saved && !historyCompletedVariants.includes(saved)) {
                   router.push(`/${locale}/streaks/${role}/history-streak?mode=${saved}`);
                 } else {
                   setIsHistoryModeModalOpen(true);
@@ -198,6 +219,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              completed={pageStreakCardCompleted}
               prefetchHrefs={[`/${locale}/streaks/${role}/page-streak`]}
               onClick={() => {
                 if (hasSeenPageStreakIntro()) {

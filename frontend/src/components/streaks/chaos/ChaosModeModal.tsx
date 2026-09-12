@@ -7,9 +7,7 @@ import { Coins, Flame, Skull } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChaosRulesModal } from './ChaosRulesModal';
-import { cascadeCompletedTiers } from '@/utils/challengeTierCompletion';
-
-const DIFFICULTY_ORDER: Difficulty[] = ['easy', 'medium', 'hell'];
+import { cascadeCompletedTiers, CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
 
 export interface ChaosModeModalProps {
   isOpen: boolean;
@@ -35,7 +33,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const completedTiers = cascadeCompletedTiers(DIFFICULTY_ORDER, completedDifficulties);
+  const completedTiers = cascadeCompletedTiers(CHAOS_DIFFICULTY_ORDER, completedDifficulties);
 
   const tiles: ChallengeIntroTile[] = [
     {

@@ -165,7 +165,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           type="button"
           onClick={onClose}
           aria-label={dict?.modal?.close || ''}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-900 border-2 border-slate-700 text-slate-300 hover:text-white hover:border-rose-500 hover:bg-rose-950 transition-all shadow-lg cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+          className="shrink-0 rounded-xl p-2 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
         >
           <X className="w-5 h-5" />
         </button>
@@ -216,7 +216,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
             title={dict?.maps?.zoomOut || ''}
             aria-label={dict?.maps?.zoomOutAria || ''}
           >
@@ -230,7 +230,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
             title={dict?.maps?.zoomIn || ''}
             aria-label={dict?.maps?.zoomInAria || ''}
           >
@@ -242,7 +242,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={handleResetView}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
             title={dict?.maps?.resetPanZoom || ''}
             aria-label={dict?.maps?.resetPanAndZoomAria || ''}
           >

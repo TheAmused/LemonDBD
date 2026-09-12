@@ -259,6 +259,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           title={dict?.streaks?.historyStreak || 'History Streak'}
           accent="slate"
           completions={completions}
+          subjectLabel={dict?.streaks?.killersLabel || 'killers'}
           dict={dict}
         />
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
@@ -273,6 +274,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           isOpen={isChangeModeOpen}
           onClose={() => setIsChangeModeOpen(false)}
           currentMode={mode}
+          showIntro={false}
           onSelectMode={(newMode) => {
             saveHistoryMode(newMode);
             setIsChangeModeOpen(false);

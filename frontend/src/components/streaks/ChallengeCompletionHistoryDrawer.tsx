@@ -20,6 +20,8 @@ export interface ChallengeCompletionHistoryDrawerProps {
   title: string;
   accent: StreakAccent;
   completions: ChallengeCompletion[];
+  /** Translated plural noun for `unlocked_characters_count`, e.g. "killers" or "survivors". */
+  subjectLabel: string;
   dict?: Dictionary;
 }
 
@@ -35,6 +37,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
   title,
   accent,
   completions,
+  subjectLabel,
   dict,
 }) => {
   useEffect(() => {
@@ -96,7 +99,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
                     </div>
                     <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
                       <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                      {entry.unlocked_characters_count} {dict?.streaks?.unlockedAtCompletion || 'unlocked'}
+                      {entry.unlocked_characters_count} {subjectLabel}
                     </div>
                   </div>
                   {entry.completed_at && (

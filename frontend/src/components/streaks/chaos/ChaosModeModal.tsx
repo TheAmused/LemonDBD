@@ -13,6 +13,9 @@ export interface ChaosModeModalProps {
   onClose: () => void;
   onSelectDifficulty: (difficulty: Difficulty) => void;
   currentDifficulty?: Difficulty;
+  /** False when switching difficulty mid-run from the board header -- skips
+   *  the explanatory intro, since the player already knows how Chaos works. */
+  showIntro?: boolean;
   dict?: Dictionary;
 }
 
@@ -21,6 +24,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
   onClose,
   onSelectDifficulty,
   currentDifficulty,
+  showIntro = true,
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -58,11 +62,13 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         iconClassName="bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400"
         title={dict?.streaks?.chooseDifficulty || 'Choose a difficulty'}
         intro={
-          dict?.streaks?.chaosIntro ||
-          'Pull the lever to draw 4 random perks and 2 addon rarities from your unlocked pool, then pick which owned killer plays the round. Win 3 kills or more to keep your streak alive.'
+          showIntro
+            ? dict?.streaks?.chaosIntro ||
+              'Pull the lever to draw 4 random perks and 2 addon rarities from your unlocked pool, then pick which owned killer plays the round. Win 3 kills or more to keep your streak alive.'
+            : undefined
         }
-        rulesLabel={dict?.streaks?.rules || 'Rules'}
-        onOpenRules={() => setIsRulesOpen(true)}
+        rulesLabel={showIntro ? dict?.streaks?.rules || 'Rules' : undefined}
+        onOpenRules={showIntro ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}
         tileGridClassName="sm:grid-cols-3"

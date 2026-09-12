@@ -13,6 +13,9 @@ export interface HistoryModeModalProps {
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
   currentMode?: HistoryMode;
+  /** False when switching mode mid-run from the board header -- skips the
+   *  explanatory intro, since the player already knows how History works. */
+  showIntro?: boolean;
   dict?: Dictionary;
 }
 
@@ -21,6 +24,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
   onClose,
   onSelectMode,
   currentMode,
+  showIntro = true,
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -51,11 +55,13 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         iconClassName="bg-slate-500/10 border-slate-500/20 text-slate-600 dark:text-slate-400"
         title={dict?.streaks?.chooseMode || 'Choose a mode'}
         intro={
-          dict?.streaks?.historyIntro ||
-          'Your owned killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next one and add its teachable perks to your pool.'
+          showIntro
+            ? dict?.streaks?.historyIntro ||
+              'Your owned killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next one and add its teachable perks to your pool.'
+            : undefined
         }
-        rulesLabel={dict?.streaks?.rules || 'Rules'}
-        onOpenRules={() => setIsRulesOpen(true)}
+        rulesLabel={showIntro ? dict?.streaks?.rules || 'Rules' : undefined}
+        onOpenRules={showIntro ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={(value) => onSelectMode(value as HistoryMode)}
         tileGridClassName="sm:grid-cols-2"

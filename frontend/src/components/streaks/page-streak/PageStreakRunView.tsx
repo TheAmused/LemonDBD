@@ -122,7 +122,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           {run.status === 'completed' ? (
             <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
               <p className="text-sm font-extrabold text-emerald-400">
-                {dict?.streaks?.allPagesClearedPrefix || 'All'} {run.page_count} {dict?.streaks?.pagesClearedOnSuffix || 'pages cleared on'} {killerDisplayName}
+                {dict?.streaks?.pageStreakVictoryPrefix || 'You won the Page Streak on'} {killerDisplayName}
               </p>
               <p className="mt-1 text-xs text-slate-400">
                 {dict?.streaks?.resetRunPrompt || 'Reset the run if you want to go through it again.'}

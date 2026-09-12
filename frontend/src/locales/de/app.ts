@@ -9,6 +9,7 @@ export default {
   loadingPerks: "Lade Talente-Tresor...",
   resetFilters: "Filter zurücksetzen",
   adminPageTitle: "LemonDBD - Admin-Kontrollzentrum",
+  achievementsPageTitle: "LemonDBD - Erfolge",
   buildsPageTitle: "LemonDBD - Community-Builds",
   guesserPageTitle: "LemonDBD - Minispiele & Quiz",
   charactersPageTitle: "LemonDBD - Charaktere & Lehrtalente",

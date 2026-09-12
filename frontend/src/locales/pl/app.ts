@@ -9,6 +9,7 @@ export default {
   loadingPerks: "Wczytywanie Skarbca Umiejętności...",
   resetFilters: "Zresetuj filtry",
   adminPageTitle: "LemonDBD - Panel Administracyjny",
+  achievementsPageTitle: "LemonDBD - Osiągnięcia",
   buildsPageTitle: "LemonDBD - Buildy Społeczności",
   guesserPageTitle: "LemonDBD - Minigry i Zgadywanka",
   charactersPageTitle: "LemonDBD - Postacie i Umiejętności Uczalne",

@@ -241,7 +241,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 dict={dict}
               />
             </div>
-            <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
+            <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 pb-24 shadow-sm">
               <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
                 {dict?.streaks?.pickYourKiller || ''}
               </h3>
@@ -260,9 +260,13 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                   dict={dict}
                 />
               </div>
+            </div>
 
+            {/* Fixed to the viewport so it's always reachable without scrolling
+                through the (potentially long) killer roster above to reach it. */}
+            <div className="fixed inset-x-0 bottom-4 z-30 flex justify-center px-4">
               {!acceptedKillerId ? (
-                <div className="mt-5 flex items-center justify-center">
+                <div className="pointer-events-auto flex items-center rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xl p-3">
                   <button
                     type="button"
                     onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
@@ -273,7 +277,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                   </button>
                 </div>
               ) : (
-                <div className="mt-5 flex items-center justify-center gap-4">
+                <div className="pointer-events-auto flex items-center gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-2xl p-3">
                   <button
                     type="button"
                     onClick={() => handleResult('win')}

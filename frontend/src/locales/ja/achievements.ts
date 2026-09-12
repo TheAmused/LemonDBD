@@ -1,7 +1,6 @@
 // frontend/src/locales/ja/achievements.ts
 export default {
-  pageTitle: "実績",
-  subtitle: "制覇したチャレンジごとのトロフィー。",
+  comingSoon: "近日公開",
   gauntletShelf: "ガントレット",
   chaosShelf: "カオス・ストリーク",
   historyShelf: "ヒストリー・ストリーク",

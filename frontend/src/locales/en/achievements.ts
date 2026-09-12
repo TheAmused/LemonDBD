@@ -1,7 +1,6 @@
 // frontend/src/locales/en/achievements.ts
 export default {
-  pageTitle: "Achievements",
-  subtitle: "Trophies for every challenge you've conquered.",
+  comingSoon: "Coming Soon",
   gauntletShelf: "Gauntlet",
   chaosShelf: "Chaos Streak",
   historyShelf: "History Streak",

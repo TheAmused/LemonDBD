@@ -84,7 +84,6 @@ export default {
   target: "対象",
   activeGauntletTarget: "現在のガントレット対象",
   yourBuildForMatch: "この試合の指定構成",
-  pickTheseInGame: "ゲーム内で該当パークを選択してください。",
   noTeachablePerks: "このキャラクターの固有パークは登録されていません。",
   rosterProgress: "名簿の進捗",
   rosterProgressDesc: "所持する全キャラクターで対戦してマスターを目指します。",

@@ -113,6 +113,19 @@ def reset_run():
     return jsonify({"run": run}), 200
 
 
+@page_streak_bp.route("/completions", methods=["GET"])
+@login_required
+def get_completions():
+    """Retrieve this killer's completion history (past full clears)."""
+    killer = request.args.get("killer", "").strip()
+    if not killer:
+        return jsonify({"error": "Query parameter 'killer' is required", "status": 400}), 400
+
+    service = get_page_streak_service()
+    completions = service.get_completions(g.current_user.id, killer)
+    return jsonify({"completions": completions}), 200
+
+
 @page_streak_bp.route("/run/reset-all", methods=["POST"])
 @login_required
 def reset_all_runs():

@@ -32,7 +32,6 @@ export default {
   everyPerkUnlocked: "Todas las habilidades están desbloqueadas.",
   loadingStreak: "Cargando racha…",
   yourBuild: "Tu configuración",
-  attempt: "intento",
   layoutFrozen: "distribución congelada",
   streakRoleTabs: "Pestañas de Rol de Racha",
   matchSummary: "Resumen de partida y rendimiento histórico",

@@ -3,6 +3,7 @@ import logging
 from typing import Any
 
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak import (
     BUILD_SIZE,
@@ -76,3 +77,6 @@ class PageStreakService:
 
     def get_stats(self, user_id: int) -> dict[str, Any]:
         return fetch_page_streak_user_stats(user_id)
+
+    def get_completions(self, user_id: int, killer: str) -> list[dict[str, Any]]:
+        return fetch_challenge_completions(user_id, "page_streak", killer)

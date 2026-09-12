@@ -32,7 +32,6 @@ export default {
   everyPerkUnlocked: "Alle Perks sind freigeschaltet.",
   loadingStreak: "Lade Streak…",
   yourBuild: "Dein Build",
-  attempt: "Versuch",
   layoutFrozen: "Layout eingefroren",
   streakRoleTabs: "Streak-Rollen-Tabs",
   matchSummary: "Spielzusammenfassung und Matchverlauf",

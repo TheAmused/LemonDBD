@@ -32,7 +32,6 @@ export default {
   everyPerkUnlocked: "Wszystkie umiejętności są odblokowane.",
   loadingStreak: "Ładowanie serii…",
   yourBuild: "Twój zestaw",
-  attempt: "próba",
   layoutFrozen: "układ zamrożony",
   streakRoleTabs: "Zakładki Ról Serii",
   matchSummary: "Podsumowanie meczu i historia wyników",

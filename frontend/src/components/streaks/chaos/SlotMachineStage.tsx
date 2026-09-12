@@ -183,27 +183,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
   return (
     <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-300 dark:border-violet-500/40 bg-gradient-to-b from-violet-100 to-white dark:from-[#1a0b2e] dark:to-[#0d0517] p-6 sm:p-8 shadow-xl shadow-violet-300/40 dark:shadow-violet-950/50">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 1px, transparent 14px)',
-        }}
-      />
-      <div className="pointer-events-none absolute inset-x-3 top-1.5 flex justify-between">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <span
-            key={i}
-            className="chaos-marquee-bulb h-1 w-1 rounded-full"
-            style={{
-              backgroundColor: i % 2 === 0 ? '#c4b5fd' : '#fbbf24',
-              boxShadow: `0 0 4px ${i % 2 === 0 ? '#c4b5fd' : '#fbbf24'}`,
-              animationDelay: `${i * 150}ms`,
-            }}
-          />
-        ))}
-      </div>
-
       <div className="relative z-10">
         <div className="flex items-center justify-center gap-4 sm:gap-6">
           <div className="flex items-end gap-2">

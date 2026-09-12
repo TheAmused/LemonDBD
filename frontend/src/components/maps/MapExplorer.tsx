@@ -3,7 +3,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, ChevronDown, MapPin } from 'lucide-react';
+import { Search, ImageOff, MapPin } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
@@ -152,11 +152,22 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         toEnter.forEach((r) => next.add(r));
         return next;
       });
+      // Two rAFs, not one: the panel must actually be painted at
+      // grid-template-rows: 0fr before flipping it to 1fr, or the browser has
+      // nothing to transition from and the panel just snaps open. A single rAF
+      // fires before the *next* paint, which is usually enough, but when the
+      // page is doing other heavy rendering right beforehand (e.g. every map
+      // card re-rendering with new names/images right after a language
+      // switch), that paint can land after the rAF already fired, so the
+      // closed state is never actually shown on screen. Nesting a second rAF
+      // guarantees a full paint has happened in between.
       requestAnimationFrame(() => {
-        setOpenRealms((prev) => {
-          const next = new Set(prev);
-          toEnter.forEach((r) => next.add(r));
-          return next;
+        requestAnimationFrame(() => {
+          setOpenRealms((prev) => {
+            const next = new Set(prev);
+            toEnter.forEach((r) => next.add(r));
+            return next;
+          });
         });
       });
     }
@@ -326,9 +337,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <span className="absolute top-2 left-2 rounded-full bg-slate-950/60 px-2 py-0.5 text-xs font-mono text-white/90">
                     {realmMaps.length}
                   </span>
-                  <ChevronDown
-                    className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
-                  />
                 </button>
 
                 {showPanel && (

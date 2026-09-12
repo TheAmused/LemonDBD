@@ -113,11 +113,6 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                 )}
-                {active && !completed && (
-                  <div className="absolute -top-2 -left-2 bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-full text-[9px] font-black z-10 uppercase tracking-tighter shadow-sm">
-                    {dict?.streaks?.target || 'Target'}
-                  </div>
-                )}
                 {checkpoint && !completed && !active && (
                   <div className="absolute -top-2 -right-2 bg-indigo-500 text-white p-1 rounded-full shadow-md z-10">
                     <ShieldCheck className="w-3 h-3" />

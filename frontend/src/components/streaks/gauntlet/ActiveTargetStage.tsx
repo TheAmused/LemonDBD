@@ -256,9 +256,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </div>
 
           <div>
-            <div className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-1">
-              {dict?.streaks?.activeGauntletTarget || 'Active Gauntlet Target'}
-            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {targetDisplayName}
             </h2>

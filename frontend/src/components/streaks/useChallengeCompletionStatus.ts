@@ -10,7 +10,7 @@ import { useAuth } from '@/context/AuthContext';
  *  "already won" trophy badges on challenge cards and difficulty tiles. */
 export function useChallengeCompletionStatus(): ChallengeCompletionStatus {
   const { token } = useAuth();
-  const [status, setStatus] = useState<ChallengeCompletionStatus>({});
+  const [status, setStatus] = useState<ChallengeCompletionStatus>({ completions: {}, active_runs: {} });
 
   useEffect(() => {
     if (!token) return;

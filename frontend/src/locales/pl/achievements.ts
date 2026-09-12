@@ -1,7 +1,6 @@
 // frontend/src/locales/pl/achievements.ts
 export default {
-  pageTitle: "Osiągnięcia",
-  subtitle: "Puchary za każde ukończone wyzwanie.",
+  comingSoon: "Wkrótce",
   gauntletShelf: "Gauntlet",
   chaosShelf: "Seria Chaosu",
   historyShelf: "Seria Historyczna",

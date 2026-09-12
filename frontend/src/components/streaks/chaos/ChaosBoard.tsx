@@ -170,7 +170,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
     }
   };
 
-  const completionTitle = dict?.streaks?.chaosStreak || '';
+  const completionTitle = dict?.streaks?.chaosVictoryTitle || 'You won the Chaos Streak';
 
   return (
     <div>
@@ -334,6 +334,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
           accent="violet"
           completions={completions}
+          subjectLabel={dict?.streaks?.killersLabel || 'killers'}
           dict={dict}
         />
         <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
@@ -349,6 +350,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}
           currentDifficulty={difficulty}
+          showIntro={false}
           onSelectDifficulty={(newDifficulty) => {
             saveChaosDifficulty(newDifficulty);
             setIsChangeDifficultyOpen(false);

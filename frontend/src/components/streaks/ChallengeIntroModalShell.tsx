@@ -21,9 +21,11 @@ export interface ChallengeIntroModalShellProps {
   icon: LucideIcon;
   iconClassName: string;
   title: string;
-  intro: string;
-  rulesLabel: string;
-  onOpenRules: () => void;
+  /** Omit to skip the explanatory intro box entirely, e.g. when a player is
+   *  just switching difficulty mid-run and already knows how the mode works. */
+  intro?: string;
+  rulesLabel?: string;
+  onOpenRules?: () => void;
   tiles: ChallengeIntroTile[];
   onSelectTile: (value: string) => void;
   tileGridClassName: string;
@@ -85,21 +87,25 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           </button>
         </div>
 
-        <div className="px-6 pb-5">
-          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm text-center">
-            <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {intro}
-            </p>
-            <button
-              type="button"
-              onClick={onOpenRules}
-              className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              {rulesLabel}
-            </button>
+        {intro && (
+          <div className="px-6 pb-5">
+            <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm text-center">
+              <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                {intro}
+              </p>
+              {onOpenRules && (
+                <button
+                  type="button"
+                  onClick={onOpenRules}
+                  className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {rulesLabel}
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className={`grid grid-cols-1 gap-4 px-6 pb-6 ${tileGridClassName}`}>
           {tiles.map((tile) => {

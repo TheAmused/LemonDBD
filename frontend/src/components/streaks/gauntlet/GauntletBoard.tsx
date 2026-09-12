@@ -210,6 +210,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           title={dict?.streaks?.gauntlet || 'Gauntlet'}
           accent="amber"
           completions={completions}
+          subjectLabel={
+            role === 'killer'
+              ? dict?.streaks?.killersLabel || 'killers'
+              : dict?.streaks?.survivorsLabel || 'survivors'
+          }
           dict={dict}
         />
         <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />

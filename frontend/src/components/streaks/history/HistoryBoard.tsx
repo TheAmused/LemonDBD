@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/history/HistoryBoard.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -73,6 +73,19 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
     setAcceptedKillerId(null);
   };
 
+  // acceptedKillerId clears after every round (win or loss), so gating the
+  // freeze badge on it directly makes it flicker off between rounds. Track
+  // whether THIS run has ever had a pick accepted at least once instead --
+  // that stays true for the run's whole lifetime, only resetting when
+  // reset/completion swaps in a different run id.
+  const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
+  useEffect(() => {
+    if (acceptedKillerId && run?.id !== engagedRunId) {
+      setEngagedRunId(run?.id ?? null);
+    }
+  }, [acceptedKillerId, run?.id, engagedRunId]);
+  const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
+
   const handleResult = async (result: 'win' | 'loss') => {
     if (!acceptedKillerId) return;
     const killerName = acceptedKillerId;
@@ -124,7 +137,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           totalKillersBeaten={run?.total_killers_beaten || 0}
           bestKillersBeaten={run?.best_killers_beaten || 0}
           checkpointRowIndex={run?.checkpoint_row_index || 0}
-          poolFrozen={Boolean(run?.pool_frozen) && Boolean(acceptedKillerId)}
+          poolFrozen={poolFrozen}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}

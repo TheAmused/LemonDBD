@@ -72,6 +72,19 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const { pool: perkPool } = useKillerPerkPool();
   const { isAdmin } = useAuth();
 
+  // perks_revealed flips back to false after every round (win or loss), so
+  // gating the freeze badge on it directly makes it flicker off between
+  // rounds. Track whether THIS run has ever been revealed at least once
+  // instead -- that stays true for the run's whole lifetime, only resetting
+  // when reset/completion swaps in a different run id.
+  const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
+  useEffect(() => {
+    if (run?.perks_revealed && run.id !== engagedRunId) {
+      setEngagedRunId(run.id);
+    }
+  }, [run?.perks_revealed, run?.id, engagedRunId]);
+  const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
+
   const rosterKillers = useMemo(() => {
     if (!run) return killers;
     return [...run.owned_killers].sort(
@@ -185,7 +198,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
-          poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.perks_revealed)}
+          poolFrozen={poolFrozen}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}

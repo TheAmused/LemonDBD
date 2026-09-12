@@ -1,0 +1,21 @@
+// frontend/src/locales/ja/achievements.ts
+export default {
+  comingSoon: "近日公開",
+  gauntletShelf: "ガントレット",
+  chaosShelf: "カオス・ストリーク",
+  historyShelf: "ヒストリー・ストリーク",
+  pageStreakShelf: "ページ・ストリーク",
+  allKillersLabel: "全キラー",
+  pageStreakOwnedHover: "所持している全キラーでページ・ストリークを完全制覇する。",
+  pageStreakAllHover: "ゲーム内の全キラーでページ・ストリークを完全制覇する。",
+  easyLabel: "イージー",
+  mediumLabel: "ミディアム",
+  hellLabel: "Hell",
+  originalLabel: "Original",
+  ownedBadgeLabel: "所持キャラのみ",
+  allBadgeLabel: "全キャラ制覇",
+  beatChallengePrefix: "難易度",
+  difficultyWord: "でこのチャレンジをクリア:",
+  ownedCharactersSuffix: "所持しているキャラクターのみを使用。",
+  allCharactersSuffix: "ゲーム内の全キャラクターを使用。",
+};

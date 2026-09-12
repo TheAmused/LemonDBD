@@ -1,0 +1,21 @@
+// frontend/src/locales/de/achievements.ts
+export default {
+  comingSoon: "Demnächst",
+  gauntletShelf: "Gauntlet",
+  chaosShelf: "Chaos-Streak",
+  historyShelf: "Historien-Streak",
+  pageStreakShelf: "Seiten-Streak",
+  allKillersLabel: "Alle Killer",
+  pageStreakOwnedHover: "Schließe einen vollständigen Seiten-Streak mit jedem Killer ab, den du besitzt.",
+  pageStreakAllHover: "Schließe einen vollständigen Seiten-Streak mit jedem Killer im Spiel ab.",
+  easyLabel: "Einfach",
+  mediumLabel: "Mittel",
+  hellLabel: "Hell",
+  originalLabel: "Original",
+  ownedBadgeLabel: "Eigener Pool",
+  allBadgeLabel: "Voller Pool",
+  beatChallengePrefix: "Schließe diese Challenge auf",
+  difficultyWord: "Schwierigkeit ab",
+  ownedCharactersSuffix: "nur mit deinen freigeschalteten Charakteren.",
+  allCharactersSuffix: "mit jedem Charakter im Spiel.",
+};

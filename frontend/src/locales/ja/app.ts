@@ -9,6 +9,7 @@ export default {
   loadingPerks: "パーク保管庫を読み込み中...",
   resetFilters: "フィルターをリセット",
   adminPageTitle: "LemonDBD - 管理コントロールセンター",
+  achievementsPageTitle: "LemonDBD - 実績",
   buildsPageTitle: "LemonDBD - コミュニティビルド構成",
   guesserPageTitle: "LemonDBD - ミニゲーム＆クイズ",
   charactersPageTitle: "LemonDBD - キャラクター＆固有パーク",

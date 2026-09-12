@@ -17,7 +17,6 @@ export default {
   others: "Inne",
   admin: "ADMINISTRATOR",
   adminControlCenter: "Panel Administracyjny",
-  soon: "Wkrótce",
   signIn: "Zaloguj się / Zarejestruj",
   signOut: "Wyloguj się",
   emailNotVerified: "E-mail niezweryfikowany. Zweryfikuj teraz",

@@ -17,7 +17,6 @@ export default {
   others: "Sonstiges",
   admin: "ADMIN",
   adminControlCenter: "Admin-Kontrollzentrum",
-  soon: "Bald",
   signIn: "Anmelden / Registrieren",
   signOut: "Abmelden",
   emailNotVerified: "E-Mail nicht verifiziert. Jetzt verifizieren",

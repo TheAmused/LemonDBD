@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 730,
+      "name": "Orderly ID",
+      "killer_id": 42,
+      "description": "Bears the face of Henry Creel as he appeared before he was changed by another dimension.\nWhile out of Worldbreaker Mode, the Vine Attack's aiming range is increased by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_OrderlyID.png?c87101",
+      "icon_local_path": "icons/addons/orderly_id.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Pflegerausweis",
+          "description": "Zeigt das Gesicht von Henry Creel, so wie es aussah, bevor er von einer anderen Dimension verändert wurde.\nAußerhalb des Weltenbrechermodus ist die Zielreichweite des Rankenangriffs um 2 Meter erhöht."
+        },
+        "es": {
+          "name": "Carné de celador",
+          "description": "Lleva el rostro de Henry Creel tal y como era antes de que la otra dimensión le cambiase.\nMientras estés fuera del modo Rompemundos, el alcance para apuntar del ataque de enredadera aumenta en 2 metros."
+        },
+        "ja": {
+          "name": "用務係の身分証明書",
+          "description": "異次元の世界で姿を変える前のヘンリー・クリールの顔が載っている。\n世界の破壊モードが発動していないとき、ツル攻撃の射程範囲が2メートル増加する。"
+        },
+        "pl": {
+          "name": "Identyfikator służbowy",
+          "description": "Widnieje na nim twarz Henry’ego Creela z czasów, zanim został zmieniony przez inny wymiar.\nBędąc poza trybem Niszczyciela światów, zasięg celowania ataku pnączem jest zwiększony o 2 m."
+        }
+      }
+    },
+    {
+      "id": 731,
+      "name": "Bead Maze",
+      "killer_id": 42,
+      "description": "A developmental toy used to enrich the minds of captive children.\nThe second phase of the Worldbreaker Timer is increased by 2.5 seconds for each living Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BeadMaze.png?c45f46",
+      "icon_local_path": "icons/addons/bead_maze.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kugellabyrinth",
+          "description": "Ein pädagogisches Spielzeug, mit dem der Verstand gefangener Kinder gefördert wurde.\nDie zweite Phase des Weltenbrecher-Timers wird für jeden lebenden Überlebenden um 2,5 Sek. verlängert."
+        },
+        "es": {
+          "name": "Laberinto de cuentas",
+          "description": "Un juguete educativo utilizado para estimular la mente de niños en cautiverio.\nLa segunda fase del temporizador de Rompemundos aumenta en 2,5 segundos por cada superviviente con vida."
+        },
+        "ja": {
+          "name": "ビーズ迷路",
+          "description": "幼い被験者の能力発達を促すために使われた知育玩具。\n世界の破壊モードの第2段階の長さが、生き残っている生存者1人につき2.5秒増加する。"
+        },
+        "pl": {
+          "name": "Labirynt z koralikami",
+          "description": "Zabawka edukacyjna wspierająca rozwój umysłowy przetrzymywanych dzieci.\nDrugi etap odliczania Niszczyciela światów jest wydłużony o 2,5 s za każdego ocalałego pozostałego przy życiu."
+        }
+      }
+    },
+    {
+      "id": 732,
+      "name": "Shattered Wrist Rocket",
+      "killer_id": 42,
+      "description": "A once-powerful slingshot, now laid to ruin.\nWhenever you Undergate attack, dropped Pallets and Generators caught in the blast special-break and explode.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ShatteredWristRocket.png?b00406",
+      "icon_local_path": "icons/addons/shattered_wrist_rocket.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerbrochene Schleuder",
+          "description": "Eine einst starke Steinschleuder, die zerstört wurde.\nImmer wenn du einen Untertor-Angriff ausführst, werden umgestoßene Paletten und Generatoren, die von der Druckwelle erfasst werden, durch die Spezialfähigkeit zerstört und in die Luft gejagt."
+        },
+        "es": {
+          "name": "Cohete de muñeca roto",
+          "description": "Un tirachinas que había sido muy poderoso, ahora está hecho trizas.\nCada vez que realices un ataque bajo la puerta, los palés derribados y generadores que queden atrapados en la explosión se romperán de forma especial y estallarán."
+        },
+        "ja": {
+          "name": "砕けたリストロケット",
+          "description": "かつて優れた攻撃力を発揮したスリングショット。今では使い物にならなくなった。\nアンダーゲート攻撃を行うと、その攻撃範囲内にある倒されたパレットと発電機がそれぞれ特殊破壊され、爆発する。"
+        },
+        "pl": {
+          "name": "Uszkodzona profesjonalna proca",
+          "description": "Kiedyś potężna proca, teraz niszczeje.\nZa każdym razem, gdy wykonujesz atak spod bramy, przewrócone palety oraz generatory w zasięgu wybuchu ulegają zniszczeniu w specjalny sposób i eksplodują."
+        }
+      }
+    },
+    {
+      "id": 733,
+      "name": "Stained Glass Mural",
+      "killer_id": 42,
+      "description": "A design once found on the Creel family door. Now it darkens the door of another dimension.\nWhile Upside Down traversal is on cooldown, whenever you basic-break Pallets or Breakable Walls, the cooldown decreases by 12 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_StainedGlassMural.png?b81c15",
+      "icon_local_path": "icons/addons/stained_glass_mural.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Buntglasbild",
+          "description": "Ein Design, das einst die Tür des Creel-Hauses zierte. Jetzt verdunkelt es die Tür einer anderen Dimension.\nSolange das Reisen auf die andere Seite abklingt, verkürzt sich die verbleibende Abklingzeit um 12 Sekunden, wenn du Paletten oder zerstörbare Wände mit einem Standardsprung zerstörst."
+        },
+        "es": {
+          "name": "Mural de vidriera",
+          "description": "Un diseño hallado en la puerta de la familia Creel. Ahora ensombrece la entrada a otra dimensión.\nMientras cruzar el Mundo del Revés esté en tiempo de recarga, cuando rompes palés o muros destruibles de forma básica, el tiempo de recarga se reducirá en 12 segundos."
+        },
+        "ja": {
+          "name": "ステンドグラスの壁画",
+          "description": "かつてクリール家の扉を飾ったステンドグラス。今は異次元の扉を暗く照らしている。\n裏側の世界の移動がクールダウン中にパレットや破壊可能な壁を通常破壊すると、そのクールダウンの残り時間が12秒減少する。"
+        },
+        "pl": {
+          "name": "Wzór na witrażu",
+          "description": "Wzór znaleziony kiedyś na drzwiach domu rodziny Creel. Dziś jest mroczną ozdobą bramy do innego wymiaru.\nGdy przejście na Drugą Stronę odnawia się, za każdym razem, gdy w podstawowy sposób niszczysz palety i rozbijalne ściany, czas odnawiania zmniejsza się o 12 s."
+        }
+      }
+    },
+    {
+      "id": 734,
+      "name": "Smashed Cassette Deck",
+      "killer_id": 42,
+      "description": "They once used music to escape Henry's grasp. Without it, they do not stand a chance.\nAt the start of the match, all Survivors scream.\nAll Survivors start with one Worldbreaker token. When Worldbreaker is activated for the first time, all Survivors lose their Worldbreaker Tokens.\n1 less Grandfather Clock appears on the map.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_SmashedCassetteDeck.png?a1beea",
+      "icon_local_path": "icons/addons/smashed_cassette_deck.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerbrochenes Kassettendeck",
+          "description": "Einst nutzten sie Musik, um sich aus Henrys Klauen zu befreien. Ohne sie haben sie keine Chance.\nZu Beginn der Partie schreien alle Überlebenden.\nAlle Überlebenden starten mit einem Weltenbrecher-Zähler. Wenn der Weltenbrechermodus zum ersten Mal aktiviert wird, verlieren alle Überlebenden ihre Weltenbrecher-Zähler.\nAuf der Karte erscheint 1 Standuhr weniger."
+        },
+        "es": {
+          "name": "Pletina rota",
+          "description": "Una vez utilizaron la música para escapar del control de Henry. Sin ella, no tienen ninguna oportunidad.\nAl comienzo de la partida, todos los supervivientes gritan.\nTodos los supervivientes empiezan con un distintivo de Rompemundos. Cuando Rompemundos se activa por primera vez, todos los supervivientes pierden sus distintivos de Rompemundos.\nEn el mapa, aparece 1 reloj de pie menos."
+        },
+        "ja": {
+          "name": "壊れたカセットデッキ",
+          "description": "彼らはヘンリーの呪縛から逃れるため音楽を使った。それなしでは彼に太刀打ちできなかった。\n儀式開始時に、生存者全員が叫び声を上げる。\n全ての生存者が世界の破壊トークンを1個持って儀式を始める。世界の破壊が初めて発動すると、全ての生存者が世界の破壊トークンを失う。\nマップに出現する古時計が1つ減る。"
+        },
+        "pl": {
+          "name": "Zniszczony magnetofon",
+          "description": "Kiedyś wykorzystali muzykę, żeby uciec Henry’emu. Bez niej nie mieli by najmniejszych szans.\nNa początku próby wszyscy ocalali krzyczą.\nWszyscy ocalali zaczynają z jednym żetonem Niszczyciela światów. Po pierwszej aktywacji Niszczyciela światów, wszyscy ocalali tracą swoje żetony Niszczyciela światów.\nNa mapie pojawia się 1 mniej stojący zegar."
+        }
+      }
+    },
+    {
+      "id": 735,
+      "name": "Bloody Roller Skate",
+      "killer_id": 42,
+      "description": "A memento of the fury that Eleven was capable of.\nWhen activating the Undergate Attack, the Killer gains a 20% Haste status effect for 1.5 seconds upon exiting.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BloodyRollerSkate.png?d4979d",
+      "icon_local_path": "icons/addons/bloody_roller_skate.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutiger Rollschuh",
+          "description": "Eine Erinnerung an die Wut, die in Elf schlummerte.\nBei Aktivierung des Untertor-Angriffs erhält der Killer beim Verlassen der anderen Seite für 1,5 Sek. den Statuseffekt Eile mit 20 %.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Patín ensangrentado",
+          "description": "Un recuerdo de la furia que era capaz de desatar Once.\nAl activar el ataque bajo la puerta, el asesino obtiene un efecto de estado del 20 % de Celeridad durante 1,5 segundos tras salir.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "血塗れのローラースケート",
+          "description": "イレブンの怒りがもたらす恐怖を示すもの。\nアンダーゲート攻撃を発動したとき、地上に出てから1.5秒間、20%の迅速ステータス効果を得る。\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Zakrwawione wrotki",
+          "description": "Memento po furii, jaką była w stanie wykrzesać z siebie Jedenastka.\nPo aktywacji ataku spod bramy, zabójca otrzymuje efekt 20% Pośpiechu na 1,5 s podczas wychodzenia.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 736,
+      "name": "Gutted Supercom",
+      "killer_id": 42,
+      "description": "A broken communication device that now crackles to life at the most terrifying times.\nWhile out of Worldbreaker Mode, Survivors hit by Vine Attacks have their aura shown for 1.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_GuttedSupercom.png?bedd7e",
+      "icon_local_path": "icons/addons/gutted_supercom.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerstörtes Walkie-Talkie",
+          "description": "Ein kaputtes Kommunikationsgerät, das jetzt zu den unheimlichsten Zeiten knisternd zum Leben erwacht.\nAußerhalb des Weltenbrechermodus wird die Aura von Überlebenden, die vom Rankenangriff getroffen werden, 1,5 Sek. lang enthüllt."
+        },
+        "es": {
+          "name": "Supercom destrozado",
+          "description": "Un dispositivo de comunicación estropeado que ahora cobra vida con interferencias en los momentos más terroríficos.\nMientras estén fuera del modo Rompemundos, los supervivientes golpeados con ataques de enredadera revelarán su aura durante 1,5 segundos."
+        },
+        "ja": {
+          "name": "壊れたトランシーバー",
+          "description": "壊れた無線機。辺りが静まり返ったとき、突然パチパチと音を立てる。\n世界の破壊モードが発動していないとき、生存者にツル攻撃が命中すると、そのオーラが1.5秒間表示される。"
+        },
+        "pl": {
+          "name": "Zniszczony super-komunikator",
+          "description": "Uszkodzone urządzenie do komunikacji, które trzeszcząc powraca do życia w najbardziej przerażających momentach.\nW trybie Niszczyciela światów, ocalali trafieni atakiem pnączem ujawniają swoją aurę na 1,5 s."
+        }
+      }
+    },
+    {
+      "id": 737,
+      "name": "Mid-Century Radio",
+      "killer_id": 42,
+      "description": "It sat silent in the Creel's dining room until the slaughter was about to begin.\nWhile in Worldbreaker Mode, Grandfather Clocks more than 32 meters away being worked on by Survivors have their auras revealed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_Mid-CenturyRadio.png?bf7518",
+      "icon_local_path": "icons/addons/mid_century_radio.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Retroradio",
+          "description": "Es stand still im Esszimmer der Creels, bis das Blutbad begann.\nIm Weltenbrechermodus werden die Auren von Standuhren enthüllt, die weiter als 32 Meter entfernt sind und von Überlebenden bearbeitet werden."
+        },
+        "es": {
+          "name": "Radio de mediados de siglo",
+          "description": "Permaneció en silencio en el comedor de los Creel hasta que la masacre estaba a punto de comenzar.\nMientras esté en el modo Rompemundos, los relojes de pie a más de 32 metros de distancia que estén siendo reparados por supervivientes revelan sus auras."
+        },
+        "ja": {
+          "name": "古いラジオ",
+          "description": "これは虐殺が始まる直前まで、クリール家の食堂を静かに見守っていた。\n世界の破壊モードが発動中、32メートル以上離れた場所にあり、生存者が作業を行っている古時計のオーラが表示される。"
+        },
+        "pl": {
+          "name": "Radio w stylu mid-century",
+          "description": "Siedział cicho w jadalni Creelów do czasu, aż miała rozpocząć się rzeź.\nW trybie Niszczyciela światów, wszystkie stojące zegary w odległości większej, niż 32 m, przy których pracują ocalali, powodują ujawnienie aur tych ocalałych."
+        }
+      }
+    },
+    {
+      "id": 738,
+      "name": "Clock Hands",
+      "killer_id": 42,
+      "description": "Hands of the Creel family's grandfather clock, corrupted by Henry's dark power.\nSurvivors gain the Oblivious status effect when interacting with Grandfather Clocks, and for 12 seconds after.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ClockHands.png?6306f3",
+      "icon_local_path": "icons/addons/clock_hands.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Uhrzeiger",
+          "description": "Die Zeiger der Standuhr der Creels, die von Henrys dunklen Kräften beeinflusst wurden.\nÜberlebende erhalten den Statuseffekt Ahnungslos, solange sie mit Standuhren interagieren, und für 12 Sek. danach.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Manecillas de reloj",
+          "description": "Las manillas del reloj de pie de la familia Creel, dañadas por el oscuro poder de Henry.\nLos supervivientes sufren el efecto de estado Inconsciencia cuando interactúen con relojes de pie y durante 12 segundos después.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "時計の針",
+          "description": "クリール家の古時計の針。ヘンリーの恐ろしい力によって歪められた。\n生存者が古時計で作業を行っている間とそのあと12秒間、無感覚のステータス効果を得る。\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Wskazówki zegara",
+          "description": "Wskazówki stojącego zegara rodziny Creelów, skażone mroczną mocą Henry’ego.\nOcalali otrzymują efekt Nieświadomy w czasie interakcji ze stojącymi zegarami i przez 12 s potem.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 739,
+      "name": "Electrode Cap",
+      "killer_id": 42,
+      "description": "Used to measure the brain's electrical activity. In the lab, nothing goes unnoticed.\nAt the start of the second phase of Worldbreaker Mode (or when Survivors complete the Grandfather Clock interactions), Survivors more than 26 meters away from the Killer have their aura revealed for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ElectrodeCap.png?da14f1",
+      "icon_local_path": "icons/addons/electrode_cap.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Elektrodenkappe",
+          "description": "Damit werden die elektrischen Aktivitäten des Gehirns gemessen. Dem Labor entgeht nichts.\nZu Beginn der zweiten Phase des Weltenbrechermodus (oder wenn Überlebende die Standuhrinteraktionen abschließen) werden die Auren von Überlebenden, die weiter als 26 Meter vom Killer entfernt sind, 6 Sek. lang enthüllt."
+        },
+        "es": {
+          "name": "Casco de electrodos",
+          "description": "Sirve para medir la actividad eléctrica del cerebro. En el laboratorio, nada pasa desapercibido.\nAl comienzo de la segunda fase del modo Rompemundos (o cuando los supervivientes completen las interacciones con el reloj de pie), se revelará el aura de los supervivientes a más de 26 metros de distancia del asesino durante 6 segundos."
+        },
+        "ja": {
+          "name": "電極キャップ",
+          "description": "脳神経細胞の電気活動を測定する装置。実験室ではすべてが観察の対象となった。\n世界の破壊モードの第2段階が始まったとき（または生存者が古時計の作業を完了したとき）、殺人鬼から26メートル以上離れた生存者のオーラが6秒間表示される。"
+        },
+        "pl": {
+          "name": "Czepek z elektrodami",
+          "description": "Używany do mierzenia aktywności elektrycznej mózgu. W laboratorium nic nie pozostaje niezauważone.\nNa początku drugiego etapu w trybie Niszczyciela światów (lub gdy ocalali ukończą działania z ze stojącym zegarem), ocalali w odległości większej, niż 26 m od zabójcy ujawniają swoje aury na 6 s."
+        }
+      }
+    },
+    {
+      "id": 740,
+      "name": "Forged Death Certificate",
+      "killer_id": 42,
+      "description": "A piece of paper used to prove the death of a powerful person who was very much alive.\nWhenever you successfully place a Worldbreaker Token on a Survivor via Vine Attack, you gain Undetectable Status Effect until the next Worldbreaker Mode activation.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ForgedDeathCertificate.png?c2b2f7",
+      "icon_local_path": "icons/addons/forged_death_certificate.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gefälschte Sterbeurkunde",
+          "description": "Ein Dokument, mit dem der Tod einer mächtigen Person bestätigt werden sollte, die allerdings ziemlich lebendig war.\nImmer wenn du mithilfe eines Rankenangriffs erfolgreich einen Weltenbrecher-Zähler auf einem Überlebenden platzierst, erhältst du den Statuseffekt Unentdeckbar, bis der nächste Weltenbrechermodus aktiviert wird.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Certificado de muerte falsificada",
+          "description": "Un trozo de papel empleado para demostrar la muerte de una persona poderosa que sí estaba viva.\nCada vez que consigas colocarle un distintivo de Rompemundos a un superviviente con un ataque de enredadera, obtienes el efecto de estado Indetectable hasta la próxima activación del modo Rompemundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "偽造死亡証明書",
+          "description": "とてつもない力を持った人物の死亡を偽装するために作られた証明書。\nツル攻撃で生存者に世界の破壊トークンを付与すると、探知不可のステータス効果を得る。この効果は、次に世界の破壊モードが発動するまで続く。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Podrobiony akt zgonu",
+          "description": "Kartka papieru mająca być dowodem śmierci wpływowej osoby, która wciąż była przy życiu.\nZa każdym razem, gdy skutecznie umieścisz żeton Niszczyciela światów na ocalałym przy użyciu ataku pnączem, otrzymujesz efekt Niewykrywalny do czasu kolejnej aktywacji Niszczyciela światów.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 741,
+      "name": "Rabbit Remains",
+      "killer_id": 42,
+      "description": "Before massacring his family, Henry started small, killing rabbits and leaving their corpses strewn about town.\nSurvivors gain the Exhausted status effect when standing in or entering the Undergate's attack radius, and for 10 seconds after.\nIncreases the cooldown of Upside Down traversal by 5 seconds\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RabbitRemains.png?a71531",
+      "icon_local_path": "icons/addons/rabbit_remains.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Kaninchenüberreste",
+          "description": "Bevor er seine Familie abschlachtete, fing Henry klein an: Er tötete Kaninchen und ließ die Kadaver überall in der Stadt liegen.\nÜberlebende erhalten den Statuseffekt Erschöpfung, wenn sie im Radius des Untertor-Angriffs stehen oder ihn betreten, und für 10 Sek. danach.\nVerlängert die Abklingzeit für das Reisen auf die andere Seite um 5 Sek.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "es": {
+          "name": "Restos de conejo",
+          "description": "Antes de masacrar a su familia, Henry empezó por criaturas más pequeñas: mataba conejos y dejaba sus cadáveres por el pueblo.\nLos supervivientes sufren el efecto de estado Agotamiento cuando estén dentro del radio del ataque bajo la puerta o entren en él, y durante 10 segundos después.\nAumenta el tiempo de recarga cruzando el Mundo del Revés en 5 segundos.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "ウサギの死骸",
+          "description": "ヘンリーは家族を虐殺する前に、ウサギを殺してその死体を町のあちこちに放置した。\n生存者がアンダーゲート攻撃の効果範囲に立っていたとき、またはその範囲に入ったとき、10秒間、疲労のステータス効果を得る。\n裏側の世界の移動のクールダウンが5秒増加する。\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Szczątki królika",
+          "description": "Przed zmasakrowaniem swojej rodziny, Henry zaczynał po trochu, od zabijania królików i rozrzucania ich zwłok po miasteczku.\nOcalali otrzymują efekt Wyczerpany, gdy stoją lub wchodzą do obszaru działania ataku spod bramy oraz przez 10 s potem.\nZwiększa czas odnawiania przejścia na Drugą Stronę o 5 s.\nWyczerpanie uniemożliwia ocalałym aktywowanie niektórych umiejętności."
+        }
+      }
+    },
+    {
+      "id": 742,
+      "name": "Neck Tendril",
+      "killer_id": 42,
+      "description": "He was furious when the tendril was torn from his neck as Max escaped his mind realm.\nSurvivors hit by the Vine Attack while in Worldbreaker Mode receive Hemorrhage and Mangled status effects for 70 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_NeckTendril.png?741a59",
+      "icon_local_path": "icons/addons/neck_tendril.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Halstentakel",
+          "description": "Er war wütend, als der Tentakel von seinem Hals gerissen wurde und Max aus dem Gedankenreich fliehen konnte.\nÜberlebende, die im Weltenbrechermodus vom Rankenangriff getroffen werden, leiden 70 Sek. lang unter den Statuseffekten Blutung und Zerfleischt.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Tentáculo del cuello",
+          "description": "Se enfureció cuando el tentáculo se desprendió de su cuello mientras Max escapaba del reino de su mente.\nLos supervivientes golpeados con el ataque de enredadera mientras estén en el modo Rompemundos sufren los efectos de estado Hemorragia y Laceración durante 70 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "首のツル",
+          "description": "マックスが彼の首からツルを引き裂いて逃れたとき、彼は激怒した。\n世界の破壊モードが発動中、ツル攻撃が命中した生存者は出血と重傷のステータス効果を70秒間受ける。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Macka na szyi",
+          "description": "Wpadł w furię, gdy macka została wyrwana z jego szyi, a Max uciekł z jego umysłowego wymiaru.\nOcalali trafieni atakiem pnączem w trybie Niszczyciela światów otrzymują efekty Krwotok i Zmasakrowany na 70 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 743,
+      "name": "Victor's Razor Blade",
+      "killer_id": 42,
+      "description": "In his grief, Henry's father used a hidden blade to take out his own eyes.\nWhen Worldbreaker Mode ends, injured Survivors become afflicted with the Broken status effect for the next 20 seconds.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_VictorsRazorBlade.png?60dd74",
+      "icon_local_path": "icons/addons/victors_razor_blade.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Victors Rasierklinge",
+          "description": "In seiner Trauer nutzte Henrys Vater eine versteckte Klinge, um seine eigenen Augen auszustechen.\nWenn der Weltenbrechermodus endet, leiden verletzte Überlebende die nächsten 20 Sek. lang unter dem Statuseffekt Gebrochen.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "es": {
+          "name": "Hoja de cuchilla de Victor",
+          "description": "En su dolor, el padre de Henry utilizó una cuchilla que había escondido para sacarse los ojos.\nCuando termina el modo Rompemundos, los supervivientes heridos sufren el efecto de estado Desesperanza durante los próximos 20 segundos.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "ヴィクターのかみそり",
+          "description": "悲嘆にくれたヘンリーの父親は、隠し持っていた刃物で自分の目をえぐり出した。\n世界の破壊モードが終了したとき、負傷状態の生存者は衰弱のステータス効果を20秒間得る。\n衰弱になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Brzytwa Victora",
+          "description": "Pogrążony w żałobie, ojciec Henry’ego sięgnął po ukryte ostrze i pozbawił się wzroku.\nGdy tryb Niszczyciela światów kończy się, ranni ocalali otrzymują efekt Okaleczony na następne 20 s.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    },
+    {
+      "id": 744,
+      "name": "Broken Skateboard",
+      "killer_id": 42,
+      "description": "A cool way to get around, smashed by a furious brother as a means of control.\nWhen Worldbreaker Mode starts, you basic-vault Windows 30% faster and auras of Pallets and Windows are revealed to you within 32 meters for the next 65 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BrokenSkateboard.png?aab300",
+      "icon_local_path": "icons/addons/broken_skateboard.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Kaputtes Skateboard",
+          "description": "Ein cooles Fortbewegungsmittel, das von einem wütenden Bruder zerstört wurde, der beweisen wollte, wer das Sagen hat.\nWenn der Weltenbrechermodus beginnt, sind deine Grundfähigkeit-Sprünge durch Fenster 30 % schneller und die Auren von Paletten und Fenstern in einem Umkreis von 32 Metern werden dir für die nächsten 65 Sek. angezeigt."
+        },
+        "es": {
+          "name": "Patineta destrozada",
+          "description": "Un método de desplazamiento genial, destrozado por un hermano furioso como método de control.\nCuando empieza el modo Rompemundos, tus saltos básicos por ventanas son un 30 % más rápidos. Además, las auras de palés y ventanas se te revelan en un radio de 32 metros durante los próximos 65 segundos."
+        },
+        "ja": {
+          "name": "壊れたスケートボード",
+          "description": "洒落た移動手段。怒った兄によって壊された。\n世界の破壊モードが始まると、次の65秒間、窓の通常乗り越えを行う速度が30%上昇し、32メートル以内にあるパレットと窓のオーラが自分に視える。"
+        },
+        "pl": {
+          "name": "Popsuta deskorolka",
+          "description": "Fajny sposób na przemieszczanie się, zniszczony przez rozwścieczonego brata, który chciał to ograniczyć.\nGdy tryb Niszczyciela światów rozpoczyna się, wykonujesz podstawowe przeskoki przez okna o 30% szybciej i aury palet i okien są ujawniane tobie w zasięgu 32 m przez następne 65 s."
+        }
+      }
+    },
+    {
+      "id": 745,
+      "name": "Black Widow Spider",
+      "killer_id": 42,
+      "description": "A terrifying spider that is no longer a mere hallucination.\nEntering the Upside Down while in Worldbreaker Mode makes the furthest Survivor, more than 36 meters away reveal their location for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BlackWidowSpider.png?e895ef",
+      "icon_local_path": "icons/addons/black_widow_spider.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schwarze Witwe",
+          "description": "Eine furchterregende Spinne, die nun mehr als eine Halluzination ist.\nBeim Betreten der anderen Seite im Weltenbrechermodus zeigt der am weitesten entfernte Überlebende, der mehr als 36 Meter entfernt ist, seine Position 3 Sek. lang an."
+        },
+        "es": {
+          "name": "Viuda negra",
+          "description": "Una araña aterradora que ya no es una simple alucinación.\nEntrar en el Mundo del Revés mientras se está en el modo Rompemundos hace que el superviviente que esté más lejos, a más de 36 metros de distancia, revele su ubicación durante 3 segundos."
+        },
+        "ja": {
+          "name": "クロゴケグモ",
+          "description": "もはや幻覚ではなくなった恐ろしいクモ。\n世界の破壊モードが発動中に裏側の世界に入ると、36メートル以上離れた最も遠くの生存者の居場所が3秒間表示される。"
+        },
+        "pl": {
+          "name": "Czarna wdowa",
+          "description": "Przerażający pająk, który już nie jest jedynie halucynacją.\nPrzejście na Drugą Stronę w trybie Niszczyciela światów powoduje, że najdalszy ocalały, w odległości większej niż 36 m, ujawnia swoją lokalizację na 3 s."
+        }
+      }
+    },
+    {
+      "id": 746,
+      "name": "Pizza Goggles",
+      "killer_id": 42,
+      "description": "Used while Eleven entered sensory deprivation, they rid the user of distractions and focus the mind.\nThe Undergate Attack's area of effect range is reduced by 90%, and its cooldown time is shortened by 25 seconds.\nYour exit cooldown time after executing the Undergate Attack is reduced by 80%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_PizzaGoggles.png?e18b0b",
+      "icon_local_path": "icons/addons/pizza_goggles.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Pizzabrille",
+          "description": "Wurde während Elfs Reizentzug verwendet. Sie vermindert Ablenkungen und fokussiert den Verstand.\nDer Wirkungsbereich des Untertor-Angriffs wird um 90 % verringert und seine Abklingzeit wird um 25 Sek. verkürzt.\nDeine Abklingzeit nach dem Verlassen der anderen Seite nach dem Untertor-Angriff ist um 80 % verkürzt."
+        },
+        "es": {
+          "name": "Gafas de buceo de pizza",
+          "description": "Se utilizaban cuando Once entraba en privación sensorial, eliminando las distracciones y ayudando a concentrar la mente.\nEl alcance del área de efecto del ataque bajo la puerta se reduce un 90 %, y su tiempo de recarga se reduce en 25 segundos.\nTu tiempo de recarga tras salir y realizar el ataque bajo la puerta se reduce un 80 %."
+        },
+        "ja": {
+          "name": "ピザ箱ゴーグル",
+          "description": "イレブンが感覚遮断用のタンクに入ったときに使ったもの。これをかければ、雑念を遮断し、精神を集中できる。\nアンダーゲート攻撃の効果範囲が90%縮小し、攻撃発動のクールダウン時間が25秒短縮する。\nアンダーゲート攻撃で地面に出たあとの動きのクールダウン時間が80%短縮する。"
+        },
+        "pl": {
+          "name": "Pizzowe gogle",
+          "description": "Używane, gdy Jedenastka wchodziła w stan deprywacji sensorycznej — pomagały unikać rozproszeń i lepiej się skupić.\nZasięg działania ataku spod bramy jest zmniejszony o 90%, a jego czas odnawiania skrócony o 25 s.\nCzas odnawiania twojego wyjścia po wykonaniu ataku spod bramy jest zredukowany o 80%."
+        }
+      }
+    },
+    {
+      "id": 747,
+      "name": "Electroshock Collar",
+      "killer_id": 42,
+      "description": "A cruelly efficient method of training and punishing the facility's prisoners.\nWhen coming out of the Upside Down, for 12 seconds, all Windows within 32 meters are blocked.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ElectroshockCollar.png?305449",
+      "icon_local_path": "icons/addons/electroshock_collar.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Elektroschockband",
+          "description": "Eine grausam effiziente Methode, die Gefangenen in der Einrichtung auszubilden und zu bestrafen.\nBeim Verlassen der anderen Seite werden alle Fenster in einem Umkreis von 32 Metern 12 Sek. lang blockiert."
+        },
+        "es": {
+          "name": "Collar de electrochoque",
+          "description": "Un método cruelmente eficiente para entrenar y castigar a los prisioneros de la instalación.\nAl salir del Mundo del Revés, durante 12 segundos, todas las ventanas en un radio de 32 metros estarán bloqueadas."
+        },
+        "ja": {
+          "name": "電気ショック首輪",
+          "description": "施設に囚われた被験者を訓練したり、罰したりする際に用いられた、残酷で効率的な器具。\n裏側の世界から出ると、12秒間、32メートル以内にある全ての窓がブロックされる。"
+        },
+        "pl": {
+          "name": "Kołnierz elektryczny",
+          "description": "Okrutnie wydajny sposób na szkolenie i karanie więźniów placówki.\nPo wyjściu z Drugiej Strony, przez 12 s, wszystkie okna w zasięgu 32 m są zablokowane."
+        }
+      }
+    },
+    {
+      "id": 748,
+      "name": "Chess Piece",
+      "killer_id": 42,
+      "description": "One of the few forms of entertainment while in the facility, it helped the students learn logic and tactics.\nThe Vine Attack has two charges, and its attack radius is diminished by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ChessPiece.png?da83b2",
+      "icon_local_path": "icons/addons/chess_piece.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schachfigur",
+          "description": "Eines der wenigen Freizeitangebote in der Einrichtung, um das logische und taktische Denken der Schüler zu fördern.\nDer Rankenangriff hat zwei Aufladungen und sein Angriffsradius ist um 40 % verkleinert."
+        },
+        "es": {
+          "name": "Pieza de ajedrez",
+          "description": "Una de las pocas formas de diversión que había en aquel lugar. Ayudaba a los alumnos a aprender lógica y estrategia.\nEl ataque de enredadera tiene dos cargas, y su radio de ataque se reduce un 40 %."
+        },
+        "ja": {
+          "name": "チェスの駒",
+          "description": "施設内での数少ない娯楽のひとつ。これを使って被験者たちは論理と戦術を学んだ。\nツル攻撃が2チャージ使え、攻撃の効果範囲が40%縮小する。"
+        },
+        "pl": {
+          "name": "Szachowa bierka",
+          "description": "Jedna z nielicznych rozrywek podczas pobytu w placówce, pomagała studentom uczyć się logiki i taktyki.\nAtak pnączem ma dwa ładunki i promień jego ataku jest zmniejszony o 40%."
+        }
+      }
+    },
+    {
+      "id": 749,
+      "name": "Iridescent Soteria Chip",
+      "killer_id": 42,
+      "description": "A chip that once limited his powers is now a source of even greater power.\nWhen Worldbreaker activates, the Killer gains Undetectable, and Survivors with at least one Worldbreaker Token have their aura revealed when coming within 12 meters of the Killer.\nThis lasts until the Killer performs a Vine Attack, enters the Upside Down, or Worldbreaker ends.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_IridescentSoteriaChip.png?127c91",
+      "icon_local_path": "icons/addons/iridescent_soteria_chip.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Soteria-Chip",
+          "description": "Ein Chip, der einst seine Kräfte einschränkte, ist jetzt eine Quelle noch größerer Macht.\nWenn der Weltenbrechermodus aktiviert wird, erhält der Killer Unentdeckbar und die Auren von Überlebenden mit mindestens einem Weltenbrecher-Zähler werden enthüllt, wenn sie sich dem Killer bis auf 12 Meter nähern.\nDieser Effekt hält an, bis der Killer einen Rankenangriff ausführt, die andere Seite betritt oder der Weltenbrechermodus endet.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Chip Soteria iridiscente",
+          "description": "Un chip que antes limitaba sus poderes es ahora una fuente de un poder aún mayor.\nCuando se activa Rompemundos, el asesino obtiene Indetectable, y los supervivientes con al menos un distintivo de Rompemundos revelarán su aura cuando estén en un radio de 12 metros del asesino.\nEsto se mantiene hasta que el asesino realiza un ataque de enredadera, entra en el Mundo Del Revés o Rompemundos termina.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "玉虫色のソテリアチップ",
+          "description": "かつて彼の力を抑制したチップが、今では大きな力の源となった。\n世界の破壊モードが発動すると、殺人鬼は探知不可となり、世界の破壊トークンを1個以上持った生存者が12メートル以内に来るとそのオーラが視える。\nこの効果は、殺人鬼がツル攻撃を行うか、裏側の世界に入るか、世界の破壊モードが終わるまで続く。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Opalizujący chip Soteria",
+          "description": "Chip, który kiedyś ograniczał jego moce, teraz jest źródłem jeszcze większej mocy.\nPo aktywacji Niszczyciela światów, zabójca otrzymuje efekt Niewykrywalny, a ocalali posiadający przynajmniej jeden żeton Niszczyciela światów ujawniają swoją aurę, gdy znajdują się w promieniu 12 m od zabójcy.\nTen efekt utrzymuje się do czasu, gdy zabójca wykona atak pnączem, wkroczy do Drugiej Strony lub gdy tryb Niszczyciela światów się zakończy.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    }
+  ]
+}

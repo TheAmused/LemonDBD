@@ -1,17 +1,10 @@
 # backend/app/services/maps/__init__.py
-from app.services.maps.data import (
-    DEFAULT_OBJECTIVES_SEED_A,
-    DEFAULT_TILES_SEED_A,
-    SAMPLE_MAPS,
-)
+"""Map reads. Nothing here writes -- `app/seeds/static_db_seeder.py` is the
+only seeder, and `seeder.py`/`data.py` next door are empty tombstones
+explaining why the second one had to go."""
 from app.services.maps.queries import fetch_maps, fetch_realms
-from app.services.maps.seeder import seed_maps_if_empty
 
 __all__ = [
-    "SAMPLE_MAPS",
-    "DEFAULT_TILES_SEED_A",
-    "DEFAULT_OBJECTIVES_SEED_A",
-    "seed_maps_if_empty",
     "fetch_maps",
     "fetch_realms",
 ]

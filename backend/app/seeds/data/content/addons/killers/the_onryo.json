@@ -1,0 +1,547 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 472,
+      "name": "Videotape Copy",
+      "killer_id": 27,
+      "description": "A copy of the deadly videotape imprinted upon by Sadako. It dampens the desire for vengeance.\n• Increases the range at which Survivors gain Condemned from Projection by 2 meters",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_videotapeCopy.png?fa783b",
+      "icon_local_path": "icons/addons/videotape_copy.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kopierte Videokassette",
+          "description": "Eine Kopie der tödlichen Videokassette, die Sadako erschaffen hat. Sie schwächt das Verlangen nach Vergeltung.\n• Erhöht die Reichweite, bei der Überlebende Verdammt durch eine Projektion erhalten, um 2 Meter."
+        },
+        "es": {
+          "name": "Copia de cinta de vídeo",
+          "description": "Una copia de la cinta de vídeo maldita donde Sadako dejó su huella. Sofoca su sed de venganza.\n• Aumenta el alcance en el que los supervivientes obtienen Condena con Proyección en 2 metros."
+        },
+        "ja": {
+          "name": "ダビングしたビデオテープ",
+          "description": "貞子が念写した死を呼ぶビデオをダビングしたテープ。復讐心を抑えてくれる。\n• 生存者が念写から呪いを得る範囲が2メートル拡大する"
+        },
+        "pl": {
+          "name": "Kopia taśmy",
+          "description": "Kopia śmiercionośnej kasety wideo, na której Sadako odcisnęła swoje piętno. Tłumi chęć zemsty.\n• Zwiększa zasięg, z którego ocalali otrzymują Potępienie z Projekcji, o 2 metry."
+        }
+      }
+    },
+    {
+      "id": 473,
+      "name": "Old Newspaper",
+      "killer_id": 27,
+      "description": "It tells of a local woman who predicted a volcanic eruption, evidence used to initially find Sadako.\n• Increases the Manifestation invisibility duration by 33%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oldNewspaper.png?40cccf",
+      "icon_local_path": "icons/addons/old_newspaper.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Alte Zeitung",
+          "description": "Bericht über eine ortsansässige Frau, die einen Vulkanausbruch vorhersagte. Hinweise, die zum Finden von Sadako verwendet wurden.\n• Erhöht die Unsichtbarkeitsdauer nach der Manifestierung um 33 %."
+        },
+        "es": {
+          "name": "Periódico viejo",
+          "description": "En él, se menciona a una mujer de la zona que predijo la erupción de un volcán, y ese dato se utilizó inicialmente como prueba para encontrar a Sadako.\n• Aumenta la duración de la invisibilidad de Manifestación un 33 %."
+        },
+        "ja": {
+          "name": "古い新聞紙",
+          "description": "噴火を予知した女性について書かれた地方紙の記事。貞子を探すための証拠として使われた。\n• 具現化の不可視時間が33%増加する"
+        },
+        "pl": {
+          "name": "Stara gazeta",
+          "description": "Opowiada o miejscowej kobiecie, która przepowiedziała wybuch wulkanu – dowód wykorzystany na początku do odnalezienia Sadako.\n• Wydłuża czas niewidzialności po Ukazaniu o 33%."
+        }
+      }
+    },
+    {
+      "id": 474,
+      "name": "Cabin Sign",
+      "killer_id": 27,
+      "description": "The cabin where both Tomoko and Reiko watched the tape. Carries the memory of those first curses.\n• Decreases the time it takes for a TV to turn on after Projection by 4.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cabinSign.png?8c1865",
+      "icon_local_path": "icons/addons/cabin_sign.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Hüttenschild",
+          "description": "Die Hütte, in der sich Tomoko und Reiko den Film angesehen haben. Trägt die Erinnerung dieser ersten Flüche.\n• Verringert die Zeit, bis sich ein Fernseher nach einer Projektion einschaltet, um 4,5 Sekunden."
+        },
+        "es": {
+          "name": "Cartel de cabaña",
+          "description": "La cabaña donde Tomoko y Reiko vieron la cinta. Contiene el recuerdo de las primeras maldiciones.\n• Reduce el tiempo que tarda en encenderse un televisor tras una Proyección en 4,5 segundos."
+        },
+        "ja": {
+          "name": "コテージの看板",
+          "description": "智子と玲子がビデオテープを見た貸し別荘。初めて呪われた人々の記憶が眠る。\n• 念写の後でテレビが電源オンになるまでの時間が4.5秒減少する"
+        },
+        "pl": {
+          "name": "Znak do chatki",
+          "description": "Chatka, w której Tomoko i Reiko oglądały taśmę. Nosi w sobie pamięć o pierwszych klątwach.\n• Skraca czas włączania telewizora po Projekcji o 4,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 475,
+      "name": "Mother's Mirror",
+      "killer_id": 27,
+      "description": "A mirror from Sadako's mother's house. A reminder of what Sadako has lost.\n• Increases the Manifestation intermittent visibility duration by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mothersMirror.png?6cd401",
+      "icon_local_path": "icons/addons/mothers_mirror.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Spiegel der Mutter",
+          "description": "Ein Spiegel aus dem Haus der Mutter Sadakos. Eine Erinnerung daran, was Sadako verloren hat.\n• Erhöht die Dauer der gelegentlichen Sichtbarkeit vor einer Manifestierung um 2 Sekunden."
+        },
+        "es": {
+          "name": "Espejo de madre",
+          "description": "Un espejo encontrado en la casa de la madre de Sadako. Un recordatorio de lo que ha perdido.\n• Aumenta la duración de la visibilidad intermitente de Manifestación en 2 segundos."
+        },
+        "ja": {
+          "name": "母の鏡",
+          "description": "貞子の母親の家にあった鏡。貞子が失ったもののを思い出させる。\n• 具現化の断続的な可視時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Lustro matki",
+          "description": "Lustro z domu matki Sadako. Przypomina o tym, co Sadako straciła.\n• Wydłuża czas migotania po Ukazaniu o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 476,
+      "name": "Reiko's Watch",
+      "killer_id": 27,
+      "description": "The watch that Reiko left her son Yoichi. A distracting and constant reminder of one’s impending doom.\n• Increases the invisibility duration while Demanifested by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_reikosWatch.png?83505e",
+      "icon_local_path": "icons/addons/reikos_watch.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Reikos Uhr",
+          "description": "Die Uhr, die Reiko ihrem Sohn Yoichi hinterlassen hat. Eine verstörende und ständige Erinnerung an das drohende Verhängnis.\n• Erhöht die Dauer der Unsichtbarkeit im nicht manifestierten Zustand um 25 %."
+        },
+        "es": {
+          "name": "Reloj de Reiko",
+          "description": "El reloj que Reiko le dejó a su hijo Yoichi. Un recordatorio constante y distractor del inevitable final.\n• Aumenta la duración de la invisibilidad mientras no se manifieste un 25 %."
+        },
+        "ja": {
+          "name": "玲子の腕時計",
+          "description": "玲子が息子の陽一に残した腕時計。いつ見ても迫りくる死を思い出させ、不穏な気持ちになる。\n• 幽体状態の時の不可視時間が25%増加する"
+        },
+        "pl": {
+          "name": "Zegarek Reiko",
+          "description": "Zegarek, który Reiko zostawiła swojemu synowi Yoichiemu. Rozpraszająca pamiątka, która nieustannie przypomina o zbliżającej się zagładzie.\n• Wydłuża czas niewidzialności w ukryciu o 25%."
+        }
+      }
+    },
+    {
+      "id": 477,
+      "name": "Sea-Soaked Cloth",
+      "killer_id": 27,
+      "description": "The hood worn by the mysterious figure in the tape. Makes those near it unable to trust what they see.\n• While Survivors are within 8 meters of a powered TV, they are afflicted with the Blindness status effect. This effect lingers for 7 seconds after the TV is turned off.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_seaSoakedCloth.png?dfbcd7",
+      "icon_local_path": "icons/addons/sea_soaked_cloth.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Salzwasser-Tuch",
+          "description": "Die Kapuze, die die geheimnisvolle Gestalt im Film trug. Menschen in der Nähe können ihren Augen nicht trauen.\n• Überlebende im Umkreis von 8 Metern um einen eingeschalteten Fernseher leiden unter dem Statuseffekt Erblindung. Der Effekt bleibt nach dem Ausschalten des Fernsehers noch 7 Sekunden lang bestehen.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Trapo empapado",
+          "description": "La tela que llevaba en la cabeza la misteriosa figura de la cinta. Quienes están cerca no pueden fiarse de sus propios ojos.\n• Cuando los supervivientes están a una distancia de 8 metros de un televisor encendido, sufrirán el efecto de estado Ceguera. Este efecto se mantiene durante 7 segundos después de haber apagado el televisor.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "海水に濡れた布",
+          "description": "映像の中に出てくる謎の人物がかぶっていた頭巾。近づいた者は、目に映るものすべてが信用できなくなる。\n• 電源のついたテレビから8メートル以内にいる生存者が目眩ましのステータス効果に苦しむ。 効果はテレビの電源が切れた後も7秒間続く\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Szmata namoczona w morzu",
+          "description": "Kaptur noszony przez tajemniczą postać z kasety. Sprawia, że osoby znajdujące się w pobliżu nie mogą ufać własnym oczom.\n• Gdy ocalali znajdują się w odległości 8 metrów od włączonego telewizora, otrzymują efekt Oślepienie. Efekt ten trwa przez 7 sekund po wyłączeniu telewizora.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 478,
+      "name": "Clump of Hair",
+      "killer_id": 27,
+      "description": "Once beautiful and long, Sadako now hides behind her ragged, matted locks.\n• Decreases the range at which The Onryō is visible while Demanifested by 6 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_clumpOfHair.png?cf09bf",
+      "icon_local_path": "icons/addons/clump_of_hair.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Haarbüschel",
+          "description": "Einst waren sie wunderschön und lang, jetzt versteckt sich Sadako hinter ihren zottigen, verfilzten Haaren.\n• Verkleinert den Umkreis, in dem der Onryō im nicht manifestierten Zustand zu sehen ist, um 6 Meter."
+        },
+        "es": {
+          "name": "Mata de pelo",
+          "description": "La melena de Sadako, larga y hermosa, ahora no es más que una maraña de pelo.\n• Reduce la distancia a la que la Onryō es visible mientras no se manifieste en 6 metros."
+        },
+        "ja": {
+          "name": "髪の塊",
+          "description": "かつては美しかった長髪も、今やぼろぼろで絡み合った房となって貞子の顔を覆い隠している。\n• 幽体化した怨霊を視認できる範囲が6メートル縮小する"
+        },
+        "pl": {
+          "name": "Kępa włosów",
+          "description": "Sadako ukrywa się za poszarpanymi, matowymi włosami – niegdyś pięknymi i długimi.\n• Zmniejsza zasięg, z jakiego Onryō jest widoczna w ukryciu, o 6 metrów."
+        }
+      }
+    },
+    {
+      "id": 479,
+      "name": "Well Stone",
+      "killer_id": 27,
+      "description": "A piece of the well where Sadako was trapped, an image burned into the mind of all those who have watched the tape.\n• Decreases the time it takes for a TV to turn on after being turned off by a Survivor by 7 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wellStone.png?bc8723",
+      "icon_local_path": "icons/addons/well_stone.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Quellstein",
+          "description": "Ein Stück des Brunnens, in dem Sadako gefangen war. Ein Bild, das sich in den Geist aller einbrennt, die den Film gesehen haben.\n• Verringert die Zeit, bis ein Fernseher sich einschaltet, nachdem er von einem Überlebenden ausgeschaltet wurde, um 7 Sekunden."
+        },
+        "es": {
+          "name": "Piedra de pozo",
+          "description": "Una parte del pozo donde estaba atrapada Sadako. Una imagen grabada a fuego en la mente de quienes han visto la cinta.\n• Reduce el tiempo que tarda en encenderse un televisor después de que lo apague un superviviente en 7 segundos."
+        },
+        "ja": {
+          "name": "井戸の石",
+          "description": "貞子が閉じ込められていた井戸の一部。ビデオを見た者全員の脳裏に焼き付いて離れない映像。\n• 生存者に電源を切られたテレビが電源オンになるまでの時間が7秒減少する"
+        },
+        "pl": {
+          "name": "Kamień ze studni",
+          "description": "Fragment studni, w której uwięziona była Sadako. Obraz wypalony w pamięci wszystkich, którzy oglądali taśmę.\n• Skraca czas włączania telewizorów po wyłączeniu przez ocalałego o 7 sekund."
+        }
+      }
+    },
+    {
+      "id": 480,
+      "name": "Yoichi's Fishing Net",
+      "killer_id": 27,
+      "description": "The net Yoichi used while fishing with his grandfather. A reminder that death comes to us all.\n• Survivors with at least 4 stacks of Condemned suffer from Blindness.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_yoichisFishingNet.png?984565",
+      "icon_local_path": "icons/addons/yoichis_fishing_net.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Yoichis Fischernetz",
+          "description": "Das Netz, das Yoichi beim Angeln mit seinem Großvater verwendet hat. Eine Erinnerung daran, dass der Tod uns alle ereilt.\n• Überlebende mit mindestens 4 Stapeln Verdammt erleiden Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Red de pesca de Yoichi",
+          "description": "La red que empleaba Yoichi cuando salía de pesca con su abuelo. Un recordatorio de que la muerte nos llega a todos.\n• Los supervivientes que tengan como mínimo 4 acumulaciones de Condena sufren Ceguera.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "陽一の漁網",
+          "description": "陽一が祖父と釣りをした時に使った網。死は誰にでも訪れるという事実を思い出させる。\n• 呪いが最低4つ重複した生存者が目眩ましに苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Sieć rybacka Yoichiego",
+          "description": "Sieć, której Yoichi używał podczas połowu ryb z dziadkiem. Przypomnienie, że śmierć przychodzi po wszystkich.\n• Ocalali z co najmniej 4 stosami Potępienia otrzymują efekt Oślepienia.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 481,
+      "name": "Rickety Pinwheel",
+      "killer_id": 27,
+      "description": "A pinwheel found in the caves of Izu Oshima. It spins even when there is no wind, disorienting those who see or hear it.\n• While Survivors are within 8 meters of a powered TV, they are afflicted with the Oblivious status effect. This effect lingers for 7 seconds after the TV is turned off.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ricketyPinwheel.png?9177f2",
+      "icon_local_path": "icons/addons/rickety_pinwheel.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Klappriges Windrädchen",
+          "description": "Ein Windrädchen, das in den Höhlen von Izu-Ōshima gefunden wurde. Es dreht sich auch ohne Wind und verwirrt so jene, die es sehen oder hören.\n• Überlebende im Umkreis von 8 Metern um einen eingeschalteten Fernseher leiden unter dem Statuseffekt Ahnungslos. Der Effekt bleibt nach dem Ausschalten des Fernsehers noch 7 Sekunden lang bestehen.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder davon betroffen sind."
+        },
+        "es": {
+          "name": "Molinillo desvencijado",
+          "description": "Un molinillo hallado en las cuevas de Izu Ōshima. Se mueve aunque no haga viento, lo que confunde a quienes lo ven o escuchan.\n• Cuando los supervivientes están a una distancia de 8 metros de un televisor encendido, sufrirán el efecto de estado Inconsciencia. Este efecto se mantiene durante 7 segundos después de haber apagado el televisor.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "おんぼろの風車",
+          "description": "伊豆大島の洞窟で発見された風車。風が無くても回り、見た者や聞いた者を混乱させる。\n• 電源のついたテレビから8メートル以内にいる生存者が無感覚のステータス効果に苦しむ。 効果はテレビの電源が切れた後も7秒間続く\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Rozklekotany wiatrak",
+          "description": "Wiatraczek znaleziony w jaskiniach Izu Oshimy. Obraca się nawet bez wiatru i dezorientuje tych, którzy go widzą lub słyszą.\n• Gdy ocalali znajdują się w promieniu 8 metrów od włączonego telewizora, otrzymują efekt Nieświadomy. Efekt utrzymuje się przez 7 sekund po wyłączeniu telewizora.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 482,
+      "name": "Well Water",
+      "killer_id": 27,
+      "description": "Water from the well where Sadako was left to die. Murky and black, it obscures everything around it.\n• Increases the duration of the Undetectable status effect by 2 seconds when Manifesting by any means.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wellWater.png?267917",
+      "icon_local_path": "icons/addons/well_water.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Brunnenwasser",
+          "description": "Wasser aus dem Brunnen, in dem Sadako zum Sterben zurückgelassen wurde. Trüb und schwarz verdunkelt es alles in seiner Umgebung.\n• Verlängert die Dauer des Statuseffekts Unentdeckbar um 2 Sekunden bei einer Manifestierung.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Agua del pozo",
+          "description": "La turbia agua del pozo donde abandonaron a su suerte a Sadako. Ensombrece todo lo que rodea.\n• Aumenta la duración del efecto de estado Indetectable en 2 segundos al manifestarse del modo que sea.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "井戸水",
+          "description": "貞子が置き去りにされて死んだ井戸の水。黒い泥水のせいで周囲がよく見えない。\n• 手段にかかわらず具現化した時の探知不可の効果持続時間が2秒増加する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Woda ze studni",
+          "description": "Woda ze studni, w której Sadako została pozostawiona na śmierć. Mętna i czarna, zasłania wszystko wokół.\n• Wydłuża czas działania statusu Niewykrywalny o 2 sekundy podczas Ukazania w dowolny sposób.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 483,
+      "name": "Ring Drawing",
+      "killer_id": 27,
+      "description": "A drawing of the view from inside the well, as drawn by a young Yoichi. Helping those cursed by the tape can only bring misfortune.\n• When hooking a Survivor carrying a tape, other Survivors gain 1 Condemned stack.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ringDrawing.png?ef7415",
+      "icon_local_path": "icons/addons/ring_drawing.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Ringzeichnung",
+          "description": "Eine Zeichnung, die den Blick aus dem Brunnen darstellt, von einem jungen Yoichi angefertigt. Wer denen hilft, die von der Videokassette verflucht wurden, auf den wartet nur Pech.\n• Wenn ein Überlebender, der im Besitz einer Kassette ist, festgehakt wird, erhalten die anderen Überlebenden 1-mal Verdammt."
+        },
+        "es": {
+          "name": "Dibujo de círculo",
+          "description": "Un dibujo de la vista desde el interior del pozo. Lo hizo Yoichi cuando era pequeña. Ayudar a las víctimas de la cinta solo puede traerte problemas.\n• Al colgar a un superviviente con una cinta, otros supervivientes obtienen 1 acumulación de Condena."
+        },
+        "ja": {
+          "name": "輪の絵",
+          "description": "幼い頃の陽一が描いた、井戸の中から見た景色の絵。ビデオに呪われた人々を救おうとしても、不運しかもたらさない。\n• ビデオテープを持っている生存者をフックに吊るすと、他の生存者たちが呪いを1段階得る"
+        },
+        "pl": {
+          "name": "Rysunek kręgu",
+          "description": "Rysunek przedstawiający widok z wnętrza studni, sporządzony przez młodego Yoichiego. Pomaganie przeklętym przez taśmę może przynieść tylko nieszczęście.\n• Kiedy wieszasz na haku ocalałego niosącego taśmę, inni ocalali otrzymują 1 punkt Potępienia."
+        }
+      }
+    },
+    {
+      "id": 484,
+      "name": "Bloody Fingernails",
+      "killer_id": 27,
+      "description": "Sadako's bloody fingernails, lost as she tried to claw her way out of the well. Evidence of her single-minded need to kill.\n• Increases the duration of Projection’s bonus movement speed by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodyFingernails.png?5e1639",
+      "icon_local_path": "icons/addons/bloody_fingernails.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Blutige Fingernägel",
+          "description": "Sadakos blutige Fingernägel, die sie beim Versuch, aus dem Brunnen zu klettern, verloren hat. Beweis für ihr unbeirrbares Bedürfnis zu töten.\n• Verlängert die Dauer der Bonus-Bewegungsgeschwindigkeit durch eine Projektion um 50 %."
+        },
+        "es": {
+          "name": "Uñas ensangrentadas",
+          "description": "Las uñas ensangrentadas de Sadako. Se le desprendieron al tratar de salir del pozo. Son la prueba de su objetivo: la necesidad de matar.\n• Aumenta la duración de la velocidad de movimiento adicional de Proyección un 50 %."
+        },
+        "ja": {
+          "name": "血だらけの爪",
+          "description": "貞子の血塗れになった爪。井戸から這い出ようとして剥がれたもの。断固たる殺意を物語っている。\n• 念写による速度上昇の持続時間が50%増加する"
+        },
+        "pl": {
+          "name": "Krwawe paznokcie",
+          "description": "Zakrwawione paznokcie Sadako, które straciła, próbując wydostać się ze studni. Dowód na jej niepohamowaną potrzebę zabijania.\n• Wydłużają czas trwania dodatkowej prędkości ruchu podczas Projekcji o 50%."
+        }
+      }
+    },
+    {
+      "id": 485,
+      "name": "Mother's Comb",
+      "killer_id": 27,
+      "description": "The comb Sadako's mother used in the tape. Sadako's psychic abilities are enhanced when she focuses on it.\n• Turning off a TV will trigger a loud noise notification.\n• Reveals the Aura of any TV that is turned off by any means.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mothersComb.png?93eb16",
+      "icon_local_path": "icons/addons/mothers_comb.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Kamm der Mutter",
+          "description": "Der Kamm, den Sadakos Mutter im Film verwendet hat. Sadakos übersinnliche Kräfte werden verstärkt, wenn sie sich darauf konzentriert.\n• Wird ein Fernseher ausgeschaltet, ist eine Benachrichtigung über ein lautes Geräusch zu hören.\n• Enthüllt die Aura jedes Fernsehers, der auf beliebige Weise ausgeschaltet wurde."
+        },
+        "es": {
+          "name": "Peine de madre",
+          "description": "El peine que utilizaba la madre de Sadako en la cinta. Las habilidades psíquicas de Sadako se intensifican cuando se concentra en él.\n• Apagar un televisor activará una notificación de ruido intenso.\n• Muestra el aura de un televisor apagado del modo que sea."
+        },
+        "ja": {
+          "name": "母の櫛",
+          "description": "映像の中で貞子の母親が使っていた櫛。それに集中した時、貞子の超能力が増大する。\n• テレビの電源を切ると、大きな通知音が発生する\n• 手段にかかわらず電源が切れた状態のすべてのテレビのオーラが表示される"
+        },
+        "pl": {
+          "name": "Grzebień matki",
+          "description": "Grzebień, którego matka Sadako używała w nagraniu. Zdolności parapsychiczne Sadako są wzmocnione, gdy się na nim skupi.\n• Wyłączenie telewizora aktywuje głośne powiadomienie dźwiękowe.\n• Ujawnia aurę każdego telewizora, który został w dowolny sposób wyłączony."
+        }
+      }
+    },
+    {
+      "id": 486,
+      "name": "VCR",
+      "killer_id": 27,
+      "description": "The original VCR that played Sadako's tape. It is still warm to the touch.\n• All TVs play the Projection effects when The Onryō Projects to a TV.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vcr.png?b9c60d",
+      "icon_local_path": "icons/addons/vcr.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Videorekorder",
+          "description": "Der ursprüngliche Videorekorder, auf dem Sadakos Kassette abgespielt wurde. Er fühlt sich noch warm an.\n• Auf allen Fernsehern werden die Projektionseffekte abgespielt, wenn sich der Onryō zu einem Fernseher projiziert."
+        },
+        "es": {
+          "name": "Reproductor de vídeo",
+          "description": "El reproductor de vídeo donde se vio la cinta de Sadako. Todavía está caliente al tacto.\n• Todos los televisores reproducen los efectos de Proyección cuando la Onryō se proyecta a un televisor."
+        },
+        "ja": {
+          "name": "ビデオデッキ",
+          "description": "最初に貞子のビデオテープが再生されたビデオデッキ。触れるとまだ温かさが残っている。\n• 怨霊がテレビに念写するとすべてのテレビに念写の映像が流れる"
+        },
+        "pl": {
+          "description": "Oryginalny magnetowid, który odtwarzał kasetę Sadako. Jest jeszcze ciepły.\n• Wszystkie telewizory odtwarzają efekty Projekcji, gdy Onryō wykonuje Projekcję na telewizorze."
+        }
+      }
+    },
+    {
+      "id": 487,
+      "name": "Distorted Photo",
+      "killer_id": 27,
+      "description": "Those who have watched the tape find all photos of them distorted, a reminder of their impending doom.\n• Survivors witnessing a Manifestation from within 16 meters will scream, and then their auras are shown for 4 seconds.\n\"\"Why is it only you were saved?\" —Sadako Yamamura\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_distortedPhoto.png?569651",
+      "icon_local_path": "icons/addons/distorted_photo.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Verzerrtes Foto",
+          "description": "Wer den Film gesehen hat, sieht alle seine Fotos verzerrt – eine Erinnerung an das Todesurteil.\n• Überlebende, die in einem Umkreis von 16 Metern Zeugen einer Manifestierung werden, schreien auf. Danach ist ihre Aura 4 Sekunden lang sichtbar.\n\"„Warum wurdest nur du gerettet?“ – Sadako Yamamura\""
+        },
+        "es": {
+          "name": "Fotografía deformada",
+          "description": "Como recordatorio de que están a punto de morir, quienes hayan visto la cinta verán distorsionadas sus fotografías.\n• Los supervivientes que presencien una manifestación en un radio de 16 metros gritarán, lo que mostrará sus auras durante 4 segundos.\n\"\"¿Por qué solo te salvaron a ti?\". (Sadako Yamamura)\""
+        },
+        "ja": {
+          "name": "歪んだ写真",
+          "description": "ビデオの映像を見た者は写真に写った自分の歪んだ姿を目の当たりにして、死が迫っていることを知る。\n• 16メートル以内で具現化を目撃した生存者は叫び声を上げ、そのオーラが4秒間視える\n\"「なんであなただけ助かるの？」 —山村貞子\""
+        },
+        "pl": {
+          "name": "Zniekształcone zdjęcie",
+          "description": "Ci, którzy obejrzeli taśmę, zauważyli, że wszystkie ich zdjęcia są zniekształcone, co przypominało o zbliżającej się zagładzie.\n• Ocalali, którzy byli świadkami Ukazania z odległości 16 metrów, krzyczą, a ich aury zostają ujawnione na 4 sekundy.\n\"„Dlaczego tylko tobie udało się przetrwać?” – Sadako Yamamura\""
+        }
+      }
+    },
+    {
+      "id": 488,
+      "name": "Telephone",
+      "killer_id": 27,
+      "description": "After watching the video, victims receive a phone call. They are frozen in fear as they realize they have seven days to live.\n• Manifestation afflicts Survivors within 7 meters with a 3% Hindered status effect for 3 seconds.\nHindered reduces survivor movement speed.\n\"\"I saw a weird video the other day... after it ended, someone called us. Some kind of prank call.\" —Tomoko Oishi\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_telephone.png?a5bed2",
+      "icon_local_path": "icons/addons/telephone.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Telefon",
+          "description": "Nachdem sie das Video gesehen haben, bekommen die Opfer einen Anruf. Sie sind vor Angst erstarrt, wenn sie verstehen, dass sie nur noch sieben Tage zu leben haben.\n• Eine Manifestierung im Umkreis von 7 Metern eines Überlebenden verursacht für 3 Sekunden den Statuseffekt Eingeschränkt mit 3 %.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden.\n\"„Ich habe letztens ein seltsames Video gesehen ... Als es vorbei war, hat uns jemand angerufen. Irgend so ein Telefonstreich.“ – Tomoko Oishi\""
+        },
+        "es": {
+          "name": "Teléfono",
+          "description": "Tras ver el vídeo, alguien llama por teléfono a las víctimas, aterrorizadas al percatarse de que solo les quedan siete días de vida.\n• Manifestarse en un radio de 7 metros de un superviviente le provoca un 3 % del efecto de estado Entorpecimiento durante 3 segundos.\nEntorpecimiento reduce la velocidad de movimiento del superviviente.\n\"\"El otro día vi un vídeo rarísimo... Cuando terminó, alguien llamó al teléfono. Era una broma, o algo así\". (Tomoko Oishi)\""
+        },
+        "ja": {
+          "name": "電話",
+          "description": "ビデオを見た者は、その後に電話が掛かってくる。7日後に死ぬことを悟り、彼らは恐怖で凍りつく。\n• 具現化が、 7メートル以内の生存者に3%の妨害ステータス効果を3秒間与える\n妨害によって生存者は移動速度が低下する。\n\"「こないださ、変なビデオ見ちゃって…それ見終わった時、電話がかかってきて。無言電話だったみたいだけど」 —大石智子\""
+        },
+        "pl": {
+          "name": "Telefon",
+          "description": "Po obejrzeniu filmu ofiary otrzymują telefon. Zamierają ze strachu, gdy słyszą, że pozostało im siedem dni życia.\n• Ukazanie w promieniu 7 metrów od ocalałego wywołuje u niego efekt Skrępowania w 3% na 3 sekundy.\nSkrępowanie zmniejsza prędkość ruchu ocalałego.\n\"„Widziałem ostatnio dziwny film… Gdy się skończył, ktoś do nas zadzwonił. Jakiś żart”. – Tomoko Oishi\""
+        }
+      }
+    },
+    {
+      "id": 489,
+      "name": "Tape Editing Deck",
+      "killer_id": 27,
+      "description": "The editing deck used by Reiko and Ryuji to analyze and copy the tape. Copying and sharing the tape is the only way to survive the curse.\n• Each Survivor starts the trial with a Tape in their possession, and their target TV is the furthest from their location.\n• Anytime a Survivor inserts a tape in their target TV, reveal their aura for 6 seconds\n\"\"Frolic in brine, goblins be thine.\" —Message hidden in Sadako's tape\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tapeEditingDeck.png?583c4d",
+      "icon_local_path": "icons/addons/tape_editing_deck.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Videobearbeitungsgerät",
+          "description": "Das Bearbeitungsgerät, mit dem Reiko und Ryūji die Videokassette analysiert und kopiert haben. Den Film zu kopieren und zu verteilen ist die einzige Möglichkeit, den Fluch zu überleben.\n• Jeder Überlebende hat zu Beginn der Prüfung eine Kassette und sein Zielfernseher ist der am weitesten entfernte.\n• Immer wenn ein Überlebender eine Kassette in seinen Zielfernseher einlegt, wird seine Aura für 6 Sek. angezeigt.\n\"„In tiefer Finsternis ist es ein großer Spaß, wenn du Kobolde als Freunde hast.“ – In Sadakos Kassette versteckte Botschaft\""
+        },
+        "es": {
+          "name": "Editor de cintas de vídeo",
+          "description": "El editor que utilizaron Reiko y Ryuji para analizar y copiar la cinta. Copiarla y compartirla es la única forma de sobrevivir a la maldición.\n• Cada superviviente comienza la partida con una cinta y debe dirigirse al televisor que tenga más lejos.\n• Cada vez que un superviviente mete una cinta en su televisor objetivo, revela su aura durante 6 segundos.\n\"\"Si sigues jugando en el agua, el monstruo vendrá a por ti.\" (Mensaje oculto en la cinta de Sadako)\""
+        },
+        "ja": {
+          "name": "ビデオテープの編集用デスク",
+          "description": "玲子と竜司がビデオテープの分析と複写に使用した編集デスク。ビデオテープをダビングして誰かに見せることが、呪いから助かる唯一の方法だ。\n• 生存者は儀式開始時に各自1本のビデオテープを持っている。各自の目標のテレビは、自分から一番遠くにあるテレビとなる\n• 生存者が目標のテレビにビデオテープを差し込むと、その生存者のオーラが6秒間表示される\n\"「しょーもんばかりしてると、ぼうこんがくるぞ 」 —貞子のビデオに隠されたメッセージ\""
+        },
+        "pl": {
+          "name": "Konsola montażowa",
+          "description": "Konsola montażowa używana przez Reiko i Ryujiego do analizy i kopiowania taśmy. Skopiowanie i udostępnienie taśmy jest jedynym sposobem, by przetrwać klątwę.\n• Każdy ocalały rozpoczyna próbę z taśmą, a jego docelowym telewizorem jest najdalsze urządzenie.\n• Za każdym razem, gdy ocalały wkłada taśmę do docelowego telewizora, ujawnia swoją aurę na 6 sekund\n\"„Wygłupy bez głowy i problem gotowy” – Wiadomość ukryta na taśmie Sadako\""
+        }
+      }
+    },
+    {
+      "id": 490,
+      "name": "Remote Control",
+      "killer_id": 27,
+      "description": "A remote for the VCR at the cabin. It allows Sadako to focus on those enemies at a distance.\n• After using Projection, the Auras of Survivors who are within 12 meters of a powered TV are revealed to you for 7 seconds.\n\"\"She killed a man just by willing him dead. That's power of a different order from her mother.\" —Ryuji Takayama\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_remoteControl.png?86a3b9",
+      "icon_local_path": "icons/addons/remote_control.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Fernbedienung",
+          "description": "Eine Fernbedienung für den Videorekorder in der Hütte. Damit kann sich Sadako aus gewisser Entfernung auf ihre Gegner konzentrieren.\n• Nach der Verwendung von Projektion werden 7 Sekunden lang die Auren von Überlebenden angezeigt, die sich maximal 12 Meter von einem eingeschalteten Fernseher entfernt aufhalten.\n\"„Sie tötete einen Mann nur durch den Wunsch, ihn tot zu sehen. Das ist eine ganz andere Kraft als die ihrer Mutter.“ – Ryūji Takayama\""
+        },
+        "es": {
+          "name": "Mando a distancia",
+          "description": "Un mando a distancia para el reproductor de la cabaña. Sadako lo utiliza para concentrarse en los enemigos más alejados.\n• Tras utilizar Proyección, se mostrarán las auras de los supervivientes que estén en un radio de 12 metros de un televisor encendido durante 7 segundos.\n\"\"Mató a un hombre con solo desear su muerte. Es un poder muy diferente al de su madre\". (Ryuji Takayama)\""
+        },
+        "ja": {
+          "name": "リモートコントロール",
+          "description": "貸し別荘にあったビデオデッキのリモコン。これで貞子は離れた敵に集中することが叶う。\n• 念写を使った後、電源のついたテレビの12メートル以内にいる生存者のオーラが7秒間視える\n\"「貞子は念じるだけで人を殺せた。母親とは桁違いの力を持っていたんだ」 —高山竜司\""
+        },
+        "pl": {
+          "name": "Pilot",
+          "description": "Pilot do magnetowidu w chacie. Pozwala Sadako skupić się na odległych wrogach.\n• Po użyciu Projekcji aury ocalałych w odległości 12 metrów od włączonego telewizora zostają ci ujawnione na 7 sekund.\n\"„Zabiła człowieka samą siłą woli. To zupełnie inna moc od tej, którą władała jej matka.” – Ryuji Takayama\""
+        }
+      }
+    },
+    {
+      "id": 491,
+      "name": "Iridescent Videotape",
+      "killer_id": 27,
+      "description": "The original tape containing Sadako’s curse.\n• Projection does not turn off TVs, and does not apply Condemned.\n• Increases the time it takes for a TV to turn on after being turned off by Survivors by 20%\n\"\"That video... It's not of this world. It's Sadako's rage.\" —Ryuji Takayama\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentVideotape.png?e4f6e0",
+      "icon_local_path": "icons/addons/iridescent_videotape.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Videokassette",
+          "description": "Das Originalband mit Sadakos Fluch.\n• Projektion schaltet keine Fernseher ab und verursacht kein Verdammt.\n• Erhöht die Dauer, bis sich ein Fernseher wieder einschaltet, nachdem ihn Überlebende ausgeschaltet haben, um 20 %.\n\"„Dieses Video ... Es ist nicht von dieser Welt. Es ist Sadakos Zorn.“ – Ryūji Takayama\""
+        },
+        "es": {
+          "name": "Cinta de vídeo iridiscente",
+          "description": "La cinta de vídeo original que contiene la maldición de Sadako.\n• Proyección no apaga televisores ni aplica Condena.\n• Aumenta el tiempo que tarda en encenderse un televisor después de que lo apaguen los supervivientes un 20 %.\n\"\"Ese vídeo... no es de este mundo. Es la rabia de Sadako.\" (Ryuji Takayama)\""
+        },
+        "ja": {
+          "name": "玉虫色のビデオテープ",
+          "description": "貞子の呪いが込められたビデオの原版。\n• 念写の過程でテレビの電源が切れない。念写が呪いの進行度を追加しない\n• 生存者が電源を切ってからテレビがオンになるまでの時間が20%増加する\n\"「あのビデオは…この世のものじゃない。貞子の怨念そのものだ」 —高山竜司\""
+        },
+        "pl": {
+          "name": "Opalizująca taśma",
+          "description": "Oryginalna taśma zawierająca klątwę Sadako.\n• Projekcja nie wyłącza telewizorów i nie nakłada Potępienia.\n• Wydłuża czas potrzebny na włączenie telewizora po wyłączeniu przez ocalałych o 20%\n\"„Ten film... nie jest z tego świata. To gniew Sadako” – Ryuji Takayama\""
+        }
+      }
+    }
+  ]
+}

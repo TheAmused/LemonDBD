@@ -6,21 +6,19 @@ import type { Dictionary } from '@/locales/types';
 import { Crown, Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
 
 interface AdminHeaderProps {
-  isSyncing: boolean;
-  syncStatus: string;
   isLoading: boolean;
   onOpenDbMaintenance: (tab?: 'export' | 'import' | 'purge') => void;
-  onTriggerSync: () => void;
   onRefreshData: () => void;
   dict?: Dictionary;
+  // Legacy scraper props preserved for backward compatibility
+  isSyncing?: boolean;
+  syncStatus?: string;
+  onTriggerSync?: () => void;
 }
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({
-  isSyncing,
-  syncStatus,
   isLoading,
   onOpenDbMaintenance,
-  onTriggerSync,
   onRefreshData,
   dict,
 }) => {
@@ -82,21 +80,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <Database className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
           <span>{dict?.admin?.pgAdmin || 'pgAdmin (DB)'}</span>
         </a>
-
-        <button
-          type="button"
-          onClick={onTriggerSync}
-          disabled={isSyncing}
-          title={dict?.admin?.runScraperTitle || 'Sync Database'}
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-red-700 hover:from-red-500 hover:to-accent-red px-4 py-2 text-xs font-bold text-text-inverted shadow-md shadow-accent-red/20 transition-all cursor-pointer disabled:opacity-60 flex-1 sm:flex-initial"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-          <span>
-            {isSyncing
-              ? (dict?.admin?.syncingStatus || 'Syncing ({status})').replace('{status}', syncStatus)
-              : dict?.admin?.syncScraper || 'Sync Scraper'}
-          </span>
-        </button>
 
         <button
           type="button"

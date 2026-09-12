@@ -1,0 +1,560 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 421,
+      "name": "Damaged Syringe",
+      "killer_id": 24,
+      "description": "Medical equipment that fared poorly during the chaos that overwhelmed Raccoon City.\n• Increases time it takes Survivors to use a Vaccine by 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_damagedSyringe.png?c337df",
+      "icon_local_path": "icons/addons/damaged_syringe.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kaputte Spritze",
+          "description": "Medizinische Ausrüstung, der es während des Chaos, das über Raccoon City hereingebrochen ist, schlecht ergangen ist.\n• Verlängert die Zeit, die Überlebende brauchen, um den Impfstoff zu injizieren, um 5 Sekunden."
+        },
+        "es": {
+          "name": "Jeringuilla dañada",
+          "description": "Material médico que sufrió desperfectos durante el caos que asoló Raccoon City.\n• Aumenta el tiempo que tardan los supervivientes en inyectarse una vacuna en 5 segundos."
+        },
+        "ja": {
+          "name": "壊れた注射器",
+          "description": "ラクーンシティを襲った混乱のさなかに損傷した医療機器。\n• 生存者がワクチンを注入する時間が5秒増加する"
+        },
+        "pl": {
+          "name": "Uszkodzona strzykawka",
+          "description": "Sprzęt medyczny, który nie sprawdził się podczas chaosu ogarniającego Raccoon City.\n• Wydłuża czas potrzebny ocalałemu na przyjęcie szczepionki o 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 422,
+      "name": "Visitor Wristband",
+      "killer_id": 24,
+      "description": "An electronic Umbrella wristband for visitors to the facility. It also doubles as a tracking device.\n• Increases zombie detection range by 2 meters and field of view by 10 degrees.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_visitorWristband.png?9bb257",
+      "icon_local_path": "icons/addons/visitor_wristband.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gästearmband",
+          "description": "Ein elektronisches Umbrella-Armband für Gäste der Einrichtung. Wird auch als Tracking-Gerät verwendet.\n• Vergrößert die Wahrnehmungsreichweite von Zombies um 2 Meter und ihr Blickfeld um 10 Grad."
+        },
+        "es": {
+          "name": "Pulsera de visitante",
+          "description": "Una pulsera electrónica de Umbrella para los visitantes de las instalaciones que también funciona como dispositivo de rastreo.\n• Aumenta el alcance de detección de zombis en 2 metros y el campo de visión en 10 grados."
+        },
+        "ja": {
+          "name": "訪問者用リストバンド",
+          "description": "腕輪型の電子装置。アンブレラ社を訪れた来客用だが、追跡装置の機能も兼ね備えている。\n• ゾンビの探知範囲が2メートル拡大して、視界が10度拡大する"
+        },
+        "pl": {
+          "name": "Opaska dla gości",
+          "description": "Elektroniczna opaska Umbrella dla gości ośrodka. Działa też jako urządzenie śledzące.\n• Zwiększa zasięg wykrywania zombie o 2 metry i pole widzenia o 10 stopni."
+        }
+      }
+    },
+    {
+      "id": 423,
+      "name": "S.T.A.R.S. Field Combat Manual",
+      "killer_id": 24,
+      "description": "A manual of compiled S.T.A.R.S. close-range combat knowledge. Edited by Chris Redfield.\n• Zombies’ auras turn yellow for 6 seconds after hitting a Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_starsFieldCombatManual.png?66cbe1",
+      "icon_local_path": "icons/addons/stars_field_combat_manual.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "S.T.A.R.S.-Feldhandbuch",
+          "description": "Ein Handbuch mit dem gesammelten S.T.A.R.S.-Wissen zum Nahkampf. Von Chris Redfield überarbeitet.\n• Die Auren von Zombies werden 6 Sekunden lang gelb, nachdem sie einen Überlebenden getroffen haben."
+        },
+        "es": {
+          "name": "Manual de combate de S.T.A.R.S.",
+          "description": "Un manual que recoge los conocimientos de combate cuerpo a cuerpo de S.T.A.R.S. editado por Chris Redfield.\n• Las auras de los zombis se vuelven amarillas durante 6 segundos tras atacar a un superviviente."
+        },
+        "ja": {
+          "name": "S.T.A.R.S.式体術教本",
+          "description": "様々な経歴を持つS.T.A.R.S.隊員たちの 戦闘技術を基に書面化された体術教本。 著者・監修はクリス・レッドフィールド。\n• 生存者を攻撃した後、ゾンビのオーラが6秒間黄色に変わる"
+        },
+        "pl": {
+          "name": "Podręcznik walki S.T.A.R.S.",
+          "description": "Zbiór wiedzy S.T.A.R.S. na temat walki bezpośredniej. Pod redakcją Chrisa Redfielda.\n• Aury zombie podświetlają się na żółto przez 6 sekund po trafieniu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 424,
+      "name": "Adrenaline Injector",
+      "killer_id": 24,
+      "description": "A hormone that heightens senses and prepares the body to fight.\n• Increases length of Killer Instinct when Survivors use a Vaccine by 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_adrenalineInjector.png?3dff78",
+      "icon_local_path": "icons/addons/adrenaline_injector.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Adrenalin-Injektion",
+          "description": "Ein Hormon, das die Sinne verstärkt und den Körper auf den Kampf vorbereitet.\n• Erhöht die Dauer des Killerinstinkt-Effekts, wenn Überlebende Impfstoff verwenden, um 3 Sekunden."
+        },
+        "es": {
+          "name": "Inyector de adrenalina",
+          "description": "Una hormona que agudiza los sentidos y prepara el cuerpo para pelear.\n• Aumenta la duración de Instinto asesino cuando los supervivientes usen una vacuna en 3 segundos."
+        },
+        "ja": {
+          "name": "アドレナリン入り注射器",
+          "description": "感覚を高めるホルモン。体を戦うモードにする。\n• 生存者のワクチン使用時、殺人鬼の本能の持続時間が3秒増加する"
+        },
+        "pl": {
+          "name": "Zastrzyk adrenaliny",
+          "description": "Hormon, który wyostrza zmysły i przygotowuje ciało do walki.\n• Wydłuża czas trwania Instynktu Zabójcy, gdy ocalali używają szczepionki, o 3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 425,
+      "name": "Zombie Heart",
+      "killer_id": 24,
+      "description": "The heart of an eviscerated zombie. It’s considered hazardous waste as it’s certainly teeming with viruses.\n• Increases mutation rate when destroying zombies with Tentacle Strike by 75%.\n\"\"Words won’t work on this thing.\" —Leon S. Kennedy\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_zombieHeart.png?26d441",
+      "icon_local_path": "icons/addons/zombie_heart.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zombieherz",
+          "description": "Das Herz eines ausgeweideten Zombies. Es wird als gefährlicher Abfall eingestuft, da es definitiv voller Viren ist.\n• Erhöht die Mutationsrate, wenn Zombies mit Tentakelschlag zerstört werden, um 75 %.\n\"„Worte helfen dir bei diesem Ding nicht.“ – Leon S. Kennedy\""
+        },
+        "es": {
+          "name": "Corazón de zombi",
+          "description": "El corazón de un zombi destripado. Se considera un residuo peligroso, ya que está plagado de virus.\n• Aumenta la tasa de mutación al destruir zombis con Golpe de tentáculo un 75 %.\n\"\"No sirve de nada tratar de razonar con esta cosa\". (Leon S. Kennedy)\""
+        },
+        "ja": {
+          "name": "ゾンビの心臓",
+          "description": "内臓が飛び出たゾンビの心臓。確実にウイルスにまみれているため、危険廃棄物として扱われる。\n• 触手打撃でゾンビを撃破した時の変異度が75%上昇する\n\"「こいつらに言葉は通じない」 —レオン・S・ケネディ\""
+        },
+        "pl": {
+          "name": "Serce zombie",
+          "description": "Serce wypatroszonego zombie. Jest uznawane za niebezpieczny odpad i z pewnością roi się od wirusów.\n• Zwiększa prędkość mutacji po zniszczeniu zombie Uderzeniem Macki o 75%.\n\"„Słowa nic tu nie dadzą”. – Leon S. Kennedy\""
+        }
+      }
+    },
+    {
+      "id": 426,
+      "name": "Admin Wristband",
+      "killer_id": 24,
+      "description": "An electronic Umbrella wristband for administrators of the facility. While allowing access to secure areas, it also doubles as a tracking device.\n• Increases zombie detection range by 4 meters and field of view by 18 degrees.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_adminWristband.png?3b24e2",
+      "icon_local_path": "icons/addons/admin_wristband.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verwalterarmband",
+          "description": "Ein elektronisches Umbrella-Armband für Verwalter der Einrichtung. Es erlaubt Zugang zu gesicherten Zonen, wird aber auch als Tracking-Gerät verwendet.\n• Vergrößert die Wahrnehmungsreichweite von Zombies um 4 Meter und ihr Blickfeld um 18 Grad."
+        },
+        "es": {
+          "name": "Pulsera de administrador",
+          "description": "Una pulsera electrónica de Umbrella para los administradores de las instalaciones. Permite acceder a las zonas altamente protegidas y también funciona como dispositivo de rastreo.\n• Aumenta el alcance de detección de zombis en 4 metros y el campo de visión en 18 grados."
+        },
+        "ja": {
+          "name": "管理者用リストバンド",
+          "description": "腕輪型の電子装置。アンブレラ社の施設管理担当が安全な区域を出入りするために与えられた許可証だが、追跡装置の機能も兼ね備えている。\n• ゾンビの探知範囲が4メートル、視野が18度拡大する"
+        },
+        "pl": {
+          "name": "Opaska administratora",
+          "description": "Elektroniczna opaska Umbrella dla administratorów ośrodka. Daje dostęp do chronionych obszarów, ale działa też jako urządzenie śledzące.\n• Zwiększa zasięg wykrywania zombie o 4 metry oraz pole widzenia o 18 stopni."
+        }
+      }
+    },
+    {
+      "id": 427,
+      "name": "Tyrant Gore",
+      "killer_id": 24,
+      "description": "A damaged sample from a T-002 Tyrant that died in combat. There are signs of severe burns.\n• Increases mutation rate when destroying zombies with Tentacle Strike by 75%.\n• Decreases zombie respawn time by 7.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tyrantGore.png?938234",
+      "icon_local_path": "icons/addons/tyrant_gore.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Tyrant-Überreste",
+          "description": "Eine beschädigte Probe eines T-002-Tyrant, der im Kampf gestorben ist. Es gibt Anzeichen schwerer Verbrennungen.\n• Erhöht die Mutationsrate, wenn Zombies mit Tentakelschlag zerstört werden, um 75 %.\n• Verkürzt die Dauer bis zum erneuten Erscheinen von Zombies um 7,5 Sekunden."
+        },
+        "es": {
+          "name": "Resto de Tyrant",
+          "description": "Una muestra dañada de un Tyrant T-002 que cayó en combate. Tiene marcas de haber sufrido quemaduras graves.\n• Aumenta la tasa de mutación al destruir zombis con Golpe de tentáculo un 75 %.\n• Reduce el tiempo de reaparición de zombis en 7,5 segundos."
+        },
+        "ja": {
+          "name": "暴君の血",
+          "description": "戦闘で死んだT-002型タイラントから採った損傷したサンプル。重度の火傷の跡がある。\n• 触手打撃でゾンビを撃破した時の変異度が75%上昇する\n• ゾンビの再出現時間が7.5秒減少する"
+        },
+        "pl": {
+          "name": "Krew Tyrana",
+          "description": "Uszkodzona próbka Tyrana T-002, który zginął w walce. Widać na niej ślady poważnych oparzeń.\n• Zwiększa prędkość mutacji po zniszczeniu zombie Uderzeniem Macką o 75%.\n• Skraca czas odradzania zombie o 7,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 428,
+      "name": "Serotonin Injector",
+      "killer_id": 24,
+      "description": "A hormone that slightly relaxes the user for when stealth is required.\n• Grants Undetectable for 15 seconds when a zombie is destroyed.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_serotoninInjector.png?ac7852",
+      "icon_local_path": "icons/addons/serotonin_injector.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Serotonin-Injektion",
+          "description": "Ein Hormon, das den Anwender leicht beruhigt, wenn Tarnung nötig ist.\n• Du erhältst den Statuseffekt Unentdeckbar für 15 Sekunden, wenn ein Zombie zerstört wurde.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Inyector de serotonina",
+          "description": "Una hormona que relaja ligeramente al usuario cuando necesite sigilo.\n• Adquiere Indetectable durante 15 segundos cuando se destruya un zombi.\nIndetectable oculta el aura, radio de terror y marca roja del asesino."
+        },
+        "ja": {
+          "name": "セロトニン入り注射器",
+          "description": "隠密が必要な時に使うと少しリラックスさせてくれるホルモン剤。\n• ゾンビが撃破された時に15秒間、探知不可になる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Zastrzyk serotoniny",
+          "description": "Hormon, który delikatnie rozluźnia użytkownika, gdy wymagane jest ukrycie się.\n• Zapewnia efekt Niewykrywalny na 15 sekund po zniszczeniu zombie.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 429,
+      "name": "T-Virus Sample",
+      "killer_id": 24,
+      "description": "A sample of the T-Virus developed by Umbrella Corporation, it causes extreme mutations and brain damage in its subjects.\n• Increases mutation rate when destroying zombies with Tentacle Strike by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_t-VirusSample.png?b5fb6a",
+      "icon_local_path": "icons/addons/t_virus_sample.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "T-Virus-Probe",
+          "description": "Eine Probe des T-Virus, das von der Umbrella Corporation entwickelt wurde. Verursacht extreme Mutationen und Hirnschäden bei den Versuchspersonen.\n• Erhöht die Mutationsrate, wenn Zombies mit Tentakelschlag zerstört werden, um 100 %."
+        },
+        "es": {
+          "name": "Muestra del virus T",
+          "description": "Una muestra del virus T, desarrollado por la corporación Umbrella, que provoca mutaciones abominables y daños cerebrales en los sujetos de pruebas.\n• Aumenta la tasa de mutación al destruir zombis con Golpe de tentáculo un 100 %."
+        },
+        "ja": {
+          "name": "t-ウィルスのサンプル",
+          "description": "アンブレラ社によって開発されたt-ウィルスのサンプル。被験者に凄まじい変異と脳の損傷を引き起こす。\n• 触手打撃でゾンビを撃破した時の変異度が100%上昇する"
+        },
+        "pl": {
+          "name": "Próbka wirusa T",
+          "description": "Próbka wirusa T stworzonego przez Umbrella Corporation. Wywołuje skrajne mutacje i uszkodzenia mózgu.\n• Zwiększa prędkość mutacji po zniszczeniu zombie Uderzeniem Macką o 100%."
+        }
+      }
+    },
+    {
+      "id": 430,
+      "name": "Plant 43 Vines",
+      "killer_id": 24,
+      "description": "The tangled remnants of a plant infected with the T-Virus, it killed one of the researchers who developed it.\n• Increases time required for Survivors to open Supply Cases by 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_plant43Vines.png?23d38c",
+      "icon_local_path": "icons/addons/plant_43_vines.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Ranken von Gewächs 43",
+          "description": "Die verschlungenen Überreste einer mit dem T-Virus infizierten Pflanze, die einen der Wissenschaftler, die das Virus entwickelt haben, getötet hat.\n• Verlängert die Zeit, die Überlebende zum Öffnen von Vorratskoffern brauchen, um 4 Sekunden."
+        },
+        "es": {
+          "name": "Vid de planta 43",
+          "description": "Los restos enredados de una planta infectada con el virus T que mató a uno de sus investigadores.\n• Aumenta el tiempo que tienen los supervivientes para abrir las cajas de suministros en 4 segundos."
+        },
+        "ja": {
+          "name": "プラント43のつる",
+          "description": "t-ウィルスに感染したつる植物の一部。これにより開発に関わった研究者の1人が命を奪われた。\n• 生存者がサプライケースを開く時間が4秒増加する"
+        },
+        "pl": {
+          "name": "Pnącza sadzonki 43",
+          "description": "Poplątane pozostałości rośliny zarażonej wirusem T. Zabiła jednego z badaczy, którzy ją stworzyli.\n• Wydłuża czas potrzebny ocalałym na otwieranie skrzyń z zapasami o 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 431,
+      "name": "Licker Tongue",
+      "killer_id": 24,
+      "description": "A sticky prehensile tongue that easily wraps around anything it touches.\n• Survivors are Hindered for an extra 1 second after being Contaminated.\nHindered reduces Survivor movement speed.\n\"\"It’s like... a nightmare.\" —Claire Redfield\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lickerTongue.png?141149",
+      "icon_local_path": "icons/addons/licker_tongue.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Licker-Zunge",
+          "description": "Eine klebrige Greifzunge, die sich um alles wickelt, was sie berührt.\n• Überlebende sind zusätzlich 1 Sekunde eingeschränkt, nachdem sie kontaminiert wurden.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden.\n\"„Es ist wie ... ein Albtraum.“ – Claire Redfield\""
+        },
+        "es": {
+          "name": "Lengua de Licker",
+          "description": "Una lengua prensil y pegajosa que envuelve ágilmente todo lo que toca.\n• Los supervivientes son víctimas de Entorpecimiento durante 1 segundo más después de sufrir Ponzoña.\nEntorpecimiento reduce la velocidad de movimiento del superviviente.\n\"\"Esto es... como una pesadilla\". (Claire Redfield)\""
+        },
+        "ja": {
+          "name": "リッカーの舌",
+          "description": "粘着性があってつかみやすい舌。触れるといとも簡単に巻き付く。\n• 汚染された生存者の妨害効果の持続時間が1秒増加する\n妨害によって生存者は移動速度が低下する。\n\"「まるで…悪夢だわ」 —クレア・レッドフィールド\""
+        },
+        "pl": {
+          "name": "Język lizacza",
+          "description": "Lepki i chwytny język, który z łatwością owija się wokół wszystkiego, czego dotknie.\n• Wydłuża czas trwania Skrępowania ocalałych po skażeniu o 1 s.\nSkrępowanie zmniejsza prędkość ruchu ocalałego.\n\"„To jak… koszmar”. – Claire Redfield\""
+        }
+      }
+    },
+    {
+      "id": 432,
+      "name": "NE-α Parasite",
+      "killer_id": 24,
+      "description": "A parasite used in the development of Nemesis T-Types, it’s capable of hijacking its host’s brain.\n• Becoming Contaminated inflicts Oblivious for 60 seconds, or until the Survivor receives a Vaccine.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ne-AParasite.png?5c6b8b",
+      "icon_local_path": "icons/addons/ne_α_parasite.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ne-α-Parasit",
+          "description": "Ein Parasit, der bei der Entwicklung von Nemesis-T-Typen verwendet wurde. Er kann die Kontrolle über das Gehirn seines Wirts übernehmen.\n• Kontaminierte Überlebende erleiden den Statuseffekt Ahnungslos für 60 Sekunden oder bis der Überlebende einen Impfstoff erhält.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Parásito NE-α",
+          "description": "Un parásito empleado en el desarrollo de Némesis tipo T capaz de apropiarse del cerebro de su huésped.\n• Al sufrir Ponzoña causa Inconsciencia durante 60 segundos o hasta que el superviviente reciba una vacuna.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "Ne-α寄生体",
+          "description": "ネメシスT-型の開発に使用された寄生体。宿主の脳を乗っ取る能力を持つ。\n• 汚染されると60秒間または生存者がワクチンを入手するまで無感覚に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Pasożyt NE-α",
+          "description": "Pasożyt używany przy tworzeniu typów T Nemesis. Potrafi przejąć kontrolę nad mózgiem żywiciela.\n• Na skażonych ocalałych nakładany jest efekt Nieświadomy trwający 60 sekund lub do momentu otrzymania szczepionki.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 433,
+      "name": "Broken Recovery Coin",
+      "killer_id": 24,
+      "description": "A coin depicting a bird framed by a laurel wreath. It’s broken in half.\n• Removes 1 Supply Case from the trial.\n\"\"This is not how I imagined my first day.\" —Leon S. Kennedy\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenRecoveryCoin.png?e1f221",
+      "icon_local_path": "icons/addons/broken_recovery_coin.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zerbrochene Erholungs-Münze",
+          "description": "Eine Münze, die einen Vogel mit einem Lorbeerkranz zeigt. Sie ist in der Mitte zerbrochen.\n• Entfernt 1 Vorratskoffer aus der Prüfung.\n\"„So habe ich mir meinen ersten Tag nicht vorgestellt.“ – Leon S. Kennedy\""
+        },
+        "es": {
+          "name": "Moneda de recuperación rota",
+          "description": "Una moneda partida en dos con la imagen de un pájaro alrededor de una corona de laureles.\n• Elimina 1 caja de suministros de la partida.\n\"\"Jamás pensé que mi primer día sería así\". (Leon S. Kennedy)\""
+        },
+        "ja": {
+          "name": "割れた廃品硬貨",
+          "description": "月桂冠の中に鳥が描かれた硬貨。半分に割れている。\n• 儀式からサプライケースを1個減らす。\n\"「想像していた初日とは大違いだな」 —レオン・S・ケネディ\""
+        },
+        "pl": {
+          "name": "Złamany żeton",
+          "description": "Żeton przedstawiający ptaka otoczonego wieńcem laurowym. Pęknięty na pół.\n• Usuwa 1 skrzynię z zapasami z próby.\n\"„Nie tak wyobrażałem sobie swój pierwszy dzień”. – Leon. S Kennedy\""
+        }
+      }
+    },
+    {
+      "id": 434,
+      "name": "Depleted Ink Ribbon",
+      "killer_id": 24,
+      "description": "Who will save them now? There’s something about this ink ribbon being dry that energizes zombies.\n• Decreases zombie respawn time by 5 seconds.\n• Increases zombie movement speed by 50%.\n• Any zombies destroyed after all generators are repaired will respawn in an exit area.\n\"\"Look, just so you know... this is the last fucking time.\" —Jill Valentine\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_depletedInkRibbon.png?4b9dac",
+      "icon_local_path": "icons/addons/depleted_ink_ribbon.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Leeres Farbband",
+          "description": "Wer wird sie jetzt retten? Aus irgendeinem Grund verleiht dieses ausgetrocknete Farbband den Zombies Energie.\n• Verkürzt die Zeit bis zum erneuten Erscheinen der Zombies um 5 Sekunden.\n• Erhöht die Bewegungsgeschwindigkeit der Zombies um 50 %.\n• Zombies, die zerstört wurden, nachdem alle Generatoren repariert wurden, erscheinen in einem Ausgangsbereich wieder.\n\"„Hör zu, nur damit du es weißt: Das ist das letzte verdammte Mal.“ – Jill Valentine\""
+        },
+        "es": {
+          "name": "Cinta de tinta seca",
+          "description": "¿Quién los salvará ahora? Esta cinta de tinta seca tiene algo que vigoriza a los zombis.\n• Reduce el tiempo de reaparición de zombis en 5 segundos.\n• Aumenta la velocidad de movimiento de los zombis un 50 %.\n• Cuando se reparen todos los generadores, los zombis destruidos reaparecerán en una zona de salida.\n\"\"Para que lo sepáis, esta será la última vez\". (Jill Valentine)\""
+        },
+        "ja": {
+          "name": "インク切れのインクリボン",
+          "description": "もはや誰が彼らを救えると言うのか？使い切ったインクリボンにはゾンビを活動的にさせる何かがある。\n• ゾンビの再出現時間が5秒減少する\n• ゾンビの移動速度が50%上昇する\n• すべての発電機の修理が完了すると、 撃破されたすべてのゾンビが脱出ゲート付近に再出現する。\n\"「言っとくけど…これで本当に最後だからね」 —ジル・バレンタイン\""
+        },
+        "pl": {
+          "name": "Wyczerpana taśma z atramentem",
+          "description": "Kto ich teraz ocali? W tej wyschniętej taśmie do maszyny do pisania jest coś, co napędza zombie.\n• Skraca czas odradzania zombie o 5 sekund.\n• Zwiększa prędkość ruchu zombie o 50%.\n• Każde zombie pokonane po naprawieniu wszystkich generatorów odradza się w obszarze wyjściowym.\n\"„Dla jasności… Robię to, cholera, ostatni raz”. – Jill Valentine\""
+        }
+      }
+    },
+    {
+      "id": 435,
+      "name": "Shattered S.T.A.R.S. Badge",
+      "killer_id": 24,
+      "description": "A symbol of hope for Raccoon City, utterly destroyed.\n• Increases Zombie movement speed by 150% for 60 seconds after a generator is repaired.\n\"\"S.T.A.R.S...\" —Nemesis\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shatteredSTARSBadge.png?d5664c",
+      "icon_local_path": "icons/addons/shattered_stars_badge.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Zerbrochenes S.T.A.R.S.-Abzeichen",
+          "description": "Ein Symbol der Hoffnung für Raccoon City, komplett zerstört.\n• Erhöht die Bewegungsgeschwindigkeit von Zombies für 60 Sekunden um 150 %, nachdem ein Generator repariert wurde.\n\"„S.T.A.R.S.“ – Nemesis\""
+        },
+        "es": {
+          "name": "Placa de S.T.A.R.S. destrozada",
+          "description": "Un símbolo de esperanza para Raccoon City que está completamente destrozado.\n• Aumenta la velocidad de movimiento de los zombis un 150 % durante 60 segundos tras reparar un generador.\n\"\"S.T.A.R.S....\". (Némesis)\""
+        },
+        "ja": {
+          "name": "粉砕されたS.T.A.R.S.の記章",
+          "description": "ラクーンシティの希望の象徴。完全に破壊されている。\n• 発電機の修理が完了すると、60秒間ゾンビの移動速度が150%上昇する\n\"「S.T.A.R.S.…」 —ネメシス\""
+        },
+        "pl": {
+          "name": "Zniszczona odznaka S.T.A.R.S.",
+          "description": "Symbol nadziei dla Raccoon City – doszczętnie zniszczony.\n• Zwiększa prędkość ruchu zombie o 150% na 60 sekund po naprawie generatora.\n\"„S.T.A.R.S…” – Nemesis\""
+        }
+      }
+    },
+    {
+      "id": 436,
+      "name": "Iridescent Umbrella Badge",
+      "killer_id": 24,
+      "description": "A glass-like badge molded from The Fog itself. It represents a corporation that pushed far beyond ethical and humane science.\n• Survivors are inflicted with Exposed for 60 seconds when using a Vaccine.\nExposed Survivors will be downed by basic attacks even if uninjured.\n\"\"Commitment, honesty, integrity. These are the core values that create the foundation of Umbrella Corp.\" —Dr. Matt Gorkis\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentUmbrellaBadge.png?93018b",
+      "icon_local_path": "icons/addons/iridescent_umbrella_badge.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Umbrella-Logo",
+          "description": "Ein glasähnliches Abzeichen, das aus dem Nebel selbst gefertigt wurde. Es steht für ein Unternehmen, das ethische und menschliche Grenzen der Wissenschaft weit überschritten hat.\n• Überlebende erleiden den Statuseffekt Gefährdet für 60 Sekunden, wenn sie einen Impfstoff verwenden.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\"„Verbindlichkeit, Ehrlichkeit, Integrität. Das sind die Grundwerte, die das Fundament von Umbrella Corp. bilden.“ – Dr. Matt Gorkis\""
+        },
+        "es": {
+          "name": "Placa iridiscente de Umbrella",
+          "description": "Una insignia vítrea moldeada por la mismísima niebla. Representa a una corporación que violó los límites de la moralidad y humanidad en la investigación científica.\n• Los supervivientes sufren Vulnerabilidad durante 60 segundos al usar vacunas.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\"\"Compromiso, honestidad, integridad. Estos son los valores fundamentales que sientan las bases de la corporación Umbrella\". (Dr. Matt Gorkis)\""
+        },
+        "ja": {
+          "name": "玉虫色のアンブレラ記章",
+          "description": "霧そのものから作られたガラス状の記章。倫理的で人道的な科学をはるかに超えた企業を象徴する。\n• ワクチン使用時に生存者が60秒間無防備に苦しむ\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\"「コミットメント、公正、誠実。これが、アンブレラ社の基礎を作る基本理念だ」 —マット・ゴーキス博士\""
+        },
+        "pl": {
+          "name": "Opalizująca odznaka Umbrella",
+          "description": "Przypominająca szkło odznaka stworzona z samej Mgły. Reprezentuje korporację, która posunęła się daleko poza granice etycznej i humanitarnej nauki.\n• Ocalali otrzymują efekt Narażony na 60 sekund po skorzystaniu ze szczepionki.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\"„Oddanie, szczerość, uczciwość. Oto główne wartości tworzące podstawy Umbrella Corp”. – Dr Matt Gorkis\""
+        }
+      }
+    },
+    {
+      "id": 864,
+      "name": "Brian's Intestine",
+      "killer_id": 24,
+      "description": "The small intestine of Brian Irons, chief of the RPD. It's an appetizing sight for zombies.\n• Increases zombie movement speed by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_briansIntestine.png?a57f03",
+      "icon_local_path": "icons/addons/brians_intestine.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Brians Darm",
+          "description": "Der Dünndarm von Brian Irons, dem Chef des RPD. Ein appetitlicher Anblick für Zombies.\n• Erhöht die Bewegungsgeschwindigkeit von Zombies um 25 %."
+        },
+        "en": {
+          "name": "Brian’s Intestine"
+        },
+        "es": {
+          "name": "Intestino de Brian",
+          "description": "El intestino delgado de Brian Irons, jefe de policía de Raccoon City. Todo un manjar para los zombis.\n• Aumenta la velocidad de movimiento de los zombis un 25 %."
+        },
+        "ja": {
+          "name": "ブライアンのはらわた",
+          "description": "R.P.D.の署長、ブライアン・アイアンズの小腸。ゾンビにはごちそうに見える。\n• ゾンビの移動速度が25%上昇する"
+        },
+        "pl": {
+          "name": "Jelito Briana",
+          "description": "Jelito cienkie Briana Ironsa – szefa RPD. Apetyczny kąsek dla zombie.\n• Zwiększa prędkość ruchu zombie o 25%."
+        }
+      }
+    },
+    {
+      "id": 865,
+      "name": "Marvin's Blood",
+      "killer_id": 24,
+      "description": "The contaminated blood of a Raccoon City police officer.\n• Increases mutation rate when hitting Survivors with Tentacle Strike by 16% for uncontaminated Survivors and by 50% for contaminated Survivors.\n\"\"All you need to know is that this place will eat you alive if you’re not careful.\" —Marvin Branagh\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_marvinsBlood.png?36aa90",
+      "icon_local_path": "icons/addons/marvins_blood.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Marvins Blut",
+          "description": "Das kontaminierte Blut eines Polizeibeamten von Raccoon City.\n• Erhöht die Mutationsrate, wenn Überlebende mit Tentakelschlag getroffen werden, um 16 %, wenn sie nicht kontaminiert sind, und um 50 %, wenn sie kontaminiert sind.\n\"„Du musst nur wissen, dass dieser Ort dein Verderben sein wird, wenn du nicht vorsichtig bist.“ – Marvin Branagh\""
+        },
+        "en": {
+          "name": "Marvin’s Blood"
+        },
+        "es": {
+          "name": "Sangre de Marvin",
+          "description": "La sangre infectada de un agente de policía de Raccoon City.\n• Aumenta la tasa de mutación al golpear a los supervivientes con Golpe de tentáculo un 16 % si no tienen Ponzoña y un 50 % si tienen Ponzoña.\n\"\"Y recuerda: si no tienes cuidado, este lugar será tu tumba\". (Marvin Branagh)\""
+        },
+        "ja": {
+          "name": "マービンの血",
+          "description": "ラクーン市警警官の汚染された血液。\n• 触手打撃で生存者を攻撃した時の変異度が、汚染されていない生存者に対しては16%、汚染された生存者に対しては50%増加する\n\"「隙を見せると生きたまま食われるぞ。それだけは頭に入れておけ」- マービン・ブラナー\""
+        },
+        "pl": {
+          "name": "Krew Marvina",
+          "description": "Skażona krew policjanta z Raccoon City.\n• Zwiększa prędkość mutacji po trafieniu ocalałego Uderzeniem Macką o 16% dla nieskażonych ocalałych i o 50% dla skażonych ocalałych.\n\"„Musisz tylko pamiętać, że to miejsce pożre cię żywcem, jeśli nie zachowasz ostrożności”. – Marvin Branagh\""
+        }
+      }
+    },
+    {
+      "id": 866,
+      "name": "Mikhail's Eye",
+      "killer_id": 24,
+      "description": "While little was left of Mikhail, his left eyeball survived the blast that killed him. It remains a tasty treat for zombies.\n• Increases zombie movement speed by 35%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mikhailsEye.png?de4a0d",
+      "icon_local_path": "icons/addons/mikhails_eye.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Mikhails Auge",
+          "description": "Wenig war von Mikhail übrig, aber sein linker Augapfel hat die Explosion, die ihn tötete, überlebt. Er ist ein Leckerbissen für Zombies.\n• Erhöht die Bewegungsgeschwindigkeit von Zombies um 35 %."
+        },
+        "en": {
+          "name": "Mikhail’s Eye"
+        },
+        "es": {
+          "name": "Ojo de Mikhail",
+          "description": "Aunque no quedó mucho de Mikhail, su ojo izquierdo sobrevivió a la explosión que acabó con él. Toda una delicia para los zombis.\n• Aumenta la velocidad de movimiento de los zombis un 35 %."
+        },
+        "ja": {
+          "name": "ミハイルの眼",
+          "description": "爆死したミハイルは体と呼べるものは皆無に等しかったが、左の眼球だけが形をとどめていた。ゾンビのおいしいデザートとなって残っている。\n• ゾンビの移動速度が35%上昇する"
+        },
+        "pl": {
+          "name": "Oko Mikhaila",
+          "description": "Choć z Mikhaila nie zostało wiele, jego lewa gałka oczna przetrwała eksplozję. Jest teraz smaczną przekąską dla zombie.\n• Zwiększa prędkość ruchu zombie o 35%."
+        }
+      }
+    },
+    {
+      "id": 867,
+      "name": "Jill's Sandwich",
+      "killer_id": 24,
+      "description": "It’s tragically squished and dripping with blood from a recent battle. Despite that, it has a delicious aroma that can’t be missed.\n• Reveals a Survivor's aura for 12 seconds after they unlock a Supply Case.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jillsSandwich.png?c22425",
+      "icon_local_path": "icons/addons/jills_sandwich.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Jills Sandwich",
+          "description": "Es ist komplett zerquetscht und voller Blut aus einem vergangenen Kampf. Aber es verströmt ein leckeres Aroma, das man nicht ignorieren kann.\n• Enthüllt die Aura eines Überlebenden für 12 Sekunden, nachdem dieser einen Vorratskoffer aufgeschlossen hat."
+        },
+        "en": {
+          "name": "Jill’s Sandwich"
+        },
+        "es": {
+          "name": "Sándwich de Jill",
+          "description": "Tentempié trágicamente aplastado y pringado de sangre tras una pelea reciente. Sin embargo, conserva un aroma delicioso.\n• Muestra el aura de un superviviente durante 12 segundos tras desbloquear una caja de suministros."
+        },
+        "ja": {
+          "name": "ジルのサンドイッチ",
+          "description": "さっきの戦闘で無念にも押しつぶされ血まみれになってしまったが、美味しそうな匂いが気になって仕方ない。\n• サプライケースをロック解除した生存者のオーラが12秒間視えるようになる"
+        },
+        "pl": {
+          "name": "Kanapka Jill",
+          "description": "Jest okropnie zgnieciona i ocieka krwią po ostatniej walce. Mimo to ma przepyszny aromat.\n• Pokazuje aury ocalałych przez 12 sekund po odblokowaniu przez nich skrzyni z zapasami."
+        }
+      }
+    }
+  ]
+}

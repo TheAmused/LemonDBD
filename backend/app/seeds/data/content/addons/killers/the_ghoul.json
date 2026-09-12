@@ -1,0 +1,566 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 684,
+      "name": "Anteiku Apron",
+      "killer_id": 39,
+      "description": "Standard-issue uniform at a lovely little coffee shop.\n• Decrease the slide after a Kagune Leap by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AnteikuApron.png?8bbead",
+      "icon_local_path": "icons/addons/anteiku_apron.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Antik-Schürze",
+          "description": "Gewöhnliche Uniform in einem netten kleinen Café.\n• Verkürzt das Rutschen nach einem Krallensprung um 50 %."
+        },
+        "es": {
+          "name": "Delantal de Anteiku",
+          "description": "El uniforme estándar de una agradable cafetería.\n• Reduce el deslizamiento tras un salto de kagune un 50 %."
+        },
+        "ja": {
+          "name": "あんていくのエプロン",
+          "description": "こじんまりとした居心地のいい喫茶店の制服。\n• 「赫子の跳躍」のあとのスライディング効果が50%減少する"
+        },
+        "pl": {
+          "name": "Fartuch Anteiku",
+          "description": "Standardowy uniform z uroczej małej kawiarni.\n• Zmniejsza długość ślizgu po Skoku Kagune o 50%."
+        }
+      }
+    },
+    {
+      "id": 685,
+      "name": "Fresh Coffee",
+      "killer_id": 39,
+      "description": "Every ghoul's favorite drink, the one human delicacy they can consume.\n• Increases Kagune Leap speed by 14%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_freshCoffee.png?c85d7a",
+      "icon_local_path": "icons/addons/fresh_coffee.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Frischer Kaffee",
+          "description": "Das Lieblingsgetränk eines jeden Ghuls, die einzige menschliche Delikatesse, die sie zu sich nehmen können.\n• Erhöht die Krallensprunggeschwindigkeit um 14 %."
+        },
+        "es": {
+          "name": "Café recién hecho",
+          "description": "La bebida favorita de los ghouls y el único manjar humano que pueden consumir.\n• Aumenta la velocidad del salto de kagune un 14 %."
+        },
+        "ja": {
+          "name": "淹れたてのコーヒー",
+          "description": "人間の食べ物の中で唯一喰種が美味しく摂取できるもの。\n• 「赫子の跳躍」の速度が14%上昇する"
+        },
+        "pl": {
+          "name": "Świeża kawa",
+          "description": "Ulubiony napój każdego ghula – jedyny przysmak ludzi, który mogą spożywać.\n• Zwiększa prędkość Skoku Kagune o 14%."
+        }
+      }
+    },
+    {
+      "id": 686,
+      "name": "Broken Chain",
+      "killer_id": 39,
+      "description": "Nothing could restrain him once he finally embraced his full potential.\n• Decreases Kagune Leap cooldown by 35% when not Enraged.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_brokenChain.png?a0bc89",
+      "icon_local_path": "icons/addons/broken_chain.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerrissene Kette",
+          "description": "Nichts konnte ihn aufhalten, als er sein volles Potenzial endlich akzeptierte.\n• Verkürzt die Abklingzeit des Krallensprungs um 35 %, wenn der erzürnte Modus nicht aktiv ist."
+        },
+        "es": {
+          "name": "Cadena rota",
+          "description": "Cuando alcanzó su máximo potencial, ya nada podría contenerlo.\n• Reduce el tiempo de recarga del salto de kagune un 35 % cuando no estés en el modo furia."
+        },
+        "ja": {
+          "name": "切れた鎖",
+          "description": "自分の本質を受け入れた彼の力を抑えられるものはなかった。\n• 狂化モードではないとき、「赫子の跳躍」のクールダウンが35%短縮する"
+        },
+        "pl": {
+          "name": "Zerwany łańcuch",
+          "description": "Nic nie mogło go powstrzymać, gdy w końcu zaakceptował swój pełny potencjał.\n• Skraca czas odnowienia Skoku Kagune o 35%, gdy Ghul nie jest w Trybie Szału."
+        }
+      }
+    },
+    {
+      "id": 687,
+      "name": "Kaneki's Satchel",
+      "killer_id": 39,
+      "description": "Essential gear for any student trying to keep up with their studies.\n• Increases the speed of the third consecutive Kagune Leap by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_satchel.png?ba2bed",
+      "icon_local_path": "icons/addons/kanekis_satchel.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kanekis Tasche",
+          "description": "Wesentliches Utensil für jeden Studenten, der im Studium vorankommen will.\n• Erhöht die Geschwindigkeit des dritten Krallensprungs in Folge um 30 %."
+        },
+        "es": {
+          "name": "Morral de Kaneki",
+          "description": "Algo esencial para cualquier alumno que quiera llevar al día sus estudios.\n• Aumenta la velocidad del tercer salto de kagune consecutivo un 30 %."
+        },
+        "ja": {
+          "name": "カネキの学生カバン",
+          "description": "学問に励む学生の必需品。\n• 連続させた3回目の「赫子の跳躍」の速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Torba na ramię Kanekiego",
+          "description": "Niezbędny ekwipunek dla każdego ucznia starającego się nadążyć za nauką.\n• Zwiększa prędkość trzeciego z rzędu Skoku Kagune o 30%."
+        }
+      }
+    },
+    {
+      "id": 688,
+      "name": "Taiyaki",
+      "killer_id": 39,
+      "description": "Ghouls can never eat human food, but they can find ways to pretend.\n• Increases the Enraged Mode countdown by 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_taiyaki.png?b8385a",
+      "icon_local_path": "icons/addons/taiyaki.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "description": "Ghule können keine menschliche Nahrung zu sich nehmen, aber sie können so tun als ob.\n• Verlängert den Countdown für den erzürnten Modus um 5 Sek."
+        },
+        "es": {
+          "description": "Los ghouls jamás pueden consumir comida humana, pero saben cómo fingir.\n• Aumenta la cuenta atrás del modo furia en 5 segundos."
+        },
+        "ja": {
+          "name": "たい焼き",
+          "description": "喰種は人間が食べるものを口にできないが、食べるふりをすることはできる。\n• 狂化モードのカウントダウンの持続時間が5秒増加する"
+        },
+        "pl": {
+          "description": "Ghule nigdy nie mogą jeść ludzkiego jedzenia, ale potrafią to udawać.\n• Wydłuża czas odliczania Trybu Szału o 5 s."
+        }
+      }
+    },
+    {
+      "id": 689,
+      "name": "Blood-Stained Handkerchief",
+      "killer_id": 39,
+      "description": "Even a single drop of blood can excite the senses of any gourmet.\n• Increases the Kagune's reach by 1 meter.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_bloodStainedHandkerchief.png?540c23",
+      "icon_local_path": "icons/addons/blood_stained_handkerchief.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutiges Taschentuch",
+          "description": "Schon ein einziger Tropfen Blut kann die Sinne eines Feinschmeckers beflügeln.\n• Vergrößert die Reichweite der Kralle um 1 Meter."
+        },
+        "es": {
+          "name": "Pañuelo con sangre",
+          "description": "Hasta una sola gota de sangre puede estimular los sentidos de cualquier gurmé.\n• Aumenta el alcance del kagune en 1 metro."
+        },
+        "ja": {
+          "name": "血の付いたハンカチ",
+          "description": "一滴の血も、美食家を興奮させるのには十分だ。\n• 赫子の到達距離が1メートル増加する"
+        },
+        "pl": {
+          "name": "Zakrwawiona chusteczka",
+          "description": "Nawet jedna kropla krwi może pobudzić zmysły każdego smakosza.\n• Zwiększa zasięg Kagune o 1 m."
+        }
+      }
+    },
+    {
+      "id": 690,
+      "name": "Rize's Glasses",
+      "killer_id": 39,
+      "description": "They made her look innocent enough, which was exactly what she wanted.\n• Upon entering Enraged Mode, reveals the auras of any healthy Survivors repairing generators for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_RizesGlasses.png?d53d30",
+      "icon_local_path": "icons/addons/rizes_glasses.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Liz’ Brille",
+          "description": "Sie verpassten ihr ein unschuldiges Aussehen, genau wie sie es wollte.\n• Beim Start des erzürnten Modus werden die Auren aller gesunden Überlebenden, die einen Generator reparieren, für 8 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Gafas de Rize",
+          "description": "Le daban un aspecto inocente, justo lo que ella quería.\n• Tras entrar en el modo furia, revela las auras de los supervivientes ilesos que estén reparando generadores durante 8 segundos."
+        },
+        "ja": {
+          "name": "リゼのメガネ",
+          "description": "彼女はこれを身につけることで、思惑通りに無垢な女性に見えた。\n• 狂化モードに入ったとき、発電機を修理している無傷の生存者が全員8秒間視える"
+        },
+        "pl": {
+          "name": "Okulary Rize",
+          "description": "Sprawiali, że wyglądała na niewinną – dokładnie tak, jak chciała.\n• Po wejściu w Tryb Szału ujawnia aury zdrowych ocalałych naprawiających generatory na 8 s."
+        }
+      }
+    },
+    {
+      "id": 691,
+      "name": "Aogiri Tree Robe",
+      "killer_id": 39,
+      "description": "Garments worn by an anti-human ghoul organization.\n• If a generator is completed while The Ghoul is in Enraged Mode, gain the Undetectable status effect for 20 seconds.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AogiriTreeRobe.png?52eb23",
+      "icon_local_path": "icons/addons/aogiri_tree_robe.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Phönixbaum-Robe",
+          "description": "Kleidung, wie sie von einer menschenfeindlichen Ghul-Organisation getragen wird.\n• Wenn ein Generator im erzürnten Modus des Ghuls fertiggestellt wird, erhältst du den Statuseffekt Unentdeckbar für 20 Sekunden.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Túnica del Árbol Aogiri",
+          "description": "Una vestimenta usada por una organización de ghouls antihumanos.\n• Si un generador se completa mientras el Ghoul está en el modo furia, obtiene el efecto de estado Indetectable durante 20 segundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "アオギリの樹のローブ",
+          "description": "人間に敵対する喰種の組織が身につけていたもの。\n• 喰種が狂化モードである間に発電機の修理が完了した場合、探知不可のステータス効果を20秒間得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Szata drzewa Aogiri",
+          "description": "Strój noszony przez organizację ghuli walczących z ludźmi.\n• Jeśli generator zostanie ukończony, gdy Ghul znajduje się w Trybie Szału, otrzymujesz status Niewykrywalny na 20 s.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 692,
+      "name": "Red Spider Lily",
+      "killer_id": 39,
+      "description": "The white flowers turned red as blood.\n• While in Enraged Mode, base attacks afflict Survivors with the Hemorrhage status effect for 60 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_redSpiderLily.png?aad5fa",
+      "icon_local_path": "icons/addons/red_spider_lily.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rote Spinnenlilie",
+          "description": "Die weißen Blumen färbten sich rot wie Blut.\n• Im erzürnten Modus verursachen Grundangriffe den Statuseffekt Blutung für 60 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Flores del infierno rojas",
+          "description": "Las flores blancas se tiñen de rojo sangre.\n• Mientras estás el modo furia, los ataques básicos causan el efecto de estado Hemorragia a los supervivientes durante 60 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "彼岸花",
+          "description": "白い花は血のように赤くなった。\n• 狂化モードの間、通常攻撃が生存者に出血のステータス効果を60秒間与える\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Czerwona pajęcza lilia",
+          "description": "Białe kwiaty zabarwiły się na czerwono niczym krew.\n• W Trybie Szału podstawowe ataki nakładają na ocalałych status Krwotok na 60 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 693,
+      "name": "CCG ID Card",
+      "killer_id": 39,
+      "description": "A card carried by every ghoul investigator.\n• Whenever you special-vault with Kagune Leap, for 3 seconds, you see the auras of all Kagune Marked Survivors within 24 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CCGIDCard.png?770aff",
+      "icon_local_path": "icons/addons/ccg_id_card.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "CCG-Ausweis",
+          "description": "Eine Karte, wie sie jeder Ghul-Ermittler bei sich trägt.\n• Immer wenn du den Krallensprung für einen Spezialsprung nutzt, siehst du für 3 Sekunden die Auren aller Überlebenden mit Krallenkennzeichnung innerhalb von 24 Metern."
+        },
+        "es": {
+          "name": "Tarjeta de identificación de la CCG",
+          "description": "Una tarjeta que llevan todos los investigadores de ghouls.\n• Cada vez que realizas un salto especial con salto de kagune, durante 3 segundos, verás las auras de todos los supervivientes con la marca de kagune en un radio de 24 metros."
+        },
+        "ja": {
+          "name": "CCG身分証明書",
+          "description": "すべての喰種捜査官が持ち歩くもの。\n• 「赫子の跳躍」で特殊乗り越えを行うと、3秒間、24メートル以内にいる赫子マークの付いた全ての生存者のオーラが視える"
+        },
+        "pl": {
+          "name": "Legitymacja CCG",
+          "description": "Karta noszona przez każdego śledczego ghula.\n• Za każdym razem, gdy wykonujesz specjalny przeskok przy pomocy Skoku Kagune, widzisz aury wszystkich ocalałych oznaczonych Znakiem Kagune w promieniu 24 m przez 3 s."
+        }
+      }
+    },
+    {
+      "id": 694,
+      "name": "Red-Headed Centipede",
+      "killer_id": 39,
+      "description": "The thing caused him immeasurable torment.\n• While in Enraged Mode, whenever you vault a Window, it is blocked for 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_redHeadedCentipede.png?218c35",
+      "icon_local_path": "icons/addons/red_headed_centipede.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Rotkopf-Tausendfüßler",
+          "description": "Das Ding fügte ihm unsagbare Schmerzen zu.\n• Immer wenn du im erzürnten Modus durch ein Fenster springst, wird es 10 Sek. lang blockiert."
+        },
+        "es": {
+          "name": "Ciempiés de cabeza roja",
+          "description": "Aquel bicho le provocó un tormento insoportable.\n• Mientras estés en el modo furia, cada vez que saltes por una ventana, esta queda bloqueada durante 10 segundos."
+        },
+        "ja": {
+          "name": "赤頭のムカデ",
+          "description": "それは、彼に計り知れない苦しみをもたらした。\n• 狂化モード中に窓の乗り越えを行うと、それが10秒間ブロックされる"
+        },
+        "pl": {
+          "name": "Czerwonogłowa stonoga",
+          "description": "To coś przyniosło mu niewyobrażalne cierpienie.\n• W Trybie Szału, za każdym razem, gdy przeskoczysz przez okno, jest ono zablokowane na 10 s."
+        }
+      }
+    },
+    {
+      "id": 695,
+      "name": "Torture Apparatus",
+      "killer_id": 39,
+      "description": "A cutting tool used every time his extremities grew back.\n• When Enraged Mode ends, The Ghoul gains 5% Haste for 6 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_medicalApparatus.png?b5d425",
+      "icon_local_path": "icons/addons/torture_apparatus.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Foltergerät",
+          "description": "Ein Schneidwerkzeug, das immer zum Einsatz kam, wenn seine Extremitäten nachwuchsen.\n• Wenn der erzürnte Modus endet, erhält der Ghul 5 % Eile für 6 Sek.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Aparato de tortura",
+          "description": "Una herramienta cortante que utilizaba cada vez que le volvían a crecer las extremidades.\n• Cuando termina el modo furia, el Ghoul obtiene un 5 % de Celeridad durante 6 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "拷問器具",
+          "description": "彼の指が再生する度にそれを引きちぎるのに使われた道具。\n• 狂化モードが終わると、喰種が5%の迅速を6秒間得る\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Narzędzie tortur",
+          "description": "Narzędzie tnące używane za każdym razem, gdy jego kończyny odrastały.\n• Gdy Tryb Szału się kończy, Ghul zyskuje 5% Pośpiechu na 6 s.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 696,
+      "name": "Iridescent Eye Patch",
+      "killer_id": 39,
+      "description": "An innocent way to hide his true nature from the world.\n• While in Enraged Mode, whenever you special-vault a Pallet on your third consecutive Kagune Leap, it special-breaks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_iridescentEyePatch.png?73c583",
+      "icon_local_path": "icons/addons/iridescent_eye_patch.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Augenklappe",
+          "description": "Eine unschuldige Möglichkeit, sein wahres Wesen vor der Welt zu verbergen.\n• Wenn du bei deinem dritten Krallensprung in Folge im erzürnten Modus einen Spezialfähigkeit-Sprung über eine Palette ausführst, wird diese Palette durch deine Stärke zerstört."
+        },
+        "es": {
+          "name": "Parche iridiscente",
+          "description": "Una forma inocente de ocultar su auténtica naturaleza al mundo.\n• Al realizar un salto de palé especial con tu tercer salto de kagune consecutivo mientras estés en el modo furia, el palé se destruirá de forma especial."
+        },
+        "ja": {
+          "name": "玉虫色の眼帯",
+          "description": "彼は簡単な方法で世間の目から自分の正体を隠した。\n• 狂化モード中に、連続させた3回目の「赫子の跳躍」でパレットの特殊乗り越えを行うと、そのパレットが特殊破壊される"
+        },
+        "pl": {
+          "name": "Opalizująca opaska na oko",
+          "description": "Niewinny sposób na ukrycie jego prawdziwej natury przed światem.\n• W Trybie Szału, za każdym razem, gdy wykonasz specjalny przeskok nad paletą podczas trzeciego z rzędu Skoku Kagune w Trybie Szału, niszczysz paletę w specjalny sposób."
+        }
+      }
+    },
+    {
+      "id": 837,
+      "name": "Kaneki's Wallet",
+      "killer_id": 39,
+      "description": "Lost to a strange boy who happened to bump into him on the street.\n• Increases the window to perform consecutive Kagune Leaps by 3 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_KanekisWallet.png?efc5ab",
+      "icon_local_path": "icons/addons/kanekis_wallet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kanekis Portemonnaie",
+          "description": "Ist jetzt im Besitz eines seltsamen Jungen, der ihn auf der Straße angerempelt hat.\n• Verlängert das Zeitfenster für aufeinanderfolgende Krallensprünge um 3 Sekunde."
+        },
+        "en": {
+          "name": "Kaneki’s Wallet"
+        },
+        "es": {
+          "name": "Cartera de Kaneki",
+          "description": "La perdió al chocarse con un chico de aspecto extraño en la calle.\n• Aumenta el intervalo para realizar saltos de kagune consecutivos en 3 segundo."
+        },
+        "ja": {
+          "name": "カネキの財布",
+          "description": "彼が通りでぶつかった見知らぬ少年に取られたもの。\n• 「赫子の跳躍」を連続できる間隔が3秒増加する"
+        },
+        "pl": {
+          "name": "Portfel Kanekiego",
+          "description": "Przegrał z dziwnym chłopcem, który przypadkiem na niego wpadł na ulicy.\n• Zwiększa okno czasowe na wykonanie kolejnych Skoków Kagune o 3 s."
+        }
+      }
+    },
+    {
+      "id": 838,
+      "name": "The Black Goat's Egg",
+      "killer_id": 39,
+      "description": "The book he used to bond with a woman of consequence.\n• Perfectly timed grab-attacks grant a 100% Bloodpoints bonus.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_TheBlackGoatsEgg.png?cb9748",
+      "icon_local_path": "icons/addons/the_black_goats_egg.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Das Ei der Schwarzen Ziege",
+          "description": "Das Buch, das er verwendete, um einer mächtigen Frau näherzukommen.\n• Erfolgreiche Packangriffe gewähren einen Blutpunktebonus von 100 %."
+        },
+        "en": {
+          "name": "The Black Goat’s Egg"
+        },
+        "es": {
+          "name": "El huevo de la Cabra Negra",
+          "description": "El libro que le hizo estrechar lazos con una mujer de armas tomar.\n• Los ataques con agarre otorgan un 100 % de puntos de sangre adicionales."
+        },
+        "ja": {
+          "name": "黒山羊の卵",
+          "description": "彼が気になっていた女性と話すきっかけとなった本。\n• 完璧なタイミングで掴み攻撃を行うと100%のブラッドポイントを追加取得する"
+        },
+        "pl": {
+          "name": "Jajo Czarnej Kozy",
+          "description": "Księga, dzięki której nawiązał więź z ważną kobietą.\n• Idealnie trafione ataki chwytające zapewniają 100% dodatkowych Punktów Krwi."
+        }
+      }
+    },
+    {
+      "id": 839,
+      "name": "Hide's Headphones",
+      "killer_id": 39,
+      "description": "They belonged to his best friend, who he tried to keep safe at all costs.\n• Survivors affected by Kagune Mark are afflicted with the Oblivious status effect.\nOblivious prevents Survivors from hearing and being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HidesHeadphones.png?5f5a5b",
+      "icon_local_path": "icons/addons/hides_headphones.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Hides Kopfhörer",
+          "description": "Sie gehörten seinem besten Freund, den er um jeden Preis beschützen wollte.\n• Überlebende, die von einer Krallenkennzeichnung betroffen sind, erleiden den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebenden den Terrorradius des Killers hören oder davon betroffen sind."
+        },
+        "en": {
+          "name": "Hide’s Headphones"
+        },
+        "es": {
+          "name": "Auriculares de Hide",
+          "description": "Eran de su mejor amigo, a quien intentó proteger a toda costa.\n• Los supervivientes afectados por la marca de kagune sufren el efecto de estado Inconsciencia.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "ヒデのヘッドホン",
+          "description": "彼が何としてでも守ろうとした親友の愛用品。\n• 赫子マークの付いた生存者が無感覚のステータス効果に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Słuchawki Hide",
+          "description": "Należały do jego najlepszego przyjaciela, którego starał się chronić za wszelką cenę.\n• Ocalali dotknięci Znakiem Kagune otrzymują efekt Nieświadomy.\nNieświadomość uniemożliwia ocalałym słyszenie zasięgu terroru zabójcy i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 840,
+      "name": "Hinami's Umbrella",
+      "killer_id": 39,
+      "description": "It was raining the day her mother was viciously taken from her.\n• Increases the amount of time added to the Enraged countdown for each perfectly timed grab-attack by 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HinamisUmbrella.png?d0571c",
+      "icon_local_path": "icons/addons/hinamis_umbrella.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Hinamis Schirm",
+          "description": "Es regnete an dem Tag, an dem ihr ihre Mutter auf grausame Weise genommen wurde.\n• Verlängert die Zeit, die für jeden perfekt getimten Packangriff zum Erzürnt-Countdown addiert wird, um 10 Sekunden."
+        },
+        "en": {
+          "name": "Hinami’s Umbrella"
+        },
+        "es": {
+          "name": "Paraguas de Hinami",
+          "description": "El día en que le arrebataron salvajemente a su madre, llovía.\n• Aumenta la cantidad de tiempo que se añade a la cuenta atrás del modo furia por cada ataque con agarre en el momento exacto en 10 segundos."
+        },
+        "ja": {
+          "name": "ヒナミの傘",
+          "description": "彼女の母親が残酷に殺された日は雨が降っていた。\n• 完璧なタイミングで掴み攻撃を行うと狂化モードのカウントダウンに追加される時間が、10秒増加する"
+        },
+        "pl": {
+          "name": "Parasol Hinami",
+          "description": "W dniu, gdy jej matka została jej brutalnie odebrana, padał deszcz.\n• Zwiększa czas dodawany do licznika Szału za każdy perfekcyjnie wymierzony atak chwytający o 10 s."
+        }
+      }
+    },
+    {
+      "id": 841,
+      "name": "Amon's Necktie",
+      "killer_id": 39,
+      "description": "Cold, calculated, precise. He had a firm grasp of every situation.\n• While aiming mid-Leap, reveals the auras of pallets and windows within 32 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AmonsNecktie.png?24a001",
+      "icon_local_path": "icons/addons/amons_necktie.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Amons Krawatte",
+          "description": "Kalt, berechnend, genau. Er hatte jede Situation unter Kontrolle.\n• Wenn du mitten im Sprung zielst, werden die Auren von Paletten und Fenstern in einem Umkreis von 32 Metern angezeigt."
+        },
+        "en": {
+          "name": "Amon’s Necktie"
+        },
+        "es": {
+          "name": "Corbata de Amon",
+          "description": "Frío, calculador y preciso. Tenía el control total de cualquier situación.\n• Mientras apuntas durante el salto, revela las auras de palés y ventanas en un radio de 32 metros."
+        },
+        "ja": {
+          "name": "亜門のネクタイ",
+          "description": "冷静で用意周到で几帳面。どんな状況もしっかりと把握している青年。\n• 跳躍したあとに次の跳躍の狙いを定めている間、32メートル以内のパレットと窓のオーラが視える"
+        },
+        "pl": {
+          "name": "Krawat Amona",
+          "description": "Zimny, wyrachowany, precyzyjny. Miał pełną kontrolę nad każdą sytuacją.\n• Podczas celowania w trakcie skoku ujawnia aury palet i okien w promieniu 32 m."
+        }
+      }
+    },
+    {
+      "id": 842,
+      "name": "Mado's Glove",
+      "killer_id": 39,
+      "description": "A glove worn by a ghoul investigator.\n• Upon removing Kagune Mark, Survivors suffer from the Exhausted status effect for 15 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MadosGlove.png?198bd1",
+      "icon_local_path": "icons/addons/mados_glove.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Mados Handschuh",
+          "description": "Der Handschuh eines Ghul-Ermittlers.\n• Wenn die Krallenkennzeichnung entfernt wird, leiden Überlebende 15 Sekunden lang unter dem Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "en": {
+          "name": "Mado’s Glove"
+        },
+        "es": {
+          "name": "Guante de Mado",
+          "description": "Un guante que llevaba un investigador de ghouls.\n• Tras quitarse la marca de kagune, los supervivientes sufren el efecto de estado Agotamiento durante 15 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "真戸の手袋",
+          "description": "喰種捜査官が身につけていた手袋。\n• 生存者が赫子マークを失うと、疲労のステータス効果に15秒間苦しむ\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Rękawiczka Mado",
+          "description": "Rękawica noszona przez śledczego ghula.\n• Gdy ocalały pozbędzie się Znaku Kagune, otrzymuje efekt Wyczerpany na 15 s.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 843,
+      "name": "Yamori's Mask",
+      "killer_id": 39,
+      "description": "Worn by a ghoul from the 13th district whose hobby was torture.\n• Upon hooking a Survivor while in Enraged Mode, all Survivors further than 40 meters scream and reveal their location for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_YamorisMask.png?5a3716",
+      "icon_local_path": "icons/addons/yamoris_mask.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Yamoris Maske",
+          "description": "Gehörte einem Ghul aus dem 13. Bezirk, der das Foltern liebte.\n• Wenn du einen Überlebenden im erzürnten Modus festhakst, schreien alle Überlebenden, die weiter als 40 Meter entfernt sind, und geben ihre Position für 3 Sek. preis."
+        },
+        "en": {
+          "name": "Yamori’s Mask"
+        },
+        "es": {
+          "name": "Máscara de Yamori",
+          "description": "La llevaba un ghoul del distrito 13 al que le encantaba torturar.\n• Tras colgar a un superviviente mientras estás en el modo furia, todos los supervivientes a más de 40 metros gritan y revelan su ubicación durante 3 segundos."
+        },
+        "ja": {
+          "name": "ヤモリのマスク",
+          "description": "13区のジェイソン。拷問を好む喰種。\n• 狂化モード中に生存者をフックに吊るすと、40メートル以上離れた生存者全員が叫び声を上げて、その位置が3秒間視える"
+        },
+        "pl": {
+          "name": "Maska Yamori",
+          "description": "Noszony przez ghula z 13. dzielnicy, którego hobby stanowiły tortury.\n• Gdy Ghul wiesza ocalałego na haku w Trybie Szału, wszyscy ocalali znajdujący się od niego dalej niż 40 metrów krzyczą i ujawniają swoją lokalizację na 3 s."
+        }
+      }
+    }
+  ]
+}

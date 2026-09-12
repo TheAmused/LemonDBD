@@ -41,7 +41,11 @@ export interface MapObjective {
 }
 
 export interface MapRealm {
-  id: string;
+  /** The integer primary key. It was a string --
+   *  `hens_autohaven_wreckers_azarovs_resting_place` -- which spelled out the
+   *  callout provider, the realm and the name, all three of which the row
+   *  already carries as `source`, `realm` and `name`. */
+  id: number;
   name: string;
   realm: string;
   layout_type: string;

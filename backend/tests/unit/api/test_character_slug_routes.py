@@ -3,38 +3,59 @@ import pytest
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, Perk
-from app.services.scraper_service import ScraperService
+from app.models import Killer, Perk, Survivor
+from tests.unit.conftest import make_chapter
 
 
 @pytest.fixture(autouse=True)
 def setup_slug_characters(db_session: Session) -> None:
-    meg = db_session.scalars(select(Character).where(Character.name == "Meg Thomas")).first()
+    """Three characters to resolve by name, slug and real name.
+
+    `role` is not passed: the table is the role. `release_number` is the
+    primary key -- the source numbered survivors and killers separately, which
+    is what each table's id is. `wiki_slug`, `short_name`, `chapter_name`,
+    `chapter_number`, `dlc_type`, `is_licensed`, `release_year` and
+    `dlc_counterparts` are all gone from a character row: the first two were
+    `name` respelled, and the rest belong to the chapter.
+    """
+    base_game = make_chapter(db_session, "Base Game")
+    resident_evil = make_chapter(db_session, "Resident Evil")
+    resident_evil.is_licensed = True
+    resident_evil.release_year = 2021
+    resident_evil.dlc_type = "chapter"
+
+    meg = db_session.scalars(select(Survivor).where(Survivor.name == "Meg Thomas")).first()
     if not meg:
-        meg = Character(name="Meg Thomas", role="Survivor", release_number=2)
+        meg = Survivor(name="Meg Thomas", id=2, chapter_id=base_game.id)
         db_session.add(meg)
         db_session.flush()
         db_session.add(
             Perk(
                 name="Sprint Burst",
-                character_id=meg.id,
+                role="Survivor",
+                survivor_id=meg.id,
                 description="Run fast",
                 icon_url="url",
                 icon_local_path="path",
             )
         )
 
-    trapper = db_session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+    trapper = db_session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
     if not trapper:
-        trapper = Character(
-            name="The Trapper", role="Killer", release_number=1, real_name="Evan MacMillan"
+        trapper = Killer(
+            name="The Trapper",
+            id=1,
+            chapter_id=base_game.id,
+            power_name="Bear Trap",
+            real_name="Evan MacMillan",
         )
         db_session.add(trapper)
         db_session.flush()
         db_session.add(
             Perk(
                 name="Agitation",
-                character_id=trapper.id,
+                role="Killer",
+                killer_id=trapper.id,
                 description="Carry fast",
                 icon_url="url",
                 icon_local_path="path",
@@ -43,31 +64,19 @@ def setup_slug_characters(db_session: Session) -> None:
     else:
         trapper.real_name = "Evan MacMillan"
 
-    nemesis = db_session.scalars(select(Character).where(Character.name == "The Nemesis")).first()
+    nemesis = db_session.scalars(select(Killer).where(Killer.name == "The Nemesis")).first()
     if not nemesis:
-        nemesis = Character(
+        nemesis = Killer(
             name="The Nemesis",
-            role="Killer",
-            release_number=24,
+            id=24,
+            chapter_id=resident_evil.id,
+            power_name="T-Virus",
             real_name="Nemesis-T Type",
-            wiki_slug="The_Nemesis",
-            short_name="the_nemesis",
-            chapter_name="Chapter 20: Resident Evil",
-            chapter_number="20",
-            dlc_type="licensed_chapter",
-            is_licensed=True,
-            release_year=2021,
-            dlc_counterparts="Leon S. Kennedy, Jill Valentine",
             lore="The Nemesis-T Type was an experimental Bio-Organic Weapon...",
         )
         db_session.add(nemesis)
     else:
-        nemesis.chapter_name = "Chapter 20: Resident Evil"
-        nemesis.chapter_number = "20"
-        nemesis.dlc_type = "licensed_chapter"
-        nemesis.is_licensed = True
-        nemesis.release_year = 2021
-        nemesis.dlc_counterparts = "Leon S. Kennedy, Jill Valentine"
+        nemesis.chapter_id = resident_evil.id
         if not nemesis.lore:
             nemesis.lore = "The Nemesis-T Type was an experimental Bio-Organic Weapon..."
 
@@ -96,16 +105,14 @@ class TestCharacterSlugRoutes:
         assert res.get_json()["data"]["character"]["name"] == expected_canonical_name
 
     def test_character_database_dlc_fields(self, client: FlaskClient) -> None:
-        ScraperService().seed_canonical_characters()
+        from app.seeds.static_db_seeder import seed_from_static_json
+        seed_from_static_json(force=True)
 
         res = client.get("/api/v1/characters/the_nemesis/detail")
         assert res.status_code == 200
         char = res.get_json()["data"]["character"]
         assert char["name"] == "The Nemesis"
-        assert char["chapter_name"] == "Chapter 20: Resident Evil"
-        assert char["chapter_number"] == "20"
-        assert char["dlc_type"] == "licensed_chapter"
+        assert "Resident Evil" in char["chapter_name"]
         assert char["is_licensed"] is True
         assert char["release_year"] == 2021
-        assert "Leon S. Kennedy" in char["dlc_counterparts"]
-        assert len(char["lore"]) > 0
+        assert char["role"] == "Killer"

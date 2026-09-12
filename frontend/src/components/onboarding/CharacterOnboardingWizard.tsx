@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/onboarding/CharacterOnboardingWizard.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Loader2 } from 'lucide-react';
@@ -11,7 +12,7 @@ import { getAvatarUrl } from '@/components/character-detail/types';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
-import { invalidate } from '@/services/dataCache';
+import { CATALOG_TTL_MS, fetchCached, invalidate } from '@/services/dataCache';
 import { getChapterBannerSrc } from '@/utils/mapUtils';
 import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
@@ -24,9 +25,13 @@ import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
  * layout server-side. */
 const POST_LANGUAGE_REDIRECT_KEY = 'onboarding_view_after_language_redirect';
 
-/** Ace Visconti, by convention -- matched by wiki_slug (stable across
- * locales) rather than his display name, which is translated. */
-const LEGEND_CHARACTER_WIKI_SLUG = 'Ace_Visconti';
+/** Ace Visconti, by convention -- matched by id, which is the stable identity
+ * of a content row. His display name is translated, so it is not usable as a
+ * key; the previous `wiki_slug` match was that same idea, but `wiki_slug` was
+ * only `name` with underscores and no longer exists. */
+/** Ace Visconti, matched by key rather than by name because the name is
+ *  translated. Survivor 7 -- killer 7 is The Doctor. */
+const LEGEND_SURVIVOR_ID = 7;
 
 // Must mirror the grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5
 // classes on the chapter grid below.
@@ -59,7 +64,6 @@ export interface OnboardingCharacter {
   release_date: string | null;
   is_owned: boolean;
   is_free: boolean;
-  wiki_slug?: string;
   avatar_url?: string;
   avatar_local_path?: string;
 }
@@ -68,6 +72,9 @@ export interface OnboardingPerk {
   perk_id: number;
   name: string;
   character_id: number | null;
+  role?: string;
+  survivor_id?: number | null;
+  killer_id?: number | null;
   is_teachable: boolean;
   is_unlocked: boolean;
   icon_url?: string;
@@ -213,7 +220,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   const [characters, setCharacters] = useState<OnboardingCharacter[]>([]);
   const [allPerks, setAllPerks] = useState<OnboardingPerk[]>([]);
-  const [ownershipDraft, setOwnershipDraft] = useState<Record<number, boolean>>({});
+  // Keyed "survivor:7" / "killer:7": the two rosters are numbered separately.
+  const [ownershipDraft, setOwnershipDraft] = useState<Record<string, boolean>>({});
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -298,9 +306,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     // Unlike the characters/perks fetch below, /api/v1/chapters is public and
     // not scoped to the signed-in user, so it doesn't belong inside that
     // user/token-gated effect -- it can run unconditionally on mount.
+    //
+    // Being public is also why it goes through the shared cache: the banner
+    // list is catalog data that only moves on a re-seed, and someone who backs
+    // out of the wizard and returns should not re-download it.
     let cancelled = false;
-    fetch(`${backendBase}/api/v1/chapters`)
-      .then((res) => res.json())
+    const chaptersKey = `${backendBase}/api/v1/chapters`;
+    fetchCached<{ chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }> }>(
+      chaptersKey,
+      () => fetch(chaptersKey).then((res) => res.json()),
+      { ttlMs: CATALOG_TTL_MS }
+    )
       .then((json: { chapters?: Array<{ name: string; banner_url: string | null; banner_local_path: string | null }> }) => {
         if (cancelled) return;
         const byName: Record<string, ChapterBanner> = {};
@@ -329,10 +345,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     if (!user || !token) return;
     let cancelled = false;
     const headers = { Authorization: `Bearer ${token}` };
+    // The two /users/... reads stay bare: they carry the bearer token, so they
+    // are personalised and neither cache will touch them. The third is the
+    // public catalog under the same key the roster page uses, so a visitor who
+    // has already loaded /characters pays nothing for it here.
+    const translatedCharsKey = `${backendBase}/api/v1/characters?lang=${locale}`;
     Promise.all([
       fetch(`${backendBase}/api/v1/users/${user.id}/characters`, { headers }).then((res) => res.json()),
       fetch(`${backendBase}/api/v1/users/${user.id}/perks?lang=${locale}`, { headers }).then((res) => res.json()),
-      fetch(`${backendBase}/api/v1/characters?lang=${locale}`).then((res) => res.json()),
+      fetchCached(translatedCharsKey, () => fetch(translatedCharsKey).then((res) => res.json()), {
+        ttlMs: CATALOG_TTL_MS,
+      }),
     ])
       .then(
         ([charsJson, perksJson, translatedCharsJson]: [
@@ -426,11 +449,14 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         );
 
   /** The legend's example swatches show a real portrait -- Ace Visconti by
-   * convention, matched by wiki_slug since `name` is translated and
-   * therefore not stable across locales. Falls back to whichever character
-   * loaded first if he isn't present. */
+   * convention, matched by id since `name` is translated and therefore not
+   * stable across locales. Falls back to whichever character loaded first if
+   * he isn't present. */
   const legendCharacter = useMemo(
-    () => characters.find((c) => c.wiki_slug === LEGEND_CHARACTER_WIKI_SLUG) ?? characters[0],
+    () =>
+      characters.find(
+        (c) => c.id === LEGEND_SURVIVOR_ID && (c.category ?? '').toLowerCase() === 'survivor',
+      ) ?? characters[0],
     [characters]
   );
 
@@ -439,12 +465,12 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
    * mutate_character_ownership -- so a chapter-level "I own this" click
    * unlocks its perks immediately instead of leaving them stuck locked
    * until the next save round-trip. */
-  const setCharacterOwned = (characterId: number, owned: boolean) => {
-    setOwnershipDraft((prev) => ({ ...prev, [characterId]: owned }));
+  const setCharacterOwned = (characterId: number, role: string, owned: boolean) => {
+    setOwnershipDraft((prev) => ({ ...prev, [ownershipKey(characterId, role)]: owned }));
     setPerkUnlockDraft((prev) => {
       const next = { ...prev };
       allPerks
-        .filter((p) => p.character_id === characterId)
+        .filter((p) => ownsPerk(p, characterId, role))
         .forEach((p) => {
           next[p.perk_id] = owned;
         });
@@ -453,7 +479,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   };
 
   const toggleChapter = (group: ChapterGroup, own: boolean) => {
-    group.characters.forEach((c) => setCharacterOwned(c.id, own));
+    group.characters.forEach((c) => setCharacterOwned(c.id, c.category, own));
   };
 
   /** Marks every loaded chapter owned in one shot, for players who own most
@@ -466,8 +492,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     setPerkUnlockDraft((prev) => ({ ...prev, [perkId]: !(prev[perkId] ?? true) }));
   };
 
-  const getCharacterPerkStats = (characterId: number) => {
-    const perksForChar = allPerks.filter((p) => p.character_id === characterId);
+  const getCharacterPerkStats = (characterId: number, role: string) => {
+    const perksForChar = allPerks.filter((p) => ownsPerk(p, characterId, role));
     const unlocked = perksForChar.filter((p) => perkUnlockDraft[p.perk_id] ?? true).length;
     return { total: perksForChar.length, unlocked };
   };
@@ -476,7 +502,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     setSaving(true);
     const characterUpdates = characters.map((c) => ({
       character_id: c.id,
-      is_owned: ownershipDraft[c.id] ?? c.is_owned,
+      role: c.category,
+      is_owned: ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
     }));
     const perkUpdates = allPerks.map((p) => ({
       perk_id: p.perk_id,
@@ -670,7 +697,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             const isExpanded = expandedChapter === group.chapterName;
             const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
             const bannerSrc = getChapterBannerSrc(banner, backendBase);
-            const chapterOwned = group.characters.every((c) => (ownershipDraft[c.id] ?? c.is_owned));
+            const chapterOwned = group.characters.every(
+              (c) => ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
+            );
             // Display only -- expandedChapter/aria-id/banner lookups all key off
             // the canonical group.chapterName above, never this localized text.
             const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
@@ -768,8 +797,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         >
                       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3 rounded-2xl border border-border-color bg-bg-surface p-3">
                       {renderedGroup.characters.map((c) => {
-                        const isOwned = ownershipDraft[c.id] ?? c.is_owned;
-                        const perkStats = getCharacterPerkStats(c.id);
+                        const isOwned =
+                          ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned;
+                        const perkStats = getCharacterPerkStats(c.id, c.category);
                         const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
                         return (
                           <div
@@ -778,7 +808,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                           >
                             <button
                               type="button"
-                              onClick={() => setCharacterOwned(c.id, !isOwned)}
+                              onClick={() => setCharacterOwned(c.id, c.category, !isOwned)}
                               className="relative aspect-[3/4] w-full cursor-pointer"
                             >
                               <img

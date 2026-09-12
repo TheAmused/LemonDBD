@@ -7,7 +7,10 @@ import { MapCard } from '@/utils/../components/maps/MapCard';
 import type { MapRealm } from '@/types/map';
 
 const sampleMap: MapRealm = {
-  id: 'hens_azarovs_resting_place',
+  // The primary key, not the old `hens_<realm>_<name>` slug: it spelled out
+  // the callout provider, the realm and the name, all three of which this row
+  // already carries as `source`, `realm` and `name`.
+  id: 1,
   name: "Azarov's Resting Place",
   realm: 'Autohaven Wreckers',
   layout_type: 'Dumbbell Narrow',

@@ -97,11 +97,6 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
                 pass
             return
 
-        from app.seeds.smash_roster_seeder import seed_smash_rosters
-        from app.seeds.user_seeder import seed_default_users
-        from app.services.db_service import DatabaseService
-        from app.services.scraper_service import ScraperService
-
         is_pg = False
         try:
             is_pg = db.engine.dialect.name in ("postgresql", "postgres")
@@ -121,17 +116,33 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
                 acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882026);")).scalar()
                 if acquired:
                     try:
-                        DatabaseService().init_db()
-                        seed_default_users()
-                        ScraperService().seed_canonical_characters()
-                        seed_smash_rosters()
+                        _seed_in_order()
                     finally:
                         conn.execute(text("SELECT pg_advisory_unlock(8882026);"))
         else:
-            DatabaseService().init_db()
-            seed_default_users()
-            ScraperService().seed_canonical_characters()
-            seed_smash_rosters()
+            _seed_in_order()
+
+    def _seed_in_order():
+        """Schema first, then the one seeder.
+
+        `DatabaseService().init_db()` creates the tables and syncs the locale
+        files; `seed_from_static_json()` is the only thing that writes seed
+        content, reading the versioned files in `app/seeds/data/` and resolving
+        every row by primary key. There used to be a second seeder reached
+        through `PerkService.reload_data()` from inside `init_db()`, and the
+        two of them fought over the same primary keys -- it planted six
+        placeholder maps on ids 1-6 and the real import then died on a
+        duplicate key, every boot. It is gone.
+
+        Seeding runs after `init_db()` so the tables exist, and the locale sync
+        inside `init_db()` is a no-op on the first boot and picks up the seeded
+        rows on the next one.
+        """
+        from app.seeds.static_db_seeder import seed_from_static_json
+        from app.services.db_service import DatabaseService
+
+        DatabaseService().init_db()
+        seed_from_static_json()
 
     with flask_app.app_context():
         try:
@@ -179,17 +190,6 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(bug_reports_bp)
     flask_app.register_blueprint(admin_control_bp)
 
-    @flask_app.route("/api/v1/i18n/<locale>", methods=["GET"])
-    def get_i18n_translations(locale: str):
-        from app.services.others.smash_or_pass_service import SmashOrPassService
-
-        try:
-            service = SmashOrPassService()
-            translations = service.get_translations(locale=locale)
-            return jsonify({"data": translations, "locale": locale}), 200
-        except Exception as e:
-            logging.error(f"Error fetching i18n translations for locale '{locale}': {e}")
-            return jsonify({"error": str(e)}), 500
 
     with flask_app.app_context():
         try:

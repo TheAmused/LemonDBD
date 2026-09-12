@@ -1,0 +1,62 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-11T19:47:34.072426+00:00",
+  "source": "LemonDBD",
+  "target": "item_categories",
+  "item_categories": [
+    {
+      "id": 1,
+      "name": "Event",
+      "addon_target_label": "Event",
+      "role": "Survivor"
+    },
+    {
+      "id": 2,
+      "name": "Firecracker",
+      "addon_target_label": "Firecracker",
+      "role": "Survivor"
+    },
+    {
+      "id": 3,
+      "name": "Flashlight",
+      "addon_target_label": "Flashlights",
+      "role": "Survivor"
+    },
+    {
+      "id": 4,
+      "name": "Fog Vial",
+      "addon_target_label": "Fog Vials",
+      "role": "Survivor"
+    },
+    {
+      "id": 5,
+      "name": "Key",
+      "addon_target_label": "Keys",
+      "role": "Survivor"
+    },
+    {
+      "id": 6,
+      "name": "Map",
+      "addon_target_label": "Maps",
+      "role": "Survivor"
+    },
+    {
+      "id": 7,
+      "name": "Med-Kit",
+      "addon_target_label": "Med-Kits",
+      "role": "Survivor"
+    },
+    {
+      "id": 8,
+      "name": "Toolbox",
+      "addon_target_label": "Toolboxes",
+      "role": "Survivor"
+    },
+    {
+      "id": 9,
+      "name": "Trial Artifact",
+      "addon_target_label": "Trial Artifact",
+      "role": "Survivor"
+    }
+  ]
+}

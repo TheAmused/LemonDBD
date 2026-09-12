@@ -3,6 +3,8 @@
 import test from 'node:test';
 import assert from 'node:assert';
 import { SmashSounds } from '@/utils/../components/smash-or-pass/SmashSoundEffects';
+import { localizedProfile } from '../../utils/entityProfile';
+import type { EntityMetadata } from '../../types/smashOrPass';
 
 test('SmashOrPass: Tier Classification & Calculations', async (t) => {
   await t.test('calculates correct tier bands for smash rates', () => {
@@ -31,6 +33,52 @@ test('SmashOrPass: Tier Classification & Calculations', async (t) => {
   });
 });
 
+test('SmashOrPass: Localized Profile Resolution', async (t) => {
+  const meta: EntityMetadata = {
+    archetype: 'The Brooding Beach Jock',
+    bio: 'Sun, sand, and unresolved issues.',
+    tagline: 'He will carry you off the beach. Eventually.',
+    quote: '"Plants do not judge."',
+    meme: 'brooding_jock.gif',
+    turn_on: 'Someone who can keep up',
+    dealbreaker: 'Sunscreen refusers',
+    dating_vibe: 'Warm outside, storm inside',
+    red_flags: ['Emotionally unavailable before noon'],
+    green_flags: ['Loyal', 'Strong swimmer'],
+    // A locale only carries the fields that actually DIFFER from English.
+    translations: {
+      pl: { quote: '„Rośliny cię nie oceniają.”', red_flags: ['Niedostępny emocjonalnie'] },
+    },
+  };
+
+  await t.test('returns the English profile verbatim for en', () => {
+    const profile = localizedProfile(meta, 'en');
+    assert.strictEqual(profile.quote, '"Plants do not judge."');
+    assert.deepStrictEqual(profile.green_flags, ['Loyal', 'Strong swimmer']);
+  });
+
+  await t.test('overlays only the fields the locale actually overrides', () => {
+    const profile = localizedProfile(meta, 'pl');
+    assert.strictEqual(profile.quote, '„Rośliny cię nie oceniają.”');
+    assert.deepStrictEqual(profile.red_flags, ['Niedostępny emocjonalnie']);
+    // Absent in translations.pl, so it falls back to English — the only fallback left.
+    assert.strictEqual(profile.bio, 'Sun, sand, and unresolved issues.');
+    assert.deepStrictEqual(profile.green_flags, ['Loyal', 'Strong swimmer']);
+  });
+
+  await t.test('falls back to English for a locale with no overrides at all', () => {
+    const profile = localizedProfile(meta, 'ja');
+    assert.strictEqual(profile.quote, '"Plants do not judge."');
+    assert.strictEqual(profile.archetype, 'The Brooding Beach Jock');
+  });
+
+  await t.test('returns a fully populated profile for missing metadata', () => {
+    const profile = localizedProfile(undefined, 'de');
+    assert.strictEqual(profile.bio, '');
+    assert.deepStrictEqual(profile.red_flags, []);
+  });
+});
+
 test('SmashOrPass: API Service Layer & Types', async (t) => {
   const {
     getSessionId,
@@ -40,7 +88,6 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
     fetchLeaderboard,
     resetSessionVotes,
     resetUserVotes,
-    fetchDynamicTranslations,
     fetchUserVotes,
     syncSessionVotes,
   } = await import('../../services/smashApi');
@@ -98,7 +145,22 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
           name: 'Ada Wong',
           role: 'Survivor',
           gender: 'female',
-          metadata: { chaos_score: 75, danger_level: 'Moderate' },
+          metadata: {
+            archetype: 'The Femme Fatale Agent',
+            bio: 'A spy who never lets the mission slip.',
+            tagline: 'Trust is a currency she never spends.',
+            quote: '"I always get what I came for."',
+            meme: 'she_could_step_on_me.gif',
+            turn_on: 'Confidence under pressure',
+            dealbreaker: 'Talking during a stealth section',
+            dating_vibe: 'Dangerous, deliberate, distant',
+            red_flags: ['Keeps secrets for a living'],
+            green_flags: ['Never panics', 'Excellent aim'],
+            chaos_score: 75,
+            danger_level: 'Moderate',
+            // Only the fields that differ from English are present per locale.
+            translations: { pl: { quote: '„Zawsze dostaję to, po co przyszłam.”' } },
+          },
         },
       ],
       total_remaining: 97,
@@ -226,24 +288,6 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
       const res = await resetUserVotes('canon');
       assert.strictEqual(res.status, 'success');
       assert.strictEqual(res.reset_count, 5);
-    } finally {
-      globalThis.fetch = originalFetch;
-    }
-  });
-
-  await t.test('fetchDynamicTranslations requests translation dictionary', async () => {
-    const originalFetch = globalThis.fetch;
-    globalThis.fetch = async (url: any) => {
-      assert.ok(String(url).includes('/translations') || String(url).includes('/api/v1/i18n'));
-      return {
-        ok: true,
-        json: async () => ({ data: { 'smashOrPass.ui.smash': 'スマッシュ' } }),
-      } as any;
-    };
-
-    try {
-      const dict = await fetchDynamicTranslations('ja');
-      assert.strictEqual(dict['smashOrPass.ui.smash'], 'スマッシュ');
     } finally {
       globalThis.fetch = originalFetch;
     }

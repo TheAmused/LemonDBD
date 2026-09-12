@@ -25,8 +25,10 @@ class OwnershipService:
     ) -> list[dict[str, Any]]:
         return fetch_user_characters(user_id=user_id, role=role, lang=lang)
 
-    def set_character_ownership(self, user_id: int, character_id: int, is_owned: bool) -> dict[str, Any]:
-        return mutate_character_ownership(user_id, character_id, is_owned)
+    def set_character_ownership(
+        self, user_id: int, character_id: int, is_owned: bool, role: str
+    ) -> dict[str, Any]:
+        return mutate_character_ownership(user_id, character_id, is_owned, role=role)
 
     def seed_default_ownership_for_new_user(self, user_id: int) -> int:
         return seed_default_character_ownership(user_id)

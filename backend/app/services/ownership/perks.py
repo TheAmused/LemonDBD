@@ -12,9 +12,10 @@ def fetch_user_perks(
     user_id: int | None = None, category: str | None = None, lang: str | None = None
 ) -> list[dict[str, Any]]:
     """Retrieve all perks annotated with unlock status for the given user."""
-    stmt = select(Perk).options(joinedload(Perk.character))
+    stmt = select(Perk).options(joinedload(Perk.survivor), joinedload(Perk.killer))
     if category and category.lower() != "all":
-        stmt = stmt.where(func.lower(Perk.category) == category.lower())
+        # `category` was renamed `role`; the query-string name is unchanged.
+        stmt = stmt.where(func.lower(Perk.role) == category.lower())
     stmt = stmt.order_by(Perk.name.asc())
     all_perks = db.session.scalars(stmt).all()
 
@@ -25,7 +26,9 @@ def fetch_user_perks(
             d["perk_id"] = p.id
             d["character_id"] = p.character_id
             d["is_unlocked"] = True
-            d["is_general"] = bool(p.character_id is None or p.is_generic_counterpart)
+            d["is_general"] = bool(
+                p.survivor_id is None and p.killer_id is None or p.is_generic_counterpart
+            )
             result.append(d)
         return result
 
@@ -37,20 +40,30 @@ def fetch_user_perks(
     char_ownerships = db.session.scalars(
         select(UserCharacterOwnership).where(UserCharacterOwnership.user_id == user_id)
     ).all()
-    deactivated_char_ids = {row.character_id for row in char_ownerships if not row.is_owned}
+    # Keyed by (role, id): a bare character id names two characters now.
+    deactivated_chars = {
+        (("survivor", row.survivor_id) if row.survivor_id else ("killer", row.killer_id))
+        for row in char_ownerships
+        if not row.is_owned
+    }
 
     result = []
     for p in all_perks:
         d = p.to_dict(lang=lang)
         d["perk_id"] = p.id
         d["character_id"] = p.character_id
-        is_general = p.character_id is None or p.is_generic_counterpart
+        owner_key = (
+            ("survivor", p.survivor_id) if p.survivor_id
+            else ("killer", p.killer_id) if p.killer_id
+            else None
+        )
+        is_general = owner_key is None or p.is_generic_counterpart
         if is_general:
             is_unlocked = True
         elif p.id in perk_explicit_dict:
             is_unlocked = perk_explicit_dict[p.id]
         else:
-            is_unlocked = (p.character_id not in deactivated_char_ids) if p.character_id else True
+            is_unlocked = owner_key not in deactivated_chars
 
         d["is_unlocked"] = bool(is_unlocked)
         d["is_general"] = bool(is_general)

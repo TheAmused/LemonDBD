@@ -1,0 +1,143 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 15,
+      "name": "Friendship Charm",
+      "item_category_id": 5,
+      "description": "Someone's thumb has worn off the initials once carved into it.\nIncreases a key's charges by 1.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_friendshipCharm.png?691b29",
+      "icon_local_path": "icons/addons/friendship_charm.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Freundschafts-Glücksbringer",
+          "description": "Jemand hat mit dem Daumen die Initialen abgescheuert, die einmal eingraviert waren.\nErhöht die Aufladungen eines Schlüssels um 1."
+        },
+        "es": {
+          "name": "Amuleto de amistad",
+          "description": "El pulgar de una persona ha desgastado las iniciales que llevaba grabadas.\nAumenta las cargas de una llave en 1."
+        },
+        "ja": {
+          "name": "友情のお守り",
+          "description": "彫られているイニシャルは誰かの指で擦り切れてしまい読めない。\nカギにチャージを1追加する。"
+        },
+        "pl": {
+          "name": "Amulet przyjaźni",
+          "description": "Czyjś kciuk wytarł wyryte tu wcześniej inicjały.\nZwiększa liczbę ładunków klucza o 1."
+        }
+      }
+    },
+    {
+      "id": 16,
+      "name": "Shrill Whistle",
+      "item_category_id": 5,
+      "description": "The high-pitched scream gives a sense of urgency to everything.\nDecreases the time to channel a key by 35%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shrillWhistle.png?101507",
+      "icon_local_path": "icons/addons/shrill_whistle.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schrille Pfeife",
+          "description": "Der hohe Schrei verleiht allem eine gewisse Dringlichkeit.\nVerkürzt die Zeit, um einen Schlüssel zu kanalisieren, um 35 %."
+        },
+        "es": {
+          "name": "Silbato estridente",
+          "description": "El grito agudo da una sensación de premura a todo.\nReduce el tiempo para canalizar una llave un 35 %."
+        },
+        "ja": {
+          "name": "甲高い笛",
+          "description": "甲高い悲鳴のような音は、聞いた者を焦らせる。\nカギが発動するまでの時間が35%減少する。"
+        },
+        "pl": {
+          "name": "Przenikliwy gwizd",
+          "description": "Wysoki ton krzyku nadaje wszystkiemu poczucie pilności.\nSkraca czas potrzebny do przekazania zdolności klucza o 35%."
+        }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Braided Bauble",
+      "item_category_id": 5,
+      "description": "Four thin but sturdy cords, all masterfully wrapped around one another.\nIncreases the duration of auras revealed by keys by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_braidedBauble.png?332519",
+      "icon_local_path": "icons/addons/braided_bauble.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Geflochtenes Schmuckstück",
+          "description": "Vier dünne, aber robuste Schnüre, die gekonnt umeinander gewickelt wurden.\nVerlängert die Dauer, für die Auren durch Schlüssel angezeigt werden, um 2 Sekunden."
+        },
+        "es": {
+          "name": "Aro trenzado",
+          "description": "Cuatro cuerdas finas, pero resistentes, entrelazadas con destreza.\nAumenta la duración de las auras reveladas con llaves en 2 segundos."
+        },
+        "ja": {
+          "name": "編み込まれた飾り",
+          "description": "4本のしっかりした細い紐が、美しく編み込まれている。\nカギを使用したときにオーラが表示される時間が2秒増加する。"
+        },
+        "pl": {
+          "name": "Spleciona błyskotka",
+          "description": "Cztery cienkie, ale wytrzymałe sznury, w mistrzowski sposób poprzeplatane.\nZwiększa czas trwania aur ujawnianych przez klucze o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Unique Wedding Ring",
+      "item_category_id": 5,
+      "description": "An engraved wedding ring that emerged from The Fog and resonates with an indescribable and incomprehensible energy.\n• The Obsession and yourself both see each other's aura at all times.\n• Decreases your chances to be The Killer’s Obsession.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_uniqueWeddingRing.png?d0e1de",
+      "icon_local_path": "icons/addons/unique_wedding_ring.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Einmaliger Ehering",
+          "description": "Ein gravierter Ehering, der aus dem Nebel aufgetaucht ist und mit einer unbeschreiblichen und unbegreiflichen Energie schwingt.\n• Du und das Ziel der Besessenheit seht eure Auren dauerhaft.\n• Verringert deine Chancen, zum Ziel der Besessenheit des Killers zu werden."
+        },
+        "es": {
+          "name": "Anillo de boda único",
+          "description": "Un anillo de boda grabado que surgió de la niebla y que rezuma una energía indescriptible e incomprensible.\n• La obsesión y tú veis vuestras auras constantemente.\n• Reduce las posibilidades de convertirte en la obsesión del asesino."
+        },
+        "ja": {
+          "name": "珍しい結婚指輪",
+          "description": "霧から現れ、未知の不可解なエネルギーと共鳴する彫刻を施した結婚指輪。\n• オブセッションと自分にお互いのオーラが常に視えるようになる\n• 自分が殺人鬼のオブセッションになる確率が減少する"
+        },
+        "pl": {
+          "name": "Niezwykła obrączka ślubna",
+          "description": "Grawerowana obrączka ślubna pochodząca z Mgły, pulsująca nieopisaną i niepojętą energią.\n• Obsesja i ty widzicie swoje aury przez cały czas.\n• Zmniejsza twoją szansę zostania obsesją zabójcy."
+        }
+      }
+    },
+    {
+      "id": 19,
+      "name": "Blood Amber",
+      "item_category_id": 5,
+      "description": "A blood-red amber striped with black veins. The amber is warm to the touch.\n• Using this key reveals the Killer to you, and you to the Killer.\n• Reduces aura reveal time by 6 seconds.\n• Reduces number of charges by 2.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodAmber.png?a1d50c",
+      "icon_local_path": "icons/addons/blood_amber.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Blutbernstein",
+          "description": "Ein blutroter Bernstein, durchzogen von schwarzen Adern. Der Bernstein fühlt sich warm an.\n• Wenn du diesen Schlüssel verwendest, siehst du den Killer und er sieht dich.\n• Verringert die Dauer der Auraenthüllung um 6 Sek.\n• Verringert die Anzahl der Aufladungen um 2."
+        },
+        "es": {
+          "name": "Ámbar de Sangre",
+          "description": "Un ámbar color rojo sangre con vetas negras. El ámbar es tibio al tacto.\n• Usar esta llave revelará al asesino, pero él también te verá a ti.\n• Reduce el tiempo de revelación del aura en 6 segundos.\n• Reduce el número de cargas en 2."
+        },
+        "ja": {
+          "name": "真っ赤な琥珀",
+          "description": "黒い血管が走っている、血のように赤い琥珀。手で触ると暖かい。\n• カギにこれを使うと、殺人鬼が自分に視え、自分が殺人鬼に視える\n• オーラが表示される時間が6秒短縮する\n• チャージ数が2減る"
+        },
+        "pl": {
+          "name": "Krwawy bursztyn",
+          "description": "Klucz w czerwono-czarne pasy, z czarnymi żyłkami. Bursztyn jest ciepły w dotyku.\n• Użycie tego klucza ujawnia zabójcę tobie i ciebie zabójcy.\n• Skraca czas ujawniania aury o 6 s.\n• Zmniejsza liczbę ładunków o 2."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 165,
+      "name": "Garden Rake",
+      "killer_id": 10,
+      "description": "A small claw rake, a must-have tool for any accomplished gardener.\n• Increases the size of the Dream Snare by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gardenRake.png?ec9456",
+      "icon_local_path": "icons/addons/garden_rake.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gartenrechen",
+          "description": "Eine kleine Harke, ein unabdingbares Werkzeug für jeden ernst zu nehmenden Gärtner.\n• Vergrößert Traumschlingen um 10 %."
+        },
+        "es": {
+          "name": "Rastrillo de jardín",
+          "description": "Un rastrillo manual pequeño, herramienta esencial para cualquier jardinero que se precie.\n• Aumenta el tamaño de la trampa de los sueños un 10 %."
+        },
+        "ja": {
+          "name": "庭用熊手",
+          "description": "腕利きの庭師であれば誰もが持つべき小さな熊手。\n• ドリームスネアのサイズが10%大きくなる"
+        },
+        "pl": {
+          "name": "Grabie ogrodnicze",
+          "description": "Małe grabie – niezbędnik każdego znakomitego ogrodnika.\n• Zwiększa rozmiar Sennych Sideł o 10%."
+        }
+      }
+    },
+    {
+      "id": 166,
+      "name": "Prototype Claws",
+      "killer_id": 10,
+      "description": "A homemade tool to facilitate bush trimming.\n• Decreases the charge time to release a Dream Snare by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_prototypeClaws.png?4a61e9",
+      "icon_local_path": "icons/addons/prototype_claws.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Klauen-Prototyp",
+          "description": "Ein selbstgemachtes Werkzeug zum Trimmen von Sträuchern.\n• Verkürzt die Aufladezeit für den Einsatz einer Traumschlinge um 10 %."
+        },
+        "es": {
+          "name": "Prototipo de garras",
+          "description": "Una herramienta improvisada para podar arbustos.\n• Reduce el tiempo de carga para lanzar una trampa de los sueños un 10 %."
+        },
+        "ja": {
+          "name": "爪の試作品",
+          "description": "茂みの刈り込みに便利な自家製ツール。\n• ドリームスネアを放つ際のチャージ時間が10%減少する"
+        },
+        "pl": {
+          "name": "Prototypowe pazury",
+          "description": "Narzędzie domowej roboty ułatwiające przycinanie krzewów.\n• Skraca czas ładowania potrzebny do użycia Sennych Sideł o 10%."
+        }
+      }
+    },
+    {
+      "id": 167,
+      "name": "Paint Thinner",
+      "killer_id": 10,
+      "description": "A tin of a highly volatile and inflammable material.\n• When a Survivor drops a Dream Pallet, they are revealed with Killer Instinct for 6 seconds.\n• Unlocks the ability to use Dream Projection on that Survivor while they are revealed.\n• Increases this Dream Projection's charge speed by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_paintThinner.png?9bf8ad",
+      "icon_local_path": "icons/addons/paint_thinner.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Farbverdünner",
+          "description": "Ein Kanister mit hochexplosivem und entflammbarem Material.\n• Wenn ein Überlebender eine Traumpalette umstößt, wird er für 6 Sek. durch den Killerinstinkt angezeigt.\n• Schaltet die Fähigkeit frei, Traumprojektion auf den Überlebenden anzuwenden, solange er enthüllt ist.\n• Erhöht die Aufladegeschwindigkeit dieser Traumprojektion um 100 %."
+        },
+        "es": {
+          "name": "Disolvente de pintura",
+          "description": "Una lata que contiene una sustancia muy volátil e inflamable.\n• Cuando un superviviente suelta un palé de los sueños, se revela con Instinto asesino durante 6 segundos.\n• Permite usar Proyección de los sueños en ese superviviente mientras se le revela.\n• Aumenta la velocidad de carga de esta Proyección de los sueños un 100 %."
+        },
+        "ja": {
+          "name": "塗料用シンナー",
+          "description": "非常に揮発性と引火性が高い物質が入った缶。\n• 生存者がドリームパレットを倒したとき、その生存者が殺人鬼の本能で6秒間探知できる\n• 生存者を探知している間、その生存者にドリームプロジェクションが使える\n• このドリームプロジェクションのチャージ速度が100%上昇する"
+        },
+        "pl": {
+          "name": "Rozcieńczalnik",
+          "description": "Blaszany kanister wypełniony lotną, łatwopalną cieczą.\n• Gdy ocalały przewróci Senną Paletę, zostaje ujawniony przez Instynkt Zabójcy na 6 s.\n• Odblokowuje możliwość użycia Projekcji Snu na tym ocalałym, gdy jest ujawniony.\n• Zwiększa prędkość ładowania tej Projekcji Snu o 100%."
+        }
+      }
+    },
+    {
+      "id": 168,
+      "name": "Sheep Block",
+      "killer_id": 10,
+      "description": "A white and blue wooden block depicting two wooly lamb grazing and the letter \"S\".\n• Increases the Alarm Clocks' cooldown by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sheepBlock.png?685941",
+      "icon_local_path": "icons/addons/sheep_block.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schafklotz",
+          "description": "Ein weiß-blauer Holzklotz, der zwei grasende Lämmer und den Buchstaben „S“ zeigt.\n• Verlängert die Abklingzeit von Weckern um 10 %."
+        },
+        "es": {
+          "name": "Bloque de ovejas",
+          "description": "Un bloque de madera blanco y azul en el que aparecen dos corderos lanudos pastando y la letra \"S\".\n• Aumenta el tiempo de recarga de los despertadores un 10 %."
+        },
+        "ja": {
+          "name": "羊のブロック",
+          "description": "白と青の木製のブロック。「S」の文字と草を食べるモコモコの子羊2頭が描かれている。\n• 目覚まし時計のクールダウンが10%増加する"
+        },
+        "pl": {
+          "name": "Klocek z wizerunkiem owcy",
+          "description": "Biało-niebieski drewniany klocek przedstawiający dwie pasące się owieczki i literę „S”.\n• Wydłuża czas odnawiania budzików o 10%."
+        }
+      }
+    },
+    {
+      "id": 169,
+      "name": "Cat Block",
+      "killer_id": 10,
+      "description": "A white and purple wooden block depicting a sleeping cat and the letter \"C\".\n• Decreases Dream Projection's cooldown by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_catBlock.png?f527a8",
+      "icon_local_path": "icons/addons/cat_block.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Katzenklotz",
+          "description": "Ein weiß-lila Holzblock zeigt eine schlafende Katze sowie den Buchstaben „C“.\n• Verkürzt die Abklingzeit einer Traumprojektion um 10 %."
+        },
+        "es": {
+          "name": "Bloque de gato",
+          "description": "Un bloque de madera blanco y morado con un gato dormido y la letra \"C\".\n• Reduce el tiempo de recarga de Proyección de los sueños un 10 %."
+        },
+        "ja": {
+          "name": "猫のブロック",
+          "description": "白と紫色の木製ブロック。「C」の文字と眠っている猫が描かれている。\n• ドリームプロジェクションのクールダウンが10%減少する"
+        },
+        "pl": {
+          "name": "Klocek z wizerunkiem kota",
+          "description": "Biało-fioletowy drewniany klocek przedstawiający śpiącego kota i literę „C”.\n• Skraca czas odnowienia Projekcji Snu o 10%."
+        }
+      }
+    },
+    {
+      "id": 170,
+      "name": "Unicorn Block",
+      "killer_id": 10,
+      "description": "A white and red wooden block depicting a prancing unicorn and the letter \"U\".\n• Increases the Dream Pallets' rupture radius by 14%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_unicornBlock.png?2b0acb",
+      "icon_local_path": "icons/addons/unicorn_block.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Einhornklotz",
+          "description": "Ein weiß-roter Holzblock zeigt ein stolzierendes Einhorn sowie den Buchstaben „U“.\n• Vergrößert den Berstradius der Traumpaletten um 14 %."
+        },
+        "es": {
+          "name": "Bloque de unicornio",
+          "description": "Un bloque de madera blanco y rojo en el que aparece un unicornio y la letra \"U\".\n• Aumenta el radio de rotura del palé de los sueños un 14 %."
+        },
+        "ja": {
+          "name": "ユニコーンのブロック",
+          "description": "白と赤の木製ブロック。「U」の文字と跳ねるユニコーンが描かれている。\n• ドリームパレットの破裂半径が14%増加する"
+        },
+        "pl": {
+          "name": "Klocek z wizerunkiem jednorożca",
+          "description": "Biało-czerwony kawałek drewna, który przedstawia rozbrykanego jednorożca i literę „U”.\n• Zwiększa promień działania Sennej Palety o 14%."
+        }
+      }
+    },
+    {
+      "id": 171,
+      "name": "\"Z\" Block",
+      "killer_id": 10,
+      "description": "A deeply scratched and burnt wooden block which only recognizable feature is the letter \"Z\".\n• Survivors hit with a Dream Snare or Dream Pallet are revealed for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_zBlock.png?7ac32e",
+      "icon_local_path": "icons/addons/z_block.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Z-Klotz",
+          "description": "Ein stark zerkratzter und verbrannter Holzblock, auf dem nur noch der Buchstabe „Z“ zu erkennen ist.\n• Überlebende, die von einer Traumschlinge oder Traumpalette getroffen werden, werden für 3 Sek. angezeigt."
+        },
+        "es": {
+          "name": "Bloque \"Z\"",
+          "description": "Un bloque de madera arañado y quemado en el que solo se reconoce la letra \"Z\".\n• Los supervivientes golpeados por una trampa de los sueños o un palé de los sueños se revelan durante 3 segundos."
+        },
+        "ja": {
+          "name": "Zのブロック",
+          "description": "「Z」の文字しか分からない、深く傷がついて焼けた木製ブロック。\n• ドリームスネアまたはドリームパレットに当たった生存者の位置が3秒間表示される"
+        },
+        "pl": {
+          "name": "Klocek z literą Z",
+          "description": "Mocno porysowany i spalony drewniany klocek, którego jedyną rozpoznawalną cechą jest litera „Z”.\n• Ocalali trafieni przez Senne Sidła lub Senną Paletę zostają ujawnieni na 3 s."
+        }
+      }
+    },
+    {
+      "id": 172,
+      "name": "Wool Shirt",
+      "killer_id": 10,
+      "description": "A small boy's orange and yellow striped shirt. Identified with a sewn name tag to \"Jesse\".\n• Decreases the delay before Dream Pallets rupture by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_woolShirt.png?21dad5",
+      "icon_local_path": "icons/addons/wool_shirt.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Wollhemd",
+          "description": "Das orange-gelb-gestreifte Hemd eines kleinen Jungen. Laut einem eingenähten Namensschild Eigentum von „Jesse“.\n• Verkürzt die Wartezeit, bis Traumpaletten bersten, um 10 %."
+        },
+        "es": {
+          "name": "Camiseta de lana",
+          "description": "Una camisa de niño a rayas naranjas y amarillas. Tiene cosida una etiqueta que pone \"Jesse\".\n• Reduce el retraso antes de la rotura del palé de los sueños un 10 %."
+        },
+        "ja": {
+          "name": "ウールのシャツ",
+          "description": "ある少年の、オレンジと黄色の縞模様のシャツ。「ジェシー」という名前タグが縫い付けられている。\n• ドリームパレットが破裂するまでの遅延が10%減少する"
+        },
+        "pl": {
+          "name": "Wełniana Koszulka",
+          "description": "Dziecięca koszulka w żółto-pomarańczowe paski z przyszytą plakietką z imieniem „Jesse”.\n• Skraca opóźnienie przed przerwaniem Sennej Palety o 10%."
+        }
+      }
+    },
+    {
+      "id": 173,
+      "name": "Green Dress",
+      "killer_id": 10,
+      "description": "A little girl's green dress with a silky white ribbon.\n• Increases the time it takes for Survivors to perform the Wake Up action by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_greenDress.png?5fdc38",
+      "icon_local_path": "icons/addons/green_dress.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Grünes Kleid",
+          "description": "Das grüne Kleid eines kleinen Mädchens mit weißem Seidenband.\n• Verlängert die Zeit, die Überlebende für die Aufwachen-Aktion benötigen, um 2 Sek.."
+        },
+        "es": {
+          "name": "Vestido verde",
+          "description": "Un vestido de niña verde con un lazo blanco de seda.\n• Aumenta el tiempo que tardan los supervivientes en realizar la acción ¡Despierta! en 2 segundos."
+        },
+        "ja": {
+          "name": "緑のドレス",
+          "description": "ある少女の、白い絹のリボンが付いた緑色のドレス。\n• 生存者が起床アクションを行うのにかかる時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Zielona Sukienka",
+          "description": "Zielona sukienka z białą jedwabną wstążką.\n• Wydłuża czas wykonywania akcji Pobudka przez ocalałych o 2 s."
+        }
+      }
+    },
+    {
+      "id": 174,
+      "name": "Blue Dress",
+      "killer_id": 10,
+      "description": "A little girl's pale blue dress with white lace which front is ruined by large cuts.\n• Dream Snare no longer moves.\n• Dream Snare remains active for 8 seconds.\n• Only 1 Dream Snare can be placed at a time.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blueDress.png?8a02b7",
+      "icon_local_path": "icons/addons/blue_dress.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Blaues Kleid",
+          "description": "Das blassblaue, mit weißer Spitze besetzte Kleid eines kleinen Mädchens. Die Vorderseite wurde durch große Schnitte verunstaltet.\n• Die Traumschlinge bewegt sich nicht mehr.\n• Die Traumschlinge bleibt 8 Sek. lang aktiv.\n• Es kann immer nur 1 Traumschlinge gleichzeitig platziert werden."
+        },
+        "es": {
+          "name": "Vestido azul",
+          "description": "Un vestido de niña azul claro con lazo blanco cuya pechera presenta múltiples cortes.\n• La trampa de los sueños ya no se mueve.\n• La trampa de los sueños permanece activa durante 8 segundos.\n• Solo se puede colocar 1 trampa de los sueños."
+        },
+        "ja": {
+          "name": "青いドレス",
+          "description": "ある少女の、白いレースが付いた淡い青色のドレス。前面が大きく引き裂かれ、台無しになっている。\n• ドリームスネアが移動しなくなる\n• ドリームスネアが8秒間有効になる\n• 設置できるドリームスネアは一度に1つ"
+        },
+        "pl": {
+          "name": "Błękitna Sukienka",
+          "description": "Jasnobłękitna sukienka z białą koronką; należała do małej dziewczynki. Przód sukienki jest zniszczony przez duże nacięcia.\n• Senne Sidła pozostają aktywne przez 8 s.\n• Tylko 1 Senne Sidła można rozstawić jednocześnie."
+        }
+      }
+    },
+    {
+      "id": 175,
+      "name": "Kid's Drawing",
+      "killer_id": 10,
+      "description": "An unattributed drawing clearly crafted by a young child.\n• Increases the amount of Sleep gained from attacking with Dream Abilities by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kidsDrawing.png?2a5128",
+      "icon_local_path": "icons/addons/kids_drawing.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kinderzeichnung",
+          "description": "Eine Zeichnung ohne Namensangabe, die aber eindeutig von einem kleinen Kind stammt.\n• Erhöht die Menge an Schlaf, die durch den Angriff mit Traumfähigkeiten gewonnen wird, um 10 %."
+        },
+        "es": {
+          "name": "Dibujo de niño",
+          "description": "Un dibujo anónimo, sin duda garabateado por un niño pequeño.\n• Aumenta la cantidad de sueño obtenido al atacar con habilidades de sueño un 10 %."
+        },
+        "ja": {
+          "name": "子供の絵",
+          "description": "明らかに幼い子供が描いた作者不明の絵。\n• ドリームアビリティの攻撃が当たった際に増える睡眠メーターの量が10%増加する"
+        },
+        "pl": {
+          "name": "Rysunek Dziecka",
+          "description": "Niepodpisany rysunek wykonany bez wątpienia przez małe dziecko.\n• Zwiększa ilość Snu przyznawaną za atak sennymi umiejętnościami o 10%.."
+        }
+      }
+    },
+    {
+      "id": 176,
+      "name": "Nancy's Sketch",
+      "killer_id": 10,
+      "description": "A crude and bold sketch made with fusain, signed Nancy H.\n• Decreases Sleep immunity after a Survivor uses an alarm clock by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_nancysSketch.png?6c238c",
+      "icon_local_path": "icons/addons/nancys_sketch.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Nancys Skizze",
+          "description": "Eine schnelle, grobe Skizze, gezeichnet mit einem Holzkohlestift und von Nancy H. signiert.\n• Verringert die Schlafimmunität, nachdem ein Überlebender einen Wecker verwendet hat, um 20 %."
+        },
+        "es": {
+          "name": "Boceto de Nancy",
+          "description": "Un boceto tosco e intenso a carboncillo firmado por Nancy H.\n• Reduce la inmunidad al sueño después de que un superviviente use un despertador un 20 %."
+        },
+        "ja": {
+          "name": "ナンシーのスケッチ",
+          "description": "フゼインで描かれたラフで大胆なスケッチ画。ナンシー・Hの署名が入っている。\n• 目覚まし時計を使ったあと生存者が眠りに落ちなくなる時間が20%減少する"
+        },
+        "pl": {
+          "name": "Szkic Nancy",
+          "description": "Surowy i śmiały szkic wykonany węglem, podpisany „Nancy H.”.\n• Skraca czas odporności na Sen po użyciu budzika przez ocalałego o 20%."
+        }
+      }
+    },
+    {
+      "id": 177,
+      "name": "Nancy's Masterpiece",
+      "killer_id": 10,
+      "description": "A painting of a character, made by Nancy Holbrook at Badham and kept as a treasured memory.\n• Decreases Dream Projection's total cooldown by 10% after hitting a Survivor with a Dream Snare or Dream Pallet.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_nancysMasterpiece.png?8668bb",
+      "icon_local_path": "icons/addons/nancys_masterpiece.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Nancys Meisterwerk",
+          "description": "Die Zeichnung einer Person, die Nancy Holbrook in der Badham-Vorschule angefertigt und als liebgewonnene Erinnerung verwahrt hat.\n• Verringert die Gesamtabklingzeit der Traumprojektion um 10 %, nachdem ein Überlebender mit einer Traumschlinge oder einer Traumpalette getroffen wurde."
+        },
+        "es": {
+          "name": "Obra maestra de Nancy",
+          "description": "Un dibujo de alguien, realizado por Nancy Holbrook en Badham, y conservado como un valioso recuerdo.\n• Reduce el tiempo de recarga total de Proyección de los sueños un 10 % tras golpear a un superviviente con una trampa de los sueños o un palé de los sueños."
+        },
+        "ja": {
+          "name": "ナンシーの最高傑作",
+          "description": "思い出として大切に保管されている、ナンシー・ホルブルックがバダム幼稚園で描いた肖像画。\n• ドリームスネアまたはドリームパレットを生存者に当てるとドリームプロジェクションのクールダウンが全体の10%進む"
+        },
+        "pl": {
+          "name": "Arcydzieło Nancy",
+          "description": "Malunek przedstawiający postać, wykonany przez Nancy Holbrook w Badham i przechowywany jako cenna pamiątka.\n• Skraca czas odnawiania Projekcji Snu o 10% po trafieniu ocalałego za pomocą Sennych Sideł lub Sennej Palety."
+        }
+      }
+    },
+    {
+      "id": 178,
+      "name": "Class Photo",
+      "killer_id": 10,
+      "description": "A large photograph taken at Badham preschool showing the cheerful class of 94-95.\n• Survivors in the Dream World are revealed with Killer Instinct while opening Exit Gates.\n• Grants the ability to teleport to Exit Gates.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_classPhoto.png?2cde87",
+      "icon_local_path": "icons/addons/class_photo.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Klassenfoto",
+          "description": "Ein großes Foto, das in der Badham-Vorschule aufgenommen wurde und den fröhlichen Jahrgang ’94/’95 zeigt.\n• Überlebende in der Traumwelt werden vom Killerinstinkt angezeigt, während sie Ausgangstore öffnen.\n• Gewährt die Fähigkeit, zu Ausgangstoren zu teleportieren."
+        },
+        "es": {
+          "name": "Fotografía de clase",
+          "description": "Una gran fotografía tomada en la guardería Badham en la que aparece la sonriente clase del 94-95.\n• Los supervivientes en el mundo de los sueños se revelan con Instinto asesino al abrir las puertas de salida.\n• Otorga la capacidad de teletransportarse a las puertas de salida."
+        },
+        "ja": {
+          "name": "クラス写真",
+          "description": "バダム幼稚園の賑やかな94～95年組が映っている大きな写真。\n• ドリームワールドにいる生存者が脱出ゲートを開けている間、殺人鬼の本能で探知できる\n• 脱出ゲートにテレポートする能力を得る"
+        },
+        "pl": {
+          "name": "Zdjęcie Klasowe",
+          "description": "Duża fotografia zrobiona w przedszkolu w Badham, przedstawiająca pogodną klasę z rocznika 94–95.\n• Ocalali w Świecie Snu są ujawniani przez Instynkt Zabójcy podczas otwierania bram wyjściowych.\n• Umożliwia teleportację do bram wyjściowych."
+        }
+      }
+    },
+    {
+      "id": 179,
+      "name": "Pill Bottle",
+      "killer_id": 10,
+      "description": "An empty pill bottle which once contained a medicine called Zoneral.\n• Each time a Survivor wakes up, their Sleep Meter fills 10% faster, up to a maximum of 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pillBottle.png?ac17af",
+      "icon_local_path": "icons/addons/pill_bottle.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Pillenflasche",
+          "description": "Eine leere Pillendose, die zuvor ein Medikament namens Zoneral beinhaltete.\n• Immer wenn ein Überlebender aufwacht, wird seine Schlafanzeige um 10 % schneller gefüllt, bis zu maximal 50 %."
+        },
+        "es": {
+          "name": "Frasco de pastillas",
+          "description": "Un frasco vacío de un medicamento llamado Zoneral.\n• Cada vez que se despierta un superviviente, su medidor de sueño se llena un 10 % más rápido, hasta un máximo del 50 %."
+        },
+        "ja": {
+          "name": "錠剤の容器",
+          "description": "かつてゾネラルという錠剤が入っていた空の容器。\n• 生存者が目覚めるたびに睡眠メーターが貯まる速度が10%上昇する（最大50%まで）"
+        },
+        "pl": {
+          "name": "Pojemnik na pigułki",
+          "description": "Pusty pojemnik na pigułki, który zawierał kiedyś lek o nazwie Zoneral.\n• Za każdym razem, gdy ocalały się budzi, jego miernik snu wypełnia się 10% szybciej, do maksymalnie 50%."
+        }
+      }
+    },
+    {
+      "id": 180,
+      "name": "Red Paint Brush",
+      "killer_id": 10,
+      "description": "A large paint brush, wet with crimson paint.\n• Reveals the aura of Survivors in the Dream World when they are further than 32 meters away.\n• Increases each Survivor's Sleep Meter by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_redPaintBrush.png?364a44",
+      "icon_local_path": "icons/addons/red_paint_brush.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Roter Farbpinsel",
+          "description": "Ein großer Farbpinsel, der vor blutroter Farbe trieft.\n• Zeigt die Auren von Überlebenden in der Traumwelt an, wenn sie weiter als 32 Meter entfernt sind.\n• Erhöht die Schlafanzeige jedes Überlebenden um 50 %."
+        },
+        "es": {
+          "name": "Brocha con pintura roja",
+          "description": "Una brocha gruesa empapada en pintura carmesí.\n• Revela el aura de los supervivientes en el mundo de los sueños cuando estén a más de 32 metros de distancia.\n• Aumenta el medidor de sueño de cada superviviente un 50 %."
+        },
+        "ja": {
+          "name": "赤いペイントブラシ",
+          "description": "赤い塗料で濡れている大きな赤いペイントブラシ。\n• ドリームワールドにいる生存者が32メートル以上離れると、その生存者のオーラが視える\n• 各生存者の睡眠メーターが満タンになるまでの長さが50%増加する"
+        },
+        "pl": {
+          "name": "Pędzel zamoczony szkarłatną farbą",
+          "description": "Duży pędzel zamoczony w szkarłatnej farbie.\n• Ujawnia aurę ocalałych w Świecie Snu, gdy znajdują się dalej niż 32 m.\n• Zwiększa miernik snu każdego ocalałego o 50%."
+        }
+      }
+    },
+    {
+      "id": 181,
+      "name": "Black Box",
+      "killer_id": 10,
+      "description": "A black cardboard box filled with photographs.\n• When an Exit Gate is opened, it is blocked for Sleeping Survivors for 15 seconds.\n• This lingers for 3 seconds after they are woken up by any means.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blackBox.png?ac189c",
+      "icon_local_path": "icons/addons/black_box.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schwarzer Karton",
+          "description": "Ein schwarzer Karton voller Fotos.\n• Wenn ein Ausgangstor geöffnet wird, ist es für schlafende Überlebende für 15 Sekunden gesperrt.\n• Dieser Effekt bleibt noch 3 Sek. lang bestehen, nachdem sie auf irgendeine Weise geweckt wurden."
+        },
+        "es": {
+          "name": "Caja negra",
+          "description": "Una caja de cartón negra llena de fotografías.\n• Cuando se abre una puerta de salida, estará bloqueada para los supervivientes dormidos durante 15 segundos.\n• Esto se mantiene durante 3 segundos después de que se despierten del modo que sea."
+        },
+        "ja": {
+          "name": "黒い箱",
+          "description": "写真がたくさん詰まった黒い段ボール箱。\n• 脱出ゲートが開かれたとき、眠っている生存者に対してゲートが15秒間ブロックされる\n• 効果は生存者が何らかの手段で起きた後も3秒間続く"
+        },
+        "pl": {
+          "name": "Czarne Pudełko",
+          "description": "Czarny karton wypełniony fotografiami.\n• Gdy brama wyjściowa zostaje otwarta, jest zablokowana dla śpiących ocalałych przez 15 s.\n• Efekt ten utrzymuje się jeszcze przez 3 s, gdy ocalały zostanie obudzony w jakikolwiek sposób."
+        }
+      }
+    },
+    {
+      "id": 182,
+      "name": "Swing Chains",
+      "killer_id": 10,
+      "description": "Rusty but sturdy chains used to securely attach a swing seat.\n• After using Dream Projection, block all window vaults within 16 meters for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_swingChains.png?65e17b",
+      "icon_local_path": "icons/addons/swing_chains.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schaukelketten",
+          "description": "Rostige, aber stabile Ketten, die zum sicheren Festmachen einer Schaukel benutzt werden.\n• Nach der Verwendung von Traumprojektion werden alle Fenstersprünge in einem Umkreis von 16 Metern für 6 Sek. blockiert."
+        },
+        "es": {
+          "name": "Cadenas de columpio",
+          "description": "Cadenas oxidadas, pero fuertes, que servían para sujetar un columpio.\n• Tras utilizar Proyección de los sueños, bloquea todas las ventanas en un radio de 16 metros durante 6 segundos."
+        },
+        "ja": {
+          "name": "スイングチェーン",
+          "description": "ブランコの椅子をしっかり固定するために使われる、錆びているが丈夫なチェーン。\n• ドリームプロジェクションを使用したあと16メートル以内の全ての窓枠が6秒間ブロックされる"
+        },
+        "pl": {
+          "name": "Łańcuch od huśtawki",
+          "description": "Zardzewiały, lecz mocny łańcuch służący do bezpiecznego montowania huśtawki.\n• Po użyciu Projekcji Snu wszystkie okna w promieniu 16 m zostają zablokowane na 6 s."
+        }
+      }
+    },
+    {
+      "id": 183,
+      "name": "Outdoor Rope",
+      "killer_id": 10,
+      "description": "Sturdy outdoor rope, handy to tie up anything.\nWhile Survivors are in the Dream World:\n• Increases the speed at which the Dream Snare travels by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_outdoorRope.png?5cd9c6",
+      "icon_local_path": "icons/addons/outdoor_rope.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Outdoor-Seil",
+          "description": "Robustes Seil für draußen, praktisch, um alles festzubinden.\nSolange Überlebende in der Traumwelt sind:\n• Erhöht die Bewegungsgeschwindigkeit der Traumschlinge um 15 %."
+        },
+        "es": {
+          "name": "Cuerda para exteriores",
+          "description": "Una robusta cuerda para exteriores, útil para atar cualquier cosa.\nMientras los supervivientes están en el mundo de los sueños:\n• Aumenta la velocidad a la se mueve la trampa de los sueños un 15 %."
+        },
+        "ja": {
+          "name": "屋外用ロープ",
+          "description": "丈夫な屋外用ロープ。色んなものを縛るのに役立つ。\n• ドリームスネアの移動する速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Lina",
+          "description": "Wytrzymała lina – można nią związać wszystko.\nGdy ocalali są w Świecie Snu:\n• Zwiększa prędkość przemieszczania się Sennych Sideł o 15%."
+        }
+      }
+    },
+    {
+      "id": 808,
+      "name": "Jump Rope (The Nightmare)",
+      "killer_id": 10,
+      "description": "A long double dutch jump rope, stained with many years of use.\n• Increases duration of Hindered when a Survivor is hit with a Dream Snare by 11%.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jumpRopeDreamDemon.png?3c3857",
+      "icon_local_path": "icons/addons/jump_rope_(the_nightmare).webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Springseil",
+          "description": "Ein langes Springseil, dem man den jahrelangen Gebrauch ansieht.\n• Verlängert die Dauer des Statuseffekts Eingeschränkt, wenn ein Überlebender von einer Traumschlinge getroffen wird, um 11 %.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "en": {
+          "name": "Jump Rope"
+        },
+        "es": {
+          "name": "Comba",
+          "description": "Una larga comba doble, manchada por años de uso.\n• Aumenta la duración de Entorpecimiento de un superviviente golpeado por una trampa de los sueños un 11 %.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "縄跳び用の縄",
+          "description": "ダブルダッチ縄跳び用の縄。長年の使用で汚れている。\n• ドリームスネアが生存者に当たった際の妨害の持続時間が11%増加する\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Skakanka",
+          "description": "Długa i wysłużona przez wiele lat podwójna skakanka.\n• Wydłuża czas trwania efektu Skrępowany o 11%, gdy ocalały zostanie trafiony przez Senne Sidła.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    }
+  ]
+}

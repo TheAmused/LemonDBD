@@ -1,0 +1,560 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 279,
+      "name": "Walleye's Matchbook",
+      "killer_id": 16,
+      "description": "A sheet of matches from Walleye's, a small bar in Northern Roseville. A victim’s phone number is scribbled in blue. One of the incriminating pieces of evidence found.\n• Decreases Night Shroud recovery time by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_walleyesMatchbook.png?da2b5a",
+      "icon_local_path": "icons/addons/walleyes_matchbook.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Walleyes-Streichholzbriefchen",
+          "description": "Ein Briefchen mit Streichhölzern von Walleyes, einer kleinen Bar in Nord-Roseville. Die Telefonnummer eines Opfers wurde in Blau darauf notiert. Einer der belastenden Beweise, die gefunden wurden.\n• Verringert die Erholungsdauer nach „Mantel der Nacht“ um 3 Sekunden."
+        },
+        "es": {
+          "name": "Caja de cerillas del Walleye's",
+          "description": "Una caja de cerillas del Walleye's, un bar pequeñito del norte de Roseville. Tiene apuntado en color azul el número de teléfono de una víctima. Una de las pruebas incriminatorias que se encontraron.\n• Reduce el tiempo de recuperación de Velo de la noche en 2 segundos."
+        },
+        "ja": {
+          "name": "ウォールアイの紙マッチ",
+          "description": "北ローズビルにある小さなバー、「ウォールアイ」の紙マッチ。青いインクで犠牲者の電話番号が殴り書きしてある。発見された有力な証拠のひとつ。\n• 闇の包容の回復時間が2秒減少する"
+        },
+        "pl": {
+          "name": "Zapałki z Walleye's",
+          "description": "Pudełko zapałek z Walleye's – małego baru w północnym Roseville. Na niebiesko zapisano na nim numer telefonu ofiary. Jeden z odnalezionych dowodów.\n• Skraca prędkość ładowania Nocnego Całunu o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 280,
+      "name": "Driver's License",
+      "killer_id": 16,
+      "description": "A driver’s license revealing Olsen’s true identity: Danny Johnson.\n• When Marking a Survivor repairing a Generator, the Generator explodes and loses 20% progress.\n• The affected Generator becomes blocked for 15 seconds.\n• When Marking multiple Survivors at the same time, the loss of progress only applies once.\n\"\"They all want to know who The Ghost Face is. But what they should ask is, who’s next.\" -The Ghost Face\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_driversLicense.png?9c458f",
+      "icon_local_path": "icons/addons/drivers_license.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Führerschein",
+          "description": "Ein Führerschein, der Olsens wahre Identität enthüllt: Danny Johnson.\n• Wenn ein Überlebender markiert wird, der einen Generator repariert, explodiert der Generator und verliert 20 % Fortschritt.\n• Der betroffene Generator wird für 15 Sek. blockiert.\n• Wenn du mehrere Überlebende gleichzeitig markierst, gilt der Fortschrittsverlust nur einmal.\n\"„Alle wollen wissen, wer Ghost Face ist. Dabei sollten sie sich lieber fragen, wer als Nächstes dran ist.“ – Ghost Face\""
+        },
+        "es": {
+          "name": "Carnet de conducir",
+          "description": "Un carnet de conducir que muestra la verdadera identidad de Olsen: Danny Johnson.\n• Al marcar a un superviviente que esté reparando un generador, este explota y el personaje pierde un 20 % de progreso.\n• El generador afectado quedará bloqueado durante 15 segundos.\n• Cuando se marquen a varios supervivientes al mismo tiempo, solo se perderá progreso una vez.\n\"\"Todos quieren saber quién es Ghost Face, cuando lo que deberían preguntarse realmente es... quién será el siguiente\". (Ghost Face)\""
+        },
+        "ja": {
+          "name": "運転免許証",
+          "description": "オルセンの本名がダニー・ジョンソンであることを証明する運転免許証。\n• 発電機を修理中の生存者をマーキングすると、その発電機が爆発して20%の進行度が減少する\n• 爆発した発電機は15秒ブロックされる\n• 同時に複数の生存者をマーキングした場合でも、進行度の減少は一度のみ適用される\n\"「誰もがゴーストフェイスの正体を知りたがっているが、本当に聞くべきなのは『次は誰の番か』だ」 - ゴーストフェイス\""
+        },
+        "pl": {
+          "name": "Prawo jazdy",
+          "description": "Prawo jazdy ujawniające prawdziwą tożsamość Olsena: Danny Johnson.\n• Po oznaczeniu ocalałego naprawiającego generator urządzenie wybucha i traci 20% postępu naprawy.\n• Generator zostaje zablokowany na 15 sekund.\n• W przypadku oznaczenia wielu ocalałych w tym samym czasie utrata postępu następuję tylko raz.\n\"„Wszyscy chcą wiedzieć, kim jest Ghost Face. Powinni jednak pytać, kto następny”. – Ghost Face\""
+        }
+      }
+    },
+    {
+      "id": 281,
+      "name": "Olsen's Address Book",
+      "killer_id": 16,
+      "description": "Filled in blunt, blue crabbed writing. All the Roseville murder victims are listed there, along with their phone number and address.\n• Survivors that are Marked reveal their auras for 5 seconds when performing rushed actions.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_olsensAddressBook.png?59a188",
+      "icon_local_path": "icons/addons/olsens_address_book.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Olsens Adressbuch",
+          "description": "Voller unleserlichem Gekritzel in Blau. Alle Mordopfer aus Roseville sind hier samt ihren Telefonnummern und Adressen aufgelistet.\n• Markierte Überlebende enthüllen ihre Auren für 5 Sekunden, wenn sie übereilte Aktionen ausführen."
+        },
+        "es": {
+          "name": "Agenda de contactos de Olsen",
+          "description": "Está escrita con tinta azul clara y difícil de descifrar. En ella aparecen todas las víctimas de asesinato de Roseville, junto con sus teléfonos y direcciones.\n• Los supervivientes marcados revelan sus auras durante 5 segundos al realizar acciones rápidas."
+        },
+        "ja": {
+          "name": "オルセンのアドレス帳",
+          "description": "不鮮明な汚い筆跡で書かれている。ローズビル殺人事件の犠牲者全員の電話番号と住所がリスト化されている。\n• マーキングされた生存者が高速アクションを行うと、5秒間オーラが表示される"
+        },
+        "pl": {
+          "name": "Książka adresowa Olsena",
+          "description": "Zapełniona rozmazanym, niewyraźnym pismem. Wymienione są w niej wszystkie ofiary morderstw w Roseville, a także ich numery telefonów i adresy.\n• Oznaczeni ocaleli ujawniają swoje aury na 5 sekund, gdy wykonują szybkie akcje."
+        }
+      }
+    },
+    {
+      "id": 282,
+      "name": "Cheap Cologne",
+      "killer_id": 16,
+      "description": "Dollar store cologne with a pungent scent of rubbing alcohol. Worn by Ghost Face to make his presence known. Reserved for impromptu visits.\n• Increases Marked duration by 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cheapCologne.png?c67c58",
+      "icon_local_path": "icons/addons/cheap_cologne.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Billigparfüm",
+          "description": "Ein Billigparfüm mit dem stechenden Geruch von Reinigungsalkohol. Ghost Face trägt es, um auf seine Anwesenheit aufmerksam zu machen. Reserviert für spontane Besuche.\n• Erhöht die Markierungsdauer um 10 Sekunden."
+        },
+        "es": {
+          "name": "Colonia barata",
+          "description": "Colonia de bazar que apesta a alcohol. Ghost Face se la pone para hacerse notar. Reservada para visitas improvisadas.\n• Aumenta la duración de Marcado en 10 segundos."
+        },
+        "ja": {
+          "name": "安物コロン",
+          "description": "1ドルショップで買ったコロン。ツンとした消毒用アルコールの刺激臭がする。自分の存在をアピールするためにゴーストフェイスが使う、突然の訪問のための備え。\n• マーキングによる無防備状態の継続時間が10秒増加する"
+        },
+        "pl": {
+          "name": "Tania woda kolońska",
+          "description": "Woda kolońska za dolara, o ostrym zapachu alkoholu do dezynfekcji. Stosowana przez Ghost Face'a do zaznaczania swojej obecności. Zarezerwowana na spontaniczne wizyty.\n• Skraca czas trwania oznaczenia o 10 sekund."
+        }
+      }
+    },
+    {
+      "id": 283,
+      "name": "Telephoto Lens",
+      "killer_id": 16,
+      "description": "A manual focus lens to take pictures from afar without being noticed.\n• A Survivor that reveals The Ghost Face is inflicted with Oblivious for 60 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_telephotoLens.png?f36085",
+      "icon_local_path": "icons/addons/telephoto_lens.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Teleobjektiv",
+          "description": "Manuelles Objektiv, mit dem man aus großer Entfernung unbemerkt Fotos schießen kann.\n• Ein Überlebender, der Ghost Face enthüllt, erleidet für 60 Sekunden den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Teleobjetivo",
+          "description": "Un objetivo de enfoque manual para hacer fotos sin que nadie se dé cuenta.\n• Un superviviente que revele a Ghost Face sufre Inconsciencia durante 60 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "望遠レンズ",
+          "description": "マニュアルフォーカスのレンズ。気付かれずに遠くから写真撮影ができる。\n• ゴーストフェイスを発見した生存者は60秒間無感覚状態になる\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Obiektyw teleskopowy",
+          "description": "Obiektyw z ręcznym ustawianiem ostrości pozwalający na dyskretne robienie zdjęć z daleka.\n• Ocalały, który ujawni Ghost Face'a, otrzymuje trwający 60 sekund efekt Nieświadomy.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 284,
+      "name": "Knife Belt Clip",
+      "killer_id": 16,
+      "description": "Perfect belt clip to scout carry your blade discreetly. No one knows what you’re planning to do tonight.\n• Reduces the Terror Radius by 12 meters while crouching.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_knifeBeltClip.png?75e009",
+      "icon_local_path": "icons/addons/knife_belt_clip.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gürtelhalterung für Messer",
+          "description": "Eine perfekte Gürtelhalterung, um deine Klinge dezent mitzuführen. Niemand ahnt, was du heute Abend vorhast.\n• Verringert den Terrorradius in geduckter Haltung um 12 Meter."
+        },
+        "es": {
+          "name": "Clip de cinturón para cuchillo",
+          "description": "Un clip de cinturón perfecto para explorar y llevar el cuchillo con discreción. Nadie sabe lo que pretendes hacer esta noche.\n• Reduce el radio de terror en 12 metros al agacharse."
+        },
+        "ja": {
+          "name": "ナイフ用ベルトクリップ",
+          "description": "目立たないようにナイフを腰に装備する際に最適なベルトクリップ。今夜の計画は誰にも知られることはない。\n• しゃがみ状態の時、脅威範囲が12メートル減少する"
+        },
+        "pl": {
+          "name": "Klamra do paska z nożem",
+          "description": "Klamra do paska idealna do dyskretnego przenoszenia noża. Nikt nie wie, jakie są twoje plany na wieczór.\n• Zmniejsza zasięg terroru o 12 metrów, gdy kucasz."
+        }
+      }
+    },
+    {
+      "id": 285,
+      "name": "Marked Map",
+      "killer_id": 16,
+      "description": "The annotated map of Northern Roseville, Florida. Each X represents a victim of The Ghost Face. Mapping out your targets allows you to roam the streets undetected.\n• Increases duration of Killer Instinct after being revealed by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_markedMap.png?9a0c1f",
+      "icon_local_path": "icons/addons/marked_map.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Karte mit Markierungen",
+          "description": "Eine Karte von Nord-Roseville, Florida, mit Markierungen. Jedes X steht für ein Opfer von Ghost Face. Indem du deine Ziele planst, kannst du dich unerkannt durch die Straßen bewegen.\n• Erhöht die Dauer von Killerinstinkt nach der Enthüllung um 2 Sekunden."
+        },
+        "es": {
+          "name": "Mapa con anotaciones",
+          "description": "El mapa con anotaciones del norte de Roseville, Florida. Cada X corresponde a una víctima de Ghost Face. Marcar en él a tus objetivos te permite deambular por las calles sin que te detecten.\n• Aumenta la duración de Instinto asesino después de que se muestre tu ubicación en 2 segundos."
+        },
+        "ja": {
+          "name": "印をつけた地図",
+          "description": "フロリダ州、北ローズビルの注釈つきの地図。Xはゴーストフェイスの犠牲者を表している。標的を地図に正確に示すことで、察知されることなく街を徘徊できるようになる。\n• 発見された後に発動する殺人鬼の本能の持続時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Oznaczona mapa",
+          "description": "Opisana mapa północnego Roseville na Florydzie. Każdy „X” oznacza ofiarę Ghost Face'a. Oznaczanie celów na mapie pozwala poruszać się po ulicach bez ryzyka wykrycia.\n• Wydłuża czas trwania Instynktu Zabójcy po ujawnieniu o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 286,
+      "name": "Lasting Perfume",
+      "killer_id": 16,
+      "description": "An overpowering musky fragrance worn by Ghost Face to announce his presence. Reserved for victims he planned to write about.\n• Survivors that are on a hook take 3 seconds to reveal The Ghost Face.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lastingPerfume.png?5a21e2",
+      "icon_local_path": "icons/addons/lasting_perfume.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Lang anhaltendes Parfüm",
+          "description": "Ein überwältigender Moschusduft, den Ghost Face trägt, um seine Anwesenheit zu verkünden. Für Opfer reserviert, über die er schreiben wollte.\n• Überlebende an einem Haken brauchen 3 Sekunden,, um Ghost Face zu enthüllen."
+        },
+        "es": {
+          "name": "Perfume duradero",
+          "description": "Una penetrante fragancia almizcleña que Ghost Face se ponía para advertir de su presencia. La reservaba para las víctimas sobre las que quería escribir.\n• Los supervivientes colgados en un gancho tardan 3 segundos en revelar a Ghost Face."
+        },
+        "ja": {
+          "name": "持続性のある香水",
+          "description": "ゴーストフェイスが自己の存在をアピールするための、圧倒的な存在感を放つ麝香のフレグランス。記事にするつもりだった犠牲者のために用意しておいたもの。\n• フックに吊るされた生存者がゴーストフェイスを発見するのに3秒かかる"
+        },
+        "pl": {
+          "name": "Trwałe perfumy",
+          "description": "Zniewalający zapach piżma noszony przez Ghost Face'a w celu podkreślenia jego obecności. Zarezerwowany dla ofiar, o których planował napisać.\n• Ujawnienie Ghost Face'a przez ocalałych zawieszonych na haku wymaga 3 sekund."
+        }
+      }
+    },
+    {
+      "id": 287,
+      "name": "Cinch Straps",
+      "killer_id": 16,
+      "description": "Black straps that keep everything in place while on the prowl.\n• Night Shroud remains active after a failed basic attack.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cinchStraps.png?71f2e4",
+      "icon_local_path": "icons/addons/cinch_straps.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Sattelgurte",
+          "description": "Schwarze Gurte, die auf der Pirsch alles an Ort und Stelle halten.\n• Mantel der Nacht bleibt nach einem fehlgeschlagenen Grundangriff aktiv."
+        },
+        "es": {
+          "name": "Correas de sujeción",
+          "description": "Correas negras que lo mantienen todo en su sitio mientras andas al acecho.\n• Velo de la noche permanece activo tras un ataque básico fallido."
+        },
+        "ja": {
+          "name": "シンチストラップ",
+          "description": "うろついている時でも物をしっかりと固定できる黒いストラップ。\n• 通常攻撃に失敗した時でも闇の包容が発動したままになる"
+        },
+        "pl": {
+          "name": "Paski zatrzaskowe",
+          "description": "Czarne pasy, które utrzymują wszystko na miejscu podczas skradania się.\n• Nocny Całun pozostaje aktywny po nieudanym podstawowym ataku."
+        }
+      }
+    },
+    {
+      "id": 288,
+      "name": "Chewed Pen",
+      "killer_id": 16,
+      "description": "Blue pen with a chewed cap that holds traces of Danny’s DNA. Incriminating evidence that was never found.\n• Survivors that are in the dying state take 3 seconds to reveal The Ghost Face.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chewedPen.png?b7592e",
+      "icon_local_path": "icons/addons/chewed_pen.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Angekauter Stift",
+          "description": "Ein blauer Stift mit angekauter Kappe, die Spuren von Dannys DNA trägt. Ein belastender Beweis, der niemals gefunden wurde.\n• Überlebende im Todesstatus brauchen 3 Sekunden, um Ghost Face zu enthüllen."
+        },
+        "es": {
+          "name": "Bolígrafo mordisqueado",
+          "description": "Bolígrafo azul cuya capucha mordisqueada contiene restos de ADN de Danny. Es una prueba incriminatoria que no se llegó a encontrar nunca.\n• Los supervivientes en estado agonizante tardan 3 segundos en revelar a Ghost Face."
+        },
+        "ja": {
+          "name": "噛み跡のついたペン",
+          "description": "キャップに噛んだ跡のある青いペン。ダニーのDNAの痕跡が残っている。発見されることのなかった、有罪を示す証拠。\n• 瀕死状態の生存者がゴーストフェイスを発見するのに3秒かかる"
+        },
+        "pl": {
+          "name": "Obgryziony długopis",
+          "description": "Niebieski długopis z pogryzioną nakrętką pokryty DNA Danny'ego. Obciążający dowód, który nigdy nie został odnaleziony.\n• Ujawnienie Ghost Face'a przez ocalałych w stanie agonii wymaga 3 sekund."
+        }
+      }
+    },
+    {
+      "id": 289,
+      "name": "Night Vision Monocular",
+      "killer_id": 16,
+      "description": "Night vision lens enabling sharp photos even when shrouded in darkness. Ideal for discreet, impromptu visits late at night.\n• A Survivor that reveals The Ghost Face is inflicted with Exhausted for 10 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_nightVisionMonocular.png?fb469a",
+      "icon_local_path": "icons/addons/night_vision_monocular.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Nachtsichtmonokular",
+          "description": "Ein Nachtsichtobjektiv, das auch in der Dunkelheit noch scharfe Fotos ermöglicht. Ideal für diskrete Spontanbesuche am späten Abend.\n• Ein Überlebender, der Ghost Face enthüllt, wird 10 Sekunden lang mit Erschöpfung belegt.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Lente de visión nocturna",
+          "description": "Lente de visión nocturna que permite hacer fotos nítidas incluso en la más absoluta oscuridad. Ideal para visitas inesperadas y discretas a altas horas de la madrugada.\n• Un superviviente que revele a Ghost Face sufre Agotamiento durante 10 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "単眼暗視スコープ",
+          "description": "暗闇でも鮮明な写真が撮影可能な暗視用レンズ。夜間、目立たないようにアポなし訪問をする際に最適。\n• ゴーストフェイスを発見した生存者は10秒間疲労状態になる\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Monokular noktowizyjny",
+          "description": "Soczewka noktowizyjna umożliwiająca robienie wyraźnych zdjęć nawet w ciemności. Idealna do dyskretnych i spontanicznych nocnych wizyt.\n• Ocalały, który ujawni Ghost Face’a, otrzymuje efekt Wyczerpany na 10 sekund.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 290,
+      "name": "Drop-Leg Knife Sheath",
+      "killer_id": 16,
+      "description": "Sheath allowing a full motion range: ideal to inflict quick and powerful wounds while moving freely. Stolen from a patrol officer the night Danny left Philadelphia.\n• The Ghost Face gains 10% movement speed for 5 seconds after Marking a Survivor.\n\"“Gotta get ready like a scout– without the stupid patches. What I get is much better.” -The Ghost Face\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_drop-LegKnifeSheath.png?a73363",
+      "icon_local_path": "icons/addons/drop_leg_knife_sheath.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Beinmesserscheide",
+          "description": "Ein Holster, das die Bewegungsfreiheit nicht einschränkt. Ideal, um schnelle und üble Wunden zuzufügen, während man sich frei bewegen kann. Wurde in der Nacht, in der Danny Philadelphia verließ, einem Streifenpolizisten gestohlen.\n• Ghost Face gewinnt für 5 Sekunden 10 % Bewegungsgeschwindigkeit, nachdem er einen Überlebenden markiert hat.\n\"„Bereit sein wie ein Pfadfinder – aber ohne die albernen Abzeichen. Was ich mir hole, ist viel besser.“ – Ghost Face\""
+        },
+        "es": {
+          "name": "Funda de cuchillo para pernera",
+          "description": "Funda que permite gozar de una gran movilidad, ideal para provocar heridas rápidas y profundas mientras te mueves con libertad. Robada a un agente de policía la noche en que Danny se marchó de Filadelfia.\n• Ghost Face gana un 10 % de velocidad de movimiento durante 5 segundos tras marcar a un superviviente.\n\"\"Tengo que prepararme como explorador, pero sin las ridículas condecoraciones. Lo que consigo es mucho mejor\". (Ghost Face)\""
+        },
+        "ja": {
+          "name": "ドロップレッグタイプのナイフシース",
+          "description": "動きを妨げないナイフ用ケース。自在な動きで素早く致命傷を与える際に適している。ダニーがフィラデルフィアを去った夜、巡回中の警官から盗んだもの。\n• ゴーストフェイスは生存者をマーキングした後5秒間、移動速度が10%上昇する\n\"「偵察兵のような覚悟が必要だ。くだらない記章なんてなくていい。僕が手に入れるのはもっといいものだ」- ゴーストフェイス\""
+        },
+        "pl": {
+          "name": "Etui na nóż przyczepiane do nogi",
+          "description": "Futerał umożliwiający pełny zakres ruchów, idealny do zadawania szybkich i mocnych ran podczas swobodnego poruszania się. Ukradziony policjantowi w nocy, kiedy Danny opuścił Filadelfię.\n• Po oznaczeniu ocalałego Ghost Face zyskuje 10% premii do prędkości ruchu na 5 sekund.\n\"„Trzeba przygotować się jak harcerz, ale bez tych głupich łat. Mam coś dużo lepszego”. – Ghost Face\""
+        }
+      }
+    },
+    {
+      "id": 291,
+      "name": "Outdoor Security Camera",
+      "killer_id": 16,
+      "description": "A small surveillance camera that filmed Ghost Face breaking into a house on Belleview Road in Northern Roseville. The camera was positioned at the perfect angle to catch a glimpse of Ghost Face without providing any real clues to the police.\n• The auras of all Survivors are revealed for 7 seconds when a Marked Survivor is put into the dying state.\n\"\"An image is worth a thousand words.” –The Ghost Face\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_outdoorSecurityCamera.png?35fbc5",
+      "icon_local_path": "icons/addons/outdoor_security_camera.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Outdoor-Überwachungskamera",
+          "description": "Eine kleine Überwachungskamera, mit der Ghost Face beim Einbruch in ein Haus in der Belleview Road in Nord-Roseville gefilmt wurde. Die Kamera war im perfekten Winkel angebracht, um einen Blick auf Ghost Face zu erhaschen, ohne der Polizei jedoch wirkliche Hinweise zu liefern.\n• Die Auren aller Überlebenden werden für 7 Sekunden enthüllt, wenn ein markierter Überlebender in den Todesstatus versetzt wird.\n\"„Ein Bild sagt mehr als tausend Worte.“ – Ghost Face\""
+        },
+        "es": {
+          "name": "Cámara de seguridad exterior",
+          "description": "Una pequeña cámara de vigilancia que grabó a Ghost Face entrando en una casa en Belleview Road, al norte de Roseville. La cámara estaba colocada en el ángulo perfecto para captar durante un instante a Ghost Face sin dejar pista alguna a la policía.\n• Se muestran las auras de todos los supervivientes durante 7 segundos cuando dejas agonizante a un superviviente marcado.\n\"\"Una imagen vale más que mil palabras\". (Ghost Face)\""
+        },
+        "ja": {
+          "name": "屋外用防犯カメラ",
+          "description": "小型の監視カメラ。ゴーストフェイスが北ローズビルのベルビュー通りにある住宅に侵入する様子が映っている。警察に証拠を残すことなくゴーストフェイスの姿が一瞬だけ映るよう、カメラは完璧なアングルで設置されていた。\n• マーキングによる無防備状態の生存者が瀕死状態になると、生存者全員のオーラが7秒間視える\n\"「映像には言葉の千倍の価値がある」–ゴーストフェイス\""
+        },
+        "pl": {
+          "name": "Zewnętrzna kamera bezpieczeństwa",
+          "description": "Mała kamera, która nagrała Ghost Face'a włamującego się do domu przy Belleview Road w północnym Roseville. Urządzenie było ustawione pod idealnym kątem, aby uchwycić Ghost Face'a bez dostarczania policji jakichkolwiek istotnych wskazówek.\n• Aury wszystkich ocalałych zostaną ujawnione na 7 sekund, kiedy oznaczony ocalały zostanie wprowadzony w stan agonii.\n\"„Jeden obraz jest wart więcej niż tysiąc słów”. – Ghost Face\""
+        }
+      }
+    },
+    {
+      "id": 292,
+      "name": "Leather Knife Sheath",
+      "killer_id": 16,
+      "description": "Quiet and flexible sheath to carry your blade. Movement is easier when things are fastened into place.\n• Increases crouched movement speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherKnifeSheath.png?dc1230",
+      "icon_local_path": "icons/addons/leather_knife_sheath.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Messerscheide aus Leder",
+          "description": "Eine leise und flexible Scheide für deine Klinge. Man kann sich leichter bewegen, wenn alles an Ort und Stelle fixiert ist.\n• Erhöht die Bewegungsgeschwindigkeit in geduckter Haltung um 10 %."
+        },
+        "es": {
+          "name": "Funda de cuero para cuchillo",
+          "description": "Una funda silenciosa y flexible para llevar el cuchillo. Es más fácil moverse cuando las cosas están sujetas en su sitio.\n• Aumenta la velocidad de movimiento al ir de cuclillas un 10 %."
+        },
+        "ja": {
+          "name": "革製ナイフシース",
+          "description": "目立たず柔軟性のあるナイフ用ケース。装備がしっかり固定されていると、動きやすさが向上する。\n• しゃがみ中の移動速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Skórzane etui na nóż",
+          "description": "Cichy i elastyczny futerał do przenoszenia noża. Łatwiej się poruszać, gdy wszystko jest przypięte w dobrym miejscu.\n• Zwiększa prędkość poruszania się podczas kucania o 10%."
+        }
+      }
+    },
+    {
+      "id": 293,
+      "name": "“Philly”",
+      "killer_id": 16,
+      "description": "Stolen camera from a victim of Olsen’s in Philadelphia, where he worked before. The film inside captured his last night in the city.\n• Decreases time required to Mark a Survivor by 10%.\n\"“Gotta love Philly: keeps giving and giving and I don’t wanna forget any of it.” –The Ghost Face\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_philly.png?5cd188",
+      "icon_local_path": "icons/addons/philly.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Philly“",
+          "description": "Kamera, die einem von Olsens Opfern in Philadelphia gestohlen wurde, wo er früher gearbeitet hat. Der Film darin hat seine letzte Nacht in der Stadt eingefangen.\n• Verringert die Zeit, die zum Markieren eines Überlebenden benötigt wird, um 10 %.\n\"„Philly muss man einfach lieben. Die Stadt gibt und gibt, und ich möchte nichts davon missen.“ – Ghost Face\""
+        },
+        "es": {
+          "name": "\"Filadelfia\"",
+          "description": "Una cámara robada a una víctima de Olsen en Filadelfia, donde solía trabajar. La cinta que contiene captó su última noche en la ciudad.\n• Reduce el tiempo que se tarda en marcar a un superviviente un 10 %.\n\"\"Es imposible que no te encante Filadelfia: siempre da más y más, y no quiero olvidarme de nada\". (Ghost Face)\""
+        },
+        "ja": {
+          "name": "「愛しのフィラデルフィア」",
+          "description": "以前働いていたフィラデルフィアで、オルセンの犠牲者から盗まれたカメラ。中に入っているフィルムには、その街でのオルセンの最後の夜が写っている。\n• 生存者をマーキングするために要する時間が10%減少する\n\"「フィラデルフィアは大好きだ。いつも様々な物を与えてくれる。何もかも大事な思い出だ」– ゴーストフェイス\""
+        },
+        "pl": {
+          "name": "„Philly”",
+          "description": "Kamera ukradziona jednej z ofiar Olsena w Filadelfii, gdzie wcześniej pracował. Znajdujące się na niej nagranie przedstawia jego ostatnią noc w mieście.\n• Skraca czas potrzebny na oznaczanie ocalałego o 10%.\n\"„Jak tu nie kochać Filadelfii: ciągle zapewnia nowe atrakcje, a ja nie chcę niczego zapomnieć”. – Ghost Face\""
+        }
+      }
+    },
+    {
+      "id": 294,
+      "name": "“Ghost Face Caught on Tape”",
+      "killer_id": 16,
+      "description": "Tape obtained by Olsen to write an article that terrorized Roseville.\n• Instantly recharges Night Shroud after a successful basic attack that puts a Survivor into the dying state.\n\"“In this footage, a dark figure is seen entering a house late at night in Northern Roseville, Florida. The police were called the next morning to report a murder in the area. Lock your doors: a killer is in our midst, roaming freely, like a Ghost in the night.” –The Roseville Gazette\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_caughtOnTape.png?e2ce41",
+      "icon_local_path": "icons/addons/ghost_face_caught_on_tape.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "„Ghost Face auf Video festgehalten“",
+          "description": "Die Videokassette, die Olsen besorgte, um einen Artikel zu schreiben, der Roseville in Angst und Schrecken versetzte.\n• Lädt Mantel der Nacht sofort wieder auf, nachdem ein erfolgreicher Grundangriff einen Überlebenden in den Todesstatus versetzt hat.\n\"„Dieses Bildmaterial zeigt eine dunkle Gestalt, die am späten Abend in Nord-Roseville, Florida, in ein Haus einbricht. Am folgenden Morgen wurde die Polizei zu einem Mord in dieser Gegend gerufen. Verschließen Sie Ihre Türen, denn unter uns ist ein Killer. Er läuft frei herum, wie ein Geist in der Nacht.“ – The Roseville Gazette\""
+        },
+        "es": {
+          "name": "\"Ghost Face capturado en vídeo\"",
+          "description": "Cinta que Olsen usó para escribir un artículo con el que sembrar el terror en Roseville.\n• Recarga al instante Velo de la noche tras un ataque básico que deje agonizante al superviviente.\n\"\"En este vídeo, se puede ver a una figura oscura colándose en una casa a altas horas de la madrugada en el norte de Roseville, Florida. Al día siguiente, la policía recibió una llamada para denunciar un asesinato en la zona. Cerrad bien las puertas: hay un asesino entre nosotros, campando a sus anchas, como un fantasma en la noche\". (La Roseville Gazette)\""
+        },
+        "ja": {
+          "name": "「ゴーストフェイス、カメラに捉えられる」",
+          "description": "ローズビルを震撼させた記事を書くためにオルセンが用意したテープ。\n• 生存者に通常攻撃を命中させて瀕死状態にした後、即座に闇の包容がチャージされる\n\"「この映像では、黒っぽい人影が深夜にフロリダの北ローズビルの住宅に侵入する場面が捉えられています。翌朝警察が呼ばれ、その地域での殺人事件を報じました。施錠を怠らないでください。殺人鬼は私たちのすぐ近くで、闇に潜む亡霊のように気ままに徘徊しています」– ローズビル・ガゼット\""
+        },
+        "pl": {
+          "name": "„Ghost Face na taśmie”",
+          "description": "Taśma nagrana przez Olsena na potrzeby artykułu, który zasiał strach w Roseville.\n• Natychmiastowo ładuje Nocny Całun po udanym podstawowym ataku, który wprowadzi ocalałego w stan agonii.\n\"„Na nagraniu widać ciemną postać wchodzącą do domu późną nocą w północnym Roseville na Florydzie. Policję wezwano następnego ranka, aby zgłosić morderstwo w okolicy. Zamknijcie drzwi na klucz: zabójca jest wśród was i porusza się swobodnie niczym duch w nocy”. – The Roseville Gazette\""
+        }
+      }
+    },
+    {
+      "id": 831,
+      "name": "Headline Cut-Outs",
+      "killer_id": 16,
+      "description": "Cutouts of articles covering unsolved murder cases from Utah to Pennsylvania. While Ghost Face only authored some of the headlines, he committed all the murders.\nCompiling your success makes you proud and boosts your confidence.\n• Increases movement speed while stalking by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_headlineCut-Outs.png?ce8d60",
+      "icon_local_path": "icons/addons/headline_cut_outs.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ausgeschnittene Schlagzeilen",
+          "description": "Ausgeschnittene Schlagzeilen über ungelöste Mordfälle von Utah bis Pennsylvania. Ghost Face hat zwar nur einige der Schlagzeilen verfasst, dafür aber sämtliche Morde begangen.\nEine Übersicht über eigene Erfolge macht stolz und stärkt das Selbstbewusstsein.\n• Erhöht die Bewegungsgeschwindigkeit während der Verfolgung um 40 %."
+        },
+        "en": {
+          "name": "Headline Cutouts"
+        },
+        "es": {
+          "name": "Recortes de titulares",
+          "description": "Recortes de artículos sobre casos de asesinatos sin resolver entre Utah y Pensilvania. Ghost Face solo escribió unos cuantos de los titulares, pero cometió todos los asesinatos.\nRecopilar tus éxitos te enorgullece y refuerza tu confianza.\n• Aumenta la velocidad de movimiento mientras acechas un 40 %."
+        },
+        "ja": {
+          "name": "見出しの切り抜き",
+          "description": "ユタ州からペンシルバニア州にかけての未解決殺人事件を特集した記事の切り抜き。ゴーストフェイスが担当した見出しは一部だけだが、殺人事件自体にはすべて関与していた。\n成功を重ねることで自尊心と自信が高まる。\n• つけ回し中の移動速が40%上昇する。"
+        },
+        "pl": {
+          "name": "Wycinki z gazet",
+          "description": "Wycięte artykuły na temat niewyjaśnionych morderstw na obszarze od Utah do Pensylwanii. Mimo że Ghost Face napisał tylko część nagłówków, popełnił wszystkie te zabójstwa.\nZebranie świadectw własnych sukcesów napawa cię dumą i dodaje pewności siebie.\n• Zwiększa prędkość ruchu podczas śledzenia o 40%."
+        }
+      }
+    },
+    {
+      "id": 832,
+      "name": "Olsen's Journal",
+      "killer_id": 16,
+      "description": "A spiral notebook filled with stained, handwritten entries. The journal details different equipment used to stalk victims.\n• A Survivor that is Marked is inflicted with Oblivious until the Mark expires.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_olsensJournal.png?d67c45",
+      "icon_local_path": "icons/addons/olsens_journal.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Olsens Tagebuch",
+          "description": "Ein Notizbuch mit Spiralbindung voller verschmierter, handgeschriebener Einträge. Darin ist allerhand Ausrüstung aufgelistet, die man braucht, um Opfern nachzuspionieren.\n• Ein markierter Überlebender leidet unter Ahnungslos, bis die Markierung abgelaufen ist.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "en": {
+          "name": "Olsen’s Journal"
+        },
+        "es": {
+          "name": "Diario de Olsen",
+          "description": "Un cuaderno de espiral con anotaciones manchadas. En el diario aparecen detallado material diverso para acechar a las víctimas.\n• Un superviviente marcado sufre Inconsciencia hasta que desaparece la marca.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "オルセンの日記",
+          "description": "染みだらけの手書きの目次がついたリング式ノート。犠牲者をつけ回すのに使用した様々な道具が日記に詳細に記述されている。\n• マーキングされた生存者は、マーキングが解除されるまで無感覚に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Dziennik Olsena",
+          "description": "Zeszyt na spirali pełen poplamionych odręcznych notatek. Zawiera szczegółowe opisy różnych przedmiotów używanych do śledzenia ofiar.\n• Na oznaczonego ocalałego nakładany jest efekt Nieświadomy do chwili wygaśnięcia oznaczenia.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 833,
+      "name": "Olsen's Wallet",
+      "killer_id": 16,
+      "description": "Olsen’s wallet holds thirty dollars in cash, a video club membership card, and a folded picture of Olsen’s first Roseville victim. Carrying incriminating evidence boosts your excitement and resolve.\n• Whenever you basic-break Pallets or Breakable Walls, instantly recharge Night Shroud.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_olsensWallet.png?4ef01a",
+      "icon_local_path": "icons/addons/olsens_wallet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Olsens Portemonnaie",
+          "description": "In Olsens Portemonnaie stecken dreißig Dollar Bargeld, die Mitgliedskarte eines Videoclubs sowie ein zusammengefaltetes Bild von Olsens erstem Opfer in Roseville. Wenn du belastende Beweise mit dir führst, erhöht das die Spannung und deine Entschlossenheit.\n• Immer wenn du Paletten oder zerstörbare Mauern mit deiner Grundfähigkeit zerstörst, wird Mantel der Nacht sofort wieder aufgeladen."
+        },
+        "en": {
+          "name": "Olsen’s Wallet"
+        },
+        "es": {
+          "name": "Cartera de Olsen",
+          "description": "En la cartera de Olsen hay treinta dólares en efectivo, una tarjeta de socio de un videoclub y una foto doblada de la primera víctima de Olsen en Roseville. Tu trepidación y determinación aumentan al llevar encima pruebas incriminatorias.\n• Cuando rompes palés o muros destruibles de forma básica, Velo de la noche se recarga al instante."
+        },
+        "ja": {
+          "name": "オルセンの財布",
+          "description": "オルセンの財布には現金30ドルとビデオ屋の会員カードのほか、ローズビルでオルセンの最初の犠牲者となった人物の写真が束で入っている。決定的な証拠を持ち歩くことで興奮が高まり、決意が固まる。\n• パレットや破壊可能な壁を通常破壊すると、即座に闇の包容がチャージされる"
+        },
+        "pl": {
+          "name": "Portfel Olsena",
+          "description": "W portfelu Olsena można znaleźć trzydzieści dolarów, kartę członkowską klubu wideo oraz złożone zdjęcie jego pierwszej ofiary w Roseville. Noszenie przy sobie obciążających dowodów zwiększa emocje i determinację.\n• Za każdym razem, gdy niszczysz w specjalny sposób palety i rozbijalne ściany, natychmiast ładujesz Nocny Całun."
+        }
+      }
+    },
+    {
+      "id": 834,
+      "name": "Victim's Detailed Routine",
+      "killer_id": 16,
+      "description": "A ripped page outlining the weekly routine of Olsen's first victim in Roseville. Compiling your victim's habits allows you to anticipate and counter their next move.\n• After being Marked, Survivors are inflicted with Exhausted for 5 seconds.\nExhausted prevents Survivors from activating exhausting perks.\n\"“I have been watching you for a while. I wanted this to be special; the kind of headlines that people do not forget.” -The Ghost Face\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_victimsDetailedRoutine.png?313d46",
+      "icon_local_path": "icons/addons/victims_detailed_routine.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Detaillierter Wochenablauf eines Opfers",
+          "description": "Eine herausgerissene Seite mit dem Wochenablauf von Olsens erstem Opfer in Roseville. Indem man die Gewohnheiten eines Opfers zusammenträgt, kann man ihm immer einen Schritt voraus sein.\n• Nachdem sie markiert wurden, werden Überlebende 5 Sekunden lang mit Erschöpfung belegt.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen.\n\"„Ich habe dich schon eine Weile beobachtet. Ich möchte, dass es besonders wird. Eine Schlagzeile, die niemand vergisst.“ – Ghost Face\""
+        },
+        "en": {
+          "name": "Victim’s Detailed Routine"
+        },
+        "es": {
+          "name": "Rutina detallada de la víctima",
+          "description": "Una página arrancada en la que aparece descrita la rutina semanal de la primera víctima de Olsen en Roseville. Recopilar los hábitos de tu víctima te permite adelantarte y contraatacar su próximo movimiento.\n• Después de que les marquen, los supervivientes sufren Agotamiento durante 5 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo.\n\"\"Llevo un tiempo observándote. Quería que este momento fuera especial; uno de esos titulares que nadie olvida\". (Ghost Face)\""
+        },
+        "ja": {
+          "name": "詳細な犠牲者の日課",
+          "description": "破れたページ。ローズビルでオルセンが最初に殺害した犠牲者の、毎週の日課についての概要が書かれている。習慣を分析することで犠牲者の行動を予測し、先回りすることができる。\n• マーキングされた生存者は、その後5秒間疲労状態になる\n疲労状態になると生存者は疲労のパークが使用不可になる。\n\"「しばらく君を監視していたよ。今回は読者の脳裏に刻み込まれるくらい特別な見出しにしたくてね」- ゴーストフェイス\""
+        },
+        "pl": {
+          "name": "Szczegółowa rutyna ofiary",
+          "description": "Wyrwana strona z opisem typowego tygodnia pierwszej ofiary Olsena w Roseville. Spisywanie zwyczajów ofiar pozwala przewidywać i kontrować ich ruchy.\n• Gdy ocalali zostaną oznaczeni, nakładany jest na nich efekt Wyczerpany trwający 5 sekund.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności.\n\"„Obserwowałem cię przez jakiś czas. Chciałem, aby to było coś wyjątkowego – nagłówki, których ludzie nie zapomną”. – Ghost Face\""
+        }
+      }
+    }
+  ]
+}

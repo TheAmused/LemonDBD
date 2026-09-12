@@ -1,0 +1,554 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 348,
+      "name": "Lead Ring",
+      "killer_id": 20,
+      "description": "Found in a refrigerator. It’s engraved with a disgusting, bloated face.\n• Increases the range of Punishment of the Damned by 25%.\n• Decreases the width of Punishment of the Damned by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leadRing.png?37069d",
+      "icon_local_path": "icons/addons/lead_ring.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Bleiring",
+          "description": "In einem Kühlschrank gefunden. Ein abscheuliches, aufgedunsenes Gesicht ist darauf zu sehen.\n• Erhöht die Reichweite von Bestrafung der Verdammten um 25 %.\n• Verringert die Breite von Bestrafung der Verdammten um 25 %."
+        },
+        "es": {
+          "name": "Anillo de plomo",
+          "description": "Encontrado en una nevera. Lleva grabado un repugnante rostro hinchado.\n• Aumenta el alcance de Castigo de los condenados un 25 %.\n• Reduce la anchura de Castigo de los condenados un 25 %."
+        },
+        "ja": {
+          "name": "鉛の指輪",
+          "description": "冷蔵庫で見つかった指輪。不快なむくみ顔が彫り込まれている。\n• 地獄の罰の範囲が25%拡大する\n• 地獄の罰の幅が25%減少する"
+        },
+        "pl": {
+          "name": "Ołowiany pierścień",
+          "description": "Znaleziony w lodówce. Wygrawerowano na nim odrażającą, rozdętą twarz.\n• Zwiększa zasięg Kary dla potępionych o 25%.\n• Zmniejsza szerokość Kary dla potępionych o 25%."
+        }
+      }
+    },
+    {
+      "id": 349,
+      "name": "Dead Butterfly",
+      "killer_id": 20,
+      "description": "A butterfly found on a bed at Wood Side Apartments. It’s frail and nearly falls apart when touched.\n• Increases Rites of Judgment's recharge rate by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deadButterfly.png?243b87",
+      "icon_local_path": "icons/addons/dead_butterfly.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Toter Schmetterling",
+          "description": "Ein Schmetterling, der auf einem Bett in den Wood Side Apartments gefunden wurde. Er fällt fast auseinander, wenn man ihn berührt.\n• Erhöht die Aufladerate von Riten des Urteils um 10 %."
+        },
+        "es": {
+          "name": "Mariposa muerta",
+          "description": "Una mariposa encontrada en una cama de los apartamentos Wood Side. Es frágil y casi se deshace al tocarla.\n• Aumenta la velocidad de recarga de Ritos de sentencia un 10 %."
+        },
+        "ja": {
+          "name": "死んだ蝶",
+          "description": "ウッドサイドアパートのベッドで見つかった蝶。触れると壊れてしまいそうなほど脆い。\n• 裁きの儀式の再チャージ速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Martwy motyl",
+          "description": "Motyl znaleziony na łóżku w Wood Side. Jest bardzo delikatny i niemal rozpada się po dotknięciu.\n• Zwiększa prędkość odnawiania Rytuału sądu o 10%."
+        }
+      }
+    },
+    {
+      "id": 350,
+      "name": "Black Strap",
+      "killer_id": 20,
+      "description": "A nylon strap that was used to restrain a victim to a metal frame. The color makes it difficult to see the blood soaked into it.\n• Decreases the range of Punishment of the Damned by 25%.\n• Increases the width of Punishment of the Damned by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blackStrap.png?a0e050",
+      "icon_local_path": "icons/addons/black_strap.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schwarzer Riemen",
+          "description": "Ein Nylonriemen, mit dem ein Opfer an einem Metallrahmen festgebunden war. Durch die Farbe ist es schwierig, davon aufgesaugtes Blut zu erkennen.\n• Verringert die Reichweite von Bestrafung der Verdammten um 25 %.\n• Vergrößert die Breite von Bestrafung der Verdammten um 25 %."
+        },
+        "es": {
+          "name": "Correa negra",
+          "description": "Una correa de nailon que se usó para sujetar a una víctima contra una estructura de metal. Su color hace que resulte difícil ver la sangre que la recubre.\n• Reduce el alcance de Castigo de los condenados un 25 %.\n• Aumenta la anchura de Castigo de los condenados un 25 %."
+        },
+        "ja": {
+          "name": "黒のストラップ",
+          "description": "金属の骨組に人を拘束するために使われていたナイロン製のストラップ。黒色で血が染み込んでもわかりづらい。\n• 地獄の罰の範囲が25%縮小する\n• 地獄の罰の幅が25%増加する"
+        },
+        "pl": {
+          "name": "Czarny pasek",
+          "description": "Nylonowy pasek, który posłużył do przywiązania ofiary do metalowego stelaża. Barwa utrudnia dostrzeżenie wsiąkniętej w pasek krwi.\n• Zmniejsza zasięg Kary dla Potępionych o 25%.\n• Zwiększa szerokośćary dla Potępionych o 25%."
+        }
+      }
+    },
+    {
+      "id": 351,
+      "name": "Copper Ring",
+      "killer_id": 20,
+      "description": "Found in the basement of Brookhaven Hospital. It’s engraved with a picture of a spider.\n• Increases maximum duration of Rites of Judgment by 5 seconds.\n\"“I was locked up inside the basement’s basement. It was so small and dark, and I was so afraid. I dropped my precious ring. But I’ll never, ever go back there.”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_copperRing.png?48e0f9",
+      "icon_local_path": "icons/addons/copper_ring.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kupferring",
+          "description": "Gefunden im Keller des Krankenhauses Brookhaven. Das Bild einer Spinne ist darauf eingraviert.\n• Verlängert die Höchstdauer von Riten des Urteils um 5 Sek.\n\"„Ich war im Keller des Kellers eingesperrt. Dort war es so eng und dunkel, und ich hatte so große Angst. Zwar habe ich meinen wertvollen Ring dort verloren, aber ich werde nie wieder dorthin zurückkehren.“\""
+        },
+        "es": {
+          "name": "Anillo de cobre",
+          "description": "Encontrado en el sótano del hospital Brookhaven. Tiene grabada la imagen de una araña.\n• Aumenta la duración máxima de Ritos de sentencia en 5 segundos.\n\"\"Estaba encerrado en el sótano del sótano. Era tan pequeño y oscuro y yo sentía tanto temor. Se me cayó mi precioso anillo. Pero nunca jamás volveré allí\".\""
+        },
+        "ja": {
+          "name": "銅の指輪",
+          "description": "ブルックヘイヴン病院の地下で見つかった指輪。蜘蛛の絵が彫り込まれている。\n• 裁きの儀式が持続する最長時間が5秒増加する\n\"「地下の地下に閉じ込められました。とても狭く、とても暗く、とても怖かったです。大切な指輪を落としてしまいました。でももうあそこには入りたくないです」\""
+        },
+        "pl": {
+          "name": "Miedziany pierścień",
+          "description": "Znalezisko ze szpitala w Brookhaven. Ozdobiony wygrawerowanym pająkiem.\n• Wydłuża maksymalny czas trwania Rytuału sądu o 5 s.\n\"„Byłam zamknięta w najgłębszej piwnicy. Była bardzo mała i ciemna, a ja strasznie się bałam. Zgubiłam swój cenny pierścionek, ale już nigdy, przenigdy tam nie wrócę”.\""
+        }
+      }
+    },
+    {
+      "id": 352,
+      "name": "Cinderella Music Box",
+      "killer_id": 20,
+      "description": "A music box with a figure from the fairy tale Cinderella. Found inside a suitcase adorned with stickers from multiple destinations.\n• Decreases Punishment of the Damned's cooldown by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cinderellaMusicBox.png?b8e13f",
+      "icon_local_path": "icons/addons/cinderella_music_box.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Spieldose „Aschenputtel“",
+          "description": "Eine Spieluhr mit einer Figur aus dem Märchen „Aschenputtel“. Sie stammt aus einem Koffer, der mit Aufklebern zahlreicher Reiseziele versehen war.\n• Verkürzt die Abklingzeit von „Bestrafung der Verdammten“ um 10 %."
+        },
+        "es": {
+          "name": "Caja de música \"Cenicienta\"",
+          "description": "Una caja de música con una figura del cuento de la Cenicienta. Estaba dentro de una maleta adornada con pegatinas de varios destinos.\n• Reduce el tiempo de recarga de Castigo de los condenados un 10 %."
+        },
+        "ja": {
+          "name": "灰被り姫のオルゴール",
+          "description": "童話「シンデレラ」の人形付きオルゴール。さまざまな行き先のシールが貼られたスーツケースの中で見つかった。\n• 地獄の罰のクールダウンが10%減少する"
+        },
+        "pl": {
+          "name": "Pozytywka z Kopciuszkiem",
+          "description": "Pozytywka z figurką z bajki o Kopciuszku. Znaleziona w walizce pokrytej naklejkami z różnych miejscowości.\n• Skraca czas odnowienia Rytuału Sądu o 10%."
+        }
+      }
+    },
+    {
+      "id": 353,
+      "name": "Forgotten Videotape",
+      "killer_id": 20,
+      "description": "A videotape of two lovers vacationing in Silent Hill. Despite its sentimental value, it was left behind in the Lakeview Hotel.\n• Increases the speed at which Punishment of the Damned travels by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_forgottenVideotape.png?2d2cdc",
+      "icon_local_path": "icons/addons/forgotten_videotape.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Vergessene Videokassette",
+          "description": "Eine Videokassette von einem Liebespaar, das in Silent Hill Urlaub machte. Trotz ihrer sentimentalen Bedeutung wurde sie im Lakeview Hotel zurückgelassen.\n• Erhöht die Geschwindigkeit, mit der sich Bestrafung der Verdammten bewegt, um 10 %."
+        },
+        "es": {
+          "name": "Cinta de vídeo olvidada",
+          "description": "Una cinta de vídeo de una pareja de vacaciones en Silent Hill. A pesar de su valor sentimental, se la dejaron en el hotel Lakeview.\n• Aumenta la velocidad de recorrido de Castigo de los condenados un 10 %."
+        },
+        "ja": {
+          "name": "忘れられたビデオテープ",
+          "description": "サイレントヒルで休暇を楽しむカップルのビデオテープ。思い入れのある物のはずだが、レイクビューホテルに置き去りにされていた。\n• 地獄の罰の移動速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Zapomniana kaseta",
+          "description": "Taśma zakochanej pary na wakacjach w Silent Hill. Mimo sentymentalnej wartości pozostawiono ją w hotelu Lakeview.\n• Zwiększa prędkość z jaką Rytuał sądu się przemieszcza o 10%."
+        }
+      }
+    },
+    {
+      "id": 354,
+      "name": "Wax Doll",
+      "killer_id": 20,
+      "description": "A doll carved from wax, handcrafted by a prisoner who would soon face their judgment.\n• Increases the range of Punishment of the Damned by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_waxDoll.png?351da5",
+      "icon_local_path": "icons/addons/wax_doll.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wachspuppe",
+          "description": "Eine aus Wachs geformte Puppe, die von einem Gefangenen angefertigt wurde, der kurz darauf sein Urteil empfing.\n• Vergrößert die Reichweite von Bestrafung der Verdammten um 5 %."
+        },
+        "es": {
+          "name": "Muñeca de cera",
+          "description": "Una muñeca tallada de cera, hecha a mano por un prisionero que no tardaría en afrontar su sentencia.\n• Aumenta el alcance de Castigo de los condenados un 5 %."
+        },
+        "ja": {
+          "name": "ろう人形",
+          "description": "ろうで作られた人形。裁きを受ける直前の囚人の手によって作られた。\n• 地獄の罰の範囲が5%拡大する"
+        },
+        "pl": {
+          "name": "Lalka z wosku",
+          "description": "Lalka ręcznie wykonana z wosku przez więźnia na krótko przed sądem.\n• Zwiększa zasięg Kary dla Potępionych o 5%."
+        }
+      }
+    },
+    {
+      "id": 355,
+      "name": "Spearhead",
+      "killer_id": 20,
+      "description": "The sharp, rusted tip of a spear. It’s flaked with blood from its last victim.\n• When a Survivor is saved from a Cage of Atonement, you see their rescuer's aura for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spearhead.png?91145c",
+      "icon_local_path": "icons/addons/spearhead.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Speerspitze",
+          "description": "Die scharfe, rostige Spitze eines Speers. Es klebt noch Blut von ihrem letzten Opfer daran.\n• Wenn ein Überlebender aus einem Bußkäfig gerettet wurde, siehst du die Aura seines Retters für 8 Sek."
+        },
+        "es": {
+          "name": "Punta de lanza",
+          "description": "La punta afilada y oxidada de una lanza. Está manchada con sangre de su última víctima.\n• Cuando se rescata a un superviviente de una Jaula de expiación, ves el aura de quien te ha rescatado durante 8 segundos."
+        },
+        "ja": {
+          "name": "槍の穂先",
+          "description": "錆びた槍の先。鋭い刃は最後の被害者の血痕で覆われている。\n• 生存者が贖罪の檻から救助されると、救助者のオーラが8秒間視える"
+        },
+        "pl": {
+          "name": "Grot włóczni",
+          "description": "Ostra i zardzewiała końcówka włóczni. Jest pokryta krwią ostatniej ofiary.\n• Gdy ocalały zostanie uratowany z Klatki odkupienia, widzisz aurę jego ratującego przez 8 sekund."
+        }
+      }
+    },
+    {
+      "id": 356,
+      "name": "Leopard-Print Fabric",
+      "killer_id": 20,
+      "description": "A shred of pink, leopard print fabric. It’s difficult to tell what it was used for.\n• Decreases the duration of stuns by 15% while using Rites of Judgment.\n\"“It doesn’t matter who I am. I’m here for you, James.” -Maria\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leopardprintFabric.png?75bc7f",
+      "icon_local_path": "icons/addons/leopard_print_fabric.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Stoff mit Leopardenmuster",
+          "description": "Ein rosa Stofffetzen mit Druck im Leopardenmuster. Schwer zu sagen, wofür er benutzt wurde.\n• Verkürzt die Dauer von Betäubungen um 15 % während der Verwendung von Riten des Urteils.\n\"„Es ist egal, wer ich bin. Ich bin wegen dir hier, James.“ – Maria\""
+        },
+        "es": {
+          "name": "Tela estampada de leopardo",
+          "description": "Un trozo de tela estampada de leopardo rosa. Cuesta saber para qué se usaba.\n• Reduce la duración de los aturdimientos un 15 % cuando se usa Ritos de sentencia.\n\"\"No importa quién sea yo... Estoy aquí para ti, James\". (Maria)\""
+        },
+        "ja": {
+          "name": "ヒョウ柄の布",
+          "description": "ピンク色ヒョウ柄の布切れ。何に使われていたかは不明。\n• 裁きの儀式を使用している間、怯みの持続時間が15%減少する\n\"「私の正体はどうだっていい。あなたのために来たのよ、ジェイムス。」- マリア\""
+        },
+        "pl": {
+          "name": "Tkanina w panterkę",
+          "description": "Fragment różowej tkaniny w panterkę. Trudno powiedzieć, do czego była używana.\n• Wydłuża czas trwania Instynktu Zabójcy podczas korzystania zRytuał Sądu o 15%.\n\"„Nieważne, kim jestem. Jestem tu dla ciebie, James”. – Maria\""
+        }
+      }
+    },
+    {
+      "id": 357,
+      "name": "Mannequin Foot",
+      "killer_id": 20,
+      "description": "The smooth grey foot of a mannequin, brutally torn from its leg.\n• Rites of Judgment trails inflict Exhausted for 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mannequinFoot.png?58f027",
+      "icon_local_path": "icons/addons/mannequin_foot.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schaufensterpuppenfuß",
+          "description": "Der glatte, graue Fuß einer Schaufensterpuppe, brutal vom Bein abgerissen.\n• Pfade von Riten des Urteils verursachen Erschöpfung für 10 Sekunden."
+        },
+        "es": {
+          "name": "Pie de maniquí",
+          "description": "El pie gris de un maniquí, arrancado brutalmente de su pierna.\n• Los rastros de Ritos de sentencia causan Agotamiento durante 10 segundos."
+        },
+        "ja": {
+          "name": "マネキンの足",
+          "description": "灰色の滑らかなマネキンの片足。無残にも脚から切り離されている。\n• 裁きの儀式のトレイルが疲労を10秒間与える"
+        },
+        "pl": {
+          "name": "Stopa manekina",
+          "description": "Gładka szara stopa manekina, brutalnie oderwana od nogi.\n• Ścieżki Rytuału Sądu nakładają efekt Wyczerpany na 10 sekund."
+        }
+      }
+    },
+    {
+      "id": 358,
+      "name": "Valtiel Sect Photograph",
+      "killer_id": 20,
+      "description": "A photograph of two figures in red hoods. Entitled Crimson and White Banquet for the Gods.\n• Decreases your Terror Radius by 2 meters for each Survivor affected by Torment.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_valtielSectPhotograph.png?1578f3",
+      "icon_local_path": "icons/addons/valtiel_sect_photograph.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Foto der Valtiel-Sekte",
+          "description": "Ein Foto von zwei Personen mit roten Kapuzen. Der Titel lautet „Blutrotes und Weißes Bankett für die Götter“.\n• Verringert deinen Terrorradius um 2 Meter pro von Folter betroffenem Überlebenden."
+        },
+        "es": {
+          "name": "Fotografía de la secta de Valtiel",
+          "description": "Una fotografía que muestra a dos figuras con capuchas rojas. Se titula \"Carmesí y Banquete Blanco para los Dioses\".\n• Reduce tu radio de terror en 2 metros por cada superviviente afectado con Tormento."
+        },
+        "ja": {
+          "name": "ヴァルティエル派の写真",
+          "description": "赤い頭巾をかぶった2人の人物の写真。神に捧げる赤と白の宴という題名がついている。\n• 煩悶の効果を受けている生存者1人につき脅威範囲が2メートル縮小する"
+        },
+        "pl": {
+          "name": "Zdjęcie sekty Valtiela",
+          "description": "Zdjęcie dwóch postaci w czerwonych kapturach podpisane „Bankiet szkarłatu i bieli dla bogów”.\n• Zmniejsza zasięg twojego terroru o 2 metry za każdego ocalałego trafionego Udręką."
+        }
+      }
+    },
+    {
+      "id": 359,
+      "name": "Burning Man Painting",
+      "killer_id": 20,
+      "description": "A diagram of the Lakeview Hotel. Red flames are painted over this place of guilt.\n• When missing Punishment of the Damned, see the auras of Survivors within 3 meters for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_burningManPainting.png?48c5f2",
+      "icon_local_path": "icons/addons/burning_man_painting.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Bild „Brennender Mann“",
+          "description": "Ein Diagramm des Lakeview Hotels. Rote Flammen wurden über diesen Ort der Schuld gemalt.\n• Wenn die Bestrafung der Verdammten misslingt, siehst du die Auren von Überlebenden in einem Umkreis von 3 Metern für 6 Sek."
+        },
+        "es": {
+          "name": "Pintura de hombre ardiendo",
+          "description": "Un diagrama del hotel Lakeview. Hay llamas pintadas por todo este lugar impío.\n• Al fallar Castigo de los condenados, ves las auras de los supervivientes en un radio de 3 metros durante 6 segundos."
+        },
+        "ja": {
+          "name": "燃える人の絵",
+          "description": "レイクビューホテルの略図。この罪なる建物には赤い炎が描かれている。\n• 地獄の罰を外したとき、3メートル以内の生存者のオーラが6秒間視える"
+        },
+        "pl": {
+          "name": "Rysunek płonącego człowieka",
+          "description": "Schemat hotelu Lakeview. Na tym miejscu winy namalowano czerwone płomienie.\n• Po nie trafieniu Karą dla potępionych, zobacz aury ocalałych w promieniu 3 metrów przez 6 sekund."
+        }
+      }
+    },
+    {
+      "id": 360,
+      "name": "Tablet of the Oppressor",
+      "killer_id": 20,
+      "description": "A metal tablet engraved with Aztec figures.\n• While using Rites of Judgment, gain the Undetectable Status Effect.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tabletOfTheOppressor.png?5acaf1",
+      "icon_local_path": "icons/addons/tablet_of_the_oppressor.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Tafel „Der Unterdrücker“",
+          "description": "Eine Metalltafel mit eingravierten Aztekenfiguren.\n• Während du  Riten des Urteils nutzt, erhältst du den Statuseffekt Unentdeckbar."
+        },
+        "es": {
+          "name": "Tablilla del \"Opresor\"",
+          "description": "Una tablilla metálica con figuras aztecas grabadas.\n• Al usar Ritos de sentencia, obtienes el efecto de estado Indetectable."
+        },
+        "ja": {
+          "name": "虐げる者の銘板",
+          "description": "アステカ族が彫り込まれた金属製の板。\n• 裁きの儀式を使用している間、探知不可のステータス効果を得る"
+        },
+        "pl": {
+          "name": "Tabliczka ciemiężcy",
+          "description": "Metalowa tablica z wygrawerowanymi azteckimi symbolami.\n• Podczas korzystania z Rytuału Sądu otrzymujesz status Niewykrywalny."
+        }
+      }
+    },
+    {
+      "id": 361,
+      "name": "Scarlet Egg",
+      "killer_id": 20,
+      "description": "A fresh egg, strikingly red in color. About the size of a quail’s egg.\n• Survivors afflicted with Torment spawn Rites of Judgment trails when sprinting. These trails last 5 seconds.\n• You no longer see the auras of Rites of Judgment trails.\n\"\"I’ve never been so scared in my whole life! You couldn’t care less about me... could you?” -Maria\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scarletEgg.png?d9548d",
+      "icon_local_path": "icons/addons/scarlet_egg.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Scharlachrotes Ei",
+          "description": "Ein frisches Ei, das auffallend rot ist. Es hat etwa die Größe eines Wachteleis.\n• Überlebende, die von Folter betroffen sind, erzeugen Pfade von Riten des Urteils, wenn sie sprinten. Diese Pfade bleiben 5 Sek. lang bestehen.\n• Du siehst die Auren der Pfade von Riten des Urteils nicht mehr.\n\"„In meinem ganzen Leben hatte ich noch nie so viel Angst! Ich bin dir wirklich völlig egal ... oder?“ – Maria\""
+        },
+        "es": {
+          "name": "Huevo escarlata",
+          "description": "Un huevo fresco de un color rojo muy llamativo. Tiene el tamaño de un huevo de codorniz.\n• Los supervivientes que sufren Tormento hacen que aparezcan rastros de Ritos de sentencia al esprintar. Estos rastros duran 5 segundos.\n• Ya no verás las auras de los rastros de Ritos de sentencia.\n\"\"¡Nunca había estado tan asustada en toda mi vida! No te importo lo más mínimo, ¿no es cierto?\". (Maria)\""
+        },
+        "ja": {
+          "name": "緋色の卵",
+          "description": "ひときわ赤い新鮮なタマゴ。ウズラの卵ほどの大きさ。\n• 煩悶の効果を受けている生存者が走ると、裁きの儀式のトレイルを発生させる。このトレイルは5秒間留まる\n• 裁きの儀式のトレイルのオーラは視えなくなる\n\"「泣きそうになったのよ。死にそうになったんだから！私のこと…どうでもいいと思ってるんでしょう？」- マリア\""
+        },
+        "pl": {
+          "name": "Szkarłatne jajo",
+          "description": "Świeże jajko o uderzająco czerwonym kolorze. Wielkości przepiórczego jaja.\n• Ocaleli trafieniUdręką  pozostawiają ścieżki Rytuału Sądu w czasie biegania.Te ścieżki trwają 5 sekund.\n• Gracz przestaje widzieć aury ścieżek Rytuału Sądu.\n\"„Nigdy w życiu się tak nie bałam! W ogóle się mną nie przejmujesz… Prawda?” – Maria\""
+        }
+      }
+    },
+    {
+      "id": 362,
+      "name": "Lost Memories Book",
+      "killer_id": 20,
+      "description": "A book about the history and legends of Silent Hill and the surrounding area.\n• Survivors injured by Punishment of the Damned suffer from the Oblivious Status Effect for 80 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.\n\"“They called this place ‘The Place of the Silent Spirits.’”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lostMemoriesBook.png?af3e4b",
+      "icon_local_path": "icons/addons/lost_memories_book.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Buch „Verlorene Erinnerungen“",
+          "description": "Ein Buch über die Geschichte und die Legenden von Silent Hill und der umliegenden Gegend.\n• Überlebende, die von Bestrafung der Verdammten verletzt wurden, leiden 80 Sekunden lang unter dem Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren.\n\"„Sie nannten diesen Ort den ‚Ort der stillen Gespenster‘.“\""
+        },
+        "es": {
+          "name": "Libro \"Memorias perdidas\"",
+          "description": "Un libro acerca de la historia y leyendas de Silent Hill y del área circundante.\n• Los supervivientes heridos con Castigo de los condenados sufren el efecto de estado Inconsciencia durante 80 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino.\n\"\"A este lugar lo llamaban 'El Lugar de los Espíritus Silenciosos'\".\""
+        },
+        "ja": {
+          "name": "失われた記憶の書",
+          "description": "サイレントヒルやその近辺の伝承や歴史について書かれている本。\n• 地獄の罰で負傷した生存者が無感覚のステータス効果に80秒間苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。\n\"「ここは『静かなる精霊眠る場所』と呼ばれていた。」\""
+        },
+        "pl": {
+          "name": "Książka „Utracone wspomnienia”",
+          "description": "Książka o historii i legendach Silent Hill oraz obszaru otaczającego miasto.\n• Na ocalałych zranionych przez Karę dla Potępionych zostaje nałożony efekt Nieświadomy utrzymujący się przez 80 sekund.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ.\n\"„Nazywali to miejsce «obszarem cichych duchów»”.\""
+        }
+      }
+    },
+    {
+      "id": 363,
+      "name": "Crimson Ceremony Book",
+      "killer_id": 20,
+      "description": "A book about an ancient god. Author unknown.\n• Survivors damaged by Punishment of the Damned suffer from the Hemorrhage and Mangled status effects for 80 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.\n\"“Speak. I am the Crimson One. The lies and the mist are not they, but I.”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crimsonCeremonyBook.png?87cf9d",
+      "icon_local_path": "icons/addons/crimson_ceremony_book.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Buch „Blutrote Zeremonie“",
+          "description": "Ein Buch über einen uralten Gott. Autor unbekannt.\n• Überlebende, die von Bestrafung der Verdammten verletzt werden, erleiden die Statuseffekte Blutung und Zerfleischt für 80 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n\"„Sprich. Ich bin der Blutrote. Die Lügen und der Nebel sind nicht sie, sondern ich.“\""
+        },
+        "es": {
+          "name": "Libro \"Ceremonia Crimson\"",
+          "description": "Un libro de autor desconocido sobre un dios antiguo.\n• Los supervivientes dañados con Castigo de los condenados, sufren los efectos de estado Hemorragia y Laceración durante 80 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo.\n\"\"Habla. Yo soy el Crimson. Las mentiras y la niebla no son ellas, sino yo\".\""
+        },
+        "ja": {
+          "name": "赤の祭祀の書",
+          "description": "古の神に関する本。著者は不明。\n• 地獄の罰でダメージを受けた生存者は、80秒間出血と重傷のステータス効果に苦しむ。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。\n\"「語れ。我は真紅のものである。嘘と霧は、彼らではなく、我である」\""
+        },
+        "pl": {
+          "name": "Książka „Szkarłatna ceremonia”",
+          "description": "Książka o pradawnym bogu. Autor nieznany.\n• Na ocalałych, którzy odniosą obrażenia w wyniku ataku Karą dla Potępionych, nakładane są efekty Krwotok i Zmasakrowany na 80 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia.\n\"„Mów. Jestem Szkarłatem. Kłamstwa i mgła to nie oni – to ja”.\""
+        }
+      }
+    },
+    {
+      "id": 364,
+      "name": "Obsidian Goblet",
+      "killer_id": 20,
+      "description": "An ancient looking goblet carved from pure obsidian.\n• You can special-break Pallets and Breakable walls with Punishment of the Damned.\n• Increases Punishment of the Damned's cooldown by 20%.\n\"“Forgive me for waking you. But without you, I just can’t go on.” -James Sunderland\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_obsidianGoblet.png?85acf9",
+      "icon_local_path": "icons/addons/obsidian_goblet.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Obsidiankelch",
+          "description": "Ein alt aussehender Kelch, der aus purem Obsidian gefertigt wurde.\n• Mit Bestrafung der Verdammten kannst du Paletten und zerstörbare Mauern durch deine Stärke zerstören.\n• Verlängert die Abklingzeit von Bestrafung der Verdammten um 20 %.\n\"„Verzeih, dass ich dich geweckt habe. Aber ohne dich kann ich einfach nicht weitermachen.“ – James Sunderland\""
+        },
+        "es": {
+          "name": "Copa de obsidiana",
+          "description": "Copa de aspecto antiguo tallada en obsidiana pura.\n• Puedes romper palés y muros destruibles de forma especial con Castigo de los condenados.\n• Aumenta el tiempo de recarga de Castigo de los condenados un 20 %.\n\"\"Perdóname por haberte despertado. Pero sin ti, nada tiene sentido\". (James Sunderland)\""
+        },
+        "ja": {
+          "name": "黒曜石の酒杯",
+          "description": "黒曜石で作られた古めかしい杯。\n• 地獄の罰でパレットや破壊可能な壁を特殊破壊できる\n• 地獄の罰のクールダウンが20%増加する\n\"「眠りから目覚めさせるのを許して欲しい。でもあなたなしでは前に進めない」 - ジェイムス・サンダーランド\""
+        },
+        "pl": {
+          "name": "Obsydianowy kielich",
+          "description": "Kielich o starożytnym wyglądzie wykonany z czystego obsydianu.\n• Możesz w specjalny sposób niszczyć palety i rozbijalne ściany przy pomocy Kary dla potępionych.\n• Zwiększa czas odnawiania Kary dla potępionych o 20%.\n\"„Wybacz, że cię budzę, ale nie mogę ruszyć bez ciebie”. – James Sunderland\""
+        }
+      }
+    },
+    {
+      "id": 365,
+      "name": "Iridescent Seal of Metatron",
+      "killer_id": 20,
+      "description": "A talisman with an odd design inscribed on it. The Entity’s influence seems to have altered it.\n• Decreases the range of Punishment of the Damned by 50%.\n• Punishment of the Damned's range increases by creating Rites of Judgment trails, up to a maximum of 200%.\n• This resets when Punishment of the Damned hits a Survivor.\n\"\"This magic square, with strong protective and dispelling properties, is called the 'Virun VII Crest' or the 'Seal of Metatron'.”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentSealOfMetatron.png?df5885",
+      "icon_local_path": "icons/addons/iridescent_seal_of_metatron.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Metatron-Siegel",
+          "description": "Ein Talisman mit einem merkwürdigen Design darauf. Der Einfluss des Entitus scheint es verändert zu haben.\n• Verringert die Reichweite von Bestrafung der Verdammten um 50 %.\n• Die Reichweite von Bestrafung der Verdammten erhöht sich durch die Schaffung von Pfaden für Riten des Urteils, bis maximal 200 %.\n• Diese Erhöhung wird zurückgesetzt, sobald Bestrafung der Verdammten einen Überlebenden trifft.\n\"„Dieses magische Quadrat mit starken schützenden und bannenden Eigenschaften wird ‚Virun-Wappen VII‘ oder auch ‚Metatron-Siegel‘ genannt.“\""
+        },
+        "es": {
+          "name": "Sello de Metatrón iridiscente",
+          "description": "Un talismán con un diseño extraño. Parece que la influencia del Ente lo ha alterado.\n• Reduce el alcance de Castigo de los condenados un 50 %.\n• El alcance de Castigo de los condenados aumenta al crear rastros de Ritos de sentencia, hasta un máximo del 200 %.\n• Esto se reinicia cuando Castigo de los condenados alcanza a un superviviente.\n\"\"Este cuadrado mágico, con fuertes propiedades protectoras y disipadoras, es llamado el 'Emblema Virun VII' o el 'Sello de Metatrón'\".\""
+        },
+        "ja": {
+          "name": "玉虫色のメタトロンの紋章",
+          "description": "奇妙なデザインが刻み込まれたお守り。エンティティの影響によって変化したと見られる。\n• 地獄の罰の範囲が50%縮小する\n• 裁きの儀式のトレイルを刻み込むことによって地獄の罰の範囲が最大200%まで拡大する\n• これは地獄の罰が生存者に命中するとリセットされる\n\"「この四角い魔法の物体は『バイルン7世のクレスト』またの名を『メタトロンの紋章』と呼ばれ、強力な保護特性と魔よけ効果を持つ。」\""
+        },
+        "pl": {
+          "name": "Opalizująca pieczęć Metatrona",
+          "description": "Talizman z dziwną inskrypcją. Zdaje się, że zmienił ją wpływ Bytu.\n• Zmniejsza zasięg Kary dla potępionych o 50%.\n• Zasięg Kary dla potępionych zwiększa się przez tworzenie ścieżek Rytuału sądu, maksymalnie o 200%.\n• Ten efekt zeruje się, gdy Karta dla potępionych trafi ocalałego.\n\"„Ta magiczna płytka o silnych właściwościach ochronnych jest nazywana herbem Virun VII lub pieczęcią Metatrona”.\""
+        }
+      }
+    },
+    {
+      "id": 856,
+      "name": "Misty Day, Remains of Judgement",
+      "killer_id": 20,
+      "description": "A painting of an imposing figure wearing a steel pyramid atop his head. Victims are caged in the background.\n• Injuring a Survivor with Punishment of the Damned reveals their aura for 8 seconds.\n\"\"It’s him...”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mistyDay.png?737404",
+      "icon_local_path": "icons/addons/misty_day_remains_of_judgement.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Nebliger Tag, Nachlass des Urteils",
+          "description": "Ein Gemälde von einer imposanten Figur, die eine Stahlpyramide auf ihrem Kopf trägt. Im Hintergrund sind Opfer in einen Käfig gesperrt.\n• Wird ein Überlebender mit Bestrafung der Verdammten verletzt, wird seine Aura für 8 Sek. enthüllt.\n\"„Das ist er ...“\""
+        },
+        "en": {
+          "name": "Misty Day, Remains of Judgment"
+        },
+        "es": {
+          "name": "Día neblinoso, restos del Juicio",
+          "description": "Un cuadro de una figura imponente que lleva una pirámide de acero en la cabeza. Hay víctimas enjauladas en el fondo.\n• Herir a un superviviente con Castigo de los condenados revela su aura durante 8 segundos.\n\"\"Es él...\".\""
+        },
+        "ja": {
+          "name": "霧の日、裁きの跡",
+          "description": "堂々とした男の絵。鋼鉄のピラミッド型の物体を頭にかぶり、背景には檻に閉じ込められた被害者が描かれている。\n• 地獄の罰で生存者を負傷させると、その生存者のオーラが8秒間視える\n\"「奴だ…」\""
+        },
+        "pl": {
+          "name": "Mglisty dzień, resztki sądu",
+          "description": "Malunek okazałej postaci ze stalową piramidą na głowie. W tle widać ofiary w klatkach.\n• Zranienie ocalałego przy pomocy Kary potępionych odsłania jego aurę na 8 sekund.\n\"„To on…”\""
+        }
+      }
+    },
+    {
+      "id": 857,
+      "name": "Rust-Coloured Egg",
+      "killer_id": 20,
+      "description": "An old-looking egg, colored reddish orange. About the size of a quail’s egg.\n• Injuring a Survivor with Punishment of the Damned increases Rites of Judgment's charge by 30%.\n\"“James... You made me happy.” -Mary\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustColoredEgg.png?43a399",
+      "icon_local_path": "icons/addons/rust_coloured_egg.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Rostfarbenes Ei",
+          "description": "Ein seltsam aussehendes Ei in einem rötlichen Orange. Es hat etwa die Größe eines Wachteleis.\n• Wenn Überlebende mit Bestrafung der Verdammten verletzt wurden, erhöht sich die Aufladung von Riten des Urteils um 30 %.\n\"„James ... Du hast mich glücklich gemacht.“ – Mary\""
+        },
+        "en": {
+          "name": "Rust-colored Egg"
+        },
+        "es": {
+          "name": "Huevo color de orín",
+          "description": "Un huevo que parece viejo, de color naranja rojizo. Tiene el tamaño de un huevo de codorniz.\n• Herir a un superviviente con Castigo de los condenados aumenta la carga de Ritos de sentencia un 30 %.\n\"\"James... me hiciste muy feliz\". (Mary)\""
+        },
+        "ja": {
+          "name": "錆色の卵",
+          "description": "赤みのかかったオレンジ色をした古そうなタマゴ。ウズラの卵ほどの大きさ。\n• 地獄の罰で生存者を負傷させると、裁きの儀式のチャージが30%増加する\n\"「ジェイムス…あなたのおかげで幸せだった。」- メアリー\""
+        },
+        "pl": {
+          "name": "Rdzawe jajo",
+          "description": "Jajko o starym wyglądzie, w czerwonawopomarańczowym kolorze. Wielkości przepiórczego jaja.\n• Zranienie ocalałego przy pomocy Kary dla potępionych skraca czas ładowania Rytuału Sądu o 30%.\n\"„James… Uszczęśliwiłeś mnie”. – Mary\""
+        }
+      }
+    }
+  ]
+}

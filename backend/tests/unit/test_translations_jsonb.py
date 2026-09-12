@@ -5,7 +5,7 @@ from flask.testing import FlaskClient
 from app import create_app
 from app.core.config import Config
 from app.core.extensions import db
-from app.models import Addon, Character, Item, Perk
+from app.models import Chapter, Item, ItemAddon, ItemCategory, Killer, Perk
 
 
 class TranslationTestConfig(Config):
@@ -32,13 +32,13 @@ def client(app: Flask) -> FlaskClient:
 
 @pytest.mark.unit
 class TestTranslationsJSONB:
-    """Tests for PostgreSQL JSONB / SQLite dict translations on Perks, Characters, and Equipment."""
+    """PostgreSQL JSONB / SQLite dict translations on perks, killers and equipment."""
 
     def test_perk_translations_model(self, app: Flask) -> None:
         with app.app_context():
             perk = Perk(
                 name="Decisive Strike",
-                category="Survivor",
+                role="Survivor",
                 description="English description for Decisive Strike.",
                 translations={
                     "en": {
@@ -84,25 +84,22 @@ class TestTranslationsJSONB:
 
     def test_character_translations_model(self, app: Flask) -> None:
         with app.app_context():
-            char = Character(
+            chapter = Chapter(name="Base Game")
+            db.session.add(chapter)
+            db.session.flush()
+            # No `role` (the table is the role) and no `chapter_name` -- the
+            # chapter title lived on every character and its translation lived
+            # in every character's blob; both come from the chapter now.
+            char = Killer(
                 name="The Trapper",
-                role="Killer",
+                chapter_id=chapter.id,
                 power_name="Bear Trap",
                 power_description="English power description.",
                 lore="English lore.",
-                chapter_name="Base Game",
                 translations={
-                    "en": {
-                        "name": "The Trapper",
-                        "lore": "English lore.",
-                        "chapter_name": "Base Game",
-                        "power_name": "Bear Trap",
-                        "power_description": "English power description.",
-                    },
                     "pl": {
                         "name": "Traper",
                         "lore": "Polska historia.",
-                        "chapter_name": "Gra Podstawowa",
                         "power_name": "Wnyki",
                         "power_description": "Polski opis mocy.",
                     },
@@ -112,7 +109,7 @@ class TestTranslationsJSONB:
             db.session.commit()
 
             loaded = db.session.scalars(
-                db.select(Character).where(Character.name == "The Trapper")
+                db.select(Killer).where(Killer.name == "The Trapper")
             ).first()
             assert loaded is not None
 
@@ -125,20 +122,25 @@ class TestTranslationsJSONB:
 
     def test_item_and_addon_translations_model(self, app: Flask) -> None:
         with app.app_context():
+            flashlights = ItemCategory(
+                name="Flashlight", addon_target_label="Flashlights", role="Survivor"
+            )
+            db.session.add(flashlights)
+            db.session.flush()
+            # `category` and `role` were two strings on every item; they are one
+            # foreign key to the class the item belongs to.
             item = Item(
                 name="Flashlight",
-                category="Flashlight",
-                role="Survivor",
+                category_id=flashlights.id,
                 description="Illuminates the area.",
                 translations={
                     "en": {"name": "Flashlight", "description": "Illuminates the area."},
                     "pl": {"name": "Latarka", "description": "Oświetla obszar."},
                 },
             )
-            addon = Addon(
+            addon = ItemAddon(
                 name="Battery",
-                associated_target="Flashlight",
-                category="Survivor",
+                item_category_id=flashlights.id,
                 description="Increases battery life.",
                 translations={
                     "en": {"name": "Battery", "description": "Increases battery life."},
@@ -149,7 +151,7 @@ class TestTranslationsJSONB:
             db.session.commit()
 
             loaded_item = db.session.scalars(db.select(Item).where(Item.name == "Flashlight")).first()
-            loaded_addon = db.session.scalars(db.select(Addon).where(Addon.name == "Battery")).first()
+            loaded_addon = db.session.scalars(db.select(ItemAddon).where(ItemAddon.name == "Battery")).first()
 
             assert loaded_item.to_dict(lang="pl")["name"] == "Latarka"
             assert loaded_item.to_dict(lang="pl")["description"] == "Oświetla obszar."
@@ -161,7 +163,7 @@ class TestTranslationsJSONB:
         with app.app_context():
             perk = Perk(
                 name="Sprint Burst",
-                category="Survivor",
+                role="Survivor",
                 description="When starting to run, break into a sprint.",
                 translations={
                     "en": {
@@ -174,12 +176,14 @@ class TestTranslationsJSONB:
                     },
                 },
             )
-            killer = Character(
+            clown_chapter = Chapter(name="Curtain Call")
+            db.session.add(clown_chapter)
+            db.session.flush()
+            killer = Killer(
                 name="The Clown",
-                role="Killer",
+                chapter_id=clown_chapter.id,
                 power_name="The Afterpiece Tonic",
                 translations={
-                    "en": {"name": "The Clown", "power_name": "The Afterpiece Tonic"},
                     "pl": {"name": "Klaun", "power_name": "Tonik Poprawiający Nastrój"},
                 },
             )

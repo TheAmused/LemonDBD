@@ -5,13 +5,16 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class EntityStatResponse(BaseModel):
-    id: str
+    # The surrogate `id` is gone: `entity_id` is the primary key of a strictly
+    # 1:1 table, so it was the only identity this row ever had.
     entity_id: str
     smash_count: int
     pass_count: int
     super_smash_count: int
-    total_votes: int
-    smash_rate: float
+    # Generated columns. The database computes them from the three counts, so
+    # they are outputs only -- nothing may send them in.
+    total_votes: int = Field(0, frozen=True)
+    smash_rate: float = Field(0.0, frozen=True)
     chaos_rating: float
     updated_at: datetime | None = None
 
@@ -27,6 +30,26 @@ class EntityResponse(BaseModel):
     gender: str
     media_url: str | None = None
     media_type: str = "image"
+
+    # ---- the profile, in English. Was the `metadata_json` blob. ----
+    archetype: str | None = None
+    bio: str = ""
+    tagline: str = ""
+    quote: str = ""
+    meme: str = ""
+    turn_on: str = ""
+    dealbreaker: str = ""
+    dating_vibe: str = ""
+    red_flags: list[str] = []
+    green_flags: list[str] = []
+    chapter: str | None = None
+    danger_level: str | None = None
+    chaos_score: int | None = None
+    #: de/es/ja/pl only, and only the fields that differ from the columns above.
+    translations: dict[str, Any] = {}
+
+    #: The assembled view of the fields above, as `Entity.to_dict()` emits it --
+    #: once. It used to be emitted twice, as `metadata` and `metadata_json`.
     metadata: dict[str, Any] = {}
     order_index: int = 0
     is_active: bool = True

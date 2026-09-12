@@ -2,11 +2,15 @@
 import React from 'react';
 import { Check, Lock, X } from 'lucide-react';
 import { getAssetUrl } from '@/components/character-detail/types';
+import { ownsPerk } from '@/utils/characterUtils';
 
 export interface PerksTogglePopupPerk {
   perk_id: number;
   name: string;
+  /** Only meaningful next to the perk's role; prefer the two keys below. */
   character_id: number | null;
+  survivor_id?: number | null;
+  killer_id?: number | null;
   icon_url?: string;
   icon_local_path?: string;
 }
@@ -25,7 +29,7 @@ export interface PerksTogglePopupDict {
 }
 
 export interface PerksTogglePopupProps {
-  character: { id?: number; name: string } | null;
+  character: { id?: number; name: string; category?: string } | null;
   perks: PerksTogglePopupPerk[];
   isPerkUnlocked: (perkId: number) => boolean;
   onTogglePerk: (perkId: number) => void;
@@ -53,7 +57,12 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
 }) => {
   if (!character) return null;
 
-  const characterPerks = perks.filter((p) => p.character_id === character.id);
+  // Matched on the key for this character's own side. A bare id comparison
+  // would pair a survivor's perks with the killer who shares that number.
+  const characterPerks =
+    character.id === undefined
+      ? []
+      : perks.filter((p) => ownsPerk(p, character.id as number, character.category));
 
   return (
     <div

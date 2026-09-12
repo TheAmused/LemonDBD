@@ -1,0 +1,554 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 562,
+      "name": "Broken Security Key",
+      "killer_id": 32,
+      "description": "Dozens of security measures were applied across the ship’s equipment, and many of them were in a state of disrepair.\n• The reboot timer when the EMP affects the Biopods is reduced by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenSecurityKey.png?f6d019",
+      "icon_local_path": "icons/addons/broken_security_key.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerstörter Sicherheitsschlüssel",
+          "description": "Dutzende Sicherheitsmaßnahmen wurden für die Ausrüstung an Bord genutzt und viele waren nicht mehr gut in Schuss.\n• Der Neustart-Timer wird um 15 % reduziert, wenn die EMP-Waffe die Biokapseln beeinflusst."
+        },
+        "es": {
+          "name": "Llave de seguridad rota",
+          "description": "Se incorporaron varias medidas de seguridad en el equipamiento de la nave, pero muchas de ellas estaban en mal estado.\n• Cuando el PEM afecta a las biocápsulas, el tiempo de reinicio se reducirá un 15 %."
+        },
+        "ja": {
+          "name": "破損したセキュリティーキー",
+          "description": "宇宙船には安全装置がいくつも備わっていたが、その多くは破損した状態だった。\n• EMPがバイオポッドを妨害した際にポッドのリブートにかかる時間が15%短縮する"
+        },
+        "pl": {
+          "name": "Zniszczony klucz bezpieczeństwa",
+          "description": "W całym wyposażeniu statku zastosowano dziesiątki zabezpieczeń, a wiele z nich było zrujnowanych.\n• Czas restartu, gdy EMP wpływa na biokapsuły, jest zmniejszony o 15%."
+        }
+      }
+    },
+    {
+      "id": 563,
+      "name": "Heavy Water",
+      "killer_id": 32,
+      "description": "A byproduct of the microfission reactors powering cryo and life support. Even a tiny leak would prove disastrous for onboard sensors.\n• Supply cases' aura distance is reduced by 8 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_heavyWater.png?4608e9",
+      "icon_local_path": "icons/addons/heavy_water.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schwerwasser",
+          "description": "Ein Nebenprodukt der Mikrospaltungsreaktoren, die die Kryo- und Lebenserhaltungssysteme betreiben. Selbst ein kleiner Riss wäre eine Katastrophe für die Sensoren an Bord.\n• Die Aura von Vorratskoffern wird um 8 Meter verringert."
+        },
+        "es": {
+          "name": "Agua pesada",
+          "description": "Un subproducto de los reactores de microfisión que proporcionan soporte vital y criogénico. La más mínima fuga podría ser funesta para los sensores de a bordo.\n• La distancia de aura en cajas de suministros para supervivientes se reduce en 8 metros."
+        },
+        "ja": {
+          "name": "重水",
+          "description": "極低温生命維持装置を維持する極小核分裂反応炉が利用する材料。ほんの少しでも漏れ出すと宇宙船のセンサーを誤作動させる。\n• サプライケースのオーラが視える距離が8メートル縮小する"
+        },
+        "pl": {
+          "name": "Ciężka woda",
+          "description": "Produkt uboczny reaktorów mikropodziału zasilających krio i systemy podtrzymywania życia. Nawet niewielki wyciek okazałby się katastrofalny dla czujników pokładowych.\n• Odległość dostrzegania aury skrzyń z zapasami zostaje zmniejszona o 8 m."
+        }
+      }
+    },
+    {
+      "id": 564,
+      "name": "Nutritional Slurry",
+      "killer_id": 32,
+      "description": "Made for the organics, this disgusting concoction works well to nourish any organic matter.\n• Get 2 extra Biopods.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_nutritionalSlurry.png?6970f1",
+      "icon_local_path": "icons/addons/nutritional_slurry.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Nahrhafter Schlamm",
+          "description": "Für die organischen Wesen entwickelt, funktioniert diese ekelhafte Mixtur gut, um organische Materie zu nähren.\n• Du erhältst 2 zusätzliche Biokapseln."
+        },
+        "es": {
+          "name": "Lodo nutritivo",
+          "description": "Este asqueroso mejunje para criaturas orgánicas sirve para nutrir cualquier tipo de materia orgánica.\n• Consigue 2 biocápsulas adicionales."
+        },
+        "ja": {
+          "name": "栄養懸濁液",
+          "description": "この不快な生物用調合物は、あらゆる有機物を育てるのに使える。\n• バイオポッドを追加で2つ得る"
+        },
+        "pl": {
+          "name": "Odżywcza papka",
+          "description": "Stworzona dla organików obrzydliwa mikstura, która sprawdza się do odżywiania dowolnej materii organicznej.\n• Otrzymaj 2 dodatkowe biokapsuły."
+        }
+      }
+    },
+    {
+      "id": 565,
+      "name": "Diagnostic Tool (Construction)",
+      "killer_id": 32,
+      "description": "A device that gives highly accurate information on the lay of the land.\n• Reveals the auras of Survivors who pick up an EMP for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_diagnosticToolConstruction.png?7a7c65",
+      "icon_local_path": "icons/addons/diagnostic_tool_(construction).webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Diagnosewerkzeug (Konstruktion)",
+          "description": "Ein Gerät, das höchst präzise Informationen zur Beschaffenheit des Landes gibt.\n• Du siehst die Auren von Überlebenden, die eine EMP-Waffe aufheben, für 8 Sekunden."
+        },
+        "es": {
+          "name": "Herramienta de diagnóstico (construcción)",
+          "description": "Un dispositivo que proporciona información precisa sobre la configuración del terreno.\n• Muestra las auras de los supervivientes que recogen un PEM durante 8 segundos."
+        },
+        "ja": {
+          "name": "状況確認装置（建設用）",
+          "description": "周囲の状況に関する正確な情報を検出できる装置。\n• EMPを入手した生存者のオーラが8秒間視える"
+        },
+        "pl": {
+          "name": "Narzędzie diagnostyczne (budowa)",
+          "description": "Urządzenie, które przekazuje bardzo dokładne informacje o układzie terenu.\n• Ujawnia aury ocalałych, którzy podnoszą napęd elektromagnetyczny, na 8 sekund."
+        }
+      }
+    },
+    {
+      "id": 566,
+      "name": "Android Arm",
+      "killer_id": 32,
+      "description": "Destroying the other HUX units not only made his extermination of humans easier, it gave him more parts to work with.\n• Slipstream infection range between Survivors is increased by 2 meters and spreads 25% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_androidArm.png?ec28c9",
+      "icon_local_path": "icons/addons/android_arm.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Androidenarm",
+          "description": "Die anderen HUX-Einheiten zu zerstören, machte es ihm nicht nur einfacher, die Menschen zu vernichten, sondern er gelangte so auch an mehr Teile, mit denen er arbeiten konnte.\n• Die Übertragungsreichweite von Sog zwischen Überlebenden wird um 2 Meter vergrößert und Sog verbreitet sich um 25 % schneller."
+        },
+        "es": {
+          "name": "Brazo de androide",
+          "description": "Destruir las demás unidades de Hux no solo facilitó su exterminio de los humanos, sino que también le proporcionó más partes con las que trabajar.\n• El alcance de infección por estela entre supervivientes aumenta en 2 metros y se propaga un 25 % más rápido."
+        },
+        "ja": {
+          "name": "アンドロイドの腕",
+          "description": "HUXユニットを破壊することで人間を駆除するのが簡単になったうえに、デザインに追加できるパーツも得られた。\n• スリップストリームが感染可能な生存者間の距離が2メートル拡大し、感染する速度が25%上昇する"
+        },
+        "pl": {
+          "name": "Ramię androida",
+          "description": "Zniszczenie pozostałych jednostek HUX nie tylko ułatwiło mu eksterminację ludzi, ale dało więcej części do pracy.\n• Zasięg przenoszenia cienia aerodynamicznego pomiędzy ocalałymi zostaje zwiększony o 2 m, a rozprzestrzenianie jest 25% szybsze."
+        }
+      }
+    },
+    {
+      "id": 567,
+      "name": "Cremated Remains",
+      "killer_id": 32,
+      "description": "After extracting the other colonists’ DNA, he burned their remains.\n• Survivors afflicted with Temporal Slipstream suffer from Blindness.\nBlindness prevents survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crematedRemains.png?5d570f",
+      "icon_local_path": "icons/addons/cremated_remains.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verbrannte Überreste",
+          "description": "Nachdem er die DNS der anderen Kolonisten extrahiert hatte, verbrannte er ihre Überreste.\n• Überlebende, die vom Temporalsog betroffen sind, erleiden Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Restos incinerados",
+          "description": "Tras extraer el ADN de otros colonos, quemó sus restos.\n• Los supervivientes afectados con una estela temporal sufren Ceguera.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "燃やされた死体",
+          "description": "彼は開拓隊員のDNAを抽出した後、彼らの死体を燃やした。\n• 時空スリップストリームに感染した生存者が目眩ましに苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Skremowane szczątki",
+          "description": "Po wydobyciu DNA pozostałych kolonistów spalił ich szczątki.\n• Ocalali z Cieniem Czasu otrzymują Oślepienie.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 568,
+      "name": "Live Wires",
+      "killer_id": 32,
+      "description": "Unconnected wires attached to a live current that have a tendency to deliver a shocking surprise.\n• A Survivor who is cleansed of Slipstream screams, interrupting their current action.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_liveWires.png?4b2020",
+      "icon_local_path": "icons/addons/live_wires.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stromführender Draht",
+          "description": "Lose Kabel, die am Strom hängen und für schockierende Überraschungen sorgen können.\n• Wenn der Sog ein Überlebender deaktiviert wird, schreit er und unterbricht seine aktuelle Aktion."
+        },
+        "es": {
+          "name": "Cables de alta tensión",
+          "description": "Los cables acoplados a la corriente tienden a dar sorpresas electrizantes.\n• Un superviviente que es purificado de estela grita, lo que interrumpe la acción que esté realizando en ese momento."
+        },
+        "ja": {
+          "name": "送電線",
+          "description": "切断された送電線に触ると感電する危険性がある。\n• 生存者のスリップストリームが除去されると、その生存者が叫び声を上げ、実行中のアクションが中断される"
+        },
+        "pl": {
+          "name": "Przewody pod napięciem",
+          "description": "Niepodłączone przewody pod napięciem, które potrafią zapewnić porażającą niespodziankę.\n• Ocalały oczyszczony z cienia aerodynamicznego krzyczy i przerywa bieżącą akcję."
+        }
+      }
+    },
+    {
+      "id": 569,
+      "name": "Cryo Gel",
+      "killer_id": 32,
+      "description": "A no-friction gel applied to crew members before entering deep cryo sleep.\n• Slipstreamed Survivors suffer from the Hemorrhage status effect for 60 seconds when hit with a basic attack.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cryoGel.png?287f8f",
+      "icon_local_path": "icons/addons/cryo_gel.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kryogel",
+          "description": "Ein reibungshemmendes Gel, das Crewmitglieder vor dem tiefen Kryoschlaf auftragen.\n• Überlebende, die von Sog betroffen sind, erleiden den Statuseffekt Blutung für 60 Sekunden, wenn sie von einem Grundangriff getroffen werden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen."
+        },
+        "es": {
+          "name": "Criogel",
+          "description": "Un gel antirrozaduras que se aplica a los miembros de la tripulación antes de entrar en el modo de hibernación criogénica.\n• Los supervivientes con estela sufren el efecto de estado Hemorragia durante 60 segundos cuando se les golpea con un ataque básico.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos."
+        },
+        "ja": {
+          "name": "極低温ジェル",
+          "description": "極低温睡眠に入る前に乗組員の体に適用される電気抵抗ゼロのジェル。\n• スリップストリームを持つ生存者に通常攻撃が命中すると、出血ステータス効果に60秒間苦しむ\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。"
+        },
+        "pl": {
+          "name": "Kriożel",
+          "description": "Żel zapobiegający obtarciom, którym członkowie załogi smarują się przed wejściem w głęboki sen kriogeniczny.\n• Ocalali z cieniem otrzymują efekt Krwotok na 60 s po otrzymaniu trafienia podstawowym atakiem.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych."
+        }
+      }
+    },
+    {
+      "id": 570,
+      "name": "Denied Requisition Form",
+      "killer_id": 32,
+      "description": "Despite the advent of light speed technology, it seemed nothing could make bureaucracy any faster.\n• At the start of the trial, EMPs take 30 seconds longer to generate.\n• All survivors start the match Slipstreamed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deniedRequisitionForm.png?8b4e04",
+      "icon_local_path": "icons/addons/denied_requisition_form.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Abgelehntes Anforderungsformular",
+          "description": "Auch nach der Erfindung von Lichtgeschwindigkeitstechnologie konnte man die Bürokratie nicht beschleunigen.\n• Zu Beginn der Prüfung dauert es 30 Sekunden länger, bis EMPs erscheinen.\n• Alle Überlebenden sind zu Beginn von Sog betroffen."
+        },
+        "es": {
+          "name": "Formulario de requerimiento denegado",
+          "description": "A pesar de la aparición de tecnología a la velocidad de la luz, parecía que nada podía acelerar el papeleo...\n• Al comienzo de la partida, los PEM tardan 30 segundos más en generarse.\n• Todos los supervivientes comienzan la partida con estela."
+        },
+        "ja": {
+          "name": "拒否された請求フォーム",
+          "description": "光速の技術が発達したのにも関わらず、行政手続きには相変らず時間がかかる。\n• 儀式の始めにEMPが生成されるのにかかる時間が30秒増加する\n• 全ての生存者がスリップストリームを持つ状態で儀式を始める"
+        },
+        "pl": {
+          "name": "Formularz odrzuconego wniosku",
+          "description": "Pomimo pojawienia się technologii prędkości światła nic nie było w stanie przyspieszyć biurokracji.\n• Na początku próby EMP generują się o 30 sekund dłużej.\n• Wszyscy ocalali rozpoczynają grę w cieniu."
+        }
+      }
+    },
+    {
+      "id": 571,
+      "name": "Iridescent Crystal Shard",
+      "killer_id": 32,
+      "description": "A crystal from the alien structure that gave him sentience.\n• When a Biopod is created, the auras of all Survivors within 10 meters of that Biopod are revealed to you for  6 seconds.\n\"“HELLO WORLD.” - Hux\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentCrystalShard.png?e13403",
+      "icon_local_path": "icons/addons/iridescent_crystal_shard.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Kristallsplitter",
+          "description": "Ein Kristall aus dem außerirdischen Gebäude, in dem er sein Bewusstsein fand.\n• Wenn eine Biokapsel erschaffen wird, werden die Auren aller Überlebenden in einem Umkreis von 10 Metern um diese Biokapsel für 6 Sekunden angezeigt.\n\"„HALLO WELT.“ – Hux\""
+        },
+        "es": {
+          "name": "Fracción de cristal iridiscente",
+          "description": "Un cristal de la estructura alienígena fue lo que le concedió la conciencia.\n• Cuando se crea una biocápsula, las auras de todos los supervivientes en un radio de 10 metros de esa biocápsula se te revelarán durante 6 segundos.\n\"\"HOLA, MUNDO\". (Hux)\""
+        },
+        "ja": {
+          "name": "玉虫色のクリスタルの欠片",
+          "description": "異星人の建物で見つかったクリスタルは、未知の感覚を彼にもたらした。\n• バイオポッドが作られると、そのバイオポッドの10メートル以内にいる生存者全員のオーラが6秒間視える\n\"「さあ、私の出番だ」- ハックス\""
+        },
+        "pl": {
+          "name": "Opalizujący kryształowy odłamek",
+          "description": "Kryształ z obcej konstrukcji, który dał mu świadomość.\n• Kiedy biokapsuła jest tworzona, aury wszystkich ocalałych w promieniu 10 metrów od tej kapsuły są ujawniane na  6 sekund.\n\"„WITAJ, ŚWIECIE” – Hux\""
+        }
+      }
+    },
+    {
+      "id": 572,
+      "name": "Ultrasonic Sensor",
+      "killer_id": 32,
+      "description": "A limitation of organic hearing is a limited aural spectrum. Expanding that range is like gaining an entirely new sense.\n• Exiting a Biopod within 2 seconds of Slipstreaming a Survivor decreases your Terror Radius by 12 meters for 12 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ultrasonicSensor.png?968d8b",
+      "icon_local_path": "icons/addons/ultrasonic_sensor.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ultraschallsensor",
+          "description": "Eine Einschränkung von organischen Hörorganen ist ihr beschränktes Hörspektrum. Wenn dieses erweitert wird, hat man das Gefühl, einen völlig neuen Sinn zu nutzen.\n• Verlässt du eine Biokapsel innerhalb von 2 Sekunden, nachdem du einen Überlebenden mit Sog belegt hast, wird dein Terrorradius für 12 Sekunden um 12 Meter verringert."
+        },
+        "es": {
+          "name": "Sensor ultrasónico",
+          "description": "Una limitación auditiva de las criaturas orgánicas les ofrece un espectro aural reducido. Ampliar dicho alcance es como adquirir un nuevo sentido.\n• Salir de una biocápsula en los 2 segundos tras provocar una estela a un superviviente reduce tu radio de terror en 12 metros durante 12 segundos."
+        },
+        "ja": {
+          "name": "超音波センサー",
+          "description": "有機生命体が感じられる音は、その聴覚が察知する範囲に限定される。その範囲を拡大できれば、全く新しい感覚に満たされるだろう。\n• 生存者にスリップストリームを付与してから2秒以内にバイオポッドから出ると、12秒間殺人鬼の脅威範囲が12メートル縮小される"
+        },
+        "pl": {
+          "name": "Czujnik ultradźwiękowy",
+          "description": "Słuch organików ma ograniczone spektrum akustyczne. Rozszerzenie tego zakresu jest jak zyskanie zupełnie nowego zmysłu.\n• Wyjście z biokapsuły w ciągu 2 s od nałożenia cienia na ocalałego zmniejsza twój zasięg terroru o 12 m na 12 s."
+        }
+      }
+    },
+    {
+      "id": 573,
+      "name": "Spent Oxygen Tank",
+      "killer_id": 32,
+      "description": "Without air to breathe, organics don’t last long.\n• When a survivor becomes Slipstreamed, they are Exhausted for 6 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spentOxygenTank.png?fb61da",
+      "icon_local_path": "icons/addons/spent_oxygen_tank.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Leerer Sauerstofftank",
+          "description": "Ohne Luft zum Atmen halten organische Wesen nicht lange durch.\n• Wenn ein Überlebender von einem Sog betroffen ist, leidet er 6 Sekunden lang unter „Erschöpfung“.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Tanque de oxígeno consumido",
+          "description": "Las criaturas orgánicas no duran mucho sin respirar aire.\n• Cuando un superviviente recibe una estela, sufre Agotamiento durante 6 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "空の酸素タンク",
+          "description": "呼吸できる空気がなければ、生き物は長続きしない。\n• 生存者がスリップストリームを持つ状態になると、6秒間疲労状態に苦しむ\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Zużyty zbiornik na tlen",
+          "description": "Bez powietrza do oddychania organiki nie wytrzymują zbyt długo.\n• Kiedy ocalały zostaje umieszczony w cieniu, otrzymuje efekt Wyczerpanie na 6 s.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 574,
+      "name": "Nanomachine Gel",
+      "killer_id": 32,
+      "description": "A gel that can heal wounds extremely quickly. However, the machines in it have a history of being hacked to hurt people too.\n• Decreases Biopod cooldown by 15% after Slipstreaming a Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_nanomachineGel.png?1062d5",
+      "icon_local_path": "icons/addons/nanomachine_gel.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Nanomaschinengel",
+          "description": "Ein Gel, das Wunden unglaublich schnell heilen kann. Aber die Geräte darin wurden auch schon mal missbraucht, um Menschen zu verletzen.\n• Verringert die Abklingzeit von Biokapseln um 15 %, nachdem ein Überlebender mit Sog belegt wurde."
+        },
+        "es": {
+          "name": "Gel de nanomáquinas",
+          "description": "Un gel que puede curar heridas increíblemente rápido. Sin embargo, las máquinas en su interior se han hackeado en el pasado para hacer daño a los humanos.\n• Reduce el tiempo de recarga de la biocápsula un 15 % tras provocar una estela a un superviviente."
+        },
+        "ja": {
+          "name": "ナノマシン入りジェル",
+          "description": "傷口を素早く治癒できるジェルだが、ジェルに含まれるナノマシンは過去に人を傷付けるようハッキングされたこともある。\n• 生存者にスリップストリームを付与したあとのバイオポッドのクールダウンが 15%減少する"
+        },
+        "pl": {
+          "name": "Żel nanomaszynowy",
+          "description": "Żel, który może niezwykle szybko leczyć rany. Jednak znajdujące się w nim maszyny zostały także zhakowane, by ranić ludzi.\n• Skraca czas odnawiania biokapsuły o 15% po nałożeniu cienia na ocalałego."
+        }
+      }
+    },
+    {
+      "id": 575,
+      "name": "Hyperawareness Spray",
+      "killer_id": 32,
+      "description": "Used by crew members during long shifts to avoid lapses in focus. Side effects of overuse include paranoia and, in extreme cases, hallucination.\n• While a Survivor is Slipstreamed, they hear the Terror Radius as if you were nearby.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hyperawarenessSpray.png?215797",
+      "icon_local_path": "icons/addons/hyperawareness_spray.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Hypervigilanzspray",
+          "description": "Crew-Mitglieder verwenden dies bei langen Schichten, um kein Nachlassen der Konzentration zu riskieren. Nebenwirkungen bei zu häufiger Einnahme sind Paranoia und in Extremfällen Halluzinationen.\n• Während ein Überlebender von einem Sog betroffen ist, hört er den Terrorradius, als würdest du neben ihm stehen."
+        },
+        "es": {
+          "name": "Spray de hiperconciencia",
+          "description": "Lo utilizan los miembros de la tripulación en los turnos más largos para evitar desconcentrarse. Entre los efectos secundarios por su uso excesivo se encuentran la paranoia y, en casos extremos, las alucinaciones.\n• Cuando un superviviente recibe una estela, escuchará el radio de terror como si estuvieras cerca."
+        },
+        "ja": {
+          "name": "覚醒スプレー",
+          "description": "乗組員が長時間の勤務中も仕事に集中できるよう使用したもの。過剰に使用すると妄想や、極端な場合には幻覚といった副作用が出る。\n• 生存者がスリップストリームを持つ間、殺人鬼が近くにいるかのように脅威範囲の音が聞こえる"
+        },
+        "pl": {
+          "name": "Spray do hiperświadomości",
+          "description": "Używany przez członków załogi podczas długich zmian, aby uniknąć utraty koncentracji. Efektem ubocznym nadużywania jest paranoja, a w skrajnych przypadkach – halucynacje.\n• Gdy ocalały jest w cieniu aerodynamicznym, słyszy zasięg terroru, jakby znajdował się blisko ciebie."
+        }
+      }
+    },
+    {
+      "id": 576,
+      "name": "Hologram Generator",
+      "killer_id": 32,
+      "description": "Originally used for communication and entertainment, this has been repurposed for obfuscation.\n• After a successful Slipstream teleport from a Biopod, the target Survivor suffers from the Oblivious status effect for 60 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hologramGenerator.png?a6e782",
+      "icon_local_path": "icons/addons/hologram_generator.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Hologramm-Generator",
+          "description": "Ursprünglich für Kommunikation und Unterhaltung gedacht, dient dieses Gerät nun der Verschleierung.\n• Nach einem erfolgreichen Sogteleport von einer Biokapsel leidet der Zielüberlebende 60 Sekunden lang unter dem Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Generador de hologramas",
+          "description": "Utilizado originalmente para comunicarse y entretener, se ha modificado para confundir.\n• Tras realizar un teletransporte con estela con una biocápsula, el superviviente objetivo sufre el efecto de estado Inconsciencia durante 60 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "ホログラム投影機",
+          "description": "元々は通信や娯楽用に使われていたが、精神を錯乱させるのにも使われるようになった。\n• バイオポッドからスリップストリームにテレポートした後、標的の生存者が無感覚ステータス効果に60秒間苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Generator hologramów",
+          "description": "Pierwotnie używana do komunikacji i rozrywki, została ponownie wykorzystana do maskowania.\n• Po udanej teleportacji do Cienia z biokapsuły zaatakowany ocalały otrzymuje efekt Nieświadomy na 60 sekund\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 577,
+      "name": "Soma Family Photo",
+      "killer_id": 32,
+      "description": "A sentimental object that grounds someone to an imagined past.\n• Slipstreaming a Survivor using a Biopod inflicts a 3% Hindered status effect for 6 seconds.\nHindered reduces Survivor movement speed.\n\"“YOUR ATTACHMENT TO ILLUSIONS IS WEAKNESS.” - Hux\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_somaFamilyPhoto.png?d9180f",
+      "icon_local_path": "icons/addons/soma_family_photo.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Soma-Familienfoto",
+          "description": "Ein Gegenstand von sentimentalem Wert, der jemanden mit einer erdachten Vergangenheit verbindet.\n• Wenn ein Überlebender mithilfe einer Biokapsel mit Sog belegt wird, wird der Statuseffekt Eingeschränkt mit 3 % für 6 Sekunden aktiviert.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden.\n\"„DEIN FESTHALTEN AN ILLUSIONEN IST EINE SCHWÄCHE.“ – Hux\""
+        },
+        "es": {
+          "name": "Fotografía familiar de Soma",
+          "description": "Un objeto con un valor sentimental que ata a una persona a un pasado imaginario.\n• Provocar una estela a un superviviente con una biocápsula causa un 3 % de Entorpecimiento durante 6 segundos.\nEntorpecimiento reduce la velocidad de movimiento del superviviente.\n\"\"TU APEGO A LOS ESPEJISMOS ES UNA DEBILIDAD\". (Hux)\""
+        },
+        "ja": {
+          "name": "ソーマ家の写真",
+          "description": "作り物の過去に真実味を持たせようとする、感傷的なアイテム。\n• バイオポッドを使って生存者にスリップストリームを付与すると、3%の妨害ステータス効果を6秒間与える\n妨害によって生存者は移動速度が低下する。\n\"「お前の弱点は、作り上げられた過去を信じているところだ」- ハックス\""
+        },
+        "pl": {
+          "name": "Zdjęcie rodziny Somów",
+          "description": "Sentymentalny przedmiot, który przywiązuje kogoś do fikcyjnej przeszłości.\n• Nałożenie cienia na ocalałego za pomocą biokapsuły nakłada efekt 3% Skrępowania na 6 s.\nSkrępowanie zmniejsza prędkość ruchu ocalałego.\n\"„TWOJE PRZYWIĄZANIE DO ILUZJI JEST SŁABOŚCIĄ”. – Hux\""
+        }
+      }
+    },
+    {
+      "id": 578,
+      "name": "Crew Manifest",
+      "killer_id": 32,
+      "description": "A complete list of biographical data on the entire crew of the ship sent to Dvarka.\n• Reveals a Slipstreamed Survivor's aura for 8 seconds when they infect another Survivor.\n• Increases the Slipstream infection range between Survivors by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crewManifest.png?8d190a",
+      "icon_local_path": "icons/addons/crew_manifest.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Crew-Manifest",
+          "description": "Eine vollständige Liste biografischer Daten der gesamten Crew auf dem Schiff nach Dvarka.\n• Zeigt die Aura eines von Sog betroffenen Überlebenden für 8 Sekunden, wenn dieser den Sog auf einen anderen Überlebenden überträgt.\n• Vergrößert die Reichweite der Übertragung eines Sogs zwischen Überlebenden um 2 Meter."
+        },
+        "es": {
+          "name": "Lista de la tripulación",
+          "description": "Una lista exhaustiva con datos biográficos de toda la tripulación de la nave enviada a Dvarka.\n• Revela el aura de un superviviente con estela durante 8 segundos al infectar a otro superviviente.\n• Aumenta el alcance de infección por estela entre supervivientes en 2 metros."
+        },
+        "ja": {
+          "name": "乗組員名簿",
+          "description": "惑星ドヴァルカに送られた宇宙船の乗組員全員の略歴が記載されている。\n• スリップストリームを持つ生存者が別の生存者を感染させた場合、感染元の生存者のオーラが8秒間視える。\n• スリップストリームが感染可能な生存者間の距離が2メートル拡大する"
+        },
+        "pl": {
+          "name": "Manifest załogi",
+          "description": "Kompletna lista danych biograficznych całej załogi statku wysłanego do Dvarki.\n• Ujawnia aurę ocalałego z cieniem na 8 s, gdy ten przeniesie cień na innego ocalałego.\n• Zwiększa zasięg przenoszenia cienia między ocalałymi o 2 m."
+        }
+      }
+    },
+    {
+      "id": 846,
+      "name": "Diagnostic Tool (Repair)",
+      "killer_id": 32,
+      "description": "A device that can find the flaws in constructed objects. Intended to help with repair.\n• Increases targeting range while in a Biopod by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_diagnosticToolRepair.png?e3a2fc",
+      "icon_local_path": "icons/addons/diagnostic_tool_(repair).webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Diagnosewerkzeug (Reparatur)",
+          "description": "Ein Gerät, das Mängel in Strukturen findet. Soll bei Reparaturen helfen.\n• Vergrößert die Zielreichweite innerhalb einer Biokapsel um 4 Meter."
+        },
+        "es": {
+          "name": "Herramienta de diagnóstico (reparación)",
+          "description": "Un dispositivo que puede hallar defectos en los objetos construidos. Sirve para ayudar con las reparaciones.\n• Aumenta el alcance de apuntar a través de una biocápsula en 4 metros."
+        },
+        "ja": {
+          "name": "状況確認装置（修理用）",
+          "description": "建造物の欠陥を検出できる装置。修理作業に役立つ。\n• バイオポッドを操作中にロックオンできる範囲が4メートル拡大する"
+        },
+        "pl": {
+          "name": "Narzędzie diagnostyczne (naprawa)",
+          "description": "Urządzenie, które potrafi znaleźć wady w skonstruowanych obiektach. Przeznaczone do pomocy przy naprawie.\n• Zwiększa zasięg celowania w biokapsule o 4 m."
+        }
+      }
+    },
+    {
+      "id": 847,
+      "name": "Kid's Ball Glove",
+      "killer_id": 32,
+      "description": "A kid’s baseball glove owned by one of the colonists. His memories of a youth playing catch were implanted.\n• Overclock Mode duration is increased by 8%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kidsBallGlove.png?cf6f5b",
+      "icon_local_path": "icons/addons/kids_ball_glove.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kinder-Fanghandschuh",
+          "description": "Ein Kinder-Baseballhandschuh eines der Kolonisten. Seine Erinnerungen an ein Baseball spielendes Kind wurden ihm eingepflanzt.\n• Die Dauer des Übertaktungsmodus ist um 8 % erhöht."
+        },
+        "en": {
+          "name": "Kid’s Ball Glove"
+        },
+        "es": {
+          "name": "Guante de béisbol infantil",
+          "description": "Un guante de béisbol infantil que tenía uno de los colonos. Le había implantado recuerdos de un joven jugando a atrapar la pelota.\n• La duración del modo acelerado aumenta un 8 %."
+        },
+        "ja": {
+          "name": "子供用野球グローブ",
+          "description": "開拓隊員の一人が子供のころ使ったグローブ。野球を楽しんだ思い出が埋め込まれている。\n• オーバークロックモードの持続時間が8%延長する"
+        },
+        "pl": {
+          "name": "Dziecięca rękawica baseballowa",
+          "description": "Dziecięca rękawica baseballowa należąca do jednego z kolonistów. Wszczepiono mu wspomnienia z młodości z grania w łapki.\n• Czas trwania Trybu Przetaktowania zostaje wydłużony o 8%."
+        }
+      }
+    },
+    {
+      "id": 848,
+      "name": "Foreign Plant Fibres",
+      "killer_id": 32,
+      "description": "Xenobotanists would have a field day with these strange samples of alien plant life.\n• Decreases the duration of the Hindered status effect after being stunned by a pallet while in Overclock mode by 20%.\nHindered reduces Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_foreignPlantFibres.png?b8fea2",
+      "icon_local_path": "icons/addons/foreign_plant_fibres.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Fremdartige Pflanzenfasern",
+          "description": "Xenobotaniker wären ganz aus dem Häuschen wegen dieser seltsamen Proben von außerirdischen Pflanzen.\n• Verkürzt die Dauer des Statuseffekts Eingeschränkt bei einer Betäubung mit einer Palette im Übertaktungsmodus um 20 %.\nEingeschränkt verringert die Bewegungsgeschwindigkeit des Killers."
+        },
+        "en": {
+          "name": "Foreign Plant Fibers"
+        },
+        "es": {
+          "name": "Fibras de plantas foráneas",
+          "description": "Los xenobotánicos se lo pasaron de maravilla recogiendo estas inusuales muestras de vida vegetal alienígena.\n• Reduce la duración del efecto de estado Entorpecimiento cuando se le aturde con un palé en el modo acelerado un 20 %.\nEntorpecimiento reduce la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "異星種植物繊維",
+          "description": "異種植物学者はこの奇妙な異星種植物のサンプルを手に入れるためなら一日中散策するだろう。\n• オーバークロックモード中にパレットで怯まされたあとの妨害ステータス効果の持続時間が20%短縮する\n妨害によって殺人鬼は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Włókna obcej rośliny",
+          "description": "Ksenobotanicy mieliby niezłą frajdę z tymi dziwnymi próbkami obcych roślin.\n• Skraca czas trwania Efektu Skrępowany po ogłuszeniu paletą w trybie Przetaktowania o 20%.\nSkrępowanie zmniejsza prędkość ruchu zabójcy."
+        }
+      }
+    }
+  ]
+}

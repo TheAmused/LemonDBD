@@ -58,4 +58,11 @@ export default {
   clientModelTooltip: "Sprache wird vollständig offline durch ein lokales KI-Modell in deinem Browser verarbeitet.",
   micAccessError: "Zugriff auf das Mikrofon nicht möglich. Bitte versuche es erneut.",
   failedToInitialize: "Spracherkennung konnte nicht initialisiert werden.",
+  accuracyTitle: "Genauigkeit des lokalen Modells",
+  accuracyFast: "Schnell",
+  accuracyFastDesc: "Kleinster Download, am schnellsten auf schwächeren Geräten. Reicht für kurze Kartennamen.",
+  accuracyAccurate: "Genau",
+  accuracyAccurateDesc: "Größeres Modell, deutlich besser bei Eigennamen und starkem Akzent. Langsamer auf älterer Hardware.",
+  accuracyNote: "Betrifft nur das lokale Modell im Browser. Die Web Speech Engine bleibt unverändert.",
+  modelSize: "~{size} MB Download",
 } as const;

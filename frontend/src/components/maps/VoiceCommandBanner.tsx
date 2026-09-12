@@ -28,8 +28,12 @@ import {
   initClientSpeechModel,
   transcribeClientAudio,
   subscribeModelProgress,
+  getModelQuality,
+  setModelQuality,
+  resolveModelDescriptor,
   VoiceEngineType,
   ModelProgressInfo,
+  ModelQuality,
   BrowserCompatibilityInfo,
 } from '@/services/clientSpeechModel';
 import dynamic from 'next/dynamic';
@@ -219,6 +223,7 @@ export function VoiceCommandBanner({
     status: 'unloaded',
     progress: 0,
   });
+  const [modelQuality, setModelQualityState] = useState<ModelQuality>(() => getModelQuality());
   const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
 
   const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
@@ -1181,6 +1186,16 @@ export function VoiceCommandBanner({
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
         onPreloadModel={() => initClientSpeechModel(locale)}
+        modelQuality={modelQuality}
+        onSelectModelQuality={(quality) => {
+          if (setModelQuality(quality)) {
+            setModelQualityState(quality);
+            if (activeEngine === 'client-model') {
+              initClientSpeechModel(locale);
+            }
+          }
+        }}
+        modelDescriptor={resolveModelDescriptor(locale, modelQuality)}
         dict={dict}
       />
     </section>

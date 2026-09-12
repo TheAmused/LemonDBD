@@ -226,7 +226,7 @@ class ChaosService:
                 user_id=user_id,
                 mode="chaos",
                 variant=r.difficulty,
-                attempts_taken=r.attempts,
+                attempts_taken=r.attempts + 1,
                 matches_played=len(r.match_logs),
                 unlocked_characters_count=len(safe_json_loads(r.owned_killers_json, default=[])),
             )

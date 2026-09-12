@@ -178,9 +178,24 @@ class TestSubmitResultWithinARow:
         assert record is not None
         assert record.mode == "history"
         assert record.variant == "hell"
-        assert record.attempts_taken == 1
+        assert record.attempts_taken == 2
         assert record.matches_played == 4
         assert record.unlocked_characters_count == 3
+
+    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.attempts_taken == 1
 
     def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self, db_session: Session) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")

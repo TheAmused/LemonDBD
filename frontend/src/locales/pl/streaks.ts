@@ -84,7 +84,6 @@ export default {
   target: "CEL",
   activeGauntletTarget: "Aktywny Cel Gauntleta",
   yourBuildForMatch: "Twój zestaw na ten mecz",
-  pickTheseInGame: "Wybierz te perki w grze. Tutaj nie trzeba nic potwierdzać.",
   noTeachablePerks: "Brak umiejętności uczonych dla tej postaci.",
   rosterProgress: "Postęp Listy Postaci",
   rosterProgressDesc: "Rozgrywaj mecze każdą posiadaną postacią, aby opanować całą listę.",

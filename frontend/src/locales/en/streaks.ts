@@ -93,7 +93,6 @@ export default {
   target: "TARGET",
   activeGauntletTarget: "Active Gauntlet Target",
   yourBuildForMatch: "Your build for this match",
-  pickTheseInGame: "Pick these in-game. Nothing to confirm here.",
   noTeachablePerks: "No teachable perks on record for this character.",
   rosterProgress: "Roster Progress",
   rosterProgressDesc: "Complete matches with each owned character to master the roster.",

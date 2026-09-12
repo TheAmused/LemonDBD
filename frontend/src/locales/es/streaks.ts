@@ -84,7 +84,6 @@ export default {
   target: "OBJETIVO",
   activeGauntletTarget: "Objetivo Activo del Guantelete",
   yourBuildForMatch: "Tu configuración para esta partida",
-  pickTheseInGame: "Elige estas habilidades dentro del juego.",
   noTeachablePerks: "No hay habilidades enseñables registradas para este personaje.",
   rosterProgress: "Progreso de la Lista",
   rosterProgressDesc: "Completa partidas con cada personaje adquirido.",

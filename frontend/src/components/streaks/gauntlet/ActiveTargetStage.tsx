@@ -7,8 +7,6 @@ import type { OwnedCharacterItem } from './useOwnedCharacters';
 import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
   RefreshCw,
-  CheckCircle,
-  XCircle,
   User,
   Skull,
   Sparkles,
@@ -298,14 +296,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
       {/* Build guide */}
       <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+        <div className="mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
             {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {dict?.streaks?.pickTheseInGame || 'Pick these in-game. Nothing to confirm here.'}
-          </p>
         </div>
         {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
@@ -424,20 +419,18 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             type="button"
             onClick={onWin}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center cursor-pointer"
           >
-            <CheckCircle className="w-5 h-5 text-emerald-100" aria-hidden="true" />
-            <span>{dict?.streaks?.winMatch || 'WIN MATCH'}</span>
+            {dict?.streaks?.winMatch || 'WON'}
           </button>
 
           <button
             type="button"
             onClick={onLoss}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center cursor-pointer"
           >
-            <XCircle className="w-5 h-5 text-rose-100" aria-hidden="true" />
-            <span>{dict?.streaks?.loseMatch || 'LOSE MATCH'}</span>
+            {dict?.streaks?.loseMatch || 'LOST'}
           </button>
         </div>
       </div>

@@ -17,7 +17,6 @@ export default {
   others: "Others",
   admin: "ADMIN",
   adminControlCenter: "Admin Control Center",
-  soon: "Soon",
   signIn: "Sign In / Register",
   signOut: "Sign Out",
   emailNotVerified: "Email not verified. Verify now",

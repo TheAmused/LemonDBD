@@ -10,8 +10,6 @@ import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
-// Reachable by direct URL only -- deliberately not linked from the sidebar
-// nav yet (which still shows its own "Trophies · Soon" placeholder item).
 export default function AchievementsPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';

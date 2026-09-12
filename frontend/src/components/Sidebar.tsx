@@ -210,8 +210,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: Trophy,
       color: 'text-accent-amber',
       activeBg: 'bg-accent-amber/10 text-accent-amber border border-accent-amber/20',
-      href: undefined,
-      comingSoon: true,
+      href: `/${currentLocale}/achievements`,
     },
   ], [dict, currentLocale]);
 
@@ -321,10 +320,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               color={item.color}
               activeBg={item.activeBg}
               href={item.href}
-              isActive={!item.comingSoon && checkIsActive(item.id, item.href)}
-              badge={item.comingSoon ? (dict?.sidebar?.soon || 'Soon') : undefined}
-              badgeColor="bg-border-color/30 text-text-muted border-border-color"
-              onClick={item.comingSoon ? undefined : closeMobile}
+              isActive={checkIsActive(item.id, item.href)}
+              onClick={closeMobile}
             />
           ))}
 

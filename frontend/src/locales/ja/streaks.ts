@@ -133,7 +133,6 @@ export default {
   leftThisCycle: "今サイクル残り",
   usedTab: "使用済み",
   remainingTab: "残り一覧",
-  killersCleared: "キラー制覇",
   streakLabel: "ストリーク:",
   streakArrow: "→",
   middotSeparator: "·",

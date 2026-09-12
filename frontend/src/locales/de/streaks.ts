@@ -133,7 +133,6 @@ export default {
   leftThisCycle: "verbleibend in diesem Zyklus",
   usedTab: "Verwendet",
   remainingTab: "Verbleibend",
-  killersCleared: "abgeschlossene Killer",
   streakLabel: "Streak:",
   streakArrow: "→",
   middotSeparator: "·",

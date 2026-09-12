@@ -106,13 +106,13 @@ const ReelStrip: React.FC<{
           }}
         >
           {strip.map((perk, i) => (
-            <div key={i} className="flex items-center justify-center bg-slate-950" style={{ height: itemPx }}>
+            <div key={i} className="flex items-center justify-center bg-violet-50 dark:bg-slate-950" style={{ height: itemPx }}>
               <PerkImg perk={perk} className="w-full h-full object-contain p-1.5" />
             </div>
           ))}
         </div>
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-slate-950">
+        <div className="w-full h-full flex items-center justify-center bg-violet-50 dark:bg-slate-950">
           <PerkImg perk={finalPerk} className="w-full h-full object-contain p-1.5" />
         </div>
       )}
@@ -123,7 +123,7 @@ const ReelStrip: React.FC<{
 const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rarity, visible }) => {
   if (!visible) return <div className="h-10" />;
   return (
-    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-violet-500/30 bg-slate-950/60 pl-1 pr-3 py-1 text-sm font-bold text-violet-100">
+    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-violet-500/30 bg-white/80 dark:bg-slate-950/60 pl-1 pr-3 py-1 text-sm font-bold text-violet-900 dark:text-violet-100">
       <img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
@@ -182,7 +182,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-500/40 bg-gradient-to-b from-[#1a0b2e] to-[#0d0517] p-6 sm:p-8 shadow-xl shadow-violet-950/50">
+    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-300 dark:border-violet-500/40 bg-gradient-to-b from-violet-100 to-white dark:from-[#1a0b2e] dark:to-[#0d0517] p-6 sm:p-8 shadow-xl shadow-violet-300/40 dark:shadow-violet-950/50">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.06]"
         style={{
@@ -229,7 +229,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                 <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
               </div>
             ) : (
-              <p className="text-lg sm:text-xl font-black leading-tight text-violet-100">
+              <p className="text-lg sm:text-xl font-black leading-tight text-violet-900 dark:text-violet-100">
                 {dict?.streaks?.pullTheLever || 'Pull the lever!'}
               </p>
             )}
@@ -238,7 +238,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       </div>
 
       <div
-        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-violet-300/60 text-xs ${
+        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-violet-500/70 dark:text-violet-300/60 text-xs ${
           loading ? 'visible' : 'invisible'
         }`}
       >

@@ -28,14 +28,16 @@ export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf, dict }) => {
       <div className="flex flex-wrap gap-6">
         {shelf.tiers.map((tier) => {
           const hoverBase = `${beatPrefix} ${tier.label} ${difficultyWord}`.trim();
+          const ownedHover = tier.hoverText?.owned ?? `${hoverBase} ${ownedSuffix}`;
+          const allHover = tier.hoverText?.all ?? `${hoverBase} ${allSuffix}`;
           return (
             <div key={tier.id} className="flex flex-col items-center gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 {tier.label}
               </span>
               <div className="flex gap-3">
-                <TrophySlot variant="owned" badgeLabel={ownedBadge} hoverText={`${hoverBase} ${ownedSuffix}`} />
-                <TrophySlot variant="all" badgeLabel={allBadge} hoverText={`${hoverBase} ${allSuffix}`} />
+                <TrophySlot variant="owned" badgeLabel={ownedBadge} hoverText={ownedHover} />
+                <TrophySlot variant="all" badgeLabel={allBadge} hoverText={allHover} />
               </div>
             </div>
           );

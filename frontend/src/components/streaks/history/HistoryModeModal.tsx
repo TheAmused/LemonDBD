@@ -7,9 +7,7 @@ import { Shield, Skull } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { HistoryRulesModal } from './HistoryRulesModal';
-import { cascadeCompletedTiers } from '@/utils/challengeTierCompletion';
-
-const MODE_ORDER: HistoryMode[] = ['medium', 'hell'];
+import { cascadeCompletedTiers, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
@@ -34,7 +32,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const completedTiers = cascadeCompletedTiers(MODE_ORDER, completedModes);
+  const completedTiers = cascadeCompletedTiers(HISTORY_MODE_ORDER, completedModes);
 
   const tiles: ChallengeIntroTile[] = [
     {

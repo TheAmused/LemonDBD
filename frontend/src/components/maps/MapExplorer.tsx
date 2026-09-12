@@ -127,6 +127,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedGroups, isSearching, expandedRealm, realmFilter]);
   const activeRealmsSignature = [...activeRealms].sort().join('|');
+  const activeRealmsRef = useRef(activeRealms);
+  activeRealmsRef.current = activeRealms;
 
   const [renderedRealms, setRenderedRealms] = useState<Set<string>>(new Set());
   const [openRealms, setOpenRealms] = useState<Set<string>>(new Set());
@@ -156,7 +158,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         requestAnimationFrame(() => {
           setOpenRealms((prev) => {
             const next = new Set(prev);
-            toEnter.forEach((r) => next.add(r));
+            // Re-check against the latest activeRealms: if the user toggled this
+            // realm shut again before these frames fired, don't reopen it.
+            toEnter.forEach((r) => {
+              if (activeRealmsRef.current.has(r)) next.add(r);
+            });
             return next;
           });
         });

@@ -1,0 +1,557 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 39,
+      "name": "Counterweight",
+      "killer_id": 3,
+      "description": "Adds weight to the base, for stability.\n• Decreases the Chainsaw Sprints's initial turn rate by 70%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_counterweight.png?d4d775",
+      "icon_local_path": "icons/addons/counterweight.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gegengewicht",
+          "description": "Verleiht dem Körper zusätzliches Gewicht für die Stabilität.\n• Verringert die anfängliche Wenderate des Kettensägensprints um 70 %."
+        },
+        "es": {
+          "name": "Contrapeso",
+          "description": "Añade peso a la base para darle estabilidad.\n• Reduce la velocidad de aparición inicial del esprint con motosierra un 70 %."
+        },
+        "ja": {
+          "name": "つり合いおもり",
+          "description": "安定性を向上させるため、本体に追加されたもの。\n• チェーンソーダッシュ開始時のターン速度が70%低下する"
+        },
+        "pl": {
+          "name": "Przeciwwaga",
+          "description": "Dodaje ciężar do podstawy, aby zwiększyć stabilność.\n• Zmniejsza początkową prędkość skrętu sprintu z piłą łańcuchową o 70%."
+        }
+      }
+    },
+    {
+      "id": 40,
+      "name": "Cracked Primer Bulb",
+      "killer_id": 3,
+      "description": "A button that clears air from the fuel lines. This machine needs to be fed.\n• Survivors hit with the Chainsaw are damaged for a single health state.\n• Increases Overdrive generation by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crackedPrimerBulb.png?7b65d4",
+      "icon_local_path": "icons/addons/cracked_primer_bulb.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kaputte manuelle Kraftstoffpumpe",
+          "description": "Eine Vorrichtung, die Luft aus den Treibstoffleitungen saugt. Diese Maschine muss gefüttert werden.\n• Überlebende, die von der Kettensäge getroffen werden, verlieren einen Gesundheitsstatus.\n• Steigert den Aufbau des Schnellgangs um 15 %."
+        },
+        "es": {
+          "name": "Bombilla de ignición rota",
+          "description": "Un botón que libera aire a través de los tubos de combustible. Hay que darle energía a esta máquina.\n• Los supervivientes golpeados por la motosierra sufren un daño de un solo estado de salud.\n• Aumenta la generación de Sobremarcha un 15 %."
+        },
+        "ja": {
+          "name": "ひびの入ったプライマーバルブ",
+          "description": "燃料経路から空気を除去する。この機械には燃料が必要だ。\n• チェーンソーが命中した生存者は負傷1段階分のダメージを受ける\n• オーバードライブのメーターが増える速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Pęknięta żarówka odpowietrzania",
+          "description": "Przycisk, który usuwa powietrze z przewodów paliwowych. Ta maszyna jest głodna.\n• Ocalali trafieni piłą łańcuchową otrzymują obrażenia w wysokości jednego stanu zdrowia.\n• Zwiększa wytwarzanie Nadbiegu o 15%."
+        }
+      }
+    },
+    {
+      "id": 41,
+      "name": "Steel Toe Boots",
+      "killer_id": 3,
+      "description": "Boots with a reinforced toe that offer protection from impact.\n• Decreases recovery time after hitting an object with the Chainsaw by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_steelToeBoots.png?95ae8a",
+      "icon_local_path": "icons/addons/steel_toe_boots.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Stahlkappenstiefel",
+          "description": "Stiefel mit einer Stahlschutzkappe für die Zehen.\n• Verkürzen die Erholungsdauer, nachdem ein Objekt mit der Kettensäge getroffen wurde, um 10 %."
+        },
+        "es": {
+          "name": "Botas con punta de acero",
+          "description": "Botas con la punta reforzada que protegen de los impactos.\n• Reduce el tiempo de recuperación tras golpear un objeto con la motosierra un 10 %."
+        },
+        "ja": {
+          "name": "安全ブーツ",
+          "description": "つま先部分が強化されたブーツ。衝撃から守ってくれる。\n• チェーンソーがオブジェクトに命中した後の回復時間が10%短縮する"
+        },
+        "pl": {
+          "name": "Obuwie ochronne",
+          "description": "Buty ze wzmocnionymi palcami chroniące przed uderzeniem.\n• Skracają czas odzyskiwania równowagi po trafieniu obiektu piłą łańcuchową o 10%."
+        }
+      }
+    },
+    {
+      "id": 42,
+      "name": "Dad's Boots",
+      "killer_id": 3,
+      "description": "A pair of trusty boots, pulled from the corpse of Max Thompson Sr.\n• Increases the Chainsaw Sprint turn rate by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dadsBoots.png?ba148f",
+      "icon_local_path": "icons/addons/dads_boots.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Dads Stiefel",
+          "description": "Ein Paar zuverlässiger Stiefel, das dem Leichnam von Max Thompson Sr. abgenommen wurde.\n• Erhöht die Wenderate des Kettensägensprints um 20 %."
+        },
+        "es": {
+          "name": "Botas de papá",
+          "description": "Un par de botas buenas sacadas del cadáver de Max Thompson sénior.\n• Aumenta la velocidad de aparición de esprint con motosierra un 20 %."
+        },
+        "ja": {
+          "name": "親父のブーツ",
+          "description": "マックス・トンプソン Sr.の遺体から引き抜かれた頑丈なブーツ。\n• チェーンソーダッシュのターン速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Buty po tacie",
+          "description": "Para sprawdzonych butów ściągniętych ze zwłok Maksa Thompsona Seniora.\n• Zwiększa sterowność podczas sprintu z piłą łańcuchową o 20%."
+        }
+      }
+    },
+    {
+      "id": 43,
+      "name": "Greased Throttle",
+      "killer_id": 3,
+      "description": "A lubricated trigger. One twitch of the finger brings the chainsaw back to life.\n• Decreases recovery time after using the Chainsaw by 5%.\n• This effect does not apply while in Overdrive.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_greasedThrottle.png?a532a4",
+      "icon_local_path": "icons/addons/greased_throttle.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Gefetteter Antrieb",
+          "description": "Ein geschmierter Knopf. Eine kleine Bewegung mit dem Finger erweckt die Kettensäge wieder zum Leben.\n• Verringert die Erholungszeit nach der Verwendung der Kettensäge um 8 %."
+        },
+        "es": {
+          "name": "Acelerador engrasado",
+          "description": "Un gatillo lubricado. Un movimiento del dedo devuelve a la vida a la motosierra.\n• Reduce el tiempo de recuperación tras usar la motosierra un 8 %."
+        },
+        "ja": {
+          "name": "油を差したスロットル",
+          "description": "潤滑油を差した制御装置。一捻りでチェーンソーが再び稼働する。\n• チェーンソーを使用した後の回復時間が5%短縮する。\n• オーバードライブ中は、この効果は適用されない"
+        },
+        "pl": {
+          "name": "Nasmarowana przepustnica",
+          "description": "Nasmarowany spust. Jedno drgnięcie palcem przywraca piłę do życia.\n• Skraca czas odnawiania po skorzystaniu z piły łańcuchowej o 5%.\n• Efekt nie działa w Nadbiegu."
+        }
+      }
+    },
+    {
+      "id": 44,
+      "name": "Clogged Intake",
+      "killer_id": 3,
+      "description": "Modifying the airflow is key to modifying the saw’s power.\n• Increases Overdrive duration by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cloggedIntake.png?3c34e3",
+      "icon_local_path": "icons/addons/clogged_intake.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verstopfte Luftzufuhr",
+          "description": "Man muss die Belüftung anpassen, um die Leistung der Säge zu verändern.\n• Verlängert die Dauer des Schnellgangs um 15 %."
+        },
+        "es": {
+          "name": "Entrada obstruida",
+          "description": "Alterar la corriente de aire es fundamental para modificar la potencia de la sierra.\n• Aumenta la duración de Sobremarcha un 15 %."
+        },
+        "ja": {
+          "name": "吸気口のネジ",
+          "description": "空気の流入を調整することが、チェーンソーの稼働力を変更する鍵となる。\n• オーバードライブの持続時間が15%増加する"
+        },
+        "pl": {
+          "name": "Zatkany wlot",
+          "description": "Zmiana przepływu powietrza jest kluczem do modyfikacji mocy piły.\n• Wydłuża czas trwania Nadbiegu o 15%."
+        }
+      }
+    },
+    {
+      "id": 45,
+      "name": "Off-Brand Motor Oil",
+      "killer_id": 3,
+      "description": "Affordable oil that can be used to lubricate noisy chains.\n• Increases Overdrive generation by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_off-brandMotorOil.png?a6953f",
+      "icon_local_path": "icons/addons/off_brand_motor_oil.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Noname-Motoröl",
+          "description": "Erschwingliches Öl, mit dem laute Ketten geschmiert werden können.\n• Steigert den Aufbau des Schnellgangs um 15 %."
+        },
+        "es": {
+          "name": "Aceite de motor genérico",
+          "description": "Aceite barato que se puede usar para lubricar cadenas ruidosas.\n• Aumenta la generación de Sobremarcha un 15 %."
+        },
+        "ja": {
+          "name": "ノーブランドのモーターオイル",
+          "description": "お手頃価格のオイル。うるさい音がするチェーンの滑りをよくするために使う。\n• オーバードライブのメーターが増える速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Olej silnikowy firmy krzak",
+          "description": "Tani olej, którego można użyć do nasmarowania głośnych łańcuchów.\n• Zwiększa wytwarzanie Nadbiegu o 15%."
+        }
+      }
+    },
+    {
+      "id": 46,
+      "name": "Thermal Casing",
+      "killer_id": 3,
+      "description": "A thicker case that allows the user to control the conservation of energy.\n• Decreases the speed at which the Overdrive meter dissipates when not using the Chainsaw by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_thermalCasing.png?da47f0",
+      "icon_local_path": "icons/addons/thermal_casing.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wärmespeicherndes Gehäuse",
+          "description": "Ein dickeres Gehäuse, mit dem der Benutzer den Energieverbrauch eindämmen kann.\n• Verringert die Geschwindigkeit, mit der die Schnellganganzeige zurückgeht, solange die Kettensäge nicht verwendet wird, um 20 %."
+        },
+        "es": {
+          "name": "Revestimiento térmico",
+          "description": "Un revestimiento más grueso que permite a su usuario controlar el consumo de energía.\n• Reduce la velocidad en la que se disipa el medidor de Sobremarcha cuando no se utiliza la motosierra un 20 %."
+        },
+        "ja": {
+          "name": "保温ケース",
+          "description": "電力の保存を向上する厚めのケース。\n• チェーンソーを使っていない時にオーバードライブのメーターが減る速度が20%低下する"
+        },
+        "pl": {
+          "name": "Obudowa termiczna",
+          "description": "Grubsza obudowa, która pozwala użytkownikowi regulować energię.\n• Obniża prędkość zmniejszania wskaźnika Nadbiegu, gdy piła łańcuchowa nie jest używana, o 20%."
+        }
+      }
+    },
+    {
+      "id": 47,
+      "name": "Spiked Boots",
+      "killer_id": 3,
+      "description": "Boots with strapped-on pieces of metal which burrow in mud for more stability and control with each step.\n• Increases the Chainsaw Sprint turn rate by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spikedBoots.png?217660",
+      "icon_local_path": "icons/addons/spiked_boots.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Nagelstiefel",
+          "description": "Stiefel mit Metallstiften an den Sohlen gewähren bei jedem Schritt mehr Stabilität und Kontrolle auf matschigem Boden.\n• Erhöht die Wenderate des Kettensägensprints um 30 %."
+        },
+        "es": {
+          "name": "Botas con pinchos",
+          "description": "Botas con piezas de metal que se meten en el barro para conseguir mayor control y estabilidad al caminar.\n• Aumenta la velocidad de aparición de esprint con motosierra un 30 %."
+        },
+        "ja": {
+          "name": "スパイク付きブーツ",
+          "description": "金属付きブーツ。金属がぬかるみに食い込むので、一歩一歩に安定性をもたらす。\n• チェーンソーダッシュのターン速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Buty z Kolcami",
+          "description": "Buty z przymocowanymi kawałkami metalu. Zagłębiają się w błocie, zapewniając większą stabilność i kontrolę podczas chodzenia.\n• Zwiększają sterowność podczas sprintu z piłą łańcuchową o 30%."
+        }
+      }
+    },
+    {
+      "id": 48,
+      "name": "The Thompsons' Mix",
+      "killer_id": 3,
+      "description": "A special oily substance concocted by the family for their machinery.\n• Decreases recovery time after using the Chainsaw by 10%.\n• This effect does not apply while in Overdrive.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theThompsonsMix.png?3bc9ea",
+      "icon_local_path": "icons/addons/the_thompsons_mix.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Thompson-Mischung",
+          "description": "Eine besondere ölige Substanz, die die Familie für ihre Maschinen hergestellt hat.\n• Verringert die Erholungszeit nach der Verwendung der Kettensäge um 12 %."
+        },
+        "es": {
+          "name": "Mezcla de los Thompson",
+          "description": "Una sustancia oleosa especial que elaboró la familia para sus máquinas.\n• Reduce el tiempo de recuperación tras usar la motosierra un 12 %."
+        },
+        "ja": {
+          "name": "トンプソンズ・ミックス",
+          "description": "家族が機械のために調合した特別な油性液体。\n• チェーンソーを使用した後の回復時間が10%短縮する\n• オーバードライブ中は、この効果は適用されない"
+        },
+        "pl": {
+          "name": "Mieszanka Thompsona",
+          "description": "Specjalna oleista substancja do maszyn sporządzona przez rodzinę.\n• Skraca czas odnawiania po skorzystaniu z piły łańcuchowej o 10%.\n• Efekt nie działa w Nadbiegu."
+        }
+      }
+    },
+    {
+      "id": 49,
+      "name": "Ragged Engine",
+      "killer_id": 3,
+      "description": "Some would say it needs a tune-up. Max would say it is tuned-up.\n• Decreases the speed at which the Overdrive meter dissipates when not using the Chainsaw by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_raggedEngine.png?58933c",
+      "icon_local_path": "icons/addons/ragged_engine.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Wilder Motor",
+          "description": "Manche finden vielleicht, er muss aufgemotzt werden. Max findet, das ist er schon.\n• Verringert die Geschwindigkeit, mit der die Schnellganganzeige zurückgeht, solange die Kettensäge nicht verwendet wird, um 30 %."
+        },
+        "es": {
+          "name": "Motor desigual",
+          "description": "Hay quien diría que necesita una puesta a punto. Max diría que ya está perfectamente.\n• Reduce la velocidad en la que se disipa el medidor de Sobremarcha cuando no se utiliza la motosierra un 30 %."
+        },
+        "ja": {
+          "name": "ボロボロのエンジン",
+          "description": "これはチューンアップが必要だと言う者もいるだろうが、マックスはチューンアップ済みだと言うだろう。\n• チェーンソーを使っていない時にオーバードライブのメーターが減る速度が30%低下する"
+        },
+        "pl": {
+          "name": "Nierówno pracujący silnik",
+          "description": "Niektórzy powiedzieliby, że wymaga poprawek. Max powiedziałaby, że jest poprawiony.\n• Obniża prędkość zmniejszania wskaźnika Nadbiegu, gdy piła łańcuchowa nie jest używana, o 30%."
+        }
+      }
+    },
+    {
+      "id": 50,
+      "name": "Low Kickback Chains",
+      "killer_id": 3,
+      "description": "A specialized chain that reduces the likelihood of kickback.\n• Decreases recovery time after hitting an object with the Chainsaw by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lowKickbackChains.png?9448b0",
+      "icon_local_path": "icons/addons/low_kickback_chains.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rückstoßverringerungskette",
+          "description": "Eine spezielle Kette, die die Wahrscheinlichkeit eines Rückstoßes verringert.\n• Verkürzt die Erholungsdauer, nachdem ein Objekt mit der Kettensäge getroffen wurde, um 15 %."
+        },
+        "es": {
+          "name": "Cadenas de bajo retroceso",
+          "description": "Una cadena especializada que reduce la probabilidad de retroceso.\n• Reduce el tiempo de recuperación tras golpear un objeto con la motosierra un 15 %."
+        },
+        "ja": {
+          "name": "低反動のチェーン",
+          "description": "反動作用の発生率が下がる特殊なチェーン。\n• チェーンソーがオブジェクトに命中した後の回復時間が15%短縮する"
+        },
+        "pl": {
+          "name": "Łańcuchy o niskim odrzucie",
+          "description": "Specjalistyczny łańcuch zmniejszający prawdopodobieństwo odbicia.\n• Skraca czas regeneracji po uderzeniu w przedmiot piłą łańcuchową o 15%."
+        }
+      }
+    },
+    {
+      "id": 51,
+      "name": "Discarded Air Filter",
+      "killer_id": 3,
+      "description": "A cracked and dusty filter. It still manages to work better than the stock model.\n• Increases the time it takes before the Overdrive meter starts dissipating by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_discardedAirFilter.png?3044b2",
+      "icon_local_path": "icons/addons/discarded_air_filter.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Weggeworfener Luftfilter",
+          "description": "Ein eingerissener und staubiger Filter. Funktioniert allerdings immer noch besser als das Serienmodell.\n• Verlängert die Dauer, bis die Schnellganganzeige zurückgeht, um 20 %."
+        },
+        "es": {
+          "name": "Filtro de aire desechado",
+          "description": "Un filtro agrietado y polvoriento que, a pesar de todo, funciona mejor que los modelos estándar.\n• Aumenta el tiempo que tarda en empezar a disiparse el medidor de Sobremarcha un 20 %."
+        },
+        "ja": {
+          "name": "廃棄されたエアフィルター",
+          "description": "ひびの入った埃っぽいフィルター。それでも標準モデルのものより機能する。\n• オーバードライブのメーターが減り始めるまでにかかる時間が20%増加する"
+        },
+        "pl": {
+          "name": "Zużyty filtr powietrza",
+          "description": "Popękany i zakurzony filtr. Wciąż działa lepiej niż oryginalny model.\n• Wydłuża czas potrzebny do rozpoczęcia zmniejszania wskaźnika Nadbiegu o 20%."
+        }
+      }
+    },
+    {
+      "id": 52,
+      "name": "High-Speed Idler Screw",
+      "killer_id": 3,
+      "description": "A loosened screw will bring more power to the chainsaw.\n• Increases the time it takes before the Overdrive meter starts dissipating by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_highSpeedIdlerScrew.png?92b50d",
+      "icon_local_path": "icons/addons/high_speed_idler_screw.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Hochgeschwindigkeits-Leerlaufsschraube",
+          "description": "Eine lockere Schraube, mit der die Kettensäge mehr Leistung erhält.\n• Verlängert die Dauer, bis die Schnellganganzeige zurückgeht, um 30 %."
+        },
+        "es": {
+          "name": "Tornillo de rodillo de alta velocidad",
+          "description": "Un tornillo suelto le dará más potencia a la motosierra.\n• Aumenta el tiempo que tarda en empezar a disiparse el medidor de Sobremarcha un 30 %."
+        },
+        "ja": {
+          "name": "高速アイドラネジ",
+          "description": "ネジを緩く調節すると、チェーンソーの稼働力が向上する。\n• オーバードライブのメーターが減り始めるまでにかかる時間が30%増加する"
+        },
+        "pl": {
+          "name": "Śruba koła pasowego o dużej prędkości",
+          "description": "Poluzowana śruba zwiększy moc piły łańcuchowej.\n• Wydłuża czas potrzebny do rozpoczęcia zmniejszania wskaźnika Nadbiegu o 30%."
+        }
+      }
+    },
+    {
+      "id": 53,
+      "name": "Apex Muffler",
+      "killer_id": 3,
+      "description": "A masterfully crafted chainsaw muffler that outperforms all others.\n• Chainsaw is silent for Survivors outside the Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_apexMuffler.png?c14845",
+      "icon_local_path": "icons/addons/apex_muffler.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Apex-Schalldämpfer",
+          "description": "Ein meisterhaft angefertigter Schalldämpfer für eine Kettensäge, der alle anderen in den Schatten stellt.\n• Die Kettensäge ist für Überlebende außerhalb des Terrorradius nicht zu hören."
+        },
+        "es": {
+          "name": "Silenciador supremo",
+          "description": "Un silenciador para motosierra fabricado con tal maestría que supera a cualquier otro.\n• Los supervivientes no oyen la motosierra fuera del radio de terror."
+        },
+        "ja": {
+          "name": "頂点のマフラー",
+          "description": "精巧なチェーンソーのマフラー。他のどのマフラーよりも高性能。\n• 脅威範囲外の生存者にチェーンソーの音がしなくなる"
+        },
+        "pl": {
+          "name": "Doskonały tłumik",
+          "description": "Mistrzowsko wykonany tłumik piły łańcuchowej, o nieprześcignionej wydajności.\n• Piła łańcuchowa jest niesłyszalna dla ocalałych poza zasięgiem terroru."
+        }
+      }
+    },
+    {
+      "id": 54,
+      "name": "Filthy Slippers",
+      "killer_id": 3,
+      "description": "Max sometimes struggled to hear his mother’s footfalls.\n• After maintaining a Chainsaw Sprint for 2 seconds, grants Undetectable until the Chainsaw Sprint ends.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_filthySlippers.png?2e491e",
+      "icon_local_path": "icons/addons/filthy_slippers.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Dreckige Pantoffeln",
+          "description": "Max hatte manchmal Schwierigkeiten, die Schritte seiner Mutter zu hören.\n• Nachdem du einen Kettensägensprint 2 Sekunden lang durchgehalten hast, erhältst du den Statuseffekt Unentdeckbar, bis du den Sprint beendest.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Zapatillas sucias",
+          "description": "A veces, a Max le costaba escuchar las pisadas de su madre.\n• Tras realizar un esprint con la motosierra durante 2 segundos, se te aplica Indetectable hasta que termine el esprint con la motosierra.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "汚れたスリッパ",
+          "description": "マックスは時々母親の足音を聞き取ることができなかった。\n• チェーンソーダッシュを2秒維持すると、チェーンソーダッシュが終了するまで探知不可になる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Obleśne kapcie",
+          "description": "Max czasem nie mogła usłyszeć kroków matki.\n• Po 2 sekundach sprintu z piłą łańcuchową otrzymujesz efekt Niewykrywalny do zakończenia sprintu.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 55,
+      "name": "Iridescent Engravings",
+      "killer_id": 3,
+      "description": "Engravings found on the Chainsaw body representing the dark beast that lives in The Fog. Fills the user with determination.\n• Increases Chainsaw Sprint movement speed by 20%.\n• Increases time required to charge the Chainsaw by 12%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentEngravings.png?be3ece",
+      "icon_local_path": "icons/addons/iridescent_engravings.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Gravuren",
+          "description": "Gravuren auf dem Gehäuse der Kettensäge, die jene düstere Bestie repräsentieren, die im Nebel lebt. Verleiht dem Benutzer Entschlossenheit.\n• Erhöht die Bewegungsgeschwindigkeit des Kettensägensprints um 20 %.\n• Verlängert die Aufladezeit der Kettensäge um 12 %."
+        },
+        "es": {
+          "name": "Grabado iridiscente",
+          "description": "Grabados en el cuerpo de la motosierra que cuentan el número de vidas que ha segado la bestia oscura que habita en la niebla. Llena de determinación a su usuario.\n• Aumenta la velocidad de movimiento de esprint con motosierra un 20 %.\n• Aumenta el tiempo que se tarda en cargar la motosierra un 12 %."
+        },
+        "ja": {
+          "name": "玉虫色の彫刻",
+          "description": "チェーンソーの胴体に彫られた彫刻。霧の中に棲む怪物を表す。使用者の決意をより固くする。\n• チェーンソーダッシュの移動速度が20%上昇する\n• チェーンソーをチャージするのに必要な時間が12%増加する"
+        },
+        "pl": {
+          "name": "Opalizujące grawerunki",
+          "description": "Grawerunki na pile przedstawiające mroczną bestię żyjącą we Mgle. Napełniają użytkownika determinacją.\n• Zwiększają prędkość sprintu z piłą łańcuchową o 20%.\n• Wydłużają czas potrzebny na naładowanie piły łańcuchowej o 12%."
+        }
+      }
+    },
+    {
+      "id": 805,
+      "name": "Begrimed Chains (The Hillbilly)",
+      "killer_id": 3,
+      "description": "A foul yet oddly familiar chain, coated with something unpleasant.\n• Survivors hit with the Chainsaw suffer from the Mangled and Hemorrhage status effects for 70 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_begrimedChains.png?99dc2a",
+      "icon_local_path": "icons/addons/begrimed_chains_(the_hillbilly).webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Beschmutzte Kette",
+          "description": "Eine dreckige, aber seltsam vertraute Kette, die mit etwas Unangenehmem überzogen ist.\n• Überlebende, die von der Kettensäge getroffen werden, leiden unter den Statuseffekten Zerfleischt und Blutung für 70 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "en": {
+          "name": "Begrimed Chains"
+        },
+        "es": {
+          "name": "Cadenas mugrosas",
+          "description": "Una cadena repugnante pero que resulta extrañamente familiar, recubierta de algo desagradable.\n• Los supervivientes que golpees con la motosierra sufren los efectos de estado Laceración y Hemorragia durante 70 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "汚れたチェーン",
+          "description": "汚いが、妙に親しみを感じるチェーン。何か不快なもので覆われている。\n• チェーンソーが命中した生存者は、70秒間重傷と出血のステータス効果に苦しむ。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、または治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Poplamione łańcuchy",
+          "description": "Paskudny, ale dziwnie znajomy łańcuch, pokryty czymś nieprzyjemnym.\n• Ocalali trafieni piłą łańcuchową otrzymują efekty Zmasakrowany i Krwotok na 70 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 806,
+      "name": "LoPro Chains",
+      "killer_id": 3,
+      "description": "Light chains that decrease the weight of the Chainsaw, allowing for greater maneuverability.\n• Whenever you special-break Pallets or Breakable Walls with the Chainsaw, continue the Chainsaw Sprint.\n• Healthy Survivors hit with the Chainsaw within 5 seconds of breaking Pallet or a Wall are damaged for a single Health State.\n• Injured Survivors suffer from the Deep Wound status effect.\nDeep Wound will put a Survivor in the dying state unless it is mended before the timer runs out.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_loProChains.png?2c668e",
+      "icon_local_path": "icons/addons/lopro_chains.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Lo-Pro-Ketten",
+          "description": "Eine leichte Kette, die das Gewicht der Kettensäge verringert und somit für mehr Beweglichkeit sorgt.\n• Immer wenn du Paletten oder zerstörbare Mauern mit der Kettensäge durch deine Stärke zerstörst, setzt du den Kettensägensprint fort.\n• Gesunde Überlebende, die innerhalb von 5 Sekunden, nachdem eine Palette oder Mauer zerstört wurde, von der Kettensäge getroffen werden, verlieren einen Gesundheitsstatus.\n• Verletzte Überlebende erleiden den Statuseffekt Tiefe Wunde.\nTiefe Wunde versetzt einen Überlebenden in den Todesstatus, wenn sie nicht versorgt wird, bevor der Timer abläuft."
+        },
+        "en": {
+          "name": "Lo Pro Chains"
+        },
+        "es": {
+          "name": "Cadenas discretas",
+          "description": "Cadenas ligeras que disminuyen el peso de la motosierra, lo que facilita su maniobrabilidad.\n• Cada vez que rompes palés o muros destruibles de forma especial con la motosierra, continúa con el esprint con motosierra.\n• Los supervivientes ilesos golpeados por la motosierra en menos de 5 segundos tras haber roto un palé o muro sufren un daño de un estado de salud.\n• Los supervivientes heridos sufren el efecto de estado Herida profunda.\nHerida profunda hará que el superviviente entre en estado agonizante excepto si se recupera antes de que se acabe el tiempo."
+        },
+        "ja": {
+          "name": "軽量チェーン",
+          "description": "チェーンソーの重量を軽減してくれる軽いチェーン。操作性が大幅に向上する。\n• チェーンソーでパレットや破壊可能な壁を特殊破壊したとき、チェーンソーダッシュを続ける\n• パレットまたは壁を破壊して5秒以内にチェーンソーが無傷状態の生存者に命中すると、その生存者が状態1段階分のダメージを受ける\n• 負傷した生存者は深手のステータス効果に苦しむ\n深手状態になった生存者はタイマー切れになる前に手当しなければ瀕死状態になる。"
+        },
+        "pl": {
+          "name": "Łańcuchy niskoprofilowe",
+          "description": "Lekkie łańcuchy, które zmniejszają wagę piły łańcuchowej i ułatwiają poruszanie nią.\n• Za każdym razem, gdy niszczysz w specjalny sposób palety lub rozbijalne ściany przy pomocy piły łańcuchowej, kontynuujesz sprint z piłą łańcuchową.\n• Zdrowi ocalali trafieni piłą łańcuchową w ciągu 5 sekund od zniszczenia palety lub ściany otrzymują obrażenia w wysokości jednego stanu zdrowia.\n• Ranni ocalali otrzymują efekt głębokiej rany.\nGłęboka rana wprowadza ocalałego w stan agonii, chyba że zostanie wyleczona przed upływem czasu."
+        }
+      }
+    },
+    {
+      "id": 807,
+      "name": "Tuned Carburettor",
+      "killer_id": 3,
+      "description": "Despite being caked in dirt and oil, this carburetor has been well adjusted.\n• Increases Chainsaw charge speed by 20%.\n• Decreases base movement speed to 4.4 m/s.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tunedCarburettor.png?bdda1a",
+      "icon_local_path": "icons/addons/tuned_carburettor.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Getunter Vergaser",
+          "description": "Trotz der Verschmutzung mit Dreck und Öl ist dieser Vergaser gut eingestellt.\n• Erhöht die Aufladegeschwindigkeit der Kettensäge um 20 %.\n• Verringert die Grundbewegungsgeschwindigkeit auf 4,4 m/s."
+        },
+        "en": {
+          "name": "Tuned Carburetor"
+        },
+        "es": {
+          "name": "Carburador ajustado",
+          "description": "Aunque está lleno de polvo y aceite, este carburador se mantiene bien ajustado.\n• Aumenta la velocidad de carga de la motosierra un 20 %.\n• Reduce la velocidad de movimiento base en 4,4 metros por segundo."
+        },
+        "ja": {
+          "name": "同調済みのキャブレター",
+          "description": "埃や油まみれだが、しっかり調整されたキャブレター。\n• チェーンソーのチャージ速度が20%上昇する\n• 基本移動速度が秒速4.4メートルに低下する"
+        },
+        "pl": {
+          "name": "Wyregulowany gaźnik",
+          "description": "Choć cały wybrudzony jest błotem, gaźnik ten został dobrze skalibrowany.\n• Zwiększa prędkość ładowania piły łańcuchowej o 20%.\n• Zmniejsza podstawową prędkość ruchu do 4,4 m/s."
+        }
+      }
+    }
+  ]
+}

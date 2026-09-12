@@ -1,0 +1,565 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 151,
+      "name": "Chainsaw File",
+      "killer_id": 9,
+      "description": "A file whose purpose is to hone Chainsaw chains.\n• Decreases tantrum duration by 0.25 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chainsawFile.png?2ca764",
+      "icon_local_path": "icons/addons/chainsaw_file.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kettensägenschleifer",
+          "description": "Eine Feile, die dafür gedacht ist, Kettensägeketten zu bearbeiten.\n• Verkürzt die Dauer des Wutanfalls um 0,25 Sekunden."
+        },
+        "es": {
+          "name": "Lima para Motosierra",
+          "description": "Una lima para afilar la cadena de una motosierra.\n• Reduce la duración de la rabieta en 0,25 segundos."
+        },
+        "ja": {
+          "name": "チェーンソー用ヤスリ",
+          "description": "チェーンソーの刃を研ぐためのヤスリ。\n• 癇癪の持続時間が0.25秒減少する"
+        },
+        "pl": {
+          "name": "Pilnik do Piły Łańcuchowej",
+          "description": "Pilnik, którego przeznaczeniem jest pogłębianie łańcuchów piły mechanicznej.\n• Skraca czas trwania furii o 0,25 sekundy."
+        }
+      }
+    },
+    {
+      "id": 152,
+      "name": "Spark Plug",
+      "killer_id": 9,
+      "description": "A clean spark plug fitted for a Chainsaw.\n• Decreases time required to replenish a charge by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sparkPlug.png?25ef17",
+      "icon_local_path": "icons/addons/spark_plug.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zündkerze",
+          "description": "Eine saubere Zündkerze, geeignet für eine Kettensäge.\n• Verkürzt die Zeit für eine vollständige Aufladung um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Bujía",
+          "description": "Bujía inmaculada, ideal para una motosierra.\n• Reduce el tiempo que tarda en reponerse una carga en 0,5 segundos."
+        },
+        "ja": {
+          "name": "点火プラグ",
+          "description": "チェーンソーに適した綺麗な点火プラグ。\n• チャージを回復するのに必要な時間が0.5秒減少する"
+        },
+        "pl": {
+          "name": "Świeca Zapłonowa",
+          "description": "Czysta świeca zapłonowa do piły łańcuchowej.\n• Skraca czas uzupełniania ładunku o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 153,
+      "name": "Vegetable Oil",
+      "killer_id": 9,
+      "description": "A rancid oil used as a poor quality lubricant.\n• Decreases Chainsaw cooldown by 0.3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vegetableOil.png?a225d9",
+      "icon_local_path": "icons/addons/vegetable_oil.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Pflanzenöl",
+          "description": "Ein ranziges Öl, genutzt als Schmiermittel geringer Qualität.\n• Verkürzt die Abklingzeit der Kettensäge um 0,3 Sekunden."
+        },
+        "es": {
+          "name": "Aceite Vegetal",
+          "description": "Un aceite rancio usado para lubricar deficientemente.\n• Reduce el tiempo de recarga de la motosierra en 0,3 segundos."
+        },
+        "ja": {
+          "name": "植物油",
+          "description": "悪臭がする油。低質な潤滑油として使われている。\n• チェーンソーのクールダウンが0.3秒減少する"
+        },
+        "pl": {
+          "name": "Olej Warzywny",
+          "description": "Zjełczały olej wykorzystywany jako kiepski smar.\n• Skraca czas odnawiania piły łańcuchowej o 0,3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 154,
+      "name": "Primer Bulb",
+      "killer_id": 9,
+      "description": "Pumps more gas in the ignition system to ensure a quick and powerful start.\n• Decreases time required to replenish a charge by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_primerBulb.png?73dd97",
+      "icon_local_path": "icons/addons/primer_bulb.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Manuelle Kraftstoffpumpe",
+          "description": "Pumpt mehr Treibstoff in die Zündanlage, um einen schnellen und kraftvollen Start zu gewährleisten.\n• Verkürzt die Zeit für eine vollständige Aufladung um 1 Sekunde."
+        },
+        "es": {
+          "name": "Bombilla de Combustible",
+          "description": "Bombea más gasolina al sistema de ignición para garantizar un arranque rápido y potente.\n• Reduce el tiempo que tarda en reponerse una carga en 1 segundo."
+        },
+        "ja": {
+          "name": "プライマー・バルブ",
+          "description": "点火システムに多くのガスを送り込むことにより、素早くパワフルに始動できるようにする。\n• チャージを回復するのに必要な時間が1秒減少する"
+        },
+        "pl": {
+          "name": "Pompa Paliwowa",
+          "description": "Pompuje więcej paliwa do układu zapłonowego, aby zapewnić szybki i potężny start urządzenia.\n• Skraca czas uzupełnienia ładunku o 1 sekundę."
+        }
+      }
+    },
+    {
+      "id": 155,
+      "name": "Long Guide Bar",
+      "killer_id": 9,
+      "description": "A sturdy iron replacement bar for long chains.\n• Increases the time the Chainsaw can be revved before triggering a tantrum by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_longGuideBar.png?c5ab62",
+      "icon_local_path": "icons/addons/long_guide_bar.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lange Führungsschiene",
+          "description": "Eine robuste, eiserne Ersatzstange für lange Ketten.\n• Erhöht die Zeit, in der Gas gegeben werden kann, bevor ein Wutanfall ausgelöst wird, um 2 Sekunden."
+        },
+        "es": {
+          "name": "Espada Larga",
+          "description": "Una robusta espada de hierro de recambio para cadenas largas.\n• Aumenta las revoluciones de la motosierra antes de activar una rabieta en 2 segundos."
+        },
+        "ja": {
+          "name": "長いガイドバー",
+          "description": "鉄製の頑丈なバー。長いチェーンに対応。\n• 癇癪を発動する前に、チェーンソーの回転数を上げることが可能な時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Długie Ostrze",
+          "description": "Solidna żelazna prowadnica zastępcza do długich łańcuchów.\n• Wydłuża możliwy czas zwiększeń obrotów przed wywołaniem furii o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 156,
+      "name": "Depth Gauge Rake",
+      "killer_id": 9,
+      "description": "Tool that increases the angle of the depth gauge, making the chain eat more \"wood\".\n• Grants 1 additional Chainsaw charge.\n• Increases time required to charge the Chainsaw by 22%.\n• Decreases Chainsaw Sweep movement speed by 2%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_depthGaugeRake.png?3cde91",
+      "icon_local_path": "icons/addons/depth_gauge_rake.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Tiefenbegrenzer-Lehre",
+          "description": "Ein Werkzeug, das den Winkel des Tiefenbegrenzers vergrößert, damit die Kette mehr „Holz“ frisst.\n• Gewährt 1 zusätzliche Kettensägenaufladung.\n• Erhöht die Aufladezeit der Kettensäge um 22 %.\n• Verringert die Bewegungsgeschwindigkeit von Kettensägenschwung um 2 %."
+        },
+        "es": {
+          "name": "Medidor de profundidad",
+          "description": "Una herramienta que aumenta el ángulo de profundidad, lo que hace que la cadena corte mejor \"la madera\".\n• Otorga 1 carga de motosierra adicional.\n• Aumenta el tiempo que se tarda en cargar la motosierra un 22 %.\n• Reduce la velocidad de movimiento del barrido con motosierra un 2 %."
+        },
+        "ja": {
+          "name": "デプスゲージ",
+          "description": "デプスゲージの角度を深くするための道具。チェーンが「木」にさらに食い込むようになる。\n• チェーンソーに1 チャージを追加する\n• チェーンソーをチャージするのに必要な時間が22%増加する\n• 掃討チェーンソーの移動速度が2%減少する"
+        },
+        "pl": {
+          "name": "Miernik Głębokości Pochylenia",
+          "description": "Narzędzie, które zwiększa kąt miernika głębokości. Sprawia, że piła mocniej wgryza się w… drewno.\n• Daje 1 dodatkowy ładunek piły łańcuchowej.\n• Wydłuża czas potrzebny na naładowanie piły łańcuchowej o 22%.\n• Zmniejsza prędkość Wymachu Piłą Łańcuchową o 2%."
+        }
+      }
+    },
+    {
+      "id": 157,
+      "name": "Homemade Muffler",
+      "killer_id": 9,
+      "description": "A makeshift exhaust system made of black gas pipes.\n• Decreases tantrum duration by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_homemadeMuffler.png?2b495c",
+      "icon_local_path": "icons/addons/homemade_muffler.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Selbstgebauter Auspuffdämpfer",
+          "description": "Ein provisorischer Auspuff aus schwarzen Gasrohren.\n• Verkürzt die Dauer des Wutanfalls um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Silenciador casero",
+          "description": "Un improvisado sistema de escape de humos hecho con tuberías negras de gas.\n• Reduce la duración de la rabieta en 0,5 segundos."
+        },
+        "ja": {
+          "name": "自家製マフラー",
+          "description": "黒いガスパイプで作られた、その場しのぎの排気装置。\n• 癇癪の持続時間が0.5秒減少する"
+        },
+        "pl": {
+          "name": "Tłumik domowej roboty",
+          "description": "Prowizoryczny system wydechowy wykonany z czarnych rur gazowych.\n• Skraca czas trwania furii o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 158,
+      "name": "Speed Limiter",
+      "killer_id": 9,
+      "description": "A mechanical device that limits the amount of fuel small engines can intake at one time, forcing a constant and safe speed.\n• Chainsaw does not automatically trigger dying state.\n• Get 100% more Bloodpoints for Chainsaw Hit score events.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_speedLimiter.png?9e299e",
+      "icon_local_path": "icons/addons/speed_limiter.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Tempodrossel",
+          "description": "Eine mechanische Vorrichtung, welche die Kraftstoffmenge festlegt, die von kleinen Motoren aufgenommen werden kann, um eine gleichbleibende und zuverlässige Geschwindigkeit zu gewährleisten.\n• Die Kettensäge versetzt Überlebende nicht automatisch in den Todesstatus.\n• Du erhältst 100 % mehr Blutpunkte für Kettensägentreffer-Punktereignisse."
+        },
+        "es": {
+          "name": "Limitador de velocidad",
+          "description": "Un dispositivo mecánico que limita la cantidad de combustible que pueden absorber los motores pequeños para así garantizar una velocidad más segura y constante.\n• La motosierra no provoca automáticamente el estado agonizante.\n• Obtienes un 100 % adicional de puntos de sangre por golpes con la motosierra."
+        },
+        "ja": {
+          "name": "スピードリミッター",
+          "description": "小型エンジンが処理できる量の燃料だけを送り込むようにする制御装置。スピードを安定させ、安全にする。\n• チェーンソーの攻撃を受けても自動的に瀕死状態にならない。\n• チェーンソー命中によって得られるブラッドポイントが100%増加する"
+        },
+        "pl": {
+          "name": "Ogranicznik Prędkości",
+          "description": "Mechaniczne urządzenie ograniczające ilość paliwa pobieranego przez małe silniki. Wymusza w ten sposób stałą, bezpieczną prędkość pracy.\n• Atak piłą łańcuchową nie aktywuje automatycznie stanu agonii.\n• Otrzymujesz 100% więcej Punktów Krwi za trafienia piłą łańcuchową."
+        }
+      }
+    },
+    {
+      "id": 159,
+      "name": "Shop Lubricant",
+      "killer_id": 9,
+      "description": "An oil specifically formulated for chainsaws. A special additive prevents oil throw off.\n• Downing a Survivor with the Chainsaw while no other Survivors are in your Terror Radius will hide the Survivor's aura for 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shopLubricant.png?2ed036",
+      "icon_local_path": "icons/addons/shop_lubricant.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Werkstattschmierstoff",
+          "description": "Ein Öl, das speziell für Kettensägen entworfen wurde. Ein besonderes Zusatzmittel verhindert den Auswurf des Öls.\n• Streckst du mit der Kettensäge einen Überlebenden nieder, während keine anderen Überlebenden in deinem Terrorradius sind, ist die Aura des Überlebenden 20 Sekunden lang nicht zu sehen."
+        },
+        "es": {
+          "name": "Lubricante Común",
+          "description": "Un aceite especialmente diseñado para motosierras. Un aditivo especial evita las emisiones.\n• Si derribas a un superviviente con la motosierra y no hay más supervivientes dentro de tu radio de terror, su aura permanecerá oculta para el resto durante 20 segundos."
+        },
+        "ja": {
+          "name": "市販の潤滑剤",
+          "description": "チェーンソー用に特殊な配合がなされた油。特別な添加剤で落ちにくくしてある。\n• 脅威範囲に他の生存者がいない状態で生存者1人をチェーンソーでダウンさせると、20秒間その生存者のオーラが視えなくなる"
+        },
+        "pl": {
+          "name": "Sklepowy Smar",
+          "description": "Olej stworzony do piły łańcuchowej. Specjalny dodatek zapobiega wyciekaniu oleju.\n• Powalenie ocalałego piłą łańcuchową, gdy żaden inny ocalały nie znajduje się w zasięgu terroru, ukrywa aurę ocalałego na 20 sekund."
+        }
+      }
+    },
+    {
+      "id": 160,
+      "name": "Knife Scratches",
+      "killer_id": 9,
+      "description": "Scratches cover the Chainsaw's body, caused by a searing blade. Memories of reprimands fill its holder with the fear of failure.\n• Increases Chainsaw Sweep movement speed by 1.5%.\n• Increases time required to charge the Chainsaw by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_knifeScratches.png?b262b1",
+      "icon_local_path": "icons/addons/knife_scratches.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Messerkratzer",
+          "description": "Von einer sengenden Klinge verursachte Kratzer bedecken das Gehäuse der Kettensäge. Erinnerungen an Züchtigungen erfüllen den Besitzer mit Angst vor dem Versagen.\n• Erhöht die Bewegungsgeschwindigkeit von Kettensägenschwung um 1,5 %.\n• Verlängert die Aufladezeit der Kettensäge um 10 %."
+        },
+        "es": {
+          "name": "Tajos de cuchillo",
+          "description": "El cuerpo de la motosierra está lleno de tajos causados por una hoja ardiente. Los recuerdos de los correctivos recibidos causan a su portador un miedo pavoroso al fracaso.\n• Aumenta la velocidad de movimiento del barrido con motosierra un 1,5 %.\n• Aumenta el tiempo que se tarda en cargar la motosierra un 10 %."
+        },
+        "ja": {
+          "name": "ナイフの傷",
+          "description": "高熱の刃によってもたらされた、チェーンソーのボディを覆う傷跡。これを持つと、暴力的なしつけの記憶のせいで失敗に対する恐怖でいっぱいになる。\n• 掃討チェーンソーの移動速度が1.5%上昇する\n• チェーンソーをチャージするのに必要な時間が10%増加する"
+        },
+        "pl": {
+          "name": "Zarysowania od noża",
+          "description": "Na pile widać zadrapania wykonane palącym ostrzem. Wspomnienia wypełniają posiadacza strachem przed porażką.\n• Zwiększa prędkość Wymachu Piłą Łańcuchową o 1,5%.\n• Wydłuża czas potrzebny na naładowanie piły łańcuchowej o 10%."
+        }
+      }
+    },
+    {
+      "id": 161,
+      "name": "The Beast's Marks",
+      "killer_id": 9,
+      "description": "Jagged marks cover the Chainsaw's body, punishment from the dark beast that lives in The Fog. Memories of violent reprimands fill its holder with the fear of failure.\n• Increases Chainsaw Sweep movement speed by 2%.\n• Increases time required to charge the Chainsaw by 12%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theBeastsMarks.png?610727",
+      "icon_local_path": "icons/addons/the_beasts_marks.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zeichen der Bestie",
+          "description": "Schartige Macken bedecken das Gehäuse der Kettensäge – eine Strafe der düsteren Bestie, die im Nebel lebt. Erinnerungen an brutale Züchtigungen erfüllen den Besitzer mit Angst vor dem Versagen.\n• Erhöht die Bewegungsgeschwindigkeit von Kettensägenschwung um 2 %.\n• Verlängert die Aufladezeit der Kettensäge um 12 %."
+        },
+        "es": {
+          "name": "Las marcas de la bestia",
+          "description": "El cuerpo de la motosierra está cubierto de dentelladas, castigo de la bestia oscura que vive en la niebla. Los recuerdos de los violentos correctivos recibidos causan a su portador un miedo pavoroso al fracaso.\n• Aumenta la velocidad de movimiento del barrido con motosierra un 2 %.\n• Aumenta el tiempo que se tarda en cargar la motosierra un 12 %."
+        },
+        "ja": {
+          "name": "暗獣の刻印",
+          "description": "チェーンソーのボディを覆うギザギザのマーク。霧の中に生きる闇の魔獣により罰として刻まれた。これを持つと、暴力的なしつけの記憶のせいで失敗に対する恐怖でいっぱいになる。\n• 掃討チェーンソーの移動速度が2%上昇する\n• チェーンソーをチャージするのに必要な時間が12%増加する"
+        },
+        "pl": {
+          "name": "Znaki Bestii",
+          "description": "Na pile widać zadrapania – ślad kary wymierzonej przez mroczną bestię żyjącą we Mgle. Bolesne wspomnienia reprymendy wypełniają posiadacza strachem przed porażką.\n• Zwiększa prędkość Wymachu Piłą Łańcuchową o 2%.\n• Wydłuża czas potrzebny na naładowanie piły łańcuchowej o 12%."
+        }
+      }
+    },
+    {
+      "id": 162,
+      "name": "Light Chassis",
+      "killer_id": 9,
+      "description": "A light and durable Chainsaw chassis with a shorter guide bar. Makes the Chainsaw easier to handle.\n• While revving, see the auras of Survivors within 8 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lightChassis.png?fd1865",
+      "icon_local_path": "icons/addons/light_chassis.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Leichtes Gehäuse",
+          "description": "Ein leichtes und robustes Kettensägengehäuse mit einer kürzeren Führungsschiene. Sorgt für einfachere Handhabung der Kettensäge.\n• Beim Gasgeben sind die Auren der Überlebenden im Umkreis von 8 Metern zu sehen."
+        },
+        "es": {
+          "name": "Bastidor ligero",
+          "description": "Un chasis de motosierra ligero y duradero con una espada más corta. Hace que la motosierra sea más fácil de manejar.\n• Al revolucionar, ves las auras de los supervivientes que estén a un máximo de 8 metros."
+        },
+        "ja": {
+          "name": "軽量シャーシ",
+          "description": "耐久力のある軽量なチェーンソーのシャーシ。チェーンソーが扱いやすくなる。\n• チェーンソーの回転数を上げている間、8メートル以内の生存者のオーラが視えるようになる"
+        },
+        "pl": {
+          "name": "Lekka rama",
+          "description": "Lekka, wytrzymała rama piły łańcuchowej z krótszą prowadnicą. Ułatwia panowanie nad urządzeniem.\n• Podczas zwiększania obrotów piły widzisz aury ocalałych oddalonych o maksymalnie 8 metrów."
+        }
+      }
+    },
+    {
+      "id": 163,
+      "name": "The Grease",
+      "killer_id": 9,
+      "description": "A thick yellowish ooze, concocted by the Sawyers. Used for all-purpose lubrication around their house.\n• Increases the time the Chainsaw can be revved before triggering a tantrum by 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theGrease.png?d9a22f",
+      "icon_local_path": "icons/addons/the_grease.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schmierfett",
+          "description": "Eine dickflüssige, gelbliche Substanz, die von den Sawyers angerührt wurde. Wird zum Schmieren aller Dinge im Haushalt verwendet.\n• Erhöht die Zeit, in der Gas gegeben werden kann, bevor ein Wutanfall ausgelöst wird, um 3 Sekunden."
+        },
+        "es": {
+          "name": "La grasa",
+          "description": "Líquido espeso y amarillento elaborado por los Sawyer. Sirve como lubricante multiusos doméstico.\n• Aumenta las revoluciones de la motosierra antes de activar una rabieta en 3 segundos."
+        },
+        "ja": {
+          "name": "グリース",
+          "description": "粘度の高い黄ばんだ油性物質。ソーヤー家が混合したこの潤滑剤は、住居周りで多目的な用途に使用されている。\n• 癇癪が起きる前のチェーンソー回転数上昇可能時間が3秒増加する"
+        },
+        "pl": {
+          "name": "Smar",
+          "description": "Gęsty żółtawy płyn opracowany przez rodzinę Sawyerów. Używany w ich domu jako uniwersalny smar.\n• Wydłuża możliwy czas zwiększeń obrotów przed wywołaniem furii o 3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 164,
+      "name": "Iridescent Flesh",
+      "killer_id": 9,
+      "description": "A thin slice of smooth, young flesh. The veins shimmer with luminescent glow, as if life still flows within.\n• Hitting a Survivor with the Chainsaw replenishes its charges.\n• Limits the maximum tantrum duration to 3 seconds.\n\"\"There are moments when we cannot believe that what is happening is really true. Pinch yourself and you may find out that it is.\" — Pam Jones\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentFlesh.png?75c3ae",
+      "icon_local_path": "icons/addons/iridescent_flesh.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Fleisch",
+          "description": "Eine dünne Scheibe zarten, jungen Fleisches. Die Adern schimmern leicht, als würde noch immer Leben durch sie fließen.\n• Wird ein Überlebender mit der Kettensäge getroffen, wird sie wieder aufgeladen.\n• Begrenzt die maximale Dauer des Wutanfalls auf 3 Sekunden.\n\"„Es gibt Momente, in denen wir nicht glauben können, dass das, was gerade passiert, wirklich wahr ist. Wer sich dann selbst kneift, wird dann womöglich genau das feststellen.“ – Pam Jones\""
+        },
+        "es": {
+          "name": "Carne iridiscente",
+          "description": "Un filete delgadito de carne joven y suave. Las venas brillan con un resplandor luminiscente, como si aún quedara vida en ellas.\n• Las cargas de la motosierra se restablecen al golpear a un superviviente con ella.\n• Limita la duración máxima de la rabieta a 3 segundos.\n\"\"Hay momentos en los que no podemos creer que lo que está sucediendo sea real. Pellízcate y quizá descubras que lo es\". (Pam Jones)\""
+        },
+        "ja": {
+          "name": "玉虫色の刃",
+          "description": "滑らかで若い肉体を薄く切ったもの。血管が今なお生気漂うかのように発光性の輝きを帯びている。\n• チェーンソーで生存者に攻撃を命中させると、チャージが回復する\n• 癇癪の持続時間の上限が3秒になる\n\"「今起きていることが現実だと受け止められない時ってものがあるのよ。自分を窮地に追いやれば、あなたもそれがわかるかもしれないわ。」 —パム・ジョーンズ\""
+        },
+        "pl": {
+          "name": "Opalizujące mięso",
+          "description": "Cienki plaster delikatnego, młodego mięsa. Żyły migoczą blaskiem, jakby wciąż płynęło w nich życie.\n• Trafienie ocalałego piłą łańcuchową odnawia jej ładunki.\n• Ogranicza maksymalny czas trwania furii do 3 sekund.\n\"„Czasami nie możemy uwierzyć, że to, co się dzieje, jest prawdziwe. Spróbuj się uszczypnąć, a być może przekonasz się, że jest”. – Pam Jones\""
+        }
+      }
+    },
+    {
+      "id": 798,
+      "name": "Chilli",
+      "killer_id": 9,
+      "description": "A big bowl of steaming chili to keep you fresh and strong.\n• Increases maximum Chainsaw Sweep duration by 0.15 seconds per charge spent.\n\"\"I got some good barbecue here! \" -Drayton Sawyer\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chilli.png?5df211",
+      "icon_local_path": "icons/addons/chilli.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Chili",
+          "description": "Eine große Schale dampfendes Chili, damit du erholt und gestärkt bist.\n• Erhöht die maximale Dauer von Kettensägenschwung um 0,15 Sekunden pro verbrauchter Aufladung.\n\"„Ich habe hier leckeres Barbecue!“ – Drayton Sawyer\""
+        },
+        "en": {
+          "name": "Chili"
+        },
+        "es": {
+          "name": "Chile",
+          "description": "Un gran bol de chile humeante que tonifica y revitaliza a quien lo toma.\n• Aumenta la duración máxima del barrido con motosierra en 0,15 segundos por carga consumida.\n\"\"¡Hoy cenamos barbacoa!\". (Drayton Sawyer)\""
+        },
+        "ja": {
+          "name": "チリ",
+          "description": "大盛りのボウルに入った温かいチリ。生気と活力を与えてくれる。\n• 掃討チェーンソーが持続する最長時間が1チャージ消費につき0.15秒増加する\n\"「うまいバーベキューがあるよ！」- ドレイトン・ソーヤー\""
+        },
+        "pl": {
+          "description": "Duża miska gorącego chili, które przywróci ci siły.\n• Zwiększa maksymalny czas trwania Wymachu Piłą Łańcuchową o 0,15 sekundy na zużyty ładunek.\n\"„Mam tu odrobinę wybornego barbecue!”. – Drayton Sawyer\""
+        }
+      }
+    },
+    {
+      "id": 799,
+      "name": "Begrimed Chains (The Cannibal)",
+      "killer_id": 9,
+      "description": "This chain is stained with a foul substance that debilitates anyone it touches.\n• Chainsaw hits cause Survivors to drop their items.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_begrimedChains.png?99dc2a",
+      "icon_local_path": "icons/addons/begrimed_chains_(the_cannibal).webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Beschmutzte Kette",
+          "description": "Diese Kette ist mit einer üblen Substanz verunreinigt, die jeden schwächt, der sie berührt.\n• Werden Überlebende mit der Kettensäge getroffen, lassen sie ihre Gegenstände fallen."
+        },
+        "en": {
+          "name": "Begrimed Chains"
+        },
+        "es": {
+          "name": "Cadenas mugrosas",
+          "description": "Esta cadena está manchada de una sustancia repugnante que debilita a quien la toca.\n• Los golpes de la motosierra hacen que los supervivientes suelten los objetos que lleven encima."
+        },
+        "ja": {
+          "name": "汚れたチェーン",
+          "description": "汚染物質が付着したチェーン。触れた者を衰弱させる。\n• チェーンソーが命中した生存者はアイテムを落とす"
+        },
+        "pl": {
+          "name": "Poplamione łańcuchy",
+          "description": "Ten łańcuch jest poplamiony paskudną substancją, która osłabia każdego, kto jej dotknie.\n• Trafienia piłą łańcuchową sprawiają, że ocalali upuszczają trzymane przedmioty."
+        }
+      }
+    },
+    {
+      "id": 800,
+      "name": "Grisly Chains",
+      "killer_id": 9,
+      "description": "A chain with unusually hefty cutter teeth that leaves victims crippled even after being healed.\n• Chainsaw hits inflict Mangled for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_grislyChains.png?dd7007",
+      "icon_local_path": "icons/addons/grisly_chains.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Grässliche Kette",
+          "description": "Eine Kette mit ungewöhnlich kräftigen Schneidezähnen, die Opfer verkrüppelt zurücklässt, selbst nachdem sie geheilt wurden.\n• Überlebende, die von der Kettensäge getroffen werden, erleiden den Statuseffekt Zerfleischt für 70 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "en": {
+          "name": "Grisly Chain"
+        },
+        "es": {
+          "name": "Cadena horripilante",
+          "description": "Una cadena con dientes especialmente afilados y robustos que deja a la víctima tullida aun después de curarse.\n• Los golpes de motosierra causan Laceración durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "残虐なチェーン",
+          "description": "非常に頑丈な刃が取り付けられたチェーン。犠牲者は治療を受けても傷が残る。\n• チェーンソーが命中すると、70秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Przerażający Łańcuch",
+          "description": "Łańcuch z wyjątkowo mocnymi zębami, które sprawiają, że ofiary pozostają okaleczone nawet po leczeniu.\n• Trafienia piłą łańcuchową dają efekt Zmasakrowany na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 801,
+      "name": "Award-winning Chilli",
+      "killer_id": 9,
+      "description": "A big bowl of spicy chili made famous thanks to prime meat.\n• Increases maximum Chainsaw Sweep duration by 0.2 seconds per charge spent.\n\"\"The secret's in the meat.\" -Drayton Sawyer\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_award-winningChilli.png?c9bda6",
+      "icon_local_path": "icons/addons/award_winning_chilli.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Preisgekröntes Chili",
+          "description": "Eine große Schale mit scharfem Chili, das wegen seines erstklassigen Fleischs berühmt ist.\n• Verlängert die maximale Dauer von Kettensägenschwung um 0,2 Sekunden pro verbrauchter Aufladung.\n\"„Das Geheimnis steckt im Fleisch.“ – Drayton Sawyer\""
+        },
+        "en": {
+          "name": "Award-Winning Chili"
+        },
+        "es": {
+          "name": "Chile de primera",
+          "description": "Un gran bol de chile picante famoso por su carne de calidad.\n• Aumenta la duración máxima del barrido con motosierra en 0,2 segundos por carga consumida.\n\"\"El secreto está en la carne\". (Drayton Sawyer)\""
+        },
+        "ja": {
+          "name": "絶品のチリ",
+          "description": "特上肉のおかげで有名になった、大盛りのスパイシーチリ。\n• 掃討チェーンソーが持続する最長時間が1チャージ消費につき0.2秒増加する\n\"「美味しさの秘密は肉にあるのですよ。」- ドレイトン・ソーヤー\""
+        },
+        "pl": {
+          "name": "Wielkokrotnie nagradzane chili",
+          "description": "Duża miska pikantnego chili, które zyskało uznanie dzięki wybornemu mięsu.\n• Zwiększa maksymalny czas trwania Wymachu Piłą Łańcuchową o 0,2 sekundy na ładunek.\n\"„Sekret tkwi w mięsie”. – Drayton Sawyer\""
+        }
+      }
+    },
+    {
+      "id": 802,
+      "name": "Rusted Chains",
+      "killer_id": 9,
+      "description": "This chain is covered with crusty and volatile rust spots that make injuries particularly difficult to heal.\n• Chainsaw hits inflict Broken for 90 seconds.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustedChains.png?7fac1b",
+      "icon_local_path": "icons/addons/rusted_chains.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Verrostete Kette",
+          "description": "Diese Kette ist übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Überlebende, die von der Kettensäge getroffen werden, erleiden den Statuseffekt Gebrochen für 90 Sekunden.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "en": {
+          "name": "Rusted Chain"
+        },
+        "es": {
+          "name": "Cadena oxidada",
+          "description": "Esta cadena está recubierta de una costra de óxido que impide que las heridas se curen fácilmente.\n• Los golpes con motosierra causan Desesperanza durante 90 segundos.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "錆びた鎖",
+          "description": "汚れて移りやすい錆がついたチェーンにより、負傷を治療しづらくする。\n• チェーンソーに命中すると90秒間衰弱状態になる\n衰弱状態になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Zardzewiały Łańcuch",
+          "description": "Łańcuch pokryty kruszącą się i odpadającą rdzą, która sprawia, że rany stają się wyjątkowo trudne do wyleczenia.\n• Trafienia piłą łańcuchową wywołują efekt Okaleczony na 90 sekund.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    },
+    {
+      "id": 803,
+      "name": "Carburettor Tuning Guide",
+      "killer_id": 9,
+      "description": "A crudely drawn guide to properly adjust and tune a Chainsaw carburetor.\n• Automatically consume all charges when triggering a Chainsaw Sweep.\n• Increases Chainsaw Sweep duration by 0.5 seconds.\n• Decreases Chainsaw Sweep movement speed by 2%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_carburettorTuningGuide.png?9004ae",
+      "icon_local_path": "icons/addons/carburettor_tuning_guide.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Vergasereinstellungsanleitung",
+          "description": "Eine grob gezeichnete Anleitung zum ordnungsgemäßen Einstellen eines Kettensägenvergasers.\n• Verbraucht automatisch alle Einheiten, wenn ein Kettensägenschwung ausgeführt wird.\n• Verlängert die Dauer des Kettensägenschwungs um 0,5 Sekunden.\n• Verringert die Bewegungsgeschwindigkeit des Kettensägenschwungs um 2 %."
+        },
+        "en": {
+          "name": "Carburetor Tuning Guide"
+        },
+        "es": {
+          "name": "Guía del carburador",
+          "description": "Una guía con dibujos toscos sobre cómo ajustar y poner a punto el carburador de una motosierra.\n• Consume automáticamente todas las cargas al activar un barrido con motosierra.\n• Aumenta la duración del barrido con motosierra en 0,5 segundos.\n• Reduce la velocidad de movimiento de barrido con motosierra un 2 %."
+        },
+        "ja": {
+          "name": "キャブレター調整ガイド",
+          "description": "チェーンソーのキャブレターの調整方法について乱暴に書かれた説明書。\n• 掃討チェーンソーを発動するとチャージが自動的にすべて消費される。\n• 掃討チェーンソーの持続時間が0.5秒増加する\n• 掃討チェーンソーの移動速度が2%低下する"
+        },
+        "pl": {
+          "name": "Poradnik Podkręcania Gaźnika",
+          "description": "Prymitywnie narysowana instrukcja prawidłowej regulacji i konfiguracji gaźnika piły łańcuchowej.\n• Automatycznie zużywa wszystkie ładunki w momencie uruchomienia Wymachu Piłą Łańcuchową.\n• Wydłuża czas trwania Wymachu Piłą Łańcuchową o 0,5 sekundy.\n• Zmniejsza prędkość Wymachu Piłą Łańcuchową o 2%."
+        }
+      }
+    }
+  ]
+}

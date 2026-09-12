@@ -67,19 +67,23 @@ EDITIONS: list[dict[str, Any]] = [
 ]
 
 
-def _enrich_with_stat(entity: Entity, stat: EntityStat | None, edition: str) -> dict[str, Any]:
+def _enrich_with_stat(
+    entity: Entity, stat: EntityStat | None, edition: str, lang: str | None = None
+) -> dict[str, Any]:
     """Serialize an Entity plus its EntityStat into the flat dict shape shared by
     every vote/leaderboard/roster-browsing response (cast_vote, get_leaderboard,
     get_characters_with_stats, get_character_stat)."""
-    d = entity.to_dict()
+    d = entity.to_dict(lang)
     d["character_slug"] = entity.slug
     d["character_name"] = entity.name
     d["edition"] = edition
     d["smash_count"] = stat.smash_count if stat else 0
     d["pass_count"] = stat.pass_count if stat else 0
     d["super_smash_count"] = stat.super_smash_count if stat else 0
-    d["total_votes"] = stat.total_votes if stat else 0
-    d["smash_rate"] = stat.smash_rate if stat else 0.0
+    # Generated columns: the database fills them in, and they read back as None
+    # on a stat row that has been added but not yet flushed and re-read.
+    d["total_votes"] = int(stat.total_votes or 0) if stat else 0
+    d["smash_rate"] = round(stat.smash_rate or 0.0, 1) if stat else 0.0
     d["chaos_rating"] = stat.chaos_rating if stat else 50.0
     return d
 
@@ -141,6 +145,7 @@ class SmashOrPassService:
         role: str | None = None,
         gender: str | None = None,
         limit: int = 250,
+        lang: str | None = None,
     ) -> dict[str, Any] | None:
         self.ensure_seeded()
         roster = db.session.scalar(select(Roster).where(Roster.slug == roster_slug))
@@ -211,7 +216,7 @@ class SmashOrPassService:
 
         return {
             "roster": roster_info,
-            "entities": [e.to_dict() for e in entities],
+            "entities": [e.to_dict(lang) for e in entities],
             "total_remaining": int(total_remaining),
         }
 
@@ -223,14 +228,17 @@ class SmashOrPassService:
         stat = db.session.scalar(select(EntityStat).where(EntityStat.entity_id == entity_id))
         if not stat:
             entity = db.session.get(Entity, entity_id)
-            chaos = float(entity.get_metadata().get("chaos_score", 50.0)) if entity else 50.0
+            # `chaos_score` is a column now, not a key in a metadata blob.
+            chaos = 50.0
+            if entity is not None and entity.chaos_score is not None:
+                chaos = float(entity.chaos_score)
+            # `total_votes` and `smash_rate` are generated columns and cannot be
+            # assigned here -- the database computes them from the three counts.
             stat = EntityStat(
                 entity_id=entity_id,
                 smash_count=0,
                 pass_count=0,
                 super_smash_count=0,
-                total_votes=0,
-                smash_rate=0.0,
                 chaos_rating=chaos,
             )
             db.session.add(stat)
@@ -251,7 +259,12 @@ class SmashOrPassService:
         stat.smash_count = int(smashes or 0)
         stat.pass_count = int(passes or 0)
         stat.super_smash_count = int(super_smashes or 0)
-        stat.calculate_rate()
+        # `calculate_rate()` is gone: `total_votes` and `smash_rate` are
+        # generated columns, so there is nothing for a writer to forget. The
+        # price is that the database has to see the new counts before those two
+        # can be read back -- hence the flush and the re-read.
+        db.session.flush()
+        db.session.refresh(stat, attribute_names=["total_votes", "smash_rate"])
         return stat
 
     def cast_vote(
@@ -263,6 +276,7 @@ class SmashOrPassService:
         user_id: int | None = None,
         roster_slug: str | None = None,
         edition: str = "canon",
+        lang: str | None = None,
     ) -> dict[str, Any]:
         self.ensure_seeded()
         valid_votes = {"smash", "pass", "super_smash"}
@@ -324,7 +338,7 @@ class SmashOrPassService:
             db.session.refresh(entity)
             db.session.refresh(stat)
 
-            return _enrich_with_stat(entity, stat, target_slug)
+            return _enrich_with_stat(entity, stat, target_slug, lang)
         except Exception as e:
             db.session.rollback()
             logger.error(f"Error recording smash-or-pass vote: {e}")
@@ -396,6 +410,7 @@ class SmashOrPassService:
         sort_by: str = "smash_rate",
         limit: int = 100,
         edition: str | None = None,
+        lang: str | None = None,
     ) -> list[dict[str, Any]]:
         self.ensure_seeded()
         target_slug = roster_slug or edition or "canon"
@@ -441,7 +456,7 @@ class SmashOrPassService:
             else:
                 tier = "Eldritch Void"
 
-            item = _enrich_with_stat(entity, stat, target_slug)
+            item = _enrich_with_stat(entity, stat, target_slug, lang)
             item["rank"] = rank
             item["tier"] = tier
             leaderboard.append(item)
@@ -529,6 +544,7 @@ class SmashOrPassService:
         role: str | None = None,
         gender: str | None = None,
         search: str | None = None,
+        lang: str | None = None,
     ) -> list[dict[str, Any]]:
         self.ensure_seeded()
         roster = db.session.scalar(select(Roster).where(Roster.slug == edition))
@@ -553,10 +569,10 @@ class SmashOrPassService:
 
         stmt = stmt.order_by(Entity.order_index)
         entities = db.session.scalars(stmt).all()
-        return [_enrich_with_stat(e, e.stat, edition) for e in entities]
+        return [_enrich_with_stat(e, e.stat, edition, lang) for e in entities]
 
     def get_character_stat(
-        self, character_slug: str, edition: str = "canon"
+        self, character_slug: str, edition: str = "canon", lang: str | None = None
     ) -> dict[str, Any] | None:
         self.ensure_seeded()
         roster = db.session.scalar(select(Roster).where(Roster.slug == edition))
@@ -572,13 +588,14 @@ class SmashOrPassService:
         )
         if not entity or not entity.stat:
             return None
-        return _enrich_with_stat(entity, entity.stat, edition)
+        return _enrich_with_stat(entity, entity.stat, edition, lang)
 
     def get_user_votes(
         self,
         user_id: int | None = None,
         session_id: str | None = None,
         edition: str = "canon",
+        lang: str | None = None,
     ) -> list[dict[str, Any]]:
         self.ensure_seeded()
         roster = db.session.scalar(select(Roster).where(Roster.slug == edition))
@@ -609,7 +626,7 @@ class SmashOrPassService:
             vd["role"] = e.role
             vd["gender"] = e.gender
             vd["edition"] = edition
-            vd["entity"] = e.to_dict()
+            vd["entity"] = e.to_dict(lang)
             res.append(vd)
         return res
 

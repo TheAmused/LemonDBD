@@ -9,7 +9,7 @@ from app.models.base import utcnow
 from app.models.admin import AdminAuditLog, ChallengeModeSetting, SeedUpdateLog
 from app.models.changelog import ChangelogPost
 from app.models.chapter import Chapter
-from app.models.character import Character, Killer, Survivor
+from app.models.character import Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.community import (
@@ -18,12 +18,12 @@ from app.models.community import (
     CustomPerk,
     DailyQuest,
 )
-from app.models.equipment import Addon, Item, Offering
+from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.gauntlet import (
     GauntletMatchLog,
     GauntletRun,
 )
-from app.models.map import MapObjective, MapRealm, MapTile, Realm
+from app.models.map import MapRealm, MapSource, Realm
 from app.models.minigames import (
     DraftSession,
     GuesserStat,
@@ -46,7 +46,6 @@ from app.models.user import (
 __all__ = [
     "utcnow",
     "Chapter",
-    "Character",
     "ChaosRun",
     "ChaosMatchLog",
     "HistoryRun",
@@ -55,12 +54,13 @@ __all__ = [
     "Killer",
     "Perk",
     "Item",
-    "Addon",
+    "ItemCategory",
+    "KillerAddon",
+    "ItemAddon",
     "Offering",
     "Realm",
     "MapRealm",
-    "MapTile",
-    "MapObjective",
+    "MapSource",
     "GauntletRun",
     "GauntletMatchLog",
     "PageStreakRun",

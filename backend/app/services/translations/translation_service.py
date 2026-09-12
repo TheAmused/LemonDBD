@@ -8,10 +8,12 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models.character import Character
-from app.models.equipment import Addon, Item, Offering
+from app.models.chapter import Chapter
+from app.models.character import Killer, Survivor
+from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.map import MapRealm, Realm
 from app.models.perk import Perk
+from app.services.db.parsing import normalize_rarity
 
 
 def sanitize_filename(name: str) -> str:
@@ -171,10 +173,23 @@ class TranslationService:
 
         target_locales = locales or SUPPORTED_LOCALES
 
-        db_characters = db.session.scalars(select(Character)).all()
+        # Two tables, one list. Translations are keyed by character name, and
+        # no survivor shares a name with a killer, so the concatenation is the
+        # same set the single `characters` table used to return.
+        db_characters = [
+            *db.session.scalars(select(Survivor)).all(),
+            *db.session.scalars(select(Killer)).all(),
+        ]
         db_perks = db.session.scalars(select(Perk)).all()
         db_items = db.session.scalars(select(Item)).all()
-        db_addons = db.session.scalars(select(Addon)).all()
+        # Two tables, one list. Translations are keyed by add-on name and no
+        # killer add-on shares a name with an item add-on (verified: zero
+        # collisions across all 931 rows), so the concatenation is the same set
+        # the single `addons` table used to return.
+        db_addons = [
+            *db.session.scalars(select(KillerAddon)).all(),
+            *db.session.scalars(select(ItemAddon)).all(),
+        ]
 
         chars_data = data.get("characters", {})
         perks_data = data.get("perks", {})
@@ -195,20 +210,34 @@ class TranslationService:
             )
             if matched and trans:
                 curr = dict(matched.translations or {})
-                raw_chapter = matched.chapter_name or "Base Game"
                 for l in target_locales:
                     if l in trans:
-                        t_item = dict(trans[l])
-                        loc_ch = raw_chapter
-                        raw_low = raw_chapter.strip().lower()
-                        for ch_pattern, ch_locs in chapters_data.items():
-                            pat_low = ch_pattern.strip().lower()
-                            if pat_low == raw_low or pat_low in raw_low or raw_low in pat_low:
-                                loc_ch = ch_locs.get(l, ch_locs.get("en", raw_chapter))
-                                break
-                        t_item["chapter_name"] = loc_ch
+                        # `chapter_name` is no longer written here. It used to
+                        # be copied into every character's translations blob --
+                        # 98 characters x 5 locales = 490 stored copies of 52
+                        # distinct chapter names, each one able to drift from
+                        # the others. It is stored once per chapter below and
+                        # read through the foreign key.
+                        t_item = {k: v for k, v in trans[l].items() if k != "chapter_name"}
                         curr[l] = t_item
                 matched.translations = curr
+
+        # 1b. Chapter name translations, stored once per chapter.
+        if chapters_data:
+            for chapter_row in db.session.scalars(select(Chapter)).all():
+                raw_low = chapter_row.name.strip().lower()
+                localized: dict[str, Any] = {}
+                for ch_pattern, ch_locs in chapters_data.items():
+                    pat_low = ch_pattern.strip().lower()
+                    if pat_low == raw_low or pat_low in raw_low or raw_low in pat_low:
+                        for l in target_locales:
+                            if ch_locs.get(l):
+                                localized[l] = {"name": ch_locs[l]}
+                        break
+                if localized:
+                    curr = dict(chapter_row.translations or {})
+                    curr.update(localized)
+                    chapter_row.translations = curr
 
         # 2. Sync Perks
         perk_exact_map = {p.name.strip().lower(): p for p in db_perks}
@@ -232,10 +261,26 @@ class TranslationService:
             if not matched:
                 continue
             else:
-                if i_val.get("category"):
-                    matched.category = i_val.get("category")
-                if i_val.get("role"):
-                    matched.role = i_val.get("role")
+                # `category` and `role` are NOT written back from this file.
+                #
+                # They used to be two strings on `items`. `category` is now the
+                # `ItemCategory` **relationship** behind `category_id`, and
+                # assigning the string "Flashlight" to it made SQLAlchemy try to
+                # treat a str as a mapped instance:
+                #
+                #     'str' object has no attribute '_sa_instance_state'
+                #
+                # which raised at flush and rolled back the entire sync -- so
+                # no translations at all were being written on any boot after
+                # the first, silently, behind the caller's `except Exception`.
+                # `role` is not a column on `items` at all any more; it is read
+                # from `category.role`, so that line only ever set a stray
+                # Python attribute.
+                #
+                # Both are structural facts resolved once at seed time from
+                # `category_id` -- the same reason the add-on block below no
+                # longer writes `associated_target` back. This file carries
+                # translations; it does not get to re-decide what an item is.
                 if i_val.get("rarity"):
                     matched.rarity = i_val.get("rarity")
                 if i_val.get("translations", {}).get("en", {}).get("description"):
@@ -249,8 +294,13 @@ class TranslationService:
 
         # 4. Sync Addons
         addon_exact_map = {a.name.strip().lower(): a for a in db_addons}
-        addon_target_map = {(a.name.strip().lower(), (a.associated_target or "").strip().lower()): a for a in db_addons}
-        addon_clean_target_map = {(re.sub(r"\s*\([^)]+\)", "", a.name).strip().lower(), (a.associated_target or "").strip().lower()): a for a in db_addons}
+        # `associated_target` is a derived property now (killer name or item
+        # class label), so it still disambiguates the ~90 add-on names that
+        # repeat across killers -- but it is read-only, and the block below no
+        # longer writes a target back from the translation file. Targets come
+        # from the seed import, where they are resolved to foreign keys once.
+        addon_target_map = {(a.name.strip().lower(), a.associated_target.strip().lower()): a for a in db_addons}
+        addon_clean_target_map = {(re.sub(r"\s*\([^)]+\)", "", a.name).strip().lower(), a.associated_target.strip().lower()): a for a in db_addons}
         addon_map = {simplify_lookup_key(a.name): a for a in db_addons}
 
         for a_name, a_val in addons_data.items():
@@ -267,12 +317,8 @@ class TranslationService:
             if not matched:
                 continue
             else:
-                if a_val.get("associated_target"):
-                    matched.associated_target = a_val.get("associated_target")
-                if a_val.get("category"):
-                    matched.category = a_val.get("category")
                 if a_val.get("rarity"):
-                    matched.rarity = a_val.get("rarity")
+                    matched.rarity = normalize_rarity(a_val.get("rarity"))
                 if a_val.get("translations", {}).get("en", {}).get("description"):
                     matched.description = a_val.get("translations", {}).get("en", {}).get("description")
                 if trans:
@@ -301,16 +347,10 @@ class TranslationService:
                         curr[l] = {"name": trans[l].get("name") or realm_row.name}
                 realm_row.translations = curr
 
-            for map_row in db_map_realms:
-                if map_row.realm.strip() != r_name.strip():
-                    continue
-                curr = dict(map_row.translations or {})
-                for l in target_locales:
-                    if l in trans:
-                        entry = dict(curr.get(l) or {})
-                        entry["realm"] = trans[l].get("name") or map_row.realm
-                        curr[l] = entry
-                map_row.translations = curr
+            # The realm name used to be copied into each of its maps'
+            # translations under a "realm" key -- 232 copies of 21 names.
+            # `MapRealm.to_dict` reads it from the realm now, so there is
+            # nothing left to write here.
 
         # 6. Sync Map name translations
         maps_data = data.get("maps", {})
@@ -359,10 +399,18 @@ class TranslationService:
             else:
                 if o_val.get("name") and matched.name != o_val.get("name"):
                     matched.name = o_val.get("name")
-                if o_val.get("category"):
-                    matched.category = o_val.get("category")
-                if o_val.get("role"):
-                    matched.role = o_val.get("role")
+                # `category` is a read-only property derived from `role`
+                # ("Survivor" -> "SurvivorOfferings"); assigning to it raises
+                # `property ... has no setter`. It was the second crash waiting
+                # in this function -- the items one above simply reached its
+                # flush first.
+                #
+                # `role` is still a real column, but it is not this file's to
+                # set either: the wiki section an offering was scraped from
+                # contradicted its actual side in six rows (Murky Reagent,
+                # Bloodied Blueprint and friends), and the seed import resolves
+                # that conflict once. Writing the wiki value back here would
+                # undo that resolution on every boot.
                 if o_val.get("rarity"):
                     matched.rarity = o_val.get("rarity")
                 if o_val.get("icon_local_path"):
@@ -385,7 +433,13 @@ class TranslationService:
             "THIS ADD-ON IS UNUSED",
             "THIS ITEM IS NO LONGER AVAILABLE",
         ]
-        for addon in db.session.scalars(select(Addon)).all():
+        # Both add-on tables are swept: a decommissioned add-on can sit in
+        # either, and there is no base class left to select once.
+        decom_addons = [
+            *db.session.scalars(select(KillerAddon)).all(),
+            *db.session.scalars(select(ItemAddon)).all(),
+        ]
+        for addon in decom_addons:
             desc = addon.description or ""
             name = addon.name or ""
             if any(p in desc.upper() for p in DECOM_PHRASES) or "(Decommissioned)" in name:
@@ -403,9 +457,12 @@ class TranslationService:
             "mushroom formula",
             "potent extract",
         }
+        # Fog Vials are an item class, so only `item_addons` can hold one.
         for addon in db.session.scalars(
-            select(Addon).where(Addon.associated_target.ilike("Fog Vial%"))
-        ).all():
+            select(ItemAddon)
+            .join(ItemCategory, ItemAddon.item_category_id == ItemCategory.id)
+            .where(ItemCategory.name == "Fog Vial")
+        ).unique().all():
             if addon.name.strip().lower() not in CANONICAL_FOG_VIAL_ADDONS:
                 logger.info(f"Removing stray Fog Vial addon: {addon.name!r}")
                 db.session.delete(addon)
@@ -439,10 +496,22 @@ class TranslationService:
     def export_squashed_json(self, target_path: Path | None = None) -> Path:
         """Exports currently loaded DB translations to squashed JSON."""
         out_file = target_path or self.translations_file
-        db_characters = db.session.scalars(select(Character)).all()
+        # Two tables, one list. Translations are keyed by character name, and
+        # no survivor shares a name with a killer, so the concatenation is the
+        # same set the single `characters` table used to return.
+        db_characters = [
+            *db.session.scalars(select(Survivor)).all(),
+            *db.session.scalars(select(Killer)).all(),
+        ]
         db_perks = db.session.scalars(select(Perk)).all()
         db_items = db.session.scalars(select(Item)).all()
-        db_addons = db.session.scalars(select(Addon)).all()
+        # Same two-table concatenation as the sync above: add-on names are
+        # unique across `killer_addons` and `item_addons`, so the export keys
+        # are exactly the ones the single table produced.
+        db_addons = [
+            *db.session.scalars(select(KillerAddon)).all(),
+            *db.session.scalars(select(ItemAddon)).all(),
+        ]
         db_realms = db.session.scalars(select(Realm)).all()
         db_map_realms = db.session.scalars(select(MapRealm)).all()
 
@@ -461,9 +530,10 @@ class TranslationService:
             key = (c.code_prefix or c.name).strip()
             squashed_data["characters"][key] = {
                 "name": c.name,
-                "code_prefix": c.code_prefix or "",
-                "wiki_slug": c.wiki_slug or "",
-                "short_name": c.short_name or "",
+                "id": c.id,
+                # code_prefix is derived (role + release_number) rather than
+                # stored; wiki_slug and short_name were the slug respelled.
+                "code_prefix": c.code_prefix,
                 "translations": c.translations or {},
             }
 
@@ -501,7 +571,7 @@ class TranslationService:
             seen_base_names.add(base_name)
             squashed_data["maps"][base_name] = {
                 "name": m.name,
-                "realm": m.realm,
+                "realm": m.realm.name if m.realm else "",
                 "translations": {
                     l: {"name": t.get("name")}
                     for l, t in (m.translations or {}).items()
@@ -512,8 +582,8 @@ class TranslationService:
         for a in db_addons:
             squashed_data["addons"][a.name.strip()] = {
                 "name": a.name,
-                "associated_target": a.associated_target or "",
-                "category": a.category or "",
+                "associated_target": a.associated_target,
+                "category": a.category,
                 "translations": a.translations or {},
             }
 

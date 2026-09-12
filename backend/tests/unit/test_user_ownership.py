@@ -4,22 +4,23 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.core.extensions import db
-from app.models import Character, Perk, User, UserCharacterOwnership, UserPerkOwnership
+from app.models import Killer, Perk, Survivor, User, UserCharacterOwnership, UserPerkOwnership
+from tests.unit.conftest import make_chapter
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
 
 
 @pytest.fixture(autouse=True)
 def setup_ownership_db(db_session: Session) -> None:
+    chapter_id = make_chapter(db_session, "Base Game").id
     trapper = db_session.scalars(
-        select(Character).where(Character.name == "The Trapper")
+        select(Killer).where(Killer.name == "The Trapper")
     ).first()
     if not trapper:
-        trapper = Character(
-            name="The Trapper",
-            wiki_slug="The_Trapper",
-            role="Killer",
-            release_number=1,
+        # `wiki_slug` was `name` with underscores and `release_number` is the
+        # primary key; neither is a column any more.
+        trapper = Killer(
+            name="The Trapper", id=1, chapter_id=chapter_id, power_name="Bear Trap"
         )
         db_session.add(trapper)
         db_session.flush()
@@ -30,25 +31,21 @@ def setup_ownership_db(db_session: Session) -> None:
             db_session.add(
                 Perk(
                     name=p_name,
-                    character_id=trapper.id,
+                    killer_id=trapper.id,
                     is_teachable=True,
-                    category="Killer",
+                    role="Killer",
                 )
             )
         else:
-            p.character_id = trapper.id
+            p.killer_id = trapper.id
+            p.role = "Killer"
             p.is_teachable = True
 
     dwight = db_session.scalars(
-        select(Character).where(Character.name == "Dwight Fairfield")
+        select(Survivor).where(Survivor.name == "Dwight Fairfield")
     ).first()
     if not dwight:
-        dwight = Character(
-            name="Dwight Fairfield",
-            wiki_slug="Dwight_Fairfield",
-            role="Survivor",
-            release_number=1,
-        )
+        dwight = Survivor(name="Dwight Fairfield", id=1, chapter_id=chapter_id)
         db_session.add(dwight)
         db_session.flush()
 
@@ -58,13 +55,14 @@ def setup_ownership_db(db_session: Session) -> None:
             db_session.add(
                 Perk(
                     name=p_name,
-                    character_id=dwight.id,
+                    survivor_id=dwight.id,
                     is_teachable=True,
-                    category="Survivor",
+                    role="Survivor",
                 )
             )
         else:
-            p.character_id = dwight.id
+            p.survivor_id = dwight.id
+            p.role = "Survivor"
             p.is_teachable = True
 
     db_session.commit()
@@ -127,12 +125,12 @@ class TestUserAndOwnership:
     ) -> None:
         user, _ = user_service.register_user("trappermain", "trapper@test.com", "password123")
         trapper = db_session.scalars(
-            select(Character).where(Character.name == "The Trapper")
+            select(Killer).where(Killer.name == "The Trapper")
         ).first()
         assert trapper is not None
 
         trapper_perks = db_session.scalars(
-            select(Perk).where(Perk.character_id == trapper.id)
+            select(Perk).where(Perk.killer_id == trapper.id)
         ).all()
         assert len(trapper_perks) == 3
         trapper_perk_ids = {p.id for p in trapper_perks}
@@ -159,10 +157,10 @@ class TestUserAndOwnership:
     ) -> None:
         user, _ = user_service.register_user("partialuser", "partial@test.com", "password123")
         trapper = db_session.scalars(
-            select(Character).where(Character.name == "The Trapper")
+            select(Killer).where(Killer.name == "The Trapper")
         ).first()
         trapper_perks = db_session.scalars(
-            select(Perk).where(Perk.character_id == trapper.id)
+            select(Perk).where(Perk.killer_id == trapper.id)
         ).all()
 
         ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
@@ -174,7 +172,7 @@ class TestUserAndOwnership:
         trapper_perk_status = {
             p["perk_id"]: p["is_unlocked"]
             for p in user_perks
-            if p["character_id"] == trapper.id
+            if p["killer_id"] == trapper.id
         }
         assert trapper_perk_status[trapper_perks[0].id] is True
         assert trapper_perk_status[trapper_perks[1].id] is False
@@ -188,10 +186,10 @@ class TestUserAndOwnership:
     ) -> None:
         user, _ = user_service.register_user("trappermain2", "trapper2@test.com", "password123")
         trapper = db_session.scalars(
-            select(Character).where(Character.name == "The Trapper")
+            select(Killer).where(Killer.name == "The Trapper")
         ).first()
         trapper_perks = db_session.scalars(
-            select(Perk).where(Perk.character_id == trapper.id)
+            select(Perk).where(Perk.killer_id == trapper.id)
         ).all()
 
         ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
@@ -217,10 +215,10 @@ class TestUserAndOwnership:
     ) -> None:
         user, _ = user_service.register_user("bulkuser", "bulk@test.com", "password123")
         trapper = db_session.scalars(
-            select(Character).where(Character.name == "The Trapper")
+            select(Killer).where(Killer.name == "The Trapper")
         ).first()
         dwight = db_session.scalars(
-            select(Character).where(Character.name == "Dwight Fairfield")
+            select(Survivor).where(Survivor.name == "Dwight Fairfield")
         ).first()
 
         ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
@@ -228,8 +226,8 @@ class TestUserAndOwnership:
         bulk_res = ownership_service.bulk_set_character_ownership(
             user.id,
             [
-                {"character_id": trapper.id, "is_owned": True},
-                {"character_id": dwight.id, "is_owned": True},
+                {"character_id": trapper.id, "role": "killer", "is_owned": True},
+                {"character_id": dwight.id, "role": "survivor", "is_owned": True},
             ],
         )
         assert bulk_res["characters_updated_count"] == 2
@@ -247,7 +245,7 @@ class TestUserAndOwnership:
     ) -> None:
         user, _ = user_service.register_user("summaryuser", "summary@test.com", "password123")
         trapper = db_session.scalars(
-            select(Character).where(Character.name == "The Trapper")
+            select(Killer).where(Killer.name == "The Trapper")
         ).first()
 
         summary_default = ownership_service.get_user_ownership_summary(user.id)
@@ -295,13 +293,13 @@ class TestUserAndOwnership:
         assert trapper_char["is_owned"] is True
 
         trapper = db_session.scalars(
-            select(Character).where(Character.name == "The Trapper")
+            select(Killer).where(Killer.name == "The Trapper")
         ).first()
         trapper_id = trapper.id
 
         lock_res = client.post(
             f"/api/v1/users/{user_id}/characters",
-            json={"character_id": trapper_id, "is_owned": False},
+            json={"character_id": trapper_id, "role": "killer", "is_owned": False},
             headers=headers,
         )
         assert lock_res.status_code == 200
@@ -311,7 +309,7 @@ class TestUserAndOwnership:
 
         own_res = client.post(
             f"/api/v1/users/{user_id}/characters",
-            json={"character_id": trapper_id, "is_owned": True},
+            json={"character_id": trapper_id, "role": "killer", "is_owned": True},
             headers=headers,
         )
         assert own_res.status_code == 200

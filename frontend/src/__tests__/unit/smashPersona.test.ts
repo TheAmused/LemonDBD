@@ -21,7 +21,7 @@ const mockEntity = (overrides: Partial<EntityItem> = {}): EntityItem => ({
   role: 'Killer',
   gender: 'male',
   stat: {
-    id: 'stat-id',
+    // No `id`: the stats table is 1:1 with entities, so `entity_id` is the key.
     entity_id: 'test-id',
     smash_count: 10,
     pass_count: 5,

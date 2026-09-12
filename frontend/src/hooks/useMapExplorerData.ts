@@ -63,8 +63,8 @@ export interface UseMapExplorerDataReturn {
   activeSearch: string;
   groupedMapsByRealm: { realm: string; maps: MapRealm[] }[];
   realmImages: Record<string, Realm>;
-  openMapId: string | null;
-  setOpenMapId: (id: string | null) => void;
+  openMapId: number | null;
+  setOpenMapId: (id: number | null) => void;
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
@@ -88,7 +88,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [loading, setLoading] = useState(cachedMaps === undefined);
-  const [openMapId, setOpenMapId] = useState<string | null>(null);
+  const [openMapId, setOpenMapId] = useState<number | null>(null);
   const lastHandledTargetRef = useRef<string | null>(null);
 
   const onAvailableMapsLoadedRef = useRef(onAvailableMapsLoaded);

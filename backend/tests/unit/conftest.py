@@ -9,10 +9,12 @@ from sqlalchemy.orm import Session
 os.environ["TESTING"] = "True"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
+from sqlalchemy import select
+
 from app import create_app
 from app.core.config import TestingConfig
 from app.core.extensions import db
-from app.models import Character, Perk, User
+from app.models import Chapter, Killer, Perk, Survivor, User
 
 
 @pytest.fixture(scope="session")
@@ -66,8 +68,23 @@ def sample_user(db_session: Session) -> User:
     return user
 
 
+def make_chapter(db_session: Session, name: str = "Test Chapter") -> Chapter:
+    """A chapter for characters to belong to.
+
+    `survivors.chapter_id` and `killers.chapter_id` are NOT NULL -- every one
+    of the 98 real characters resolves to a chapter, Base Game included -- so a
+    test that builds a character has to build one of these first.
+    """
+    chapter = db_session.scalars(select(Chapter).where(Chapter.name == name)).first()
+    if chapter is None:
+        chapter = Chapter(name=name)
+        db_session.add(chapter)
+        db_session.flush()
+    return chapter
+
+
 @pytest.fixture
-def seed_chaos_roster(db_session: Session) -> list[Character]:
+def seed_chaos_roster(db_session: Session) -> list[Killer]:
     """Seed a representative set of Killers and Perks for Chaos mode testing."""
     killers_data = [
         ("The Trapper", ["Brutal Strength", "Agitation", "Unnerving Presence"]),
@@ -77,10 +94,14 @@ def seed_chaos_roster(db_session: Session) -> list[Character]:
         ("The Huntress", ["Beast of Prey", "Territorial Imperative", "Hex: Huntress Lullaby"]),
         ("The Shape", ["Save the Best for Last", "Play with Your Food", "Dying Light"]),
     ]
-    created_characters: list[Character] = []
+    chapter = make_chapter(db_session)
+    created_characters: list[Killer] = []
 
     for killer_name, perks in killers_data:
-        char = Character(name=killer_name, role="Killer")
+        # `killers` is its own table now, so there is no role to pass: the
+        # table is the role. `power_name` is NOT NULL here, which it could not
+        # be while 54 survivors shared the table.
+        char = Killer(name=killer_name, chapter_id=chapter.id, power_name=f"{killer_name} Power")
         db_session.add(char)
         db_session.flush()
         created_characters.append(char)
@@ -89,9 +110,9 @@ def seed_chaos_roster(db_session: Session) -> list[Character]:
             db_session.add(
                 Perk(
                     name=perk_name,
-                    character_id=char.id,
+                    killer_id=char.id,
                     is_teachable=True,
-                    category="Killer",
+                    role="Killer",
                 )
             )
 

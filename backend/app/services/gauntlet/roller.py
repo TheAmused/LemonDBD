@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models import Character, Perk
+from app.models import Killer, Perk, Survivor
 from app.services.gauntlet.constants import (
     ORIGINAL_KILLER_ROSTER_LIMIT,
     ORIGINAL_SURVIVOR_ROSTER_LIMIT,
@@ -36,22 +36,51 @@ def get_owned_character_ids(user_id: int, role: str, ownership_service: Ownershi
     return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
 
 
-def resolve_character_names_by_ids(ids: list[int]) -> list[str]:
+def resolve_character_names_by_ids(ids: list[int], role: str | None = None) -> list[str]:
+    """Frozen id list -> current names.
+
+    Gauntlet runs cover both roles, and an id alone no longer names one
+    character: survivor 7 and killer 7 both exist. `role` says which table to
+    read; without it both are searched and the survivor wins a tie, which is
+    what a run recorded before the split would have meant, since survivors held
+    the low ids in the single table.
+    """
     if not ids:
         return []
-    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
-    by_id = {c.id: c.name for c in rows}
+    key = (role or "").strip().rstrip("s").lower()
+    models = {"survivor": (Survivor,), "killer": (Killer,)}.get(key, (Survivor, Killer))
+
+    by_id: dict[int, str] = {}
+    for model in reversed(models):
+        for row in db.session.scalars(select(model).where(model.id.in_(ids))).all():
+            by_id[row.id] = row.name
     return [by_id[i] for i in ids if i in by_id]
 
 
 def get_character_teachable_perks(character_name: str) -> list[dict[str, Any]]:
-    perks = db.session.scalars(
-        select(Perk)
-        .join(Character, Perk.character_id == Character.id)
-        .where(Character.name == character_name, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False))
-        .order_by(Perk.name.asc())
-    ).all()
-    return [p.to_dict() for p in perks]
+    """The perks one character teaches, found by name.
+
+    Names are unique across both tables -- no survivor shares one with a killer
+    -- so the name alone still identifies a character. Which side it is on
+    decides which key the perk carries.
+    """
+    for model, owner_column in ((Survivor, Perk.survivor_id), (Killer, Perk.killer_id)):
+        character = db.session.scalars(
+            select(model).where(model.name == character_name)
+        ).first()
+        if not character:
+            continue
+        perks = db.session.scalars(
+            select(Perk)
+            .where(
+                owner_column == character.id,
+                Perk.is_teachable.is_(True),
+                Perk.is_disabled.is_(False),
+            )
+            .order_by(Perk.name.asc())
+        ).all()
+        return [p.to_dict() for p in perks]
+    return []
 
 
 def pick_initial_target(user_id: int, role: str, ownership_service: OwnershipService) -> str:

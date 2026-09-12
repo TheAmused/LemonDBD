@@ -1,0 +1,278 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 37,
+      "name": "Clean Rag",
+      "item_category_id": 8,
+      "description": "A mundane rag. Suspiciously clean.\n• Increases the Toolbox's repair speed by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cleanRag.png?a8f97d",
+      "icon_local_path": "icons/addons/clean_rag.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Saubere Lumpen",
+          "description": "Ein alltäglicher Stoff. Verdächtig sauber.\n• Erhöht die Reparaturgeschwindigkeit der Werkzeugkiste um 20 %."
+        },
+        "es": {
+          "name": "Trapo Limpio",
+          "description": "Un trapo común y corriente. Sospechosamente limpio.\n• Aumenta la velocidad de reparación de la caja de herramientas un 20 %."
+        },
+        "ja": {
+          "name": "綺麗なぼろきれ",
+          "description": "妙に綺麗なぼろきれ。\n•  工具箱の修理速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Czysta Szmatka",
+          "description": "Zwyczajna szmatka. Jest podejrzanie czysta.\n• Zwiększa prędkość naprawy za pomocą skrzynki z narzędziami o 20%."
+        }
+      }
+    },
+    {
+      "id": 38,
+      "name": "Instructions",
+      "item_category_id": 8,
+      "description": "Someone quickly painted what seems to be repair instructions on this piece of bark.\n• Eliminates Skill Checks while repairing with the Toolbox.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_instructions.png?2c2543",
+      "icon_local_path": "icons/addons/instructions.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Anleitungen",
+          "description": "Jemand hat schnell etwas auf dieses Rindenstück gemalt, das allem Anschein nach eine Reparaturanleitung ist.\n• Eliminiert Fähigkeitschecks während der Reparaturen mit der Werkzeugkiste."
+        },
+        "es": {
+          "name": "Instrucciones",
+          "description": "Alguien se dio prisa en pintar lo que parecen ser instrucciones de reparación en este trozo de corteza.\n• Elimina las pruebas de habilidad al reparar con la caja de herramientas."
+        },
+        "ja": {
+          "name": "説明書",
+          "description": "何者かに修理方法が走り書きされたと思われる木の皮。\n• 工具箱で修理する間のスキルチェックを排除する"
+        },
+        "pl": {
+          "name": "Instrukcje",
+          "description": "Na tym kawałku kory namalowano coś, co przypomina instrukcję naprawy.\n• Usuwa testy umiejętności podczas naprawy za pomocą skrzynki narzędziowej."
+        }
+      }
+    },
+    {
+      "id": 39,
+      "name": "Scraps",
+      "item_category_id": 8,
+      "description": "Springs, screws and gears. Mostly unusable junk.\n• Adds 8 charges to the Toolbox.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scraps.png?60a345",
+      "icon_local_path": "icons/addons/scraps.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schrottteile",
+          "description": "Federn, Schrauben und Zahnräder. Meist unbrauchbares Gerümpel.\n• Fügt 8 Einheiten zur Werkzeugkiste hinzu."
+        },
+        "es": {
+          "name": "Chatarra",
+          "description": "Muelles, tornillos y ruedas dentadas. Chatarra inútil en su mayoría.\n• Añade 8 cargas a la caja de herramientas."
+        },
+        "ja": {
+          "name": "鉄クズ",
+          "description": "スプリングやネジ、歯車など、ほとんど使い物にならないガラクタ。\n• 工具箱に8チャージ追加する"
+        },
+        "pl": {
+          "name": "Skrawki",
+          "description": "Sprężyny, śruby i koła zębate. Przeważnie bezużyteczne śmieci.\n• Dodają 8 ładunków do skrzynki z narzędziami."
+        }
+      }
+    },
+    {
+      "id": 40,
+      "name": "Cutting Wire",
+      "item_category_id": 8,
+      "description": "A rudimentary cutting tool made from a jagged metal wire and two wooden handles.\n• Increases the Toolbox's sabotage speed by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cuttingWire.png?87513b",
+      "icon_local_path": "icons/addons/cutting_wire.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schneidedraht",
+          "description": "Ein einfaches Schneidwerkzeug aus einem gezackten Metalldraht und zwei hölzernen Griffen.\n• Erhöht die Sabotagegeschwindigkeit der Werkzeugkiste um 20 %."
+        },
+        "es": {
+          "name": "Alambre para cortar",
+          "description": "Una rudimentaria herramienta de dos mangos hecha para cortar con alambres dentados.\n• Aumenta la velocidad de sabotaje con la caja de herramientas un 20 %."
+        },
+        "ja": {
+          "name": "カッティングワイヤー",
+          "description": "基本の切断用道具。木製の取っ手と刃がついた鉄線でできている。\n• 工具箱の破壊工作の速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Drut do cięcia",
+          "description": "Podstawowe narzędzie tnące wykonane z metalowych drutów i dwóch drewnianych uchwytów.\n• Przyspiesza sabotowanie za pomocą skrzynki z narzędziami o 20%."
+        }
+      }
+    },
+    {
+      "id": 41,
+      "name": "Socket Swivels",
+      "item_category_id": 8,
+      "description": "Swivels provide bend and flexibility for bolts that are out of reach, deep within mechanical devices.\n• Increases the Toolbox repair speed by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_socketSwivels.png?360bd5",
+      "icon_local_path": "icons/addons/socket_swivels.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schwenkbare Steckschlüsselaufsätze",
+          "description": "Steckschlüsselaufsätze, die es aufgrund ihrer Beweglichkeit möglich machen, schwer zugängliche Bolzen innerhalb mechanischer Geräte zu erreichen.\n• Erhöhen die Reparaturgeschwindigkeit der Werkzeugkiste um 30 %."
+        },
+        "es": {
+          "name": "Llave articulada",
+          "description": "Los mangos articulados proporcionan flexibilidad a la hora de manipular tornillos que están fuera de alcance en el interior de aparatos mecánicos.\n• Aumenta la velocidad de reparación con la caja de herramientas un 30 %."
+        },
+        "ja": {
+          "name": "可動式ジョイント",
+          "description": "機械の内部で、長さが足りないボルトに角度や柔軟性を与える器具。\n• 工具箱の修理速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Nasadka przegubowa",
+          "description": "Nasadka zapewniająca giętkość i elastyczność śrub znajdujących się głęboko w mechanicznych urządzeniach poza zasięgiem jakichkolwiek narzędzi.\n• Przyspiesza naprawianie za pomocą skrzynki z narzędziami o 30%."
+        }
+      }
+    },
+    {
+      "id": 42,
+      "name": "Spring Clamp",
+      "item_category_id": 8,
+      "description": "Useful tool to clamp hoses or hold wires in place and prevent damage or injury.\n• The distance at which your repairs can be heard is reduced by 8 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_springClamp.png?b651b6",
+      "icon_local_path": "icons/addons/spring_clamp.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Klemmzange",
+          "description": "Nützliches Werkzeug, um Schläuche abzuklemmen oder Drähte zu befestigen und dadurch Beschädigungen und Verletzungen zu verhindern.\n• Die Entfernung, in der deine Reparaturen gehört werden können, wird um 8 Meter verringert."
+        },
+        "es": {
+          "name": "Alicates",
+          "description": "Una herramienta útil para sujetar tubos o alambres y así evitar heridas.\n• Se reduce la distancia a la que se pueden oír tus reparaciones en 8 metros."
+        },
+        "ja": {
+          "name": "スプリングクランプ",
+          "description": "管やワイヤーをまとめ、破損や怪我を防ぐことができる便利な道具。\n• 修理音の聴こえる範囲が8メートル縮小する"
+        },
+        "pl": {
+          "name": "Kleszcze",
+          "description": "Użyteczne narzędzie do zaciskania gumowych węży ogrodowych i przytrzymywania drutów we właściwym miejscu. Zapobiega nieszczęśliwym wypadkom.\n• Odległość, z jakiej można usłyszeć naprawy, zostaje zmniejszona o 8 metrów."
+        }
+      }
+    },
+    {
+      "id": 43,
+      "name": "Wire Spool",
+      "item_category_id": 8,
+      "description": "A portable but heavy spool of copper wire.\n• Adds 12 charges to the Toolbox.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wireSpool.png?9d265d",
+      "icon_local_path": "icons/addons/wire_spool.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Drahtspule",
+          "description": "Eine tragbare, aber schwere Kupferdrahtspule.\n• Fügt 12 Einheiten zur Werkzeugkiste hinzu."
+        },
+        "es": {
+          "name": "Carrete de Alambre",
+          "description": "Un pesado carrete portátil de alambre de cobre.\n• Añade 12 cargas a la caja de herramientas."
+        },
+        "ja": {
+          "name": "ワイヤーのリール",
+          "description": "重いが持ち運び可能な銅線スプール。\n• 工具箱に12チャージ追加する"
+        },
+        "pl": {
+          "name": "Kłębek Drutu",
+          "description": "Przenośna, bardzo ciężka szpula miedzianego drutu.\n• Dodaje 12 ładunków do skrzynki z narzędziami."
+        }
+      }
+    },
+    {
+      "id": 44,
+      "name": "Grip Wrench",
+      "item_category_id": 8,
+      "description": "An adjustable wrench with a tough grip. Essential in any Toolbox.\n• Hooks sabotaged using the Toolbox take an extra 20 seconds to respawn.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gripWrench.png?367484",
+      "icon_local_path": "icons/addons/grip_wrench.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gripzange",
+          "description": "Eine einstellbare Zange mit robustem Griff. Unverzichtbar in jeder Werkzeugkiste.\n• Haken, die mit der Werkzeugkiste sabotiert werden, benötigen zusätzliche 20 Sekunden zum erneuten Erscheinen."
+        },
+        "es": {
+          "name": "Alicate de Presión",
+          "description": "Unos alicates ajustables de mango fuerte. Esenciales en cualquier caja de herramientas.\n• Los ganchos saboteados usando la caja de herramientas tardan 20 segundos más en reaparecer."
+        },
+        "ja": {
+          "name": "グリップレンチ",
+          "description": "丈夫なグリップがついた可動レンチ。工具箱には欠かせない。\n• 工具箱を使って破壊されたフックが再出現するまでの時間が20秒増加する"
+        },
+        "pl": {
+          "name": "Zacisk",
+          "description": "Nastawny klucz z mocnym uchwytem. Niezbędny przyrząd w każdej skrzynce z narzędziami.\n• Haki sabotowane za pomocą skrzynki narzędziowej odnawiają się 20 sekund dłużej."
+        }
+      }
+    },
+    {
+      "id": 45,
+      "name": "Hacksaw",
+      "item_category_id": 8,
+      "description": "A small hand saw mounted with a metal cutting blade.\n• Increases the Toolbox's sabotage speed by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hacksaw.png?b7e4cf",
+      "icon_local_path": "icons/addons/hacksaw.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Metallsäge",
+          "description": "Eine kleine Handsäge ausgestattet mit einem Metallschneidemesser.\n• Erhöht die Sabotagegeschwindigkeit der Werkzeugkiste um 30 %."
+        },
+        "es": {
+          "name": "Serrucho de Metal",
+          "description": "Un pequeño serrucho con una cuchilla de metal.\n• Aumenta la velocidad de sabotaje con la caja de herramientas un 30 %."
+        },
+        "ja": {
+          "name": "弓ノコ",
+          "description": "鉄製の刃がついた小さなノコギリ。\n• 工具箱の破壊工作の速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Piła do Metalu",
+          "description": "Mała piła ręczna przymocowana do metalowego ostrza.\n• Przyspiesza sabotowanie za pomocą skrzynki z narzędziami o 30%."
+        }
+      }
+    },
+    {
+      "id": 46,
+      "name": "Brand New Part",
+      "item_category_id": 8,
+      "description": "This intricate mechanical part feels oddly out of place. It is clean and shiny as if straight out of the factory.\n• Toolbox Repair action is replaced with Install Brand New Part.\n• During the installation, you will be faced with a difficult Skill Check.\n• Upon succeeding the Skill Check, the generator's required charges are reduced by 10.\n• This add-on is consumed after use.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brandNewPart.png?b863d0",
+      "icon_local_path": "icons/addons/brand_new_part.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Nagelneues Teil",
+          "description": "Dieses komplexe mechanische Teil erscheint seltsam fehl am Platz. Es ist sauber und glänzend, wie frisch aus der Fabrik.\n• Die Reparaturaktion mit der Werkzeugkiste wird durch Nagelneues Teil installieren ersetzt.\n• Während des Installierens erscheint ein schwieriger Fähigkeitscheck.\n• Wenn du den Fähigkeitscheck schaffst, werden die erforderlichen Aufladungen des Generators um 10 verringert.\n• Dieser Zusatz wird bei seiner Benutzung vollständig verbraucht."
+        },
+        "es": {
+          "name": "Recambio Nuevo",
+          "description": "Esta intrincada pieza metálica no parece encajar en este lugar. Está limpia y reluciente, como recién salida de fábrica.\n• La acción Reparar con caja de herramientas se sustituye por Instalar recambio nuevo.\n• Durante la instalación, te enfrentarás a una prueba de habilidad difícil.\n• Tras superar la prueba de habilidad, las cargas necesarias del generador se reducirán a 10.\n• Este accesorio se consume tras el uso."
+        },
+        "ja": {
+          "name": "真新しいパーツ",
+          "description": "場違いで奇妙に思える、機械式の複雑なパーツ。新品のように輝いており、まるで工場から出荷されたばかりのようだ。\n• 「工具箱で修理」アクションが「真新しいパーツを装着」に置き換わる\n• 装着中、難しいスキルチェックに直面する\n• スキルチェックに成功すると、発電機の必須チャージが10減少する\n• 使用後このアドオンは消費される"
+        },
+        "pl": {
+          "name": "Markowe Części",
+          "description": "Te skomplikowane mechaniczne części wydają się tu nie pasować. Są czyste i lśnią, jakby wyszły prosto z fabryki.\n• Naprawianie generatora jest zastąpione akcją Zamontuj Markowe Części.\n• W momencie montażu wywołany zostanie trudny test umiejętności.\n• Zaliczenie testu umiejętności obniża wymaganą liczbę ładunków generatora o 10.\n• Dodatek znika po użyciu."
+        }
+      }
+    }
+  ]
+}

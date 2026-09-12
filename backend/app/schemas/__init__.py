@@ -1,19 +1,20 @@
 # backend/app/schemas/__init__.py
-"""
-Schemas Package
-Exports all request and response validation DTOs.
+"""Request/response validation DTOs.
+
+Only `user.py` has a reader (`app/routes/users.py`). The chapter, character,
+map and perk modules were deleted: nothing imported them, and they had become a
+second hand-maintained description of the models that drifted from the real
+ones -- still declaring `MapTile`, `MapObjective`, a `Character` with a `role`
+discriminator and a nested killer profile, and `Perk.category`.
+
+The modules still listed below have no reader either. They are kept for now
+because, unlike those four, they do not describe anything that was deleted.
 """
 
 from app.schemas.admin import (
     AdminAuditLogResponse,
     ChallengeModeSettingBase,
     ChallengeModeSettingResponse,
-)
-from app.schemas.character import (
-    CharacterBase,
-    CharacterCreate,
-    CharacterResponse,
-    KillerPowerSchema,
 )
 from app.schemas.community import (
     BugReportBase,
@@ -29,10 +30,14 @@ from app.schemas.community import (
     DailyQuestResponse,
 )
 from app.schemas.equipment import (
-    AddonBase,
-    AddonResponse,
+    ItemAddonBase,
+    ItemAddonResponse,
     ItemBase,
+    ItemCategoryBase,
+    ItemCategoryResponse,
     ItemResponse,
+    KillerAddonBase,
+    KillerAddonResponse,
     OfferingBase,
     OfferingResponse,
 )
@@ -55,15 +60,6 @@ from app.schemas.history import (
     HistoryRunBase,
     HistoryRunResponse,
 )
-from app.schemas.map import (
-    MapObjectiveBase,
-    MapObjectiveResponse,
-    MapPosition,
-    MapRealmBase,
-    MapRealmResponse,
-    MapTileBase,
-    MapTileResponse,
-)
 from app.schemas.minigames import (
     DraftSessionBase,
     DraftSessionResponse,
@@ -76,11 +72,6 @@ from app.schemas.page_streak import (
     PageStreakRunBase,
     PageStreakRunCreate,
     PageStreakRunResponse,
-)
-from app.schemas.perk import (
-    PerkBase,
-    PerkCreate,
-    PerkResponse,
 )
 from app.schemas.smash_or_pass import (
     EntityResponse,
@@ -109,26 +100,16 @@ __all__ = [
     "UserCharacterOwnershipResponse",
     "UserPerkOwnershipBase",
     "UserPerkOwnershipResponse",
-    "CharacterBase",
-    "CharacterCreate",
-    "CharacterResponse",
-    "KillerPowerSchema",
-    "PerkBase",
-    "PerkCreate",
-    "PerkResponse",
     "ItemBase",
     "ItemResponse",
-    "AddonBase",
-    "AddonResponse",
+    "ItemCategoryBase",
+    "ItemCategoryResponse",
+    "KillerAddonBase",
+    "KillerAddonResponse",
+    "ItemAddonBase",
+    "ItemAddonResponse",
     "OfferingBase",
     "OfferingResponse",
-    "MapPosition",
-    "MapTileBase",
-    "MapTileResponse",
-    "MapObjectiveBase",
-    "MapObjectiveResponse",
-    "MapRealmBase",
-    "MapRealmResponse",
     "GauntletRunBase",
     "GauntletRunCreate",
     "GauntletRunResponse",

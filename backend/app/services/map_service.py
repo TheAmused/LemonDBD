@@ -7,7 +7,6 @@ from app.services.maps import (
     fetch_map_by_id,
     fetch_maps,
     fetch_realms,
-    seed_maps_if_empty,
 )
 
 logger = logging.getLogger(__name__)
@@ -17,9 +16,6 @@ class MapService:
     def __init__(self, db_service: DatabaseService | None = None):
         self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
-
-    def _seed_db_if_empty(self, conn) -> None:
-        seed_maps_if_empty(conn, self.db_service)
 
     def get_maps(
         self,
@@ -37,6 +33,13 @@ class MapService:
         floor: int = 1,
         lang: str | None = None,
     ) -> dict[str, Any] | None:
+        """Look one map up by the `<string:map_id>` route parameter.
+
+        The parameter keeps its name and its string type because the route
+        does, but `map_realms.map_id` no longer exists: a numeric value is the
+        integer primary key and anything else is matched against the map's
+        name, which is unique across all 58.
+        """
         return fetch_map_by_id(
             self._use_sqlalchemy, self.db_service, map_id, seed_variant=seed_variant, floor=floor, lang=lang
         )

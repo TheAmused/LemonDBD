@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 769,
+      "name": "Koenrad's Gauntlet",
+      "killer_id": 44,
+      "description": "“When darkness threatened to swallow his flock, he led them towards the light.” (Witness to Koenrad, ch. 1)\nIncreases the max time that could be spent controlling Divine Light before it's Cast by 25%.\nDecreases the max speed of controlled Divine Light by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_KoenradsGauntlet.png?93c616",
+      "icon_local_path": "icons/addons/koenrads_gauntlet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Koenrads Panzerhandschuh",
+          "description": "„Als die Dunkelheit drohte, seine Herde zu verschlucken, führte er sie ins Licht.“ (Zeuge zu Koenrad, Kapitel 1)\nVerlängert die maximale Dauer, für die „Göttliches Licht“ gelenkt werden kann, bevor es gewirkt wird, um 25 %.\nVerringert die maximale Geschwindigkeit des gelenkten „Göttlichen Lichts“ um 10 %."
+        },
+        "es": {
+          "name": "Guantelete de Koenrad",
+          "description": "\"Cuando la oscuridad amenazó con engullir a su rebaño, él lo condujo hacia la luz\". (Testigo de Koenrad, capítulo 1)\nAumenta el tiempo máximo durante el que se puede controlar Luz divina antes de lanzarla un 25 %.\nReduce la velocidad máxima de la Luz divina controlada un 10 %."
+        },
+        "ja": {
+          "name": "コエンラートの籠手",
+          "description": "「闇が彼の一団を呑み込もうとしたとき、彼は一団を光の方へと導いた」（『コエンラートの偉業』第1章）\n聖なる光を放つ前に光を制御できる最大時間が25%増加する。\n制御中の聖なる光が動く最大速度が10%低下する。"
+        },
+        "pl": {
+          "name": "Rękawica Koenrada",
+          "description": "„Gdy mrok zagroził pochłonięciem jego trzody, poprowadził ją ku światłu” – Świadectwo Koenrada, rozdział 1\nZwiększa o 25% maksymalny czas, który można spędzić na kontrolowaniu Boskiego Światłu przed jego rzuceniem.\nZmniejsza maksymalną prędkość kontrolowanego Boskiego Światła o 10%."
+        }
+      }
+    },
+    {
+      "id": 770,
+      "name": "Heretic's Mark",
+      "killer_id": 44,
+      "description": "“Those who stray from the path shall never escape ostracization once they receive the mark.” (III On Heresy, ch. 3)\nWhen Cast Divine Light passes a Survivor within 1 meter without hitting them, reveal them with Killer Instinct for 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HereticsMark.png?350180",
+      "icon_local_path": "icons/addons/heretics_mark.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Symbol des Ketzers",
+          "description": "„Wer vom Weg abkommt, wird unvermeidlich geächtet, sobald er das Zeichen erhalten hat.“ (III Zur Ketzerei, Kapitel 3)\nWenn das gewirkte „Göttliche Licht“ sich einem Überlebenden bis auf 1 Meter nähert, ohne ihn zu treffen, wird er 2 Sek. lang mit dem Killerinstinkt enthüllt."
+        },
+        "es": {
+          "name": "Marca del hereje",
+          "description": "\"Quienes se desvíen del camino jamás escaparán al ostracismo una vez reciban la marca\". (Sobre la herejía III, capítulo 3)\nCuando la Luz divina lanzada pase a menos de 1 metro de un superviviente sin alcanzarlo, revelará su posición con Instinto asesino durante 2 segundos."
+        },
+        "ja": {
+          "name": "異端者の印",
+          "description": "「道を外れた者は烙印を押され、追放を免れることない」（『異端論III』第3章）\n放たれた聖なる光が生存者に当たらずに、生存者の1メートル以内を通ったとき、その生存者が殺人鬼の本能で2秒間探知される。"
+        },
+        "pl": {
+          "name": "Znak heretyka",
+          "description": "„Ci, którzy zboczą z wyznaczonej ścieżki, nigdy nie unikną wyklęcia, gdy raz zostaną naznaczeni” – O herezji III, rozdział 3\nPo rzuceniu Boskiego Światła mija ocalałego w zasięgu 1 m bez trafienia go, ujawni go przy pomocy Instynktu Zabójcy na 2 s."
+        }
+      }
+    },
+    {
+      "id": 771,
+      "name": "Holy Winged Icon",
+      "killer_id": 44,
+      "description": "“Clutch it to your chest and pray, lest your heart appear untrue to It.” (II On Heresy, ch. 14)\nWhile controlling Divine Light, gain the ability to press the Killer Ability button to Cast it back towards yourself.\nWhen Cast in this way,\n• The minimum delay before it is lethal is set to 0.4 seconds.\n• Increase its max speed by 10%.\n• It only damages Heretics.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HolyWingedIcon.png?6998f5",
+      "icon_local_path": "icons/addons/holy_winged_icon.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Heiliges Flügelsymbol",
+          "description": "„Drücke es an deine Brust und bete, auf dass es die Wahrheit in deinem Herzen erkennt.“ (II Zur Ketzerei, Kapitel 14)\nWährend du „Göttliches Licht“ lenkst, erhältst du die Fähigkeit, es mithilfe der Taste für die Killer-Fähigkeit zurück zu dir zu wirken.\nIn diesem Fall gilt:\n• Die Mindestverzögerung, bis es tödlich wird, wird auf 0,5 Sek. festgesetzt.\n• Seine Höchstgeschwindigkeit wird um 10 % erhöht.\n• Es fügt nur Ketzern Schaden zu."
+        },
+        "es": {
+          "name": "Icono alado sagrado",
+          "description": "\"Aférralo contra el pecho y reza, no sea que tu corazón le parezca impuro\". (Sobre la herejía II, capítulo 14)\nMientras controles Luz divina, podrás pulsar el botón de la habilidad del asesino para lanzarla de vuelta hacia ti.\nAl lanzarla de este modo:\n• El retraso mínimo antes de que se vuelva letal se fija en 0,5 segundos.\n• Su velocidad máxima aumenta un 10 %.\n• Solo daña a los herejes."
+        },
+        "ja": {
+          "name": "翼のある聖像",
+          "description": "「汝の心が背かないよう、それを胸に抱きしめ祈りなさい」（『異端論II』第14章）\n聖なる光を制御中にアビリティの発動ボタンを押すことで、光を自分に向けて放つことができる。\nこの方法で光を放ったとき：\n• 光が威力を持つまでの最短遅延が0.4秒になる。\n• 光の最大速度が10%上昇する。\n• 異端状態の生存者のみにダメージを与える。"
+        },
+        "pl": {
+          "name": "Ikona uskrzydlonej świętości",
+          "description": "„Przyciśnij go do piersi i pomódl się, aby twe serce nie zostało uznane niewierne wobec Niego” – O herezji II, rozdział 14\nPodczas kontrolowania Boskiego Światła, zyskujesz umiejętność, dzięki której możesz nacisnąć przycisk umiejętności zabójcy, aby rzucić je z powrotem w swoją stronę.\nPo rzuceniu w tę stronę:\n• Minimalne opóźnienie, zanim Boskie Światło staje się zabójcze, jest zmienione na 0,5 s.\n• Jego maksymalna prędkość zwiększa się o 10%.\n• Może zadawać obrażenia jedynie heretykom."
+        }
+      }
+    },
+    {
+      "id": 772,
+      "name": "Prayer Kneeler",
+      "killer_id": 44,
+      "description": "“Suffer the pain of prayer, for the suffering of unbelievers is far worse.” (II On Heresy, ch. 8)\nWhile controlling Divine Light that is slowed down by a tall obstruction, further decreases its max speed by 99%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_PrayerKneeler.png?def0a6",
+      "icon_local_path": "icons/addons/prayer_kneeler.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gebetsbank",
+          "description": "„Ertragt die Qual des Gebets und wisset, dass die Qual der Ungläubigen noch viel größer ist.“ (II Zur Ketzerei, Kapitel 8)\nWenn du „Göttliches Licht“ lenkst, das von einem Hindernis verlangsamt wird, gilt:\n• Seine Höchstgeschwindigkeit wird weiter um 99 % verringert.\n• Beim Wirken erreicht es die Höchstgeschwindigkeit 25 % schneller und erhöht diese noch um 10 %."
+        },
+        "es": {
+          "name": "Reclinatorio de oración",
+          "description": "\"Sufrid el dolor de la oración, pues el sufrimiento de los incrédulos es mucho peor\". (Sobre la herejía II, capítulo 8)\nMientras controles Luz divina y un obstáculo la esté ralentizando:\n• Su velocidad máxima se reduce un 99 % más.\n• Al lanzarse, alcanza su velocidad máxima un 25 % más rápido y su velocidad máxima aumenta un 10 %."
+        },
+        "ja": {
+          "name": "祈りの台",
+          "description": "「祈りの苦しみを受け入れなさい。それは、信仰なき者の苦しみに比べたら微々たるものだろう」（『異端論II』第8章）\n聖なる光を制御中に、高い障害物によってその光が動く速度が低下している間、光が動く最大速度がさらに99%低下する。"
+        },
+        "pl": {
+          "name": "Klęcznik modlitewny",
+          "description": "„Znoś ból towarzyszący modlitwie, albowiem cierpienie niewiernych jest o wiele straszniejsze” – O herezji II, rozdział 8\nPodczas kontrolowania Boskiego Światła, której jest spowolnione przez przeszkodę:\n• Jego maksymalna prędkość zwiększa się o dalsze 99%.\n• Po rzuceniu, osiąga maksymalną prędkość 25% szybciej, a jego maksymalna prędkość zwiększa się o 10%."
+        }
+      }
+    },
+    {
+      "id": 773,
+      "name": "Electric Torch",
+      "killer_id": 44,
+      "description": "“The faithful shall go out in great numbers at night, searching for the heretics who hide in the dark.” (Witness to Koenrad, ch. 40)\nIncreases the max speed of controlled Divine Light by 25%.\nYou move 10% faster while controlling Divine Light.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ElectricTorch.png?792472",
+      "icon_local_path": "icons/addons/electric_torch.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Elektrische Fackel",
+          "description": "„Die Gläubigen sollen in großer Zahl des Nachts ausströmen und die Ketzer suchen, die sich im Schutz der Dunkelheit verstecken.“ (Zeuge zu Koenrad, Kapitel 40)\nVerringert den Radius von „Göttliches Licht“ um 10 %.\nErhöht die Höchstgeschwindigkeit von gelenktem „Göttlichen Licht“ um 25 %.\nDu bewegst dich 10 % schneller, während du „Göttliches Licht“ lenkst."
+        },
+        "es": {
+          "name": "Antorcha eléctrica",
+          "description": "\"Los fieles saldrán en gran número por la noche en busca de los herejes que se ocultan en la oscuridad\". (Testigo de Koenrad, capítulo 40)\nReduce el radio de Luz divina un 10 %.\nAumenta la velocidad máxima de la Luz divina controlada un 25 %.\nTe mueves un 10 % más rápido mientras controlas Luz divina."
+        },
+        "ja": {
+          "name": "電気のトーチ",
+          "description": "「信者たちは夜になると大勢で繰り出し、闇に隠れる異端者を探した」（『コエンラートの偉業』第40章）\n制御中の聖なる光が動く最大速度が25%上昇する。\n聖なる光を制御中の移動速度が10%上昇する。"
+        },
+        "pl": {
+          "name": "Elektryczna latarka",
+          "description": "„Wierni wyruszą liczną rzeszą w nocy, poszukując heretyków, którzy skrywają się w mroku” – Świadectwo Koenrada, rozdział 40\nPromień Boskiego Światła zmniejsza się o 10%.\nMaksymalna prędkość kontrolowanego Boskiego Światła zwiększa się o 25%.\nPoruszasz się 10% szybciej podczas kontrolowania Boskiego Światła."
+        }
+      }
+    },
+    {
+      "id": 774,
+      "name": "Undying Flame",
+      "killer_id": 44,
+      "description": "“The village of Dend was repentant in its last moments, but its remnants still burn to this day as a warning.” (II Barbarians, ch. 4)\nWhile Zealous,\n• Increases the maximum lifetime of the Cast Divine Light by 200%.\n• Decreases the radius of Divine Light by 20%.\n• The range that Survivors can observe Divine Light's Aura is extended by 200%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_UndyingFlame.png?1fcfbf",
+      "icon_local_path": "icons/addons/undying_flame.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Unsterbliche Flamme",
+          "description": "„In seinen letzten Atemzügen zeigte das Dorf Dend Reue, aber seine Überreste brennen bis zu diesem Tag als Warnung.“ (II Barbaren, Kapitel 4)\nWährend „Eifrig“ gilt:\n• Die maximale Lebensdauer des gewirkten „Göttlichen Lichts“ wird um 200 % verlängert.\n• Der Radius von „Göttliches Licht“ wird um 50 % verkleinert.\n• Die Reichweite, in der Überlebende die Aura von „Göttliches Licht“ sehen, wird um 200 % vergrößert."
+        },
+        "es": {
+          "name": "Llama imperecedera",
+          "description": "\"El pueblo de Dend se arrepintió en sus últimos momentos, pero sus restos aún arden hoy como advertencia\". (Bárbaros II, capítulo 4)\nMientras estés en estado de Fervor:\n• La duración máxima de la Luz divina lanzada aumenta un 200 %.\n• El radio de Luz divina se reduce un 50 %.\n• El alcance desde el que los supervivientes pueden ver el aura de Luz divina aumenta un 200 %."
+        },
+        "ja": {
+          "name": "不死の炎",
+          "description": "「デンド村の住民は最後に自らの過ちを悔い改めたが、その残骸は今もなお警告として燃え続けている」（『野蛮人II』第4章）\n熱狂の間：\n• 放たれた聖なる光の最大持続時間が200%増加する。\n• 聖なる光の半径が20%減少する。\n• 生存者が聖なる光のオーラを視認できる範囲が200%拡大する。"
+        },
+        "pl": {
+          "name": "Niegasnący płomień",
+          "description": "„Osada Dend okazała żal za grzechy w swych ostatnich chwilach, lecz jej pozostałości płoną po dziś dzień jako przestroga” – Barbarzyńcy II, rozdział 4\nW stanie Gorliwości:\n• Maksymalny czas trwania rzuconego Boskiego Światła zwiększa się o 200%.\n• Promień Boskiego Światła zmniejsza się o 50%.\n• Zasięg, z jakiego ocalali mogą obserwować aurę Boskiego Światła jest wydłużony o 200%."
+        }
+      }
+    },
+    {
+      "id": 775,
+      "name": "Aurora's Telereceptor",
+      "killer_id": 44,
+      "description": "“None should stare into the abyss with the wretched devices made by the heretics.” (III On Heresy, ch. 12)\nWhenever a Survivor gains Heresy, for 4 seconds,\n• Their Aura is revealed to you.\n• Your Aura is revealed to them.\nWhenever a Heretic sees your aura for a duration, they see it for 2 seconds longer.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AurorasTelereceptor.png?f20b68",
+      "icon_local_path": "icons/addons/auroras_telereceptor.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Auroras Telerezeptor",
+          "description": "„Niemand darf mit den erbärmlichen Geräten der Ketzer in den Abgrund blicken.“ (III Zur Ketzerei, Kapitel 12)\nImmer wenn ein Überlebender „Ketzerei“ erhält, wird seine Aura 4 Sek. lang enthüllt. Zusätzlich sieht er deine Aura 4 Sek. lang."
+        },
+        "es": {
+          "name": "Telerreceptor de Aurora",
+          "description": "\"Nadie debería contemplar el abismo mediante los infames dispositivos creados por los herejes\". (Sobre la herejía III, capítulo 12)\nCada vez que un superviviente sufra Herejía, su aura se revelará durante 4 segundos. Además, tu aura se le revelará durante 4 segundos."
+        },
+        "ja": {
+          "name": "オーロラのテレレセプター",
+          "description": "「異端者が作った粗末な装置で深淵を覗き込むべきではない」（『異端論III』第12章）\n生存者が異端を得ると、4秒間：\n• その生存者のオーラがあなたに表示される。\n• あなたのオーラがその生存者に表示される。\n異端状態の生存者にあなたのオーラが一定時間視えるとき、その時間が2秒延長される。"
+        },
+        "pl": {
+          "name": "Telereceptor Aurory",
+          "description": "„Niech nikt nie powinien spoglądać w otchłań przy pomocy przeklętych urządzeń stworzonych przez heretyków” – O herezji III, rozdział 12\nZa każdym razem, gdy ocalały zyskuje Herezję, jego aura jest ujawniana na 4 s. Ponadto twoja aura jest ujawniana im na 4 s."
+        }
+      }
+    },
+    {
+      "id": 776,
+      "name": "Order of Inquisition",
+      "killer_id": 44,
+      "description": "“All those who believe in Its glory are deputized to search for heretics. Trust not even your own neighbor.” (Witness to Koenrad, ch. 16)\nWhenever Divine Light is Cast, its radius starts 25% smaller, but grows until it is 50% larger over 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_OrderOfInquisition.png?692100",
+      "icon_local_path": "icons/addons/order_of_inquisition.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Orden der Inquisition",
+          "description": "„Alle, die an seine Pracht glauben, sind verpflichtet, Ketzer zu suchen. Vertraut nicht mal euren eigenen Nachbarn.“ (Zeuge zu Koenrad, Kapitel 16)\nImmer wenn „Göttliches Licht“ gewirkt wird, ist sein Radius zu Beginn 50 % kleiner. Im Verlauf von 1 Sek. wächst er aber, bis er 100 % größer ist."
+        },
+        "es": {
+          "name": "Orden de la Inquisición",
+          "description": "\"Todos aquellos que crean en su gloria recibirán la autoridad para buscar herejes. No confiéis ni siquiera en vuestro propio vecino\". (Testigo de Koenrad, capítulo 16)\nCada vez que se lance Luz divina, su radio comenzará siendo un 50 % menor, pero aumentará hasta ser un 100 % mayor en 1 segundo."
+        },
+        "ja": {
+          "name": "異端審問の命",
+          "description": "「その栄光を信じる者は、誰もが異端者を探し出す命を授かる。隣人さえも信用してはならない」（『コエンラートの偉業』第16章）\n聖なる光が放たれたとき、光の半径が25%小さく始まり、1秒かけて50%大きい半径になる。"
+        },
+        "pl": {
+          "name": "Zakon Inkwizycji",
+          "description": "„Wszyscy, którzy wierzą w Jego chwałę, mają obowiązek tropienia heretyków. Nie ufajcie nawet swoim sąsiadom” – Świadectwo Koenrada, rozdział 16\nZa każdym razem, gdy Boskie Światło jest rzucone, jego promień na początku jest o 50% mniejszy, ale rośnie do czasu, aż będzie 100% większy w czasie 1 s."
+        }
+      }
+    },
+    {
+      "id": 777,
+      "name": "Blindfold of the Devoted",
+      "killer_id": 44,
+      "description": "“Those who follow Gerhardt's path shall wear blindfolds, to remember the sacrifice he made for his prophecy.” (III On Heresy, ch. 61)\nWhenever you Exile a Survivor with the lowest amount of Hook States, reveal the Auras of all other Survivors with the lowest amount of Hook States outside 32 meters for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BlindfoldOfTheDevoted.png?7c3828",
+      "icon_local_path": "icons/addons/blindfold_of_the_devoted.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Augenbinde der Frommen",
+          "description": "„Wer Gerhardts Weg folgt, soll eine Augenbinde tragen, als Erinnerung an das Opfer, das er für seine Prophezeiung brachte.“ (III Zur Ketzerei, Kapitel 61)\nImmer wenn du den Überlebenden mit den geringsten Hakenstatus ins Exil schickst, werden die Auren aller anderen Überlebenden mit den geringsten Hakenstatus, die weiter als 32 Meter entfernt sind, für 5 Sek. enthüllt."
+        },
+        "es": {
+          "name": "Venda de ojos del devoto",
+          "description": "\"Quienes sigan el camino de Gerhardt llevarán los ojos vendados para recordar el sacrificio que hizo por su profecía\". (Sobre la herejía III, capítulo 61)\nCada vez que exilies a un superviviente con el menor número de estados de gancho, revelarás las auras de los demás supervivientes con el menor número de estados de gancho que estén a más de 32 metros de distancia de ti durante 5 segundos."
+        },
+        "ja": {
+          "name": "信奉者の目隠し",
+          "description": "「ゲルハルトの道を辿る者は、予言のために彼が背負った犠牲を忘れないよう、目隠しをした」（『異端論III』第61章）\nフック段階の最も少ない生存者を追放すると、32メートル以上離れたフック段階の最も少ない他の生存者全員のオーラが5秒間視える。"
+        },
+        "pl": {
+          "name": "Opaska na oczy oddanego",
+          "description": "„Ci, którzy podążają drogą Gerhardta powinni nosić opaski na oczy, by pamiętać o poświęceniu, jakie poczynił dla swojego proroctwa” – O herezji III, rozdział 61\nZa każdym razem, gdy wygnasz ocalałego z najmniejszą liczbą faz haka, ujawniasz na 5 s aury wszystkich pozostałych ocalałych z najmniejszą liczbą faz haka w odległości większej, niż 32 m."
+        }
+      }
+    },
+    {
+      "id": 778,
+      "name": "Superheated Glass",
+      "killer_id": 44,
+      "description": "“The planet of Aleide was unrepentant; after their leader was Exiled, Its Divine Light turned the surface to glass.” (II Barbarians, ch. 12)\nYou are Zealous for 20% shorter.\nWhile you are Zealous, a Cast Divine Light breaks all Breakable Walls and Dropped Pallets it passes through.\nWhenever you break an object this way, survivors within 12 meters of it gain Heresy and scream.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SuperheatedGlass.png?9b227e",
+      "icon_local_path": "icons/addons/superheated_glass.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Überhitztes Glas",
+          "description": "„Der Planet Aleide zeigte keinerlei Reue. Nachdem der Anführer ins Exil geschickt worden war, verwandelte das göttliche Licht des Urteils seine Oberfläche in Glas.“ (II Barbaren, Kapitel 12)\nDie Dauer von „Eifrig“ ist um 50 % verkürzt.\nWährend du „Eifrig“ bist, zerstört ein gewirktes „Göttliches Licht“ alle zerstörbaren Mauern und umgestoßenen Paletten, an denen es vorbeikommt."
+        },
+        "es": {
+          "name": "Cristal sobrecalentado",
+          "description": "\"El planeta Aleide no se arrepintió. Después de que su líder fuera exiliado, su Luz divina convirtió la superficie en cristal\". (Bárbaros II, capítulo 12)\nLa duración del estado de Fervor se reduce un 50 %.\nMientras estés en estado de Fervor, la Luz divina lanzada romperá todos los muros destruibles y palés derribados que atraviese."
+        },
+        "ja": {
+          "name": "過熱したガラス",
+          "description": "「アレイデ星の住民はその過ちを悔い改めなかった。彼らの指導者が追放されたあと、聖なる光によってその大地はガラスと化した」（『野蛮人II』第12章）\n熱狂の持続時間が20%短縮する。\n熱狂の間、放たれた聖なる光が、通過した破壊可能な壁や倒されたパレットをすべて破壊する。\nこの方法でオブジェクトを破壊したとき、その12メートル以内の生存者が異端を得て、叫び声を上げる。"
+        },
+        "pl": {
+          "name": "Przegrzane szkło",
+          "description": "„Planeta Aleide nie wyraziła żalu; po Wygnaniu przywódcy, Jego Boskie Światło przemieniło powierzchnię planety w szkło” – Barbarzyńcy II, rozdział 12\nTwoja Gorliwość jest o 50% krótsza.\nGdy jesteś w stanie Gorliwości, rzucenie Boskiego Światła niszczy wszystkie rozbijalne ściany i przewrócone palety, przez które przejdzie."
+        }
+      }
+    },
+    {
+      "id": 779,
+      "name": "Mark of the Adherent",
+      "killer_id": 44,
+      "description": "“Wear your faith proudly and permanently. Let it be a reminder to others that It is always present.” (II On Heresy, ch. 1)\nWhile not Zealous, increases the radius of Divine Light by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MarkOfTheAdherent.png?51c4c0",
+      "icon_local_path": "icons/addons/mark_of_the_adherent.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zeichen des Anhängers",
+          "description": "„Zeigt euren Glauben stolz und zu jeder Zeit. Er soll andere erinnern, dass das Urteil immer da ist.“ (II Zur Ketzerei, Kapitel 1)\nWährend du „Eifrig“ „Göttliches Licht“ wirkst, gilt:\n• Du behältst zu 1 % die Kontrolle über es.\n• Hindernisse verlangsamen es zusätzlich um 50 %."
+        },
+        "es": {
+          "name": "Marca del adepto",
+          "description": "\"Portad vuestra fe con orgullo y para siempre. Que sirva para recordar a los demás que ella siempre está presente\". (Sobre la herejía II, capítulo 1)\nMientras estés en estado de Fervor y lances Luz divina:\n• Conserva un 1 % de control sobre ella.\n• Los obstáculos la ralentizan un 50 % más."
+        },
+        "ja": {
+          "name": "支持者の印",
+          "description": "「信仰の絶え間ない存在を他者に思い起こさせるため、信仰の印を誇り高く、永遠に纏いなさい」（『異端論II』第1章）\n熱狂が発動していない間、聖なる光の半径が10%増加する。"
+        },
+        "pl": {
+          "name": "Znak wyznawcy",
+          "description": "„Noś swą wiarę z dumą i bez przerwy. Niech przypomina innym o stałej obecności Sądu” – O herezji II, rozdział 1\nW stanie Gorliwości i rzucając Boskie Światło:\n• Utrzymujesz nad nim 1% kontroli.\n• Przeszkody spowalniają je o dodatkowe 50%."
+        }
+      }
+    },
+    {
+      "id": 780,
+      "name": "Confessor's War Horn",
+      "killer_id": 44,
+      "description": "“The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.” (Witness to Koenrad, ch. 33)\nSurvivors gaining Heresy additionally gain Exhausted for 10 seconds.\nExhausted prevents Survivors from activating other perks that cause Exhausted.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ConfessorsWarHorn.png?787ec7",
+      "icon_local_path": "icons/addons/confessors_war_horn.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kriegshorn des Beichtvaters",
+          "description": "„Der Klang des Horns soll die Herzen der Ungläubigen mit Furcht erfüllen und die Entschlossenheit der Gläubigen stärken.“ (Zeuge zu Koenrad, Kapitel 33)\nÜberlebende, die „Ketzerei“ erhalten, erleiden auch „Erschöpfung“ für 10 Sek."
+        },
+        "es": {
+          "name": "Cuerno de guerra del confesor",
+          "description": "\"El sonido del cuerno sembrará el miedo en los corazones de los incrédulos y alentará la voluntad de los fieles\". (Testigo de Koenrad, capítulo 33)\nLos supervivientes que sufran Herejía también sufren Agotamiento durante 10 segundos."
+        },
+        "ja": {
+          "name": "告白者の角笛",
+          "description": "「角笛の音は信仰なき者の心に恐怖を植え付け、信者の意志を奮い起こすだろう」（『コエンラートの偉業』第33章）\n生存者は異端を得ると、10秒間疲労状態になる。\n疲労状態になると生存者は疲労を引き起こす他のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Wojenny róg spowiednika",
+          "description": "„Dźwięk rogu wzbudzi strach w sercach niewiernych i wzmocni wolę wiernych” – Świadectwo Koenrada, rozdział 33\nOcalali zyskujący Herezję otrzymują dodatkowo Wyczerpanie na 10 s."
+        }
+      }
+    },
+    {
+      "id": 781,
+      "name": "Searcher's Skull",
+      "killer_id": 44,
+      "description": "“The skulls of the heretics shall be cleaned and displayed as a warning to others who might stray from the light.” (Witness to Koenrad, ch. 33)\nWhen a Survivor blinds you, they gain Heresy. Additionally, If they were already a Heretic, they become blinded themselves for 2.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SearchersSkull.png?de8241",
+      "icon_local_path": "icons/addons/searchers_skull.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schädel des Suchers",
+          "description": "„Die Schädel der Ketzer sollen gesäubert und als Warnung für andere präsentiert werden, die vom Weg des Lichts abkommen.“ (Zeuge zu Koenrad, Kapitel 33)\nImmer wenn dich ein Überlebender blendet, gilt:\n• Wenn er ein Ketzer ist, wird er selbst geblendet.\n• Dann erhält er „Ketzerei“."
+        },
+        "es": {
+          "name": "Cráneo del buscador",
+          "description": "\"Los cráneos de los herejes serán limpiados y exhibidos como advertencia para quienes puedan apartarse de la luz\". (Testigo de Koenrad, capítulo 33)\nCada vez que un superviviente te ciegue:\n• Si es hereje, también queda cegado.\n• A continuación, sufrirá Herejía."
+        },
+        "ja": {
+          "name": "探求者の頭蓋骨",
+          "description": "「異端者の頭蓋骨は清められ、光から外れる者への見せしめとして、さらしものにされた」（『コエンラートの偉業』第33章）\n生存者があなたを目眩し状態にすると、その生存者は異端を得る。生存者がすでに異端状態だった場合は、その生存者も2.5秒間、目眩し状態になる。"
+        },
+        "pl": {
+          "name": "Czaszka Poszukiwacza",
+          "description": "„Czaszki heretyków zostaną oczyszczone i wystawione jako ostrzeżenia dla innych, którzy mogą zbłądzić z dala od światła” – Świadectwo Koenrada, rozdział 33\nZa każdym razem, gdy ocalały cię oślepi:\n• Jeśli jest heretykiem, sam zostanie oślepiony.\n• Następnie, zyska Herezję."
+        }
+      }
+    },
+    {
+      "id": 782,
+      "name": "Chains of the Heretic",
+      "killer_id": 44,
+      "description": "“Examples shall be made of the loudest apostates. They shall be dragged through the streets in chains.” (Witness to Koenrad, ch. 41)\nWhile Zealous,\n• The minimum delay before Divine Light is lethal is set to 0.35 seconds.\n• Increases the max speed of Controlled Divine Light by 100%.\n• Increases the max speed of Cast Divine Light by 50%.\n• Cast Divine Light will always be directed towards you.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ChainsOfTheHeretic.png?870a0c",
+      "icon_local_path": "icons/addons/chains_of_the_heretic.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ketzerketten",
+          "description": "„An den lautesten Abtrünnigen soll ein Exempel statuiert werden. In Ketten sollen sie durch die Straßen gezerrt werden.“ (Zeuge zu Koenrad, Kapitel 41)\nWährend „Eifrig“ gilt:\n• Die Mindestverzögerung, bis „Göttliches Licht“ tödlich wird, wird auf 0,5 Sek. festgesetzt.\n• Die Höchstgeschwindigkeit von gelenktem „Göttlichen Licht“ wird um 100 % erhöht.\n• Die Höchstgeschwindigkeit von gewirktem „Göttlichen Licht“ wird um 50 % erhöht.\n• Gewirktes „Göttliches Licht“ wird immer zu dir gelenkt."
+        },
+        "es": {
+          "name": "Cadenas del hereje",
+          "description": "\"Los apóstatas más vociferantes servirán de escarmiento. Serán arrastrados por las calles, encadenados\". (Testigo de Koenrad, capítulo 41)\nMientras estés en estado de Fervor:\n• El retraso mínimo antes de que Luz divina se vuelva letal se fija en 0,5 segundos.\n• La velocidad máxima de la Luz divina controlada aumenta un 100 %.\n• La velocidad máxima de la Luz divina lanzada aumenta un 50 %.\n• La Luz divina lanzada siempre se dirige hacia ti."
+        },
+        "ja": {
+          "name": "異端者の鎖",
+          "description": "「最も声高な背教者たちは見せしめにされ、鎖につながれて街中を引きずり回された」（『コエンラートの偉業』第41章）\n熱狂の間：\n• 光が威力を持つまでの最短遅延が0.35秒になる。\n• 制御中の聖なる光が動く最大速度が100%上昇する。\n• 放たれた聖なる光の最大速度が50%上昇する。\n• 放たれた聖なる光は、常にあなたに向かって移動する。"
+        },
+        "pl": {
+          "name": "Łańcuchy heretyka",
+          "description": "„Niech najgłośniejsi odstępcy staną się przestrogą. Będą wleczeni ulicami skuci w kajdany” – Świadectwo Koenrada, rozdział 41\nW stanie Gorliwości:\n• Minimalne opóźnienie, zanim Boskie Światło staje się zabójcze, jest zmienione na 0,5 s.\n• Maksymalna prędkość kontrolowanego Boskiego Światła zwiększa się o 100%.\n• Maksymalna prędkość rzuconego Boskiego Światła zwiększa się o 50%.\n• Rzucone Boskie Światło będzie zawsze skierowane w twoją stronę."
+        }
+      }
+    },
+    {
+      "id": 783,
+      "name": "Improvised Detonators",
+      "killer_id": 44,
+      "description": "“Like cowards, they strike with bombs in the night, afraid to let the light of day illuminate their blackened souls.” (Witness to Koenrad, ch. 35)\nWhenever you Exile a Survivor with the lowest amount of Hook States, if no Survivors are dead, gain a Token.\nThen if you have 4 or more Tokens,\n• The generator with the most progression explodes and instantly regresses by 20% of its total progression.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ImprovisedDetonators.png?e5915c",
+      "icon_local_path": "icons/addons/improvised_detonators.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Improvisierte Sprengkapseln",
+          "description": "„Wie Feiglinge greifen sie des Nachts mit Bomben an, aus Angst, das Tageslicht könnte ihre schwarzen Seelen enthüllen.“ (Zeuge zu Koenrad, Kapitel 35)\nImmer wenn du den Überlebenden mit den geringsten Hakenstatus ins Exil schickst und kein Überlebender tot ist, erhältst du einen Zähler.\nWenn du 4 oder mehr Zähler hast, gilt:\n• Der Generator mit dem größten Fortschritt explodiert und verliert sofort 20 % seines Gesamtfortschritts."
+        },
+        "es": {
+          "name": "Detonadores improvisados",
+          "description": "\"Como cobardes, atacan con bombas durante la noche, temerosos de que la luz del día ilumine sus almas ennegrecidas\". (Testigo de Koenrad, capítulo 35)\nCada vez que exilies a un superviviente con el menor número de estados de gancho, si no ha muerto ningún superviviente, obtendrás un distintivo.\nDespués, si tienes 4 distintivos o más:\n• El generador con más progreso explota y revierte al instante un 20 % de su progreso total."
+        },
+        "ja": {
+          "name": "即席起爆装置",
+          "description": "「彼らは自らの黒く染まった魂が日の光に照らし出されるのを恐れ、夜の闇に隠れて爆弾を投じた」（『コエンラートの偉業』第35章）\nフック段階の最も少ない生存者を追放したときに、死亡した生存者がいない場合、トークンを1個得る。\nその際、トークンが4個以上あると：\n• 最も修理の進んだ発電機が爆発して、進行度が即座に全体の20%失われ、後退し始める。"
+        },
+        "pl": {
+          "name": "Improwizowane detonatory",
+          "description": "„Niczym tchórze uderzają bombami nocą, w strachu, by światło dnia nie oświetliło ich poczerniałych dusz” – Świadectwo Koenrada, rozdział 35\nZa każdym razem, gdy Wygnasz ocalałego z najmniejszą liczbą faz haka, jeśli żaden ocalały nie jest martwy, otrzymujesz żeton.\nNastępnie, jeśli masz 4 lub więcej żetonów:\n• Generator z największym postępem naprawy eksploduje i i natychmiast traci 20% swojego całkowitego postępu."
+        }
+      }
+    },
+    {
+      "id": 784,
+      "name": "Eyes of Gerhardt",
+      "killer_id": 44,
+      "description": "“He rapturously tore the eyes from his face after seeing such brilliant visions of the future.” (II Barbarians, ch. 60)\nWhenever a Heretic completes a Generator, opens an Exit Gate, or exits a Locker, the aura of all Heretics are revealed to you for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_EyesOfGerhardt.png?6038b7",
+      "icon_local_path": "icons/addons/eyes_of_gerhardt.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Augen von Gerhardt",
+          "description": "„Verzückt riss er sich die Augen aus dem Gesicht, nachdem er diese außerordentlichen Visionen der Zukunft gesehen hatte.“ (II Barbaren, Kapitel 60)\nImmer wenn ein Ketzer einen Generator fertigstellt oder ein Ausgangstor öffnet, werden dir die Auren aller Ketzer 5 Sek. lang angezeigt."
+        },
+        "es": {
+          "name": "Ojos de Gerhardt",
+          "description": "\"Se arrancó los ojos en pleno éxtasis tras contemplar tan brillantes visiones del futuro\". (Bárbaros II, capítulo 60)\nCada vez que un hereje complete un generador o abra una puerta de salida, las auras de todos los herejes se te revelarán durante 5 segundos."
+        },
+        "ja": {
+          "name": "ゲルハルトの目玉",
+          "description": "「彼は輝かしい未来の姿を予知したあと、恍惚とした表情で自分の目を引き抜いた」（『野蛮人II』第60章）\n異端状態の生存者が発電機の修理を完了するか、脱出ゲートを開けるか、ロッカーから出ると、異端状態の生存者全員のオーラが5秒間あなたに視える。"
+        },
+        "pl": {
+          "name": "Oczy Gerhardta",
+          "description": "„Widząc tak wspaniałe wizje przyszłości, z zachwytem wyrwał sobie oczy” – Barbarzyńcy II, rozdział 60\nZa każdym razem, gdy heretyk ukończy generator lub otworzy bramę wyjściową, aura wszystkich heretyków jest tobie ujawniana na 5 s."
+        }
+      }
+    },
+    {
+      "id": 785,
+      "name": "Obsidian Feather",
+      "killer_id": 44,
+      "description": "“Some villagers will carve feathers from rocks, hoping that their faith might protect them.” (Visions of Gerhardt, ch. 3)\nYou can no longer manually Cast or cancel controlled Divine Light, and it is automatically Cast when it would instead time out.\nYou move 100% faster while controlling Divine Light, and decreases the max time that could be spent controlling it by 25%.\nYou recover 10% slower and move 30% slower while Casting Divine Light.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ObsidianFeather.png?609290",
+      "icon_local_path": "icons/addons/obsidian_feather.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Obsidianfeder",
+          "description": "„Einige Dorfbewohner schnitzen Federn aus Steinen und hoffen, dass ihr Glaube sie schützt.“ (Visionen von Gerhardt, Kapitel 3)\nDu kannst gelenktes „Göttliches Licht“ nicht mehr abbrechen und es wird automatisch gewirkt, anstatt wegen Zeitüberschreitung beendet zu werden.\nDu bewegst dich 75 % schneller, während du „Göttliches Licht“ lenkst.\nDu erholst dich 10 % langsamer und bewegst dich 30 % langsamer, während du „Göttliches Licht“ wirkst."
+        },
+        "es": {
+          "name": "Pluma de obsidiana",
+          "description": "\"Algunos aldeanos tallarán plumas en la roca con la esperanza de que su fe los proteja\". (Visiones de Gerhardt, capítulo 3)\nYa no puedes cancelar la Luz divina controlada, que se lanzará automáticamente cuando se agote el tiempo de control.\nMientras controles Luz divina, te moverás un 75 % más rápido.\nMientras lances Luz divina, te recuperarás un 10 % más despacio y te moverás un 30 % más despacio."
+        },
+        "ja": {
+          "name": "黒曜石の羽根",
+          "description": "「村人たちは信仰のご加護を願って、岩から羽根を彫り出した」（『ゲルハルトの予知』第3章）\n制御中の聖なる光をキャンセルすることや、自分のタイミングで放つことはできず、召喚された光は一定時間が経つとタイムアウトする代わりに自動的に放たれる。\n聖なる光を制御中の移動速度が100%上昇し、光を制御できる最大時間が25%減少する。\n能力の回復速度が10%低下し、光を放つ間の移動速度が30%低下する。"
+        },
+        "pl": {
+          "name": "Obsydianowe pióro",
+          "description": "„Niektórzy wieśniacy będą wykuwać pióra z kamieni w nadziei, że ich wiara ich ochroni” – Wizje Gerhardta, rozdział 3\nNie możesz już anulować kontrolowanego Boskiego Światła, a to jest automatycznie rzucane w sytuacji, gdyby normalnie upłynął czas.\nPoruszasz się 75% szybciej podczas kontrolowania Boskiego Światła.\nDochodzisz do siebie 10% wolniej i poruszasz się 30% wolniej podczas rzucania Boskiego Światła."
+        }
+      }
+    },
+    {
+      "id": 786,
+      "name": "Crown of the Destroyer",
+      "killer_id": 44,
+      "description": "“The Creators saw this and bestowed upon It a crown and said, use this to bring light to the darkness.” (I Barbarians, ch. 6)\nWhenever a Survivor Liberates another Survivor from Exile, for 20 seconds,\n• Your Terror Radius is reduced by 70%.\n• Your Terror Radius is copied to every Shrine of Judgment.\n• You gain Undetectable.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CrownOfTheDestroyer.png?e1e7b3",
+      "icon_local_path": "icons/addons/crown_of_the_destroyer.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Krone des Zerstörers",
+          "description": "„Die Schöpfer sahen dies und schenkten dem Urteil eine Krone. Sie sagten: ‚Nutze sie, um Licht ins Dunkel zu bringen.‘“ (I Barbaren, Kapitel 6)\nImmer wenn ein Überlebender einen anderen Überlebenden aus dem Exil befreit, gilt für 20 Sek.:\n• Dein Terrorradius ist um 75 % verkleinert.\n• Dein Terrorradius wird auf jeden Schrein des Urteils übertragen.\n• Du wirst „Unentdeckbar“."
+        },
+        "es": {
+          "name": "Corona del destructor",
+          "description": "\"Los creadores vieron aquello, le concedieron una corona y dijeron: 'Úsala para llevar la luz a la oscuridad'\". (Bárbaros I, capítulo 6)\nCada vez que un superviviente libere a otro superviviente del exilio, durante 20 segundos:\n• Tu radio de terror se reduce un 75 %.\n• Tu radio de terror se replica en todos los santuarios de la Sentencia.\n• Obtienes Indetectable."
+        },
+        "ja": {
+          "name": "破壊者の冠",
+          "description": "「創造者はこれを見て、冠を与え、『これを使って闇に光をもたらせよ』と言った」（『野蛮人I』第6章）\n生存者が追放から他の生存者を解放すると、20秒間：\n• あなたの脅威範囲が70%縮小する。\n• あなたの脅威範囲が全てのジャッジメントのほこらに移る。\n• あなたは探知不可を得る。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Korona Niszczyciela",
+          "description": "„Stwórcy ujrzeli to, nałożyli na Jego głowę koronę i rzekli: – Użyj jej, by zanieść światło tam, gdzie panuje mrok” – Barbarzyńcy I, rozdział 6\nZa każdym razem, gdy ocalały wyzwala innego ocalałego z Wygnania, przez 20 s:\n• Twój zasięg terroru jest mniejszy o 75%.\n• Twój zasięg terroru jest kopiowany na każdą Świątynię Sądu.\n• Otrzymujesz efekt Niewykrywalności."
+        }
+      }
+    },
+    {
+      "id": 787,
+      "name": "Mirror of the Creators",
+      "killer_id": 44,
+      "description": "“And They said unto It, take this mirror, and show them the error of their ways.” (I Barbarians, ch. 6)\nA Cast Divine Light now Reflects off the first 2 tall obstructions it would otherwise pass through.\nWhen Reflecting, it pauses for 0.4 seconds before being Cast again.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MirrorOfTheCreators.png?7843e0",
+      "icon_local_path": "icons/addons/mirror_of_the_creators.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Spiegel der Schöpfer",
+          "description": "„Und sie sprachen zu ihm: ‚Nimm diesen Spiegel und zeige ihnen ihre Fehler.“ (I Barbaren, Kapitel 6)\nEin gewirktes „Göttliches Licht“ wird jetzt von den ersten 2 Hindernissen reflektiert, durch die es sonst ziehen würde.\nDurch die Reflektion wird es 0,5 Sek. lang pausiert, bevor es weiter gewirkt wird."
+        },
+        "es": {
+          "name": "Espejo de los creadores",
+          "description": "\"Y le dijeron: 'Toma este espejo y muéstrales el error de sus actos'\". (Bárbaros I, capítulo 6)\nLa Luz divina lanzada ahora rebota en los primeros 2 obstáculos que atravesaría de otro modo.\nAl rebotar, se detiene durante 0,5 segundos antes de volver a lanzarse."
+        },
+        "ja": {
+          "name": "創造者の鏡",
+          "description": "「そして、『この鏡を取り、彼らの過ちを見せてやれ』と言った」（『野蛮人I』第6章）\n放たれた聖なる光が、最初の2つの高い障害物を通過する代わりに反射する。\n光は反射する際、再び放たれる前に0.4秒静止する。"
+        },
+        "pl": {
+          "name": "Lustro Stwórców",
+          "description": "„I rzekli do Niego: – Weź to zwierciadło i wskaż im błędy ich działania” – Barbarzyńcy I, rozdział 6\nRzucenie Boskiego Światła od teraz odbija się od pierwszych 2 przeszkód, przez które w przeciwnym wypadku by przeszło.\nPo odbiciu, zatrzymuje się na 0,5 s, zanim znowu zostanie rzucone."
+        }
+      }
+    },
+    {
+      "id": 880,
+      "name": "Magnetised Manacles",
+      "killer_id": 44,
+      "description": "“Those who do not go into hiding will be locked deep underground, far from the guiding light of the stars.” (Visions of Gerhardt, ch. 6)\nWhenever you Exile a survivor with the lowest amount of Hook States, gain a Token, up to a max of 5.\nWhenever you become Zealous, you become Zealous for 10% longer per Token.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MagnetisedManacles.png?2559be",
+      "icon_local_path": "icons/addons/magnetised_manacles.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Magnetische Fesseln",
+          "description": "„Wer sich nicht versteckt, wird tief im Untergrund weggesperrt, weit entfernt vom leitenden Licht der Sterne.“ (Visionen von Gerhardt, Kapitel 6)\nImmer wenn du den Überlebenden mit den wenigsten Hakenstatus ins Exil schickst, erhältst du einen Zähler, bis zu 5.\nImmer wenn du „Eifrig“ wirst, erhältst du pro Zähler 10 % länger „Eifrig“."
+        },
+        "en": {
+          "name": "Magnetized Manacles"
+        },
+        "es": {
+          "name": "Grilletes magnetizados",
+          "description": "\"Quienes no se oculten serán encerrados en las profundidades de la tierra, lejos de la luz orientadora de las estrellas\". (Visiones de Gerhardt, capítulo 6)\nCada vez que exilies a un superviviente con el menor número de estados de gancho, obtendrás un distintivo, hasta un máximo de 5.\nCada vez que entres en estado de Fervor, su duración aumentará un 10 % por cada distintivo."
+        },
+        "ja": {
+          "name": "磁気の手錠",
+          "description": "「身を隠さぬ者は、運命を導く星の光から遠く離れた、地下の奥深くに閉じ込められるだろう」（『ゲルハルトの予知』第6章）\nフック段階の最も少ない生存者を追放すると、トークンを1個得る（5個まで）。\n熱狂を発動したとき、熱狂の持続時間がトークン1個につき10%増加する。"
+        },
+        "pl": {
+          "name": "Namagnesowane kajdany",
+          "description": "„Ci, którzy nie pójdą do schronienia, zostaną zamknięci głęboko pod ziemią, z dala od przewodniego światła gwiazd” – Wizje Gerhardta, rozdział 6\nZa każdym razem, gdy wygnasz ocalałego z najmniejszą liczbą faz haka, zyskujesz żeton, do maksymalnie 5.\nZa każdym razem, gdy wejdziesz w stan Gorliwości, twoja Gorliwość będzie trwała o 10% dłużej za żeton."
+        }
+      }
+    }
+  ]
+}

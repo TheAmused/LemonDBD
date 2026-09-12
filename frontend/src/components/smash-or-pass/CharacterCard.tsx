@@ -19,37 +19,11 @@ import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem } from '@/types/smashOrPass';
+import { localizedProfile } from '@/utils/entityProfile';
 
-interface CharacterMetadataLocale {
-  title?: string;
-  tagline?: string;
-  bio?: string;
-  quote?: string;
-  green_flags?: string[];
-  red_flags?: string[];
-  turn_on?: string;
-  dealbreaker?: string;
-  meme?: string;
-}
-
-interface CharacterMetadataContainer {
-  title?: string;
-  archetype?: string;
-  tagline?: string;
-  bio?: string;
-  quote?: string;
-  lore_quote?: string;
-  green_flags?: string[];
-  greenFlags?: string[];
-  red_flags?: string[];
-  redFlags?: string[];
-  turn_on?: string;
-  turnOn?: string;
-  dealbreaker?: string;
-  meme?: string;
-  translations?: Record<string, CharacterMetadataLocale>;
-  i18n?: Record<string, CharacterMetadataLocale>;
-}
+// The local CharacterMetadataLocale / CharacterMetadataContainer shapes are gone: they
+// only existed to describe the duplicated payload (camelCase twins, `i18n` next to
+// `translations`, `title` next to `archetype`). EntityMetadata is now that description.
 
 const FLIP_HALF_MS = 190;
 
@@ -98,9 +72,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const isSurvivor = character.role === 'Survivor';
 
-  const metadata = (character.metadata || {}) as CharacterMetadataContainer;
   const currentLoc = locale || 'en';
-  const locMeta = metadata.translations?.[currentLoc] || metadata.i18n?.[currentLoc] || {};
+  const profile = localizedProfile(character.metadata, currentLoc);
 
   useEffect(() => {
     setIsFlipped(false);
@@ -127,48 +100,15 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     }
   }, [turn]);
 
-  const charTitle =
-    locMeta.title ||
-    metadata.title ||
-    metadata.archetype ||
-    character.role;
+  // `|| character.role` is a render-level default for an entity with no archetype yet,
+  // not a data fallback — localizedProfile already resolved locale vs. English.
+  const charTitle = profile.archetype || character.role;
 
-  const charTagline =
-    locMeta.tagline ||
-    metadata.tagline ||
-    '';
-
-  const charBio =
-    locMeta.bio ||
-    metadata.bio ||
-    '';
-
-  const charQuote = locMeta.quote || metadata.quote || metadata.lore_quote || '';
-
-  const greenFlags: string[] =
-    locMeta.green_flags ||
-    metadata.green_flags ||
-    metadata.greenFlags ||
-    [];
-
-  const redFlags: string[] =
-    locMeta.red_flags ||
-    metadata.red_flags ||
-    metadata.redFlags ||
-    [];
-
-  const turnOn: string =
-    locMeta.turn_on ||
-    metadata.turn_on ||
-    metadata.turnOn ||
-    '';
-
-  const dealbreaker: string =
-    locMeta.dealbreaker ||
-    metadata.dealbreaker ||
-    '';
-
-  const charMeme: string = locMeta.meme || metadata.meme || '';
+  const charTagline = profile.tagline;
+  const charBio = profile.bio;
+  const charQuote = profile.quote;
+  const dealbreaker: string = profile.dealbreaker;
+  const charMeme: string = profile.meme;
 
   const avatarSrc =
     character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
@@ -580,30 +520,30 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 </div>
               )}
 
-              {(greenFlags.length > 0 || redFlags.length > 0) && (
+              {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
                 <div className="grid grid-cols-1 gap-1.5">
-                  {greenFlags.length > 0 && (
+                  {profile.green_flags.length > 0 && (
                     <div className="bg-emerald-950/40 border border-emerald-500/30 p-2.5 rounded-2xl space-y-0.5">
                       <span className="flex items-center gap-1 text-xs font-black text-emerald-400">
                         <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                         {rawSmashDict?.greenFlags || ''}
                       </span>
                       <ul className="text-xs text-emerald-200/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {greenFlags.map((flag: string, idx: number) => (
+                        {profile.green_flags.map((flag: string, idx: number) => (
                           <li key={idx}>{flag}</li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {redFlags.length > 0 && (
+                  {profile.red_flags.length > 0 && (
                     <div className="bg-rose-950/40 border border-rose-500/30 p-2.5 rounded-2xl space-y-0.5">
                       <span className="flex items-center gap-1 text-xs font-black text-rose-400">
                         <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
                         {rawSmashDict?.redFlags || ''}
                       </span>
                       <ul className="text-xs text-rose-200/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {redFlags.map((flag: string, idx: number) => (
+                        {profile.red_flags.map((flag: string, idx: number) => (
                           <li key={idx}>{flag}</li>
                         ))}
                       </ul>
@@ -612,14 +552,14 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 </div>
               )}
 
-              {(turnOn || dealbreaker) && (
+              {(profile.turn_on || dealbreaker) && (
                 <div className="grid grid-cols-2 gap-1.5 text-xs">
-                  {turnOn && (
+                  {profile.turn_on && (
                     <div className="bg-zinc-950/80 border border-zinc-800 p-2 rounded-2xl space-y-0.5">
                       <span className="font-bold text-pink-400 uppercase text-[10px]">
                         {rawSmashDict?.turnOn || ''}
                       </span>
-                      <p className="text-zinc-300 font-medium text-[11px] leading-tight font-sans">{turnOn}</p>
+                      <p className="text-zinc-300 font-medium text-[11px] leading-tight font-sans">{profile.turn_on}</p>
                     </div>
                   )}
                   {dealbreaker && (

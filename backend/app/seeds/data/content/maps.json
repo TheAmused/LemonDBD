@@ -1,5113 +1,1218 @@
 {
-  "version": "1.0",
+  "version": "3.0",
   "exported_at": "2026-09-10T12:16:35.282512+00:00",
   "source": "LemonDBD",
   "target": "maps",
-  "count": 58,
   "maps": [
     {
-      "map_id": "hens_autohaven_wreckers_azarovs_resting_place",
+      "id": 1,
       "name": "Azarov's Resting Place",
-      "realm": "Autohaven Wreckers",
-      "realm_id": "autohaven_wreckers",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 2,
+      "source_id": 1,
       "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
       "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/azarovs_resting_place.webp",
       "translations": {
         "de": {
-          "name": "Azarovs Ruhestätte",
-          "realm": "Autohaven-Schrottplatz"
+          "name": "Azarovs Ruhestätte"
         },
         "es": {
-          "name": "Lugar de Descanso de Azarov",
-          "realm": "Desguace Autohaven"
+          "name": "Lugar de Descanso de Azarov"
         },
         "ja": {
-          "name": "アザロフの休憩所",
-          "realm": "オートヘイヴン・レッカーズ"
+          "name": "アザロフの休憩所"
         },
         "pl": {
-          "name": "Miejsce Spoczynku Azarova",
-          "realm": "Złomowisko Autohaven"
+          "name": "Miejsce Spoczynku Azarova"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_autohaven_wreckers_blood_lodge",
+      "id": 2,
       "name": "Blood Lodge",
-      "realm": "Autohaven Wreckers",
-      "realm_id": "autohaven_wreckers",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 2,
+      "source_id": 1,
       "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
       "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/blood_lodge.webp",
       "translations": {
         "de": {
-          "name": "Bluthütte",
-          "realm": "Autohaven-Schrottplatz"
+          "name": "Bluthütte"
         },
         "es": {
-          "name": "Cabaña de Sangre",
-          "realm": "Desguace Autohaven"
+          "name": "Cabaña de Sangre"
         },
         "ja": {
-          "name": "ブラッド・ロッジ",
-          "realm": "オートヘイヴン・レッカーズ"
+          "name": "ブラッド・ロッジ"
         },
         "pl": {
-          "name": "Krwawa Stróżówka",
-          "realm": "Złomowisko Autohaven"
+          "name": "Krwawa Stróżówka"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_autohaven_wreckers_gas_heaven",
+      "id": 3,
       "name": "Gas Heaven",
-      "realm": "Autohaven Wreckers",
-      "realm_id": "autohaven_wreckers",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 2,
+      "source_id": 1,
       "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
       "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/gas_heaven.webp",
       "translations": {
         "de": {
-          "name": "Sprithimmel",
-          "realm": "Autohaven-Schrottplatz"
+          "name": "Sprithimmel"
         },
         "es": {
-          "name": "Gasolinera",
-          "realm": "Desguace Autohaven"
+          "name": "Gasolinera"
         },
         "ja": {
-          "name": "ガス・ヘヴン",
-          "realm": "オートヘイヴン・レッカーズ"
+          "name": "ガス・ヘヴン"
         },
         "pl": {
-          "name": "Stacja Paliw",
-          "realm": "Złomowisko Autohaven"
+          "name": "Stacja Paliw"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_autohaven_wreckers_wreckers_yard",
+      "id": 4,
       "name": "Wreckers' Yard",
-      "realm": "Autohaven Wreckers",
-      "realm_id": "autohaven_wreckers",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 2,
+      "source_id": 1,
       "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
       "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wreckers_yard.webp",
       "translations": {
         "de": {
-          "name": "Schrottplatz",
-          "realm": "Autohaven-Schrottplatz"
+          "name": "Schrottplatz"
         },
         "es": {
-          "name": "Desguace",
-          "realm": "Desguace Autohaven"
+          "name": "Desguace"
         },
         "ja": {
-          "name": "レッカーズ・ヤード",
-          "realm": "オートヘイヴン・レッカーズ"
+          "name": "レッカーズ・ヤード"
         },
         "pl": {
-          "name": "Podwórze Złomowiska",
-          "realm": "Złomowisko Autohaven"
+          "name": "Podwórze Złomowiska"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_autohaven_wreckers_wretched_shop",
+      "id": 5,
       "name": "Wretched Shop",
-      "realm": "Autohaven Wreckers",
-      "realm_id": "autohaven_wreckers",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 2,
+      "source_id": 1,
       "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
       "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wretched_shop.webp",
       "translations": {
         "de": {
-          "name": "Werkstatt",
-          "realm": "Autohaven-Schrottplatz"
+          "name": "Werkstatt"
         },
         "es": {
-          "name": "Taller Ruinoso",
-          "realm": "Desguace Autohaven"
+          "name": "Taller Ruinoso"
         },
         "ja": {
-          "name": "レッチド・ショップ",
-          "realm": "オートヘイヴン・レッカーズ"
+          "name": "レッチド・ショップ"
         },
         "pl": {
-          "name": "Sklep Nędzy",
-          "realm": "Złomowisko Autohaven"
+          "name": "Sklep Nędzy"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_springwood_preschool_i",
+      "id": 6,
       "name": "Preschool I",
-      "realm": "Springwood",
-      "realm_id": "springwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 9,
+      "source_id": 1,
       "description": "12-Clock Callout System for Preschool I (Springwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_i.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule",
-          "realm": "Springwood"
+          "name": "Badham-Vorschule"
         },
         "es": {
-          "name": "Guardería Badham",
-          "realm": "Springwood"
+          "name": "Guardería Badham"
         },
         "ja": {
-          "name": "バダム幼稚園",
-          "realm": "スプリングウッド"
+          "name": "バダム幼稚園"
         },
         "pl": {
-          "name": "Przedszkole w Badham",
-          "realm": "Springwood"
+          "name": "Przedszkole w Badham"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_springwood_preschool_ii",
+      "id": 7,
       "name": "Preschool II",
-      "realm": "Springwood",
-      "realm_id": "springwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 9,
+      "source_id": 1,
       "description": "12-Clock Callout System for Preschool II (Springwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_ii.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule",
-          "realm": "Springwood"
+          "name": "Badham-Vorschule"
         },
         "es": {
-          "name": "Guardería Badham",
-          "realm": "Springwood"
+          "name": "Guardería Badham"
         },
         "ja": {
-          "name": "バダム幼稚園",
-          "realm": "スプリングウッド"
+          "name": "バダム幼稚園"
         },
         "pl": {
-          "name": "Przedszkole w Badham",
-          "realm": "Springwood"
+          "name": "Przedszkole w Badham"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_springwood_preschool_iii",
+      "id": 8,
       "name": "Preschool III",
-      "realm": "Springwood",
-      "realm_id": "springwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 9,
+      "source_id": 1,
       "description": "12-Clock Callout System for Preschool III (Springwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iii.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule",
-          "realm": "Springwood"
+          "name": "Badham-Vorschule"
         },
         "es": {
-          "name": "Guardería Badham",
-          "realm": "Springwood"
+          "name": "Guardería Badham"
         },
         "ja": {
-          "name": "バダム幼稚園",
-          "realm": "スプリングウッド"
+          "name": "バダム幼稚園"
         },
         "pl": {
-          "name": "Przedszkole w Badham",
-          "realm": "Springwood"
+          "name": "Przedszkole w Badham"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_springwood_preschool_iiiv",
-      "name": "Preschool IIIV",
-      "realm": "Springwood",
-      "realm_id": "springwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Preschool IIIV (Springwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
+      "id": 9,
+      "name": "Preschool IV",
+      "realm_id": 9,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Preschool IV (Springwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iiiv.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule",
-          "realm": "Springwood"
+          "name": "Badham-Vorschule"
         },
         "es": {
-          "name": "Guardería Badham",
-          "realm": "Springwood"
+          "name": "Guardería Badham"
         },
         "ja": {
-          "name": "バダム幼稚園",
-          "realm": "スプリングウッド"
+          "name": "バダム幼稚園"
         },
         "pl": {
-          "name": "Przedszkole w Badham",
-          "realm": "Springwood"
+          "name": "Przedszkole w Badham"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_springwood_preschool_v",
+      "id": 10,
       "name": "Preschool V",
-      "realm": "Springwood",
-      "realm_id": "springwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 9,
+      "source_id": 1,
       "description": "12-Clock Callout System for Preschool V (Springwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
       "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_v.webp",
       "translations": {
         "de": {
-          "name": "Badham-Vorschule",
-          "realm": "Springwood"
+          "name": "Badham-Vorschule"
         },
         "es": {
-          "name": "Guardería Badham",
-          "realm": "Springwood"
+          "name": "Guardería Badham"
         },
         "ja": {
-          "name": "バダム幼稚園",
-          "realm": "スプリングウッド"
+          "name": "バダム幼稚園"
         },
         "pl": {
-          "name": "Przedszkole w Badham",
-          "realm": "Springwood"
+          "name": "Przedszkole w Badham"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_coldwind_farm_fractured_cowshed",
+      "id": 11,
       "name": "Fractured Cowshed",
-      "realm": "Coldwind Farm",
-      "realm_id": "coldwind_farm",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 3,
+      "source_id": 1,
       "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
       "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/fractured_cowshed.webp",
       "translations": {
         "de": {
-          "name": "Verfallener Kuhstall",
-          "realm": "Coldwind Farm"
+          "name": "Verfallener Kuhstall"
         },
         "es": {
-          "name": "Establo en Ruinas",
-          "realm": "Granja Coldwind"
+          "name": "Establo en Ruinas"
         },
         "ja": {
-          "name": "フラクチャード・カウシェッド",
-          "realm": "コールドウィンド・ファーム"
+          "name": "フラクチャード・カウシェッド"
         },
         "pl": {
-          "name": "Spękana Obora",
-          "realm": "Farma Coldwind"
+          "name": "Spękana Obora"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_coldwind_farm_rancid_abbatoir",
+      "id": 12,
       "name": "Rancid Abbatoir",
-      "realm": "Coldwind Farm",
-      "realm_id": "coldwind_farm",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 3,
+      "source_id": 1,
       "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
       "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rancid_abbatoir.webp",
       "translations": {
         "de": {
-          "name": "Widerliches Schlachthaus",
-          "realm": "Coldwind Farm"
+          "name": "Widerliches Schlachthaus"
         },
         "es": {
-          "name": "Matadero Pestilente",
-          "realm": "Granja Coldwind"
+          "name": "Matadero Pestilente"
         },
         "ja": {
-          "name": "ランシッド・アバトワー",
-          "realm": "コールドウィンド・ファーム"
+          "name": "ランシッド・アバトワー"
         },
         "pl": {
-          "name": "Zjęłczała Rzeźnia",
-          "realm": "Farma Coldwind"
+          "name": "Zjęłczała Rzeźnia"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_coldwind_farm_rotten_fields",
+      "id": 13,
       "name": "Rotten Fields",
-      "realm": "Coldwind Farm",
-      "realm_id": "coldwind_farm",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 3,
+      "source_id": 1,
       "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
       "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rotten_fields.webp",
       "translations": {
         "de": {
-          "name": "Faulige Felder",
-          "realm": "Coldwind Farm"
+          "name": "Faulige Felder"
         },
         "es": {
-          "name": "Campos Podridos",
-          "realm": "Granja Coldwind"
+          "name": "Campos Podridos"
         },
         "ja": {
-          "name": "ロトン・フィールズ",
-          "realm": "コールドウィンド・ファーム"
+          "name": "ロトン・フィールズ"
         },
         "pl": {
-          "name": "Zbutwiałe Pola",
-          "realm": "Farma Coldwind"
+          "name": "Zbutwiałe Pola"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_coldwind_farm_the_thompson_house",
+      "id": 14,
       "name": "The Thompson House",
-      "realm": "Coldwind Farm",
-      "realm_id": "coldwind_farm",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 3,
+      "source_id": 1,
       "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
       "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/the_thompson_house.webp",
       "translations": {
         "de": {
-          "name": "Das Thompson-Haus",
-          "realm": "Coldwind Farm"
+          "name": "Das Thompson-Haus"
         },
         "es": {
-          "name": "La Casa de los Thompson",
-          "realm": "Granja Coldwind"
+          "name": "La Casa de los Thompson"
         },
         "ja": {
-          "name": "トンプソン・ハウス",
-          "realm": "コールドウィンド・ファーム"
+          "name": "トンプソン・ハウス"
         },
         "pl": {
-          "name": "Dom Thompsona",
-          "realm": "Farma Coldwind"
+          "name": "Dom Thompsona"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_coldwind_farm_torment_creek",
+      "id": 15,
       "name": "Torment Creek",
-      "realm": "Coldwind Farm",
-      "realm_id": "coldwind_farm",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 3,
+      "source_id": 1,
       "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
       "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/torment_creek.webp",
       "translations": {
         "de": {
-          "name": "Tal der Qual",
-          "realm": "Coldwind Farm"
+          "name": "Tal der Qual"
         },
         "es": {
-          "name": "Arroyo del Tormento",
-          "realm": "Granja Coldwind"
+          "name": "Arroyo del Tormento"
         },
         "ja": {
-          "name": "トーメント・クリーク",
-          "realm": "コールドウィンド・ファーム"
+          "name": "トーメント・クリーク"
         },
         "pl": {
-          "name": "Przełęcz Udręki",
-          "realm": "Farma Coldwind"
+          "name": "Przełęcz Udręki"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_disturbed_ward_disturbed_ward",
+      "id": 16,
       "name": "Disturbed Ward",
-      "realm": "Disturbed Ward",
-      "realm_id": "disturbed_ward",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Disturbed Ward (Disturbed Ward). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
+      "realm_id": 4,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
       "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/disturbed_ward.webp",
       "translations": {
         "de": {
-          "name": "Gestörtenabteilung",
-          "realm": "Crotus-Prenn-Anstalt"
+          "name": "Gestörtenabteilung"
         },
         "es": {
-          "name": "Sala de Trastornados",
-          "realm": "Psiquiátrico Crotus Prenn"
+          "name": "Sala de Trastornados"
         },
         "ja": {
-          "name": "ディスターブド・ウォード",
-          "realm": "クロータス・プレン・アサイラム"
+          "name": "ディスターブド・ウォード"
         },
         "pl": {
-          "name": "Niespokojny Oddział",
-          "realm": "Przytułek Crotus Prenn"
+          "name": "Niespokojny Oddział"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_disturbed_ward_father_campbells_chapel",
+      "id": 17,
       "name": "Father Campbells Chapel",
-      "realm": "Disturbed Ward",
-      "realm_id": "disturbed_ward",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Father Campbells Chapel (Disturbed Ward). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
+      "realm_id": 4,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
       "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/father_campbells_chapel.webp",
       "translations": {
         "de": {
-          "name": "Pater Campbells Kapelle",
-          "realm": "Crotus-Prenn-Anstalt"
+          "name": "Pater Campbells Kapelle"
         },
         "es": {
-          "name": "Capilla del Padre Campbell",
-          "realm": "Psiquiátrico Crotus Prenn"
+          "name": "Capilla del Padre Campbell"
         },
         "ja": {
-          "name": "ファザー・キャンベルズ・チャペル",
-          "realm": "クロータス・プレン・アサイラム"
+          "name": "ファザー・キャンベルズ・チャペル"
         },
         "pl": {
-          "name": "Kaplica Ojca Campbella",
-          "realm": "Przytułek Crotus Prenn"
+          "name": "Kaplica Ojca Campbella"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_decimated_borgo_shattered_square",
+      "id": 18,
       "name": "Shattered Square",
-      "realm": "The Decimated Borgo",
-      "realm_id": "the_decimated_borgo",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 19,
+      "source_id": 1,
       "description": "12-Clock Callout System for Shattered Square (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/shattered_square.webp",
       "translations": {
         "de": {
-          "name": "Der zerstörte Platz",
-          "realm": "Das dezimierte Borgo"
+          "name": "Der zerstörte Platz"
         },
         "es": {
-          "name": "El Cuadrado Roto",
-          "realm": "El Pueblo Diezmado"
+          "name": "El Cuadrado Roto"
         },
         "ja": {
-          "name": "瓦礫と化した広場",
-          "realm": "壊滅したボルゴ"
+          "name": "瓦礫と化した広場"
         },
         "pl": {
-          "name": "Roztrzaskany Plac",
-          "realm": "Zdziesiątkowane Borgo"
+          "name": "Roztrzaskany Plac"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_decimated_borgo_forgotten_ruins",
+      "id": 19,
       "name": "Forgotten Ruins",
-      "realm": "The Decimated Borgo",
-      "realm_id": "the_decimated_borgo",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 19,
+      "source_id": 1,
       "description": "12-Clock Callout System for Forgotten Ruins (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/forgotten_ruins.webp",
       "translations": {
         "de": {
-          "name": "Vergessene Ruinen",
-          "realm": "Das dezimierte Borgo"
+          "name": "Vergessene Ruinen"
         },
         "es": {
-          "name": "Ruinas Olvidadas",
-          "realm": "El Pueblo Diezmado"
+          "name": "Ruinas Olvidadas"
         },
         "ja": {
-          "name": "忘れ去られた遺跡",
-          "realm": "壊滅したボルゴ"
+          "name": "忘れ去られた遺跡"
         },
         "pl": {
-          "name": "Zapomniane Ruiny",
-          "realm": "Zdziesiątkowane Borgo"
+          "name": "Zapomniane Ruiny"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_forsaken_boneyard_eyrie_of_crows",
+      "id": 20,
       "name": "Eyrie of Crows",
-      "realm": "Forsaken Boneyard",
-      "realm_id": "forsaken_boneyard",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 17,
+      "source_id": 1,
       "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
       "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/eyrie_of_crows.webp",
       "translations": {
         "de": {
-          "name": "Krähenhorst",
-          "realm": "Einsamer Friedhof"
+          "name": "Krähenhorst"
         },
         "es": {
-          "name": "Aviario de Cuervos",
-          "realm": "Cementerio Abandonado"
+          "name": "Aviario de Cuervos"
         },
         "ja": {
-          "name": "カラスの巣",
-          "realm": "荒れ果てた墓場"
+          "name": "カラスの巣"
         },
         "pl": {
-          "name": "Gniazdo Kruków",
-          "realm": "Zapomniany Cmentarz"
+          "name": "Gniazdo Kruków"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_forsaken_boneyard_dead_sands",
+      "id": 21,
       "name": "Dead Sands",
-      "realm": "Forsaken Boneyard",
-      "realm_id": "forsaken_boneyard",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 17,
+      "source_id": 1,
       "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
       "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/dead_sands.webp",
       "translations": {
         "de": {
-          "name": "Tote Sande",
-          "realm": "Einsamer Friedhof"
+          "name": "Tote Sande"
         },
         "es": {
-          "name": "Arenas Mortales",
-          "realm": "Cementerio Abandonado"
+          "name": "Arenas Mortales"
         },
         "ja": {
-          "name": "死の砂漠",
-          "realm": "荒れ果てた墓場"
+          "name": "死の砂漠"
         },
         "pl": {
-          "name": "Martwe Piaski",
-          "realm": "Zapomniany Cmentarz"
+          "name": "Martwe Piaski"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_hawkins_national_laboratory_the_underground_complex",
+      "id": 22,
       "name": "The Underground Complex",
-      "realm": "Hawkins National Laboratory",
-      "realm_id": "hawkins_national_laboratory",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 13,
+      "source_id": 1,
       "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
       "callout_image_local_path": "maps/callouts/hens333/hawkins_national_laboratory/the_underground_complex.webp",
       "translations": {
         "de": {
-          "name": "Der Untergrundkomplex",
-          "realm": "Hawkins National Laboratory"
+          "name": "Der Untergrundkomplex"
         },
         "es": {
-          "name": "El Complejo Subterráneo",
-          "realm": "Laboratorio Nacional Hawkins"
+          "name": "El Complejo Subterráneo"
         },
         "ja": {
-          "name": "地下施設",
-          "realm": "ホーキンス国立研究所"
+          "name": "地下施設"
         },
         "pl": {
-          "name": "Podziemny Kompleks",
-          "realm": "Hawkins National Laboratory"
+          "name": "Podziemny Kompleks"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_macmillan_estate_coal_tower",
+      "id": 23,
       "name": "Coal Tower",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 1,
+      "source_id": 1,
       "description": "12-Clock Callout System for Coal Tower (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower.webp",
       "translations": {
         "de": {
-          "name": "Kohlelager",
-          "realm": "MacMillan-Anwesen"
+          "name": "Kohlelager"
         },
         "es": {
-          "name": "Torre de Carbón",
-          "realm": "La Finca MacMillan"
+          "name": "Torre de Carbón"
         },
         "ja": {
-          "name": "コール・タワー",
-          "realm": "マクミラン・エステート"
+          "name": "コール・タワー"
         },
         "pl": {
-          "name": "Wieża Węglowa",
-          "realm": "Posiadłość Macmillanów"
+          "name": "Wieża Węglowa"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_macmillan_estate_coal_tower_ii",
-      "name": "Coal Tower II",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Coal Tower II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
-      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower_ii.webp",
-      "translations": {
-        "de": {
-          "name": "Kohlelager",
-          "realm": "MacMillan-Anwesen"
-        },
-        "es": {
-          "name": "Torre de Carbón",
-          "realm": "La Finca MacMillan"
-        },
-        "ja": {
-          "name": "コール・タワー",
-          "realm": "マクミラン・エステート"
-        },
-        "pl": {
-          "name": "Wieża Węglowa",
-          "realm": "Posiadłość Macmillanów"
-        }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
-    },
-    {
-      "map_id": "hens_the_macmillan_estate_groaning_storehouse",
+      "id": 24,
       "name": "Groaning Storehouse",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 1,
+      "source_id": 1,
       "description": "12-Clock Callout System for Groaning Storehouse (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse.webp",
       "translations": {
         "de": {
-          "name": "Seufzendes Lagerhaus",
-          "realm": "MacMillan-Anwesen"
+          "name": "Seufzendes Lagerhaus"
         },
         "es": {
-          "name": "Almacén Quejumbroso",
-          "realm": "La Finca MacMillan"
+          "name": "Almacén Quejumbroso"
         },
         "ja": {
-          "name": "グロウニング・ストアハウス",
-          "realm": "マクミラン・エステート"
+          "name": "グロウニング・ストアハウス"
         },
         "pl": {
-          "name": "Jęczący Magazyn",
-          "realm": "Posiadłość Macmillanów"
+          "name": "Jęczący Magazyn"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_macmillan_estate_groaning_storehouse_ii",
-      "name": "Groaning Storehouse II",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Groaning Storehouse II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
-      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse_ii.webp",
-      "translations": {
-        "de": {
-          "name": "Seufzendes Lagerhaus",
-          "realm": "MacMillan-Anwesen"
-        },
-        "es": {
-          "name": "Almacén Quejumbroso",
-          "realm": "La Finca MacMillan"
-        },
-        "ja": {
-          "name": "グロウニング・ストアハウス",
-          "realm": "マクミラン・エステート"
-        },
-        "pl": {
-          "name": "Jęczący Magazyn",
-          "realm": "Posiadłość Macmillanów"
-        }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
-    },
-    {
-      "map_id": "hens_the_macmillan_estate_ironworks_of_misery",
+      "id": 25,
       "name": "Ironworks Of Misery",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 1,
+      "source_id": 1,
       "description": "12-Clock Callout System for Ironworks Of Misery (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery.webp",
       "translations": {
         "de": {
-          "name": "Eisenwerk der Qual",
-          "realm": "MacMillan-Anwesen"
+          "name": "Eisenwerk der Qual"
         },
         "es": {
-          "name": "Fundición de la Miseria",
-          "realm": "La Finca MacMillan"
+          "name": "Fundición de la Miseria"
         },
         "ja": {
-          "name": "アイアンワークス・オブ・ミザリー",
-          "realm": "マクミラン・エステート"
+          "name": "アイアンワークス・オブ・ミザリー"
         },
         "pl": {
-          "name": "Huta Niedoli",
-          "realm": "Posiadłość Macmillanów"
+          "name": "Huta Niedoli"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_macmillan_estate_ironworks_of_misery_ii",
-      "name": "Ironworks Of Misery II",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Ironworks Of Misery II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
-      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery_ii.webp",
-      "translations": {
-        "de": {
-          "name": "Eisenwerk der Qual",
-          "realm": "MacMillan-Anwesen"
-        },
-        "es": {
-          "name": "Fundición de la Miseria",
-          "realm": "La Finca MacMillan"
-        },
-        "ja": {
-          "name": "アイアンワークス・オブ・ミザリー",
-          "realm": "マクミラン・エステート"
-        },
-        "pl": {
-          "name": "Huta Niedoli",
-          "realm": "Posiadłość Macmillanów"
-        }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
-    },
-    {
-      "map_id": "hens_the_macmillan_estate_shelter_woods",
+      "id": 26,
       "name": "Shelter Woods",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 1,
+      "source_id": 1,
       "description": "12-Clock Callout System for Shelter Woods (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods.webp",
       "translations": {
         "de": {
-          "name": "Schutzwald",
-          "realm": "MacMillan-Anwesen"
+          "name": "Schutzwald"
         },
         "es": {
-          "name": "Bosque Refugio",
-          "realm": "La Finca MacMillan"
+          "name": "Bosque Refugio"
         },
         "ja": {
-          "name": "シェルター・ウッズ",
-          "realm": "マクミラン・エステート"
+          "name": "シェルター・ウッズ"
         },
         "pl": {
-          "name": "Leśne Schronisko",
-          "realm": "Posiadłość Macmillanów"
+          "name": "Leśne Schronisko"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_macmillan_estate_shelter_woods_ii",
-      "name": "Shelter Woods II",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Shelter Woods II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
-      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods_ii.webp",
-      "translations": {
-        "de": {
-          "name": "Schutzwald",
-          "realm": "MacMillan-Anwesen"
-        },
-        "es": {
-          "name": "Bosque Refugio",
-          "realm": "La Finca MacMillan"
-        },
-        "ja": {
-          "name": "シェルター・ウッズ",
-          "realm": "マクミラン・エステート"
-        },
-        "pl": {
-          "name": "Leśne Schronisko",
-          "realm": "Posiadłość Macmillanów"
-        }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
-    },
-    {
-      "map_id": "hens_the_macmillan_estate_suffocation_pit",
+      "id": 27,
       "name": "Suffocation Pit",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 1,
+      "source_id": 1,
       "description": "12-Clock Callout System for Suffocation Pit (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
       "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit.webp",
       "translations": {
         "de": {
-          "name": "Grubenschacht",
-          "realm": "MacMillan-Anwesen"
+          "name": "Grubenschacht"
         },
         "es": {
-          "name": "Pozo de Asfixia",
-          "realm": "La Finca MacMillan"
+          "name": "Pozo de Asfixia"
         },
         "ja": {
-          "name": "サファケーション・ピット",
-          "realm": "マクミラン・エステート"
+          "name": "サファケーション・ピット"
         },
         "pl": {
-          "name": "Duszna Kopalnia",
-          "realm": "Posiadłość Macmillanów"
+          "name": "Duszna Kopalnia"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_the_macmillan_estate_suffocation_pit_ii",
-      "name": "Suffocation Pit II",
-      "realm": "The Macmillan Estate",
-      "realm_id": "the_macmillan_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
-      "description": "12-Clock Callout System for Suffocation Pit II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
-      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit_ii.webp",
-      "translations": {
-        "de": {
-          "name": "Grubenschacht",
-          "realm": "MacMillan-Anwesen"
-        },
-        "es": {
-          "name": "Pozo de Asfixia",
-          "realm": "La Finca MacMillan"
-        },
-        "ja": {
-          "name": "サファケーション・ピット",
-          "realm": "マクミラン・エステート"
-        },
-        "pl": {
-          "name": "Duszna Kopalnia",
-          "realm": "Posiadłość Macmillanów"
-        }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
-    },
-    {
-      "map_id": "hens_red_forest_mothers_dwelling",
+      "id": 28,
       "name": "Mother's Dwelling",
-      "realm": "Red Forest",
-      "realm_id": "red_forest",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 8,
+      "source_id": 1,
       "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
       "callout_image_local_path": "maps/callouts/hens333/red_forest/mothers_dwelling.webp",
       "translations": {
         "de": {
-          "name": "Mutters Behausung",
-          "realm": "Roter Wald"
+          "name": "Mutters Behausung"
         },
         "es": {
-          "name": "Morada Maternal",
-          "realm": "Bosque Rojo"
+          "name": "Morada Maternal"
         },
         "ja": {
-          "name": "マザーズ・ドゥエリング",
-          "realm": "レッド・フォレスト"
+          "name": "マザーズ・ドゥエリング"
         },
         "pl": {
-          "name": "Dom Matki",
-          "realm": "Czerwony Las"
+          "name": "Dom Matki"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_red_forest_temple_of_purgation",
+      "id": 29,
       "name": "Temple of Purgation",
-      "realm": "Red Forest",
-      "realm_id": "red_forest",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 8,
+      "source_id": 1,
       "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
       "callout_image_local_path": "maps/callouts/hens333/red_forest/temple_of_purgation.webp",
       "translations": {
         "de": {
-          "name": "Der Tempel der Reinigung",
-          "realm": "Roter Wald"
+          "name": "Der Tempel der Reinigung"
         },
         "es": {
-          "name": "El Templo de la Purgación",
-          "realm": "Bosque Rojo"
+          "name": "El Templo de la Purgación"
         },
         "ja": {
-          "name": "浄罪の神殿",
-          "realm": "レッド・フォレスト"
+          "name": "浄罪の神殿"
         },
         "pl": {
-          "name": "Świątynia Oczyszczenia",
-          "realm": "Czerwony Las"
+          "name": "Świątynia Oczyszczenia"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_backwater_swamp_grim_pantry",
+      "id": 30,
       "name": "Grim Pantry",
-      "realm": "Backwater Swamp",
-      "realm_id": "backwater_swamp",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 6,
+      "source_id": 1,
       "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
       "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/grim_pantry.webp",
       "translations": {
         "de": {
-          "name": "Schaurige Speisekammer",
-          "realm": "Backwater-Sumpf"
+          "name": "Schaurige Speisekammer"
         },
         "es": {
-          "name": "Despensa Sombría",
-          "realm": "Pantano de Aguas Estancadas"
+          "name": "Despensa Sombría"
         },
         "ja": {
-          "name": "おぞましい貯蔵室",
-          "realm": "バックウォーター・スワンプ"
+          "name": "おぞましい貯蔵室"
         },
         "pl": {
-          "name": "Ponura Spiżarnia",
-          "realm": "Bagienne Rozlewisko"
+          "name": "Ponura Spiżarnia"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_backwater_swamp_the_pale_rose",
+      "id": 31,
       "name": "The Pale Rose",
-      "realm": "Backwater Swamp",
-      "realm_id": "backwater_swamp",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 6,
+      "source_id": 1,
       "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
       "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/the_pale_rose.webp",
       "translations": {
         "de": {
-          "name": "Die Pale Rose",
-          "realm": "Backwater-Sumpf"
+          "name": "Die Pale Rose"
         },
         "es": {
-          "name": "La Rosa Pálida",
-          "realm": "Pantano de Aguas Estancadas"
+          "name": "La Rosa Pálida"
         },
         "ja": {
-          "name": "ペイル・ローズ",
-          "realm": "バックウォーター・スワンプ"
+          "name": "ペイル・ローズ"
         },
         "pl": {
-          "name": "Blada Róża",
-          "realm": "Bagienne Rozlewisko"
+          "name": "Blada Róża"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_yamaoka_estate_family_residence",
+      "id": 32,
       "name": "Family Residence",
-      "realm": "Yamaoka Estate",
-      "realm_id": "yamaoka_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 11,
+      "source_id": 1,
       "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence.webp",
       "translations": {
         "de": {
-          "name": "Familiensitz",
-          "realm": "Yamaoka-Anwesen"
+          "name": "Familiensitz"
         },
         "es": {
-          "name": "Residencia Familiar",
-          "realm": "Residencia Yamaoka"
+          "name": "Residencia Familiar"
         },
         "ja": {
-          "name": "ファミリー・レジデンス",
-          "realm": "山岡邸"
+          "name": "ファミリー・レジデンス"
         },
         "pl": {
-          "name": "Rezydencja Rodzinna",
-          "realm": "Posiadłość Rodziny Yamaoka"
+          "name": "Rezydencja Rodzinna"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_yamaoka_estate_family_residence_ii",
+      "id": 33,
       "name": "Family Residence II",
-      "realm": "Yamaoka Estate",
-      "realm_id": "yamaoka_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 11,
+      "source_id": 1,
       "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence_ii.webp",
       "translations": {
         "de": {
-          "name": "Familiensitz",
-          "realm": "Yamaoka-Anwesen"
+          "name": "Familiensitz"
         },
         "es": {
-          "name": "Residencia Familiar",
-          "realm": "Residencia Yamaoka"
+          "name": "Residencia Familiar"
         },
         "ja": {
-          "name": "ファミリー・レジデンス",
-          "realm": "山岡邸"
+          "name": "ファミリー・レジデンス"
         },
         "pl": {
-          "name": "Rezydencja Rodzinna",
-          "realm": "Posiadłość Rodziny Yamaoka"
+          "name": "Rezydencja Rodzinna"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_yamaoka_estate_sanctum_of_wrath",
+      "id": 34,
       "name": "Sanctum of Wrath",
-      "realm": "Yamaoka Estate",
-      "realm_id": "yamaoka_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 11,
+      "source_id": 1,
       "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath.webp",
       "translations": {
         "de": {
-          "name": "Heiligtum des Zorns",
-          "realm": "Yamaoka-Anwesen"
+          "name": "Heiligtum des Zorns"
         },
         "es": {
-          "name": "Santuario de la Ira",
-          "realm": "Residencia Yamaoka"
+          "name": "Santuario de la Ira"
         },
         "ja": {
-          "name": "怒りの聖所",
-          "realm": "山岡邸"
+          "name": "怒りの聖所"
         },
         "pl": {
-          "name": "Sanktuarium Gniewu",
-          "realm": "Posiadłość Rodziny Yamaoka"
+          "name": "Sanktuarium Gniewu"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_yamaoka_estate_sanctum_of_wrath_ii",
+      "id": 35,
       "name": "Sanctum of Wrath II",
-      "realm": "Yamaoka Estate",
-      "realm_id": "yamaoka_estate",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 11,
+      "source_id": 1,
       "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
       "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath_ii.webp",
       "translations": {
         "de": {
-          "name": "Heiligtum des Zorns",
-          "realm": "Yamaoka-Anwesen"
+          "name": "Heiligtum des Zorns"
         },
         "es": {
-          "name": "Santuario de la Ira",
-          "realm": "Residencia Yamaoka"
+          "name": "Santuario de la Ira"
         },
         "ja": {
-          "name": "怒りの聖所",
-          "realm": "山岡邸"
+          "name": "怒りの聖所"
         },
         "pl": {
-          "name": "Sanktuarium Gniewu",
-          "realm": "Posiadłość Rodziny Yamaoka"
+          "name": "Sanktuarium Gniewu"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_raccoon_city_police_station_east_wing",
+      "id": 36,
       "name": "Police Station East Wing",
-      "realm": "Raccoon City",
-      "realm_id": "raccoon_city",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 16,
+      "source_id": 1,
       "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
       "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_east_wing.webp",
       "translations": {
         "de": {
-          "name": "Ostflügel der Polizeistation von Raccoon City",
-          "realm": "Raccoon City"
+          "name": "Ostflügel der Polizeistation von Raccoon City"
         },
         "es": {
-          "name": "Ala Este del Departamento de Policía de Raccoon City",
-          "realm": "Raccoon City"
+          "name": "Ala Este del Departamento de Policía de Raccoon City"
         },
         "ja": {
-          "name": "ラクーンシティ警察署東棟",
-          "realm": "ラクーンシティ"
+          "name": "ラクーンシティ警察署東棟"
         },
         "pl": {
-          "name": "Posterunek Policji Raccoon City – Wschodnie Skrzydło",
-          "realm": "Raccoon City"
+          "name": "Posterunek Policji Raccoon City – Wschodnie Skrzydło"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_raccoon_city_police_station_west_wing",
+      "id": 37,
       "name": "Police Station West Wing",
-      "realm": "Raccoon City",
-      "realm_id": "raccoon_city",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 16,
+      "source_id": 1,
       "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
       "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_west_wing.webp",
       "translations": {
         "de": {
-          "name": "Westflügel der Polizeistation von Raccoon City",
-          "realm": "Raccoon City"
+          "name": "Westflügel der Polizeistation von Raccoon City"
         },
         "es": {
-          "name": "Ala Oeste del Departamento de Policía de Raccoon City",
-          "realm": "Raccoon City"
+          "name": "Ala Oeste del Departamento de Policía de Raccoon City"
         },
         "ja": {
-          "name": "ラクーンシティ警察署西棟",
-          "realm": "ラクーンシティ"
+          "name": "ラクーンシティ警察署西棟"
         },
         "pl": {
-          "name": "Posterunek Policji Raccoon City – Zachodnie Skrzydło",
-          "realm": "Raccoon City"
+          "name": "Posterunek Policji Raccoon City – Zachodnie Skrzydło"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_grave_of_glenvale_dead_dawg_saloon",
+      "id": 38,
       "name": "Dead Dawg Saloon",
-      "realm": "Grave of Glenvale",
-      "realm_id": "grave_of_glenvale",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 14,
+      "source_id": 1,
       "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glenvale). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
       "callout_image_local_path": "maps/callouts/hens333/grave_of_glenvale/dead_dawg_saloon.webp",
       "translations": {
-        "de": {
-          "name": "Dead Dawg Saloon",
-          "realm": "Grab von Glenvale"
-        },
         "es": {
-          "name": "Cantina El Perro Muerto",
-          "realm": "Tumba de Glenvale"
+          "name": "Cantina El Perro Muerto"
         },
         "ja": {
-          "name": "死んだ犬の酒場",
-          "realm": "グレンベールの墓場"
+          "name": "死んだ犬の酒場"
         },
         "pl": {
-          "name": "Knajpa pod Martwym Ziomkiem",
-          "realm": "Grób w Glenvale"
+          "name": "Knajpa pod Martwym Ziomkiem"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_withered_isle_garden_of_joy",
+      "id": 39,
       "name": "Garden of Joy",
-      "realm": "Withered Isle",
-      "realm_id": "withered_isle",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 18,
+      "source_id": 1,
       "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
       "callout_image_local_path": "maps/callouts/hens333/withered_isle/garden_of_joy.webp",
       "translations": {
         "de": {
-          "name": "Garten der Freude",
-          "realm": "Verkümmerte Insel"
+          "name": "Garten der Freude"
         },
         "es": {
-          "name": "Jardín de Dicha",
-          "realm": "Isla Marchita"
+          "name": "Jardín de Dicha"
         },
         "ja": {
-          "name": "喜びの庭",
-          "realm": "枯死の島"
+          "name": "喜びの庭"
         },
         "pl": {
-          "name": "Ogród Radości",
-          "realm": "Uschnięta Wyspa"
+          "name": "Ogród Radości"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_withered_isle_greenville_square",
+      "id": 40,
       "name": "Greenville Square",
-      "realm": "Withered Isle",
-      "realm_id": "withered_isle",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 18,
+      "source_id": 1,
       "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
       "callout_image_local_path": "maps/callouts/hens333/withered_isle/greenville_square.webp",
       "translations": {
         "de": {
-          "name": "Hauptplatz von Greenville",
-          "realm": "Verkümmerte Insel"
+          "name": "Hauptplatz von Greenville"
         },
         "es": {
-          "name": "Plaza de Greenville",
-          "realm": "Isla Marchita"
+          "name": "Plaza de Greenville"
         },
         "ja": {
-          "name": "グリーンビル広場",
-          "realm": "枯死の島"
+          "name": "グリーンビル広場"
         },
         "pl": {
-          "name": "Plac Greenville",
-          "realm": "Uschnięta Wyspa"
+          "name": "Plac Greenville"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_withered_isle_fallen_refuge",
+      "id": 41,
       "name": "Fallen Refuge",
-      "realm": "Withered Isle",
-      "realm_id": "withered_isle",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 18,
+      "source_id": 1,
       "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
       "callout_image_local_path": "maps/callouts/hens333/withered_isle/fallen_refuge.webp",
       "translations": {
         "de": {
-          "name": "Gefallene Zuflucht",
-          "realm": "Verkümmerte Insel"
+          "name": "Gefallene Zuflucht"
         },
         "es": {
-          "name": "Refugio Caído",
-          "realm": "Isla Marchita"
+          "name": "Refugio Caído"
         },
         "ja": {
-          "name": "落ちた避難所",
-          "realm": "枯死の島"
+          "name": "落ちた避難所"
         },
         "pl": {
-          "name": "Upadły Azyl",
-          "realm": "Uschnięta Wyspa"
+          "name": "Upadły Azyl"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_withered_isle_freddy_fazbears_pizza",
+      "id": 42,
       "name": "Freddy Fazbears Pizza",
-      "realm": "Withered Isle",
-      "realm_id": "withered_isle",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 18,
+      "source_id": 1,
       "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
       "callout_image_local_path": "maps/callouts/hens333/withered_isle/freddy_fazbears_pizza.webp",
       "translations": {
         "de": {
-          "name": "Freddy Fazbear's Pizza",
-          "realm": "Verkümmerte Insel"
+          "name": "Freddy Fazbear's Pizza"
         },
         "es": {
-          "name": "Freddy Fazbear's Pizza",
-          "realm": "Isla Marchita"
+          "name": "Freddy Fazbear's Pizza"
         },
         "ja": {
-          "name": "フレディファズベアーズピザ",
-          "realm": "枯死の島"
+          "name": "フレディファズベアーズピザ"
         },
         "pl": {
-          "name": "Pizzeria Freddy Fazbear",
-          "realm": "Uschnięta Wyspa"
+          "name": "Pizzeria Freddy Fazbear"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_gideon_meat_plant_the_game",
+      "id": 43,
       "name": "The Game",
-      "realm": "Gideon Meat Plant",
-      "realm_id": "gideon_meat_plant",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 10,
+      "source_id": 1,
       "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
       "callout_image_local_path": "maps/callouts/hens333/gideon_meat_plant/the_game.webp",
       "translations": {
         "de": {
-          "name": "Das Spiel",
-          "realm": "Gideon-Fleischfabrik"
+          "name": "Das Spiel"
         },
         "es": {
-          "name": "El Juego",
-          "realm": "Planta Procesadora de Carne Gideon"
+          "name": "El Juego"
         },
         "ja": {
-          "name": "ザ・ゲーム",
-          "realm": "ギデオン食肉工場"
+          "name": "ザ・ゲーム"
         },
         "pl": {
-          "name": "Rozgrywka",
-          "realm": "Zakład Mięsny Gideon"
+          "name": "Rozgrywka"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_haddonfield_lampkin_lane",
+      "id": 44,
       "name": "Lampkin Lane",
-      "realm": "Haddonfield",
-      "realm_id": "haddonfield",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 5,
+      "source_id": 1,
       "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
       "callout_image_local_path": "maps/callouts/hens333/haddonfield/lampkin_lane.webp",
       "translations": {
-        "de": {
-          "name": "Lampkin Lane",
-          "realm": "Haddonfield"
-        },
         "es": {
-          "name": "Avenida Lampkin",
-          "realm": "Haddonfield"
+          "name": "Avenida Lampkin"
         },
         "ja": {
-          "name": "ランプキン・レーン",
-          "realm": "ハドンフィールド"
+          "name": "ランプキン・レーン"
         },
         "pl": {
-          "name": "Alejka Lampkin",
-          "realm": "Haddonfield"
+          "name": "Alejka Lampkin"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_silent_hill_midwich_elementary_school",
+      "id": 45,
       "name": "Midwich Elementary School",
-      "realm": "Silent Hill",
-      "realm_id": "silent_hill",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 15,
+      "source_id": 1,
       "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
       "callout_image_local_path": "maps/callouts/hens333/silent_hill/midwich_elementary_school.webp",
       "translations": {
-        "de": {
-          "name": "Midwich Elementary School",
-          "realm": "Silent Hill"
-        },
         "es": {
-          "name": "Escuela Primaria Midwich",
-          "realm": "Silent Hill"
+          "name": "Escuela Primaria Midwich"
         },
         "ja": {
-          "name": "ミッドウィッチ小学校",
-          "realm": "サイレントヒル"
+          "name": "ミッドウィッチ小学校"
         },
         "pl": {
-          "name": "Szkoła Podstawowa Midwich",
-          "realm": "Silent Hill"
+          "name": "Szkoła Podstawowa Midwich"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_ormond_mount_ormond_resort",
+      "id": 46,
       "name": "Mount Ormond Resort",
-      "realm": "Ormond",
-      "realm_id": "ormond",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 12,
+      "source_id": 1,
       "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
       "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort.webp",
       "translations": {
         "de": {
-          "name": "Skiort am Mount Ormond",
-          "realm": "Ormond"
+          "name": "Skiort am Mount Ormond"
         },
         "es": {
-          "name": "Complejo del Monte Ormond",
-          "realm": "Ormond"
+          "name": "Complejo del Monte Ormond"
         },
         "ja": {
-          "name": "オーモンド山のリゾート",
-          "realm": "オーモンド"
+          "name": "オーモンド山のリゾート"
         },
         "pl": {
-          "name": "Ośrodek Mount Ormond",
-          "realm": "Ormond"
+          "name": "Ośrodek Mount Ormond"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_ormond_mount_ormond_resort_ii",
+      "id": 47,
       "name": "Mount Ormond Resort II",
-      "realm": "Ormond",
-      "realm_id": "ormond",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 12,
+      "source_id": 1,
       "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
       "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_ii.webp",
       "translations": {
         "de": {
-          "name": "Skiort am Mount Ormond",
-          "realm": "Ormond"
+          "name": "Skiort am Mount Ormond"
         },
         "es": {
-          "name": "Complejo del Monte Ormond",
-          "realm": "Ormond"
+          "name": "Complejo del Monte Ormond"
         },
         "ja": {
-          "name": "オーモンド山のリゾート",
-          "realm": "オーモンド"
+          "name": "オーモンド山のリゾート"
         },
         "pl": {
-          "name": "Ośrodek Mount Ormond",
-          "realm": "Ormond"
+          "name": "Ośrodek Mount Ormond"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_ormond_mount_ormond_resort_iii",
+      "id": 48,
       "name": "Mount Ormond Resort III",
-      "realm": "Ormond",
-      "realm_id": "ormond",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 12,
+      "source_id": 1,
       "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
       "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_iii.webp",
       "translations": {
         "de": {
-          "name": "Skiort am Mount Ormond",
-          "realm": "Ormond"
+          "name": "Skiort am Mount Ormond"
         },
         "es": {
-          "name": "Complejo del Monte Ormond",
-          "realm": "Ormond"
+          "name": "Complejo del Monte Ormond"
         },
         "ja": {
-          "name": "オーモンド山のリゾート",
-          "realm": "オーモンド"
+          "name": "オーモンド山のリゾート"
         },
         "pl": {
-          "name": "Ośrodek Mount Ormond",
-          "realm": "Ormond"
+          "name": "Ośrodek Mount Ormond"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_ormond_ormond_lake_mine",
+      "id": 49,
       "name": "Ormond Lake Mine",
-      "realm": "Ormond",
-      "realm_id": "ormond",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 12,
+      "source_id": 1,
       "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
       "callout_image_local_path": "maps/callouts/hens333/ormond/ormond_lake_mine.webp",
       "translations": {
         "de": {
-          "name": "Mine am Ormond-See",
-          "realm": "Ormond"
+          "name": "Mine am Ormond-See"
         },
         "es": {
-          "name": "Mina del Lago Ormond",
-          "realm": "Ormond"
+          "name": "Mina del Lago Ormond"
         },
         "ja": {
-          "name": "オーモンド湖採掘場",
-          "realm": "オーモンド"
+          "name": "オーモンド湖採掘場"
         },
         "pl": {
-          "name": "Kopalnia nad Jeziorem Ormond",
-          "realm": "Ormond"
+          "name": "Kopalnia nad Jeziorem Ormond"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_lerys_memorial_institute_treatment_theatre",
+      "id": 50,
       "name": "Treatment Theatre",
-      "realm": "Lery's Memorial Institute",
-      "realm_id": "lerys_memorial_institute",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 7,
+      "source_id": 1,
       "description": "12-Clock Callout System for Treatment Theatre (Lery's Memorial Institute). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
       "callout_image_local_path": "maps/callouts/hens333/lerys_memorial_institute/treatment_theatre.webp",
       "translations": {
         "de": {
-          "name": "Behandlungsbereich",
-          "realm": "Lérys Gedenkinstitut"
+          "name": "Behandlungsbereich"
         },
         "es": {
-          "name": "Centro de Tratamiento",
-          "realm": "Instituto Conmemorativo Léry"
+          "name": "Centro de Tratamiento"
         },
         "ja": {
-          "name": "治療シアター",
-          "realm": "レリー記念研究所"
+          "name": "治療シアター"
         },
         "pl": {
-          "name": "Placówka Medyczna",
-          "realm": "Instytut Pamięci Léry'ego"
+          "name": "Placówka Medyczna"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_dvarka_deepwood_toba_landing",
+      "id": 51,
       "name": "Toba Landing",
-      "realm": "Dvarka Deepwood",
-      "realm_id": "dvarka_deepwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 20,
+      "source_id": 1,
       "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
       "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/toba_landing.webp",
       "translations": {
         "de": {
-          "name": "Toba-Landeplatz",
-          "realm": "Dvarka-Dschungel"
+          "name": "Toba-Landeplatz"
         },
         "es": {
-          "name": "Desembarco en Toba",
-          "realm": "Bosque Profundo de Dvarka"
+          "name": "Desembarco en Toba"
         },
         "ja": {
-          "name": "トーバ着陸地点",
-          "realm": "ドヴァルカ・ディープウッド"
+          "name": "トーバ着陸地点"
         },
         "pl": {
-          "name": "Ziemie Toba",
-          "realm": "Gęsty Las Dvarki"
+          "name": "Ziemie Toba"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_dvarka_deepwood_nostromo_wreckage",
+      "id": 52,
       "name": "Nostromo Wreckage",
-      "realm": "Dvarka Deepwood",
-      "realm_id": "dvarka_deepwood",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 20,
+      "source_id": 1,
       "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
       "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/nostromo_wreckage.webp",
       "translations": {
         "de": {
-          "name": "Nostromo-Wrack",
-          "realm": "Dvarka-Dschungel"
+          "name": "Nostromo-Wrack"
         },
         "es": {
-          "name": "Ruinas de la Nostromo",
-          "realm": "Bosque Profundo de Dvarka"
+          "name": "Ruinas de la Nostromo"
         },
         "ja": {
-          "name": "ノストロモ号の残骸",
-          "realm": "ドヴァルカ・ディープウッド"
+          "name": "ノストロモ号の残骸"
         },
         "pl": {
-          "name": "Wrak Nostromo",
-          "realm": "Gęsty Las Dvarki"
+          "name": "Wrak Nostromo"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     },
     {
-      "map_id": "hens_sleepless_district_tricksters_delusion",
+      "id": 53,
       "name": "Trickster's Delusion",
-      "realm": "Sleepless District",
-      "realm_id": "sleepless_district",
-      "source": "hens333",
-      "source_label": "Hens333 12-Clock Callouts",
-      "layout_type": "Standard",
-      "jungle_gyms_count": 4,
-      "totem_spawns_count": 5,
-      "pallet_density": "Medium",
-      "shack_has_basement": true,
+      "realm_id": 21,
+      "source_id": 1,
       "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock.",
-      "image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
       "callout_image_local_path": "maps/callouts/hens333/sleepless_district/tricksters_delusion.webp",
       "translations": {
         "de": {
-          "name": "Illusion des Tricksters",
-          "realm": "Schlafloses Viertel"
+          "name": "Illusion des Tricksters"
         },
         "es": {
-          "name": "Delirio del Embaucador",
-          "realm": "Distrito Insomne"
+          "name": "Delirio del Embaucador"
         },
         "ja": {
-          "name": "トリックスターの妄想",
-          "realm": "眠らない界隈"
+          "name": "トリックスターの妄想"
         },
         "pl": {
-          "name": "Urojenia Magika",
-          "realm": "Bezsenna Dzielnica"
+          "name": "Urojenia Magika"
         }
-      },
-      "tiles": [
-        {
-          "name": "12 O'Clock: Main Landmark / North Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.1,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": true
-        },
-        {
-          "name": "3 O'Clock: East Loop Tile / Generator Cluster",
-          "type": "landmark",
-          "x": 0.9,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        },
-        {
-          "name": "6 O'Clock: Killer Shack & Basement / South Exit Gate",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.9,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "9 O'Clock: West Jungle Gym / Pallet Gym",
-          "type": "landmark",
-          "x": 0.1,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": true,
-          "has_window": true
-        },
-        {
-          "name": "Center: Center Landmark / Central Generator",
-          "type": "landmark",
-          "x": 0.5,
-          "y": 0.5,
-          "seed_variant": "seed_a",
-          "floor": 1,
-          "has_pallet": false,
-          "has_window": false
-        }
-      ],
-      "objectives": []
+      }
     }
   ]
 }

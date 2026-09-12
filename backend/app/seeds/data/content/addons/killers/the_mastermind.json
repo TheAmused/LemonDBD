@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 509,
+      "name": "Jewel Beetle",
+      "killer_id": 29,
+      "description": "A beautiful and valuable insect. While difficult to capture, it’s worth a pretty penny.\n• Decreases the Virulent Bound extension when grabbing a Survivor mid-Bound by 50%.\n• Gain 100% bonus Bloodpoints for Virulent Bound score events.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jewelBeetle.png?6a1ee4",
+      "icon_local_path": "icons/addons/jewel_beetle.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Juwelenkäfer",
+          "description": "Ein wunderschönes und wertvolles Insekt. Es ist zwar schwierig zu fangen, aber ein hübsches Sümmchen wert.\n• Verringert die Verlängerung von Ansteckender Hechtsprung beim Ergreifen eines Überlebenden mitten im Sprung um 50 %.\n• Du erhältst 100 % Bonus-Blutpunkte für „Ansteckender Hechtsprung“-Punktereignisse."
+        },
+        "es": {
+          "name": "Joya escarabajo",
+          "description": "Un insecto fascinante y valioso. Aunque es difícil de atrapar, compensa el esfuerzo.\n• Reduce el tiempo de duración de Adhesión virulenta al agarrar a un superviviente en medio de una adhesión un 50 %.\n• Obtienes un 100 % de puntos de sangre adicionales en los eventos de puntuación de Adhesión virulenta."
+        },
+        "ja": {
+          "name": "ホウセキカミキリ",
+          "description": "美しく貴重な虫。捕まえるのは難しいが、かなりの価値がある。\n• 猛毒バウンドでバウンド中に生存者をつかむまでの時間が50%減少する\n• 猛毒バウンドの得点が発生するとブラッドポイントを100%追加取得する"
+        },
+        "pl": {
+          "name": "Bogatkowaty",
+          "description": "Piękny i cenny owad. Trudno go złapać, ale jest wiele wart.\n• Zmniejsza o 50% zaawansowanie zaraźliwej więzi przy chwyceniu ocalałego w trakcie związania.\n• Daje 100% dodatkowych Punktów Krwi za punktowane wydarzenia zaraźliwej więzi."
+        }
+      }
+    },
+    {
+      "id": 510,
+      "name": "Green Herb",
+      "killer_id": 29,
+      "description": "A common plant, usually known for its restorative properties.\n• Increases the rate of Infection when grabbing a Survivor during a Virulent Bound by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_greenHerb.png?f6b081",
+      "icon_local_path": "icons/addons/green_herb.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Grünes Kraut",
+          "description": "Eine häufig anzutreffende Pflanze, die für ihre Heilkräfte bekannt ist.\n• Erhöht die Infektionsrate beim Ergreifen eines Überlebenden während Ansteckender Hechtsprung um 30 %."
+        },
+        "es": {
+          "name": "Hierba verde",
+          "description": "Una planta común que se suele emplear por sus propiedades regenerativas.\n• Aumenta la tasa de infección al agarrar a un superviviente durante Adhesión virulenta un 30 %."
+        },
+        "ja": {
+          "name": "グリーンハーブ",
+          "description": "通常は回復効果があることで知られている、ありふれた植物。\n• 猛毒バウンド発動中に生存者をつかんだ際の感染速度が30%増加する"
+        },
+        "pl": {
+          "name": "Zielone zioło",
+          "description": "Popularna roślina, znana ze swoich właściwości regenerujących.\n• Zwiększa współczynnik infekcji o 30% po chwyceniu ocalałego w trakcie działania zaraźliwej więzi."
+        }
+      }
+    },
+    {
+      "id": 511,
+      "name": "Unicorn Medallion",
+      "killer_id": 29,
+      "description": "An old medallion depicting a majestic unicorn. It was placed in storage for years.\n• Increases the initial Virulent Bound distance by 20%.\n• Decreases the subsequent Virulent Bound distance by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_unicornMedallion.png?6a59e1",
+      "icon_local_path": "icons/addons/unicorn_medallion.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Einhorn-Medaillon",
+          "description": "Ein altes Medaillon, das ein prächtiges Einhorn zeigt. Es wurde vor Jahren eingelagert.\n• Vergrößert die anfängliche Distanz von Ansteckender Hechtsprung um 20 %.\n• Verringert die Distanz folgender Verwendungen von Ansteckender Hechtsprung um 20 %."
+        },
+        "es": {
+          "name": "Medallón de unicornio",
+          "description": "Un viejo medallón que muestra a un unicornio majestuoso. Estuvo años guardado.\n• Aumenta la distancia de la Adhesión virulenta inicial un 20 %.\n• Reduce la distancia de la siguiente Adhesión virulenta un 20 %."
+        },
+        "ja": {
+          "name": "ユニコーンメダル",
+          "description": "威厳のあるユニコーンが描かれた古いメダル。長年、倉庫に眠っていた。\n• 猛毒バウンドの1回目の距離が20%増加する\n• 猛毒バウンドの2回目の距離が20%減少する"
+        },
+        "pl": {
+          "name": "Medalion z jednorożcem",
+          "description": "Stary medalion przedstawiający majestatycznego jednorożca. Przechowywany w magazynie od lat.\n• Zwiększa dystans początkowej zaraźliwej więzi o 20%.\n• Zmniejsza dystans kolejnej zaraźliwej więzi o 20%."
+        }
+      }
+    },
+    {
+      "id": 512,
+      "name": "R.P.D. Shoulder Walkie",
+      "killer_id": 29,
+      "description": "Without the ability to communicate, the cops of Raccoon City are isolated and don’t stand a chance.\n• Decreases the initial Virulent Bound distance by 20%.\n• Increases the subsequent Virulent Bound distance by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RPDShoulderWalkie.png?c57ec9",
+      "icon_local_path": "icons/addons/rpd_shoulder_walkie.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schulter-Funkgerät des R.P.D.",
+          "description": "Ohne die Möglichkeit zu kommunizieren, sind die Cops von Raccoon City isoliert und haben keine Chance.\n• Verringert die anfängliche Distanz von Ansteckender Hechtsprung um 20 %.\n• Vergrößert die Distanz folgender Verwendungen von Ansteckender Hechtsprung um 20 %."
+        },
+        "es": {
+          "name": "Walkie-talkie de hombro de la R.P.D.",
+          "description": "Sin la posibilidad de comunicarse, la policía de Raccoon City está aislada y tiene todas las de perder.\n• Reduce la distancia de la Adhesión virulenta inicial un 20 %.\n• Aumenta la distancia de la siguiente Adhesión virulenta un 20 %."
+        },
+        "ja": {
+          "name": "R.P.D.の肩掛け無線",
+          "description": "伝達の方法なしでは、ラクーン市警の警察官は孤立してまったく勝ち目がない。\n• 猛毒バウンドの1回目の距離が20%減少する\n• 2回目の猛毒バウンドの距離が20%増加する"
+        },
+        "pl": {
+          "name": "Krótkofalówka naramienna R.P.D.",
+          "description": "Nie mogąc się komunikować, policjanci z Raccoon City są odizolowani i nie mają żadnych szans.\n• Zmniejsza początkowy dystans zaraźliwej więzi o 20%.\n• Zwiększa dystans kolejnej zaraźliwej więzi o 20%."
+        }
+      }
+    },
+    {
+      "id": 513,
+      "name": "Loose Crank",
+      "killer_id": 29,
+      "description": "To the person whose only tool is a crank, the whole world looks like a crank-shaped hole.\n• Increases movement speed between the first and second Virulent Bounds by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_looseCrank.png?e6a9d5",
+      "icon_local_path": "icons/addons/loose_crank.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lockere Kurbel",
+          "description": "Für jemanden, dessen einziges Werkzeug eine Kurbel ist, sieht die ganze Welt wie eine Vertiefung für eine Kurbel aus.\n• Erhöht die Bewegungsgeschwindigkeit zwischen der ersten und der zweiten Verwendung von Ansteckender Hechtsprung um 8 %."
+        },
+        "es": {
+          "name": "Palanca suelta",
+          "description": "Si tu única herramienta es una palanca, el mundo se llenará de sitios donde clavarla.\n• Aumenta la velocidad de movimiento entre la primera y segunda Adhesión virulenta un 15 %."
+        },
+        "ja": {
+          "name": "緩いクランク",
+          "description": "クランクしか道具を持っていない人間にとって、世界全体がクランクの形をした穴に見える。\n• 1回目の猛毒バウンドから2回目を開始するまでの移動速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Korbka",
+          "description": "Osobie wyposażonej wyłącznie w korbkę cały świat wydaje się napędzany korbką.\n• Zwiększa prędkość ruchu pomiędzy pierwszą a drugą zaraźliwą więzią o 15%."
+        }
+      }
+    },
+    {
+      "id": 514,
+      "name": "Leather Gloves",
+      "killer_id": 29,
+      "description": "Gloves of a cold, calculating schemer. They impart an air of icy professionalism.\n• Decreases the time to recharge Virulent Bound by 8%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherGloves.png?11b6bf",
+      "icon_local_path": "icons/addons/leather_gloves.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lederhandschuhe",
+          "description": "Handschuhe eines kalten, berechnenden Intriganten. Sie verströmen eine Aura eiskalter Professionalität.\n• Verringert die Zeit zum Wiederaufladen von Ansteckender Hechtsprung um 8 %."
+        },
+        "es": {
+          "name": "Guantes de cuero",
+          "description": "Unos guantes que pertenecen a alguien frío y calculador. Transmiten una gélida profesionalidad.\n• Reduce el tiempo que tarda en recargarse Adhesión virulenta un 8 %."
+        },
+        "ja": {
+          "name": "革の手袋",
+          "description": "冷徹で計算高い策略家の手袋。氷のように冷淡なプロ意識を漂わせている。\n• 猛毒バウンドの再チャージする時間が8%減少する"
+        },
+        "pl": {
+          "name": "Skórzane rękawiczki",
+          "description": "Rękawiczki chłodnego, wyrachowanego spiskowca. Unosi się wokół nich aura zimnego profesjonalizmu.\n• Zmniejszają czas na naładowanie zaraźliwej więzi o 8%."
+        }
+      }
+    },
+    {
+      "id": 515,
+      "name": "Lion Medallion",
+      "killer_id": 29,
+      "description": "An old medallion depicting a brave lion. It was made when the Raccoon Police Station was still an art museum.\n• Increases the distance at which Survivors are thrown by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lionMedallion.png?a52144",
+      "icon_local_path": "icons/addons/lion_medallion.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Löwen-Medaillon",
+          "description": "Ein altes Medaillon, das einen tapferen Löwen zeigt. Es stammt aus der Zeit, als die Polizeistation von Raccoon City noch ein Kunstmuseum war.\n• Erhöht die Wurfweite von Überlebenden um 30 %."
+        },
+        "es": {
+          "name": "Medallón de león",
+          "description": "Un viejo medallón que muestra a un valiente león. Se fabricó cuando la comisaría de Raccoon City todavía era un museo.\n• Aumenta la distancia a la que se arroja a los supervivientes un 30 %."
+        },
+        "ja": {
+          "name": "ライオンメダル",
+          "description": "勇敢な獅子が描かれた古いメダル。まだラクーンシティ警察署が美術館だった時代に作られた。\n• 生存者が投げられる距離が30%増加する"
+        },
+        "pl": {
+          "name": "Medalion z lwem",
+          "description": "Stary medalion przedstawiający dzielnego lwa. Został wykonany, gdy posterunek policji w Raccoon wciąż był muzeum sztuki.\n• Zwiększa dystans, na który rzucani są ocalali, o 30%."
+        }
+      }
+    },
+    {
+      "id": 516,
+      "name": "Chalice (Gold)",
+      "killer_id": 29,
+      "description": "A chalice of pure gold used to celebrate the summer solstice.\n• Increases the Virulent Bound extension when grabbing a Survivor mid-Bound by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chaliceGold.png?d0047e",
+      "icon_local_path": "icons/addons/chalice_(gold).webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kelch (golden)",
+          "description": "Ein Kelch aus purem Gold, mit dem die Sommersonnenwende gefeiert wird.\n• Erhöht die Verlängerung von Ansteckender Hechtsprung beim Ergreifen eines Überlebenden mitten im Sprung um 50 %."
+        },
+        "es": {
+          "name": "Cáliz (oro)",
+          "description": "Un cáliz de oro macizo, empleado para celebrar el solsticio de verano.\n• Aumenta la duración de Adhesión virulenta al agarrar a un superviviente en medio de la adhesión un 50 %."
+        },
+        "ja": {
+          "name": "黄金の杯",
+          "description": "かつて夏至を祝うために使われていた純金の杯。\n• 猛毒バウンドで生存者をバウンド中につかむまでの時間が50%増加する"
+        },
+        "pl": {
+          "name": "Kielich (złoty)",
+          "description": "Kielich z czystego złota, używany do świętowania przesilenia letniego.\n• Zwiększa o 50% rozszerzenie zaraźliwej więzi po chwyceniu ocalałego w połowie skoku."
+        }
+      }
+    },
+    {
+      "id": 517,
+      "name": "Bullhorn",
+      "killer_id": 29,
+      "description": "The commands screamed into this device riled up some and disoriented others.\n• Survivors that use the First Aid Spray suffer from the Oblivious status effect for 30 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bullhorn.png?8929aa",
+      "icon_local_path": "icons/addons/bullhorn.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Megafon",
+          "description": "Die Befehle, die in das Gerät gebrüllt wurden, verärgerten manche und verwirrten die anderen.\n• Überlebende, die das Erste-Hilfe-Spray verwenden, leiden 30 Sekunden lang unter dem Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Megáfono",
+          "description": "Las órdenes que salen de este dispositivo alientan a algunos y desorientan a otros.\n• Los supervivientes que utilicen el spray de primeros auxilios sufren el efecto de estado Inconsciencia durante 30 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "拡声器",
+          "description": "この装置から叫び声で発せられる命令に激怒する者もいれば、混乱する者もいた。\n• 救急スプレーを使用する生存者は、無感覚のステータス効果に30秒間苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Megafon",
+          "description": "Rozkazy wykrzyczane do tego urządzenia zdenerwowały niektórych ludzi i zdezorientowały innych.\n• Ocalali, którzy użyją sprayu leczniczego, doznają efektu Nieświadomości przez 30 s.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 518,
+      "name": "Portable Safe",
+      "killer_id": 29,
+      "description": "A small container that requires a complicated combination to unlock.\n• Survivors injured by Virulent Bound suffer from the Hemorrhage status effect until fully healed.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_portableSafe.png?45dd7f",
+      "icon_local_path": "icons/addons/portable_safe.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Tragbarer Tresor",
+          "description": "Ein kleiner Behälter, der nur mit einer komplizierten Kombination geöffnet werden kann.\n• Durch Ansteckender Hechtsprung verletzte Überlebende leiden am Statuseffekt Blutung, bis sie vollständig geheilt sind.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Caja fuerte portátil",
+          "description": "Un pequeño recipiente que solo puede abrirse con una compleja combinación.\n• Los supervivientes afectados por Adhesión virulenta sufren el efecto de estado Hemorragia hasta que se curen por completo.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "ポータブルセーフ",
+          "description": "解除するのに複雑な組み合わせ数字が必要な小型の入れ物。\n• 猛毒バウンドによって負傷した生存者は、完全回復するまで出血のステータス効果に苦しむ\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Przenośny sejf",
+          "description": "Niewielki pojemnik, którego otwarcie wymaga skomplikowanej kombinacji.\n• Ocalali ranieni zaraźliwą więzią otrzymują efekt Krwotoku do chwili pełnego wyleczenia.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 519,
+      "name": "Red Herb",
+      "killer_id": 29,
+      "description": "Acts as a reagent that strengthens the effect of that with which it is combined.\n• Increases the time it takes for Survivors to use a First Aid Spray by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_redHerb.png?ec23f6",
+      "icon_local_path": "icons/addons/red_herb.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rotes Kraut",
+          "description": "Funktioniert wie ein Reagenz, das die Wirkung dessen, mit dem es kombiniert wird, verstärkt.\n• Verlängert die Zeit, die ein Überlebender zur Verwendung eines Erste-Hilfe-Sprays benötigt, um 2 Sekunden."
+        },
+        "es": {
+          "name": "Hierba roja",
+          "description": "Actúa como catalizador que intensifica el efecto de aquello con lo que se combina.\n• Aumenta el tiempo que tardan los supervivientes en utilizar un spray de primeros auxilios en 2 segundos."
+        },
+        "ja": {
+          "name": "レッドハーブ",
+          "description": "組み合わせると効果を強化する試薬として作用する。\n• 生存者が救急スプレーの使用に要する時間が2秒間増加する"
+        },
+        "pl": {
+          "name": "Czerwone zioło",
+          "description": "Ten środek wzmacnia efekt, z którym został połączony.\n• Wydłuża czas potrzebny do użycia sprayu leczniczego przez ocalałych o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 520,
+      "name": "Maiden Medallion",
+      "killer_id": 29,
+      "description": "A medallion depicting a beautiful maiden. Its purpose was unknown for many years.\n• When a Survivor becomes fully Infected, they suffer from the Blindness status effect for 60 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_maidenMedallion.png?885d0b",
+      "icon_local_path": "icons/addons/maiden_medallion.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Mädchen-Medaillon",
+          "description": "Ein Medaillon, das ein wunderschönes Mädchen zeigt. Sein Zweck war viele Jahre lang unbekannt.\n• Wenn ein Überlebender vollständig infiziert ist, leidet er 60 Sekunden lang unter dem Statuseffekt Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Medallón de doncella",
+          "description": "Un medallón que muestra a una hermosa doncella. Durante muchos años, se desconocía su propósito.\n• Cuando un superviviente está completamente infectado, sufre el efecto de estado Ceguera durante 60 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "バージンメダル",
+          "description": "美しい乙女が描かれたメダル。その目的は長い間不明だった。\n• 生存者が完全に感染すると、目眩ましのステータス効果に60秒間苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Medalion z niewiastą",
+          "description": "Medalion przedstawiający piękną pannę. Jego przeznaczenie przez wiele lat było nieznane.\n• Gdy ocalały stanie się w pełni zarażony, doznaje efektu Oślepienia przez 60 s.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 521,
+      "name": "Video Conference Device",
+      "killer_id": 29,
+      "description": "Many intricate conspiracies were orchestrated on devices just like this one.\n• Increases the Infection passive gain rate by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_videoConferenceDevice.png?d41477",
+      "icon_local_path": "icons/addons/video_conference_device.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Videokonferenz-Gerät",
+          "description": "Viele komplexe Verschwörungen wurden mit solchen Geräten geplant.\n• Erhöht die passive Wachstumsrate der Infektion um 30 %."
+        },
+        "es": {
+          "name": "Dispositivo de videoconferencias",
+          "description": "Se han trazado múltiples conspiraciones de lo más enrevesadas en dispositivos como este.\n• Aumenta la tasa pasiva de infección un 30 %."
+        },
+        "ja": {
+          "name": "ビデオ会議用機器",
+          "description": "このようなデバイスで数多くの入り組んだ陰謀が画策された。\n• 感染の進行速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Urządzenie do wideokonferencji",
+          "description": "Wiele skomplikowanych spisków było planowanych na takich właśnie urządzeniach.\n• Zwiększa pasywny współczynnik zyskiwania Infekcji o 30%."
+        }
+      }
+    },
+    {
+      "id": 522,
+      "name": "Egg (Gold)",
+      "killer_id": 29,
+      "description": "A highly coveted foodstuff. The cash worth is second only to its regenerative effects.\n• Increases the duration of the additional Virulent Bound window by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_eggGold.png?7dd6fc",
+      "icon_local_path": "icons/addons/egg_(gold).webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Ei (golden)",
+          "description": "Ein heiß begehrtes Nahrungsmittel. Sein monetärer Wert wird nur von seinen Heilkräften übertroffen.\n• Erhöht die Dauer des zusätzlichen Zeitfensters für Ansteckender Hechtsprung um 50 %."
+        },
+        "es": {
+          "name": "Huevo (dorado)",
+          "description": "Un avituallamiento muy codiciado. Su valor casi está a la altura de sus efectos regenerativos.\n• Aumenta la duración de la ventana de tiempo para una Adhesión virulenta adicional un 20 %."
+        },
+        "ja": {
+          "name": "卵（金）",
+          "description": "誰もが欲しがる食べ物。その再生効果は現金的な価値よりも勝る。\n• 追加の猛毒バウンドの持続時間が20%増加する"
+        },
+        "pl": {
+          "name": "Jajo (złote)",
+          "description": "Bardzo pożądana żywność. Jej wartość pieniężną przewyższają jedynie efekty regeneracyjne.\n• Zwiększa czas trwania dodatkowego okna zaraźliwej więzi o 20%."
+        }
+      }
+    },
+    {
+      "id": 523,
+      "name": "Dark Sunglasses",
+      "killer_id": 29,
+      "description": "Glasses enhanced with AR that grant the wearer an invaluable advantage on the battlefield.\n• When a Survivor is fully infected with the Uroboros Infection, gain the Undetectable status effect for 20 seconds.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_darkSunglasses.png?bdcf0b",
+      "icon_local_path": "icons/addons/dark_sunglasses.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Dunkle Sonnenbrille",
+          "description": "Mit AR verstärkte Brille, die dem Träger einen wertvollen Vorteil auf dem Schlachtfeld bietet.\n• Sobald ein Überlebender vollständig mit Uroboros infiziert ist, erhältst du für 20 Sekunden den Statuseffekt Unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Gafas de sol oscuras",
+          "description": "Gafas mejoradas con realidad aumentada, para ofrecer una ventaja muy valiosa en el campo de batalla.\n• Cuando un superviviente esté completamente infectado con la infección de Uroboros, obtienes el efecto de estado Indetectable durante 20 segundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "黒のサングラス",
+          "description": "AR機能付きサングラス。戦場で有利に働いてくれる貴重アイテム。\n• 生存者のウロボロス感染が最高まで到達すると、探知不可のステータス効果を20秒間得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Ciemne okulary przeciwsłoneczne",
+          "description": "Okulary wyposażone w technologię rozszerzonej rzeczywistości, które dają noszącemu bezcenną przewagę na polu walki.\n• Kiedy ocalały zostanie w pełni zakażony infekcją Uroborosa, zyskasz efekt Niewykrywalny na 20 sekund.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 524,
+      "name": "Helicopter Stick",
+      "killer_id": 29,
+      "description": "Debris from a helicopter crash. Few jobs are more dangerous than a helicopter pilot’s when Wesker is involved.\n• When a Survivor uses a First Aid Spray, reveal their aura for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_helicopterStick.png?a1bdd7",
+      "icon_local_path": "icons/addons/helicopter_stick.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Helikopter-Steuerknüppel",
+          "description": "Trümmer nach einem Helikopterabsturz. Es gibt nur wenige Jobs, die gefährlicher sind als Helikopterpilot, wenn Wesker in der Nähe ist.\n• Wenn ein Überlebender Erste-Hilfe-Spray verwendet, wird seine Aura für 8 Sekunden sichtbar."
+        },
+        "es": {
+          "name": "Palanca de helicóptero",
+          "description": "Restos de un helicóptero estrellado. Pocos trabajos hay más peligrosos que el de piloto de helicóptero si Wesker está involucrado.\n• Cuando un superviviente utiliza un spray de primeros auxilios, se muestra su aura durante 8 segundos."
+        },
+        "ja": {
+          "name": "ヘリコプターの操縦桿",
+          "description": "墜落したヘリコプターの残骸。ウェスカーが関与しているヘリコプターのパイロットほど危険な仕事はない。\n• 救急スプレーを使用した生存者のオーラが8秒間視えるようになる"
+        },
+        "pl": {
+          "name": "Drążek śmigłowca",
+          "description": "Szczątki z wypadku śmigłowca. Niewiele zawodów jest bardziej niebezpiecznych niż pilot śmigłowca, szczególnie gdy pojawia się Wesker.\n• Kiedy ocalały używa sprayu leczniczego, jego aura zostaje ujawniona na 8 sekund."
+        }
+      }
+    },
+    {
+      "id": 525,
+      "name": "Uroboros Tendril",
+      "killer_id": 29,
+      "description": "The result of decades of Bio Organic Weapon research. It will not rest until it has swallowed the entire world.\n• Increases movement speed while charging Virulent Bound by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_uroborosTendril.png?ed888f",
+      "icon_local_path": "icons/addons/uroboros_tendril.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Uroboros-Tentakel",
+          "description": "Das Ergebnis jahrzehntelanger Forschung zu bioorganischen Waffen. Sie wird erst ruhen, wenn sie die ganze Welt verschluckt hat.\n• Erhöht die Bewegungsgeschwindigkeit beim Aufladen von Ansteckender Hechtsprung um 5 %."
+        },
+        "es": {
+          "name": "Tentáculo de Uroboros",
+          "description": "El resultado de décadas investigando armas bioorgánicas. No se detendrá hasta haber devorado el mundo entero.\n• Aumenta la velocidad de movimiento mientras carga Adhesión virulenta un 5 %."
+        },
+        "ja": {
+          "name": "蔓性ウロボロス",
+          "description": "何十年に及ぶ研究の末に作り出されたB.O.W.。全世界を呑み込むまで止まることはない。\n• 猛毒バウンドをチャージしている間の移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Macka uroborosa",
+          "description": "Wynik dekad badań nad bronią bioorganiczną. Nie spocznie, dopóki nie pochłonie całego świata.\n• Zwiększa prędkość ruchu w trakcie ładowania zaraźliwej więzi o 5%."
+        }
+      }
+    },
+    {
+      "id": 526,
+      "name": "Uroboros Virus",
+      "killer_id": 29,
+      "description": "For some, the strength and resistance was worth the trade-off.\n• When a Survivor reaches full infection, reveal their aura for 4 seconds.\n\"\"The balance of the world is changing… and you're completely oblivious to it.\" –Ricardo Irving\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_uroborosVirus.png?b050ad",
+      "icon_local_path": "icons/addons/uroboros_virus.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Uroboros-Virus",
+          "description": "Für manche waren die Stärke und die Widerstandskraft den Preis wert.\n• Wenn ein Überlebender vollständig infiziert ist, wird seine Aura für 4 Sekunden angezeigt.\n\"„Das Gleichgewicht der Welt verändert sich ... und ihr kriegt das gar nicht mit.“ – Ricardo Irving\""
+        },
+        "es": {
+          "name": "Virus Uroboros",
+          "description": "Para algunos, la fuerza y la resistencia que se obtenían justificaban un sacrificio.\n• Cuando un superviviente llega a la infección total, su aura se muestra durante 4 segundos.\n\"\"El equilibrio del mundo está cambiando..., y no os dais ni cuenta\". (Ricardo Irving)\""
+        },
+        "ja": {
+          "name": "ウロボロスウィルス",
+          "description": "ある者にとって、力と耐性は交換する価値のあるものだった。\n• 完全に感染した生存者のオーラが4秒間視えるようになる\n\"「めでたい連中だ…もうすぐ世界のバランスが変わるってのによ」―リカルド・アーヴィング\""
+        },
+        "pl": {
+          "name": "Wirus uroboros",
+          "description": "Niektórzy twierdzą, że warto było poświęcić siłę i odporność.\n• Kiedy ocalały osiągnie pełen poziom Infekcji, jego aura zostaje ujawniona na 4 sekundy.\n\"„Równowaga w świecie się zmienia... a ty nie masz o tym zielonego pojęcia”. – Ricardo Irving\""
+        }
+      }
+    },
+    {
+      "id": 527,
+      "name": "Lab Photo",
+      "killer_id": 29,
+      "description": "Wesker was as much a researcher as he was a guinea pig for Umbrella's bio-weapons.\n• You can special-break Pallets and Breakable Walls with Virulent Bound.\n• Removes the ability to special-vault pallets while using Virulent Bound.\n\"\"Only a handful of humans truly matter. Everyone else is just so much chaff. So now I have to separate this chaff from the wheat.\" –Albert Wesker\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_labPhoto.png?f7af25",
+      "icon_local_path": "icons/addons/lab_photo.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Laborfoto",
+          "description": "Wesker war Forscher und Versuchskaninchen für Biowaffen von Umbrella.\n• Du kannst Paletten und zerstörbare Mauern mit Ansteckender Hechtsprung durch deine Stärke zerstören.\n• Entfernt die Fähigkeit, mit der Spezialfähigkeit über Paletten zu springen, solange Ansteckender Hechtsprung verwendet wird.\n\"„Nur wenige Menschen sind wirklich wichtig. Alle anderen sind überflüssig. Es liegt an mir, die Spreu vom Weizen zu trennen.“ – Albert Wesker\""
+        },
+        "es": {
+          "name": "Fotografía de laboratorio",
+          "description": "Wesker había sido un investigador, pero también un conejillo de Indias para probar las armas biológicas de Umbrella.\n• Puedes romper palés y muros destruibles de forma especial con Adhesión virulenta.\n• Elimina la capacidad de realizar saltos especiales sobre palés cuando usas Adhesión virulenta.\n\"\"Solo unos pocos humanos son importantes. El resto son basura, y ya es hora de deshacernos de ellos\". (Albert Wesker)\""
+        },
+        "ja": {
+          "name": "研究所の写真",
+          "description": "ウェスカーは研究者だったが、アンブレラ社にとって生体兵器のモルモットでもあった。\n• 猛毒バウンドでパレットや破壊可能な壁を特殊破壊できる\n• 猛毒バウンドでパレットの特殊乗り越えを行う能力を失う\n\"「必要な人間はほんの一握り。それ以外のクズは重石にすぎん。重石を捨て去れば人間はもっと自由になれる」―アルバート・ウェスカー\""
+        },
+        "pl": {
+          "name": "Zdjęcie z laboratorium",
+          "description": "Wesker był jednocześnie naukowcem i królikiem doświadczalnym dla broni biologicznej Umbrelli.\n• Możesz niszczyć palety i rozbijalne ściany w specjalny sposób przy pomocy zaraźliwej więzi.\n• Usuwa zdolność do specjalnych przeskoków nad paletami, gdy korzystasz z zaraźliwej więzi.\n\"„Liczy się jedynie garstka ludzi. Reszta to zwykle plewy. A więc teraz muszę oddzielić ziarno od plew”. – Albert Wesker\""
+        }
+      }
+    },
+    {
+      "id": 528,
+      "name": "Iridescent Uroboros Vial",
+      "killer_id": 29,
+      "description": "The perfect bio-weapon. Decades of research have led to this.\n• Survivors start the trial Infected with Uroboros.\n• Survivors suffer from the Exposed status effect for 30 seconds when reaching maximum Infection.\nExposed Survivors will be downed by basic attacks even if uninjured.\n\"\"The entire world will be infected. A new Genesis is at hand and I will be the creator!\" –Albert Wesker\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentUroborosVial.png?8fe22a",
+      "icon_local_path": "icons/addons/iridescent_uroboros_vial.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Uroboros-Ampulle",
+          "description": "Die perfekte Biowaffe. Jahrzehnte der Forschung – und das ist das Ergebnis.\n• Überlebende beginnen die Prüfung mit einer Uroboros-Infektion.\n• Überlebende leiden 30 Sekunden lang am Statuseffekt Gefährdet, wenn sie die maximale Infektion erreicht haben.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\"„Die ganze Welt wird infiziert werden. Eine neue Schöpfungsgeschichte steht bevor – und ich werde der Schöpfer sein.“ – Albert Wesker\""
+        },
+        "es": {
+          "name": "Frasco iridiscente de Uroboros",
+          "description": "El arma biológica perfecta, obtenida tras décadas de investigación.\n• Los supervivientes comienzan la partida infectados con Uroboros.\n• Los supervivientes sufren el efecto de estado Vulnerabilidad durante 30 segundos cuando alcanzan la infección máxima.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\"\"Todo el mundo quedará infectado: es el comienzo de un nuevo génesis ¡y yo soy su creador!\". (Albert Wesker)\""
+        },
+        "ja": {
+          "name": "玉虫色のウロボロス入り瓶",
+          "description": "完璧な生体兵器。何十年もの研究によって生み出された。\n• 儀式開始時に生存者がウロボロスに感染している\n• 完全に感染すると、生存者は無防備のステータス効果に30秒間苦しむ\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\"「新たな時代の幕開けだ。俺はその創造主なのだ！」―アルバート・ウェスカー\""
+        },
+        "pl": {
+          "name": "Opalizująca fiolka z uroborosem",
+          "description": "Idealna broń biologiczna. Do jej opracowania doprowadziły dekady badań.\n• Ocalali rozpoczynają próbę zarażeni Uroborosem.\n• Ocalali otrzymują efekt Narażony na 30 s po osiągnięciu maksymalnej infekcji.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\"„Cały świat zostanie zakażony. Zbliża się nowy początek, ale tym razem to ja będę stwórcą!” – Albert Wesker\""
+        }
+      }
+    }
+  ]
+}

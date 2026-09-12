@@ -23,6 +23,39 @@ services:
     networks:
       - dbd_network
 
+  # Shared catalog cache and rate-limit storage.
+  #
+  # gunicorn runs GUNICORN_WORKERS (4) separate processes, so anything held in
+  # process memory is four caches and four rate-limit counters that never see
+  # each other -- which made every configured limit effectively 4x looser than
+  # written. This is the one place all four share.
+  #
+  # No volume on purpose: everything in here is derived from Postgres or is a
+  # rate-limit window, so persisting it across a restart would only risk
+  # serving a stale generation. `--maxmemory-policy allkeys-lru` means a full
+  # Redis evicts rather than starts refusing writes, since a cache that
+  # fails closed would take the API down with it.
+  redis:
+    image: redis:alpine
+    container_name: dbd_redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --save ""
+      --appendonly no
+      --maxmemory ${REDIS_MAXMEMORY:-256mb}
+      --maxmemory-policy allkeys-lru
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 3s
+    networks:
+      - dbd_network
+
   backend:
     build:
       context: ./backend
@@ -45,6 +78,10 @@ services:
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
       - DB_POOL_SIZE=${DB_POOL_SIZE:-20}
       - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-30}
+      # Unset this and the app still boots: the catalog cache falls back to a
+      # per-worker dict and the limiter to per-worker counters.
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - CATALOG_CACHE_TTL=${CATALOG_CACHE_TTL:-86400}
       - CORS_ORIGINS=${CORS_ORIGINS:-*}
       - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
       - MAIL_PORT=${MAIL_PORT:-587}
@@ -58,6 +95,8 @@ services:
       - INITIAL_SCRAPE_ENABLED=${INITIAL_SCRAPE_ENABLED:-false}
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]

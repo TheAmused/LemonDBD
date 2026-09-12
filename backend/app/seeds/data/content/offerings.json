@@ -1,13 +1,12 @@
 {
-  "version": "1.0",
+  "version": "3.0",
   "exported_at": "2026-09-10T12:16:35.260694+00:00",
   "source": "LemonDBD",
   "target": "offerings",
-  "count": 96,
   "offerings": [
     {
+      "id": 1,
       "name": "Primrose Blossom Sachet",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Boldness</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing 4 gold petals.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_primroseBlossomSachet.png?d3c8ff",
@@ -17,10 +16,6 @@
         "de": {
           "name": "Primelblüten-Säckchen",
           "description": "Gewährt <b>50%</b> zusätzliche Blutpunkte in der Kategorie <b>Kühnheit</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein handgenähtes Säckchen mit 4 goldenen Blütenblättern.“</span>"
-        },
-        "en": {
-          "name": "Primrose Blossom Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Boldness</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing 4 gold petals.\"</span>"
         },
         "es": {
           "name": "Bolsita de flores de prímula",
@@ -37,8 +32,8 @@
       }
     },
     {
+      "id": 2,
       "name": "Fresh Primrose Blossom",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Boldness</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"The primrose opens at the very last moment before the sun gives place to the night.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_freshPrimroseBlossom.png?f9224c",
@@ -48,10 +43,6 @@
         "de": {
           "name": "Frische Primelblüte",
           "description": "Gewährt <b>75%</b> zusätzliche Blutpunkte in der Kategorie <b>Kühnheit</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Die Primel öffnet sich im allerletzten Moment, bevor die Sonne der Nacht weicht.“</span>"
-        },
-        "en": {
-          "name": "Fresh Primrose Blossom",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Boldness</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"The primrose opens at the very last moment before the sun gives place to the night.\"</span>"
         },
         "es": {
           "name": "Flor de prímula fresca",
@@ -68,8 +59,8 @@
       }
     },
     {
+      "id": 3,
       "name": "Fragrant Primrose Blossom",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Boldness</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A sweet and intoxicating aroma fills the realm.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_fragrantPrimroseBlossom.png?6ba026",
@@ -79,10 +70,6 @@
         "de": {
           "name": "Duftende Primelblüte",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in der Kategorie <b>Kühnheit</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein süßes und berauschendes Aroma erfüllt das Reich.“</span>"
-        },
-        "en": {
-          "name": "Fragrant Primrose Blossom",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Boldness</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A sweet and intoxicating aroma fills the realm.\"</span>"
         },
         "es": {
           "name": "Flor de prímula fragante",
@@ -99,8 +86,8 @@
       }
     },
     {
+      "id": 4,
       "name": "Sweet William Sachet",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Altruism</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing dried sweet petals.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_sweetWilliamSachet.png?809e4e",
@@ -110,10 +97,6 @@
         "de": {
           "name": "Bartnelken-Säckchen",
           "description": "Gewährt <b>50%</b> zusätzliche Blutpunkte in der Kategorie <b>Altruismus</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein handgenähtes Säckchen mit getrockneten Nelkenblättern.“</span>"
-        },
-        "en": {
-          "name": "Sweet William Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Altruism</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing dried sweet petals.\"</span>"
         },
         "es": {
           "name": "Bolsita de minutisa",
@@ -130,8 +113,8 @@
       }
     },
     {
+      "id": 5,
       "name": "Fresh Sweet William",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Altruism</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Golden flowers harvested at their peak, releasing a soothing scent.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_freshSweetWilliam.png?8f1428",
@@ -141,10 +124,6 @@
         "de": {
           "name": "Frische Bartnelke",
           "description": "Gewährt <b>75%</b> zusätzliche Blutpunkte in der Kategorie <b>Altruismus</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Goldene Blumen, die auf ihrem Höhepunkt geerntet wurden und einen beruhigenden Duft verströmen.“</span>"
-        },
-        "en": {
-          "name": "Fresh Sweet William",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Altruism</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Golden flowers harvested at their peak, releasing a soothing scent.\"</span>"
         },
         "es": {
           "name": "Minutisa fresca",
@@ -161,8 +140,8 @@
       }
     },
     {
+      "id": 6,
       "name": "Fragrant Sweet William",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Altruism</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Golden flowers harvested at their peak. Releases a strong, earthy, and soothing scent.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_fragrantSweetWilliam.png?5ca7a0",
@@ -172,10 +151,6 @@
         "de": {
           "name": "Duftende Bartnelke",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in der Kategorie <b>Altruismus</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Goldene Blumen mit einem intensiven, erdigen und beruhigenden Duft.“</span>"
-        },
-        "en": {
-          "name": "Fragrant Sweet William",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Altruism</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Golden flowers harvested at their peak. Releases a strong, earthy, and soothing scent.\"</span>"
         },
         "es": {
           "name": "Minutisa fragante",
@@ -192,8 +167,8 @@
       }
     },
     {
+      "id": 7,
       "name": "Bog Laurel Sachet",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Objectives</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet packed with beaded grain.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_bogLaurelSachet.png?a3573a",
@@ -203,10 +178,6 @@
         "de": {
           "name": "Sumpflorbeer-Säckchen",
           "description": "Gewährt <b>50%</b> zusätzliche Blutpunkte in der Kategorie <b>Ziele</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein handgenähtes Säckchen voller perlenartigem Korn.“</span>"
-        },
-        "en": {
-          "name": "Bog Laurel Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Objectives</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet packed with beaded grain.\"</span>"
         },
         "es": {
           "name": "Bolsita de laurel de pantano",
@@ -223,8 +194,8 @@
       }
     },
     {
+      "id": 8,
       "name": "Fresh Bog Laurel",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Objectives</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Pale green leaves laced with strange crimson veins. Releases a pungent radish scent.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_freshBogLaurel.png?363afa",
@@ -234,10 +205,6 @@
         "de": {
           "name": "Frischer Sumpflorbeer",
           "description": "Gewährt <b>75%</b> zusätzliche Blutpunkte in der Kategorie <b>Ziele</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Blassgrüne Blätter mit seltsamen karminroten Adern. Verströmt einen stechenden Rettichgeruch.“</span>"
-        },
-        "en": {
-          "name": "Fresh Bog Laurel",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Objectives</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Pale green leaves laced with strange crimson veins. Releases a pungent radish scent.\"</span>"
         },
         "es": {
           "name": "Laurel de pantano fresco",
@@ -254,8 +221,8 @@
       }
     },
     {
+      "id": 9,
       "name": "Fragrant Bog Laurel",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Objectives</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Pale green leaves laced with strange crimson veins. Releases a strong, intoxicating scent.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_fragrantBogLaurel.png?33bee5",
@@ -265,10 +232,6 @@
         "de": {
           "name": "Duftender Sumpflorbeer",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in der Kategorie <b>Ziele</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Blassgrüne Blätter mit karminroten Adern und betörendem Duft.“</span>"
-        },
-        "en": {
-          "name": "Fragrant Bog Laurel",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Objectives</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"Pale green leaves laced with strange crimson veins. Releases a strong, intoxicating scent.\"</span>"
         },
         "es": {
           "name": "Laurel de pantano fragante",
@@ -285,8 +248,8 @@
       }
     },
     {
+      "id": 10,
       "name": "Crispleaf Amaranth Sachet",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Survival</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing dried leaves.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_crispleafAmaranthSachet.png?ba4e48",
@@ -296,10 +259,6 @@
         "de": {
           "name": "Krausblatt-Amarant-Säckchen",
           "description": "Gewährt <b>50%</b> zusätzliche Blutpunkte in der Kategorie <b>Überleben</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein handgenähtes Säckchen mit getrockneten Amarantblättern.“</span>"
-        },
-        "en": {
-          "name": "Crispleaf Amaranth Sachet",
-          "description": "Grants <b>50%</b> bonus Bloodpoints in the <b>Survival</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A palm-sized hand-sewn sachet containing dried leaves.\"</span>"
         },
         "es": {
           "name": "Bolsita de amaranto rizado",
@@ -316,8 +275,8 @@
       }
     },
     {
+      "id": 11,
       "name": "Fresh Crispleaf Amaranth",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Survival</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A bunch of flowers with pink petals and a blood-red pericarp.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_freshCrispleafAmaranth.png?9e64b3",
@@ -327,10 +286,6 @@
         "de": {
           "name": "Frischer Krausblatt-Amarant",
           "description": "Gewährt <b>75%</b> zusätzliche Blutpunkte in der Kategorie <b>Überleben</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein Blumenstrauß mit rosa Blütenblättern und blutroter Samenschale.“</span>"
-        },
-        "en": {
-          "name": "Fresh Crispleaf Amaranth",
-          "description": "Grants <b>75%</b> bonus Bloodpoints in the <b>Survival</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A bunch of flowers with pink petals and a blood-red pericarp.\"</span>"
         },
         "es": {
           "name": "Amaranto rizado fresco",
@@ -347,8 +302,8 @@
       }
     },
     {
+      "id": 12,
       "name": "Fragrant Crispleaf Amaranth",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Survival</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A bunch of flowers with pink petals. Amaranth is said to be eternal.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_fragrantCrispleafAmaranth.png?32946e",
@@ -358,10 +313,6 @@
         "de": {
           "name": "Duftender Krausblatt-Amarant",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in der Kategorie <b>Überleben</b>.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein Strauß mit rosa Blüten. Man sagt, der Amarant sei ewig.“</span>"
-        },
-        "en": {
-          "name": "Fragrant Crispleaf Amaranth",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in the <b>Survival</b> category.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A bunch of flowers with pink petals. Amaranth is said to be eternal.\"</span>"
         },
         "es": {
           "name": "Amaranto rizado fragante",
@@ -378,8 +329,8 @@
       }
     },
     {
+      "id": 13,
       "name": "Chalk Pouch",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Slightly increases</b> your Luck (+1%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small cotton pouch filled with white chalky powder.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_chalkPouch.png?b7bcf4",
@@ -389,10 +340,6 @@
         "de": {
           "name": "Kreidesäckchen",
           "description": "Erhöht dein Glück <b>leicht</b> (+1%).<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein kleines Baumwollsäckchen mit weißem Kreidepulver.“</span>"
-        },
-        "en": {
-          "name": "Chalk Pouch",
-          "description": "<b>Slightly increases</b> your Luck (+1%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small cotton pouch filled with white chalky powder.\"</span>"
         },
         "es": {
           "name": "Bolsita de tiza",
@@ -409,8 +356,8 @@
       }
     },
     {
+      "id": 14,
       "name": "Cream Chalk Pouch",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Moderately increases</b> your Luck (+2%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small cotton pouch filled halfway with cream chalky powder.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_creamChalkPouch.png?154e93",
@@ -420,10 +367,6 @@
         "de": {
           "name": "Cremefarbenes Kreidesäckchen",
           "description": "Erhöht dein Glück <b>mäßig</b> (+2%).<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein kleines Baumwollsäckchen, halbvoll mit cremefarbenem Pulver.“</span>"
-        },
-        "en": {
-          "name": "Cream Chalk Pouch",
-          "description": "<b>Moderately increases</b> your Luck (+2%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small cotton pouch filled halfway with cream chalky powder.\"</span>"
         },
         "es": {
           "name": "Bolsita de tiza crema",
@@ -440,8 +383,8 @@
       }
     },
     {
+      "id": 15,
       "name": "Ivory Chalk Pouch",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Considerably increases</b> your Luck (+3%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small leather pouch filled with ivory chalky powder.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ivoryChalkPouch.png?79c240",
@@ -451,10 +394,6 @@
         "de": {
           "name": "Elfenbeinfarbenes Kreidesäckchen",
           "description": "Erhöht dein Glück <b>beträchtlich</b> (+3%).<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein kleines Ledersäckchen mit elfenbeinfarbenem Kreidepulver.“</span>"
-        },
-        "en": {
-          "name": "Ivory Chalk Pouch",
-          "description": "<b>Considerably increases</b> your Luck (+3%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small leather pouch filled with ivory chalky powder.\"</span>"
         },
         "es": {
           "name": "Bolsita de tiza marfil",
@@ -471,8 +410,8 @@
       }
     },
     {
+      "id": 16,
       "name": "Salt Pouch",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Slightly increases</b> the Luck of all Survivors (+1%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small cotton pouch filled with a white salty powder.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_saltPouch.png?be0c32",
@@ -482,10 +421,6 @@
         "de": {
           "name": "Salzsäckchen",
           "description": "Erhöht das Glück aller Überlebenden <b>leicht</b> (+1%).<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein kleines Baumwollsäckchen voller weißem, salzigem Pulver.“</span>"
-        },
-        "en": {
-          "name": "Salt Pouch",
-          "description": "<b>Slightly increases</b> the Luck of all Survivors (+1%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small cotton pouch filled with a white salty powder.\"</span>"
         },
         "es": {
           "name": "Bolsita de sal",
@@ -502,8 +437,8 @@
       }
     },
     {
+      "id": 17,
       "name": "Black Salt Statuette",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Moderately increases</b> the Luck of all Survivors (+2%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small statuette carved from black rock salt.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_blackSaltStatuette.png?5b0b82",
@@ -513,10 +448,6 @@
         "de": {
           "name": "Schwarze Salzstatuette",
           "description": "Erhöht das Glück aller Überlebenden <b>mäßig</b> (+2%).<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Eine kleine Statuette, geschnitzt aus schwarzem Steinsalz.“</span>"
-        },
-        "en": {
-          "name": "Black Salt Statuette",
-          "description": "<b>Moderately increases</b> the Luck of all Survivors (+2%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A small statuette carved from black rock salt.\"</span>"
         },
         "es": {
           "name": "Estatuilla de sal negra",
@@ -533,8 +464,8 @@
       }
     },
     {
+      "id": 18,
       "name": "Vigo's Jar of Salty Lips",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Considerably increases</b> the Luck of all Survivors (+3%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A jar filled with salty lips floating in murky brine.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_vigosJarOfSaltyLips.png?900f77",
@@ -544,10 +475,6 @@
         "de": {
           "name": "Vigos Glas voller salziger Lippen",
           "description": "Erhöht das Glück aller Überlebenden <b>beträchtlich</b> (+3%).<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein Glas voller salziger Lippen, die in trüber Lake schwimmen.“</span>"
-        },
-        "en": {
-          "name": "Vigo's Jar of Salty Lips",
-          "description": "<b>Considerably increases</b> the Luck of all Survivors (+3%).<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A jar filled with salty lips floating in murky brine.\"</span>"
         },
         "es": {
           "name": "Frasco de labios salados de Vigo",
@@ -564,8 +491,8 @@
       }
     },
     {
+      "id": 19,
       "name": "Tarnished Coin",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Calls on The Entity to spawn <b>1 additional Chest</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A round piece of metal which has lost all sheen.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_tarnishedCoin.png?145990",
@@ -575,10 +502,6 @@
         "de": {
           "name": "Angelaufene Münze",
           "description": "Ruft den Entitus an, um <b>1 zusätzliche Truhe</b> erscheinen zu lassen.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein rundes Stück Metall, das jeden Glanz verloren hat.“</span>"
-        },
-        "en": {
-          "name": "Tarnished Coin",
-          "description": "Calls on The Entity to spawn <b>1 additional Chest</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A round piece of metal which has lost all sheen.\"</span>"
         },
         "es": {
           "name": "Moneda deslustrada",
@@ -595,8 +518,8 @@
       }
     },
     {
+      "id": 20,
       "name": "Shiny Coin",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Calls on The Entity to spawn <b>2 additional Chests</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A clean and polished piece of gold...\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_shinyCoin.png?e215e2",
@@ -606,10 +529,6 @@
         "de": {
           "name": "Glänzende Münze",
           "description": "Ruft den Entitus an, um <b>2 zusätzliche Truhen</b> erscheinen zu lassen.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein sauberes und poliertes Stück Gold...“</span>"
-        },
-        "en": {
-          "name": "Shiny Coin",
-          "description": "Calls on The Entity to spawn <b>2 additional Chests</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A clean and polished piece of gold...\"</span>"
         },
         "es": {
           "name": "Moneda brillante",
@@ -626,8 +545,8 @@
       }
     },
     {
+      "id": 21,
       "name": "Vigo's Blueprint",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "<b>Tremendously increases</b> the chance of spawning the Hatch in the Main Building.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A clever design that has the letter V etched on the bottom.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_vigosBlueprint.png?99e22e",
@@ -637,10 +556,6 @@
         "de": {
           "name": "Vigos Bauplan",
           "description": "Erhöht die Chance <b>enorm</b>, dass die Bodenluke im Hauptgebäude erscheint.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein ausgeklügelter Entwurf mit einem eingravierten V am unteren Rand.“</span>"
-        },
-        "en": {
-          "name": "Vigo's Blueprint",
-          "description": "<b>Tremendously increases</b> the chance of spawning the Hatch in the Main Building.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A clever design that has the letter V etched on the bottom.\"</span>"
         },
         "es": {
           "name": "Plano de Vigo",
@@ -657,8 +572,8 @@
       }
     },
     {
+      "id": 22,
       "name": "Shroud of Union",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "You start the trial together with another Survivor.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A knotted piece of fabric.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_shroudOfUnion.png?570201",
@@ -668,10 +583,6 @@
         "de": {
           "name": "Schleier der Vereinigung",
           "description": "Du beginnst die Prüfung zusammen mit einem anderen Überlebenden.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein verknotetes Stück Stoff.“</span>"
-        },
-        "en": {
-          "name": "Shroud of Union",
-          "description": "You start the trial together with another Survivor.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A knotted piece of fabric.\"</span>"
         },
         "es": {
           "name": "Mortaja de unión",
@@ -688,8 +599,8 @@
       }
     },
     {
+      "id": 23,
       "name": "Vigo's Shroud",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "You start the trial as far as possible from the Killer.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"I found marvels through the years in The Fog, but only now do I understand how to bend The Fog's irrefragable rules.\" — Vigo's Journal</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_vigosShroud.png?7718f0",
@@ -699,10 +610,6 @@
         "de": {
           "name": "Vigos Schleier",
           "description": "Du beginnst die Prüfung so weit wie möglich vom Killer entfernt.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ich habe im Laufe der Jahre Wunder im Nebel gefunden, aber erst jetzt verstehe ich, wie man seine unumstößlichen Gesetze beugt.“ — Vigos Tagebuch</span>"
-        },
-        "en": {
-          "name": "Vigo's Shroud",
-          "description": "You start the trial as far as possible from the Killer.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"I found marvels through the years in The Fog, but only now do I understand how to bend The Fog's irrefragable rules.\" — Vigo's Journal</span>"
         },
         "es": {
           "name": "Mortaja de Vigo",
@@ -719,8 +626,8 @@
       }
     },
     {
+      "id": 24,
       "name": "White Ward",
-      "category": "SurvivorOfferings",
       "role": "Survivor",
       "description": "Burning this offering grants you protection against the loss of your Item and Add-ons upon death.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"Keep me from evil, defend me, and pass away.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_whiteWard.png?c5222c",
@@ -730,10 +637,6 @@
         "de": {
           "name": "Weißes Schutzzeichen",
           "description": "Das Verbrennen dieser Opfergabe schützt dich beim Tod vor dem Verlust deines Gegenstands und deiner Zusätze.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Bewahre mich vor dem Bösen, verteidige mich und vergehe.“</span>"
-        },
-        "en": {
-          "name": "White Ward",
-          "description": "Burning this offering grants you protection against the loss of your Item and Add-ons upon death.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"Keep me from evil, defend me, and pass away.\"</span>"
         },
         "es": {
           "name": "Sello blanco",
@@ -750,8 +653,8 @@
       }
     },
     {
+      "id": 25,
       "name": "Survivor Pudding",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants <b>100%</b> bonus Bloodpoints in all categories.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A putrid dessert concocted from the suffering of Survivors.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_survivorPudding.png?b93c58",
@@ -761,10 +664,6 @@
         "de": {
           "name": "Überlebenden-Pudding",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in allen Kategorien.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein fauliges Dessert aus den Qualen der Überlebenden.“</span>"
-        },
-        "en": {
-          "name": "Survivor Pudding",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in all categories.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A putrid dessert concocted from the suffering of Survivors.\"</span>"
         },
         "es": {
           "name": "Pudin de superviviente",
@@ -781,8 +680,8 @@
       }
     },
     {
+      "id": 26,
       "name": "Tanager Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 50% bonus Bloodpoints in the Brutality category.\n\"\"Crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_tanagerWreath.png?589297",
@@ -792,10 +691,6 @@
         "de": {
           "name": "Tangarkranz",
           "description": "Gewährt 50 % Bonus-Blutpunkte in der Brutalitätskategorie.\n\"„Gefertigt aus blutigen Stöcken und Gedärmen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Tanager Wreath",
-          "description": "Grants 50% bonus Bloodpoints in the Brutality category.\n\"\"Crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del cardenal",
@@ -812,8 +707,8 @@
       }
     },
     {
+      "id": 27,
       "name": "Devout Tanager Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 75% bonus Bloodpoints in the Brutality category.\n\"\"Devoutly crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_devoutTanagerWreath.png?58293d",
@@ -823,10 +718,6 @@
         "de": {
           "name": "Andächtiger Tangarkranz",
           "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Brutalität“.\n\"„Inbrünstig hergestellt aus blutigen Stöcken und Gedärmen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Devout Tanager Wreath",
-          "description": "Grants 75% bonus Bloodpoints in the Brutality category.\n\"\"Devoutly crafted out of bloody sticks and guts, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del cardenal devoto",
@@ -843,8 +734,8 @@
       }
     },
     {
+      "id": 28,
       "name": "Ardent Tanager Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• Reveal the auras of Survivors within 32 meters while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits grant 100% more Brutality and 200% more Deviousness Bloodpoints.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ardentTanagerWreath.png?35b9ea",
@@ -854,10 +745,6 @@
         "de": {
           "name": "Inbrünstiger Tangarkranz",
           "description": "Ein tragbarer Schminkspiegel, der mit einem scharfen Metallgegenstand heftig zerkratzt wurde.\n• Enthüllt beim Verfolgen die Auren von Überlebenden in einem Umkreis von 32 Metern.\n• Der Verfolgermodus kann nicht verlassen werden.\n• Punktereignisse für Treffer gewähren 100 % mehr Blutpunkte für Brutalität und 200 % mehr Blutpunkte für Hinterhältigkeit."
-        },
-        "en": {
-          "name": "Ardent Tanager Wreath",
-          "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• Reveal the auras of Survivors within 32 meters while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits grant 100% more Brutality and 200% more Deviousness Bloodpoints."
         },
         "es": {
           "name": "Guirnalda del cardenal ferviente",
@@ -874,8 +761,8 @@
       }
     },
     {
+      "id": 29,
       "name": "Raven Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 50% bonus Bloodpoints in the Deviousness category.\n\"\"Crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ravenWreath.png?881878",
@@ -885,10 +772,6 @@
         "de": {
           "name": "Rabenkranz",
           "description": "Gewährt 50 % Bonus-Blutpunkte in der Hinterhältigkeitskategorie.\n\"„Hergestellt aus geschwärzten Zweigen und Kohlen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Raven Wreath",
-          "description": "Grants 50% bonus Bloodpoints in the Deviousness category.\n\"\"Crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del cuervo",
@@ -905,8 +788,8 @@
       }
     },
     {
+      "id": 30,
       "name": "Devout Raven Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 75% bonus Bloodpoints in the Deviousness category.\n\"\"Devoutly crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_devoutRavenWreath.png?8e45e6",
@@ -916,10 +799,6 @@
         "de": {
           "name": "Andächtiger Rabenkranz",
           "description": "Gewährt 75 % Bonus-Blutpunkte in der Kategorie „Hinterhältigkeit“.\n\"„Inbrünstig hergestellt aus geschwärzten Zweigen und Kohlen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Devout Raven Wreath",
-          "description": "Grants 75% bonus Bloodpoints in the Deviousness category.\n\"\"Devoutly crafted out of blackened branches and coals, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del cuervo devoto",
@@ -936,8 +815,8 @@
       }
     },
     {
+      "id": 31,
       "name": "Ardent Raven Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• Reveal the auras of Survivors within 32 meters while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits grant 100% more Brutality and 200% more Deviousness Bloodpoints.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ardentRavenWreath.png?9aa0c1",
@@ -947,10 +826,6 @@
         "de": {
           "name": "Inbrünstiger Rabenkranz",
           "description": "Ein tragbarer Schminkspiegel, der mit einem scharfen Metallgegenstand heftig zerkratzt wurde.\n• Enthüllt beim Verfolgen die Auren von Überlebenden in einem Umkreis von 32 Metern.\n• Der Verfolgermodus kann nicht verlassen werden.\n• Punktereignisse für Treffer gewähren 100 % mehr Blutpunkte für Brutalität und 200 % mehr Blutpunkte für Hinterhältigkeit."
-        },
-        "en": {
-          "name": "Ardent Raven Wreath",
-          "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• Reveal the auras of Survivors within 32 meters while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits grant 100% more Brutality and 200% more Deviousness Bloodpoints."
         },
         "es": {
           "name": "Guirnalda del cuervo ferviente",
@@ -967,8 +842,8 @@
       }
     },
     {
+      "id": 32,
       "name": "Spotted Owl Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 50% bonus Bloodpoints in the Hunting category.\n\"\"Crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_spottedOwlWreath.png?bb89da",
@@ -978,10 +853,6 @@
         "de": {
           "name": "Fleckenkauzkranz",
           "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Jäger“.\n\"„Hergestellt aus scharfkantigen Metallen, Seilen und Federn, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Spotted Owl Wreath",
-          "description": "Grants 50% bonus Bloodpoints in the Hunting category.\n\"\"Crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del búho moteado",
@@ -998,8 +869,8 @@
       }
     },
     {
+      "id": 33,
       "name": "Devout Spotted Owl Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 75% bonus Bloodpoints in the Hunting category.\n\"\"Devoutly crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_devoutSpottedOwlWreath.png?7c8d1f",
@@ -1009,10 +880,6 @@
         "de": {
           "name": "Andächtiger Fleckenkauzkranz",
           "description": "Gewährt 75 % Bonus-Blutpunkte in der Verfolgungskategorie.\n\"„Andächtig hergestellt aus scharfkantigen Metallen, Seilen und Federn, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Devout Spotted Owl Wreath",
-          "description": "Grants 75% bonus Bloodpoints in the Hunting category.\n\"\"Devoutly crafted out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del búho moteado devoto",
@@ -1029,8 +896,8 @@
       }
     },
     {
+      "id": 34,
       "name": "Ardent Spotted Owl Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 100% bonus Bloodpoints in the Hunting category.\n\"\"Crafted with a fiery, undying passion out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ardentSpottedOwlWreath.png?9ff807",
@@ -1040,10 +907,6 @@
         "de": {
           "name": "Inbrünstiger Fleckenkauzkranz",
           "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Jäger“.\n\"„Mit feuriger, unsterblicher Leidenschaft aus scharfkantigen Metallen, Seilen und Federn hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Ardent Spotted Owl Wreath",
-          "description": "Grants 100% bonus Bloodpoints in the Hunting category.\n\"\"Crafted with a fiery, undying passion out of sharp metals, ropes and feathers, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del búho moteado ferviente",
@@ -1060,8 +923,8 @@
       }
     },
     {
+      "id": 35,
       "name": "Shrike Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 50% bonus Bloodpoints in the Sacrifice category.\n\"\"Crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_shrikeWreath.png?6c7ea3",
@@ -1071,10 +934,6 @@
         "de": {
           "name": "Würgerkranz",
           "description": "Gewährt 50 % Bonus-Blutpunkte in der Kategorie „Opfer“.\n\"„Hergestellt aus Stöcken, Schnüren und Knochen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Shrike Wreath",
-          "description": "Grants 50% bonus Bloodpoints in the Sacrifice category.\n\"\"Crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del alcaudón",
@@ -1091,8 +950,8 @@
       }
     },
     {
+      "id": 36,
       "name": "Devout Shrike Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 75% bonus Bloodpoints in the Sacrifice category.\n\"\"Devoutly crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_devoutShrikeWreath.png?c5c882",
@@ -1102,10 +961,6 @@
         "de": {
           "name": "Andächtiger Würgerkranz",
           "description": "Gewährt 75 % Bonus-Blutpunkte in der Opferkategorie.\n\"„Andächtig hergestellt aus Stöcken, Schnüren und Knochen, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Devout Shrike Wreath",
-          "description": "Grants 75% bonus Bloodpoints in the Sacrifice category.\n\"\"Devoutly crafted out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del alcaudón devoto",
@@ -1122,8 +977,8 @@
       }
     },
     {
+      "id": 37,
       "name": "Ardent Shrike Wreath",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants 100% bonus Bloodpoints in the Sacrifice category.\n\"\"Crafted with a fiery, undying passion out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ardentShrikeWreath.png?78e016",
@@ -1133,10 +988,6 @@
         "de": {
           "name": "Inbrünstiger Würgerkranz",
           "description": "Gewährt 100 % Bonus-Blutpunkte in der Kategorie „Opfer“.\n\"„Mit feuriger, unsterblicher Leidenschaft aus Stöcken, Schnüren und Knochen hergestellt, ruft dieser Kranz nach dem Segen des Entitus für mehr Blut.“\""
-        },
-        "en": {
-          "name": "Ardent Shrike Wreath",
-          "description": "Grants 100% bonus Bloodpoints in the Sacrifice category.\n\"\"Crafted with a fiery, undying passion out of sticks, strings and bones, this wreath calls on The Entity's blessing for more blood.\"\""
         },
         "es": {
           "name": "Guirnalda del alcaudón ferviente",
@@ -1153,8 +1004,8 @@
       }
     },
     {
+      "id": 38,
       "name": "Scratched Coin",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Calls on The Entity to remove <b>1 Chest</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A defaced coin with deep scratches.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_scratchedCoin.png?508cc3",
@@ -1164,10 +1015,6 @@
         "de": {
           "name": "Zerkratzte Münze",
           "description": "Ruft den Entitus an, um <b>1 Truhe</b> zu entfernen.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Eine entstellte Münze mit tiefen Kratzern.“</span>"
-        },
-        "en": {
-          "name": "Scratched Coin",
-          "description": "Calls on The Entity to remove <b>1 Chest</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A defaced coin with deep scratches.\"</span>"
         },
         "es": {
           "name": "Moneda rayada",
@@ -1184,8 +1031,8 @@
       }
     },
     {
+      "id": 39,
       "name": "Cut Coin",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Calls on The Entity to remove <b>2 Chests</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"Two halves of a torn coin.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_cutCoin.png?bee681",
@@ -1195,10 +1042,6 @@
         "de": {
           "name": "Zerschnittene Münze",
           "description": "Ruft den Entitus an, um <b>2 Truhen</b> zu entfernen.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Zwei Hälften einer zerschnittenen Münze.“</span>"
-        },
-        "en": {
-          "name": "Cut Coin",
-          "description": "Calls on The Entity to remove <b>2 Chests</b>.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"Two halves of a torn coin.\"</span>"
         },
         "es": {
           "name": "Moneda cortada",
@@ -1215,8 +1058,8 @@
       }
     },
     {
+      "id": 40,
       "name": "Mouldy Oak",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Calls on The Entity to <b>slightly decrease</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A decaying, fungus-covered piece of oak.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_moldyOak.png?1c51dd",
@@ -1226,10 +1069,6 @@
         "de": {
           "name": "Schimmlige Eiche",
           "description": "Ruft den Entitus an, um den Abstand zwischen Opferhaken <b>leicht zu verringern</b>.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein verfallendes, pilzüberwachsenes Stück Eiche.“</span>"
-        },
-        "en": {
-          "name": "Mouldy Oak",
-          "description": "Calls on The Entity to <b>slightly decrease</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A decaying, fungus-covered piece of oak.\"</span>"
         },
         "es": {
           "name": "Roble mohoso",
@@ -1246,8 +1085,8 @@
       }
     },
     {
+      "id": 41,
       "name": "Rotten Oak",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Calls on The Entity to <b>moderately decrease</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A decomposing piece of oak carved with strange symbols.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_rottenOak.png?1e09ee",
@@ -1257,10 +1096,6 @@
         "de": {
           "name": "Morsche Eiche",
           "description": "Ruft den Entitus an, um den Abstand zwischen Opferhaken <b>mäßig zu verringern</b>.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein verfallendes Stück Eiche mit seltsamen Symbolen.“</span>"
-        },
-        "en": {
-          "name": "Rotten Oak",
-          "description": "Calls on The Entity to <b>moderately decrease</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A decomposing piece of oak carved with strange symbols.\"</span>"
         },
         "es": {
           "name": "Roble podrido",
@@ -1277,8 +1112,8 @@
       }
     },
     {
+      "id": 42,
       "name": "Petrified Oak",
-      "category": "KillerOfferings",
       "role": "Survivor",
       "description": "Calms The Entity and <b>moderately increases</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A deteriorating piece of petrified wood.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_petrifiedOak.png?325977",
@@ -1288,10 +1123,6 @@
         "de": {
           "name": "Versteinerte Eiche",
           "description": "Beruhigt den Entitus und vergrößert den Abstand zwischen Opferhaken <b>mäßig</b>.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein verfallendes Stück versteinertes Holz.“</span>"
-        },
-        "en": {
-          "name": "Petrified Oak",
-          "description": "Calms The Entity and <b>moderately increases</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A deteriorating piece of petrified wood.\"</span>"
         },
         "es": {
           "name": "Roble petrificado",
@@ -1308,8 +1139,8 @@
       }
     },
     {
+      "id": 43,
       "name": "Putrid Oak",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Calls on The Entity to <b>considerably decrease</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A rotten piece of oak soaked in a black rotting liquid.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_putridOak.png?6231cc",
@@ -1319,10 +1150,6 @@
         "de": {
           "name": "Verfaulte Eiche",
           "description": "Ruft den Entitus an, um den Abstand zwischen Opferhaken <b>beträchtlich zu verringern</b>.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein verrottetes Stück Eiche, getränkt mit einer schwarzen Fäulnisflüssigkeit.“</span>"
-        },
-        "en": {
-          "name": "Putrid Oak",
-          "description": "Calls on The Entity to <b>considerably decrease</b> the distance between sacrificial hooks.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A rotten piece of oak soaked in a black rotting liquid.\"</span>"
         },
         "es": {
           "name": "Roble pútrido",
@@ -1339,8 +1166,8 @@
       }
     },
     {
+      "id": 44,
       "name": "Ivory Memento Mori",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants the ability to kill 1 Survivor who has progressed 2 Hook Stages by your hand.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A token of death carved from ivory.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ivoryMementoMori.png?16da97",
@@ -1350,10 +1177,6 @@
         "de": {
           "name": "Elfenbein-Memento Mori",
           "description": "Gewährt die Fähigkeit, 1 Überlebenden, der 2 Hakenstufen erreicht hat, eigenhändig zu töten.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein aus Elfenbein geschnitztes Zeichen des Todes.“</span>"
-        },
-        "en": {
-          "name": "Ivory Memento Mori",
-          "description": "Grants the ability to kill 1 Survivor who has progressed 2 Hook Stages by your hand.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A token of death carved from ivory.\"</span>"
         },
         "es": {
           "name": "Memento Mori de marfil",
@@ -1370,8 +1193,8 @@
       }
     },
     {
+      "id": 45,
       "name": "Ebony Memento Mori",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Grants the ability to kill all Survivors who have progressed 2 Hook Stages by your hand.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"No one escapes.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ebonyMementoMori.png?7f7d73",
@@ -1381,10 +1204,6 @@
         "de": {
           "name": "Ebenholz-Memento Mori",
           "description": "Gewährt die Fähigkeit, alle Überlebenden, die 2 Hakenstufen erreicht haben, eigenhändig zu töten.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Niemand entkommt.“</span>"
-        },
-        "en": {
-          "name": "Ebony Memento Mori",
-          "description": "Grants the ability to kill all Survivors who have progressed 2 Hook Stages by your hand.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"No one escapes.\"</span>"
         },
         "es": {
           "name": "Memento Mori de ébano",
@@ -1401,8 +1220,8 @@
       }
     },
     {
+      "id": 46,
       "name": "Shroud of Separation",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "All Survivors start the trial separated from one another.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A torn shroud bearing a cold omen.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_shroudOfSeparation.png?211799",
@@ -1412,10 +1231,6 @@
         "de": {
           "name": "Schleier der Trennung",
           "description": "Alle Überlebenden beginnen die Prüfung voneinander getrennt.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Ein zerrissener Schleier voller finsterer Vorzeichen.“</span>"
-        },
-        "en": {
-          "name": "Shroud of Separation",
-          "description": "All Survivors start the trial separated from one another.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"A torn shroud bearing a cold omen.\"</span>"
         },
         "es": {
           "name": "Mortaja de separación",
@@ -1432,8 +1247,8 @@
       }
     },
     {
+      "id": 47,
       "name": "Black Ward",
-      "category": "KillerOfferings",
       "role": "Killer",
       "description": "Burning this offering grants you protection against the loss of your Add-ons at the end of the trial.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"The dark power remains unspent.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_blackWard.png?6586a8",
@@ -1443,10 +1258,6 @@
         "de": {
           "name": "Schwarzes Schutzzeichen",
           "description": "Das Verbrennen dieser Opfergabe schützt dich am Ende der Prüfung vor dem Verlust deiner Zusätze.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Die dunkle Kraft bleibt unberührt.“</span>"
-        },
-        "en": {
-          "name": "Black Ward",
-          "description": "Burning this offering grants you protection against the loss of your Add-ons at the end of the trial.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"The dark power remains unspent.\"</span>"
         },
         "es": {
           "name": "Sello negro",
@@ -1463,8 +1274,8 @@
       }
     },
     {
+      "id": 48,
       "name": "Escape! Cake",
-      "category": "CommonOfferings",
       "role": "Survivor",
       "description": "Grants <b>100%</b> bonus Bloodpoints in all categories to yourself.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A delightfully sweet treat baked with the essence of freedom.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_escapeCake.png?cf850a",
@@ -1474,10 +1285,6 @@
         "de": {
           "name": "Fluchtkuchen",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in allen Kategorien für dich selbst.<br><br><li>Persönlich.</li><br><span class=\"FlavorText\">„Ein herrlich süßer Kuchen, gebacken mit der Essenz der Freiheit.“</span>"
-        },
-        "en": {
-          "name": "Escape! Cake",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in all categories to yourself.<br><br><li>Personal.</li><br><span class=\"FlavorText\">\"A delightfully sweet treat baked with the essence of freedom.\"</span>"
         },
         "es": {
           "name": "¡Tarta de huida!",
@@ -1494,8 +1301,8 @@
       }
     },
     {
+      "id": 49,
       "name": "Hollow Shell",
-      "category": "CommonOfferings",
       "role": "Killer",
       "description": "Grants <b>25%</b> bonus Bloodpoints in all categories.<br><br><span class=\"FlavorText\">\"A hollowed shell holding lingering echoes of the Entity's realm.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_hollowShell.png?55656e",
@@ -1505,10 +1312,6 @@
         "de": {
           "name": "Hohle Schale",
           "description": "Gewährt <b>25%</b> zusätzliche Blutpunkte in allen Kategorien.<br><br><span class=\"FlavorText\">„Eine hohle Schale mit verwehten Echos des Reiches.“</span>"
-        },
-        "en": {
-          "name": "Hollow Shell",
-          "description": "Grants <b>25%</b> bonus Bloodpoints in all categories.<br><br><span class=\"FlavorText\">\"A hollowed shell holding lingering echoes of the Entity's realm.\"</span>"
         },
         "es": {
           "name": "Concha hueca",
@@ -1525,8 +1328,8 @@
       }
     },
     {
+      "id": 50,
       "name": "Sealed Envelope",
-      "category": "CommonOfferings",
       "role": "Survivor",
       "description": "Grants <b>25%</b> bonus Bloodpoints in all categories to all Survivors.<br><br><span class=\"FlavorText\">\"A sealed wax envelope containing mysterious tokens of encouragement.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_sealedEnvelope.png?fac66f",
@@ -1536,10 +1339,6 @@
         "de": {
           "name": "Versiegelter Umschlag",
           "description": "Gewährt allen Überlebenden <b>25%</b> zusätzliche Blutpunkte in allen Kategorien.<br><br><span class=\"FlavorText\">„Ein versiegelter Wachsumschlag mit geheimnisvollen Zeichen der Ermutigung.“</span>"
-        },
-        "en": {
-          "name": "Sealed Envelope",
-          "description": "Grants <b>25%</b> bonus Bloodpoints in all categories to all Survivors.<br><br><span class=\"FlavorText\">\"A sealed wax envelope containing mysterious tokens of encouragement.\"</span>"
         },
         "es": {
           "name": "Sobre sellado",
@@ -1556,8 +1355,8 @@
       }
     },
     {
+      "id": 51,
       "name": "Bloody Party Streamers",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants 100% bonus Bloodpoints in all categories for all players this trial.\n\"\"A reminder of a bloody good time when people came together, but left screaming.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_bloodyPartyStreamers.png?c37deb",
@@ -1567,10 +1366,6 @@
         "de": {
           "name": "Blutige Partyluftschlangen",
           "description": "Gewährt 100 % Bonus-Blutpunkte in allen Kategorien für alle Spieler in dieser Prüfung.\n\"„Eine Erinnerung an eine fantastische Feier, bei der sich Leute versammelt hatten, dann aber schreiend flüchteten.“\""
-        },
-        "en": {
-          "name": "Bloody Party Streamers",
-          "description": "Grants 100% bonus Bloodpoints in all categories for all players this trial.\n\"\"A reminder of a bloody good time when people came together, but left screaming.\"\""
         },
         "es": {
           "name": "Serpentinas de fiesta ensangrentadas",
@@ -1587,8 +1382,8 @@
       }
     },
     {
+      "id": 52,
       "name": "Bound Envelope",
-      "category": "CommonOfferings",
       "role": "Survivor",
       "description": "Grants <b>25%</b> bonus Bloodpoints in all categories to all Survivors.<br><br><span class=\"FlavorText\">\"An envelope tied with rough twine, holding tokens of shared survival.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_boundEnvelope.png?4e4c97",
@@ -1598,10 +1393,6 @@
         "de": {
           "name": "Gebundener Umschlag",
           "description": "Gewährt allen Überlebenden <b>25%</b> zusätzliche Blutpunkte in allen Kategorien.<br><br><span class=\"FlavorText\">„Ein mit rauem Garn verschnürter Umschlag mit Zeichen des Zusammenhalts.“</span>"
-        },
-        "en": {
-          "name": "Bound Envelope",
-          "description": "Grants <b>25%</b> bonus Bloodpoints in all categories to all Survivors.<br><br><span class=\"FlavorText\">\"An envelope tied with rough twine, holding tokens of shared survival.\"</span>"
         },
         "es": {
           "name": "Sobre atado",
@@ -1618,8 +1409,8 @@
       }
     },
     {
+      "id": 53,
       "name": "Coconut Scream Pie",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants <b>106%</b> bonus Bloodpoints in all categories to all players and reveals event props.<br><br><span class=\"FlavorText\">\"A delightfully horrifying dessert packed with coconut screams.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconsFavors_9thAnniversary.png?21cf45",
@@ -1629,10 +1420,6 @@
         "de": {
           "name": "Schockosnusskuchen",
           "description": "Gewährt allen Spielern <b>106%</b> zusätzliche Blutpunkte in allen Kategorien und zeigt Event-Objekte an.<br><br><span class=\"FlavorText\">„Ein schaurig-köstliches Dessert voller Kokosnuss-Schreie.“</span>"
-        },
-        "en": {
-          "name": "Coconut Scream Pie",
-          "description": "Grants <b>106%</b> bonus Bloodpoints in all categories to all players and reveals event props.<br><br><span class=\"FlavorText\">\"A delightfully horrifying dessert packed with coconut screams.\"</span>"
         },
         "es": {
           "name": "Pastel de coco gritón",
@@ -1649,8 +1436,8 @@
       }
     },
     {
+      "id": 54,
       "name": "Frightful Flan",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "It may be a masquerade ball, but there is no masking the foul odor of this quivering yellow mass.\nConsuming it, however, fills you with vigor.\nGrants 106% bonus Bloodpoints in all categories for all players this trial.\n\"\"Happy Anniversary! We made you this cake/pie/pudding/unspeakable horror.\"\n- The Dead by Daylight Team\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_frightfulFlan.png?f3fddf",
@@ -1660,10 +1447,6 @@
         "de": {
           "name": "Fürchterlicher Flan",
           "description": "Auch wenn es ein Maskenball ist, der faulige Geruch dieser glibberigen gelben Masse kann nicht überdeckt werden.\nAber wenn du sie verwendest, wirst du mit Kraft erfüllt.\nGewährt 106 % Bonus-Blutpunkte in allen Kategorien für alle Spieler in dieser Prüfung.\n\"„Alles Gute zum Jubiläum! Wir haben diesen Kuchen/Plunder/Pudding/unsagbaren Horror für dich gemacht.“\n– Das Team von Dead by Daylight\""
-        },
-        "en": {
-          "name": "Frightful Flan",
-          "description": "It may be a masquerade ball, but there is no masking the foul odor of this quivering yellow mass.\nConsuming it, however, fills you with vigor.\nGrants 106% bonus Bloodpoints in all categories for all players this trial.\n\"\"Happy Anniversary! We made you this cake/pie/pudding/unspeakable horror.\"\n- The Dead by Daylight Team\""
         },
         "es": {
           "name": "Flan aterrador",
@@ -1680,8 +1463,8 @@
       }
     },
     {
+      "id": 55,
       "name": "Ghastly Gateau",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "A spectacularly grim cake to mark our four years together. 1% tastier than a Gruesome Gateau. Grants 104% bonus Bloodpoints in all categories for all players this trial.\n\"\"Happy Anniversary! Here's to many more!\"\n- The Dead by Daylight Team\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ghastlyGateau.png?efca5e",
@@ -1691,10 +1474,6 @@
         "de": {
           "name": "Torte des Grauens",
           "description": "Eine spektakulär schreckliche Torte zur Feier von vier gemeinsamen Jahren. Ist 1 % leckerer als eine Ekeltorte. Gewährt 104 % Bonus-Blutpunkte in allen Kategorien und für alle Spieler in dieser Prüfung.\n\"„Herzlichen Glückwunsch! Auf viele weitere Jahre!“\n– Das Team von Dead by Daylight\""
-        },
-        "en": {
-          "name": "Ghastly Gateau",
-          "description": "A spectacularly grim cake to mark our four years together. 1% tastier than a Gruesome Gateau. Grants 104% bonus Bloodpoints in all categories for all players this trial.\n\"\"Happy Anniversary! Here's to many more!\"\n- The Dead by Daylight Team\""
         },
         "es": {
           "name": "Tarta fantasmagórica",
@@ -1711,8 +1490,8 @@
       }
     },
     {
+      "id": 56,
       "name": "Gruesome Gateau",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "A terrific stomach-churning cake to mark our three years together. Grants 103% bonus Bloodpoints in all categories for all players this trial.\n\"“Happy Anniversary! Here's to our three years together!\"\n– The Dead by Daylight Team\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_gruesomeGateau.png?344e3b",
@@ -1722,10 +1501,6 @@
         "de": {
           "name": "Ekeltorte",
           "description": "Eine schreckliche, den Magen durchschüttelnde Torte zur Feier von drei gemeinsamen Jahren. Gewährt 103 % Bonus-Blutpunkte in allen Kategorien und für alle Spieler in dieser Prüfung.\n\"„Herzlichen Glückwunsch! Auf unsere drei gemeinsamen Jahre!“\n– Das Team von Dead by Daylight\""
-        },
-        "en": {
-          "name": "Gruesome Gateau",
-          "description": "A terrific stomach-churning cake to mark our three years together. Grants 103% bonus Bloodpoints in all categories for all players this trial.\n\"“Happy Anniversary! Here's to our three years together!\"\n– The Dead by Daylight Team\""
         },
         "es": {
           "name": "Tarta horripilante",
@@ -1742,8 +1517,8 @@
       }
     },
     {
+      "id": 57,
       "name": "Sacrificial Cake",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants <b>105%</b> bonus Bloodpoints in all categories to all players during the 5th Anniversary.<br><br><span class=\"FlavorText\">\"A delightfully bloody cake to celebrate 5 years in the Fog.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_sacrificialCake.png?bcfd7d",
@@ -1753,10 +1528,6 @@
         "de": {
           "name": "Opferkuchen",
           "description": "Gewährt allen Spielern <b>105%</b> zusätzliche Blutpunkte in allen Kategorien während des 5. Jubiläums.<br><br><span class=\"FlavorText\">„Ein herrlich blutiger Kuchen zum 5-jährigen Jubiläum im Nebel.“</span>"
-        },
-        "en": {
-          "name": "Sacrificial Cake",
-          "description": "Grants <b>105%</b> bonus Bloodpoints in all categories to all players during the 5th Anniversary.<br><br><span class=\"FlavorText\">\"A delightfully bloody cake to celebrate 5 years in the Fog.\"</span>"
         },
         "es": {
           "name": "Pastel del sacrificio",
@@ -1773,8 +1544,8 @@
       }
     },
     {
+      "id": 58,
       "name": "SCREECH COBBLER",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants <b>108%</b> bonus Bloodpoints in all categories to all players and reveals Invitations during the 8th Anniversary.<br><br><span class=\"FlavorText\">\"Tryks has concocted a delicious dessert for you this year... dying to have a taste.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_screechCobbler.png?1bcdd0",
@@ -1786,8 +1557,7 @@
           "description": "Gewährt allen Spielern <b>108%</b> zusätzliche Blutpunkte in allen Kategorien während des 8. Jubiläums.<br><br><span class=\"FlavorText\">„Tryks hat dieses Jahr ein köstliches Dessert zubereitet... zum Sterben lecker.“</span>"
         },
         "en": {
-          "name": "Screech Cobbler",
-          "description": "Grants <b>108%</b> bonus Bloodpoints in all categories to all players and reveals Invitations during the 8th Anniversary.<br><br><span class=\"FlavorText\">\"Tryks has concocted a delicious dessert for you this year... dying to have a taste.\"</span>"
+          "name": "Screech Cobbler"
         },
         "es": {
           "name": "Pastel chillón",
@@ -1804,8 +1574,8 @@
       }
     },
     {
+      "id": 59,
       "name": "TERRORMISU",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants <b>107%</b> bonus Bloodpoints in all categories to all players and reveals Invitations during the 7th Anniversary.<br><br><span class=\"FlavorText\">\"A delightfully twisted dessert layered with horrors and sweet decadence.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_terrormisu.png?165ae1",
@@ -1817,8 +1587,7 @@
           "description": "Gewährt allen Spielern <b>107%</b> zusätzliche Blutpunkte in allen Kategorien während des 7. Jubiläums.<br><br><span class=\"FlavorText\">„Ein herrlich verdrehtes Dessert voller Grauen und süßer Dekadenz.“</span>"
         },
         "en": {
-          "name": "Terrormisu",
-          "description": "Grants <b>107%</b> bonus Bloodpoints in all categories to all players and reveals Invitations during the 7th Anniversary.<br><br><span class=\"FlavorText\">\"A delightfully twisted dessert layered with horrors and sweet decadence.\"</span>"
+          "name": "Terrormisu"
         },
         "es": {
           "name": "Terrormisú",
@@ -1835,8 +1604,8 @@
       }
     },
     {
+      "id": 60,
       "name": "Toothy Torte",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants <b>109%</b> bonus Bloodpoints in all categories to all players during the 9th Anniversary.<br><br><span class=\"FlavorText\">\"A razor-sharp celebration cake that bites back.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconsFavors_10thAnniversary.png?c0ec5b",
@@ -1846,10 +1615,6 @@
         "de": {
           "name": "Zahnige Torte",
           "description": "Gewährt allen Spielern <b>109%</b> zusätzliche Blutpunkte in allen Kategorien während des 9. Jubiläums.<br><br><span class=\"FlavorText\">„Eine messerscharfe Festtagstorte, die zurückbeißt.“</span>"
-        },
-        "en": {
-          "name": "Toothy Torte",
-          "description": "Grants <b>109%</b> bonus Bloodpoints in all categories to all players during the 9th Anniversary.<br><br><span class=\"FlavorText\">\"A razor-sharp celebration cake that bites back.\"</span>"
         },
         "es": {
           "name": "Tarta dentada",
@@ -1866,8 +1631,8 @@
       }
     },
     {
+      "id": 61,
       "name": "Arcane Dousing Rod",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Calls upon The Entity to reveal the auras of Haunts during the event and grants bonus Bloodpoints.<br><br><li>Special.</li><br><span class=\"FlavorText\">\"A peculiar wooden rod imbued with arcane energy.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_arcaneDousingRod.png?b14179",
@@ -1877,10 +1642,6 @@
         "de": {
           "name": "Arkane Wünschelrute",
           "description": "Ruft den Entitus an, um während des Events die Auren von Spukerscheinungen zu enthüllen, und gewährt zusätzliche Blutpunkte.<br><br><li>Spezial.</li><br><span class=\"FlavorText\">„Eine eigentümliche Holzwünschelrute, erfüllt von arkaner Energie.“</span>"
-        },
-        "en": {
-          "name": "Arcane Dousing Rod",
-          "description": "Calls upon The Entity to reveal the auras of Haunts during the event and grants bonus Bloodpoints.<br><br><li>Special.</li><br><span class=\"FlavorText\">\"A peculiar wooden rod imbued with arcane energy.\"</span>"
         },
         "es": {
           "name": "Vara de zahorí arcana",
@@ -1897,8 +1658,8 @@
       }
     },
     {
+      "id": 62,
       "name": "Cursed Seed",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants <b>100%</b> bonus Bloodpoints in all categories and reveals shrines during The Midnight Grove event.<br><br><span class=\"FlavorText\">\"A dark seed harvested under the pale light of the Midnight Grove.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_cursedSeed.png?756352",
@@ -1908,10 +1669,6 @@
         "de": {
           "name": "Verfluchter Samen",
           "description": "Gewährt <b>100%</b> zusätzliche Blutpunkte in allen Kategorien und zeigt Schreine während des Mitternachtshain-Events an.<br><br><span class=\"FlavorText\">„Ein dunkler Samen, geerntet im blassen Licht des Mitternachtshains.“</span>"
-        },
-        "en": {
-          "name": "Cursed Seed",
-          "description": "Grants <b>100%</b> bonus Bloodpoints in all categories and reveals shrines during The Midnight Grove event.<br><br><span class=\"FlavorText\">\"A dark seed harvested under the pale light of the Midnight Grove.\"</span>"
         },
         "es": {
           "name": "Semilla maldita",
@@ -1928,8 +1685,8 @@
       }
     },
     {
+      "id": 63,
       "name": "Pustula Petals",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants bonus Bloodpoints and spawns additional Cankerous Pustules during The Eternal Blight event.<br><br><span class=\"FlavorText\">\"Rotten, glowing petals dripping with concentrated serum.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_pustulaPetals.png?defff7",
@@ -1939,10 +1696,6 @@
         "de": {
           "name": "Pustel-Blütenblätter",
           "description": "Gewährt Bonus-Blutpunkte und lässt zusätzliche Fäulnispusteln während des Events Die ewige Fäule erscheinen.<br><br><span class=\"FlavorText\">„Verfaulte, leuchtende Blütenblätter, die von konzentriertem Serum triefen.“</span>"
-        },
-        "en": {
-          "name": "Pustula Petals",
-          "description": "Grants bonus Bloodpoints and spawns additional Cankerous Pustules during The Eternal Blight event.<br><br><span class=\"FlavorText\">\"Rotten, glowing petals dripping with concentrated serum.\"</span>"
         },
         "es": {
           "name": "Pétalos de pústula",
@@ -1959,8 +1712,8 @@
       }
     },
     {
+      "id": 64,
       "name": "Red Envelope",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "A gesture of generosity to bring good fortune to the unfortunate. Calls upon The Entity to generate 1 Red Envelope in the trial.\n• The aura of your own envelope is revealed to you at the start of the trial.\n• Interacting with your own Red Envelope reveals its aura to all other players in the trial until claimed.\n• Opening another player's Red Envelope awards you with Bloodpoints of a random amount.\n• When another player opens your envelope during the trial, you are awarded Bloodpoints and a cosmetic from the Moonlight Burrow collection.\n• Increased Bloodpoints awarded from Lunar New Year Generators and Hooks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_redEnvelope.png?9a93c6",
@@ -1970,10 +1723,6 @@
         "de": {
           "name": "Roter Umschlag",
           "description": "Eine großzügige Geste, um weniger Glücklichen ein wenig Glück zu bringen. Ruft den Entitus, um bei der Prüfung 1 roten Umschlag zu erzeugen.\n• Die Aura deines eigenen Umschlags wird dir zu Beginn der Prüfung angezeigt.\n• Wenn du mit deinem eigenen roten Umschlag interagierst, wird seine Aura allen anderen Spielern in der Prüfung angezeigt, bis er abgeholt wurde.\n• Wenn du den roten Umschlag eines anderen Spielers öffnest, erhältst du eine zufällige Anzahl von Blutpunkten.\n• Wenn ein anderer Spieler deinen Umschlag während einer Prüfung öffnet, erhältst du Blutpunkte und einen kosmetischen Gegenstand der Sammlung Mondlichthöhle.\n• Mond-Neujahr-Generatoren und -Haken gewähren mehr Blutpunkte."
-        },
-        "en": {
-          "name": "Red Envelope",
-          "description": "A gesture of generosity to bring good fortune to the unfortunate. Calls upon The Entity to generate 1 Red Envelope in the trial.\n• The aura of your own envelope is revealed to you at the start of the trial.\n• Interacting with your own Red Envelope reveals its aura to all other players in the trial until claimed.\n• Opening another player's Red Envelope awards you with Bloodpoints of a random amount.\n• When another player opens your envelope during the trial, you are awarded Bloodpoints and a cosmetic from the Moonlight Burrow collection.\n• Increased Bloodpoints awarded from Lunar New Year Generators and Hooks."
         },
         "es": {
           "name": "Sobre rojo",
@@ -1990,8 +1739,8 @@
       }
     },
     {
+      "id": 65,
       "name": "Bloodshot Eye",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "An eye filled with, and capable of finding, strange blood.\n• Personal.\n• Provides a +100% Bloodpoints bonus to all Blood Moon score events.\n• Only usable when playing Event: Blood Moon.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_bloodshotEye.png?18eae1",
@@ -2001,10 +1750,6 @@
         "de": {
           "name": "Blutunterlaufenes Auge",
           "description": "Ein Auge, das mit seltsamem Blut gefüllt ist und dieses auch aufspüren kann.\n• Betrifft nur den Besitzer.\n• Gewährt einen Blutpunktebonus von +100 % auf alle Blutmond-Punktereignisse.\n• Nur verwendbar im Event: Blutmond."
-        },
-        "en": {
-          "name": "Bloodshot Eye",
-          "description": "An eye filled with, and capable of finding, strange blood.\n• Personal.\n• Provides a +100% Bloodpoints bonus to all Blood Moon score events.\n• Only usable when playing Event: Blood Moon."
         },
         "es": {
           "name": "Ojo sanguinolento",
@@ -2021,8 +1766,8 @@
       }
     },
     {
+      "id": 66,
       "name": "BBQ Invitation",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Grants bonus Bloodpoints and converts generators and hooks into BBQ-themed objectives during the Scorching Summer BBQ event.<br><br><span class=\"FlavorText\">\"Fire up the grill and let the meat sizzle under the blazing sun.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_bbqInvitation.png?567a12",
@@ -2032,10 +1777,6 @@
         "de": {
           "name": "Grill-Einladung",
           "description": "Gewährt Bonus-Blutpunkte und verwandelt Generatoren und Haken in Grill-Objekte während des Sommergrill-Events.<br><br><span class=\"FlavorText\">„Feuere den Grill an und lass das Fleisch unter der sengenden Sonne brutzeln.“</span>"
-        },
-        "en": {
-          "name": "BBQ Invitation",
-          "description": "Grants bonus Bloodpoints and converts generators and hooks into BBQ-themed objectives during the Scorching Summer BBQ event.<br><br><span class=\"FlavorText\">\"Fire up the grill and let the meat sizzle under the blazing sun.\"</span>"
         },
         "es": {
           "name": "Invitación a la barbacoa",
@@ -2052,8 +1793,8 @@
       }
     },
     {
+      "id": 67,
       "name": "Bloodied Blueprint",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Reveals the aura of the basement hooks to you for 20 seconds at the start of the trial. Tremendously increases the chance of spawning the basement in the Killer Shack, if the map has a Killer Shack.\n• Secret.\n\"\"Spatters of dried blood partially conceal the design.”\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_bloodiedBlueprint.png?29cd50",
@@ -2063,10 +1804,6 @@
         "de": {
           "name": "Blutige Blaupause",
           "description": "Enthüllt für dich zu Beginn der Prüfung 20 Sekunden lang die Auren der Kellerhaken. Erhöht enorm die Wahrscheinlichkeit, dass der Keller in der Hütte des Killers erscheint, sofern es auf der Karte eine Hütte des Killers gibt.\n• Geheim.\n\"„Der Plan ist teilweise von Blutflecken bedeckt.“\""
-        },
-        "en": {
-          "name": "Bloodied Blueprint",
-          "description": "Reveals the aura of the basement hooks to you for 20 seconds at the start of the trial. Tremendously increases the chance of spawning the basement in the Killer Shack, if the map has a Killer Shack.\n• Secret.\n\"\"Spatters of dried blood partially conceal the design.”\""
         },
         "es": {
           "name": "Planos ensangrentados",
@@ -2083,8 +1820,8 @@
       }
     },
     {
+      "id": 68,
       "name": "Torn Blueprint",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Reveals the aura of the basement hooks to you for 20 seconds at the start of the trial. Tremendously increases the chance of spawning the basement in the main building, if the map has a main building.\n• Secret.\n\"\"Though brittle and torn, the design is mostly legible.”\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_tornBlueprint.png?5f9d67",
@@ -2094,10 +1831,6 @@
         "de": {
           "name": "Zerrissene Blaupause",
           "description": "Enthüllt für dich zu Beginn der Prüfung 20 Sekunden lang die Auren der Kellerhaken. Erhöht enorm die Wahrscheinlichkeit, dass der Keller im Hauptgebäude erscheint, sofern es auf der Karte ein Hauptgebäude gibt.\n• Geheim.\n\"„Der Plan ist zwar rissig und zerfetzt, aber durchaus lesbar.“\""
-        },
-        "en": {
-          "name": "Torn Blueprint",
-          "description": "Reveals the aura of the basement hooks to you for 20 seconds at the start of the trial. Tremendously increases the chance of spawning the basement in the main building, if the map has a main building.\n• Secret.\n\"\"Though brittle and torn, the design is mostly legible.”\""
         },
         "es": {
           "name": "Planos rotos",
@@ -2114,8 +1847,8 @@
       }
     },
     {
+      "id": 69,
       "name": "Clear Reagent",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Slightly lessens the Dark Mist.\n• Secret.\n\"\"The Mist rolls in, traps all in Its deep madness. There is no running, no escape, no asylum, except for the clear waters of the pond lost in the forest.\" -Unknown, Notebook\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_clearReagent.png?9dd727",
@@ -2125,10 +1858,6 @@
         "de": {
           "name": "Klares Reagenz",
           "description": "Verringert leicht den dunklen Nebelschleier.\n• Geheim.\n\"„Der Nebelschleier bricht herein, er zieht alles in seinen dunklen Wahnsinn. Es gibt kein Weglaufen, kein Entrinnen, keine Zuflucht, abgesehen vom reinen Wasser des im Wald verlorenen Teichs.“ – Notizbuch eines unbekannten Verfassers\""
-        },
-        "en": {
-          "name": "Clear Reagent",
-          "description": "Slightly lessens the Dark Mist.\n• Secret.\n\"\"The Mist rolls in, traps all in Its deep madness. There is no running, no escape, no asylum, except for the clear waters of the pond lost in the forest.\" -Unknown, Notebook\""
         },
         "es": {
           "name": "Reactivo transparente",
@@ -2145,8 +1874,8 @@
       }
     },
     {
+      "id": 70,
       "name": "Faint Reagent",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Slightly thickens the Dark Mist.\n• Secret.\n\"\"Paralyzed, I stand in the cold as death lingers.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_faintReagent.png?c4e9fb",
@@ -2156,10 +1885,6 @@
         "de": {
           "name": "Schwaches Reagenz",
           "description": "Verdichtet leicht den dunklen Nebelschleier.\n• Geheim.\n\"„Gelähmt stehe ich in der Kälte, zurückbleibend mit dem Tod.“\""
-        },
-        "en": {
-          "name": "Faint Reagent",
-          "description": "Slightly thickens the Dark Mist.\n• Secret.\n\"\"Paralyzed, I stand in the cold as death lingers.\"\""
         },
         "es": {
           "name": "Reactivo translúcido",
@@ -2176,8 +1901,8 @@
       }
     },
     {
+      "id": 71,
       "name": "Hazy Reagent",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Moderately thickens the Dark Mist.\n• Secret.\n\"\"The Mist is alluring, hypnotizing. I love It and fear It at the same time.\" -Donna's Sketchbook\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_hazyReagent.png?3558c4",
@@ -2187,10 +1912,6 @@
         "de": {
           "name": "Trübes Reagenz",
           "description": "Verdichtet moderat den dunklen Nebelschleier.\n• Geheim.\n\"„Der Nebelschleier ist verführerisch, hypnotisierend. Ich liebe ihn und fürchte ihn zugleich.“ – Donnas Skizzenbuch\""
-        },
-        "en": {
-          "name": "Hazy Reagent",
-          "description": "Moderately thickens the Dark Mist.\n• Secret.\n\"\"The Mist is alluring, hypnotizing. I love It and fear It at the same time.\" -Donna's Sketchbook\""
         },
         "es": {
           "name": "Reactivo turbio",
@@ -2207,8 +1928,8 @@
       }
     },
     {
+      "id": 72,
       "name": "Murky Reagent",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Greatly thickens the Dark Mist.\n• Secret.\n\"\"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" -Unknown, Notebook\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_murkyReagent.png?1bf707",
@@ -2218,10 +1939,6 @@
         "de": {
           "name": "Dunkles Reagenz",
           "description": "Verdichtet stark den dunklen Nebelschleier.\n• Geheim.\n\"„Der Nebelschleier scheint uns vor der Bestie zu beschützen, aber er ist ein Gift, ein Geschwür, welches uns mit Dunkelheit und Wahnsinn erfüllt.“ – Notizbuch eines unbekannten Verfassers\""
-        },
-        "en": {
-          "name": "Murky Reagent",
-          "description": "Greatly thickens the Dark Mist.\n• Secret.\n\"\"The Mist seems to protect us from the beast, but it is a poison, a cancer, filling us with darkness and insanity.\" -Unknown, Notebook\""
         },
         "es": {
           "name": "Reactivo opaco",
@@ -2238,8 +1955,8 @@
       }
     },
     {
+      "id": 73,
       "name": "Annotated Blueprint",
-      "category": "CommonOfferings",
       "role": "Survivor",
       "description": "<b>Tremendously increases</b> the chance of spawning the Hatch in the Killer Shack.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"Someone wrote essential notes on the side, but who?\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_annotatedBlueprint.png?979e92",
@@ -2249,10 +1966,6 @@
         "de": {
           "name": "Kommentierter Bauplan",
           "description": "Erhöht die Chance <b>enorm</b>, dass die Bodenluke in der Killer-Hütte erscheint.<br><br><li>Geheimnis.</li><br><span class=\"FlavorText\">„Jemand hat wichtige Notizen am Rand hinterlassen, aber wer?“</span>"
-        },
-        "en": {
-          "name": "Annotated Blueprint",
-          "description": "<b>Tremendously increases</b> the chance of spawning the Hatch in the Killer Shack.<br><br><li>Secret.</li><br><span class=\"FlavorText\">\"Someone wrote essential notes on the side, but who?\"</span>"
         },
         "es": {
           "name": "Plano anotado",
@@ -2269,9 +1982,10 @@
       }
     },
     {
+      "id": 74,
       "name": "Azarov's Key",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 2,
       "description": "<b>Tremendously increases</b> the chance of being sent to <b>Autohaven Wreckers</b> when burnt.<br><br><span class=\"FlavorText\">\"A mechanical key etched with the mark of the Azarov lineage.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_azarovsKey.png?7a4d16",
       "icon_local_path": "icons/offerings/azarovs_key.webp",
@@ -2280,10 +1994,6 @@
         "de": {
           "name": "Azarovs Schlüssel",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zum <b>Autohaven-Schrottplatz</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Ein mechanischer Schlüssel mit dem Siegel der Familie Azarov.“</span>"
-        },
-        "en": {
-          "name": "Azarov's Key",
-          "description": "<b>Tremendously increases</b> the chance of being sent to <b>Autohaven Wreckers</b> when burnt.<br><br><span class=\"FlavorText\">\"A mechanical key etched with the mark of the Azarov lineage.\"</span>"
         },
         "es": {
           "name": "Llave de Azarov",
@@ -2300,9 +2010,10 @@
       }
     },
     {
+      "id": 75,
       "name": "Grandma's Cookbook",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 6,
       "description": "Tremendously increases the chances of being sent to Backwater Swamp when burnt.\n• Secret.\n• Does not stack.\n\"\"A leather-bound binder containing horrible human meat recipes such as the granny-slappin’ good chili.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_granmasCookbook.png?e2f732",
       "icon_local_path": "icons/offerings/grandmas_cookbook.webp",
@@ -2311,10 +2022,6 @@
         "de": {
           "name": "Großmutters Kochbuch",
           "description": "Erhöht enorm die Wahrscheinlichkeit, zum Backwater-Sumpf geschickt zu werden, wenn es verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Eine ledergebundene Mappe, die grausame Menschenfleischrezepte enthält, wie zum Beispiel Großmutters Schlager: das gute Chili.“\""
-        },
-        "en": {
-          "name": "Grandma's Cookbook",
-          "description": "Tremendously increases the chances of being sent to Backwater Swamp when burnt.\n• Secret.\n• Does not stack.\n\"\"A leather-bound binder containing horrible human meat recipes such as the granny-slappin’ good chili.\"\""
         },
         "es": {
           "name": "Libro de cocina de la abuela",
@@ -2331,9 +2038,10 @@
       }
     },
     {
+      "id": 76,
       "name": "Heart Locket",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 3,
       "description": "Tremendously increases the chances of being sent to Coldwind Farm when burnt.\n• Secret.\n• Does not stack.\n\"\"A silver heart locket necklace. The simple interior is engraved with the following: 'E+M'.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_heartLocket.png?37d076",
       "icon_local_path": "icons/offerings/heart_locket.webp",
@@ -2342,10 +2050,6 @@
         "de": {
           "name": "Herzmedaillon",
           "description": "Erhöht enorm die Wahrscheinlichkeit, zur Coldwind Farm geschickt zu werden, wenn es verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Eine Halskette mit silbernem Anhänger. Im schlichten Inneren ist E+M eingraviert.“\""
-        },
-        "en": {
-          "name": "Heart Locket",
-          "description": "Tremendously increases the chances of being sent to Coldwind Farm when burnt.\n• Secret.\n• Does not stack.\n\"\"A silver heart locket necklace. The simple interior is engraved with the following: 'E+M'.\"\""
         },
         "es": {
           "name": "Medallón de corazón",
@@ -2362,8 +2066,8 @@
       }
     },
     {
+      "id": 77,
       "name": "Charred Wedding Photograph",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "<b>Tremendously increases</b> the chance of being sent to <b>Crotus Prenn Asylum</b> when burnt.<br><br><span class=\"FlavorText\">\"A burnt picture holding painful memories of a shattered marriage.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_charredWeddingPhotograph.png?63060c",
@@ -2373,10 +2077,6 @@
         "de": {
           "name": "Verkohltes Hochzeitsfoto",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zur <b>Crotus-Prenn-Anstalt</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Ein verbranntes Foto mit schmerzhaften Erinnerungen an eine zerbrochene Ehe.“</span>"
-        },
-        "en": {
-          "name": "Charred Wedding Photograph",
-          "description": "<b>Tremendously increases</b> the chance of being sent to <b>Crotus Prenn Asylum</b> when burnt.<br><br><span class=\"FlavorText\">\"A burnt picture holding painful memories of a shattered marriage.\"</span>"
         },
         "es": {
           "name": "Foto de boda carbonizada",
@@ -2393,9 +2093,10 @@
       }
     },
     {
+      "id": 78,
       "name": "Beef Tallow Mixture",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 19,
       "description": "<b>Tremendously increases</b> the chance of being sent to <b>The Decimated Borgo</b> when burnt.<br><br><span class=\"FlavorText\">\"A foul blend of rendered fat once used to fuel the fires of war.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_beefTallowMixture.png?67bb69",
       "icon_local_path": "icons/offerings/beef_tallow_mixture.webp",
@@ -2404,10 +2105,6 @@
         "de": {
           "name": "Rindertalgmischung",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zum <b>Dezimierten Borgo</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Eine übelriechende Mischung aus ausgelassenem Fett, die einst die Kriegsfeuer nährte.“</span>"
-        },
-        "en": {
-          "name": "Beef Tallow Mixture",
-          "description": "<b>Tremendously increases</b> the chance of being sent to <b>The Decimated Borgo</b> when burnt.<br><br><span class=\"FlavorText\">\"A foul blend of rendered fat once used to fuel the fires of war.\"</span>"
         },
         "es": {
           "name": "Mezcla de sebo de buey",
@@ -2424,8 +2121,8 @@
       }
     },
     {
+      "id": 79,
       "name": "Airlock Doors",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Tremendously increases the chance to be sent to Nostromo Wreckage when burnt.\n• Secret.\n• Does not stack.\n\"“You know the quarantine procedure. 24 hours for decontamination.” –Ellen Ripley\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_airlockDoors.png?315559",
@@ -2435,10 +2132,6 @@
         "de": {
           "name": "Luftschleusentore",
           "description": "Erhöht enorm die Wahrscheinlichkeit, zum Nostromo-Wrack geschickt zu werden, wenn sie verbrannt werden.\n• Geheim.\n• Nicht kombinierbar.\n\"„Du kennst die Quarantänevorschriften. 24 Stunden für die Dekontaminierung.“ – Ellen Ripley\""
-        },
-        "en": {
-          "name": "Airlock Doors",
-          "description": "Tremendously increases the chance to be sent to Nostromo Wreckage when burnt.\n• Secret.\n• Does not stack.\n\"“You know the quarantine procedure. 24 hours for decontamination.” –Ellen Ripley\""
         },
         "es": {
           "name": "Puertas de cámara de descompresión",
@@ -2455,8 +2148,8 @@
       }
     },
     {
+      "id": 80,
       "name": "Alien Flora",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "<b>Tremendously increases</b> the chance of being sent to <b>Nostromo Wreckage</b> when burnt.<br><br><span class=\"FlavorText\">\"The flora on this strange planet was beautiful, but could have been deadly; thankfully, it has not killed anyone... yet.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_alienFlora.png?379c1d",
@@ -2466,10 +2159,6 @@
         "de": {
           "name": "Außerirdische Flora",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zum <b>Nostromo-Wrack</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Die Flora auf diesem seltsamen Planeten war wunderschön, hätte aber tödlich sein können. Zum Glück hat sie noch niemanden getötet... bisher.“</span>"
-        },
-        "en": {
-          "name": "Alien Flora",
-          "description": "<b>Tremendously increases</b> the chance of being sent to <b>Nostromo Wreckage</b> when burnt.<br><br><span class=\"FlavorText\">\"The flora on this strange planet was beautiful, but could have been deadly; thankfully, it has not killed anyone... yet.\"</span>"
         },
         "es": {
           "name": "Flora alienígena",
@@ -2486,9 +2175,10 @@
       }
     },
     {
+      "id": 81,
       "name": "Crow's Eye",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 17,
       "description": "<b>Tremendously increases</b> the chance of being sent to the <b>Forsaken Boneyard</b> when burnt.<br><br><span class=\"FlavorText\">\"A petrified crow's eye gazing eternally into the barren graveyard.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_crowsEye.png?7f550c",
       "icon_local_path": "icons/offerings/crows_eye.webp",
@@ -2497,10 +2187,6 @@
         "de": {
           "name": "Krähenauge",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zum <b>Einsamen Friedhof</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Ein versteinertes Krähenauge, das ewig auf das öde Gräberfeld blickt.“</span>"
-        },
-        "en": {
-          "name": "Crow's Eye",
-          "description": "<b>Tremendously increases</b> the chance of being sent to the <b>Forsaken Boneyard</b> when burnt.<br><br><span class=\"FlavorText\">\"A petrified crow's eye gazing eternally into the barren graveyard.\"</span>"
         },
         "es": {
           "name": "Ojo de cuervo",
@@ -2517,9 +2203,10 @@
       }
     },
     {
+      "id": 82,
       "name": "Jigsaw Piece",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 10,
       "description": "Tremendously increases the chances of being sent to Gideon Meat Plant when burnt.\n• Secret.\n• Does not stack.\n\"\"Congratulations. You are still alive. Most people are so ungrateful to be alive. But not you. Not anymore.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_jigsawPiece.png?2327a3",
       "icon_local_path": "icons/offerings/jigsaw_piece.webp",
@@ -2528,10 +2215,6 @@
         "de": {
           "name": "Puzzleteil",
           "description": "Erhöht enorm die Wahrscheinlichkeit, in die Gideon-Fleischfabrik geschickt zu werden, wenn es verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Herzlichen Glückwunsch. Sie leben weiter. Die meisten Menschen sind so undankbar, dass sie noch leben. Aber Sie nicht. Jetzt nicht mehr.“\""
-        },
-        "en": {
-          "name": "Jigsaw Piece",
-          "description": "Tremendously increases the chances of being sent to Gideon Meat Plant when burnt.\n• Secret.\n• Does not stack.\n\"\"Congratulations. You are still alive. Most people are so ungrateful to be alive. But not you. Not anymore.\"\""
         },
         "es": {
           "name": "Pieza de Puzle",
@@ -2548,9 +2231,10 @@
       }
     },
     {
+      "id": 83,
       "name": "Shattered Bottle",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 14,
       "description": "Tremendously increases the chance to be sent to Grave of Glenvale when burnt.\n• Secret.\n• Does not stack.\n\"“Ain't much for holding a drink no more, but it can sure make a mess of a fella's throat.”\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_shatteredBottle.png?705db8",
       "icon_local_path": "icons/offerings/shattered_bottle.webp",
@@ -2559,10 +2243,6 @@
         "de": {
           "name": "Zerbrochene Flasche",
           "description": "Erhöht enorm die Wahrscheinlichkeit, zum Grab von Glenvale geschickt zu werden, wenn sie verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Für Getränke taugt sie nicht mehr, aber an einem Hals kann sie ganz schön viel Schaden anrichten.“\""
-        },
-        "en": {
-          "name": "Shattered Bottle",
-          "description": "Tremendously increases the chance to be sent to Grave of Glenvale when burnt.\n• Secret.\n• Does not stack.\n\"“Ain't much for holding a drink no more, but it can sure make a mess of a fella's throat.”\""
         },
         "es": {
           "name": "Botella rota",
@@ -2579,9 +2259,10 @@
       }
     },
     {
+      "id": 84,
       "name": "Strode Realty Key",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 5,
       "description": "Tremendously increases the chances of being sent to Haddonfield when burnt.\n• Secret.\n• Does not stack.\n\"\"A house key, mundane in appearance. A cardboard key-tag attached to it reads 'Strode Real Estate', followed by a handwritten address: '45 Lampkin Lane'.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_strodeRealtyKey.png?592a29",
       "icon_local_path": "icons/offerings/strode_realty_key.webp",
@@ -2590,10 +2271,6 @@
         "de": {
           "name": "Strode-Immobilienschlüssel",
           "description": "Erhöht enorm die Wahrscheinlichkeit, nach Haddonfield geschickt zu werden, wenn er verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Ein gewöhnlich wirkender Hausschlüssel. Der Schlüsselanhänger aus Pappe weist ihn als Eigentum der Strode-Immobilienfirma aus, darauf findet sich auch eine handgeschriebene Adresse: 45 Lampkin Lane.“\""
-        },
-        "en": {
-          "name": "Strode Realty Key",
-          "description": "Tremendously increases the chances of being sent to Haddonfield when burnt.\n• Secret.\n• Does not stack.\n\"\"A house key, mundane in appearance. A cardboard key-tag attached to it reads 'Strode Real Estate', followed by a handwritten address: '45 Lampkin Lane'.\"\""
         },
         "es": {
           "name": "Llave de la inmobiliaria Strode",
@@ -2610,9 +2287,10 @@
       }
     },
     {
+      "id": 85,
       "name": "Hawkins National Laboratory ID",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 13,
       "description": "<b>Tremendously increases</b> the chance of being sent to the <b>Underground Complex</b> when burnt.<br><br><span class=\"FlavorText\">\"A pass for the Hawkins National Laboratory, which once held dangerous experiments.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_hawkinsNationalLaboratoryID.png?d7c80f",
       "icon_local_path": "icons/offerings/hawkins_national_laboratory_id.webp",
@@ -2621,10 +2299,6 @@
         "de": {
           "name": "Hawkins National Laboratory-Ausweis",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zum <b>Unterirdischen Komplex</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Ein Ausweis für das Hawkins National Laboratory, in dem einst gefährliche Experimente stattfanden.“</span>"
-        },
-        "en": {
-          "name": "Hawkins National Laboratory ID",
-          "description": "<b>Tremendously increases</b> the chance of being sent to the <b>Underground Complex</b> when burnt.<br><br><span class=\"FlavorText\">\"A pass for the Hawkins National Laboratory, which once held dangerous experiments.\"</span>"
         },
         "es": {
           "name": "Tarjeta de identificación del Laboratorio Nacional de Hawkins",
@@ -2641,8 +2315,8 @@
       }
     },
     {
+      "id": 86,
       "name": "Shattered Glasses",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Tremendously increases the chances of being sent to Léry's Memorial Institute when burnt.\n• Secret.\n• Does not stack.\n\"\"Bent reading glasses. Speckles of dried blood can be seen on the shattered lens.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_shatteredGlasses.png?4295f5",
@@ -2652,10 +2326,6 @@
         "de": {
           "name": "Kaputte Brille",
           "description": "Erhöht enorm die Wahrscheinlichkeit, in Lérys Gedenkinstitut geschickt zu werden, wenn sie verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Verbogene Lesebrille. Auf den kaputten Gläsern befinden sich Tropfen getrockneten Bluts.“\""
-        },
-        "en": {
-          "name": "Shattered Glasses",
-          "description": "Tremendously increases the chances of being sent to Léry's Memorial Institute when burnt.\n• Secret.\n• Does not stack.\n\"\"Bent reading glasses. Speckles of dried blood can be seen on the shattered lens.\"\""
         },
         "es": {
           "name": "Gafas rotas",
@@ -2672,9 +2342,10 @@
       }
     },
     {
+      "id": 87,
       "name": "MacMillan's Phalanx Bone",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 1,
       "description": "<b>Tremendously increases</b> the chance of being sent to <b>The MacMillan Estate</b> when burnt.<br><br><span class=\"FlavorText\">\"A severed finger bone from the founder of the MacMillan empire.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_macMillansPhalanxBone.png?3bdbd6",
       "icon_local_path": "icons/offerings/macmillans_phalanx_bone.webp",
@@ -2683,10 +2354,6 @@
         "de": {
           "name": "MacMillans Fingerknochen",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zum <b>MacMillan-Anwesen</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Ein abgetrennter Fingerknochen des Gründers des MacMillan-Imperiums.“</span>"
-        },
-        "en": {
-          "name": "MacMillan's Phalanx Bone",
-          "description": "<b>Tremendously increases</b> the chance of being sent to <b>The MacMillan Estate</b> when burnt.<br><br><span class=\"FlavorText\">\"A severed finger bone from the founder of the MacMillan empire.\"</span>"
         },
         "es": {
           "name": "Falange de MacMillan",
@@ -2703,9 +2370,10 @@
       }
     },
     {
+      "id": 88,
       "name": "Damaged Photo",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 12,
       "description": "Tremendously increases the chance to be sent to Ormond when burnt.\n• Secret.\n• Does not stack.\nAug. 28th, ‘96\n\"“A dormant darkness lies beneath his childlike smile, about to be awaken.”\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_damagedPhoto.png?a1e1db",
       "icon_local_path": "icons/offerings/damaged_photo.webp",
@@ -2714,10 +2382,6 @@
         "de": {
           "name": "Beschädigtes Foto",
           "description": "Erhöht enorm die Wahrscheinlichkeit, nach Ormond geschickt zu werden, wenn es verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n28. Aug. 1996\n\"„Hinter seinem kindhaften Lächeln schlummert eine Dunkelheit, die bald erwachen wird.“\""
-        },
-        "en": {
-          "name": "Damaged Photo",
-          "description": "Tremendously increases the chance to be sent to Ormond when burnt.\n• Secret.\n• Does not stack.\nAug. 28th, ‘96\n\"“A dormant darkness lies beneath his childlike smile, about to be awaken.”\""
         },
         "es": {
           "name": "Fotografía estropeada",
@@ -2734,9 +2398,10 @@
       }
     },
     {
+      "id": 89,
       "name": "RPD Badge",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 16,
       "description": "Tremendously increases the chance of being sent to Raccoon City police station when burnt.\n• Secret.\n• Does not stack.\n\"\"If we stay here that monster will find us.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_rpdBadge.png?278566",
       "icon_local_path": "icons/offerings/rpd_badge.webp",
@@ -2745,10 +2410,6 @@
         "de": {
           "name": "RPD-Abzeichen",
           "description": "Erhöht enorm die Wahrscheinlichkeit, in die Polizeistation von Raccoon City geschickt zu werden, wenn es verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Wenn wir hier bleiben, wird uns dieses Monster finden.“\""
-        },
-        "en": {
-          "name": "RPD Badge",
-          "description": "Tremendously increases the chance of being sent to Raccoon City police station when burnt.\n• Secret.\n• Does not stack.\n\"\"If we stay here that monster will find us.\"\""
         },
         "es": {
           "name": "Placa de policía de Raccoon City",
@@ -2765,9 +2426,10 @@
       }
     },
     {
+      "id": 90,
       "name": "The Last Mask",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 8,
       "description": "Tremendously increases the chances of being sent to Red Forest when burnt.\n• Secret.\n• Does not stack.\n\"\"A beautifully crafted tiger mask that would fit snug on a child's face. A faded note in Cyrillic letters can be found scripted on the back.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_theLastMask.png?b3eb2b",
       "icon_local_path": "icons/offerings/the_last_mask.webp",
@@ -2776,10 +2438,6 @@
         "de": {
           "name": "Die letzte Maske",
           "description": "Erhöht enorm die Wahrscheinlichkeit, in den Roten Wald geschickt zu werden, wenn sie verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Eine wunderschön gefertigte Tigermaske, die einem Kind perfekt passen würde. Auf der Rückseite befindet sich eine verblasste Notiz in kyrillischer Schrift.“\""
-        },
-        "en": {
-          "name": "The Last Mask",
-          "description": "Tremendously increases the chances of being sent to Red Forest when burnt.\n• Secret.\n• Does not stack.\n\"\"A beautifully crafted tiger mask that would fit snug on a child's face. A faded note in Cyrillic letters can be found scripted on the back.\"\""
         },
         "es": {
           "name": "La última máscara",
@@ -2796,8 +2454,8 @@
       }
     },
     {
+      "id": 91,
       "name": "Mary's Letter",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "<b>Tremendously increases</b> the chance of being sent to <b>Midwich Elementary School</b> when burnt.<br><br><span class=\"FlavorText\">\"A tragic letter written by Mary, filled with haunting farewells.\"</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_marysLetter.png?a6d7ce",
@@ -2807,10 +2465,6 @@
         "de": {
           "name": "Marys Brief",
           "description": "Erhöht beim Verbrennen die Chance <b>enorm</b>, zur <b>Midwich-Grundschule</b> geschickt zu werden.<br><br><span class=\"FlavorText\">„Ein tragischer Brief von Mary, voller ergreifender Abschiede.“</span>"
-        },
-        "en": {
-          "name": "Mary's Letter",
-          "description": "<b>Tremendously increases</b> the chance of being sent to <b>Midwich Elementary School</b> when burnt.<br><br><span class=\"FlavorText\">\"A tragic letter written by Mary, filled with haunting farewells.\"</span>"
         },
         "es": {
           "name": "Carta de Mary",
@@ -2827,9 +2481,10 @@
       }
     },
     {
+      "id": 92,
       "name": "The Pied Piper",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 9,
       "description": "Tremendously increases the chances of being sent to Springwood when burnt.\n• Secret.\n• Does not stack.\n\"\"Betrayed by the town, he exacts his revenge by taking all their children.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_thePiedPiper.png?d8afeb",
       "icon_local_path": "icons/offerings/the_pied_piper.webp",
@@ -2838,10 +2493,6 @@
         "de": {
           "name": "Der Rattenfänger",
           "description": "Erhöht enorm die Wahrscheinlichkeit, nach Springwood geschickt zu werden, wenn er verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Von der Stadt verraten, holt er sich seine Rache, indem er ihnen alle ihre Kinder nimmt.“\""
-        },
-        "en": {
-          "name": "The Pied Piper",
-          "description": "Tremendously increases the chances of being sent to Springwood when burnt.\n• Secret.\n• Does not stack.\n\"\"Betrayed by the town, he exacts his revenge by taking all their children.\"\""
         },
         "es": {
           "name": "El flautista de Hamelín",
@@ -2858,9 +2509,10 @@
       }
     },
     {
+      "id": 93,
       "name": "Ichorous Loam",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 18,
       "description": "Tremendously increases the chance to be sent to Withered Isle when burnt.\n• Secret.\n• Does not stack.\n\"\"Expel malthought from your mind, from your heart, from your mouth to prevent the darkness from corrupting your truth. For to let darkness find seed in your soul is to invite the Druanee.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_ichorousLoam.png?8ec959",
       "icon_local_path": "icons/offerings/ichorous_loam.webp",
@@ -2869,10 +2521,6 @@
         "de": {
           "name": "Eiterlehm",
           "description": "Erhöht enorm die Wahrscheinlichkeit, zur Verkümmerten Insel geschickt zu werden, wenn er verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Verbannt alle bösen Gedanken aus eurem Verstand, aus eurem Herzen und aus eurem Mund, damit die Dunkelheit eure Wahrheit nicht korrumpieren kann. Denn wer zulässt, dass die Dunkelheit in seiner Seele keimt, lädt den Druanee ein.“\""
-        },
-        "en": {
-          "name": "Ichorous Loam",
-          "description": "Tremendously increases the chance to be sent to Withered Isle when burnt.\n• Secret.\n• Does not stack.\n\"\"Expel malthought from your mind, from your heart, from your mouth to prevent the darkness from corrupting your truth. For to let darkness find seed in your soul is to invite the Druanee.\"\""
         },
         "es": {
           "name": "Marga de icor",
@@ -2889,9 +2537,10 @@
       }
     },
     {
+      "id": 94,
       "name": "Yamaoka Family Crest",
-      "category": "CommonOfferings",
       "role": "All",
+      "realm_id": 11,
       "description": "Tremendously increases the chances of being sent to Yamaoka Estate when burnt.\n• Secret.\n• Does not stack.\n\"\"You never leave a broken home. You only run away until the memories stop haunting you.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_yamaokaFamilyCrest.png?b6188c",
       "icon_local_path": "icons/offerings/yamaoka_family_crest.webp",
@@ -2900,10 +2549,6 @@
         "de": {
           "name": "Wappen der Yamaoka-Familie",
           "description": "Erhöht enorm die Wahrscheinlichkeit, zum Yamaoka-Anwesen geschickt zu werden, wenn es verbrannt wird.\n• Geheim.\n• Nicht kombinierbar.\n\"„Ein zerstörtes Zuhause verlässt man nie. Man läuft nur so lange davon, bis einen die Erinnerungen nicht mehr verfolgen.“\""
-        },
-        "en": {
-          "name": "Yamaoka Family Crest",
-          "description": "Tremendously increases the chances of being sent to Yamaoka Estate when burnt.\n• Secret.\n• Does not stack.\n\"\"You never leave a broken home. You only run away until the memories stop haunting you.\"\""
         },
         "es": {
           "name": "Blasón familiar de los Yamaoka",
@@ -2920,8 +2565,8 @@
       }
     },
     {
+      "id": 95,
       "name": "Shroud of Vanishing",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Calls on The Entity to nullify any offerings that would change the Survivors' starting locations.\n• Secret.\n\"\"In an instant, their power was lost.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconsFavors_shroudOfVanishing.png?cea3d0",
@@ -2931,10 +2576,6 @@
         "de": {
           "name": "Tuch des Verschwindens",
           "description": "Bittet den Entitus, alle Opfergaben aufzuheben, die den Startpunkt von Überlebenden verändern würden.\n• Geheim.\n\"„In einem Augenblick war ihre Macht verschwunden.“\""
-        },
-        "en": {
-          "name": "Shroud of Vanishing",
-          "description": "Calls on The Entity to nullify any offerings that would change the Survivors' starting locations.\n• Secret.\n\"\"In an instant, their power was lost.\"\""
         },
         "es": {
           "name": "Velo de desvanecimiento",
@@ -2951,8 +2592,8 @@
       }
     },
     {
+      "id": 96,
       "name": "Sacrificial Ward",
-      "category": "CommonOfferings",
       "role": "All",
       "description": "Calls upon The Entity to reject all offerings that alter the chance of being sent to a specific realm.\nThis can only be canceled if four identical realm offerings are played.\n\"“With blind eyes, we surrender our will and appeal to you for guidance.”\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconFavors_sacrificialWard.png?d8f63c",
@@ -2962,10 +2603,6 @@
         "de": {
           "name": "Opferabwehr",
           "description": "Bittet den Entitus, alle Opfergaben abzulehnen, die die Wahrscheinlichkeit ändern, zu einem bestimmten Reich geschickt zu werden.\nLässt sich nur abbrechen, wenn vier identische Reich-Opfergaben gespielt werden.\n\"„Blind unterwerfen wir uns deinem Willen und bitten dich um Führung.“\""
-        },
-        "en": {
-          "name": "Sacrificial Ward",
-          "description": "Calls upon The Entity to reject all offerings that alter the chance of being sent to a specific realm.\nThis can only be canceled if four identical realm offerings are played.\n\"“With blind eyes, we surrender our will and appeal to you for guidance.”\""
         },
         "es": {
           "name": "Cámara de sacrificios",

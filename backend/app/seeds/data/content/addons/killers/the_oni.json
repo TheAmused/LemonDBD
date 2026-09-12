@@ -1,0 +1,550 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 313,
+      "name": "Rotting Rope",
+      "killer_id": 18,
+      "description": "Had the rope been stronger, it would have likely held Kazan. As it was, he escaped and butchered his captors.\n• Increases Blood Orb aura reading range by 2 meters.\n\"\"Though Death is focused, he has been known to blink.\" -Renjiro's Doctrine 14:5 \"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rottingRope.png?96693f",
+      "icon_local_path": "icons/addons/rotting_rope.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerfallendes Seil",
+          "description": "Wäre das Seil stärker gewesen, hätte es Kazan vermutlich festgehalten. So aber konnte er entkommen und seine Häscher abschlachten.\n• Erhöht die Distanz, in der die Auren von Blutkugeln entdeckt werden können, um 2 Meter.\n\"„Obwohl der Tod fokussiert ist, kennt er die Teleportation.“ – Renjiros Doktrin 14, 5 \""
+        },
+        "es": {
+          "name": "Cuerda podrida",
+          "description": "Si la cuerda hubiera sido más fuerte, Kazan seguramente no hubiera podido liberarse. Pero no fue el caso, así que consiguió escaparse y asesinó a sus secuestradores.\n• Aumenta el alcance de percepción de auras de orbes de sangre en 2 metros.\n\"\"Aunque la muerte siempre está observando, se sabe que a veces parpadea\". (Doctrina de Renjiro, 14:5) \""
+        },
+        "ja": {
+          "name": "朽ちかけたロープ",
+          "description": "ロープがもっと強かったら、崋山を拘束することができたであろう。しかし、そうではなかったため崋山は囚われの身から逃がれ、その相手を虐殺した。\n• 血の球のオーラ可視距離が2メートル拡大する\n\"「死神は素晴らしい集中力の持ち主だが、それでも瞬きはする。」- 練次郎の教え 拾肆ノ伍\""
+        },
+        "pl": {
+          "name": "Gnijąca lina",
+          "description": "Gdyby lina była mocniejsza, prawdopodobnie utrzymałaby Kazana. A tak uciekł i wymordował porywaczy.\n• Zwiększa zasięg odczytywania aur krwawych kul o 2 metry.\n\"„Choć śmierć jest skupiona, czasem mruga”. – Doktryna Renjira 14:5\""
+        }
+      }
+    },
+    {
+      "id": 314,
+      "name": "Blackened Toenail",
+      "killer_id": 18,
+      "description": "Fell off during one of Kazan's hundred winter treks to the temple. Despite his pilgrimage, Akito's leg would never heal.\n• Increases movement speed while absorbing Blood Orbs by 0.4 m/s.\n\"\"If a father sacrifices not for his children, then who does he father?\" -Renjiro's Doctrine 11:12\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blackenedToenail.png?58c4ae",
+      "icon_local_path": "icons/addons/blackened_toenail.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schwarzer Zehennagel",
+          "description": "Fiel während einer der vielen hundert Winterwanderungen Kazans zum Tempel ab. Trotz seines Pilgerdaseins wollte Akitos Bein nie heilen.\n• Erhöht die Bewegungsgeschwindigkeit, während Blutkugeln absorbiert werden, um 0,4 m/s.\n\"„Wenn ein Vater keine Opfer für seine Kinder bringt, was für ein Vater ist er dann?“ – Renjiros Doktrin 11, 12\""
+        },
+        "es": {
+          "name": "Uña del pie ennegrecida",
+          "description": "Se cayó durante una de las innumerables caminatas de invierno de Kazan hasta el templo. A pesar de su peregrinaje, la pierna de Akito nunca llegó a curarse.\n• Aumenta la velocidad de movimiento al absorber orbes de sangre en 0,4 metros por segundo.\n\"\"Si un padre no es capaz de sacrificarse por sus hijos, ¿cómo puede hacerse llamar padre?\". (Doctrina de Renjiro, 11:12)\""
+        },
+        "ja": {
+          "name": "黒ずんだ足爪",
+          "description": "崋山の冬の百遍路中に剥がれたもの。献身的な巡礼にもかかわらず、彰人の脚は治らなかった。\n• 血の球を吸収中の移動速度が秒速0.4メートル上昇する\n\"「父親が子のために犠牲を払わなければ、何をもって父親と言えるのだろうか。」- 練次郎の教え 拾壱ノ拾弐\""
+        },
+        "pl": {
+          "name": "Czarny paznokieć",
+          "description": "Odpadł podczas jednej z setek zimowych wypraw Kazana do świątyni. Mimo pielgrzymki noga Akito nigdy nie wyzdrowiała.\n• Zwiększa prędkość ruchu podczas zbierania krwawych kul o 0,4 m/s.\n\"„Jeśli ojciec nie poświęca się dla swoich dzieci, jaki z niego ojciec?” – Doktryna Renjira 11:12\""
+        }
+      }
+    },
+    {
+      "id": 315,
+      "name": "Cracked Sakazuki",
+      "killer_id": 18,
+      "description": "A cup from Kazan's wedding ceremony, it never made it through the night before being damaged.\n• Decreases Blood Fury activation time by 0.5 seconds.\n• Decreases Blood Fury cooldown by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crackedSakazuki.png?6e46a1",
+      "icon_local_path": "icons/addons/cracked_sakazuki.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gesprungene Sakazuki",
+          "description": "Eine Tasse von Kazans Hochzeitszeremonie, die schon kaputt ging, bevor die Nacht zu Ende war.\n• Verringert die Aktivierungsdauer von Blutzorn um 0,5 Sekunden.\n• Verkürzt die Abklingzeit von Blutzorn um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Sakazuki resquebrajado",
+          "description": "Un cuenco de la boda de Kazan. No llegó a aguantar toda la noche sin dañarse.\n• Reduce la duración de la activación de Furia sangrienta en 0,5 segundos.\n• Reduce el tiempo de recarga de Furia sangrienta en 0,5 segundos."
+        },
+        "ja": {
+          "name": "ひびの入った盃",
+          "description": "崋山の結婚式で使われた盃。夜が終わる前にひびが入ってしまった。\n• 血の怒りの発動時間が0.5秒減少する\n• 血の怒りのクールダウンが0.5秒減少する"
+        },
+        "pl": {
+          "name": "Pęknięte sakazuki",
+          "description": "Naczynie z ceremonii zaślubin Kazana. Nie przetrwało nocy.\n• Skraca czas aktywacji Krwawej Furii o 0,5 sekundy.\n• Skraca czas odnawiania Krwawej Furii o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 316,
+      "name": "Paper Lantern",
+      "killer_id": 18,
+      "description": "Perhaps a memento of simpler times, before rage fully enveloped him.\n• Increases Blood Orb absorption speed by 4 m/s.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_paperLantern.png?63788b",
+      "icon_local_path": "icons/addons/paper_lantern.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Papierlaterne",
+          "description": "Vielleicht ein Andenken an einfachere Zeiten, bevor die Wut ihn ganz vereinnahmte.\n• Erhöht die Absorptionsgeschwindigkeit von Blutkugeln um 4 m/s."
+        },
+        "es": {
+          "name": "Farolillo de papel",
+          "description": "Puede que sea un recuerdo de una época más sencilla, antes de que la ira se apoderase de él.\n• Aumenta la velocidad de absorción de los orbes de sangre en 4 metros por segundo."
+        },
+        "ja": {
+          "name": "提灯",
+          "description": "怒りに完全支配される前、もっと平穏だった頃の記念になる品かもしれない。\n• 血の球の吸収速度が秒速4メートル上昇する"
+        },
+        "pl": {
+          "name": "Papierowy lampion",
+          "description": "To pewnie jakaś pamiątka z prostszych czasów, zanim gnie opanował go bez reszty.\n• Zwiększa prędkość zbierania krwawych kul o 4 m/s."
+        }
+      }
+    },
+    {
+      "id": 317,
+      "name": "Child's Wooden Sword",
+      "killer_id": 18,
+      "description": "Akito's practice sword. The child had little use for it after his injury.\n• Increases Blood Orb aura reading range by 3 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_childsWoodenSword.png?6c4cbf",
+      "icon_local_path": "icons/addons/childs_wooden_sword.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kinderholzschwert",
+          "description": "Akitos Übungsschwert. Das Kind hatte nach seiner Verletzung nur wenig Verwendung dafür.\n• Vergrößert die Distanz, in der die Auren von Blutkugeln entdeckt werden können, um 3 Meter."
+        },
+        "es": {
+          "name": "Espada de madera de niño",
+          "description": "La espada de prácticas de Akito. Al pequeño no le sirvió de mucho tras su lesión.\n• Aumenta moderadamente el alcance de percepción de auras de los orbes de sangre en 3 metros."
+        },
+        "ja": {
+          "name": "子どもの木刀",
+          "description": "彰人の練習用の刀。怪我をした後は、ほとんど使われることがなかった。\n• 血の球のオーラ可視距離が3メートル拡大する"
+        },
+        "pl": {
+          "name": "Drewniany dziecięcy miecz",
+          "description": "Miecz treningowy Akita. Chłopak rzadko go używał po wypadku.\n• Zwiększa zasięg odczytywania aur krwawych kul o 3 metry."
+        }
+      }
+    },
+    {
+      "id": 318,
+      "name": "Polished Maedate",
+      "killer_id": 18,
+      "description": "A horned crest Kazan tore from his helmet after being compared to a demon.\n• Increases Yamaoka's Wrath passive charge rate by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_polishedMaedate.png?216cbd",
+      "icon_local_path": "icons/addons/polished_maedate.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Poliertes Maedate",
+          "description": "Ein Kopfschmuck mit Hörnern, den Kazan von seinem Helm abgerissen hatte, nachdem er mit einem Dämon verglichen worden war.\n• Erhöht die passive Aufladegeschwindigkeit von Yamaokas Zorn um 50 %."
+        },
+        "es": {
+          "name": "Maedate pulido",
+          "description": "Una cimera con cuernos que Kazan arrancó de su casco después de que lo comparasen con un demonio.\n• Aumenta la velocidad de carga pasiva de Cólera de Yamaoka un 50 %."
+        },
+        "ja": {
+          "name": "磨かれた前立物",
+          "description": "鬼と比べられた崋山が自分の兜から引きちぎった角付きの前立物。\n• 山岡の怒りのパッシブチャージ速度が50%上昇する"
+        },
+        "pl": {
+          "name": "Wypolerowane maedate",
+          "description": "Rogaty grzebień, który Kazan zerwał ze swojego hełmu, gdy został porównany do demona.\n• Zwiększa prędkość pasywnego ładowania Gniewu Yamaoki o 50%."
+        }
+      }
+    },
+    {
+      "id": 319,
+      "name": "Chipped Saihai",
+      "killer_id": 18,
+      "description": "A baton that belonged to Renjiro, it was stolen by Kazan upon his departure.\n• Increases Blood Fury duration by 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chippedSaihai.png?2a1153",
+      "icon_local_path": "icons/addons/chipped_saihai.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Saihai mit Kerben",
+          "description": "Ein Schlagstock, der einst Renjiro gehört hat, dann aber von Kazan bei dessen Abreise gestohlen wurde.\n• Verlängert die Dauer von Blutzorn um 6 Sekunden."
+        },
+        "es": {
+          "name": "Saihai astillado",
+          "description": "Un bastón que pertenecía a Renjiro y que Kazan robó al marcharse.\n• Aumenta la duración de Furia sangrienta en 6 segundos."
+        },
+        "ja": {
+          "name": "欠けた采配",
+          "description": "練次郎のものであった采配。崋山が去ったときに盗んでいった。\n• 血の怒りの持続時間が6秒増加する"
+        },
+        "pl": {
+          "name": "Wyszczerbione saihai",
+          "description": "Buława, która należała do Renjira. Kazan ukradł ją, gdy odchodził.\n• Wydłuża czas trwania Krwawej Furii o 6 sekund."
+        }
+      }
+    },
+    {
+      "id": 320,
+      "name": "Ink Lion",
+      "killer_id": 18,
+      "description": "An ink painting that once hung in the Yamaoka estate. Depicts the story of a lion eaten by mice.\n• Decreases Blood Fury activation time by 0.5 seconds.\n• Decreases Blood Fury cooldown by 0.5 seconds.\n• Decreases Blood Fury consumption when downing a Survivor by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_inkLion.png?ed3fb5",
+      "icon_local_path": "icons/addons/ink_lion.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Tuschelöwe",
+          "description": "Eine Tuschezeichnung, die einst im Yamaoka-Anwesen hing. Sie zeigt die Geschichte eines Löwen, der von Mäusen gefressen wird.\n• Verringert die Aktivierungsdauer von Blutzorn um 0,5 Sekunden.\n• Verkürzt die Abklingzeit von Blutzorn um 0,5 Sekunden.\n• Verringert den Verbrauch von Blutzorn, wenn man einen Überlebenden niederstreckt, um 2 Sekunden."
+        },
+        "es": {
+          "name": "León de tinta",
+          "description": "Un cuadro pintado con tinta que decoraba la residencia Yamaoka. Retrata la historia de un león devorado por ratones.\n• Reduce la duración de la activación de Furia sangrienta en 0,5 segundos.\n• Reduce el tiempo de recarga en 0,5 segundos.\n• Reduce el consumo de Furia sangrienta al derribar a un superviviente en 2 segundos."
+        },
+        "ja": {
+          "name": "水墨画のライオン",
+          "description": "山岡邸に一時期飾られていた水墨画。ネズミに食べられたライオンの話が描かれている。\n• 血の怒りの発動時間が0.5秒減少する\n• 血の怒りのクールダウンが0.5減少する\n• 生存者をダウンさせる時、血の怒りのチャージ消耗時間が2秒減少する"
+        },
+        "pl": {
+          "name": "Atramentowy lew",
+          "description": "Malowidło wykonane tuszem, które wisiało niegdyś w posiadłości rodziny Yamaoka. Przedstawia historię lwa zjedzonego przez myszy.\n• Skraca czas aktywacji Krwawej Furii o 0,5 sekundy.\n• Skraca czas odnawiania Krwawej Furii o 0,5 sekundy.\n• Zmniejsza zużycie Krwawej Furii przy powaleniu ocalałego o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 321,
+      "name": "Bloody Sash",
+      "killer_id": 18,
+      "description": "Blood from a boy who called Kazan The Imposter Noble. Kazan hid evidence of the fight from his father, often reveling at the sash in secret.\n• Increases movement speed while absorbing Blood Orbs by 0.7 m/s.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodySash.png?fbd7b7",
+      "icon_local_path": "icons/addons/bloody_sash.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutige Schärpe",
+          "description": "Blut von einem Jungen, der Kazan „adligen Hochstapler“ nannte. Kazan verbarg die Anzeichen für den Kampf vor seinem Vater und weidete sich nur im Geheimen an der Schärpe.\n• Erhöht die Bewegungsgeschwindigkeit, während Blutkugeln absorbiert werden, um 0,7 m/s."
+        },
+        "es": {
+          "name": "Banda ensangrentada",
+          "description": "Sangre de un chico que llamó a Kazan \"Noble Farsante\". Kazan, que a menudo disfrutaba poniéndose la banda en secreto, le ocultó las pruebas de la pelea a su padre.\n• Aumenta la velocidad de movimiento al absorber orbes de sangre en 0,7 metros por segundo."
+        },
+        "ja": {
+          "name": "血塗れのサッシュ",
+          "description": "ニセ貴族の崋山と呼ばれる男の子の血。崋山はしばしば父親の目から喧嘩の証拠を隠した。そして隠れてサッシュに付着した血を楽しむのだった。\n• 血の球を吸収中の移動速度が秒速0.7メートル上昇する"
+        },
+        "pl": {
+          "name": "Zakrwawiona tunika",
+          "description": "Krew chłopca, który nazwał Kazana fałszywym szlachcicem. Kazan ukrył ślady walki przed ojcem i często w tajemnicy upajał się widokiem przepaski.\n• Zwiększa prędkość ruchu podczas zbierania krwawych kul o 0,7 m/s."
+        }
+      }
+    },
+    {
+      "id": 322,
+      "name": "Kanai-anzen Talisman",
+      "killer_id": 18,
+      "description": "A trinket given to Kazan at birth, its powers are meant to protect his family from harm.\n• Increases movement speed of Demon Dash by 8%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kanai-AnzenTalisman.png?ab1b92",
+      "icon_local_path": "icons/addons/kanai_anzen_talisman.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Kanai-anzen-Talisman",
+          "description": "Ein Schmuckstück, das Kazan bei der Geburt gegeben wurde. Seine Kräfte sollen seine Familie vor Unheil beschützen.\n• Erhöht die Bewegungsgeschwindigkeit von Dämonensprint um 8 %."
+        },
+        "es": {
+          "name": "Talismán Kanai-anzen",
+          "description": "Un amuleto que Kazan recibió al nacer. Sus poderes sirven para proteger a su familia de todo mal.\n• Aumenta la velocidad de movimiento de Velocidad demoníaca un 8 %."
+        },
+        "ja": {
+          "name": "家内安全のお守り",
+          "description": "崋山が生まれたときに授けられたお守り。家族を守る力があると言われている。\n• 血の怒り発動中の鬼の猛進の移動速度が8%上昇する"
+        },
+        "pl": {
+          "name": "Talizman kanai-anzen",
+          "description": "Wisiorek, który Kazan otrzymał przy narodzinach. Moce przedmiotu mają chronić rodzinę Kazana przed krzywdą.\n• Zwiększa prędkość Demonicznego Pędu o 8%."
+        }
+      }
+    },
+    {
+      "id": 323,
+      "name": "Wooden Oni Mask",
+      "killer_id": 18,
+      "description": "A mask that a young Kazan bought to celebrate Setsubun, its repulsively fanged mouth began haunting his nightmares.\n• Increases the frequency of Blood Orbs dropped by Survivors by 14%.\n• Survivors drop an additional Blood Orb when they vault, throw pallets, exit lockers, crouch, or fail a skill check.\n\"\"It is no coincidence that man is so familiar with demons.\" -Renjiro's Doctrine 3:8\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_woodenOniMask.png?e60531",
+      "icon_local_path": "icons/addons/wooden_oni_mask.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Hölzerne Oni-Maske",
+          "description": "Eine Maske, die der junge Kazan kaufte, um Setsubun zu feiern. Der Mund wird von abstoßenden Zähnen geziert und kam später immer wieder in seinen Albträumen vor.\n• Erhöht die Häufigkeit an Blutkugeln, die Überlebende verlieren, um 14 %.\n• Überlebende verlieren eine zusätzliche Blutkugel, wenn sie springen, Paletten werfen, Schließschränke verlassen, sich ducken oder bei einem Fähigkeitscheck versagen.\n\"„Es ist kein Zufall, dass der Mensch sich so gut mit Dämonen auskennt.“ – Renjiros Doktrin 3, 8\""
+        },
+        "es": {
+          "name": "Máscara de oni de madera",
+          "description": "Una máscara que un joven Kazan compró para celebrar el Setsubun. Su repulsiva boca llena de colmillos empezó a atormentarlo en sueños.\n• Aumenta la frecuencia con la que los supervivientes sueltan orbes de sangre un 14 %.\n• Los supervivientes sueltan un orbe de sangre adicional al saltar, lanzar palés, salir de taquillas, agacharse o fallar una prueba de habilidad.\n\"\"No es casualidad que el hombre esté tan acostumbrado a los demonios\". (Doctrina de Renjiro, 3:8)\""
+        },
+        "ja": {
+          "name": "木製の鬼の面",
+          "description": "若い崋山が節分を祝うために購入したお面。そのゾッとするような牙をむいた口元が悪夢に出てくるようになった。\n• 生存者が血の球を落とす頻度が14%増加する\n• 生存者は乗り越え時、パレットを倒した時、ロッカー脱出時、しゃがんだ時、スキルチェック失敗時に血の球を追加で落とす\n\"「人間が鬼に親しみを持つのは偶然ではない。」- 練次郎の教え 参ノ捌\""
+        },
+        "pl": {
+          "name": "Drewniana maska Oni",
+          "description": "Maska, którą młody Kazan kupił, by świętować Setsubun. Jej najeżone kłami usta zaczęły nawiedzać go w koszmarach.\n• Zwiększa częstotliwość upuszczania krwawych kul przez ocalałych o 14%.\n• Ocalali upuszczają dodatkowe krwawe kule, gdy przeskakują, przewracają palety, wychodzą z szafek, kucają lub wykonują nieudany test umiejętności.\n\"„To nie przypadek, że ten człowiek tak dobrze zna demony”. – Doktryna Renjira 3:8\""
+        }
+      }
+    },
+    {
+      "id": 324,
+      "name": "Yamaoka Sashimono",
+      "killer_id": 18,
+      "description": "The banner of the Yamaoka family, Kazan felt an overwhelming pride from it.\n• Increases Blood Fury duration by 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_yamaokaSashimono.png?4c1184",
+      "icon_local_path": "icons/addons/yamaoka_sashimono.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "description": "Das Banner der Yamaoka-Familie. Kazan war unglaublich stolz darauf.\n• Verlängert die Dauer von Blutzorn um 8 Sekunden."
+        },
+        "es": {
+          "name": "Sashimono de Yamaoka",
+          "description": "El estandarte de la familia Yamaoka. A Kazan le llenaba de un orgullo inconmensurable.\n• Aumenta la duración de Furia sangrienta en 8 segundos."
+        },
+        "ja": {
+          "name": "山岡家の幟",
+          "description": "山岡家の幟。崋山はこれに圧倒的な誇りを感じたらしい。\n• 血の怒りの持続時間が8秒間増加する"
+        },
+        "pl": {
+          "name": "Sashimono rodziny Yamaoka",
+          "description": "Herb rodziny Yamaoka, który napełniał Kazana niewyobrażalną dumą.\n• Wydłuża czas trwania Krwawej Furii o 8 sekund."
+        }
+      }
+    },
+    {
+      "id": 325,
+      "name": "Scalped Topknot",
+      "killer_id": 18,
+      "description": "The topknot of a samurai who questioned Kazan's honor. The roots cling to a thin strip of bloody skin.\n• Decreases time to activate Demon Dash by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scalpedTopknot.png?5a31e0",
+      "icon_local_path": "icons/addons/scalped_topknot.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Haarknotenskalp",
+          "description": "Der Haarknoten eines Samurai, der Kazans Ehre infrage gestellt hatte. An den Haarwurzeln hängt ein dünner Streifen blutiger Haut.\n• Verringert die Zeit für die Aktivierung von Dämonensprint um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Rodete arrancado",
+          "description": "El rodete de un samurái que puso en entredicho el honor de Kazan. Las raíces están adheridas a una fina tira de piel ensangrentada.\n• Reduce la duración de activación de Velocidad demoníaca en 0,5 segundos."
+        },
+        "ja": {
+          "name": "頭皮のついたちょんまげ",
+          "description": "崋山の高潔さに疑問を抱いた侍のちょんまげ。毛根には血まみれの薄い頭皮がついている。\n• 鬼の猛進を発動する時間が0.5秒減少する"
+        },
+        "pl": {
+          "name": "Odcięty kok",
+          "description": "Kok samuraja, który zakwestionował honor Kazana. Na końcówkach zwisa cienki pasek zakrwawionej skóry.\n• Skraca czas aktywacji Demonicznego Pędu o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 326,
+      "name": "Shattered Wakizashi",
+      "killer_id": 18,
+      "description": "The fragments of an ancestral blade, destroyed by Kazan in a fit of rage.\n• Increases Yamaoka's Wrath passive charge rate by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shatteredWakizashi.png?e68af6",
+      "icon_local_path": "icons/addons/shattered_wakizashi.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zerschlagenes Wakizashi",
+          "description": "Die Bruchstücke einer uralten Klinge, die von Kazan in einem Wutanfall zerstört wurde.\n• Erhöht die passive Laderate für Yamaokas Zorn um 100 %."
+        },
+        "es": {
+          "name": "Wakizashi destrozada",
+          "description": "Los fragmentos de una espada ancestral que Kazan destruyó en un arrebato de ira.\n• Aumenta la velocidad de carga pasiva de Cólera de Yamaoka un 100 %."
+        },
+        "ja": {
+          "name": "折れた脇差",
+          "description": "先祖代々受け継がれた刀の一部。崋山の怒りに触れて壊された。\n• 山岡の怒りのパッシブチャージ速度が100%上昇する"
+        },
+        "pl": {
+          "name": "Roztrzaskany miecz wakizashi",
+          "description": "Fragmenty rodowego ostrza zniszczonego przez Kazana w przypływie gniewu.\n• Zwiększają prędkość pasywnego ładowania Gniewu Yamaoki o 100%."
+        }
+      }
+    },
+    {
+      "id": 327,
+      "name": "Lion Fang",
+      "killer_id": 18,
+      "description": "A tooth sold from an exotic vendor, it symbolizes power and nobility.\n• Increases Blood Fury duration by 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lionFang.png?c198ea",
+      "icon_local_path": "icons/addons/lion_fang.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Löwenzahn",
+          "description": "Ein Zahn, der von einem exotischen Händler verkauft wurde. Er symbolisiert Macht und Vornehmheit.\n• Verlängert die Dauer von Blutzorn um 10 Sekunden."
+        },
+        "es": {
+          "name": "Colmillo de león",
+          "description": "Un diente vendido por un comerciante exótico que simboliza el poder y la nobleza.\n• Aumenta la duración de Furia sangrienta en 10 segundos."
+        },
+        "ja": {
+          "name": "ライオンの牙",
+          "description": "珍しいものを扱う行商が売っていた牙。力と高貴さを象徴している。\n• 血の怒りの持続時間が10秒増加する"
+        },
+        "pl": {
+          "name": "Kieł lwa",
+          "description": "Ząb sprzedawany przez egzotycznego sprzedawcę. Symbolizuje moc i szlachetność.\n• Wydłuża czas trwania Krwawej Furii o 10 sekund."
+        }
+      }
+    },
+    {
+      "id": 328,
+      "name": "Splintered Hull",
+      "killer_id": 18,
+      "description": "Fragments of a ship that carried Renjiro Yamaoka. Against all odds, the legendary samurai seemed to survive.\n• Increases the frequency of Blood Orbs dropped by Survivors by 33%.\n• Survivors drop an additional Blood Orb when they vault, throw pallets, exit lockers, crouch, or fail a skill check.\n\"\"To plan subterfuge, begin with a counsel of none.\" -Renjiro's Doctrine 7:9\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_splinteredHull.png?627bc3",
+      "icon_local_path": "icons/addons/splintered_hull.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schiffsrumpfsplitter",
+          "description": "Bruchstücke eines Schiffs, auf dem Renjiro Yamaoka mitfuhr. Entgegen aller Wahrscheinlichkeiten scheint der Samurai überlebt zu haben.\n• Erhöht die Häufigkeit an Blutkugeln, die Überlebende verlieren, um 33 %.\n• Überlebende verlieren eine zusätzliche Blutkugel, wenn sie springen, Paletten werfen, Schließschränke verlassen, sich ducken oder bei einem Fähigkeitscheck versagen.\n\"„Wenn du eine List planst, darfst du niemandes Rat annehmen.“ – Renjiros Doktrin 7, 9\""
+        },
+        "es": {
+          "name": "Casco astillado",
+          "description": "Fragmentos de un barco en el que viajó Renjiro Yamaoka. Contra todo pronóstico, parece que el legendario samurái logró sobrevivir.\n• Aumenta la frecuencia con la que los supervivientes sueltan orbes de sangre un 33 %.\n• Los supervivientes sueltan un orbe de sangre adicional al saltar, lanzar palés, salir de taquillas, agacharse o fallar una prueba de habilidad.\n\"\"Para planificar un subterfugio, empieza por no contar con nadie\". (Doctrina de Renjiro, 7:9)\""
+        },
+        "ja": {
+          "name": "裂けた船体",
+          "description": "山岡練次郎を運んだ船の一部。あらゆる障害を乗り越えて、伝説の侍は生き延びたようだ。\n• 生存者が血の球を落とす頻度が33%増加する\n• 生存者は乗り越え時、パレットを倒した時、ロッカー脱出時、しゃがんだ時、スキルチェック失敗時に血の球を追加で落とす\n\"「策略を練るのならば、誰にも話さないことだ。」- 練次郎の教え 漆ノ玖\""
+        },
+        "pl": {
+          "name": "Połamany kadłub",
+          "description": "Fragmenty statku, który niósł Renjira Yamaokę. Wbrew wszelkim przeciwnościom zdawało się, że legendarny samuraj przetrwa.\n• Zwiększa częstotliwość upuszczania krwawych kul przez ocalałych o 33%.\n• Ocalali upuszczają dodatkowe krwawe kule, gdy przeskakują, przewracają palety, wychodzą z szafek, kucają lub wykonują nieudany test umiejętności.\n\"„Planując intrygę, nie korzystaj z rad”. – Doktryna Renjira 7:9\""
+        }
+      }
+    },
+    {
+      "id": 329,
+      "name": "Tear Soaked Tenugui",
+      "killer_id": 18,
+      "description": "The cloth that Kazan's mother cried into when he left on his pilgrimage to cleanse the samurai.\n• Decreases Blood Fury consumption when downing a Survivor by 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tearSoakedTenugui.png?eebddd",
+      "icon_local_path": "icons/addons/tear_soaked_tenugui.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Tränengetränktes Tenugui",
+          "description": "Das Stück Stoff, in das Kazans Mutter weinte, als er zu seiner Pilgerreise aufbrach, um die Samurai zu zerstören.\n• Verringert den Verbrauch von Blutzorn, wenn man einen Überlebenden niederstreckt, um 4 Sekunden."
+        },
+        "es": {
+          "name": "Tenugui empapado de lágrimas",
+          "description": "El pañuelo en el que la madre de Kazan lloró cuando este se fue de peregrinaje para purificar a los samuráis.\n• Reduce el consumo de Furia sangrienta al derribar a una superviviente en 4 segundos."
+        },
+        "ja": {
+          "name": "涙が染み込んだ手ぬぐい",
+          "description": "崋山が侍を浄化する巡礼に旅立った際に、崋山の母が涙を拭った手ぬぐい。\n• 生存者をダウンさせる時、血の怒りのチャージ消耗時間が4秒減少する"
+        },
+        "pl": {
+          "name": "Tenugui przesiąknięte łzami",
+          "description": "Tkanina, w którą matka Kazana płakała, gdy wyruszył na pielgrzymkę w celu oczyszczenia klasy samurajów.\n• Zmniejsza zużycie Krwawej Furii podczas powalania ocalałego o 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 330,
+      "name": "Akito's Crutch",
+      "killer_id": 18,
+      "description": "The crutch used by Kazan's son after falling from a tree. Akito's playmate and her family were punished for the boy's injury.\n• Increases movement speed of Demon Dash by 13%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_akitosCrutch.png?a531c3",
+      "icon_local_path": "icons/addons/akitos_crutch.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Akitos Krücke",
+          "description": "Die Krücke, die Kazans Sohn nutzen musste, nachdem er von einem Baum gefallen war. Akitos Spielkameradin und ihre Familie wurden für den Unfall des Jungen bestraft.\n• Erhöht die Bewegungsgeschwindigkeit von Dämonensprint um 13 %."
+        },
+        "es": {
+          "name": "Muleta de Akito",
+          "description": "La muleta que utilizó el hijo de Kazan tras caerse de un árbol. La amiga de Akito y su familia recibieron un castigo por la lesión del chico.\n• Aumenta la velocidad de movimiento de Velocidad demoníaca un 13 %."
+        },
+        "ja": {
+          "name": "彰人の松葉づえ",
+          "description": "崋山の息子である彰人が木から落ちた後に使用した松葉づえ。友だちとその家族は、彰人の怪我のせいで罰せられた。\n• 血の怒り発動中の鬼の猛進の移動速度が13%上昇する"
+        },
+        "pl": {
+          "name": "Kula Akito",
+          "description": "Kula używana przez syna Kazana po upadku z drzewa. Koleżanka Akito wraz z rodziną została ukarana za krzywdę chłopca.\n• Zwiększa prędkość Demonicznego Pędu o 13%."
+        }
+      }
+    },
+    {
+      "id": 331,
+      "name": "Iridescent Family Crest",
+      "killer_id": 18,
+      "description": "A crest that denotes its owner as being a part of the Yamaoka family.\n• Miss a charged attack during Blood Fury to smash the ground and create a shock wave. Any Survivors within 24 meters will scream and reveal their current location to you for 4 seconds.\n\"\"Know who you are so you may shield your heart.\" -Renjiro's Doctrine 11:2\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentFamilyCrest.png?58b658",
+      "icon_local_path": "icons/addons/iridescent_family_crest.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Irisierendes Familienwappen",
+          "description": "Ein Wappen, das seinen Besitzer als Angehöriger der Yamaoka-Familie ausweist.\n• Verfehle einen aufgeladenen Angriff während Blutzorn, um den Boden zu erschüttern und eine Schockwelle zu erzeugen. Alle Überlebenden in einem Radius von 24 Metern schreien und zeigen dir damit ihre Position für 4 Sekunden.\n\"„Wisse, wer du bist, damit du dein Herz abschirmen kannst.“ – Renjiros Doktrin 11, 2\""
+        },
+        "es": {
+          "name": "Blasón familiar iridiscente",
+          "description": "Un blasón que indica que su propietario forma parte de la familia Yamaoka.\n• Falla un ataque cargado durante Furia sangrienta para golpear el suelo y crear una onda sísmica. Todos los supervivientes que estén en un radio de 24 metros gritarán y se muestra su ubicación durante 4 segundos.\n\"\"Sé consciente de quién eres para poder proteger tu corazón\". (Doctrina de Renjiro, 11:2)\""
+        },
+        "ja": {
+          "name": "玉虫色の家紋",
+          "description": "持っていることで山岡家の一部であることを意味する家紋。\n• 血の怒り発動中、チャージ済みの攻撃を外して地面に命中させると衝撃波を生み出す。24メートル以内にいる生存者全員は叫び声をあげ、4秒間居場所が判明する\n\"「己の心を守れるように、己を知ることだ。」- 練次郎の教え 拾壱ノ弐\""
+        },
+        "pl": {
+          "name": "Opalowy herb rodzinny",
+          "description": "Herb, którego właściciel należy do rodziny Yamaoka.\n• Nie traf naładowanym atakiem podczas Krwawej Furii, aby uderzyć w ziemię i wywołać falę uderzeniową. Wszyscy ocalali w promieniu 24 metrów krzykną i ujawnią swoją lokalizację na 4 sekundy.\n\"„Wiedz, kim jesteś, aby chronić swoje serce”. – Doktryna Renjira 11:2\""
+        }
+      }
+    },
+    {
+      "id": 878,
+      "name": "Renjiro's Bloody Glove",
+      "killer_id": 18,
+      "description": "The glove Renjiro held to his sternum following the strike dealt by his son.\n• All Survivors can see Blood Orbs at the same distance as you.\n• A Survivor's aura is revealed for 2 seconds when coming into contact with a Blood Orb.\n\"\"When all else spills out, cling only to your honor.\" -Renjiro's Doctrine 14:12\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_renjirosBloodyGlove.png?8a2597",
+      "icon_local_path": "icons/addons/renjiros_bloody_glove.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Renjiros blutiger Handschuh",
+          "description": "Der Handschuh, den Renjiro an sein Brustbein hielt, nachdem er von seinem Sohn erstochen wurde.\n• Alle Überlebenden können Blutkugeln in derselben Reichweite wie du sehen.\n• Die Aura eines Überlebenden ist für 2 Sekunden zu sehen, wenn dieser mit einer Blutkugel in Kontakt kommt.\n\"„Wenn alles andere dich verlässt, dann halte dich an deiner Ehre fest.“ – Renjiros Doktrin 14, 12\""
+        },
+        "en": {
+          "name": "Renjiro’s Bloody Glove"
+        },
+        "es": {
+          "name": "Guante ensangrentado de Renjiro",
+          "description": "El guante que Renjiro se llevó al esternón tras el golpe de su hijo.\n• Todos los supervivientes pueden ver los orbes de sangre a la misma distancia que tú.\n• El aura de un superviviente se muestra durante 2 segundos al entrar en contacto con un orbe de sangre.\n\"\"Cuando todo vaya mal, aférrate al honor\". (Doctrina de Renjiro, 14:12)\""
+        },
+        "ja": {
+          "name": "練次郎の血塗れの籠手",
+          "description": "息子の一撃を受けた後に練次郎が胸に掲げた籠手。\n• すべての生存者に血の球が自分と同じ距離で視えるようになる。\n• 生存者が血の球に触れると、生存者のオーラが2秒間視える。\n\"「何もかもを失っても、高潔であれ。」- 練次郎の教え 拾肆ノ拾弐\""
+        },
+        "pl": {
+          "name": "Zakrwawiona rękawica Renjira",
+          "description": "Rękawica, którą Renjiro przyciskał do mostka po zadanym przez syna ciosie.\n• Wszyscy ocalali widzą krwawe kule z tej samej odległości co ty.\n• Aura ocalałego zostaje ujawniona na 2 sekundy, kiedy dotknie on krwawej kuli.\n\"„Gdy wszystko inne zawiedzie, trzymaj się swojego honoru”. – Doktryna Renjira 14:12\""
+        }
+      }
+    }
+  ]
+}

@@ -1,33 +1,43 @@
 # backend/app/seeds/static_db_seeder.py
 import hashlib
 import json
+import os
 import logging
 from pathlib import Path
 from typing import Any
 from sqlalchemy import func, select, text
 
 from app.core.extensions import db
-from app.models.character import Character
+from app.core.redis_cache import bump_catalog_version
+from app.models.character import Killer, Survivor
 from app.models.admin import SeedUpdateLog
 from app.services.db.export_import import DatabaseExportImportService
 
 logger = logging.getLogger(__name__)
 
+#: The baseline seed data: 10 JSON files, the only copy of them, and the only
+#: thing that writes seed content into the database.
+#:
+#: There used to be a second copy at the repository root, in
+#: `data/static_export/`, reached through a three-entry fallback chain. It was
+#: never read in a container: `backend/Dockerfile` builds from the `backend/`
+#: directory alone, so nothing above it is in the image, and `/app/data` is an
+#: empty named volume. Editing that copy changed nothing, which is exactly the
+#: sort of thing a fallback chain hides. There is no chain now -- if this
+#: directory is missing, seeding fails loudly rather than quietly reading
+#: something else.
 SEEDS_DATA_DIR = Path(__file__).resolve().parent / "data"
-SEEDS_UPDATES_DIR = Path(__file__).resolve().parent / "updates"
 
-FALLBACK_DATA_DIRS = [
-    Path("/app/app/seeds/data"),
-    Path("/app/data/static_export"),
-    Path(__file__).resolve().parent.parent.parent / "data" / "static_export",
-]
+#: Patch files, dropped in without a rebuild.
+#:
+#: `docker-compose.base.yml` bind-mounts the repository's `data/updates/` here,
+#: which is the whole point: a `.json` patch copied into that folder is picked
+#: up on the next boot. Baking a second updates folder into the image would
+#: need a rebuild to change, so there is only this one.
+UPDATES_DIR = Path(os.environ.get("SEED_UPDATES_DIR", "/app/updates"))
 
-FALLBACK_UPDATES_DIRS = [
-    Path("/app/app/seeds/updates"),
-    Path("/app/data/updates"),
-    Path("/app/updates"),
-    Path(__file__).resolve().parent.parent.parent / "data" / "updates",
-]
+#: Where `UPDATES_DIR` lives when the app runs outside a container.
+LOCAL_UPDATES_DIR = Path(__file__).resolve().parents[3] / "data" / "updates"
 
 
 def compute_file_hash(path: Path) -> str:
@@ -39,60 +49,111 @@ def compute_file_hash(path: Path) -> str:
     return sha.hexdigest()
 
 
+#: Tables the seeder inserts explicit ids into. Postgres does not advance a
+#: sequence when the id is supplied, so without this the next INSERT that lets
+#: the sequence pick would collide with seeded row 1.
+_SEQUENCE_TABLES = (
+    "survivors",
+    "killers",
+    "perks",
+    "items",
+    "killer_addons",
+    "item_addons",
+    "offerings",
+    "chapters",
+    "realms",
+    "map_realms",
+    "map_sources",
+    "item_categories",
+    "users",
+    "rosters",
+    "seed_update_logs",
+)
+
+
+def _integer_sequence_tables(names: tuple[str, ...]) -> list[tuple[str, str]]:
+    """Of `names`, the tables whose `id` is an integer backed by a sequence.
+
+    `rosters.id` is TEXT. `pg_get_serial_sequence('rosters', 'id')` returns
+    NULL for it, and the setval below then reads
+    `COALESCE(NULL, 1)` against a text MAX(id) -- "COALESCE types text and
+    integer cannot be matched". That error aborted the whole transaction, so
+    the *next* table in the loop failed too ("current transaction is aborted"),
+    and its per-table `except` could not save it: in Postgres, catching the
+    Python exception does not un-abort the transaction.
+
+    Asking the catalog which tables actually have an integer sequence means the
+    statement is never issued for one that cannot answer it.
+    """
+    rows = db.session.execute(
+        text(
+            """
+            SELECT c.table_name,
+                   pg_get_serial_sequence(quote_ident(c.table_name), 'id') AS seq
+            FROM information_schema.columns AS c
+            WHERE c.table_schema = current_schema()
+              AND c.column_name = 'id'
+              AND c.data_type IN ('smallint', 'integer', 'bigint')
+              AND c.table_name = ANY(:names)
+            """
+        ),
+        {"names": list(names)},
+    ).all()
+    return [(name, seq) for name, seq in rows if seq]
+
+
 def _sync_all_postgres_sequences() -> None:
-    """Updates all PostgreSQL sequences to MAX(id) after bulk seeding or updates."""
+    """Advances each id sequence to MAX(id) after a bulk seed or update."""
     try:
         if db.engine.dialect.name not in ("postgresql", "postgres"):
             return
 
-        tables_to_sync = [
-            "characters",
-            "perks",
-            "items",
-            "addons",
-            "offerings",
-            "chapters",
-            "realms",
-            "map_realms",
-            "map_tiles",
-            "map_objectives",
-            "users",
-            "rosters",
-            "seed_update_logs",
-        ]
+        syncable = _integer_sequence_tables(_SEQUENCE_TABLES)
+        skipped = sorted(set(_SEQUENCE_TABLES) - {name for name, _ in syncable})
+        if skipped:
+            logger.debug(
+                "[static_seeder] No integer id sequence, nothing to sync: %s",
+                ", ".join(skipped),
+            )
 
-        for table in tables_to_sync:
+        for table, sequence in syncable:
+            # A savepoint per table, so that a failure here still cannot poison
+            # the transaction for the tables after it.
+            savepoint = db.session.begin_nested()
             try:
-                db.session.execute(text(
-                    f"SELECT setval(pg_get_serial_sequence('{table}', 'id'), "
-                    f"COALESCE((SELECT MAX(id) FROM \"{table}\"), 1), true);"
-                ))
+                db.session.execute(
+                    text(
+                        "SELECT setval(:seq, COALESCE((SELECT MAX(id) FROM "
+                        + f'"{table}"'
+                        + "), 1), true)"
+                    ),
+                    {"seq": sequence},
+                )
+                savepoint.commit()
             except Exception as seq_err:
-                logger.debug(f"[static_seeder] Sequence sync notice for {table}: {seq_err}")
+                savepoint.rollback()
+                logger.warning(
+                    "[static_seeder] Sequence sync failed for %s: %s", table, seq_err
+                )
 
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         logger.warning(f"[static_seeder] Failed syncing postgres sequences: {e}")
 
 
 def _find_data_dir() -> Path | None:
-    """Locate the seed data directory - always the modular folder structure."""
-    if SEEDS_DATA_DIR.exists():
-        return SEEDS_DATA_DIR
-    for fallback in FALLBACK_DATA_DIRS:
-        if fallback.exists():
-            return fallback
-    return None
+    """The seed data directory, or None if it is missing."""
+    return SEEDS_DATA_DIR if SEEDS_DATA_DIR.exists() else None
 
 
 def _find_updates_dirs() -> list[Path]:
-    dirs = []
-    if SEEDS_UPDATES_DIR.exists():
-        dirs.append(SEEDS_UPDATES_DIR)
-    for fallback in FALLBACK_UPDATES_DIRS:
-        if fallback.exists() and fallback not in dirs:
-            dirs.append(fallback)
-    return dirs
+    """The patch-drop folder: the bind mount in a container, the repository
+    folder it is mounted from otherwise. Both spellings of one directory."""
+    for candidate in (UPDATES_DIR, LOCAL_UPDATES_DIR):
+        if candidate.exists():
+            return [candidate]
+    return []
 
 
 def load_static_seed_payload(data_dir: Path) -> dict[str, Any]:
@@ -263,6 +324,9 @@ def apply_pending_updates() -> dict[str, Any]:
             PerkService().reload_data()
         except Exception:
             pass
+        # PerkService().reload_data() only refreshes this process. The catalog
+        # cache is shared by every worker, and it has just been made wrong.
+        bump_catalog_version()
         logger.info(f"[static_seeder] Completed applying {len(applied_files)} update file(s).")
     else:
         logger.debug("[static_seeder] Database is up to date with all seed and update files.")
@@ -283,7 +347,12 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
 
     char_count = 0
     try:
-        char_count = db.session.scalar(select(func.count(Character.id))) or 0
+        # "Has this database been seeded?" -- survivors alone answer it, but
+        # both are counted so a half-applied import still reads as unseeded.
+        char_count = (
+            (db.session.scalar(select(func.count(Survivor.id))) or 0)
+            + (db.session.scalar(select(func.count(Killer.id))) or 0)
+        )
     except Exception as e:
         logger.debug(f"[static_seeder] Character count check notice: {e}")
         char_count = 0
@@ -319,6 +388,10 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
             PerkService().reload_data()
         except Exception:
             pass
+
+        # Anything cached before this point was computed against an empty or
+        # stale catalog, so it is discarded here rather than left to its TTL.
+        bump_catalog_version()
 
         logger.info(f"[static_seeder] Initial seeding completed: {initial_result.get('summary', {})}")
 

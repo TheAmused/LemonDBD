@@ -14,22 +14,22 @@ import type {
 
 // Sample mock maps list reflecting backend/data/maps.json
 const mockMaps = [
-  { id: 'hens_azarovs_resting_place', name: "Azarov's Resting Place", realm: 'Autohaven Wreckers', source: 'hens333' },
-  { id: 'hens_blood_lodge', name: 'Blood Lodge', realm: 'Autohaven Wreckers', source: 'hens333' },
-  { id: 'hens_preschool_i', name: 'Preschool I', realm: 'Badham', source: 'hens333' },
-  { id: 'hens_preschool_ii', name: 'Preschool II', realm: 'Badham', source: 'hens333' },
-  { id: 'hens_preschool_iii', name: 'Preschool III', realm: 'Badham', source: 'hens333' },
-  { id: 'hens_preschool_iiiv', name: 'Preschool IIIV', realm: 'Badham', source: 'hens333' },
-  { id: 'hens_preschool_v', name: 'Preschool V', realm: 'Badham', source: 'hens333' },
-  { id: 'hens_police_station_east_wing', name: 'Police Station East Wing', realm: 'Raccoon City', source: 'hens333' },
-  { id: 'hens_police_station_west_wing', name: 'Police Station West Wing', realm: 'Raccoon City', source: 'hens333' },
-  { id: 'hens_coal_tower', name: 'Coal Tower', realm: 'MacMillan Estate', source: 'hens333' },
-  { id: 'hens_coal_tower_ii', name: 'Coal Tower II', realm: 'MacMillan Estate', source: 'hens333' },
-  { id: 'hens_dead_dawg_saloon', name: 'Dead Dawg Saloon', realm: 'Grave of Glennvale', source: 'hens333' },
-  { id: 'hens_the_game', name: 'The Game', realm: 'Gideon Meat Plant', source: 'hens333' },
-  { id: 'hens_lampkin_lane', name: 'Lampkin Lane', realm: 'Haddonfield', source: 'hens333' },
-  { id: 'samoel_coal_tower', name: 'Coal Tower', realm: 'MacMillan Estate', source: 'samoelcolt' },
-  { id: 'samoel_dead_dawg', name: 'Dead Dawg Saloon', realm: 'Grave of Glennvale', source: 'samoelcolt' },
+  { id: 1, name: "Azarov's Resting Place", realm: 'Autohaven Wreckers', source: 'hens333' },
+  { id: 2, name: 'Blood Lodge', realm: 'Autohaven Wreckers', source: 'hens333' },
+  { id: 3, name: 'Preschool I', realm: 'Badham', source: 'hens333' },
+  { id: 4, name: 'Preschool II', realm: 'Badham', source: 'hens333' },
+  { id: 5, name: 'Preschool III', realm: 'Badham', source: 'hens333' },
+  { id: 6, name: 'Preschool IIIV', realm: 'Badham', source: 'hens333' },
+  { id: 7, name: 'Preschool V', realm: 'Badham', source: 'hens333' },
+  { id: 8, name: 'Police Station East Wing', realm: 'Raccoon City', source: 'hens333' },
+  { id: 9, name: 'Police Station West Wing', realm: 'Raccoon City', source: 'hens333' },
+  { id: 10, name: 'Coal Tower', realm: 'MacMillan Estate', source: 'hens333' },
+  { id: 11, name: 'Coal Tower II', realm: 'MacMillan Estate', source: 'hens333' },
+  { id: 12, name: 'Dead Dawg Saloon', realm: 'Grave of Glennvale', source: 'hens333' },
+  { id: 13, name: 'The Game', realm: 'Gideon Meat Plant', source: 'hens333' },
+  { id: 14, name: 'Lampkin Lane', realm: 'Haddonfield', source: 'hens333' },
+  { id: 15, name: 'Coal Tower', realm: 'MacMillan Estate', source: 'samoelcolt' },
+  { id: 16, name: 'Dead Dawg Saloon', realm: 'Grave of Glennvale', source: 'samoelcolt' },
 ];
 
 test('levenshteinDistance calculates standard edit distances correctly', () => {
@@ -45,7 +45,7 @@ test('Exact match recognition for canonical map names', () => {
   const r1 = matchVoiceQuery("Azarov's Resting Place", 'all', mockMaps);
   assert.ok(r1);
   assert.strictEqual(r1.matchedMapName, "Azarov's Resting Place");
-  assert.strictEqual(r1.matchedMapId, 'hens_azarovs_resting_place');
+  assert.strictEqual(r1.matchedMapId, 1);
   assert.strictEqual(r1.action, 'navigate');
   assert.ok(r1.confidence >= 0.95);
 
@@ -304,13 +304,13 @@ test('Source-aware map ID resolution', () => {
   // If currentSource is samoelcolt, should prefer samoel map ID
   const rSamoel = matchVoiceQuery("coal tower", 'samoelcolt', mockMaps);
   assert.ok(rSamoel);
-  assert.strictEqual(rSamoel.matchedMapId, 'samoel_coal_tower');
+  assert.strictEqual(rSamoel.matchedMapId, 15);
   assert.strictEqual(rSamoel.source, 'samoelcolt');
 
   // If currentSource is hens333, should prefer hens map ID
   const rHens = matchVoiceQuery("coal tower", 'hens333', mockMaps);
   assert.ok(rHens);
-  assert.strictEqual(rHens.matchedMapId, 'hens_coal_tower');
+  assert.strictEqual(rHens.matchedMapId, 10);
   assert.strictEqual(rHens.source, 'hens333');
 });
 
@@ -391,7 +391,7 @@ test('Source-prefixed map queries route to appropriate source provider', () => {
   assert.ok(rHens);
   assert.strictEqual(rHens.matchedMapName, "Blood Lodge");
   assert.strictEqual(rHens.source, 'hens333');
-  assert.strictEqual(rHens.matchedMapId, 'hens_blood_lodge');
+  assert.strictEqual(rHens.matchedMapId, 2);
   assert.strictEqual(rHens.action, 'navigate');
 
   // "samoel dead dawg"
@@ -399,7 +399,7 @@ test('Source-prefixed map queries route to appropriate source provider', () => {
   assert.ok(rSamoel);
   assert.strictEqual(rSamoel.matchedMapName, "Dead Dawg Saloon");
   assert.strictEqual(rSamoel.source, 'samoelcolt');
-  assert.strictEqual(rSamoel.matchedMapId, 'samoel_dead_dawg');
+  assert.strictEqual(rSamoel.matchedMapId, 16);
   assert.strictEqual(rSamoel.action, 'navigate');
 });
 

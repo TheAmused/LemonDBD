@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 452,
+      "name": "Oil Paints",
+      "killer_id": 26,
+      "description": "There's little left but a few globs of black and gray, yet Carmina could paint an expansive landscape with them.\n• Increases the Dire Crow's Killer Instinct detection range by 1.5 meters.\nKiller Instinct intermittently reveals the location of Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oilPaints.png?dc35d5",
+      "icon_local_path": "icons/addons/oil_paints.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ölfarben",
+          "description": "Es sind nur noch ein paar Kleckse Schwarz und Grau übrig, aber Carmina konnte damit eine ausgedehnte Landschaft malen.\n• Erhöht die Wahrnehmungsreichweite des Killerinstinkts der Düsterkrähe um 1,5 Meter.\nDer Killerinstinkt zeigt in regelmäßigen Abständen die Position von Überlebenden an."
+        },
+        "es": {
+          "name": "Pinturas al óleo",
+          "description": "Apenas quedan unos pocos pegotes de negro y gris, pero Carmina podría pintar un amplio paisaje con ellos.\n• Aumenta el alcance de detección del Instinto asesino de los cuervos funestos en 1,5 metros.\nEl Instinto asesino revela la posición de los supervivientes de manera intermitente."
+        },
+        "ja": {
+          "name": "油絵の具",
+          "description": "ほとんどの色は残っておらず、少々の黒とグレーだけでカルミナは壮大な風景画を描くことができた。\n• 不吉なカラスの殺人鬼の本能による検知範囲が1.5メートル拡大する\n殺人鬼の本能は生存者の居場所を断続的に明らかにする。"
+        },
+        "pl": {
+          "name": "Farby Olejne",
+          "description": "Zostało tylko trochę czarnej i szarej farby, ale Carmina potrafi namalować nią rozległy krajobraz.\n• Zwiększają zasięg wykrywania Instynktu Zabójcy złowieszczych kruków o 1,5 metra.\nInstynkt Zabójcy co jakiś czas ujawnia lokalizację ocalałych."
+        }
+      }
+    },
+    {
+      "id": 453,
+      "name": "Vibrant Obituary",
+      "killer_id": 26,
+      "description": "Scrap newspaper, speckled with bright, eye-catching paint. It seems tragedy is a daily thing.\n• Increases the length of time a Dire Crow's Killer Instinct reveals Survivors by 3 seconds.\nKiller Instinct intermittently reveals the location of Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vibrantObituary.png?fee784",
+      "icon_local_path": "icons/addons/vibrant_obituary.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Bunter Nachruf",
+          "description": "Alte Zeitungen, die mit heller, auffallender Farbe bespritzt sind. Tragödien scheinen an der Tagesordnung zu sein.\n• Verlängert die Dauer, für die der Killerinstinkt einer Düsterkrähe Überlebende anzeigt, um 3 Sekunden.\nDer Killerinstinkt zeigt in regelmäßigen Abständen die Position von Überlebenden an."
+        },
+        "es": {
+          "name": "Esquela llamativa",
+          "description": "Un trozo de periódico salpicado con motas de pintura llamativa. Al parecer, la tragedia es algo cotidiano.\n• Aumenta el lapso de tiempo durante el cual el Instinto asesino de los cuervos funestos delata a los supervivientes en 3 segundos.\nEl Instinto asesino revela la posición de los supervivientes de manera intermitente."
+        },
+        "ja": {
+          "name": "鮮やかな死亡記事",
+          "description": "明るく目立つ絵の具による小さな斑点がたくさん付いた新聞の切り抜き。悲劇は日々起きるようだ。\n• 不吉なカラスの殺人鬼の本能によって生存者の居場所が判明する時間の長さが3秒増加する\n殺人鬼の本能は生存者の居場所を断続的に明らかにする。"
+        },
+        "pl": {
+          "name": "Jaskrawy nekrolog",
+          "description": "Wycinek z gazety ochlapany jasną, przyciągającą wzrok farbą. Zdaje się, że tragedia to nieodłączna część każdego dnia.\n• Wydłuża czas ujawniania ocalałych za pomocą Instynktu Zabójcy złowieszczego kruka o 3 sekundy.\nInstynkt Zabójcy co jakiś czas ujawnia lokalizację ocalałych."
+        }
+      }
+    },
+    {
+      "id": 454,
+      "name": "Thick Tar",
+      "killer_id": 26,
+      "description": "Sticky, viscous sludge that Carmina used for an experimental piece. Once it sticks to skin, it's nearly impossible to get off.\n• Increases the time for Survivors to repel a Dire Crow swarm by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_thickTar.png?12f33a",
+      "icon_local_path": "icons/addons/thick_tar.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Dicker Teer",
+          "description": "Klebriger, zähflüssiger Matsch, den Carmina für ein experimentelles Werk verwendet hat. Wenn er erst mal an der Haut klebt, bekommt man ihn fast nicht mehr ab.\n• Verlängert die Zeit, die Überlebende brauchen, um einen Düsterkrähenschwarm abzuwehren, um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Brea densa",
+          "description": "Sustancia viscosa y pegajosa que utilizó Carmina para un experimento. Una vez que se pega a la piel, es casi imposible desprenderla.\n• Aumenta el tiempo que tardan los supervivientes en espantar a una bandada de cuervos funestos en 0,5 segundos."
+        },
+        "ja": {
+          "name": "高粘度のタール",
+          "description": "カルミナが試験的作品に使用したヘドロ。べとついていて、一度肌に付くと落とすのはほぼ不可能。\n• 生存者が不吉なカラスの群れを撃退するまでの時間が0.5秒増加する"
+        },
+        "pl": {
+          "name": "Gęsta smoła",
+          "description": "Lepki, kleisty szlam, który Carmina wykorzystała podczas tworzenia eksperymentalnego dzieła. Niemal nie sposób się go pozbyć, gdy przyklei się do skóry.\n• Wydłuża czas, jaki ocaleli mają na rozgonienie stada złowieszczych kruków, o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 455,
+      "name": "Choclo Corn",
+      "killer_id": 26,
+      "description": "A type of corn common in South America. A few kernels are reason enough for a crow to stop for a snack.\n• Increases the time Dire Crows stay idle for before disintegrating by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chocloCorn.png?ea160c",
+      "icon_local_path": "icons/addons/choclo_corn.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Choclo-Mais",
+          "description": "Eine Maisart, die in Südamerika weit verbreitet ist. Von ein paar Körnern lässt sich eine Krähe gern zu einem Zwischenstopp für einen Snack hinreißen.\n• Verlängert die Dauer, für die Düsterkrähen untätig bleiben, bevor sie sich auflösen, um 2 Sekunden."
+        },
+        "es": {
+          "name": "Choclo",
+          "description": "Una variedad de maíz común en Latinoamérica. Bastan unos cuantos granos para que un cuervo se pare a picotear.\n• Aumenta el tiempo que los cuervos funestos permanecen inactivos antes de desintegrarse en 2 segundos."
+        },
+        "ja": {
+          "name": "ジャイアントコーン",
+          "description": "南米で普及しているトウモロコシの一種。これだけの大きければ、カラスもおやつに数粒ついばみたくもなるだろう。\n• 不吉なカラスが消えるまでの待機時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Kukurydza choclo",
+          "description": "Odmiana kukurydzy występująca powszechnie w Ameryce Południowej. Zaledwie kilka ziaren wystarczy, by zwabiony nimi kruk zrobił sobie przerwę na przekąskę.\n• Wydłuża czas bezczynności złowieszczych kruków przed dezintegracją o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 456,
+      "name": "Automatic Drawing",
+      "killer_id": 26,
+      "description": "An experimental drawing Carmina made without conscious planning. Do not think—act.\n• Decreases Birds of Torment cooldown time by 1.5 seconds after a Dire Crow disintegrates from inactivity.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_automaticDrawing.png?52439c",
+      "icon_local_path": "icons/addons/automatic_drawing.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Automatisches Zeichnen",
+          "description": "Eine experimentelle Zeichnung, die Carmina ohne bewusste Planung angefertigt hat. Nicht nachdenken, handeln!\n• Verringert die Abklingzeit von „Foltervögel“ um 1.5 Sekunden, nachdem eine Düsterkrähe sich wegen Inaktivität aufgelöst hat."
+        },
+        "es": {
+          "name": "Dibujo automático",
+          "description": "Un dibujo experimental que hizo Carmina sin planificación alguna. No pienses, actúa.\n• Reduce el tiempo de recarga de Aves del tormento en 1.5 segundos después de que un cuervo funesto se desintegre por inactividad."
+        },
+        "ja": {
+          "name": "無意識のスケッチ",
+          "description": "意識せずにカルミナが取り掛かった実験的スケッチ。考えるな—ただ動け。\n• 不吉なカラスが発動されずに消えた後のさいなむ害鳥のクールダウンが1.5秒減少する"
+        },
+        "pl": {
+          "name": "Rysunek automatyczny",
+          "description": "Eksperymentalny rysunek wykonany przez Carminę bez świadomego planowania. Nie myśl – działaj.\n• Skraca czas odnawiania Ptaków Udręki o 1,5 sekundy po dezintegracji złowieszczego kruka spowodowanej brakiem aktywności."
+        }
+      }
+    },
+    {
+      "id": 457,
+      "name": "Festering Carrion",
+      "killer_id": 26,
+      "description": "A stomach-churning pile of meat and guts, yet it attracts hungry crows craving a bite.\n• Decreases Birds of Torment cooldown time by 0.5 seconds after a Dire Crow takes flight.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_festeringCarrion.png?21b058",
+      "icon_local_path": "icons/addons/festering_carrion.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verfaulendes Aas",
+          "description": "Ein ekelerregender Haufen aus Fleisch und Gedärmen, der es aber vermag, hungrige Krähen anzulocken.\n• Verringert die Abklingzeit von „Foltervögel“ um 0,5 Sekunden, nachdem eine Düsterkrähe sich in die Luft erhoben hat."
+        },
+        "es": {
+          "name": "Carroña pútrida",
+          "description": "Un repulsivo montón de carne y tripas, todo un manjar para cuervos famélicos.\n• Reduce el tiempo de recarga de Aves del tormento en 0,5 segundos después de que un cuervo funesto eche a volar."
+        },
+        "ja": {
+          "name": "腐った死肉",
+          "description": "吐き気を催す肉と内臓の山。飢えたカラスは気にせず食べたがる。\n• 不吉なカラスが飛び立った後のさいなむ害鳥のクールダウンが0.5秒減少する"
+        },
+        "pl": {
+          "name": "Gnijąca padlina",
+          "description": "Odrażająca sterta mięsa i wnętrzności. Przyciąga głodne kruki szukające czegoś do zjedzenia.\n• Skraca czas odnawiania Ptaków Udręki o 0,5 sekundy po poderwaniu się złowieszczego kruka do lotu."
+        }
+      }
+    },
+    {
+      "id": 458,
+      "name": "Velvet Fabric",
+      "killer_id": 26,
+      "description": "A striking red fabric Carmina used on an art project. Its brightness contrasted against black feathers.\n• When a Survivor attempts to repel a Dire Crow swarm, the swarm's aura remains visible for an additional 1.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_velvetFabric.png?94d066",
+      "icon_local_path": "icons/addons/velvet_fabric.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Samtstoff",
+          "description": "Ein auffallender, roter Stoff, den Carmina bei einem Kunstprojekt verwendet hat. Die Helligkeit steht im Kontrast zu schwarzen Federn.\n• Wenn ein Überlebender versucht, einen Düsterkrähenschwarm abzuwehren, bleibt die Aura des Schwarms noch zusätzliche 1.5 Sekunden sichtbar."
+        },
+        "es": {
+          "name": "Terciopelo colorido",
+          "description": "Un llamativo tejido rojo que utilizó Carmina para un proyecto artístico. Su tonalidad destaca entre el negro de las plumas.\n• Cuando un superviviente intenta espantar a una bandada de cuervos funestos, el aura de las aves sigue siendo visible durante 1.5 segundos más."
+        },
+        "ja": {
+          "name": "ビロード生地",
+          "description": "カルミナがアートプロジェクトで使った真っ赤な布。その明るさが黒い羽との対照を生み出している。\n• 生存者が不吉なカラスの群れの撃退を試みた時、群れのオーラ表示が1.5秒延長される"
+        },
+        "pl": {
+          "name": "Kawałek aksamitu",
+          "description": "Uderzająco czerwona tkanina, którą Carmina wykorzystała w jednym ze swoich projektów. Jasny kolor kontrastuje z czernią piór.\n• Gdy ocalały próbuje rozgonić stado złowieszczych kruków, aura stada pozostaje widoczna przez dodatkowe 1,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 459,
+      "name": "Still Life Crow",
+      "killer_id": 26,
+      "description": "An ink drawing of a dead crow. Carmina's sadness over its death can be felt with each dark line.\n• Increases the time Dire Crows stay idle before disintegrating by 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stillLifeCrow.png?82383a",
+      "icon_local_path": "icons/addons/still_life_crow.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Stillleben-Krähe",
+          "description": "Eine Tuschezeichnung einer toten Krähe. Carminas Trauer über ihren Tod ist mit jedem dunklen Strich zu spüren.\n• Verlängert die Dauer der Inaktivität von Düsterkrähen, bevor sie sich auflösen, um 4 Sekunden."
+        },
+        "es": {
+          "name": "Retrato de cuervo difunto",
+          "description": "Dibujo a tinta de un cuervo muerto. En cada línea negra se plasma la tristeza de Carmina por su muerte.\n• Aumenta el tiempo que los cuervos funestos permanecen inactivos antes de desintegrarse en 4 segundos."
+        },
+        "ja": {
+          "name": "カラスの静物画",
+          "description": "死んだカラスを描いたインク画。カラスの死を悼むカルミナの悲しみが、1本1本の黒い線に感じられる。\n• 不吉なカラスが消えるまでの待機時間が4秒増加する"
+        },
+        "pl": {
+          "name": "Martwa natura z krukiem",
+          "description": "Rysunek tuszem przedstawiający martwego kruka. W każdej ciemnej linii daje się odczuć smutek Carminy opłakującej śmierć ptaka.\n• Wydłuża czas bezczynności złowieszczych kruków przed dezintegracją o 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 460,
+      "name": "Untitled Agony",
+      "killer_id": 26,
+      "description": "A canvas that was targeted with swipes and thrashes of black paint following Matias' death. It radiates with heavy, crippling sorrow.\n• When Dire Crows swarm a Survivor, it afflicts them with a 15% Hindered status effect for 1.5 seconds.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_untitledAgony.png?b0f8cb",
+      "icon_local_path": "icons/addons/untitled_agony.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Unbenannte Agonie",
+          "description": "Eine Leinwand, die nach Matias’ Tod das Opfer von Angriffen mit schwarzer Farbe wurde. Sie strahlt eine schwere, lähmende Trauer aus.\n• Wenn Düsterkrähen einen Überlebenden umzingeln, erleidet dieser den Statuseffekt Eingeschränkt mit 15 % für 1,5 Sekunden.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Agonía sin título",
+          "description": "Un lienzo castigado con brochazos y salpicaduras de pintura negra tras la muerte de Matías. Exuda una pena devastadora.\n• Cuando los cuervos funestos acosan a un superviviente, este sufre un 15 % del efecto de estado Entorpecimiento durante 1,5 segundos.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "無題の悲痛",
+          "description": "マティアスの死後に黒い絵の具で激しく描かれたキャンバス。猛烈で壊滅的な悲しみを発している。\n• 不吉なカラスが群れた生存者に15%の妨害ステータス効果を1.5秒間与える\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Niezatytułowana agonia",
+          "description": "Płótno, które po śmierci Matiasa zostało pomazane i pochlapane czarną farbą. Promieniuje przytłaczającym uczuciem żalu.\n• Gdy stado złowieszczych kruków zaatakuje ocalałego, nakłada na niego efekt Skrępowany w 15% utrzymujący się przez 1,5 sekundy.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 461,
+      "name": "Charcoal Stick",
+      "killer_id": 26,
+      "description": "A stick of charcoal that conceals anything it rubs over.\n• The Dire Crow's aura is no longer visible when in flight.\n• The Dire Crow's aura is visible for 0.5 seconds when summoned.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_charcoalStick.png?61ad04",
+      "icon_local_path": "icons/addons/charcoal_stick.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Kohlestück",
+          "description": "Ein Stück Kohle, das alles überdeckt, worüber es reibt.\n• Die Aura der Düsterkrähe ist im Flug nicht zu sehen.\n• Die Aura der Düsterkrähe ist beim Beschwören 0,5 Sekunden lang zu sehen."
+        },
+        "es": {
+          "name": "Carboncillo",
+          "description": "Un trozo de carboncillo que ennegrece todo lo que roza.\n• El aura de los cuervos funestos deja de ser visible cuando vuelan.\n• Al invocar a los cuervos funestos su aura es visible durante 0,5 segundos."
+        },
+        "ja": {
+          "name": "木炭の棒",
+          "description": "刷り込むと何もかもを隠す木炭。\n• 不吉なカラスが飛んでいる時のオーラが視えなくなる\n• 不吉なカラスが呼び出された時、そのオーラが0.5秒間視える"
+        },
+        "pl": {
+          "name": "Kawałek węgla",
+          "description": "Kawałek węgla, który ukrywa wszystko, co zostanie nim pokryte.\n• Aura złowieszczych kruków nie jest już widoczna podczas ich lotu.\n• Aura złowieszczych kruków jest widoczna przez 0,5 sekundy po przyzwaniu."
+        }
+      }
+    },
+    {
+      "id": 462,
+      "name": "Darkest Ink",
+      "killer_id": 26,
+      "description": "An unnatural ink, so wretched and dark that it seems to pull in light around it.\n• When Dire Crows swarm a Survivor, it afflicts them with the Blindness status effect. The effect persists for 15 seconds after Dire Crows are repelled from a Survivor.\nBlindness prevents survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_darkestInk.png?af7273",
+      "icon_local_path": "icons/addons/darkest_ink.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Dunkelste Tinte",
+          "description": "Eine unnatürliche Tinte, die so elend und dunkel ist, dass es scheint, als würde sie das Licht um sie herum aufsaugen.\n• Wenn Düsterkrähen einen Überlebenden umzingeln, erleidet dieser den Statuseffekt Erblindung. Der Effekt hält für 15 Sekunden an, nachdem Düsterkrähen von einem Überlebenden abgewehrt wurden.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Tinta azabache",
+          "description": "Una tinta antinatural, tan siniestra y oscura que parece absorber la luz que la rodea.\n• Cuando los cuervos funestos acosan a un superviviente, este sufre el efecto de estado Ceguera. El efecto se mantiene durante 15 segundos cuando el superviviente espanta a los cuervos funestos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "真っ黒なインク",
+          "description": "不自然なインク。あまりに粗末で黒いがゆえに、周りに光を引き寄せる。\n• 不吉なカラスが群れた生存者に目眩ましのステータス効果を与える。この効果は不吉なカラスが生存者に撃退された後も15秒持続する\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Najciemniejszy tusz",
+          "description": "Nienaturalny tusz, tak złowieszczy i mroczny, że zdaje się pochłaniać światło.\n• Gdy złowieszcze kruki dopadną ocalałego, nakładają na niego efekt Oślepienie, który utrzymuje się przez 15 sekund od chwili odpędzenia złowieszczych kruków od ocalałego.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 463,
+      "name": "O Grief, O Lover",
+      "killer_id": 26,
+      "description": "An abstract ink drawing that Carmina drew before walking to the Death Leap.\n• When Dire Crows swarm a Survivor, it afflicts them with the Exhausted status effect.\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oGriefOLover.png?af9b00",
+      "icon_local_path": "icons/addons/o_grief_o_lover.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "O Kummer, o Liebster",
+          "description": "Eine abstrakte Tuschezeichnung, die Carmina anfertigte, bevor sie zum Todessprung ging.\n• Wenn Düsterkrähen einen Überlebenden umzingeln, erleidet dieser den Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "es": {
+          "name": "Amor lacerante",
+          "description": "Un dibujo abstracto que hizo Carmina a tinta antes de dirigirse al Salto mortal.\n• Cuando los cuervos funestos acosan a un superviviente, este sufre el efecto de estado Agotamiento.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "おお悲しみよ、おお愛する人よ",
+          "description": "インクを使った抽象画。「飛び降りスポット」に向かう前にカルミナが描いた。\n• 不吉なカラスが群れた生存者に疲労のステータス効果を与える\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "O żalu, o kochanku",
+          "description": "Abstrakcja wykonana tuszem, którą Carmina namalowała przed udaniem się do Skoku Śmierci.\n• Gdy złowieszcze kruki dopadną ocalałego, nakładają na niego efekt Wyczerpany.\nWyczerpanie uniemożliwia ocalałym aktywowanie niektórych umiejętności."
+        }
+      }
+    },
+    {
+      "id": 464,
+      "name": "Thorny Nest",
+      "killer_id": 26,
+      "description": "A nest that remained empty near Carmina's home. There are sharp thorns embedded in it.\n• Survivors damaged by a Dire Crow are afflicted with the Hemorrhage and Mangled status effects for 70 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_thornyNest.png?c9f5b6",
+      "icon_local_path": "icons/addons/thorny_nest.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Dornennest",
+          "description": "Ein Nest in der Nähe von Carminas Haus, das leer blieb. Spitze Stacheln sind darin eingearbeitet.\n• Überlebende, die von einer Düsterkrähe verletzt werden, erleiden die Statuseffekte Blutung und Zerfleischt für 70 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Nido espinoso",
+          "description": "Un nido que quedó vacío cerca de la casa de Carmina. Espinas punzantes sobresalen de él.\n• Cuando un cuervo funesto ataca a un superviviente, este sufre los efectos de estado Hemorragia y Laceración durante 70 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "棘のある巣",
+          "description": "カルミナの家の近くにあるずっと空の巣。中には鋭利な棘が埋め込まれている。\n• 不吉なカラスからダメージを受けた生存者は、70秒間出血と重傷のステータス効果に苦しむ。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Cierniste gniazdo",
+          "description": "Puste gniazdo, które znajdowało się w pobliżu domu Carminy. Tkwią w nim ostre ciernie.\n• Na ocalałych, którzy odniosą obrażenia w wyniku ataku strasznego kruka, nakładane są efekty Zmasakrowany i Krwotok na 70 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 465,
+      "name": "Silver Bell",
+      "killer_id": 26,
+      "description": "A shiny trinket that a crow took a liking to. The clinking of the bell was a distraction to all but Carmina.\n• When Dire Crows swarm a Survivor it afflicts them with the Oblivious status effect.\nOblivious prevents Survivors from hearing and being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_silverBell.png?fb8329",
+      "icon_local_path": "icons/addons/silver_bell.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Silberne Glocke",
+          "description": "Ein glänzendes Schmuckstück, an dem eine Krähe Gefallen gefunden hat. Das Klimpern der Glocke ließ alle aufschrecken außer Carmina.\n• Wenn Düsterkrähen einen Überlebenden umzingeln, erleidet dieser den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebenden den Terrorradius des Killers hören oder davon betroffen sind."
+        },
+        "es": {
+          "name": "Cascabel plateado",
+          "description": "Una bagatela brillante con la que un cuervo se encaprichó. Su tintineo distraería a cualquiera, pero no a Carmina.\n• Cuando los cuervos funestos acosan a un superviviente, este sufre el efecto de estado Inconsciencia.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "銀の鐘",
+          "description": "カラスが好きなキラキラ輝くベル。他とは違ってカルミナは鐘の音が気にならなかった。\n• 不吉なカラスが群れた生存者に無感覚のステータス効果を与える\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Srebrny dzwonek",
+          "description": "Lśniący bibelot, który spodobał się krukowi. Dźwięk dzwonka rozpraszał wszystkich poza Carminą.\n• Na ocalałego otoczonego przez stado złowieszczych kruków nakładany jest efekt Nieświadomy.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 466,
+      "name": "Matias' Baby Shoes",
+      "killer_id": 26,
+      "description": "A grieving reminder to Carmina that Matias would be with her, always watching.\n• Survivors within 5 meters of an idle Dire Crow have their auras revealed for 3 seconds.\n\"\"See you soon, Matias.\" —Carmina Mora \"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_matiasBabyShoes.png?5f8ca6",
+      "icon_local_path": "icons/addons/matias_baby_shoes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Matias’ Babyschühchen",
+          "description": "Eine traurige Erinnerung für Carmina, dass Matias bei ihr sein und immer über sie wachen würde.\n• Die Auren von Überlebenden innerhalb eines Umkreises von 5 Metern einer untätigen Düsterkrähe werden für 3 Sekunden angezeigt.\n\"„Wir sehen uns bald, Matias.“ – Carmina Mora\""
+        },
+        "es": {
+          "name": "Patucos de Matías",
+          "description": "Para Carmina, un triste recordatorio de que Matías la acompaña, siempre alerta.\n• Cuando un superviviente está a menos de 5 metros de un cuervo funesto inactivo, se muestra su aura durante 3 segundos.\n\"\"Hasta pronto, Matías\". (Carmina Mora) \""
+        },
+        "ja": {
+          "name": "マティアスのベビーシューズ",
+          "description": "悲しいながらもマティアスがいつも側で見守っているということをカルミナに思い出させてくれるもの。\n• 待機状態の不吉なカラスから5メートル以内にいる生存者は3秒間そのオーラが表示される\n\"「もうすぐ会えるからね、マティアス」—カルミナ・モーラ\""
+        },
+        "pl": {
+          "name": "Dziecięce buciki Matiasa",
+          "description": "Pamiątka przypominająca Carminie, że Matias jest przy niej i zawsze nad nią czuwa.\n•  Aury ocalałych znajdujących się w promieniu 5 metrów od bezczynnego złowieszczego kruka zostają ujawnione na 3 sekundy.\n\"„Do zobaczenia wkrótce, Matiasie”. – Carmina Mora \""
+        }
+      }
+    },
+    {
+      "id": 467,
+      "name": "Severed Tongue",
+      "killer_id": 26,
+      "description": "Carmina's tongue, cut from her mouth shortly before her death. The sight instills rage not just in her, but in her crows.\n• Decreases the length of time The Artist's movement slows when Dire Crows take flight by 0.5 seconds.\n\"\"How are you going to tell poems now?\"—Hooded Man \"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_severedTongue.png?778881",
+      "icon_local_path": "icons/addons/severed_tongue.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Abgetrennte Zunge",
+          "description": "Carminas Zunge, die ihr kurz vor ihrem Tod aus dem Mund geschnitten wurde. Der Anblick weckt nicht nur ihre eigene Wut, sondern auch die ihrer Krähen.\n• Verringert die Dauer, in der die Bewegungen der Künstlerin verlangsamt sind, während Düsterkrähen sich in die Luft erheben, um 0,5 Sekunden.\n\"„Wie willst du jetzt Gedichte aufsagen?“ – Mann mit Kapuze\""
+        },
+        "es": {
+          "name": "Lengua amputada",
+          "description": "La lengua de Carmina, cortada poco antes de su muerte. Al verla, la ira no solo se apodera de ella, también de sus cuervos.\n• Reduce el tiempo durante el cual la Artista se mueve con lentitud cuando los cuervos funestos echan a volar en 0,5 segundos.\n\"\"A ver cómo recitas poemas ahora\". (Encapuchado)\""
+        },
+        "ja": {
+          "name": "切断された舌",
+          "description": "カルミナが死ぬ直前に切り落とされた舌。その光景によって彼女本人ではなく、カラスの中に怒りが湧いた。\n• 不吉なカラスが飛ぶ時にアーティストの移動速度が低下する時間の長さが0.5秒減少する\n\"「これではもう詩を朗読できないだろう？」—フードを被った男\""
+        },
+        "pl": {
+          "name": "Odcięty język",
+          "description": "Język Carminy odcięty tuż przed jej śmiercią. Jego widok wzbudza gniew nie tylko w niej, ale również w jej krukach.\n• Skraca czas, w którym ruch Artystki jest spowolniony poderwaniem się do lotu złowieszczego kruka, o 0,5 sekundy.\n\"„Jak będziesz teraz deklamowała wiersze?” – Zakapturzony Mężczyzna \""
+        }
+      }
+    },
+    {
+      "id": 468,
+      "name": "Garden of Rot",
+      "killer_id": 26,
+      "description": "A nude self-portrait in which Carmina depicts a rotting darkness growing outwards from within.\n• When a Survivor affected by Dire Crows completes the repel action, they are afflicted by the Exposed status effect for 4 seconds.\nExposed Survivors are downed by basic attacks, even if uninjured.\n\"\"I see no salvation in the rot.\"—Carmina Mora\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gardenOfRot.png?6aa819",
+      "icon_local_path": "icons/addons/garden_of_rot.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Garten der Verwesung",
+          "description": "Ein Akt-Selbstporträt, in dem Carmina eine verwesende Dunkelheit zeigt, die sich von innen nach außen frisst.\n• Wenn ein Überlebender, der von Düsterkrähen betroffen ist, die Abwehraktion abschließt, leidet er 4 Sekunden unter dem Statuseffekt Gefährdet.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\"„Ich sehe keine Erlösung in der Verwesung.“ – Carmina Mora\""
+        },
+        "es": {
+          "name": "Jardín putrefacto",
+          "description": "Autorretrato desnudo en el que Carmina representa una oscuridad infecta que se extiende desde su interior.\n• Cuando un superviviente al que ataquen los cuervos funestos completa la acción de espantarlos, sufre el efecto de estado Vulnerabilidad durante 4 segundos.\nBasta un ataque básico para derribar a un superviviente con Vulnerabilidad, aunque no tenga heridas.\n\"\"No hallo salvación en la podredumbre\". (Carmina Mora)\""
+        },
+        "ja": {
+          "name": "腐敗した庭",
+          "description": "カルミナが描いた裸体の自画像。内側から外に向かって大きくなる腐った闇を表現している。\n• 不吉なカラスに襲われた生存者が撃退アクションを完了すると、4秒間無防備のステータス効果に苦しむ\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\"「腐敗の中に救済はない」—カルミナ・モーラ\""
+        },
+        "pl": {
+          "name": "Ogród zgnilizny",
+          "description": "Nagi autoportret Carminy, na którym z jej wnętrza wyrasta gnijący mrok.\n• Gdy ocalały, którego atakują złowieszcze kruki, skutecznie je odgoni, nakładany jest na niego efekt Narażony utrzymujący się przez 4 sekundy.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\"„Nie widzę zbawienia w zgniliźnie”. – Carmina Mora\""
+        }
+      }
+    },
+    {
+      "id": 469,
+      "name": "Ink Egg",
+      "killer_id": 26,
+      "description": "An unusual egg that seems to be nothing but a ball of semi-solid ink.\n• Increases the maximum capacity of Dire Crows by 1.\n• Decreases the time Dire Crows stay idle before disintegrating by 2 seconds.\n\"\"Perhaps, covered in darkness as I was, they saw me as one of their own.\" —Carmina Mora\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_inkEgg.png?9d1175",
+      "icon_local_path": "icons/addons/ink_egg.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Tintenei",
+          "description": "Ein ungewöhnliches Ei, das eine Kugel halbfester Tinte zu sein scheint.\n• Erhöht die maximale Kapazität von Düsterkrähen um 1.\n• Verringert die Dauer, für die Düsterkrähen untätig bleiben, bevor sie sich auflösen, um 2 Sekunden.\n\"„Vielleicht sahen sie mich als ihresgleichen, weil ich so von Dunkelheit umgeben war.“ – Carmina Mora\""
+        },
+        "es": {
+          "name": "Huevo de tinta",
+          "description": "Un extraño huevo que parece estar compuesto por tinta cuajada.\n• Aumenta la capacidad máxima de cuervos funestos en 1.\n• Reduce el tiempo que los cuervos funestos permanecen inactivos antes de desintegrarse en 2 segundos.\n\"\"Quizás, al verme envuelta en oscuridad, me consideraron de los suyos\". (Carmina Mora)\""
+        },
+        "ja": {
+          "name": "インクの卵",
+          "description": "半固体のインクの球にしか見えない異常な卵。\n• 不吉なカラスの呼び出し上限数が1増加する\n• 不吉なカラスが消えるまでの待機時間が2秒減少する\n\"「闇に埋もれていた私を、あの子達は仲間だと見なしてくれたんじゃないかな」—カルミナ・モーラ\""
+        },
+        "pl": {
+          "name": "Jajo z tuszu",
+          "description": "Niezwykłe jajo, które wygląda, jakby powstało z zestalonego tuszu.\n• Zwiększa  maksymalną liczbę złowieszczych kruków o 1.\n• Skraca czas bezczynności złowieszczych kruków przed ich dezintegracją o 2 sekundy.\n\"„Być może uznały, że jestem jedną z nich, gdy ujrzały mnie okrytą mrokiem”. – Carmina Mora\""
+        }
+      }
+    },
+    {
+      "id": 470,
+      "name": "Severed Hands",
+      "killer_id": 26,
+      "description": "Carmina's severed hands, cut from her arms shortly before her death. The sight brings sheer fury to her and her protectors.\n• Any Survivors within 3 meters of a Survivor being swarmed by Dire Crows will also be swarmed.\n\"\"How are you going to paint now?\" —Hooded Man \"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_severedHands.png?6cd3ba",
+      "icon_local_path": "icons/addons/severed_hands.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Abgetrennte Hände",
+          "description": "Carminas Hände, die kurz vor ihrem Tod von ihren Armen getrennt wurden. Der Anblick weckt puren Zorn in ihr und ihren Beschützern.\n• Jeder Überlebende, der sich in einem Umkreis von 3 Metern rund um einen umzingelten Überlebenden befindet, wird ebenfalls von Düsterkrähen umzingelt.\n\"„Wie willst du jetzt malen?“ – Mann mit Kapuze \""
+        },
+        "es": {
+          "name": "Manos amputadas",
+          "description": "Las manos de Carmina, cercenadas poco antes de su muerte. Su mera visión la enfurece a ella y a sus protectores.\n• Al acosar a un superviviente, los cuervos funestos acosarán también a los supervivientes que estén en un radio de 3 metros.\n\"\"A ver cómo pintas ahora\". (Encapuchado)\""
+        },
+        "ja": {
+          "name": "切断された手",
+          "description": "カルミナが死ぬ直前に腕から切り落とされた手。その光景によって、彼女本人と彼女を守る友人達は激しい怒りを覚えた。\n• 不吉なカラスの群れに囲まれた生存者の3メートル以内にいる他の生存者も群れに囲まれる。\n\"「これではもう絵を描けないなぁ？」—フードを被った男\""
+        },
+        "pl": {
+          "name": "Odcięte dłonie",
+          "description": "Dłonie Carminy odcięte tuż przed jej śmiercią. Ich widok wzbudza furię w niej i w jej obrońcach.\n• Ocalali znajdujący się w promieniu 3 metrów od osoby otoczonej przez stado złowieszczych kruków również zostają przez nie otoczone.\n\"„Jak będziesz teraz malowała?” – Zakapturzony Mężczyzna \""
+        }
+      }
+    },
+    {
+      "id": 471,
+      "name": "Iridescent Feather",
+      "killer_id": 26,
+      "description": "A glass-like feather molded from The Fog itself. Simple as it may be, it's a symbol of those who watch over Carmina.\n• The Artist gains the Undetectable status effect when Birds of Torment is in cooldown and she holds no Dire Crows.\n• Decreases the maximum capacity of Dire Crows by 1.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.\n\"\"They saved me when I couldn't save myself.\" — Carmina Mora \"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentFeather.png?25246f",
+      "icon_local_path": "icons/addons/iridescent_feather.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Feder",
+          "description": "Eine glasartige Feder, die aus dem Nebel selbst geformt wurde. Sie mag einfach sein, ist aber das Symbol für jene, die auf Carmina aufpassen.\n• Die Künstlerin erhält den Statuseffekt Unentdeckbar, wenn sich Foltervögel in Abklingzeit befindet und sie keine Düsterkrähen hat.\n• Verringert die maximale Kapazität von Düsterkrähen um 1.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„Sie haben mich gerettet, als ich es nicht selbst konnte.“ – Carmina Mora\""
+        },
+        "es": {
+          "name": "Pluma iridiscente",
+          "description": "Una pluma de aspecto cristalino moldeada por la mismísima niebla. Por sencillo que sea, es un símbolo que representa a quienes velan por Carmina.\n• La Artista obtiene el efecto de estado Indetectable cuando Aves del tormento está en tiempo de recarga y no tiene cuervos funestos.\n• Reduce la capacidad máxima de los cuervos funestos en 1.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino.\n\"\"Me salvaron cuando no fui capaz de salvarme yo\". (Carmina Mora)\""
+        },
+        "ja": {
+          "name": "玉虫色の羽",
+          "description": "霧から作られたガラスのような羽。シンプルながらも、カルミナを守る見守り隊の象徴だ。\n• アーティストはさいなむ害鳥がクールダウン中で不吉なカラスがいない時、探知不可のステータス効果を得る\n• 不吉なカラスの呼び出し上限数が1減少する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「あの子達は救いのなかった私を救ってくれた」—カルミナ・モーラ\""
+        },
+        "pl": {
+          "name": "Opalizujące pióro",
+          "description": "Przypominające szkło pióro uformowane z samej Mgły. Choć same w sobie jest proste, to symbolizuje tych, którzy czuwają nad Carminą.\n• Artystka zyskuje efekt Niewykrywalny, gdy podczas odnawiania Ptaków Udręki nie posiada żadnych złowieszczych kruków.\n• Zmniejsza maksymalną liczbę złowieszczych kruków o 1.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Uratowali mnie, gdy nie mogłam uratować siebie sama”. – Carmina Mora\""
+        }
+      }
+    }
+  ]
+}

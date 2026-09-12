@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 56,
+      "name": "Plaid Flannel",
+      "killer_id": 4,
+      "description": "A torn piece of red and black plaid flannel. The scrap of fabric imbues The Nurse with devastating focus.\n• Allows the Nurse to see the Blink target location.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_plaidFlannel.png?606b0a",
+      "icon_local_path": "icons/addons/plaid_flannel.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Karierter Lappen",
+          "description": "Ein zerfetztes Stück eines rot und schwarz karierten Lappens. Der Stofffetzen erfüllt die Krankenschwester mit verheerender Konzentration.\n• Ermöglicht es der Krankenschwester, Zielgebiete der Teleportation zu sehen."
+        },
+        "es": {
+          "name": "Franela de cuadros",
+          "description": "Un trozo rasgado de franela de cuadros rojos y negros. Este pedazo de tela otorga a la Enfermera una capacidad de concentración devastadora.\n• Permite ver el punto hasta donde llega la Proyección."
+        },
+        "ja": {
+          "name": "縞模様の布切れ",
+          "description": "赤と黒の縞模様のシャツがちぎれたもの。生地の切れ端がナースに猛烈な集中力を吹き込む。\n• ブリンクの到達地点が視えるようになる"
+        },
+        "pl": {
+          "name": "Flanelowy Pled",
+          "description": "Rozpruty kawałek bawełnianego materiału w czerwono-czarną kratę. Fabryczny skrawek wprowadzający Pielęgniarkę w stan destrukcyjnego skupienia.\n• Pozwala Pielęgniarce dostrzec docelowe miejsce teleportacji."
+        }
+      }
+    },
+    {
+      "id": 57,
+      "name": "White Nit Comb",
+      "killer_id": 4,
+      "description": "A parasitic nit comb taken from the clinic. Once the symbol of a deep connection between an anxious patient and her nurse.\n• Decreases the length of Blink Attack lunges by 50%.\n• Increases Bloodpoints for Blink Attack score events by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_whiteNitComb.png?3d3705",
+      "icon_local_path": "icons/addons/white_nit_comb.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Weißer Nissenkamm",
+          "description": "Ein parasitenbesetzter Nissenkamm aus der Klinik. Einst war er das Symbol tiefer Verbundenheit zwischen einer ängstlichen Patientin und ihrer Krankenschwester.\n• Verringert die Distanz von Teleportations-Sprungangriffen um 50 %.\n• Erhöht die Blutpunkte für Punktereignisse durch Teleportationsangriffe um 100 %."
+        },
+        "es": {
+          "name": "Peine para piojos blanco",
+          "description": "Un peine para piojos traído de la clínica. En su momento fue símbolo de una profunda conexión entre una paciente con ansiedad y su enfermera.\n• Reduce la duración de las embestidas tras Proyección un 50 %.\n• Aumenta los puntos de sangre eventos de puntuación de Proyección un 100 %."
+        },
+        "ja": {
+          "name": "白い梳き櫛",
+          "description": "診療所から持ち出された毛じらみ用の櫛。かつては緊張病の患者と彼女の看護師の、深い絆の象徴だった。\n• ブリンクの突進攻撃の範囲が50%縮小する\n• ブリンク攻撃命中の得点が発生すると取得ブラッドポイントが100%増加する"
+        },
+        "pl": {
+          "name": "Grzebień Niespokojnego Pacjenta",
+          "description": "Pasożytniczy grzebień nitkowy zabrany z kliniki. Dawny symbol silnej więzi łączącej niespokojną pacjentkę z pielęgniarką.\n• Zmniejsza długość skoków przy atakach teleportacyjnych o 50%.\n• Zwiększa liczbę Punktów Krwi za ataki teleportacyjne o 100%."
+        }
+      }
+    },
+    {
+      "id": 58,
+      "name": "Anxious Gasp",
+      "killer_id": 4,
+      "description": "The gasp of surprise collected from an anxious girl which The Nurse was fond of. Twitches vigorously at The Nurse's touch.\n• Blinking past a survivor causes them to scream and awards 200 Bloodpoints for spooking them.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_anxiousGasp.png?7b574c",
+      "icon_local_path": "icons/addons/anxious_gasp.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Ängstliches Keuchen",
+          "description": "Das überraschte Keuchen von einem ängstlichen Mädchen, für das die Krankenschwester Zuneigung empfand. Es zuckt energisch zusammen, wenn die Krankenschwester es berührt.\n• Nutzt sie die Teleportation, um an einem Überlebenden vorbeizukommen, schreit dieser auf und sie erhält 200 Blutpunkte für sein Erschrecken."
+        },
+        "es": {
+          "name": "Aliento ansioso",
+          "description": "El aliento de sorpresa de una chica ansiosa que la Enfermera apreciaba. Se retuerce enérgicamente al entrar en contacto con la Enfermera.\n• Al proyectarse hacia un superviviente, este grita y otorga 200 puntos de sangre por asustarle."
+        },
+        "ja": {
+          "name": "心配性の喘ぎ",
+          "description": "心配症の女の子から採取された驚きの喘ぎ。ナースが好み、触れると勢い良く痙攣する。\n• ブリンクで生存者を追い越すと生存者が悲鳴を上げ、驚かせたことで200ポイントのブラッドポイントを獲得する"
+        },
+        "pl": {
+          "name": "Niespokojny Oddech",
+          "description": "Westchnienie zdumienia wykradzione niespokojnej dziewczynie, którą Pielęgniarka darzyła szczególną sympatią. Drga energicznie na dotyk Pielęgniarki.\n• Teleportacja obok ocalałego zmusza go do krzyku i daje 200 Punktów Krwi za jego wystraszenie."
+        }
+      }
+    },
+    {
+      "id": 59,
+      "name": "Torn Bookmark",
+      "killer_id": 4,
+      "description": "A white and pristine piece of ribbon once attached to a sacred book. Serves as the symbol of a dispute.\n• Adds 1 Blink charge.\n• Increases Blink recharge time by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tornBookmark.png?73fb12",
+      "icon_local_path": "icons/addons/torn_bookmark.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Zerfetztes Lesezeichen",
+          "description": "Ein weißes, sauberes Band, das Teil eines heiligen Buchs war. Einst war dies das Symbol einer Auseinandersetzung.\n• Fügt 1 Teleportation-Aufladung hinzu.\n• Erhöht die Ladezeit der Teleportation um 30 %."
+        },
+        "es": {
+          "name": "Marcapáginas desgarrado",
+          "description": "Un trozo de cinta blanca e inmaculada que antiguamente estuvo unida a un libro sagrado. Es el símbolo de una disputa.\n• Añade 1 carga de Proyección.\n• Aumenta el tiempo de recarga de Proyección un 30 %."
+        },
+        "ja": {
+          "name": "ちぎれた栞",
+          "description": "白くてきれいなリボンの切れ端。かつては神聖な本に取り付けられていて、討論の象徴だった。\n• 貯められるブリンクの総数が1増加する\n• ブリンクのチャージ時間が30%増加する"
+        },
+        "pl": {
+          "name": "Poszarpana Zakładka",
+          "description": "Nieskazitelnie biały kawałek wstążki dołączonej kiedyś do świętej księgi. Stanowi symbol debaty.\n• Dodaje 1 ładunek teleportacyjny.\n• Wydłuża czas ładowania teleportacji o 30%."
+        }
+      }
+    },
+    {
+      "id": 60,
+      "name": "Dark Cincture",
+      "killer_id": 4,
+      "description": "A black rope used as a belt in times of mourning. Taken from Father Campbell's body.\n• Increases movement speed after a Blink but before the following fatigue by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_darkCincture.png?c0e3af",
+      "icon_local_path": "icons/addons/dark_cincture.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Dunkler Gürtel",
+          "description": "Ein schwarzes Seil, das in Zeiten der Trauer als Gürtel genutzt wurde. Stammt von Pater Campbells Leichnam.\n• Erhöht die Bewegungsgeschwindigkeit nach einer Teleportation und vor der folgenden Ermüdung um 30 %."
+        },
+        "es": {
+          "name": "Cinturón oscuro",
+          "description": "Un cordel negro que se usaba como cinturón para los momentos de luto. Arrebatado del cuerpo del padre Campbell.\n• Aumenta la velocidad de movimiento tras una Proyección, pero antes de la siguiente fatiga, un 30 %."
+        },
+        "ja": {
+          "name": "暗色の帯",
+          "description": "弔事の際にベルトとして使われた黒いロープ。キャンベル神父の遺体から奪われた。\n• ブリンク後の疲労が起こる前の移動速度が30%増加する"
+        },
+        "pl": {
+          "name": "Ciemny Pasek",
+          "description": "Czarna lina używana jako pasek w czasie żałoby. Zabrana z ciała ojca Campbella.\n• Zwiększa prędkość ruchu po teleportacji przed zmęczeniem o 30%."
+        }
+      }
+    },
+    {
+      "id": 61,
+      "name": "Fragile Wheeze",
+      "killer_id": 4,
+      "description": "The whistling and rattling breath stolen from Father Campbell. Silently curves and bends at The Nurse's touch.\n• Blink Attacks inflict the Mangled status effect for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fragileWheeze.png?4ccc14",
+      "icon_local_path": "icons/addons/fragile_wheeze.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schwaches Röcheln",
+          "description": "Der pfeifende und rasselnde Atem, gestohlen von Pater Campbell. Krümmt und biegt sich lautlos, wenn die Krankenschwester ihn berührt.\n• Teleportationsangriffe verursachen den Statuseffekt Zerfleischt für 70 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Respiración frágil",
+          "description": "Un estertor sibilante robado al padre Campbell. Se curva e inclina en silencio al entrar en contacto con la Enfermera.\n• Los ataques tras Proyección causan el efecto de estado Laceración durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "はかない息切れ",
+          "description": "ヒューヒューと乱れた息。キャンベル神父から盗まれた。ナースが触ると少し歪む。\n• ブリンク攻撃によって、70秒間重傷ステータス効果を与える。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Ciche Sapanie",
+          "description": "Gwałtowny i tępy oddech skradziony od ojca Campbella. Zgina się cicho w rękach Pielęgniarki.\n• Ataki teleportacyjne nakładają efekt Zmasakrowany na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 62,
+      "name": "Campbell's Last Breath",
+      "killer_id": 4,
+      "description": "A powerful last breath snatched from Crotus Prenn asylum priest Father Campbell. In the hands of The Nurse, it crackles with intensity.\n• After reappearing from a fully charged Blink, The Nurse immediately Blinks at full charge in the direction she is currently facing.\n• This only works if The Nurse has a remaining Blink charge.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_campbellsLastBreath.png?f689f1",
+      "icon_local_path": "icons/addons/campbells_last_breath.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Campbells letzter Atem",
+          "description": "Ein kraftvoller letzter Atemzug, gestohlen von Pater Campbell, dem Priester der Crotus-Prenn-Anstalt. In den Händen der Krankenschwester knistert er stark.\n• Nach dem Wiedererscheinen aus einer komplett aufgeladenen Teleportation kann sich die Krankenschwester sofort mit voller Aufladung in ihre aktuelle Blickrichtung teleportieren.\n• Funktioniert nur, wenn die Krankenschwester noch eine Teleportation-Aufladung hat."
+        },
+        "es": {
+          "name": "Último suspiro de Campbell",
+          "description": "Un último y poderoso aliento arrebatado al cura del psiquiátrico Crotus Prenn, el padre Campbell. Crepita con intensidad en las manos de la Enfermera.\n• Después de reaparecer tras una Proyección cargada al máximo, la Enfermera se proyecta inmediatamente con toda su carga hacia la dirección en la que esté mirando.\n• Solo funciona si la Enfermera tiene alguna carga de Proyección."
+        },
+        "ja": {
+          "name": "キャンベルの最期の一息",
+          "description": "クロータス・プレン・アサイラムのキャンベル神父から奪われた、力強い最期の一息。ナースの手の中で熱気を帯びてパチパチと弾ける。\n• 最大にチャージしたブリンクを使用してから再出現した後、ナースが向いている方向に最大チャージで即座にブリンクする\n• 使えるブリンクがナースに残っている場合のみ可能"
+        },
+        "pl": {
+          "name": "Ostatni oddech Campbella",
+          "description": "Potężny, ostatni oddech wyrwany od ojca Campbella, kapelana przytułku Crotus Prenn. Drży intensywnie w rękach Pielęgniarki.\n• Po ponownym pojawieniu się po w pełni naładowanej teleportacji Pielęgniarka natychmiast teleportuje się z pełnym ładunkiem w kierunku, w którym jest zwrócona.\n• Działa tylko, gdy Pielęgniarka ma wolny ładunek teleportacji."
+        }
+      }
+    },
+    {
+      "id": 63,
+      "name": "Metal Spoon",
+      "killer_id": 4,
+      "description": "A dull, partially rusted and stained metallic spoon. Confiscated from room 202's patient, the \"Bad Man\".\n• Hitting a survivor with a successful Blink Attack causes their sounds of pain to be 50% louder for 60 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_metalSpoon.png?6c0f00",
+      "icon_local_path": "icons/addons/metal_spoon.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Metalllöffel",
+          "description": "Ein glanzloser, teilweise verrosteter und schmutziger Löffel aus Metall. Konfisziert vom Patienten aus Zimmer 202, dem „Bösen Mann“.\n• Wird ein Überlebender erfolgreich mit einer Teleportation angegriffen, werden seine Schmerzensschreie 60 Sekunden lang um 50 % lauter."
+        },
+        "es": {
+          "name": "Cuchara de metal",
+          "description": "Una cuchara de metal sin brillo y medio oxidada, confiscada al paciente de la habitación 202, el \"Hombre Malo\".\n• Al golpear a un superviviente con un ataque de Proyección, sus quejidos de dolor se vuelven un 50 % más ruidosos durante 60 segundos."
+        },
+        "ja": {
+          "name": "金属のスプーン",
+          "description": "光沢がなく、所々錆びて染みが付いた金属のスプーン。202号室の患者「バッドマン」から没収された。\n• ブリンク攻撃が生存者に命中すると、生存者のうめき声が60秒間50%大きくなる"
+        },
+        "pl": {
+          "name": "Metalowa Łyżka",
+          "description": "Zwyczajna, częściowo zardzewiała i poplamiona metalowa łyżka. Została skonfiskowana od pacjenta z pokoju 202, „Złego Człowieka”.\n• Trafienie ocalałego atakiem teleportacyjnym sprawia, że odgłosy bólu stają się o 50% głośniejsze przez 60 sekund."
+        }
+      }
+    },
+    {
+      "id": 64,
+      "name": "Bad Man Keepsake",
+      "killer_id": 4,
+      "description": "A rotten molar extirpated from the \"Bad Man's\" cold dead hand.\n• Hitting a survivor with a successful Blink Attack causes their aura to be revealed when healing or being healed within a 28 meter range for 60 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_badManKeepsake.png?1ff5c3",
+      "icon_local_path": "icons/addons/bad_man_keepsake.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Andenken an den „Bösen Mann“",
+          "description": "Ein verfaulter Backenzahn, der dem toten „Bösen Mann“ entrissen wurde.\n• Triffst du einen Überlebenden mit einem Teleportationsangriff, wird dessen Aura enthüllt, sofern dieser sich in einem Umkreis von 28 Metern heilt oder geheilt wird, und zwar für 60 Sekunden."
+        },
+        "es": {
+          "name": "Recuerdo del \"Hombre Malo\"",
+          "description": "Una muela podrida arrebatada de la mano del cadáver del \"Hombre Malo\".\n• Si golpeas a un superviviente al usar Proyección, percibirás su aura cuando se esté o lo estén curando dentro de una distancia de 28 metros durante 60 segundos."
+        },
+        "ja": {
+          "name": "バッドマンの形見",
+          "description": "死んだ「バッドマン」の手から摘出された腐った奥歯。\n• ブリンク攻撃が生存者に命中すると、60秒間その生存者が28メートル以内で治療するか治療を受けた時にそのオーラが視えるようになる"
+        },
+        "pl": {
+          "name": "Pamiątka po złym człowieku",
+          "description": "Przegniły trzonowiec wyrwany z zimnej, martwej ręki „Złego Człowieka”.\n• Trafienie ocalałego atakiem teleportacyjnym powoduje ujawnienie jego aury podczas leczenia lub otrzymywania pomocy w promieniu 28 metrów przez 60 sekund."
+        }
+      }
+    },
+    {
+      "id": 65,
+      "name": "Wooden Horse",
+      "killer_id": 4,
+      "description": "An unpainted toy carved out of cheap wood to resemble a horse. Once the symbol of a deep connection between a catatonic patient and his nurse.\n• Decreases extra fatigue from missed Blink Attacks by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_woodenHorse.png?817057",
+      "icon_local_path": "icons/addons/wooden_horse.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Holzpferd",
+          "description": "Ein unbemaltes, aus billigem Holz geschnitztes Spielzeug, das einem Pferd ähnelt. Einst war es das Symbol tiefer Verbundenheit zwischen einem katatonischen Patienten und seiner Krankenschwester.\n• Verringert die zusätzliche Ermüdung, die von misslungenen Teleportation-Angriffen herrührt, um 50 %."
+        },
+        "es": {
+          "name": "Caballito de madera",
+          "description": "Un juguete sin pintar, tallado con forma de caballo en madera barata. En su momento fue símbolo de una profunda conexión entre un paciente catatónico y su enfermera.\n• Reduce la fatiga extra al fallar ataques tras Proyección un 50 %."
+        },
+        "ja": {
+          "name": "木馬",
+          "description": "馬に似せるために、安っぽい木材から彫って作られたまま塗装されていないおもちゃ。かつては強硬症の患者と彼の看護師の、深い絆の象徴だった。\n• ブリンク攻撃に失敗した時の追加の疲労が50%減少する"
+        },
+        "pl": {
+          "name": "Drewniany Konik",
+          "description": "Niepomalowana zabawka wyciosana z taniego drewna na podobieństwo konia. Dawniej symbol silnej więzi łączącej pacjenta cierpiącego na katatonię z pielęgniarką.\n• Zmniejsza dodatkowe zmęczenie z chybionych ataków teleportacyjnych o 50%."
+        }
+      }
+    },
+    {
+      "id": 66,
+      "name": "Catatonic Boy's Treasure",
+      "killer_id": 4,
+      "description": "A pine-cone which unexpectedly calmed a patient's repetitive movement. Taken from the catatonic boy's body.\n• Decreases extra fatigue from chain Blinks by 65%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_catatonicBoysTreasure.png?8d2f8e",
+      "icon_local_path": "icons/addons/catatonic_boys_treasure.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schatz des katatonischen Jungen",
+          "description": "Ein Tannenzapfen, der unerwartet die sich wiederholenden Bewegungen eines Patienten minderte. Stammt vom Leichnam des katatonischen Jungen.\n• Verringert die zusätzliche Ermüdung durch Mehrfach-Teleportation um 65 %."
+        },
+        "es": {
+          "name": "Tesoro del chico catatónico",
+          "description": "Una piña que, sorprendentemente, conseguía apaciguar los movimientos repetitivos de un paciente. Arrebatada del cuerpo del chico catatónico.\n• Reduce la fatiga extra de las proyecciones combinadas un 65 %."
+        },
+        "ja": {
+          "name": "緊張病の男の子の宝物",
+          "description": "予想だにせず患者の多動を抑えた松ぼっくり。緊張病の男の子の遺体から奪われた。\n• 連続ブリンクによる追加の疲労が65%減少する"
+        },
+        "pl": {
+          "name": "Skarb Chłopca z Katatonią",
+          "description": "Sosnowa szyszka, która niespodziewanie uspokoiła powtarzalne ruchy pacjenta. Zabrana z ciała chłopca z katatonią.\n• Zmniejsza dodatkowe zmęczenie z połączonych teleportacji o 65%."
+        }
+      }
+    },
+    {
+      "id": 67,
+      "name": "Ataxic Respiration",
+      "killer_id": 4,
+      "description": "The irregular and deteriorating breath collected from the catatonic boy. Normally stable and calm, becomes incredibly agitated at The Nurse's touch.\n• Decreases base Blink fatigue duration by 7%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ataxicRespiration.png?ca4ee0",
+      "icon_local_path": "icons/addons/ataxic_respiration.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Unkoordinierter Atem",
+          "description": "Der unregelmäßige und schwächer werdende Atemzug des katatonischen Jungen. Er ist normalerweise gleichmäßig und ruhig, wird aber unglaublich hektisch, sobald die Krankenschwester ihn berührt.\n• Verkürzt die Grundermüdungszeit der Teleportation um 7 %."
+        },
+        "es": {
+          "name": "Respiración atáxica",
+          "description": "La respiración irregular y deteriorada obtenida del chico catatónico. Normalmente se mantiene estable y tranquila, pero se agita violentamente al entrar en contacto con la Enfermera.\n• Reduce la duración de la fatiga tras usar Proyección un 7 %."
+        },
+        "ja": {
+          "name": "失調性の呼気",
+          "description": "緊張病の男の子から採取した、不規則で悪化している呼気。普段は落ち着いているが、ナースが触れると急激に乱れる。\n• ブリンクの疲労時間が7%減少する"
+        },
+        "pl": {
+          "name": "Przedśmiertny Oddech",
+          "description": "Nieregularny, marniejący oddech odebrany chłopcu cierpiącemu na katatonię. Jest zazwyczaj miarowy i stabilny, ale gdy znajduje się w rękach Pielęgniarki, staje się wyjątkowo niespokojny.\n• Zmniejsza bazowe zmęczenie po teleportacji o 7%."
+        }
+      }
+    },
+    {
+      "id": 68,
+      "name": "\"Bad Man's\" Last Breath",
+      "killer_id": 4,
+      "description": "A powerful last breath snatched from Crotus Prenn asylum patient \"the Bad Man.\" In the hands of The Nurse, it jolts with intensity.\n• Hitting a survivor with a successful Blink Attack grants the Nurse Undetectable for 25 seconds. This effect may be only triggered once every 45 seconds.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_badMansLastBreath.png?c6932c",
+      "icon_local_path": "icons/addons/bad_mans_last_breath.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Letzter Atem des „Bösen Mannes“",
+          "description": "Ein kraftvoller letzter Atemzug, gestohlen vom „Bösen Mann“, einem Patienten der Crotus-Prenn-Anstalt. In den Händen der Krankenschwester gebärdet er sich wie wild.\n• Wird ein Überlebender erfolgreich mit einer Teleportation angegriffen, erhält die Krankenschwester den Status Unentdeckbar für 25 Sekunden. Dieser Effekt kann nur einmal alle 45 Sekunden ausgelöst werden.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Último suspiro del \"Hombre Malo\"",
+          "description": "Un poderoso último suspiro arrebatado al \"Hombre Malo\", un paciente del psiquiátrico Crotus Prenn. En manos de la Enfermera, se agita con intensidad.\n• Si golpea a un superviviente al usar Proyección, la Enfermera obtiene Indetectable durante 25 segundos. Este efecto solo se puede activar una vez cada 45 segundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "「バッドマン」の最期の一息",
+          "description": "クロータス・プレン・アサイラムの患者であったバッドマンの、力強い最期の一息。ナースの手の中で力を持って震える。\n• 生存者にブリンク攻撃が命中するとナースは25秒間探知不可になる。この効果は45秒間に一度だけ発動する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Ostatni Oddech „Złego Człowieka\"",
+          "description": "Potężne ostatnie tchnienie „Złego Człowieka”, pacjenta przytułku Crotus Prenn. Drży intensywnie w rękach Pielęgniarki.\n• Trafienie ocalałego atakiem teleportacyjnym daje Pielęgniarce status Niewykrywalny na 25 sekund.Efekt można włączyć tylko raz na 45 s.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 69,
+      "name": "Dull Bracelet",
+      "killer_id": 4,
+      "description": "A worthless piece of jewelry that might have had an important significance to someone. Taken from the anxious girl's body.\n• Decreases maximum Blink distance by 20%.\n• Increases Bloodpoints for Precise Blink score events by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dullBracelet.png?8c6772",
+      "icon_local_path": "icons/addons/dull_bracelet.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glanzloser Armreif",
+          "description": "Ein wertloses Schmuckstück, das vielleicht für jemanden von großer Bedeutung war. Stammt vom Leichnam des ängstlichen Mädchens.\n• Verringert die maximale Distanz der Teleportation um 20 %.\n• Erhöht die Blutpunkte für Punktereignisse mit Genauer Teleportation um 100 %."
+        },
+        "es": {
+          "name": "Brazalete sin brillo",
+          "description": "Una pieza de joyería sin valor que quizás tuvo un gran significado para alguien. La encontraron en el cadáver de la chica ansiosa.\n• Reduce la distancia máxima de Proyección un 20 %.\n• Aumenta los puntos de sangre obtenidos por proyecciones precisas con los eventos de puntuación un 100 %."
+        },
+        "ja": {
+          "name": "すり減ったブレスレット",
+          "description": "誰かが大事にしていたかもしれない、無価値なアクセサリーの一部。心配性の女の子の遺体から奪われた。\n• ブリンクの最大範囲が20%減少する\n• 正確なブリンクの得点が発生すると取得ブラッドポイントが100%増加する"
+        },
+        "pl": {
+          "name": "Odbarwiona bransoletka",
+          "description": "Bezwartościowy kawałek biżuterii. Niewykluczone, że miał dla kogoś wartość sentymentalną. Został zabrany z ciała niespokojnej dziewczyny.\n• Zmniejsza maksymalną odległość teleportacji o 20%.\n• Zwiększa liczbę Punktów Krwi za precyzyjną teleportację o 100%."
+        }
+      }
+    },
+    {
+      "id": 70,
+      "name": "Heavy Panting",
+      "killer_id": 4,
+      "description": "The slow and bulging breath stolen from the orderly. Dimly oscillates at The Nurse's touch.\n• Extends the duration of a lunge after more than one Blink by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_heavyPanting.png?c4bfed",
+      "icon_local_path": "icons/addons/heavy_panting.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Heftiges Keuchen",
+          "description": "Der langsame und tiefe Atemzug, gestohlen vom Krankenpfleger. Er vibriert matt, wenn die Krankenschwester ihn berührt.\n• Verlängert die Dauer eines Sprungs nach mehr als einer Teleportation um 30 %."
+        },
+        "es": {
+          "name": "Jadeo intenso",
+          "description": "El aliento pesado arrebatado al camillero. Oscila débilmente al entrar en contacto con la Enfermera.\n• Aumenta la duración de una embestida tras realizar más de una Proyección un 10 %."
+        },
+        "ja": {
+          "name": "重く息切れする呼気",
+          "description": "職員から採取された呼気。ゆっくりと膨らむ。ナースが触れると穏やかに振動する。\n• 複数回ブリンクした後の突進の持続時間が10%増加する"
+        },
+        "pl": {
+          "name": "Ciężkie Dyszenie",
+          "description": "Wolny i ciężki oddech wykradziony dyżurnemu. Drży słabo w rękach Pielęgniarki.\n• Zwiększa czas trwania skoku po więcej niż jednej Teleportacji o 10%."
+        }
+      }
+    },
+    {
+      "id": 71,
+      "name": "Jenner's Last Breath",
+      "killer_id": 4,
+      "description": "A powerful last breath snatched from Crotus Prenn asylum patient Mary Jenner. In the hands of The Nurse, it trembles with intensity.\n• Once The Nurse has exhausted all of her Blinks, allows The Nurse to immediately Blink back to her original position by pressing the Active Ability Button.\n• Must be triggered before The Nurse succumbs to fatigue.\n• After returning to her original position, The Nurse will have one Blink charge ready.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jennersLastBreath.png?ad706a",
+      "icon_local_path": "icons/addons/jenners_last_breath.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Jenners letzter Atem",
+          "description": "Ein kraftvoller letzter Atemzug, gestohlen von Mary Jenner, einer Patientin der Crotus-Prenn-Anstalt. Zittert heftig in der Hand der Krankenschwester.\n• Sobald die Krankenschwester alle Teleportationen verbraucht hat, kann die Krankenschwester sofort zu ihrer ursprünglichen Position zurückteleportieren, indem du die Taste für die aktive Fähigkeit drückst.\n• Muss ausgelöst werden, bevor die Krankenschwester von Ermüdung heimgesucht wird.\n• Wenn sie an ihre ursprüngliche Position zurückgekehrt ist, verfügt die Krankenschwester über eine Teleportation-Aufladung."
+        },
+        "es": {
+          "name": "Último suspiro de Jenner",
+          "description": "Un poderoso último aliento arrebatado a Mary Jenner, paciente del psiquiátrico Crotus Prenn. En manos de la Enfermera, tiembla con intensidad.\n• Cuando la Enfermera haya utilizado todas sus proyecciones, vuelve a proyectarse inmediatamente a su posición original pulsando el botón de la habilidad activa.\n• Debe activarse antes de que a la Enfermera le afecte la fatiga.\n• Tras regresar a su posición original, la Enfermera tendrá lista una carga de Proyección."
+        },
+        "ja": {
+          "name": "ジェナーの最期の一息",
+          "description": "クロータス・プレン・アサイラムの患者であったメアリー・ジェナーの、力強い最期の一息。ナースの手の中で力を持って揺れ動く。\n• ナースがブリンクを使い果たした後、アビリティ発動のボタンを押すと、即座に元の位置に戻ることができる\n• ナースが疲労で動けなくなる前にボタンを押さないと発動しない\n• ナースはブリンクが1つ使える状態で元の位置に戻る"
+        },
+        "pl": {
+          "name": "Ostatni Oddech Jenner",
+          "description": "Potężny ostatni oddech odebrany Mary Jenner – pacjentce przytułku Crotus Prenn. Drży intensywnie w rękach Pielęgniarki.\n• Gdy Pielęgniarka wykorzysta wszystkie Teleportacje, oddech ten pozwala jej natychmiast powrócić do początkowej pozycji po naciśnięciu przycisku aktywnej umiejętności.\n• Należy włączyć, zanim Pielęgniarka ulegnie zmęczeniu.\n• Po powrocie do początkowej pozycji Pielęgniarka będzie miała jeden gotowy ładunek Teleportacji."
+        }
+      }
+    },
+    {
+      "id": 72,
+      "name": "Kavanagh's Last Breath",
+      "killer_id": 4,
+      "description": "A powerful last breath snatched from Crotus Prenn asylum orderly Harvey Kavanagh. In the hands of The Nurse, it wobbles with intensity.\n• When succumbing to fatigue, any Survivors within 8 meters of The Nurse are afflicted with the Blindness status effect for 60 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kavanaghsLastBreath.png?c87984",
+      "icon_local_path": "icons/addons/kavanaghs_last_breath.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Kavanaghs letzter Atem",
+          "description": "Ein kraftvoller letzter Atemzug, gestohlen von Harvey Kavanagh, einem Krankenpfleger der Crotus-Prenn-Anstalt. Er wabbelt heftig in den Händen der Krankenschwester.\n• Wenn dich Ermüdung ereilt, erleiden alle Überlebenden in einem Umkreis von 8 Metern um die Krankenschwester den Statuseffekt Erblindung für 60 Sekunden.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Último suspiro de Kavanagh",
+          "description": "Un poderoso último aliento arrebatado a Harvey Kavanagh, camillero del psiquiátrico Crotus Prenn. En manos de la Enfermera, se agita con intensidad.\n• Cuando sucumben a la fatiga, todos los supervivientes a 8 metros de la Enfermera sufren el efecto de estado Ceguera durante 60 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "カヴァナーの最期の一息",
+          "description": "クロータス・プレン・アサイラムの職員であったハーヴェイ・カヴァナーの、力強い最期の一息。ナースの手の中で激しく揺れる。\n• 疲労で動けなくなるとナースの8メートル以内の生存者が目眩ましステータス効果に60秒間苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Ostatni Oddech Kavanagha",
+          "description": "Potężny ostatni oddech wykradziony z płuc Harveya Kavanagha – pacjenta przytułku Crotus Prenn. Drży intensywnie w rękach Pielęgniarki.\n• Po zmęczeniu ocalali w zasięgu 8 m od Pielęgniarki otrzymują efekt Oślepienie na 60 s.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 73,
+      "name": "Matchbox",
+      "killer_id": 4,
+      "description": "A matchbox containing an odd collection of mismatched buttons. Serves as a reminder of a horrible place.\n• Sets maximum number of Blink charges to 1.\n• Increases The Nurse's base movement speed to 4.4 m/s.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_matchbox.png?2ae025",
+      "icon_local_path": "icons/addons/matchbox.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Streichholzschachtel",
+          "description": "Eine Streichholzschachtel mit einer seltsamen Sammlung nicht zusammenpassender Knöpfe. Sie dient als Erinnerung an einen schrecklichen Ort.\n• Setzt die maximale Anzahl von Teleportation-Aufladungen auf 1 fest.\n• Erhöht die Grundbewegungsgeschwindigkeit der Krankenschwester auf 4,4 m/s."
+        },
+        "es": {
+          "name": "Caja de cerillas",
+          "description": "Una caja de cerillas que contiene una extraña colección de botones desemparejados. Es el recuerdo de un lugar horrible.\n• El número máximo de cargas de Proyección que puedes llevar cambia a 1.\n• Aumenta la velocidad de movimiento base de la Enfermera a 4,4 m/s."
+        },
+        "ja": {
+          "name": "マッチ箱",
+          "description": "形が異なるボタンの奇妙な寄せ集めが入っているマッチ箱。恐ろしい場所を思い出させるのに効果的。\n• 貯められるブリンクの総数を1に設定する\n• ナースの基本移動速度が4.4m/秒に上昇する"
+        },
+        "pl": {
+          "name": "Pudełko zapałek",
+          "description": "Pudełko zawierające dziwną kolekcję niedopasowanych zapałek. Służy jako pamiątka z okropnego miejsca.\n• Ustawia maksymalną liczbę ładunków teleportacji na 1.\n• Zwiększa podstawową prędkość ruchu pielęgniarki do 4,4 m/s."
+        }
+      }
+    },
+    {
+      "id": 74,
+      "name": "Spasmodic Breath",
+      "killer_id": 4,
+      "description": "The twitchy and tremulous breath stolen from the \"Bad Man.\" Aggressively pulses and jumps at The Nurse's touch.\n• Hitting a survivor with a successful Blink Attack disables the ability to Blink and increases the Nurse's base movement speed to 4.6 m/s for 60 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spasmodicBreath.png?8a161a",
+      "icon_local_path": "icons/addons/spasmodic_breath.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Krampfhafter Atem",
+          "description": "Der nervöse und zittrige Atemzug, gestohlen vom „Bösen Mann“. Pulsiert aggressiv und springt, wenn die Krankenschwester ihn berührt.\n• Wird ein Überlebender erfolgreich mit einer Teleportation angegriffen, verliert die Krankenschwester die Fähigkeit zur Teleportation und ihre Grundbewegungsgeschwindigkeit erhöht sich auf 4,6 m/s, und zwar für 60 Sekunden."
+        },
+        "es": {
+          "name": "Aliento espasmódico",
+          "description": "Un aliento trémulo y nervioso arrebatado al \"Hombre Malo\". Palpita y salta con agresividad al entrar en contacto con la Enfermera.\n• Si golpea a un superviviente tras usar Proyección, la Enfermera pierde la capacidad de proyectarse y su velocidad de movimiento base aumenta en 4,6 metros por segundo durante 60 segundos."
+        },
+        "ja": {
+          "name": "痙攣する呼気",
+          "description": "バッドマンから採取した、引きつって震える呼気。ナースが触れると激しく脈動して暴れる。\n• 生存者にブリンク攻撃が命中するとブリンク発動が不可となり、ナースの基本移動速度が60秒間、秒速4.6メートルに上昇する"
+        },
+        "pl": {
+          "name": "Spazmatyczny Oddech",
+          "description": "Nerwowy i drżący oddech wykradziony „Złemu Człowiekowi”. Pulsuje i skacze agresywnie w rękach Pielęgniarki.\n• Trafienie ocalałego atakiem teleportacyjnym wyłącza umiejętność teleportacji i zwiększa podstawową prędkość ruchu pielęgniarki do 4,6 m/s na 60 sekund."
+        }
+      }
+    },
+    {
+      "id": 858,
+      "name": "Pocket Watch (The Nurse)",
+      "killer_id": 4,
+      "description": "A charred and broken pocket watch with rattling pieces. Taken from Nurse Moris' body.\n• Increases the time before The Nurse succumbs to fatigue after Blinking by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pocketWatchSpencersLastBreath.png?d99cb5",
+      "icon_local_path": "icons/addons/pocket_watch_(the_nurse).webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Taschenuhr",
+          "description": "Eine verkohlte und zerbrochene Taschenuhr mit klappernden Teilen. Stammt von Krankenpflegerin Moris’ Leichnam.\n• Verlängert das Zeitfenster, bevor Ermüdung die Krankenschwester nach einer Teleportation erfasst, um 20 %."
+        },
+        "en": {
+          "name": "Pocket Watch"
+        },
+        "es": {
+          "name": "Reloj de bolsillo",
+          "description": "Un reloj de bolsillo roto y quemado, cuyas piezas tintinean. Se recuperó del cuerpo de la enfermera Moris.\n• Aumenta el tiempo que tarda la Enfermera en afectarle la fatiga tras Proyección un 20 %."
+        },
+        "ja": {
+          "name": "懐中時計",
+          "description": "がらがら音を立てる破片が入った、黒焦げになって壊れている懐中時計。看護士モリスの遺体から持ち去られた。\n• ブリンク後にナースが疲労で動けなくなるまでの時間が20%増加する"
+        },
+        "pl": {
+          "name": "Zegarek Kieszonkowy",
+          "description": "Pokryty sadzą zepsuty zegarek kieszonkowy z grzechocącymi elementami. Został zrabowany z ciała pielęgniarki imieniem Moris.\n• Wydłuża czas, zanim Pielęgniarka ulegnie zmęczeniu po teleportacji, o 20%."
+        }
+      }
+    }
+  ]
+}

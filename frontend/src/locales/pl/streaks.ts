@@ -154,7 +154,6 @@ export default {
   youBeatEveryRowOn: "Ukończyłeś każdy rząd na poziomie",
   rowLabel: "Rząd",
   ofLabel: "z",
-  killerLabel: "zabójca",
   nextRowPreviewLabel: "Podgląd następnego rzędu",
   availableLabel: "Dostępne",
   lockedLabel: "Zablokowane",

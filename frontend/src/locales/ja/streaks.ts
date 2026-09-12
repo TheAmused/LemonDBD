@@ -154,7 +154,6 @@ export default {
   youBeatEveryRowOn: "全列クリア達成:",
   rowLabel: "第",
   ofLabel: "/",
-  killerLabel: "列キラー",
   nextRowPreviewLabel: "次の列のプレビュー",
   availableLabel: "選択可能",
   lockedLabel: "ロック中",

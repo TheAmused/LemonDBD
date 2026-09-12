@@ -154,7 +154,6 @@ export default {
   youBeatEveryRowOn: "Du hast jede Reihe abgeschlossen auf",
   rowLabel: "Reihe",
   ofLabel: "von",
-  killerLabel: "Killer",
   nextRowPreviewLabel: "Vorschau nächste Reihe",
   availableLabel: "Verfügbar",
   lockedLabel: "Gesperrt",

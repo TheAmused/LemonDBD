@@ -180,7 +180,6 @@ export default {
   youBeatEveryRowOn: "You beat every row on",
   rowLabel: "Row",
   ofLabel: "of",
-  killerLabel: "killer",
   nextRowPreviewLabel: "Next row preview",
   availableLabel: "Available",
   lockedLabel: "Locked",

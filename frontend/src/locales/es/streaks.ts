@@ -154,7 +154,6 @@ export default {
   youBeatEveryRowOn: "Completaste todas las filas en",
   rowLabel: "Fila",
   ofLabel: "de",
-  killerLabel: "asesino",
   nextRowPreviewLabel: "Vista previa de siguiente fila",
   availableLabel: "Disponible",
   lockedLabel: "Bloqueado",

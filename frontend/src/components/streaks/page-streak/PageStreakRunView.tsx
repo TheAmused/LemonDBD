@@ -141,7 +141,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }}
                     className="flex-1 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-emerald-400 transition-colors hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 motion-reduce:transition-none"
                   >
-                    {dict?.stats?.win || 'Win'}
+                    {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </button>
                   <button
                     type="button"
@@ -152,7 +152,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }}
                     className="flex-1 rounded-xl border border-rose-500/35 bg-rose-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-rose-400 transition-colors hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:opacity-50 motion-reduce:transition-none"
                   >
-                    {dict?.stats?.loss || 'Loss'}
+                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
                   </button>
                 </div>
               )}
@@ -205,6 +205,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }`}
                   >
                     <div className="overflow-hidden">
+                      <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
                     </div>
                   </div>
                 </>

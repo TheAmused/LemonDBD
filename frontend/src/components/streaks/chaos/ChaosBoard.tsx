@@ -246,6 +246,21 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 {dict?.streaks?.pickYourKiller || ''}
               </h3>
 
+              <div
+                className={`transition-opacity ${run?.perks_revealed ? '' : 'opacity-40 pointer-events-none'
+                  }`}
+              >
+                <KillerPickerGrid
+                  killers={rosterKillers}
+                  completedKillers={run?.completed_killers || []}
+                  selectedKillerId={acceptedKillerId ?? selectedKillerId}
+                  onSelect={setSelectedKillerId}
+                  disabled={busy || Boolean(acceptedKillerId) || !run?.perks_revealed}
+                  loading={loadingKillers}
+                  dict={dict}
+                />
+              </div>
+
               {!acceptedKillerId ? (
                 <div className="mt-5 flex items-center justify-center">
                   <button
@@ -277,21 +292,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                   </button>
                 </div>
               )}
-
-              <div
-                className={`mt-5 transition-opacity ${run?.perks_revealed ? '' : 'opacity-40 pointer-events-none'
-                  }`}
-              >
-                <KillerPickerGrid
-                  killers={rosterKillers}
-                  completedKillers={run?.completed_killers || []}
-                  selectedKillerId={acceptedKillerId ?? selectedKillerId}
-                  onSelect={setSelectedKillerId}
-                  disabled={busy || Boolean(acceptedKillerId) || !run?.perks_revealed}
-                  loading={loadingKillers}
-                  dict={dict}
-                />
-              </div>
             </div>
           </>
         )}

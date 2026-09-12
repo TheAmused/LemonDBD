@@ -2,12 +2,9 @@
 import type { Dictionary } from '@/locales/types';
 
 export interface TrophyTierDef {
-  /** Stable id, e.g. "chaos_hell" -- not yet wired to any real unlock data. */
   id: string;
   label: string;
-  /** Overrides the default "Beat this challenge at {label} difficulty..."
-   *  hover sentence -- needed for modes like Page Streak that don't have a
-   *  difficulty tier to beat, just an owned-roster/full-roster split. */
+  /** Overrides the auto-generated hover sentence for tiers without a difficulty (e.g. Page Streak). */
   hoverText?: { owned: string; all: string };
 }
 
@@ -17,12 +14,6 @@ export interface TrophyShelfDef {
   tiers: TrophyTierDef[];
 }
 
-/**
- * Static placeholder layout: one shelf per challenge mode, one trophy tier
- * per difficulty level that mode has. No unlock system reads this yet --
- * every trophy renders as a locked silhouette until real artwork and a
- * completion-status wiring pass happen in a later task.
- */
 export function getTrophyShelves(dict?: Dictionary): TrophyShelfDef[] {
   const t = dict?.achievements;
   return [

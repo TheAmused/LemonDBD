@@ -44,7 +44,6 @@ export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf, dict }) => {
         })}
       </div>
 
-      {/* Physical "shelf" ledge, purely decorative. */}
       <div className="mt-5 h-2 rounded-full bg-gradient-to-r from-transparent via-amber-800/40 to-transparent" />
     </div>
   );

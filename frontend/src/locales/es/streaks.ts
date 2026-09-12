@@ -42,7 +42,6 @@ export default {
   loadingKillers: "Cargando tus asesinos...",
   retry: "Reintentar",
   loadingRoster: "Cargando lista de personajes…",
-  resetRunPrompt: "Reinicia el intento si deseas completarlo desde el principio.",
   chaosRulesTitle: "Reglas de la Racha del Caos",
   chaosStreak: "Racha del Caos",
   chaosVictoryTitle: "Ganaste: Racha del Caos",

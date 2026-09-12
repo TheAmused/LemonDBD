@@ -42,7 +42,6 @@ export default {
   loadingKillers: "Lade deine Killer...",
   retry: "Wiederholen",
   loadingRoster: "Lade Charakterliste…",
-  resetRunPrompt: "Setze den Lauf zurück, um ihn von vorne zu beginnen.",
   chaosRulesTitle: "Chaos-Streak-Regeln",
   chaosStreak: "Chaos-Streak",
   chaosVictoryTitle: "Du hast gewonnen: Chaos-Streak",

@@ -42,7 +42,6 @@ export default {
   loadingKillers: "所持キラーを読み込み中...",
   retry: "再試行",
   loadingRoster: "名簿を読み込み中…",
-  resetRunPrompt: "最初からやり直したい場合は挑戦をリセットしてください。",
   chaosRulesTitle: "カオス・ストリークのルール",
   chaosStreak: "カオス・ストリーク",
   chaosVictoryTitle: "勝利: カオス・ストリーク",

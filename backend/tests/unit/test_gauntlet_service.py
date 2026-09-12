@@ -481,9 +481,24 @@ class TestGauntletCompletion:
         assert record is not None
         assert record.mode == "gauntlet"
         assert record.variant == "killer_original"
-        assert record.attempts_taken == 1
+        assert record.attempts_taken == 2
         assert record.matches_played == 3
         assert record.unlocked_characters_count == 2
+
+    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.attempts_taken == 1
 
 
 @pytest.mark.unit

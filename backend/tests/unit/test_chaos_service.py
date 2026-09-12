@@ -207,8 +207,22 @@ class TestHellDifficulty:
         assert record is not None
         assert record.mode == "chaos"
         assert record.variant == "hell"
-        assert record.attempts_taken == 1
+        assert record.attempts_taken == 2
         assert record.matches_played == 3
+
+    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.attempts_taken == 1
         assert record.unlocked_characters_count == 2
 
     def test_one_loss_resets_everything_in_hell(self) -> None:

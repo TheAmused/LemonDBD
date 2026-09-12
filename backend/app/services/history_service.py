@@ -206,7 +206,7 @@ class HistoryService:
                 user_id=user_id,
                 mode="history",
                 variant=run.mode,
-                attempts_taken=run.attempts,
+                attempts_taken=run.attempts + 1,
                 matches_played=len(run.match_logs),
                 unlocked_characters_count=len(safe_json_loads(run.owned_killers_json, default=[])),
             )

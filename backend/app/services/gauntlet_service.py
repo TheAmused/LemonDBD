@@ -213,7 +213,7 @@ class GauntletService:
                 user_id=user_id,
                 mode="gauntlet",
                 variant=f"{r.role}_{r.game_mode}",
-                attempts_taken=r.attempts,
+                attempts_taken=r.attempts + 1,
                 matches_played=len(r.match_logs),
                 unlocked_characters_count=len(safe_json_loads(r.owned_characters_json, default=[])),
             )

@@ -1,0 +1,554 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 611,
+      "name": "Rabbit's Foot",
+      "killer_id": 35,
+      "description": "The unlucky creature’s remains were found by a tree, its intestines wedged between its teeth.\n• Pools of blood are brighter when charging UVX.\nSurvivors injured by UVX suffer from the Hemorrhage status effect for 45 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rabbitsFoot.png?942f75",
+      "icon_local_path": "icons/addons/rabbits_foot.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Hasenpfote",
+          "description": "Die Überreste des armen Tieres wurden bei einem Baum gefunden. Die Eingeweide zwischen seinen Zähnen verkeilt.\n• Blutpfützen leuchten heller, wenn UVX aufgeladen wird.\nÜberlebende, die von UVX verletzt werden, erleiden den Statuseffekt Blutung für 45 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht geheilt wird, und verstärkt die Blutspuren verletzter Überlebender."
+        },
+        "es": {
+          "name": "Pata de conejo",
+          "description": "Los restos de la desdichada criatura se hallaron junto a un árbol. Tenía los intestinos incrustados en sus dientes.\n• Los charcos de sangre son más brillantes al cargar el VXD.\nLos supervivientes heridos con el VXD sufren el efecto de estado Hemorragia durante 45 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos."
+        },
+        "ja": {
+          "name": "ウサギの足",
+          "description": "木のそばで見つかった不運な生き物の死骸は、腸が歯の間に詰まっている状態だった。\n• UVXをチャージ中は、血痕がより鮮明に表示される。\nUVXで負傷した生存者は、45秒間出血のステータス効果に苦しむ。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。"
+        },
+        "pl": {
+          "name": "Królicza łapka",
+          "description": "Szczątki nieszczęsnego stworzenia znaleziono pod drzewem. Wnętrzności miało zablokowane między zębami.\n• Podczas ładowania NJX ślady krwi są jaśniejsze.\n• Ocalali zranieni przez NJX otrzymują efekt Krwotoku na 45 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych."
+        }
+      }
+    },
+    {
+      "id": 612,
+      "name": "Footprint Cast",
+      "killer_id": 35,
+      "description": "The cast sits in the Museum of the Weird in Sarasota, Florida and has long since been debunked.\n• Decreases the time until the next Hallucination spawns by 15 seconds when a Survivor becomes Weakened.\nWeakened Survivors lose health states when hit by UVX’s Blast Area.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_footprintCast.png?1d0b4d",
+      "icon_local_path": "icons/addons/footprint_cast.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gipsabdruck eines Fußes",
+          "description": "Der Abdruck liegt im Kuriositätenmuseum in Sarasota, Florida, und gilt längst als Fake.\n• Verkürzt die Zeit bis zur nächsten Halluzination um 15 Sekunden, wenn ein Überlebender schwach wird.\nSchwache Überlebende verlieren Gesundheitsstatus, wenn sie sich im Explosionsbereich von UGX befinden."
+        },
+        "es": {
+          "name": "Molde de huella",
+          "description": "El molde está en el Museo de Rarezas de Sarasota (Florida), pero hace ya tiempo que se ha refutado su autenticidad.\n• Reduce el tiempo que tarda en aparecer hasta la próxima alucinación en 15 segundos cuando un superviviente sufre Debilidad.\nLos supervivientes debilitados perderán estados de salud si la zona de explosión del VXD los alcanza."
+        },
+        "ja": {
+          "name": "足跡",
+          "description": "その足跡はフロリダ州サラソタにある超自然博物館に展示され、遥か昔にフェイクであることが証明されている。\n• 生存者が弱体化したときに次の幻覚が出現するまでの時間が15秒短縮される\n弱体化した生存者はUVXの爆発範囲に接触すると1段階負傷する。"
+        },
+        "pl": {
+          "name": "Odlew odcisku stopy",
+          "description": "Odlew znajduje się w Muzeum Dziwactw w Sarasocie na Florydzie i już dawno został zdemaskowany jako fałszywy.\n• Skraca czas do pojawienia się kolejnej Halucynacji o 15 s, gdy ocalały staje się Wrażliwy.\nWrażliwi ocalali tracą stany zdrowia po trafieniu obszarem wybuchu NJX."
+        }
+      }
+    },
+    {
+      "id": 613,
+      "name": "Blurry Photo",
+      "killer_id": 35,
+      "description": "The photo was found at an abandoned campsite. The campers were never seen again.\n• After Teleporting, regain full movement speed 7% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blurryPhoto.png?402643",
+      "icon_local_path": "icons/addons/blurry_photo.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Verschwommenes Foto",
+          "description": "Man fand das Foto auf einem verlassenen Campingplatz. Die Camper wurden nie wieder gesehen.\n• Nach dem Teleportieren erreichst du die vollständige Bewegungsgeschwindigkeit 7 % schneller."
+        },
+        "es": {
+          "name": "Foto borrosa",
+          "description": "La foto se halló en un campamento abandonado. Nadie volvió a ver a los campistas.\n• Tras teletransportarse, recupera la velocidad de movimiento al completo un 7 % más rápido."
+        },
+        "ja": {
+          "name": "ぼやけた写真",
+          "description": "その写真はひとけのないキャンプ場で見つかった。その後、キャンパーたちの姿を見た者はいない。\n• テレポートしたあとに移動速度を完全に取り戻すのが7%速くなる"
+        },
+        "pl": {
+          "name": "Rozmazane zdjęcie",
+          "description": "Zdjęcie zostało znalezione w opuszczonym obozie. Obozowiczów nigdy nie znaleziono.\n• Po Teleportacji odzyskujesz pełną prędkość ruchu o 7% szybciej."
+        }
+      }
+    },
+    {
+      "id": 614,
+      "name": "Slashed Backpack",
+      "killer_id": 35,
+      "description": "When the hiker was rescued from the mountain pass, she insisted her companion would never wander off alone.\n• UVX triggers a Blast Area upon contact with Hallucinations.\n• Hallucinations can be destroyed by UVX. Doing so decreases the time until the next Hallucination spawns by 65%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_slashedBackpack.png?3ebd10",
+      "icon_local_path": "icons/addons/slashed_backpack.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Aufgeschlitzter Rucksack",
+          "description": "Als die Wanderin auf dem Bergpass geborgen wurde, behauptete sie, dass ihre Begleitung niemals alleine fortgehen würde.\n• UGX lässt bei Kontakt mit Halluzinationen einen Explosionsbereich entstehen.\n• Halluzinationen können von UGX zerstört werden. Wenn dies geschieht, wird die Zeit bis zur nächsten Halluzination um 65 % verkürzt."
+        },
+        "es": {
+          "name": "Mochila rajada",
+          "description": "Cuando se rescató a la senderista del pase de montaña, insistió en que su compañera jamás se habría alejado por su cuenta.\n• El VXD activa una zona de explosión al entrar en contacto con las alucinaciones.\n• Las alucinaciones pueden destruirse con el VXD. Al hacerlo, se reduce el tiempo hasta que aparece la próxima alucinación un 65 %."
+        },
+        "ja": {
+          "name": "切り裂かれたバックパック",
+          "description": "そのハイカーの女性が山道で救出された時、一緒だった連れが一人でどこかへ行くことなどあり得ないと断言した。\n• UVXが幻覚と接触すると爆発範囲が発動する\n• 幻覚はUVXで破壊することができる。UVXで幻覚を破壊すると、次に幻覚が出現するまでの時間が65%短縮される"
+        },
+        "pl": {
+          "name": "Rozcięty plecak",
+          "description": "Kiedy turystka została uratowana z górskiej przełęczy, nalegała, aby jej towarzysz nigdy nie wędrował sam.\n• NJX uruchamia obszar wybuchu w momencie kontaktu z Halucynacjami.\n• Halucynacje można niszczyć za pomocą NJX. Powoduje to skrócenie czasu do pojawienia się kolejnej Halucynacji o 65%."
+        }
+      }
+    },
+    {
+      "id": 615,
+      "name": "Punctured Eyeball",
+      "killer_id": 35,
+      "description": "The station was a scene of madness. The officers had seemingly turned on each other.\n• Survivors who are both Weakened and injured suffer from the Deep Wound status effect when they Dispel a Hallucination.\nDeep Wound will put a Survivor in the dying state unless it is mended before the timer runs out.\nWeakened Survivors lose health states when hit by UVX’s Blast Area.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_puncturedEyeball.png?158de5",
+      "icon_local_path": "icons/addons/punctured_eyeball.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Durchstoßener Augapfel",
+          "description": "Auf der Wache war das Chaos ausgebrochen. Anscheinend waren die Beamten aufeinander losgegangen.\n• Überlebende, die sowohl schwach als auch verletzt sind, erleiden den Statuseffekt Tiefe Wunde, wenn sie eine Halluzination beenden.\nTiefe Wunde versetzt einen Überlebenden in den Todesstatus, wenn sie nicht versorgt wird, bevor der Timer abläuft.\nSchwache Überlebende verlieren Gesundheitsstatus, wenn sie sich im Explosionsbereich von UGX befinden."
+        },
+        "es": {
+          "name": "Globo ocular perforado",
+          "description": "La comisaría presentaba una imagen dantesca. Los policías se habían atacado unos a otros.\n• Los supervivientes que sufran Debilidad y estén heridos sufren el efecto de estado Herida profunda al disipar una alucinación.\nHerida profunda hará que el superviviente entre en estado agonizante excepto si se recupera antes de que se acabe el tiempo.\nLos supervivientes debilitados perderán estados de salud si la zona de explosión del VXD los alcanza."
+        },
+        "ja": {
+          "name": "貫かれた眼球",
+          "description": "駅は狂気一色だった。どうやら、警官たちが互いに攻撃し合っていたようだ。\n• 弱体化し、負傷している生存者は幻覚を払いのけると深手のステータス効果に苦しむ\n深手状態になった生存者はタイマー切れになる前に手当しなければ瀕死状態になる。\n弱体化した生存者はUVXの爆発範囲に接触すると1段階負傷する。"
+        },
+        "pl": {
+          "name": "Przebita gałka oczna",
+          "description": "Posterunek oszalał. Funkcjonariusze najwyraźniej zwrócili się przeciwko sobie.\n• Ocalali, którzy są jednocześnie Wrażliwi i ranni, otrzymują efekt Głębokiej Rany, gdy próbują rozwiać Halucynację.\nGłęboka Rana wprowadza ocalałego w stan agonii, chyba że zostanie wyleczona przed upływem czasu.\nOsłabieni ocalali tracą stany zdrowia po trafieniu obszarem wybuchu NJX."
+        }
+      }
+    },
+    {
+      "id": 616,
+      "name": "Notebook of Theories",
+      "killer_id": 35,
+      "description": "His studio apartment was empty and reeked of black mold. The book was the only thing left.\n• Survivors hit by UVX while it is airborne suffer from the Hindered status effect for an additional 2 seconds.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_notebookOfTheories.png?7b814f",
+      "icon_local_path": "icons/addons/notebook_of_theories.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Notizbuch mit Hypothesen",
+          "description": "Seine Einzimmerwohnung war leer und stank nach Schimmel. Nur das Buch lag noch da.\n• Überlebende, die von UGX getroffen werden, solange es noch in der Luft ist, leiden 2 zusätzliche Sekunden lang unter dem Statuseffekt Eingeschränkt.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Cuaderno de teorías",
+          "description": "Su estudio estaba vacío y apestaba a moho negro. Lo único que quedaba era el libro.\n• Los supervivientes que el VXD alcance mientras esté en el aire sufren el efecto de estado Entorpecimiento durante 2 segundos adicionales.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "理論が書かれたノート",
+          "description": "彼のワンルームマンションは空っぽで、黒カビの臭いが充満していた。そこに残っていたのは本だけだった。\n• 空中にあるUVXが命中した生存者は、追加で2秒間妨害のステータス効果に苦しむ\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Zeszyt z teoriami",
+          "description": "Jego kawalerka była pusta i cuchnęła pleśnią. Pozostała w niej jedynie książka.\n• Ocalali trafieni przez NJX, gdy jest ono w powietrzu, otrzymują efekt Skrępowany na dodatkowe 2 s.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 617,
+      "name": "Last Known Recording",
+      "killer_id": 35,
+      "description": "She studied musique concrète before she disappeared, her screams the last sound on the tape.\n• Decreases your Hallucinations’ Aura Range that is visible to Survivors by 35%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lastKnownRecording.png?94946f",
+      "icon_local_path": "icons/addons/last_known_recording.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Letzte bekannte Aufnahme",
+          "description": "Sie hatte Musique concrète studiert, bevor sie verschwand. Ihre Schreie waren nun das letzte Geräusch auf der Kassette.\n• Verringert den Aurabereich deiner Halluzinationen, der für Überlebende sichtbar ist, um 35 %."
+        },
+        "es": {
+          "name": "Última grabación conocida",
+          "description": "Estudiaba música concreta antes de desaparecer, y sus gritos fueron el último sonido que grabó la cinta.\n• Reduce el alcance del aura de tus alucinaciones visible para los supervivientes un 35 %."
+        },
+        "ja": {
+          "name": "最後に確認された音源",
+          "description": "行方不明になる前、彼女はミュジーク・コンクレートを学んでいた。テープの最後に録音されていたのは、彼女の叫び声だ。\n• 生存者に視える幻覚のオーラ範囲が35%縮小する"
+        },
+        "pl": {
+          "name": "Ostatnie znane nagranie",
+          "description": "Zanim zniknęła, studiowała muzykę konkretną, a jej krzyki były ostatnim dźwiękiem na taśmie.\n• Zmniejsza zasięg aury Halucynacji widoczny dla ocalałych o 35%."
+        }
+      }
+    },
+    {
+      "id": 618,
+      "name": "Sketch Attempt",
+      "killer_id": 35,
+      "description": "The victim’s child was given paper and crayons at the station, while he waited for his father to pick him up.\n• Survivors hit by UVX's Blast Area suffer from the Oblivious status effect for 20 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sketchAttempt.png?ae906b",
+      "icon_local_path": "icons/addons/sketch_attempt.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Versuch einer Skizze",
+          "description": "Auf der Wache gab man dem Kind des Opfers Papier und Stifte, während es auf seinen Vater wartete.\n• Überlebende im Explosionsbereich von UGX leiden für 20 Sekunden unter dem Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Intento de boceto",
+          "description": "Al hijo de la víctima se le dio un papel y ceras para pintar en la comisaría mientras esperaba a que lo recogiera su padre.\n• Los supervivientes que la zona de explosión del VXD alcance sufren el efecto de estado Inconsciencia durante 20 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "描きかけのスケッチ",
+          "description": "被害者の子供は駅で紙とクレヨンを渡され、父親の迎えを待った。\n• UVXの爆発範囲に接触した生存者は、20秒間無感覚のステータス効果に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Próba szkicu",
+          "description": "Dziecko ofiary otrzymało na stacji kartkę i kredki i czekało, aż odbierze je ojciec.\n• Ocalali trafieni obszarem wybuchu NJX otrzymują efekt Nieświadomy na 20 s.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 619,
+      "name": "Vanishing Box",
+      "killer_id": 35,
+      "description": "The magician was popular at children’s parties, and quickly became the top suspect.\n• Survivors who complete generators become Weakened against UVX.\n• Increases Hallucination spawn time by 120%.\nWeakened Survivors lose health states when hit by the UVX's Blast Area.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vanishingBox.png?77b287",
+      "icon_local_path": "icons/addons/vanishing_box.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Verschwindekiste",
+          "description": "Der Magier war ein beliebter Gast auf Kinderpartys und wurde schnell zum Hauptverdächtigen.\n• Überlebende, die Generatoren fertigstellen, werden schwach gegen UGX.\n• Verlängert die Dauer, bis Halluzinationen entstehen, um 120 %.\nSchwache Überlebende verlieren Gesundheitsstatus, wenn sie vom Explosionsbereich von UGX getroffen werden."
+        },
+        "es": {
+          "name": "Caja evanescente",
+          "description": "El mago era muy popular en las fiestas infantiles, y no tardó en convertirse en el principal sospechoso.\n• Los supervivientes que completen generadores sufren Debilidad contra el VXD.\n• Aumenta el tiempo de aparición de la alucinación un 120 %.\nLos supervivientes debilitados perderán estados de salud si la zona de explosión del VXD los alcanza."
+        },
+        "ja": {
+          "name": "小物消しの箱",
+          "description": "子供のパーティーで人気だったマジシャンは、すぐに第一容疑者となった。\n• 生存者が発電機の修理を完了すると、UVXに対して弱体化する\n• 幻覚の出現にかかる時間が120%増加する\n弱体化した生存者はUVXの爆発範囲に接触すると1段階負傷する。"
+        },
+        "pl": {
+          "name": "Pudełko do znikania",
+          "description": "Magik był popularny na imprezach dla dzieci i szybko stał się głównym podejrzanym.\n• Ocalali, którzy ukończą generator, stają się Wrażliwi na działanie NJX.\n• Zwiększa prędkość pojawiania się Halucynacji o 120%.\nWrażliwi ocalali tracą stany zdrowia po trafieniu obszarem wybuchu NJX."
+        }
+      }
+    },
+    {
+      "id": 620,
+      "name": "Front-Page Article",
+      "killer_id": 35,
+      "description": "The assailant had torn gaping holes in the walls of the cabin, and drove the family into the woods.\n• Performing the break interaction on a pallet or breakable wall decreases the time until the next Hallucination spawns by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_frontPageArticle.png?91958f",
+      "icon_local_path": "icons/addons/front_page_article.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Artikel auf der Titelseite",
+          "description": "Der Angreifer hatte riesige Löcher in die Wände der Hütte gerissen und die Familie in den Wald gejagt.\n• Wenn du eine Palette oder zerstörbare Mauer zerstörst, wird die Zeit bis zur nächsten Halluzination um 50 % verringert."
+        },
+        "es": {
+          "name": "Artículo de primera plana",
+          "description": "El agresor había agujereado las paredes de la cabaña, y se había llevado en su vehículo a la familia, camino del bosque.\n• Al realizar la interacción para liberarse en un palé o muro destruible, se reduce el tiempo hasta que aparezca la próxima alucinación un 50 %."
+        },
+        "ja": {
+          "name": "一面記事",
+          "description": "襲撃者は小屋の壁に穴を開け、車で一家を森へと連れ去った。\n• パレットや破壊可能な壁に対し破壊アクションを行うと、次に幻覚が出現するまでの時間が50%短縮される"
+        },
+        "pl": {
+          "name": "Artykuł z pierwszej strony",
+          "description": "Napastnik wyrwał dziury w ścianach chaty i przegnał rodzinę do lasu.\n• Wykonanie interakcji niszczenia palety lub ściany skraca czas do pojawienia się następnej Halucynacji o 50%."
+        }
+      }
+    },
+    {
+      "id": 621,
+      "name": "B-Movie Poster",
+      "killer_id": 35,
+      "description": "The movie was rumored to be state-funded propaganda, made specifically for something called Project Apple-Pie.\n• Survivors damaged by UVX's Blast Area suffer from the Broken status effect for 30 seconds.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_b-moviePoster.png?5a8150",
+      "icon_local_path": "icons/addons/b_movie_poster.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Plakat für einen billigen Film",
+          "description": "Der Film galt als von der Regierung finanzierte Propaganda, die extra für das sogenannte Projekt Apple-Pie gedreht worden war.\n• Überlebende, die Schaden durch den Explosionsbereich von UGX nehmen, leiden 30 Sekunden lang unter dem Statuseffekt Gebrochen.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "es": {
+          "name": "Cartel de película de serie B",
+          "description": "Se rumoreaba que la película era propaganda financiada por el estado, creada específicamente para algo conocido como \"proyecto Apple-Pie\".\n• Los supervivientes dañados por la zona de explosión del VXD sufren el efecto de estado Desesperanza durante 30 segundos.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "B級映画のポスター",
+          "description": "その映画は国費でつくられたプロパガンダとの噂があった。アップルパイ計画と呼ばれるもののために、特別につくられたらしい。\n• UVXの爆発範囲で負傷した生存者は、30秒間衰弱のステータス効果に苦しむ\n衰弱になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Plakat filmu klasy B",
+          "description": "Krążyły plotki, że film był finansowaną przez państwo propagandą stworzoną specjalnie na potrzeby czegoś o nazwie „projekt Apple-Pie”.\n• Ocalali zranieni przez obszar wybuchu NJX otrzymują efekt Okaleczony na 30 s.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    },
+    {
+      "id": 622,
+      "name": "Device of Undisclosed Origin",
+      "killer_id": 35,
+      "description": "Was the thing made on Earth? Or somewhere else entirely?\n• Survivors entering the Aura Range of a Hallucination suffer from the Oblivious status effect.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deviceOfUndisclosedOrigin.png?7ec168",
+      "icon_local_path": "icons/addons/device_of_undisclosed_origin.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Gerät geheimen Ursprungs",
+          "description": "Ist dieses Ding auf der Erde entstanden? Oder irgendwo völlig anders?\n• Überlebende, die den Aurabereich einer Halluzination betreten, erleiden den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Dispositivo de origen secreto",
+          "description": "¿Se había creado en la Tierra o provenía de otro lugar?\n• Los supervivientes que entren en el alcance del aura de una alucinación sufren el efecto de estado Inconsciencia.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "謎の起源を持つ装置",
+          "description": "これは地球でつくられた物なのか？それとも全く異なる場所でつくられたのか？\n• 幻覚のオーラ範囲に入った生存者は、無感覚のステータス効果に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Urządzenie o niewiadomym pochodzeniu",
+          "description": "Czy to coś powstało na Ziemi? A może zupełnie gdzie indziej?\n• Ocalali wchodzący w zasięg aury Halucynacji, otrzymają efekt Nieświadomość.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 623,
+      "name": "Homemade Mask",
+      "killer_id": 35,
+      "description": "The killer had made the mask in the shed in his backyard, where he would bring the others when the sun went down.\n• Survivors who Dispel Hallucinations suffer from the Blindness status effect for 60 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_homemadeMask.png?c1ad51",
+      "icon_local_path": "icons/addons/homemade_mask.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Selbstgebaute Maske",
+          "description": "Der Killer hatte die Maske in seinem Gartenschuppen hergestellt, wohin er auch die anderen bringen würde, sobald die Sonne untergegangen war.\n• Überlebende, die Halluzinationen beenden, leiden 60 Sekunden lang unter dem Statuseffekt Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Máscara casera",
+          "description": "El asesino había fabricado la máscara en el cobertizo del patio de su casa. Era el mismo lugar donde traía al resto al anochecer.\n• Los supervivientes que disipen alucinaciones sufren el efecto de estado Ceguera durante 60 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "手作りの仮面",
+          "description": "殺人鬼は自宅の裏庭にある小屋でその仮面を作った。彼はよく日が暮れるとその小屋に他の人間を連れて行った。\n• 幻覚を払いのけた生存者は、60秒間目眩ましのステータス効果に苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Maska domowej roboty",
+          "description": "Zabójca wykonał maskę w szopie na swoim podwórku i przynosił tam inne, gdy zachodziło słońce.\n• Ocalali, którzy rozwieją Halucynacje, otrzymują efekt Oślepienie na 60 s.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 624,
+      "name": "Obscure Game Cartridge",
+      "killer_id": 35,
+      "description": "Some maintained Project Apple-Pie evolved over time, turning to new forms of media for results.\n• Triggers for 20 seconds following a Teleport.\n• Increases the action speed for breaking downed pallets, breakable walls, damaging generators, and vaulting windows by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_obscureGameCartridge.png?3b8648",
+      "icon_local_path": "icons/addons/obscure_game_cartridge.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Geheimnisvolles Spielmodul",
+          "description": "Einige meinten, Projekt Apple-Pie hätte sich mit der Zeit weiterentwickelt und sich neuen Arten von Medien zugewandt, um Ergebnisse zu erzielen.\n• Wird nach einer Teleportation für 20 Sekunden ausgelöst.\n• Erhöht die Aktionsgeschwindigkeit für das Zerbrechen von Paletten und zerstörbaren Mauern, das Beschädigen von Generatoren und das Springen durch Fenster um 30 %."
+        },
+        "es": {
+          "name": "Cartucho de juego desconocido",
+          "description": "Algunas personas defendían que el proyecto Apple-Pie había cambiado con el paso del tiempo, centrándose en nuevas formas de medios de comunicación para obtener resultados.\n• Se activa durante 20 segundos tras un teletransporte.\n• Aumenta la velocidad de acción para romper palés derribados o muros destruibles, dañar generadores y atravesar ventanas un 30 %."
+        },
+        "ja": {
+          "name": "不穏なゲームカートリッジ",
+          "description": "一部で続行されたアップルパイ計画は時間をかけて進化し、その結果として新しい形のメディアに姿を変えた。\n• テレポート後、20秒間発動する\n• 倒されたパレットや破壊可能な壁を壊したり、発電機にダメージを与えたり、窓を乗り越えたりする速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Dyskietka z nieznaną grą",
+          "description": "Niektórzy utrzymywali, że projekt Apple-Pie rozwinął się z czasem i zwrócił ku nowym formom mediów w celu poprawy wyników.\n• Uruchamia się na 20 s po Teleportacji.\n• Zwiększa prędkość niszczenia powalonych palet, ścian, uszkadzania generatorów i przeskakiwania przez okna o 30%."
+        }
+      }
+    },
+    {
+      "id": 625,
+      "name": "Discarded Milk Carton",
+      "killer_id": 35,
+      "description": "She decided to take the long way home, and waved goodbye to her friends before parting ways.\n• Doubles the UVX projectile's bounce strength.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_discardedMilkCarton.png?412f62",
+      "icon_local_path": "icons/addons/discarded_milk_carton.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Weggeworfene Milchpackung",
+          "description": "Sie entschied sich für den längeren Nachhauseweg und winkte ihren Freunden zum Abschied zu, bevor sich ihre Wege trennten.\n• Verdoppelt die Abprallstärke von UGX."
+        },
+        "es": {
+          "name": "Cartón de leche desechado",
+          "description": "Decidió tomar el largo camino a casa y se despidió de sus amigos antes de marcharse.\n• Duplica la fuerza de rebote del proyectil del VXD."
+        },
+        "ja": {
+          "name": "捨てられた牛乳パック",
+          "description": "遠回りして家に帰ることにした彼女は、友人たちに手を振ってから別れた。\n• 発射体UVXの反発力が2倍になる。"
+        },
+        "pl": {
+          "name": "Pusty karton po mleku",
+          "description": "Zdecydowała się na dłuższą drogę do domu i pomachała znajomym na pożegnanie, zanim się rozeszli.\n• Podwaja siłę odbicia pocisku NJX."
+        }
+      }
+    },
+    {
+      "id": 626,
+      "name": "Serum Vial",
+      "killer_id": 35,
+      "description": "The molecular structure of the substance was synthesized in the lab, but its effects could never be replicated.\n• Survivors within a Hallucination’s Aura Range suffer from the Exhausted status effect for 15 seconds.\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_serumVial.png?7f92c7",
+      "icon_local_path": "icons/addons/serum_vial.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Serumampulle",
+          "description": "Die Molekülstruktur der Substanz wurde im Labor künstlich nachgebaut, aber ihre Wirkung konnte nie kopiert werden.\n• Überlebende innerhalb des Aurabereichs einer Halluzination leiden 15 Sekunden lang unter dem Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "es": {
+          "name": "Frasco con suero",
+          "description": "La estructura molecular de la sustancia se había sintetizado en el laboratorio, pero jamás se podrían replicar sus efectos.\n• Los supervivientes que se encuentren al alcance de una alucinación del aura, sufren el efecto de estado Agotamiento durante 15 segundos.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "血清の小瓶",
+          "description": "研究室で物質の分子構造が合成されたが、その効果を再現することはできなかった。\n• 幻覚のオーラ範囲内にいる生存者は、15秒間疲労ステータスに苦しむ\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Fiolka z serum",
+          "description": "Struktura molekularna substancji została wytworzona w laboratorium, ale jej efektów nigdy nie udało się odtworzyć.\n• Ocalali w zasięgu aury Halucynacji otrzymują efekt Wyczerpany na 15 s.\nWyczerpanie uniemożliwia ocalałym aktywowanie niektórych umiejętności."
+        }
+      }
+    },
+    {
+      "id": 627,
+      "name": "Captured by the Dark",
+      "killer_id": 35,
+      "description": "The documentary purported that the disappearances were linked to small-town cinemas. Audiences left the theater feeling uneasy.\n• Survivors begin the trial Weakened.\n• Decreases the maximum number of Hallucinations that can be spawned by 1.\nWeakened Survivors lose health states when hit by UVX’s Blast Area.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_capturedByTheDark.png?b353c5",
+      "icon_local_path": "icons/addons/captured_by_the_dark.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Von der Dunkelheit erfasst",
+          "description": "Die Dokumentation stellte die Hypothese auf, dass die Vermisstenfälle mit Kleinstadtkinos in Zusammenhang standen. Die Zuseher verließen das Kino mit einem mulmigen Gefühl.\n• Überlebende beginnen die Prüfung bereits schwach.\n• Verringert die maximale Anzahl von Halluzinationen, die erschafft werden können, um 1.\nSchwache Überlebende verlieren Gesundheitsstatus, wenn sie sich im Explosionsbereich von UGX befinden."
+        },
+        "es": {
+          "name": "Capturados por la oscuridad",
+          "description": "El documental afirmaba que las desapariciones estaban vinculadas a cines situados en ciudades pequeñas. Los espectadores abandonaban la sala muy perturbados.\n• Los supervivientes comienzan la partida con Debilidad.\n• Reduce el número máximo de alucinaciones que se pueden generar en 1.\nLos supervivientes debilitados perderán estados de salud si la zona de explosión del VXD los alcanza."
+        },
+        "ja": {
+          "name": "暗闇に囚われて",
+          "description": "そのドキュメンタリー作品の主張は、数々の失踪事件が小さな町の映画館とつながっているというものだった。観客は皆、落ち着かない様子で劇場を後にした。\n• 生存者が弱体化した状態で儀式を始める\n• 幻覚の最大出現個数が1つ減る\n弱体化した生存者はUVXの爆発範囲に接触すると1段階負傷する。"
+        },
+        "pl": {
+          "name": "Schwytany przez ciemność",
+          "description": "Dokument wskazywał, że zniknięcia były powiązane z małomiasteczkowymi kinami. Widzowie opuścili salę kinową z poczuciem niepokoju.\n• Ocalali zaczynają próbę z Wrażliwością.\n• Zmniejsza maksymalną liczbę Halucynacji, które można przywołać, o 1.\nWrażliwi ocalali tracą stany zdrowia po trafieniu obszarem wybuchu NJX."
+        }
+      }
+    },
+    {
+      "id": 628,
+      "name": "Iridescent OSS Report",
+      "killer_id": 35,
+      "description": "The report was redacted to the point of being meaningless. But still, theorists tried to extract meaning from it.\n• Decreases Teleport cooldown by 5 seconds.\n• The Decoy left behind after The Unknown teleports takes 10 seconds longer to disappear.\n• When created, the Decoy has the same Terror Radius and Red Stain as The Unknown.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentOSSReport.png?50d771",
+      "icon_local_path": "icons/addons/iridescent_oss_report.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder OSS-Bericht",
+          "description": "Der Bericht war so stark zensiert, dass er gar keinen Sinn mehr ergab. Trotzdem versuchten Theoretiker, daraus schlau zu werden.\n• Verringert die Abklingzeit nach einer Teleportation um 5 Sekunden.\n• Der Köder, der nach der Teleportation des Unbekannten zurückbleibt, bleibt 10 Sekunden länger bestehen.\n• Bei seiner Entstehung hat der Köder denselben Terrorradius und roten Fleck wie das Unbekannte."
+        },
+        "es": {
+          "name": "Informe de la OSE iridiscente",
+          "description": "El informe estaba tan censurado por confidencialidad que no se entendía nada. Aun así, surgieron muchas teorías sobre su significado.\n• Reduce el tiempo de recarga de teletransporte en 5 segundos.\n• El señuelo que lo Desconocido deja tras teletransportarse tarda 10 segundos más en desaparecer.\n• Al crearse, el señuelo tiene el mismo radio de terror que la marca roja como lo Desconocido."
+        },
+        "ja": {
+          "name": "玉虫色のOSSレポート",
+          "description": "意味をなさないまでに黒塗りされたレポート。それでも理論家たちはその意味を引き出そうとした。\n• テレポートのクールダウンが5秒短縮される\n• アンノウンのテレポート後に残されるデコイが消えるまでの時間が10秒増加する\n• 作成されたデコイは、アンノウンと同じ脅威範囲と赤い光を持つ"
+        },
+        "pl": {
+          "name": "Opalizujący raport OSS",
+          "description": "Raport został ocenzurowany do tego stopnia, że przestał mieć jakikolwiek sens. Mimo to teoretycy próbowali wydobyć z niego znaczenie.\n• Skraca czas odnawiania Teleportacji o 5 s.\n• Wabik pozostawiony po Teleportacji Nieznanego znika 10 s dłużej.\n• Po stworzeniu Wabik ma taki sam zasięg terroru i czerwoną poświatę jak Nieznane."
+        }
+      }
+    },
+    {
+      "id": 870,
+      "name": "Victim's Map",
+      "killer_id": 35,
+      "description": "He thought the key to solving the mystery lay beyond the forest, and feared he would never return.\n• When a Survivor successfully Stares Down The Unknown, The Unknown gains Killer Instinct for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_victimsMap.png?519681",
+      "icon_local_path": "icons/addons/victims_map.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Plan des Opfers",
+          "description": "Er dachte, dass die Lösung des Rätsels jenseits des Walds wartete, und fürchtete schon, dass er nie zurückkehren würde.\n• Wenn ein Überlebender dem Unbekannten erfolgreich ins Auge blickt, erhält es den Killerinstinkt für 3 Sekunden."
+        },
+        "en": {
+          "name": "Victim’s Map"
+        },
+        "es": {
+          "name": "Mapa de víctima",
+          "description": "Creía que la clave para resolver el misterio se encontraba más allá del bosque, pero temía no regresar jamás.\n• Cuando un superviviente logra intimidar con la mirada a lo Desconocido, este obtiene Instinto asesino durante 3 segundos."
+        },
+        "ja": {
+          "name": "被害者の地図",
+          "description": "謎を解くカギが森の向こうにあると考えた彼は、二度と戻れないかもしれないことに恐怖した。\n• 生存者がアンノウンを睨み倒すことに成功すると、3秒間殺人鬼の本能が発動する"
+        },
+        "pl": {
+          "name": "Mapa ofiary",
+          "description": "Myślał, że klucz do rozwikłania tajemnicy leży za lasem, ale bał się, że nigdy stamtąd nie wróci.\n• Gdy ocalały skutecznie onieśmieli Nieznane, zabójca otrzymuje Instynkt Zabójcy na 3 s."
+        }
+      }
+    },
+    {
+      "id": 871,
+      "name": "Hypnotist's Watch",
+      "killer_id": 35,
+      "description": "Hypnotherapy was recommended to recover repressed memories. What emerged from his mind would be his undoing.\n• Survivors hit by UVX while it is airborne suffer from the Exhausted status effect for 15 seconds.\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hypnotistsWatch.png?11f25e",
+      "icon_local_path": "icons/addons/hypnotists_watch.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Hypnoseuhr",
+          "description": "Hypnotherapie wurde empfohlen, um unterdrückte Erinnerungen wieder zu wecken. Was sein Geist da zu Tage förderte, sollte sein Verderben sein.\n• Überlebende, die von UGX getroffen werden, solange es noch in der Luft ist, erleiden 15 Sekunden lang den Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "en": {
+          "name": "Hypnotist’s Watch"
+        },
+        "es": {
+          "name": "Reloj de hipnotizador",
+          "description": "La hipnoterapia se recomendaba para recuperar recuerdos reprimidos. Lo que brotó de su mente terminaría siendo su perdición.\n• Los supervivientes que el VXD alcance mientras esté en el aire sufren el efecto de estado Agotamiento durante 15 segundos.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "催眠術師の時計",
+          "description": "抑圧された記憶を取り戻すために催眠療法が推奨された。彼の心の中から浮かび上がってきたのは、彼を破滅に導いた原因だった。\n• 空中にあるUVXによる攻撃が命中した生存者は、15秒間疲労のステータス効果に苦しむ\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Zegarek hipnotyzera",
+          "description": "Zalecono hipnoterapię w celu odzyskania utraconych wspomnień. To, co wyłoniło się z jego umysłu, miało się stać jego zgubą.\n• Ocalali trafieni przez NJX, gdy jest ono w powietrzu, otrzymują efekt Wyczerpany na 15 s.\nWyczerpanie uniemożliwia ocalałym aktywowanie niektórych umiejętności."
+        }
+      }
+    }
+  ]
+}

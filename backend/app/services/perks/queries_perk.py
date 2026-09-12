@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 
 from app.core.cache import catalog_cache
 from app.core.extensions import db
-from app.models import Character, Perk, UserCharacterOwnership, UserPerkOwnership
+from app.models import Killer, Perk, Survivor, UserCharacterOwnership, UserPerkOwnership
 from app.services.perks.utils import normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
@@ -91,7 +91,7 @@ def _localized_perk_name(p: Perk, lang: str | None) -> str:
     return p.name
 
 
-def _localized_character_name(character: Character | None, lang: str | None) -> str:
+def _localized_character_name(character: "Survivor | Killer | None", lang: str | None) -> str:
     if not character:
         return "General"
     if lang and isinstance(character.translations, dict) and lang in character.translations:
@@ -101,7 +101,7 @@ def _localized_character_name(character: Character | None, lang: str | None) -> 
     return character.name
 
 
-def _localized_character_real_name(character: Character, lang: str | None) -> str:
+def _localized_character_real_name(character: "Survivor | Killer", lang: str | None) -> str:
     if lang and isinstance(character.translations, dict) and lang in character.translations:
         trans = character.translations.get(lang) or {}
         if isinstance(trans, dict) and trans.get("real_name"):
@@ -109,18 +109,39 @@ def _localized_character_real_name(character: Character, lang: str | None) -> st
     return character.real_name or ""
 
 
-def _resolve_character_ids_by_name(character: str, lang: str | None = None) -> list[int]:
+def _resolve_character_ids_by_name(character: str, lang: str | None = None) -> tuple[list[int], list[int]]:
+    """Match a character name to owner ids, as `(survivor_ids, killer_ids)`.
+
+    One flat list of ids no longer identifies anything: survivor 7 and killer 7
+    are different characters, so the id has to travel with the table it came
+    from. The two lists are kept apart all the way into the `WHERE` clause.
+    """
     target_lower = character.strip().lower()
     norm_target = normalize_search_key(character)
-    matched_ids: list[int] = []
-    for c in db.session.scalars(select(Character)).unique().all():
-        display_candidates = [_localized_character_name(c, lang), _localized_character_real_name(c, lang)]
-        if any(_text_equals(v, target_lower, norm_target) for v in display_candidates):
-            matched_ids.append(c.id)
-            continue
-        if target_lower and target_lower in {(c.short_name or "").lower(), (c.wiki_slug or "").lower()}:
-            matched_ids.append(c.id)
-    return matched_ids
+    survivor_ids: list[int] = []
+    killer_ids: list[int] = []
+    for model, matched_ids in ((Survivor, survivor_ids), (Killer, killer_ids)):
+        for c in db.session.scalars(select(model)).unique().all():
+            display_candidates = [_localized_character_name(c, lang), _localized_character_real_name(c, lang)]
+            if any(_text_equals(v, target_lower, norm_target) for v in display_candidates):
+                matched_ids.append(c.id)
+                continue
+            # `code_prefix` ("K01") is derived from role + release_number, so it
+            # is a Python attribute rather than a column and cannot be compared
+            # in SQL; the display names are handled by the localized comparison
+            # above.
+            if target_lower and target_lower == c.code_prefix.lower():
+                matched_ids.append(c.id)
+    return survivor_ids, killer_ids
+
+
+def _has_no_owner():
+    """`WHERE` condition for a general perk.
+
+    The 27 perks that belong to no character used to be `character_id IS NULL`;
+    with one owner column per table it takes both being NULL.
+    """
+    return and_(Perk.survivor_id.is_(None), Perk.killer_id.is_(None))
 
 
 def _perk_search_haystacks(p: Perk, lang: str | None = None) -> list[str]:
@@ -134,7 +155,7 @@ def _perk_search_haystacks(p: Perk, lang: str | None = None) -> list[str]:
 
 
 def _perk_matches_search(p: Perk, query_lower: str, norm_query: str, is_general_match: bool, lang: str | None = None) -> bool:
-    if is_general_match and (p.character_id is None or p.is_generic_counterpart):
+    if is_general_match and ((p.survivor_id is None and p.killer_id is None) or p.is_generic_counterpart):
         return True
     return any(_text_matches(h, query_lower, norm_query) for h in _perk_search_haystacks(p, lang))
 
@@ -273,34 +294,51 @@ def fetch_perks(
             return cached_res
 
     try:
-        stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
+        # `Perk.character` is a read-only property over the two owner
+        # relationships, so the join and the eager load name both of them.
+        # Each is an outer join to at most one row, which is what the single
+        # join to `characters` was.
+        stmt = (
+            select(Perk)
+            .outerjoin(Perk.survivor)
+            .outerjoin(Perk.killer)
+            .options(joinedload(Perk.survivor), joinedload(Perk.killer))
+        )
 
         if category and category.lower() != "all":
-            stmt = stmt.where(func.lower(Perk.category) == category.lower())
+            stmt = stmt.where(func.lower(Perk.role) == category.lower())
 
         if character and character.lower() != "all":
             if character.lower() == "general":
                 stmt = stmt.where(
                     or_(
-                        Perk.character_id.is_(None),
+                        _has_no_owner(),
                         Perk.is_generic_counterpart.is_(True),
                     )
                 )
             else:
-                matched_char_ids = _resolve_character_ids_by_name(character, lang)
-                stmt = stmt.where(Perk.character_id.in_(matched_char_ids))
+                matched_survivor_ids, matched_killer_ids = _resolve_character_ids_by_name(character, lang)
+                stmt = stmt.where(
+                    or_(
+                        Perk.survivor_id.in_(matched_survivor_ids),
+                        Perk.killer_id.in_(matched_killer_ids),
+                    )
+                )
 
         if scope and scope.lower() == "general":
             stmt = stmt.where(
                 or_(
-                    Perk.character_id.is_(None),
+                    _has_no_owner(),
                     Perk.is_generic_counterpart.is_(True),
                 )
             )
         elif scope and scope.lower() == "teachable":
             stmt = stmt.where(
                 and_(
-                    Perk.character_id.is_not(None),
+                    or_(
+                        Perk.survivor_id.is_not(None),
+                        Perk.killer_id.is_not(None),
+                    ),
                     Perk.is_generic_counterpart.is_(False),
                 )
             )
@@ -310,9 +348,20 @@ def fetch_perks(
                 UserPerkOwnership.user_id == user_id,
                 UserPerkOwnership.is_unlocked.is_(False),
             )
-            deactivated_chars_subq = select(UserCharacterOwnership.character_id).where(
+            # One ownership row names one side, so the deactivated-character
+            # set is two subqueries. Each excludes the NULL half of its own
+            # rows: a killer's ownership row has `survivor_id IS NULL`, and a
+            # single NULL in a `NOT IN` list makes the whole predicate NULL,
+            # which would drop every perk instead of none.
+            deactivated_survivors_subq = select(UserCharacterOwnership.survivor_id).where(
                 UserCharacterOwnership.user_id == user_id,
                 UserCharacterOwnership.is_owned.is_(False),
+                UserCharacterOwnership.survivor_id.is_not(None),
+            )
+            deactivated_killers_subq = select(UserCharacterOwnership.killer_id).where(
+                UserCharacterOwnership.user_id == user_id,
+                UserCharacterOwnership.is_owned.is_(False),
+                UserCharacterOwnership.killer_id.is_not(None),
             )
             unlocked_perks_subq = select(UserPerkOwnership.perk_id).where(
                 UserPerkOwnership.user_id == user_id,
@@ -321,13 +370,25 @@ def fetch_perks(
 
             stmt = stmt.where(
                 or_(
-                    Perk.character_id.is_(None),
+                    _has_no_owner(),
                     Perk.is_generic_counterpart.is_(True),
                     and_(
                         Perk.id.not_in(locked_perks_subq),
                         or_(
                             Perk.id.in_(unlocked_perks_subq),
-                            Perk.character_id.not_in(deactivated_chars_subq),
+                            # At most one owner column is set, so the perk's
+                            # owner is active when the side it is on is not
+                            # deactivated and the other side is NULL.
+                            and_(
+                                or_(
+                                    Perk.survivor_id.is_(None),
+                                    Perk.survivor_id.not_in(deactivated_survivors_subq),
+                                ),
+                                or_(
+                                    Perk.killer_id.is_(None),
+                                    Perk.killer_id.not_in(deactivated_killers_subq),
+                                ),
+                            ),
                         ),
                     ),
                 )
@@ -347,9 +408,11 @@ def fetch_perks(
 
         valid_sort_field = sort_by.lower() if sort_by.lower() in service.ALLOWED_SORT_FIELDS else "name"
         if valid_sort_field == "character":
-            sort_col = func.coalesce(Character.name, "General")
+            # Whichever owner is joined; a general perk has neither and keeps
+            # sorting under "General".
+            sort_col = func.coalesce(Survivor.name, Killer.name, "General")
         elif valid_sort_field == "category":
-            sort_col = Perk.category
+            sort_col = Perk.role
         else:
             sort_col = Perk.name
 
@@ -375,14 +438,16 @@ def fetch_perks(
 
         paginated_data = []
         if user_id:
-            deactivated_char_ids = set(
-                db.session.scalars(
-                    select(UserCharacterOwnership.character_id).where(
-                        UserCharacterOwnership.user_id == user_id,
-                        UserCharacterOwnership.is_owned.is_(False),
-                    )
-                ).all()
-            )
+            # Two sets rather than one: an id only identifies a character
+            # together with its role, and survivor 7 and killer 7 both exist.
+            deactivated_rows = db.session.execute(
+                select(UserCharacterOwnership.survivor_id, UserCharacterOwnership.killer_id).where(
+                    UserCharacterOwnership.user_id == user_id,
+                    UserCharacterOwnership.is_owned.is_(False),
+                )
+            ).all()
+            deactivated_survivor_ids = {row[0] for row in deactivated_rows if row[0] is not None}
+            deactivated_killer_ids = {row[1] for row in deactivated_rows if row[1] is not None}
             perk_explicit_rows = db.session.execute(
                 select(UserPerkOwnership.perk_id, UserPerkOwnership.is_unlocked).where(
                     UserPerkOwnership.user_id == user_id
@@ -392,13 +457,17 @@ def fetch_perks(
 
             for p in perks:
                 d = p.to_dict(lang=lang)
-                is_gen = p.character_id is None or p.is_generic_counterpart
+                is_gen = (p.survivor_id is None and p.killer_id is None) or p.is_generic_counterpart
                 if is_gen:
                     is_owned = True
                 elif p.id in perk_explicit_map:
                     is_owned = perk_explicit_map[p.id]
+                elif p.survivor_id is not None:
+                    is_owned = p.survivor_id not in deactivated_survivor_ids
+                elif p.killer_id is not None:
+                    is_owned = p.killer_id not in deactivated_killer_ids
                 else:
-                    is_owned = (p.character_id not in deactivated_char_ids) if p.character_id else True
+                    is_owned = True
                 d["is_owned"] = bool(is_owned)
                 paginated_data.append(d)
         else:
@@ -453,9 +522,14 @@ def fetch_perk_suggestions(
         return cached
 
     try:
-        stmt = select(Perk).outerjoin(Perk.character).options(joinedload(Perk.character))
+        stmt = (
+            select(Perk)
+            .outerjoin(Perk.survivor)
+            .outerjoin(Perk.killer)
+            .options(joinedload(Perk.survivor), joinedload(Perk.killer))
+        )
         if category and category.lower() != "all":
-            stmt = stmt.where(func.lower(Perk.category) == category.lower())
+            stmt = stmt.where(func.lower(Perk.role) == category.lower())
 
         prefilter = _perk_search_prefilter(query, lang) if query and query.strip() else None
         if prefilter is not None:
@@ -478,7 +552,9 @@ def fetch_perk_suggestions(
                 "id": p.id,
                 "name": _localized_perk_name(p, lang),
                 "alternate_name": p.alternate_name or "",
-                "category": p.category,
+                # The response key stays "category"; the column behind it is
+                # `role` now, and holds the same "Survivor"/"Killer" values.
+                "category": p.role,
                 "character": _localized_character_name(p.character, lang),
                 "icon_url": p.icon_url or "",
                 "icon_local_path": p.icon_local_path or "",
@@ -520,7 +596,7 @@ def fetch_perk_by_identifier(service, identifier: str, lang: str | None = None) 
         return cached
 
     try:
-        stmt = select(Perk).options(joinedload(Perk.character)).where(
+        stmt = select(Perk).options(joinedload(Perk.survivor), joinedload(Perk.killer)).where(
             or_(
                 func.lower(Perk.name) == target,
                 func.lower(Perk.alternate_name) == target,

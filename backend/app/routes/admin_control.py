@@ -4,8 +4,9 @@ from flask import Blueprint, g, jsonify, request
 from sqlalchemy import and_, case, select
 
 from app.core.extensions import db
+from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
-from app.models import Character, Perk
+from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
 from app.services.admin_control_service import (
     get_audit_logs,
@@ -36,20 +37,19 @@ def list_characters_for_admin():
     role = request.args.get("role", "").strip()
     search = request.args.get("search", "").strip().lower()
 
-    stmt = select(Character)
+    # One query per table. `release_number` was a column to sort on; it is the
+    # primary key now -- the source numbered survivors and killers separately,
+    # and that is exactly what each table's id is -- so ordering by id is the
+    # same order with one fewer column to keep in step.
+    wanted = (Survivor, Killer)
     if role and role.lower() != "all":
-        stmt = stmt.where(Character.role == role)
+        wanted = (Killer,) if role.strip().lower().startswith("killer") else (Survivor,)
 
-    stmt = stmt.order_by(
-        case(
-            (and_(Character.release_number.is_not(None), Character.release_number > 0), Character.release_number),
-            else_=9999,
-        ).asc(),
-        Character.id.asc(),
-        Character.name.asc(),
-    )
-
-    characters = db.session.scalars(stmt).all()
+    characters = [
+        row
+        for model in wanted
+        for row in db.session.scalars(select(model).order_by(model.id.asc())).all()
+    ]
     if search:
         characters = [c for c in characters if search in c.name.lower()]
 
@@ -72,12 +72,24 @@ def list_characters_for_admin():
 @admin_control_bp.route("/characters/<int:character_id>/disable", methods=["PUT"])
 @admin_required
 def set_character_disabled(character_id: int):
-    """Enables/disables a killer or survivor from being rolled into new challenge pools."""
-    character = db.session.get(Character, character_id)
+    """Enables/disables a killer or survivor from being rolled into new challenge pools.
+
+    `role` is required alongside the id: survivor 7 and killer 7 are different
+    characters, so disabling "character 7" no longer names one row. It is read
+    from the query string or the body, whichever the caller uses.
+    """
+    data = request.get_json(silent=True) or {}
+    role = (request.args.get("role") or data.get("role") or "").strip().rstrip("s").lower()
+    model = {"survivor": Survivor, "killer": Killer}.get(role)
+    if model is None:
+        return jsonify({
+            "error": "Query or body field 'role' must be 'survivor' or 'killer'.",
+        }), 400
+
+    character = db.session.get(model, character_id)
     if not character:
         return jsonify({"error": "Character not found."}), 404
 
-    data = request.get_json(silent=True) or {}
     is_disabled = data.get("is_disabled")
     if not isinstance(is_disabled, bool):
         return jsonify({"error": "Field 'is_disabled' (bool) is required."}), 400
@@ -89,6 +101,11 @@ def set_character_disabled(character_id: int):
     character.is_disabled = is_disabled
     character.disabled_reason = reason if is_disabled else None
     db.session.commit()
+
+    # `is_disabled`/`disabled_reason` are serialized into the cached character
+    # and perk catalog responses, so a kill switch that does not invalidate
+    # them keeps the disabled character on the site for a day.
+    bump_catalog_version()
 
     log_admin_action(
         g.current_user.id,
@@ -118,7 +135,8 @@ def list_perks_for_admin():
 
     stmt = select(Perk)
     if category and category.lower() != "all":
-        stmt = stmt.where(Perk.category == category)
+        # `category` became `role`; the query-string name is unchanged.
+        stmt = stmt.where(Perk.role == category)
     stmt = stmt.order_by(Perk.name.asc())
 
     perks = db.session.scalars(stmt).all()
@@ -153,7 +171,11 @@ def set_perk_disabled(perk_id: int):
     if not perk:
         return jsonify({"error": "Perk not found."}), 404
 
+    # This line was missing: `data` was read below without ever being assigned,
+    # so every call to this endpoint raised NameError and returned a 500. The
+    # sibling `set_character_disabled` has always had it.
     data = request.get_json(silent=True) or {}
+
     is_disabled = data.get("is_disabled")
     if not isinstance(is_disabled, bool):
         return jsonify({"error": "Field 'is_disabled' (bool) is required."}), 400
@@ -165,6 +187,8 @@ def set_perk_disabled(perk_id: int):
     perk.is_disabled = is_disabled
     perk.disabled_reason = reason if is_disabled else None
     db.session.commit()
+
+    bump_catalog_version()
 
     log_admin_action(
         g.current_user.id,
@@ -207,6 +231,10 @@ def update_challenge_mode(mode: str):
         return jsonify({"error": str(e)}), 400
 
     updated = set_challenge_mode_enabled(mode, is_enabled, reason)
+
+    # The same settings are served publicly by `/api/v1/challenge-modes`,
+    # which is cached.
+    bump_catalog_version()
 
     log_admin_action(
         g.current_user.id,

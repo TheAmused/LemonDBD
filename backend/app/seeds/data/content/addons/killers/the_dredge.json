@@ -1,0 +1,557 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 492,
+      "name": "Wooden Plank",
+      "killer_id": 28,
+      "description": "A wooden plank torn from the stage where Otto Stamper sacrificed a meddling journalist.\n• Increases the amount Nightfall charges when a Survivor is hooked by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_woodenPlank.png?9451ea",
+      "icon_local_path": "icons/addons/wooden_plank.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Brett",
+          "description": "Ein Holzbrett der Bühne, auf der Otto Stamper eine aufdringliche Journalistin opferte.\n• Erhöht die Menge der Aufladungen von Nachteinbruch, wenn ein Überlebender festgehakt wird, um 25 %."
+        },
+        "es": {
+          "name": "Tablón de madera",
+          "description": "Un tablón de madera de la plataforma donde Otto Stamper sacrificó a una periodista entrometida.\n• Aumenta la cantidad de carga de Nocturnidad cuando un superviviente queda enganchado un 25 %."
+        },
+        "ja": {
+          "name": "木の板",
+          "description": "オットー・スタンパーが干渉しすぎたジャーナリストを処刑した壇から引き剥がされた木の厚板。\n• 生存者がフックに吊るされた時の日没のチャージ量が25%増加する"
+        },
+        "pl": {
+          "name": "Drewniana deska",
+          "description": "Drewniana deska wyrwana ze sceny, na której Otto Stamper złożył w ofierze wścibskiego dziennikarza.\n• Zwiększa poziom naładowania Zmroku po zawieszeniu ocalałego na haku o 25%."
+        }
+      }
+    },
+    {
+      "id": 493,
+      "name": "Caffeine Tablets",
+      "killer_id": 28,
+      "description": "Stamper’s followers were told not to sleep, or they would bring the wrath of Druanee upon them. Towards the end, he brought in drugs from the mainland.\n• Auras of locked lockers are visible while charging The Gloaming and Teleporting.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_caffeineTablets.png?7ed110",
+      "icon_local_path": "icons/addons/caffeine_tablets.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Koffeintabletten",
+          "description": "Stampers Anhänger durften nicht schlafen, sonst würden sie den Zorn von Druanee auf sich ziehen. Gegen das Ende hin brachte er Drogen vom Festland mit.\n• Auren von verschlossenen Schließschränken werden beim Aufladen der Dämmerung und beim Teleportieren gelb angezeigt."
+        },
+        "es": {
+          "name": "Píldoras de cafeína",
+          "description": "Los discípulos de Stamper tenían prohibido dormir para evitar que la cólera de Druanee cayera sobre ellos. Al final, tuvo que traerse ciertos medicamentos que no había en la isla.\n• Las auras de las taquillas cerradas se iluminarán de color amarillo mientras carga La Penumbra y el teletransporte."
+        },
+        "ja": {
+          "name": "カフェイン錠剤",
+          "description": "スタンパーは信奉者に、ドゥルーアニーの怒りを買ってしまうから眠ってはいけないと教えた。末期になると、スタンパーは本島から薬物を持ち込んでいた。\n• 黄昏のチャージ中とテレポート中、施錠されたロッカーのオーラが表示される"
+        },
+        "pl": {
+          "name": "Tabletki z kofeiną",
+          "description": "Zwolennikom Stampera kazano nie spać, by nie ściągnęli na siebie gniewu Druanee. Pod koniec sprowadzał narkotyki z lądu.\n• Aury zablokowanych szafek są widoczne na żółto podczas ładowania Zaciemnienia i teleportowania."
+        }
+      }
+    },
+    {
+      "id": 494,
+      "name": "Mortar and Pestle",
+      "killer_id": 28,
+      "description": "Disconnected from the world and modern medicine, Stamper's followers originally had to make do with the flora local to the island.\n• The Dredge will emerge from its Remnant facing the same direction as when Teleport is activated instead of the direction facing when the Remnant was placed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mortarAndPestle.png?30e459",
+      "icon_local_path": "icons/addons/mortar_and_pestle.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Mörser und Stößel",
+          "description": "Von der Welt und der modernen Medizin abgeschnitten mussten Stampers Anhänger zuerst mit der Flora der Insel auskommen.\n• Die Dredsche tritt aus ihrem Überrest und wendet sich in dieselbe Richtung wie bei aktiviertem Teleportieren und nicht in die Richtung, in die sie blickte, als der Überrest platziert wurde."
+        },
+        "es": {
+          "name": "Mortero con mano",
+          "description": "Los discípulos de Stamper vivían desconectados del mundo y de la medicina moderna, así que se las arreglaban con las plantas autóctonas de la isla.\n• La Draga saldrá de su remanente hacia la misma dirección en la que miraba cuando se activó el teletransporte, en lugar de la dirección en la que miraba al colocar el remanente."
+        },
+        "ja": {
+          "name": "すり鉢とすりこぎ",
+          "description": "当初、世間と現代医療から切り離されてしまったスタンパーの信奉者たちは、島に生息する植物で間に合わせるしかなかった。\n• ドレッジが残留部から現れる際、残留部を配置した時に向いていた方向ではなく、テレポートした時に向いていた方向のまま出現する"
+        },
+        "pl": {
+          "name": "Moździerz i tłuczek",
+          "description": "Odcięci od świata i nowoczesnej medycyny zwolennicy Stampera musieli początkowo radzić sobie z miejscową florą.\n• Szlam wyjdzie ze swojej iluzorycznej postaci zwrócony w tym samym kierunku, w którym aktywowany został teleport, a nie w kierunku, w którym umieszczono iluzoryczną postać."
+        }
+      }
+    },
+    {
+      "id": 495,
+      "name": "Burnt Letters",
+      "killer_id": 28,
+      "description": "Some followers tried to write letters home. Stamper ensured that nobody would have contact with the outside world.\n• Increases the amount Nightfall charges when injuring a Survivor by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_burntLetters.png?9a4575",
+      "icon_local_path": "icons/addons/burnt_letters.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verbrannte Briefe",
+          "description": "Einige Anhänger versuchten, Briefe nach Hause zu schreiben. Stamper sorgte dafür, dass niemand Kontakt zur Außenwelt aufnehmen konnte.\n• Erhöht die Menge der Aufladungen von Nachteinbruch, wenn ein Überlebender verletzt wird, um 25 %."
+        },
+        "es": {
+          "name": "Cartas quemadas",
+          "description": "Algunos discípulos trataron de escribir a sus familias, pero Stamper se aseguró de que nadie tuviera contacto con el mundo exterior.\n• Aumenta la cantidad de carga de Nocturnidad al herir a un superviviente un 25 %."
+        },
+        "ja": {
+          "name": "焼かれた手紙",
+          "description": "信奉者のなかには家に手紙を書いて送ろうと試みる者もいたが、スタンパーは外の世界とのつながりを誰にも持たせないようにした。\n• 生存者を負傷させた時の日没のチャージ量が25%増加する"
+        },
+        "pl": {
+          "name": "Spalone listy",
+          "description": "Niektórzy zwolennicy próbowali pisać listy do domu. Stamper dbał o to, by nikt nie miał kontaktu ze światem zewnętrznym.\n• Zwiększa poziom naładowania Zmroku po ranieniu ocalałego o 25%."
+        }
+      }
+    },
+    {
+      "id": 496,
+      "name": "Air Freshener",
+      "killer_id": 28,
+      "description": "After her parents were found, this was in the bag of belongings the police returned. Haddie doesn’t know why she keeps it.\n• Adds 1 additional Power Token for Teleporting.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_airFreshener.png?3a6653",
+      "icon_local_path": "icons/addons/air_freshener.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lufterfrischer",
+          "description": "Nachdem ihre Eltern gefunden worden waren, war das im Beutel mit den Habseligkeiten, den ihr die Polizei gab. Haddie weiß gar nicht, warum sie sie behält.\n• Fügt 1 zusätzlichen Stärkezähler für das Teleportieren hinzu."
+        },
+        "es": {
+          "name": "Ambientador de coche",
+          "description": "Este objeto estaba en la bolsa de pertenencias que le devolvió la policía cuando encontraron a sus padres. Haddie no tiene muy claro por qué lo ha guardado.\n• Añade 1 distintivo de poder adicional por teletransportarse."
+        },
+        "ja": {
+          "name": "消臭スプレー",
+          "description": "両親の発見後、警察が返してくれた所持品かばんの中にあった。なぜこれを持ち続けているのか、ハディにも分からない。\n• テレポートに必要な能力トークンが1つ追加される"
+        },
+        "pl": {
+          "name": "Odświeżacz powietrza",
+          "description": "Gdy odnaleźli się jej rodzice, to znajdowało się w torbie z rzeczami zwróconymi przez policję. Haddie nie wie, dlaczego go zachowała.\n• Daje 1 dodatkowy żeton mocy do teleportacji."
+        }
+      }
+    },
+    {
+      "id": 497,
+      "name": "Fallen Shingle",
+      "killer_id": 28,
+      "description": "After the Ottomarians were subsumed by The Dredge, the mansion fell into disrepair.\n• Using Reign of Darkness increases Nightfall charge speed by an additional 15% per second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fallenShingle.png?1bb612",
+      "icon_local_path": "icons/addons/fallen_shingle.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Herabgefallene Schindel",
+          "description": "Nachdem die Ottomarianer von der Dredsche verschlungen worden waren, verfiel das Anwesen langsam.\n• Die Verwendung von Herrschaft der Dunkelheit erhöht die Aufladegeschwindigkeit von Nachteinbruch um zusätzliche 15 % pro Sekunde."
+        },
+        "es": {
+          "name": "Teja caída",
+          "description": "Cuando la Draga incorporó a los ottomianos, la mansión quedó hecha una ruina.\n• Usar Reino de oscuridad aumenta la velocidad de carga de Nocturnidad un 15 % por segundo más."
+        },
+        "ja": {
+          "name": "落下した屋根板",
+          "description": "オットーマリアンがドレッジに飲み込まれてからというもの、屋敷はすっかり荒廃した。\n• 闇夜の支配を使うと日没のチャージ速度が1秒につき15%上昇する"
+        },
+        "pl": {
+          "name": "Spadający gont",
+          "description": "Po tym jak Ottomarianie zostali wchłonięci przez Szlama, rezydencja popadła w ruinę.\n• Użycie Władzy Ciemności zwiększa prędkość ładowania Zmroku o dodatkowe 15% na sekundę."
+        }
+      }
+    },
+    {
+      "id": 498,
+      "name": "Worry Stone",
+      "killer_id": 28,
+      "description": "While the Ottomarians were told to think only positive thoughts, some kept these stones in their pockets to rub when negative thoughts arose.\n• Reveals the aura of a Survivor for 6 seconds when they lock a locker.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_worryStone.png?72c589",
+      "icon_local_path": "icons/addons/worry_stone.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sorgenstein",
+          "description": "Die Ottomarianer sollten nur positive Gedanken zulassen. Manche hatten diese Steine in den Taschen, die sie bei negativen Gedanken rieben.\n• Enthüllt die Aura eines Überlebenden für 6 Sekunden, wenn er einen Schließschrank verschließt."
+        },
+        "es": {
+          "name": "Piedra de preocupación",
+          "description": "Cuando se obligó a los ottomianos a tener pensamientos únicamente positivos, había quien se guardaba estas piedras en los bolsillos para frotarlas cuando les viniera una idea negativa.\n• Revela el aura de un superviviente durante 6 segundos cuando cierra una taquilla."
+        },
+        "ja": {
+          "name": "不安の石",
+          "description": "オットーマリアンはポジティブ思考だけで物事を考えるよう教えられていたが、ネガティブな考えが沸き起こった時にすり合わせるために、これらの石をポケットに入れておいた。\n• ロッカーを施錠した生存者のオーラが6秒間表示される"
+        },
+        "pl": {
+          "name": "Kamień zmartwień",
+          "description": "Choć Ottomarianom kazano myśleć tylko pozytywnie, niektórzy trzymali w kieszeniach kamienie do pocierania, gdy napadały ich złe myśli.\n• Aura ocalałego jest widoczna przez 6 sekund, gdy zamknie on szafkę."
+        }
+      }
+    },
+    {
+      "id": 499,
+      "name": "Ottomarian Writing",
+      "killer_id": 28,
+      "description": "The words of Otto Stamper were the only words available for his followers to read, decrying malthink and malspeak.\n• Decreases Teleport cooldown by 2 seconds while not in Nightfall.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ottomarianWriting.png?b44091",
+      "icon_local_path": "icons/addons/ottomarian_writing.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Ottomarianer-Schrift",
+          "description": "Seine Anhänger konnten nur Otto Stampers Worte lesen, die jeden schlechten Gedanken und jedes schlechte Wort verurteilten.\n• Verringert die Abklingzeit nach dem Teleportieren um 2 Sekunden, wenn Nachteinbruch nicht aktiv ist."
+        },
+        "es": {
+          "name": "Escrituras ottomianas",
+          "description": "Las palabras de Otto Stamper eran las únicas que sus discípulos podían leer, censurando a malpensantes y malhablantes.\n• Reduce el tiempo de recarga de teletransporte en 2 segundos cuando Nocturnidad no esté activo."
+        },
+        "ja": {
+          "name": "オットーマリアンの読み物",
+          "description": "オットー・スタンパーの言葉は不平不満の思考や発言を非難するものであり、信奉者が読むことのできる唯一の文章だった。\n• 日没でない間、テレポートのクールダウンが2秒間減少する"
+        },
+        "pl": {
+          "name": "Ottomariańskie pisma",
+          "description": "Słowa Ottona Stampera były jedynymi, które mogli czytać jego zwolennicy – potępiały złomyślenie i złorzeczenie.\n• Skraca czas odnowienia mocy dla teleportacji o 2 sekundy poza Zmrokiem."
+        }
+      }
+    },
+    {
+      "id": 500,
+      "name": "Broken Doll",
+      "killer_id": 28,
+      "description": "Followers brought their families to live in a utopia. None of them were spared.\n• Increases the duration of Nightfall by 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenDoll.png?576a67",
+      "icon_local_path": "icons/addons/broken_doll.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Kaputte Puppe",
+          "description": "Anhänger brachten ihre Familien mit, damit sie in einer Utopie leben konnten. Niemand wurde verschont.\n• Verlängert die Dauer von Nachteinbruch um 20 Sekunden."
+        },
+        "es": {
+          "name": "Muñeca rota",
+          "description": "Los discípulos se trajeron a sus familias para que vivieran en una utopía. Ninguno se libró de la condena.\n• Aumenta la duración de Nocturnidad en 20 segundos."
+        },
+        "ja": {
+          "name": "壊れた人形",
+          "description": "信奉者は理想郷で住むために家族を連れてやってきたが、そのうちの誰ひとりとして免れる者はいなかった。\n• 日没の持続時間が20秒増加する"
+        },
+        "pl": {
+          "name": "Zniszczona lalka",
+          "description": "Zwolennicy przyprowadzili swoje rodziny, by żyć w utopii. Nikt nie został oszczędzony.\n• Wydłuża czas trwania Zmroku o 20 sekund."
+        }
+      }
+    },
+    {
+      "id": 501,
+      "name": "War Helmet",
+      "killer_id": 28,
+      "description": "While investigating an Overlap in the Alps, she found an abandoned war bunker. She took a helmet from it after the Overlap nearly took her.\n• Increases Killer Instinct duration by 1.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_warHelmet.png?40c5d3",
+      "icon_local_path": "icons/addons/war_helmet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Soldatenhelm",
+          "description": "Als sie eine Überschneidung in den Alpen untersuchte, fand sie einen verlassenen Kriegsbunker. Sie nahm einen Helm daraus mit, als sie die Überschneidung beinahe ergriff.\n• Verlängert die Dauer des Killerinstinkts um 1,5 Sekunden."
+        },
+        "es": {
+          "name": "Casco de soldado",
+          "description": "Mientras investigaba una interferencia en los Alpes, halló un búnker de guerra abandonado. Después de que la interferencia estuviese a punto de llevársela, cogió un casco que había allí.\n• Aumenta la duración de Instinto asesino en 1,5 segundos."
+        },
+        "ja": {
+          "name": "戦時のヘルメット",
+          "description": "アルプス山脈で「重なり」について調査していた時に、戦時中に使用された掩蔽壕の跡地を見つけた。「重なり」に連れ去られそうになった後、そこからヘルメットを手に入れた。\n• 殺人鬼の本能の持続時間が1.5秒増加する"
+        },
+        "pl": {
+          "name": "Hełm wojenny",
+          "description": "Podczas badania Najścia w Alpach znalazła opuszczony bunkier wojenny. Zabrała z niego hełm po tym, jak Najście prawie ją dosięgnęło.\n• Wydłuża czas trwania Instynktu Zabójcy o 1,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 502,
+      "name": "Destroyed Pillow",
+      "killer_id": 28,
+      "description": "While not allowed to sleep, leaders among the Ottomarians tore sleeping supplies to shreds to prevent malthinkers from sneaking off to nap.\n• Decreases Teleport cooldown by 2.5 seconds during Nightfall.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_destroyedPillow.png?b1d50a",
+      "icon_local_path": "icons/addons/destroyed_pillow.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zerstörtes Kissen",
+          "description": "Sie durften nicht schlafen, deswegen zerrissen die Anführer der Ottomarianer Schlafutensilien, damit Kritiker nicht heimlich ein Nickerchen einlegen konnten.\n• Verringert die Abklingzeit nach dem Teleportieren um 2,5 Sekunden während Nachteinbruch."
+        },
+        "es": {
+          "name": "Almohada destrozada",
+          "description": "Como no podían dormir, los líderes de los ottomianos rompían objetos relacionados con el descanso para evitar que los malpensantes se echasen siestas.\n• Reduce el tiempo de recarga de teletransporte en 2,5 segundos durante Nocturnidad."
+        },
+        "ja": {
+          "name": "粉砕された枕",
+          "description": "睡眠が禁じられている間、オットーマリアンのリーダーたちはネガティブ思考の信奉者たちが隠れて仮眠を取らないように寝具をズタズタに引き裂いた。\n• 日没中、テレポートのクールダウンが2.5秒減少する"
+        },
+        "pl": {
+          "name": "Zniszczona poduszka",
+          "description": "Sen jest zakazany, więc przywódcy Ottomarianów rozerwali na strzępy zapasy do spania, aby uniemożliwić złomyślcom wymykanie się na drzemkę.\n• Skraca czas odnawiania Teleportacji o 2,5 sekundy podczas Zmroku."
+        }
+      }
+    },
+    {
+      "id": 503,
+      "name": "Tilling Blade",
+      "killer_id": 28,
+      "description": "The island was self-sufficient, and followers tilled the tough soil to grow crops during the warm season.\n• When a Survivor is injured from full health during Nightfall, they are afflicted with the Blindness, Hemorrhage, and Mangled status effects for 80 seconds.\nBlindness prevents Survivors from seeing auras.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.\n\"\"Like a predatory beast, it can smell and track blood.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tillingBlade.png?63607b",
+      "icon_local_path": "icons/addons/tilling_blade.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ackerwerkzeug",
+          "description": "Die Insel war autark und die Anhänger bearbeiteten den rauen Boden, um in der warmen Jahreszeit Pflanzen anzubauen.\n• Wenn ein Überlebender während Nachteinbruch bei voller Gesundheit verletzt wird, erleidet er für 80 Sekunden die Statuseffekte Erblindung, Blutung und Zerfleischt.\nBei Erblindung können Überlebende keine Auren sehen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n\"„Wie eine Raubbestie kann sie Blut riechen und aufspüren.“\""
+        },
+        "es": {
+          "name": "Hoja para arar",
+          "description": "La isla era autosuficiente y los discípulos araban la dura tierra para poder cultivar algo en las estaciones más cálidas.\n• Cuando se hiere a un superviviente con la salud al máximo durante Nocturnidad, este sufre los efectos de estado Ceguera, Hemorragia y Laceración durante 80 segundos.\nCeguera impide que los supervivientes vean auras.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo.\n\"\"Igual que una bestia voraz, puede oler y seguir el rastro de la sangre\".\""
+        },
+        "ja": {
+          "name": "耕作用刃",
+          "description": "島の生活は自給自足だったため、温暖な季節に信奉者らは固い土を耕して作物を作った。\n• 日没中、無傷から負傷した生存者は、80秒間目眩まし、出血、重傷のステータス効果に苦しむ。\n目眩まし状態になると生存者はオーラが視えなくなる。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。\n\"「こいつは捕食獣のごとく血の匂いを嗅ぎ、獲物を追いかける」\""
+        },
+        "pl": {
+          "name": "Ostrze uprawowe",
+          "description": "Wyspa była samowystarczalna, a wyznawcy uprawiali twardą glebę, aby w ciepłych porach roku hodować rośliny.\n• Kiedy ocalały zostanie zraniony przy pełnym zdrowiu podczas Zmroku, otrzymuje efekty Oślepienia, Krwotoku i Zmasakrowania na 80 s.\nOślepienie uniemożliwia ocalałym widzenie aur.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia,\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia.\n\"„Niczym drapieżna bestia potrafi wyczuć i tropić krew”.\""
+        }
+      }
+    },
+    {
+      "id": 504,
+      "name": "Boat Key",
+      "killer_id": 28,
+      "description": "Only one boat allowed people on and off the island, and the keys were hidden away to prevent deserters.\n• Increases Teleport speed by 16% while not in Nightfall.\n• When the exit gates are powered, all active locks are instantly broken.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_boatKey.png?69ec92",
+      "icon_local_path": "icons/addons/boat_key.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Bootsschlüssel",
+          "description": "Es gab nur ein Boot, um die Menschen von der Insel und auf die Insel zu befördern. Die Schlüssel waren versteckt, um Abtrünnigen keine Chance zu geben.\n• Erhöht die Geschwindigkeit beim Teleportieren um 16 %, wenn Nachteinbruch nicht aktiv ist.\n• Wenn die Ausgangstore mit Strom versorgt werden, werden alle aktiven Schlösser sofort zerstört."
+        },
+        "es": {
+          "name": "Llave de barco",
+          "description": "Solo había un barco para que la gente pudiera entrar y salir de la isla. Las llaves estaban guardadas a buen recaudo para que no hubiera fugas.\n• Aumenta la velocidad de teletransporte un 16 % cuando Nocturnidad no esté activo.\n• Cuando las puertas de salida estén encendidas, los cierres activados se romperán al instante."
+        },
+        "ja": {
+          "name": "船の鍵",
+          "description": "島を行き来するための船は1艘しかなく、脱走を防ぐために鍵は隠されていた。\n• 日没でない間、テレポートの速度が16%上昇する\n• 脱出ゲートが通電すると、施錠されたすべての鍵が壊れる。"
+        },
+        "pl": {
+          "name": "Klucz do łodzi",
+          "description": "Tylko jedna łódź umożliwiała przypłynięcie na wyspę i jej opuszczenie, a klucze do niej były ukryte, aby zapobiec dezercjom.\n• Zwiększa prędkość Teleportacji o 16% poza Zmrokiem.\n• Gdy bramy wyjściowe są zasilane, wszystkie aktywne zamki zostają od razu zniszczone."
+        }
+      }
+    },
+    {
+      "id": 505,
+      "name": "Field Recorder",
+      "killer_id": 28,
+      "description": "Haddie documented all of her forays near Overlaps, to prove not only to the world but herself what she saw and felt.\n• Nightfall is active at the start of the trial.\n• Nightfall is automatically triggered when the last generator is repaired.\n• Any Survivor that comes into contact with a Remnant is afflicted with the Exhausted status effect for 15 seconds.\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fieldRecorder.png?d02f0d",
+      "icon_local_path": "icons/addons/field_recorder.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Feldrekorder",
+          "description": "Haddie dokumentierte alle ihre Streifzüge in der Nähe von Überschneidungen, um nicht nur für die Welt, sondern auch für sich selbst zu belegen, was sie sah und fühlte.\n• Nachteinbruch ist zu Beginn der Prüfung aktiv.\n• Nachteinbruch wird automatisch ausgelöst, wenn der letzte Generator repariert wurde.\n• Jeder Überlebende, der mit einem Überrest in Berührung kommt, erleidet 15 Sekunden lang den Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "es": {
+          "name": "Grabadora de campo",
+          "description": "Haddie documentaba todas las incursiones que había tenido cerca de interferencias para demostrarle al mundo y a ella misma todo lo que había visto y experimentado.\n• Nocturnidad está activo al comienzo de la partida.\n• Nocturnidad se activa automáticamente cuando se repara el último generador.\n• Cualquier superviviente que entre en contacto con un remanente sufre Agotamiento durante 15 segundos.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "戦いの記録者",
+          "description": "ハディが「重なり」に接近した状況をすべて記録したのは、自分が見て感じたことを世界に対してだけでなく、自分自身にも示したかったからだ。\n• 儀式開始時点で日没が発動している。\n• ラスト1台の発電機の修理が完了すると、自動的に日没が発動する。\n• 残留部に出くわした生存者は15秒間疲労のステータス効果に苦しむ\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Rejestrator terenowy",
+          "description": "Haddie dokumentowała wszystkie swoje wyprawy w pobliże Najść, aby udowodnić nie tylko światu, ale też sobie, co widziała i czuła.\n• Zmrok jest aktywny na początku próby.\n• Zmrok jest automatycznie uruchamiany po naprawie ostatniego generatora.\n• Każdy ocalały, który zetknie się z iluzoryczną postacią, otrzymuje efekt Wyczerpany na 15 sekund.\nWyczerpanie uniemożliwia ocalałym aktywację niektórych umiejętności."
+        }
+      }
+    },
+    {
+      "id": 506,
+      "name": "Lavalier Microphone",
+      "killer_id": 28,
+      "description": "She kept a lav mic nearby, allowing her to record her innermost feelings when under great stress.\n• Survivor auras are revealed for 3 seconds when using the last Teleport token.\n• When entering a locker using Teleport, other lockers within 6 meters of Survivors open and slam their doors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lavalierMicrophone.png?6ed7e3",
+      "icon_local_path": "icons/addons/lavalier_microphone.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Lavalier-Mikrofon",
+          "description": "Sie hatte immer ein Mikrofon in der Nähe, um ihre innersten Gefühle auch unter großem Druck festzuhalten.\n• Die Auren von Überlebenden werden 3 Sekunden lang angezeigt, wenn der letzte Zähler für Teleportieren verwendet wird.\n• Wenn du einen Schließschrank mit Teleportieren betrittst, werden andere Schließschränke in einem Umkreis von 6 Metern von Überlebenden geöffnet und ihre Türen werden zugeknallt."
+        },
+        "es": {
+          "name": "Micrófono inalámbrico",
+          "description": "Siempre tenía a mano un micrófono inalámbrico para poder registrar sus sentimientos más íntimos cuando se veía sometida a una situación de estrés.\n• Se muestran las auras de los supervivientes durante 3 segundos al utilizar el último distintivo de teletransporte.\n• Al entrar en una taquilla con teletransporte, se abrirán las puertas de otras taquillas a 6 metros de distancia de los supervivientes."
+        },
+        "ja": {
+          "name": "小型マイク",
+          "description": "小型マイクを近くに装着しておくことで、強い緊張状態の時に心の奥底にある感情を記録することができた。\n• 最後のテレポートトークンを使う時、生存者のオーラが3秒間視える\n• テレポート使用中にロッカーに入った時、生存者の6メートル範囲内にある他のロッカーのドアが開いてバタンと閉じる"
+        },
+        "pl": {
+          "name": "Mikrofon krawatowy",
+          "description": "Trzymała w pobliżu mikrofon, który pozwalał jej nagrywać najskrytsze uczucia, gdy odczuwała silny stres.\n• Aury ocalałych zostają ujawnione na 3 sekundy po skorzystaniu z ostatniego żetonu teleportacji.\n• Gdy ocalały wejdzie do szafki przez teleport, inne szafki w promieniu 6 metrów otwierają się i trzaskają drzwiami."
+        }
+      }
+    },
+    {
+      "id": 507,
+      "name": "Sacrificial Knife",
+      "killer_id": 28,
+      "description": "When a journalist attempted to warn the Ottomarians of his true task, he slit her throat as a warning to any dissenters.\n• Exiting a locker during Nightfall blocks all vault locations within 16 meters for 5 seconds.\n\"\"There are imposters among you! They intend to destroy our perfect home with dark thoughts. Find them and bring them to me!\" –Otto Stamper\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sacrificialKnife.png?32cf57",
+      "icon_local_path": "icons/addons/sacrificial_knife.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Opfermesser",
+          "description": "Als eine Journalistin die Ottomarianer vor seinem wahren Ziel warnen wollte, schlitzte er als Warnung für alle Andersdenkenden ihre Kehle auf.\n• Das Verlassen eines Schließschranks während Nachteinbruch blockiert 5 Sek. lang alle Sprungmöglichkeiten im Umkreis von 16 Metern.\n\"„Es gibt Schwindler unter euch! Sie wollen unser perfektes Zuhause mit dunklen Gedanken zerstören. Findet sie und bringt sie zu mir!“ – Otto Stamper\""
+        },
+        "es": {
+          "name": "Cuchillo de sacrificio",
+          "description": "Cuando una periodista trató de advertir a los ottomianos sobre cuál era su verdadero propósito, le rajó la garganta. De paso, lo usó como advertencia a los disidentes.\n• Salir de una taquilla con Nocturnidad activo bloquea todos los lugares por los que se pueda saltar en un radio de 16 metros durante 5 segundos.\n\"\"¡Hay impostores entre vosotros! Quieren destruir nuestro perfecto hogar con pensamientos oscuros. Debéis encontrarlos y traerlos ante mí\". (Otto Stamper)\""
+        },
+        "ja": {
+          "name": "生贄のナイフ",
+          "description": "とある女性ジャーナリストが彼の本当の任務についてオットーマリアンに警告しようと試みた時、彼は反対者に対する見せしめとして女の喉を切り裂いた。\n• 日没中にロッカーから出ると、16メートル範囲内にあるすべての飛び越え地点が5秒間ブロックされる\n\"「諸君の中に偽者がいる！邪悪な思考によって我々の完璧な家を破滅させようと目論む連中だ。奴らを見つけ出し、私のもとへ連れて来るのだ！」 –オットー・スタンパー\""
+        },
+        "pl": {
+          "name": "Nóż ofiarny",
+          "description": "Kiedy pewna dziennikarka próbowała ostrzec Ottomarianów o jego prawdziwym zadaniu, poderżnął jej gardło, aby ostrzec wszystkich przeciwników.\n• Wyjście z szafki podczas Zmroku blokuje wszystkie miejsca przeskoku w promieniu 16 metrów na 5 sekund.\n\"„Są wśród was oszuści! Zamierzają zniszczyć nasz doskonały dom za pomocą mrocznych myśli. Znajdźcie ich i przyprowadźcie do mnie!” – Otto Stamper\""
+        }
+      }
+    },
+    {
+      "id": 508,
+      "name": "Iridescent Wooden Plank",
+      "killer_id": 28,
+      "description": "Once the journalist’s blood stained the wooden boards of the stage, everything was set into motion for The Dredge’s arrival.\n• Survivors are afflicted with the Exposed status effect for the last 12 seconds of Nightfall.\nExposed Survivors are downed by basic attacks, even if uninjured.\n\"\"She came here to poison your minds with fear! Do not let the fear in!\" –Otto Stamper\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentWoodenPlank.png?45e50b",
+      "icon_local_path": "icons/addons/iridescent_wooden_plank.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Brett",
+          "description": "Als das Blut der Journalistin das Holz der Bühne befleckte, liefen die Vorbereitungen für die Ankunft der Dredsche.\n• Während der letzten 12 Sekunden von Nachteinbruch leiden Überlebende unter dem Statuseffekt Gefährdet.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\"„Sie kam hierher, um euren Geist mit Angst zu vergiften! Lasst das nicht zu!“ – Otto Stamper\""
+        },
+        "es": {
+          "name": "Tablón de madera iridiscente",
+          "description": "Cuando la sangre de la periodista tiñó los tablones de madera de la plataforma, se iniciaron los preparativos para la llegada de la Draga.\n• Los supervivientes sufren Vulnerabilidad durante los últimos 12 segundos de Nocturnidad.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\"\"Vino para emponzoñar vuestras mentes con el miedo. ¡No permitáis que eso suceda!\". (Otto Stamper)\""
+        },
+        "ja": {
+          "name": "玉虫色の木板",
+          "description": "ジャーナリストの血で壇の木板が染まると、ドレッジの登場のためのお膳立てがすべて揃った。\n• 日没が終わる最後の12秒間、生存者は無防備のステータス効果に苦しむ。\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\"「この女は諸君らの心を恐怖で蝕むためにやってきたのだ！恐怖心に負けてはならない！」 –オットー・スタンパー\""
+        },
+        "pl": {
+          "name": "Opalizująca deska drewniana",
+          "description": "Kiedy krew dziennikarki zabarwiła deski sceny, rozpoczęto przygotowania na przybycie Wgłębnika.\n• Ocaleni otrzymują efekt Narażony na ostatnie 12 sekund Zmroku.\n\"Narażeni ocalali są powalani podstawowymi atakami, nawet jeśli nie są ranni.\"\n„Przybyła tu, by zatruć wasze umysły strachem! Nie dopuszczajcie do siebie strachu!” – Otto Stamper"
+        }
+      }
+    },
+    {
+      "id": 853,
+      "name": "Follower's Cowl",
+      "killer_id": 28,
+      "description": "They believed the cowls proved their enlightenment, but they merely kept them in darkness.\n• Teleporting to the Remnant will activate Killer Instinct even when not in Nightfall.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_followersCowl.png?47195a",
+      "icon_local_path": "icons/addons/followers_cowl.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Anhängerkapuze",
+          "description": "Sie dachten, ihre Kapuzen würden ihre Erleuchtung beweisen, aber stattdessen blieben sie dank ihnen in der Dunkelheit.\n• Das Teleportieren zum Überrest aktiviert den Killerinstinkt, auch wenn Nachteinbruch nicht aktiv ist."
+        },
+        "en": {
+          "name": "Follower’s Cowl"
+        },
+        "es": {
+          "name": "Hábito de discípulo",
+          "description": "Pensaban que aquellas vestiduras demostraban su condición de seres superiores, pero solo servían para mantenerlos en la oscuridad.\n• El teletransporte al remanente activará Instinto asesino aunque Nocturnidad no esté activo."
+        },
+        "ja": {
+          "name": "信奉者の頭巾",
+          "description": "彼らは頭巾が自らの啓発を証明していると信じていたが、闇の中ではほとんど手放した状態だった。\n• 残留部にテレポートすると日没時以外でも殺人鬼の本能が発動する"
+        },
+        "pl": {
+          "name": "Kaptur zwolennika",
+          "description": "Wierzyli, że kaptury są dowodem ich oświecenia, a one jedynie utrzymały ich w ciemności.\n• Teleportacja do iluzorycznej postaci aktywuje instynkt zabójcy nawet poza Zmrokiem."
+        }
+      }
+    },
+    {
+      "id": 854,
+      "name": "Haddie's Calendar",
+      "killer_id": 28,
+      "description": "She planned to cross out each day until her parents took her to India, but when tragedy struck, she abandoned her calendar.\n• Decreases the time to exit a locked locker by 0.4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_haddiesCalendar.png?10b21d",
+      "icon_local_path": "icons/addons/haddies_calendar.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Haddies Kalender",
+          "description": "Sie wollte jeden Tag durchstreichen, bis ihre Eltern mit ihr nach Indien reisten. Aber als die Tragödie ihren Lauf nahm, vergaß sie ihren Kalender.\n• Verkürzt die Zeit zum Verlassen eines verschlossenen Schließschranks um 0,4 Sekunden."
+        },
+        "en": {
+          "name": "Haddie’s Calendar"
+        },
+        "es": {
+          "name": "Calendario de Haddie",
+          "description": "Había planeado tachar todos los días hasta que sus padres la llevaran a la India. Sin embargo, olvidó aquel calendario cuando ocurrió la tragedia.\n• Reduce el tiempo que para salir de una taquilla cerrada en 0,4 segundos."
+        },
+        "ja": {
+          "name": "ハディのカレンダー",
+          "description": "両親にインドへ連れていってもらう日まで日付にバツを付けるつもりだったが、悲劇が襲った時、カレンダーを捨ててしまった。\n• 施錠されたロッカーから出るのにかかる時間が0.4秒減少する"
+        },
+        "pl": {
+          "name": "Kalendarz Haddie",
+          "description": "Planowała skreślać każdy dzień do czasu, aż rodzice zabiorą ją do Indii. Po tragedii porzuciła kalendarz.\n• Skraca czas wyjścia z zamkniętej szafki o 0,4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 855,
+      "name": "Malthinker's Skull",
+      "killer_id": 28,
+      "description": "Those who brought negativity to the commune would mysteriously disappear from time to time. Their remains were never found… until The Dredge brought them up.\n• Increases Nightfall charge speed by 25% while any Survivor is injured.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_malthinkersSkull.png?e42f22",
+      "icon_local_path": "icons/addons/malthinkers_skull.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kritikerschädel",
+          "description": "Wer Negativität in die Gemeinschaft brachte, verschwand immer mal wieder auf geheimnisvolle Weise. Die Überreste wurden nie gefunden ... bis die Dredsche sie aufdeckte.\n• Erhöht die Aufladegeschwindigkeit von Nachteinbruch um 25 %, solange mindestens ein Überlebender verletzt ist."
+        },
+        "en": {
+          "name": "Malthinker’s Skull"
+        },
+        "es": {
+          "name": "Calavera de malpensante",
+          "description": "Quienes traían negatividad a la comuna iban desapareciendo misteriosamente de la isla. Nadie encontró sus restos..., hasta que la Draga los devolvió.\n• Aumenta la velocidad de carga de Nocturnidad un 25 % si hay algún superviviente herido."
+        },
+        "ja": {
+          "name": "ネガティブ思考者の頭蓋骨",
+          "description": "時折、この生活共同体に負の要素を持ち込んだ者は謎の失踪を遂げ、亡骸が発見されることはなかった。ドレッジによって浮上するまでは…\n• 負傷した生存者がいる間、日没のチャージ速度が25%上昇する"
+        },
+        "pl": {
+          "name": "Czaszka złomyślcy",
+          "description": "Ci, którzy wnosili do społeczności negatywne uczucia, od czasu do czasu w tajemniczy sposób znikali. Ich szczątek nigdy nie udawało się odnaleźć… dopóki nie odkrył ich Szlam.\n• Zwiększa prędkość ładowania Zmroku o 25%, gdy któryś ocalały jest ranny."
+        }
+      }
+    }
+  ]
+}

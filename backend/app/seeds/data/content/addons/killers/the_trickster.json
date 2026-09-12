@@ -1,0 +1,534 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 401,
+      "name": "Inferno Wires",
+      "killer_id": 23,
+      "description": "A signature from the celebrity known as The Trickster. Sore as his wrist was after hundreds of these, it was invigorating to know he was so in demand.\n• Increases the duration of Main Event by 44%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_infernoWires.png?95f551",
+      "icon_local_path": "icons/addons/inferno_wires.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Infernokabel",
+          "description": "Eine Unterschrift des Promis, der als Trickster bekannt ist. Auch wenn sein Handgelenk nach Hunderten von diesen schmerzte, war es motivierend zu wissen, dass er so beliebt war.\n• Verlängert die Dauer von Hauptevent um 44 %."
+        },
+        "es": {
+          "name": "Cables infernales",
+          "description": "La firma de la estrella conocida como \"Traicionero\". Por mucho que le doliera la muñeca tras firmar cientos de autógrafos, le animaba saber que era tan popular.\n• Aumenta la duración del evento principal un 44 %."
+        },
+        "ja": {
+          "name": "烈火のケーブル",
+          "description": "トリックスターという名の有名アーティストが書いたサイン。何百回と書いたために手首が痛むが、それほど求められているということを知るのは爽快だった。\n• メインイベントの持続時間が44%増加する"
+        },
+        "pl": {
+          "name": "Piekielne kable",
+          "description": "Autograf gwiazdy znanej jako Magik. Choć jego nadgarstek zdrętwiał po wykonaniu setek podpisów, mężczyznę cieszyła taka popularność.\n• Wydłuża czas trwania Gwoździa Programu o 44%."
+        }
+      }
+    },
+    {
+      "id": 402,
+      "name": "Killing Part Chords",
+      "killer_id": 23,
+      "description": "A set of chords that Ji-Woon never found a song for. Still, the sound is undeniably catchy.\n• Increases the time before Style Ranks D to A decay by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_killingPartChords.png?b3b66a",
+      "icon_local_path": "icons/addons/killing_part_chords.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Mordpartieakkorde"
+        },
+        "es": {
+          "name": "Acordes letales"
+        },
+        "ja": {
+          "name": "死の声部のコード"
+        },
+        "pl": {
+          "name": "Zabójcze akordy"
+        }
+      }
+    },
+    {
+      "id": 403,
+      "name": "Memento Blades",
+      "killer_id": 23,
+      "description": "Blood-rusted knives, worn from overuse. Employed during Ji-Woon's early murders, they hold a place of importance in his heart.\n• Displays a Reticule while aiming Blades.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mementoBlades.png?4c9e2c",
+      "icon_local_path": "icons/addons/memento_blades.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Andenkenklingen"
+        },
+        "es": {
+          "name": "Hojas del recuerdo"
+        },
+        "ja": {
+          "name": "思い出のナイフ"
+        },
+        "pl": {
+          "name": "Pamiątkowe ostrza"
+        }
+      }
+    },
+    {
+      "id": 404,
+      "name": "Trick Pouch",
+      "killer_id": 23,
+      "description": "A pouch with a number of hidden pockets. Used by aspiring magicians and those with something to hide.\n• Increases the number of carried Blades by 8.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trickPouch.png?5cd46e",
+      "icon_local_path": "icons/addons/trick_pouch.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Trickbeutel"
+        },
+        "es": {
+          "name": "Bolsa de tramposo"
+        },
+        "ja": {
+          "name": "トリック用ポーチ"
+        },
+        "pl": {
+          "name": "Sakiewka do sztuczek"
+        }
+      }
+    },
+    {
+      "id": 405,
+      "name": "Ji-woon's Autograph",
+      "killer_id": 23,
+      "description": "An underground single produced by Ji-woon before achieving fame. Only the biggest NO SPIN fans collected this hidden gem.\n• Increases the duration of Main Event by 0.5 seconds for each Blade hit while in S-Rank, up to a maximum of 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ji-WoonsAutograph.png?f1680b",
+      "icon_local_path": "icons/addons/ji_woons_autograph.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ji-woons Autogramm",
+          "description": "Eine unbekannte Single, die Ji-woon vor seinem Aufstieg zum Star aufgenommen hatte. Nur die größten Fans von NO SPIN haben dieses verborgene Juwel gesammelt.\n• Verlängert die Zeit, bevor die Schnittwunden-Anzeige abnimmt, um 30 %."
+        },
+        "es": {
+          "name": "Autógrafo de Ji-Woon",
+          "description": "Un sencillo de poca calidad producido por el mismo Ji-Woon antes de hacerse famoso. Solo los auténticos seguidores de NO SPIN poseen semejante tesoro.\n• Aumenta un 0,5 % la duración del evento principal por cada ataque con cuchillo estando en la clasificación S, hasta un máximo de 20 segundos."
+        },
+        "ja": {
+          "name": "ジウンのサイン",
+          "description": "有名になる前にジウンが制作したアングラのシングル。NO SPINの大ファンだけがこの隠れた宝石を集めていた。\n• Sランクの間に命中したナイフ1本につき0.5秒メインイベントの持続時間が増加する（最大20秒まで）"
+        },
+        "pl": {
+          "name": "Autograf Ji-woona",
+          "description": "Undergroundowy singiel wyprodukowany przez Ji-woona, zanim ten stał się sławny. Tylko najwięksi fani NO SPIN posiadali tę perełkę.\n• Wydłuża czas trwania Gwoździa Programu o 0,5 s za każde trafienie ostrzem przy radze S i na maksymalnie 20 s."
+        }
+      }
+    },
+    {
+      "id": 406,
+      "name": "Lucky Blade",
+      "killer_id": 23,
+      "description": "The first throwing knife Ji-woon ever owned. Purchased by his father, he was expected to put on a show for those frequenting the family restaurant.\nOn every eighth Blade Hit, an additional bonus is assigned at random:\n• Increases Throw Speed by 5% for 5 seconds.\n• Gain 3% Haste for 6 seconds.\n• Gain an additional Style Point.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_luckyBlade.png?cb6b34",
+      "icon_local_path": "icons/addons/lucky_blade.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glücksklinge",
+          "description": "Das erste Wurfmesser, das Ji-woon je besaß. Sein Vater hatte es ihm gekauft, damit er den Gästen im Familienrestaurant eine Show bieten konnte.\nBei jedem achten Klingentreffer wird zufällig ein zusätzlicher Bonus zugewiesen:\n• Erhöht die Wurfgeschwindigkeit 8 Sek. lang um 8 %.\n• Erhalte 3 % Eile für 3 Sek.\n• Erhalte einen zusätzlichen Stilpunkt."
+        },
+        "es": {
+          "name": "Hoja de la suerte",
+          "description": "El primer cuchillo que tuvo Ji-Woon. Se lo compró su padre, confiando en que el pequeño actuara para los clientes de su restaurante familiar.\nCada octavo ataque con cuchillo, se asigna una bonificación adicional aleatoria:\n• Aumenta la velocidad de lanzamiento un 5 % durante 5 segundos.\n• Obtiene un 3 % de Celeridad durante 6 segundos.\n• Obtiene un punto de estilo adicional."
+        },
+        "ja": {
+          "name": "幸運のナイフ",
+          "description": "ジウンが手に入れた初めての投げナイフ。父親はこのナイフを彼に買い与え、一家が経営するレストランの常連にショーを披露するよう期待した。\nナイフが8回命中するごとに、いずれかのランダムなボーナスが発生する\n• 5秒間ナイフを投げる速度が5%上昇する\n• 3%の迅速を6秒間得る\n• 追加でスタイルポイントを得る"
+        },
+        "pl": {
+          "name": "Szczęśliwe ostrze",
+          "description": "Pierwszy nóż do rzucania należący do Ji-woona. Kupił go jego ojciec z zamiarem zrobienia pokazu dla odwiedzających rodzinną restaurację.\nCo ósme trafienie ostrzem, przydzielana jest losowo dodatkowa premia:\n• Zwiększa prędkość rzucania o 5% przez 5 s.\n• Zyskujesz 3% Pośpiechu przez 6 s.\n• Zyskujesz dodatkowy punkt stylu."
+        }
+      }
+    },
+    {
+      "id": 407,
+      "name": "On Target Single",
+      "killer_id": 23,
+      "description": "An underground single produced by Ji-woon before achieving fame. Only the biggest NO SPIN fans collected this hidden gem.\n• Increases the duration of Main Event by 0.5 seconds for each Blade hit while in S-Rank, up to a maximum of 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_onTargetSingle.png?c5f7af",
+      "icon_local_path": "icons/addons/on_target_single.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„On Target“-Single",
+          "description": "Eine unbekannte Single, die Ji-woon vor seinem Aufstieg zum Star aufgenommen hatte. Nur die größten Fans von NO SPIN haben dieses verborgene Juwel gesammelt.\n• Verlängert die Zeit, bevor die Schnittwunden-Anzeige abnimmt, um 30 %."
+        },
+        "es": {
+          "name": "Camino del éxito",
+          "description": "Un sencillo de poca calidad producido por el mismo Ji-Woon antes de hacerse famoso. Solo los auténticos seguidores de NO SPIN poseen semejante tesoro.\n• Aumenta un 0,5 % la duración del evento principal por cada ataque con cuchillo estando en la clasificación S, hasta un máximo de 20 segundos."
+        },
+        "ja": {
+          "name": "シングル曲『狙いうち』",
+          "description": "有名になる前にジウンが制作したアングラのシングル。NO SPINの大ファンだけがこの隠れた宝石を集めていた。\n• Sランクの間に命中したナイフ1本につき0.5秒メインイベントの持続時間が増加する（最大20秒まで）"
+        },
+        "pl": {
+          "name": "Trafiony singiel",
+          "description": "Undergroundowy singiel wyprodukowany przez Ji-woona, zanim ten stał się sławny. Tylko najwięksi fani NO SPIN posiadali tę perełkę.\n• Wydłuża czas trwania Gwoździa Programu o 0,5 s za każde trafienie ostrzem przy radze S i na maksymalnie 20 s."
+        }
+      }
+    },
+    {
+      "id": 408,
+      "name": "Ripper Brace",
+      "killer_id": 23,
+      "description": "A wrist brace worn by Ji-woon during the filming of his music video Ripper. Though unintentional, the design stabilizes the wrist better than many medical braces.\n• For each Style Rank, you basic-vault Windows, basic-break Pallets or Breakable Walls, and damage Generators 6% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ripperBrace.png?bec53e",
+      "icon_local_path": "icons/addons/ripper_brace.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ripper-Schoner",
+          "description": "Ein Handgelenkschoner, den Ji-Woon beim Dreh des Musikvideos zu „Ripper“ trug. Unbeabsichtigt stabilisiert das Design das Handgelenk besser als viele medizinische Schienen.\n• Für jeden Stilrang sind deine Sprünge durch Fenster, deine Zerstöraktionen gegen Paletten oder zerstörbare Wände und das Beschädigen von Generatoren durch deine Grundfähigkeit um 3 % schneller."
+        },
+        "es": {
+          "name": "Muñequera milagrosa",
+          "description": "Una muñequera que Ji-Woon se puso durante la grabación del videoclip \"Desgarrador\". Aunque no era su intención original, el diseño sujeta la muñeca mejor que otros artículos ortopédicos.\n• Por cada clasificación de estilo, realizas saltos básicos por ventanas, rompes palés o muros destruibles de forma básica y dañas generadores un 6 % más rápido."
+        },
+        "ja": {
+          "name": "引き裂き魔のサポーター",
+          "description": "『引き裂き魔』のミュージックビデオ撮影時にジウンが使っていた手首固定器具。意図したわけではなかったが、多くの医療用サポーターよりも手首が安定するデザインだった。\n• スタイルランク1つにつき、窓の通常乗り越えを行う速度、パレットや破壊可能な壁を通常破壊する速度、発電機にダメージを与える速度が6%上昇する"
+        },
+        "pl": {
+          "name": "Bransoletka z „Rippera”",
+          "description": "Bransoletka noszona przez Ji-woona w teledysku „Ripper”. Choć nie jest to zamierzone, jej konstrukcja stabilizuje nadgarstek lepiej niż niejedna taśma medyczna.\n• Za każdą rangę stylu, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób palety i rozbijalne ściany oraz uszkadzasz generatory o 6% szybciej."
+        }
+      }
+    },
+    {
+      "id": 409,
+      "name": "Tequila Moonrock",
+      "killer_id": 23,
+      "description": "A drink invented in a modest Changwon bar. Became a favorite of Ji-woon's.\n• Increases Throw Speed by 8% for 10 seconds after gaining a Style Rank.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tequilaMoonrock.png?972fc9",
+      "icon_local_path": "icons/addons/tequila_moonrock.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "description": "Ein Drink, der in einer bescheidenen Bar in Changwon erfunden wurde. Zählt zu Ji-woons Lieblingsgetränken.\n• Erhöht nach dem Erhalt eines Stilrangs die Wurfgeschwindigkeit 10 Sek. lang um 15 %."
+        },
+        "es": {
+          "description": "Bebida creada en un humilde bar de Changwon y una de las favoritas de Ji-Woon.\n• Aumenta la velocidad de lanzamiento un 8 % durante 10 segundos tras obtener una clasificación de estilo."
+        },
+        "ja": {
+          "name": "テキーラ・ムーンロック",
+          "description": "昌原の質素なバーで誕生したカクテル。ジウンのお気に入りになった。\n• スタイルランクが上がったあと、10秒間ナイフを投げる速度が8%上昇する"
+        },
+        "pl": {
+          "name": "Księżycowa tequila",
+          "description": "Napój wymyślony w skromnym barze Changwon. Szybko stał się ulubionym trunkiem Ji-woona.\n• Zwiększa prędkość rzucania o 8% na 10 s po zdobyciu rangi stylu."
+        }
+      }
+    },
+    {
+      "id": 410,
+      "name": "Waiting for You Watch",
+      "killer_id": 23,
+      "description": "A pocket watch worn by Ji-woon during a live performance of I’ll Be Waiting for You. It’s a stage prop that doesn’t work and never will.\n• Survivors whose Laceration Meter fully decays are revealed for 10 seconds.\n\"“Don’t run away\nDon’t say we’re through\nNo way to escape this\nI’ll be waiting for you”\n— NO SPIN’s “I’ll Be Waiting for You”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_waitingForYouWatch.png?43d05d",
+      "icon_local_path": "icons/addons/waiting_for_you_watch.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Waiting for You“-Uhr",
+          "description": "Eine Taschenuhr, die Ji-woon während eines Live-Auftritts von „I’ll Be Waiting for You“ bei sich hatte. Es ist eine Requisite, die nie funktionieren wird.\n• Überlebende mit vollständig abgebauter Schnittwunden-Anzeige werden 4 Sek. lang angezeigt.\n\"„Don’t run away\nDon’t say we’re through\nNo way to escape this\nI’ll be waiting for you.“\n– „I’ll Be Waiting for You“ von NO SPIN\""
+        },
+        "es": {
+          "name": "Reloj de la espera",
+          "description": "Un reloj de bolsillo que llevó Ji-Woon durante un concierto de \"Te estaré esperando\". Es un objeto de atrezo, así que no funciona.\n• Los supervivientes cuyo medidor de desgarro disminuya del todo se revelarán durante 10 segundos.\n\"\"No huyas/\nNo digas que lo nuestro se ha acabado/\nNo tienes forma de escapar/\nTe estaré esperando\".\n\"Te estaré esperando\" (NO SPIN)\""
+        },
+        "ja": {
+          "name": "『ウェイティング・フォー・ユー』の時計",
+          "description": "『アイル・ビー・ウェイティング・フォー・ユー』の演奏中にジウンが身に着けていた懐中時計。小道具なので機能しない。この先も。\n• 裂傷メーターがゼロまで減少した生存者のオーラが10秒間視える\n\"「いかないでくれ\n終わりだなんて言わないで\n逃がれることなんてできない\n君を待ち続けるから」\n- NO SPIN『アイル・ビー・ウェイティング・フォー・ユー』\""
+        },
+        "pl": {
+          "name": "Zegarek z „Waiting for You”",
+          "description": "Zegarek kieszonkowy noszony przez Ji-woona w trakcie wykonywania „I’ll Be Waiting for You”. To rekwizyt, który nie działa i nigdy nie będzie działał.\n• Ocalali, których miernik Poszarpania ulegnie całkowitemu zanikowi, są ujawniani na  10 s.\n\"„Nie odchodź\nNie mów, że to koniec już\nNie uciekniesz\nBędę czekał tu”\n– NO SPIN, „I’ll Be Waiting for You”\""
+        }
+      }
+    },
+    {
+      "id": 411,
+      "name": "Bloody Boa",
+      "killer_id": 23,
+      "description": "A boa that Ji-woon draped around a victim’s slashed neck. A number of pockets are concealed within it.\n• Decreases the speed at which Laceration decays by 75%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodyBoa.png?2528f3",
+      "icon_local_path": "icons/addons/bloody_boa.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Blutige Boa",
+          "description": "Eine Boa, die Ji-woon um den aufgeschlitzten Hals eines Opfers gelegt hat. Einige Taschen sind darin verborgen.\n• Verringert die Geschwindigkeit, mit der die Schnittwunden-Anzeige abnimmt, um 25 %."
+        },
+        "es": {
+          "name": "Boa sangrienta",
+          "description": "Una estola que Ji-Woon colocó sobre una víctima degollada. En su interior hay varios bolsillos secretos.\n• Reduce la velocidad en la que el desgarro disminuye un 75 %."
+        },
+        "ja": {
+          "name": "血まみれのボア",
+          "description": "切り裂いた被害者の首にジウンが巻いたボア。中にはポケットがたくさん隠されている。\n• 裂傷メーターが減る速度が75%低下する"
+        },
+        "pl": {
+          "name": "Zakrwawiony szal",
+          "description": "Szal boa, który Ji-woon owinął wokół poderżniętego gardła ofiary. Skrywa wiele kieszeni.\n• Zmniejsza prędkość, z jaką Poszarpanie zanika o 75%."
+        }
+      }
+    },
+    {
+      "id": 412,
+      "name": "Caged Heart Shoes",
+      "killer_id": 23,
+      "description": "Shoes that Ji-woon wore during the music video for One Caged Heart. Allows for smooth, graceful movements of the point dance.\n• When you basic-break Pallets and Breakable Walls or damage Generators, the next time you enter the Throw State, increase movement speed while in the Throw State by 5% for 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cagedHeartShoes.png?7756fc",
+      "icon_local_path": "icons/addons/caged_heart_shoes.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„One Caged Heart“-Schuhe",
+          "description": "Die Schuhe, die Ji-woon im Musikvideo für „One Caged Heart“ trug. Erlauben glatte, anmutige Tanzbewegungen.\n• Wenn du Paletten oder zerstörbare Mauern mit deiner Grundfähigkeit zerstörst oder Generatoren beschädigst, wird die Bewegungsgeschwindigkeit beim nächsten Wurfzustand 10 Sek. lang um 5 % erhöht."
+        },
+        "es": {
+          "name": "Zapatos \"Corazón enjaulado\"",
+          "description": "Ji-Woon lució estos zapatos en el videoclip de \"Corazón enjaulado\" que le permiten bailar con movimientos ágiles y elegantes.\n• Cuando rompes palés y muros destruibles de forma básica o dañas generadores, la próxima vez que entres en el modo de lanzamiento, la velocidad de movimiento en este modo aumentará un 5 % durante 10 segundos."
+        },
+        "ja": {
+          "name": "檻の心のシューズ",
+          "description": "『心ひとつ捕らわれて』のミュージックビデオでジウンが履いていたシューズ。スムーズで優雅な動きのダンスが叶う。\n• 破壊可能な壁やパレットを通常破壊したり発電機にダメージを与えたとき、次に投げモードに入ると、10秒間投げモード中の移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Buty z „One Caged Heart”",
+          "description": "Buty, które Ji-woon nosił w teledysku do „One Caged Heart”. Umożliwiają płynne i zgrabne ruchy w tańcu.\n• Gdy Gdy niszczysz w podstawowy sposób palety i rozbijalne ściany lub uszkadzasz generatory, następnym razem po przejściu do trybu rzucania, prędkość ruchu w trybie rzucania zwiększa się o 5% na 10 s."
+        }
+      }
+    },
+    {
+      "id": 413,
+      "name": "Fizz-Spin Soda",
+      "killer_id": 23,
+      "description": "A limited edition can of soda promoting NO SPIN. High sugar and caffeine content.\n• Decreases the number of Blade Throws required to increase Throw Speed by 2.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fizz-SpinSoda.png?62ad10",
+      "icon_local_path": "icons/addons/fizz_spin_soda.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sprudel-Spin-Limo",
+          "description": "Eine limitierte Softdrink-Dose als Werbung für NO SPIN. Hoher Zucker- und Koffeingehalt.\n• Erhöht die Zahl erforderlicher Klingenwürfe, um beim Werfen die Bewegungsgeschwindigkeit zu verringern, um 2."
+        },
+        "es": {
+          "name": "Bebida carbonatada",
+          "description": "Una lata de refresco de edición limitada de NO SPIN. Posee un alto contenido de azúcar y cafeína.\n• Reduce el número de ataques con cuchillo necesarios para aumentar la velocidad de lanzamiento en 2."
+        },
+        "ja": {
+          "name": "フィズスピンソーダ",
+          "description": "NO SPINを宣伝する限定版の缶入り炭酸飲料。砂糖とカフェインの含有量は高め。\n• ナイフ投げ速度が上がるまでに投げる必要のあるナイフの数が2本減少する"
+        },
+        "pl": {
+          "name": "Napój Fizz-Spin",
+          "description": "Napój w limitowanej puszce promującej ekipę NO SPIN. Wysoka zawartość cukru i kofeiny.\n• Zmniejsza liczbę rzutów ostrzem potrzebnych do zwiększenia prędkości rzucania o 2."
+        }
+      }
+    },
+    {
+      "id": 414,
+      "name": "Melodious Murder",
+      "killer_id": 23,
+      "description": "An audio file of victims’ crisp, clear shrieks. Ji-woon incorporated the sounds into one of his more popular tracks.\n• Increases Blade reload speed at lockers by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_melodiousMurder.png?b48f16",
+      "icon_local_path": "icons/addons/melodious_murder.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Melodischer Mord",
+          "description": "Eine Tonaufnahme der knappen, klaren Schreie der Opfer. Ji-woon nahm die Geräusche in eines seiner bekannteren Lieder auf.\n• Erhöht die Geschwindigkeit zum Nachfüllen von Klingen an einem Schließschrank um 25 %."
+        },
+        "es": {
+          "name": "Asesinato melódico",
+          "description": "Una grabación nítida de los chillidos de las víctimas. Ji-Woon incluyó esos sonidos en uno de sus temas más populares.\n• Aumenta la velocidad de recarga de los cuchillos en las taquillas un 25 %."
+        },
+        "ja": {
+          "name": "美しい旋律の殺人",
+          "description": "被害者の金切り声を収録した音声ファイル。ジウンがこの音源を取り入れた曲は、それなりにヒットした。\n• ロッカーでのナイフ補充速度が25%上昇する"
+        },
+        "pl": {
+          "name": "Melodyjne morderstwo",
+          "description": "Plik dźwiękowy z głośnymi i wyraźnymi jękami ofiary. Ji-woon dołączył te odgłosy do jednego ze swoich popularnych utworów.\n• Zwiększa prędkość uzupełniania ostrzy w szafkach o 25%."
+        }
+      }
+    },
+    {
+      "id": 415,
+      "name": "Trick Blades",
+      "killer_id": 23,
+      "description": "Specialty blades that are only seen as faulty by those who lack imagination. A young Ji-woon dazzled spectators with the tricks he performed.\n• Blades can ricochet off of the environment once.\n• On every eighth Blade Hit after a ricochet, an additional bonus is assigned at random:\n• Increases Laceration by 100%.\n• Reveal Survivor auras within 12 meters for 4.4 seconds.\n• Gain an additional Style Point.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trickBlades.png?5144ab",
+      "icon_local_path": "icons/addons/trick_blades.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Trickklingen",
+          "description": "Spezialklingen, die nur von jenen als fehlerhaft angesehen werden, denen es an Vorstellungskraft mangelt. Der junge Ji-woon verzauberte Zuschauer mit seinen Tricks.\n• Klingen können einmal von der Umgebung abprallen.\n• Bei jedem achten Klingentreffer nach dem Abprallen wird ein zusätzlicher Bonus zufällig zugewiesen:\n• Die Schnittwunden-Anzeige wird um 100 % erhöht.\n• Die Auren von Überlebenden in einem Umkreis von 12 Metern werden 4,4 Sek. lang enthüllt.\n• Du erhältst einen zusätzlichen Stilpunkt."
+        },
+        "es": {
+          "name": "Hojas engañosas",
+          "description": "Unas hojas especiales. Para quienes carezcan de imaginación, solo verán unos cuchillos defectuosos. De pequeño, Ji-Woon deslumbraba al público con sus trucos.\n• Los cuchillos pueden rebotar en el entorno una vez.\n• Cada octavo ataque con cuchillo tras un rebote, se asigna una bonificación adicional aleatoria:\n• Aumenta el desgarro un 100 %.\n• Revela las auras de los supervivientes en un radio de 12 metros durante 4,4 segundos.\n• Obtiene un punto de estilo adicional."
+        },
+        "ja": {
+          "name": "トリック用の刃物",
+          "description": "自慢のナイフ。想像力に欠けた人間には欠陥品にしか見えないが、幼いジウンはトリックを披露して観客の目を奪った。\n• ナイフが周囲の環境に当たると1回跳ね返る\n• 跳ね返ったナイフが8回命中するごとに、いずれかのランダムなボーナスが発生する\n• 裂傷を追加で100%与える\n• 12メートル以内の生存者のオーラが4.4秒間視える\n• 追加でスタイルポイントを得る"
+        },
+        "pl": {
+          "name": "Ostrza do sztuczek",
+          "description": "Specjalne ostrza, które tylko ludzie bez wyobraźni uważają za uszkodzone. Młody Ji-woon oczarowywał widzów swoimi sztuczkami.\n• Ostrza mogą rykoszetować od otoczenia jeden raz.\n• Co óśme trafienie ostrzem po rykoszecie, przyznawana jest dodatkowa losowa premia:\n• Poszarpanie zwiększa się o 100%.\n• Aury ocalałego w odległości 12 m są ujawniane na 4,4 s.\n• Zdobywasz dodatkowy punkt stylu."
+        }
+      }
+    },
+    {
+      "id": 416,
+      "name": "Cut Thru U Single",
+      "killer_id": 23,
+      "description": "The first single released by NO SPIN after Ji-woon joined their ranks. Scored an all-kill on the Korean charts.\n• When reaching A-Rank, Survivors within 32 meters are revealed with Killer Instinct for 4.4 seconds.\n\"“Can't stop this love\nThat's tearing your heart\nWherever you go\nI will cut you apart”\n— NO SPIN’s “Cut Thru U”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cutThruUSingle.png?c2ec5c",
+      "icon_local_path": "icons/addons/cut_thru_u_single.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Cut Thru U“-Single",
+          "description": "Die erste von NO SPIN veröffentlichte Single nach Ji-woons Beitritt zur Band. Ein immenser Erfolg in den koreanischen Charts.\n• Beim Erreichen von Rang A werden Überlebende in einem Umkreis von 32 Metern 4,4 Sek. lang vom Killerinstinkt enthüllt.\n\"„Can’t stop this love\nThat’s tearing your heart\nWherever you go\nI will cut you apart.“\n– „Cut Thru U“ von NO SPIN\""
+        },
+        "es": {
+          "name": "Sencillo \"Atravesando tu corazón\"",
+          "description": "El primer sencillo de NO SPIN publicado tras la llegada de Ji-Woon a la banda. Tuvo una recepción brutal en todas las listas de éxitos coreanas.\n• Al alcanzar la clasificación A, los supervivientes en un radio de 32 metros se revelan con Instinto asesino durante 4,4 segundos.\n\"\"Este amor no se detiene/\nTe desgarra el corazón/\nVayas donde vayas/\nTe partiré en dos\".\n(\"Atravesando tu corazón\", NO SPIN)\""
+        },
+        "ja": {
+          "name": "シングル『カット・スルー・ユー』",
+          "description": "ジウンの加入後はじめてNO SPINがリリースしたシングル。韓国の国内チャート1位をオールキル（総なめ）にした。\n• Aランクに達すると、4.4秒間、32メートル以内にいる生存者の位置が殺人鬼の本能により判明する\n\"「愛が止まらない\n君の心は張り裂けそう\nどこにいても君を\nバラバラにしちゃいたい\n-  NO SPIN『カット・スルー・ユー』\""
+        },
+        "pl": {
+          "name": "Singiel „Cut Thru U”",
+          "description": "Pierwszy singiel NO SPIN po dołączeniu Ji-woona. Sięgnął szczytu koreańskich list przebojów.\n• Po osiągnięciu rangi A, ocalali w zasięgu 32 m są ujawniani przez Instynkt Zabójcy na 4,4 s.\n\"„Przed siłą miłości\nNie ocalisz serca\nMoje wielkie uczucie\nBędzie jak morderca”\n– NO SPIN, „Cut Thru U”\""
+        }
+      }
+    },
+    {
+      "id": 417,
+      "name": "Diamond Cufflinks",
+      "killer_id": 23,
+      "description": "Cufflinks gouged into the eyes of a sasaeng fan who made the mistake of stalking Ji-woon. Rubbing off the blood, there’s so much to be seen in the glitter.\n• Reveals Survivor auras for 6 seconds when their Laceration reaches one Blade hit from maximum.\n\"“Shhh... You don’t have to see your blood anymore.” -Hak Ji-woon\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_diamondCufflinks.png?8465f6",
+      "icon_local_path": "icons/addons/diamond_cufflinks.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Diamantmanschettenknöpfe",
+          "description": "Manschettenknöpfe, die Ji-woon in die Augen eines obsessiven Fans gebohrt hatte, der den Fehler gemacht hat ihn zu verfolgen. Wenn man das Blut abwischt, kann man so viel in den glitzernden Stücken erkennen.\n• Enthüllt die Auren von Überlebenden 6 Sek. lang, wenn ihre Schnittwunden-Anzeige einen Klingentreffer vom Maximum entfernt ist.\n\"„Schhh ... Du musst dein Blut nicht mehr sehen.“ – Hak Ji-woon\""
+        },
+        "es": {
+          "name": "Gemelos de diamante",
+          "description": "Unos gemelos clavados en los ojos de una fan obsesiva que cometió el error de acosar a Ji-woon. Al quitar la sangre, puede apreciarse su espectacular brillo.\n• Revela auras de supervivientes durante 6 segundos cuando su desgarro esté a un ataque con cuchillo para llegar al máximo.\n\"\"Shh... Ya no tendrás que ver tu propia sangre\". (Hak Ji-woon)\""
+        },
+        "ja": {
+          "name": "ダイヤのカフスボタン",
+          "description": "ジウンのストーカーをするという過ちを犯してしまった過激ファンの、えぐられた眼球に入れられたカフスボタン。血をこすり落とせば素晴らしい輝きを放ってくれる。\n• 生存者の裂傷があと1回のナイフ命中で最大に到達する時、その生存者のオーラが6秒間視える\n\"「シーッ…もう自分の血を見ずに済むんだから」- ハク・ジウン\""
+        },
+        "pl": {
+          "name": "Diamentowe spinki",
+          "description": "Spinki do mankietów wbite w oczy psychofana, który popełnił błąd i śledził Ji-woona. Po wytarciu krwi można wiele zobaczyć w ich niezwykłym blasku.\n• Ujawnia aury ocalałych na 6 sekund, gdy Poszarpanie osiąga poziom jednego ostrza od wartości maksymalnej.\n\"„Ciii… Nie musisz już patrzeć na swoją krew”. – Hak Ji-woon\""
+        }
+      }
+    },
+    {
+      "id": 418,
+      "name": "Edge of Revival Album",
+      "killer_id": 23,
+      "description": "The Trickster’s debut album. The coarse and vicious tone was met with a mixed reaction from fans despite critical acclaim.\n• Blade Hits from more than 20 meters away deal 100% more Laceration.\n\"“Your whisper on me\nWarm as can be\nBurning each breath\nTill I can’t breathe”\n— The Trickster’s “Whispers of Warmth”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_edgeOfRevivalAlbum.png?1b2966",
+      "icon_local_path": "icons/addons/edge_of_revival_album.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Edge of Revival“-Album",
+          "description": "Das erste Album des Tricksters. Die rauen und boshaften Klänge wurden von Fans unterschiedlich aufgenommen, von den Kritikern aber gelobt.\n• Klingentreffer aus einer Entfernung von mehr als 20 Metern verursachen 100 % mehr Schnittwunden.\n\"„Your whisper on me\nWarm as can be\nBurning each breath\nTill I can’t breathe.“\n– „Whispers of Warmth“ von Trickster\""
+        },
+        "es": {
+          "name": "Álbum \"Frontera de resurrección\"",
+          "description": "El álbum debut del Traicionero. Su temática violenta y descarnada hizo que tuviera una acogida de los fans bastante tibia, pero fue muy aclamado entre la crítica.\n• Los ataques con cuchillo realizados a más de 20 metros de distancia infligen un 100 % más de desgarro.\n\"\"Tu susurro sobre mí/\nNada más cálido puedo sentir/\nQuemando cada aliento/\nHasta dejarme sin respiración\".\n(\"Susurros cálidos\", el Traicionero)\""
+        },
+        "ja": {
+          "name": "エッジの効いた復活アルバム",
+          "description": "トリックスターのデビューアルバム。粗暴で物騒な音色は批評家から称賛を受けたものの、ファンの間では賛否両論だった。\n• 20メートル以上離れた場所からナイフを命中させると、裂傷を追加で100%与える\n\"「君のささやき声に\nぬくもりを感じて\n息をするたび焦がす想いが\n息を止めてしまうまで」\n-  トリックスター『ぬくもりのささやき」\""
+        },
+        "pl": {
+          "name": "Album „Edge of Revival”",
+          "description": "Debiutancki album Magika. Surowy i złowrogi ton był różnie odbierany przez fanów mimo uznania krytyków.\n• Trafienia ostrzem z odległości większej, niż 20 m, zadają 100% więcej Poszarpania.\n\"„Twój ciepły oddech\nI cichy szept\nPalą mnie z mocą\nOdbierając dech”\n– Magik, „Whispers of Warmth”\""
+        }
+      }
+    },
+    {
+      "id": 419,
+      "name": "Death Throes Compilation",
+      "killer_id": 23,
+      "description": "A collection of the final sounds from Ji-woon's victims, adapted to a vinyl record. Terrifying and emotionally raw.\n• Refills Blades by 75% of the maximum when Main Event ends.\n\"“Please, no... don’t make it hurt... I can’t... I...” —Unidentified Voice\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deathThroesCompilation.png?82da84",
+      "icon_local_path": "icons/addons/death_throes_compilation.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Todesschmerzen-Compilation",
+          "description": "Eine Sammlung der letzten Laute von Ji-woons Opfern, die auf einer Schallplatte festgehalten wurden. Erschreckend und grob.\n• Füllt die Klingen um 50 % des Maximalwerts auf, wenn Hauptevent endet.\n\"„Bitte nicht ... mach, dass es nicht wehtut ... Ich kann nicht ... Ich ...“ – Nicht identifizierbare Stimme\""
+        },
+        "es": {
+          "name": "Recopilación \"Agonía de muerte\"",
+          "description": "Una recopilación de los últimos sonidos de las víctimas de Ji-Woon en un disco de vinilo. Aterrador y cargado de emoción.\n• Recarga un 75 % del máximo de cuchillos cuando termine el evento principal.\n\"\"No, te lo ruego... No me hagas daño, por favor... No...\". (Anónimo)\""
+        },
+        "ja": {
+          "name": "断末魔の編集音源",
+          "description": "ジウンがレコード用に被害者から録音した最終音源のコレクション。感情がそのまま伝わる恐ろしい音声だ。\n• メインイベントが終わったとき、ナイフが最大数の75%補充される\n\"「お願い、やめて…痛くしないで…もう無理…うう…」- 正体不明の声\""
+        },
+        "pl": {
+          "name": "Kompilacja odgłosów agonii",
+          "description": "Kolekcja ostatnich odgłosów wydawanych przez ofiary Ji-woona, nagranych na winylu. Przerażająca i emocjonalnie przytłaczająca.\n• Uzupełnia ostrza o 75% maksymalnej liczby ostrzy po zakończeniu Gwoździa Programu.\n\"„Proszę, nie… Nie chcę, żeby bolało… Nie mogę… Ja…” – niezidentyfikowany głos\""
+        }
+      }
+    },
+    {
+      "id": 420,
+      "name": "Iridescent Photocard",
+      "killer_id": 23,
+      "description": "A glass-like photo molded from The Fog itself. Ji-woon's eyes shimmer holographically on his grinning face.\n• Increases the duration of Main Event by 100%.\n• When Main Event is activated: reveal your aura to all Survivors, all Survivors’ auras are revealed, and block all Generators for 6 seconds.\n\"“It’s okay, scream my name. Let me hear everything the pain awakens...” -Hak Ji-woon\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentPhotocard.png?927413",
+      "icon_local_path": "icons/addons/iridescent_photocard.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Fotokarte",
+          "description": "Ein glasähnliches Foto, das aus dem Nebel selbst erschaffen wurde. Ji-woons Augen glitzern holografisch in seinem grinsenden Gesicht.\n• Verlängert die Dauer von Hauptevent um 100 %.\n• Wenn Hauptevent aktiviert wird, wird deine Aura 6 Sek. lang für alle Überlebenden enthüllt, du siehst die Auren aller Überlebenden und alle Generatoren werden blockiert.\n\"„Schon okay, schrei meinen Namen. Lass mich alles hören, was der Schmerz in dir weckt ...“ – Hak Ji-woon\""
+        },
+        "es": {
+          "name": "Fotografía iridiscente",
+          "description": "Una foto vítrea moldeada por la mismísima niebla. La intensa mirada de Ji-Woon es el mejor complemento para su diabólica sonrisa.\n• Aumenta la duración del evento principal un 100 %.\n• Cuando se active el evento principal: revela tu aura a todos los supervivientes, se revelan las auras de todos los supervivientes y bloquea todos los generadores durante 6 segundos.\n\"\"Tranquila, grita mi nombre... Quiero escuchar todo lo que el dolor despierta...\". (Ji-Woon Hak)\""
+        },
+        "ja": {
+          "name": "玉虫色のフォトカード",
+          "description": "霧から作られたガラス状の写真。ニヤリと笑うジウンの目がホログラフ的に光っている。\n• メインイベントの持続時間が100%増加する\n• メインイベントを発動すると、6秒間、自分のオーラが生存者全員に視え、生存者全員のオーラが視え、すべての発電機がブロックされる\n\"「ほら、僕の名前を叫んでごらん。苦痛が呼び覚ます声を聴かせてくれよ…」- ハク・ジウン\""
+        },
+        "pl": {
+          "name": "Opalizujące zdjęcie",
+          "description": "Zdjęcie przypominające szkło, uformowane z Mgły. Holograficzne oczy Ji-woona błyszczą na jego wyszczerzonej twarzy.\n• Zwiększa czas trwania Gwoździa Programu o 100%.\n• Gdy Gwóźdź Programu jest aktywowany: ujawnia twoją aurę wszystkim ocalałym, ujawnia aury wszystkich ocalałych i blokuje wszystkie generatory przez 6 s.\n\"„W porządku, krzycz moje imię. Chcę usłyszeć wszystko, co budzi w tobie ból…” – Ji-woon Hak\""
+        }
+      }
+    }
+  ]
+}

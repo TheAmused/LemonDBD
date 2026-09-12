@@ -1,0 +1,557 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 203,
+      "name": "Robin Feather",
+      "killer_id": 12,
+      "description": "A warm orange feather, soft to the touch.\n• Decreases bottle throw cooldown by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_robinFeather.png?89a113",
+      "icon_local_path": "icons/addons/robin_feather.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Rotkehlchenfeder",
+          "description": "Eine warme, weiche, orange Feder.\n• Verkürzt die Abklingzeit zwischen Würfen mit der Flasche um 40 %."
+        },
+        "es": {
+          "name": "Pluma de petirrojo",
+          "description": "Una pluma muy suave de color naranja intenso.\n• Reduce el tiempo de recarga de lanzamiento de botellas un 40 %."
+        },
+        "ja": {
+          "name": "コマドリの羽根",
+          "description": "柔らかい手触りの、暖かいオレンジ色の羽。\n• ボトル投げのクールダウンが40%減少する"
+        },
+        "pl": {
+          "name": "Pióro Rudzika",
+          "description": "Piórko w kolorze pomarańczowym. Miękkie w dotyku.\n• Skraca czas odnawiania rzutu butelką o 40%."
+        }
+      }
+    },
+    {
+      "id": 204,
+      "name": "Party Bottle",
+      "killer_id": 12,
+      "description": "Be the life of the party!\n• Party Bottles emit confetti when they break, in addition to their usual gas effect.\n• Hitting a Survivor directly with a Party Bottle interrupts actions as usual, and awards 100 Devious Bloodpoints.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_partyBottle.png?f8d1b3",
+      "icon_local_path": "icons/addons/party_bottle.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Partyflasche",
+          "description": "Bringe die Party in Schwung!\n• Partyflaschen verstreuen Konfetti, wenn sie zerbrechen, zusätzlich zu ihrem üblichen Gaseffekt.\n• Wenn du einen Überlebenden direkt mit einer Partyflasche triffst, werden Aktionen wie gewohnt unterbrochen und du verdienst 100 Blutpunkte für Hinterhältigkeit."
+        },
+        "es": {
+          "name": "Frasco de fiesta",
+          "description": "¡Conviértete en el alma de la fiesta!\n• Los frascos de fiesta lanzan confeti al romperse, además de emitir su habitual efecto de gas.\n• Golpear a un superviviente de forma directa con un frasco de fiesta interrumpirá sus acciones como de costumbre y otorgará 100 puntos de sangre maliciosos."
+        },
+        "ja": {
+          "name": "パーティー用ボトル",
+          "description": "パーティーの主役を目指せ！\n• パーティー用ボトルは通常のガス効果に加え、壊れた際に紙吹雪を発する\n• 生存者にパーティー用ボトルを直接命中させると通常どおりアクションを妨害し、邪悪カテゴリーで100ブラッドポイントを獲得する"
+        },
+        "pl": {
+          "name": "Butelka imprezowa",
+          "description": "Zostań duszą towarzystwa!\n• Butelki imprezowe oprócz zwykłego gazu po rozbiciu wypuszczają też konfetti.\n• Bezpośrednie trafienie ocalałego butelką imprezową przerywa jak zwykle wszelkie działania i daje 100 Punktów Krwi w kategorii Przebiegłość."
+        }
+      }
+    },
+    {
+      "id": 205,
+      "name": "Smelly Inner Soles",
+      "killer_id": 12,
+      "description": "A moldy inner sole which gives much comfort to tired feet.\n• Increases movement speed while reloading bottles by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_smellyInnerSoles.png?752f32",
+      "icon_local_path": "icons/addons/smelly_inner_soles.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stinkende Einlegesohlen",
+          "description": "Ein modrige Einlegesohle, die müden Füßen Komfort spendet.\n• Erhöht die Bewegungsgeschwindigkeit beim Nachfüllen von Flaschen um 15 %."
+        },
+        "es": {
+          "name": "Plantillas nauseabundas",
+          "description": "Unas plantillas mohosas que brindan mucha comodidad a los pies cansados.\n• Aumenta la velocidad de movimiento mientras recargas botellas un 15 %."
+        },
+        "ja": {
+          "name": "臭い中敷",
+          "description": "疲れた足には心地良い、カビの生えた靴の中底。\n• ボトルのリロード中の移動速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Śmierdzące Wkładki do Butów",
+          "description": "Spleśniała wkładka do butów zapewniająca komfort zmęczonym stopom.\n• Zwiększa prędkość ruchu podczas napełniania butelek o 15%."
+        }
+      }
+    },
+    {
+      "id": 206,
+      "name": "Fingerless Parade Gloves",
+      "killer_id": 12,
+      "description": "Part of the standard Clown apparel; the cut fingers allow for dexterous manipulations.\n• Increases bottle throw speed by 25%.\n• Decreases bottle throw angle by 15 degrees.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fingerlessParadeGloves.png?62974c",
+      "icon_local_path": "icons/addons/fingerless_parade_gloves.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Fingerlose Paradehandschuhe",
+          "description": "Die abgeschnittenen Finger sind Teil der standardmäßigen Clown-Bekleidung und erlauben geschickte Manipulationen.\n• Erhöht die Wurfgeschwindigkeit von Flaschen um 25 %.\n• Senkt den Wurfwinkel von Flaschen um 15 Grad."
+        },
+        "es": {
+          "name": "Guantes sin dedos",
+          "description": "Parte del atuendo habitual del Payaso. Los dedos cortados aportan mayor facilidad de movimientos.\n• Aumenta la velocidad de lanzamiento de botellas un 25 %.\n• Reduce el ángulo de lanzamiento de botellas en 15 grados."
+        },
+        "ja": {
+          "name": "指あきのパレード用手袋",
+          "description": "標準的なクラウンの衣装の一部。指の部分を切り落とすことで器用さが増す。\n• ボトルを投げる速度が25%上昇する\n• ボトルを投げる角度が15度減少する"
+        },
+        "pl": {
+          "name": "Rękawiczki Bez Palców",
+          "description": "Część klasycznego stroju Klauna. Ucięte palce pozwalają wykonywać zręczne ruchy.\n• Zwiększa prędkość rzutu butelką o 25%.\n• Obniża kąt rzutu butelką o 15%."
+        }
+      }
+    },
+    {
+      "id": 207,
+      "name": "Thick Cork Stopper",
+      "killer_id": 12,
+      "description": "A sturdy cork, fitting The Afterpiece Tonic bottles perfectly.\n• Decreases reload time by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_thickCorkStopper.png?a01d7a",
+      "icon_local_path": "icons/addons/thick_cork_stopper.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Dicker Korkstöpsel",
+          "description": "Ein stabiler Korken, der perfekt auf die Flaschen des Nachspieltonikums passt.\n• Verringert die Nachfüllzeit um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Tapón de corcho grueso",
+          "description": "Un corcho recio que encaja a la perfección en las botellas de El último acto.\n• Reduce el tiempo de recarga en 0,5 segundos."
+        },
+        "ja": {
+          "name": "厚いコルク栓",
+          "description": "寸劇のトニックのボトルに驚くほどピッタリとフィットする丈夫なコルク。\n• リロード時間が0.5秒減少する"
+        },
+        "pl": {
+          "name": "Gruby Korek",
+          "description": "Solidny korek, który idealnie pasuje do otworu w butelce wypełnionej Odurzającą Mieszanką Komika.\n• Skraca czas napełniania o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 208,
+      "name": "Solvent Jug",
+      "killer_id": 12,
+      "description": "A volatile chemical compound that irritates the respiratory tract, but increases absorption of The Afterpiece Antidote.\n• Increases duration of Invigoration by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_solventJug.png?4161ae",
+      "icon_local_path": "icons/addons/solvent_jug.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Krug mit Lösungsmittel",
+          "description": "Ein flüchtiger chemischer Stoff, der die Atemwege reizt, aber die Aufnahme des Nachspielgegengifts verstärkt.\n• Verlängert die Dauer der Stärkung um 1 Sek."
+        },
+        "es": {
+          "name": "Jarra de disolvente",
+          "description": "Un compuesto químico volátil que irrita el tracto respiratorio, pero incrementa la absorción del Antídoto para el primer acto.\n• Aumenta la duración de Tonificación en 1 segundo."
+        },
+        "ja": {
+          "name": "溶剤の器",
+          "description": "揮発性の化学化合物。呼吸器に炎症を引き起こすが、寸劇の解毒剤の吸収性を増加させる。\n• 活発状態の持続時間が1秒増加する"
+        },
+        "pl": {
+          "name": "Dzbanek z Rozpuszczalnikiem",
+          "description": "Chemiczna, lotna mieszanka drażniąca drogi oddechowe i wzmacniająca wchłanianie Antidotum Komika.\n• Wydłuża czas działania pobudzenia o 1 sekundę."
+        }
+      }
+    },
+    {
+      "id": 209,
+      "name": "Kerosene Can",
+      "killer_id": 12,
+      "description": "A thin and clear combustible liquid which numbs the mind when inhaled.\n• Intoxication inflicts Blindness for 30 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_keroseneCan.png?164928",
+      "icon_local_path": "icons/addons/kerosene_can.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kerosinkanister",
+          "description": "Eine dünne, klare und brennbare Flüssigkeit, die beim Einatmen den Verstand betäubt.\n• Die Benebelung verursacht Erblindung für 30 Sekunden.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Lata de queroseno",
+          "description": "Un líquido combustible transparente que nubla la mente cuando se inhala.\n• Intoxicación causa Ceguera durante 30 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "灯油缶",
+          "description": "薄い透明の可燃性の液体。吸入すると頭が麻痺する。\n• 中毒によって30秒間目眩まし効果を与える\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Puszka z Kerozyną",
+          "description": "Przejrzysty, rozrzedzony, łatwopalny płyn, przytępiający zmysły tych, którzy go powąchają.\n• Zatrucie wywołuje efekt Oślepienia na 30 sekund.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 210,
+      "name": "Sticky Soda Bottle",
+      "killer_id": 12,
+      "description": "It's sugary sweet, with only a little blood on the label.\n• Increases The Clown's Invigoration by 2%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stickySodaBottle.png?b40b94",
+      "icon_local_path": "icons/addons/sticky_soda_bottle.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Klebrige Limoflasche",
+          "description": "Zuckersüß mit nur ein wenig Blut auf dem Etikett.\n• Erhöht die Stärkung um 2 %."
+        },
+        "es": {
+          "name": "Botella de refresco pringosa",
+          "description": "Es increíblemente dulce, y solo hay un poco de sangre en la etiqueta.\n• Aumenta Tonificación del Payaso un 2 %."
+        },
+        "ja": {
+          "name": "ネバネバしたソーダボトル",
+          "description": "砂糖たっぷりで甘い飲み物入りで、ラベルにはほんの少し血がついている。\n• クラウンの活発状態の効果が2%上昇する"
+        },
+        "pl": {
+          "name": "Lepka Butelka Po Napoju Gazowanym",
+          "description": "Jest słodziutka, a na etykiecie widać tylko odrobinę krwi.\n• Zwiększa pobudzenie klauna o 2%."
+        }
+      }
+    },
+    {
+      "id": 211,
+      "name": "Starling Feather",
+      "killer_id": 12,
+      "description": "A black feather with an emerald sheen, very soft to the touch.\n• Decreases bottle throw cooldown by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_starlingFeather.png?a6cd52",
+      "icon_local_path": "icons/addons/starling_feather.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Starenfeder",
+          "description": "Eine schwarze Feder mit grünem Glanz, sehr weich.\n• Verkürzt die Abklingzeit zwischen Würfen mit der Flasche um 50 %."
+        },
+        "es": {
+          "name": "Pluma de estornino",
+          "description": "Una pluma negra muy suave con un brillo esmeralda.\n• Reduce el tiempo de recarga de lanzamiento de botellas un 50 %."
+        },
+        "ja": {
+          "name": "ムクドリの羽",
+          "description": "とても柔らかい手触りの、エメラルドの光沢を持つ黒い羽。\n• ボトル投げのクールダウンが50%減少する"
+        },
+        "pl": {
+          "name": "Pióro Szpaka",
+          "description": "Czarne piórko o szmaragdowym połysku. Jest bardzo miękkie w dotyku.\n• Skraca czas odnawiania rzutu butelką o 50%."
+        }
+      }
+    },
+    {
+      "id": 212,
+      "name": "VHS Porn",
+      "killer_id": 12,
+      "description": "An all time classic. You won't see things quite the same again.\n• Increases the size and spread of Afterpiece Tonic gas clouds by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vhsPorn.png?11dd51",
+      "icon_local_path": "icons/addons/vhs_porn.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Porno-Videokassette",
+          "description": "Ein zeitloser Klassiker. Du wirst die Welt mit anderen Augen sehen.\n• Erhöht die Größe und die Ausdehnung der Gaswolken des Nachspieltonikums um 10 %."
+        },
+        "es": {
+          "name": "Cinta de vídeo porno",
+          "description": "Un clásico eterno. No volverás a ver las cosas igual.\n• Aumenta el tamaño y desvío de las nubes de gas de El último acto un 10 %."
+        },
+        "ja": {
+          "name": "VHSポルノビデオ",
+          "description": "古典的名作。同じレベルのものは二度とお目にかかれない。\n• 寸劇のトニックのガス充満範囲が10%拡大する"
+        },
+        "pl": {
+          "name": "Kaseta Porno",
+          "description": "Ponadczasowy klasyk. Już nigdy nie będziesz patrzył na wszystko tak, jak kiedyś.\n• Zwiększa rozmiar i zasięg działania oparów Odurzającej Mieszanki Komika o 20%."
+        }
+      }
+    },
+    {
+      "id": 213,
+      "name": "Spirit of Hartshorn",
+      "killer_id": 12,
+      "description": "A pungent chemical compound consisting of ammonia. One whiff is enough to jolt even the most sluggish of minds.\n• Increases the size and spread of Afterpiece Antidote gas clouds by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spiritOfHartshorn.png?75cd86",
+      "icon_local_path": "icons/addons/spirit_of_hartshorn.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gespenst von Hartshorn",
+          "description": "Eine chemische Verbindung aus Ammoniak mit beißendem Geruch. Ein Hauch reicht, um selbst die trägsten Geister zu wecken.\n• Erhöht die Größe und die Ausdehnung der Gaswolken des Nachspielgegengifts um 20 %."
+        },
+        "es": {
+          "name": "Espíritu de Hartshorn",
+          "description": "Una sustancia química de olor fuerte compuesta por amoníaco. Basta con olerla para espabilar hasta a la persona más aletargada.\n• Aumenta el tamaño y alcance de las nubes de gas de Antídoto para el primer acto un 20 %."
+        },
+        "ja": {
+          "name": "アンモニア水",
+          "description": "アンモニアから成る刺激臭のする化合物。どれほど鈍い頭もひと嗅ぎで衝撃を受ける。\n• 寸劇の解毒剤のガス充満範囲が20%拡大する"
+        },
+        "pl": {
+          "name": "Dusza jelenia",
+          "description": "Gryząca mieszanka chemiczna zawierająca amoniak. Jedno powąchanie wystarczy, by pobudzić nawet najwolniejszy umysł.\n• Zwiększa rozmiar i zasięg działania oparów Antidotum Komika o 20%."
+        }
+      }
+    },
+    {
+      "id": 214,
+      "name": "Flask of Bleach",
+      "killer_id": 12,
+      "description": "A potent chemical which causes irritation, burn and lungs damage.\n• Increases the Hindered penalty from Intoxication by an additional 2%.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_flaskOfBleach.png?c93123",
+      "icon_local_path": "icons/addons/flask_of_bleach.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Flasche Bleichmittel",
+          "description": "Ein wirkungsvoller chemischer Stoff, der Reizungen, Verbrennungen und Lungenschäden verursacht.\n• Erhöht die Eingeschränkt-Strafe durch Benebelung um zusätzliche 2 %.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Frasco de lejía",
+          "description": "Un potente químico que causa irritación, quemaduras y daño pulmonar.\n• Aumenta la penalización Entorpecimiento con Intoxicación un 2 % adicional.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "ブリーチのフラスコ",
+          "description": "炎症、火傷、肺の損傷を引き起こす強力な化学薬品。\n• 中毒による妨害で生じる速度低下が2%追加される\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Fiolka z Wybielaczem",
+          "description": "Silny związek chemiczny, który wywołuje podrażnienia, poparzenia i uszkadza płuca.\n• Zwiększa karę za Skrępowanie poprzez zatrucie o 2%.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 215,
+      "name": "Bottle of Chloroform",
+      "killer_id": 12,
+      "description": "A sweet-smelling organic compound with strong anesthetic capabilities.\n• Increases the size and spread of Afterpiece Tonic gas clouds by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bottleOfChloroform.png?facc62",
+      "icon_local_path": "icons/addons/bottle_of_chloroform.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Flasche Chloroform",
+          "description": "Ein süßlich riechender, organischer Stoff mit starken betäubenden Eigenschaften.\n• Erhöht die Größe und die Ausdehnung der Gaswolken des Nachspieltonikums um 20 %."
+        },
+        "es": {
+          "name": "Botella de cloroformo",
+          "description": "Un compuesto orgánico de olor dulzón con fuertes propiedades anestésicas.\n• Aumenta el tamaño y desvío de las nubes de gas de El último acto un 20 %."
+        },
+        "ja": {
+          "name": "クロロホルムのボトル",
+          "description": "強い麻酔作用がある、甘い匂いのする有機化合物。\n• 寸劇のトニックのガス充満範囲が20%拡大する"
+        },
+        "pl": {
+          "name": "Butelka Chloroformu",
+          "description": "Mieszanka organiczna o słodkim zapachu. Ma silne właściwości znieczulające.\n• Zwiększa rozmiar i zasięg działania oparów Odurzającej Mieszanki Komika o 20%."
+        }
+      }
+    },
+    {
+      "id": 216,
+      "name": "Cheap Gin Bottle",
+      "killer_id": 12,
+      "description": "When the night was rough and the day is rougher, a little hair of the dog will give you a boost.\n• Increases The Clown's Invigoration by 3%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cheapGinBottle.png?4f6ed3",
+      "icon_local_path": "icons/addons/cheap_gin_bottle.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Flasche mit billigem Gin",
+          "description": "Wenn die Nacht hart war und der Tag noch härter, bringt dich ein Katertropfen wieder auf Touren.\n• Erhöht die Stärkung um 3 %."
+        },
+        "es": {
+          "name": "Botella de ginebra barata",
+          "description": "Cuando la noche ha sido dura y el día, mucho más, tomar otro trago es lo mejor para seguir.\n• Aumenta Tonificación del Payaso un 3 %."
+        },
+        "ja": {
+          "name": "安物のジンボトル",
+          "description": "何もかもうまくいかず飲み過ぎたときは、迎え酒の力を借りよう。\n• クラウンの活発状態の効果が3%上昇する"
+        },
+        "pl": {
+          "name": "Butelka Taniego Ginu",
+          "description": "Kiedy noc była ciężka, a dzień jest jeszcze cięższy, mały klinik doda ci otuchy.\n• Zwiększa pobudzenie klauna o 3%."
+        }
+      }
+    },
+    {
+      "id": 217,
+      "name": "Ether 15 vol%",
+      "killer_id": 12,
+      "description": "A highly volatile organic compound, toxic at this concentration.\n• Increases the duration of Intoxication by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ether15Vol.png?da3927",
+      "icon_local_path": "icons/addons/ether_15_vol.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ether, 15 Volumenprozent",
+          "description": "Ein sehr flüchtiger, organischer Stoff, der in dieser Konzentration giftig ist.\n• Verlängert die Dauer der Benebelung um 0.5 Sekunde."
+        },
+        "es": {
+          "name": "Éter de 15 % del vol.",
+          "description": "Un compuesto orgánico muy volátil. Su concentración resulta tóxica.\n• Aumenta la duración del efecto Intoxicación en 0.5 segundo."
+        },
+        "ja": {
+          "name": "15vol% のエーテル",
+          "description": "揮発性の高い有機化合物。ここまで濃縮されたことで毒性を持つ。\n• 中毒の効果時間が0.5秒増加する"
+        },
+        "pl": {
+          "name": "Eter, 15%",
+          "description": "Bardzo lotna, toksyczna substancja organiczna.\n• Wydłuża czas trwania zatrucia o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 218,
+      "name": "Cigar Box",
+      "killer_id": 12,
+      "description": "A grim and incomplete collection of fingers. Fills The Clown with longing and focuses his chemical crafting abilities.\n• While The Clown or a Survivor is Invigorated, they see all other Survivor and Killer auras within 6 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cigarBox.png?aafdc6",
+      "icon_local_path": "icons/addons/cigar_box.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zigarrenkiste",
+          "description": "Eine grausige und unvollständige Sammlung von Fingern. Erfüllt den Clown mit Sehnsucht und hilft ihm dabei, sich auf das Fertigen von Betäubungsmitteln zu konzentrieren.\n• Solange der Clown oder ein Überlebender gestärkt ist, kann er die Auren aller anderen Überlebenden und des Killers innerhalb eines Umkreises von 6 Metern sehen."
+        },
+        "es": {
+          "name": "Caja de puros",
+          "description": "Una macabra colección de dedos incompleta. Estimula la capacidad de elaboración química del Payaso.\n• Cuando un superviviente o al Payaso se le aplica el efecto Tonificación, ve las auras del resto de supervivientes y asesinos dentro de un alcance de 6 metros."
+        },
+        "ja": {
+          "name": "葉巻の箱",
+          "description": "おぞましい、不完全な指のコレクション。クラウンの願望を膨らませ、化学薬品の製造能力に集中させる。\n• クラウンか生存者が活発状態になると、6メートル以内にいる他の生存者や殺人鬼のオーラが視えるようになる"
+        },
+        "pl": {
+          "name": "Pudełko Na Cygara",
+          "description": "Ponura i niekompletna kolekcja palców. Napełnia Klauna nostalgią i pomaga mu się skupić przy ćwiczeniu umiejętności chemicznych.\n• Gdy Klaun lub ocalały stanie się Pobudzony, zobaczy aury wszystkich innych graczy w promieniu 6 metrów."
+        }
+      }
+    },
+    {
+      "id": 219,
+      "name": "Tattoo's Middle Finger",
+      "killer_id": 12,
+      "description": "The prized middle finger of a large tattooed man. Has a faint taste of machinery oil.\n• Auras of Intoxicated or Invigorated Survivors are revealed to you for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tattoosMiddleFinger.png?115e9e",
+      "icon_local_path": "icons/addons/tattoos_middle_finger.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Mittelfinger eines Tätowierten",
+          "description": "Der geschätzte Mittelfinger eines großen, tätowierten Mannes. Schmeckt leicht nach Maschinenöl.\n• Auren von Überlebenden, die unter „Benebelt“ oder „Gestärkt“ leiden, werden dir 6 Sekunden lang angezeigt."
+        },
+        "es": {
+          "name": "Dedo corazón de tatuado",
+          "description": "El valioso dedo corazón de un corpulento hombre tatuado. Sabe un poco a aceite de maquinaria.\n• Se te revelan las auras de los supervivientes intoxicados o tonificados durante 6 segundos."
+        },
+        "ja": {
+          "name": "入れ墨男の中指",
+          "description": "入れ墨のある大柄な男の貴重な中指。かすかに機械油の味がする。\n• 中毒または活発になった生存者のオーラを6秒間視ることができる"
+        },
+        "pl": {
+          "name": "Środkowy Palec Mężczyzny z Tatuażem",
+          "description": "Cenny środkowy palec należący do wysokiego mężczyzny z tatuażami. Ma mdławy posmak oleju, który wlewa się do silników różnych maszyn.\n• Aury odurzonych lub pobudzonych ocalałych są dla ciebie widoczne przez 6 sekund."
+        }
+      }
+    },
+    {
+      "id": 788,
+      "name": "Sulphuric Acid Vial",
+      "killer_id": 12,
+      "description": "An odorless syrupy liquid which is highly corrosive.\n• Intoxication inflicts Mangled on injured Survivors for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sulphuricAcidVial.png?5a8745",
+      "icon_local_path": "icons/addons/sulphuric_acid_vial.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Fläschchen mit Schwefelsäure",
+          "description": "Eine geruchlose, sirupartige Flüssigkeit, die äußerst ätzend ist.\n• Die Benebelung löst für 70 Sekunden Zerfleischt bei verletzten Überlebenden aus.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "en": {
+          "name": "Sulfuric Acid Vial"
+        },
+        "es": {
+          "name": "Ampolla de ácido sulfúrico",
+          "description": "Un líquido viscoso, inodoro y muy corrosivo.\n• La intoxicación causa Laceración a los supervivientes heridos durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "硫酸の瓶",
+          "description": "無臭で粘着性の、腐食性の高い液体。\n• 中毒になると負傷した生存者は、70秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Fiolka z Kwasem Siarkowym",
+          "description": "Bezwonna, syropowata ciecz. Silnie żrąca.\n• Zatrucie wywołuje u rannych ocalałych efekt Zmasakrowany na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 789,
+      "name": "Garish Make-Up Kit",
+      "killer_id": 12,
+      "description": "Some for the face and some for the Antidote. The unknown compound intensifies the Antidote's effects.\n• Increases the duration of Invigoration by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_garishMake-UpKit.png?2fe6e4",
+      "icon_local_path": "icons/addons/garish_make_up_kit.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Auffallendes Schminkset",
+          "description": "Etwas fürs Gesicht und etwas fürs Gegengift. Das unbekannte Präparat intensiviert die Wirkung des Gegengifts.\n• Verlängert die Dauer der Stärkung um 2 Sek."
+        },
+        "en": {
+          "name": "Garish Makeup Kit"
+        },
+        "es": {
+          "name": "Kit de maquillaje estridente",
+          "description": "Un poco para la cara y otro poco para el antídoto. El compuesto desconocido intensifica sus efectos.\n• Aumenta la duración de Tonificación en 2 segundos."
+        },
+        "ja": {
+          "name": "派手なメイク道具",
+          "description": "半分は顔に、半分は解毒剤に使用。未知の化合物が解毒剤の効果を増大させる。\n• 活発状態の持続時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Krzykliwy Zestaw do Makijażu",
+          "description": "Szczypta chemii dla urody, szczypta chemii do mieszanki. Nieznany związek wzmacnia działanie antidotum.\n• Wydłuża czas trwania efektu pobudzenia o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 790,
+      "name": "Redhead's Pinkie Finger",
+      "killer_id": 12,
+      "description": "The prized pinky of a redhead. Faintly fragrant. Tastes of potpourri and varnish.\n• Direct hits by a bottle of Afterpiece Tonic inflict Exposed until Intoxication ends.\n• Sets maximum number of carried bottles to 1.\nExposed Survivors will be downed by basic attacks even if uninjured.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_redheadsPinkieFinger.png?5ec25a",
+      "icon_local_path": "icons/addons/redheads_pinkie_finger.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Kleiner Finger eines Rotschopfs",
+          "description": "Der kostbare kleine Finger eines Rotschopfs. Duftet leicht. Schmeckt nach Potpourri und Lack.\n• Direkte Treffer mit einer Flasche Nachspieltonikum verursachen Gefährdet, bis die Benebelung endet.\n• Legt das Limit für getragene Flaschen auf 1 fest.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind."
+        },
+        "en": {
+          "name": "Redhead's Pinky Finger"
+        },
+        "es": {
+          "name": "Meñique de pelirrojo",
+          "description": "El valioso meñique de un pelirrojo. Ligeramente perfumado. Sabe a flores secas y a barniz.\n• Golpear con una botella de El último acto causa Vulnerabilidad mientras dure la intoxicación.\n• El número máximo de botellas que puedes llevar cambia a 1.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas."
+        },
+        "ja": {
+          "name": "赤毛の小指",
+          "description": "赤毛の女性の貴重な小指。かすかに香気を放っていて、ポプリとニスの味がする。\n• 寸劇のトニックのボトルが直接命中すると、中毒の効果が終わるまで無防備になる\n• 持ち運べるボトルの数が最大1本になる\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。"
+        },
+        "pl": {
+          "name": "Mały Palec Rudowłosej",
+          "description": "Cenny mały palec rudowłosej. Ma niewyraźny zapach. Smakuje jak mieszanka ziół i lakieru.\n• Bezpośrednie trafienie butelką Odurzającej Mieszanki Komika nakłada na ocalałego efekt Narażenia do zakończenia zatrucia.\n• Ustawia maksymalną liczbę niesionych butelek na 1.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni."
+        }
+      }
+    }
+  ]
+}

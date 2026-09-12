@@ -7,6 +7,7 @@ import uuid
 from typing import Any, Dict, List, Tuple
 from sqlalchemy import select
 from app.core.extensions import db
+from app.core.redis_cache import bump_catalog_version
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
@@ -17,6 +18,40 @@ logger = logging.getLogger(__name__)
 
 ROSTERS_DIR = Path(__file__).resolve().parent / "data" / "smash_or_pass" / "rosters"
 
+#: The profile columns a seed entity may carry, at the top level of its dict.
+#: They used to arrive as one `metadata_json` blob; they are columns now, and
+#: the seed files spell them exactly as the model does.
+ENTITY_TEXT_FIELDS = (
+    "bio",
+    "tagline",
+    "quote",
+    "meme",
+    "turn_on",
+    "dealbreaker",
+    "dating_vibe",
+)
+
+
+def _entity_profile(e_data: Dict[str, Any]) -> Dict[str, Any]:
+    """The profile columns for one seed entity, defaulted like the model.
+
+    `normalize_smash_rosters.py` drops empty values from the files, so every
+    field here has to survive being absent.
+    """
+    profile: Dict[str, Any] = {
+        "archetype": e_data.get("archetype"),
+        "red_flags": list(e_data.get("red_flags") or []),
+        "green_flags": list(e_data.get("green_flags") or []),
+        "chapter": e_data.get("chapter"),
+        "danger_level": e_data.get("danger_level"),
+        "chaos_score": e_data.get("chaos_score"),
+        # de/es/ja/pl differences only; an "en" entry would restate a column.
+        "translations": e_data.get("translations") or {},
+    }
+    for field in ENTITY_TEXT_FIELDS:
+        profile[field] = e_data.get(field) or ""
+    return profile
+
 
 def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List[Dict[str, Any]]]]:
     """
@@ -26,14 +61,12 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
     rosters_list: List[Dict[str, Any]] = []
     entities_by_roster: Dict[str, List[Dict[str, Any]]] = {}
 
+    # There used to be a fallback to data/static_export/smash_or_pass/rosters
+    # here. That directory does not exist anywhere in the repo, so the fallback
+    # could only ever turn a missing seed directory into an empty, silent seed.
     target_dir = ROSTERS_DIR
     if not target_dir.exists():
-        fallback = Path(__file__).resolve().parent.parent.parent / "data" / "static_export" / "smash_or_pass" / "rosters"
-        if fallback.exists():
-            target_dir = fallback
-        else:
-            logger.warning(f"Rosters directory does not exist: {ROSTERS_DIR}")
-            return rosters_list, entities_by_roster
+        raise FileNotFoundError(f"Rosters directory does not exist: {ROSTERS_DIR}")
 
     # Sort JSON files (canon first, then alphabetically)
     json_files = sorted(
@@ -72,8 +105,10 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
     return rosters_list, entities_by_roster
 
 
-# Dynamically load data for module-level access
-ROSTERS_SEED_DATA, ENTITIES_BY_ROSTER = load_rosters_from_json_files()
+# `ROSTERS_SEED_DATA` / `ENTITIES_BY_ROSTER` used to be loaded here at import
+# time. Nothing ever read them -- `_seed_smash_rosters_impl` calls the loader
+# itself -- and now that a missing rosters directory raises instead of being
+# papered over, an import-time call would take the whole app down with it.
 
 
 def seed_smash_rosters():
@@ -140,6 +175,7 @@ def _seed_smash_rosters_impl():
                         Entity.slug == e_data["slug"],
                     )
                 )
+                profile = _entity_profile(e_data)
                 if not entity:
                     entity = Entity(
                         id=str(uuid.uuid4()),
@@ -149,10 +185,10 @@ def _seed_smash_rosters_impl():
                         role=e_data.get("role", "Survivor"),
                         gender=e_data.get("gender", "female"),
                         media_url=e_data.get("media_url"),
-                        media_type="image",
-                        metadata_json=e_data.get("metadata_json") or e_data.get("metadata") or {},
+                        media_type=e_data.get("media_type", "image"),
                         order_index=idx,
                         is_active=True,
+                        **profile,
                     )
                     db.session.add(entity)
                     db.session.flush()
@@ -161,30 +197,35 @@ def _seed_smash_rosters_impl():
                     entity.role = e_data.get("role", entity.role)
                     entity.gender = e_data.get("gender", entity.gender)
                     entity.media_url = e_data.get("media_url")
-                    entity.metadata_json = e_data.get("metadata_json") or e_data.get("metadata", entity.metadata_json)
+                    for field, value in profile.items():
+                        setattr(entity, field, value)
                     entity.order_index = idx
                     entity.is_active = True
                     db.session.flush()
 
-                # Ensure associated EntityStat exists
+                # Ensure associated EntityStat exists. Only the three counts and
+                # `chaos_rating` are assignable: `total_votes` and `smash_rate`
+                # are generated columns the database computes, and the surrogate
+                # `id` is gone -- `entity_id` is the primary key.
                 stat = db.session.scalar(
                     select(EntityStat).where(EntityStat.entity_id == entity.id)
                 )
                 if not stat:
+                    s_data = e_data.get("stat") or {}
                     stat = EntityStat(
-                        id=str(uuid.uuid4()),
                         entity_id=entity.id,
-                        smash_count=0,
-                        pass_count=0,
-                        super_smash_count=0,
-                        total_votes=0,
-                        smash_rate=0.0,
-                        chaos_rating=50.0,
+                        smash_count=int(s_data.get("smash_count") or 0),
+                        pass_count=int(s_data.get("pass_count") or 0),
+                        super_smash_count=int(s_data.get("super_smash_count") or 0),
+                        chaos_rating=float(s_data.get("chaos_rating") or 50.0),
                     )
                     db.session.add(stat)
 
 
         db.session.commit()
+        # Rosters and entities feed catalog responses in every worker; the seed
+        # just changed what those would return.
+        bump_catalog_version()
         logger.info(f"Successfully seeded all {len(rosters_list)} rosters from JSON files into the database.")
     except Exception as e:
         db.session.rollback()

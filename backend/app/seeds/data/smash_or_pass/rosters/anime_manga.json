@@ -1,9 +1,7 @@
 {
-  "version": "1.0",
-  "exported_at": "2026-09-10T12:16:35.320022+00:00",
+  "version": "3.0",
   "source": "LemonDBD",
   "target": "rosters",
-  "count": 1,
   "rosters": [
     {
       "slug": "anime_manga",
@@ -22,245 +20,98 @@
           "gender": "female",
           "media_url": "/static/avatars/killers/anime_spirit.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "Fierce, honorable, and breathtakingly fast. She protects her companions with whirlwind katana strikes and gentle cherry blossom tea ceremonies.",
-            "i18n": {
-              "de": {
-                "bio": "Rin: Spirit Blade ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Rin: Spirit Blade in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "Fierce, honorable, and breathtakingly fast. She protects her companions with whirlwind katana strikes and gentle cherry blossom tea ceremonies.",
-                "meme": "Meme: Rin: Spirit Blade in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Phantasmagoric Shonen Blade",
-                "tagline": "Floating ethereal shards, dramatic anime wind, and tragic backstory.",
-                "turn_on": "Earnest effort, mutual respect, and quiet training under the moonlight",
-                "red_flags": [
-                  "Instant rage triggers when betrayed",
-                  "Slices melons with deadly katana speed"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Dishonor and broken promises",
-                "green_flags": [
-                  "Unbreakable honor code",
-                  "Dramatic cherry blossom entrances",
-                  "Endlessly loyal"
-                ]
-              },
-              "es": {
-                "bio": "Rin: Spirit Blade es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Rin: Spirit Blade en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Rin: Spirit Bladeはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のRin: Spirit Blade – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Rin: Spirit Blade to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Rin: Spirit Blade we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+          "archetype": "Phantasmagoric Shonen Blade",
+          "bio": "Fierce, honorable, and breathtakingly fast. She protects her companions with whirlwind katana strikes and gentle cherry blossom tea ceremonies.",
+          "tagline": "Floating ethereal shards, dramatic anime wind, and tragic backstory.",
+          "quote": "\"My blade remembers the warmth you gave me.\"",
+          "meme": "Meme: Rin: Spirit Blade in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Earnest effort, mutual respect, and quiet training under the moonlight",
+          "dealbreaker": "Dishonor and broken promises",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Instant rage triggers when betrayed",
+            "Slices melons with deadly katana speed"
+          ],
+          "green_flags": [
+            "Unbreakable honor code",
+            "Dramatic cherry blossom entrances",
+            "Endlessly loyal"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Rin: Spirit Blade: Killer im Nebel",
+              "bio": "Rin: Spirit Blade ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Jagd im Reich des Wesens.",
+              "meme": "Meme: Rin: Spirit Blade in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Tödliche Präzision"
+              ]
             },
-            "meme": "Meme: Rin: Spirit Blade in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"My blade remembers the warmth you gave me.\"",
-            "title": "Phantasmagoric Shonen Blade",
-            "turnOn": "Earnest effort, mutual respect, and quiet training under the moonlight",
-            "chapter": "",
-            "tagline": "Floating ethereal shards, dramatic anime wind, and tragic backstory.",
-            "turn_on": "Earnest effort, mutual respect, and quiet training under the moonlight",
-            "redFlags": [
-              "Instant rage triggers when betrayed",
-              "Slices melons with deadly katana speed"
-            ],
-            "archetype": "Phantasmagoric Shonen Blade",
-            "red_flags": [
-              "Instant rage triggers when betrayed",
-              "Slices melons with deadly katana speed"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Unbreakable honor code",
-              "Dramatic cherry blossom entrances",
-              "Endlessly loyal"
-            ],
-            "chaos_score": 75,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Dishonor and broken promises",
-            "green_flags": [
-              "Unbreakable honor code",
-              "Dramatic cherry blossom entrances",
-              "Endlessly loyal"
-            ],
-            "danger_level": "High",
-            "translations": {
-              "de": {
-                "bio": "Rin: Spirit Blade ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Rin: Spirit Blade in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "Fierce, honorable, and breathtakingly fast. She protects her companions with whirlwind katana strikes and gentle cherry blossom tea ceremonies.",
-                "meme": "Meme: Rin: Spirit Blade in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Phantasmagoric Shonen Blade",
-                "tagline": "Floating ethereal shards, dramatic anime wind, and tragic backstory.",
-                "turn_on": "Earnest effort, mutual respect, and quiet training under the moonlight",
-                "red_flags": [
-                  "Instant rage triggers when betrayed",
-                  "Slices melons with deadly katana speed"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Dishonor and broken promises",
-                "green_flags": [
-                  "Unbreakable honor code",
-                  "Dramatic cherry blossom entrances",
-                  "Endlessly loyal"
-                ]
-              },
-              "es": {
-                "bio": "Rin: Spirit Blade es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Rin: Spirit Blade en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Rin: Spirit Bladeはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のRin: Spirit Blade – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"My blade remembers the warmth you gave me.\"",
-                "title": "Rin: Spirit Blade: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Rin: Spirit Blade to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Rin: Spirit Blade we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Kataną przecinam więzy czasu i przestrzeni.”",
-                "title": "Rin: Spirit Blade: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+            "es": {
+              "archetype": "Rin: Spirit Blade: Asesino en la Niebla",
+              "bio": "Rin: Spirit Blade es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Acechando presas en el reino del Ente.",
+              "meme": "Meme: Rin: Spirit Blade en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Eficacia letal"
+              ]
             },
-            "compatibility_tags": [
-              "Phantasmagoric Shonen Blade",
-              "Killer",
-              "female"
-            ]
+            "ja": {
+              "archetype": "Rin: Spirit Blade: 霧のキラー",
+              "bio": "Rin: Spirit Bladeはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "エンティティの領域で獲物を狩る。",
+              "meme": "ミーム: 試練のRin: Spirit Blade – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "圧倒的な攻撃力"
+              ]
+            },
+            "pl": {
+              "archetype": "Rin: Spirit Blade: Zabójca we Mgle",
+              "bio": "Rin: Spirit Blade to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+              "quote": "„Kataną przecinam więzy czasu i przestrzeni.”",
+              "meme": "Meme: Rin: Spirit Blade we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Zabójcza skuteczność"
+              ]
+            }
           },
           "order_index": 0,
-          "is_active": true,
-          "stat": {
-            "id": "3d7c764d-8df9-4268-8d08-60a5970cfc6e",
-            "entity_id": "aff42cd7-c84b-4ebb-8b26-d58e983f8b34",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.610410+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_mikaela",
@@ -269,245 +120,98 @@
           "gender": "female",
           "media_url": "/static/avatars/survivors/anime_mikaela.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "A magical girl protecting the trial with radiant blessing totems and cozy coffee shop charm.",
-            "i18n": {
-              "de": {
-                "bio": "Mikaela: Mahou Shoujo ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Mikaela: Mahou Shoujo in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "A magical girl protecting the trial with radiant blessing totems and cozy coffee shop charm.",
-                "meme": "Meme: Mikaela: Mahou Shoujo in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Boon Witch of Starlight",
-                "tagline": "Pastel witch hat, glowing magical circle boons, and wholesome coffee stories.",
-                "turn_on": "Stargazing, gentle poetry, and sweet pastries",
-                "red_flags": [
-                  "Spends hours blessing single totems",
-                  "Over-dramatic spell incantations"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Snuffing out totems and bad vibes",
-                "green_flags": [
-                  "Endless optimism",
-                  "Brews enchanted lattes",
-                  "Blesses your day with good fortune"
-                ]
-              },
-              "es": {
-                "bio": "Mikaela: Mahou Shoujo es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Mikaela: Mahou Shoujo en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Mikaela: Mahou Shoujoはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のMikaela: Mahou Shoujo – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Mikaela: Mahou Shoujo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Mikaela: Mahou Shoujo we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+          "archetype": "Boon Witch of Starlight",
+          "bio": "A magical girl protecting the trial with radiant blessing totems and cozy coffee shop charm.",
+          "tagline": "Pastel witch hat, glowing magical circle boons, and wholesome coffee stories.",
+          "quote": "\"May the starlight protect our path!\"",
+          "meme": "Meme: Mikaela: Mahou Shoujo in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Stargazing, gentle poetry, and sweet pastries",
+          "dealbreaker": "Snuffing out totems and bad vibes",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Spends hours blessing single totems",
+            "Over-dramatic spell incantations"
+          ],
+          "green_flags": [
+            "Endless optimism",
+            "Brews enchanted lattes",
+            "Blesses your day with good fortune"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Mikaela: Mahou Shoujo: Überlebender im Nebel",
+              "bio": "Mikaela: Mahou Shoujo ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+              "meme": "Meme: Mikaela: Mahou Shoujo in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Treue in brenzligen Situationen"
+              ]
             },
-            "meme": "Meme: Mikaela: Mahou Shoujo in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"May the starlight protect our path!\"",
-            "title": "Boon Witch of Starlight",
-            "turnOn": "Stargazing, gentle poetry, and sweet pastries",
-            "chapter": "",
-            "tagline": "Pastel witch hat, glowing magical circle boons, and wholesome coffee stories.",
-            "turn_on": "Stargazing, gentle poetry, and sweet pastries",
-            "redFlags": [
-              "Spends hours blessing single totems",
-              "Over-dramatic spell incantations"
-            ],
-            "archetype": "Boon Witch of Starlight",
-            "red_flags": [
-              "Spends hours blessing single totems",
-              "Over-dramatic spell incantations"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Endless optimism",
-              "Brews enchanted lattes",
-              "Blesses your day with good fortune"
-            ],
-            "chaos_score": 50,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Snuffing out totems and bad vibes",
-            "green_flags": [
-              "Endless optimism",
-              "Brews enchanted lattes",
-              "Blesses your day with good fortune"
-            ],
-            "danger_level": "Low",
-            "translations": {
-              "de": {
-                "bio": "Mikaela: Mahou Shoujo ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Mikaela: Mahou Shoujo in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "A magical girl protecting the trial with radiant blessing totems and cozy coffee shop charm.",
-                "meme": "Meme: Mikaela: Mahou Shoujo in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Boon Witch of Starlight",
-                "tagline": "Pastel witch hat, glowing magical circle boons, and wholesome coffee stories.",
-                "turn_on": "Stargazing, gentle poetry, and sweet pastries",
-                "red_flags": [
-                  "Spends hours blessing single totems",
-                  "Over-dramatic spell incantations"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Snuffing out totems and bad vibes",
-                "green_flags": [
-                  "Endless optimism",
-                  "Brews enchanted lattes",
-                  "Blesses your day with good fortune"
-                ]
-              },
-              "es": {
-                "bio": "Mikaela: Mahou Shoujo es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Mikaela: Mahou Shoujo en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Mikaela: Mahou Shoujoはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のMikaela: Mahou Shoujo – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"May the starlight protect our path!\"",
-                "title": "Mikaela: Mahou Shoujo: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Mikaela: Mahou Shoujo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Mikaela: Mahou Shoujo we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Magia, zaklęcia i odrobina kawy – przepis na przetrwanie!”",
-                "title": "Mikaela: Mahou Shoujo: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+            "es": {
+              "archetype": "Mikaela: Mahou Shoujo: Superviviente en la Niebla",
+              "bio": "Mikaela: Mahou Shoujo es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Buscando escapar de las garras de la Niebla.",
+              "meme": "Meme: Mikaela: Mahou Shoujo en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Lealtad en momentos críticos"
+              ]
             },
-            "compatibility_tags": [
-              "Boon Witch of Starlight",
-              "Survivor",
-              "female"
-            ]
+            "ja": {
+              "archetype": "Mikaela: Mahou Shoujo: 霧のサバイバー",
+              "bio": "Mikaela: Mahou Shoujoはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "霧の試練からの脱出を目指す。",
+              "meme": "ミーム: 試練のMikaela: Mahou Shoujo – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "窮地での頼もしさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Mikaela: Mahou Shoujo: Ocalały we Mgle",
+              "bio": "Mikaela: Mahou Shoujo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+              "quote": "„Magia, zaklęcia i odrobina kawy – przepis na przetrwanie!”",
+              "meme": "Meme: Mikaela: Mahou Shoujo we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Lojalność wobec sojuszników"
+              ]
+            }
           },
           "order_index": 1,
-          "is_active": true,
-          "stat": {
-            "id": "cf8d1b14-0ae3-47e1-bd88-6bd917bc8f32",
-            "entity_id": "bce912e2-d1f9-4665-a84e-533e5436f451",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.612144+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_yui",
@@ -516,245 +220,98 @@
           "gender": "female",
           "media_url": "/static/avatars/survivors/anime_yui.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "Leader of the Sakura 7 gang who rides with undeniable style. She will pick up dropped pallets and carry you across the finish line.",
-            "i18n": {
-              "de": {
-                "bio": "Yui: Midnight Racer ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Yui: Midnight Racer in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "Leader of the Sakura 7 gang who rides with undeniable style. She will pick up dropped pallets and carry you across the finish line.",
-                "meme": "Meme: Yui: Midnight Racer in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Tokyo Drift Champion",
-                "tagline": "Leather racing jacket, custom turbocharged motorcycle, fierce leadership.",
-                "turn_on": "Speed, adrenaline, and true camaraderie",
-                "red_flags": [
-                  "Takes corners at 200 km/h",
-                  "Never turns down a drag race"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Giving up before the checkered flag",
-                "green_flags": [
-                  "Fiercely protective",
-                  "Fixes any motorcycle in minutes",
-                  "Unmatched courage"
-                ]
-              },
-              "es": {
-                "bio": "Yui: Midnight Racer es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Yui: Midnight Racer en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Yui: Midnight Racerはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のYui: Midnight Racer – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Yui: Midnight Racer to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Yui: Midnight Racer we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+          "archetype": "Tokyo Drift Champion",
+          "bio": "Leader of the Sakura 7 gang who rides with undeniable style. She will pick up dropped pallets and carry you across the finish line.",
+          "tagline": "Leather racing jacket, custom turbocharged motorcycle, fierce leadership.",
+          "quote": "\"Never look back, only forward to the horizon.\"",
+          "meme": "Meme: Yui: Midnight Racer in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Speed, adrenaline, and true camaraderie",
+          "dealbreaker": "Giving up before the checkered flag",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Takes corners at 200 km/h",
+            "Never turns down a drag race"
+          ],
+          "green_flags": [
+            "Fiercely protective",
+            "Fixes any motorcycle in minutes",
+            "Unmatched courage"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Yui: Midnight Racer: Überlebender im Nebel",
+              "bio": "Yui: Midnight Racer ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+              "meme": "Meme: Yui: Midnight Racer in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Treue in brenzligen Situationen"
+              ]
             },
-            "meme": "Meme: Yui: Midnight Racer in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"Never look back, only forward to the horizon.\"",
-            "title": "Tokyo Drift Champion",
-            "turnOn": "Speed, adrenaline, and true camaraderie",
-            "chapter": "",
-            "tagline": "Leather racing jacket, custom turbocharged motorcycle, fierce leadership.",
-            "turn_on": "Speed, adrenaline, and true camaraderie",
-            "redFlags": [
-              "Takes corners at 200 km/h",
-              "Never turns down a drag race"
-            ],
-            "archetype": "Tokyo Drift Champion",
-            "red_flags": [
-              "Takes corners at 200 km/h",
-              "Never turns down a drag race"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Fiercely protective",
-              "Fixes any motorcycle in minutes",
-              "Unmatched courage"
-            ],
-            "chaos_score": 50,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Giving up before the checkered flag",
-            "green_flags": [
-              "Fiercely protective",
-              "Fixes any motorcycle in minutes",
-              "Unmatched courage"
-            ],
-            "danger_level": "Low",
-            "translations": {
-              "de": {
-                "bio": "Yui: Midnight Racer ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Yui: Midnight Racer in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "Leader of the Sakura 7 gang who rides with undeniable style. She will pick up dropped pallets and carry you across the finish line.",
-                "meme": "Meme: Yui: Midnight Racer in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Tokyo Drift Champion",
-                "tagline": "Leather racing jacket, custom turbocharged motorcycle, fierce leadership.",
-                "turn_on": "Speed, adrenaline, and true camaraderie",
-                "red_flags": [
-                  "Takes corners at 200 km/h",
-                  "Never turns down a drag race"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Giving up before the checkered flag",
-                "green_flags": [
-                  "Fiercely protective",
-                  "Fixes any motorcycle in minutes",
-                  "Unmatched courage"
-                ]
-              },
-              "es": {
-                "bio": "Yui: Midnight Racer es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Yui: Midnight Racer en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Yui: Midnight Racerはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のYui: Midnight Racer – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Never look back, only forward to the horizon.\"",
-                "title": "Yui: Midnight Racer: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Yui: Midnight Racer to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Yui: Midnight Racer we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Moja maszyna pędzi przez mgłę z prędkością błyskawicy!”",
-                "title": "Yui: Midnight Racer: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+            "es": {
+              "archetype": "Yui: Midnight Racer: Superviviente en la Niebla",
+              "bio": "Yui: Midnight Racer es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Buscando escapar de las garras de la Niebla.",
+              "meme": "Meme: Yui: Midnight Racer en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Lealtad en momentos críticos"
+              ]
             },
-            "compatibility_tags": [
-              "Tokyo Drift Champion",
-              "Survivor",
-              "female"
-            ]
+            "ja": {
+              "archetype": "Yui: Midnight Racer: 霧のサバイバー",
+              "bio": "Yui: Midnight Racerはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "霧の試練からの脱出を目指す。",
+              "meme": "ミーム: 試練のYui: Midnight Racer – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "窮地での頼もしさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Yui: Midnight Racer: Ocalały we Mgle",
+              "bio": "Yui: Midnight Racer to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+              "quote": "„Moja maszyna pędzi przez mgłę z prędkością błyskawicy!”",
+              "meme": "Meme: Yui: Midnight Racer we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Lojalność wobec sojuszników"
+              ]
+            }
           },
           "order_index": 2,
-          "is_active": true,
-          "stat": {
-            "id": "cce245df-8d52-432d-a365-3598f6bde1da",
-            "entity_id": "88a617be-9d23-457f-b54e-d33dfcb1d16a",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.613837+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_trickster",
@@ -763,245 +320,98 @@
           "gender": "male",
           "media_url": "/static/avatars/killers/anime_trickster.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "A legendary pop idol by day, stylish reaper by night. He will serenade you with anime opening themes while throwing rose petals and daggers.",
-            "i18n": {
-              "de": {
-                "bio": "Trickster: Idol Shinigami ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Trickster: Idol Shinigami in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "A legendary pop idol by day, stylish reaper by night. He will serenade you with anime opening themes while throwing rose petals and daggers.",
-                "meme": "Meme: Trickster: Idol Shinigami in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Shonen Stage Virtuoso",
-                "tagline": "Golden microphone dagger, anime sparkle effects, and concert choreography.",
-                "turn_on": "Cheering fans and synchronized stage dances",
-                "red_flags": [
-                  "Extremely dramatic monologue pauses",
-                  "Refuses to mess up his styled hair"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Criticizing his vocal range",
-                "green_flags": [
-                  "Bilingual singer",
-                  "Top-tier idol visuals",
-                  "Writes original anime OSTs for you"
-                ]
-              },
-              "es": {
-                "bio": "Trickster: Idol Shinigami es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Trickster: Idol Shinigami en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Trickster: Idol Shinigamiはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のTrickster: Idol Shinigami – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Trickster: Idol Shinigami to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Trickster: Idol Shinigami we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+          "archetype": "Shonen Stage Virtuoso",
+          "bio": "A legendary pop idol by day, stylish reaper by night. He will serenade you with anime opening themes while throwing rose petals and daggers.",
+          "tagline": "Golden microphone dagger, anime sparkle effects, and concert choreography.",
+          "quote": "\"The stage lights are ours tonight!\"",
+          "meme": "Meme: Trickster: Idol Shinigami in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Cheering fans and synchronized stage dances",
+          "dealbreaker": "Criticizing his vocal range",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Extremely dramatic monologue pauses",
+            "Refuses to mess up his styled hair"
+          ],
+          "green_flags": [
+            "Bilingual singer",
+            "Top-tier idol visuals",
+            "Writes original anime OSTs for you"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Trickster: Idol Shinigami: Killer im Nebel",
+              "bio": "Trickster: Idol Shinigami ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Jagd im Reich des Wesens.",
+              "meme": "Meme: Trickster: Idol Shinigami in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Tödliche Präzision"
+              ]
             },
-            "meme": "Meme: Trickster: Idol Shinigami in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"The stage lights are ours tonight!\"",
-            "title": "Shonen Stage Virtuoso",
-            "turnOn": "Cheering fans and synchronized stage dances",
-            "chapter": "",
-            "tagline": "Golden microphone dagger, anime sparkle effects, and concert choreography.",
-            "turn_on": "Cheering fans and synchronized stage dances",
-            "redFlags": [
-              "Extremely dramatic monologue pauses",
-              "Refuses to mess up his styled hair"
-            ],
-            "archetype": "Shonen Stage Virtuoso",
-            "red_flags": [
-              "Extremely dramatic monologue pauses",
-              "Refuses to mess up his styled hair"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Bilingual singer",
-              "Top-tier idol visuals",
-              "Writes original anime OSTs for you"
-            ],
-            "chaos_score": 75,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Criticizing his vocal range",
-            "green_flags": [
-              "Bilingual singer",
-              "Top-tier idol visuals",
-              "Writes original anime OSTs for you"
-            ],
-            "danger_level": "High",
-            "translations": {
-              "de": {
-                "bio": "Trickster: Idol Shinigami ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Trickster: Idol Shinigami in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "A legendary pop idol by day, stylish reaper by night. He will serenade you with anime opening themes while throwing rose petals and daggers.",
-                "meme": "Meme: Trickster: Idol Shinigami in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Shonen Stage Virtuoso",
-                "tagline": "Golden microphone dagger, anime sparkle effects, and concert choreography.",
-                "turn_on": "Cheering fans and synchronized stage dances",
-                "red_flags": [
-                  "Extremely dramatic monologue pauses",
-                  "Refuses to mess up his styled hair"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Criticizing his vocal range",
-                "green_flags": [
-                  "Bilingual singer",
-                  "Top-tier idol visuals",
-                  "Writes original anime OSTs for you"
-                ]
-              },
-              "es": {
-                "bio": "Trickster: Idol Shinigami es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Trickster: Idol Shinigami en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Trickster: Idol Shinigamiはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のTrickster: Idol Shinigami – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"The stage lights are ours tonight!\"",
-                "title": "Trickster: Idol Shinigami: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Trickster: Idol Shinigami to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Trickster: Idol Shinigami we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„K-pop, sztylety i perfekcyjny uśmiech – brawom nie ma końca!”",
-                "title": "Trickster: Idol Shinigami: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+            "es": {
+              "archetype": "Trickster: Idol Shinigami: Asesino en la Niebla",
+              "bio": "Trickster: Idol Shinigami es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Acechando presas en el reino del Ente.",
+              "meme": "Meme: Trickster: Idol Shinigami en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Eficacia letal"
+              ]
             },
-            "compatibility_tags": [
-              "Shonen Stage Virtuoso",
-              "Killer",
-              "male"
-            ]
+            "ja": {
+              "archetype": "Trickster: Idol Shinigami: 霧のキラー",
+              "bio": "Trickster: Idol Shinigamiはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "エンティティの領域で獲物を狩る。",
+              "meme": "ミーム: 試練のTrickster: Idol Shinigami – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "圧倒的な攻撃力"
+              ]
+            },
+            "pl": {
+              "archetype": "Trickster: Idol Shinigami: Zabójca we Mgle",
+              "bio": "Trickster: Idol Shinigami to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+              "quote": "„K-pop, sztylety i perfekcyjny uśmiech – brawom nie ma końca!”",
+              "meme": "Meme: Trickster: Idol Shinigami we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Zabójcza skuteczność"
+              ]
+            }
           },
           "order_index": 3,
-          "is_active": true,
-          "stat": {
-            "id": "6df2190d-09da-47b7-8040-57e537eb6752",
-            "entity_id": "bfa78ff6-2310-4af5-bbe3-1402a5f277a8",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.615506+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_huntress",
@@ -1010,245 +420,98 @@
           "gender": "female",
           "media_url": "/static/avatars/killers/anime_huntress.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "'I-it's not like I chopped that firewood for you or anything, baka!' An adorable yet terrifying forest guardian.",
-            "i18n": {
-              "de": {
-                "bio": "Anna: Tsundere Forest Queen ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Anna: Tsundere Forest Queen in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "'I-it's not like I chopped that firewood for you or anything, baka!' An adorable yet terrifying forest guardian.",
-                "meme": "Meme: Anna: Tsundere Forest Queen in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Bavarian Forest Tsundere",
-                "tagline": "Rabbit mask with bunny ears, huge hatchet, flustered blushes.",
-                "turn_on": "Courage, shared campfire stew, and gentle headpats",
-                "red_flags": [
-                  "Throws hatchets when embarrassed",
-                  "Extreme tsundere denial"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Calling her cute in front of other killers",
-                "green_flags": [
-                  "Loves baking honey berries",
-                  "Deep down wants warm cuddles",
-                  "Provides limitless food"
-                ]
-              },
-              "es": {
-                "bio": "Anna: Tsundere Forest Queen es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Anna: Tsundere Forest Queen en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Anna: Tsundere Forest Queenはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のAnna: Tsundere Forest Queen – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Anna: Tsundere Forest Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Anna: Tsundere Forest Queen we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+          "archetype": "Bavarian Forest Tsundere",
+          "bio": "'I-it's not like I chopped that firewood for you or anything, baka!' An adorable yet terrifying forest guardian.",
+          "tagline": "Rabbit mask with bunny ears, huge hatchet, flustered blushes.",
+          "quote": "\"Don't look at me like that, baka!\"",
+          "meme": "Meme: Anna: Tsundere Forest Queen in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Courage, shared campfire stew, and gentle headpats",
+          "dealbreaker": "Calling her cute in front of other killers",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Throws hatchets when embarrassed",
+            "Extreme tsundere denial"
+          ],
+          "green_flags": [
+            "Loves baking honey berries",
+            "Deep down wants warm cuddles",
+            "Provides limitless food"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Anna: Tsundere Forest Queen: Killer im Nebel",
+              "bio": "Anna: Tsundere Forest Queen ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Jagd im Reich des Wesens.",
+              "meme": "Meme: Anna: Tsundere Forest Queen in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Tödliche Präzision"
+              ]
             },
-            "meme": "Meme: Anna: Tsundere Forest Queen in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"Don't look at me like that, baka!\"",
-            "title": "Bavarian Forest Tsundere",
-            "turnOn": "Courage, shared campfire stew, and gentle headpats",
-            "chapter": "",
-            "tagline": "Rabbit mask with bunny ears, huge hatchet, flustered blushes.",
-            "turn_on": "Courage, shared campfire stew, and gentle headpats",
-            "redFlags": [
-              "Throws hatchets when embarrassed",
-              "Extreme tsundere denial"
-            ],
-            "archetype": "Bavarian Forest Tsundere",
-            "red_flags": [
-              "Throws hatchets when embarrassed",
-              "Extreme tsundere denial"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Loves baking honey berries",
-              "Deep down wants warm cuddles",
-              "Provides limitless food"
-            ],
-            "chaos_score": 75,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Calling her cute in front of other killers",
-            "green_flags": [
-              "Loves baking honey berries",
-              "Deep down wants warm cuddles",
-              "Provides limitless food"
-            ],
-            "danger_level": "High",
-            "translations": {
-              "de": {
-                "bio": "Anna: Tsundere Forest Queen ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Anna: Tsundere Forest Queen in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "'I-it's not like I chopped that firewood for you or anything, baka!' An adorable yet terrifying forest guardian.",
-                "meme": "Meme: Anna: Tsundere Forest Queen in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Bavarian Forest Tsundere",
-                "tagline": "Rabbit mask with bunny ears, huge hatchet, flustered blushes.",
-                "turn_on": "Courage, shared campfire stew, and gentle headpats",
-                "red_flags": [
-                  "Throws hatchets when embarrassed",
-                  "Extreme tsundere denial"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Calling her cute in front of other killers",
-                "green_flags": [
-                  "Loves baking honey berries",
-                  "Deep down wants warm cuddles",
-                  "Provides limitless food"
-                ]
-              },
-              "es": {
-                "bio": "Anna: Tsundere Forest Queen es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Anna: Tsundere Forest Queen en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Anna: Tsundere Forest Queenはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のAnna: Tsundere Forest Queen – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Don't look at me like that, baka!\"",
-                "title": "Anna: Tsundere Forest Queen: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Anna: Tsundere Forest Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Anna: Tsundere Forest Queen we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Anna: Tsundere Forest Queen",
-                "title": "Anna: Tsundere Forest Queen: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+            "es": {
+              "archetype": "Anna: Tsundere Forest Queen: Asesino en la Niebla",
+              "bio": "Anna: Tsundere Forest Queen es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Acechando presas en el reino del Ente.",
+              "meme": "Meme: Anna: Tsundere Forest Queen en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Eficacia letal"
+              ]
             },
-            "compatibility_tags": [
-              "Bavarian Forest Tsundere",
-              "Killer",
-              "female"
-            ]
+            "ja": {
+              "archetype": "Anna: Tsundere Forest Queen: 霧のキラー",
+              "bio": "Anna: Tsundere Forest Queenはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "エンティティの領域で獲物を狩る。",
+              "meme": "ミーム: 試練のAnna: Tsundere Forest Queen – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "圧倒的な攻撃力"
+              ]
+            },
+            "pl": {
+              "archetype": "Anna: Tsundere Forest Queen: Zabójca we Mgle",
+              "bio": "Anna: Tsundere Forest Queen to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Anna: Tsundere Forest Queen",
+              "meme": "Meme: Anna: Tsundere Forest Queen we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Zabójcza skuteczność"
+              ]
+            }
           },
           "order_index": 4,
-          "is_active": true,
-          "stat": {
-            "id": "e2809329-b791-47bf-90b1-614101da3737",
-            "entity_id": "3f3b0740-e18e-4c02-87f3-1aa1d061d10b",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.617252+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_legion",
@@ -1257,245 +520,98 @@
           "gender": "male",
           "media_url": "/static/avatars/killers/anime_legion.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "The notorious after-school delinquents who rule the campus rooftop. They will share convenience store melon pan with you after class.",
-            "i18n": {
-              "de": {
-                "bio": "Frank & Julie: Delinquent Duo ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "The notorious after-school delinquents who rule the campus rooftop. They will share convenience store melon pan with you after class.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"We run this campus together!\"",
-                "title": "High School Rebel Squad",
-                "tagline": "Graffiti hoodie, sprint frenzy, high-energy school festival romance.",
-                "turn_on": "Rooftop hangouts and rebellion against school rules",
-                "red_flags": [
-                  "Skips class frequently",
-                  "Runs everywhere at 150% speed"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Snitching to the student council",
-                "green_flags": [
-                  "Ride-or-die high school loyalty",
-                  "Always shares snacks",
-                  "High energy adventures"
-                ]
-              },
-              "es": {
-                "bio": "Frank & Julie: Delinquent Duo es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Frank & Julie: Delinquent Duoはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のFrank & Julie: Delinquent Duo – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Frank & Julie: Delinquent Duo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+          "archetype": "High School Rebel Squad",
+          "bio": "The notorious after-school delinquents who rule the campus rooftop. They will share convenience store melon pan with you after class.",
+          "tagline": "Graffiti hoodie, sprint frenzy, high-energy school festival romance.",
+          "quote": "\"We run this campus together!\"",
+          "meme": "Meme: Frank & Julie: Delinquent Duo in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Rooftop hangouts and rebellion against school rules",
+          "dealbreaker": "Snitching to the student council",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Skips class frequently",
+            "Runs everywhere at 150% speed"
+          ],
+          "green_flags": [
+            "Ride-or-die high school loyalty",
+            "Always shares snacks",
+            "High energy adventures"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Frank & Julie: Delinquent Duo: Killer im Nebel",
+              "bio": "Frank & Julie: Delinquent Duo ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Jagd im Reich des Wesens.",
+              "meme": "Meme: Frank & Julie: Delinquent Duo in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Tödliche Präzision"
+              ]
             },
-            "meme": "Meme: Frank & Julie: Delinquent Duo in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"We run this campus together!\"",
-            "title": "High School Rebel Squad",
-            "turnOn": "Rooftop hangouts and rebellion against school rules",
-            "chapter": "",
-            "tagline": "Graffiti hoodie, sprint frenzy, high-energy school festival romance.",
-            "turn_on": "Rooftop hangouts and rebellion against school rules",
-            "redFlags": [
-              "Skips class frequently",
-              "Runs everywhere at 150% speed"
-            ],
-            "archetype": "High School Rebel Squad",
-            "red_flags": [
-              "Skips class frequently",
-              "Runs everywhere at 150% speed"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Ride-or-die high school loyalty",
-              "Always shares snacks",
-              "High energy adventures"
-            ],
-            "chaos_score": 75,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Snitching to the student council",
-            "green_flags": [
-              "Ride-or-die high school loyalty",
-              "Always shares snacks",
-              "High energy adventures"
-            ],
-            "danger_level": "High",
-            "translations": {
-              "de": {
-                "bio": "Frank & Julie: Delinquent Duo ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "The notorious after-school delinquents who rule the campus rooftop. They will share convenience store melon pan with you after class.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"We run this campus together!\"",
-                "title": "High School Rebel Squad",
-                "tagline": "Graffiti hoodie, sprint frenzy, high-energy school festival romance.",
-                "turn_on": "Rooftop hangouts and rebellion against school rules",
-                "red_flags": [
-                  "Skips class frequently",
-                  "Runs everywhere at 150% speed"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Snitching to the student council",
-                "green_flags": [
-                  "Ride-or-die high school loyalty",
-                  "Always shares snacks",
-                  "High energy adventures"
-                ]
-              },
-              "es": {
-                "bio": "Frank & Julie: Delinquent Duo es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Frank & Julie: Delinquent Duoはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のFrank & Julie: Delinquent Duo – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"We run this campus together!\"",
-                "title": "Frank & Julie: Delinquent Duo: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Frank & Julie: Delinquent Duo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Frank & Julie: Delinquent Duo we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Buntownicza brygada z Mgły – nie zatrzymasz nas!”",
-                "title": "Frank & Julie: Delinquent Duo: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+            "es": {
+              "archetype": "Frank & Julie: Delinquent Duo: Asesino en la Niebla",
+              "bio": "Frank & Julie: Delinquent Duo es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Acechando presas en el reino del Ente.",
+              "meme": "Meme: Frank & Julie: Delinquent Duo en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Eficacia letal"
+              ]
             },
-            "compatibility_tags": [
-              "High School Rebel Squad",
-              "Killer",
-              "male"
-            ]
+            "ja": {
+              "archetype": "Frank & Julie: Delinquent Duo: 霧のキラー",
+              "bio": "Frank & Julie: Delinquent Duoはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "エンティティの領域で獲物を狩る。",
+              "meme": "ミーム: 試練のFrank & Julie: Delinquent Duo – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "圧倒的な攻撃力"
+              ]
+            },
+            "pl": {
+              "archetype": "Frank & Julie: Delinquent Duo: Zabójca we Mgle",
+              "bio": "Frank & Julie: Delinquent Duo to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+              "quote": "„Buntownicza brygada z Mgły – nie zatrzymasz nas!”",
+              "meme": "Meme: Frank & Julie: Delinquent Duo we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Zabójcza skuteczność"
+              ]
+            }
           },
           "order_index": 5,
-          "is_active": true,
-          "stat": {
-            "id": "e856e011-5c9a-468a-acfe-f9cee3d7af8d",
-            "entity_id": "50bea4c3-730a-499e-a0e8-257f2cf427bf",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.618773+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_dracula",
@@ -1504,245 +620,98 @@
           "gender": "male",
           "media_url": "/static/avatars/killers/anime_dracula.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "A timeless aristocratic vampire prince who will offer you eternal companionship in his gothic sky castle.",
-            "i18n": {
-              "de": {
-                "bio": "Dracula: Castlevania Prince ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Dracula: Castlevania Prince in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "A timeless aristocratic vampire prince who will offer you eternal companionship in his gothic sky castle.",
-                "meme": "Meme: Dracula: Castlevania Prince in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Bishounen Dark Sovereign",
-                "tagline": "Flowing silver hair, velvet cape, tragic shonen backstory.",
-                "turn_on": "Eternal loyalty and classical violin duets",
-                "red_flags": [
-                  "Dramatic soliloquies by moonlit balconies",
-                  "Vampiric thirst"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Holy water and garlic jokes",
-                "green_flags": [
-                  "Tragic romantic backstory",
-                  "Flawless bishounen elegance",
-                  "Commands bats and hellfire"
-                ]
-              },
-              "es": {
-                "bio": "Dracula: Castlevania Prince es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Dracula: Castlevania Prince en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Dracula: Castlevania Princeはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のDracula: Castlevania Prince – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Dracula: Castlevania Prince to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Dracula: Castlevania Prince we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+          "archetype": "Bishounen Dark Sovereign",
+          "bio": "A timeless aristocratic vampire prince who will offer you eternal companionship in his gothic sky castle.",
+          "tagline": "Flowing silver hair, velvet cape, tragic shonen backstory.",
+          "quote": "\"What is a man? But my love for you is eternal.\"",
+          "meme": "Meme: Dracula: Castlevania Prince in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Eternal loyalty and classical violin duets",
+          "dealbreaker": "Holy water and garlic jokes",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Dramatic soliloquies by moonlit balconies",
+            "Vampiric thirst"
+          ],
+          "green_flags": [
+            "Tragic romantic backstory",
+            "Flawless bishounen elegance",
+            "Commands bats and hellfire"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Dracula: Castlevania Prince: Killer im Nebel",
+              "bio": "Dracula: Castlevania Prince ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Jagd im Reich des Wesens.",
+              "meme": "Meme: Dracula: Castlevania Prince in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Tödliche Präzision"
+              ]
             },
-            "meme": "Meme: Dracula: Castlevania Prince in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"What is a man? But my love for you is eternal.\"",
-            "title": "Bishounen Dark Sovereign",
-            "turnOn": "Eternal loyalty and classical violin duets",
-            "chapter": "",
-            "tagline": "Flowing silver hair, velvet cape, tragic shonen backstory.",
-            "turn_on": "Eternal loyalty and classical violin duets",
-            "redFlags": [
-              "Dramatic soliloquies by moonlit balconies",
-              "Vampiric thirst"
-            ],
-            "archetype": "Bishounen Dark Sovereign",
-            "red_flags": [
-              "Dramatic soliloquies by moonlit balconies",
-              "Vampiric thirst"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Tragic romantic backstory",
-              "Flawless bishounen elegance",
-              "Commands bats and hellfire"
-            ],
-            "chaos_score": 75,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Holy water and garlic jokes",
-            "green_flags": [
-              "Tragic romantic backstory",
-              "Flawless bishounen elegance",
-              "Commands bats and hellfire"
-            ],
-            "danger_level": "High",
-            "translations": {
-              "de": {
-                "bio": "Dracula: Castlevania Prince ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Dracula: Castlevania Prince in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "A timeless aristocratic vampire prince who will offer you eternal companionship in his gothic sky castle.",
-                "meme": "Meme: Dracula: Castlevania Prince in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Bishounen Dark Sovereign",
-                "tagline": "Flowing silver hair, velvet cape, tragic shonen backstory.",
-                "turn_on": "Eternal loyalty and classical violin duets",
-                "red_flags": [
-                  "Dramatic soliloquies by moonlit balconies",
-                  "Vampiric thirst"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Holy water and garlic jokes",
-                "green_flags": [
-                  "Tragic romantic backstory",
-                  "Flawless bishounen elegance",
-                  "Commands bats and hellfire"
-                ]
-              },
-              "es": {
-                "bio": "Dracula: Castlevania Prince es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Dracula: Castlevania Prince en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Dracula: Castlevania Princeはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のDracula: Castlevania Prince – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"What is a man? But my love for you is eternal.\"",
-                "title": "Dracula: Castlevania Prince: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Dracula: Castlevania Prince to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Dracula: Castlevania Prince we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Dracula: Castlevania Prince",
-                "title": "Dracula: Castlevania Prince: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+            "es": {
+              "archetype": "Dracula: Castlevania Prince: Asesino en la Niebla",
+              "bio": "Dracula: Castlevania Prince es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Acechando presas en el reino del Ente.",
+              "meme": "Meme: Dracula: Castlevania Prince en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Eficacia letal"
+              ]
             },
-            "compatibility_tags": [
-              "Bishounen Dark Sovereign",
-              "Killer",
-              "male"
-            ]
+            "ja": {
+              "archetype": "Dracula: Castlevania Prince: 霧のキラー",
+              "bio": "Dracula: Castlevania Princeはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "エンティティの領域で獲物を狩る。",
+              "meme": "ミーム: 試練のDracula: Castlevania Prince – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "圧倒的な攻撃力"
+              ]
+            },
+            "pl": {
+              "archetype": "Dracula: Castlevania Prince: Zabójca we Mgle",
+              "bio": "Dracula: Castlevania Prince to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Dracula: Castlevania Prince",
+              "meme": "Meme: Dracula: Castlevania Prince we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Zabójcza skuteczność"
+              ]
+            }
           },
           "order_index": 6,
-          "is_active": true,
-          "stat": {
-            "id": "bcf82a8a-53c1-47ba-98d1-50069b947198",
-            "entity_id": "a3d68564-a26a-47b5-b5d1-8f066c410dab",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.620353+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_feng_min",
@@ -1751,245 +720,98 @@
           "gender": "female",
           "media_url": "/static/avatars/survivors/anime_feng_min.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "The reigning champion of every Tokyo arcade center. She will teach you the secret frame data for every dance machine.",
-            "i18n": {
-              "de": {
-                "bio": "Feng Min: Arcade Senpai ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Feng Min: Arcade Senpai in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "The reigning champion of every Tokyo arcade center. She will teach you the secret frame data for every dance machine.",
-                "meme": "Meme: Feng Min: Arcade Senpai in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Rhythm Game Queen",
-                "tagline": "Neon bunny headphones, perfect 100% combo streak, boba lover.",
-                "turn_on": "Gacha luck and perfect rhythm sync",
-                "red_flags": [
-                  "Stays awake 36 hours for gacha banner resets",
-                  "Rage quits when dropping combos"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Casual button mashers",
-                "green_flags": [
-                  "Wins every claw machine plushie for you",
-                  "Super cute gaming aesthetic",
-                  "Carries 2v8 trials"
-                ]
-              },
-              "es": {
-                "bio": "Feng Min: Arcade Senpai es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Feng Min: Arcade Senpai en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Feng Min: Arcade Senpaiはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のFeng Min: Arcade Senpai – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Feng Min: Arcade Senpai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Feng Min: Arcade Senpai we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+          "archetype": "Rhythm Game Queen",
+          "bio": "The reigning champion of every Tokyo arcade center. She will teach you the secret frame data for every dance machine.",
+          "tagline": "Neon bunny headphones, perfect 100% combo streak, boba lover.",
+          "quote": "\"Combo chain: Max! Let's go!\"",
+          "meme": "Meme: Feng Min: Arcade Senpai in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Gacha luck and perfect rhythm sync",
+          "dealbreaker": "Casual button mashers",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Stays awake 36 hours for gacha banner resets",
+            "Rage quits when dropping combos"
+          ],
+          "green_flags": [
+            "Wins every claw machine plushie for you",
+            "Super cute gaming aesthetic",
+            "Carries 2v8 trials"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Feng Min: Arcade Senpai: Überlebender im Nebel",
+              "bio": "Feng Min: Arcade Senpai ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+              "meme": "Meme: Feng Min: Arcade Senpai in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Treue in brenzligen Situationen"
+              ]
             },
-            "meme": "Meme: Feng Min: Arcade Senpai in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"Combo chain: Max! Let's go!\"",
-            "title": "Rhythm Game Queen",
-            "turnOn": "Gacha luck and perfect rhythm sync",
-            "chapter": "",
-            "tagline": "Neon bunny headphones, perfect 100% combo streak, boba lover.",
-            "turn_on": "Gacha luck and perfect rhythm sync",
-            "redFlags": [
-              "Stays awake 36 hours for gacha banner resets",
-              "Rage quits when dropping combos"
-            ],
-            "archetype": "Rhythm Game Queen",
-            "red_flags": [
-              "Stays awake 36 hours for gacha banner resets",
-              "Rage quits when dropping combos"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Wins every claw machine plushie for you",
-              "Super cute gaming aesthetic",
-              "Carries 2v8 trials"
-            ],
-            "chaos_score": 50,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Casual button mashers",
-            "green_flags": [
-              "Wins every claw machine plushie for you",
-              "Super cute gaming aesthetic",
-              "Carries 2v8 trials"
-            ],
-            "danger_level": "Low",
-            "translations": {
-              "de": {
-                "bio": "Feng Min: Arcade Senpai ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Feng Min: Arcade Senpai in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "The reigning champion of every Tokyo arcade center. She will teach you the secret frame data for every dance machine.",
-                "meme": "Meme: Feng Min: Arcade Senpai in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Rhythm Game Queen",
-                "tagline": "Neon bunny headphones, perfect 100% combo streak, boba lover.",
-                "turn_on": "Gacha luck and perfect rhythm sync",
-                "red_flags": [
-                  "Stays awake 36 hours for gacha banner resets",
-                  "Rage quits when dropping combos"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Casual button mashers",
-                "green_flags": [
-                  "Wins every claw machine plushie for you",
-                  "Super cute gaming aesthetic",
-                  "Carries 2v8 trials"
-                ]
-              },
-              "es": {
-                "bio": "Feng Min: Arcade Senpai es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Feng Min: Arcade Senpai en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Feng Min: Arcade Senpaiはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のFeng Min: Arcade Senpai – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Combo chain: Max! Let's go!\"",
-                "title": "Feng Min: Arcade Senpai: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Feng Min: Arcade Senpai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Feng Min: Arcade Senpai we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Feng Min: Arcade Senpai",
-                "title": "Feng Min: Arcade Senpai: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+            "es": {
+              "archetype": "Feng Min: Arcade Senpai: Superviviente en la Niebla",
+              "bio": "Feng Min: Arcade Senpai es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Buscando escapar de las garras de la Niebla.",
+              "meme": "Meme: Feng Min: Arcade Senpai en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Lealtad en momentos críticos"
+              ]
             },
-            "compatibility_tags": [
-              "Rhythm Game Queen",
-              "Survivor",
-              "female"
-            ]
+            "ja": {
+              "archetype": "Feng Min: Arcade Senpai: 霧のサバイバー",
+              "bio": "Feng Min: Arcade Senpaiはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "霧の試練からの脱出を目指す。",
+              "meme": "ミーム: 試練のFeng Min: Arcade Senpai – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "窮地での頼もしさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Feng Min: Arcade Senpai: Ocalały we Mgle",
+              "bio": "Feng Min: Arcade Senpai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+              "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Feng Min: Arcade Senpai",
+              "meme": "Meme: Feng Min: Arcade Senpai we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Lojalność wobec sojuszników"
+              ]
+            }
           },
           "order_index": 7,
-          "is_active": true,
-          "stat": {
-            "id": "564d4ffa-94f9-448a-8ef5-2baa1bc7f755",
-            "entity_id": "34c195c6-8e2f-44f5-9890-3f55dfd86923",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.621923+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_wesker",
@@ -1998,245 +820,98 @@
           "gender": "male",
           "media_url": "/static/avatars/killers/anime_wesker.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "'All according to keikaku (Translator's note: keikaku means plan).' The calculating student council president who controls the school.",
-            "i18n": {
-              "de": {
-                "bio": "Wesker: Megane Mastermind ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Wesker: Megane Mastermind in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "'All according to keikaku (Translator's note: keikaku means plan).' The calculating student council president who controls the school.",
-                "meme": "Meme: Wesker: Megane Mastermind in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Calculating Student President",
-                "tagline": "Pushes glasses up nose, trench coat, seven minutes plan.",
-                "turn_on": "Intellectual debates and perfectionism",
-                "red_flags": [
-                  "Monologues about global saturation during lunch",
-                  "Strict 7-minute date timer"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Failing basic biology exams",
-                "green_flags": [
-                  "Impeccable strategic intellect",
-                  "Always achieves highest exam scores",
-                  "Never late"
-                ]
-              },
-              "es": {
-                "bio": "Wesker: Megane Mastermind es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Wesker: Megane Mastermind en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Wesker: Megane Mastermindはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のWesker: Megane Mastermind – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Wesker: Megane Mastermind to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Wesker: Megane Mastermind we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+          "archetype": "Calculating Student President",
+          "bio": "'All according to keikaku (Translator's note: keikaku means plan).' The calculating student council president who controls the school.",
+          "tagline": "Pushes glasses up nose, trench coat, seven minutes plan.",
+          "quote": "\"Seven minutes is all the study time you need.\"",
+          "meme": "Meme: Wesker: Megane Mastermind in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Intellectual debates and perfectionism",
+          "dealbreaker": "Failing basic biology exams",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Monologues about global saturation during lunch",
+            "Strict 7-minute date timer"
+          ],
+          "green_flags": [
+            "Impeccable strategic intellect",
+            "Always achieves highest exam scores",
+            "Never late"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Wesker: Megane Mastermind: Killer im Nebel",
+              "bio": "Wesker: Megane Mastermind ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Jagd im Reich des Wesens.",
+              "meme": "Meme: Wesker: Megane Mastermind in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Tödliche Präzision"
+              ]
             },
-            "meme": "Meme: Wesker: Megane Mastermind in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"Seven minutes is all the study time you need.\"",
-            "title": "Calculating Student President",
-            "turnOn": "Intellectual debates and perfectionism",
-            "chapter": "",
-            "tagline": "Pushes glasses up nose, trench coat, seven minutes plan.",
-            "turn_on": "Intellectual debates and perfectionism",
-            "redFlags": [
-              "Monologues about global saturation during lunch",
-              "Strict 7-minute date timer"
-            ],
-            "archetype": "Calculating Student President",
-            "red_flags": [
-              "Monologues about global saturation during lunch",
-              "Strict 7-minute date timer"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Impeccable strategic intellect",
-              "Always achieves highest exam scores",
-              "Never late"
-            ],
-            "chaos_score": 75,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Failing basic biology exams",
-            "green_flags": [
-              "Impeccable strategic intellect",
-              "Always achieves highest exam scores",
-              "Never late"
-            ],
-            "danger_level": "High",
-            "translations": {
-              "de": {
-                "bio": "Wesker: Megane Mastermind ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Wesker: Megane Mastermind in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: Killer im Nebel",
-                "tagline": "Auf der Jagd im Reich des Wesens.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Tödliche Präzision"
-                ]
-              },
-              "en": {
-                "bio": "'All according to keikaku (Translator's note: keikaku means plan).' The calculating student council president who controls the school.",
-                "meme": "Meme: Wesker: Megane Mastermind in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Calculating Student President",
-                "tagline": "Pushes glasses up nose, trench coat, seven minutes plan.",
-                "turn_on": "Intellectual debates and perfectionism",
-                "red_flags": [
-                  "Monologues about global saturation during lunch",
-                  "Strict 7-minute date timer"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Failing basic biology exams",
-                "green_flags": [
-                  "Impeccable strategic intellect",
-                  "Always achieves highest exam scores",
-                  "Never late"
-                ]
-              },
-              "es": {
-                "bio": "Wesker: Megane Mastermind es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Wesker: Megane Mastermind en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: Asesino en la Niebla",
-                "tagline": "Acechando presas en el reino del Ente.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Eficacia letal"
-                ]
-              },
-              "ja": {
-                "bio": "Wesker: Megane Mastermindはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のWesker: Megane Mastermind – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"Seven minutes is all the study time you need.\"",
-                "title": "Wesker: Megane Mastermind: 霧のキラー",
-                "tagline": "エンティティの領域で獲物を狩る。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "圧倒的な攻撃力"
-                ]
-              },
-              "pl": {
-                "bio": "Wesker: Megane Mastermind to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Wesker: Megane Mastermind we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Wesker: Megane Mastermind",
-                "title": "Wesker: Megane Mastermind: Zabójca we Mgle",
-                "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Zabójcza skuteczność"
-                ]
-              }
+            "es": {
+              "archetype": "Wesker: Megane Mastermind: Asesino en la Niebla",
+              "bio": "Wesker: Megane Mastermind es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Acechando presas en el reino del Ente.",
+              "meme": "Meme: Wesker: Megane Mastermind en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Eficacia letal"
+              ]
             },
-            "compatibility_tags": [
-              "Calculating Student President",
-              "Killer",
-              "male"
-            ]
+            "ja": {
+              "archetype": "Wesker: Megane Mastermind: 霧のキラー",
+              "bio": "Wesker: Megane Mastermindはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "エンティティの領域で獲物を狩る。",
+              "meme": "ミーム: 試練のWesker: Megane Mastermind – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "圧倒的な攻撃力"
+              ]
+            },
+            "pl": {
+              "archetype": "Wesker: Megane Mastermind: Zabójca we Mgle",
+              "bio": "Wesker: Megane Mastermind to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
+              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Wesker: Megane Mastermind",
+              "meme": "Meme: Wesker: Megane Mastermind we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Zabójcza skuteczność"
+              ]
+            }
           },
           "order_index": 8,
-          "is_active": true,
-          "stat": {
-            "id": "a3ef98b0-074f-4b02-ab25-77b403b295c9",
-            "entity_id": "230ec9dd-ba32-46e3-be6f-1eaa817819dc",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.623530+00:00"
-          },
-          "votes": []
+          "is_active": true
         },
         {
           "slug": "anime_meg",
@@ -2245,249 +920,100 @@
           "gender": "female",
           "media_url": "/static/avatars/survivors/anime_meg.webp",
           "media_type": "image",
-          "metadata_json": {
-            "bio": "The spirited star of the school track club who will run by your side every morning at sunrise.",
-            "i18n": {
-              "de": {
-                "bio": "Meg: Track & Field Kouhai ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Meg: Track & Field Kouhai in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "The spirited star of the school track club who will run by your side every morning at sunrise.",
-                "meme": "Meme: Meg: Track & Field Kouhai in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Energetic Athletics Star",
-                "tagline": "Twin tails, track baton, morning jogging dates.",
-                "turn_on": "Morning jogs, sports drinks, and cheering fans",
-                "red_flags": [
-                  "Wakes you up at 5 AM for cardio training",
-                  "Never stops running"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Lazy couch potatoes",
-                "green_flags": [
-                  "Boundless positive energy",
-                  "Makes healthy bento boxes",
-                  "Sprint Burst queen"
-                ]
-              },
-              "es": {
-                "bio": "Meg: Track & Field Kouhai es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Meg: Track & Field Kouhai en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Meg: Track & Field Kouhaiはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のMeg: Track & Field Kouhai – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Meg: Track & Field Kouhai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Meg: Track & Field Kouhai we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+          "archetype": "Energetic Athletics Star",
+          "bio": "The spirited star of the school track club who will run by your side every morning at sunrise.",
+          "tagline": "Twin tails, track baton, morning jogging dates.",
+          "quote": "\"One more lap around the trial!\"",
+          "meme": "Meme: Meg: Track & Field Kouhai in the trials - always bringing chaos and unhinged energy to the campfire.",
+          "turn_on": "Morning jogs, sports drinks, and cheering fans",
+          "dealbreaker": "Lazy couch potatoes",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Wakes you up at 5 AM for cardio training",
+            "Never stops running"
+          ],
+          "green_flags": [
+            "Boundless positive energy",
+            "Makes healthy bento boxes",
+            "Sprint Burst queen"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Meg: Track & Field Kouhai: Überlebender im Nebel",
+              "bio": "Meg: Track & Field Kouhai ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
+              "meme": "Meme: Meg: Track & Field Kouhai in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "turn_on": "Mut und Standhaftigkeit unter Druck",
+              "dealbreaker": "Verrat und Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Unberechenbar im Nebel",
+                "Fokus auf eigene Ziele"
+              ],
+              "green_flags": [
+                "Unbeugsame Entschlossenheit",
+                "Treue in brenzligen Situationen"
+              ]
             },
-            "meme": "Meme: Meg: Track & Field Kouhai in the trials - always bringing chaos and unhinged energy to the campfire.",
-            "quote": "\"One more lap around the trial!\"",
-            "title": "Energetic Athletics Star",
-            "turnOn": "Morning jogs, sports drinks, and cheering fans",
-            "chapter": "",
-            "tagline": "Twin tails, track baton, morning jogging dates.",
-            "turn_on": "Morning jogs, sports drinks, and cheering fans",
-            "redFlags": [
-              "Wakes you up at 5 AM for cardio training",
-              "Never stops running"
-            ],
-            "archetype": "Energetic Athletics Star",
-            "red_flags": [
-              "Wakes you up at 5 AM for cardio training",
-              "Never stops running"
-            ],
-            "datingVibe": "High-stakes Fog romance",
-            "greenFlags": [
-              "Boundless positive energy",
-              "Makes healthy bento boxes",
-              "Sprint Burst queen"
-            ],
-            "chaos_score": 50,
-            "dating_vibe": "High-stakes Fog romance",
-            "dealbreaker": "Lazy couch potatoes",
-            "green_flags": [
-              "Boundless positive energy",
-              "Makes healthy bento boxes",
-              "Sprint Burst queen"
-            ],
-            "danger_level": "Low",
-            "translations": {
-              "de": {
-                "bio": "Meg: Track & Field Kouhai ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-                "meme": "Meme: Meg: Track & Field Kouhai in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: Überlebender im Nebel",
-                "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-                "turn_on": "Mut und Standhaftigkeit unter Druck",
-                "red_flags": [
-                  "Unberechenbar im Nebel",
-                  "Fokus auf eigene Ziele"
-                ],
-                "dating_vibe": "Spannende, düstere Romanze im Nebel",
-                "dealbreaker": "Verrat und Feigheit",
-                "green_flags": [
-                  "Unbeugsame Entschlossenheit",
-                  "Treue in brenzligen Situationen"
-                ]
-              },
-              "en": {
-                "bio": "The spirited star of the school track club who will run by your side every morning at sunrise.",
-                "meme": "Meme: Meg: Track & Field Kouhai in the trials - always bringing chaos and unhinged energy to the campfire.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Energetic Athletics Star",
-                "tagline": "Twin tails, track baton, morning jogging dates.",
-                "turn_on": "Morning jogs, sports drinks, and cheering fans",
-                "red_flags": [
-                  "Wakes you up at 5 AM for cardio training",
-                  "Never stops running"
-                ],
-                "dating_vibe": "High-stakes Fog romance",
-                "dealbreaker": "Lazy couch potatoes",
-                "green_flags": [
-                  "Boundless positive energy",
-                  "Makes healthy bento boxes",
-                  "Sprint Burst queen"
-                ]
-              },
-              "es": {
-                "bio": "Meg: Track & Field Kouhai es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-                "meme": "Meme: Meg: Track & Field Kouhai en la partida – pura adrenalina y caos en los motores.",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: Superviviente en la Niebla",
-                "tagline": "Buscando escapar de las garras de la Niebla.",
-                "turn_on": "Valentía y elegancia bajo presión",
-                "red_flags": [
-                  "Impredecible en la niebla",
-                  "Obsesión con los objetivos"
-                ],
-                "dating_vibe": "Romance intenso y peligroso en la Niebla",
-                "dealbreaker": "La traición y la cobardía",
-                "green_flags": [
-                  "Determinación inquebrantable",
-                  "Lealtad en momentos críticos"
-                ]
-              },
-              "ja": {
-                "bio": "Meg: Track & Field Kouhaiはエンティティの試練において際立った存在感を放つキャラクターです。",
-                "meme": "ミーム: 試練のMeg: Track & Field Kouhai – 発電機とチェイスで常に戦場をかき乱す。",
-                "quote": "\"One more lap around the trial!\"",
-                "title": "Meg: Track & Field Kouhai: 霧のサバイバー",
-                "tagline": "霧の試練からの脱出を目指す。",
-                "turn_on": "極限状態での勇気と冷静さ",
-                "red_flags": [
-                  "霧の中での予測不能さ",
-                  "単独行動しがち"
-                ],
-                "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-                "dealbreaker": "裏切りと逃走",
-                "green_flags": [
-                  "試練での高い集中力",
-                  "窮地での頼もしさ"
-                ]
-              },
-              "pl": {
-                "bio": "Meg: Track & Field Kouhai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-                "meme": "Meme: Meg: Track & Field Kouhai we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-                "quote": "„Szybkość, pasja i zero strachu – taka jest moja droga we Mgle!”",
-                "title": "Meg: Track & Field Kouhai: Ocalały we Mgle",
-                "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-                "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-                "red_flags": [
-                  "Nieprzewidywalność we mgle",
-                  "Skupienie na własnych celach"
-                ],
-                "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-                "dealbreaker": "Zdrada i brak szacunku",
-                "green_flags": [
-                  "Niezłomna determinacja w próbie",
-                  "Lojalność wobec sojuszników"
-                ]
-              }
+            "es": {
+              "archetype": "Meg: Track & Field Kouhai: Superviviente en la Niebla",
+              "bio": "Meg: Track & Field Kouhai es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "tagline": "Buscando escapar de las garras de la Niebla.",
+              "meme": "Meme: Meg: Track & Field Kouhai en la partida – pura adrenalina y caos en los motores.",
+              "turn_on": "Valentía y elegancia bajo presión",
+              "dealbreaker": "La traición y la cobardía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Impredecible en la niebla",
+                "Obsesión con los objetivos"
+              ],
+              "green_flags": [
+                "Determinación inquebrantable",
+                "Lealtad en momentos críticos"
+              ]
             },
-            "compatibility_tags": [
-              "Energetic Athletics Star",
-              "Survivor",
-              "female"
-            ]
+            "ja": {
+              "archetype": "Meg: Track & Field Kouhai: 霧のサバイバー",
+              "bio": "Meg: Track & Field Kouhaiはエンティティの試練において際立った存在感を放つキャラクターです。",
+              "tagline": "霧の試練からの脱出を目指す。",
+              "meme": "ミーム: 試練のMeg: Track & Field Kouhai – 発電機とチェイスで常に戦場をかき乱す。",
+              "turn_on": "極限状態での勇気と冷静さ",
+              "dealbreaker": "裏切りと逃走",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "霧の中での予測不能さ",
+                "単独行動しがち"
+              ],
+              "green_flags": [
+                "試練での高い集中力",
+                "窮地での頼もしさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Meg: Track & Field Kouhai: Ocalały we Mgle",
+              "bio": "Meg: Track & Field Kouhai to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
+              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
+              "quote": "„Szybkość, pasja i zero strachu – taka jest moja droga we Mgle!”",
+              "meme": "Meme: Meg: Track & Field Kouhai we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
+              "dealbreaker": "Zdrada i brak szacunku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nieprzewidywalność we mgle",
+                "Skupienie na własnych celach"
+              ],
+              "green_flags": [
+                "Niezłomna determinacja w próbie",
+                "Lojalność wobec sojuszników"
+              ]
+            }
           },
           "order_index": 9,
-          "is_active": true,
-          "stat": {
-            "id": "ef5b09e5-e873-473f-affc-1887294c8819",
-            "entity_id": "b2094dd0-ec53-4401-ac46-0ab1de7016fb",
-            "smash_count": 0,
-            "pass_count": 0,
-            "super_smash_count": 0,
-            "total_votes": 0,
-            "smash_rate": 0.0,
-            "chaos_rating": 50.0,
-            "updated_at": "2026-09-07T18:14:48.625216+00:00"
-          },
-          "votes": []
+          "is_active": true
         }
       ]
     }
-  ],
-  "roster_slug": "anime_manga",
-  "entity_count": 10
+  ]
 }

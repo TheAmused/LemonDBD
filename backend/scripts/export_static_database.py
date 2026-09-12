@@ -8,16 +8,19 @@ from sqlalchemy import select
 
 from app import create_app
 from app.core.extensions import db
-from app.models.character import Character
+from app.models.character import Killer, Survivor
 from app.models.perk import Perk
-from app.models.equipment import Item, Addon, Offering
+from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.chapter import Chapter
-from app.models.map import MapRealm, Realm
+from app.models.map import MapRealm, MapSource, Realm
 from app.models.user import User
 from app.models.smash_or_pass import Roster, Entity
 from app.services.db.serializers import (
-    serialize_character, serialize_perk, serialize_item, serialize_addon, serialize_offering,
-    serialize_chapter, serialize_realm, serialize_user,
+    serialize_addon, serialize_chapter, serialize_killer, serialize_survivor,
+    serialize_item,
+    serialize_item_category, serialize_killer_addon,
+    serialize_item_addon, serialize_offering, serialize_perk, serialize_realm,
+    serialize_user,
 )
 
 OUTPUT_DIR = Path(os.environ.get("EXPORT_DIR", "/app/static_database_export"))
@@ -61,8 +64,20 @@ def main():
     with app.app_context():
         # 1. CONTENT
         print("\n--- Exporting Content Entities ---")
-        characters = [serialize_character(c) for c in db.session.scalars(select(Character).order_by(Character.id)).all()]
-        save_json_file(OUTPUT_DIR / "content" / "characters.json", "characters", characters)
+        # Two tables, two files. Their ids are numbered separately, so a
+        # single `characters.json` could not say which one a row belonged to.
+        survivors = [
+            serialize_survivor(c)
+            for c in db.session.scalars(select(Survivor).order_by(Survivor.id)).all()
+        ]
+        save_json_file(OUTPUT_DIR / "content" / "survivors.json", "survivors", survivors)
+
+        killers = [
+            serialize_killer(c)
+            for c in db.session.scalars(select(Killer).order_by(Killer.id)).all()
+        ]
+        save_json_file(OUTPUT_DIR / "content" / "killers.json", "killers", killers)
+        characters = survivors + killers
 
         perks = [serialize_perk(p) for p in db.session.scalars(select(Perk).order_by(Perk.id)).all()]
         save_json_file(OUTPUT_DIR / "content" / "perks.json", "perks", perks)
@@ -70,8 +85,24 @@ def main():
         items = [serialize_item(i) for i in db.session.scalars(select(Item).order_by(Item.id)).all()]
         save_json_file(OUTPUT_DIR / "content" / "items.json", "items", items)
 
-        addons = [serialize_addon(a) for a in db.session.scalars(select(Addon).order_by(Addon.id)).all()]
-        save_json_file(OUTPUT_DIR / "content" / "addons.json", "addons", addons)
+        # One file per owner, matching the seed layout: an add-on belongs to a
+        # killer or to an item class, and those are two tables now.
+        killer_addons = [
+            serialize_killer_addon(a)
+            for a in db.session.scalars(select(KillerAddon).order_by(KillerAddon.id)).all()
+        ]
+        save_json_file(
+            OUTPUT_DIR / "content" / "killer_addons.json", "killer_addons", killer_addons
+        )
+
+        item_addons = [
+            serialize_item_addon(a)
+            for a in db.session.scalars(select(ItemAddon).order_by(ItemAddon.id)).all()
+        ]
+        save_json_file(
+            OUTPUT_DIR / "content" / "item_addons.json", "item_addons", item_addons
+        )
+        addons = killer_addons + item_addons
 
         offerings = [serialize_offering(o) for o in db.session.scalars(select(Offering).order_by(Offering.id)).all()]
         save_json_file(OUTPUT_DIR / "content" / "offerings.json", "offerings", offerings)
@@ -81,6 +112,24 @@ def main():
 
         realms = [serialize_realm(r) for r in db.session.scalars(select(Realm).order_by(Realm.id)).all()]
         save_json_file(OUTPUT_DIR / "content" / "realms.json", "realms", realms)
+
+        # The two lookup tables the foreign keys above point at. Without them
+        # an export cannot be re-imported: `items.category_id` and
+        # `map_realms.source_id` would reference rows that are not in the file
+        # set.
+        item_categories = [
+            serialize_item_category(c)
+            for c in db.session.scalars(select(ItemCategory).order_by(ItemCategory.id)).all()
+        ]
+        save_json_file(
+            OUTPUT_DIR / "content" / "item_categories.json", "item_categories", item_categories
+        )
+
+        map_sources = [
+            {"id": s.id, "code": s.code, "label": s.label}
+            for s in db.session.scalars(select(MapSource).order_by(MapSource.id)).all()
+        ]
+        save_json_file(OUTPUT_DIR / "content" / "map_sources.json", "map_sources", map_sources)
 
         # Maps (with tiles and objectives)
         map_realms = db.session.scalars(select(MapRealm).order_by(MapRealm.id)).all()
@@ -108,18 +157,16 @@ def main():
                 }
                 for o in r.objectives
             ]
+            # Two integer foreign keys, and nothing copied out of the rows they
+            # point at. `realm` (the realm's display name), `source` and
+            # `source_label` are read through `realm_id` / `source_id`; the five
+            # layout figures are model defaults, not columns.
             maps_list.append({
+                "id": r.id,
                 "map_id": r.map_id,
                 "name": r.name,
-                "realm": r.realm,
                 "realm_id": r.realm_id,
-                "source": r.source,
-                "source_label": r.source_label,
-                "layout_type": r.layout_type,
-                "jungle_gyms_count": r.jungle_gyms_count,
-                "totem_spawns_count": r.totem_spawns_count,
-                "pallet_density": r.pallet_density,
-                "shack_has_basement": r.shack_has_basement,
+                "source_id": r.source_id,
                 "description": r.description,
                 "image_url": r.image_url,
                 "callout_image_url": r.callout_image_url,
@@ -152,7 +199,22 @@ def main():
                         "gender": e.gender,
                         "media_url": e.media_url,
                         "media_type": e.media_type,
-                        "metadata_json": e.get_metadata(),
+                        # The profile is columns now; `metadata_json` was one
+                        # blob restating them, so it exports as columns too.
+                        "archetype": e.archetype,
+                        "bio": e.bio,
+                        "tagline": e.tagline,
+                        "quote": e.quote,
+                        "meme": e.meme,
+                        "turn_on": e.turn_on,
+                        "dealbreaker": e.dealbreaker,
+                        "dating_vibe": e.dating_vibe,
+                        "red_flags": list(e.red_flags or []),
+                        "green_flags": list(e.green_flags or []),
+                        "chapter": e.chapter,
+                        "danger_level": e.danger_level,
+                        "chaos_score": e.chaos_score,
+                        "translations": e.translations or {},
                         "order_index": e.order_index,
                         "is_active": e.is_active,
                         "stat": e.stat.to_dict() if e.stat else None,
@@ -197,7 +259,8 @@ It completely excludes:
 ```text
 static_export/
 ├── content/
-│   ├── characters.json         ({len(characters)} characters with powers, stats, lore, translations)
+│   ├── survivors.json          ({len(survivors)} survivors with lore and translations)
+│   ├── killers.json            ({len(killers)} killers with powers, stats, lore, translations)
 │   ├── perks.json              ({len(perks)} perks with teachables, descriptions, translations)
 │   ├── items.json              ({len(items)} survivor/killer items)
 │   ├── addons.json             ({len(addons)} item and power addons)

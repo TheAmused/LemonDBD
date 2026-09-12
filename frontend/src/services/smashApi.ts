@@ -86,6 +86,14 @@ async function handleResponse<T>(response: Response): Promise<T> {
 export async function fetchRosters(activeOnly: boolean = true): Promise<RosterItem[]> {
   const backendBase = getBackendBaseUrl();
   const url = `${backendBase}/api/v1/smash-or-pass/rosters?active_only=${activeOnly}`;
+  // Still `no-store`, even though a roster looks like catalog data.
+  //
+  // Each RosterItem carries `total_votes`, a live SUM over that roster's
+  // entity stats, so the list changes every time anyone votes anywhere in it.
+  // The backend deliberately does not cache this endpoint for the same reason
+  // and therefore sends no ETag -- without an explicit opt-out the browser
+  // would apply heuristic freshness to a response with no validator and serve
+  // a frozen vote counter.
   const response = await fetch(url, {
     method: 'GET',
     headers: getRequestHeaders(),
@@ -112,6 +120,9 @@ export async function fetchRosterFeed(
   if (options?.gender && options.gender !== 'all') params.set('gender', options.gender);
 
   const url = `${backendBase}/api/v1/smash-or-pass/rosters/${encodeURIComponent(slug)}/feed?${params.toString()}`;
+  // Stays uncached: the feed is "whatever this session has not voted on yet",
+  // so it changes with every vote cast. A replayed response would deal out
+  // cards the player has already swiped.
   const response = await fetch(url, {
     method: 'GET',
     headers: getRequestHeaders(),
@@ -168,6 +179,9 @@ export async function fetchLeaderboard(
   if (options?.gender && options.gender !== 'all') params.set('gender', options.gender);
 
   const url = `${backendBase}/api/v1/smash-or-pass/rosters/${encodeURIComponent(slug)}/leaderboard?${params.toString()}`;
+  // Stays uncached: rankings move with every vote anyone casts, and the point
+  // of opening the leaderboard is to see where your own vote just landed.
+  // The backend does not cache this one either, so there is no ETag to reuse.
   const response = await fetch(url, {
     method: 'GET',
     headers: getRequestHeaders(),
@@ -255,6 +269,10 @@ export async function fetchUserVotes(
   params.set('session_id', sessionId);
 
   try {
+    // Stays uncached: this is the caller's own vote history, which is what the
+    // client hydrates its local stats from. It is personalised (session id plus
+    // any bearer token), so the backend never caches it, and a stale copy would
+    // resurrect votes the player has just reset.
     const response = await fetch(
       `${backendBase}/api/v1/smash-or-pass/user-votes?${params.toString()}`,
       {

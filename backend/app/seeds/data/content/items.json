@@ -1,14 +1,13 @@
 {
-  "version": "1.0",
+  "version": "3.0",
   "exported_at": "2026-09-10T12:16:35.171286+00:00",
   "source": "LemonDBD",
   "target": "items",
-  "count": 58,
   "items": [
     {
+      "id": 1,
       "name": "Chinese Firecracker",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A traditional Chinese firecracker used to ward off evil spirits during the Lunar New Year.<br><br>Press the <i>Use Item button</i> to drop the firecracker:<br>• Detonates with a series of loud bangs and bright flashes of light.<br>• Temporarily <b>blinds</b> and <b>deafens</b> nearby Players.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded.<br><br><span class=\"FlavorText\">Single-use consumable item.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_chineseFirecracker.png?622685",
       "icon_local_path": "icons/items/chinese_firecracker.webp",
@@ -17,10 +16,6 @@
         "de": {
           "name": "Chinesischer Böller",
           "description": "Traditionelle chinesische Feuerwerkskörper zur Vertreibung böser Geister zum Mondneujahr.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um den Böller abzulegen:<br>• Detoniert mit einer Reihe lauter Knalle und Lichtblitze.<br>• <b>Blendet</b> und <b>betäubt</b> nahe Spieler.<br>• Lässt den Killer getragene Überlebende <b>fallenlassen</b>.<br><br><span class=\"FlavorText\">Einmalig verwendbarer Gegenstand.</span>"
-        },
-        "en": {
-          "name": "Chinese Firecracker",
-          "description": "A traditional Chinese firecracker used to ward off evil spirits during the Lunar New Year.<br><br>Press the <i>Use Item button</i> to drop the firecracker:<br>• Detonates with a series of loud bangs and bright flashes of light.<br>• Temporarily <b>blinds</b> and <b>deafens</b> nearby Players.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded.<br><br><span class=\"FlavorText\">Single-use consumable item.</span>"
         },
         "es": {
           "name": "Petardos chinos",
@@ -37,9 +32,9 @@
       }
     },
     {
+      "id": 2,
       "name": "Third Year Party Starter",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A special anniversary firecracker celebrating the 3rd Year of Dead by Daylight.<br><br>Press the <i>Use Item button</i> to drop the firecracker:<br>• Detonates with a loud bang and a shower of colorful confetti.<br>• Temporarily <b>blinds</b> and <b>deafens</b> nearby Players.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded during a pickup or carry.<br><br><span class=\"FlavorText\">Single-use consumable item.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_thirdYearPartyStarter.png?347e6b",
       "icon_local_path": "icons/items/third_year_party_starter.webp",
@@ -48,10 +43,6 @@
         "de": {
           "name": "Partykracher zum dritten Geburtstag",
           "description": "Ein spezieller Knallkörper zum 3. Geburtstag von Dead by Daylight.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um den Kracher abzulegen:<br>• Detoniert mit lautem Knall und buntem Konfetti.<br>• <b>Blendet</b> und <b>betäubt</b> kurzzeitig nahe Spieler.<br>• Lässt den Killer getragene Überlebende <b>fallenlassen</b>.<br><br><span class=\"FlavorText\">Einmalig verwendbarer Gegenstand.</span>"
-        },
-        "en": {
-          "name": "Third Year Party Starter",
-          "description": "A special anniversary firecracker celebrating the 3rd Year of Dead by Daylight.<br><br>Press the <i>Use Item button</i> to drop the firecracker:<br>• Detonates with a loud bang and a shower of colorful confetti.<br>• Temporarily <b>blinds</b> and <b>deafens</b> nearby Players.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded during a pickup or carry.<br><br><span class=\"FlavorText\">Single-use consumable item.</span>"
         },
         "es": {
           "name": "Petardo del tercer aniversario",
@@ -68,9 +59,9 @@
       }
     },
     {
+      "id": 3,
       "name": "Winter Party Starter",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A festive winter firecracker that detonates into loud bangs and intense flashes of light.<br><br>Press the <i>Use Item button</i> to drop the firecracker:<br>• Detonates with a loud bang and a blinding flash of light.<br>• Temporarily <b>blinds</b> and <b>deafens</b> nearby Players.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded during a pickup or carry.<br><br><span class=\"FlavorText\">Single-use consumable item.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_winterPartyStarter.png?c4c42b",
       "icon_local_path": "icons/items/winter_party_starter.webp",
@@ -79,10 +70,6 @@
         "de": {
           "name": "Winter-Knallbonbon",
           "description": "Ein festlicher Winter-Partykracher, der mit lauten Knallen und hellen Blitzen detoniert.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um den Kracher abzulegen:<br>• Detoniert mit lautem Knall und blendendem Blitz.<br>• <b>Blendet</b> und <b>betäubt</b> kurzzeitig nahe Spieler.<br>• Lässt den Killer getragene Überlebende <b>fallenlassen</b>, wenn er geblendet wird.<br><br><span class=\"FlavorText\">Einmalig verwendbarer Gegenstand.</span>"
-        },
-        "en": {
-          "name": "Winter Party Starter",
-          "description": "A festive winter firecracker that detonates into loud bangs and intense flashes of light.<br><br>Press the <i>Use Item button</i> to drop the firecracker:<br>• Detonates with a loud bang and a blinding flash of light.<br>• Temporarily <b>blinds</b> and <b>deafens</b> nearby Players.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded during a pickup or carry.<br><br><span class=\"FlavorText\">Single-use consumable item.</span>"
         },
         "es": {
           "name": "Petardo invernal",
@@ -99,9 +86,9 @@
       }
     },
     {
+      "id": 4,
       "name": "Flashlight",
-      "category": "Flashlight",
-      "role": "Survivor",
+      "category_id": 3,
       "description": "A standard Flashlight. Can be used to light your way in the darkness.\n• 8 seconds of use.\n\"\"Most of the battery life was wastefully used by the previous owner.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_flashlight.png?9d0a80",
       "icon_local_path": "icons/items/flashlight.webp",
@@ -110,10 +97,6 @@
         "de": {
           "name": "Taschenlampe",
           "description": "Eine Standardtaschenlampe. Kann genutzt werden, um dir deinen Weg in der Dunkelheit zu leuchten.\n• 8 Sekunden Nutzungsdauer.\n\"„Der Großteil der Batterielebensdauer wurde vom Vorbesitzer sinnlos verschwendet.“\""
-        },
-        "en": {
-          "name": "Flashlight",
-          "description": "A standard Flashlight. Can be used to light your way in the darkness.\n• 8 seconds of use.\n\"\"Most of the battery life was wastefully used by the previous owner.\"\""
         },
         "es": {
           "name": "Linterna",
@@ -130,9 +113,9 @@
       }
     },
     {
+      "id": 5,
       "name": "Sport Flashlight",
-      "category": "Flashlight",
-      "role": "Survivor",
+      "category_id": 3,
       "description": "A very portable Flashlight with a good grip. Its efficient technology produces a powerful light while consuming less power.\n• 8 Seconds of use.\n• Decreases Flashlight battery consumption by 11%.\n• Increases the accuracy of the Flashlight beam by 20%.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_sportFlashlight.png?574655",
       "icon_local_path": "icons/items/sport_flashlight.webp",
@@ -141,10 +124,6 @@
         "de": {
           "name": "Sporttaschenlampe",
           "description": "Eine leichte Taschenlampe mit guter Griffigkeit. Ihre effiziente Technologie erzeugt ein kraftvolles Licht, während sie gleichzeitig weniger Energie verbraucht.\n• 8 Sekunden Nutzungsdauer.\n• Verringert den Batterieverbrauch der Taschenlampe um 11 %.\n• Erhöht die Genauigkeit des Lichtstrahls um 20 %."
-        },
-        "en": {
-          "name": "Sport Flashlight",
-          "description": "A very portable Flashlight with a good grip. Its efficient technology produces a powerful light while consuming less power.\n• 8 Seconds of use.\n• Decreases Flashlight battery consumption by 11%.\n• Increases the accuracy of the Flashlight beam by 20%."
         },
         "es": {
           "name": "Linterna deportiva",
@@ -161,9 +140,9 @@
       }
     },
     {
+      "id": 6,
       "name": "Utility Flashlight",
-      "category": "Flashlight",
-      "role": "Survivor",
+      "category_id": 3,
       "description": "A sturdy but heavy Flashlight that packs a lot of power.\n• 12 Seconds of use.\n• Increases the brightness of the Flashlight beam by 30%.\n• Increases Blindness duration by 15%.\n• Decreases the accuracy of the Flashlight beam by 20%.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_utilityFlashlight.png?14da21",
       "icon_local_path": "icons/items/utility_flashlight.webp",
@@ -172,10 +151,6 @@
         "de": {
           "name": "Nützliche Taschenlampe",
           "description": "Eine robuste, aber schwere Taschenlampe, die jede Menge Energie bereithält.\n• 12 Sekunden Nutzungsdauer.\n• Erhöht die Helligkeit des Lichtstrahls um 30 %.\n• Verlängert die Dauer der Erblindung um 15 %.\n• Verringert die Genauigkeit des Lichtstrahls um 20 %."
-        },
-        "en": {
-          "name": "Utility Flashlight",
-          "description": "A sturdy but heavy Flashlight that packs a lot of power.\n• 12 Seconds of use.\n• Increases the brightness of the Flashlight beam by 30%.\n• Increases Blindness duration by 15%.\n• Decreases the accuracy of the Flashlight beam by 20%."
         },
         "es": {
           "name": "Linterna multiusos",
@@ -192,9 +167,9 @@
       }
     },
     {
+      "id": 7,
       "name": "Anniversary Flashlight",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A festive Flashlight equipped with sparklers that creates a celebratory burst of confetti upon blinding the Killer.<br><br>Press the <i>Use Item button</i> to light the <b>Flashlight</b> for up to <b>8 seconds</b>.<br><br>• Blinding the Killer triggers a burst of confetti.<br><br><span class=\"FlavorText\">\"Happy Anniversary!\" — The Dead by Daylight Team</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_anniversaryFlashlight.png?983482",
       "icon_local_path": "icons/items/anniversary_flashlight.webp",
@@ -203,10 +178,6 @@
         "de": {
           "name": "Geburtstags-Taschenlampe",
           "description": "Eine festliche Taschenlampe mit Wunderkerzen, die beim Blenden des Killers eine Konfetti-Explosion erzeugt.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um die <b>Taschenlampe</b> bis zu <b>8 Sekunden</b> lang leuchten zu lassen.<br><br>• Das Blenden des Killers erzeugt eine Konfetti-Explosion.<br><br><span class=\"FlavorText\">„Alles Gute zum Jubiläum!“ – Das Dead by Daylight-Team</span>"
-        },
-        "en": {
-          "name": "Anniversary Flashlight",
-          "description": "A festive Flashlight equipped with sparklers that creates a celebratory burst of confetti upon blinding the Killer.<br><br>Press the <i>Use Item button</i> to light the <b>Flashlight</b> for up to <b>8 seconds</b>.<br><br>• Blinding the Killer triggers a burst of confetti.<br><br><span class=\"FlavorText\">\"Happy Anniversary!\" — The Dead by Daylight Team</span>"
         },
         "es": {
           "name": "Linterna de aniversario",
@@ -223,9 +194,9 @@
       }
     },
     {
+      "id": 8,
       "name": "Banquet Flashlight",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "It's time to burn calories... and retinas.<br><br>Press the <i>Use Item button</i> to light the <b>Flashlight</b> for up to <b>8 seconds</b>.<br><br>• Blinding the Killer creates a celebratory burst of confetti and lights.<br><br><span class=\"FlavorText\">Only available during Anniversary Events.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconItems_flashlight_anniversary2026.png?1caa99",
       "icon_local_path": "icons/items/banquet_flashlight.webp",
@@ -234,10 +205,6 @@
         "de": {
           "name": "Bankett-Taschenlampe",
           "description": "Zeit, Kalorien zu verbrennen ... und Netzhäute.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um die <b>Taschenlampe</b> bis zu <b>8 Sekunden</b> lang leuchten zu lassen.<br><br>• Das Blenden des Killers erzeugt eine festliche Explosion aus Konfetti und Licht.<br><br><span class=\"FlavorText\">Nur während Jubiläums-Events verfügbar.</span>"
-        },
-        "en": {
-          "name": "Banquet Flashlight",
-          "description": "It's time to burn calories... and retinas.<br><br>Press the <i>Use Item button</i> to light the <b>Flashlight</b> for up to <b>8 seconds</b>.<br><br>• Blinding the Killer creates a celebratory burst of confetti and lights.<br><br><span class=\"FlavorText\">Only available during Anniversary Events.</span>"
         },
         "es": {
           "name": "Linterna de banquete",
@@ -254,9 +221,9 @@
       }
     },
     {
+      "id": 9,
       "name": "Masquerade Flashlight",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "Not even a mask can protect you from this Flashlight's bright beam.<br><br>Press the <i>Use Item button</i> to light the <b>Flashlight</b> for up to <b>8 seconds</b>.<br><br>• Blinding the Killer triggers a celebratory explosion of confetti and lights.<br><br><span class=\"FlavorText\">\"Happy Anniversary! The future looks bright!\" — The Dead by Daylight Team</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_masqueradeFlashlight.png?fe8294",
       "icon_local_path": "icons/items/masquerade_flashlight.webp",
@@ -265,10 +232,6 @@
         "de": {
           "name": "Maskeraden-Taschenlampe",
           "description": "Nicht einmal eine Maske kann dich vor dem hellen Lichtstrahl dieser Taschenlampe schützen.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um die <b>Taschenlampe</b> bis zu <b>8 Sekunden</b> lang leuchten zu lassen.<br><br>• Das Blenden des Killers löst eine festliche Konfetti- und Lichtexplosion aus.<br><br><span class=\"FlavorText\">„Alles Gute zum Jubiläum! Die Zukunft sieht rosig aus!“ – Das Dead by Daylight-Team</span>"
-        },
-        "en": {
-          "name": "Masquerade Flashlight",
-          "description": "Not even a mask can protect you from this Flashlight's bright beam.<br><br>Press the <i>Use Item button</i> to light the <b>Flashlight</b> for up to <b>8 seconds</b>.<br><br>• Blinding the Killer triggers a celebratory explosion of confetti and lights.<br><br><span class=\"FlavorText\">\"Happy Anniversary! The future looks bright!\" — The Dead by Daylight Team</span>"
         },
         "es": {
           "name": "Linterna de mascarada",
@@ -285,9 +248,9 @@
       }
     },
     {
+      "id": 10,
       "name": "Will O' Wisp",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A Flashlight equipped with a special lens cover that adds an orange tint and a little ghost to the beam.\n• 8 Seconds of use.\n• Considerably increases Friendly Ghosts in your life.\n\"\"Happy Trick or Treating!\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_willOWisp.png?2ee5ef",
       "icon_local_path": "icons/items/will_o_wisp.webp",
@@ -296,10 +259,6 @@
         "de": {
           "name": "Irrlicht",
           "description": "Eine Taschenlampe, die mit einem besonderen Aufsatz ausgestattet ist, der das Licht orange färbt und einen kleinen Geist erscheinen lässt.\n• 8 Sekunden Nutzungsdauer.\n• Erhöht deutlich die Anzahl freundlicher Geister in deinem Leben.\n\"„Viel Spaß zu Halloween!“\""
-        },
-        "en": {
-          "name": "Will O' Wisp",
-          "description": "A Flashlight equipped with a special lens cover that adds an orange tint and a little ghost to the beam.\n• 8 Seconds of use.\n• Considerably increases Friendly Ghosts in your life.\n\"\"Happy Trick or Treating!\"\""
         },
         "es": {
           "name": "Fuego fatuo",
@@ -316,9 +275,9 @@
       }
     },
     {
+      "id": 11,
       "name": "Apprentice's Fog Vial",
-      "category": "Fog Vial",
-      "role": "Survivor",
+      "category_id": 4,
       "description": "Made by the hands of a diligent but timid novice.\n• Releases concentrated Fog.\n• Fog Cloud lasts for 8 seconds\n• Fog Cloud expands to a maximum of 8 meters.\n• While inside a Fog Cloud, auras are suppressed, and Survivors leave no scratch marks and make no sound.\n• Has 4 charges.\n• Recharges over 70 seconds.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_apprenticesFogVial.png?15c5b3",
       "icon_local_path": "icons/items/apprentices_fog_vial.webp",
@@ -327,10 +286,6 @@
         "de": {
           "name": "Nebelfläschchen des Lehrlings",
           "description": "Gefertigt von einem fleißigen, aber schüchternen Lehrling.\n• Setzt konzentrierten Nebel frei.\n• Die Nebelwolke hält 8 Sek. lang an.\n• Die Nebelwolke breitet sich auf maximal 8 Meter aus.\n• In einer Nebelwolke sind Auren unterdrückt, Überlebende hinterlassen keine Kratzspuren und machen keine Geräusche.\n• Hat 4 Aufladungen.\n• Lädt sich über 70 Sek. wieder auf."
-        },
-        "en": {
-          "name": "Apprentice's Fog Vial",
-          "description": "Made by the hands of a diligent but timid novice.\n• Releases concentrated Fog.\n• Fog Cloud lasts for 8 seconds\n• Fog Cloud expands to a maximum of 8 meters.\n• While inside a Fog Cloud, auras are suppressed, and Survivors leave no scratch marks and make no sound.\n• Has 4 charges.\n• Recharges over 70 seconds."
         },
         "es": {
           "name": "Frasco de niebla de aprendiz",
@@ -347,9 +302,9 @@
       }
     },
     {
+      "id": 12,
       "name": "Artisan's Fog Vial",
-      "category": "Fog Vial",
-      "role": "Survivor",
+      "category_id": 4,
       "description": "Crafted by an experienced glazier with a love for her craft.\n• Releases concentrated Fog.\n• Fog Cloud lasts for 10 seconds\n• Fog Cloud expands to a maximum of 8 meters.\n• While inside a Fog Cloud, auras are suppressed, and Survivors leave no scratch marks and make no sound.\n• Has 4 charges.\n• Recharges over 65 seconds.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_artisansFogVial.png?20782b",
       "icon_local_path": "icons/items/artisans_fog_vial.webp",
@@ -358,10 +313,6 @@
         "de": {
           "name": "Nebelfläschchen des Kunsthandwerkers",
           "description": "Von einer erfahrenen Glaserin gefertigt, die ihr Handwerk liebt.\n• Setzt konzentrierten Nebel frei.\n• Die Nebelwolke hält 10 Sek. lang an.\n• Die Nebelwolke breitet sich auf maximal 8 Meter aus.\n• In einer Nebelwolke sind Auren unterdrückt, Überlebende hinterlassen keine Kratzspuren und machen keine Geräusche.\n• Hat 4 Aufladungen.\n• Lädt sich über 65 Sek. wieder auf."
-        },
-        "en": {
-          "name": "Artisan's Fog Vial",
-          "description": "Crafted by an experienced glazier with a love for her craft.\n• Releases concentrated Fog.\n• Fog Cloud lasts for 10 seconds\n• Fog Cloud expands to a maximum of 8 meters.\n• While inside a Fog Cloud, auras are suppressed, and Survivors leave no scratch marks and make no sound.\n• Has 4 charges.\n• Recharges over 65 seconds."
         },
         "es": {
           "name": "Frasco de niebla de artesano",
@@ -378,9 +329,9 @@
       }
     },
     {
+      "id": 13,
       "name": "Vigo's Fog Vial",
-      "category": "Fog Vial",
-      "role": "Survivor",
+      "category_id": 4,
       "description": "From the man’s own collection. Impeccable. Unparalleled.\n• Releases concentrated Fog.\n• Fog Cloud lasts for 12 seconds\n• Fog Cloud expands to a maximum of 8 meters.\n• While inside a Fog Cloud, auras are suppressed, and Survivors leave no scratch marks and make no sound.\n• Has 4 charges.\n• Recharges over 60 seconds.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_vigosFogVial.png?ba135c",
       "icon_local_path": "icons/items/vigos_fog_vial.webp",
@@ -389,10 +340,6 @@
         "de": {
           "name": "Vigos Nebelfläschchen",
           "description": "Aus der persönlichen Sammlung des Mannes. Makellos. Unvergleichlich.\n• Setzt konzentrierten Nebel frei.\n• Die Nebelwolke hält 12 Sek. lang an.\n• Die Nebelwolke breitet sich auf maximal 8 Meter aus.\n• In einer Nebelwolke sind Auren unterdrückt, Überlebende hinterlassen keine Kratzspuren und machen keine Geräusche.\n• Hat 4 Aufladungen.\n• Lädt sich über 60 Sek. wieder auf."
-        },
-        "en": {
-          "name": "Vigo's Fog Vial",
-          "description": "From the man’s own collection. Impeccable. Unparalleled.\n• Releases concentrated Fog.\n• Fog Cloud lasts for 12 seconds\n• Fog Cloud expands to a maximum of 8 meters.\n• While inside a Fog Cloud, auras are suppressed, and Survivors leave no scratch marks and make no sound.\n• Has 4 charges.\n• Recharges over 60 seconds."
         },
         "es": {
           "name": "Frasco de niebla de Vigo",
@@ -409,9 +356,9 @@
       }
     },
     {
+      "id": 14,
       "name": "Broken Key",
-      "category": "Key",
-      "role": "Survivor",
+      "category_id": 5,
       "description": "The bow and shank of a key, vibrating with power.\nConsume a charge to:\n• Reveal auras of Survivors within 48 meters for 8 seconds by holding the Use Item Button.\nBegins with 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_brokenKey.png?32b943",
       "icon_local_path": "icons/items/broken_key.webp",
@@ -420,10 +367,6 @@
         "de": {
           "name": "Zerbrochener Schlüssel",
           "description": "Griff und Halm eines Schlüssels, der vor Kraft vibriert.\nVerbrauche eine Aufladung, um:\n• Auren von Überlebenden in einem Umkreis von 48 Metern für 8 Sek. zu enthüllen, indem du die „Gegenstand verwenden“-Taste hältst.\nBeginnt mit 6 Aufladungen."
-        },
-        "en": {
-          "name": "Broken Key",
-          "description": "The bow and shank of a key, vibrating with power.\nConsume a charge to:\n• Reveal auras of Survivors within 48 meters for 8 seconds by holding the Use Item Button.\nBegins with 6 charges."
         },
         "es": {
           "name": "Llave rota",
@@ -440,9 +383,9 @@
       }
     },
     {
+      "id": 15,
       "name": "Dull Key",
-      "category": "Key",
-      "role": "Survivor",
+      "category_id": 5,
       "description": "A bent and dull Key that once held great power.\nConsume a charge to:\n• Reveal auras of Survivors within 56 meters for 9 seconds by holding the Use Item Button.\n• Unlock Chests quickly. Chests unlocked with this Key have a revealed aura within 42 meters, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• Unlock the Hatch.\nBegins with 5 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_dullKey.png?a30f9d",
       "icon_local_path": "icons/items/dull_key.webp",
@@ -451,10 +394,6 @@
         "de": {
           "name": "Matter Schlüssel",
           "description": "Ein verbogener und matter Schlüssel, der einst große Kraft besaß.\nVerbrauche eine Aufladung, um:\n• Auren von Überlebenden in einem Umkreis von 56 Metern für 9 Sek. zu enthüllen, indem du die „Gegenstand verwenden“-Taste wählst.\n• Truhen schnell aufzuschließen. Truhen, die mit diesem Schlüssel geöffnet werden, enthüllen ihre Aura mit einem Radius von 42 Metern, wodurch andere Überlebende sie einmal durchwühlen können. Sie enthalten Gegenstände, die mindestens die Seltenheit „Selten“ haben.\n• die Bodenluke zu öffnen.\nBeginnt mit 5 Aufladungen."
-        },
-        "en": {
-          "name": "Dull Key",
-          "description": "A bent and dull Key that once held great power.\nConsume a charge to:\n• Reveal auras of Survivors within 56 meters for 9 seconds by holding the Use Item Button.\n• Unlock Chests quickly. Chests unlocked with this Key have a revealed aura within 42 meters, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• Unlock the Hatch.\nBegins with 5 charges."
         },
         "es": {
           "name": "Llave deslustrada",
@@ -471,9 +410,9 @@
       }
     },
     {
+      "id": 16,
       "name": "Skeleton Key",
-      "category": "Key",
-      "role": "Survivor",
+      "category_id": 5,
       "description": "A tarnished and crooked key, vibrating with ominous power.\nConsume a charge to:\n• Reveal auras of Survivors within 64 meters for 10 seconds by holding the Use Item Button.\n• Unlock Chests quickly. Chests unlocked with this Key have a revealed aura within 42 meters, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• Unlock the Hatch.\nBegins with 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_skeletonKey.png?1b6308",
       "icon_local_path": "icons/items/skeleton_key.webp",
@@ -482,10 +421,6 @@
         "de": {
           "name": "Hauptschlüssel",
           "description": "Ein angelaufener und verbogener Schlüssel, in dem eine ominöse Kraft vibriert.\nVerbrauche eine Aufladung, um:\n• Auren von Überlebenden in einem Umkreis von 64 Metern für 10 Sek. zu enthüllen, indem du die „Gegenstand verwenden“-Taste hältst.\n• Truhen schnell aufzuschließen. Truhen, die mit diesem Schlüssel geöffnet werden, enthüllen ihre Aura mit einem Radius von 42 Metern, wodurch andere Überlebende sie einmal durchwühlen können. Sie enthalten Gegenstände, die mindestens die Seltenheit „Selten“ haben.\n• die Bodenluke zu öffnen.\nBeginnt mit 6 Aufladungen."
-        },
-        "en": {
-          "name": "Skeleton Key",
-          "description": "A tarnished and crooked key, vibrating with ominous power.\nConsume a charge to:\n• Reveal auras of Survivors within 64 meters for 10 seconds by holding the Use Item Button.\n• Unlock Chests quickly. Chests unlocked with this Key have a revealed aura within 42 meters, enabling another Survivor to rummage once, and will contain items of at least Rare quality.\n• Unlock the Hatch.\nBegins with 6 charges."
         },
         "es": {
           "name": "Llave esqueleto",
@@ -502,9 +437,9 @@
       }
     },
     {
+      "id": 17,
       "name": "Cryptic Map",
-      "category": "Map",
-      "role": "Survivor",
+      "category_id": 6,
       "description": "Looking at it, the directions make no sense. But merely holding it grants you an uncanny intuition.\n• Press the Use Item Button to reveal auras of all pallets and vaults within 24 meters for 10 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• 4 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_CrypticMap.png?624911",
       "icon_local_path": "icons/items/cryptic_map.webp",
@@ -513,10 +448,6 @@
         "de": {
           "name": "Geheimnisvolle Karte",
           "description": "Auf den ersten Blick ergeben die Richtungen keinen Sinn. Aber während du sie in den Händen hältst, hast du eine unheimliche Intuition.\n• Drücke die „Gegenstand verwenden“-Taste, um 10 Sek. lang die Auren aller Paletten und Sprungpositionen innerhalb von 24 Metern anzuzeigen.\n• Die sekundäre Interaktion erzeugt einen Lichtstrahl an der Position des Überlebenden. Generatoren in einem Umkreis von 32 Metern rund um den Lichtstrahl werden mit roten Auren angezeigt.\n• 4 Aufladungen."
-        },
-        "en": {
-          "name": "Cryptic Map",
-          "description": "Looking at it, the directions make no sense. But merely holding it grants you an uncanny intuition.\n• Press the Use Item Button to reveal auras of all pallets and vaults within 24 meters for 10 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• 4 charges."
         },
         "es": {
           "name": "Mapa críptico",
@@ -533,9 +464,9 @@
       }
     },
     {
+      "id": 18,
       "name": "Scribbled Map",
-      "category": "Map",
-      "role": "Survivor",
+      "category_id": 6,
       "description": "Peering at the parchment, a path appears in your mind. Moments later, you feel lost again.\n• Press the Use Item Button to reveal auras of all pallets and vaults within 32 meters for 12 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• 5 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_map.png?a9589c",
       "icon_local_path": "icons/items/scribbled_map.webp",
@@ -544,10 +475,6 @@
         "de": {
           "name": "Gekritzelte Karte",
           "description": "Wenn du auf das Pergament blickst, siehst du einen Weg vor deinem inneren Auge. Kurz darauf fühlst du dich wieder orientierungslos.\n• Drücke die „Gegenstand verwenden“-Taste, um 12 Sek. lang die Auren aller Paletten und Sprungpositionen innerhalb von 32 Metern anzuzeigen.\n• Die sekundäre Interaktion erzeugt einen Lichtstrahl an der Position des Überlebenden. Generatoren in einem Umkreis von 32 Metern rund um den Lichtstrahl werden mit roten Auren angezeigt.\n• 5 Aufladungen."
-        },
-        "en": {
-          "name": "Scribbled Map",
-          "description": "Peering at the parchment, a path appears in your mind. Moments later, you feel lost again.\n• Press the Use Item Button to reveal auras of all pallets and vaults within 32 meters for 12 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• 5 charges."
         },
         "es": {
           "name": "Mapa garabateado",
@@ -564,9 +491,9 @@
       }
     },
     {
+      "id": 19,
       "name": "Annotated Map",
-      "category": "Map",
-      "role": "Survivor",
+      "category_id": 6,
       "description": "The sketch is clear and detailed. Strange knowledge flows into you, followed by dread uncertainty.\n• Press the Use Item Button to reveal auras of all pallets and vaults within 40 meters for 14 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_rainbowMap.png?25dde4",
       "icon_local_path": "icons/items/annotated_map.webp",
@@ -575,10 +502,6 @@
         "de": {
           "name": "Kommentierte Karte",
           "description": "Die Skizze ist scharf und genau. Ein seltsames Wissen erfüllt dich, gefolgt von einer schrecklichen Ungewissheit.\n• Drücke die „Gegenstand verwenden“-Taste, um 14 Sek. lang die Auren aller Paletten und Sprungpositionen innerhalb von 40 Metern anzuzeigen.\n• Die sekundäre Interaktion erzeugt einen Lichtstrahl an der Position des Überlebenden. Generatoren in einem Umkreis von 32 Metern rund um den Lichtstrahl werden mit roten Auren angezeigt.\n• 6 Aufladungen."
-        },
-        "en": {
-          "name": "Annotated Map",
-          "description": "The sketch is clear and detailed. Strange knowledge flows into you, followed by dread uncertainty.\n• Press the Use Item Button to reveal auras of all pallets and vaults within 40 meters for 14 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• 6 charges."
         },
         "es": {
           "name": "Mapa anotado",
@@ -595,9 +518,9 @@
       }
     },
     {
+      "id": 20,
       "name": "Bloodsense Map",
-      "category": "Map",
-      "role": "Survivor",
+      "category_id": 6,
       "description": "A bloodstained piece of parchment, hastily rolled and burning with a strange power.\n• Press the Use Item Button to reveal auras of all pallets, vaults and injured Survivors within 48 meters for 14 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• Causes pools of blood to spawn beneath you while being used.\n• 8 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_bloodsenseMap.png?d98285",
       "icon_local_path": "icons/items/bloodsense_map.webp",
@@ -606,10 +529,6 @@
         "de": {
           "name": "Blutsinn-Karte",
           "description": "Ein blutiges Stück Pergament, das hastig zusammengerollt wurde und eine seltsame Kraft ausstrahlt.\n• Drücke die „Gegenstand verwenden“-Taste, um 14 Sek. lang die Auren aller Paletten, Sprungpositionen und verletzten Überlebenden innerhalb von 48 Metern anzuzeigen.\n• Die sekundäre Interaktion erzeugt einen Lichtstrahl an der Position des Überlebenden. Generatoren in einem Umkreis von 32 Metern rund um den Lichtstrahl werden mit roten Auren angezeigt.\n• Während der Verwendung entstehen Blutpfützen unter dir.\n• 8 Aufladungen."
-        },
-        "en": {
-          "name": "Bloodsense Map",
-          "description": "A bloodstained piece of parchment, hastily rolled and burning with a strange power.\n• Press the Use Item Button to reveal auras of all pallets, vaults and injured Survivors within 48 meters for 14 seconds.\n• Using the secondary interaction creates a beam of light at the Survivor's location. Generators within 32 meters of the beam of light have their auras revealed.\n• Causes pools of blood to spawn beneath you while being used.\n• 8 charges."
         },
         "es": {
           "name": "Mapa de sentido sangriento",
@@ -626,9 +545,9 @@
       }
     },
     {
+      "id": 21,
       "name": "Camping Aid Kit",
-      "category": "Med-Kit",
-      "role": "Survivor",
+      "category_id": 7,
       "description": "A rudimentary aid kit which can save lives in emergencies, even if it's lacking some of its supplies.\n• 24 charges.\n• Increases the speed that you heal others by 35%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"Barely has enough material for a decent patch-up.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_campingAidKit.png?66c06a",
       "icon_local_path": "icons/items/camping_aid_kit.webp",
@@ -637,10 +556,6 @@
         "de": {
           "name": "Erste-Hilfe-Campingset",
           "description": "Ein rudimentäres Erste-Hilfe-Set, das in Notfällen Leben retten kann, auch wenn einige Dinge darin fehlen.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 35 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit der Selbstheilung um 33 %.\nFür eine vollständige Heilung sind 16 Einheiten nötig.\n\"„Hat gerade genug Material, um jemanden einigermaßen zusammenzuflicken.“\""
-        },
-        "en": {
-          "name": "Camping Aid Kit",
-          "description": "A rudimentary aid kit which can save lives in emergencies, even if it's lacking some of its supplies.\n• 24 charges.\n• Increases the speed that you heal others by 35%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"Barely has enough material for a decent patch-up.\"\""
         },
         "es": {
           "name": "Botiquín de primeros auxilios de acampada",
@@ -657,9 +572,9 @@
       }
     },
     {
+      "id": 22,
       "name": "First Aid Kit",
-      "category": "Med-Kit",
-      "role": "Survivor",
+      "category_id": 7,
       "description": "A standard first aid kit with all the necessary equipment for treating common to more serious injuries.\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_firstAidKit.png?c3dfd1",
       "icon_local_path": "icons/items/first_aid_kit.webp",
@@ -668,10 +583,6 @@
         "de": {
           "name": "Erste-Hilfe-Kasten",
           "description": "Ein Standard-Erste-Hilfe-Set mit allen notwendigen Utensilien für die Behandlung einfacher bis ernsthafter Verletzungen.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 40 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit bei der Selbstheilung um 33 %.\nFür eine vollständige Heilung sind 16 Einheiten nötig."
-        },
-        "en": {
-          "name": "First Aid Kit",
-          "description": "A standard first aid kit with all the necessary equipment for treating common to more serious injuries.\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges."
         },
         "es": {
           "name": "Botiquín de primeros auxilios",
@@ -688,9 +599,9 @@
       }
     },
     {
+      "id": 23,
       "name": "Emergency Med-kit",
-      "category": "Med-Kit",
-      "role": "Survivor",
+      "category_id": 7,
       "description": "A sturdy and well organized medical kit equipped with top condition emergency supplies.\n• 24 charges.\n• Increases the speed that you heal others by 45%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"There is a cure for almost everything… but not for this.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_emergencyMedKit.png?3e0dbf",
       "icon_local_path": "icons/items/emergency_med_kit.webp",
@@ -699,10 +610,6 @@
         "de": {
           "name": "Notfall-Sani-Kasten",
           "description": "Ein robuster, gut sortierter Sanitätskasten, ausgestattet mit erstklassigen Notfallutensilien.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 45 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit der Selbstheilung um 33 %.\nFür eine vollständige Heilung sind 16 Einheiten nötig.\n\"„Es gibt für nahezu alles eine Heilung ... aber hierfür nicht.“\""
-        },
-        "en": {
-          "name": "Emergency Med-kit",
-          "description": "A sturdy and well organized medical kit equipped with top condition emergency supplies.\n• 24 charges.\n• Increases the speed that you heal others by 45%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"There is a cure for almost everything… but not for this.\"\""
         },
         "es": {
           "name": "Botiquín de emergencia",
@@ -719,9 +626,9 @@
       }
     },
     {
+      "id": 24,
       "name": "Ranger Med-kit",
-      "category": "Med-Kit",
-      "role": "Survivor",
+      "category_id": 7,
       "description": "A large metal box containing medical supplies aimed for emergency rescues in hard to reach, often isolated locations.\n• 24 charges.\n• Increases the speed that you heal others by 50%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"A small engraved label can be found glued to the back panel: VK.ID-3994723.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_rangerMedKit.png?7b5928",
       "icon_local_path": "icons/items/ranger_med_kit.webp",
@@ -730,10 +637,6 @@
         "de": {
           "name": "Sani-Kasten des Rangers",
           "description": "Eine große Metallkiste mit Medizinbedarf, speziell für Notfallrettungen in schwer zugänglichen, oft abgelegenen Regionen.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 50 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit der Selbstheilung um 33 %.\nFür eine vollständige Heilung sind 16 Einheiten nötig.\n\"„Auf der Rückwand klebt ein kleines, graviertes Etikett: VZ.ID-3994723.“\""
-        },
-        "en": {
-          "name": "Ranger Med-kit",
-          "description": "A large metal box containing medical supplies aimed for emergency rescues in hard to reach, often isolated locations.\n• 24 charges.\n• Increases the speed that you heal others by 50%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"A small engraved label can be found glued to the back panel: VK.ID-3994723.\"\""
         },
         "es": {
           "name": "Botiquín de guardabosques",
@@ -750,9 +653,9 @@
       }
     },
     {
+      "id": 25,
       "name": "All Hallows' Eve Lunchbox",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A spooky Halloween-themed lunchbox containing medical supplies that makes you glow brightly in the dark.<br><br>• <b>32 Charges</b>.<br>• <b>Increases Altruistic Healing speed</b> by <b>+40%</b>.<br>• Unlocks the <i>Self-Heal</i> action.<br>• Makes you <b>considerably more visible</b> to all Players while holding it.<br><br><span class=\"FlavorText\">\"Happy Halloween!\" — The Dead by Daylight Team</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_allHallowsEveLunchbox.png?3c0bf6",
       "icon_local_path": "icons/items/all_hallows_eve_lunchbox.webp",
@@ -761,10 +664,6 @@
         "de": {
           "name": "Halloween-Brotdose",
           "description": "Eine gruselige Halloween-Brotdose mit medizinischen Hilfsmitteln, die dich im Dunkeln hell leuchten lässt.<br><br>• <b>32 Aufladungen</b>.<br>• <b>Erhöht das Altruismus-Heilungstempo</b> um <b>+40%</b>.<br>• Schaltet die Aktion <i>Selbstheilung</i> frei.<br>• Macht dich beim Halten für alle Spieler <b>deutlich sichtbarer</b>.<br><br><span class=\"FlavorText\">„Frohes Halloween!“ – Das Dead by Daylight-Team</span>"
-        },
-        "en": {
-          "name": "All Hallows' Eve Lunchbox",
-          "description": "A spooky Halloween-themed lunchbox containing medical supplies that makes you glow brightly in the dark.<br><br>• <b>32 Charges</b>.<br>• <b>Increases Altruistic Healing speed</b> by <b>+40%</b>.<br>• Unlocks the <i>Self-Heal</i> action.<br>• Makes you <b>considerably more visible</b> to all Players while holding it.<br><br><span class=\"FlavorText\">\"Happy Halloween!\" — The Dead by Daylight Team</span>"
         },
         "es": {
           "name": "Fiambrera de Halloween",
@@ -781,9 +680,9 @@
       }
     },
     {
+      "id": 26,
       "name": "Anniversary Med-kit",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A festive Med-Kit with a shocking surprise, giving a whole new meaning to the term \"health scare.\"\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\n• Increases confetti by 100%.\nA full heal requires 16 charges.\n\"\"Happy Anniversary! To your health!\"\n- The Dead by Daylight Team\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_anniversaryMedKit.png?43eff4",
       "icon_local_path": "icons/items/anniversary_med_kit.webp",
@@ -792,10 +691,6 @@
         "de": {
           "name": "Geburtstag-Sani-Kasten",
           "description": "Ein festlicher Sani-Kasten mit einer schockierenden Überraschung. So bekommt der Ausdruck Sani-Täter eine ganz neue Bedeutung.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 40 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit bei der Selbstheilung um 33 %.\n• Vermehrt Konfetti um 100 %.\nFür eine vollständige Heilung sind 16 Einheiten nötig.\n\"„Alles Gute zum Geburtstag! Auf deine Gesundheit!“\n– Das Team von Dead by Daylight\""
-        },
-        "en": {
-          "name": "Anniversary Med-kit",
-          "description": "A festive Med-Kit with a shocking surprise, giving a whole new meaning to the term \"health scare.\"\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\n• Increases confetti by 100%.\nA full heal requires 16 charges.\n\"\"Happy Anniversary! To your health!\"\n- The Dead by Daylight Team\""
         },
         "es": {
           "name": "Botiquín de aniversario",
@@ -812,9 +707,9 @@
       }
     },
     {
+      "id": 27,
       "name": "Banquet Med-Kit",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "Does it heal indigestion? There’s only one way to find out.\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"Here’s to health!\" --The Dead by Daylight Team\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconItems_medkit_anniversary2026.png?410cab",
       "icon_local_path": "icons/items/banquet_med_kit.webp",
@@ -823,10 +718,6 @@
         "de": {
           "name": "Bankett-Sani-Kasten",
           "description": "Hilft er auch gegen eine Magenverstimmung? Es gibt nur einen Weg, das herauszufinden.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 40 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit bei der Selbstheilung um 33 %\n.Für eine vollständige Heilung sind 16 Einheiten nötig.\n\"„Auf die Gesundheit!“ – Das Team von Dead by Daylight\""
-        },
-        "en": {
-          "name": "Banquet Med-Kit",
-          "description": "Does it heal indigestion? There’s only one way to find out.\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"Here’s to health!\" --The Dead by Daylight Team\""
         },
         "es": {
           "name": "Botiquín de banquete",
@@ -843,9 +734,9 @@
       }
     },
     {
+      "id": 28,
       "name": "Masquerade Med-Kit",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "Does it heal indigestion? There’s only one way to find out.\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"Here’s to health!\" --The Dead by Daylight Team\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_masqueradeMedKit.png?1a416b",
       "icon_local_path": "icons/items/masquerade_med_kit.webp",
@@ -854,10 +745,6 @@
         "de": {
           "name": "Maskeraden-Sani-Kasten",
           "description": "Hilft er auch gegen eine Magenverstimmung? Es gibt nur einen Weg, das herauszufinden.\n• 24 Einheiten.\n• Erhöht die Geschwindigkeit, mit der du andere heilst, um 40 %.\n• Schaltet die Selbstheilungsaktion frei.\n• Verringert Tempo und Wirksamkeit bei der Selbstheilung um 33 %\n.Für eine vollständige Heilung sind 16 Einheiten nötig.\n\"„Auf die Gesundheit!“ – Das Team von Dead by Daylight\""
-        },
-        "en": {
-          "name": "Masquerade Med-Kit",
-          "description": "Does it heal indigestion? There’s only one way to find out.\n• 24 charges.\n• Increases the speed that you heal others by 40%.\n• Unlocks the self-healing action.\n• Decreases the speed and efficiency when healing yourself by 33%.\nA full heal requires 16 charges.\n\"\"Here’s to health!\" --The Dead by Daylight Team\""
         },
         "es": {
           "name": "Botiquín de mascarada",
@@ -874,9 +761,9 @@
       }
     },
     {
+      "id": 29,
       "name": "Worn-out Tools",
-      "category": "Toolbox",
-      "role": "Survivor",
+      "category_id": 8,
       "description": "Metal box containing out of condition tools that could break at any moment. Even without training, can be used to repair or break various mechanical components.\n• 16 charges.\n• Increases repair speed by 50%.\n• Decreases Skill Check success zone size by 10%.\n• Unlocks the sabotage action.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"You call these tools?… Really?\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_wornOutTools.png?755d30",
       "icon_local_path": "icons/items/worn_out_tools.webp",
@@ -885,10 +772,6 @@
         "de": {
           "name": "Abgenutzte Werkzeuge",
           "description": "Metallkiste mit ausgedienten Werkzeugen, die jeden Moment auseinanderbrechen könnten. Kann selbst ohne Übung für Reparaturen oder die Zerstörung verschiedener mechanischer Komponenten verwendet werden.\n• 16 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Verringert die Größe der Erfolgszone bei einem Fähigkeitscheck um 10 %.\n• Schaltet die Sabotageaktion frei.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich.\n\"„Das nennst du Werkzeuge? Wirklich?“\""
-        },
-        "en": {
-          "name": "Worn-out Tools",
-          "description": "Metal box containing out of condition tools that could break at any moment. Even without training, can be used to repair or break various mechanical components.\n• 16 charges.\n• Increases repair speed by 50%.\n• Decreases Skill Check success zone size by 10%.\n• Unlocks the sabotage action.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"You call these tools?… Really?\"\""
         },
         "es": {
           "name": "Herramientas desgastadas",
@@ -905,9 +788,9 @@
       }
     },
     {
+      "id": 30,
       "name": "Toolbox",
-      "category": "Toolbox",
-      "role": "Survivor",
+      "category_id": 8,
       "description": "Metal box containing a set of basic tools. Even without training, can be used to repair or break various mechanical components.\n• 20 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 15%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"It is unclear as to where these tools come from. Were they brought in by one of us or did they belong to one of the monsters?\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_toolbox.png?760545",
       "icon_local_path": "icons/items/toolbox.webp",
@@ -916,10 +799,6 @@
         "de": {
           "name": "Werkzeugkiste",
           "description": "Metallkiste mit einem Set aus grundlegenden Werkzeugen. Kann selbst ohne Übung für Reparaturen oder die Zerstörung verschiedener mechanischer Komponenten verwendet werden.\n• 20 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 15 %.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich.\n\"„Es ist ungewiss, woher diese Werkzeuge stammen. Wurden sie von einem von uns hier hergebracht oder gehörten sie einem der Monster?“\""
-        },
-        "en": {
-          "name": "Toolbox",
-          "description": "Metal box containing a set of basic tools. Even without training, can be used to repair or break various mechanical components.\n• 20 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 15%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"It is unclear as to where these tools come from. Were they brought in by one of us or did they belong to one of the monsters?\"\""
         },
         "es": {
           "name": "Caja de herramientas",
@@ -936,9 +815,9 @@
       }
     },
     {
+      "id": 31,
       "name": "Commodious Toolbox",
-      "category": "Toolbox",
-      "role": "Survivor",
+      "category_id": 8,
       "description": "A large metal box containing basic tools and extra mechanical parts. Even without training, can be used to repair or break various mechanical components.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_commodiousToolbox.png?b118a1",
       "icon_local_path": "icons/items/commodious_toolbox.webp",
@@ -947,10 +826,6 @@
         "de": {
           "name": "Geräumige Werkzeugkiste",
           "description": "Eine große Metallkiste mit grundlegenden Werkzeugen und mechanischen Ersatzteilen. Kann selbst ohne Übung für Reparaturen oder die Zerstörung verschiedener mechanischer Komponenten verwendet werden.\n• 32 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 50 %.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich."
-        },
-        "en": {
-          "name": "Commodious Toolbox",
-          "description": "A large metal box containing basic tools and extra mechanical parts. Even without training, can be used to repair or break various mechanical components.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges."
         },
         "es": {
           "name": "Caja de herramientas espaciosa",
@@ -967,9 +842,9 @@
       }
     },
     {
+      "id": 32,
       "name": "Mechanic's Toolbox",
-      "category": "Toolbox",
-      "role": "Survivor",
+      "category_id": 8,
       "description": "Metal box with specialized mechanics tools. Even without training, can be used to repair or break various mechanical components.\n• 16 charges.\n• Increases repair speed by 75%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 25%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_mechanicsToolbox.png?55cd0f",
       "icon_local_path": "icons/items/mechanics_toolbox.webp",
@@ -978,10 +853,6 @@
         "de": {
           "name": "Werkzeugkiste des Mechanikers",
           "description": "Metallkiste mit Spezialwerkzeugen für Mechaniker. Kann selbst ohne Übung für Reparaturen oder die Zerstörung verschiedener mechanischer Komponenten verwendet werden.\n• 16 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 75 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 25 %.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich."
-        },
-        "en": {
-          "name": "Mechanic's Toolbox",
-          "description": "Metal box with specialized mechanics tools. Even without training, can be used to repair or break various mechanical components.\n• 16 charges.\n• Increases repair speed by 75%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 25%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges."
         },
         "es": {
           "name": "Caja de herramientas de mecánica",
@@ -998,9 +869,9 @@
       }
     },
     {
+      "id": 33,
       "name": "Alex's Toolbox",
-      "category": "Toolbox",
-      "role": "Survivor",
+      "category_id": 8,
       "description": "A metal box containing mainly saws and vice grips of varying sizes but also other tools. Even though the content of this Toolbox is clearly aimed at destructive deeds, it can be used to repair various mechanical components as well.\n• 18 charges.\n• Increases repair speed by 10%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 100%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"Most of the tools are identified as 'owned by Alex'.\"\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_alexsToolbox.png?e03e7f",
       "icon_local_path": "icons/items/alexs_toolbox.webp",
@@ -1009,10 +880,6 @@
         "de": {
           "name": "Alex’ Werkzeugkiste",
           "description": "Eine Metallkiste, die hauptsächlich mit Sägen und Schraubstockgriffen verschiedener Größen, aber auch mit anderen Werkzeugen gefüllt ist. Auch wenn der Inhalt dieser Werkzeugkiste eindeutig für zerstörerische Zwecke gedacht ist, kann er genauso gut für die Reparatur verschiedener mechanischer Komponenten genutzt werden.\n• 18 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 10 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotagegeschwindigkeit um 100 %.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich.\n\"„Die meisten Werkzeuge sind als ‚Eigentum von Alex‘ gekennzeichnet.“\""
-        },
-        "en": {
-          "name": "Alex's Toolbox",
-          "description": "A metal box containing mainly saws and vice grips of varying sizes but also other tools. Even though the content of this Toolbox is clearly aimed at destructive deeds, it can be used to repair various mechanical components as well.\n• 18 charges.\n• Increases repair speed by 10%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 100%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"Most of the tools are identified as 'owned by Alex'.\"\""
         },
         "es": {
           "name": "Caja de herramientas de Alex",
@@ -1029,9 +896,9 @@
       }
     },
     {
+      "id": 34,
       "name": "Engineer's Toolbox",
-      "category": "Toolbox",
-      "role": "Survivor",
+      "category_id": 8,
       "description": "Metal box with highly specialized tools meant for engineering. Most of the tools can still be used by neophytes to make fast repairs or break various mechanical components.\n• 16 charges.\n• Increases repair speed by 100%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 10%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"I've created tools beyond compare and stood paralyzed as they were stolen from me. These are but a poor replica, spat out by The Fog.\" –Vigo's Journal\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_engineersToolbox.png?188e4e",
       "icon_local_path": "icons/items/engineers_toolbox.webp",
@@ -1040,10 +907,6 @@
         "de": {
           "name": "Werkzeugkiste des Ingenieurs",
           "description": "Metallkiste mit hoch spezialisierten Werkzeugen für Ingenieure. Die meisten der Werkzeuge können aber selbst von Neulingen noch für schnelle Reparaturen oder die Zerstörung verschiedener mechanischer Komponenten genutzt werden.\n• 16 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 100 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 10 %.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich.\n\"„Ich habe unvergleichliche Werkzeuge hergestellt und stand hilflos da, als sie mir gestohlen wurden. Das sind nur billige Nachbauten, vom Nebel ausgespien.“ – Vigos Tagebuch\""
-        },
-        "en": {
-          "name": "Engineer's Toolbox",
-          "description": "Metal box with highly specialized tools meant for engineering. Most of the tools can still be used by neophytes to make fast repairs or break various mechanical components.\n• 16 charges.\n• Increases repair speed by 100%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 10%.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.\n\"\"I've created tools beyond compare and stood paralyzed as they were stolen from me. These are but a poor replica, spat out by The Fog.\" –Vigo's Journal\""
         },
         "es": {
           "name": "Caja de herramientas de ingeniería",
@@ -1060,9 +923,9 @@
       }
     },
     {
+      "id": 35,
       "name": "Anniversary Toolbox",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_anniversaryToolbox.png?692e50",
       "icon_local_path": "icons/items/anniversary_toolbox.webp",
@@ -1071,10 +934,6 @@
         "de": {
           "name": "Geburtstags-Werkzeugkiste",
           "description": "Eine Werkzeugkiste, die mit Feuerwerkskörpern vollgepackt ist. Bereit, um alle Erfolge deines Lebens zu feiern ... und all deine Fehlschläge.\n• 32 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 50 %.\n• Großartige Fähigkeitschecks lösen eine kleine Gruppe Feuerwerkskörper aus.\n• Gescheiterte Fähigkeitschecks zünden ein ganzes Feuerwerk.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich."
-        },
-        "en": {
-          "name": "Anniversary Toolbox",
-          "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges."
         },
         "es": {
           "name": "Caja de herramientas de aniversario",
@@ -1091,9 +950,9 @@
       }
     },
     {
+      "id": 36,
       "name": "Banquet Toolbox",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconItems_toolbox_anniversary2026.png?705336",
       "icon_local_path": "icons/items/banquet_toolbox.webp",
@@ -1102,10 +961,6 @@
         "de": {
           "name": "Bankett-Werkzeugkiste",
           "description": "Eine Werkzeugkiste, die mit Feuerwerkskörpern vollgepackt ist. Bereit, um alle Erfolge deines Lebens zu feiern ... und all deine Fehlschläge.\n• 32 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 50 %.\n• Großartige Fähigkeitschecks lösen eine kleine Gruppe Feuerwerkskörper aus.\n• Gescheiterte Fähigkeitschecks zünden ein ganzes Feuerwerk.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich."
-        },
-        "en": {
-          "name": "Banquet Toolbox",
-          "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges."
         },
         "es": {
           "name": "Caja de herramientas de banquete",
@@ -1122,9 +977,9 @@
       }
     },
     {
+      "id": 37,
       "name": "Festive Toolbox",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_festiveToolbox.png?50ce71",
       "icon_local_path": "icons/items/festive_toolbox.webp",
@@ -1133,10 +988,6 @@
         "de": {
           "name": "Festliche Werkzeugkiste",
           "description": "Eine Werkzeugkiste, die mit Feuerwerkskörpern vollgepackt ist. Bereit, um alle Erfolge deines Lebens zu feiern ... und all deine Fehlschläge.\n• 32 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 50 %.\n• Großartige Fähigkeitschecks lösen eine kleine Gruppe Feuerwerkskörper aus.\n• Gescheiterte Fähigkeitschecks zünden ein ganzes Feuerwerk.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich."
-        },
-        "en": {
-          "name": "Festive Toolbox",
-          "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges."
         },
         "es": {
           "name": "Caja de herramientas festiva",
@@ -1153,9 +1004,9 @@
       }
     },
     {
+      "id": 38,
       "name": "Masquerade Toolbox",
-      "category": "Event",
-      "role": "Survivor",
+      "category_id": 1,
       "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_masqueradeToolbox.png?8ef654",
       "icon_local_path": "icons/items/masquerade_toolbox.webp",
@@ -1164,10 +1015,6 @@
         "de": {
           "name": "Maskeraden-Werkzeugkiste",
           "description": "Eine Werkzeugkiste, die mit Feuerwerkskörpern vollgepackt ist. Bereit, um alle Erfolge deines Lebens zu feiern ... und all deine Fehlschläge.\n• 32 Einheiten.\n• Erhöht die Reparaturgeschwindigkeit um 50 %.\n• Schaltet die Sabotageaktion frei.\n• Erhöht die Sabotage-Geschwindigkeit um 50 %.\n• Großartige Fähigkeitschecks lösen eine kleine Gruppe Feuerwerkskörper aus.\n• Gescheiterte Fähigkeitschecks zünden ein ganzes Feuerwerk.\nFür die Reparatur eines Generators sind 90 Einheiten nötig.\nFür die Sabotage eines Hakens sind 6 Einheiten erforderlich."
-        },
-        "en": {
-          "name": "Masquerade Toolbox",
-          "description": "A Toolbox packed to the brim with fireworks, it's prepared to celebrate all your life’s successes... and failures.\n• 32 charges.\n• Increases repair speed by 50%.\n• Unlocks the sabotage action.\n• Increases sabotage speed by 50%.\n• Great Skill Checks detonate a small cluster of firecrackers.\n• Failed Skill Checks detonate fireworks.\nRepairing a generator requires 90 charges.\nSabotaging a hook requires 6 charges."
         },
         "es": {
           "name": "Caja de herramientas de mascarada",
@@ -1184,9 +1031,9 @@
       }
     },
     {
+      "id": 39,
       "name": "Antidote",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A potent formula that reverses the effects of both the T-Virus and Uroboros Infection. Limited items are consumed by The Entity at the trial's end.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_firstAidSpray.png?9634ac",
       "icon_local_path": "icons/items/antidote.webp",
@@ -1195,10 +1042,6 @@
         "de": {
           "name": "Gegenmittel",
           "description": "Eine mächtige Mischung, die die Wirkung des T-Virus und der Uroboros-Infektion aufheben kann. Begrenzte Gegenstände werden am Ende der Prüfung vom Entitus aufgenommen."
-        },
-        "en": {
-          "name": "Antidote",
-          "description": "A potent formula that reverses the effects of both the T-Virus and Uroboros Infection. Limited items are consumed by The Entity at the trial's end."
         },
         "es": {
           "name": "Antídoto",
@@ -1215,9 +1058,9 @@
       }
     },
     {
+      "id": 40,
       "name": "Blood Can",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "The handle is slick, and blood wells between your fingers as you tighten your grip.Found when interacting with the Blood Pump. Required to carry the blood needed to repair Blood Generators.\n• Carry capacity of 40 liters.\n• Produces a pool of blood when running.\n• Generates distinct noises while being carried.\n•\n• Noises vary depending on movement speed and number of liters being carried.\n• Blood leaks from the Blood Can when running or if it is left on the ground.\n• Killers can stomp the Blood Can while on the ground, spilling more blood.\n• Vanishes from the trial when empty.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconItems_LimitedJerryCan.png?ba5ae1",
       "icon_local_path": "icons/items/blood_can.webp",
@@ -1226,10 +1069,6 @@
         "de": {
           "name": "Blutkanister",
           "description": "Der Griff ist glitschig und zwischen deinen Fingern tritt Blut hervor, wenn du ihn fester hältst.Beim Betätigen einer Blutpumpe zu finden. Erforderlich, um das Blut zu transportieren, das für die Reparatur von Blutgeneratoren benötigt wird.\n• Fassungsvermögen: 40 Liter.\n• Hinterlässt beim Laufen eine Blutpfütze.\n• Erzeugt eigene Geräusche beim Tragen.\n•\n• Die Lautstärke hängt von der Bewegungsgeschwindigkeit und der getragenen Menge ab.\n• Blut tropft aus dem Blutkanister, wenn Überlebende damit laufen oder wenn er auf dem Boden steht.\n• Killer können einen stehenden Blutkanister umtreten, wodurch er mehr Blut verliert.\n• Verschwindet aus der Prüfung, sobald er leer ist."
-        },
-        "en": {
-          "name": "Blood Can",
-          "description": "The handle is slick, and blood wells between your fingers as you tighten your grip.Found when interacting with the Blood Pump. Required to carry the blood needed to repair Blood Generators.\n• Carry capacity of 40 liters.\n• Produces a pool of blood when running.\n• Generates distinct noises while being carried.\n•\n• Noises vary depending on movement speed and number of liters being carried.\n• Blood leaks from the Blood Can when running or if it is left on the ground.\n• Killers can stomp the Blood Can while on the ground, spilling more blood.\n• Vanishes from the trial when empty."
         },
         "es": {
           "name": "Bidón de sangre",
@@ -1246,9 +1085,9 @@
       }
     },
     {
+      "id": 41,
       "name": "Candelabra",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "Limited Item from the <i>Lights Out - Castlevania</i> Modifier Event.<br><br>In the darkest of castles, any light is a precious commodity. All Survivors start the Trial with a <b>Candelabra</b> in hand.<br><br>• <b>90 Charges</b>.<br>• Pushes back the Fog as a passive effect when held.<br>• Press and hold the <i>Use Item button</i> to reveal the Aura of the nearest incomplete Generator.<br>• Place the <b>Candelabra</b> on top of a Generator to reveal its Aura to all Survivors within <b>32 meters</b>.<br>• Completing that Generator suppresses the Killer's ability to read Generator Auras for <b>15 seconds</b>.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_fireflyLantern.png?6818a2",
       "icon_local_path": "icons/items/candelabra.webp",
@@ -1257,10 +1096,6 @@
         "de": {
           "name": "Kandelaber",
           "description": "Begrenzter Gegenstand aus dem Event <i>Lights Out – Castlevania</i>.<br><br>In den dunkelsten Schlössern ist jedes Licht ein kostbares Gut. Alle Überlebenden beginnen die Prüfung mit einem <b>Kandelaber</b> in der Hand.<br><br>• <b>90 Aufladungen</b>.<br>• Drängt beim Halten den Nebel passiv zurück.<br>• Halte die Taste <i>Gegenstand benutzen</i> gedrückt, um die Aura des nächsten unvollständigen Generators anzuzeigen.<br>• Platziere den <b>Kandelaber</b> auf einem Generator, um dessen Aura allen Überlebenden im Umkreis von <b>32 Metern</b> anzuzeigen.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Candelabra",
-          "description": "Limited Item from the <i>Lights Out - Castlevania</i> Modifier Event.<br><br>In the darkest of castles, any light is a precious commodity. All Survivors start the Trial with a <b>Candelabra</b> in hand.<br><br>• <b>90 Charges</b>.<br>• Pushes back the Fog as a passive effect when held.<br>• Press and hold the <i>Use Item button</i> to reveal the Aura of the nearest incomplete Generator.<br>• Place the <b>Candelabra</b> on top of a Generator to reveal its Aura to all Survivors within <b>32 meters</b>.<br>• Completing that Generator suppresses the Killer's ability to read Generator Auras for <b>15 seconds</b>.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Candelabro",
@@ -1277,9 +1112,9 @@
       }
     },
     {
+      "id": 42,
       "name": "EMP",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A device printed from Supply Cases to disable The Singularity's network.<br><br>• Press and hold the <i>Use Item button</i> to charge and release an <b>Electromagnetic Pulse (EMP)</b>:<br>• <b>Removes Slipstream</b> from all nearby Survivors.<br>• <b>Temporarily disables Biopods</b> within the blast radius.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_emp.png?d9bba8",
       "icon_local_path": "icons/items/emp.webp",
@@ -1288,10 +1123,6 @@
         "de": {
           "name": "EMP-Gerät",
           "description": "Ein von Versorgungskisten gedrucktes Gerät gegen die Singularität.<br><br>• Halte die Taste <i>Gegenstand benutzen</i> gedrückt, um einen <b>Elektromagnetischen Impuls (EMP)</b> auszulösen:<br>• <b>Entfernt den Windschatten (Slipstream)</b> von allen nahen Überlebenden.<br>• <b>Deaktiviert Biokapseln</b> der Singularität im Wirkungsbereich vorübergehend.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "EMP",
-          "description": "A device printed from Supply Cases to disable The Singularity's network.<br><br>• Press and hold the <i>Use Item button</i> to charge and release an <b>Electromagnetic Pulse (EMP)</b>:<br>• <b>Removes Slipstream</b> from all nearby Survivors.<br>• <b>Temporarily disables Biopods</b> within the blast radius.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Dispositivo PEM",
@@ -1308,9 +1139,9 @@
       }
     },
     {
+      "id": 43,
       "name": "Eye Of Vecna",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A legendary artifact of The Lich found inside magical Treasure Chests.<br><br>• Press the <i>Interaction button</i> to attune to the <b>Eye of Vecna</b>:<br>• Exiting a Locker grants complete <b>Invisibility</b> and <b>+50% Haste</b> for <b>3 seconds</b>.<br>• Leaves no Scratch Marks or pools of blood while invisible.<br>• Activating costs <b>1 Health State</b> and triggers <i>Killer Instinct</i> for <b>3 seconds</b>.<br>• An attuned Survivor can be executed immediately by The Lich when placed in the Dying State.<br><br><span class=\"FlavorText\">Limited Item — cannot be brought out of the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_LimitedVecnaEye.png?cd0c16",
       "icon_local_path": "icons/items/eye_of_vecna.webp",
@@ -1321,8 +1152,7 @@
           "description": "Ein legendäres Artefakt des Lichs aus magischen Schatztruhen.<br><br>• Stimme dich auf das <b>Auge von Vecna</b> ein:<br>• Das Verlassen eines Schranks gewährt <b>3 Sekunden</b> lang <b>Unsichtbarkeit</b> und <b>+50% Eile</b>.<br>• Kostet <b>1 Gesundheitsstatus</b> und löst für <b>3 Sekunden</b> <i>Killer-Instinkt</i> aus.<br>• Kann vom Lich bei Erreichen des Todesstatus sofort getötet werden.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – kann die Prüfung nicht verlassen.</span>"
         },
         "en": {
-          "name": "Eye of Vecna",
-          "description": "A legendary artifact of The Lich found inside magical Treasure Chests.<br><br>• Press the <i>Interaction button</i> to attune to the <b>Eye of Vecna</b>:<br>• Exiting a Locker grants complete <b>Invisibility</b> and <b>+50% Haste</b> for <b>3 seconds</b>.<br>• Leaves no Scratch Marks or pools of blood while invisible.<br>• Activating costs <b>1 Health State</b> and triggers <i>Killer Instinct</i> for <b>3 seconds</b>.<br>• An attuned Survivor can be executed immediately by The Lich when placed in the Dying State.<br><br><span class=\"FlavorText\">Limited Item — cannot be brought out of the Trial.</span>"
+          "name": "Eye of Vecna"
         },
         "es": {
           "name": "Ojo de Vecna",
@@ -1339,9 +1169,9 @@
       }
     },
     {
+      "id": 44,
       "name": "First Aid Spray",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A medication that helps reverse the effects of Uroboros infection.\nLimited items are consumed by The Entity at the trial's end.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_firstAidSpray.png?9634ac",
       "icon_local_path": "icons/items/first_aid_spray.webp",
@@ -1350,10 +1180,6 @@
         "de": {
           "name": "Erste-Hilfe-Spray",
           "description": "Eine Medizin, die die Wirkung einer Uroboros-Infektion aufheben kann.\nBegrenzte Gegenstände werden am Ende der Prüfung vom Entitus aufgenommen."
-        },
-        "en": {
-          "name": "First Aid Spray",
-          "description": "A medication that helps reverse the effects of Uroboros infection.\nLimited items are consumed by The Entity at the trial's end."
         },
         "es": {
           "name": "Spray de primeros auxilios",
@@ -1370,9 +1196,9 @@
       }
     },
     {
+      "id": 45,
       "name": "Flash Grenade",
-      "category": "Firecracker",
-      "role": "Survivor",
+      "category_id": 2,
       "description": "Craftable Limited Item created using the <i>Flashbang</i> Perk.<br><br>Press the <i>Use Item button</i> to drop the grenade on the ground:<br>• Detonates with a short delay, producing a loud bang and a blinding flash of light.<br>• <b>Blinds</b> and <b>deafens</b> all players within the blast radius.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded during a pickup or carry.<br>• Triggers a loud Noise Notification at the explosion location for the Killer.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity at the end of the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_flashGrenade.png?1e2548",
       "icon_local_path": "icons/items/flash_grenade.webp",
@@ -1381,10 +1207,6 @@
         "de": {
           "name": "Blendgranate",
           "description": "Herstellbarer Gegenstand durch das Talent <i>Granate</i>.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um die Granate fallen zu lassen:<br>• Detoniert nach kurzer Verzögerung mit lautem Knall und Lichtblitz.<br>• <b>Blendet</b> und <b>betäubt</b> alle Spieler im Explosionsbereich.<br>• Lässt den Killer getragene Überlebende <b>fallenlassen</b>.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Flash Grenade",
-          "description": "Craftable Limited Item created using the <i>Flashbang</i> Perk.<br><br>Press the <i>Use Item button</i> to drop the grenade on the ground:<br>• Detonates with a short delay, producing a loud bang and a blinding flash of light.<br>• <b>Blinds</b> and <b>deafens</b> all players within the blast radius.<br>• Causes the Killer to <b>drop carried Survivors</b> if blinded during a pickup or carry.<br>• Triggers a loud Noise Notification at the explosion location for the Killer.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity at the end of the Trial.</span>"
         },
         "es": {
           "name": "Granada cegadora",
@@ -1401,9 +1223,9 @@
       }
     },
     {
+      "id": 46,
       "name": "Fog Crystal",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "Limited Item from the <i>Haunted by Daylight</i> Event.<br><br>Cold to the touch, the crystal vibrates with dark Void energy.<br><br>Press the <i>Use Item button</i> to throw the crystal:<br>• Explodes into a dense cloud of fog that slows the Killer and suppresses their Aura reading abilities within the area.<br>• Allows Survivors to quickly hide and break line of sight.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_calamariSmokeBomb.png?b6f39e",
       "icon_local_path": "icons/items/fog_crystal.webp",
@@ -1412,10 +1234,6 @@
         "de": {
           "name": "Nebelkristall",
           "description": "Begrenzter Gegenstand aus dem <i>Haunted by Daylight</i>-Event.<br><br>Der Kristall fühlt sich eiskalt an und vibriert vor dunkler Energie.<br><br>Drücke die Taste <i>Gegenstand benutzen</i>, um den Kristall zu werfen:<br>• Explodiert in eine dichte Nebelwolke, die den Killer verlangsamt und Auren blockiert.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Fog Crystal",
-          "description": "Limited Item from the <i>Haunted by Daylight</i> Event.<br><br>Cold to the touch, the crystal vibrates with dark Void energy.<br><br>Press the <i>Use Item button</i> to throw the crystal:<br>• Explodes into a dense cloud of fog that slows the Killer and suppresses their Aura reading abilities within the area.<br>• Allows Survivors to quickly hide and break line of sight.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Cristal de niebla",
@@ -1432,9 +1250,9 @@
       }
     },
     {
+      "id": 47,
       "name": "Fragile Mirror",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A pocket mirror retrieved from the basement with a White Glyph. Its surface is icy cold.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_fragileMirror.png?898b39",
       "icon_local_path": "icons/items/fragile_mirror.webp",
@@ -1443,10 +1261,6 @@
         "de": {
           "name": "Zerbrechlicher Spiegel",
           "description": "Ein Taschenspiegel aus dem Keller mit einer weißen Glyphe. Seine Oberfläche ist eiskalt.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Fragile Mirror",
-          "description": "A pocket mirror retrieved from the basement with a White Glyph. Its surface is icy cold.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Espejo frágil",
@@ -1463,9 +1277,9 @@
       }
     },
     {
+      "id": 48,
       "name": "Glowing Fungus",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A strange glowing fungus that grows on Survivors infected with a parasite.<br><br>• Consuming the <b>Glowing Fungus</b> removes the parasite and cures the infection.<br>• Eating the fungus may temporarily inflict the <b>Oblivious</b> or <b>Exhausted</b> Status Effect.<br>• Holding a fungus reveals your location to the Killer within a certain range.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_glowingFungus.png?717ccf",
       "icon_local_path": "icons/items/glowing_fungus.webp",
@@ -1474,10 +1288,6 @@
         "de": {
           "name": "Leuchtpilz",
           "description": "Ein leuchtender Pilz, der auf parasitenbefallenen Überlebenden wächst.<br><br>• Das Verzehren des <b>Leuchtpilzes</b> entfernt den Parasiten und heilt die Infektion.<br>• Kann vorübergehend den Statuseffekt <b>Ahnungslos</b> oder <b>Erschöpft</b> auslösen.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Glowing Fungus",
-          "description": "A strange glowing fungus that grows on Survivors infected with a parasite.<br><br>• Consuming the <b>Glowing Fungus</b> removes the parasite and cures the infection.<br>• Eating the fungus may temporarily inflict the <b>Oblivious</b> or <b>Exhausted</b> Status Effect.<br>• Holding a fungus reveals your location to the Killer within a certain range.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Hongo brillante",
@@ -1494,9 +1304,9 @@
       }
     },
     {
+      "id": 49,
       "name": "Hand of Vecna",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A legendary artifact of The Lich found inside magical Treasure Chests.<br><br>• Press the <i>Interaction button</i> to attune to the <b>Hand of Vecna</b>:<br>• Entering a Locker allows you to instantly <b>teleport to another Locker</b> within line of sight.<br>• Teleporting costs <b>1 Health State</b> and triggers <i>Killer Instinct</i> for <b>3 seconds</b>.<br>• An attuned Survivor can be executed immediately by The Lich when placed in the Dying State.<br><br><span class=\"FlavorText\">Limited Item — cannot be brought out of the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_LimitedVecnaHand.png?d689e2",
       "icon_local_path": "icons/items/hand_of_vecna.webp",
@@ -1505,10 +1315,6 @@
         "de": {
           "name": "Hand von Vecna",
           "description": "Ein legendäres Artefakt des Lichs aus magischen Schatztruhen.<br><br>• Stimme dich auf die <b>Hand von Vecna</b> ein:<br>• Das Betreten eines Schranks erlaubt dir, dich sofort zu einem anderen Schrank zu <b>teleportieren</b>.<br>• Kostet <b>1 Gesundheitsstatus</b> und löst für <b>3 Sekunden</b> <i>Killer-Instinkt</i> aus.<br>• Kann vom Lich bei Erreichen des Todesstatus sofort getötet werden.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – kann die Prüfung nicht verlassen.</span>"
-        },
-        "en": {
-          "name": "Hand of Vecna",
-          "description": "A legendary artifact of The Lich found inside magical Treasure Chests.<br><br>• Press the <i>Interaction button</i> to attune to the <b>Hand of Vecna</b>:<br>• Entering a Locker allows you to instantly <b>teleport to another Locker</b> within line of sight.<br>• Teleporting costs <b>1 Health State</b> and triggers <i>Killer Instinct</i> for <b>3 seconds</b>.<br>• An attuned Survivor can be executed immediately by The Lich when placed in the Dying State.<br><br><span class=\"FlavorText\">Limited Item — cannot be brought out of the Trial.</span>"
         },
         "es": {
           "name": "Mano de Vecna",
@@ -1525,9 +1331,9 @@
       }
     },
     {
+      "id": 50,
       "name": "Keycard",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A keycard that fits in a terminal inside the secret room aboard the <i>Nostromo</i>.<br><br>• Unlocks the secret supply cache on the <i>Nostromo Wreckage</i> map.<br>• Insert the keycard into the terminal console to unlock the door and retrieve powerful tools.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_keycard.png?11e179",
       "icon_local_path": "icons/items/keycard.webp",
@@ -1536,10 +1342,6 @@
         "de": {
           "name": "Schlüsselkarte",
           "description": "Eine Schlüsselkarte, die in ein Terminal an Bord der <i>Nostromo</i> passt.<br><br>• Öffnet den geheimen Vorratsraum auf dem <i>Wrack der Nostromo</i>.<br>• Verwende die Karte am Terminal, um die Tür zu entriegeln.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Keycard",
-          "description": "A keycard that fits in a terminal inside the secret room aboard the <i>Nostromo</i>.<br><br>• Unlocks the secret supply cache on the <i>Nostromo Wreckage</i> map.<br>• Insert the keycard into the terminal console to unlock the door and retrieve powerful tools.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Tarjeta de acceso",
@@ -1556,9 +1358,9 @@
       }
     },
     {
+      "id": 51,
       "name": "Lament Configuration",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A puzzle box that acts as a key to a dimension of agonizing pain and pleasure.\nLimited items are consumed by The Entity at the trial's end.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_lamentConfiguration.png?8033d5",
       "icon_local_path": "icons/items/lament_configuration.webp",
@@ -1567,10 +1369,6 @@
         "de": {
           "name": "Rätselwürfel",
           "description": "Ein Rätselwürfel, der als Schlüssel zu einer Dimension voll qualvoller Schmerzen und Vergnügen dient.\nBegrenzte Gegenstände werden am Ende der Prüfung vom Entitus verschlungen."
-        },
-        "en": {
-          "name": "Lament Configuration",
-          "description": "A puzzle box that acts as a key to a dimension of agonizing pain and pleasure.\nLimited items are consumed by The Entity at the trial's end."
         },
         "es": {
           "name": "Configuración del Lamento",
@@ -1587,9 +1385,9 @@
       }
     },
     {
+      "id": 52,
       "name": "Lantern",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A light to shine the way, illuminating even the most palpable darkness.\nWhen held, reveal the Aura of Pallets, Vault locations, and the closest Generator. Place your Lantern atop a Generator to reveal its Aura to your teammates.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_modifierLantern.png?ccc4d9",
       "icon_local_path": "icons/items/lantern.webp",
@@ -1598,10 +1396,6 @@
         "de": {
           "name": "Armleuchter",
           "description": "In der dunkelsten aller Burgen ist jede Lichtquelle ein willkommenes Werkzeug.\n• 90 Aufladungen.\n• Solange du ihn hältst, kannst du den Nebel zurückdrängen.\n• Bei Verwendung werden der nächste nicht vollständig reparierte Generator und die aktuellen Aktionen von Überlebenden im Team im HUD angezeigt.\n• Wenn du ihn auf einen Generator stellst, sehen alle Überlebenden in einem Umkreis von 32 Metern rund um diesen Generator seine Aura.\n• Wenn du einen Generator reparierst, auf dem ein Armleuchter steht, sieht der Killer 15 Sekunden lang keine Auren von Generatoren.\n• Killer können Armleuchter zerstören, die auf Generatoren stehen."
-        },
-        "en": {
-          "name": "Lantern",
-          "description": "A light to shine the way, illuminating even the most palpable darkness.\nWhen held, reveal the Aura of Pallets, Vault locations, and the closest Generator. Place your Lantern atop a Generator to reveal its Aura to your teammates."
         },
         "es": {
           "name": "Candelabro",
@@ -1618,9 +1412,9 @@
       }
     },
     {
+      "id": 53,
       "name": "Pocket Mirror",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A pocket mirror pulled from the basement's White Glyph. Its surface is frosty.\nLimited items are consumed by The Entity at the trial's end.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_pocketMirror.png?a21049",
       "icon_local_path": "icons/items/pocket_mirror.webp",
@@ -1629,10 +1423,6 @@
         "de": {
           "name": "Taschenspiegel",
           "description": "Ein Taschenspiegel, der aus der weißen Glyphe im Keller geholt wurde. Seine Oberfläche ist eiskalt.\nBegrenzte Gegenstände werden am Ende der Prüfung vom Entitus aufgenommen."
-        },
-        "en": {
-          "name": "Pocket Mirror",
-          "description": "A pocket mirror pulled from the basement's White Glyph. Its surface is frosty.\nLimited items are consumed by The Entity at the trial's end."
         },
         "es": {
           "name": "Espejo de bolsillo",
@@ -1649,9 +1439,9 @@
       }
     },
     {
+      "id": 54,
       "name": "Remote Flame Turret",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "Limited Item against The Xenomorph retrieved from Control Stations.<br><br>• Deployed turrets emit an audible warning and reveal the distance of an approaching Xenomorph.<br>• When The Xenomorph is in range, the turret fires flames: slowing The Xenomorph and ending its <b>Crawler Mode</b>.<br>• Continuous firing causes the turret to overheat and shut down.<br>• The Xenomorph can destroy deployed turrets with a basic attack or Tail Attack.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_remoteFlameTurret.png?f9f60b",
       "icon_local_path": "icons/items/remote_flame_turret.webp",
@@ -1660,10 +1450,6 @@
         "de": {
           "name": "Ferngesteuertes Flammengeschütz",
           "description": "Begrenzter Gegenstand von Kontrollstationen gegen den Xenomorph.<br><br>• Das aufgestellte Flammengeschütz warnt vor dem herannahenden Xenomorph und zeigt dessen Entfernung an.<br>• Kommt der Xenomorph in Reichweite, eröffnet das Geschütz das Feuer: es <b>verlangsamt</b> ihn und beendet seinen <b>Kriechmodus</b>.<br>• Der Xenomorph kann Geschütze mit einem normalen Angriff oder Schwanzangriff zerstören.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "Remote Flame Turret",
-          "description": "Limited Item against The Xenomorph retrieved from Control Stations.<br><br>• Deployed turrets emit an audible warning and reveal the distance of an approaching Xenomorph.<br>• When The Xenomorph is in range, the turret fires flames: slowing The Xenomorph and ending its <b>Crawler Mode</b>.<br>• Continuous firing causes the turret to overheat and shut down.<br>• The Xenomorph can destroy deployed turrets with a basic attack or Tail Attack.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Torreta lanzallamas a distancia",
@@ -1680,9 +1466,9 @@
       }
     },
     {
+      "id": 55,
       "name": "Searcher's Pendant",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "An artifact from another place, where the night sky held answers.\n• Use Item button: Collect Exiled Souls.\n• For each Exiled Soul collected (up to 10), gives an extra 0.5 seconds of Endurance, Haste, and Elusive when Liberated from Exile.\n• Exiled Souls do not provide additional bonuses once all Generators are completed.\nLimited items are consumed by The Entity at the trial's end.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconItems_LimitedExileArtifact.png?1d6898",
       "icon_local_path": "icons/items/searchers_pendant.webp",
@@ -1691,10 +1477,6 @@
         "de": {
           "name": "Anhänger des Suchers",
           "description": "Ein Artefakt von einem fremden Ort, an dem der Nachthimmel Antworten gab.\nDer Anhänger des Suchers funktioniert wie eine Taschenlampe. Jedes Mal, wenn ein Überlebender ins Exil kommt, erhält er den Anhänger des Suchers in einem temporären dritten Gegenstandsplatz. Halte [M2?] gedrückt, um verbannte Seelen anzuvisieren. Nach 0,5 Sek. wird die Seele absorbiert. Nach dem Absorbieren erhältst du eine 1-sekündige Immunität gegen Saat der Strafe. Maximale Reichweite: 10 m. Für jede gesammelte Seele (bevor alle Generatoren fertiggestellt wurden) erhält der Überlebende Blutpunkte und zusätzlich 0,5 Sek. für die folgenden Effekte, wenn er aus dem Exil gerettet wurde: Kondition, 10 % Eile, Schlüpfrig. Seelen, die gesammelt werden, nachdem alle Generatoren fertiggestellt wurden, gewähren keinen zusätzlichen Schutz nach einer Rettung."
-        },
-        "en": {
-          "name": "Searcher's Pendant",
-          "description": "An artifact from another place, where the night sky held answers.\n• Use Item button: Collect Exiled Souls.\n• For each Exiled Soul collected (up to 10), gives an extra 0.5 seconds of Endurance, Haste, and Elusive when Liberated from Exile.\n• Exiled Souls do not provide additional bonuses once all Generators are completed.\nLimited items are consumed by The Entity at the trial's end."
         },
         "es": {
           "name": "Colgante de Buscador",
@@ -1711,9 +1493,9 @@
       }
     },
     {
+      "id": 56,
       "name": "VHS Tape",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "A cursed videotape retrieved from an active TV to turn it off temporarily.<br><br>• Carrying a <b>VHS Tape</b> causes <b>Condemned</b> to steadily build up during The Onryō's Projections.<br>• Insert the <b>VHS Tape</b> into the highlighted TV to <b>reduce Condemned by -3 Stacks</b>.<br>• Survivors who reach maximum Condemned (7 Stacks) can be killed immediately when downed.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_vhsTape.png?d4c36e",
       "icon_local_path": "icons/items/vhs_tape.webp",
@@ -1722,10 +1504,6 @@
         "de": {
           "name": "Videokassette",
           "description": "Ein verfluchtes Videoband aus einem aktiven Fernseher, um diesen vorübergehend auszuschalten.<br><br>• Das Tragen des <b>Videobands</b> baut während der Projektionen von Onryō Stapel von <b>Verdammt</b> auf.<br>• Lege das Band in den markierten Fernseher ein, um <b>3 Stapel von Verdammt abzubauen</b>.<br><br><span class=\"FlavorText\">Begrenzter Gegenstand – wird am Ende der Prüfung vom Entitus aufgenommen.</span>"
-        },
-        "en": {
-          "name": "VHS Tape",
-          "description": "A cursed videotape retrieved from an active TV to turn it off temporarily.<br><br>• Carrying a <b>VHS Tape</b> causes <b>Condemned</b> to steadily build up during The Onryō's Projections.<br>• Insert the <b>VHS Tape</b> into the highlighted TV to <b>reduce Condemned by -3 Stacks</b>.<br>• Survivors who reach maximum Condemned (7 Stacks) can be killed immediately when downed.<br><br><span class=\"FlavorText\">Limited Item — consumed by The Entity upon exiting the Trial.</span>"
         },
         "es": {
           "name": "Cinta de vídeo",
@@ -1742,9 +1520,9 @@
       }
     },
     {
+      "id": 57,
       "name": "Vaccine",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "Use Item button: Cure yourself or another Survivor from the T-Virus and/or Uroboros Infection.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_vaccine.png?6c2818",
       "icon_local_path": "icons/items/vaccine.webp",
@@ -1753,10 +1531,6 @@
         "de": {
           "name": "Impfstoff",
           "description": "„Gegenstand verwenden“-Taste: Heile dich oder einen anderen Überlebenden vom T-Virus und/oder der Uroboros-Infektion."
-        },
-        "en": {
-          "name": "Vaccine",
-          "description": "Use Item button: Cure yourself or another Survivor from the T-Virus and/or Uroboros Infection."
         },
         "es": {
           "name": "Vacuna",
@@ -1773,9 +1547,9 @@
       }
     },
     {
+      "id": 58,
       "name": "Void Crystal",
-      "category": "Trial Artifact",
-      "role": "Survivor",
+      "category_id": 9,
       "description": "Cold to the touch, the crystal vibrates from the force contained within.\n• 1 charge.\n• When shattered, the Void Crystal releases thick smoke with an expanding radius of up to 4 meters.\n• Survivors within 6 meters of the smoke do not leave scratch marks.\n• The smoke dissipates 8 seconds after reaching it maximum size.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconItems_voidCrystal.png?730b51",
       "icon_local_path": "icons/items/void_crystal.webp",
@@ -1784,10 +1558,6 @@
         "de": {
           "name": "Leerekristall",
           "description": "Dieser Kristall ist ganz kalt und zittert von der Macht, die in ihm bewahrt wird.\n• 1 Aufladung.\n• Wenn er zerbrochen wird, versprüht der Leerekristall dichten Rauch mit einem Radius, der bis zu 4 Meter betragen wird.\n• Überlebende in einem Umkreis von 6 Metern rund um den Rauch hinterlassen keine Kratzspuren.\n• Der Rauch löst sich 8 Sekunden, nachdem er seine maximale Ausdehnung erreicht hat, wieder auf."
-        },
-        "en": {
-          "name": "Void Crystal",
-          "description": "Cold to the touch, the crystal vibrates from the force contained within.\n• 1 charge.\n• When shattered, the Void Crystal releases thick smoke with an expanding radius of up to 4 meters.\n• Survivors within 6 meters of the smoke do not leave scratch marks.\n• The smoke dissipates 8 seconds after reaching it maximum size."
         },
         "es": {
           "name": "Cristal del vacío",

@@ -1,42 +1,31 @@
 # backend/run.py
+"""The WSGI entry point. `gunicorn ... run:app` imports this.
+
+It used to do two other things, both wrong:
+
+1. `from app.models.character import Character` -- a table that no longer
+   exists. `characters` was split into `survivors` and `killers`, so this
+   import failed and gunicorn never started.
+
+2. `_seed_static_db_if_needed()`, which called `seed_from_static_json()` at
+   import time if the character count was zero. That was a *fourth* seeder, on
+   top of the three already consolidated into `static_db_seeder`, and the worst
+   placed of them: `create_app()` seeds under a Postgres advisory lock
+   (`pg_try_advisory_lock(8882026)`) precisely so that N gunicorn workers
+   booting at once do not race each other, and this ran outside that lock, in
+   every worker, after `create_app()` had already done the work.
+
+Both are gone. `create_app()` builds the schema and seeds; this module just
+exposes the app.
+"""
 import logging
-import os
-import threading
-from sqlalchemy import func, select
+
 from app import create_app
-from app.core.config import Config
-from app.core.extensions import db
-from app.models.character import Character
-from app.services.perk_service import PerkService
 
 logger = logging.getLogger(__name__)
+
 app = create_app()
 
-
-def _seed_static_db_if_needed() -> None:
-    """Seeds the database from offline static JSON data if characters table is empty.
-    Wiki.gg scraper is completely disabled."""
-    char_count = 0
-    with app.app_context():
-        try:
-            char_count = db.session.scalar(select(func.count(Character.id))) or 0
-        except Exception as e:
-            logger.debug(f"[startup-check] char_count check notice: {e}")
-            char_count = 0
-
-    if char_count == 0:
-        logger.info("[startup] No characters found. Seeding database from offline static JSON...")
-        from app.seeds.static_db_seeder import seed_from_static_json
-        with app.app_context():
-            try:
-                seed_from_static_json()
-            except Exception:
-                logger.exception("[startup] Error running static JSON seeder:")
-    else:
-        logger.info(f"[startup] Database is initialized with {char_count} characters. Wiki.gg scraper is disabled.")
-
-
-_seed_static_db_if_needed()
 
 if __name__ == "__main__":
     host = app.config.get("HOST", "0.0.0.0")

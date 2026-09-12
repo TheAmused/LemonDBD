@@ -2,16 +2,30 @@
 import logging
 import re
 from typing import Any
-from sqlalchemy import and_, case, func, or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import joinedload
 
 from app.core.cache import catalog_cache
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
-from app.models import Addon, Character, Item, Offering
+from app.models import Item, ItemAddon, Killer, KillerAddon, Offering, Survivor
 from app.services.perks.utils import HEADER_EXCLUSIONS, normalize_search_key, slugify
 
 logger = logging.getLogger(__name__)
+
+
+def _role_models(category: str | None) -> list[type[Survivor] | type[Killer]]:
+    """The tables a `category` filter selects, survivors first.
+
+    The filter used to be `WHERE lower(role) = ?` against the discriminator
+    column; with one table per role it picks tables instead. A category that
+    names neither role selects nothing, exactly as the old comparison matched
+    no rows.
+    """
+    wanted = category.lower() if category else "all"
+    if wanted == "all":
+        return [Survivor, Killer]
+    return [m for m in (Survivor, Killer) if m.role.lower() == wanted]
 
 
 def fetch_characters(service, category: str | None = None, lang: str | None = None) -> list[dict[str, Any]]:
@@ -22,24 +36,29 @@ def fetch_characters(service, category: str | None = None, lang: str | None = No
         return cached
 
     try:
-        stmt = select(Character).options(joinedload(Character.perks))
-        if category and category.lower() != "all":
-            stmt = stmt.where(func.lower(Character.role) == category.lower())
+        models = _role_models(category)
+        characters: list[Survivor | Killer] = []
+        for model in models:
+            # `release_number` is the primary key now, so the CASE that pushed
+            # NULL and 0 release numbers to the end of the list has nothing
+            # left to guard against: ordering by id is the same order.
+            stmt = (
+                select(model)
+                .options(joinedload(model.perks))
+                .order_by(model.id.asc(), model.name.asc())
+            )
+            characters.extend(_run_characters_query(stmt))
 
-        stmt = stmt.order_by(
-            case(
-                (and_(Character.release_number.is_not(None), Character.release_number > 0), Character.release_number),
-                else_=9999,
-            ).asc(),
-            Character.id.asc(),
-            Character.name.asc(),
-        )
-
-        characters = _run_characters_query(stmt)
-        # TEMPORARY DIAGNOSTIC (remove once confirmed): this path silently
-        # falls back to a possibly-empty in-memory cache on ANY exception,
-        # including one raised inside to_dict() -- log it loudly so a bad
-        # fallback is never mistaken for "there's just no data yet".
+        if len(models) > 1:
+            # The old single query ordered all 98 rows by release number, so
+            # the two result sets have to be interleaved rather than appended:
+            # survivor 3 came before killer 4. Survivors win an equal release
+            # number because they held ids 1-54 against the killers' 55-98 in
+            # the table that no longer exists, and `id ASC` was the tiebreak.
+            characters.sort(key=lambda c: (c.release_number, 0 if isinstance(c, Survivor) else 1, c.name))
+        # This path falls back to a possibly-empty in-memory cache on any
+        # exception, including one raised inside to_dict(), so an empty result
+        # is logged rather than passed off as "there is no data yet".
         if not characters:
             logger.warning(
                 f"[characters-query-check] DB query returned 0 rows "
@@ -82,22 +101,29 @@ def fetch_character_suggestions(
         return cached
 
     try:
-        stmt = select(Character)
-        if category and category.lower() != "all":
-            stmt = stmt.where(func.lower(Character.role) == category.lower())
-
-        if query:
-            q_clean = f"%{query.strip().lower()}%"
-            stmt = stmt.where(
-                or_(
-                    func.lower(Character.name).like(q_clean),
-                    func.lower(Character.real_name).like(q_clean),
-                    func.lower(Character.short_name).like(q_clean),
+        models = _role_models(category)
+        chars: list[Survivor | Killer] = []
+        for model in models:
+            stmt = select(model)
+            if query:
+                q_clean = f"%{query.strip().lower()}%"
+                stmt = stmt.where(
+                    or_(
+                        func.lower(model.name).like(q_clean),
+                        func.lower(model.real_name).like(q_clean),
+                    )
                 )
-            )
 
-        stmt = stmt.order_by(Character.name.asc()).limit(limit)
-        chars = db.session.scalars(stmt).all()
+            stmt = stmt.order_by(model.name.asc()).limit(limit)
+            chars.extend(db.session.scalars(stmt).all())
+
+        if len(models) > 1:
+            # Each half is already name-ordered and capped at `limit`, so the
+            # first `limit` names of the merge are the same ones the single
+            # ordered query returned.
+            chars.sort(key=lambda c: c.name)
+            chars = chars[:limit]
+
         res = [
             {
                 "id": c.id,
@@ -144,51 +170,55 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
         return cached
 
     try:
-        # Fast-path: attempt direct indexed SQL lookup on common canonical identifiers
-        direct_stmt = (
-            select(Character)
-            .options(joinedload(Character.perks))
-            .where(
-                or_(
-                    func.lower(Character.name) == target_clean,
-                    func.lower(Character.name) == target_spaces,
-                    func.lower(Character.wiki_slug) == target_clean,
-                    func.lower(Character.wiki_slug) == target_slug,
-                    func.lower(Character.short_name) == target_clean,
-                    func.lower(Character.code_prefix) == target_clean,
-                    func.lower(Character.real_name) == target_clean,
-                    func.lower(Character.real_name) == target_spaces,
+        # Fast-path: attempt direct indexed SQL lookup on common canonical
+        # identifiers. Survivors are tried before killers, and a hit in either
+        # table ends the search: names are unique across both tables (no
+        # survivor shares a name with a killer), so there is never a second
+        # row to weigh against the first.
+        matched_char: Survivor | Killer | None = None
+        for model in (Survivor, Killer):
+            direct_stmt = (
+                select(model)
+                .options(joinedload(model.perks))
+                .where(
+                    or_(
+                        func.lower(model.name) == target_clean,
+                        func.lower(model.name) == target_spaces,
+                        # This resolves a URL path segment, so it necessarily
+                        # compares text -- but only against the two real display
+                        # columns. The three alias columns it used to try
+                        # (wiki_slug, short_name, code_prefix) were `name`
+                        # respelled and no longer exist; code_prefix is derived
+                        # and is matched in the Python fallback below.
+                        func.lower(model.real_name) == target_clean,
+                        func.lower(model.real_name) == target_spaces,
+                    )
                 )
             )
-        )
-        matched_char: Character | None = db.session.scalars(direct_stmt).unique().first()
+            matched_char = db.session.scalars(direct_stmt).unique().first()
+            if matched_char:
+                break
 
         # Fallback path: check normalized aliases and localized translation names
         if not matched_char:
-            stmt = select(Character).options(joinedload(Character.perks))
-            chars = db.session.scalars(stmt).unique().all()
+            chars: list[Survivor | Killer] = []
+            for model in (Survivor, Killer):
+                stmt = select(model).options(joinedload(model.perks))
+                chars.extend(db.session.scalars(stmt).unique().all())
 
             for c in chars:
                 c_name = c.name.lower()
                 c_real = (c.real_name or "").lower()
-                c_slug = (c.wiki_slug or "").lower()
-                c_short = (c.short_name or "").lower()
-                c_prefix = (c.code_prefix or "").lower()
+                c_prefix = c.code_prefix.lower()
 
                 candidate_slugs = {
                     c_name,
                     c_real,
-                    c_slug,
-                    c_short,
                     c_prefix,
                     slugify(c.name),
                     slugify(c.real_name or ""),
-                    slugify(c.wiki_slug or ""),
-                    slugify(c.short_name or ""),
-                    slugify(c.code_prefix or ""),
                     normalize_search_key(c.name),
                     normalize_search_key(c.real_name or ""),
-                    normalize_search_key(c.short_name or ""),
                 }
 
                 if c.translations and isinstance(c.translations, dict):
@@ -238,61 +268,16 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
         offerings_list: list[dict[str, Any]] = []
 
         if char_role.lower() == "killer":
-            all_addons = db.session.scalars(
-                select(Addon).where(func.lower(Addon.category) == "killer")
+            # This was 55 lines of Python: load all 880 killer add-ons, build a
+            # token set from the character's name, real name, wiki slug, short
+            # name and power name, then substring- and word-match each add-on's
+            # `associated_target` against it -- on every request, to find the
+            # 20 rows that belong to this killer. `killer_addons.killer_id` is
+            # NOT NULL and indexed, so it is a single exact predicate rather
+            # than a heuristic over every add-on in the game.
+            matched_addons = db.session.scalars(
+                select(KillerAddon).where(KillerAddon.killer_id == matched_char.id)
             ).all()
-            matched_addons = []
-
-            canonical_name = matched_char.name.strip()
-            no_article_name = re.sub(r"^the\s+", "", canonical_name, flags=re.IGNORECASE).strip()
-
-            char_tokens = {
-                normalize_search_key(canonical_name),
-                normalize_search_key(no_article_name),
-                normalize_search_key(matched_char.real_name or ""),
-                normalize_search_key(matched_char.wiki_slug or ""),
-                normalize_search_key(matched_char.short_name or ""),
-            }
-            if matched_char.power_name:
-                p_norm = normalize_search_key(matched_char.power_name)
-                char_tokens.add(p_norm)
-                if p_norm.endswith("s"):
-                    char_tokens.add(p_norm[:-1])
-                if p_norm.endswith("es"):
-                    char_tokens.add(p_norm[:-2])
-            char_tokens.discard("")
-
-            for a in all_addons:
-                raw_target = (a.associated_target or "").strip()
-                target_norm = normalize_search_key(raw_target)
-                if not target_norm:
-                    continue
-
-                if target_norm in char_tokens:
-                    matched_addons.append(a)
-                    continue
-
-                target_no_art = re.sub(r"^the\s+", "", target_norm).strip()
-                if target_no_art in char_tokens:
-                    matched_addons.append(a)
-                    continue
-
-                target_words = set(target_norm.split())
-                matched_word = False
-                for tok in char_tokens:
-                    tok_words = tok.split()
-                    if len(tok_words) == 1:
-                        if tok in target_words and tok not in {"the", "and", "for", "all"}:
-                            matched_word = True
-                            break
-                    else:
-                        if tok in target_norm:
-                            matched_word = True
-                            break
-
-                if matched_word:
-                    matched_addons.append(a)
-
             addons_list = [a.to_dict(lang=lang) for a in matched_addons]
             addons_list.sort(key=get_rarity_sort_key)
 
@@ -302,17 +287,21 @@ def fetch_character_detail(service, character_name: str, lang: str | None = None
             offerings_list = [o.to_dict(lang=lang) for o in killer_offerings]
             offerings_list.sort(key=get_rarity_sort_key)
         else:
-            items_stmt = select(Item).where(func.lower(Item.role) == "survivor")
-            items = db.session.scalars(items_stmt).all()
+            items = db.session.scalars(select(Item)).all()
             items_list = [i.to_dict(lang=lang) for i in items if i.name.lower().strip() not in HEADER_EXCLUSIONS]
             items_list.sort(key=get_rarity_sort_key)
 
-            survivor_addons_stmt = select(Addon).where(func.lower(Addon.category) == "survivor")
-            survivor_addons = db.session.scalars(survivor_addons_stmt).all()
+            # Survivor add-ons are the whole of `item_addons`: the table exists
+            # because these 51 rows attach to an item class rather than to a
+            # killer, so there is no predicate left to write. The old query
+            # filtered on `category` (a stored string) and then dropped any row
+            # whose target contained "numbers" -- a guard against header rows
+            # that the foreign key makes unnecessary.
+            survivor_addons = db.session.scalars(select(ItemAddon)).all()
             addons_list = [
                 a.to_dict(lang=lang)
                 for a in survivor_addons
-                if a.name.lower().strip() not in HEADER_EXCLUSIONS and "numbers" not in (a.associated_target or "").lower()
+                if a.name.lower().strip() not in HEADER_EXCLUSIONS
             ]
             addons_list.sort(key=get_rarity_sort_key)
 

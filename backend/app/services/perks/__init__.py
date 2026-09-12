@@ -2,7 +2,6 @@
 from app.services.perks.loader import (
     load_fallback_files,
     reload_service_data,
-    seed_database_from_json_files,
 )
 from app.services.perks.queries_character import (
     fetch_character_detail,
@@ -51,7 +50,6 @@ __all__ = [
     "AddonModel",
     "MapModel",
     "PerkModel",
-    "seed_database_from_json_files",
     "load_fallback_files",
     "reload_service_data",
     "fetch_perks",

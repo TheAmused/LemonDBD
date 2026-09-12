@@ -19,7 +19,7 @@ export type MapSource = 'all' | 'hens333' | 'samoelcolt';
 
 export interface MatchResult {
   matchedMapName: string;
-  matchedMapId?: string;
+  matchedMapId?: number;
   source: MapSource;
   confidence: number;
   isVariant: boolean;
@@ -29,7 +29,13 @@ export interface MatchResult {
 }
 
 export interface MapDataEntry {
-  id: string;
+  /** The integer primary key, matching `MapRealm.id`. It used to be a slug
+   *  (`hens_azarovs_resting_place`) that spelled out the callout provider and
+   *  the map name -- both of which this row already carries as `source` and
+   *  `name`. This is the subset of `MapRealm` the matcher reads; it stays a
+   *  structural type rather than importing `MapRealm` so the matcher can be
+   *  called with any row-like object. */
+  id: number;
   name: string;
   realm?: string;
   source?: string;
@@ -1718,7 +1724,7 @@ function createMapMatchResult(
     ? customVariants
     : getVariantsForMap(matchedMapName);
 
-  let matchedMapId: string | undefined;
+  let matchedMapId: number | undefined;
   let finalSource: MapSource = currentSource;
 
   if (allMaps && allMaps.length > 0) {

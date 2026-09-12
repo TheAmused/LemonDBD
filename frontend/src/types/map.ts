@@ -63,7 +63,11 @@ export interface MapObjective {
 }
 
 export interface MapRealm {
-  id: string;
+  /** The integer primary key. It was a string --
+   *  `hens_autohaven_wreckers_azarovs_resting_place` -- which spelled out the
+   *  callout provider, the realm and the name, all three of which the row
+   *  already carries as `source`, `realm` and `name`. */
+  id: number;
   name: string;
   realm: string;
   layout_type: string;
@@ -92,6 +96,11 @@ export interface MapRealm {
     six_o_clock?: string;
     nine_o_clock?: string;
   };
+  /** Always empty. `map_tiles` held five generic placeholder names copied onto
+   *  every map and `map_objectives` held nothing at all, so both tables are
+   *  gone. What the UI actually renders as the callout system is the image at
+   *  `callout_image_url`, not a tile list. The keys stay on the wire because
+   *  clients read them. */
   tiles?: MapTile[];
   objectives?: MapObjective[];
 }

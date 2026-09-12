@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 750,
+      "name": "Garden Claw",
+      "killer_id": 43,
+      "description": "Good for digging up weeds and digging into human flesh.\nIncreases the duration of Killer Instinct after a Jump Scare by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_GardenClaw.png?6d77bc",
+      "icon_local_path": "icons/addons/garden_claw.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gartenkralle",
+          "description": "Gut, um Unkraut zu jäten ... und sich in Menschenfleisch zu bohren.\nVerlängert die Dauer des Killerinstinkts nach einem Schockmoment um 2 Sek."
+        },
+        "es": {
+          "name": "Garra de jardín",
+          "description": "Ideal para arrancar malas hierbas... y desgarrar carne humana.\nAumenta la duración de Instinto asesino tras un sobresalto en 2 segundos."
+        },
+        "ja": {
+          "name": "園芸用クロー",
+          "description": "雑草を根元から掘り起こすのにも、人間の体に\"掘り込む\"のにも便利。\nジャンプスケアのあとに発動する殺人鬼の本能の持続期間が2秒増加する"
+        },
+        "pl": {
+          "name": "Pazury ogrodnicze",
+          "description": "Dobre do wykopywania chwastów i do wkopywania się w ludzkie ciało.\nZwiększa czas trwania Instynktu Zabójcy po Wystraszeniu przez 2 s."
+        }
+      }
+    },
+    {
+      "id": 751,
+      "name": "Bent Wheel",
+      "killer_id": 43,
+      "description": "All that remained of the victim's wheelchair after the fatal blow.\nIncreases the range at which you can trigger Jump Scare by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BentWheel.png?b469e7",
+      "icon_local_path": "icons/addons/bent_wheel.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Verbogenes Rad",
+          "description": "Alles, was nach dem tödlichen Schlag vom Rollstuhl des Opfers übrigblieb.\nVergrößert die Reichweite, innerhalb der du einen Schockmoment auslösen kannst, um 4 Meter."
+        },
+        "es": {
+          "name": "Rueda doblada",
+          "description": "Lo único que quedó de la silla de ruedas de la víctima tras el golpe mortal.\nAumenta el alcance al que puedes activar sobresalto en 4 metros."
+        },
+        "ja": {
+          "name": "曲がった車輪",
+          "description": "車椅子の被害者が致命傷を受けたあと、残ったのはこれだけだった。\nジャンプスケアを実行できる範囲が4メートル拡大する"
+        },
+        "pl": {
+          "name": "Pogięty wózek",
+          "description": "Wszystko, co pozostało z wózka inwalidzkiego ofiary po śmiertelnym ciosie.\nZwiększa zasięg, z którego możesz uruchomić Wystraszenie o 4 m."
+        }
+      }
+    },
+    {
+      "id": 752,
+      "name": "Knitting Needle",
+      "killer_id": 43,
+      "description": "You won't believe what—and who—this thing has been through.\nIncreases the time it takes for injured Impaled Survivors to extract the Spike from themselves by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_KnittingNeedle.png?901404",
+      "icon_local_path": "icons/addons/knitting_needle.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Stricknadel",
+          "description": "Du wirst nicht glauben, wo bzw. in wem dieses Ding schon steckte.\nVerlängert die Zeit, die verletzte aufgespießte Überlebende brauchen, um den Spieß herauszuziehen, um 20 %."
+        },
+        "es": {
+          "name": "Aguja de tricotar",
+          "description": "No te creerías por lo que ha pasado esta cosa... ni por quién.\nAumenta el tiempo que tardan los supervivientes empalados heridos en quitarse el clavo un 20 %."
+        },
+        "ja": {
+          "name": "編み棒",
+          "description": "これが何に、そして誰に突き刺さってきたかは誰も知らない。\n串刺し状態の負傷した生存者が自分で投げ棒を引き抜くのにかかる時間が20%増加する"
+        },
+        "pl": {
+          "name": "Druty dziewiarskie",
+          "description": "Nie uwierzysz, przez co i przez kogo przeszło to coś.\nWydłuża czas potrzebny do wyjęcia z siebie kolca przez rannych przebitych ocalałych o 20%."
+        }
+      }
+    },
+    {
+      "id": 753,
+      "name": "Orderly's Shoe",
+      "killer_id": 43,
+      "description": "It hung from her twitching foot as the knife plunged into her belly.\nIncreases the duration of Haste after a Jump Scare by 5 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_OrderlysShoe.png?619042",
+      "icon_local_path": "icons/addons/orderlys_shoe.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Pflegerinnenschuh",
+          "description": "Er hing an ihrem zuckenden Fuß, während sich das Messer in ihren Bauch bohrte.\nVerlängert die Dauer von Eile nach einem Schockmoment um 5 Sek.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Zapato de celador",
+          "description": "Le colgaba de su pie tembloroso mientras el cuchillo se hundía en su vientre.\nAumenta la duración de Celeridad tras un sobresalto en 5 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "看護師の靴",
+          "description": "彼女の腹にはナイフが突き刺され、震える足には靴がぶら下がっていた。\nジャンプスケアのあとに得る迅速の持続期間が5秒増加する\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "But sanitariuszki",
+          "description": "Zwisał z jej drżącej nogi, gdy nóż przeszył jej brzuch.\nZwiększa czas trwania Pośpiechu po Wystraszeniu o 5 s.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 754,
+      "name": "Sleeping Bag",
+      "killer_id": 43,
+      "description": "An absolutely awful place to hide from a killer.\nAfter grabbing a Hook Spike while in Omnipresent Evil mode, see the locations of Survivors within 10 meters of hooks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SleepingBag.png?c86801",
+      "icon_local_path": "icons/addons/sleeping_bag.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schlafsack",
+          "description": "Ein richtig schlechtes Versteck vor einem Killer.\nNachdem du dir im Modus Allgegenwärtiges Böses einen Hakenspieß geschnappt hast, siehst du die Positionen von Überlebenden in einem Umkreis von 8 Metern rund um Haken."
+        },
+        "es": {
+          "name": "Saco de dormir",
+          "description": "Un escondite absolutamente pésimo contra un asesino.\nTras coger un clavo de gancho en el modo Mal omnipresente, ves las ubicaciones de los supervivientes en un radio de 8 metros de los ganchos."
+        },
+        "ja": {
+          "name": "寝袋",
+          "description": "殺人鬼から身を隠すのには最悪の場所。\n神出鬼没の悪モード中にフックの投げ棒を手に入れると、フックの10メートル以内にいる生存者の居場所が視える"
+        },
+        "pl": {
+          "name": "Śpiwór",
+          "description": "Absolutnie okropne miejsce do ukrycia się przed zabójcą.\nPo wzięciu kolca z haka w trybie Wszechobecnego zła, widzisz lokalizacje ocalałych w odległości 8 m od haków."
+        }
+      }
+    },
+    {
+      "id": 755,
+      "name": "Bloody Smile",
+      "killer_id": 43,
+      "description": "He wasn't happy after his face was smashed into a tree.\nIncreases Jump Scare and Omnipresent Evil's detection range of Survivors by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BloodySmile.png?8823b2",
+      "icon_local_path": "icons/addons/bloody_smile.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutiges Grinsen",
+          "description": "Er war nicht mehr so glücklich, nachdem sein Gesicht gegen einen Baum geschleudert worden war.\nVergrößert die Wahrnehmungsreichweite von Überlebenden für Schockmoment und Allgegenwärtiges Böses um 4 Meter."
+        },
+        "es": {
+          "name": "Sonrisa ensangrentada",
+          "description": "No quedó muy contento después de que le estampasen la cara contra un árbol.\nAumenta el sobresalto y el alcance de detección de supervivientes de Mal omnipresente en 4 metros."
+        },
+        "ja": {
+          "name": "血まみれの笑顔",
+          "description": "彼は顔面が木に衝突したことが気に食わなかっただろう。\nジャンプスケアや神出鬼没の悪が生存者を探知する範囲が4メートル拡大する"
+        },
+        "pl": {
+          "name": "Krwawy uśmiech",
+          "description": "Nie był zadowolony po tym, jak jego twarz uderzyła o drzewo.\nZwiększa zasięg wykrywania ocalałych przy pomocy Wystraszenia i Wszechobecnego zła o 4 m."
+        }
+      }
+    },
+    {
+      "id": 756,
+      "name": "Toxic Waste",
+      "killer_id": 43,
+      "description": "No one could survive being submerged in this poison.\nAfter a Jump Scare, Survivors within 10 meters of a hook or Scrap Pile gain Oblivious for 13 seconds.\nOblivious prevents Survivors from hearing and being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ToxicWaste.png?eb0f66",
+      "icon_local_path": "icons/addons/toxic_waste.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Giftmüll",
+          "description": "Wer diesem Gift ausgesetzt wurde, überlebte nicht.\nNach einem Schockmoment leiden Überlebende in einem Umkreis von 8 Metern rund um einen Haken oder einen Schrotthaufen 13 Sek. lang unter Ahnungslos\n. Ahnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder davon betroffen sind."
+        },
+        "es": {
+          "name": "Residuos tóxicos",
+          "description": "Nadie podría sobrevivir tras quedar sumergido en este veneno.\nTras un sobresalto, los supervivientes en un radio de 8 metros de un gancho o de un montón de chatarra sufren Inconsciencia durante 13 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "有毒廃棄物",
+          "description": "この毒に顔を浸したら、誰も生き延びれない。\nジャンプスケアのあと、フックまたはクズの山の10メートル以内にいる生存者が13 秒間、無感覚状態になる\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Toksyczne odpady",
+          "description": "Nikt nie przeżyje zanurzenia w tej truciźnie.\nPo Wystraszeniu, ocalali w odległości 8 m od haka lub stosu złomu zyskują efekt Nieświadomości na 13 s.\nNieświadomość uniemożliwia ocalałym słyszenie zasięgu terroru zabójcy i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 757,
+      "name": "Party Noisemaker",
+      "killer_id": 43,
+      "description": "A party instument that tore through a woman's eyeball and gouged her brain.\nBreaking a Pallet or Breakable Wall with Jump Scare reveals the Auras of Survivors further than 28 meters for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_PartyNoisemaker.png?c71c76",
+      "icon_local_path": "icons/addons/party_noisemaker.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Party-Krachmacher",
+          "description": "Ein Partyinstrument, das den Augapfel einer Frau durchbohrte und ihr Gehirn zerstörte.\nWenn du eine Palette oder eine zerstörbare Mauer mit Schockmoment zerstörst, werden 6 Sek. lang die Auren von Überlebenden enthüllt, die weiter als 32 Meter entfernt sind."
+        },
+        "es": {
+          "name": "Matraca de fiesta",
+          "description": "Un instrumento de fiesta que le atravesó el ojo a una mujer y le perforó el cerebro.\nRomper un palé o muro destruible con un sobresalto revela las auras de los supervivientes que estén a más de 32 metros durante 6 segundos."
+        },
+        "ja": {
+          "name": "パーティーホーン",
+          "description": "パーティー用のおもちゃが女の目玉を突き抜け、脳みそに突き刺さった。\nジャンプスケアで破壊可能な壁またはパレットを破壊すると、28メートル以上離れた生存者のオーラが6秒間視える"
+        },
+        "pl": {
+          "name": "Źródło hałasu na imprezie",
+          "description": "Istrument imprezowy, który przekuł oko kobiety i wydłubał jej mózg.\nZniszczenie palety lub rozbijalnej ściany przy pomocy Wystraszenia ujawnia aury ocalałych oddalonych o więcej, niż 32 m przez 6 s."
+        }
+      }
+    },
+    {
+      "id": 758,
+      "name": "Coroner's Coffee",
+      "killer_id": 43,
+      "description": "A cup of coffee that went unfinished.\nIncreases the distance Survivors are pushed by Spikes by 25%.\nGain 13% Haste for 3 seconds after injuring a Survivor with a Spike if they do not collide with the environment.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CoronersCoffee.png?23f8ec",
+      "icon_local_path": "icons/addons/coroners_coffee.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kaffee des Gerichtsmediziners",
+          "description": "Eine Tasse Kaffee, die nie ausgetrunken wurde.\nErhöht die Distanz, die Überlebende durch Spieße vorangetrieben werden, um 25 %.\nDu erhältst 13 % Eile für 3 Sek., nachdem du einen Überlebenden mit einem Spieß verletzt hast, wenn er nicht gegen eine Oberfläche in der Umgebung geschleudert wird.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Café de forense",
+          "description": "Una taza de café que nadie se acabó.\nAumenta la distancia a la que los clavos empujan a los supervivientes un 25 %.\nObtienes un 13 % de Celeridad durante 3 segundos tras herir a un superviviente con un clavo si no chocan con el entorno.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "検死官のコーヒー",
+          "description": "飲み干されることのなかったコーヒー。\n生存者が投げ棒によって押し飛ばされる距離が25%増加する\n投げ棒で生存者を負傷させたとき、その生存者が周囲のものに衝突しなければ、13%の迅速を3秒間得る\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Kawa koronera",
+          "description": "Niedopita filiżanka kawy.\nZwiększa odległość, o którą ocalali są odpychani przez kolce o 25%.\nZyskujesz 13% Pośpiechu przez 3 s po zranieniu ocalałego za pomocą kolca, jeśli nie koliduje z otoczeniem.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 759,
+      "name": "Sauna Rock",
+      "killer_id": 43,
+      "description": "Nicely weighted, could be used to crush a rib cage.\nAfter a Jump Scare, inflict all Survivors within Killer Instinct's detection range with Exhausted for 3 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SaunaRock.png?905830",
+      "icon_local_path": "icons/addons/sauna_rock.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Saunastein",
+          "description": "Das perfekte Gewicht, um einen Brustkorb zu zermalmen.\nNach einem Schockmoment belegst du alle Überlebenden innerhalb der Wahrnehmungsreichweite des Killerinstinkts 13 Sek. lang mit Erschöpfung.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Piedra de sauna",
+          "description": "Bastante pesada. Podría usarse para aplastar una caja torácica.\nTras un sobresalto, infliges Agotamiento a todos los supervivientes dentro del alcance de detección de Instinto asesino durante 13 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "サウナの石",
+          "description": "適度な重さで、肋骨を砕くのにも使える。\nジャンプスケアのあと、殺人鬼の本能の探知範囲にいる生存者全員を3秒間疲労状態にする\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Kamień z sauny",
+          "description": "Dobrze wyważony, mógł być użyty do zmiażdżenia klatki piersiowej.\nPo Wystraszeniu, wywołaj efekt Wyczerpania wśród ocalałych będących w zasięgu Instynktu Zabójcy przez 13 s.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 760,
+      "name": "Imprinted Aluminum",
+      "killer_id": 43,
+      "description": "It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\nInjuring a healthy Survivor with a Spike inflicts the Mangled and Hemorrhage status effects for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ImprintedAluminum.png?97b5cf",
+      "icon_local_path": "icons/addons/imprinted_aluminum.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Aluminiumabbild",
+          "description": "Entweder ist es moderne Kunst oder das entsetzte Abbild einer Frau, deren Gesicht hineingeschleudert wurde.\nWird ein gesunder Überlebender mit einem Spieß verletzt, erhält er die Statuseffekte Zerfleischt und Blutung für 70 Sek.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Aluminio marcado",
+          "description": "O es una obra de arte vanguardista... o la espeluznante marca de una mujer cuya cara fue estampada contra él.\nHerir a un superviviente ileso con un clavo le inflige los efectos de estado Laceración y Hemorragia durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "くぼんだアルミ",
+          "description": "アバンギャルドなアート作品にも、女性の顔が突き当たってできたくぼみにも見える。\n投げ棒で無傷の生存者を負傷させると、その生存者が70秒間、重傷と出血状態になる\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Odciśnięte aluminium",
+          "description": "Jest to albo awangardowe dzieło sztuki, albo przerażający odcisk kobiety, której twarz została w nie wgnieciona.\nTrafienie zdrowego ocalałego piłą łańcuchową powoduje efekty Zmasakrowany i Krwotok na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 761,
+      "name": "Two Nails",
+      "killer_id": 43,
+      "description": "A reliable way to hold a corpse's wrist in place.\nSpikes that come within 1 meter of a Survivor reveal their Aura for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_TwoNails.png?9d2c55",
+      "icon_local_path": "icons/addons/two_nails.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zwei Nägel",
+          "description": "Eine sichere Art, um das Handgelenk einer Leiche an Ort und Stelle zu fixieren.\nSpieße in einem Umkreis von 1 Meter um einen Überlebenden enthüllen dessen Aura für 6 Sek."
+        },
+        "es": {
+          "name": "Dos clavos",
+          "description": "Una forma fiable de inmovilizar la muñeca de un cadáver.\nLos clavos que estén a 1 metro de un superviviente revelan su aura durante 6 segundos."
+        },
+        "ja": {
+          "name": "2本のクギ",
+          "description": "これを使えば、遺体の手首を確実に固定できる。\n投げ棒が生存者の1メートル以内にくると、その生存者のオーラが5秒間視える"
+        },
+        "pl": {
+          "name": "Dwa gwoździe",
+          "description": "Niezawodny sposób na unieruchomienie nadgarstka zwłok w miejscu.\nKolce, które trafiają w odległości 1 m od ocalałych, ujawniają ich aurę na 6 s."
+        }
+      }
+    },
+    {
+      "id": 762,
+      "name": "Eye Goop",
+      "killer_id": 43,
+      "description": "What remains when a harpoon is shoved into one's eye.\nGain Undetectable for 13 seconds after grabbing a Hook Spike.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_EyeGoop.png?6d99dd",
+      "icon_local_path": "icons/addons/eye_goop.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Augenschleim",
+          "description": "Was übrig bleibt, wenn ein Auge mit einer Harpune durchbohrt wird.\nDu erhältst 13 Sek. lang Unentdeckbar, nachdem du dir einen Hakenspieß geschnappt hast.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Masa ocular",
+          "description": "Lo que queda cuando te clavan un arpón en el ojo.\nObtienes Indetectable durante 13 segundos tras coger un clavo de gancho.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "眼球ゼリー",
+          "description": "銛が目玉に突き刺さったときに出てきたもの。\nフックの投げ棒を手に入れたあと、探知不可を13秒間得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Maź z oka",
+          "description": "Co pozostaje, gdy harpun wbije się w czyjeś oko.\nZyskujesz efekt Niewykrywalności przez 13 s po wzięciu kolca z haka.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 763,
+      "name": "Bloody Magazine",
+      "killer_id": 43,
+      "description": "The spattering of blood told the story of a brutal massacre.\nWhen a Hook Spike misses, all Survivors within 8 meters of the impact scream and reveal their Auras for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BloodyMagazine.png?32e65b",
+      "icon_local_path": "icons/addons/bloody_magazine.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Blutige Zeitschrift",
+          "description": "Die Blutspritzer deuteten auf ein brutales Massaker hin.\nWenn ein Hakenspieß sein Ziel verfehlt, schreien alle Überlebenden in einem Umkreis von 8 Metern rund um den Einschlagsort auf und enthüllen ihre Auren für 3 Sek."
+        },
+        "es": {
+          "name": "Revista ensangrentada",
+          "description": "Las salpicaduras de sangre contaban la historia de una brutal masacre.\nCuando falle un clavo de gancho, todos los supervivientes en un radio de 8 metros del impacto gritarán y revelarán sus auras durante 3 segundos."
+        },
+        "ja": {
+          "name": "血まみれの雑誌",
+          "description": "飛び散った血痕が惨たらしい虐殺を物語っている。\nフックの投げ棒が的を外すと、その到達地点の8メートル以内にいる生存者全員が叫び声を上げ、そのオーラが3秒間視える"
+        },
+        "pl": {
+          "name": "Zakrwawiony magazynek",
+          "description": "Rozbryzgi krwi opowiadały historię brutalnej masakry.\nGdy kolec z haka chybi, wszyscy ocalali w odległości 8 m od miejsca trafienia krzyczą i ujawniają swoje aure na 3 s."
+        }
+      }
+    },
+    {
+      "id": 764,
+      "name": "Burnt Fuse",
+      "killer_id": 43,
+      "description": "The surge of electricity was overwhelming. It left the man's flesh charred and smelling of cooked meat.\nWhile a Survivor is Impaled and for 5 seconds after they extract the Spike, the Exit Gates are blocked for them and any Survivors within 13 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BurntFuse.png?ef9c79",
+      "icon_local_path": "icons/addons/burnt_fuse.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Verbrannte Lunte",
+          "description": "Der Stromschlag war überwältigend. Der Körper des Mannes war danach verkohlt und roch nach gekochtem Fleisch.\nSolange ein Überlebender aufgespießt ist und für 5 Sek., nachdem er den Spieß herausgezogen hat, werden die Ausgangstore für ihn und Überlebende in einem Umkreis von 13 Metern blockiert."
+        },
+        "es": {
+          "name": "Fusible quemado",
+          "description": "La descarga eléctrica fue devastadora. Dejó la carne del hombre chamuscada y con olor a carne cocinada.\nMientras haya un superviviente empalado y durante 5 segundos después de que se quite el clavo, este no podrá acceder a las puertas de salida ni tampoco los supervivientes que estén dentro de un radio de 13 metros."
+        },
+        "ja": {
+          "name": "切れたヒューズ",
+          "description": "高電圧が男の体を黒焦げにし、焼けた肉の匂いが周囲を満たした。\n生存者が串刺し状態の間と、その生存者が投げ棒を引き抜いてから5秒間、その生存者と13メートル以内の生存者に対して脱出ゲートがブロックされる"
+        },
+        "pl": {
+          "name": "Wypalony lont",
+          "description": "Uderzenie prądu było przytłaczające. Pozostawiło zwęglone ciało mężczyzny i zapach usmażonego mięsa.\nGdy ocalały jest Przebity i przez 5 s po wyjęciu kolca, bramy wyjściowe są zablokowane dla nich i dla wszystkich ocalałych w odległości 13 m."
+        }
+      }
+    },
+    {
+      "id": 765,
+      "name": "Missing Corkscrew",
+      "killer_id": 43,
+      "description": "It seems to always be missing when you need it on-hand.\nImpaled Survivors emit a 32 meter Terror Radius until the Spike is extracted.\nGain Undetectable from the time a Survivor is Impaled to 13 seconds after they extract the Spike.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MissingCorkscrew.png?55c365",
+      "icon_local_path": "icons/addons/missing_corkscrew.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Fehlender Korkenzieher",
+          "description": "Er ist irgendwie nie da, wenn du ihn brauchst.\nAufgespießte Überlebende haben einen Terrorradius von 32 Metern, bis der Spieß herausgezogen wurde.\nAb dem Zeitpunkt, an dem ein Überlebender aufgespießt wurde, erhältst du Unentdeckbar. Der Effekt hält noch 13 Sek. lang an, nachdem der Spieß herausgezogen wurde.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Sacacorchos perdido",
+          "description": "Parece desaparecer siempre justo cuando más lo necesitas.\nLos supervivientes empalados emiten un radio de terror de 32 metros hasta que se saquen el clavo.\nObtienes Indetectable desde que un superviviente está empalado hasta 13 segundos después de que se quite el clavo.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "なくなったコルク栓抜き",
+          "description": "必要なときに限って、いつも見当たらないもの。\n串刺し状態の生存者は、投げ棒が引き抜かれるまで、32メートルの脅威範囲を持つ\n生存者が串刺し状態になった時点から、投げ棒を引き抜いたあと13秒間、探知不可を得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Zgubiony korkociąg",
+          "description": "Wydaje się, że zawsze się gubi, gdy potrzebujesz go pod ręką.\nPrzebici ocalali emitują zasięg terroru o promieniu 32 m do czasu wyjęcia kolca.\nZyskujesz efekt Niewykrywalności od momentu, gdy ocalały jest Przebity do 13 s po wyjęciu kolca.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 766,
+      "name": "Deputy's Badge",
+      "killer_id": 43,
+      "description": "The badge of an officer who discovered that some things aren't worth investigating.\nWhile in Omnipresent Evil, passing within 2 meters of a generator will cause it to explode, losing 5% progress and begin regressing. If any survivors are repairing the generator, it doesn't explode, but they get a special Skill Check.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_DeputysBadge.png?ca1a5b",
+      "icon_local_path": "icons/addons/deputys_badge.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Deputy-Marke",
+          "description": "Die Marke eines Gesetzeshüters, der feststellen musste, dass sich manche Ermittlungen nicht lohnen.\nWenn du dich im Modus Allgegenwärtiges Böses Generatoren auf 4 Meter näherst, explodieren sie, verlieren 5 % Fortschritt und bauen Fortschritt ab. Wenn Überlebende den Generator gerade reparieren, explodiert er nicht, aber sie erhalten einen besonderen Fähigkeitscheck."
+        },
+        "es": {
+          "name": "Placa de ayudante del sheriff",
+          "description": "La placa de un agente que descubrió que hay cosas que es mejor no investigar.\nMientras esté activo Mal omnipresente, pasar a una distancia de 4 metros de un generador hará que este explote, pierda un 5 % de progreso y empiece a revertirse. Si hay supervivientes reparando el generador, este no explotará, pero ellos recibirán una prueba de habilidad especial."
+        },
+        "ja": {
+          "name": "保安官のバッジ",
+          "description": "調査しないほうがいいこともあると知った警官のバッジ。\n神出鬼没の悪モード中、発電機の2メートル以内を通ると、その発電機が爆発して進行度が5%失われ、後退し始める。その発電機を生存者が修理していた場合は、爆発する代わりに特殊なスキルチェックが発生する。"
+        },
+        "pl": {
+          "name": "Oznaka zastępcy",
+          "description": "Odznaka funkcjonariusza, który odkrył, że niektóre sprawy nie są warte dociekania.\nW trybie Wszechobecnego zła, mijanie generatorów w odległości 4 m spowoduje, że te eksplodują, tracąc 5% postępu i zaczną tracić postęp. Gdy jacyś ocalali naprawiają generator, ten nie eksploduje, ale ocalali otrzymają specjalny test umiejętności."
+        }
+      }
+    },
+    {
+      "id": 767,
+      "name": "Dirty Money",
+      "killer_id": 43,
+      "description": "No amount of money can save you from him.\nGain 2 Tokens whenever a Generator is completed.\nIf you are not holding a Spike when vaulting a Window or breaking a Pallet or Breakable Wall, immediately spend a Token and gain a Spike.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_DirtyMoney.png?94c187",
+      "icon_local_path": "icons/addons/dirty_money.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schmutziges Geld",
+          "description": "Kein Geld der Welt kann dich vor ihm retten.\nImmer wenn ein Generator fertiggestellt wurde, erhältst du 2 Zähler.\nFalls du keinen Spieß in der Hand hältst, wenn du durch ein Fenster springst oder eine Palette oder zerstörbare Mauer zerstörst, verbrauchst du sofort einen Zähler und erhältst einen Spieß."
+        },
+        "es": {
+          "name": "Dinero sucio",
+          "description": "No hay cantidad de dinero suficiente que pueda salvarte de él.\nObtienes 2 distintivos cada vez que se completa un generador.\nSi no tienes un clavo mientras saltes por una ventana o rompas un palé o un muro destruible, gasta un distintivo inmediatamente y obtienes un clavo."
+        },
+        "ja": {
+          "name": "汚れたお金",
+          "description": "いくらお金があっても、彼から逃れることはできない。\n発電機の修理が完了すると、トークンを2個得る\n投げ棒を持たずに窓を乗り越えたり、破壊可能な壁やパレットを破壊すると、即座にトークンを1個消費して投げ棒を手に入れる"
+        },
+        "pl": {
+          "name": "Brudne pieniądze",
+          "description": "Żadne pieniądze cię przed nim nie uchronią.\nZyskujesz 2 żetony za każdym razem, gdy ukończony jest generator.\nJeśli nie trzymasz kolca wykonując przeskok przez okno lub niszcząc paletę lub rozbijalną ścianę, natychmiast wydajesz żeton i zyskujesz kolec."
+        }
+      }
+    },
+    {
+      "id": 768,
+      "name": "Iridescent Boat Motor",
+      "killer_id": 43,
+      "description": "The blades are chipped and cracked, as if having cut through something solid.\nPassing through Windows while in Omnipresent Evil mode marks them for 13 seconds. When you perform a Jump Scare, all marked Windows become blocked for 13 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_IridescentBoatMotor.png?ead49a",
+      "icon_local_path": "icons/addons/iridescent_boat_motor.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Bootsmotor",
+          "description": "Die Propellerflügel sind schartig und rissig, als hätten sie etwas Festes durchtrennt.\nWenn du im Modus Allgegenwärtiges Böses durch Fenster springst, markierst du sie für 13 Sek. Löst du einen Schockmoment aus, werden alle markierten Fenster 13 Sek. lang blockiert."
+        },
+        "es": {
+          "name": "Motor de lancha iridiscente",
+          "description": "Las hojas están melladas y agrietadas, como si hubieran atravesado algo sólido.\nAtravesar ventanas en el modo Mal omnipresente las marca durante 13 segundos. Cuando realizas un sobresalto, todas las ventanas marcadas se bloquean durante 13 segundos."
+        },
+        "ja": {
+          "name": "玉虫色のボートのエンジン",
+          "description": "まるで何か固いものを切断したかのようにモーターの刃にひびが入っている。\n神出鬼没の悪モード中に窓を通り抜けると、それを13秒間マークする。ジャンプスケアを行ったとき、マークされた窓がすべて13秒間ブロックされる"
+        },
+        "pl": {
+          "name": "Opalizujący Silnik łodzi",
+          "description": "Ostrza są wyszczerbione i popękane, jak gdyby cięły coś twardego.\nPrzechodzenie przez okna w trybie Wszechobecnego zła oznacza je na 13 s. Gdy wykonujesz Wystraszenie, wszystkie oznaczone okna stają się zablokowane na 13 s."
+        }
+      }
+    },
+    {
+      "id": 879,
+      "name": "Mirror Shards (The Slasher)",
+      "killer_id": 43,
+      "description": "A weapon that dealt more than bad luck.\nImpaled Survivors become Broken for 40 seconds after extracting the Spike.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MirrorShards.png?8ffdcf",
+      "icon_local_path": "icons/addons/mirror_shards_(the_slasher).webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Spiegelscherben",
+          "description": "Eine Waffe, die mehr brachte als nur Pech.\nAufgespießte Überlebende leiden 30 Sek. lang unter Gebrochen, nachdem sie den Spieß herausgezogen haben.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "en": {
+          "name": "Mirror Shards"
+        },
+        "es": {
+          "name": "Trozos de espejo",
+          "description": "Un arma que repartía algo más que mala suerte.\nLos supervivientes empalados sufren Desesperanza durante 30 segundos tras quitarse el clavo.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "鏡の破片",
+          "description": "この武器がもたらすのは、悪運だけではない。\n串刺し状態の生存者が、投げ棒を引き抜いたあと、40秒間衰弱状態となる\n衰弱になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Odłamki lustra",
+          "description": "Broń, która przynosiła więcej, niż tylko pecha.\nPrzebici ocalali otrzymują efekt Okaleczenia przez 30 s po wyjęciu kolca.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    }
+  ]
+}

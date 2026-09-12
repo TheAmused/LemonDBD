@@ -1,5 +1,6 @@
 # backend/app/routes/maps.py
 from flask import Blueprint, jsonify, request
+from app.core.http_cache import cache_catalog
 from app.services.map_service import MapService
 from app.utils.lang import extract_lang
 
@@ -8,6 +9,7 @@ service = MapService()
 
 
 @maps_bp.route("/realms", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("lang",))
 def get_realms():
     """Retrieve all realm banner images for client-side name matching."""
     realms = service.get_realms(lang=extract_lang())
@@ -16,6 +18,7 @@ def get_realms():
 
 @maps_bp.route("", methods=["GET"])
 @maps_bp.route("/", methods=["GET"])
+@cache_catalog(ttl=3600, vary=("realm", "search", "source", "lang"))
 def get_maps():
     """Retrieve all available map realms with optional query filtering."""
     realm = request.args.get("realm")
@@ -27,6 +30,7 @@ def get_maps():
 
 
 @maps_bp.route("/<string:map_id>", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("seed", "floor", "lang"))
 def get_map_detail(map_id: str):
     """Retrieve structured layout and landmark coordinates for a specific map."""
     seed = request.args.get("seed") or "seed_a"

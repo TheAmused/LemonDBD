@@ -2,6 +2,7 @@
 import base64
 import io
 import json
+from decimal import Decimal
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
@@ -10,12 +11,14 @@ from sqlalchemy.orm import Session
 from app import create_app
 from app.core.extensions import db
 from app.core.security import generate_token
-from app.models.character import Character
+from app.models.chapter import Chapter
+from app.models.character import Killer, Survivor
 from app.models.map import Realm
 from app.models.perk import Perk
 from app.models.user import User
 from app.services.db import export_import as export_import_module
 from app.services.db.export_import import DatabaseExportImportService
+from tests.unit.conftest import make_chapter
 
 
 def _flat(exported: dict) -> dict:
@@ -57,14 +60,19 @@ def export_import_app() -> Flask:
             )
             db.session.add(reg_user)
 
-        char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+        # The Trapper is a `killers` row now, not a `characters` row with
+        # role="Killer": the table is the role. `chapter_id` and `power_name`
+        # are both NOT NULL here, which they could not be while 54 survivors
+        # shared the table, so the chapter has to exist first.
+        char = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
         if not char:
-            char = Character(name="The Trapper", role="Killer", short_name="Trapper")
+            chapter = make_chapter(db.session)
+            char = Killer(name="The Trapper", chapter_id=chapter.id, power_name="Bear Trap")
             db.session.add(char)
 
         perk = db.session.scalars(select(Perk).where(Perk.name == "Brutal Strength")).first()
         if not perk:
-            perk = Perk(name="Brutal Strength", category="Killer")
+            perk = Perk(name="Brutal Strength", role="Killer")
             db.session.add(perk)
 
         db.session.commit()
@@ -107,10 +115,14 @@ class TestDatabaseExportImport:
         assert "groups" in data
         assert "data" not in data, "export should no longer include a redundant flat 'data' key"
         assert "content" in data["groups"]
-        assert "characters" in data["groups"]["content"]
+        # One "characters" key became two, because the two tables have separate
+        # id spaces and a killer row carries seven power columns a survivor row
+        # does not.
+        assert "survivors" in data["groups"]["content"]
+        assert "killers" in data["groups"]["content"]
         assert "perks" in data["groups"]["content"]
-        assert len(data["groups"]["content"]["characters"]) >= 1
-        assert any(c["name"] == "The Trapper" for c in data["groups"]["content"]["characters"])
+        assert len(data["groups"]["content"]["killers"]) >= 1
+        assert any(c["name"] == "The Trapper" for c in data["groups"]["content"]["killers"])
 
     def test_export_database_selective(self, client: FlaskClient, admin_token: str) -> None:
         res = client.get(
@@ -121,7 +133,8 @@ class TestDatabaseExportImport:
         data = res.get_json()
         assert "groups" in data
         assert "perks" in data["groups"].get("content", {})
-        assert "characters" not in data["groups"].get("content", {})
+        assert "survivors" not in data["groups"].get("content", {})
+        assert "killers" not in data["groups"].get("content", {})
 
     def test_export_database_download_header(self, client: FlaskClient, admin_token: str) -> None:
         res = client.get(
@@ -142,22 +155,30 @@ class TestDatabaseExportImport:
         assert res_no_auth.status_code == 401
 
     def test_import_database_merge_json_body(self, client: FlaskClient, admin_token: str) -> None:
+        chapter_id = db.session.scalars(select(Chapter)).first().id
+        # Every row is addressed by its own integer id -- no name comparison,
+        # no slug lookup -- so an import payload that omits `id` is counted as
+        # skipped rather than created. The Trapper holds killer id 1, and the
+        # perk fixture holds perk id 1.
         payload = {
             "version": "1.0",
             "data": {
-                "characters": [
+                "killers": [
                     {
+                        "id": 2,
                         "name": "The Wraith",
-                        "role": "Killer",
+                        "chapter_id": chapter_id,
+                        "power_name": "Wailing Bell",
                         "real_name": "Philip Ojomo",
                         "translations": {"pl": {"name": "Upiór"}},
                     }
                 ],
                 "perks": [
                     {
+                        "id": 2,
                         "name": "Shadowborn",
-                        "category": "Killer",
-                        "character_name": "The Wraith",
+                        "role": "Killer",
+                        "killer_id": 2,
                         "description": "Increases FOV.",
                     }
                 ],
@@ -172,27 +193,39 @@ class TestDatabaseExportImport:
         assert res.status_code == 200
         res_data = res.get_json()
         assert res_data["status"] == "success"
-        assert res_data["summary"]["characters"]["created"] == 1
+        assert res_data["summary"]["killers"]["created"] == 1
         assert res_data["summary"]["perks"]["created"] == 1
 
-        char = db.session.scalars(select(Character).where(Character.name == "The Wraith")).first()
+        char = db.session.scalars(select(Killer).where(Killer.name == "The Wraith")).first()
         assert char is not None
         assert char.real_name == "Philip Ojomo"
         assert char.translations == {"pl": {"name": "Upiór"}}
+        assert char.power_name == "Wailing Bell"
 
         perk = db.session.scalars(select(Perk).where(Perk.name == "Shadowborn")).first()
         assert perk is not None
+        # `character_id` is a read-only property over the `survivor_id` /
+        # `killer_id` pair, so this still asserts that the perk landed on the
+        # killer the payload named.
+        assert perk.killer_id == char.id
         assert perk.character_id == char.id
 
     def test_import_database_multipart_file(self, client: FlaskClient, admin_token: str) -> None:
+        chapter_id = db.session.scalars(select(Chapter)).first().id
+        # `items.category_id` is a NOT NULL foreign key now, so the class the
+        # Med-Kit belongs to has to travel in the same file. The import runs
+        # `item_categories` before `items` for exactly that reason.
         backup = {
             "version": "1.0",
             "data": {
-                "characters": [
-                    {"name": "Dwight Fairfield", "role": "Survivor", "short_name": "Dwight"}
+                "survivors": [
+                    {"id": 1, "name": "Dwight Fairfield", "chapter_id": chapter_id}
+                ],
+                "item_categories": [
+                    {"id": 1, "name": "Med-Kits", "addon_target_label": "Med-Kits", "role": "Survivor"}
                 ],
                 "items": [
-                    {"name": "Med-Kit", "category": "Medical", "role": "Survivor"}
+                    {"id": 1, "name": "Med-Kit", "category_id": 1}
                 ],
             },
         }
@@ -207,27 +240,33 @@ class TestDatabaseExportImport:
         assert res.status_code == 200
         res_data = res.get_json()
         assert res_data["status"] == "success"
-        assert res_data["summary"]["characters"]["created"] == 1
+        assert res_data["summary"]["survivors"]["created"] == 1
         assert res_data["summary"]["items"]["created"] == 1
 
     def test_import_database_replace_mode(self, client: FlaskClient, admin_token: str) -> None:
-        assert db.session.scalars(select(Character).where(Character.name == "The Trapper")).first() is not None
+        chapter_id = db.session.scalars(select(Chapter)).first().id
+        assert db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first() is not None
 
         payload = {
-            "characters": [
-                {"name": "The Nurse", "role": "Killer", "short_name": "Nurse"}
+            "killers": [
+                {
+                    "id": 1,
+                    "name": "The Nurse",
+                    "chapter_id": chapter_id,
+                    "power_name": "Spencer's Last Breath",
+                }
             ]
         }
 
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["characters"], "data": payload},
+            json={"mode": "replace", "targets": ["killers"], "data": payload},
         )
         assert res.status_code == 200
 
-        assert db.session.scalars(select(Character).where(Character.name == "The Trapper")).first() is None
-        assert db.session.scalars(select(Character).where(Character.name == "The Nurse")).first() is not None
+        assert db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first() is None
+        assert db.session.scalars(select(Killer).where(Killer.name == "The Nurse")).first() is not None
 
     def test_import_database_invalid_payload(self, client: FlaskClient, admin_token: str) -> None:
         res = client.post(
@@ -268,9 +307,13 @@ class TestDatabaseExportImport:
         clear-before-restore gate ("maps" in target_keys), not a narrower,
         separate "realms" in target_keys check.
         """
+        # The row carries an `id`: the import resolves a realm with
+        # `db.session.get(Realm, row["id"])` and nothing else, and counts a row
+        # without one as skipped rather than guessing which realm it means.
         payload = {
             "realms": [
                 {
+                    "id": 1,
                     "name": "Ormond",
                     "image_url": "https://example.com/ormond.png",
                     "image_local_path": "realms/ormond.png",
@@ -307,15 +350,15 @@ class TestDatabaseExportImport:
     ) -> None:
         """A pre-Fix-3 backup file has "maps" data but no "realms" key at
         all. Restoring it in replace mode with targets=["maps"] clears
-        existing Realm rows (same as it always cleared MapRealm/MapTile/
-        MapObjective under the "maps" key) but must not error just because
-        there is nothing to restore them from.
+        existing Realm rows (same as it always cleared MapRealm under the
+        "maps" key -- `map_tiles` and `map_objectives` are dropped tables now)
+        but must not error just because there is nothing to restore them from.
         """
         db.session.add(Realm(name="Haddonfield", image_url="", image_local_path=""))
         db.session.commit()
         assert db.session.scalars(select(Realm).where(Realm.name == "Haddonfield")).first() is not None
 
-        payload = {"characters": []}  # no "maps" or "realms" keys at all, like an old backup
+        payload = {"survivors": []}  # no "maps" or "realms" keys at all, like an old backup
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
@@ -335,7 +378,7 @@ class TestDatabaseExportImport:
 
         payload = {
             "realms": [
-                {"name": "Yamaoka Estate", "image_url": "", "image_local_path": ""}
+                {"id": 1, "name": "Yamaoka Estate", "image_url": "", "image_local_path": ""}
             ]
         }
         res = client.post(
@@ -361,12 +404,12 @@ class TestDatabaseExportImportAssetBundling:
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
 
         with export_import_app.app_context():
-            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
             char.avatar_local_path = "icons/characters/trapper.webp"
             db.session.commit()
 
-            result = DatabaseExportImportService.export_database(targets=["characters"])
-            exported = _flat(result)["characters"][0]
+            result = DatabaseExportImportService.export_database(targets=["killers"])
+            exported = _flat(result)["killers"][0]
 
             assert exported["avatar_local_path"] == "icons/characters/trapper.webp"
             assert exported["avatar_local_path_data"] == base64.b64encode(raw).decode("ascii")
@@ -374,21 +417,24 @@ class TestDatabaseExportImportAssetBundling:
     def test_import_restores_character_avatar_file(self, export_import_app, monkeypatch, tmp_path):
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
         raw = b"restored-avatar-bytes"
-        payload = {
-            "data": {
-                "characters": [
-                    {
-                        "name": "The Trapper",
-                        "role": "Killer",
-                        "avatar_local_path": "icons/characters/trapper.webp",
-                        "avatar_local_path_data": base64.b64encode(raw).decode("ascii"),
-                    }
-                ]
-            }
-        }
 
         with export_import_app.app_context():
-            DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
+            trapper = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
+            payload = {
+                "data": {
+                    "killers": [
+                        {
+                            "id": trapper.id,
+                            "name": "The Trapper",
+                            "chapter_id": trapper.chapter_id,
+                            "power_name": "Bear Trap",
+                            "avatar_local_path": "icons/characters/trapper.webp",
+                            "avatar_local_path_data": base64.b64encode(raw).decode("ascii"),
+                        }
+                    ]
+                }
+            }
+            DatabaseExportImportService.import_database(payload, mode="merge", targets=["killers"])
 
             written = tmp_path / "icons" / "characters" / "trapper.webp"
             assert written.read_bytes() == raw
@@ -400,12 +446,12 @@ class TestDatabaseExportImportAssetBundling:
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
 
         with export_import_app.app_context():
-            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
             char.avatar_local_path = "icons/characters/trapper.webp"
             db.session.commit()
 
-            result = DatabaseExportImportService.export_database(targets=["characters"], include_assets=False)
-            exported = _flat(result)["characters"][0]
+            result = DatabaseExportImportService.export_database(targets=["killers"], include_assets=False)
+            exported = _flat(result)["killers"][0]
 
             assert "avatar_local_path_data" not in exported
 
@@ -415,16 +461,22 @@ class TestDatabaseExportImportOfferingsAndChapters:
     def test_export_import_offerings_and_chapters_roundtrip(self, export_import_app):
         with export_import_app.app_context():
             from app.models.equipment import Offering
-            from app.models.chapter import Chapter
             from sqlalchemy import delete as sa_delete
 
-            db.session.add(Offering(name="Bloody Party Streamers", category="Offering", role="Killer"))
+            # `category` is gone from the column list: it restated `role` and
+            # contradicted it in six rows, so it is derived from `role` now.
+            db.session.add(Offering(name="Bloody Party Streamers", role="Killer"))
             db.session.add(Chapter(name="A Nightmare on Elm Street"))
             db.session.commit()
 
+            # The fixture's Killer needs a chapter of its own -- `chapter_id`
+            # is NOT NULL on both character tables -- so the chapters table is
+            # never empty here and the count is not a constant.
+            chapter_count = len(db.session.scalars(select(Chapter)).all())
+
             exported = DatabaseExportImportService.export_database(targets=["offerings", "chapters"])
             assert exported["counts"]["offerings"] == 1
-            assert exported["counts"]["chapters"] == 1
+            assert exported["counts"]["chapters"] == chapter_count
 
             db.session.execute(sa_delete(Offering))
             db.session.execute(sa_delete(Chapter))
@@ -432,9 +484,9 @@ class TestDatabaseExportImportOfferingsAndChapters:
 
             summary = DatabaseExportImportService.import_database(exported, mode="merge", targets=["offerings", "chapters"])
             assert summary["summary"]["offerings"]["created"] == 1
-            assert summary["summary"]["chapters"]["created"] == 1
+            assert summary["summary"]["chapters"]["created"] == chapter_count
             assert db.session.scalars(select(Offering)).first().name == "Bloody Party Streamers"
-            assert db.session.scalars(select(Chapter)).first().name == "A Nightmare on Elm Street"
+            assert db.session.scalar(select(Chapter).where(Chapter.name == "A Nightmare on Elm Street")) is not None
 
 
 @pytest.mark.unit
@@ -581,17 +633,17 @@ class TestDatabaseExportRouteIncludeAssets:
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
 
         with export_import_app.app_context():
-            char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).first()
+            char = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
             char.avatar_local_path = "icons/characters/trapper.webp"
             db.session.commit()
 
         resp = client.get(
-            "/api/v1/admin/database/export?targets=characters&include_assets=false",
+            "/api/v1/admin/database/export?targets=killers&include_assets=false",
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert resp.status_code == 200
         payload = resp.get_json()
-        assert "avatar_local_path_data" not in _flat(payload)["characters"][0]
+        assert "avatar_local_path_data" not in _flat(payload)["killers"][0]
 
 
 @pytest.mark.unit
@@ -605,7 +657,8 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             assert "users" in exported["groups"]
 
             content_group = exported["groups"]["content"]
-            assert "characters" in content_group
+            assert "survivors" in content_group
+            assert "killers" in content_group
             assert "perks" in content_group
 
             users_group = exported["groups"]["users"]
@@ -613,47 +666,69 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
 
     def test_import_database_from_grouped_payload(self, export_import_app):
         with export_import_app.app_context():
+            chapter_id = db.session.scalars(select(Chapter)).first().id
             payload = {
                 "version": "1.0",
                 "groups": {
                     "content": {
-                        "characters": [
-                            {"name": "Grouped Dwight", "role": "Survivor", "wiki_slug": "grouped-dwight"}
+                        "survivors": [
+                            {"id": 1, "name": "Grouped Dwight", "chapter_id": chapter_id}
                         ]
                     }
                 }
             }
-            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
-            assert summary["summary"]["characters"]["created"] == 1
-            char = db.session.scalar(select(Character).where(Character.name == "Grouped Dwight"))
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["survivors"])
+            assert summary["summary"]["survivors"]["created"] == 1
+            char = db.session.scalar(select(Survivor).where(Survivor.name == "Grouped Dwight"))
             assert char is not None
-            assert char.wiki_slug == "grouped-dwight"
+            assert char.id == 1
+            assert char.chapter_id == chapter_id
 
-    def test_import_database_upsert_characters_by_wiki_slug(self, export_import_app):
+    def test_import_database_upsert_characters_updates_existing_row(self, export_import_app):
+        """An incoming row whose id already exists updates that row in place.
+
+        This used to key on `wiki_slug`, a column that held `name` respelled
+        for all 98 characters and is gone. Rows are addressed by their integer
+        primary key now, and names stay unique across `survivors` and
+        `killers`, so a rename is visible as exactly one row changing name --
+        never as a second row appearing beside the old one.
+        """
         with export_import_app.app_context():
-            char = Character(name="Old Trapper Name", wiki_slug="unique-trapper-slug", role="Killer")
+            chapter_id = db.session.scalars(select(Chapter)).first().id
+            char = Killer(
+                id=7,
+                name="Old Trapper Name",
+                chapter_id=chapter_id,
+                power_name="Bear Trap",
+            )
             db.session.add(char)
             db.session.commit()
 
             payload = {
                 "data": {
-                    "characters": [
+                    "killers": [
                         {
+                            "id": 7,
                             "name": "Updated Trapper Name",
-                            "wiki_slug": "unique-trapper-slug",
-                            "role": "Killer",
-                            "movement_speed": "4.6 m/s"
+                            "movement_speed_ms": "4.6",
                         }
                     ]
                 }
             }
-            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["characters"])
-            assert summary["summary"]["characters"]["updated"] == 1
-            assert summary["summary"]["characters"]["created"] == 0
+            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["killers"])
+            assert summary["summary"]["killers"]["updated"] == 1
+            assert summary["summary"]["killers"]["created"] == 0
 
-            updated_char = db.session.scalar(select(Character).where(Character.wiki_slug == "unique-trapper-slug"))
-            assert updated_char.name == "Updated Trapper Name"
-            assert updated_char.movement_speed == "4.6 m/s"
+            updated_char = db.session.scalar(select(Killer).where(Killer.name == "Updated Trapper Name"))
+            assert updated_char is not None
+            assert updated_char.id == 7
+            # The old name resolves to nothing: the row was renamed, not copied.
+            assert db.session.scalar(select(Killer).where(Killer.name == "Old Trapper Name")) is None
+            # `movement_speed_ms` arrives as a string and lands in a NUMERIC
+            # column; the display form the old `movement_speed` column held is
+            # rendered from it.
+            assert updated_char.movement_speed_ms == Decimal("4.6")
+            assert updated_char.movement_speed == "4.6 m/s (115%)"
 
     def test_import_database_upsert_users_safe_email_conflict(self, export_import_app):
         with export_import_app.app_context():
@@ -721,11 +796,11 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             # Setup: ensure 2 existing perks with baseline data
             p1 = db.session.scalar(select(Perk).where(Perk.name == "Brutal Strength"))
             p1.description = "Original Brutal Strength Description"
-            p1.category = "Killer"
+            p1.role = "Killer"
 
             p2 = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
             if not p2:
-                p2 = Perk(name="Sprint Burst", category="Survivor", description="Original Sprint Burst Description")
+                p2 = Perk(name="Sprint Burst", role="Survivor", description="Original Sprint Burst Description")
                 db.session.add(p2)
             else:
                 p2.description = "Original Sprint Burst Description"
@@ -733,19 +808,24 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             # Baseline 3rd perk that shouldn't be touched
             p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))
             if not p3:
-                p3 = Perk(name="Dead Hard", category="Survivor", description="Original Dead Hard Description")
+                p3 = Perk(name="Dead Hard", role="Survivor", description="Original Dead Hard Description")
                 db.session.add(p3)
 
             db.session.commit()
 
-            # User edits ONLY the 2 perks with updated descriptions in a partial .json
+            # User edits ONLY the 2 perks with updated descriptions in a partial .json.
+            # The rows carry their ids because that is the only thing the import
+            # consults to decide which row a payload entry is; the name is here
+            # for the reader.
             partial_payload = {
                 "perks": [
                     {
+                        "id": p1.id,
                         "name": "Brutal Strength",
                         "description": "Custom updated description for Brutal Strength."
                     },
                     {
+                        "id": p2.id,
                         "name": "Sprint Burst",
                         "description": "Custom updated description for Sprint Burst."
                     }
@@ -762,11 +842,11 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             # Verify the 2 perks have the new descriptions
             reloaded_p1 = db.session.scalar(select(Perk).where(Perk.name == "Brutal Strength"))
             assert reloaded_p1.description == "Custom updated description for Brutal Strength."
-            assert reloaded_p1.category == "Killer"  # Category was preserved untouched!
+            assert reloaded_p1.role == "Killer"  # `category` renamed to `role`, preserved untouched!
 
             reloaded_p2 = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
             assert reloaded_p2.description == "Custom updated description for Sprint Burst."
-            assert reloaded_p2.category == "Survivor"  # Preserved untouched!
+            assert reloaded_p2.role == "Survivor"  # Preserved untouched!
 
             # Verify untouched perks in the database are intact
             reloaded_p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))

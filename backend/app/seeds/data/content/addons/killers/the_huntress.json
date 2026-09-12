@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 131,
+      "name": "Rusty Head",
+      "killer_id": 8,
+      "description": "These Hatchets' heads are covered with crusty and volatile rust spots that makes injuries particularly difficult to heal.\n• Hatchets inflict Mangled for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustyHead.png?db0437",
+      "icon_local_path": "icons/addons/rusty_head.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rostige Klinge",
+          "description": "Die Klingen dieser Beile sind übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Beile verursachen den Statuseffekt Zerfleischt für 70 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Cabezal oxidado",
+          "description": "Los cabezales de estos destrales están recubiertos de una costra de óxido que impide que las heridas se curen fácilmente.\n• Los destrales causan Laceración durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "錆びた刃",
+          "description": "手斧の刃のところどころに固くて剥がれやすい錆が付着しているため、傷がとても治りづらくなる。\n• 手斧が命中すると、70秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Zardzewiały Żeleziec",
+          "description": "Żeleźca toporków są pokryte kruchą i lotną rdzą, sprawiającą, że rany ofiar, które wpadły w pułapkę, stają się bardzo trudne do wyleczenia.\n• Toporki nakładają efekt Zmasakrowany na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 132,
+      "name": "Begrimed Head",
+      "killer_id": 8,
+      "description": "These Hatchets' heads are stained with a foul substance that afflict anyone it touches with debilities.\n• Hit target suffers from the Mangled and Hemorrhage status effects for 80 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_begrimedHead.png?656ac6",
+      "icon_local_path": "icons/addons/begrimed_head.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Beschmutzte Klinge",
+          "description": "Die Klingen dieser Beile sind mit einer üblen Substanz verunreinigt, die jeden schwächt, der sie berührt.\n• Ein getroffenes Ziel leidet unter den Statuseffekten Zerfleischt und Blutung für 80 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Cabezal mugroso",
+          "description": "El cabezal de los destrales está manchado con una sustancia repugnante que afecta a todo aquel que lo toca.\n• El objetivo golpeado sufre los efectos de estado Laceración y Hemorragia durante 80 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "汚れた斧頭",
+          "description": "手斧の刃に付着した汚らわしい何かの染みが、触れた者を誰でも衰弱させる。\n• 命中した対象は、80秒間重傷と出血のステータス効果に苦しむ。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Poplamiony Żeleziec",
+          "description": "Żeleźca toporków pokryte cuchnącą substancją, która osłabia każdego, kto się z nią zetknie.\n• Na trafione ofiary nakładane są efekty Zmasakrowany i Krwotok na 80 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 133,
+      "name": "Wooden Fox",
+      "killer_id": 8,
+      "description": "Roughly carved, this fox statuette is no more than a few inches. A reminder that stealth and cunning is as effective as raw power.\n• Grants Undetectable for 30 seconds after reloading.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_woodenFox.png?783451",
+      "icon_local_path": "icons/addons/wooden_fox.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Holzfuchs",
+          "description": "Diese Fuchsfigur ist grob geschnitzt und nur wenige Zentimeter groß. Eine Erinnerung daran, dass Tarnung und Gerissenheit so wirksam sind wie rohe Kraft.\n• Gewährt nach dem Nachladen für 30 Sekunden den Statuseffekt Unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Zorro de madera",
+          "description": "Una tosca y diminuta estatuilla de un zorro, recordatorio de que el sigilo y la astucia son tan letales como la fuerza bruta.\n• Aplica Indetectable durante 30 segundos tras recargar.\nIndetectable oculta el aura, radio de terror y marca roja del asesino."
+        },
+        "ja": {
+          "name": "木製の狐",
+          "description": "大ざっぱに彫られた10センチ足らずの小さな狐の像。隠密さと狡猾さには実力と同等の効力があることを思い出させてくれる。\n• リロード後、30秒間探知不可になる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Drewniany lis",
+          "description": "Ta niestarannie wyciosana figurka lisa ma nie więcej niż kilkanaście centymetrów wysokości. Przypomina, że skradanie i przebiegłość potrafią być równie skuteczne, co czysta siła.\n• Daje efekt Niewykrywalny na 30 sekund po przeładowaniu.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 134,
+      "name": "Rose Root",
+      "killer_id": 8,
+      "description": "Dried petals that relieve symptoms of fatigue and overexertion when brewed in a tea.\n• Increases thrown Hatchet speed by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_roseRoot.png?adad50",
+      "icon_local_path": "icons/addons/rose_root.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rosenwurzel",
+          "description": "Getrocknete Blütenblätter, die als Tee gebraut Ermüdung und Überanstrengung lindern.\n• Erhöht die Geschwindigkeit geworfener Beile um 20 %."
+        },
+        "es": {
+          "name": "Raíz de rosa",
+          "description": "Pétalos secos de pústula que alivian los síntomas de fatiga y esfuerzo excesivo cuando se preparan como infusión.\n• Aumenta la velocidad de lanzamiento de destrales un 20 %."
+        },
+        "ja": {
+          "name": "イワベンケイ",
+          "description": "乾燥した花びら。お茶にすると倦怠感や過労を和らげてくれる。\n• 手斧の投擲速度が20％上昇する"
+        },
+        "pl": {
+          "name": "Różany korzeń",
+          "description": "Wysuszone płatki, które po zaparzeniu w herbacie łagodzą objawy zmęczenia i nadmiernego wysiłku.\n• Zwiększają prędkość rzuconego toporka o 20%."
+        }
+      }
+    },
+    {
+      "id": 135,
+      "name": "Coarse Stone",
+      "killer_id": 8,
+      "description": "This stone is too coarse to do any good. A blade damaged by it inflicts awful open wounds.\n• Hitting a target increases the volume of their grunts of pain by 50% until healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_coarseStone.png?d405f9",
+      "icon_local_path": "icons/addons/coarse_stone.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Rauer Stein",
+          "description": "Dieser Stein ist zu rau, um irgendetwas Gutes zu bewirken. Eine Klinge, die durch ihn beschädigt wurde, verursacht grauenhafte offene Wunden.\n• Die Schmerzenslaute von getroffenen Zielen sind um 50 % verstärkt, bis sie geheilt sind."
+        },
+        "es": {
+          "name": "Piedra basta",
+          "description": "Esta piedra es demasiado basta para servir de nada. Las hojas machacadas con ella provocan terribles heridas abiertas.\n• Los gruñidos de dolor del objetivo golpeado aumenta un 50 % hasta que se curan por completo."
+        },
+        "ja": {
+          "name": "ザラザラした石",
+          "description": "粗すぎて何の役にも立たない石。これで傷がついた刃で切られると、ひどい開放創ができる。\n• 攻撃が命中した生存者は回復するまで痛みによるうめき声が50%増大する"
+        },
+        "pl": {
+          "name": "Szorstki kamień",
+          "description": "Kamień zbyt szorstki, aby nadawał się do czegokolwiek. Uszkodzone kamieniem ostrze wywołuje otwarte rany.\n• Trafienie celu zwiększa głośność jęków bólu o 50% do wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 136,
+      "name": "Weighted Head",
+      "killer_id": 8,
+      "description": "An oddly weighted hatchet head, crafted to deliver a hard blow to its target. It requires a wielder with a strong arm.\n• Hatchets inflict Incapacitated for 10 seconds.\nIncapacitated prevents Survivors from healing, repairing, sabotaging, cleansing, blessing, mending, or using items.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_weightedHead.png?602274",
+      "icon_local_path": "icons/addons/weighted_head.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Beschwerte Klinge",
+          "description": "Eine seltsam beschwerte Beilklinge, die so konstruiert ist, dass sie ihrem Ziel einen harten Schlag versetzt. Sie kann nur von einem Träger mit einem starken Arm verwendet werden.\n• Beile verursachen den Statuseffekt Bewegungsunfähig für 10 Sekunden.\nBewegungsunfähige Überlebende können nicht heilen, reparieren, sabotieren, zerstören, segnen, genesen oder Gegenstände verwenden."
+        },
+        "es": {
+          "name": "Cabeza lastrada",
+          "description": "Una cabeza de destral pesada, fabricada para asestar un golpe contundente a su blanco. Hace falta mucha fuerza para llevarlo.\n• Los destrales causan Incapacitación durante 10 segundos.\nIncapacitación impide que los supervivientes se curen, hagan reparaciones, sabotajes, se purifiquen, bendigan, sanen o utilicen objetos."
+        },
+        "ja": {
+          "name": "重りの付いた刃",
+          "description": "変則的な重りの付いた手斧の刃。強打を与えるために作られた。扱うためには腕の筋力が必要。\n• 手斧は命中した相手を10秒間行動不能にする\n行動不能になると生存者は治療・修理・破壊工作・浄化・清め・治癒・アイテム使用が不可になる。"
+        },
+        "pl": {
+          "name": "Wyważona głowica",
+          "description": "Dziwnie wyważona głowica toporka, przeznaczona do zadawania mocnych uderzeń. Wymaga od użytkownika silnych ramion.\n• Toporki nakładają efekt Unieruchomiony na 10 sekund.\nUnieruchomienie uniemożliwia ocalałym leczenie, naprawianie, sabotowanie, oczyszczanie, błogosławienie i używanie przedmiotów."
+        }
+      }
+    },
+    {
+      "id": 137,
+      "name": "Leather Loop",
+      "killer_id": 8,
+      "description": "The right tool in the right hands is key to a successful hunt.\n• Hatchet hits grant 2% Haste for 5 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherLoop.png?b5452b",
+      "icon_local_path": "icons/addons/leather_loop.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lederschlaufe",
+          "description": "Das richtige Werkzeug in den richtigen Händen ist der Schlüssel für eine erfolgreiche Jagd.\n• Treffer mit dem Beil gewähren 2 % Eile für 5 Sek..\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Presilla de cuero",
+          "description": "La herramienta adecuada en las manos adecuadas es fundamental para que la caza tenga éxito.\n• Los golpes de destral otorgan un 2 % de Celeridad durante 5 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "革の輪",
+          "description": "どんな道具も名人の手に渡れば、狩りを成功させる鍵となる。\n• 手斧が命中すると2%の迅速を5秒間得る\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Skórzany Węzeł",
+          "description": "Właściwe narzędzie we właściwych rękach jest kluczem do udanego polowania.\n• Uderzenia toporka dodają 2% Pośpiechu na 5 s.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 138,
+      "name": "Infantry Belt",
+      "killer_id": 8,
+      "description": "A sturdy utility belt pillaged from a soldier. He was quick in combat, but she was quicker.\n• Hatchet hits grant 3% Haste for 5 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_infantryBelt.png?cae6e6",
+      "icon_local_path": "icons/addons/infantry_belt.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Infanteristengürtel",
+          "description": "Ein robuster Mehrzweckgürtel, der einem Soldaten abgenommen wurde. Er war schnell im Kampf, doch sie war schneller.\n• Treffer mit dem Beil gewähren 3 % Eile für 5 Sekunden.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Cinturón de infantería",
+          "description": "Un resistente cinturón de herramientas que perteneció a un soldado caído. Era rápido en combate, pero ella lo era más.\n• Los golpes de destral otorgan un 3 % de Celeridad durante 5 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "歩兵のベルト",
+          "description": "兵士から奪われた丈夫で万能なベルト。その兵士は鋭敏だったが、彼女の素早さには敵わなかった。\n• 手斧が命中すると3%の迅速を5秒間得る\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Pasek Piechoty",
+          "description": "Solidny pas zabrany żołnierzowi. Był szybki w walce, ale ona była szybsza.\n• Uderzenia toporka dodają 3% pośpiechu na 5 s.\nPośpiechPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 139,
+      "name": "Yellowed Cloth",
+      "killer_id": 8,
+      "description": "A simple scrap of material to tend to blisters and wipe the puss away.\n• Increases thrown hatchet speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_yellowedCloth.png?7d4cc2",
+      "icon_local_path": "icons/addons/yellowed_cloth.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Vergilbtes Tuch",
+          "description": "Ein einfacher Fetzen, um Blasen zu behandeln und Eiter wegzuwischen.\n• Erhöht die Beil-Fluggeschwindigkeit um 10 %."
+        },
+        "es": {
+          "name": "Trapo amarillo",
+          "description": "Un trozo de tela básico para tapar ampollas y limpiar el pus.\n• Aumenta la velocidad de lanzamiento de destrales un 10 %."
+        },
+        "ja": {
+          "name": "黄ばんだ布",
+          "description": "水ぶくれのある顔を拭き取るための質素な生地の布切れ。\n• 手斧の投擲速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Pożółkła szmata",
+          "description": "Prostu kawałek materiału do opatrywania pęcherzy i przecierania twarzy.\n• Zwiększa prędkość rzuconego toporka o 10%."
+        }
+      }
+    },
+    {
+      "id": 140,
+      "name": "Venomous Concoction",
+      "killer_id": 8,
+      "description": "A toxic concoction applied to the Hatchets' blade. The murky concoction is mainly composed of Berus snake venom which gives it fatiguing capabilities.\n• Hatchets inflict Exhausted for 5 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_venomousConcoction.png?627827",
+      "icon_local_path": "icons/addons/venomous_concoction.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Giftiges Präparat",
+          "description": "Ein giftiges Präparat, das auf die Klingen der Beile aufgetragen wird. Dieses trübe Präparat besteht hauptsächlich aus dem Gift der Kreuzotter und wirkt daher ermüdend.\n• Beile verursachen 5 Sekunden lang den Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Preparado venenoso",
+          "description": "Un preparado tóxico que se aplica a la hoja de los destrales. Se compone principalmente de veneno de víbora, que le otorga propiedades extenuantes.\n• Los destrales causan Agotamiento durante 5 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "毒性の調合物",
+          "description": "手斧の刃に塗られた有毒な調合薬。濁った毒液は、主に目眩を引き起こす効果を持つクサリヘビの毒でできている。\n• 手斧は命中した相手を5秒間疲労状態にする\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Trująca Mikstura",
+          "description": "Toksyczny napar wylany wprost na ostrza toporków. Gęsta substancja została przyrządzona głównie z wywołującego zmęczenie jadu żmii.\n• Toporki wywołują efekt Wyczerpany na 5 sekund.\nWyczerpanie uniemożliwia ocalałym aktywację wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 141,
+      "name": "Iridescent Head",
+      "killer_id": 8,
+      "description": "A glass-like Hatchet head molded from The Fog Itself. The blade is warm and reverberating with The Entity's power.\n• Successful Hatchet hits immediately put healthy Survivors into the dying state.\n• Sets maximum number of carried Hatchets to 1.\n\"\"The iridescent glass cuts through flesh and soul.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentHead.png?4e4800",
+      "icon_local_path": "icons/addons/iridescent_head.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Klinge",
+          "description": "Eine glasartige Beilklinge, die aus dem Nebel selbst erschaffen wurde. Die Klinge ist warm und verströmt die Macht des Entitus.\n• Erfolgreiche Treffer mit dem Beil versetzen gesunde Überlebende sofort in den Todesstatus.\n• Legt die Anzahl der maximal tragbaren Beile auf 1 fest.\n\"„Das schillernde Glas schneidet durch das Fleisch und die Seele.“\""
+        },
+        "es": {
+          "name": "Cabezal iridiscente",
+          "description": "Un destral de aspecto cristalino moldeado a partir de la mismísima niebla. La hoja está templada y reverbera con el poder del Ente.\n• Los golpes de destral hacen que los supervivientes ilesos caigan en estado agonizante al instante.\n• El número máximo de destrales que puedes llevar cambia a 1.\n\"\"El vidrio iridiscente atraviesa la carne y el alma\".\""
+        },
+        "ja": {
+          "name": "玉虫色の刃",
+          "description": "霧から創られたガラスのような手斧の刃。刃は温かく、エンティティの力で振動しているかのようだ。\n• 手斧が命中した無傷の生存者は即座に瀕死状態に陥る\n• 持ち運ぶ手斧の上限数が1本に設定される\n\"「玉虫色のガラスは肉と魂を断ち切る。」\""
+        },
+        "pl": {
+          "name": "Opalowy Żeleziec",
+          "description": "Toporek jakby ze szkła, stworzony z samej Mgły. Ostrze jest wciąż ciepłe i wibruje energią Bytu.\n• Udane trafienie toporkiem natychmiast wywołuje stan agonii u ofiary.\n• Ustawia maksymalną liczbę niesionych toporków na 1.\n\"„Opalizujące szkło przebija się przez ciało i duszę”.\""
+        }
+      }
+    },
+    {
+      "id": 142,
+      "name": "Bandaged Haft",
+      "killer_id": 8,
+      "description": "First-aid bandages securely rolled and attached to the Hatchets' haft.\n• Decreases Hatchet throw cooldown by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bandagedHaft.png?cb8521",
+      "icon_local_path": "icons/addons/bandaged_haft.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Umwickelter Griff",
+          "description": "Verbandsmaterial, das straff um den Griff der Beile gewickelt wurde.\n• Verringert die Abklingzeit zwischen Beilwürfen um 10 %."
+        },
+        "es": {
+          "name": "Mango vendado",
+          "description": "Vendas de primeros auxilios firmemente enrolladas y amarradas al mango de los destrales.\n• Reduce el tiempo de recarga de lanzamiento de destrales un 10 %."
+        },
+        "ja": {
+          "name": "包帯が巻かれた柄",
+          "description": "手斧の柄にしっかり巻かれた包帯。\n• 手斧を投げた時のクールダウンが10%減少する"
+        },
+        "pl": {
+          "name": "Zabandażowany Trzonek",
+          "description": "Bandaże owinięte precyzyjnie wokół trzonka.\n• Skraca czas odnawiania rzutu toporkiem o 10%."
+        }
+      }
+    },
+    {
+      "id": 143,
+      "name": "Oak Haft",
+      "killer_id": 8,
+      "description": "A polished haft which allows for a quick and sly manipulation of the deadly tool.\n• Decreases Hatchet throw cooldown by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oakHaft.png?8a7e0e",
+      "icon_local_path": "icons/addons/oak_haft.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Eichengriff",
+          "description": "Ein polierter Griff, der die schnelle und listige Handhabung des tödlichen Werkzeugs gewährleistet.\n• Verringert die Abklingzeit zwischen Beilwürfen um 20 %."
+        },
+        "es": {
+          "name": "Mango de roble",
+          "description": "Un mango pulido que permite manejar la letal herramienta de forma rápida y disimulada.\n• Reduce el tiempo de recarga de lanzamiento de destrales un 20 %."
+        },
+        "ja": {
+          "name": "樫製の柄",
+          "description": "素早く、巧妙に扱うことが出来るよう磨かれた、手斧用の樫製の柄。\n• 手斧を投げた時のクールダウンが20%減少する"
+        },
+        "pl": {
+          "name": "Dębowy Trzonek",
+          "description": "Wypolerowany trzonek umożliwiający wykonywanie szybkich, zwinnych ruchów zabójczym narzędziem.\n• Skraca czas odnawiania rzutu toporkiem o 20%."
+        }
+      }
+    },
+    {
+      "id": 144,
+      "name": "Deerskin Gloves",
+      "killer_id": 8,
+      "description": "Cured leather gloves that protect the hands and give a sure grip.\n• Decreases time required to reload Hatchets at a locker by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deerskinGloves.png?b957ee",
+      "icon_local_path": "icons/addons/deerskin_gloves.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rehlederhandschuhe",
+          "description": "Handschuhe aus gehärtetem Leder sorgen für einen sicheren Griff.\n• Verringert die Nachfüllzeit für Beile bei Schließschränken um 20 %."
+        },
+        "es": {
+          "name": "Guantes de piel de ciervo",
+          "description": "Guantes de cuero curtido que protegen las manos y mejoran el agarre.\n• Reduce el tiempo que tardan en recargarse los destrales de una taquilla un 20 %."
+        },
+        "ja": {
+          "name": "鹿革の手袋",
+          "description": "なめされた革で作られた手袋は手を守り、しっかりとしたグリップを与えてくれる。\n• ロッカーで手斧を補充するのに必要な時間が20%減少する"
+        },
+        "pl": {
+          "name": "Rękawice ze skóry Jelenia",
+          "description": "Skórzane rękawice. Służą do ochrony rąk. Zapewniają solidny chwyt.\n• Skracają czas potrzebny do uzupełnienia toporków z szafki o 20%."
+        }
+      }
+    },
+    {
+      "id": 145,
+      "name": "Shiny Pin",
+      "killer_id": 8,
+      "description": "A copper pin defaced beyond recognition yet polished to a high sheen. Pillaged from a particularly difficult prey.\n• Increases The Huntress' movement speed by 5% while aiming or throwing a Hatchet.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shinyPin.png?4ef0b0",
+      "icon_local_path": "icons/addons/shiny_pin.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glänzende Anstecknadel",
+          "description": "Eine nahezu völlig abgewetzte, kupferne Anstecknadel, die jedoch auf Hochglanz poliert wurde. Wurde einer besonders herausfordernden Beute abgenommen.\n• Erhöht die Bewegungsgeschwindigkeit der Jägerin um 5 %, während sie zielt oder ein Beil wirft."
+        },
+        "es": {
+          "name": "Insignia reluciente",
+          "description": "Una insignia de cobre tan deformada que resulta casi irreconocible, pero pulida hasta dotarla de un lustre intenso. Botín de una presa particularmente difícil.\n• Aumenta la velocidad de movimiento de la Cazadora un 5 % mientras apuntas con un destral o lo lanzas."
+        },
+        "ja": {
+          "name": "光り輝くブローチ",
+          "description": "原型をとどめていないが、未だピカピカに磨かれている銅のブローチ。特に厄介な獲物から奪われた。\n• 手斧を狙う時または投げる時の移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Połyskująca Broszka",
+          "description": "Miedziana broszka, oszpecona nie do poznania. Nadal jednak mocno się błyszczy. Została odebrana wyjątkowo trudnej do upolowania ofierze.\n• Zwiększa prędkość ruchu Łowczyni o 5% podczas celowania lub rzucania toporkiem."
+        }
+      }
+    },
+    {
+      "id": 146,
+      "name": "Amanita Toxin",
+      "killer_id": 8,
+      "description": "A toxin applied to the Hatchets' blade. The Amanita mushrooms' toxin numbs the mind.\n• Hatchets inflict Blindness for 60 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_amanitaToxin.png?f17f3f",
+      "icon_local_path": "icons/addons/amanita_toxin.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Fliegenpilzgift",
+          "description": "Ein Gift, das auf die Klingen der Beile aufgetragen wird. Das Gift des Fliegenpilzes betäubt das Gehirn.\n• Beile verursachen Erblindung für 60 Sekunden.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Toxina de amanita",
+          "description": "Una toxina que se aplica a la hoja de los destrales. La toxina de las setas amanita nubla la mente.\n• Los destrales causan Ceguera durante 60 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "テングダケの毒",
+          "description": "手斧の刃に塗る毒。テングダケの毒は頭脳を麻痺させる。\n• 手斧は命中した相手を60秒間目眩まし状態にする\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Toksyna z Muchomora",
+          "description": "Toksyna z muchomora rozsmarowana na ostrzach toporków. Otępia zmysły.\n• Toporki nakładają efekt Oślepienia na 60 sekund.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 147,
+      "name": "Glowing Concoction",
+      "killer_id": 8,
+      "description": "An otherworldly concoction that faintly glows a foreboding light.\n• Reveals the auras of Survivors hit by Hatchets for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_glowingConcoction.png?48134b",
+      "icon_local_path": "icons/addons/glowing_concoction.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Leuchtendes Gebräu",
+          "description": "Ein fremdartiges Gebräu, das ein schwaches, unheilvolles Licht ausstrahlt.\n• Auren von mit Beilen getroffenen Überlebenden werden dir 5 Sekunden lang angezeigt."
+        },
+        "es": {
+          "name": "Preparado brillante",
+          "description": "Un preparado etéreo que brilla con una luz tenue e inquietante.\n• Se muestran las auras de supervivientes alcanzados por destrales durante 5 segundos."
+        },
+        "ja": {
+          "name": "鮮やかな調合薬",
+          "description": "この世のものとは思えない調合薬は、不吉な光をかすかに放っている。\n• 手斧が命中した生存者のオーラが5秒間表視えるようになる"
+        },
+        "pl": {
+          "name": "Jarząca się Mikstura",
+          "description": "Mikstura nie z tego świata, świecąca złowrogo.\n• Pokazuje aury ocalałych trafionych toporkami na 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 148,
+      "name": "Soldier's Puttee",
+      "killer_id": 8,
+      "description": "A wrap taken from a dead soldier, it provides protection and support to the ankle and lower leg.\n• The Huntress moves 4.6 m/s when she has no Hatchets.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_soldiersPuttee.png?dceac9",
+      "icon_local_path": "icons/addons/soldiers_puttee.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Soldatengamasche",
+          "description": "Ein Wickel von einem toten Soldaten. Er bietet Schutz und Unterstützung für Knöchel und Unterschenkel.\n• Die Jägerin bewegt sich mit 4,6 m/s, wenn sie keine Beile hat."
+        },
+        "es": {
+          "name": "Polaina de soldado",
+          "description": "Trozo de tela de un soldado muerto que protege y sujeta el tobillo y la pantorrilla.\n• La Cazadora se mueve a 4,6 m/s cuando no tenga ningún destral."
+        },
+        "ja": {
+          "name": "兵士の巻きゲートル",
+          "description": "死んだ兵士から手に入れた布。サポーターとして足首と下腿を保護してくれる。\n• 手斧を持っていない時のハントレスの移動速度が秒速4.6メートルになる"
+        },
+        "pl": {
+          "name": "Owijacz żołnierza",
+          "description": "Opaska zdjęta z martwego żołnierza. Zapewnia ochronę i wsparcie kostce i dolnej części nogi.\n• Łowczyni porusza się z prędkością 4,6 m/s, gdy nie ma toporków."
+        }
+      }
+    },
+    {
+      "id": 149,
+      "name": "Manna Grass Braid",
+      "killer_id": 8,
+      "description": "A circular decorative braid made from manna grass. This memory of a lost little one fills the Huntress with rage and focus.\n• Decreases time required to wind up a Hatchet throw by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mannaGrassBraid.png?c59ee3",
+      "icon_local_path": "icons/addons/manna_grass_braid.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Süßgraskranz",
+          "description": "Ein runder, dekorativer Kranz aus Süßgras. Dieses Erinnerungsstück an ein verlorenes Mädchen erfüllt die Jägerin mit Zorn und Konzentration.\n• Verringert die Vorbereitungszeit für Beilwürfe um 5 %."
+        },
+        "es": {
+          "name": "Trenza de hierba del maná",
+          "description": "Una trenza decorativa circular hecha de hierba del maná. Este recuerdo de una niña perdida provoca un arrebato de ira y de determinación a la Cazadora.\n• Reduce el tiempo que se tarda en preparar un lanzamiento de destral un 5 %."
+        },
+        "ja": {
+          "name": "ドジョウツナギの編み紐",
+          "description": "ドジョウツナギから作られた、丸い装飾用の編み紐。取り残された幼い存在の記憶により、ハントレスは怒りと集中力で満たされる。\n• 手斧を構えるのに必要な時間が5%減少する"
+        },
+        "pl": {
+          "name": "Plecionka z Glycerii",
+          "description": "Okrągła plecionka dekoracyjna wykonana z glycerii. Przypomina Łowczyni o tym, co utraciła jako dziecko. Napełnia kobietę gniewem i sprawia, że staje się bardziej skupiona.\n• Skraca czas ładowania rzutu toporkiem o 5%."
+        }
+      }
+    },
+    {
+      "id": 150,
+      "name": "Flower Babushka",
+      "killer_id": 8,
+      "description": "A clean and colorful kerchief adorned with a flower pattern. This memory of a lost little one fills the Huntress with rage and focus.\n• Decreases time required to wind up a Hatchet throw by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_flowerBabushka.png?eacbf3",
+      "icon_local_path": "icons/addons/flower_babushka.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Blumenkopftuch",
+          "description": "Ein sauberes, farbenfrohes Kopftuch mit Blumenmuster. Dieses Erinnerungsstück an ein verlorenes Mädchen erfüllt die Jägerin mit Zorn und Konzentration.\n• Verringert die Vorbereitungszeit für Beilwürfe um 10 %."
+        },
+        "es": {
+          "name": "Babushka de flores",
+          "description": "Un pañuelo estampado de flores limpio y colorido. Este recuerdo de una niña perdida provoca un arrebato de ira y de determinación a la Cazadora.\n• Reduce el tiempo que se tarda en preparar un lanzamiento de destral un 10 %."
+        },
+        "ja": {
+          "name": "花のバブーシュカ",
+          "description": "花柄で飾られた、綺麗でカラフルなスカーフ。取り残された幼い存在の記憶により、ハントレスは怒りと集中力で満たされる。\n• 手斧を構えるのに必要な時間が10%減少する"
+        },
+        "pl": {
+          "name": "Kwiecista Babuszka",
+          "description": "Czysta, kolorowa chustka na głowę przyozdobiona kwiecistym wzorem. Przypomina Łowczyni o tym, co utraciła jako dziecko. Napełnia kobietę gniewem i sprawia, że staje się bardziej skupiona.\n• Skraca czas ładowania rzutu toporkiem o 10%."
+        }
+      }
+    }
+  ]
+}

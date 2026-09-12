@@ -359,7 +359,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         </div>
       )}
 
-      {openMapId && (
+      {/* `!== null` rather than a truthiness check: the id is an integer now,
+          and a falsy check would swallow id 0 if the sequence ever issued it. */}
+      {openMapId !== null && (
         <FullscreenMapEngine
           mapId={openMapId}
           availableMaps={maps}

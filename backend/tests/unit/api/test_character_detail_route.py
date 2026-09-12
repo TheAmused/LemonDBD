@@ -3,14 +3,17 @@ import pytest
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, Perk
+from app.models import Perk, Survivor
+from tests.unit.conftest import make_chapter
 
 
 @pytest.fixture(autouse=True)
 def setup_character_data(db_session: Session) -> None:
-    existing = db_session.scalars(select(Character).where(Character.name == "Meg Thomas")).first()
+    existing = db_session.scalars(select(Survivor).where(Survivor.name == "Meg Thomas")).first()
     if not existing:
-        c = Character(name="Meg Thomas", role="Survivor", release_number=2)
+        # `release_number` is the primary key now -- the source numbered
+        # survivors and killers separately, and that is what each table's id is.
+        c = Survivor(name="Meg Thomas", id=2, chapter_id=make_chapter(db_session).id)
         db_session.add(c)
         db_session.flush()
     else:
@@ -21,14 +24,15 @@ def setup_character_data(db_session: Session) -> None:
         db_session.add(
             Perk(
                 name="Sprint Burst",
-                character_id=c.id,
+                survivor_id=c.id,
+                role="Survivor",
                 description="Run fast",
                 icon_url="url",
                 icon_local_path="path",
             )
         )
     else:
-        perk.character_id = c.id
+        perk.survivor_id = c.id
     db_session.commit()
 
 

@@ -1,0 +1,534 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 1,
+      "name": "Trapper Gloves",
+      "killer_id": 1,
+      "description": "Protective padded leather gloves.\n• Increases Bear Trap setting speed by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trapperGloves.png?e0115d",
+      "icon_local_path": "icons/addons/trapper_gloves.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Fallenstellerhandschuhe",
+          "description": "Gefütterte Schutzhandschuhe aus Leder.\n• Erhöht die Geschwindigkeit beim Einstellen einer Bärenfalle um 30 %."
+        },
+        "es": {
+          "name": "Guantes de trampero",
+          "description": "Guantes acolchados de cuero.\n• Aumenta la velocidad de instalación de trampas para osos un 30 %."
+        },
+        "ja": {
+          "name": "トラッパーのグローブ",
+          "description": "防護パッドが施された革手袋。\n• トラバサミの設置速度が30%増加する"
+        },
+        "pl": {
+          "name": "Rękawice Trapera",
+          "description": "Skórzane rękawice ochronne.\n• Zwiększają prędkość zastawiania pułapek na niedźwiedzie o 30%."
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Padded Jaws",
+      "killer_id": 1,
+      "description": "These padded jaws are meant to restrain, not to wound.\n• Bear Traps do not inflict damage on trapped Survivors. Equipping this add-on negates the effects of Rusted Jaws and Serrated Jaws.\n• Points awarded for trapping Survivors are increased by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_paddedJaws.png?28d330",
+      "icon_local_path": "icons/addons/padded_jaws.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gepolsterte Bügel",
+          "description": "Diese gepolsterten Bügel sollen festhalten, nicht verwunden.\n• Bärenfallen fügen gefangenen Überlebenden keinen Schaden zu. Wenn du diesen Zusatz ausrüstest, wird die Wirkung von Rostige Bügel und Gezahnte Bügel aufgehoben.\n• Die Punkte für gefangene Überlebende werden um 100 % erhöht."
+        },
+        "es": {
+          "name": "Mandíbulas acolchadas",
+          "description": "Estas mandíbulas acolchadas están hechas para retener, no para herir.\n• Las trampas para osos no infligen daño a los supervivientes atrapados. Al equipar este accesorio, se anulan los efectos de Mandíbulas oxidadas y de Mandíbulas serradas.\n• Los puntos concedidos al atrapar a supervivientes aumentan un 100 %."
+        },
+        "ja": {
+          "name": "パッド付きの歯",
+          "description": "パッド付きの歯。傷を負わせるのではなく、拘束することが目的。\n• トラバサミにかかった生存者はダメージを受けない。このアドオンを装備すると錆びた歯とギザギザした歯の効果が無効になる\n• 生存者を罠にかけて得られるポイントが100%増加する"
+        },
+        "pl": {
+          "name": "Wyściełane Szczęki",
+          "description": "Wyściełane szczęki służące do chwytania ofiar, nie zaś do ich ranienia.\n• Pułapki na niedźwiedzie nie zadają obrażeń uwięzionym ocalałym. Wyposażenie dodatku anuluje efekty Zardzewiałych Szczęk i Ząbkowanych Szczęk.\n• Liczba punktów zdobywanych za łapanie ocalałych w pułapki zostaje zwiększona o 100%."
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Makeshift Wrap",
+      "killer_id": 1,
+      "description": "A scratched and worn brace made of thick, cured animal skin.\n• The Trapper cannot be caught in his Bear Traps.\n• Bear Traps will be disarmed if The Trapper steps on them.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_makeshiftWrap.png?44f26e",
+      "icon_local_path": "icons/addons/makeshift_wrap.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Provisorische Umwicklung",
+          "description": "Ein zerkratztes und abgetragenes Band aus dicker, getrockneter Tierhaut.\n• Der Fallensteller kann von seinen Bärenfallen nicht gefangen werden.\n• Bärenfallen werden deaktiviert, wenn der Fallensteller in sie tappt."
+        },
+        "es": {
+          "name": "Abrazadera improvisada",
+          "description": "Una abrazadera raída y desgastada hecha con un cuero grueso.\n• No se puede atrapar al Trampero con sus trampas para osos.\n• Si el Trampero pisa las trampas para osos, se desarmarán."
+        },
+        "ja": {
+          "name": "間に合わせのサポーター",
+          "description": "傷だらけで使い古しの固定具。分厚くて硬くなった動物の皮膚で作られている。\n• トラッパーは自分のトラバサミに掛らなくなる\n• トラバサミはトラッパーに踏まれると解除される"
+        },
+        "pl": {
+          "name": "Prowizoryczna owijka",
+          "description": "Porysowana i zużyta opaska wykonana z grubej, utwardzonej zwierzęcej skóry.\n• Traper nie może wpaść we własne pułapki na niedźwiedzie.\n• Pułapki na niedźwiedzie są rozbrajane, gdy wejdzie w nie Traper."
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Bear Oil",
+      "killer_id": 1,
+      "description": "Rendered animal fat used to lubricate mechanical parts.<br><li>Setting <b>Bear Traps</b> is completely silent.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bearOil.png?f434ee",
+      "icon_local_path": "icons/addons/bear_oil.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Bärenöl",
+          "description": "Ausgelassenes Tierfett zum Schmieren mechanischer Teile.<br><li>Das Aufstellen von <b>Bärenfallen</b> ist völlig lautlos.</li>"
+        },
+        "es": {
+          "name": "Aceite de oso",
+          "description": "Grasa animal derretida para lubricar piezas mecánicas.<br><li>Colocar <b>trampas para osos</b> es completamente silencioso.</li>"
+        },
+        "ja": {
+          "name": "熊の油",
+          "description": "機械部品の潤滑に使用される動物性油脂。<br><li><b>トラバサミ</b>の設置音が完全に無音になる。</li>"
+        },
+        "pl": {
+          "name": "Niedźwiedzi tłuszcz",
+          "description": "Stopiony zwierzęcy tłuszcz, którym można nasmarować pułapkę na niedźwiedzie.<br><li>Zastawianie <b>pułapek na niedźwiedzie</b> jest całkowicie ciche.</li>"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Coffee Grounds",
+      "killer_id": 1,
+      "description": "An old rusted can containing damp coffee grounds.\n• Increases the Haste status effect gained after setting a  Bear Trap by 5%.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_coffeeGrounds.png?79c520",
+      "icon_local_path": "icons/addons/coffee_grounds.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kaffeesatz",
+          "description": "Eine alte, rostige Dose mit feuchtem Kaffeesatz.\n• Erhöht den Statuseffekt „Eile“ nach dem Legen einer Bärenfalle um 5 %.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Café molido",
+          "description": "Una lata vieja y oxidada que contiene café molido.\n• Aumenta el efecto de estado Celeridad obtenido tras colocar una trampa para osos un 5 %.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "コーヒーかす",
+          "description": "古い錆びた缶。湿ったコーヒーの出し殻が入っている。\n• トラバサミの設置後に得られる迅速のステータス効果が5%増加する\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Fusy kawy",
+          "description": "Stara zardzewiała puszka zawierająca wilgotne fusy kawy.\n• Zwiększa Pośpiech o 5% po zastawieniu pułapki na niedźwiedzie.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Lengthened Jaws",
+      "killer_id": 1,
+      "description": "A pair of lengthened jaws that replaces the normal ones on the Bear Trap.<br><li>Survivors that escape a <b>Bear Trap</b> are inflicted with <b>Deep Wound</b>.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lengthenedJaws.png?537304",
+      "icon_local_path": "icons/addons/lengthened_jaws.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verlängerte Backen",
+          "description": "Ein Paar verlängerte Backen, die die normalen der Bärenfalle ersetzen.<br><li>Überlebende, die aus einer <b>Bärenfalle</b> entkommen, erleiden den Status <b>Tiefe Wunde</b>.</li>"
+        },
+        "es": {
+          "name": "Mandíbulas alargadas",
+          "description": "Un par de mandíbulas alargadas que reemplazan a las normales en la trampa para osos.<br><li>Los supervivientes que escapan de una <b>trampa para osos</b> sufren el efecto <b>Herida profunda</b>.</li>"
+        },
+        "ja": {
+          "name": "長めの歯",
+          "description": "トラバサミの通常の歯と交換する長めの歯。<br><li><b>トラバサミ</b>から脱出した生存者に<b>深手</b>を付与する。</li>"
+        },
+        "pl": {
+          "name": "Wydłużone szczęki",
+          "description": "Para wydłużonych szczęk zastępująca zwykłe szczęki pułapki na niedźwiedzie.<br><li>Ocalali, którzy uciekną z <b>pułapki na niedźwiedzie</b>, otrzymują efekt <b>Głęboka Rana</b>.</li>"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Serrated Jaws",
+      "killer_id": 1,
+      "description": "Add small, jagged blades to the trap jaws to maximize damage.<br><li>Survivors caught in a <b>Bear Trap</b> suffer from the <b>Mangled</b> and <b>Hemorrhage</b> Status Effects until fully healed.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_serratedJaws.png?da1d7a",
+      "icon_local_path": "icons/addons/serrated_jaws.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Gezackte Backen",
+          "description": "Fügt den Fallenbacken kleine, gezackte Klingen hinzu.<br><li>Überlebende, die in eine <b>Bärenfalle</b> geraten, leiden unter den Statuseffekten <b>Zerfleischt</b> und <b>Blutung</b>, bis sie vollständig geheilt sind.</li>"
+        },
+        "es": {
+          "name": "Mandíbulas dentadas",
+          "description": "Añade hojas dentadas a las mandíbulas de la trampa.<br><li>Los supervivientes atrapados en una <b>trampa para osos</b> sufren los efectos <b>Mutilado</b> y <b>Hemorragia</b> hasta curarse por completo.</li>"
+        },
+        "ja": {
+          "name": "ギザギザの歯",
+          "description": "トラバサミの歯にギザギザの刃を取り付ける。<br><li><b>トラバサミ</b>にかかった生存者は、完全に回復するまで<b>重症</b>と<b>出血</b>のステータス効果を受ける。</li>"
+        },
+        "pl": {
+          "name": "Ząbkowane szczęki",
+          "description": "Dodaje małe, poszarpane ostrza do szczęk pułapki.<br><li>Ocalali schwytani w <b>pułapkę na niedźwiedzie</b> cierpią na efekty <b>Zmasakrowanie</b> i <b>Krwotok</b> do momentu pełnego wyleczenia.</li>"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Wax Brick",
+      "killer_id": 1,
+      "description": "A large block of translucent paraffin wax.<br><li><b>Increases</b> the time required for Survivors to rescue or escape a <b>Bear Trap</b> by <b>33%</b>.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_waxBrick.png?a9197a",
+      "icon_local_path": "icons/addons/wax_brick.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wachsblock",
+          "description": "Ein großer Block durchscheinendes Paraffinwachs.<br><li><b>Erhöht</b> die Zeit, die Überlebende benötigen, um sich aus einer <b>Bärenfalle</b> zu befreien oder gerettet zu werden, um <b>33%</b>.</li>"
+        },
+        "es": {
+          "name": "Ladrillo de cera",
+          "description": "Un bloque grande de cera de parafina translúcida.<br><li><b>Aumenta</b> el tiempo necesario para que los supervivientes rescaten o escapen de una <b>trampa para osos</b> en un <b>33%</b>.</li>"
+        },
+        "ja": {
+          "name": "パラフィンワックスの塊",
+          "description": "半透明のパラフィンワックスの大きな塊。<br><li>生存者が<b>トラバサミ</b>から脱出または救出するのにかかる時間が<b>33%増加</b>する。</li>"
+        },
+        "pl": {
+          "name": "Kostka wosku",
+          "description": "Duży blok półprzezroczystego wosku parafinowego.<br><li><b>Wydłuża</b> czas potrzebny ocalałym na ratunek lub ucieczkę z <b>pułapki na niedźwiedzie</b> o <b>33%</b>.</li>"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "4-Coil Spring Kit",
+      "killer_id": 1,
+      "description": "A replacement kit for Bear Traps which changes the usual dual spring system with 4 coil springs adding a great amount of strength to the traps' hold.\n• Increases time required for Survivors to disarm Bear Traps by 33%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_4-coilSpringKit.png?bd4536",
+      "icon_local_path": "icons/addons/4_coil_spring_kit.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "4-Sprungfedern-Set",
+          "description": "Ein Ersatzset für Bärenfallen, das das übliche Doppelfedersystem durch 4 Sprungfedern ersetzt und die Haltekraft der Falle enorm verstärkt.\n• Verlängert die Zeit zum Entschärfen von Bärenfallen um 33 %."
+        },
+        "es": {
+          "name": "Kit de 4 muelles",
+          "description": "Un kit de repuestos de trampas para osos que sustituye el sistema habitual de dos muelles por otro de cuatro muelles helicoidales, lo que le imprime más agarre a la trampa.\n• Aumenta el tiempo que tardan los supervivientes en desarmar las trampas para osos un 33 %."
+        },
+        "ja": {
+          "name": "4コイルのスプリングキット",
+          "description": "トラバサミの交換キット。コイルを通常の2コイルから4コイル仕様に変換し、罠の締めつけ力を強化する。\n• トラバサミの解除時間が33%増加する"
+        },
+        "pl": {
+          "name": "Zestaw 4 sprężyn",
+          "description": "Zestaw wymienny do pułapek na niedźwiedzie. Zastępuje typowy, podwójny system sprężyn systemem składającym się z czterech sprężyn wzmacniających chwyt pułapek.\n• Wydłuża czas potrzebny do rozbrojenia pułapek na niedźwiedzie o 33%."
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Rusted Jaws",
+      "killer_id": 1,
+      "description": "A heavily rusted pair of trap jaws that replaces the normal ones on the Bear Trap.<br><li>Survivors caught in a <b>Bear Trap</b> suffer from the <b>Broken</b> Status Effect until fully healed.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustedJaws.png?ee3927",
+      "icon_local_path": "icons/addons/rusted_jaws.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rostige Backen",
+          "description": "Ein stark verrostetes Paar Fallenbacken, die die normalen der Bärenfalle ersetzen.<br><li>Überlebende, die in eine <b>Bärenfalle</b> geraten, leiden unter dem Statuseffekts <b>Gebrochen</b>, bis sie vollständig geheilt sind.</li>"
+        },
+        "es": {
+          "name": "Mandíbulas oxidadas",
+          "description": "Un par de mandíbulas muy oxidadas que reemplazan a las normales en la trampa para osos.<br><li>Los supervivientes atrapados en una <b>trampa para osos</b> sufren el efecto <b>Desesperanza</b> hasta curarse por completo.</li>"
+        },
+        "ja": {
+          "name": "錆びた歯",
+          "description": "トラバサミの通常の歯と交換する錆びた歯。<br><li><b>トラバサミ</b>にかかった生存者は、完全に回復するまで<b>衰弱</b>のステータス効果を受ける。</li>"
+        },
+        "pl": {
+          "name": "Zardzewiałe szczęki",
+          "description": "Mocno zardzewiała para szczęk zastępująca zwykłe szczęki pułapki na niedźwiedzie.<br><li>Ocalali schwytani w <b>pułapkę na niedźwiedzie</b> cierpią na efekt <b>Okaleczenie</b> do momentu pełnego wyleczenia.</li>"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Secondary Coil",
+      "killer_id": 1,
+      "description": "A secondary coil which keeps a Bear Trap effective in times when the primary coils becomes unusable.\n• Increases time required for Survivors to disarm Bear Traps by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_secondaryCoil.png?48505e",
+      "icon_local_path": "icons/addons/secondary_coil.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sekundärfeder",
+          "description": "Eine Sekundärfeder, die die Wirkung einer Bärenfalle garantiert, wenn die Primärfedern unbrauchbar werden.\n• Verlängert die Zeit zum Entschärfen von Bärenfallen um 50 %."
+        },
+        "es": {
+          "name": "Muelle secundario",
+          "description": "Muelle secundario que mantiene la efectividad de la trampa para osos cuando el muelle principal se queda inutilizado.\n• Aumenta el tiempo que tardan los supervivientes en sabotear trampas para osos un 50 %."
+        },
+        "ja": {
+          "name": "補助コイル",
+          "description": "メインのコイルが使えなくなった時でもトラバサミを作動させられる補助コイル。\n• 生存者がトラバサミの解除に必要な時間が50%増加する"
+        },
+        "pl": {
+          "name": "Dodatkowa Sprężyna",
+          "description": "Druga sprężyna utrzymująca pułapkę na niedźwiedzie w całości, w razie gdyby główne sprężyny stały się bezużyteczne.\n• Wydłuża czas potrzebny ocalałym na rozbrojenie pułapki na niedźwiedzie o 50%."
+        }
+      }
+    },
+    {
+      "id": 12,
+      "name": "Tar Bottle",
+      "killer_id": 1,
+      "description": "A black, matte and sticky substance similar to tar. When applied to Bear Traps, makes them far less noticeable.\n• Darkens the appearance of Bear Traps.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tarBottle.png?105e51",
+      "icon_local_path": "icons/addons/tar_bottle.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Teerflasche",
+          "description": "Eine schwarze, matte und klebrige Substanz, die Teer ähnelt. Wenn Bärenfallen damit behandelt werden, sind sie weitaus schwerer zu erkennen.\n• Verdunkelt alle Bärenfallen."
+        },
+        "es": {
+          "name": "Frasco de brea",
+          "description": "Sustancia negra, opaca y pegajosa parecida a la brea. Cuando se aplica a las trampas para osos, las hace mucho menos visibles.\n• Oculta la apariencia de las trampas para osos."
+        },
+        "ja": {
+          "name": "タールのボトル",
+          "description": "タールの様に黒くてくすんだ、ベトベトする素材。トラバサミに使用することで目立ちにくくする効果がある。\n• トラバサミの外観が暗くなる"
+        },
+        "pl": {
+          "name": "Butelka Smoły",
+          "description": "Czarna, matowa i lepka substancja podobna do smoły. Po zastosowaniu na pułapkach na niedźwiedzie czyni je znacznie trudniejszymi do dostrzeżenia.\n• Przyciemnia pułapki na niedźwiedzie."
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Bloody Coil",
+      "killer_id": 1,
+      "description": "Part sticky, part slippery, this grim liquid makes handling the traps' springs more dangerous.\n• When a Bear Trap is disarmed by a healthy Survivor, the bloody coils exact their price and that Survivor becomes injured.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodyCoil.png?fb2af6",
+      "icon_local_path": "icons/addons/bloody_coil.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Blutige Schraubenfeder",
+          "description": "Diese grausige, halb klebrige und halb glitschige Flüssigkeit macht den Umgang mit den Sprungfedern von Fallen gefährlicher.\n• Wenn eine Bärenfalle von einem gesunden Überlebenden entschärft wird, fordern die blutigen Federn ihren Tribut und der Überlebende wird verletzt."
+        },
+        "es": {
+          "name": "Muelle ensangrentado",
+          "description": "Este desagradable líquido viscoso hace que resulte más peligroso manipular los muelles de las trampas.\n• Cuando un superviviente ileso desarma una trampa para osos, los muelles ensangrentados se cobran su precio y el superviviente queda herido."
+        },
+        "ja": {
+          "name": "血まみれのコイル",
+          "description": "不気味な液体に覆われたこのスプリングは、所によりねばつき、所により滑りやすく、扱いがより困難で危険だ。\n• 無傷の状態でトラバサミを解除した生存者は、代償を求めた血まみれのコイルによって負傷状態になる"
+        },
+        "pl": {
+          "name": "Zakrwawiona sprężyna",
+          "description": "Lepko-śliski, groźny płyn, który sprawia, że majstrowanie przy sprężynach w pułapkach staje się bardziej niebezpiecznym zadaniem.\n• Kiedy zdrowy ocalały rozbroi pułapkę na niedźwiedzie, zakrwawiona sprężyna sprawi, że znajdzie się on w stanie krytycznym."
+        }
+      }
+    },
+    {
+      "id": 14,
+      "name": "Honing Stone",
+      "killer_id": 1,
+      "description": "When used with the Bear Trap, the honing stone sharpens its blades. The razor-sharp blades inflicts deep wounds aimed at bleeding the victim as fast as possible.\n• The trapped victim is left dying instead of injured if they free themselves.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_honingStone.png?712f23",
+      "icon_local_path": "icons/addons/honing_stone.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schleifstein",
+          "description": "Mit diesem Wetzstein lassen sich die Klingen der Bärenfalle schärfen. Die rasiermesserscharfen Klingen erzeugen Fleischwunden, die das Opfer so schnell wie möglich verbluten lassen.\n• Versetzt das gefangene Opfer in den Todesstatus, wenn es sich befreit, anstatt in den Status „Verletzt“."
+        },
+        "es": {
+          "name": "Piedra de afilar",
+          "description": "Sirve para afilar las cuchillas de las trampas para osos. Las cuchillas afiladas provocan heridas profundas para desangrar a la víctima lo más rápido posible.\n• Inflige el estado agonizante a la víctima atrapada si consigue liberarse."
+        },
+        "ja": {
+          "name": "砥石",
+          "description": "トラバサミの歯を研ぐための砥石。鋭く研がれた歯により、罠にかかった被害者は瞬時に深い傷を負う。\n• 罠にかかった生存者が自力で脱出した場合、負傷ではなく瀕死状態になる"
+        },
+        "pl": {
+          "name": "Osełka",
+          "description": "Osełka umożliwiająca naostrzenie szczęk pułapki, by zadawała ofiarom głębokie rany i prowadziła do szybkiego wykrwawienia ocalałego.\n• Ofiara, która sama uwolni się z pułapki, przejdzie w stan agonii, a nie w krytyczny."
+        }
+      }
+    },
+    {
+      "id": 15,
+      "name": "Oily Coil",
+      "killer_id": 1,
+      "description": "An oiled spring that marks the hands of those who meddle with a Bear Trap.\n• When resetting a Bear Trap, reveal the aura of the most recent Survivor to disarm it for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oilyCoil.png?192047",
+      "icon_local_path": "icons/addons/oily_coil.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ölige Schraubenfeder",
+          "description": "Eine geölte Feder, die die Hände jener markiert, die an einer Bärenfalle herumspielen.\n• Wenn eine Bärenfalle zurückgesetzt wird, wird für 5 Sekunden die Aura des letzten Überlebenden angezeigt, der sie entschärft hat."
+        },
+        "es": {
+          "name": "Muelle aceitoso",
+          "description": "Un muelle engrasado que mancha las manos de quienes toquetean con una trampa para osos.\n• Al volver a colocar una trampa para osos, se muestra el aura de los últimos supervivientes que la desarmaran durante 5 segundos."
+        },
+        "ja": {
+          "name": "油まみれのコイル",
+          "description": "油をさしたばね。トラバサミにちょっかいを出した人間の手にその跡をつける。\n• トラバサミをリセットすると、最後に解除した生存者のオーラが5秒間視えるようになる"
+        },
+        "pl": {
+          "name": "Naoliwiona sprężyna",
+          "description": "Naoliwiona sprężyna, która brudzi ręce tych, co majstrują przy pułapce na niedźwiedzie.\n• Podczas ponownego zastawiania pułapki na niedźwiedzie aura ostatniego ocalałego, który próbował ją rozbroić, zostanie ujawniona na 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 16,
+      "name": "Tension Spring",
+      "killer_id": 1,
+      "description": "A high tension spring that snaps back into place after being stretched.\n• A Bear Trap resets 2 seconds after a Survivor escapes from it.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tensionSpring.png?9ae400",
+      "icon_local_path": "icons/addons/tension_spring.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Spannfeder",
+          "description": "Eine Feder unter Spannung, die nach dem Dehnen wieder zurück an ihren Platz schnellt.\n• Eine Bärenfalle wird 2 Sekunden, nachdem ein Überlebender ihr entkommen ist, zurückgesetzt."
+        },
+        "es": {
+          "name": "Resorte de tensión",
+          "description": "Un muelle de alta tensión que vuelve a su sitio después de estirarse.\n• Se restablece una trampa para osos 2 segundos después de que un superviviente se libere de ella."
+        },
+        "ja": {
+          "name": "張り詰めたばね",
+          "description": "張力の高いばね。伸ばすと反発して一瞬で元の場所に戻る。\n• 生存者がトラバサミから脱出すると、その2秒後にそのトラバサミがリセットされる"
+        },
+        "pl": {
+          "name": "Sprężyna napinająca",
+          "description": "Sprężyna o wysokim naprężeniu, która zatrzaskuje się z powrotem na miejscu po rozciągnięciu.\n• Pułapka na niedźwiedzie  rozstawia się ponownie 2 sekundy po ucieczce ocalałego."
+        }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Trapper Sack",
+      "killer_id": 1,
+      "description": "A crude leather sack suitable for foraging.\n• All Bear Traps are carried at the beginning of the Trial instead of spawning on the map.\n• Bear Traps cannot be picked up.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trapperSack.png?1483fc",
+      "icon_local_path": "icons/addons/trapper_sack.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Fallenstellersack",
+          "description": "Ein einfacher Ledersack zum Sammeln.\n• Alle Bärenfallen werden zu Beginn der Prüfung getragen, anstatt auf der Karte zu erscheinen.\n• Bärenfallen können nicht aufgehoben werden."
+        },
+        "es": {
+          "name": "Saco de trampero",
+          "description": "Saco de piel adecuado para salir a buscar alimento.\n• Todas las trampas para osos se llevan al comienzo de la partida en lugar de aparecer en el mapa.\n• Las trampas para osos no se pueden recoger."
+        },
+        "ja": {
+          "name": "罠用袋",
+          "description": "採集狩猟に適した、頑丈な革の袋。\n• すべてのトラバサミがマップ上に出現せず、儀式の開始時に手持ち状態になる\n• トラバサミの回収は不可。"
+        },
+        "pl": {
+          "name": "Worek trapera",
+          "description": "Prosty skórzany worek nadający się do zbierania pożywienia.\n• Wszystkie pułapki na niedźwiedzie są niesione na początku próby zamiast pojawiać się na mapie.\n• Pułapek na niedźwiedzie nie można podnosić."
+        }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Iridescent Stone",
+      "killer_id": 1,
+      "description": "Traps sharpened with this sickly gleaming stone seem to gain a life of their own.\n• Every 30 seconds, one closed Bear Trap chosen at random becomes set.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentStone.png?b56c70",
+      "icon_local_path": "icons/addons/iridescent_stone.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Stein",
+          "description": "Fallen, die mit diesem widerlich leuchtenden Stein geschärft wurden, scheinen ein Eigenleben zu haben.\n• Alle 30 Sekunden wird eine zufällig gewählte geschlossene Bärenfalle wieder aktiviert."
+        },
+        "es": {
+          "name": "Piedra iridiscente",
+          "description": "Las trampas afiladas con esta piedra de brillo enfermizo parecen cobrar vida.\n• Cada 30 segundos, una trampa para osos cerrada al azar se instala sola."
+        },
+        "ja": {
+          "name": "玉虫色の石",
+          "description": "このかすかに光る鋭い石が付いた罠は、自ら命を得ているかのようだ。\n• 30秒ごとに閉じているトラバサミがランダムで1つ設置状態になる"
+        },
+        "pl": {
+          "name": "Opalizująca Osełka",
+          "description": "Zdaje się, że pułapki naostrzone tym niesamowicie lśniącym kamieniem zostały obdarowane własnym życiem.\n• Raz na każde 30 sekund jedna losowa zamknięta pułapka na niedźwiedzie rozstawi się automatycznie."
+        }
+      }
+    },
+    {
+      "id": 791,
+      "name": "Fastening Tools",
+      "killer_id": 1,
+      "description": "A specialized set of tools used to fasten Bear Traps to ensure their effectiveness.<br><li><b>Increases Bear Trap</b> setting speed by <b>50%</b>.</li><li><b>Increases</b> the time required to rescue a Survivor or attempt escape from a <b>Bear Trap</b> by <b>25%</b>.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fasteningTools.png?f6270d",
+      "icon_local_path": "icons/addons/fastening_tools.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schnelle Werkzeuge",
+          "description": "Ein spezielles Werkzeugset zum schnellen Befestigen von Bärenfallen.<br><li><b>Erhöht</b> das Aufstelltempo von <b>Bärenfallen</b> um <b>50%</b>.</li><li><b>Erhöht</b> die Zeit zum Retten oder Befreien aus einer <b>Bärenfalle</b> um <b>25%</b>.</li>"
+        },
+        "en": {
+          "name": "Fast Tools"
+        },
+        "es": {
+          "name": "Herramientas rápidas",
+          "description": "Un conjunto especializado de herramientas utilizadas para asegurar las trampas para osos.<br><li><b>Aumenta</b> la velocidad de colocación de <b>trampas para osos</b> en un <b>50%</b>.</li><li><b>Aumenta</b> el tiempo necesario para rescatar o escapar de una <b>trampa para osos</b> en un <b>25%</b>.</li>"
+        },
+        "ja": {
+          "name": "素早い工具",
+          "description": "トラバサミを素早く調整するための特殊工具一式。<br><li><b>トラバサミ</b>の設置速度が<b>50%上昇</b>する。</li><li>生存者が<b>トラバサミ</b>から脱出または救出するのにかかる時間が<b>25%増加</b>する。</li>"
+        },
+        "pl": {
+          "name": "Szybkie narzędzia",
+          "description": "Specjalny zestaw narzędzi używany do mocowania pułapek na niedźwiedzie, aby zapewnić ich skuteczność.<br><li><b>Zwiększa</b> prędkość zastawiania <b>pułapek na niedźwiedzie</b> o <b>50%</b>.</li><li><b>Wydłuża</b> czas potrzebny na ratunek ocalałego lub próbę ucieczki z <b>pułapki na niedźwiedzie</b> o <b>25%</b>.</li>"
+        }
+      }
+    },
+    {
+      "id": 792,
+      "name": "Trapper Bag",
+      "killer_id": 1,
+      "description": "A cured leather waist bag.\nLarge and sturdy to transport hunting equipment.\n* Increases the number of carried Bear Traps by +1.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trapperBag.png?b8bdb5",
+      "icon_local_path": "icons/addons/trapper_bag.webp",
+      "rarity": "Rare",
+      "translations": {}
+    }
+  ]
+}

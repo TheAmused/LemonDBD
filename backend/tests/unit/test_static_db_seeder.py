@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 from sqlalchemy import select, func
 from app.core.extensions import db
-from app.models.character import Character
+from app.models.character import Killer, Survivor
 from app.models.perk import Perk
 from app.models.smash_or_pass import Roster
 from app.models.admin import SeedUpdateLog
@@ -19,7 +19,11 @@ def test_static_db_seeder_initializes_empty_db(app):
         result = seed_from_static_json(force=True)
         assert result["status"] == "success"
 
-        char_count = db.session.scalar(select(func.count(Character.id)))
+        # Two tables, so two counts. "How many characters are there" is the
+        # sum; there is no table holding both.
+        char_count = (db.session.scalar(select(func.count(Survivor.id))) or 0) + (
+            db.session.scalar(select(func.count(Killer.id))) or 0
+        )
         perk_count = db.session.scalar(select(func.count(Perk.id)))
         roster_count = db.session.scalar(select(func.count(Roster.id)))
 
@@ -94,6 +98,6 @@ def test_import_update_file_directly(app, tmp_path):
         res = import_update_file(custom_patch)
         assert res["status"] == "success"
 
-        trapper = db.session.scalar(select(Character).where(Character.name == "The Trapper"))
+        trapper = db.session.scalar(select(Killer).where(Killer.name == "The Trapper"))
         assert trapper is not None
         assert trapper.lore == new_lore

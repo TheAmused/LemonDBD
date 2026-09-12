@@ -6,7 +6,9 @@ from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request, send_from_directory
 
+from app.core import redis_cache
 from app.core.extensions import db
+from app.core.http_cache import cache_catalog
 from app.core.security import admin_required, get_current_user
 from app.seeds.static_db_seeder import seed_from_static_json
 from app.services.perk_service import PerkService
@@ -34,10 +36,24 @@ def _extract_optional_user_id() -> int | None:
 
 @perks_bp.route("/api/v1/health", methods=["GET"])
 def health_check():
-    return jsonify({"status": "healthy", "service": "dbd-backend-api"}), 200
+    # Whether the catalog cache is one shared Redis or four per-worker
+    # fallbacks is invisible from the outside until it starts serving stale
+    # data, so the health probe says which it is.
+    return jsonify({
+        "status": "healthy",
+        "service": "dbd-backend-api",
+        "cache": redis_cache.stats(),
+    }), 200
 
 
 @perks_bp.route("/api/v1/perks", methods=["GET"])
+@cache_catalog(
+    ttl=3600,
+    vary=(
+        "category", "character", "scope", "search", "sort_by", "order",
+        "page", "limit", "owned_only", "lang",
+    ),
+)
 def list_perks():
     """Retrieve perks with filtering, sorting, pagination, and ownership status."""
     category = request.args.get("category")
@@ -72,6 +88,7 @@ def list_perks():
 
 
 @perks_bp.route("/api/v1/perks/suggestions", methods=["GET"])
+@cache_catalog(ttl=3600, vary=("q", "category", "limit", "lang"))
 def get_perk_suggestions():
     q = request.args.get("q", default="", type=str)
     category = request.args.get("category")
@@ -82,6 +99,7 @@ def get_perk_suggestions():
 
 
 @perks_bp.route("/api/v1/characters/suggestions", methods=["GET"])
+@cache_catalog(ttl=3600, vary=("q", "category", "limit"))
 def get_character_suggestions():
     q = request.args.get("q", default="", type=str)
     category = request.args.get("category")
@@ -91,6 +109,7 @@ def get_character_suggestions():
 
 
 @perks_bp.route("/api/v1/perks/<string:identifier>", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("lang",))
 def get_perk(identifier: str):
     lang = _extract_lang()
     perk = perk_service.get_by_identifier(identifier, lang=lang)
@@ -100,6 +119,7 @@ def get_perk(identifier: str):
 
 
 @perks_bp.route("/api/v1/characters", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("category", "lang"))
 def list_characters():
     category = request.args.get("category")
     lang = _extract_lang()
@@ -108,6 +128,7 @@ def list_characters():
 
 
 @perks_bp.route("/api/v1/chapters", methods=["GET"])
+@cache_catalog(ttl=86400, vary=())
 def list_chapters():
     """Retrieve all chapter/DLC banner images for client-side name matching."""
     from app.core.extensions import db
@@ -119,6 +140,7 @@ def list_chapters():
 
 
 @perks_bp.route("/api/v1/stats/summary", methods=["GET"])
+@cache_catalog(ttl=86400, vary=())
 def stats_summary():
     """Lightweight counts for the sidebar "vault stats" card.
 
@@ -131,14 +153,17 @@ def stats_summary():
     from sqlalchemy import func, select
 
     from app.core.extensions import db
-    from app.models import Character, Perk
+    from app.models import Killer, Perk, Survivor
 
     perk_rows = db.session.execute(
-        select(Perk.category, func.count(Perk.id)).group_by(Perk.category)
+        select(Perk.role, func.count(Perk.id)).group_by(Perk.role)
     ).all()
-    character_rows = db.session.execute(
-        select(Character.role, func.count(Character.id)).group_by(Character.role)
-    ).all()
+    # A GROUP BY over a role column becomes one COUNT per table, because the
+    # table is the role.
+    character_rows = [
+        ("Survivor", db.session.scalar(select(func.count(Survivor.id))) or 0),
+        ("Killer", db.session.scalar(select(func.count(Killer.id))) or 0),
+    ]
 
     def _pick(rows, wanted: str) -> int:
         for key, count in rows:
@@ -166,6 +191,7 @@ def stats_summary():
 
 
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("lang",))
 def get_character_detail(character_name: str):
     lang = _extract_lang()
     detail = perk_service.get_character_detail(character_name, lang=lang)
@@ -175,12 +201,14 @@ def get_character_detail(character_name: str):
 
 
 @perks_bp.route("/api/v1/challenge-modes", methods=["GET"])
+@cache_catalog(ttl=300, vary=())
 def list_challenge_modes_public():
     from app.services.admin_control_service import get_challenge_mode_settings
     return jsonify({"modes": get_challenge_mode_settings()}), 200
 
 
 @perks_bp.route("/api/v1/survivors", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("lang",))
 def list_survivors():
     lang = _extract_lang()
     survivors = perk_service.get_characters("Survivor", lang=lang)
@@ -188,6 +216,7 @@ def list_survivors():
 
 
 @perks_bp.route("/api/v1/killers", methods=["GET"])
+@cache_catalog(ttl=86400, vary=("lang",))
 def list_killers():
     lang = _extract_lang()
     killers = perk_service.get_characters("Killer", lang=lang)
@@ -195,6 +224,7 @@ def list_killers():
 
 
 @perks_bp.route("/api/v1/items", methods=["GET"])
+@cache_catalog(ttl=3600, vary=("category", "search", "lang"))
 def list_items():
     category = request.args.get("category")
     search = request.args.get("search")
@@ -204,6 +234,7 @@ def list_items():
 
 
 @perks_bp.route("/api/v1/addons", methods=["GET"])
+@cache_catalog(ttl=3600, vary=("category", "target", "associated_target", "search", "lang"))
 def list_addons():
     category = request.args.get("category")
     target = request.args.get("target") or request.args.get("associated_target")

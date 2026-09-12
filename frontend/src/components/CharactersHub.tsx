@@ -2,6 +2,7 @@
 // frontend/src/components/CharactersHub.tsx
 
 import React, { useEffect, useState, useMemo } from 'react';
+import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import {
@@ -50,7 +51,12 @@ interface OwnedCharacter {
 interface OwnedPerk {
   perk_id: number;
   name: string;
+  /** Scoped to the perk's own role. Survivor 7 and killer 7 are different
+   *  characters, so this is only meaningful next to `role`. */
   character_id: number | null;
+  role: string;
+  survivor_id: number | null;
+  killer_id: number | null;
   is_teachable: boolean;
   is_unlocked: boolean;
   icon_url?: string;
@@ -110,7 +116,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
   const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
   const [showSavedToast, setShowSavedToast] = useState<boolean>(false);
-  const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<number, boolean>>({});
+  // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
+  // killers are numbered separately now, so an id alone collides.
+  const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
@@ -181,17 +189,18 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     }
   };
 
-  const handleToggleCharacterOwned = (characterId: number) => {
-    const newIsOwned = !(characterOwnershipDraft[characterId] ?? true);
+  const handleToggleCharacterOwned = (characterId: number, role: string) => {
+    const key = ownershipKey(characterId, role);
+    const newIsOwned = !(characterOwnershipDraft[key] ?? true);
     setCharacterOwnershipDraft((prev) => ({
       ...prev,
-      [characterId]: newIsOwned,
+      [key]: newIsOwned,
     }));
 
     setPerkUnlockDraft((prev) => {
       const next = { ...prev };
       allPerks
-        .filter((p) => p.character_id === characterId)
+        .filter((p) => ownsPerk(p, characterId, role))
         .forEach((p) => {
           next[p.perk_id] = newIsOwned;
         });
@@ -219,10 +228,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     setOwnershipSaving(true);
     setOwnershipSaveError(null);
     try {
-      const characterUpdates = Object.entries(characterOwnershipDraft).map(([characterId, isOwned]) => ({
-        character_id: Number(characterId),
-        is_owned: isOwned,
-      }));
+      const characterUpdates = Object.entries(characterOwnershipDraft).map(([key, isOwned]) => {
+        const [role, id] = key.split(':');
+        return { character_id: Number(id), role, is_owned: isOwned };
+      });
       const perkUpdates = Object.entries(perkUnlockDraft).map(([perkId, isUnlocked]) => ({
         perk_id: Number(perkId),
         is_unlocked: isUnlocked,
@@ -251,9 +260,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     }
   };
 
-  const getCharacterPerkStats = (characterId?: number) => {
+  const getCharacterPerkStats = (characterId?: number, role?: string) => {
     if (!characterId) return { total: 0, unlocked: 0 };
-    const perksForChar = allPerks.filter((p) => p.character_id === characterId);
+    const perksForChar = allPerks.filter((p) => ownsPerk(p, characterId, role));
     const unlocked = perksForChar.filter((p) => perkUnlockDraft[p.perk_id] ?? true).length;
     return { total: perksForChar.length, unlocked };
   };
@@ -400,8 +409,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         >
           {filteredCharacters.map((char, idx) => {
             const isSurvivor = char.category?.toLowerCase() === 'survivor';
-            const isOwned = char.id ? characterOwnershipDraft[char.id] ?? true : true;
-            const perkStats = ownershipMode ? getCharacterPerkStats(char.id) : { total: 0, unlocked: 0 };
+            const isOwned = char.id
+              ? characterOwnershipDraft[ownershipKey(char.id, char.category)] ?? true
+              : true;
+            const perkStats = ownershipMode
+              ? getCharacterPerkStats(char.id, char.category)
+              : { total: 0, unlocked: 0 };
             const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
             const showLockedOverlay = !isOwned;
             const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
@@ -418,7 +431,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 }}
                 onClick={() => {
                   if (ownershipMode) {
-                    if (char.id) handleToggleCharacterOwned(char.id);
+                    if (char.id) handleToggleCharacterOwned(char.id, char.category);
                   } else {
                     router.push(detailHref);
                   }

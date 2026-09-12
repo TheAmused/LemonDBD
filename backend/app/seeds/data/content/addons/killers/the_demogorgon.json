@@ -1,0 +1,554 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 295,
+      "name": "Rotten Pumpkin",
+      "killer_id": 17,
+      "description": "Pumpkin flesh infected by the rotten soil in Hawkins.\n• When traversing the Upside Down, the Portal you enter is destroyed. Gain an additional 200 Bloodpoints for the traversal.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rottenPumpkin.png?1ced44",
+      "icon_local_path": "icons/addons/rotten_pumpkin.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Verfaulter Kürbis",
+          "description": "Kürbisfleisch, das von der verdorbenen Erde in Hawkins infiziert wurde.\n• Beim Durchqueren der anderen Seite wird das Portal, das du betrittst, zerstört. Du erhältst zusätzlich 200 Blutpunkte für die Durchquerung."
+        },
+        "es": {
+          "name": "Calabaza podrida",
+          "description": "Pulpa de calabaza infectada por la tierra podrida de Hawkins.\n• Al cruzar el Mundo Del Revés, se destruye el portal por el que entras. Gana 200 puntos de sangre adicionales por el recorrido."
+        },
+        "ja": {
+          "name": "腐ったかぼちゃ",
+          "description": "ホーキンスの腐った土壌に汚染されたかぼちゃ。\n• 裏側の世界を横断する際、進入するポータルが破壊される。横断するとブラッドポイントを200追加で取得する"
+        },
+        "pl": {
+          "name": "Zgniła dynia",
+          "description": "Miąższ dyni skażony zgniłą glebą w Hawkins.\n• Gdy przemierzasz Drugą Stronę, portal, w który wchodzisz, zostaje zniszczony. Zyskujesz dodatkowe 200 Punktów Krwi za przejście."
+        }
+      }
+    },
+    {
+      "id": 296,
+      "name": "Black Heart",
+      "killer_id": 17,
+      "description": "A black fermented heart ripped from the chest of a tentacled creature in the Upside Down.\n• Decreases Shred hit cooldown by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blackHeart.png?2fd033",
+      "icon_local_path": "icons/addons/black_heart.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schwarzes Herz",
+          "description": "Ein schwarzes, fermentiertes Herz, das einem Tentakelwesen von der anderen Seite aus der Brust gerissen wurde.\n• Verringert die Abklingzeit nach dem Zerfetzen um 10 %."
+        },
+        "es": {
+          "name": "Corazón negro",
+          "description": "Un corazón negro fermentado, arrancado del pecho de una criatura con tentáculos en el Mundo Del Revés.\n• Reduce el tiempo de recarga tras alcanzar a un superviviente con Desmenuzar un 10 %."
+        },
+        "ja": {
+          "name": "黒の心臓",
+          "description": "裏側の世界の触手生物より剥ぎ取られた黒くうねる心臓。\n• シュレッドの命中時のクールダウンが10%減少する"
+        },
+        "pl": {
+          "name": "Czarne serce",
+          "description": "Czarne sfermentowane serce wyrwane z klatki piersiowej istoty z mackami po Drugiej Stronie.\n• Skraca czas odnawiania Postrzępienia po celnym ataku o 10%."
+        }
+      }
+    },
+    {
+      "id": 297,
+      "name": "Rat Liver",
+      "killer_id": 17,
+      "description": "A soggy pile of salty, soft liver.\n• Increases movement speed while charging Of The Abyss by 3.5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ratLiver.png?6da929",
+      "icon_local_path": "icons/addons/rat_liver.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Rattenleber",
+          "description": "Ein feuchter Haufen salziger, weicher Leber.\n• Erhöht die Bewegungsgeschwindigkeit, während Aus dem Abgrund aufgeladen wird, um 3,5 %."
+        },
+        "es": {
+          "name": "Hígado de rata",
+          "description": "Una pasta de hígado salado.\n• Aumenta la velocidad de movimiento mientras carga Desde el abismo un 3,5 %."
+        },
+        "ja": {
+          "name": "ネズミのレバー",
+          "description": "塩気のある柔らかなレバーの山。\n• 深淵のいざないのチャージ中、移動速度が3.5%上昇する"
+        },
+        "pl": {
+          "name": "Wątroba szczura",
+          "description": "Mokra sterta słonych, miękkich wątrób.\n• Zwiększa prędkość ruchu zabójcy podczas ładowania umiejętności Z Otchłani o 3,5%."
+        }
+      }
+    },
+    {
+      "id": 298,
+      "name": "Rat Tail",
+      "killer_id": 17,
+      "description": "A chewy rat tail for The Demogorgon to consume.\n• Increases speed of opening a Portal by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ratTail.png?b0d86d",
+      "icon_local_path": "icons/addons/rat_tail.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Rattenschwanz",
+          "description": "Ein zäher Rattenschwanz, der als Futter für den Demogorgon dient.\n• Erhöht die Geschwindigkeit beim Öffnen eines Portals um 50 %."
+        },
+        "es": {
+          "name": "Cola de rata",
+          "description": "Una correosa cola de rata para que devore el Demogorgon.\n• Aumenta el tiempo necesario para abrir un portal un 50 %."
+        },
+        "ja": {
+          "name": "ネズミの尾",
+          "description": "デモゴルゴンが食べる、噛みごたえのあるネズミの尻尾。\n• ポータルを開く速度が50%上昇する"
+        },
+        "pl": {
+          "name": "Ogon szczura",
+          "description": "Żylasty ogon szczura do zjedzenia przez Demogorgona.\n• Zwiększa prędkość otwierania portalu o 50%."
+        }
+      }
+    },
+    {
+      "id": 299,
+      "name": "Sticky Lining",
+      "killer_id": 17,
+      "description": "A fetid, viscous layer that covers and expands the interdimensional tunnels.\n• Increases the distance from Portals at which Survivors can be detected by Of The Abyss by 2.5 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stickyLining.png?6641cc",
+      "icon_local_path": "icons/addons/sticky_lining.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Klebriger Belag",
+          "description": "Eine übelriechende zähflüssige Schicht, die in den interdimensionalen Tunneln klebt und sich dort ausbreitet.\n• Erhöht die Entfernung zum Portal, in der Überlebende von Aus dem Abgrund entdeckt werden können, um 2,5 Meter."
+        },
+        "es": {
+          "name": "Mucosa pegajosa",
+          "description": "Una capa viscosa y fétida que cubre los túneles interdimensionales.\n• Aumenta la distancia a la que se puede detectar a los supervivientes desde los portales con Desde el abismo en 2,5 metros."
+        },
+        "ja": {
+          "name": "スティッキーライニング",
+          "description": "軽い粘性のある地層。次元間トンネルを覆い、拡張している。\n• 深淵のいざないによって生存者を検知可能になるポータルからの距離が2.5メートル拡大する"
+        },
+        "pl": {
+          "name": "Klejący nabłonek",
+          "description": "Cuchnąca, lepka, rozszerzająca się warstwa, która pokrywa międzywymiarowe tunele.\n• Zwiększa promień wykrywania ocalałych przez umiejętność Z Otchłani o 2,5 m."
+        }
+      }
+    },
+    {
+      "id": 300,
+      "name": "Viscous Webbing",
+      "killer_id": 17,
+      "description": "Wet, elastic webs that broaden the interdimensional tunnels.\n• Increases time required for Survivors to seal Portals by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_viscousWebbing.png?efff23",
+      "icon_local_path": "icons/addons/viscous_webbing.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schmieriges Gewebe",
+          "description": "Feuchte, elastische Gewebe, die die interdimensionalen Tunnel erweitern.\n• Verlängert die Zeit, die Überlebende benötigen, um ein Portal zu versiegeln, um 10 %."
+        },
+        "es": {
+          "name": "Membrana viscosa",
+          "description": "Membrana elástica y húmeda que se extiende por los túneles interdimensionales.\n• Aumenta el tiempo que los supervivientes tardan en sellar portales un 10 %."
+        },
+        "ja": {
+          "name": "ヴィスカス・ウェビング",
+          "description": "湿った弾性のある網。次元間トンネルを拡張する。\n• 生存者がポータルを閉鎖するのに要する時間が10%増加する"
+        },
+        "pl": {
+          "name": "Lepka sieć",
+          "description": "Mokre, elastyczne sieci, które poszerzają międzywymiarowe tunele.\n• Wydłużają czas potrzebny ocalałym na zamknięcie portalu o 10%."
+        }
+      }
+    },
+    {
+      "id": 301,
+      "name": "Rotten Green Tripe",
+      "killer_id": 17,
+      "description": "Rotten tripe that fuels The Demogorgon.\n• Increases Upside Down movement speed by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rottenGreenTripe.png?23e67c",
+      "icon_local_path": "icons/addons/rotten_green_tripe.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verfaulte grüne Kutteln",
+          "description": "Verfaulte Kutteln, die dem Demogorgon als Futter dienen.\n• Erhöht die Bewegungsgeschwindigkeit auf der anderen Seite um 15 %."
+        },
+        "es": {
+          "name": "Tripas verdes podridas",
+          "description": "Tripas podridas que llenan al Demogorgon de energía.\n• Aumenta la velocidad de movimiento del Mundo Del Revés un 15 %."
+        },
+        "ja": {
+          "name": "腐った緑色のトライプ",
+          "description": "デモゴルゴンの餌となる腐敗した胃袋。\n• 裏側の世界の移動速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Zgniłe zielone flaki",
+          "description": "Zgniłe flaki, które wzmacniają Demogorgona.\n• Zwiększają prędkość ruchu po Drugiej Stronie o 15%."
+        }
+      }
+    },
+    {
+      "id": 302,
+      "name": "Barb's Glasses",
+      "killer_id": 17,
+      "description": "A broken pair of glasses that traveled to the Upside Down.\n• Whenever you special-break Pallets or Breakable Walls with Shred, the cooldown is 10% shorter",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_barbsGlasses.png?e23fd1",
+      "icon_local_path": "icons/addons/barbs_glasses.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Barbs Brille",
+          "description": "Eine zerbrochene Brille, die auf der anderen Seite war.\n• Immer wenn du Paletten oder zerstörbare Mauern mit Zerfetzen durch deine Stärke zerstörst, ist die Abklingzeit 10 % kürzer."
+        },
+        "es": {
+          "name": "Gafas de Barb",
+          "description": "Un par de gafas rotas que viajaron hasta el Mundo del Revés.\n• Cada vez que rompes palés o muros destruibles de forma especial con Desmenuzar, el tiempo de recarga es un 10 % más breve."
+        },
+        "ja": {
+          "name": "バーブの眼鏡",
+          "description": "裏側の世界を通過して壊れたメガネ。\n• シュレッドでパレットや破壊可能な壁を特殊破壊した時のクールダウンが10%減少する"
+        },
+        "pl": {
+          "name": "Okulary Barb",
+          "description": "Złamane okulary, które były po Drugiej Stronie.\n• Za każdym razem, gdy niszczysz w specjalny sposób palety i rozbijalne ściany przy pomocy Postrzępienia, czas odnawiania jest o 10% krótszy."
+        }
+      }
+    },
+    {
+      "id": 303,
+      "name": "Eleven's Soda",
+      "killer_id": 17,
+      "description": "A soda can charged with psychic energy.\n• Shows Auras for Generators being repaired while traversing the Upside Down.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_elevensSoda.png?9c940b",
+      "icon_local_path": "icons/addons/elevens_soda.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Eleven-Limonade",
+          "description": "Eine Getränkedose, die mit psychischer Energie gefüllt ist.\n• Zeigt bei der Durchquerung der anderen Seite Auren von Generatoren an, die repariert werden."
+        },
+        "es": {
+          "name": "Refresco de Once",
+          "description": "Una lata de refresco cargada de energía psíquica.\n• Al cruzar el Mundo del Revés, muestra las auras de los generadores que se están reparando."
+        },
+        "ja": {
+          "name": "イレブンのソーダ",
+          "description": "精神エネルギーで満ちたソーダ缶。\n• 裏側の世界を横断する間、修理中の発電機のオーラが表示される"
+        },
+        "pl": {
+          "name": "Napój Jedenastki",
+          "description": "Puszka z napojem naładowana nadnaturalną energią.\n• Podczas przemierzania Drugiej Strony wyświetla aury naprawianych generatorów."
+        }
+      }
+    },
+    {
+      "id": 304,
+      "name": "Thorny Vines",
+      "killer_id": 17,
+      "description": "Thick, thorny vines that stretch and reinforce the interdimensional tunnels.\n• Increases time required for Survivors to seal Portals by 8%\n• Increases the distance from Portals at which Survivors can be detected by Of The Abyss by 1 meter.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_thornyVines.png?4608b6",
+      "icon_local_path": "icons/addons/thorny_vines.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Dornige Ranken",
+          "description": "Dicke und dornige Ranken, die die interdimensionalen Tunnel verstärken und erweitern.\n• Erhöht die Dauer für das Versiegeln eines Portals durch Überlebende um 8 %.\n• Erhöht die Entfernung zu Portalen, in der Überlebende von Aus dem Abgrund entdeckt werden können, um 1 Meter."
+        },
+        "es": {
+          "name": "Enredaderas espinosas",
+          "description": "Enredaderas gruesas y espinosas que refuerzan los túneles interdimensionales.\n• Aumenta el tiempo que los supervivientes tardan en sellar portales un 8 %.\n• Aumenta la distancia a la que se puede detectar a los supervivientes desde los portales con Desde el abismo en 1 metro."
+        },
+        "ja": {
+          "name": "茨のツル",
+          "description": "厚いとげのあるつる植物。広がることで次元間トンネルを強化する。\n• 生存者がポータルを閉鎖するのに要する時間が8%増加する\n• 深淵のいざないによって生存者を検知可能になるポータルからの距離が1メートル拡大する"
+        },
+        "pl": {
+          "name": "Kolczaste winorośle",
+          "description": "Grube, kolczaste pnącza rozciągające się i wzmacniające międzywymiarowe tunele.\n• Wydłużają czas potrzebny ocalałym na zamknięcie portalu o 8%.\n• Zwiększają promień wykrywania ocalałych przez umiejętność Z Otchłani o 1 m."
+        }
+      }
+    },
+    {
+      "id": 305,
+      "name": "Brass Case Lighter",
+      "killer_id": 17,
+      "description": "A lighter used to ignite trouble.\n• Proximity to Portals inflicts Survivors with Blindness. Once out of contact with the Portal, this effect persists for 60 seconds.\nBlindness prevents Survivors from seeing auras.\n\"“Emits a strong electromagnetic field: it must have come into contact with the Upside Down.” - Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brassCaseLighter.png?73449d",
+      "icon_local_path": "icons/addons/brass_case_lighter.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Messingfeuerzeug",
+          "description": "Ein Feuerzeug, mit dem Ärger entfacht wird.\n• Überlebende in der Nähe von Portalen erleiden Erblindung. Sobald der Kontakt zum Portal abbricht, bleibt der Effekt weiterhin für 60 Sekunden bestehen.\nBei Erblindung können Überlebende keine Auren sehen.\n\"„Es erzeugt ein starkes, elektromagnetisches Feld. Es muss mit der anderen Seite in Kontakt gekommen sein.“ – Hawkins National Laboratory\""
+        },
+        "es": {
+          "name": "Mechero de latón",
+          "description": "Un mechero utilizado para generar problemas incendiarios.\n• La proximidad a los portales causa Ceguera en los supervivientes. A partir del momento en que dejen de estar en contacto con el portal, el efecto persistirá durante 60 segundos.\nCeguera impide que los supervivientes vean auras.\n\"\"Emite un fuerte campo electromagnético. Debe de haber estado en contacto con el Mundo Del Revés\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "真鍮のライター",
+          "description": "トラブルを引き起こすのに使用されたライター。\n• ポータルの付近にいる生存者は目眩まし状態になる。ポータルから離れたあとも、この効果は60秒間持続する\n目眩まし状態になると生存者はオーラが視えなくなる。\n\"「強力な電磁場を発生させるということは、裏側の世界と接触したにちがいない」 - ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Zapalniczka w mosiężnej obudowie",
+          "description": "Zapalniczka służąca do wzniecania kłopotów.\n• Bliskość portali nakłada na ocalałych efekt Ślepoty. Po zakończeniu kontaktu z portalem efekt utrzymuje się przez 60 sekund.\nŚlepota uniemożliwia ocalałym widzenie aur.\n\"„Emituje silne pole elektromagnetyczne: musiała mieć styczność z Drugą Stroną”. – Hawkins National Laboratory\""
+        }
+      }
+    },
+    {
+      "id": 306,
+      "name": "Violet Waxcap",
+      "killer_id": 17,
+      "description": "A dark fleshed mushroom from the Upside Down that allows The Demogorgon to telepathically distort the senses in its prey.\n• Increases the duration of the Undetectable effect gained when emerging from a Portal by 1 second.\nUndetectable hides the Killer's aura, Terror Radius and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_violetWaxcap.png?53bc76",
+      "icon_local_path": "icons/addons/violet_waxcap.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Violetter Saftling",
+          "description": "Ein Pilz mit dunklem Fleisch von der anderen Seite. Durch ihn kann der Demogorgon die Sinne seiner Beute telepathisch stören.\n• Verlängert die Dauer des Statuseffekts Unentdeckbar, der nach dem Verlassen eines Portals wirkt, um 1 Sekunde.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Hongo violeta",
+          "description": "Un hongo oscuro y carnoso, procedente del Mundo Del Revés, que permite que el Demogorgon pueda distorsionar telepáticamente los sentidos de su presa.\n• Aumenta la duración del efecto Indetectable obtenido al salir de un portal en 1 segundo.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "ヴァイオレット・ワックスキャップ",
+          "description": "裏側の世界の黒いキノコ。デモゴルゴンはこれによりテレパシーで獲物の感覚を歪める。\n• ポータルから出現した時に得る探知不可効果の持続時間が1秒間増加する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Fioletowy grzyb",
+          "description": "Ciemny grzyb z Drugiej Strony, który umożliwia Demogorgonowi telepatyczne zakłócenie zmysłów ofiary.\n• Wydłuża czas trwania efektu Niewykrywalny otrzymanego po wyjściu z portalu o 1 sekundę.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 307,
+      "name": "Deer Lung",
+      "killer_id": 17,
+      "description": "A raw, rubbery lung that reinvigorates The Demogorgon.\n• Increases Upside Down movement speed by 30%.\n• Decreases the number of available Portals by 2.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deerLung.png?fbd810",
+      "icon_local_path": "icons/addons/deer_lung.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rehlunge",
+          "description": "Eine rohe, gummiartige Lunge, die den Demogorgon neu belebt.\n• Erhöht die Bewegungsgeschwindigkeit auf der anderen Seite um 30 %.\n• Verringert die Anzahl verfügbarer Portale um 2."
+        },
+        "es": {
+          "name": "Pulmón de ciervo",
+          "description": "Un pulmón crudo y gelatinoso que fortalece al Demogorgon.\n• Aumenta la velocidad de movimiento del Mundo Del Revés un 30 %.\n• Reduce el número de portales disponibles en 2."
+        },
+        "ja": {
+          "name": "鹿の肺",
+          "description": "デモゴルゴンを再活性化する生のゴム状の肺。\n• 裏側の世界の移動速度が30%上昇する\n• 使用できるポータルの数が2減少する"
+        },
+        "pl": {
+          "name": "Płuco jelenia",
+          "description": "Surowe, gumowate płuco, które wzmacnia Demogorgona.\n• Zwiększa prędkość ruchu po Drugiej Stronie o 30%.\n• Zmniejsza liczbę dostępnych portali o 2."
+        }
+      }
+    },
+    {
+      "id": 308,
+      "name": "Lifeguard Whistle",
+      "killer_id": 17,
+      "description": "A rusty, metal whistle that once ruled the Hawkins public pool.\n• Increases the number of available Portals by 2.\n\"“Emits a strong electromagnetic field: it must have come into contact with the Upside Down.” - Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lifeguardWhistle.png?d76420",
+      "icon_local_path": "icons/addons/lifeguard_whistle.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Bademeisterpfeife",
+          "description": "Eine rostige Metallpfeife, die einst im öffentlichen Schwimmbad von Hawkins für Ordnung sorgte.\n• Erhöht die Anzahl verfügbarer Portale um 2.\n\"„Sie erzeugt ein starkes, elektromagnetisches Feld. Sie muss mit der anderen Seite in Kontakt gekommen sein.“\n– Hawkins National Laboratory\""
+        },
+        "es": {
+          "name": "Silbato de socorrista",
+          "description": "Un silbato de metal oxidado que en su día se usaba para vigilar la piscina pública de Hawkins.\n• Aumenta el número de portales disponibles en 2.\n\"\"Emite un fuerte campo electromagnético. Debe de haber estado en contacto con el Mundo Del Revés\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "ライフガードのホイッスル",
+          "description": "錆びついた金属製のホイッスル。かつてホーキンス公共プールを支配していた。\n• 利用可能なポータルの数が2つ増加する\n\"「強力な電磁場を発生させるということは、裏側の世界と接触したにちがいない」 - ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Gwizdek ratownika",
+          "description": "Zardzewiały metalowy gwizdek, który niegdyś zaprowadzał porządek na publicznym basenie w Hawkins.\n• Zwiększa liczbę dostępnych portali o 2.\n\"„Emituje silne pole elektromagnetyczne: musiał mieć styczność z Drugą Stroną”. – Hawkins National Laboratory\""
+        }
+      }
+    },
+    {
+      "id": 309,
+      "name": "Upside Down Resin",
+      "killer_id": 17,
+      "description": "A sticky, flammable sap that fortifies the gateway to the interdimensional tunnels.\n• Increases time required for Survivors to seal Portals by 20%.\n\"“A sample taken from a tree that concealed a Portal to another plane. Studies on its effects are inconclusive.”- Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_upsideDownResin.png?f0c8b8",
+      "icon_local_path": "icons/addons/upside_down_resin.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Harz der anderen Seite",
+          "description": "Ein klebriger und entflammbarer Saft, der das Tor zu den interdimensionalen Tunneln verstärkt.\n• Erhöht die Zeit, die Überlebende benötigen, um ein Portal zu versiegeln, um 20 %.\n\"„Eine Probe, die wir einem Baum entnahmen, der ein Portal zu einer anderen Ebene verbarg. Untersuchungen zu ihren Wirkungen sind bislang unschlüssig.“ – Hawkins National Laboratory\""
+        },
+        "es": {
+          "name": "Resina del Mundo Del Revés",
+          "description": "Savia inflamable y pegajosa que refuerza la puerta de entrada a los túneles interdimensionales.\n• Aumenta el tiempo que los supervivientes tardan en sellar portales un 20 %.\n\"\"Una muestra tomada del tronco del árbol que ocultaba un portal a otra dimensión. Los estudios realizados sobre sus efectos no son concluyentes\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "裏側の世界の樹脂",
+          "description": "次元間トンネルへの入り口を強化する粘着性で可燃性の樹液。\n• 生存者がポータルを閉鎖するのに要する時間が20%増加する\n\"「かつて門として使われていた木の樹皮から採取したサンプル。これまでのところ、その効果に関する私たちの結論は定まっていない」-ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Żywica z Drugiej Strony",
+          "description": "Lepki i łatwopalny sok, które wzmacnia wejście do międzywymiarowych tuneli.\n• Wydłuża czas potrzebny ocalałym do zamknięcia portalu o 20%.\n\"„Próbka pobrana z drzewa, które skrywało portal do innego wymiaru. Wyniki badań dotyczących jej działania są niejednoznaczne”. – Hawkins National Laboratory\""
+        }
+      }
+    },
+    {
+      "id": 310,
+      "name": "Unknown Egg",
+      "killer_id": 17,
+      "description": "A large, warm egg coated in gruesome webbing.\n• Decreases the cooldown after traversing the Upside Down by 2.5 seconds.\n\"“A large egg was sighted in the Upside Down, but no sample survived the trip to the lab for proper examination.” - Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_unknownEgg.png?82908d",
+      "icon_local_path": "icons/addons/unknown_egg.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Unbekanntes Ei",
+          "description": "Ein großes, warmes Ei, das mit einem ekelhaften Gewebe bedeckt ist.\n• Verringert die Abklingzeit nach dem Durchqueren der anderen Seite um 2,5 Sekunden.\n\"„Ein großes Ei wurde auf der anderen Seite entdeckt. Jedoch hat keine Probe die Reise ins Labor überlebt, sodass wir keine Untersuchungen anstellen konnten.“ – Hawkins National Laboratory\""
+        },
+        "es": {
+          "name": "Huevo desconocido",
+          "description": "Un huevo enorme y caliente, cubierto con una membrana repugnante.\n• Reduce el tiempo de recarga tras cruzar el Mundo Del Revés en 2,5 segundos.\n\"\"Avistamos un huevo enorme en el Mundo Del Revés, pero no sobrevivió ni una sola muestra para poder examinarla en condiciones\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "未知の卵",
+          "description": "大きな温かい卵。おぞましいクモの巣に覆われている。\n• 裏側の世界での横断後のクールダウンが2.5秒減少する。\n\"「裏側の世界で大きな卵が発見された。だが、適切な検査のための研究所への輸送に耐えたサンプルはなかった」 -ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Nieznane jajo",
+          "description": "Duże, ciepłe jajo pokryte okropną siecią.\n• Skraca czas odnawiania po przejściu Drugiej Strony o 2,5 sekundy.\n\"„Po Drugiej Stronie zauważono duże jajo, jednak żadna próbka nie przetrwała transportu do laboratorium w celu wykonania badań”. – Hawkins National Laboratory\""
+        }
+      }
+    },
+    {
+      "id": 311,
+      "name": "Leprose Lichen",
+      "killer_id": 17,
+      "description": "A potent lichen that grows like dust on the rocks in the Upside Down.\n• Reveals the auras of all Survivors while traversing the Upside Down.\n• After emerging from a Portal, the auras of all Survivors within 16 meters of an active Portal are revealed for 3 seconds.\n\"“One small dose can cause severe hallucinations.” - Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leproseLichen.png?5a3a3a",
+      "icon_local_path": "icons/addons/leprose_lichen.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Anderflechte",
+          "description": "Eine wirksame Flechte, die auf der anderen Seite wie Staub auf Steinen wächst.\n• Enthüllt die Auren aller Überlebenden während der Durchquerung der anderen Seite.\n• Nach dem Verlassen eines Portals werden die Auren aller Überlebenden in einem Umkreis von 16 Metern rund um ein aktives Portal für 3 Sekunden  angezeigt.\n\"„Eine kleine Dosis kann schwere Halluzinationen verursachen.“ – Hawkins National Laboratory\""
+        },
+        "es": {
+          "name": "Liquen musgoso",
+          "description": "Un liquen potente que crece a un ritmo vertiginoso sobre las piedras del Mundo Del Revés.\n• Revela el aura de todos los supervivientes al cruzar el Mundo Del Revés.\n• Tras salir de un portal, se revelará el aura de todos los supervivientes en un radio de 16 metros de un portal activo durante 3 segundos.\n\"\"Una pequeña dosis puede provocar alucinaciones graves\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "ふけ状の地衣類",
+          "description": "裏側の世界の岩の上で、ホコリのように成長する地衣類。\n• 裏側の世界を横断している間、生存者全員のオーラが視える\n• ポータルから出現したあと、有効なポータルの16メートル以内にいる生存者全員のオーラが3秒間視える\n\"「少量の服用で重度の幻覚を引き起こすことがある」 - ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Trędowaty narost",
+          "description": "Bujny porost rosnący gęsto na skałach po Drugiej Stronie.\n• Odkrywa aury wszystkich ocalałych podczas przemierzania Drugiej Strony.\n• Po wyjściu z portalu widzisz aury wszystkich ocalałych w promieniu 16 metrów od aktywnego portalu przez 3 sekundy.\n\"„Jedna mała dawka może wywołać silne halucynacje”. – Hawkins National Laboratory\""
+        }
+      }
+    },
+    {
+      "id": 312,
+      "name": "Red Moss",
+      "killer_id": 17,
+      "description": "A psychedelic moss that grows on tree barks in the Upside Down.\n• Increases time required to emerge from a Portal by 15%.\n• Increases the duration of the Undetectable effect gained when emerging from a Portal by 8 seconds.\n• Emerging from Portals becomes silent.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.\n\"“Consuming its leaf enhances athletic performance and causes euphoria.” - Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_redMoss.png?f3c01d",
+      "icon_local_path": "icons/addons/red_moss.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Rotes Moos",
+          "description": "Ein bewusstseinserweiterndes Moos, das auf der anderen Seite auf Baumrinde wächst.\n• Verlängert die benötigte Zeit, um aus einem Portal zu treten, um 15 %.\n• Verlängert die Dauer des Statuseffekts Unentdeckbar, der beim Treten aus einem Portal wirkt, um 8 Sekunden.\n• Das Benutzen eines Portals macht keine Geräusche mehr.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„Sein Verzehr verstärkt athletische Leistungen und verursacht Euphorie.“ – Hawkins National Laboratory\""
+        },
+        "es": {
+          "name": "Musgo rojo",
+          "description": "Un musgo alucinógeno que crece en las cortezas de los árboles en el Mundo Del Revés.\n• Aumenta el tiempo que se tarda en salir de un portal un 15 %.\n• Aumenta la duración del efecto Indetectable obtenido al salir de un portal en 8 segundos.\n• No se produce ningún ruido al salir de un portal.\nIndetectable oculta el aura, radio de terror y marca roja del asesino.\n\"\"Consumir sus hojas sirve para mejorar el rendimiento deportivo y provoca euforia\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "赤い苔",
+          "description": "裏側の世界の樹皮で成長するサイケデリックな苔。\nポータルから出現するまでに必要な時間が15%上昇する\n•\n• ポータルから出現した時に得る探知不可効果の持続時間が8秒間増加する\n• ポータルから出現時に音を出さなくなる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「葉を摂取すると運動能力が高まり、多幸感を引き起こす」 - ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Czerwony mech",
+          "description": "Halucynogenny mech porastający korę drzew po Drugiej Stronie.\n• Wydłuża czas potrzebny na wyjście z portalu o 15%.\n• Wydłuża czas trwania efektu Niewykrywalny uzyskanego po wyjściu z portalu o 8 sekund.\n• Wychodzenie z portali staje się ciche.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Zjedzenie liści zwiększa sprawność fizyczną i wywołuje euforię”. – Hawkins National Laboratory\""
+        }
+      }
+    },
+    {
+      "id": 835,
+      "name": "Mews' Guts",
+      "killer_id": 17,
+      "description": "The tasty guts of an unfortunate victim.\n• Increases the total number of available Portals by 1.\n• Decreases Shred miss cooldown by 11%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mewsGuts.png?2c1f53",
+      "icon_local_path": "icons/addons/mews_guts.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Mews Innereien",
+          "description": "Die leckeren Innereien eines unglücklichen Opfers.\n• Erhöht die Gesamtzahl der verfügbaren Portale um 1.\n• Verringert die Abklingzeit nach missglücktem Zerfetzen um 11 %."
+        },
+        "en": {
+          "name": "Mew's Guts"
+        },
+        "es": {
+          "name": "Entrañas de Mews",
+          "description": "Las sabrosas entrañas de una víctima desdichada.\n• Aumenta el número total de portales disponibles en 1.\n• Reduce el tiempo de recarga de Desmenuzar fallido un 11 %."
+        },
+        "ja": {
+          "name": "ミューの内蔵",
+          "description": "不運な犠牲者の美味しい内臓。\n• 使用可能なポータルの合計数が1つ増加する\n• シュレッドの攻撃が外れた時のクールダウンが11%増加する"
+        },
+        "pl": {
+          "name": "Flaki mewy",
+          "description": "Smaczne wnętrzności pechowej ofiary.\n• Zwiększają całkowitą liczbę dostępnych portali o 1.\n• Skracają czas odnawiania Postrzępienia po chybionym ataku o 11%."
+        }
+      }
+    },
+    {
+      "id": 836,
+      "name": "Vermilion Webcap",
+      "killer_id": 17,
+      "description": "A bright red poisonous mushroom from the Upside Down.\n• Increases the duration of the Undetectable effect gained when emerging from a Portal by 3 seconds.\nUndetectable hides the Killer's aura, Terror Radius and Red Stain.\n\"\"Still experimenting with this specimen, so far our results are inconsistent.\" - Hawkins National Laboratory\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vermilionWebcap.png?a79852",
+      "icon_local_path": "icons/addons/vermilion_webcap.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zinnoberroter Raukopf",
+          "description": "Ein hellroter Giftpilz von der anderen Seite.\n• Erhöht die Dauer des Statuseffekts Unentdeckbar, der nach dem Verlassen eines Portals wirkt, um 3 Sekunden.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"\"\n„Wir experimentieren noch immer mit diesem Exemplar, denn bislang sind unsere Ergebnisse inkonsistent.“ – Hawkins National Laboratory"
+        },
+        "en": {
+          "name": "Vermillion Webcap"
+        },
+        "es": {
+          "name": "Hongo bermellón",
+          "description": "Un hongo de color rojo brillante perteneciente al Mundo Del Revés.\n• Aumenta la duración del efecto Indetectable obtenido al salir de un portal en 3 segundos.\nIndetectable oculta el aura, radio de terror y marca roja del asesino.\n\"\"Aún estamos realizando experimentos con el espécimen. De momento no tenemos resultados concluyentes\". (Laboratorio Nacional de Hawkins)\""
+        },
+        "ja": {
+          "name": "ヴァーミリオン・ウェブキャップ",
+          "description": "裏側の世界の真っ赤な毒キノコ。ポータルから出現した時に得る\n• 探知不可効果の持続時間が3秒間増加する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「この標本で実験を続けているが、今のところ結果は一致しない。」 - ホーキンス国立研究所\""
+        },
+        "pl": {
+          "name": "Cynobrowy grzyb",
+          "description": "Jasnoczerwony trujący grzyb z Drugiej Strony.\n• Wydłuża czas trwania efektu Niewykrywalny zyskanego po wyjściu z portalu o 3 sekundy.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Wciąż prowadzimy eksperymenty na tym osobniku, ale na razie wyniki są niespójne”. – Hawkins National Laboratory\""
+        }
+      }
+    }
+  ]
+}

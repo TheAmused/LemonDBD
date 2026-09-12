@@ -1,0 +1,13 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-11T19:47:34.072426+00:00",
+  "source": "LemonDBD",
+  "target": "map_sources",
+  "map_sources": [
+    {
+      "id": 1,
+      "code": "hens333",
+      "label": "Hens333 12-Clock Callouts"
+    }
+  ]
+}

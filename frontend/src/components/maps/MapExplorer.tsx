@@ -32,7 +32,6 @@ export interface MapExplorerProps {
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   dict?: Dictionary;
-  /** Drives translated map/realm names; refetches when it changes. */
   locale?: string;
   hideSearch?: boolean;
   /** Rendered in the same slot as the search header (e.g. a voice command
@@ -152,15 +151,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         toEnter.forEach((r) => next.add(r));
         return next;
       });
-      // Two rAFs, not one: the panel must actually be painted at
-      // grid-template-rows: 0fr before flipping it to 1fr, or the browser has
-      // nothing to transition from and the panel just snaps open. A single rAF
-      // fires before the *next* paint, which is usually enough, but when the
-      // page is doing other heavy rendering right beforehand (e.g. every map
-      // card re-rendering with new names/images right after a language
-      // switch), that paint can land after the rAF already fired, so the
-      // closed state is never actually shown on screen. Nesting a second rAF
-      // guarantees a full paint has happened in between.
+      // Double rAF: guarantees the closed state actually paints before flipping open, or the transition can silently skip.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setOpenRealms((prev) => {

@@ -17,16 +17,7 @@ const getApiBase = () => {
 
 const API_BASE = getApiBase();
 
-/**
- * Exported so callers can read the cache synchronously before rendering.
- *
- * `lang` must be part of the key: the backend translates map/realm names from
- * the request's `lang` param (falling back to sniffing the Referer), so a
- * cache entry fetched under one locale is wrong for another. Without `lang`
- * here, switching the site language while staying on the page would keep
- * serving the previous locale's names out of this cache until a hard reload
- * reset it.
- */
+// Exported so callers can read the cache synchronously before rendering; `lang` is part of the key so a language switch invalidates stale-locale entries.
 export function mapsCacheKey(search?: string, source?: string, realm?: string, lang?: string): string {
   const params = new URLSearchParams();
   if (realm) params.append('realm', realm);

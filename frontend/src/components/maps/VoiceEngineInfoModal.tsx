@@ -33,10 +33,8 @@ export interface VoiceEngineInfoModalProps {
   hasNativeWebSpeech: boolean;
   modelProgress: ModelProgressInfo;
   onPreloadModel: () => void;
-  /** Which local checkpoint is selected: whisper-tiny ('fast') or -base ('accurate'). */
   modelQuality?: ModelQuality;
   onSelectModelQuality?: (quality: ModelQuality) => void;
-  /** The checkpoint the current locale + quality resolves to, for the size label. */
   modelDescriptor?: ModelDescriptor;
   dict?: Dictionary | any;
 }

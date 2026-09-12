@@ -13,7 +13,6 @@ export interface UseMapExplorerDataOptions {
   initialMapName?: string;
   selectedMap?: { mapName: string; timestamp: number } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
-  /** Drives translated map/realm names; refetches when it changes. */
   locale?: string;
 }
 

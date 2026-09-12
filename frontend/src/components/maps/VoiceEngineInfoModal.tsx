@@ -272,10 +272,6 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               );
             })}
           </div>
-
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-            {t.accuracyNote || ''}
-          </p>
         </div>
 
         {/* Why Fallback Is Needed Box */}
@@ -326,17 +322,6 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               </button>
             </div>
           )}
-        </div>
-
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-2 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 px-5 py-2 text-xs font-bold shadow-md transition-all hover:opacity-90 cursor-pointer font-mono"
-          >
-            {dict?.modal?.close || dict?.modal?.gotIt || ''}
-          </button>
         </div>
       </div>
     </div>

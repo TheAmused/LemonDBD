@@ -63,6 +63,5 @@ export default {
   accuracyFastDesc: "Descarga más pequeña y más rápida en equipos modestos. Suficiente para nombres cortos.",
   accuracyAccurate: "Preciso",
   accuracyAccurateDesc: "Modelo más grande, claramente mejor con nombres propios y acentos marcados. Más lento en hardware antiguo.",
-  accuracyNote: "Solo afecta al modelo local del navegador. El motor Web Speech no cambia.",
   modelSize: "~{size} MB de descarga",
 } as const;

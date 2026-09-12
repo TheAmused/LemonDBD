@@ -63,6 +63,5 @@ export default {
   accuracyFastDesc: "Smallest download, quickest on low-end devices. Good enough for short map names.",
   accuracyAccurate: "Accurate",
   accuracyAccurateDesc: "Larger model, clearly better on proper nouns and strong accents. Slower on older hardware.",
-  accuracyNote: "Only affects the local in-browser model. The Web Speech engine is unaffected.",
   modelSize: "~{size} MB download",
 } as const;

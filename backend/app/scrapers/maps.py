@@ -2,16 +2,10 @@
 import logging
 import re
 import time
-from typing import Any
 from bs4 import BeautifulSoup
 from curl_cffi import requests
-from flask import current_app
-from sqlalchemy import select
-from sqlalchemy.orm import joinedload
-from app.core.extensions import db
-from app.models import MapRealm
 from app.scrapers.types import MapData
-from app.scrapers.utils import normalize_name_key, sanitize_filename
+from app.scrapers.utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
@@ -64,60 +58,6 @@ def resolve_hens_realm(map_name: str, dpath: str) -> str:
         return folder
 
     return FOLDER_REALM_MAP.get(folder_key, folder)
-
-
-def get_map_landmarks_data(
-    map_name: str, realm_name: str, source: str = "hens333"
-) -> dict[str, Any]:
-    try:
-        if current_app:
-            norm_map = normalize_name_key(map_name)
-            maps = db.session.scalars(
-                select(MapRealm).options(joinedload(MapRealm.tiles))
-            ).all()
-            for m in maps:
-                m_norm = normalize_name_key(m.name)
-                if norm_map and (norm_map == m_norm or norm_map in m_norm or m_norm in norm_map):
-                    twelve = next(
-                        (t.name for t in m.tiles if "twelve" in t.name.lower() or t.y < 0.25),
-                        "Main Building / North Exit Gate",
-                    )
-                    three = next(
-                        (t.name for t in m.tiles if "three" in t.name.lower() or t.x > 0.75),
-                        "East Jungle Gym / Outer Loop",
-                    )
-                    six = next(
-                        (t.name for t in m.tiles if "six" in t.name.lower() or "shack" in t.name.lower() or t.y > 0.75),
-                        "Killer Shack & Basement / South Exit Gate",
-                    )
-                    nine = next(
-                        (t.name for t in m.tiles if "nine" in t.name.lower() or t.x < 0.25),
-                        "West Gym / L-T Walls",
-                    )
-                    center = next(
-                        (t.name for t in m.tiles if "center" in t.name.lower() or (0.4 <= t.x <= 0.6 and 0.4 <= t.y <= 0.6)),
-                        "Center Spine / Central Generator",
-                    )
-                    desc = m.description or f"Landmark layout for {m.name} ({m.realm})."
-                    return {
-                        "description": f"12-Clock Callout System for {m.name} ({m.realm}). {desc}".strip(),
-                        "twelve_o_clock": twelve,
-                        "three_o_clock": three,
-                        "six_o_clock": six,
-                        "nine_o_clock": nine,
-                        "center": center,
-                    }
-    except Exception:
-        pass
-
-    return {
-        "description": f"12-Clock Callout System for {map_name} ({realm_name}). Standard top-middle starts at 12 o'clock.",
-        "twelve_o_clock": "Main Landmark / North Exit Gate",
-        "three_o_clock": "East Loop Tile / Generator Cluster",
-        "six_o_clock": "Killer Shack & Basement / South Exit Gate",
-        "nine_o_clock": "West Jungle Gym / Pallet Gym",
-        "center": "Center Landmark / Central Generator",
-    }
 
 
 class HensMapScraperDriver:
@@ -189,11 +129,6 @@ class HensMapScraperDriver:
                             callout_image_url=remote_url,
                             callout_image_local_path=rel_static_path,
                             dpath=dpath,
-                            clock_system=get_map_landmarks_data(
-                                map_name=map_name,
-                                realm_name=realm_name,
-                                source="hens333",
-                            ),
                             source="hens333",
                             source_label="Hens333 12-Clock Callouts",
                         )
@@ -231,11 +166,6 @@ class HensMapScraperDriver:
                             callout_image_url=remote_url,
                             callout_image_local_path=rel_static_path,
                             dpath=dpath,
-                            clock_system=get_map_landmarks_data(
-                                map_name=map_name,
-                                realm_name=realm_name,
-                                source="hens333",
-                            ),
                             source="hens333",
                             source_label="Hens333 12-Clock Callouts",
                         )

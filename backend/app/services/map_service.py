@@ -3,12 +3,7 @@ import logging
 from typing import Any
 
 from app.services.db_service import DatabaseService
-from app.services.maps import (
-    fetch_map_by_id,
-    fetch_maps,
-    fetch_realms,
-    seed_maps_if_empty,
-)
+from app.services.maps import fetch_maps, fetch_realms, seed_maps_if_empty
 
 logger = logging.getLogger(__name__)
 
@@ -29,17 +24,6 @@ class MapService:
         lang: str | None = None,
     ) -> list[dict[str, Any]]:
         return fetch_maps(self._use_sqlalchemy, self.db_service, realm=realm, search=search, source=source, lang=lang)
-
-    def get_map_by_id(
-        self,
-        map_id: str,
-        seed_variant: str = "seed_a",
-        floor: int = 1,
-        lang: str | None = None,
-    ) -> dict[str, Any] | None:
-        return fetch_map_by_id(
-            self._use_sqlalchemy, self.db_service, map_id, seed_variant=seed_variant, floor=floor, lang=lang
-        )
 
     def get_realms(self, lang: str | None = None) -> list[dict[str, Any]]:
         return fetch_realms(lang=lang)

@@ -3,10 +3,7 @@ from app.scrapers.constants import (
     GENERIC_PERK_CANONICAL_MAP,
     KNOWN_KILLER_POWER_ALIASES,
 )
-from app.scrapers.maps import (
-    HensMapScraperDriver,
-    get_map_landmarks_data,
-)
+from app.scrapers.maps import HensMapScraperDriver
 from app.scrapers.types import (
     AddonData,
     CharacterData,
@@ -41,6 +38,5 @@ __all__ = [
     "extract_slug_from_href",
     "classify_portrait",
     "WikiGGScraperDriver",
-    "get_map_landmarks_data",
     "HensMapScraperDriver",
 ]

@@ -16,11 +16,14 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import { avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
+import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 
-export const avatarUrlFor = (name: string, role: Role) =>
-  name ? avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') : null;
+export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
+  if (!name) return null;
+  const owned = characters.find((c) => c.name === name)?.avatar_local_path;
+  return staticUrl(owned) || avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') || null;
+};
 
 const KILLER_SEND_OFFS = [
   'Good luck out there.',
@@ -60,13 +63,14 @@ export interface ActiveTargetStageProps {
   dict?: Dictionary;
 }
 
-const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> = ({
+const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; characters: OwnedCharacterItem[] }> = ({
   name,
   role,
   phase,
+  characters,
 }) => {
   const [failed, setFailed] = useState<boolean>(false);
-  const src = name ? avatarUrlFor(name, role) : null;
+  const src = name ? avatarUrlFor(name, role, characters) : null;
 
   useEffect(() => setFailed(false), [name]);
 
@@ -207,6 +211,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             name={drawing ? reelName ?? undefined : undefined}
             role={role}
             phase={drawing ? phase : 'idle'}
+            characters={characters}
           />
         </div>
 
@@ -258,7 +263,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
-  const avatarSrc = avatarUrlFor(targetName, role);
+  const avatarSrc = avatarUrlFor(targetName, role, characters);
   const charPerks = loadout.character_perks;
   const perkSlots = [0, 1, 2, 3];
 

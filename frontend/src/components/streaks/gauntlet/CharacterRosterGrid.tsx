@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
 import { Check, User, Skull, ShieldCheck } from 'lucide-react';
-import { avatarUrlForCharacter } from '@/utils/staticUrl';
+import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 export interface CharacterRosterGridProps {
@@ -45,6 +45,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     !!activeCharacterId && activeCharacterId.toLowerCase().trim() === charName.toLowerCase().trim();
 
   const getAvatarUrl = (char: OwnedCharacterItem) =>
+    staticUrl(char.avatar_local_path) ||
     avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
 
   const completedCount = characters.filter((c) => isCompleted(c.name)).length;

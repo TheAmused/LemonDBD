@@ -353,7 +353,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onClose={() => setIsChangeDifficultyOpen(false)}
           currentDifficulty={difficulty}
           showIntro={false}
-          completedDifficulties={(completionStatus.chaos ?? []) as Difficulty[]}
+          completedDifficulties={(completionStatus.completions.chaos ?? []) as Difficulty[]}
           onSelectDifficulty={(newDifficulty) => {
             saveChaosDifficulty(newDifficulty);
             setIsChangeDifficultyOpen(false);

@@ -277,7 +277,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onClose={() => setIsChangeModeOpen(false)}
           currentMode={mode}
           showIntro={false}
-          completedModes={(completionStatus.history ?? []) as HistoryMode[]}
+          completedModes={(completionStatus.completions.history ?? []) as HistoryMode[]}
           onSelectMode={(newMode) => {
             saveHistoryMode(newMode);
             setIsChangeModeOpen(false);

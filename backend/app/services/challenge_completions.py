@@ -3,7 +3,7 @@ from typing import Any
 from sqlalchemy import delete, select
 
 from app.core.extensions import db
-from app.models import ChallengeCompletionRecord
+from app.models import ChallengeCompletionRecord, ChaosRun, GauntletRun, HistoryRun
 
 
 def record_challenge_completion(
@@ -76,6 +76,41 @@ def fetch_completed_variants_by_mode(user_id: int) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     for mode, variant in rows:
         result.setdefault(mode, []).append(variant)
+    return result
+
+
+def fetch_active_run_variants_by_mode(user_id: int) -> dict[str, list[str]]:
+    """Every mode+variant this user currently has an in-progress run for.
+
+    A completion record is permanent by design (it must survive a reset), but
+    that means a tier cleared once in the past would otherwise keep looking
+    "already completed" forever -- including while the player is mid-way
+    through a brand new attempt on that same tier after resetting. This lets
+    the frontend tell those two cases apart and only reopen the difficulty
+    picker when there's no run actually in progress.
+    """
+    result: dict[str, list[str]] = {}
+
+    gauntlet_rows = db.session.execute(
+        select(GauntletRun.role, GauntletRun.game_mode).where(
+            GauntletRun.user_id == user_id, GauntletRun.status == "in_progress"
+        )
+    ).all()
+    if gauntlet_rows:
+        result["gauntlet"] = [f"{role}_{game_mode}" for role, game_mode in gauntlet_rows]
+
+    chaos_rows = db.session.scalars(
+        select(ChaosRun.difficulty).where(ChaosRun.user_id == user_id, ChaosRun.status == "in_progress")
+    ).all()
+    if chaos_rows:
+        result["chaos"] = list(chaos_rows)
+
+    history_rows = db.session.scalars(
+        select(HistoryRun.mode).where(HistoryRun.user_id == user_id, HistoryRun.status == "in_progress")
+    ).all()
+    if history_rows:
+        result["history"] = list(history_rows)
+
     return result
 
 

@@ -482,6 +482,7 @@ class TestGauntletCompletion:
         assert record.mode == "gauntlet"
         assert record.variant == "killer_original"
         assert record.attempts_taken == 1
+        assert record.matches_played == 3
         assert record.unlocked_characters_count == 2
 
 

@@ -21,6 +21,7 @@ class ChallengeCompletionRecord(Base):
     mode: Mapped[str] = mapped_column(String(20), nullable=False)
     variant: Mapped[str] = mapped_column(String(30), nullable=False)
     attempts_taken: Mapped[int] = mapped_column(Integer, nullable=False)
+    matches_played: Mapped[int] = mapped_column(Integer, nullable=False)
     unlocked_characters_count: Mapped[int] = mapped_column(Integer, nullable=False)
     completed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, index=True, nullable=False
@@ -32,6 +33,7 @@ class ChallengeCompletionRecord(Base):
             "mode": self.mode,
             "variant": self.variant,
             "attempts_taken": self.attempts_taken,
+            "matches_played": self.matches_played,
             "unlocked_characters_count": self.unlocked_characters_count,
             "completed_at": self.completed_at.isoformat() if self.completed_at else None,
         }

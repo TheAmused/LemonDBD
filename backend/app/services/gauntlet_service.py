@@ -194,19 +194,6 @@ class GauntletService:
         r.completed_characters_json = safe_json_dumps(completed)
         r.checkpoint_characters_json = safe_json_dumps(checkpoint_chars)
 
-        if result == "win" and r.status == "completed":
-            self._freeze_pool(r)
-            record_challenge_completion(
-                user_id=user_id,
-                mode="gauntlet",
-                variant=f"{r.role}_{r.game_mode}",
-                attempts_taken=r.attempts,
-                unlocked_characters_count=len(safe_json_loads(r.owned_characters_json, default=[])),
-            )
-            r.attempts = 0
-        elif result == "loss" and streak_after == 0:
-            self._freeze_pool(r)
-
         db.session.add(
             GauntletMatchLog(
                 run_id=run_id,
@@ -219,6 +206,21 @@ class GauntletService:
                 streak_after=streak_after,
             )
         )
+
+        if result == "win" and r.status == "completed":
+            self._freeze_pool(r)
+            record_challenge_completion(
+                user_id=user_id,
+                mode="gauntlet",
+                variant=f"{r.role}_{r.game_mode}",
+                attempts_taken=r.attempts,
+                matches_played=len(r.match_logs),
+                unlocked_characters_count=len(safe_json_loads(r.owned_characters_json, default=[])),
+            )
+            r.attempts = 0
+        elif result == "loss" and streak_after == 0:
+            self._freeze_pool(r)
+
         db.session.commit()
 
         data = self._with_owned_characters(r.to_dict())

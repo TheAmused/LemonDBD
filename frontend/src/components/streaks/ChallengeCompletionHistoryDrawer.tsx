@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, History, RotateCcw, Users } from 'lucide-react';
+import { X, History, RotateCcw, Users, Swords } from 'lucide-react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import type { StreakAccent } from './StreakStatsDrawer';
 
@@ -85,7 +85,11 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
                   key={entry.id}
                   className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 shadow-sm"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
+                      <Swords className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                      {entry.matches_played} {dict?.streaks?.matches || 'Matches'}
+                    </div>
                     <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
                       <RotateCcw className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                       {entry.attempts_taken} {dict?.streaks?.attempts || 'Attempts'}

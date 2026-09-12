@@ -172,14 +172,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
   const completionTitle = dict?.streaks?.chaosStreak || '';
 
-  const youWonText = dict?.streaks?.youWonOn
-    ? `${dict.streaks.youWonOn} `
-    : '';
-
-  const modeSuffixText = dict?.streaks?.modeSuffix
-    ? ` ${dict.streaks.modeSuffix}`
-    : '';
-
   return (
     <div>
       <Confetti active={celebrating} />
@@ -222,9 +214,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
               {completionTitle}
             </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              {youWonText}<span className="capitalize font-bold">{difficulty}</span>{modeSuffixText}
-            </p>
             <button
               type="button"
               onClick={reset}

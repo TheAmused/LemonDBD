@@ -3,7 +3,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, ChevronDown, MapPin } from 'lucide-react';
+import { Search, ImageOff, MapPin } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
@@ -32,6 +32,7 @@ export interface MapExplorerProps {
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   dict?: Dictionary;
+  locale?: string;
   hideSearch?: boolean;
   /** Rendered in the same slot as the search header (e.g. a voice command
    * banner) when `hideSearch` is true. Overlaid in the same grid cell as
@@ -47,6 +48,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   onAvailableMapsLoaded,
   backendBase,
   dict,
+  locale,
   hideSearch = false,
   voiceSlot,
 }) => {
@@ -64,6 +66,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     initialMapName,
     selectedMap,
     onAvailableMapsLoaded,
+    locale,
   });
 
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
@@ -124,6 +127,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [displayedGroups, isSearching, expandedRealm, realmFilter]);
   const activeRealmsSignature = [...activeRealms].sort().join('|');
+  const activeRealmsRef = useRef(activeRealms);
+  activeRealmsRef.current = activeRealms;
 
   const [renderedRealms, setRenderedRealms] = useState<Set<string>>(new Set());
   const [openRealms, setOpenRealms] = useState<Set<string>>(new Set());
@@ -148,11 +153,18 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         toEnter.forEach((r) => next.add(r));
         return next;
       });
+      // Double rAF: guarantees the closed state actually paints before flipping open, or the transition can silently skip.
       requestAnimationFrame(() => {
-        setOpenRealms((prev) => {
-          const next = new Set(prev);
-          toEnter.forEach((r) => next.add(r));
-          return next;
+        requestAnimationFrame(() => {
+          setOpenRealms((prev) => {
+            const next = new Set(prev);
+            // Re-check against the latest activeRealms: if the user toggled this
+            // realm shut again before these frames fired, don't reopen it.
+            toEnter.forEach((r) => {
+              if (activeRealmsRef.current.has(r)) next.add(r);
+            });
+            return next;
+          });
         });
       });
     }
@@ -245,7 +257,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   key={realm}
                   type="button"
                   tabIndex={hideSearch ? -1 : undefined}
-                  onClick={() => setRealmFilter(realm)}
+                  onClick={() => setRealmFilter((prev) => (prev === realm ? null : realm))}
                   aria-pressed={realmFilter === realm}
                   className={`cursor-pointer inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition-colors ${
                     realmFilter === realm
@@ -322,9 +334,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <span className="absolute top-2 left-2 rounded-full bg-slate-950/60 px-2 py-0.5 text-xs font-mono text-white/90">
                     {realmMaps.length}
                   </span>
-                  <ChevronDown
-                    className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
-                  />
                 </button>
 
                 {showPanel && (

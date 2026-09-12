@@ -24,19 +24,3 @@ def get_maps():
 
     maps = service.get_maps(realm=realm, search=search, source=source, lang=extract_lang())
     return jsonify({"maps": maps}), 200
-
-
-@maps_bp.route("/<string:map_id>", methods=["GET"])
-def get_map_detail(map_id: str):
-    """Retrieve structured layout and landmark coordinates for a specific map."""
-    seed = request.args.get("seed") or "seed_a"
-    floor = request.args.get("floor", default=1, type=int)
-
-    if floor is None or floor < 1:
-        floor = 1
-
-    map_detail = service.get_map_by_id(map_id, seed_variant=seed, floor=floor, lang=extract_lang())
-    if not map_detail:
-        return jsonify({"error": f"Map '{map_id}' not found", "status": 404}), 404
-
-    return jsonify({"map": map_detail}), 200

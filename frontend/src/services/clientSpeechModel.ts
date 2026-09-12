@@ -12,6 +12,31 @@
 
 export type VoiceEngineType = 'web-speech' | 'client-model';
 
+export type ModelQuality = 'fast' | 'accurate';
+
+export const MODEL_QUALITY_STORAGE_KEY = 'lemondbd:voice:modelQuality';
+
+export interface ModelDescriptor {
+  name: string;
+  approxSizeMb: number;
+}
+
+const MODEL_MATRIX: Record<ModelQuality, { english: ModelDescriptor; multilingual: ModelDescriptor }> = {
+  fast: {
+    english: { name: 'Xenova/whisper-tiny.en', approxSizeMb: 39 },
+    multilingual: { name: 'Xenova/whisper-tiny', approxSizeMb: 42 },
+  },
+  accurate: {
+    english: { name: 'Xenova/whisper-base.en', approxSizeMb: 78 },
+    multilingual: { name: 'Xenova/whisper-base', approxSizeMb: 82 },
+  },
+};
+
+export function resolveModelDescriptor(locale: string = 'en', quality: ModelQuality = 'fast'): ModelDescriptor {
+  const tier = MODEL_MATRIX[quality] || MODEL_MATRIX.fast;
+  return locale === 'pl' ? tier.multilingual : tier.english;
+}
+
 export type ModelLoadingStatus = 'unloaded' | 'downloading' | 'ready' | 'error';
 
 export interface ModelProgressInfo {
@@ -388,12 +413,42 @@ export class AudioCaptureSession {
 // ─── In-Browser Client Speech Recognition Pipeline ──────────────────────────
 
 let cachedPipeline: any = null;
+let cachedModelName: string | null = null;
 let currentProgressInfo: ModelProgressInfo = {
   status: 'unloaded',
   progress: 0,
 };
 const progressListeners = new Set<ProgressCallback>();
 let isLocalBundleActive = false;
+let modelQuality: ModelQuality = 'fast';
+
+if (typeof window !== 'undefined') {
+  try {
+    const stored = window.localStorage?.getItem(MODEL_QUALITY_STORAGE_KEY);
+    if (stored === 'fast' || stored === 'accurate') modelQuality = stored;
+  } catch {}
+}
+
+export function getModelQuality(): ModelQuality {
+  return modelQuality;
+}
+
+export function setModelQuality(quality: ModelQuality): boolean {
+  if (quality !== 'fast' && quality !== 'accurate') return false;
+  if (quality === modelQuality) return false;
+
+  modelQuality = quality;
+  cachedPipeline = null;
+  cachedModelName = null;
+  broadcastProgress({ status: 'unloaded', progress: 0 });
+
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage?.setItem(MODEL_QUALITY_STORAGE_KEY, quality);
+    } catch {}
+  }
+  return true;
+}
 
 function broadcastProgress(info: ModelProgressInfo) {
   currentProgressInfo = info;
@@ -458,9 +513,16 @@ async function loadTransformersStandalone(): Promise<any> {
  * Uses Transformers.js with direct Whisper-tiny models.
  */
 export async function initClientSpeechModel(locale: string = 'en'): Promise<any> {
-  if (cachedPipeline) {
+  const descriptor = resolveModelDescriptor(locale, modelQuality);
+
+  if (cachedPipeline && cachedModelName === descriptor.name) {
     broadcastProgress({ status: 'ready', progress: 100 });
     return cachedPipeline;
+  }
+
+  if (cachedPipeline && cachedModelName !== descriptor.name) {
+    cachedPipeline = null;
+    cachedModelName = null;
   }
 
   if (typeof window === 'undefined') return null;
@@ -503,10 +565,11 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       }
     }
 
-    const modelName =
-      locale === 'pl' ? 'Xenova/whisper-tiny' : 'Xenova/whisper-tiny.en';
+    const modelName = descriptor.name;
 
-    console.log(`[ClientSpeechModel] Initializing Whisper model (${modelName})...`);
+    console.log(
+      `[ClientSpeechModel] Initializing Whisper model (${modelName}, quality=${modelQuality})...`
+    );
 
     const progress_callback = (progressData: any) => {
       if (progressData && progressData.status === 'progress' && progressData.total) {
@@ -551,11 +614,13 @@ export async function initClientSpeechModel(locale: string = 'en'): Promise<any>
       });
     }
 
+    cachedModelName = modelName;
     broadcastProgress({ status: 'ready', progress: 100 });
     console.log(`[ClientSpeechModel] Whisper model ${modelName} initialized successfully in browser memory!`);
     return cachedPipeline;
   } catch (err: any) {
     console.warn('[ClientSpeechModel] Whisper pipeline initialization error:', err);
+    cachedModelName = null;
     broadcastProgress({
       status: 'error',
       progress: 0,

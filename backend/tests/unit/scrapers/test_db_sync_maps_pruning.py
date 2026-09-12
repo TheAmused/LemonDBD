@@ -51,7 +51,6 @@ def test_sync_maps_to_db_prunes_stale_rows_on_id_scheme_change(db_session: Sessi
             callout_image_url="",
             callout_image_local_path="",
             dpath="",
-            clock_system={},
         )
         for i in range(58)
     ]

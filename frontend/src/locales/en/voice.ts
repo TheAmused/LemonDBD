@@ -58,4 +58,10 @@ export default {
   clientModelTooltip: "Speech is processed entirely offline by a local AI model in your browser.",
   micAccessError: "Couldn't access the microphone. Please try again.",
   failedToInitialize: "Failed to initialize speech recognition.",
+  accuracyTitle: "Local model accuracy",
+  accuracyFast: "Fast",
+  accuracyFastDesc: "Smallest download, quickest on low-end devices. Good enough for short map names.",
+  accuracyAccurate: "Accurate",
+  accuracyAccurateDesc: "Larger model, clearly better on proper nouns and strong accents. Slower on older hardware.",
+  modelSize: "~{size} MB download",
 } as const;

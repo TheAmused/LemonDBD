@@ -7,28 +7,6 @@ export interface Realm {
   image_local_path: string;
 }
 
-export interface TotemSpawn {
-  id: number;
-  x: number;
-  y: number;
-  location: string;
-  description?: string;
-}
-
-export interface KeyTile {
-  name: string;
-  type: string;
-  x: number;
-  y: number;
-  has_pallet: boolean;
-  has_window: boolean;
-  pallet_safety_rating?: PalletSafetyRating | null;
-  vault_direction?: string;
-  vault_directions?: string[] | string;
-  looping_tips?: string;
-  mindgame_counter?: string;
-}
-
 export interface MapTile {
   id?: number | string;
   name: string;
@@ -73,25 +51,10 @@ export interface MapRealm {
   shack_has_basement: boolean;
   description: string;
   image_url?: string;
-  totem_spawns?: TotemSpawn[];
-  key_tiles?: KeyTile[];
-  seed_variant?: string;
-  floor?: number;
-  pallet_safety_rating?: PalletSafetyRating;
-  has_pallet?: boolean;
-  has_window?: boolean;
-  vault_direction?: string;
   source?: string;
   source_label?: string;
   callout_image_url?: string;
   callout_image_local_path?: string;
-  clock_system?: {
-    description?: string;
-    twelve_o_clock?: string;
-    three_o_clock?: string;
-    six_o_clock?: string;
-    nine_o_clock?: string;
-  };
   tiles?: MapTile[];
   objectives?: MapObjective[];
 }

@@ -13,6 +13,7 @@ export interface UseMapExplorerDataOptions {
   initialMapName?: string;
   selectedMap?: { mapName: string; timestamp: number } | string;
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
+  locale?: string;
 }
 
 export function normalizeMapSearch(s: string): string {
@@ -68,16 +69,16 @@ export interface UseMapExplorerDataReturn {
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
-  const { initialMapName = '', selectedMap, onAvailableMapsLoaded } = options;
+  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, locale } = options;
 
   // Seed straight from the cache during the first render. Waiting for the
   // effect below would repaint the spinner for a frame on every return visit,
   // even though the data is already in memory.
-  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', 'hens333'))?.maps;
+  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', 'hens333', undefined, locale))?.maps;
 
   const [maps, setMaps] = useState<MapRealm[]>(cachedMaps ?? []);
   const [realmImages, setRealmImages] = useState<Record<string, Realm>>(() => {
-    const cached = readCache<{ realms: Realm[] }>(realmsCacheKey())?.realms;
+    const cached = readCache<{ realms: Realm[] }>(realmsCacheKey(locale))?.realms;
     if (!cached) return {};
     const byName: Record<string, Realm> = {};
     cached.forEach((r) => {
@@ -112,10 +113,10 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
       try {
         // Only show the spinner when there is genuinely nothing to display;
         // a cached result should swap in without a loading flash.
-        if (readCache(mapsCacheKey(debouncedSearch, 'hens333')) === undefined) {
+        if (readCache(mapsCacheKey(debouncedSearch, 'hens333', undefined, locale)) === undefined) {
           setLoading(true);
         }
-        const data = await fetchMaps(undefined, debouncedSearch, 'hens333');
+        const data = await fetchMaps(undefined, debouncedSearch, 'hens333', locale);
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
@@ -133,13 +134,13 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [debouncedSearch]);
+  }, [debouncedSearch, locale]);
 
   useEffect(() => {
     let isCancelled = false;
     async function loadRealms() {
       try {
-        const data = await fetchRealms();
+        const data = await fetchRealms(locale);
         if (!isCancelled) {
           const byName: Record<string, Realm> = {};
           (data?.realms || []).forEach((r) => {
@@ -155,7 +156,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;

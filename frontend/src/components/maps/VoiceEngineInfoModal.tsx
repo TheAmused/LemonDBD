@@ -14,9 +14,15 @@ import {
   Info,
   Laptop,
   DownloadCloud,
+  Gauge,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import type { VoiceEngineType, ModelProgressInfo } from '@/services/clientSpeechModel';
+import type {
+  VoiceEngineType,
+  ModelProgressInfo,
+  ModelQuality,
+  ModelDescriptor,
+} from '@/services/clientSpeechModel';
 
 export interface VoiceEngineInfoModalProps {
   isOpen: boolean;
@@ -27,6 +33,9 @@ export interface VoiceEngineInfoModalProps {
   hasNativeWebSpeech: boolean;
   modelProgress: ModelProgressInfo;
   onPreloadModel: () => void;
+  modelQuality?: ModelQuality;
+  onSelectModelQuality?: (quality: ModelQuality) => void;
+  modelDescriptor?: ModelDescriptor;
   dict?: Dictionary | any;
 }
 
@@ -39,6 +48,9 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
   hasNativeWebSpeech,
   modelProgress,
   onPreloadModel,
+  modelQuality = 'fast',
+  onSelectModelQuality,
+  modelDescriptor,
   dict,
 }) => {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -204,6 +216,62 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
           </div>
         </div>
 
+        {/* Local model accuracy: whisper-tiny ('fast') vs whisper-base ('accurate') */}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/60 p-4 space-y-3">
+          <div className="flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-slate-500 font-mono">
+            <Gauge className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
+            <span>{t.accuracyTitle || ''}</span>
+          </div>
+
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+            role="radiogroup"
+            aria-label={t.accuracyTitle || ''}
+          >
+            {(['fast', 'accurate'] as const).map((quality) => {
+              const isSelected = modelQuality === quality;
+              const label = quality === 'fast' ? t.accuracyFast : t.accuracyAccurate;
+              const description = quality === 'fast' ? t.accuracyFastDesc : t.accuracyAccurateDesc;
+              const sizeMb = isSelected && modelDescriptor ? modelDescriptor.approxSizeMb : null;
+
+              return (
+                <button
+                  key={quality}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  disabled={!onSelectModelQuality}
+                  onClick={() => onSelectModelQuality?.(quality)}
+                  className={`rounded-2xl border p-3 text-left transition-all space-y-1.5 ${
+                    onSelectModelQuality ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'
+                  } ${
+                    isSelected
+                      ? 'border-emerald-500/50 bg-emerald-500/5 dark:bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                      : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs font-black text-slate-900 dark:text-slate-100 uppercase tracking-wider font-mono">
+                      {label || ''}
+                    </span>
+                    {isSelected && (
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" aria-hidden="true" />
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {description || ''}
+                  </p>
+                  {sizeMb !== null && (
+                    <p className="text-[10px] font-bold text-slate-500 font-mono">
+                      {(t.modelSize || '').replace('{size}', String(sizeMb))}
+                    </p>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Why Fallback Is Needed Box */}
         <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-500/5 p-4 space-y-2">
           <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-extrabold text-xs font-mono">
@@ -252,17 +320,6 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
               </button>
             </div>
           )}
-        </div>
-
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-2 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 px-5 py-2 text-xs font-bold shadow-md transition-all hover:opacity-90 cursor-pointer font-mono"
-          >
-            {dict?.modal?.close || dict?.modal?.gotIt || ''}
-          </button>
         </div>
       </div>
     </div>

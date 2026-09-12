@@ -133,7 +133,6 @@ export default {
   leftThisCycle: "pozostało w tym cyklu",
   usedTab: "Użyte",
   remainingTab: "Pozostałe",
-  killersCleared: "pokonanych zabójców",
   streakLabel: "Seria:",
   streakArrow: "→",
   middotSeparator: "·",

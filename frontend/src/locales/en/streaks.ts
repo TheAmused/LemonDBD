@@ -151,7 +151,6 @@ export default {
   leftThisCycle: "left this cycle",
   usedTab: "Used",
   remainingTab: "Remaining",
-  killersCleared: "killers cleared",
   streakLabel: "Streak:",
   streakArrow: "→",
   middotSeparator: "·",

@@ -133,7 +133,6 @@ export default {
   leftThisCycle: "restantes en este ciclo",
   usedTab: "Usados",
   remainingTab: "Restantes",
-  killersCleared: "asesinos completados",
   streakLabel: "Racha:",
   streakArrow: "→",
   middotSeparator: "·",

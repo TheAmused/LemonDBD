@@ -13,7 +13,6 @@ import { useChaosRun } from './useChaosRun';
 import { useOwnedKillers } from './useOwnedKillers';
 import { useKillerPerkPool } from './useKillerPerkPool';
 import { ChaosHeader } from './ChaosHeader';
-import { ChaosProgressBar } from './ChaosProgressBar';
 import { SlotMachineStage } from './SlotMachineStage';
 import { KillerPickerGrid } from './KillerPickerGrid';
 import { useAuth } from '@/context/AuthContext';
@@ -186,7 +185,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
-          poolFrozen={run?.pool_frozen}
+          poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.perks_revealed)}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
@@ -194,16 +193,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onChangeDifficulty={() => setIsChangeDifficultyOpen(true)}
           dict={dict}
         />
-
-        {!isCompleted && rosterKillers.length > 0 && (
-          <ChaosProgressBar
-            currentStreak={run?.current_streak || 0}
-            lastCheckpointStreak={run?.last_checkpoint_streak || 0}
-            checkpointInterval={run?.checkpoint_interval || 0}
-            totalKillers={rosterKillers.length}
-            dict={dict}
-          />
-        )}
 
         {isCompleted ? (
           <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">

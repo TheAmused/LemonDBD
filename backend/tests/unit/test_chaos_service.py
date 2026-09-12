@@ -208,6 +208,7 @@ class TestHellDifficulty:
         assert record.mode == "chaos"
         assert record.variant == "hell"
         assert record.attempts_taken == 1
+        assert record.matches_played == 3
         assert record.unlocked_characters_count == 2
 
     def test_one_loss_resets_everything_in_hell(self) -> None:

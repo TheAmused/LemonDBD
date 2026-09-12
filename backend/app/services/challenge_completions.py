@@ -11,6 +11,7 @@ def record_challenge_completion(
     mode: str,
     variant: str,
     attempts_taken: int,
+    matches_played: int,
     unlocked_characters_count: int,
 ) -> None:
     """Snapshot a fully-completed challenge run so it survives the run's own reset.
@@ -24,6 +25,7 @@ def record_challenge_completion(
             mode=mode,
             variant=variant,
             attempts_taken=attempts_taken,
+            matches_played=matches_played,
             unlocked_characters_count=unlocked_characters_count,
         )
     )

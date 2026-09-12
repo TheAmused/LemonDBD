@@ -179,6 +179,7 @@ class TestSubmitResultWithinARow:
         assert record.mode == "history"
         assert record.variant == "hell"
         assert record.attempts_taken == 1
+        assert record.matches_played == 4
         assert record.unlocked_characters_count == 3
 
     def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self, db_session: Session) -> None:

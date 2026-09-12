@@ -150,9 +150,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
               {dict?.streaks?.gauntletComplete || 'Gauntlet complete!'}
             </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              {dict?.streaks?.youWonThe || 'You won the'} {role} {dict?.streaks?.gauntletSuffix || 'Gauntlet.'}
-            </p>
             <button
               onClick={reset}
               disabled={busy}

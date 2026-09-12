@@ -178,15 +178,6 @@ class HistoryService:
                 completed = []
                 if run.current_row_index >= len(rows):
                     run.status = "completed"
-                    self._freeze_pool(run)
-                    record_challenge_completion(
-                        user_id=user_id,
-                        mode="history",
-                        variant=run.mode,
-                        attempts_taken=run.attempts,
-                        unlocked_characters_count=len(safe_json_loads(run.owned_killers_json, default=[])),
-                    )
-                    run.attempts = 0
                 if run.mode == "medium":
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
@@ -208,6 +199,19 @@ class HistoryService:
             streak_before=streak_before,
             streak_after=streak_after,
         ))
+
+        if result == "win" and run.status == "completed":
+            self._freeze_pool(run)
+            record_challenge_completion(
+                user_id=user_id,
+                mode="history",
+                variant=run.mode,
+                attempts_taken=run.attempts,
+                matches_played=len(run.match_logs),
+                unlocked_characters_count=len(safe_json_loads(run.owned_killers_json, default=[])),
+            )
+            run.attempts = 0
+
         db.session.commit()
 
         data = self._augment(run)

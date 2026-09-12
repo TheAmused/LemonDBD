@@ -227,6 +227,7 @@ class ChaosService:
                 mode="chaos",
                 variant=r.difficulty,
                 attempts_taken=r.attempts,
+                matches_played=len(r.match_logs),
                 unlocked_characters_count=len(safe_json_loads(r.owned_killers_json, default=[])),
             )
             r.attempts = 0

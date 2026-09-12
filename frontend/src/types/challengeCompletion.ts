@@ -5,6 +5,7 @@ export interface ChallengeCompletion {
   mode: string;
   variant: string;
   attempts_taken: number;
+  matches_played: number;
   unlocked_characters_count: number;
   completed_at: string;
 }

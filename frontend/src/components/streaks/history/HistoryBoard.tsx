@@ -159,10 +159,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
               {dict?.streaks?.historyStreakComplete || 'History Streak complete!'}
             </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {dict?.streaks?.youBeatEveryRowOn || 'You beat every row on'} {mode}{' '}
-              {dict?.streaks?.modeSuffix || 'mode.'}
-            </p>
             <button
               onClick={reset}
               disabled={busy}

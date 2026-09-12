@@ -32,6 +32,8 @@ export interface MapExplorerProps {
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   dict?: Dictionary;
+  /** Drives translated map/realm names; refetches when it changes. */
+  locale?: string;
   hideSearch?: boolean;
   /** Rendered in the same slot as the search header (e.g. a voice command
    * banner) when `hideSearch` is true. Overlaid in the same grid cell as
@@ -47,6 +49,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   onAvailableMapsLoaded,
   backendBase,
   dict,
+  locale,
   hideSearch = false,
   voiceSlot,
 }) => {
@@ -64,6 +67,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     initialMapName,
     selectedMap,
     onAvailableMapsLoaded,
+    locale,
   });
 
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);

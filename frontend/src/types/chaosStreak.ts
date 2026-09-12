@@ -25,6 +25,7 @@ export interface ChaosRun {
   current_addon_rarities: AddonRarity[];
   perks_revealed: boolean;
   pool_frozen: boolean;
+  attempts: number;
   checkpoint_interval: number;
   created_at?: string;
   updated_at?: string;

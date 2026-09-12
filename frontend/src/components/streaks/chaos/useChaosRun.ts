@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { ChaosRun, ChaosStats, Difficulty } from '@/types/chaosStreak';
+import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/chaosStreakApi';
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,6 +11,7 @@ export function useChaosRun(difficulty: Difficulty) {
   const { token } = useAuth();
   const [run, setRun] = useState<ChaosRun | null>(null);
   const [stats, setStats] = useState<ChaosStats | null>(null);
+  const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +24,16 @@ export function useChaosRun(difficulty: Difficulty) {
       setStats(s);
     } catch (err) {
       console.error('Failed to load chaos stats:', err);
+    }
+  }, [token, difficulty]);
+
+  const loadCompletions = useCallback(async () => {
+    if (!token) return;
+    try {
+      const resp = await api.fetchChaosCompletions(token, difficulty);
+      setCompletions(resp.completions);
+    } catch (err) {
+      console.error('Failed to load chaos completion history:', err);
     }
   }, [token, difficulty]);
 
@@ -42,7 +54,8 @@ export function useChaosRun(difficulty: Difficulty) {
   useEffect(() => {
     load();
     loadStats();
-  }, [load, loadStats]);
+    loadCompletions();
+  }, [load, loadStats, loadCompletions]);
 
   const mutate = useCallback(
     async (action: () => Promise<ChaosRun>) => {
@@ -71,6 +84,9 @@ export function useChaosRun(difficulty: Difficulty) {
         const justFinished = updated.status === 'completed';
         setRun(updated);
         loadStats();
+        if (justFinished) {
+          loadCompletions();
+        }
         if (
           !options?.silent &&
           result === 'win' &&
@@ -87,7 +103,7 @@ export function useChaosRun(difficulty: Difficulty) {
         setBusy(false);
       }
     },
-    [token, run, loadStats]
+    [token, run, loadStats, loadCompletions]
   );
 
   const dismissCheckpointCelebration = useCallback(() => {
@@ -108,6 +124,7 @@ export function useChaosRun(difficulty: Difficulty) {
   return {
     run,
     stats,
+    completions,
     loading,
     busy,
     error,

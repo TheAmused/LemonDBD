@@ -156,6 +156,31 @@ class TestSubmitResultWithinARow:
         assert log.result == "loss"
         assert log.triggered_by == "inactivity"
 
+    def test_inactivity_loss_increments_attempts(self) -> None:
+        self.service.apply_inactivity_loss(self.run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, "hell")
+        assert reloaded["attempts"] == 1
+
+    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.apply_inactivity_loss(self.run["id"])  # attempts -> 1
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+        assert final["attempts"] == 0
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "history"
+        assert record.variant == "hell"
+        assert record.attempts_taken == 1
+        assert record.unlocked_characters_count == 3
+
     def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self, db_session: Session) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
@@ -187,6 +212,7 @@ class TestHellModeLoss:
         assert after_loss["completed_killers"] == []
         assert after_loss["unlocked_perk_names"] == ["Whispers"]
         assert after_loss["total_killers_beaten"] == 0
+        assert after_loss["attempts"] == 1
 
     def test_loss_after_clearing_a_row_still_resets_to_zero(self, db_session: Session) -> None:
         for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:

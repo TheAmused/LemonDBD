@@ -8,6 +8,7 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import HistoryMatchLog, HistoryRun
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.history import fetch_history_user_stats
 from app.services.history.roster import (
     ROW_SIZE,
@@ -178,6 +179,14 @@ class HistoryService:
                 if run.current_row_index >= len(rows):
                     run.status = "completed"
                     self._freeze_pool(run)
+                    record_challenge_completion(
+                        user_id=user_id,
+                        mode="history",
+                        variant=run.mode,
+                        attempts_taken=run.attempts,
+                        unlocked_characters_count=len(safe_json_loads(run.owned_killers_json, default=[])),
+                    )
+                    run.attempts = 0
                 if run.mode == "medium":
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
@@ -185,6 +194,7 @@ class HistoryService:
                     run.checkpoint_unlocked_perk_names_json = safe_json_dumps(unlocked)
         else:
             completed, unlocked = self._resolve_loss(run)
+            run.attempts += 1
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = safe_json_dumps(completed)
@@ -214,6 +224,7 @@ class HistoryService:
         row_index_for_log = run.current_row_index
 
         completed, unlocked = self._resolve_loss(run)
+        run.attempts += 1
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = safe_json_dumps(completed)
@@ -232,3 +243,6 @@ class HistoryService:
 
     def get_stats(self, user_id: int, mode: str) -> dict[str, Any]:
         return fetch_history_user_stats(user_id, mode)
+
+    def get_completions(self, user_id: int, mode: str) -> list[dict[str, Any]]:
+        return fetch_challenge_completions(user_id, "history", mode)

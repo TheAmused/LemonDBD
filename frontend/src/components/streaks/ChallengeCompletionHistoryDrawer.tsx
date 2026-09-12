@@ -20,8 +20,10 @@ export interface ChallengeCompletionHistoryDrawerProps {
   title: string;
   accent: StreakAccent;
   completions: ChallengeCompletion[];
-  /** Translated plural noun for `unlocked_characters_count`, e.g. "killers" or "survivors". */
-  subjectLabel: string;
+  /** Translated plural noun for `unlocked_characters_count`, e.g. "killers" or "survivors".
+   *  Omit to hide that stat entirely -- not every mode tracks it meaningfully (Page Streak
+   *  is scoped to one killer per completion, so an "owned" count doesn't apply). */
+  subjectLabel?: string;
   dict?: Dictionary;
 }
 
@@ -97,10 +99,12 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
                       <RotateCcw className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                       {entry.attempts_taken} {dict?.streaks?.attempts || 'Attempts'}
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
-                      <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                      {entry.unlocked_characters_count} {subjectLabel}
-                    </div>
+                    {subjectLabel && (
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                        {entry.unlocked_characters_count} {subjectLabel}
+                      </div>
+                    )}
                   </div>
                   {entry.completed_at && (
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">

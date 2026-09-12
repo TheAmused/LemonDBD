@@ -239,6 +239,9 @@ class TestPageStreakRoster:
         run = self.service.start_run(self.user_id, "Nurse")
         assert run["snapshot_at"] is not None
         assert run["snapshot_at"].endswith("Z")
+        assert "+00:00" not in run["snapshot_at"]
+        from datetime import datetime
+        datetime.fromisoformat(run["snapshot_at"].replace("Z", "+00:00"))  # must parse cleanly
 
     def test_start_run_freezes_snapshot(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
@@ -365,6 +368,17 @@ class TestPageStreakResults:
         self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
         with pytest.raises(ValueError):
             self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+    def test_get_completions_returns_this_killers_past_wins(self) -> None:
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        completions = self.service.get_completions(self.user_id, "Nurse")
+        assert len(completions) == 1
+        assert completions[0]["variant"] == "Nurse"
+        assert completions[0]["attempts_taken"] == 1
+        assert completions[0]["matches_played"] == 3
 
     def test_winning_last_page_records_a_completion(self) -> None:
         from app.core.extensions import db

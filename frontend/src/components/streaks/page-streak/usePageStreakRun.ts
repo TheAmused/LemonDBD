@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { PageStreakRun, PageStreakStats } from '@/types/pageStreak';
+import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/pageStreakApi';
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,6 +11,7 @@ export function usePageStreakRun(killer: string) {
   const { token } = useAuth();
   const [run, setRun] = useState<PageStreakRun | null>(null);
   const [stats, setStats] = useState<PageStreakStats | null>(null);
+  const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +24,16 @@ export function usePageStreakRun(killer: string) {
       console.error('Failed to load page streak stats:', err);
     }
   }, [token]);
+
+  const loadCompletions = useCallback(async () => {
+    if (!token) return;
+    try {
+      const resp = await api.fetchCompletions(token, killer);
+      setCompletions(resp.completions);
+    } catch (err) {
+      console.error('Failed to load page streak completion history:', err);
+    }
+  }, [token, killer]);
 
   const load = useCallback(async () => {
     if (!token) return;
@@ -39,27 +51,31 @@ export function usePageStreakRun(killer: string) {
   useEffect(() => {
     load();
     loadStats();
-  }, [load, loadStats]);
+    loadCompletions();
+  }, [load, loadStats, loadCompletions]);
 
   const mutate = useCallback(
     async (action: () => Promise<PageStreakRun>, reloadStatsAfter: boolean) => {
       setBusy(true);
       setError(null);
       try {
-        setRun(await action());
+        const updated = await action();
+        setRun(updated);
         if (reloadStatsAfter) loadStats();
+        if (updated.status === 'completed') loadCompletions();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'That did not go through — try again');
       } finally {
         setBusy(false);
       }
     },
-    [loadStats]
+    [loadStats, loadCompletions]
   );
 
   return {
     run,
     stats,
+    completions,
     loading,
     busy,
     error,

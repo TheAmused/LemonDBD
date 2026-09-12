@@ -1,5 +1,6 @@
 // frontend/src/services/pageStreakApi.ts
 import { PageStreakRun, PageStreakStats, PoolSummary, RosterEntry } from '../types/pageStreak';
+import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('page-streak');
@@ -54,4 +55,8 @@ export async function resetAllRuns(token: string): Promise<void> {
 export async function fetchStats(token: string): Promise<PageStreakStats> {
   const data = await getJson<{ stats: PageStreakStats }>(token, '/stats');
   return data.stats;
+}
+
+export async function fetchCompletions(token: string, killer: string): Promise<CompletionsResponse> {
+  return getJson<CompletionsResponse>(token, `/completions?killer=${encodeURIComponent(killer)}`);
 }

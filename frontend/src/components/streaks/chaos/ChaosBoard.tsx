@@ -18,6 +18,7 @@ import { KillerPickerGrid } from './KillerPickerGrid';
 import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -55,6 +56,7 @@ interface ChaosBoardProps {
 
 export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const dict = useStreaksDict();
+  const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -351,6 +353,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onClose={() => setIsChangeDifficultyOpen(false)}
           currentDifficulty={difficulty}
           showIntro={false}
+          completedDifficulties={(completionStatus.chaos ?? []) as Difficulty[]}
           onSelectDifficulty={(newDifficulty) => {
             saveChaosDifficulty(newDifficulty);
             setIsChangeDifficultyOpen(false);

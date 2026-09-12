@@ -14,6 +14,7 @@ import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useChallengeCompletionStatus } from './useChallengeCompletionStatus';
 
 const GauntletModeModal = dynamic(
   () => import('./gauntlet/GauntletModeModal').then((m) => m.GauntletModeModal),
@@ -70,6 +71,13 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const [isHistoryModeModalOpen, setIsHistoryModeModalOpen] = useState(false);
   const [isPageStreakModeModalOpen, setIsPageStreakModeModalOpen] = useState(false);
   const [modeStatus, setModeStatus] = useState<ChallengeModeStatusMap>({});
+  const completionStatus = useChallengeCompletionStatus();
+  const gauntletCompletedVariants = completionStatus.gauntlet ?? [];
+  const chaosCompletedVariants = completionStatus.chaos ?? [];
+  const historyCompletedVariants = completionStatus.history ?? [];
+  const gauntletCardCompleted = gauntletCompletedVariants.includes(`${role}_original`);
+  const chaosCardCompleted = chaosCompletedVariants.includes('hell');
+  const historyCardCompleted = historyCompletedVariants.includes('hell');
 
   useEffect(() => {
     fetchChallengeModeStatus().then(setModeStatus);
@@ -121,6 +129,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              completed={gauntletCardCompleted}
               prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
               onClick={() => {
                 const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
@@ -143,6 +152,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              completed={chaosCardCompleted}
               prefetchHrefs={[`/${locale}/streaks/${role}/chaos-streak`]}
               onClick={() => {
                 const saved = getSavedChaosDifficulty();
@@ -165,6 +175,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               color={panel.color}
               image={panel.image}
               dict={dict}
+              completed={historyCardCompleted}
               prefetchHrefs={[`/${locale}/streaks/${role}/history-streak`]}
               onClick={() => {
                 const saved = getSavedHistoryMode();
@@ -220,6 +231,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
         }}
         role={role as 'killer' | 'survivor'}
+        originalCompleted={gauntletCardCompleted}
         dict={dict}
       />
 
@@ -230,6 +242,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           saveChaosDifficulty(difficulty);
           router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${difficulty}`);
         }}
+        completedDifficulties={chaosCompletedVariants as Difficulty[]}
         dict={dict}
       />
 
@@ -240,6 +253,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           saveHistoryMode(mode);
           router.push(`/${locale}/streaks/${role}/history-streak?mode=${mode}`);
         }}
+        completedModes={historyCompletedVariants as HistoryMode[]}
         dict={dict}
       />
 

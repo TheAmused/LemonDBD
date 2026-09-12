@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Trophy } from 'lucide-react';
 import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
 
 const DisabledReasonModal = dynamic(
@@ -19,6 +19,8 @@ interface StreakPanelBaseProps {
   image?: string;
   disabled?: boolean;
   disabledReason?: string | null;
+  /** Shows a trophy badge -- this challenge has already been fully cleared. */
+  completed?: boolean;
   dict?: Dictionary;
   /**
    * Routes this panel may navigate to. Panels that pick their destination at
@@ -45,6 +47,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   comingSoon,
   disabled,
   disabledReason,
+  completed,
   dict,
   prefetchHrefs,
 }) => {
@@ -79,6 +82,14 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       ) : comingSoon ? (
         <span className="absolute right-3 top-3 z-10 rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {dict?.streaks?.comingSoon || 'Coming soon.'}
+        </span>
+      ) : completed ? (
+        <span
+          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 text-yellow-600 dark:text-yellow-400 shadow-sm"
+          aria-label={dict?.streaks?.completed || 'Completed'}
+          title={dict?.streaks?.completed || 'Completed'}
+        >
+          <Trophy className="h-3.5 w-3.5" />
         </span>
       ) : null}
 

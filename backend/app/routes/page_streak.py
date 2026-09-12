@@ -111,3 +111,16 @@ def reset_run():
         return jsonify({"error": str(err), "status": 400}), 400
 
     return jsonify({"run": run}), 200
+
+
+@page_streak_bp.route("/run/reset-all", methods=["POST"])
+@login_required
+def reset_all_runs():
+    """Wipe every killer's Page Streak progress and completion badges."""
+    service = get_page_streak_service()
+    try:
+        service.reset_all(g.current_user.id)
+    except ValueError as err:
+        return jsonify({"error": str(err), "status": 400}), 400
+
+    return jsonify({"success": True}), 200

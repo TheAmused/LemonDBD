@@ -6,6 +6,7 @@ from sqlalchemy import select
 from app.core.extensions import db
 from app.core.json_provider import safe_json_loads
 from app.models import PageStreakRun
+from app.services.challenge_completions import fetch_completed_variants
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
 
@@ -63,11 +64,16 @@ def build_roster_summary(
     ).all()
     runs = {r.killer: r for r in runs_db}
     avatar_map = get_killer_avatar_map(user_id, ownership_service)
+    # Read from the persistent completion history, not the run's own status --
+    # a per-killer reset wipes the run's status back to "in_progress" but this
+    # badge must survive it (that's the whole point of tracking it separately).
+    completed_killers = fetch_completed_variants(user_id, "page_streak")
     roster: list[dict[str, Any]] = []
 
     for killer in get_owned_killers_ordered(user_id, perk_service, ownership_service):
         r = runs.get(killer)
         avatar_local_path = avatar_map.get(killer)
+        ever_completed = killer in completed_killers
         if r is None:
             roster.append({
                 "killer": killer,
@@ -77,6 +83,7 @@ def build_roster_summary(
                 "best_page": 0,
                 "page_count": page_count,
                 "avatar_local_path": avatar_local_path,
+                "ever_completed": ever_completed,
             })
         else:
             roster.append({
@@ -87,5 +94,6 @@ def build_roster_summary(
                 "best_page": r.best_page,
                 "page_count": len(safe_json_loads(r.pages_json, default=[])),
                 "avatar_local_path": avatar_local_path,
+                "ever_completed": ever_completed,
             })
     return roster

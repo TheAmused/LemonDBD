@@ -9,6 +9,8 @@ export interface RosterEntry {
   best_page: number;
   page_count: number;
   avatar_local_path?: string | null;
+  /** From the persistent completion history, not this run's own status -- survives a per-killer reset. */
+  ever_completed: boolean;
 }
 
 export interface HistoryEntry {

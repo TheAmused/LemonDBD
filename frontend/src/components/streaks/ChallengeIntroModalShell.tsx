@@ -1,8 +1,10 @@
 // frontend/src/components/streaks/ChallengeIntroModalShell.tsx
 'use client';
 
+import type { Dictionary } from '@/locales/types';
+
 import React, { useEffect } from 'react';
-import { X, BookOpen, type LucideIcon } from 'lucide-react';
+import { X, BookOpen, Trophy, type LucideIcon } from 'lucide-react';
 
 export interface ChallengeIntroTile {
   value: string;
@@ -13,6 +15,8 @@ export interface ChallengeIntroTile {
   accentClassName: string;
   disabled?: boolean;
   disabledBadge?: string;
+  /** This tier has already been fully cleared -- shows a small trophy badge. */
+  completed?: boolean;
 }
 
 export interface ChallengeIntroModalShellProps {
@@ -32,6 +36,7 @@ export interface ChallengeIntroModalShellProps {
   escapeDisabled?: boolean;
   selectedValue?: string;
   currentLabel: string;
+  dict?: Dictionary;
 }
 
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
@@ -49,6 +54,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   escapeDisabled,
   selectedValue,
   currentLabel,
+  dict,
 }) => {
   useEffect(() => {
     if (!isOpen || escapeDisabled) return;
@@ -81,7 +87,8 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+            aria-label={dict?.modal?.close || 'Close'}
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -152,10 +159,15 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               <button
                 key={tile.value}
                 onClick={() => onSelectTile(tile.value)}
-                className={`group flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
+                className={`group relative flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
                   isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : ''
                 }`}
               >
+                {tile.completed && (
+                  <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 text-yellow-600 dark:text-yellow-400 shadow-sm">
+                    <Trophy className="h-3 w-3" />
+                  </span>
+                )}
                 {content}
               </button>
             );

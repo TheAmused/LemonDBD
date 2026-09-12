@@ -18,6 +18,7 @@ from app.services.page_streak import (
     get_user_killer_pool,
     record_match_result,
     reset_active_run,
+    reset_all_runs,
 )
 from app.services.perk_service import PerkService
 
@@ -68,6 +69,10 @@ class PageStreakService:
     def reset_run(self, user_id: int, killer: str) -> dict[str, Any] | None:
         assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, reset_active_run(user_id, killer, self.build_pages))
+
+    def reset_all(self, user_id: int) -> None:
+        assert_challenge_mode_enabled("page_streak")
+        reset_all_runs(user_id)
 
     def get_stats(self, user_id: int) -> dict[str, Any]:
         return fetch_page_streak_user_stats(user_id)

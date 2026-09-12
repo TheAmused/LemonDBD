@@ -154,6 +154,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.others.killer_calc import killer_calc_bp
     from app.routes.others.quests import quests_bp
     from app.routes.others.smash_or_pass import smash_or_pass_bp
+    from app.routes.challenge_completions import challenge_completions_bp
     from app.routes.page_streak import page_streak_bp
     from app.routes.perks import perk_service, perks_bp
     from app.routes.synergy import synergy_bp
@@ -170,6 +171,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(custom_perks_bp)
     flask_app.register_blueprint(maps_bp)
     flask_app.register_blueprint(page_streak_bp)
+    flask_app.register_blueprint(challenge_completions_bp)
     flask_app.register_blueprint(gauntlet_streak_bp)
     flask_app.register_blueprint(chaos_streak_bp)
     flask_app.register_blueprint(changelog_bp)

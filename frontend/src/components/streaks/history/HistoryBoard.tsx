@@ -175,10 +175,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               {run && (
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
-                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}{' '}
-                  {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.killerLabel || 'killer'}{' '}
-                  {run.total_killers_beaten + 1} {dict?.streaks?.ofLabel || 'of'}{' '}
-                  {run.total_owned_killers}
+                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}
                 </p>
               )}
             </div>

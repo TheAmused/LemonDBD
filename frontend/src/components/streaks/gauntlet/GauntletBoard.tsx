@@ -23,6 +23,10 @@ const GauntletStatsDrawer = dynamic(
   () => import('./GauntletStatsDrawer').then((m) => m.GauntletStatsDrawer),
   { ssr: false }
 );
+const ChallengeCompletionHistoryDrawer = dynamic(
+  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
+  { ssr: false }
+);
 const GauntletRulesModal = dynamic(
   () => import('./GauntletRulesModal').then((m) => m.GauntletRulesModal),
   { ssr: false }
@@ -49,6 +53,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   const {
     run,
     stats,
+    completions,
     loading,
     busy,
     error,
@@ -67,6 +72,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   }, [run?.owned_characters, releaseOrder]);
   const rosterCharacters = run ? frozenCharacters : characters;
   const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -130,6 +136,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
           poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           dict={dict}
@@ -193,7 +200,21 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           dict={dict}
         />
 
-        <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <GauntletStatsDrawer
+          isOpen={isStatsOpen}
+          onClose={() => setIsStatsOpen(false)}
+          stats={stats}
+          attempts={run?.attempts}
+          dict={dict}
+        />
+        <ChallengeCompletionHistoryDrawer
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          title={dict?.streaks?.gauntlet || 'Gauntlet'}
+          accent="amber"
+          completions={completions}
+          dict={dict}
+        />
         <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />
         <CheckpointModal
           checkpoint={justBankedCheckpoint}

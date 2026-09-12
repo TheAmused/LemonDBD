@@ -91,4 +91,14 @@ def make_streak_blueprint(
         stats = service.get_stats(g.current_user.id, value)
         return jsonify({"stats": stats}), 200
 
+    @bp.route("/completions", methods=["GET"])
+    @login_required
+    def get_completions():
+        value = clean_value(request.args.get(param_name))
+        if not value:
+            return jsonify({"error": f"Query parameter '{param_name}' must be {invalid_value_hint}"}), 400
+        service = get_service()
+        completions = service.get_completions(g.current_user.id, value)
+        return jsonify({"completions": completions}), 200
+
     return bp

@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { GauntletRun, GauntletStats, Role } from '@/types/gauntletStreak';
+import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/gauntletStreakApi';
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,6 +11,7 @@ export function useGauntletRun(role: Role) {
   const { token } = useAuth();
   const [run, setRun] = useState<GauntletRun | null>(null);
   const [stats, setStats] = useState<GauntletStats | null>(null);
+  const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +26,16 @@ export function useGauntletRun(role: Role) {
       setStats(resp.stats);
     } catch (err) {
       console.error('Failed to load gauntlet stats:', err);
+    }
+  }, [token, role]);
+
+  const loadCompletions = useCallback(async () => {
+    if (!token) return;
+    try {
+      const resp = await api.fetchCompletions(token, role);
+      setCompletions(resp.completions);
+    } catch (err) {
+      console.error('Failed to load gauntlet completion history:', err);
     }
   }, [token, role]);
 
@@ -44,7 +56,8 @@ export function useGauntletRun(role: Role) {
   useEffect(() => {
     load();
     loadStats();
-  }, [load, loadStats]);
+    loadCompletions();
+  }, [load, loadStats, loadCompletions]);
 
   const mutate = useCallback(
     async (action: () => Promise<GauntletRun>) => {
@@ -75,6 +88,9 @@ export function useGauntletRun(role: Role) {
         // A win that banks a fresh checkpoint gets its own celebration. If that
         // same win also finished the gauntlet, the win screen covers that instead.
         const justFinished = resp.previous_run.status === 'completed';
+        if (justFinished) {
+          loadCompletions();
+        }
         if (
           result === 'win' &&
           !justFinished &&
@@ -88,7 +104,7 @@ export function useGauntletRun(role: Role) {
         setBusy(false);
       }
     },
-    [token, role, run, loadStats]
+    [token, role, run, loadStats, loadCompletions]
   );
 
   const dismissCheckpointCelebration = useCallback(() => {
@@ -109,6 +125,7 @@ export function useGauntletRun(role: Role) {
   return {
     run,
     stats,
+    completions,
     loading,
     busy,
     error,

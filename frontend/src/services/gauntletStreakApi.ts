@@ -1,5 +1,6 @@
 // frontend/src/services/gauntletStreakApi.ts
 import { Role, RunResponse, SubmitResultResponse, StatsResponse, GauntletRun } from '../types/gauntletStreak';
+import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('gauntlet-streak');
@@ -29,4 +30,8 @@ export async function resetRun(token: string, role: Role): Promise<GauntletRun> 
 
 export async function fetchStats(token: string, role: Role): Promise<StatsResponse> {
   return getJson<StatsResponse>(token, `/stats?role=${role}`);
+}
+
+export async function fetchCompletions(token: string, role: Role): Promise<CompletionsResponse> {
+  return getJson<CompletionsResponse>(token, `/completions?role=${role}`);
 }

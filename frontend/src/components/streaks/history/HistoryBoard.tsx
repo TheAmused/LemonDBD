@@ -29,6 +29,10 @@ const HistoryStatsDrawer = dynamic(
   () => import('./HistoryStatsDrawer').then((m) => m.HistoryStatsDrawer),
   { ssr: false }
 );
+const ChallengeCompletionHistoryDrawer = dynamic(
+  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
+  { ssr: false }
+);
 const HistoryPerkModal = dynamic(
   () => import('./HistoryPerkModal').then((m) => m.HistoryPerkModal),
   { ssr: false }
@@ -53,7 +57,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const pathname = usePathname();
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
-  const { run, stats, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
+  const { run, stats, completions, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
   const { pool: perkPool } = useKillerPerkPool();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
@@ -62,6 +66,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [perkModal, setPerkModal] = useState<{ killerName: string; perks: Perk[] } | null>(null);
   const [rowClearedNumber, setRowClearedNumber] = useState<number | null>(null);
   const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
@@ -140,6 +145,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           poolFrozen={poolFrozen}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
           dict={dict}
@@ -244,7 +250,21 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           dict={dict}
         />
 
-        <HistoryStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <HistoryStatsDrawer
+          isOpen={isStatsOpen}
+          onClose={() => setIsStatsOpen(false)}
+          stats={stats}
+          attempts={run?.attempts}
+          dict={dict}
+        />
+        <ChallengeCompletionHistoryDrawer
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          title={dict?.streaks?.historyStreak || 'History Streak'}
+          accent="slate"
+          completions={completions}
+          dict={dict}
+        />
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}

@@ -8,6 +8,7 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import GauntletMatchLog, GauntletRun
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.gauntlet import (
     CHECKPOINT_INTERVAL,
     fetch_gauntlet_user_stats,
@@ -185,6 +186,7 @@ class GauntletService:
             streak_after = last_checkpoint if CHECKPOINT_INTERVAL > 0 else 0
             completed = list(checkpoint_chars)
             best_after = best_streak
+            r.attempts += 1
 
         r.current_streak = streak_after
         r.best_streak = best_after
@@ -194,6 +196,14 @@ class GauntletService:
 
         if result == "win" and r.status == "completed":
             self._freeze_pool(r)
+            record_challenge_completion(
+                user_id=user_id,
+                mode="gauntlet",
+                variant=f"{r.role}_{r.game_mode}",
+                attempts_taken=r.attempts,
+                unlocked_characters_count=len(safe_json_loads(r.owned_characters_json, default=[])),
+            )
+            r.attempts = 0
         elif result == "loss" and streak_after == 0:
             self._freeze_pool(r)
 
@@ -217,3 +227,11 @@ class GauntletService:
 
     def get_stats(self, user_id: int, role: str) -> dict[str, Any]:
         return fetch_gauntlet_user_stats(user_id, role)
+
+    def get_completions(self, user_id: int, role: str) -> list[dict[str, Any]]:
+        # game_mode isn't yet a user-facing choice at this layer (every run is
+        # created with the model's "original" default), so completions are
+        # only ever recorded/queried under that variant today. The stored
+        # variant string still carries game_mode from the run itself (see
+        # submit_result) so this stays correct if that ever changes.
+        return fetch_challenge_completions(user_id, "gauntlet", f"{role}_original")

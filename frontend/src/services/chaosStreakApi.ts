@@ -6,6 +6,7 @@ import {
   ChaosStatsResponse,
   Difficulty,
 } from '../types/chaosStreak';
+import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('chaos-streak');
@@ -42,4 +43,8 @@ export async function resetChaosRun(token: string, difficulty: Difficulty): Prom
 export async function fetchChaosStats(token: string, difficulty: Difficulty): Promise<ChaosStats> {
   const data = await getJson<ChaosStatsResponse>(token, `/stats?difficulty=${difficulty}`);
   return data.stats;
+}
+
+export async function fetchChaosCompletions(token: string, difficulty: Difficulty): Promise<CompletionsResponse> {
+  return getJson<CompletionsResponse>(token, `/completions?difficulty=${difficulty}`);
 }

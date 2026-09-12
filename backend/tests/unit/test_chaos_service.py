@@ -186,6 +186,30 @@ class TestHellDifficulty:
         assert final["status"] == "completed"
         assert final["current_streak"] == 2
 
+    def test_loss_increments_attempts(self) -> None:
+        assert self.run["attempts"] == 0
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss", "The Trapper")
+        assert after_loss["attempts"] == 1
+
+    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, self.run["id"], "loss", "The Trapper")  # attempts -> 1
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        assert final["status"] == "completed"
+        assert final["attempts"] == 0
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "chaos"
+        assert record.variant == "hell"
+        assert record.attempts_taken == 1
+        assert record.unlocked_characters_count == 2
+
     def test_one_loss_resets_everything_in_hell(self) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss", "The Wraith")
@@ -215,6 +239,7 @@ class TestHellDifficulty:
         reloaded = self.service.get_or_create_run(self.user_id, "hell")
         assert reloaded["current_streak"] == 0
         assert reloaded["completed_killers"] == []
+        assert reloaded["attempts"] == 1
 
         log = db_session.scalars(
             select(ChaosMatchLog).where(ChaosMatchLog.run_id == self.run["id"])

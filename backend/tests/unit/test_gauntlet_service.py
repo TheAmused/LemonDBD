@@ -294,6 +294,26 @@ class TestGauntletResults:
         updated = self.service.submit_result(self.user_id, self.run["id"], "win")
         assert target in updated["completed_characters"]
 
+    def test_loss_increments_attempts_regardless_of_checkpoint(self) -> None:
+        assert self.run["attempts"] == 0
+        after_first_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        assert after_first_loss["attempts"] == 1
+        for _ in range(10):
+            self.service.submit_result(self.user_id, self.run["id"], "win")
+        after_checkpoint_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        assert after_checkpoint_loss["current_streak"] == 10
+        assert after_checkpoint_loss["attempts"] == 2
+
+    def test_win_does_not_increment_attempts(self) -> None:
+        updated = self.service.submit_result(self.user_id, self.run["id"], "win")
+        assert updated["attempts"] == 0
+
+    def test_inactivity_loss_increments_attempts(self) -> None:
+        updated = self.service.submit_result(
+            self.user_id, self.run["id"], "loss", triggered_by="inactivity"
+        )
+        assert updated["attempts"] == 1
+
     def test_best_streak_is_never_decreased_by_a_loss(self) -> None:
         for _ in range(3):
             self.service.submit_result(self.user_id, self.run["id"], "win")
@@ -442,6 +462,27 @@ class TestGauntletCompletion:
         assert fresh["current_streak"] == 0
         assert fresh["completed_characters"] == []
         assert fresh["target_revealed"] is False
+
+    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        self.service.submit_result(self.user_id, run["id"], "loss")  # attempts -> 1
+
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+        assert final["attempts"] == 0
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "gauntlet"
+        assert record.variant == "killer_original"
+        assert record.attempts_taken == 1
+        assert record.unlocked_characters_count == 2
 
 
 @pytest.mark.unit

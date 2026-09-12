@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { HistoryMode, HistoryRun, HistoryStats } from '@/types/historyStreak';
+import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/historyStreakApi';
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,6 +11,7 @@ export function useHistoryRun(mode: HistoryMode) {
   const { token } = useAuth();
   const [run, setRun] = useState<HistoryRun | null>(null);
   const [stats, setStats] = useState<HistoryStats | null>(null);
+  const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +23,16 @@ export function useHistoryRun(mode: HistoryMode) {
       setStats(s);
     } catch (err) {
       console.error('Failed to load history stats:', err);
+    }
+  }, [token, mode]);
+
+  const loadCompletions = useCallback(async () => {
+    if (!token) return;
+    try {
+      const resp = await api.fetchHistoryCompletions(token, mode);
+      setCompletions(resp.completions);
+    } catch (err) {
+      console.error('Failed to load history completion history:', err);
     }
   }, [token, mode]);
 
@@ -41,7 +53,8 @@ export function useHistoryRun(mode: HistoryMode) {
   useEffect(() => {
     load();
     loadStats();
-  }, [load, loadStats]);
+    loadCompletions();
+  }, [load, loadStats, loadCompletions]);
 
   const submitResult = useCallback(
     async (result: 'win' | 'loss', killerId: string) => {
@@ -52,6 +65,9 @@ export function useHistoryRun(mode: HistoryMode) {
         const updated = await api.submitHistoryResult(token, run.id, result, killerId);
         setRun(updated);
         loadStats();
+        if (updated.status === 'completed') {
+          loadCompletions();
+        }
         return updated;
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to record the result');
@@ -60,7 +76,7 @@ export function useHistoryRun(mode: HistoryMode) {
         setBusy(false);
       }
     },
-    [token, run, loadStats]
+    [token, run, loadStats, loadCompletions]
   );
 
   const reset = useCallback(async () => {
@@ -76,5 +92,5 @@ export function useHistoryRun(mode: HistoryMode) {
     }
   }, [token, mode]);
 
-  return { run, stats, loading, busy, error, submitResult, reset, reload: load };
+  return { run, stats, completions, loading, busy, error, submitResult, reset, reload: load };
 }

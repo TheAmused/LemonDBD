@@ -32,6 +32,10 @@ const ChaosStatsDrawer = dynamic(
   () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
   { ssr: false }
 );
+const ChallengeCompletionHistoryDrawer = dynamic(
+  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
+  { ssr: false }
+);
 const ChaosRulesModal = dynamic(
   () => import('./ChaosRulesModal').then((m) => m.ChaosRulesModal),
   { ssr: false }
@@ -59,6 +63,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const {
     run,
     stats,
+    completions,
     loading,
     busy,
     error,
@@ -109,6 +114,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const [celebrating, setCelebrating] = useState<boolean>(false);
   const [confirmingReset, setConfirmingReset] = useState<boolean>(false);
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [isRulesOpen, setIsRulesOpen] = useState<boolean>(false);
   const [isPerkPoolOpen, setIsPerkPoolOpen] = useState<boolean>(false);
   const [isChangeDifficultyOpen, setIsChangeDifficultyOpen] = useState<boolean>(false);
@@ -200,6 +206,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
           poolFrozen={poolFrozen}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenPerkPool={() => setIsPerkPoolOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
@@ -325,7 +332,21 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           dict={dict}
         />
 
-        <ChaosStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <ChaosStatsDrawer
+          isOpen={isStatsOpen}
+          onClose={() => setIsStatsOpen(false)}
+          stats={stats}
+          attempts={run?.attempts}
+          dict={dict}
+        />
+        <ChallengeCompletionHistoryDrawer
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
+          accent="violet"
+          completions={completions}
+          dict={dict}
+        />
         <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
         <ChaosPerkPoolModal
           isOpen={isPerkPoolOpen}

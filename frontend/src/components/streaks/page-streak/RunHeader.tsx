@@ -51,16 +51,6 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
             {killerDisplayName}
           </h2>
-          {run.pool_frozen && (
-            <div className="mt-1 flex flex-wrap gap-4 font-mono text-[11px] text-slate-500">
-              <span>
-                {dict?.streaks?.layoutFrozen || 'layout frozen'}{' '}
-                <b className="text-slate-800 dark:text-slate-200">
-                  {new Date(run.snapshot_at).toLocaleDateString()}
-                </b>
-              </span>
-            </div>
-          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">

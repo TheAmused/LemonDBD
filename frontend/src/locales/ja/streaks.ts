@@ -32,7 +32,6 @@ export default {
   everyPerkUnlocked: "すべてのパークが解放済みです。",
   loadingStreak: "ストリークを読み込み中…",
   yourBuild: "指定ビルド",
-  layoutFrozen: "構成固定中",
   streakRoleTabs: "ストリーク役割タブ",
   matchSummary: "試合結果と戦績履歴",
   temporarilyDisabled: "このチャレンジは一時的に無効化されています。",

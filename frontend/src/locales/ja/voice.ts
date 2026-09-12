@@ -58,4 +58,11 @@ export default {
   clientModelTooltip: "音声はブラウザ内のローカルAIモデルで完全オフライン処理されます。",
   micAccessError: "マイクにアクセスできませんでした。もう一度お試しください。",
   failedToInitialize: "音声認識を初期化できませんでした。",
+  accuracyTitle: "ローカルモデルの精度",
+  accuracyFast: "高速",
+  accuracyFastDesc: "ダウンロードが最小で、低スペック端末でも高速。短いマップ名には十分です。",
+  accuracyAccurate: "高精度",
+  accuracyAccurateDesc: "より大きなモデル。固有名詞や強いアクセントに明確に強いが、旧型端末では低速です。",
+  accuracyNote: "ブラウザ内ローカルモデルのみに影響します。Web Speech エンジンには影響しません。",
+  modelSize: "約 {size} MB のダウンロード",
 } as const;

@@ -8,9 +8,11 @@ import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { PerkCard } from '@/components/PerkCard';
 
+export type PerkSlotSize = 'default' | 'large' | 'fill' | 'tarot' | 'compact';
+
 // Matches PerkCard's own grid-view footprint exactly, so an empty/obscured
 // slot takes up the same space as a filled one and nothing jumps around.
-const SLOT_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compact', string> = {
+const SLOT_SIZE_CLASSES: Record<PerkSlotSize, string> = {
   default: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44 2xl:h-52 2xl:w-52 min-[1800px]:h-60 min-[1800px]:w-60',
   large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 min-[1800px]:h-68 min-[1800px]:w-68',
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
@@ -32,7 +34,7 @@ export interface PerkSlotProps {
   announce?: boolean;
   /** 'large' is used by every mode's result grid; the Wheel's flanking
    * loadout slots stay at 'default'; 'tarot' fits inside tarot cards; 'compact' for mobile scatter. */
-  size?: 'default' | 'large' | 'fill' | 'tarot' | 'compact';
+  size?: PerkSlotSize;
   /** Persistent Blind Mode -- distinct from `isObscured` (the Chaos
    * "Curse of Blindness" mutator), which does NOT show the coordinate tag.
    * Blind Mode always shows it. */
@@ -40,6 +42,14 @@ export interface PerkSlotProps {
   onClick?: () => void;
   dict?: Dictionary;
 }
+
+const SLOT_OUTER_PADDING: Record<PerkSlotSize, string> = {
+  default: 'p-2 sm:p-3',
+  large: 'p-2 sm:p-3',
+  fill: 'p-1',
+  tarot: 'p-0.5',
+  compact: 'p-0.5',
+};
 
 export const PerkSlot: React.FC<PerkSlotProps> = ({
   perk,
@@ -55,34 +65,38 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
 }) => {
   if (isObscured) {
     return (
-      <button
-        type="button"
-        onClick={onClick}
-        className={cn(
-          SLOT_SIZE_CLASSES[size],
-          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-purple-400/50 dark:border-purple-800/60 bg-purple-50/90 dark:bg-purple-950/70 text-purple-700 dark:text-purple-400 cursor-pointer shadow-xs transition-colors backdrop-blur-xs'
-        )}
-      >
-        <EyeOff className="h-10 w-10 animate-pulse" />
-        <span className="text-[11px] font-black uppercase tracking-wide text-center px-2">
-          {dict?.generator?.clickToReveal || '??? (Click to Reveal)'}
-        </span>
-      </button>
+      <div className={cn('flex items-center justify-center w-full', SLOT_OUTER_PADDING[size])}>
+        <button
+          type="button"
+          onClick={onClick}
+          className={cn(
+            SLOT_SIZE_CLASSES[size],
+            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-purple-400/50 dark:border-purple-800/60 bg-purple-50/90 dark:bg-purple-950/70 text-purple-700 dark:text-purple-400 cursor-pointer shadow-xs transition-colors backdrop-blur-xs'
+          )}
+        >
+          <EyeOff className="h-10 w-10 animate-pulse" />
+          <span className="text-[11px] font-black uppercase tracking-wide text-center px-2">
+            {dict?.generator?.clickToReveal || '??? (Click to Reveal)'}
+          </span>
+        </button>
+      </div>
     );
   }
 
   if (!perk) {
     return (
-      <div
-        className={cn(
-          SLOT_SIZE_CLASSES[size],
-          'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-slate-400 dark:text-slate-500 transition-colors shadow-xs backdrop-blur-xs'
-        )}
-      >
-        <ImageOff className="h-8 w-8 text-slate-400 dark:text-slate-600" />
-        <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 text-center px-2">
-          {dict?.generator?.emptySlot || 'Empty Slot'}
-        </span>
+      <div className={cn('flex items-center justify-center w-full', SLOT_OUTER_PADDING[size])}>
+        <div
+          className={cn(
+            SLOT_SIZE_CLASSES[size],
+            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-slate-400 dark:text-slate-500 transition-colors shadow-xs backdrop-blur-xs'
+          )}
+        >
+          <ImageOff className="h-8 w-8 text-slate-400 dark:text-slate-600" />
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 text-center px-2">
+            {dict?.generator?.emptySlot || 'Empty Slot'}
+          </span>
+        </div>
       </div>
     );
   }

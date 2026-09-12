@@ -7,6 +7,9 @@ import { Coins, Flame, Skull } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChaosRulesModal } from './ChaosRulesModal';
+import { cascadeCompletedTiers } from '@/utils/challengeTierCompletion';
+
+const DIFFICULTY_ORDER: Difficulty[] = ['easy', 'medium', 'hell'];
 
 export interface ChaosModeModalProps {
   isOpen: boolean;
@@ -16,6 +19,9 @@ export interface ChaosModeModalProps {
   /** False when switching difficulty mid-run from the board header -- skips
    *  the explanatory intro, since the player already knows how Chaos works. */
   showIntro?: boolean;
+  /** Difficulties this user has ever fully completed -- clearing a harder one
+   *  marks every easier tile as done too. */
+  completedDifficulties?: Difficulty[];
   dict?: Dictionary;
 }
 
@@ -25,9 +31,11 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
   onSelectDifficulty,
   currentDifficulty,
   showIntro = true,
+  completedDifficulties = [],
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const completedTiers = cascadeCompletedTiers(DIFFICULTY_ORDER, completedDifficulties);
 
   const tiles: ChallengeIntroTile[] = [
     {
@@ -36,6 +44,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       description: dict?.streaks?.chaosEasyDesc || 'A checkpoint banks every 5 wins.',
       icon: Coins,
       accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+      completed: completedTiers.has('easy'),
     },
     {
       value: 'medium',
@@ -43,6 +52,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       description: dict?.streaks?.chaosMediumDesc || 'A checkpoint banks every 10 wins.',
       icon: Flame,
       accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+      completed: completedTiers.has('medium'),
     },
     {
       value: 'hell',
@@ -50,6 +60,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       description: dict?.streaks?.chaosHellDesc || 'No checkpoints. One loss resets everything.',
       icon: Skull,
       accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+      completed: completedTiers.has('hell'),
     },
   ];
 
@@ -75,6 +86,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         escapeDisabled={isRulesOpen}
         selectedValue={currentDifficulty}
         currentLabel={dict?.streaks?.current || 'Current'}
+        dict={dict}
       />
 
       <ChaosRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

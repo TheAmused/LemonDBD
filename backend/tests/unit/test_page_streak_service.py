@@ -366,6 +366,52 @@ class TestPageStreakResults:
         with pytest.raises(ValueError):
             self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
 
+    def test_winning_last_page_records_a_completion(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "page_streak"
+        assert record.variant == "Nurse"
+        assert record.attempts_taken == 1
+        assert record.matches_played == 3
+
+    def test_completion_survives_a_per_killer_reset(self) -> None:
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        self.service.reset_run(self.user_id, "Nurse")
+
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert roster["Nurse"]["status"] == "in_progress"
+        assert roster["Nurse"]["ever_completed"] is True
+
+    def test_reset_all_wipes_runs_and_completion_badges(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        self.service.reset_all(self.user_id)
+
+        assert self.service.get_run(self.user_id, "Nurse") is None
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert roster["Nurse"]["status"] == "not_started"
+        assert roster["Nurse"]["ever_completed"] is False
+        assert db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first() is None
+
     def test_reset_restarts_with_fresh_snapshot_and_keeps_history(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 

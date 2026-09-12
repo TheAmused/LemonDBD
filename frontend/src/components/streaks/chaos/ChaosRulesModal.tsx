@@ -39,6 +39,7 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     iconClassName="bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400"
     footerButtonClassName="bg-violet-600 hover:bg-violet-500 shadow-violet-500/20"
     footerButtonLabel={dict?.streaks?.gotItLetsPlay || "Got It, Let's Play!"}
+    dict={dict}
   >
     <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider mb-2 flex items-center gap-2">

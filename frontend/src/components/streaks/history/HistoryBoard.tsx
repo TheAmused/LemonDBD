@@ -19,6 +19,7 @@ import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -52,6 +53,7 @@ interface HistoryBoardProps {
 
 export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const dict = useStreaksDict();
+  const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -275,6 +277,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           onClose={() => setIsChangeModeOpen(false)}
           currentMode={mode}
           showIntro={false}
+          completedModes={(completionStatus.history ?? []) as HistoryMode[]}
           onSelectMode={(newMode) => {
             saveHistoryMode(newMode);
             setIsChangeModeOpen(false);

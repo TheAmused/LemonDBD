@@ -7,6 +7,9 @@ import { Shield, Skull } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { HistoryRulesModal } from './HistoryRulesModal';
+import { cascadeCompletedTiers } from '@/utils/challengeTierCompletion';
+
+const MODE_ORDER: HistoryMode[] = ['medium', 'hell'];
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
@@ -16,6 +19,8 @@ export interface HistoryModeModalProps {
   /** False when switching mode mid-run from the board header -- skips the
    *  explanatory intro, since the player already knows how History works. */
   showIntro?: boolean;
+  /** Modes this user has ever fully completed -- clearing Hell marks Medium done too. */
+  completedModes?: HistoryMode[];
   dict?: Dictionary;
 }
 
@@ -25,9 +30,11 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
   onSelectMode,
   currentMode,
   showIntro = true,
+  completedModes = [],
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const completedTiers = cascadeCompletedTiers(MODE_ORDER, completedModes);
 
   const tiles: ChallengeIntroTile[] = [
     {
@@ -36,6 +43,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       description: dict?.streaks?.historyMediumDesc || 'A checkpoint banks every row you clear.',
       icon: Shield,
       accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
+      completed: completedTiers.has('medium'),
     },
     {
       value: 'hell',
@@ -43,6 +51,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       description: dict?.streaks?.historyHellDesc || 'No checkpoints. One loss resets everything.',
       icon: Skull,
       accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
+      completed: completedTiers.has('hell'),
     },
   ];
 
@@ -68,6 +77,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         escapeDisabled={isRulesOpen}
         selectedValue={currentMode}
         currentLabel={dict?.streaks?.current || 'Current'}
+        dict={dict}
       />
 
       <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

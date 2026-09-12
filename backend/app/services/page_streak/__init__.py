@@ -24,6 +24,7 @@ from app.services.page_streak.runs import (
     fetch_run,
     record_match_result,
     reset_active_run,
+    reset_all_runs,
     run_to_dict,
     validate_match_submission,
 )
@@ -49,6 +50,7 @@ __all__ = [
     "validate_match_submission",
     "record_match_result",
     "reset_active_run",
+    "reset_all_runs",
     "apply_inactivity_loss",
     "fetch_page_streak_user_stats",
 ]

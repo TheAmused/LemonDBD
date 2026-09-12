@@ -1,6 +1,6 @@
 # backend/app/services/challenge_completions.py
 from typing import Any
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from app.core.extensions import db
 from app.models import ChallengeCompletionRecord
@@ -46,3 +46,46 @@ def fetch_challenge_completions(
         .limit(limit)
     ).all()
     return [r.to_dict() for r in records]
+
+
+def fetch_completed_variants(user_id: int, mode: str) -> set[str]:
+    """Every distinct variant this user has ever fully completed for one mode."""
+    rows = db.session.scalars(
+        select(ChallengeCompletionRecord.variant)
+        .where(
+            ChallengeCompletionRecord.user_id == user_id,
+            ChallengeCompletionRecord.mode == mode,
+        )
+        .distinct()
+    ).all()
+    return set(rows)
+
+
+def fetch_completed_variants_by_mode(user_id: int) -> dict[str, list[str]]:
+    """Every distinct (mode, variant) this user has ever fully completed, grouped by mode.
+
+    Drives "already won" badges (challenge cards, difficulty tiles, page-streak
+    killer roster) -- these survive a run's own reset because they read this
+    table, not the run row itself.
+    """
+    rows = db.session.execute(
+        select(ChallengeCompletionRecord.mode, ChallengeCompletionRecord.variant)
+        .where(ChallengeCompletionRecord.user_id == user_id)
+        .distinct()
+    ).all()
+    result: dict[str, list[str]] = {}
+    for mode, variant in rows:
+        result.setdefault(mode, []).append(variant)
+    return result
+
+
+def delete_completions(user_id: int, mode: str) -> None:
+    """Wipe every completion record for a user/mode -- used only by page streak's
+    "reset everything" flow, which intentionally also clears the win badges
+    (unlike a normal per-run reset elsewhere, which leaves this table alone)."""
+    db.session.execute(
+        delete(ChallengeCompletionRecord).where(
+            ChallengeCompletionRecord.user_id == user_id,
+            ChallengeCompletionRecord.mode == mode,
+        )
+    )

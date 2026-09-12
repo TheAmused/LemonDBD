@@ -47,6 +47,10 @@ export async function resetRun(token: string, killer: string): Promise<PageStrea
   return data.run;
 }
 
+export async function resetAllRuns(token: string): Promise<void> {
+  await postJson<{ success: boolean }>(token, '/run/reset-all', {});
+}
+
 export async function fetchStats(token: string): Promise<PageStreakStats> {
   const data = await getJson<{ stats: PageStreakStats }>(token, '/stats');
   return data.stats;

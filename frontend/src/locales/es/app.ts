@@ -9,6 +9,7 @@ export default {
   loadingPerks: "Cargando Bóveda de Habilidades...",
   resetFilters: "Restablecer filtros",
   adminPageTitle: "LemonDBD - Centro de Control de Administración",
+  achievementsPageTitle: "LemonDBD - Logros",
   buildsPageTitle: "LemonDBD - Builds de la Comunidad",
   guesserPageTitle: "LemonDBD - Minijuegos y Adivinanzas",
   charactersPageTitle: "LemonDBD - Personajes y Enseñables",

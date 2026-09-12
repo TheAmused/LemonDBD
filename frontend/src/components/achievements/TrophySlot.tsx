@@ -8,7 +8,6 @@ interface TrophySlotProps {
   variant: TrophyVariant;
   badgeLabel: string;
   hoverText: string;
-  /** Real unlock-status wiring lands later; every trophy is locked for now. */
   unlocked?: boolean;
 }
 
@@ -17,8 +16,6 @@ const VARIANT_ICON: Record<TrophyVariant, LucideIcon> = {
   all: Crown,
 };
 
-/** A single trophy placeholder: a locked silhouette until real artwork and
- *  completion data exist. Hover shows what it takes to unlock it. */
 export const TrophySlot: React.FC<TrophySlotProps> = ({ variant, badgeLabel, hoverText, unlocked = false }) => {
   const Icon = VARIANT_ICON[variant];
 

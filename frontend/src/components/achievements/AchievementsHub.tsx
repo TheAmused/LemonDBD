@@ -10,15 +10,6 @@ interface AchievementsHubProps {
   dict?: Dictionary;
 }
 
-/**
- * Static trophy-cabinet placeholder: 3 shelves (one per challenge mode with
- * difficulty tiers), each tier showing 2 locked silhouettes (owned-roster
- * clear vs full-roster clear). No completion data is wired up yet -- see
- * shelves.ts and TrophySlot.tsx for where that plugs in later.
- *
- * Blurred and covered with a "Coming Soon" overlay for now -- the page is
- * reachable and the layout is real, but nothing here is finished yet.
- */
 export const AchievementsHub: React.FC<AchievementsHubProps> = ({ dict }) => {
   const shelves = useMemo(() => getTrophyShelves(dict), [dict]);
   const t = dict?.achievements;
@@ -31,8 +22,8 @@ export const AchievementsHub: React.FC<AchievementsHubProps> = ({ dict }) => {
         ))}
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-6 py-3 text-2xl font-black tracking-wide text-amber-500 shadow-lg">
+      <div className="lemon-shell-main fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
+        <span className="pointer-events-auto rounded-2xl border border-amber-500/40 bg-amber-500/10 px-6 py-3 text-2xl font-black tracking-wide text-amber-500 shadow-lg">
           {t?.comingSoon || 'Coming Soon'}
         </span>
       </div>

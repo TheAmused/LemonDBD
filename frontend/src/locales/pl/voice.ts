@@ -63,6 +63,5 @@ export default {
   accuracyFastDesc: "Najmniejszy plik, najszybszy na słabszym sprzęcie. Wystarcza do krótkich nazw map.",
   accuracyAccurate: "Dokładny",
   accuracyAccurateDesc: "Większy model, wyraźnie lepszy przy nazwach własnych i mocnym akcencie. Wolniejszy na starszym sprzęcie.",
-  accuracyNote: "Dotyczy tylko lokalnego modelu w przeglądarce. Nie wpływa na silnik Web Speech.",
   modelSize: "~{size} MB do pobrania",
 } as const;

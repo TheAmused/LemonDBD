@@ -17,25 +17,34 @@ const getApiBase = () => {
 
 const API_BASE = getApiBase();
 
-/** Exported so callers can read the cache synchronously before rendering. */
-export function mapsCacheKey(search?: string, source?: string, realm?: string): string {
+// Exported so callers can read the cache synchronously before rendering; `lang` is part of the key so a language switch invalidates stale-locale entries.
+export function mapsCacheKey(search?: string, source?: string, realm?: string, lang?: string): string {
   const params = new URLSearchParams();
   if (realm) params.append('realm', realm);
   if (search) params.append('search', search);
   if (source) params.append('source', source);
+  if (lang) params.append('lang', lang);
   return `${API_BASE}/maps?${params.toString()}`;
 }
 
-export function realmsCacheKey(): string {
-  return `${API_BASE}/maps/realms`;
+export function realmsCacheKey(lang?: string): string {
+  const params = new URLSearchParams();
+  if (lang) params.append('lang', lang);
+  const query = params.toString();
+  return `${API_BASE}/maps/realms${query ? `?${query}` : ''}`;
 }
 
-export async function fetchMaps(realm?: string, search?: string, source?: string): Promise<{ maps: MapRealm[] }> {
-  const url = mapsCacheKey(search, source, realm);
+export async function fetchMaps(
+  realm?: string,
+  search?: string,
+  source?: string,
+  lang?: string
+): Promise<{ maps: MapRealm[] }> {
+  const url = mapsCacheKey(search, source, realm, lang);
   return fetchCached(url, () => fetchJson<{ maps: MapRealm[] }>(url));
 }
 
-export async function fetchRealms(): Promise<{ realms: Realm[] }> {
-  const url = realmsCacheKey();
+export async function fetchRealms(lang?: string): Promise<{ realms: Realm[] }> {
+  const url = realmsCacheKey(lang);
   return fetchCached(url, () => fetchJson<{ realms: Realm[] }>(url));
 }

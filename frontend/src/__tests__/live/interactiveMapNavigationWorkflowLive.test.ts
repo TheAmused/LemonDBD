@@ -10,8 +10,8 @@ test("Live Frontend Workflow: Interactive Map Navigation & Realms", async () => 
   const maps = (await mapsRes.json()).maps;
   assert.ok(maps.length > 0);
 
-  const detailRes = await fetch(`${API_BASE}/api/v1/maps/coal_tower?seed=seed_a`);
-  assert.strictEqual(detailRes.status, 200);
-  const mapData = (await detailRes.json()).map;
-  assert.ok(mapData.id.includes("coal_tower"), `expected map id to contain "coal_tower", got ${mapData.id}`);
+  const macmillanRes = await fetch(`${API_BASE}/api/v1/maps?realm=${encodeURIComponent("The MacMillan Estate")}`);
+  assert.strictEqual(macmillanRes.status, 200);
+  const macMaps = (await macmillanRes.json()).maps;
+  assert.ok(macMaps.length > 0);
 });

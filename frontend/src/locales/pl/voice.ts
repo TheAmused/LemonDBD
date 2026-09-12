@@ -58,4 +58,10 @@ export default {
   clientModelTooltip: "Mowa jest przetwarzana w całości lokalnie przez model AI w przeglądarce.",
   micAccessError: "Nie udało się uzyskać dostępu do mikrofonu. Spróbuj ponownie.",
   failedToInitialize: "Nie udało się zainicjować rozpoznawania mowy.",
+  accuracyTitle: "Dokładność modelu lokalnego",
+  accuracyFast: "Szybki",
+  accuracyFastDesc: "Najmniejszy plik, najszybszy na słabszym sprzęcie. Wystarcza do krótkich nazw map.",
+  accuracyAccurate: "Dokładny",
+  accuracyAccurateDesc: "Większy model, wyraźnie lepszy przy nazwach własnych i mocnym akcencie. Wolniejszy na starszym sprzęcie.",
+  modelSize: "~{size} MB do pobrania",
 } as const;

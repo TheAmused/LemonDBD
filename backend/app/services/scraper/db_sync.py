@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
-from app.models import Addon, Chapter, Character, Item, MapRealm, MapTile, Offering, Perk, Realm
+from app.models import Addon, Chapter, Character, Item, MapRealm, Offering, Perk, Realm
 from app.scrapers.types import (
     AddonData,
     ChapterImageData,
@@ -282,11 +282,7 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
     for m in maps:
         m_id = getattr(m, "id", None) or f"map_{sanitize_filename(m.name)}"
         valid_ids.add(m_id)
-        desc = ""
-        if getattr(m, "clock_system", None) and isinstance(m.clock_system, dict):
-            desc = m.clock_system.get("description", "")
-        if not desc:
-            desc = f"12-Clock callout map layout for {m.name} ({m.realm})."
+        desc = f"12-Clock callout map layout for {m.name} ({m.realm})."
 
         existing_map = existing_maps.get(m_id)
         if existing_map:
@@ -319,34 +315,6 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
             )
             db.session.add(new_map)
             existing_maps[m_id] = new_map
-
-        clock_sys = getattr(m, "clock_system", None)
-        if clock_sys and isinstance(clock_sys, dict):
-            existing_tiles = db.session.scalars(
-                select(MapTile).where(MapTile.map_id == m_id)
-            ).all()
-            if not existing_tiles:
-                landmark_positions = [
-                    ("twelve_o_clock", "12 O'Clock: " + str(clock_sys.get("twelve_o_clock", "Main Building / North Exit Gate")), 0.5, 0.1),
-                    ("three_o_clock", "3 O'Clock: " + str(clock_sys.get("three_o_clock", "East Gym / Outer Loop")), 0.9, 0.5),
-                    ("six_o_clock", "6 O'Clock: " + str(clock_sys.get("six_o_clock", "Killer Shack / South Exit Gate")), 0.5, 0.9),
-                    ("nine_o_clock", "9 O'Clock: " + str(clock_sys.get("nine_o_clock", "West Gym / L-T Wall")), 0.1, 0.5),
-                    ("center", "Center: " + str(clock_sys.get("center", "Central Landmark")), 0.5, 0.5),
-                ]
-                for key, tile_name, tx, ty in landmark_positions:
-                    db.session.add(
-                        MapTile(
-                            map_id=m_id,
-                            name=tile_name,
-                            type="landmark",
-                            x=tx,
-                            y=ty,
-                            seed_variant="seed_a",
-                            floor=1,
-                            has_pallet=("shack" in tile_name.lower() or "gym" in tile_name.lower()),
-                            has_window=("shack" in tile_name.lower() or "gym" in tile_name.lower() or "main" in tile_name.lower()),
-                        )
-                    )
 
     incoming_sources = {getattr(m, "source", "hens333") for m in maps}
     for k, existing_map in existing_maps.items():

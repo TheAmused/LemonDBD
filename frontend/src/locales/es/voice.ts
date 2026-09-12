@@ -58,4 +58,10 @@ export default {
   clientModelTooltip: "La voz se procesa completamente sin conexión mediante un modelo de IA local en tu navegador.",
   micAccessError: "No se pudo acceder al micrófono. Inténtalo de nuevo.",
   failedToInitialize: "No se pudo inicializar el reconocimiento de voz.",
+  accuracyTitle: "Precisión del modelo local",
+  accuracyFast: "Rápido",
+  accuracyFastDesc: "Descarga más pequeña y más rápida en equipos modestos. Suficiente para nombres cortos.",
+  accuracyAccurate: "Preciso",
+  accuracyAccurateDesc: "Modelo más grande, claramente mejor con nombres propios y acentos marcados. Más lento en hardware antiguo.",
+  modelSize: "~{size} MB de descarga",
 } as const;

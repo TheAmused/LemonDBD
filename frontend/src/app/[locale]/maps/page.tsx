@@ -126,6 +126,7 @@ function MapsPageInner() {
           }}
           backendBase={backendBase}
           dict={dict}
+          locale={locale}
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}
         />

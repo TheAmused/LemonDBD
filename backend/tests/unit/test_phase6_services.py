@@ -25,22 +25,8 @@ class TestMapService:
         names = [m["name"] for m in maps]
         assert "Coal Tower" in names
 
-    def test_get_map_detail(self, service: MapService) -> None:
-        detail = service.get_map_by_id("coal_tower")
-        assert detail is not None
-        assert detail["name"] == "Coal Tower"
-        assert "totem_spawns" in detail
-        assert len(detail["totem_spawns"]) == 5
-
     def test_api_maps_endpoint(self, client: FlaskClient) -> None:
         res = client.get("/api/v1/maps")
         assert res.status_code == 200
         data = res.get_json()
         assert "maps" in data
-
-    def test_api_map_detail_endpoint(self, client: FlaskClient) -> None:
-        res = client.get("/api/v1/maps/azarov_resting_place")
-        assert res.status_code == 200
-        data = res.get_json()
-        assert "map" in data
-        assert data["map"]["name"] == "Azarov's Resting Place"

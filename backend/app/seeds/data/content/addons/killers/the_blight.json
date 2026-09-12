@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 366,
+      "name": "Compound Seven",
+      "killer_id": 21,
+      "description": "This early sample failed to achieve desired results but demonstrated surprising effects regardless.\n• Automatically face the nearest Survivor within 16 meters after a Slam.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_compoundSeven.png?247705",
+      "icon_local_path": "icons/addons/compound_seven.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Präparat Sieben",
+          "description": "Diese frühe Probe hat zwar nicht die gewünschten Ergebnisse geliefert, aber trotzdem überraschende Effekte gezeigt.\n• Stelle dich nach einer Ramme automatisch dem nächsten Überlebenden innerhalb 16 Metern."
+        },
+        "es": {
+          "name": "Compuesto siete",
+          "description": "Esta primera muestra no arrojó los resultados esperados, pero, a pesar de todo, demostró unos efectos sorprendentes.\n• Se planta frente al superviviente más cercano en un radio de 16 metros automáticamente tras un Topetazo."
+        },
+        "ja": {
+          "name": "化合物7",
+          "description": "初期のサンプル。期待されていた結果を達成することはなかったが、それでも驚くような効果を証明した。\n• 激突の後、自動的に16メートル以内の一番近くにいる生存者の方向に向く"
+        },
+        "pl": {
+          "name": "Mikstura nr 7",
+          "description": "Ta wczesna próbka nie przyniosła pożądanych rezultatów, ale i tak wykazała zaskakujące efekty.\n• Automatyczne odwrócenie w stronę najbliższego ocalałego w promieniu 16 m po Uderzeniu."
+        }
+      }
+    },
+    {
+      "id": 367,
+      "name": "Chipped Monocle",
+      "killer_id": 21,
+      "description": "A monocle Talbot rarely used despite his eyesight weakening in later years.\n• Displays the target location of a Slam.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chippedMonocle.png?6f2c11",
+      "icon_local_path": "icons/addons/chipped_monocle.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Vermacktes Monokel",
+          "description": "Ein Monokel, das Talbot trotz seiner in späteren Jahren zunehmenden Sehschwäche nur selten genutzt hat.\n• Zeigt die Zielposition einer Ramme."
+        },
+        "es": {
+          "name": "Monóculo resquebrajado",
+          "description": "Un monóculo que Talbot usaba muy raramente a pesar de su deterioro visual con el paso de los años.\n• Muestra la ubicación del objetivo de un Topetazo."
+        },
+        "ja": {
+          "name": "欠けた単眼鏡",
+          "description": "年老いて視力が衰えたにもかかわらず、タルボットがほとんど使わなかった単眼鏡。\n• 激突の目標位置が表示される"
+        },
+        "pl": {
+          "name": "Wyszczerbiony monokl",
+          "description": "Monokl, którego Talbot rzadko używał, mimo pogarszającego się z czasem wzroku.\n• Pokazuje położenie celu Uderzenia."
+        }
+      }
+    },
+    {
+      "id": 368,
+      "name": "Placebo Tablet",
+      "killer_id": 21,
+      "description": "A pill that’s utterly ineffective... or is it?\n• Decreases movement speed while Rushing by 15%.\n• Gain 100% bonus Bloodpoints on Rush score events.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_placeboTablet.png?372ba5",
+      "icon_local_path": "icons/addons/placebo_tablet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Placebo-Tablette",
+          "description": "Eine völlig wirkungslose Pille ... oder?\n• Verringert die Bewegungsgeschwindigkeit beim Stürmen um 15 %.\n• Du erhältst 100 % Bonus-Blutpunkte bei Sturm-Punktereignissen."
+        },
+        "es": {
+          "name": "Placebo",
+          "description": "Una píldora totalmente ineficaz... ¿o no?\n• Reduce la velocidad de movimiento de Acometida un 15 %.\n• Obtiene un 100 % de puntos de sangre adicionales con los eventos de puntuación de Acometida."
+        },
+        "ja": {
+          "name": "錠剤タイプの偽薬",
+          "description": "完全に効果のない薬…かどうかはわからない。\n• 突進中の移動速度が15%低下する\n• 突進の得点が発生するとブラッドポイントを100%追加取得する"
+        },
+        "pl": {
+          "name": "Placebo",
+          "description": "Całkowicie nieskuteczna tabletka. Ale czy na pewno?\n• Zmniejsza prędkość ruchu podczas Pędu o 15%.\n• Otrzymujesz 100% dodatkowych Punktów Krwi za punktowane ataki Pędem."
+        }
+      }
+    },
+    {
+      "id": 369,
+      "name": "Foxglove",
+      "killer_id": 21,
+      "description": "A poisonous plant that sparked Talbot’s interest in chemistry. It rekindles deeply buried memories.\n• Decreases Rush recovery time by 0.25 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_foxglove.png?cd5c99",
+      "icon_local_path": "icons/addons/foxglove.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Fingerhut",
+          "description": "Eine giftige Pflanze, die Talbots Interesse an Chemie entfacht hat. Sie lässt tief vergrabene Erinnerungen wieder aufflammen.\n• Verringert die Erholungszeit nach einem Sturm um 0,25 Sekunden."
+        },
+        "es": {
+          "name": "Dedalera",
+          "description": "Una planta venenosa que despertó el interés de Talbot por la química. Reaviva recuerdos que estaban profundamente enterrados.\n• Reduce el tiempo de recuperación de Acometida en 0,25 segundos."
+        },
+        "ja": {
+          "name": "ジギタリス",
+          "description": "タルボットの化学に対する興味を引き出した有毒植物。奥底に秘めた思い出をよみがえらせる。\n• 突進の回復時間が0.25秒減少する"
+        },
+        "pl": {
+          "name": "Naparstnica purpurowa",
+          "description": "Trująca roślina, dzięki której Talbot zainteresował się chemią. Przywołuje dawno wyparte wspomnienia.\n• Skraca czas odnawiania Pędu o 0,25 sekundy."
+        }
+      }
+    },
+    {
+      "id": 370,
+      "name": "Shredded Notes",
+      "killer_id": 21,
+      "description": "The remnants of Talbot’s notes, they still contain some valuable information within.\n• Decreases time to recharge a Rush token by 0.33 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shreddedNotes.png?7d28ef",
+      "icon_local_path": "icons/addons/shredded_notes.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerfetzte Notizen",
+          "description": "Die Reste von Talbots Notizen. Es sind immer noch einige wertvolle Informationen darin enthalten.\n• Verringert die Zeit, um einen Sturm-Zähler wieder aufzuladen, um 0,33 Sekunden."
+        },
+        "es": {
+          "name": "Notas destrozadas",
+          "description": "Los restos de las notas de Talbot. Aún contienen información valiosa.\n• Reduce el tiempo que recarga un distintivo de Acometida en 0,33 segundos."
+        },
+        "ja": {
+          "name": "ボロボロの手記",
+          "description": "タルボットの手記の一部。価値のある情報が記載されている。\n• 突進トークンのチャージに要する時間が0.33秒減少する"
+        },
+        "pl": {
+          "name": "Porwane notatki",
+          "description": "Pozostałości po notatkach Talbota. Wciąż zawierają cenne informacje.\n• Skracają czas ładowania żetonu Pędu o 0,33 s."
+        }
+      }
+    },
+    {
+      "id": 371,
+      "name": "Pustula Dust",
+      "killer_id": 21,
+      "description": "Dried pustula petals ground into a fine dust.\n• Increases maximum Slam duration by 0.75 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pustulaDust.png?a2c784",
+      "icon_local_path": "icons/addons/pustula_dust.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Pustelmehl",
+          "description": "Getrocknete Blütenblätter der Pustelblume, die zu feinem Mehl verarbeitet wurden.\n• Erhöht die maximale Ramme-Dauer um 0,75 Sekunden."
+        },
+        "es": {
+          "name": "Polvo de pústula",
+          "description": "Pétalos secos de pústula, convertidos en un polvo fino.\n• Aumenta la duración máxima de Topetazo en 0,75 segundos."
+        },
+        "ja": {
+          "name": "パチュラの粉",
+          "description": "乾燥させたパチュラの花弁を細塵状にすりつぶしたもの。\n• 激突の最大持続時間が0.75秒増加する"
+        },
+        "pl": {
+          "name": "Pył z krostorośli",
+          "description": "Suszone płatki krostorośli zmielone na drobny pył.\n• Zwiększa maksymalny czas trwania Uderzenia o 0,75 sekundy."
+        }
+      }
+    },
+    {
+      "id": 372,
+      "name": "Plague Bile",
+      "killer_id": 21,
+      "description": "A sample of The Plague’s bile, distilled and treated with a mixture of chemicals.\n• Increases turn rate while Rushing by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_plagueBile.png?3d00f2",
+      "icon_local_path": "icons/addons/plague_bile.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Seuchengalle",
+          "description": "Eine Probe des Gallensekrets der Seuche, die destilliert und mit einem chemischen Gemisch behandelt wurde.\n• Erhöht die Wenderate beim Stürmen um 10 %."
+        },
+        "es": {
+          "name": "Bilis de la Plaga",
+          "description": "Una muestra de la bilis de la Plaga, destilada y tratada con una mezcla de sustancias químicas.\n• Aumenta la velocidad de aparición de Acometida un 10 %."
+        },
+        "ja": {
+          "name": "プレイグの胆汁",
+          "description": "プレイグの胆汁のサンプル。精製され、化学薬品の混合物で処理されている。\n• 突進中のターン速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Żółć Plagi",
+          "description": "Próbka żółci Plagi, destylowana i potraktowana mieszaniną chemikaliów.\n• Zwiększa prędkość obrotów podczas Pędu o 10%."
+        }
+      }
+    },
+    {
+      "id": 373,
+      "name": "Canker Thorn",
+      "killer_id": 21,
+      "description": "A sizable thorn snipped from a visceral canker. It secretes a mild toxin.\n• Decreases recovery time after Rushing by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cankerThorn.png?b0fc3d",
+      "icon_local_path": "icons/addons/canker_thorn.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Geschwürdorn",
+          "description": "Ein ansehnlicher Dorn, der von einem Viszeralgeschwür abgeschnitten wurde. Er sondert ein mildes Gift ab.\n• Verringert die Erholungszeit nach einem Sturm um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Espina ulcerosa",
+          "description": "Una espina bastante grande, extraída de una úlcera visceral. Segrega una toxina leve.\n• Reduce el tiempo de recuperación de Acometida en 0,5 segundos."
+        },
+        "ja": {
+          "name": "潰瘍の棘",
+          "description": "臓器の潰瘍から切り取った棘。かなり大きく、軽度の毒素を分泌する。\n• 突進後の回復時間が0.5秒減少する"
+        },
+        "pl": {
+          "name": "Cierń przerośla",
+          "description": "Pokaźnych rozmiarów cierń odcięty z przerośla. Wydziela słabą truciznę.\n• Skraca czas odnawiania po Pędzie o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 374,
+      "name": "Blighted Rat",
+      "killer_id": 21,
+      "description": "A rat that briefly returned to life when injected with serum, becoming aggressive and uncontrollable.\n• Increases speed while Rushing by 2% for each consecutive Rush.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blightedRat.png?e816e1",
+      "icon_local_path": "icons/addons/blighted_rat.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verfaulte Ratte",
+          "description": "Eine Ratte, die kurzzeitig ins Leben zurückkehrte, als ihr Serum injiziert wurde. Sie wurde aber aggressiv und unkontrollierbar.\n• Erhöht die Geschwindigkeit beim Stürmen um 2 % für jeden folgenden Sturm."
+        },
+        "es": {
+          "name": "Rata deteriorada",
+          "description": "Una rata que resucitó momentáneamente al inocularle el suero, pero en un estado agresivo e incontrolable.\n• Aumenta la velocidad de Acometida un 2 % por cada Acometida consecutiva."
+        },
+        "ja": {
+          "name": "破滅したネズミ",
+          "description": "血清を投与され一瞬生き返ったネズミ。攻撃的で制御不能になった。\n• 突進を連続するたびに突進中の速度が2%上昇する"
+        },
+        "pl": {
+          "name": "Zarażony szczur",
+          "description": "Szczur, który na krótko powrócił do życia po wstrzyknięciu serum. Wywołało to u niego niekontrolowaną agresję.\n• Zwiększa prędkość podczas Pędu o 2% za każdy kolejny Pęd."
+        }
+      }
+    },
+    {
+      "id": 375,
+      "name": "Compound Twenty-One",
+      "killer_id": 21,
+      "description": "A serum that's fatal to humans. It evokes beneficial qualities in those who are... something more.\n• Reveals the auras of all Survivors within 8 meters for 3 seconds after a Slam.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_compoundTwentyOne.png?c9c6cb",
+      "icon_local_path": "icons/addons/compound_twenty_one.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Präparat Einundzwanzig",
+          "description": "Ein für Menschen tödliches Serum. In jenen, die ... besonders sind, ruft es vorteilhafte Qualitäten hervor.\n• Nach einer Ramme werden die Auren aller Überlebenden im Umkreis von 8 Metern für 3 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Compuesto veintiuno",
+          "description": "Un suero letal para los humanos que evoca cualidades beneficiosas para los que son... algo más.\n• Se muestran las auras de todos los supervivientes que se hallen en un radio de 8 metros durante 3 segundos tras un Topetazo."
+        },
+        "ja": {
+          "name": "化合物21",
+          "description": "人間の命を脅かす血清。それ以上の存在である者には、有益な効果をもたらす。\n• 激突後、8メートル以内にいる生存者のオーラが3秒間視える"
+        },
+        "pl": {
+          "name": "Mikstura nr 21",
+          "description": "Serum. Śmiertelnie trujące dla ludzi, ale wywołuje pomyślne skutki u tych, którzy są… czymś więcej.\n• Odkrywa aury ocalałych w promieniu 8 metrów od miejsca Uderzenia na 3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 376,
+      "name": "Rose Tonic",
+      "killer_id": 21,
+      "description": "A mixture made with dried roses from the exceedingly rare New Moon Bouquet.\n• Increases maximum Slam duration by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_roseTonic.png?69cd3a",
+      "icon_local_path": "icons/addons/rose_tonic.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rosentonikum",
+          "description": "Eine Mischung aus getrockneten Rosen vom außerordentlich seltenen Neumondbouquet.\n• Verlängert die maximale Dauer der Ramme um 1 Sekunde."
+        },
+        "es": {
+          "name": "Tónico de rosas",
+          "description": "Una mezcla elaborada a partir de rosas secas procedentes del ramillete de luna nueva tan difícil de encontrar.\n• Aumenta la duración máxima de Topetazo en 1 segundo."
+        },
+        "ja": {
+          "name": "バラの強壮剤",
+          "description": "非常に貴重な新月の花束から取った、乾燥したバラの花で作られた混合物。\n• 激突の最大持続時間が1秒増加する"
+        },
+        "pl": {
+          "name": "Woda różana",
+          "description": "Mikstura z suszonych róż z nadzwyczaj rzadkiego bukietu nowiu księżyca.\n• Wydłuża maksymalny czas trwania Uderzenia o 1 sekundę."
+        }
+      }
+    },
+    {
+      "id": 377,
+      "name": "Umbra Salts",
+      "killer_id": 21,
+      "description": "Regular sea salt that has momentarily passed through the spirit world, altering its properties in the process.\n• Increases turn rate while Rushing by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_umbraSalts.png?996c63",
+      "icon_local_path": "icons/addons/umbra_salts.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Umbrasalz",
+          "description": "Gewöhnliches Meeressalz, das vorübergehend durch die Geisterwelt bewegt wurde, wodurch es seine Eigenschaften verändert hat.\n• Erhöht die Wenderate beim Stürmen um 15 %."
+        },
+        "es": {
+          "name": "Sales umbrías",
+          "description": "Sal marina común que ha atravesado momentáneamente el mundo espiritual, lo cual ha alterado sus propiedades.\n• Aumenta la velocidad de aparición al usar Acometida un 15 %."
+        },
+        "ja": {
+          "name": "本影の塩",
+          "description": "一瞬だけ霊界を通り抜けた、ごく普通の海塩。その過程で性質が変わった。\n• 突進中のターン速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Sól z Półmroku",
+          "description": "Zwykła sól morska, która na chwilę znalazła się w świecie duchów, co zmieniło jej właściwości.\n• Zwiększa prędkość obrotów podczas Pędu o 15%."
+        }
+      }
+    },
+    {
+      "id": 378,
+      "name": "Adrenaline Vial",
+      "killer_id": 21,
+      "description": "A hormone removed from an unwilling subject’s adrenal gland. Though it provides a jolt of energy, it can fatigue its user.\n• Increases maximum Rush tokens by 2.\n• Increases maximum look angle while Rushing by 20 degrees.\n• Decreases Rush turn rate by 55%.\n• Increases Rush speed by 5%.\n\"\"Please, don't do this...\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_adrenalineVial.png?f16b99",
+      "icon_local_path": "icons/addons/adrenaline_vial.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Adrenalinfläschchen",
+          "description": "Ein Hormon, das einem Subjekt gegen seinen Willen aus der Nebenniere entnommen wurde. Obwohl es für einen Energieschub sorgt, kann es beim Nutzer zu Ermüdung führen.\n• Erhöht die maximale Anzahl von Sturm-Zählern um 2.\n• Erhöht den maximalen Blickwinkel beim Stürmen um 20 Grad.\n• Verringert die Wenderate beim Stürmen um 55 %.\n• Erhöht die Geschwindigkeit beim Stürmen um 5 %.\n\"„Bitte, tu das nicht ...“\""
+        },
+        "es": {
+          "name": "Vial de adrenalina",
+          "description": "Una hormona extraída de la glándula suprarrenal de un sujeto reticente. Aumenta los niveles de energía, pero puede causar fatiga.\n• Aumenta los distintivos de Acometida máximos en 2.\n• Aumenta el ángulo de visión máximo de Acometida en 20 grados.\n• Reduce la velocidad de aparición de Acometida un 55 %.\n• Aumenta la velocidad de Acometida un 5 %.\n\"\"Por favor, no lo hagas...\".\""
+        },
+        "ja": {
+          "name": "アドレナリンの小瓶",
+          "description": "不幸な被験者の副腎から抽出したホルモン。使用するとほとばしるエネルギーを得ることができるが、その後に疲労がやってくる。\n• 突進トークンの最大数が2つ増加する\n• 突進中の最大視認角度が20度増加する\n• 突進のターン速度が55%低下する\n• 突進の速度が5%上昇する\n\"「お願い、やめて…」\""
+        },
+        "pl": {
+          "name": "Ampułka z adrenaliną",
+          "description": "Hormon z nadnerczy nieskłonnego do współpracy obiektu badań. Chociaż zapewnia nagły skok energii, użycie może zmęczyć.\n• Zwiększa maksymalną liczbę żetonów Pędu o 2.\n• Zwiększa maksymalny kąt patrzenia w trakcie Pędu o 20 stopni.\n• Zmniejsza prędkość obrotów podczas Pędu o 55%.\n• Zwiększa prędkość Pędu o 5%.\n\"„Proszę, nie rób tego...”\""
+        }
+      }
+    },
+    {
+      "id": 379,
+      "name": "Blighted Crow",
+      "killer_id": 21,
+      "description": "A dead crow that has been grotesquely mutated by blight serum.\n• Increases speed while Rushing by 3% for each consecutive Rush.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blightedCrow.png?9103fc",
+      "icon_local_path": "icons/addons/blighted_crow.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Verfaulte Krähe",
+          "description": "Eine tote Krähe, die auf groteske Weise durch das Fäuleserum mutiert ist.\n• Erhöht die Geschwindigkeit beim Stürmen um 3 % für jeden folgenden Sturm."
+        },
+        "es": {
+          "name": "Cuervo deteriorado",
+          "description": "Un cuervo muerto que ha mutado de forma grotesca debido al suero del Deterioro.\n• Aumenta la velocidad de Acometida un 3 % por cada Acometida consecutiva."
+        },
+        "ja": {
+          "name": "破滅したカラス",
+          "description": "破滅の血清によりグロテスクな変異を遂げて死んだカラス。\n• 突進を連続するたびに突進中の速度が3%上昇する"
+        },
+        "pl": {
+          "name": "Zarażony kruk",
+          "description": "Martwy kruk, groteskowo zmutowany przez serum zarazy.\n• Zwiększa prędkość podczas Pędu o 3% za każdy kolejny Pęd."
+        }
+      }
+    },
+    {
+      "id": 380,
+      "name": "Summoning Stone",
+      "killer_id": 21,
+      "description": "Talbot used this stone to carve what he believed was his research into the opium den’s walls.\n• Increases the initial Rush duration by 0.5 seconds.\n\"\"Death is only the beginning.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_summoningStone.png?a9b57e",
+      "icon_local_path": "icons/addons/summoning_stone.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Beschwörungsstein",
+          "description": "Talbot hat diesen Stein verwendet, um das, was er für seine Forschung hielt, in die Wände der Opiumhöhle zu kratzen.\n• Verlängert die anfängliche Sturmdauer um 0,5 Sekunden.\n\"„Der Tod ist erst der Anfang.“\""
+        },
+        "es": {
+          "name": "Piedra de invocación",
+          "description": "Talbot usó esta piedra para tallar lo que creía que era su investigación sobre las paredes del fumadero de opio.\n• Aumenta la duración inicial de la Acometida en 0,5 segundos.\n\"\"La muerte solo es el comienzo\".\""
+        },
+        "ja": {
+          "name": "召喚の石",
+          "description": "タルボットはこの石を使って、本人が研究であると主張する対象をアヘン窟の壁に刻んだ。\n• 最初の突進持続時間が0.5秒増加する\n\"「死は始まりに過ぎないのだ。」\""
+        },
+        "pl": {
+          "name": "Kamień przywołań",
+          "description": "Talbot używał tego kamienia, aby wyryć na ścianach swej nory to, co uważał za wyniki swoich badań.\n• Zwiększa początkowy czas trwania Pędu o 0,5 s.\n\"„Śmierć to dopiero początek”\""
+        }
+      }
+    },
+    {
+      "id": 381,
+      "name": "Soul Chemical",
+      "killer_id": 21,
+      "description": "A chemical squeezed from the pineal gland of a recently deceased Survivor.\n• Increases the initial Rush speed by 5%.\n\"\"...suspected to cause atypical alterations in neural rhythmic activity.\" —Unlabeled mystery school text\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_soulChemical.png?cdb5df",
+      "icon_local_path": "icons/addons/soul_chemical.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Seelenchemikalie",
+          "description": "Eine Chemikalie, die aus der Pinealdrüse eines kürzlich verstorbenen Überlebenden gepresst wurde.\n• Erhöht die Anfangsgeschwindigkeit von Sturm um 5 %.\n\"„... steht unter Verdacht, atypische Veränderungen in der Aktivität der neuralen Rhythmik zu verursachen.“ – Nicht näher benannter Text der Geheimschule\""
+        },
+        "es": {
+          "name": "Sustancia química del alma",
+          "description": "Una sustancia química extraída de la glándula pineal de un superviviente recién fallecido.\n• Aumenta la velocidad inicial de Acometida un 5 %.\n\"\"... Se sospecha que produce alteraciones en la actividad rítmica neuronal\". (Texto académico sobre misterio sin etiquetar)\""
+        },
+        "ja": {
+          "name": "魂の化学物質",
+          "description": "最近死亡した生存者の松果腺から絞り出した化学物質。\n• 最初の突進速度が5%上昇する\n\"「…は神経の律動活動に異常な変化をおよぼすと考えられる。」 ―未分類の謎めいた教科書\""
+        },
+        "pl": {
+          "name": "Substancja duszy",
+          "description": "Płyn pobierany z szyszynki zmarłego niedawno ocalałego.\n• Zwiększa początkową prędkość Pędu o 5%.\n\"„… podejrzewa się, że wywołuje nietypowe zmiany w rytmach fal mózgowych” – Nieoznakowany tekst szkoły mistyków\""
+        }
+      }
+    },
+    {
+      "id": 382,
+      "name": "Vigo's Journal",
+      "killer_id": 21,
+      "description": "The journal of a man who claimed to have returned from the Void. The knowledge within has practical applications.\n• Grants Undetectable while Rushing.\nUndetectable  hides the Killer's aura, terror radius and red stain.\n\"\"In a wasteland of forgotten dreams and endless routine, the man with a way out is God.\" —Talbot Grimes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vigosJournal.png?ae7ba9",
+      "icon_local_path": "icons/addons/vigos_journal.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Vigos Tagebuch",
+          "description": "Das Tagebuch eines Mannes, der behauptet, aus der Leere zurückgekehrt zu sein. Das Wissen, das darin aufgeschrieben ist, bietet praktischen Nutzen.\n• Du erhältst beim Stürmen den Statuseffekt Unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„In einer Wüste aus vergessenen Träumen und endloser Routine ist Gott derjenige, der den Ausweg kennt.“ – Talbot Grimes\""
+        },
+        "es": {
+          "name": "Diario de Vigo",
+          "description": "El diario de un hombre que decía haber vuelto desde el Vacío. Los conocimientos que alberga tienen aplicaciones prácticas.\n• Se te aplica Indetectable mientras usas Acometida.\nIndetectable oculta el aura, radio de terror y marca roja del asesino.\n\"\"En un páramo de sueños olvidados y de rutinas interminables, el hombre que tiene una salida es Dios\". (Talbot Grimes)\""
+        },
+        "ja": {
+          "name": "ヴィゴの手記",
+          "description": "虚無から戻ってきたと言う男の日記。記載された情報には実用性がある。\n• 突進中は探知不可になる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「忘れ去られた夢と終わりなき日常しかない荒れ地では、そこから抜け出す方法を知っている者が神である。」 ―タルボット・グライムズ\""
+        },
+        "pl": {
+          "name": "Dziennik Viga",
+          "description": "Dziennik mężczyzny, który twierdził, że powrócił z Pustki. Wiedza tu zawarta ma praktyczne zastosowanie.\n• Daje efekt Niewykrywalny podczas Pędu.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Człowiek, który znajdzie wyście z pustkowi zapomnianych marzeń i niekończącej się rutyny, staje się Bogiem”. – Talbot Grimes\""
+        }
+      }
+    },
+    {
+      "id": 383,
+      "name": "Compound Thirty-Three",
+      "killer_id": 21,
+      "description": "Talbot’s penultimate attempt at a serum. Though it did not facilitate his escape, it did have powerful side effects.\n• Rush cannot be performed more than 5 times.\n• Increases Rush turn rate by 11%.\n• Increases Rush duration by 11%.\n\"\"Time is scarce. Let this be the one...\" —Talbot Grimes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_compoundThirtyThree.png?8fc17d",
+      "icon_local_path": "icons/addons/compound_thirty_three.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Präparat Dreiunddreißig",
+          "description": "Talbots vorletzter Versuch eines Serums. Es ermöglichte zwar nicht seine Flucht, verursachte aber starke Nebenwirkungen.\n• Sturm kann maximal 5-mal ausgeführt werden.\n• Erhöht die Wenderate von Sturm um 11 %.\n• Verlängert die Sturmdauer um 11 %.\n\"„Die Zeit wird knapp. Hoffentlich ist es das jetzt ...“ – Talbot Grimes\""
+        },
+        "es": {
+          "name": "Compuesto treinta y tres",
+          "description": "El penúltimo intento de suero de Talbot. Aunque no facilitó su huida, los efectos secundarios eran muy poderosos.\n• Acometida no se puede utilizar más de 5 veces.\n• Aumenta la velocidad de aparición de Acometida un 11 %.\n• Aumenta la duración de Acometida un 11 %.\n\"\"No tenemos mucho tiempo. Este objetivo me vale...\". (Talbot Grimes)\""
+        },
+        "ja": {
+          "name": "化合物33",
+          "description": "タルボットが最後から2番目に作った血清の試作品。タルボットの脱出には寄与しなかったが、強力な副作用があった。\n• 突進は5回までしか発動できない\n• 突進のターン速度が11%増加する\n• 突進の持続時間が11%増加する\n\"「時間がない。これで決めなければ…」 ―タルボット・グライムズ\""
+        },
+        "pl": {
+          "name": "Mikstura nr 33",
+          "description": "Przedostatni wysiłek Talbota, by stworzyć serum. Chociaż nie umożliwiło mu ucieczki, miało potężne efekty uboczne.\n• Pędu nie można wykonać więcej niż 5 razy.\n• Zwiększa prędkość obrotów podczas Pędu o 11%.\n• Wydłuża czas trwania Pędu o 11%.\n\"„Zostało mało czasu. Oby to było to...” – Talbot Grimes\""
+        }
+      }
+    },
+    {
+      "id": 384,
+      "name": "Iridescent Blight Tag",
+      "killer_id": 21,
+      "description": "A glass-like laboratory tag, molded from The Fog itself. Either a gift from The Entity or a cruel jest to tag The Blight as he once did to others.\n• Rush cannot be performed more than 3 times.\n• Increases maximum Rush look angle by 20 degrees.\n• Increases Rush speed by 10%.\n\"\"Progress requires drastic change.\" —Talbot Grimes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentBlightTag.png?a22263",
+      "icon_local_path": "icons/addons/iridescent_blight_tag.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Fäule-Etikett",
+          "description": "Ein glasartiges Labor-Etikett, das aus dem Nebel selbst erschaffen wurde. Entweder ein Geschenk vom Entitus oder ein grausamer Scherz, um die Fäule zu markieren, wie sie es einst mit anderen getan hat.\n• Du kannst nicht mehr als 3 Stürme ausführen.\n• Vergrößert den maximalen Blickwinkel beim Stürmen um 20 Grad.\n• Erhöht die Sturmgeschwindigkeit um 10 %.\n\"„Fortschritt erfordert drastische Veränderungen.“ – Talbot Grimes\""
+        },
+        "es": {
+          "name": "Etiqueta del Deterioro iridiscente",
+          "description": "Una etiqueta cristalina de laboratorio, moldeada por la mismísima niebla. Puede ser un regalo del Ente o una broma cruel con la que etiquetar al Deterioro como él había hecho anteriormente con los demás.\n• Acometida no se puede utilizar más de 3 veces.\n• Aumenta el ángulo de visión máximo de Acometida en 20 grados.\n• Aumenta la velocidad de Acometida un 10 %.\n\"\"Todo progreso exige un cambio drástico\". (Talbot Grimes)\""
+        },
+        "ja": {
+          "name": "玉虫色のブライト用ラベル",
+          "description": "霧そのものから作られたガラス状の研究室用ラベル。エンティティによるプレゼント。あるいは、かつて本人が他者にしていたような、ブライトにラベルをつける残酷ないたずら。\n• 突進は3回までしか発動できない\n• 突進中の最大視認角度が20度増加する\n• 突進の速度が10%上昇する\n\"「進化には劇的な変化が伴うものだ」 ―タルボット・グライムズ\""
+        },
+        "pl": {
+          "name": "Opalizująca etykieta Zarazy",
+          "description": "Etykieta laboratoryjna wyglądająca na szklaną, uformowana z samej Mgły. Albo dar od Bytu, albo okrutny żart, w ramach którego Zaraza zostaje oznakowany tak, jak kiedyś oznaczał innych.\n• Pędu nie można wykonać więcej niż 3 razy.\n• Zwiększa maksymalny kąt patrzenia podczas Pędu o 20 stopni.\n• Zwiększa prędkość Pędu o 10%.\n\"„Postęp wymaga drastycznych zmian” – Talbot Grimes\""
+        }
+      }
+    },
+    {
+      "id": 793,
+      "name": "Alchemist's Ring",
+      "killer_id": 21,
+      "description": "A ring given to chemists graduating from the London School of Medicine. It’s a reminder of unrestrained ambition.\n• Increases Rush duration by 20% for each consecutive Rush.\n\"\"The student is accused of grave robbing with the intent of unsanctioned scientific testing.\" —Faculty reprimand of Talbot Grimes, 1838\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_alchemistsRing.png?ab249b",
+      "icon_local_path": "icons/addons/alchemists_ring.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Alchemistenring",
+          "description": "Ein Ring, wie er Chemikern beim Abschluss an der London School of Medicine überreicht wird. Er ist eine Erinnerung daran, niemals nachzulassen.\n• Erhöht die Dauer von Sturm für jeden aufeinanderfolgenden Sturm um 20 %.\n\"„Der Student wird der Grabräuberei und der Absicht nicht genehmigter wissenschaftlicher Tests bezichtigt.“ – Tadel der Fakultät an Talbot Grimes, 1838\""
+        },
+        "en": {
+          "name": "Alchemist’s Ring"
+        },
+        "es": {
+          "name": "Anillo de alquimista",
+          "description": "Un anillo que se les otorga a los que se gradúan como químicos en la Facultad de Medicina de Londres. Es el recuerdo de una ambición descontrolada.\n• Aumenta la duración de la Acometida un 20 % por cada Acometida consecutiva.\n\"\"Al estudiante se le acusa de saquear tumbas con el fin de llevar a cabo experimentos científicos no autorizados.\" (Amonestación estudiantil de Talbot Grimes, 1838)\""
+        },
+        "ja": {
+          "name": "錬金術師の指輪",
+          "description": "ロンドン医科大学を卒業した化学者に与えられる指輪。飽くなき野望を象徴する。\n• 突進を連続するたびに、突進の持続時間が20%増加する\n\"「その生徒は、無許可の科学実験を行う目的で墓を荒らしたという罪に問われている」 —教員によるタルボット・グライムズの処分（1838年）\""
+        },
+        "pl": {
+          "name": "Pierścień alchemika",
+          "description": "Pierścień, który otrzymują chemicy w dniu ukończenia studiów w London School of Medicine. Ma przypominać o niepowstrzymanej ambicji.\n• Wydłuża czas trwania Pędu o 20% po każdym kolejnym Pędzie.\n\"„Student został oskarżony o okradanie grobów z zamiarem przeprowadzania nielegalnych badań na zwłokach” – Nagana dla studenta Talbota Grimesa, 1838 r.\""
+        }
+      }
+    }
+  ]
+}

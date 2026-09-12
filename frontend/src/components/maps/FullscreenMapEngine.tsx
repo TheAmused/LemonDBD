@@ -8,7 +8,7 @@ import type { Dictionary } from '@/locales/types';
 import { getMapImageSrc } from '@/utils/mapUtils';
 
 interface FullscreenMapEngineProps {
-  mapId: string;
+  mapId: number;
   onClose: () => void;
   availableMaps?: MapRealm[];
   backendBase: string;

@@ -1,0 +1,565 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 579,
+      "name": "Cereal Rations",
+      "killer_id": 33,
+      "description": "Contains 100% of the recommended daily intake of Vitamin A. Tastes awful.\n• Turret auras are visible while in tunnels and when coming out of vents for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cerealRations.png?fa2c1a",
+      "icon_local_path": "icons/addons/cereal_rations.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Müsliration",
+          "description": "Enthält 100 % der empfohlenen Tagesdosis von Vitamin A. Schmeckt ekelhaft.\n• Auren von Geschützen sind in Tunneln und beim Verlassen von Schächten für 3 Sekunden sichtbar."
+        },
+        "es": {
+          "name": "Raciones de cereales",
+          "description": "Contiene el 100 % de la ingesta diaria recomendada de vitamina A, pero sabe fatal.\n• Las auras de las torretas son visibles dentro de túneles y al salir de las rejillas de ventilación durante 3 segundos."
+        },
+        "ja": {
+          "name": "シリアルの宇宙食",
+          "description": "1日の推奨摂取量のビタミンAが含まれている。味は最悪。\n• トンネルにいる間、そしてトンネルを出てから3秒間、タレットのオーラが視える"
+        },
+        "pl": {
+          "name": "Racja zbożowa",
+          "description": "Zawiera 100% zalecanego dziennego spożycia witaminy A. Smakuje okropnie.\n• Aury wieżyczek są widoczne podczas przebywania w tunelach i wychodzenia z nich przez 3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 580,
+      "name": "Ripley's Watch",
+      "killer_id": 33,
+      "description": "On a ship as massive as the Nostromo, synchronizing watches was important to keep track of work shifts.\n• When a Turret removes Crawler Mode, it is destroyed automatically.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ripleysWatch.png?4dfd9e",
+      "icon_local_path": "icons/addons/ripleys_watch.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ripleys Uhr",
+          "description": "Auf einem so großen Schiff wie der Nostromo war es wichtig, die Uhren zu synchronisieren, um Arbeitsschichten im Blick zu behalten.\n• Wenn ein Geschütz den Kriechmodus beendet, wird es automatisch zerstört."
+        },
+        "es": {
+          "name": "Reloj de Ripley",
+          "description": "En una nave tan grande como la Nostromo, es importante sincronizar relojes para controlar los turnos de trabajo.\n• Cuando una torreta elimina el modo rastreador, se destruye automáticamente."
+        },
+        "ja": {
+          "name": "リプリーの時計",
+          "description": "ノストロモ号のような大型船では勤務シフトを合わせるため、乗組員の間で時刻を同期させることが重要だった。\n• タレットによってクローラーモードが解除されると、そのタレットが自動的に破壊される"
+        },
+        "pl": {
+          "name": "Zegarek Ripley",
+          "description": "Na tak ogromnym statku jak Nostromo synchronizacja zegarków była istotna ze względu na pracę zmianową.\n• Gdy wieżyczka usuwa tryb pełzania, zostaje automatycznie zniszczona."
+        }
+      }
+    },
+    {
+      "id": 581,
+      "name": "Ovomorph",
+      "killer_id": 33,
+      "description": "It looks harmless, but the horrors held inside are immeasurable.\n• The cooldown of Crawler Mode is 25% faster while outside of tunnels.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ovomorph.png?d9db64",
+      "icon_local_path": "icons/addons/ovomorph.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "description": "Sieht harmlos aus, aber die Grauen darin sind unermesslich.\n• Die Abklingzeit des Kriechmodus ist außerhalb von Tunneln um 25 % beschleunigt."
+        },
+        "es": {
+          "name": "Ovomorfo",
+          "description": "Parece inofensivo, pero los horrores que alberga son espantosos.\n• El tiempo de recarga del modo rastreador es un 25 % más rápido fuera de los túneles."
+        },
+        "ja": {
+          "name": "オヴォモーフ",
+          "description": "一見無害に見えるが、計り知れない恐怖を秘めている。\n• トンネルの外にいる間、クローラーモードのクールダウンが25%速くなる"
+        },
+        "pl": {
+          "name": "Jajo ksenomorfa",
+          "description": "Wygląda niegroźnie, ale kryją się w nim bezgraniczne okropności.\n• Czas odnawiania trybu pełzania jest o 25% krótszy, gdy znajdujesz się poza tunelami."
+        }
+      }
+    },
+    {
+      "id": 582,
+      "name": "Drinking Bird",
+      "killer_id": 33,
+      "description": "One of the many tchotchkes littering the Nostromo’s living quarters. A bit of whimsy in an otherwise sterile environment.\n• After exiting a tunnel, Killer Instinct duration is increased by 3 seconds.\nKiller Instinct intermittently reveals the location of Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_drinkingBird.png?8b3d30",
+      "icon_local_path": "icons/addons/drinking_bird.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Trinkvogel",
+          "description": "Eine der vielen Kleinigkeiten, die überall im Wohnquartier der Nostromo zu finden sind. Etwas Persönliches in einer sonst so sterilen Umgebung.\n• Nach dem Verlassen eines Tunnels wird die Dauer des Killerinstinkts um 3 Sekunden verlängert.\nDer Killerinstinkt zeigt in regelmäßigen Abständen die Position von Überlebenden an."
+        },
+        "es": {
+          "name": "Pájaro bebedor",
+          "description": "Uno de los muchos adornos inútiles esparcidos por los dormitorios de la Nostromo. Un toque hortera en un entorno estéril.\n• Tras salir de un túnel, la duración de Instinto asesino aumenta en 3 segundos.\nEl Instinto asesino revela la posición de los supervivientes de manera intermitente."
+        },
+        "ja": {
+          "name": "水飲み鳥",
+          "description": "ノストロモ号の生活スペースに置かれた小物の一つ。無機質になりがちな空間に遊び心を加えるもの。\n• トンネルから出たあとの「殺人鬼の本能」の持続時間が3秒間増加する\n殺人鬼の本能は生存者の居場所を断続的に明らかにする。"
+        },
+        "pl": {
+          "name": "Pijący ptak",
+          "description": "Jeden z wielu bibelotów zaśmiecających pomieszczenia mieszkalne Nostromo. Odrobina fantazji w sterylnym otoczeniu.\n• Po wyjściu z tunelu czas działania Instynktu Zabójcy zostaje wydłużony o 3 s.\nInstynkt Zabójcy w sposób przerywany ujawnia lokalizację ocalałych."
+        }
+      }
+    },
+    {
+      "id": 583,
+      "name": "Crew Headset",
+      "killer_id": 33,
+      "description": "While they facilitated team communication, the constant chatter made the crew easier to track.\n• While in tunnels, footstep detection is increased by 6 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crewHeadset.png?d5503c",
+      "icon_local_path": "icons/addons/crew_headset.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Crew-Headset",
+          "description": "Damit wurde zwar die Verständigung im Team erleichtert, durch den ständigen Funkverkehr konnte die Crew jedoch auch leichter aufgespürt werden.\n• In Tunneln ist die Schritterkennung um 6 Meter vergrößert."
+        },
+        "es": {
+          "name": "Auriculares de tripulante",
+          "description": "Aunque facilitaban la comunicación del equipo, el parloteo constante hizo que fuese más fácil rastrear a la tripulación.\n• Cuando estés dentro de túneles, la detección de pisadas aumenta en 6 metros."
+        },
+        "ja": {
+          "name": "乗組員のヘッドセット",
+          "description": "チームの通信を可能にするだけでなく、おしゃべりをする乗組員の居場所を簡単に把握できた。\n• トンネル内にいる間、足音を探知できる距離が6メートル増加する"
+        },
+        "pl": {
+          "name": "Zestaw słuchawkowy załogi",
+          "description": "Chociaż ułatwiał on komunikację w zespole, ciągłe rozmowy pozwalały też lepiej śledzić załogę.\n• Podczas przebywania w tunelach dystans wykrywania kroków zostaje zwiększony o 6 m."
+        }
+      }
+    },
+    {
+      "id": 584,
+      "name": "Emergency Helmet",
+      "killer_id": 33,
+      "description": "An extra helmet on the bridge, for use in emergencies only.\n• Increases resistance to staggering from Turrets by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_emergencyHelmet.png?7df0e6",
+      "icon_local_path": "icons/addons/emergency_helmet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Notfallhelm",
+          "description": "Ein zusätzlicher Helm auf der Brücke, der ausschließlich für Notfälle gedacht ist.\n• Erhöht den Schutz vor dem Taumeln durch Geschütze um 15 %."
+        },
+        "es": {
+          "name": "Casco de emergencia",
+          "description": "Un casco adicional en el puente. Solo se puede utilizar en situaciones de emergencia.\n• Aumenta la resistencia al tambaleo por ataques de torreta un 15 %."
+        },
+        "ja": {
+          "name": "緊急用ヘルメット",
+          "description": "ブリッジに用意された緊急用のヘルメット。\n• タレットによる「よろめき」に対する耐性が15%増加する"
+        },
+        "pl": {
+          "name": "Awaryjny hełm",
+          "description": "Przechowywany na mostku dodatkowy hełm, używany tylko w nagłych wypadkach.\n• Zwiększa odporność na oszołomienie przez wieżyczki o 15%."
+        }
+      }
+    },
+    {
+      "id": 585,
+      "name": "Light Wand",
+      "killer_id": 33,
+      "description": "A portable light source used by Ash and Dallas while looking for the invasive creature. Mostly ineffective for lighting larger spaces.\n• Increases downtime of Turrets by 3 second after exiting a tunnel.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lightWand.png?815854",
+      "icon_local_path": "icons/addons/light_wand.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Leuchtstab",
+          "description": "Eine tragbare Lichtquelle, die Ash und Dallas nutzten, um den Eindringling zu finden. Nicht sehr gut geeignet, um größere Räume auszuleuchten.\n• Verlängert die inaktive Zeit von Geschützen nach dem Verlassen eines Tunnels um 3 Sekunde."
+        },
+        "es": {
+          "name": "Varita de luz",
+          "description": "Una fuente de luz portátil que utilizan Ash y Dallas mientras buscan a la criatura invasora. No suele funcionar para iluminar grandes espacios.\n• Aumenta el tiempo de inactividad de las torretas en 3 segundo tras salir de un túnel."
+        },
+        "ja": {
+          "name": "照明棒",
+          "description": "侵入者を探す際、アッシュとダラスが使用した携帯用の照明装置。広い空間の照明には向いてない。\n• トンネルから出たあとのタレットの停止時間が3秒増加する"
+        },
+        "pl": {
+          "name": "Świetlna różdżka",
+          "description": "Przenośne źródło światła używane przez Asha i Dallasa podczas poszukiwań intruza. Raczej nieskuteczne do oświetlania większych przestrzeni.\n• Zwiększa czas przestoju wieżyczek o 3 s po wyjściu z tunelu."
+        }
+      }
+    },
+    {
+      "id": 586,
+      "name": "Multipurpose Hatchet",
+      "killer_id": 33,
+      "description": "Equally useful for destruction and repair.\n• Survivors hit by a Tail Attack suffer from Hemorrhage.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_multipurposeHatchet.png?a48af4",
+      "icon_local_path": "icons/addons/multipurpose_hatchet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Mehrzweckbeil",
+          "description": "Praktisch für die Zerstörung sowie für Reparaturen.\n• Überlebende, die von einem Schwanzangriff getroffen werden, erleiden Blutung.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Destral multiusos",
+          "description": "Útil tanto para destruir como para reparar.\n• Los supervivientes golpeados con un ataque de cola sufren Hemorragia.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "多目的斧",
+          "description": "破壊にも修理にも使える。\n• 尻尾攻撃が命中した生存者が出血に苦しむ\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Wielofunkcyjny toporek",
+          "description": "Równie przydatny do niszczenia, co do naprawiania.\n• Na ocalałych trafionych atakiem ogonem nałożony zostaje efekt Krwotoku.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 587,
+      "name": "Semiotic Keyboard",
+      "killer_id": 33,
+      "description": "Its symbols are designed to be universally recognizable, but they take some getting used to.\n• Generators within 16 meters of a Turret have the intensity of their auras determined by their repair progression.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_semioticKeyboard.png?c9c125",
+      "icon_local_path": "icons/addons/semiotic_keyboard.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Semiotische Tastatur",
+          "description": "Die Symbole sollen allgemein verständlich sein, aber man muss sich erst an sie gewöhnen.\n• Der Reparaturfortschritt von Generatoren in einem Umkreis von 16 Metern rund um ein Geschütz hängt von der Intensität ihrer Auren ab."
+        },
+        "es": {
+          "name": "Teclado semiótico",
+          "description": "Sus símbolos se han diseñado para reconocerse universalmente, pero se tarda tiempo en acostumbrarse.\n• La intensidad de las auras de los generadores en un radio de 16 metros de una torreta varía en función de su progreso de reparación."
+        },
+        "ja": {
+          "name": "記号キーボード",
+          "description": "記号は誰にでも認識できるようにデザインされているが、慣れるのには時間がかかる。\n• タレットの16メートル以内にある発電機は、修理進行度がオーラの強さで判別できる。"
+        },
+        "pl": {
+          "name": "Klawiatura semiotyczna",
+          "description": "Symbole na niej zostały zaprojektowane tak, aby były powszechnie rozpoznawalne, jednak wymaga ona przyzwyczajenia.\n• Tempo naprawy generatorów w promieniu 16 m od wieżyczki jest określane przez intensywność ich aury."
+        }
+      }
+    },
+    {
+      "id": 588,
+      "name": "Harpoon Gun",
+      "killer_id": 33,
+      "description": "Barely a weapon, its use is only viable in a situation of last resort.\n• Exiting a tunnel and hitting a Survivor within 30 seconds causes all Survivors further than 16 meters from you to scream and reveal their locations.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_harpoonGun.png?a37244",
+      "icon_local_path": "icons/addons/harpoon_gun.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Harpunenkanone",
+          "description": "Geht kaum als Waffe durch und ist nur als letzter Ausweg eine Option.\n• Wenn du einen Tunnel verlässt und innerhalb von 30 Sekunden einen Überlebenden triffst, schreien alle Überlebenden, die weiter als 16 Meter von dir entfernt sind, und geben ihren Standort preis."
+        },
+        "es": {
+          "name": "Lanzaarpones",
+          "description": "Apenas es un arma y su uso solo es apto como último recurso.\n• Salir de un túnel y golpear a un superviviente durante los siguientes 30 segundos hace que todos los supervivientes a más de 16 metros de distancia griten y revelen sus ubicaciones."
+        },
+        "ja": {
+          "name": "銛砲",
+          "description": "追い詰められた際、最後の手段として使用される。\n• トンネルを出てから30秒以内に生存者に攻撃を命中させると、自分から16メートル以上離れた生存者全員が叫び声を上げ、その位置が判明する"
+        },
+        "pl": {
+          "name": "Wyrzutnia harpunów",
+          "description": "Ciężko ją nazwać bronią i nadaje się raczej tylko do użycia w ostateczności.\n• Trafienie ocalałego w ciągu 30 s po wyjściu z tunelu powoduje, że wszyscy ocalali znajdujący się dalej niż 16 m od ciebie krzyczą i ujawniają swoją lokalizację."
+        }
+      }
+    },
+    {
+      "id": 589,
+      "name": "Cat Carrier",
+      "killer_id": 33,
+      "description": "Saving the cat is a noble goal. It’s also very distracting.\n• Exiting Crawler Mode due to a Turret attack makes you Undetectable for 30 seconds.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_catCarrier.png?bb7899",
+      "icon_local_path": "icons/addons/cat_carrier.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Katzenbox",
+          "description": "Die Katze zu retten ist ein hehres Ziel. Wenn auch eine gewisse Ablenkung.\n• Wenn du den Kriechmodus aufgrund eines Geschützangriffs beenden musst, wirst du für 30 Sekunden unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Transportín de gato",
+          "description": "Salvar al gato es un objetivo muy loable, pero también distrae mucho.\n• Salir del modo rastreador por un ataque de torreta te vuelve Indetectable durante 30 segundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "猫のキャリーバッグ",
+          "description": "猫を救うのは崇高な行為であり、気晴らしにもなる行為だ。\n• タレットの攻撃によりクローラーモードが解除されると、30秒間探知不可になる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Transporter dla kota",
+          "description": "Ratowanie kota to szlachetny cel. A także niezwykle rozpraszający.\n• Wyjście z trybu pełzania z powodu ataku wieżyczki zapewnia trwający 30 sekund efekt Niewykrywalności.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 590,
+      "name": "Self-Destruct Bolt",
+      "killer_id": 33,
+      "description": "They needed to be removed to start, and replaced to end, the self-destruct sequence. Just seeing them evokes a sense of urgency.\n• While in Crawler Mode, you basic-vault Windows 30% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_selfDestructBolt.png?a6be4e",
+      "icon_local_path": "icons/addons/self_destruct_bolt.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Selbstzerstörungsbolzen",
+          "description": "Zum Starten der Selbstzerstörungssequenz mussten sie entfernt und zum Beenden wieder eingesetzt werden. Allein ihr Anblick sorgt für ein Gefühl der Dringlichkeit.\n• Im Kriechmodus sind deine Grundfähigkeit-Sprünge durch Fenster um 30 % schneller."
+        },
+        "es": {
+          "name": "Perno de autodestrucción",
+          "description": "Había que quitarlos para arrancar y cambiarlos para finalizar la secuencia de autodestrucción. Solo verlos provoca una sensación de urgencia.\n• Mientras estés en el modo rastreador, tus saltos básicos por ventanas son un 30 % más rápidos."
+        },
+        "ja": {
+          "name": "自爆装置のボルト",
+          "description": "ボルトを外して開始し、入れ替えて完了する自爆装置起動シークエンス。それを見ているだけで緊迫感が感じられる。\n• クローラーモードの間、窓の通常乗り越えを行う速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Śruba autodestrukcyjna",
+          "description": "Bezpieczniki muszą zostać usunięte w celu rozpoczęcia procedury samozniszczenia lub umieszczone na miejscu ponownie w celu jej przerwania. Sam ich widok wywołuje napięcie.\n• W trybie pełzania wykonujesz podstawowe przeskoki przez okna 30% szybciej."
+        }
+      }
+    },
+    {
+      "id": 591,
+      "name": "Improvised Cattle Prod",
+      "killer_id": 33,
+      "description": "A brutal and noisy weapon, which might have been more effective against a cow.\n• Each time a generator is completed, a 15-second timer starts. Any Survivor who comes within 10 meters of a Control Station during that time has their aura revealed for the remainder of the timer.\n\"“It shouldn't damage the little bastard, unless its skin's thinner than ours.” –Brett\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_improvisedCattleProd.png?9cc0c5",
+      "icon_local_path": "icons/addons/improvised_cattle_prod.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Improvisierter Viehtreiber",
+          "description": "Eine brutale und laute Waffe, die gegen eine Kuh vielleicht mehr Wirkung gezeigt hätte.\n• Nach Abschluss eines Generators startet ein Timer von 15 Sekunden. Die Aura jedes Überlebenden, der sich einer Kontrollstation auf weniger als 10 Meter nähert, wird für die Dauer des Timers enthüllt.\n\"„Das sollte dem kleinen Bastard nicht schaden, außer seine Haut ist dünner als unsere.“ – Brett\""
+        },
+        "es": {
+          "name": "Aguijón eléctrico improvisado",
+          "description": "Un arma brutal y ruidosa, que sería más efectiva contra vacas.\n• Cada vez que se completa un generador, se activará un temporizador de 15 segundos. Cualquier superviviente que esté en un radio de 10 metros de una estación de control durante ese período mostrará su aura mientras el temporizador esté activo.\n\"\"No debería hacerle daño a ese bicho asqueroso, a no ser que su piel sea más fina que la nuestra\". (Brett)\""
+        },
+        "ja": {
+          "name": "即席の牛追い棒",
+          "description": "大きな音を立てる残忍な武器。牛を追うにはより効果的だったかもしれない。\n• 発電機の修理が完了するたびに、15秒のタイマーが開始する。このタイマーが切れる前に操作装置の10メートル以内に生存者が入ると、そのオーラがタイマーが切れるまで視える\n\"「皮膚が俺たちのより薄くない限り、あのチビにダメージはない」- ブレット\""
+        },
+        "pl": {
+          "name": "Improwizowany poganiacz bydła",
+          "description": "Brutalna i hałaśliwa broń, która byłaby bardziej skuteczna przeciwko krowie.\n• Po każdej ukończonej naprawia generatora rozpoczyna się 15-sekundowe odliczanie. Aura ocalałego, który znajdzie się w tym czasie w odległości 10 metrów od stacji kontrolnej, zostanie ujawniona na pozostały czas odliczania.\n\"„Raczej nie uszkodzi to tego draństwa, no chyba że jego skóra jest cieńsza niż nasza”. – Brett\""
+        }
+      }
+    },
+    {
+      "id": 592,
+      "name": "Acidic Blood",
+      "killer_id": 33,
+      "description": "When damaged, the Xenomorph’s unique physiology made it deadlier than ever.\n• While exiting a tunnel in Crawler Mode, any Survivor who stuns you with a pallet in the next 20 seconds takes damage. If that Survivor is already injured, they suffer from Deep Wound.\nDeep Wound will put a Survivor in the dying state unless it is mended before the timer runs out.\n\"“I think we oughta discuss the bonus situation.” –Parker\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_acidicBlood.png?e9a568",
+      "icon_local_path": "icons/addons/acidic_blood.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Säureblut",
+          "description": "Die einzigartige Physiologie des Xenomorphs machte ihn bei Verletzungen noch tödlicher.\n• Wenn du einen Tunnel im Kriechmodus verlässt, wird jeder Überlebende verletzt, der dich in den nächsten 20 Sekunden mit einer Palette betäubt. Ist dieser Überlebende bereits verletzt, erhält er eine tiefe Wunde.\nTiefe Wunde versetzt einen Überlebenden in den Todesstatus, wenn sie nicht versorgt wird, bevor der Timer abläuft.\n\"„Ich glaube, wir sollten den Bonus mal besprechen.“ – Parker\""
+        },
+        "es": {
+          "name": "Sangre ácida",
+          "description": "Al sufrir daño, la fisiología tan especial del xenomorfo lo hacía más letal que nunca.\n• Al salir de un túnel en el modo rastreador, si un superviviente te aturde con un palé durante los siguientes 20 segundos, este acabará herido. Si ese superviviente ya está herido, sufrirá Herida profunda.\nHerida profunda hará que el superviviente entre en estado agonizante excepto si se recupera antes de que se acabe el tiempo.\n\"\"Creo que deberíamos hablar sobre la gratificación\". (Parker)\""
+        },
+        "ja": {
+          "name": "酸性の血",
+          "description": "ゼノモーフはダメージを受けると、独特の生理機能により、より一層危険になる。\n• クローラーモードでトンネルから出たあと、次の20秒以内にパレットで自分を怯ませた生存者がダメージを受ける。その生存者がすでに負傷している場合、その生存者は深手に苦しむ\n深手状態になった生存者はタイマー切れになる前に手当しなければ瀕死状態になる。\n\"「ボーナスの話をしようじゃないか」–パーカー\""
+        },
+        "pl": {
+          "name": "Kwaśna krew",
+          "description": "Wyjątkowa fizjologia Ksenomorfa czyni go jeszcze bardziej śmiercionośnym po odniesieniu obrażeń.\n• Każdy ocalały, który ogłuszy cię w ciągu 20 sekund od wyjścia z tunelu w trybie pełzania, odniesie obrażenia. Jeśli ocalały jest już ranny, otrzyma efekt Głębokiej Rany.\nGłęboka rana wprowadza ocalałego w stan agonii, chyba że zostanie wyleczona przed upływem czasu.\n\"„Myślę, że musimy porozmawiać o premiach”. – Parker\""
+        }
+      }
+    },
+    {
+      "id": 824,
+      "name": "Ash's Innards",
+      "killer_id": 33,
+      "description": "While hardier, mechanical beings break too when enough force is applied.\n• Turrets take 15 seconds longer to respawn after they are destroyed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ashsInnards.png?ca975c",
+      "icon_local_path": "icons/addons/ashs_innards.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ashs Eingeweide",
+          "description": "Sie mögen zwar robuster sein, aber auch mechanische Wesen können zerbrechen, wenn nur genug Kraft aufgewendet wird.\n• Geschütze brauchen nach ihrer Zerstörung 15 Sekunden länger, bis sie wieder erscheinen."
+        },
+        "en": {
+          "name": "Ash’s Innards"
+        },
+        "es": {
+          "name": "Entrañas de Ash",
+          "description": "Si se aplica suficiente fuerza, hasta las criaturas mecánicas más resistentes se rompen.\n• Las torretas tardan 15 segundos más en volver a aparecer después de ser destruidas."
+        },
+        "ja": {
+          "name": "アッシュの内部構造",
+          "description": "人間よりは丈夫だが、機械の体も十分な力がかかれば崩壊する。\n• タレットが破壊されてから再出現するまでの時間が15秒長くなる"
+        },
+        "pl": {
+          "name": "Wnętrzności Asha",
+          "description": "Mechaniczne istoty, choć bardziej wytrzymałe, również ulegają zniszczeniu po przyłożeniu odpowiedniej siły.\n• Wieżyczki odradzają się 15 s dłużej po zniszczeniu."
+        }
+      }
+    },
+    {
+      "id": 825,
+      "name": "Brett's Cap",
+      "killer_id": 33,
+      "description": "This Nostromo ballcap was fashionable, but severely limited his vertical field of vision.\n• Destroying a Turret causes all Survivors within 16 meters to suffer from Blindness for 25 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brettsCap.png?6577e1",
+      "icon_local_path": "icons/addons/bretts_cap.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Bretts Mütze",
+          "description": "Diese Nostromo-Baseballmütze sah zwar gut aus, schränkte aber sein vertikales Sichtfeld stark ein.\n• Wenn ein Geschütz zerstört wird, leiden alle Überlebenden in einem Umkreis von 16 Metern für 25 Sekunden unter Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "en": {
+          "name": "Brett’s Cap"
+        },
+        "es": {
+          "name": "Gorra de Brett",
+          "description": "Esta gorra hallada en la Nostromo resultaba moderna, pero afectaba gravemente al campo de visión vertical.\n• Destruir una torreta provoca que todos los supervivientes en un radio de 16 metros sufran Ceguera durante 25 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "ブレットの帽子",
+          "description": "このノストロモ号の野球帽は格好はいいが、自分の頭上が大分見えにくくなる。\n• タレットを破壊すると、 16メートル以内の生存者全員が目眩ましに25秒間苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Czapka Bretta",
+          "description": "Ta czapka z logiem Nostromo była stylowa, ale poważnie ograniczała pole widzenia w pionie.\n• Zniszczenie wieżyczki powoduje nałożenie na wszystkich ocalałych w promieniu 16 metrów trwającego 25 sekund efektu Oślepienia.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 826,
+      "name": "Lambert's Star Map",
+      "killer_id": 33,
+      "description": "Vital for interstellar travel, but not as useful on a smaller scale.\n• Decreases the flame distance of Turrets by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lambertsStarMap.png?9988fe",
+      "icon_local_path": "icons/addons/lamberts_star_map.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lamberts Sternenkarte",
+          "description": "Lebensnotwendig für interstellare Reisen, aber für kleinere Maßstäbe nicht besonders nützlich.\n• Die Flammenreichweite von Geschützen wird um 2 Meter verringert."
+        },
+        "en": {
+          "name": "Lambert’s Star Map"
+        },
+        "es": {
+          "name": "Mapa estelar de Lambert",
+          "description": "Fundamental para realizar viajes interestelares, pero no resulta tan útil para distancias más reducidas.\n• Reduce la distancia de las llamas de las torretas en 2 metros."
+        },
+        "ja": {
+          "name": "ランバートの星図",
+          "description": "恒星間旅行には欠かせないが、短距離の移動にはあまり役に立たない。\n• タレットの炎の範囲が2メートル減少する"
+        },
+        "pl": {
+          "name": "Mapa nieba Lambert",
+          "description": "Niezbędna podczas podróży międzygwiezdnych, ale mniej przydatna na krótszych dystansach.\n• Zmniejsza zasięg ognia wieżyczek o 2 m."
+        }
+      }
+    },
+    {
+      "id": 827,
+      "name": "Kane's Helmet",
+      "killer_id": 33,
+      "description": "A thin layer of glass was the difference between a minor inconvenience and the tragic destruction of the Nostromo’s crew.\n• Survivors hit with a Tail Attack are Mangled for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kanesHelmet.png?8a4701",
+      "icon_local_path": "icons/addons/kanes_helmet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Kanes Helm",
+          "description": "Eine dünne Glasschicht machte den Unterschied zwischen einer kleinen Unannehmlichkeit und der tragischen Vernichtung der Besatzung der Nostromo aus.\n• Überlebende, die von einem Schwanzangriff getroffen werden, werden für 70 Sekunden zerfleischt.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält für eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "en": {
+          "name": "Kane’s Helmet"
+        },
+        "es": {
+          "name": "Casco de Kane",
+          "description": "Una fina capa de vidrio era la diferencia entre un pequeño inconveniente y la destrucción trágica de la tripulación de la Nostromo.\n• Los supervivientes golpeados con un ataque de cola sufren Laceración durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "ケインのヘルメット",
+          "description": "ヘルメットの薄いガラスが破られ、ノストロモ号の乗組員が悲劇の運命をたどることになった。\n• 尻尾攻撃が命中した生存者が、70秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Hełm Kane'a",
+          "description": "Cienka warstwa szkła stanowiła granicę między drobną niedogodnością a tragiczną zagładą załogi Nostromo.\n• Na ocalałych trafionych atakiem ogonem nałożony zostaje efekt Zmasakrowania na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 828,
+      "name": "Moulted Skin",
+      "killer_id": 33,
+      "description": "Dried skin shed by the Xenomorph during rapid growth.<br><li><b>Increases Movement Speed</b> while in <b>Crawler Mode</b> by <b>+2%</b>.</li>",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_moultedSkin.png?e9cde7",
+      "icon_local_path": "icons/addons/moulted_skin.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gehäutete Haut",
+          "description": "Getrocknete Haut, die der Xenomorph beim schnellen Wachstum abgeworfen hat.<br><li><b>Erhöht die Bewegungsgeschwindigkeit</b> im <b>Kriechmodus</b> um <b>+2%</b>.</li>"
+        },
+        "en": {
+          "name": "Molted Skin"
+        },
+        "es": {
+          "name": "Piel mudada",
+          "description": "Piel seca mudada por el Xenomorfo durante su rápido crecimiento.<br><li><b>Aumenta la velocidad de movimiento</b> en <b>modo cuadrúpedo</b> en un <b>+2%</b>.</li>"
+        },
+        "ja": {
+          "name": "脱皮した皮膚",
+          "description": "ゼノモーフの急成長時に剥がれ落ちた乾燥した皮膚。<br><li><b>這いずりモード</b>時の<b>移動速度が+2%上昇</b>する。</li>"
+        },
+        "pl": {
+          "name": "Wylinka",
+          "description": "Wysuszona skóra zrzucona przez Ksenomorfa w trakcie szybkiego wzrostu.<br><li><b>Zwiększa prędkość ruchu</b> w <b>trybie pełzania</b> o <b>+2%</b>.</li>"
+        }
+      }
+    },
+    {
+      "id": 829,
+      "name": "Parker's Headband",
+      "killer_id": 33,
+      "description": "A bold fashion choice that doubled as a handy way to wick sweat from the eyes.\n• After exiting a tunnel, gain 5% Haste for 3 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_parkersHeadband.png?572eee",
+      "icon_local_path": "icons/addons/parkers_headband.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Parkers Stirnband",
+          "description": "Ein auffälliges Modestatement, das auch praktisch ist, um die Augen vor Schweiß zu schützen.\n• Nach dem Verlassen eines Tunnels erhältst du für 3 Sekunden 5 % Eile.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "en": {
+          "name": "Parker’s Headband"
+        },
+        "es": {
+          "name": "Cinta de Parker",
+          "description": "Una elección algo atrevida, pero es muy útil para evitar que el sudor caiga en los ojos.\n• Tras salir de un túnel, obtienes un 5 % de Celeridad durante 3 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "パーカーのヘッドバンド",
+          "description": "大胆な目立つヘッドバンドで、目に汗が入るのも防げる。\n• トンネルから出たあと、5%の迅速を3秒間得る\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Opaska Parkera",
+          "description": "Odważny wybór, a jednocześnie dobry sposób na osłonięcie oczu przed potem.\n• Po wyjściu z tunelu zyskujesz efekt Pośpiechu zwiększający na 3 sekundy bazową prędkość ruchu o 5%Po.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    }
+  ]
+}

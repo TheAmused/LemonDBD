@@ -1,0 +1,563 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 437,
+      "name": "Bent Nail",
+      "killer_id": 25,
+      "description": "A simple nail that cut deep into Larry Cotton’s hand. Though the damage was superficial, it set into motion a horrifying set of events.\n• Gain 100% bonus Bloodpoints when binding a Survivor with a possessed chain.\n• When hitting a Survivor with a possessed chain, only 1 additional chain will spawn.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bentNail.png?394778",
+      "icon_local_path": "icons/addons/bent_nail.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Verbogener Nagel",
+          "description": "Ein einfacher Nagel, der tief in Larry Cottons Hand geschnitten hat. Auch wenn die Verletzung nur oberflächlich war, hatte sie eine schreckliche Reihe von Ereignissen zur Folge.\n• Du erhältst 100 % Bonus-Blutpunkte, wenn du einen Überlebenden mit einer besessenen Kette festbindest.\n• Wenn du einen Überlebenden mit einer besessenen Kette triffst, erscheint nur 1 zusätzliche Kette."
+        },
+        "es": {
+          "name": "Clavo doblado",
+          "description": "Un simple clavo que provocó una herida profunda en la mano de Larry Cotton. Aunque no fue algo grave, desencadenó una serie de eventos espantosos.\n• Obtienes un 100 % de puntos de sangre adicionales al enganchar a un superviviente con una cadena diabólica.\n• Cuando golpees a un superviviente con una cadena diabólica, solo se generará 1 cadena adicional."
+        },
+        "ja": {
+          "name": "曲がった釘",
+          "description": "ラリー・コットンの手に深く切り込まれたシンプルな釘。損傷は表面的なものだったが、これによって恐ろしい出来事が次々と動き出した。\n• 憑依鎖で生存者を拘束すると100%のブラッドポイントを追加取得する\n• 生存者に憑依鎖を命中させた時、追加の鎖が1個のみ出現する"
+        },
+        "pl": {
+          "name": "Wygięty gwóźdź",
+          "description": "Zwykły gwóźdź, który wbił się głęboko w rękę Larry'ego Cottona. Choć obrażenia były powierzchowne, zapoczątkowały przerażający ciąg wydarzeń.\n• Zdobądź 100%bonusowych Punktów Krwi za związanie ocalałego opętanym łańcuchem.\n• Gdy uderzysz ocalałego opętanym łańcuchem, pojawi się tylko 1 dodatkowy łańcuch."
+        }
+      }
+    },
+    {
+      "id": 438,
+      "name": "Lively Crickets",
+      "killer_id": 25,
+      "description": "Insects which scarcely avoided being eaten by a mysterious drifter.\n• Increases turn rate of possessed chains by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_livelyCrickets.png?519488",
+      "icon_local_path": "icons/addons/lively_crickets.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Lebhafte Grillen",
+          "description": "Insekten, die beinahe von einem geheimnisvollen Stadtstreicher verzehrt worden wären.\n• Erhöht die Wenderate von besessenen Ketten um 10 %."
+        },
+        "es": {
+          "name": "Grillos vivos",
+          "description": "Insectos que lograron evitar ser el almuerzo de un vagabundo misterioso.\n• Aumenta la velocidad de aparición de las cadenas diabólicas un 10 %."
+        },
+        "ja": {
+          "name": "跳ねるコオロギ",
+          "description": "ミステリアスな放浪者に食べられるのをどうにも避けられなかった虫。\n• 憑依鎖のターン速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Żywotne świerszcze",
+          "description": "Owady, które ledwo uniknęły zjedzenia przez tajemniczego driftera.\n• Zwiększają szybkość obracania opętanych łańcuchów o 10%."
+        }
+      }
+    },
+    {
+      "id": 439,
+      "name": "Burning Candle",
+      "killer_id": 25,
+      "description": "A candle lit by Frank Cotton during a fatal summoning ceremony.\n• Decreases the time for Chain Hunts to activate by 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_burningCandle.png?ec3e32",
+      "icon_local_path": "icons/addons/burning_candle.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Brennende Kerze",
+          "description": "Eine Kerze, die Frank Cotton während einer verhängnisvollen Beschwörungszeremonie angezündet hat.\n• Verringert die Zeit, die für die Aktivierung von Kettenjagden benötigt wird, um 3 Sekunden."
+        },
+        "es": {
+          "name": "Vela encendida",
+          "description": "Una vela que encendió Frank Cotton durante una ceremonia de invocación que resultó letal para él.\n• Reduce la velocidad con la que se activa Caza encadenada en 3 segundos."
+        },
+        "ja": {
+          "name": "燃えるキャンドル",
+          "description": "死の召喚儀式でフランク・コットンが火を灯したロウソク。\n• チェーンハンティングが発動するまでの時間が3秒減少する"
+        },
+        "pl": {
+          "name": "Płonąca świeca",
+          "description": "Świeca zapalona przez Franka Cottona podczas śmiertelnej ceremonii przywołania.\n• Skraca czas aktywowania się Łowów Łańcuchowych o 3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 440,
+      "name": "Leather Strip",
+      "killer_id": 25,
+      "description": "Leather strips torn from a cenobite’s uniform, allowing for the mutilation of exposed flesh.\n• Decreases Summons of Pain’s cooldown time after possessing a chain by 3%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherStrip.png?b96844",
+      "icon_local_path": "icons/addons/leather_strip.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Lederstreifen",
+          "description": "Ein Lederstreifen von der Uniform eines Zenobiten, der enthülltes Fleisch aufreißen kann.\n• Verkürzt die Abklingzeit von „Schmerzensbeschwörungen“ nach dem Kontrollieren einer Kette um 3 %."
+        },
+        "es": {
+          "name": "Tira de cuero",
+          "description": "Tiras de cuero arrancadas de un uniforme cenobita, ideal para mutilar la carne expuesta.\n• Reduce el tiempo de recarga de Invocaciones de dolor tras poseer una cadena diabólica un 3 %."
+        },
+        "ja": {
+          "name": "革の切れ端",
+          "description": "魔道士の制服から剥ぎ取った革の切れ端。晒された身体の一部を切断することができる。\n• 憑依鎖の発動後、苦しみの召喚のクールダウン時間が3%減少する"
+        },
+        "pl": {
+          "name": "Skórzany pasek",
+          "description": "Skórzane paski wyrwane z uniformu Cenobity. Pozwalają na okaleczenie odsłoniętego ciała.\n• Skracają czas odnawiania Przywołania Bólu po opętaniu łańcucha o 3%."
+        }
+      }
+    },
+    {
+      "id": 441,
+      "name": "Wriggling Maggots",
+      "killer_id": 25,
+      "description": "Larvae that poured from the mouth of a corpse hidden in the Cotton household.\n• Increases turn rate of possessed chains by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wrigglingMaggots.png?f308d6",
+      "icon_local_path": "icons/addons/wriggling_maggots.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Sich windende Maden",
+          "description": "Larven, die aus dem Mund einer Leiche quollen, die im Haus der Cottons versteckt war.\n• Erhöht die Wenderate von besessenen Ketten um 15 %."
+        },
+        "es": {
+          "name": "Larvas escurridizas",
+          "description": "Larvas encontradas en la boca de un cadáver oculto en casa de los Cotton.\n• Aumenta la velocidad de aparición de las cadenas diabólicas un 15 %."
+        },
+        "ja": {
+          "name": "うごめく蛆",
+          "description": "コットン家に隠された死体の口から溢れ出た幼虫。\n• 憑依鎖のターン速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Wijące się larwy",
+          "description": "Larwy, które wylały się z ust zwłok ukrytych w domu Cottonów.\n• Zwiększają szybkość obrotu opętanych łańcuchów o 15%."
+        }
+      }
+    },
+    {
+      "id": 442,
+      "name": "Spoiled Meal",
+      "killer_id": 25,
+      "description": "A pile of mold, feasted on by a cockroach. Perhaps a sign of Frank Cotton’s mysterious disappearance...\n• Increases the possessed chain’s maximum travel distance by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spoiledMeal.png?6c83c0",
+      "icon_local_path": "icons/addons/spoiled_meal.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verdorbenes Essen",
+          "description": "Schimmel, an dem sich eine Kakerlake labt. Vielleicht ein Zeichen von Frank Cottons geheimnisvollem Verschwinden ...\n• Erhöht die maximal zurückgelegte Entfernung der besessenen Kette um 2 Meter."
+        },
+        "es": {
+          "name": "Comida podrida",
+          "description": "Un puñado de moho del que se alimenta una cucaracha. Tal vez esté relacionado con la misteriosa desaparición de Frank Cotton...\n• Aumenta la distancia máxima que recorre una cadena diabólica en 2 metros."
+        },
+        "ja": {
+          "name": "腐った食事",
+          "description": "ゴキブリが喜んで餌にしている大量のカビ。おそらく、フランク・コットンの謎めいた失踪に関係しているのか…\n• 憑依鎖の最大飛距離が2メートル増加する"
+        },
+        "pl": {
+          "name": "Zepsuty posiłek",
+          "description": "Sterta pleśni zjadana przez karalucha. Być może to znak tajemniczego zniknięcia Franka Cottona…\n• Zwiększa maksymalny zasięg działania opętanego łańcucha o 2 metry."
+        }
+      }
+    },
+    {
+      "id": 443,
+      "name": "Skewered Rat",
+      "killer_id": 25,
+      "description": "A crude solution for the Cotton home’s rat problem.\n• Decreases Summons of Pain’s cooldown time after possessing a chain by 9%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_skeweredRat.png?532a27",
+      "icon_local_path": "icons/addons/skewered_rat.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Aufgespiesste Ratte",
+          "description": "Eine primitive Lösung für das Rattenproblem im Cotton-Haus.\n• Verkürzt die Abklingzeit von „Schmerzensbeschwörungen“ nach dem Kontrollieren einer Kette um 9 %."
+        },
+        "es": {
+          "name": "Rata ensartada",
+          "description": "Una solución tosca para la plaga de ratas en casa de los Cotton.\n• Reduce el tiempo de recarga de Invocaciones de dolor tras poseer una cadena diabólica un 9 %."
+        },
+        "ja": {
+          "name": "串刺しネズミ",
+          "description": "コットン家の雑なネズミ対策。\n• 憑依鎖の発動後、苦しみの召喚のクールダウン時間が9%減少する"
+        },
+        "pl": {
+          "name": "Szczur z rożna",
+          "description": "Prymitywne rozwiązanie problemu szczurów w domu Cottonów.\n• Skraca czas odnawiania Przywołania Bólu po opętaniu łańcucha o 9%."
+        }
+      }
+    },
+    {
+      "id": 444,
+      "name": "Flickering Television",
+      "killer_id": 25,
+      "description": "A television that acted strangely upon the arrival of the cenobites.\n• Increases the maximum casting range of the gateway by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_flickeringTelevision.png?ef8258",
+      "icon_local_path": "icons/addons/flickering_television.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Flackernder Fernseher",
+          "description": "Ein Fernseher, der sich bei der Ankunft der Zenobiten seltsam verhalten hat.\n• Erhöht die maximale Wirkreichweite des Portals um 4 Meter."
+        },
+        "es": {
+          "name": "Televisión con interferencias",
+          "description": "Tras la llegada de los cenobitas, la televisión empezó a sufrir algunas alteraciones.\n• Aumenta el alcance de proyección máximo de la puerta de entrada en 4 metros."
+        },
+        "ja": {
+          "name": "ちらつくテレビ",
+          "description": "魔道士たちが現れた時に奇妙な様子を見せたテレビ。\n• 門の最大投下距離が4メートル増加する"
+        },
+        "pl": {
+          "name": "Migoczący telewizor",
+          "description": "Telewizor, który działał dziwnie po przybyciu Cenobitów.\n• Zwiększa maksymalny zasięg rzutu bramy o 4 metry."
+        }
+      }
+    },
+    {
+      "id": 445,
+      "name": "Liquified Gore",
+      "killer_id": 25,
+      "description": "The result of summoning the cenobites. There’s no telling what part of the human body this belonged to.\n• Increases the time it takes Survivors to solve the Lament Configuration by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_liquifiedGore.png?f2a2c6",
+      "icon_local_path": "icons/addons/liquified_gore.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verflüssigter Überrest",
+          "description": "Das Ergebnis nach dem Beschwören der Zenobiten. Es ist nicht feststellbar, zu welchem Körperteil das einmal gehört hat.\n• Verlängert die Dauer, die Überlebende zum Lösen des Rätselwürfels benötigen, um 1 Sekunde."
+        },
+        "es": {
+          "name": "Sangre licuada",
+          "description": "La consecuencia de invocar a los cenobitas. Es imposible saber a qué parte del cuerpo pertenecía...\n• Aumenta el tiempo que los supervivientes tardan en resolver la Configuración del Lamento en 1 segundo."
+        },
+        "ja": {
+          "name": "液化した血餅",
+          "description": "魔術師が召喚された結末。これが人間の体のどの部分に属するのかも不明。\n• 生存者がルマルシャンの箱を解く時間が1秒増加する"
+        },
+        "pl": {
+          "name": "Płynne flaki",
+          "description": "Wynik przywołania Cenobitów. Nie wiadomo, do jakiej części ludzkiego ciała należały.\n• Wydłużają czas rozwiązywania Konfiguracji Lamentu przez ocalałych o 1 sekundę."
+        }
+      }
+    },
+    {
+      "id": 446,
+      "name": "Torture Pillar",
+      "killer_id": 25,
+      "description": "A dangling slab covered in the gore of past victims.\n• Decreases the time for Chain Hunts to activate by 6 seconds.\n\"\"This isn’t for your eyes.\" —Pinhead \"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_torturePillar.png?58cb0f",
+      "icon_local_path": "icons/addons/torture_pillar.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Foltersäule",
+          "description": "Eine baumelnde Platte mit dem Blut früherer Opfer.\n• Verringert die Zeit, die für die Aktivierung von Kettenjagden benötigt wird, um 6 Sekunden.\n\"„Das ist nicht für deine Augen bestimmt.“ – Pinhead \""
+        },
+        "es": {
+          "name": "Pilar de tortura",
+          "description": "Un pilar extraño cubierto con los restos de víctimas pasadas.\n• Reduce el tiempo que tarda en activarse Caza encadenada en 6 segundos.\n\"\"Esto no es para tus ojos\". (Pinhead)\""
+        },
+        "ja": {
+          "name": "拷問柱",
+          "description": "ぶら下がった板。過去に被害者となった人々の血糊で覆われている。\n• チェーンハンティングが発動するまでの時間が6秒減少する\n\"「目だけでは済まさんぞ」 —ピンヘッド\""
+        },
+        "pl": {
+          "name": "Filar Tortur",
+          "description": "Zwisająca płyta pokryta krwią wcześniejszych ofiar.\n• Skraca czas oczekiwania na aktywowanie się Łowów Łańcuchowych o 6 sekund.\n\"„Lepiej tego nie oglądaj”. – Pinhead \""
+        }
+      }
+    },
+    {
+      "id": 447,
+      "name": "Slice of Frank",
+      "killer_id": 25,
+      "description": "A slab of Frank’s face after his torture at the hand of the cenobites.\n• Survivors carrying the Lament Configuration are inflicted with Exhausted.\nExhausted prevents Survivors from activating exhausting perks.\n\"\"The cenobites gave me an experience beyond limits. Pain and pleasure, indivisible.\" —Frank Cotton\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sliceOfFrank.png?f26cac",
+      "icon_local_path": "icons/addons/slice_of_frank.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stück von Frank",
+          "description": "Ein Stück von Franks Gesicht nach seiner Folter durch die Zenobiten.\n• Überlebende, die den Rätselwürfel tragen, erleiden den Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen.\n\"„Die Zenobiten gewährten mir eine grenzenlose Erfahrung. Schmerz und Vergnügen, untrennbar verbunden.“ – Frank Cotton\""
+        },
+        "es": {
+          "name": "Trozo de Frank",
+          "description": "Un trozo de la cara de Frank tras haber sufrido las torturas de los cenobitas.\n• Los supervivientes que tengan la Configuración del Lamento sufrirán Agotamiento.\nAgotamiento impide que los supervivientes activen habilidades de este tipo.\n\"\"Los cenobitas me ofrecieron una experiencia mucho más allá. Dolor y placer, indivisibles\". (Frank Cotton)\""
+        },
+        "ja": {
+          "name": "フランクのスライス",
+          "description": "魔道士たちの手で痛めつけられた後で厚切りにされたフランクの顔。\n• ルマルシャンの箱を持っている生存者が疲労に苦しむ\n疲労状態になると生存者は疲労のパークが使用不可になる。\n\"「魔道士は限界の向こう側を教えてくれた。痛みと快楽は、表裏一体なんだよ」 —フランク・コットン\""
+        },
+        "pl": {
+          "name": "Kawałek Franka",
+          "description": "Kawałek twarzy Franka po torturach zadanych przez Cenobitów.\n• Ocalali niosący Konfigurację Lamentu otrzymują efekt Wyczerpany.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności.\n\"„Cenobici zapewnili mi bezgraniczne doświadczenia. Ból i przyjemność, razem”. – Frank Cotton\""
+        }
+      }
+    },
+    {
+      "id": 448,
+      "name": "Greasy Black Lens",
+      "killer_id": 25,
+      "description": "A lens from the sunglasses of an obese cenobite whose fleshy rolls droop down his face and neck.\n• Survivors hit by a possessed chain are revealed for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_greasyBlackLens.png?957174",
+      "icon_local_path": "icons/addons/greasy_black_lens.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schmieriges schwarzes Brillenglas",
+          "description": "Das Glas einer Sonnenbrille eines übergewichtigen Zenobiten, dessen Fleischwulste über Gesicht und Hals hängen.\n• Überlebende, die von einer besessenen Kette getroffen werden, werden für 6 Sekunden enthüllt."
+        },
+        "es": {
+          "name": "Lente negra grasienta",
+          "description": "Una lente de las gafas de un cenobita obeso cubierto de grasa en el cuello y el rostro.\n• Los supervivientes golpeados con una cadena diabólica se muestran durante 6 segundos."
+        },
+        "ja": {
+          "name": "脂っこい黒のレンズ",
+          "description": "サングラスのレンズ。顔と首に脂肪が垂れ下がった肥満の魔道士が掛けていた。\n• 憑依鎖が命中した生存者の位置が6秒間判明する"
+        },
+        "pl": {
+          "name": "Tłusta czarna soczewka",
+          "description": "Soczewka z okularów przeciwsłonecznych otyłego Cenobity, którego mięsiste wałki opadają na twarz i szyję.\n• Ocalali trafieni opętanym łańcuchem są ujawniani na 6 sekund."
+        }
+      }
+    },
+    {
+      "id": 449,
+      "name": "Original Pain",
+      "killer_id": 25,
+      "description": "The first pin pushed into Pinhead’s skull. Such pleasure and pain.\n• When a Survivor breaks free from a possessed chain, reveal their aura for 8 seconds.\n\"“No tears, please. It’s a waste of good suffering.” —Pinhead\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_originalPain.png?ba0be7",
+      "icon_local_path": "icons/addons/original_pain.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ursprünglicher Schmerz",
+          "description": "Die erste Nadel, die in Pinheads Schädel gestoßen wurde. So ein Vergnügen, so ein Schmerz.\n• Wenn sich ein Überlebender von einer besessenen Kette losreißt, wird seine Aura 8 Sek. lang enthüllt.\n\"„Keine Tränen, bitte. Das wäre eine Verschwendung guten Leidens.“ – Pinhead\""
+        },
+        "es": {
+          "name": "Dolor primigenio",
+          "description": "El primer clavo insertado en el cráneo de Pinhead. Cuánto placer y dolor...\n• Cuando un superviviente se libera de una cadena diabólica, se revela su aura durante 8 segundos.\n\"\"Nada de lágrimas, por favor. No desperdicies el sufrimiento\". (Pinhead)\""
+        },
+        "ja": {
+          "name": "最初の痛み",
+          "description": "ピンヘッドの頭に押し込まれた1本目のピン。\n• 生存者が憑依鎖から逃れると、その生存者のオーラが8秒間視える\n\"「泣くのはやめなさい。せっかくの素晴らしい苦痛が台無しになる」 —ピンヘッド\""
+        },
+        "pl": {
+          "name": "Oryginalny ból",
+          "description": "Pierwsza szpilka wbita w czaszkę Pinheada. Przyjemność i ból.\n• Gdy ocalały uwolni się z opętanego łańcucha, ujawnia swoją aurę przez 8 s.\n\"„Nie płacz, proszę. Szkoda dobrego cierpienia”. – Pinhead\""
+        }
+      }
+    },
+    {
+      "id": 450,
+      "name": "Impaling Wire",
+      "killer_id": 25,
+      "description": "A wire that pierces the cheeks of a cenobite, while revealing the gaping wound on her neck.\n• When a Survivor uses the environment to break a chain, an additional chain will target them.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_impalingWire.png?131767",
+      "icon_local_path": "icons/addons/impaling_wire.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Einschneidender Draht",
+          "description": "Ein Draht, der die Wangen einer Zenobitin durchbohrt und dabei die klaffende Wunde an ihrem Hals zeigt.\n• Wenn ein Überlebender die Umgebung nutzt, um eine Kette zu zerbrechen, wird er zum Ziel einer zusätzlichen Kette."
+        },
+        "es": {
+          "name": "Cable empalador",
+          "description": "Un cable que atraviesa las mejillas de una cenobita, revelando la herida abierta de su cuello.\n• Cuando un superviviente use el entorno para romper una cadena, le atacará otra."
+        },
+        "ja": {
+          "name": "突き刺すワイヤー",
+          "description": "魔道士の頬を貫通するワイヤー。首にはぱっくり割れた傷が顕になっている。\n• 生存者が周囲の環境を利用して1本の鎖を壊すと、もう1本が狙ってくる"
+        },
+        "pl": {
+          "name": "Przygważdżający drut",
+          "description": "Drut, który przebija policzki Cenobitki i odsłania rozległą ranę na jej szyi.\n• Kiedy ocalały użyje otoczenia do zerwania łańcucha, wymierzony zostanie w niego dodatkowy łańcuch."
+        }
+      }
+    },
+    {
+      "id": 451,
+      "name": "Iridescent Lament Configuration",
+      "killer_id": 25,
+      "description": "A glass-like puzzle box molded from The Fog itself. This replica differs from the original, providing altogether new powers.\n• When a Chain Hunt is inactive, Survivors beyond 24 meters of the Lament Configuration cannot see its aura.\n\"“You opened it. We came.” —Pinhead\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentLamentConfiguration.png?a707d0",
+      "icon_local_path": "icons/addons/iridescent_lament_configuration.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Rätselwürfel",
+          "description": "Ein glasähnlicher Rätselwürfel, der aus dem Nebel selbst erschaffen wurde. Diese Nachbildung unterscheidet sich vom Original und bietet ganz neue Kräfte.\n• Wenn eine Kettenjagd inaktiv ist, können Überlebende, die weiter als 24 Meter vom Rätselwürfel entfernt sind, seine Aura nicht sehen.\n\"„Du hast ihn geöffnet. Wir sind gekommen.“ – Pinhead\""
+        },
+        "es": {
+          "name": "Configuración del Lamento iridiscente",
+          "description": "Una caja vítrea con un rompecabezas moldeada por la mismísima niebla. Esta réplica es diferente a la caja original y confiere poderes completamente nuevos.\n• Cuando una Caza encadenada está inactiva, los supervivientes a más de 24 metros de la Configuración del Lamento no pueden ver su aura.\n\"\"Tú abriste la caja y nosotros vinimos\". (Pinhead)\""
+        },
+        "ja": {
+          "name": "玉虫色のルマルシャンの箱",
+          "description": "霧から作られたガラス状のパズルボックス。このレプリカは本物とは異なり、全く新しい力を与える。\n• チェーンハンティングが発動していない時、ルマルシャンの箱から24メートル以上離れた生存者には箱のオーラが視えない\n\"「箱を開けただろう。だから来てやったのだ」 —ピンヘッド\""
+        },
+        "pl": {
+          "name": "Opalizująca Konfiguracja Lamentu",
+          "description": "Pudełko na puzzle. Wygląda jak szklane, a uformowane jest z samej Mgły. Ta replika różni się od oryginału i zapewnia zupełnie nowe moce.\n• Gdy Łowy Łańcuchowe są aktywne, ocalali znajdujący się dalej niż 24 m od Konfiguracji Lamentu nie widzą jej aury.\n\"„Otworzyłeś. Przybyliśmy”. – Pinhead\""
+        }
+      }
+    },
+    {
+      "id": 859,
+      "name": "Frank's Heart",
+      "killer_id": 25,
+      "description": "The beating heart of Frank, given life from his brother’s blood.\n• Increases the maximum casting range of the gateway by 8 meters.\n\"“Nobody escapes us.” —Pinhead\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_franksHeart.png?cbbd2d",
+      "icon_local_path": "icons/addons/franks_heart.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Franks Herz",
+          "description": "Das pochende Herz von Frank, durch das das Blut seines Bruders strömt.\n• Erhöht die maximale Wirkreichweite des Portals um 8 Meter.\n\"„Niemand entkommt uns.“ – Pinhead\""
+        },
+        "en": {
+          "name": "Frank’s Heart"
+        },
+        "es": {
+          "name": "Corazón de Frank",
+          "description": "El corazón palpitante de Frank, que ha cobrado vida gracias a la sangre de su hermano.\n• Aumenta el alcance de proyección máximo de la puerta de entrada en 8 metros.\n\"\"Nadie huye de nosotros\". (Pinhead)\""
+        },
+        "ja": {
+          "name": "フランクの心臓",
+          "description": "鼓動するフランクの心臓は、弟の血から得た命。\n• 門の最大投下距離が8メートル増加する\n\"「我々から逃れられる者などいない」 —ピンヘッド\""
+        },
+        "pl": {
+          "name": "Serce Franka",
+          "description": "Bijące serce Franka, które ożyło dzięki krwi brata.\n• Zwiększa maksymalny zasięg rzutu bramy o 8 metrów.\n\"„Nikt nam nie ucieknie”. – Pinhead\""
+        }
+      }
+    },
+    {
+      "id": 860,
+      "name": "Larry's Blood",
+      "killer_id": 25,
+      "description": "The blood of Larry Cotton, which partially resurrected his brother Frank.\n• Increases the possessed chain's maximum travel distance by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_larrysBlood.png?c07a4e",
+      "icon_local_path": "icons/addons/larrys_blood.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Larrys Blut",
+          "description": "Das Blut Larry Cottons, das teilweise zur Wiederauferstehung seines Bruders Frank beitrug.\n• Erhöht die maximal zurückgelegte Entfernung der besessenen Kette um 4 Meter."
+        },
+        "en": {
+          "name": "Larry’s Blood"
+        },
+        "es": {
+          "name": "Sangre de Larry",
+          "description": "La sangre de Larry Cotton que sirvió para resucitar parcialmente a Frank, su hermano.\n• Aumenta la distancia máxima que recorre una cadena diabólica en 4 metros."
+        },
+        "ja": {
+          "name": "ラリーの血",
+          "description": "ラリー・コットンの血液。部分的に兄のフランクを生き返らせた。\n• 憑依鎖の最大飛距離が4メートル増加する"
+        },
+        "pl": {
+          "name": "Krew Larry’ego",
+          "description": "Krew Larry'ego Cottona, która częściowo wskrzesiła jego brata Franka.\n• Zwiększa maksymalny zasięg działania opętanego łańcucha o 4 metry."
+        }
+      }
+    },
+    {
+      "id": 861,
+      "name": "Larry's Remains",
+      "killer_id": 25,
+      "description": "The skeletal remains of Larry Cotton, covered in a thick, sticky layer of blood.\n• Increases the time it takes Survivors to solve the Lament Configuration by 2 seconds.\n\"\"We want the man who did this.\" —Pinhead\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_larrysRemains.png?1ecf8e",
+      "icon_local_path": "icons/addons/larrys_remains.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Larrys Überreste",
+          "description": "Die knöchernen Überreste von Larry Cotton, von einer dicken, klebrigen Blutschicht bedeckt.\n• Verlängert die Dauer, die Überlebende zum Lösen des Rätselwürfels benötigen, um 2 Sekunden.\n\"„Wir wollen den Mann, der das getan hat.“ – Pinhead\""
+        },
+        "en": {
+          "name": "Larry’s Remains"
+        },
+        "es": {
+          "name": "Restos de Larry",
+          "description": "Los restos óseos de Larry Cotton, cubiertos de una capa de sangre espesa y pegajosa.\n• Aumenta el tiempo que los supervivientes tardan en resolver la Configuración del Lamento en 2 segundos.\n\"\"Queremos al hombre que hizo esto\". (Pinhead)\""
+        },
+        "ja": {
+          "name": "ラリーの遺体",
+          "description": "ラリー・コットンの骨化した遺体。分厚い血糊で覆われている。\n• 生存者がルマルシャンの箱を解く時間が2秒増加する\n\"「やった張本人を捕らえろ」 —ピンヘッド\""
+        },
+        "pl": {
+          "name": "Szczątki Larry’ego",
+          "description": "Szkielet Larry'ego Cottona pokryty grubą, lepką warstwą krwi.\n• Wydłuża czas potrzebny ocalałym na rozwiązanie Konfiguracji Lamentu o 2 sekundy.\n\"„Chcemy człowieka, który to zrobił”. – Pinhead\""
+        }
+      }
+    },
+    {
+      "id": 862,
+      "name": "Chatterer's Tooth",
+      "killer_id": 25,
+      "description": "A fragment from a cenobite whose mouth chatters endlessly. This tooth, having broken from his jaw, is finally silent.\n• Reveal the Lament Configuration.\n• Picking up the Lament Configuration deactivates Chain Hunts.\n• Gain the Undetectable status effect for 25 seconds after picking up the Lament Configuration.\nUndetectable hides the Killer's aura, Terror Radius and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chatterersTooth.png?46debf",
+      "icon_local_path": "icons/addons/chatterers_tooth.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zahn von Chatterer",
+          "description": "Ein Bruchstück eines Zenobiten, dessen Mund nie still ist. Dieser Zahn, der aus seinem Gebiss fiel, schweigt nun endlich.\n• Enthülle den Rätselwürfel.\n• Das Aufheben des Rätselwürfels deaktiviert Kettenjagden.\n• Erhalte den Statuseffekt Unentdeckbar für 25 Sekunden, nachdem du den Rätselwürfel aufgehoben hast.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "en": {
+          "name": "Chatterer’s Tooth"
+        },
+        "es": {
+          "name": "Diente de Chatterer",
+          "description": "El fragmento de un cenobita que no deja de castañetear los dientes. Este diente desprendido de su mandíbula por fin dejará de sufrir.\n• Muestra la Configuración del Lamento.\n• Si recoges la Configuración del Lamento se desactiva Caza encadenada.\n• Obtienes el efecto de estado Indetectable durante 25 segundos tras recoger la Configuración del Lamento.\nIndetectable oculta el aura, radio de terror y marca roja del asesino."
+        },
+        "ja": {
+          "name": "チャタラーの歯",
+          "description": "歯をカタカタと鳴らし続ける魔道士の一片。顎から割れ落ちたこの歯は、ようやく静かになった。\n• ルマルシャンの箱の位置が判明する\n• ルマルシャンの箱を拾うとチェーンハンティングが解除される\n• ルマルシャンの箱を拾うと、その後25秒間、探知不可のステータス効果を得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Ząb gaduły",
+          "description": "Fragment Cenobity, który gadał bez końca. Ten ząb, który wyłamał się z jego szczęki, w końcu zamilkł.\n• Ujawnij Konfigurację Lamentu.\n• Zebranie Konfiguracji Lamentu dezaktywuje Łowy Łańcuchowe.\n• Uzyskaj efekt Niewykrywalny na 25 sekund po podniesieniu Konfiguracji Lamentu.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 863,
+      "name": "Engineer's Fang",
+      "killer_id": 25,
+      "description": "A sharp tooth from the maw of a fleshy, scorpion-like creature, known to accompany cenobites on their grim undertakings.\n• Possessed chains injure healthy Survivors, but do not bind them or spawn additional chains.\n• Increases the time to close the gateway after hitting a healthy Survivor with a possessed chain by 50%.\n• When hitting an injured Survivor with a possessed chain, only 1 additional chain will spawn.\n\"\"We have such sights to show you.\" —Pinhead\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_engineersFang.png?1c83ca",
+      "icon_local_path": "icons/addons/engineers_fang.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Ingenieur-Zahn",
+          "description": "Ein spitzer Zahn aus dem Rachen eines fleischigen, skorpionähnlichen Wesens, das Zenobiten bei ihren dunklen Vorhaben begleitet.\n• Besessene Ketten verwunden gesunde Überlebende, fesseln sie aber nicht und lassen keine zusätzlichen Ketten erscheinen.\n• Verlängert die Dauer für das Schließen des Portals, nachdem ein gesunder Überlebender von einer besessenen Kette getroffen wurde, um 50 %.\n• Wenn ein verletzter Überlebender mit einer besessenen Kette getroffen wird, erscheint nur 1 zusätzliche Kette.\n\"„Wir haben dir so viele wundervolle Dinge zu zeigen.“ – Pinhead\""
+        },
+        "en": {
+          "name": "Engineer’s Fang"
+        },
+        "es": {
+          "name": "Colmillo del Ingeniero",
+          "description": "El afilado diente de las fauces de una criatura con forma de escorpión, conocida por acompañar a los cenobitas en sus espantosas misiones.\n• Las cadenas diabólicas hieren a los supervivientes ilesos, pero no los atrapan ni generan cadenas adicionales.\n• Aumenta el tiempo del que dispone para cerrar la puerta de entrada tras golpear a un superviviente ileso con una cadena diabólica un 50 %.\n• Al golpear a un superviviente herido con una cadena diabólica, solo se generará 1 cadena adicional.\n\"\"Tenemos tantos mundos que enseñarte\". (Pinhead)\""
+        },
+        "ja": {
+          "name": "技師の犬歯",
+          "description": "太ったサソリのような人間の鋭い歯。この人物は魔道士たちの残忍な業務に同行していた。\n• 憑依鎖は無傷の生存者を負傷させるが、拘束はせず追加の鎖も出現しない。\n• 憑依鎖を無傷の生存者に命中させた後、門を閉めるまでの時間が50%増加する\n• 負傷状態の生存者に憑依鎖を命中させた時に出現する追加の鎖が1本のみになる\n\"「素晴らしい光景を見せてあげよう」 —ピンヘッド\""
+        },
+        "pl": {
+          "name": "Kieł inżyniera",
+          "description": "Ostry ząb z paszczy mięsistego, skorpionopodobnego stworzenia, znanego z towarzyszenia Cenobitom w ich ponurych przedsięwzięciach.\n• Opętane łańcuchy ranią zdrowych ocalałych, ale nie wiążą ich ani nie tworzą dodatkowych łańcuchów.\n• Wydłuża czas do zamknięcia przejścia po trafieniu zdrowego ocalałego opętanym łańcuchem o 50%.\n• Po trafieniu opętanym łańcuchem rannego ocalałego pojawia się tylko 1 dodatkowy łańcuch.\n\"„Mamy ci wiele do pokazania”. – Pinhead\""
+        }
+      }
+    }
+  ]
+}

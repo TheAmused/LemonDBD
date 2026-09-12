@@ -1,0 +1,1218 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.282512+00:00",
+  "source": "LemonDBD",
+  "target": "maps",
+  "maps": [
+    {
+      "id": 1,
+      "name": "Azarov's Resting Place",
+      "realm_id": 2,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/azarovs_resting_place.webp",
+      "translations": {
+        "de": {
+          "name": "Azarovs Ruhestätte"
+        },
+        "es": {
+          "name": "Lugar de Descanso de Azarov"
+        },
+        "ja": {
+          "name": "アザロフの休憩所"
+        },
+        "pl": {
+          "name": "Miejsce Spoczynku Azarova"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Blood Lodge",
+      "realm_id": 2,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/blood_lodge.webp",
+      "translations": {
+        "de": {
+          "name": "Bluthütte"
+        },
+        "es": {
+          "name": "Cabaña de Sangre"
+        },
+        "ja": {
+          "name": "ブラッド・ロッジ"
+        },
+        "pl": {
+          "name": "Krwawa Stróżówka"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Gas Heaven",
+      "realm_id": 2,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/gas_heaven.webp",
+      "translations": {
+        "de": {
+          "name": "Sprithimmel"
+        },
+        "es": {
+          "name": "Gasolinera"
+        },
+        "ja": {
+          "name": "ガス・ヘヴン"
+        },
+        "pl": {
+          "name": "Stacja Paliw"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Wreckers' Yard",
+      "realm_id": 2,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wreckers_yard.webp",
+      "translations": {
+        "de": {
+          "name": "Schrottplatz"
+        },
+        "es": {
+          "name": "Desguace"
+        },
+        "ja": {
+          "name": "レッカーズ・ヤード"
+        },
+        "pl": {
+          "name": "Podwórze Złomowiska"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Wretched Shop",
+      "realm_id": 2,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wretched_shop.webp",
+      "translations": {
+        "de": {
+          "name": "Werkstatt"
+        },
+        "es": {
+          "name": "Taller Ruinoso"
+        },
+        "ja": {
+          "name": "レッチド・ショップ"
+        },
+        "pl": {
+          "name": "Sklep Nędzy"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Preschool I",
+      "realm_id": 9,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Preschool I (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_i.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule"
+        },
+        "es": {
+          "name": "Guardería Badham"
+        },
+        "ja": {
+          "name": "バダム幼稚園"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Preschool II",
+      "realm_id": 9,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Preschool II (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule"
+        },
+        "es": {
+          "name": "Guardería Badham"
+        },
+        "ja": {
+          "name": "バダム幼稚園"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Preschool III",
+      "realm_id": 9,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Preschool III (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iii.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule"
+        },
+        "es": {
+          "name": "Guardería Badham"
+        },
+        "ja": {
+          "name": "バダム幼稚園"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "Preschool IV",
+      "realm_id": 9,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Preschool IV (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iiiv.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule"
+        },
+        "es": {
+          "name": "Guardería Badham"
+        },
+        "ja": {
+          "name": "バダム幼稚園"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Preschool V",
+      "realm_id": 9,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Preschool V (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_v.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule"
+        },
+        "es": {
+          "name": "Guardería Badham"
+        },
+        "ja": {
+          "name": "バダム幼稚園"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Fractured Cowshed",
+      "realm_id": 3,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/fractured_cowshed.webp",
+      "translations": {
+        "de": {
+          "name": "Verfallener Kuhstall"
+        },
+        "es": {
+          "name": "Establo en Ruinas"
+        },
+        "ja": {
+          "name": "フラクチャード・カウシェッド"
+        },
+        "pl": {
+          "name": "Spękana Obora"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "name": "Rancid Abbatoir",
+      "realm_id": 3,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rancid_abbatoir.webp",
+      "translations": {
+        "de": {
+          "name": "Widerliches Schlachthaus"
+        },
+        "es": {
+          "name": "Matadero Pestilente"
+        },
+        "ja": {
+          "name": "ランシッド・アバトワー"
+        },
+        "pl": {
+          "name": "Zjęłczała Rzeźnia"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Rotten Fields",
+      "realm_id": 3,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rotten_fields.webp",
+      "translations": {
+        "de": {
+          "name": "Faulige Felder"
+        },
+        "es": {
+          "name": "Campos Podridos"
+        },
+        "ja": {
+          "name": "ロトン・フィールズ"
+        },
+        "pl": {
+          "name": "Zbutwiałe Pola"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "name": "The Thompson House",
+      "realm_id": 3,
+      "source_id": 1,
+      "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/the_thompson_house.webp",
+      "translations": {
+        "de": {
+          "name": "Das Thompson-Haus"
+        },
+        "es": {
+          "name": "La Casa de los Thompson"
+        },
+        "ja": {
+          "name": "トンプソン・ハウス"
+        },
+        "pl": {
+          "name": "Dom Thompsona"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "name": "Torment Creek",
+      "realm_id": 3,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/torment_creek.webp",
+      "translations": {
+        "de": {
+          "name": "Tal der Qual"
+        },
+        "es": {
+          "name": "Arroyo del Tormento"
+        },
+        "ja": {
+          "name": "トーメント・クリーク"
+        },
+        "pl": {
+          "name": "Przełęcz Udręki"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "name": "Disturbed Ward",
+      "realm_id": 4,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
+      "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/disturbed_ward.webp",
+      "translations": {
+        "de": {
+          "name": "Gestörtenabteilung"
+        },
+        "es": {
+          "name": "Sala de Trastornados"
+        },
+        "ja": {
+          "name": "ディスターブド・ウォード"
+        },
+        "pl": {
+          "name": "Niespokojny Oddział"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Father Campbells Chapel",
+      "realm_id": 4,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
+      "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/father_campbells_chapel.webp",
+      "translations": {
+        "de": {
+          "name": "Pater Campbells Kapelle"
+        },
+        "es": {
+          "name": "Capilla del Padre Campbell"
+        },
+        "ja": {
+          "name": "ファザー・キャンベルズ・チャペル"
+        },
+        "pl": {
+          "name": "Kaplica Ojca Campbella"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Shattered Square",
+      "realm_id": 19,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Shattered Square (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/shattered_square.webp",
+      "translations": {
+        "de": {
+          "name": "Der zerstörte Platz"
+        },
+        "es": {
+          "name": "El Cuadrado Roto"
+        },
+        "ja": {
+          "name": "瓦礫と化した広場"
+        },
+        "pl": {
+          "name": "Roztrzaskany Plac"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "name": "Forgotten Ruins",
+      "realm_id": 19,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Forgotten Ruins (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/forgotten_ruins.webp",
+      "translations": {
+        "de": {
+          "name": "Vergessene Ruinen"
+        },
+        "es": {
+          "name": "Ruinas Olvidadas"
+        },
+        "ja": {
+          "name": "忘れ去られた遺跡"
+        },
+        "pl": {
+          "name": "Zapomniane Ruiny"
+        }
+      }
+    },
+    {
+      "id": 20,
+      "name": "Eyrie of Crows",
+      "realm_id": 17,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
+      "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/eyrie_of_crows.webp",
+      "translations": {
+        "de": {
+          "name": "Krähenhorst"
+        },
+        "es": {
+          "name": "Aviario de Cuervos"
+        },
+        "ja": {
+          "name": "カラスの巣"
+        },
+        "pl": {
+          "name": "Gniazdo Kruków"
+        }
+      }
+    },
+    {
+      "id": 21,
+      "name": "Dead Sands",
+      "realm_id": 17,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
+      "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/dead_sands.webp",
+      "translations": {
+        "de": {
+          "name": "Tote Sande"
+        },
+        "es": {
+          "name": "Arenas Mortales"
+        },
+        "ja": {
+          "name": "死の砂漠"
+        },
+        "pl": {
+          "name": "Martwe Piaski"
+        }
+      }
+    },
+    {
+      "id": 22,
+      "name": "The Underground Complex",
+      "realm_id": 13,
+      "source_id": 1,
+      "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
+      "callout_image_local_path": "maps/callouts/hens333/hawkins_national_laboratory/the_underground_complex.webp",
+      "translations": {
+        "de": {
+          "name": "Der Untergrundkomplex"
+        },
+        "es": {
+          "name": "El Complejo Subterráneo"
+        },
+        "ja": {
+          "name": "地下施設"
+        },
+        "pl": {
+          "name": "Podziemny Kompleks"
+        }
+      }
+    },
+    {
+      "id": 23,
+      "name": "Coal Tower",
+      "realm_id": 1,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Coal Tower (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower.webp",
+      "translations": {
+        "de": {
+          "name": "Kohlelager"
+        },
+        "es": {
+          "name": "Torre de Carbón"
+        },
+        "ja": {
+          "name": "コール・タワー"
+        },
+        "pl": {
+          "name": "Wieża Węglowa"
+        }
+      }
+    },
+    {
+      "id": 24,
+      "name": "Groaning Storehouse",
+      "realm_id": 1,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Groaning Storehouse (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse.webp",
+      "translations": {
+        "de": {
+          "name": "Seufzendes Lagerhaus"
+        },
+        "es": {
+          "name": "Almacén Quejumbroso"
+        },
+        "ja": {
+          "name": "グロウニング・ストアハウス"
+        },
+        "pl": {
+          "name": "Jęczący Magazyn"
+        }
+      }
+    },
+    {
+      "id": 25,
+      "name": "Ironworks Of Misery",
+      "realm_id": 1,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Ironworks Of Misery (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery.webp",
+      "translations": {
+        "de": {
+          "name": "Eisenwerk der Qual"
+        },
+        "es": {
+          "name": "Fundición de la Miseria"
+        },
+        "ja": {
+          "name": "アイアンワークス・オブ・ミザリー"
+        },
+        "pl": {
+          "name": "Huta Niedoli"
+        }
+      }
+    },
+    {
+      "id": 26,
+      "name": "Shelter Woods",
+      "realm_id": 1,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Shelter Woods (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods.webp",
+      "translations": {
+        "de": {
+          "name": "Schutzwald"
+        },
+        "es": {
+          "name": "Bosque Refugio"
+        },
+        "ja": {
+          "name": "シェルター・ウッズ"
+        },
+        "pl": {
+          "name": "Leśne Schronisko"
+        }
+      }
+    },
+    {
+      "id": 27,
+      "name": "Suffocation Pit",
+      "realm_id": 1,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Suffocation Pit (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit.webp",
+      "translations": {
+        "de": {
+          "name": "Grubenschacht"
+        },
+        "es": {
+          "name": "Pozo de Asfixia"
+        },
+        "ja": {
+          "name": "サファケーション・ピット"
+        },
+        "pl": {
+          "name": "Duszna Kopalnia"
+        }
+      }
+    },
+    {
+      "id": 28,
+      "name": "Mother's Dwelling",
+      "realm_id": 8,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
+      "callout_image_local_path": "maps/callouts/hens333/red_forest/mothers_dwelling.webp",
+      "translations": {
+        "de": {
+          "name": "Mutters Behausung"
+        },
+        "es": {
+          "name": "Morada Maternal"
+        },
+        "ja": {
+          "name": "マザーズ・ドゥエリング"
+        },
+        "pl": {
+          "name": "Dom Matki"
+        }
+      }
+    },
+    {
+      "id": 29,
+      "name": "Temple of Purgation",
+      "realm_id": 8,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
+      "callout_image_local_path": "maps/callouts/hens333/red_forest/temple_of_purgation.webp",
+      "translations": {
+        "de": {
+          "name": "Der Tempel der Reinigung"
+        },
+        "es": {
+          "name": "El Templo de la Purgación"
+        },
+        "ja": {
+          "name": "浄罪の神殿"
+        },
+        "pl": {
+          "name": "Świątynia Oczyszczenia"
+        }
+      }
+    },
+    {
+      "id": 30,
+      "name": "Grim Pantry",
+      "realm_id": 6,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
+      "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/grim_pantry.webp",
+      "translations": {
+        "de": {
+          "name": "Schaurige Speisekammer"
+        },
+        "es": {
+          "name": "Despensa Sombría"
+        },
+        "ja": {
+          "name": "おぞましい貯蔵室"
+        },
+        "pl": {
+          "name": "Ponura Spiżarnia"
+        }
+      }
+    },
+    {
+      "id": 31,
+      "name": "The Pale Rose",
+      "realm_id": 6,
+      "source_id": 1,
+      "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
+      "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/the_pale_rose.webp",
+      "translations": {
+        "de": {
+          "name": "Die Pale Rose"
+        },
+        "es": {
+          "name": "La Rosa Pálida"
+        },
+        "ja": {
+          "name": "ペイル・ローズ"
+        },
+        "pl": {
+          "name": "Blada Róża"
+        }
+      }
+    },
+    {
+      "id": 32,
+      "name": "Family Residence",
+      "realm_id": 11,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence.webp",
+      "translations": {
+        "de": {
+          "name": "Familiensitz"
+        },
+        "es": {
+          "name": "Residencia Familiar"
+        },
+        "ja": {
+          "name": "ファミリー・レジデンス"
+        },
+        "pl": {
+          "name": "Rezydencja Rodzinna"
+        }
+      }
+    },
+    {
+      "id": 33,
+      "name": "Family Residence II",
+      "realm_id": 11,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Familiensitz"
+        },
+        "es": {
+          "name": "Residencia Familiar"
+        },
+        "ja": {
+          "name": "ファミリー・レジデンス"
+        },
+        "pl": {
+          "name": "Rezydencja Rodzinna"
+        }
+      }
+    },
+    {
+      "id": 34,
+      "name": "Sanctum of Wrath",
+      "realm_id": 11,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath.webp",
+      "translations": {
+        "de": {
+          "name": "Heiligtum des Zorns"
+        },
+        "es": {
+          "name": "Santuario de la Ira"
+        },
+        "ja": {
+          "name": "怒りの聖所"
+        },
+        "pl": {
+          "name": "Sanktuarium Gniewu"
+        }
+      }
+    },
+    {
+      "id": 35,
+      "name": "Sanctum of Wrath II",
+      "realm_id": 11,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Heiligtum des Zorns"
+        },
+        "es": {
+          "name": "Santuario de la Ira"
+        },
+        "ja": {
+          "name": "怒りの聖所"
+        },
+        "pl": {
+          "name": "Sanktuarium Gniewu"
+        }
+      }
+    },
+    {
+      "id": 36,
+      "name": "Police Station East Wing",
+      "realm_id": 16,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
+      "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_east_wing.webp",
+      "translations": {
+        "de": {
+          "name": "Ostflügel der Polizeistation von Raccoon City"
+        },
+        "es": {
+          "name": "Ala Este del Departamento de Policía de Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ警察署東棟"
+        },
+        "pl": {
+          "name": "Posterunek Policji Raccoon City – Wschodnie Skrzydło"
+        }
+      }
+    },
+    {
+      "id": 37,
+      "name": "Police Station West Wing",
+      "realm_id": 16,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
+      "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_west_wing.webp",
+      "translations": {
+        "de": {
+          "name": "Westflügel der Polizeistation von Raccoon City"
+        },
+        "es": {
+          "name": "Ala Oeste del Departamento de Policía de Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ警察署西棟"
+        },
+        "pl": {
+          "name": "Posterunek Policji Raccoon City – Zachodnie Skrzydło"
+        }
+      }
+    },
+    {
+      "id": 38,
+      "name": "Dead Dawg Saloon",
+      "realm_id": 14,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glenvale). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
+      "callout_image_local_path": "maps/callouts/hens333/grave_of_glenvale/dead_dawg_saloon.webp",
+      "translations": {
+        "es": {
+          "name": "Cantina El Perro Muerto"
+        },
+        "ja": {
+          "name": "死んだ犬の酒場"
+        },
+        "pl": {
+          "name": "Knajpa pod Martwym Ziomkiem"
+        }
+      }
+    },
+    {
+      "id": 39,
+      "name": "Garden of Joy",
+      "realm_id": 18,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/garden_of_joy.webp",
+      "translations": {
+        "de": {
+          "name": "Garten der Freude"
+        },
+        "es": {
+          "name": "Jardín de Dicha"
+        },
+        "ja": {
+          "name": "喜びの庭"
+        },
+        "pl": {
+          "name": "Ogród Radości"
+        }
+      }
+    },
+    {
+      "id": 40,
+      "name": "Greenville Square",
+      "realm_id": 18,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/greenville_square.webp",
+      "translations": {
+        "de": {
+          "name": "Hauptplatz von Greenville"
+        },
+        "es": {
+          "name": "Plaza de Greenville"
+        },
+        "ja": {
+          "name": "グリーンビル広場"
+        },
+        "pl": {
+          "name": "Plac Greenville"
+        }
+      }
+    },
+    {
+      "id": 41,
+      "name": "Fallen Refuge",
+      "realm_id": 18,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/fallen_refuge.webp",
+      "translations": {
+        "de": {
+          "name": "Gefallene Zuflucht"
+        },
+        "es": {
+          "name": "Refugio Caído"
+        },
+        "ja": {
+          "name": "落ちた避難所"
+        },
+        "pl": {
+          "name": "Upadły Azyl"
+        }
+      }
+    },
+    {
+      "id": 42,
+      "name": "Freddy Fazbears Pizza",
+      "realm_id": 18,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/freddy_fazbears_pizza.webp",
+      "translations": {
+        "de": {
+          "name": "Freddy Fazbear's Pizza"
+        },
+        "es": {
+          "name": "Freddy Fazbear's Pizza"
+        },
+        "ja": {
+          "name": "フレディファズベアーズピザ"
+        },
+        "pl": {
+          "name": "Pizzeria Freddy Fazbear"
+        }
+      }
+    },
+    {
+      "id": 43,
+      "name": "The Game",
+      "realm_id": 10,
+      "source_id": 1,
+      "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
+      "callout_image_local_path": "maps/callouts/hens333/gideon_meat_plant/the_game.webp",
+      "translations": {
+        "de": {
+          "name": "Das Spiel"
+        },
+        "es": {
+          "name": "El Juego"
+        },
+        "ja": {
+          "name": "ザ・ゲーム"
+        },
+        "pl": {
+          "name": "Rozgrywka"
+        }
+      }
+    },
+    {
+      "id": 44,
+      "name": "Lampkin Lane",
+      "realm_id": 5,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
+      "callout_image_local_path": "maps/callouts/hens333/haddonfield/lampkin_lane.webp",
+      "translations": {
+        "es": {
+          "name": "Avenida Lampkin"
+        },
+        "ja": {
+          "name": "ランプキン・レーン"
+        },
+        "pl": {
+          "name": "Alejka Lampkin"
+        }
+      }
+    },
+    {
+      "id": 45,
+      "name": "Midwich Elementary School",
+      "realm_id": 15,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
+      "callout_image_local_path": "maps/callouts/hens333/silent_hill/midwich_elementary_school.webp",
+      "translations": {
+        "es": {
+          "name": "Escuela Primaria Midwich"
+        },
+        "ja": {
+          "name": "ミッドウィッチ小学校"
+        },
+        "pl": {
+          "name": "Szkoła Podstawowa Midwich"
+        }
+      }
+    },
+    {
+      "id": 46,
+      "name": "Mount Ormond Resort",
+      "realm_id": 12,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort.webp",
+      "translations": {
+        "de": {
+          "name": "Skiort am Mount Ormond"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート"
+        },
+        "pl": {
+          "name": "Ośrodek Mount Ormond"
+        }
+      }
+    },
+    {
+      "id": 47,
+      "name": "Mount Ormond Resort II",
+      "realm_id": 12,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Skiort am Mount Ormond"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート"
+        },
+        "pl": {
+          "name": "Ośrodek Mount Ormond"
+        }
+      }
+    },
+    {
+      "id": 48,
+      "name": "Mount Ormond Resort III",
+      "realm_id": 12,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_iii.webp",
+      "translations": {
+        "de": {
+          "name": "Skiort am Mount Ormond"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート"
+        },
+        "pl": {
+          "name": "Ośrodek Mount Ormond"
+        }
+      }
+    },
+    {
+      "id": 49,
+      "name": "Ormond Lake Mine",
+      "realm_id": 12,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/ormond_lake_mine.webp",
+      "translations": {
+        "de": {
+          "name": "Mine am Ormond-See"
+        },
+        "es": {
+          "name": "Mina del Lago Ormond"
+        },
+        "ja": {
+          "name": "オーモンド湖採掘場"
+        },
+        "pl": {
+          "name": "Kopalnia nad Jeziorem Ormond"
+        }
+      }
+    },
+    {
+      "id": 50,
+      "name": "Treatment Theatre",
+      "realm_id": 7,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Treatment Theatre (Lery's Memorial Institute). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
+      "callout_image_local_path": "maps/callouts/hens333/lerys_memorial_institute/treatment_theatre.webp",
+      "translations": {
+        "de": {
+          "name": "Behandlungsbereich"
+        },
+        "es": {
+          "name": "Centro de Tratamiento"
+        },
+        "ja": {
+          "name": "治療シアター"
+        },
+        "pl": {
+          "name": "Placówka Medyczna"
+        }
+      }
+    },
+    {
+      "id": 51,
+      "name": "Toba Landing",
+      "realm_id": 20,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
+      "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/toba_landing.webp",
+      "translations": {
+        "de": {
+          "name": "Toba-Landeplatz"
+        },
+        "es": {
+          "name": "Desembarco en Toba"
+        },
+        "ja": {
+          "name": "トーバ着陸地点"
+        },
+        "pl": {
+          "name": "Ziemie Toba"
+        }
+      }
+    },
+    {
+      "id": 52,
+      "name": "Nostromo Wreckage",
+      "realm_id": 20,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
+      "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/nostromo_wreckage.webp",
+      "translations": {
+        "de": {
+          "name": "Nostromo-Wrack"
+        },
+        "es": {
+          "name": "Ruinas de la Nostromo"
+        },
+        "ja": {
+          "name": "ノストロモ号の残骸"
+        },
+        "pl": {
+          "name": "Wrak Nostromo"
+        }
+      }
+    },
+    {
+      "id": 53,
+      "name": "Trickster's Delusion",
+      "realm_id": 21,
+      "source_id": 1,
+      "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
+      "callout_image_local_path": "maps/callouts/hens333/sleepless_district/tricksters_delusion.webp",
+      "translations": {
+        "de": {
+          "name": "Illusion des Tricksters"
+        },
+        "es": {
+          "name": "Delirio del Embaucador"
+        },
+        "ja": {
+          "name": "トリックスターの妄想"
+        },
+        "pl": {
+          "name": "Urojenia Magika"
+        }
+      }
+    }
+  ]
+}

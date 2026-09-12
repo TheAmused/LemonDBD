@@ -48,7 +48,6 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'offerings', label: 'Offerings', desc: 'Survivor and Killer offerings', category: 'content' },
   { id: 'chapters', label: 'Chapters', desc: 'DLC chapters and banner art', category: 'content' },
   { id: 'maps', label: 'Maps & Callouts', desc: 'Map realms, tiles, and objective landmarks', category: 'content' },
-  { id: 'perk_rules', label: 'Perk Slot Rules', desc: 'Randomizer slot type rule sets', category: 'settings' },
   { id: 'users', label: 'User Accounts', desc: 'Registered user profiles, roles and avatars', category: 'users' },
   { id: 'ownerships', label: 'User Ownership Records', desc: 'Unlocked perks, character prestige and favorites', category: 'users' },
   { id: 'user_showcases', label: 'Player Showcases', desc: 'Public profile mains and prestige display', category: 'users' },
@@ -58,7 +57,6 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'bug_reports', label: 'Bug Reports', desc: 'Submitted bug reports and admin notes', category: 'community' },
   { id: 'changelog_posts', label: 'Changelog Posts', desc: 'Published What is New feed entries', category: 'community' },
   { id: 'draft_sessions', label: 'Draft Sessions', desc: 'Live perk draft room state', category: 'settings' },
-  { id: 'scraper_settings', label: 'Scraper Settings', desc: 'Data source configuration', category: 'settings' },
   { id: 'challenge_mode_settings', label: 'Challenge Mode Toggles', desc: 'Site-wide enable and disable state per mode', category: 'settings' },
   { id: 'admin_audit_logs', label: 'Admin Audit Log', desc: 'History of administrative actions', category: 'settings' },
   { id: 'guesser_stats', label: 'Guesser Stats', desc: 'Streaks and guesser game records', category: 'settings' },
@@ -67,7 +65,6 @@ const ALL_TARGETS: readonly TargetItem[] = [
   { id: 'history_runs', label: 'History Streak Runs', desc: 'In-progress and completed history streak history', category: 'community' },
   { id: 'page_streak_runs', label: 'Page Streak Runs', desc: 'In-progress and completed page streak history', category: 'community' },
   { id: 'rosters', label: 'Smash or Pass Rosters', desc: 'Rosters, entities, stats and votes', category: 'community' },
-  { id: 'smash_translations', label: 'Smash or Pass Translations', desc: 'Localized roster and entity text', category: 'community' },
 ];
 
 const TARGET_KEY_MAP: Record<string, string> = {
@@ -78,7 +75,6 @@ const TARGET_KEY_MAP: Record<string, string> = {
   offerings: 'Offerings',
   chapters: 'Chapters',
   maps: 'Maps',
-  perk_rules: 'PerkRules',
   users: 'Users',
   ownerships: 'Ownerships',
   user_showcases: 'UserShowcases',
@@ -88,7 +84,6 @@ const TARGET_KEY_MAP: Record<string, string> = {
   bug_reports: 'BugReports',
   changelog_posts: 'ChangelogPosts',
   draft_sessions: 'DraftSessions',
-  scraper_settings: 'ScraperSettings',
   challenge_mode_settings: 'ChallengeModeSettings',
   admin_audit_logs: 'AdminAuditLogs',
   guesser_stats: 'GuesserStats',
@@ -97,7 +92,6 @@ const TARGET_KEY_MAP: Record<string, string> = {
   history_runs: 'HistoryRuns',
   page_streak_runs: 'PageStreakRuns',
   rosters: 'Rosters',
-  smash_translations: 'SmashTranslations',
 };
 
 const TARGET_GROUPS_CONFIG = [

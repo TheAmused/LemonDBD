@@ -2,7 +2,6 @@
 from datetime import datetime, timezone
 import pytest
 from pydantic import ValidationError
-from app.schemas.character import CharacterBase, CharacterResponse, KillerPowerSchema
 from app.schemas.community import (
     BugReportCreate,
     BugReportResponse,
@@ -10,12 +9,17 @@ from app.schemas.community import (
     CustomPerkCreate,
     DailyQuestResponse,
 )
-from app.schemas.equipment import AddonResponse, ItemResponse
+from app.schemas.equipment import (
+    ItemAddonBase,
+    ItemAddonResponse,
+    ItemResponse,
+    KillerAddonBase,
+    KillerAddonResponse,
+)
 from app.schemas.gauntlet import GauntletRunCreate, GauntletRunResponse
 from app.schemas.chaos import ChaosRunResponse
 from app.schemas.history import HistoryRunResponse
 from app.schemas.page_streak import PageStreakRunCreate, PageStreakRunResponse
-from app.schemas.perk import PerkBase, PerkResponse, PerkRuleResponse
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 
@@ -71,73 +75,6 @@ class TestUserSchemas:
 
 
 @pytest.mark.unit
-class TestCharacterAndPerkSchemas:
-    """Tests for Character and Perk serialization contracts."""
-
-    def test_character_response_serialization(self) -> None:
-        power = KillerPowerSchema(
-            name="Spencer's Last Breath",
-            description="Allows teleporting through obstacles.",
-            movement_speed="3.85 m/s (96.25%)",
-            terror_radius="32 m",
-            terror_radius_meters=32,
-            height="Average",
-        )
-        data = {
-            "id": 1,
-            "name": "The Nurse",
-            "role": "Killer",
-            "category": "Killer",
-            "code_prefix": "NR",
-            "portrait_url": "/nurse.png",
-            "real_name": "Sally Smithson",
-            "short_name": "nurse",
-            "wiki_slug": "nurse",
-            "avatar_url": "/nurse.png",
-            "avatar_local_path": "/icons/nurse.png",
-            "release_number": 4,
-            "chapter_name": "The Last Breath",
-            "chapter_number": "Chapter 2",
-            "dlc_type": "original_chapter",
-            "is_licensed": False,
-            "is_disabled": False,
-            "disabled_reason": None,
-            "release_year": 2016,
-            "release_date": "2016-08-18",
-            "dlc_counterparts": ["Nea Karlsson"],
-            "lore": "Sally Smithson worked at Disturbed Ward...",
-            "power": power,
-        }
-        validated = CharacterResponse.model_validate(data)
-        assert validated.name == "The Nurse"
-        assert validated.power is not None
-        assert validated.power.name == "Spencer's Last Breath"
-
-    def test_perk_response_defaults(self) -> None:
-        data = {
-            "id": 101,
-            "name": "Sprint Burst",
-            "alternate_name": None,
-            "is_generic_counterpart": False,
-            "is_teachable": True,
-            "category": "Survivor",
-            "description": "Break into a sprint at 150% normal running speed for 3 seconds.",
-            "icon_url": "/icons/sprint_burst.png",
-            "icon_local_path": "icons/perks/sprint_burst.png",
-            "character_id": 2,
-            "character": "Meg Thomas",
-            "character_real_name": "Meg Thomas",
-            "character_avatar_path": "icons/avatars/meg.png",
-            "is_disabled": False,
-            "disabled_reason": None,
-        }
-        perk = PerkResponse.model_validate(data)
-        assert perk.id == 101
-        assert perk.name == "Sprint Burst"
-        assert perk.character == "Meg Thomas"
-
-
-@pytest.mark.unit
 class TestCommunityAndStreakSchemas:
     """Tests for Community builds and challenge streak request payloads."""
 
@@ -170,3 +107,38 @@ class TestCommunityAndStreakSchemas:
         )
         assert run_req.user_id == 14
         assert run_req.starting_character_id == "trapper"
+
+
+@pytest.mark.unit
+class TestAddonSchemas:
+    """The two add-on tables replaced one table with two nullable keys."""
+
+    def test_owner_key_is_required_on_each_write_shape(self) -> None:
+        # The old AddonBase accepted a row with neither key and leaned on a
+        # validator to reject one with both. Neither case is reachable now:
+        # each table has exactly one owner column, and it is NOT NULL.
+        with pytest.raises(ValidationError):
+            KillerAddonBase.model_validate({"name": "Bloody Coil"})
+        with pytest.raises(ValidationError):
+            ItemAddonBase.model_validate({"name": "Battery"})
+
+        killer_addon = KillerAddonBase.model_validate({"name": "Bloody Coil", "killer_id": 1})
+        item_addon = ItemAddonBase.model_validate({"name": "Battery", "item_category_id": 1})
+        assert killer_addon.killer_id == 1
+        assert item_addon.item_category_id == 1
+        assert not hasattr(killer_addon, "item_category_id")
+        assert not hasattr(item_addon, "killer_id")
+
+    def test_both_responses_expose_the_same_fields(self) -> None:
+        # A client holding a mixed list of add-ons should not have to know
+        # which table a row came from, so the two responses are one shape.
+        assert set(KillerAddonResponse.model_fields) == set(ItemAddonResponse.model_fields)
+
+        killer_row = KillerAddonResponse.model_validate(
+            {"id": 1, "name": "Bloody Coil", "killer_id": 1, "associated_target": "The Trapper"}
+        )
+        item_row = ItemAddonResponse.model_validate(
+            {"id": 1, "name": "Battery", "item_category_id": 1, "associated_target": "Flashlights"}
+        )
+        assert killer_row.item_category_id is None
+        assert item_row.killer_id is None

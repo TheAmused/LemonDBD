@@ -18,15 +18,15 @@ test('VoiceCommandBanner, MapExplorer, FullscreenMapEngine, and VariantSwitcherB
 
 test('VoiceCommandBanner props interface and match handling integration', () => {
   const mockMaps = [
-    { id: 'hens_azarovs_resting_place', name: "Azarov's Resting Place", realm: 'Autohaven Wreckers', source: 'hens333' },
-    { id: 'samoel_dead_dawg', name: 'Dead Dawg Saloon', realm: 'Grave of Glennvale', source: 'samoelcolt' },
+    { id: 1, name: "Azarov's Resting Place", realm: 'Autohaven Wreckers', source: 'hens333' },
+    { id: 16, name: 'Dead Dawg Saloon', realm: 'Grave of Glennvale', source: 'samoelcolt' },
   ];
 
   // Test map matching flow
   const mapResult = matchVoiceQuery("Azarov's", 'hens333', mockMaps);
   assert.ok(mapResult);
   assert.strictEqual(mapResult.matchedMapName, "Azarov's Resting Place");
-  assert.strictEqual(mapResult.matchedMapId, 'hens_azarovs_resting_place');
+  assert.strictEqual(mapResult.matchedMapId, 1);
 
   // Test source switching flow
   const sourceResult = matchVoiceQuery('switch to samoel', 'hens333');

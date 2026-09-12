@@ -1,0 +1,116 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 20,
+      "name": "Glowing Ink",
+      "item_category_id": 6,
+      "description": "Some of the images seemed to jump right off the page.\nIncreases the duration of auras revealed by maps for 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_glowingInk.png?976c14",
+      "icon_local_path": "icons/addons/glowing_ink.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Leuchtende Tinte",
+          "description": "Einige der Bilder schienen förmlich von der Seite zu springen.\nVerlängert die Dauer, für die Auren durch Karten enthüllt werden, um 2 Sekunden."
+        },
+        "es": {
+          "name": "Tinta radiante",
+          "description": "Algunas de las imágenes parecían que iban a salirse de la página.\nAumenta la duración de las auras que revelan los mapas en 2 segundos."
+        },
+        "ja": {
+          "name": "光るインク",
+          "description": "一部の絵は、マップの紙から浮かび上がるように見えた。\nマップを使ったときにオーラが表示される時間が2秒増加する。"
+        },
+        "pl": {
+          "name": "Świecący tusz",
+          "description": "Niektóre rysunki zdawały się wręcz wychodzić ze strony.\nZwiększa czas trwania aur ujawnianych przez mapy o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 21,
+      "name": "Gnarled Compass",
+      "item_category_id": 6,
+      "description": "It seems to set itself to the perfect distance every time.\nIncreases a map's charges by 2.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gnarledCompass.png?b2ac98",
+      "icon_local_path": "icons/addons/gnarled_compass.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Knorriger Zirkel",
+          "description": "Scheint sich jedes Mal auf die perfekte Distanz einzustellen.\nErhöht die Aufladungen einer Karte um 2."
+        },
+        "es": {
+          "name": "Brújula retorcida",
+          "description": "Parece colocarse siempre a la distancia idónea.\nAumenta las cargas de un mapa en 2."
+        },
+        "ja": {
+          "name": "曲がったコンパス",
+          "description": "それは常に完璧な距離を示すようだ。\nマップにチャージを2追加する。"
+        },
+        "pl": {
+          "name": "Powykręcany kompas",
+          "description": "Zdaje się za każdym razem ustawiać w idealnej odległości.\nZwiększa liczbę ładunków mapy o 2."
+        }
+      }
+    },
+    {
+      "id": 22,
+      "name": "Battered Tape",
+      "item_category_id": 6,
+      "description": "Additional pieces of parchment hung loosely from the map, hastily affixed with tape.\nIncreases the maximum range of a map by 8 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_batteredTape.png?635d3f",
+      "icon_local_path": "icons/addons/battered_tape.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Abgenutztes Klebeband",
+          "description": "Zusätzliche Pergamentstücke hingen lose an der Karte, nachdem sie hastig mit Klebeband befestigt worden waren.\nErhöht die maximale Reichweite einer Karte um 8 Meter."
+        },
+        "es": {
+          "name": "Cinta adhesiva destrozada",
+          "description": "Unos trozos de pergamino colgaban del mapa, pegados apresuradamente con cinta adhesiva.\nAumenta el alcance máximo de un mapa en 8 metros."
+        },
+        "ja": {
+          "name": "使い古したテープ",
+          "description": "地図には追加の羊皮紙がテープで張り付けられていた。\nマップの最大範囲が8メートル拡大する。"
+        },
+        "pl": {
+          "name": "Wysłużona taśma",
+          "description": "Dodatkowe skrawki pergaminu zwisały z mapy, pośpiesznie przyklejone taśmą.\nZwiększa maksymalny zasięg mapy o 8 m."
+        }
+      }
+    },
+    {
+      "id": 23,
+      "name": "Sharpened Flint",
+      "item_category_id": 6,
+      "description": "When sparked near the map, new sigils appeared in unexpected locations.\nWhen using the map, all totems within range are revealed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sharpenedFlint.png?25de8f",
+      "icon_local_path": "icons/addons/sharpened_flint.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Angespitzter Feuerstein",
+          "description": "Als damit in der Nähe der Karte Funken erzeugt wurden, erschienen neue Siegel an unerwarteten Orten.\nBei Verwendung der Karte werden alle Totems innerhalb der Reichweite enthüllt."
+        },
+        "es": {
+          "name": "Pedernal afilado",
+          "description": "Al encenderlo cerca del mapa, aparecieron sellos nuevos en ubicaciones inesperadas.\nAl utilizar el mapa, todos los tótems dentro de su alcance se revelan."
+        },
+        "ja": {
+          "name": "研がれた火打ち石",
+          "description": "マップの近くで光らせると、予期せぬ場所に新たな印が現れた。\nマップを使用中、範囲内のトーテムがすべて視える。"
+        },
+        "pl": {
+          "name": "Zaostrzony krzemień",
+          "description": "Gdy zaiskrzyło w pobliżu mapy, nowe oznaczenia pojawiły się w nieoczekiwanych miejscach.\nPodczas korzystania z mapy, wszystkie totemy w zasięgu są ujawniane."
+        }
+      }
+    }
+  ]
+}

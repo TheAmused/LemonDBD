@@ -69,7 +69,7 @@ class Config:
         "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
     }
 
-    INITIAL_SCRAPE_ENABLED: bool = os.getenv("INITIAL_SCRAPE_ENABLED", "true").lower() in ("true", "1", "yes")
+    INITIAL_SCRAPE_ENABLED: bool = os.getenv("INITIAL_SCRAPE_ENABLED", "false").lower() in ("true", "1", "yes")
     SCRAPE_LOCK_FILE: str = os.getenv(
         "SCRAPE_LOCK_FILE",
         str(Path(tempfile.gettempdir()) / "dbd_initial_scrape.lock"),

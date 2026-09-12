@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 112,
+      "name": "\"Order\" - Class I",
+      "killer_id": 7,
+      "description": "A conventional ECT procedure, part of a patient's daily routine at the Léry's Memorial Institute. Can cause a state of mild confusion in the patient.\n• Decreases Static Blast cooldown by 2 seconds.\nSurvivors with Madness suffer from the Affliction of Order:\n• Broken pallets may appear to be replaced with illusionary pallets that persist until approached.\n• A new illusionary pallet is generated at the location of a random broken pallet every 20 seconds.\n• The Doctor sees the auras of illusionary pallets.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_orderClassI.png?e95bce",
+      "icon_local_path": "icons/addons/order_class_i.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Ordnung“ – Klasse I",
+          "description": "Ein konventionelles EKT-Verfahren. Es ist Teil des täglichen Ablaufs eines Patienten in Lérys Gedenkinstitut. Kann beim Patienten leichte Verwirrung hervorrufen.\n• Verkürzt die Abklingzeit von statisches Feld um 2 Sekunden.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden unter dem Symptom der Ordnung.\n• Zerstörte Paletten können durch Trugbilder von Paletten ersetzt werden, die bestehen bleiben, bis man sich ihnen nähert.\n• Ein neues Trugbild einer Palette wird alle 20 Sekunden an der Position einer willkürlich ausgewählten zerstörten Palette erzeugt.\n• Der Doktor sieht die Auren der Paletten-Trugbilder."
+        },
+        "es": {
+          "name": "Orden (clase I)",
+          "description": "Una terapia de electrochoque convencional, utilizada como parte de la rutina diaria de los pacientes en el Instituto Conmemorativo Léry. Puede causar confusión leve a los pacientes.\n• Reduce el tiempo de recarga de Explosión estática en 2 segundos.\nLos supervivientes con el efecto de estado Locura sufren el síntoma Orden:\n• Los palés rotos pueden parecer haber sido reemplazados por palés imaginarios, que desaparecen al acercarse.\n• Un nuevo palé imaginario se genera cada 20 segundos en la ubicación de un palé roto al azar.\n• El Doctor ve las auras de los palés imaginarios."
+        },
+        "ja": {
+          "name": "「秩序」- クラスI",
+          "description": "従来の電気ショック療法。レリー記念研究所の患者に毎日行われていた。患者に軽度の混乱を引き起こす場合がある。\n• 放電爆破のクールダウンが2秒減少する\n狂気状態の生存者は秩序の症状を発症する。\n• 破壊されたパレットが幻覚のパレットに置き換わり近づくまで視え続けることがある\n• 幻覚のパレットはランダムな破壊済みパレットの場所に20秒ごとに生成される\n• ドクターは幻覚のパレットのオーラを視ることができる"
+        },
+        "pl": {
+          "name": "\"Porządek\" – Klasa I",
+          "description": "Standardowa procedura elektrowstrząsowa. Stanowiła niegdyś część rutyny pacjenta leczonego w Instytucie Pamięci Léry'ego. Może wywoływać u pacjenta stan łagodnej dezorientacji.\n• Skraca czas odnawiania Wybuchu Statycznego o 2 sekundy:\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Porządek:\n• Zniszczone palety mogą zostać zastąpione iluzorycznymi paletami, które znikają tylko wtedy, gdy się do nich podejdzie.\n• Nowa iluzoryczna paleta pojawia się co 20 sekund w miejscu losowej zniszczonej palety.\n• Doktor widzi aury iluzorycznych palet."
+        }
+      }
+    },
+    {
+      "id": 113,
+      "name": "\"Calm\" - Class I",
+      "killer_id": 7,
+      "description": "An ECT procedure using a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure can cause mild anxiety in the patient.\n• Increases Terror Radius by 4 meters while Static Blast is ready.\n• Decreases Terror Radius by 4 meters while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently causes Survivors to hear a distant illusionary Terror Radius.\n• Madness III: Constantly causes Survivors to hear a distant illusionary Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_calmClassI.png?7b5bb3",
+      "icon_local_path": "icons/addons/calm_class_i.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Ruhe“ – Klasse I",
+          "description": "Ein riskantes EKT-Verfahren, basierend auf einer tiefen Wellenlänge, die diverse geistige Beschwerden lindert. Da Carters Funke als Quelle genutzt wird, kann die Prozedur beim Patienten milde Angstgefühle hervorrufen.\n• Vergrößert den Terrorradius um 4 Meter, während statisches Feld bereit ist.\n• Verkleinert den Terrorradius um 4 Meter, während statisches Feld sich in der Abklingzeit befindet.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom der Ruhe.\n• Wahnsinn II: Bewirkt zeitweise, dass Überlebende in der Ferne eine Illusion des Terrorradius hören.\n• Wahnsinn III: Bewirkt dauerhaft, dass Überlebende in der Ferne eine Illusion des Terrorradius hören."
+        },
+        "es": {
+          "name": "Calma (clase I)",
+          "description": "Una terapia de electrochoque que usa ondas profundas para calmar varias enfermedades mentales. Se basa en Chispa de Carter y puede causar ansiedad leve en el paciente.\n• Aumenta tu radio de terror en 4 metros mientras Explosión estática está lista.\n• Reduce tu radio de terror en 4 metros mientras Explosión estática se está recargando.\nLos supervivientes con Locura sufren el síntoma Calma:\n• Locura II: Hace que los supervivientes oigan de manera intermitente un radio de terror imaginario.\n• Locura III: Hace que los supervivientes oigan de manera constante un radio de terror imaginario."
+        },
+        "ja": {
+          "name": "「鎮静」- クラスI",
+          "description": "様々な精神病を和らげるための低周波を使用する電気ショック療法。カーターのスパークをエネルギー源とするこの処置は、患者に軽度の不安を引き起こす。\n• 放電爆破の準備が整っている間、脅威範囲が4メートル増加する\n• 放電爆破がクールダウンの間、脅威範囲が4メートル減少する\n狂気状態の生存者は鎮静の症状を発症する。\n• 狂気度II：生存者は幻覚の脅威範囲の心音が遠くから断続的に聞こえるようになる\n• 狂気度III：生存者は幻覚の脅威範囲の心音が遠くから絶えず聞こえるようになる"
+        },
+        "pl": {
+          "name": "\"Spokój\" – Klasa I",
+          "description": "Procedura elektrowstrząsowa wykorzystująca basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wypacza procedurę i wywołuje łagodny niepokój u pacjenta.\n• Zwiększa zasięg terroru o 4 metry, gdy Wybuch Statyczny jest gotowy.\n• Zmniejsza zasięg terroru o 4 metry podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• Szaleństwo 2: ocalali co jakiś czas słyszą odległy iluzoryczny zasięg terroru.\n• Szaleństwo 3: ocalali ciągle słyszą odległy iluzoryczny zasięg terroru."
+        }
+      }
+    },
+    {
+      "id": 114,
+      "name": "Maple Knight",
+      "killer_id": 7,
+      "description": "A white knight chess piece made of maple. This gift from an old man brings back distant memories and imbues The Doctor with devastating focus.\n• Reveals the area of effect of Shock Therapy.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mapleKnight.png?cb97fa",
+      "icon_local_path": "icons/addons/maple_knight.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ahornspringer",
+          "description": "Eine weiße Schachfigur des Springers aus Ahornholz. Dieses Geschenk eines alten Mannes ruft alte Erinnerungen zurück und erfüllt den Doktor mit verheerender Konzentration.\n• Zeigt den Wirkungsbereich der Schocktherapie an."
+        },
+        "es": {
+          "name": "Caballo de arce",
+          "description": "Un caballo blanco de ajedrez hecho de madera de arce. Este regalo de un anciano hace que el Doctor rememore recuerdos lejanos y le infunde una concentración devastadora.\n• Permite ver el área de efecto de Terapia de choque."
+        },
+        "ja": {
+          "name": "楓製のナイト",
+          "description": "樫材で出来た白いチェスのナイトの駒。とある老人からの贈り物で、遠い記憶を思い起こさせ、ドクターに凄まじい集中力を与える。\n• ショック療法の効果範囲が表示されるようになる"
+        },
+        "pl": {
+          "name": "Klonowy Rycerz",
+          "description": "Biały koń szachowy wykonany z drewna klonowego. Prezent od starego mężczyzny, przywołuje dawne wspomnienia i nasyca Doktora dewastującym skupieniem.\n• Ujawnia obszar działania Terapii Szokowej."
+        }
+      }
+    },
+    {
+      "id": 115,
+      "name": "\"Order\" - Class II",
+      "killer_id": 7,
+      "description": "A high stimulus ECT procedure, part of a patient daily routine at the Léry's Memorial Institute. Can cause a state of moderate confusion in the patient.\n• Decreases Static Blast cooldown by 2.5 seconds.\nSurvivors with Madness suffer from the Affliction of Order:\n• Broken pallets may appear to be replaced with illusionary pallets that persist until approached.\n• A new illusionary pallet is generated at the location of a random broken pallet every 20 seconds.\n• The Doctor sees the auras of illusionary pallets.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_orderClassII.png?ccf92d",
+      "icon_local_path": "icons/addons/order_class_ii.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Ordnung“ – Klasse II",
+          "description": "Ein EKT-Verfahren mit starker Reizwirkung; Teil des täglichen Ablaufs eines Patienten in Lérys Gedenkinstitut. Kann beim Patienten moderate Verwirrung hervorrufen.\n• Verkürzt die Abklingzeit von „Statisches Feld“ um 2,5 Sekunden.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden unter dem Symptom der Ordnung.\n• Zerstörte Paletten können durch Trugbilder von Paletten ersetzt werden, die bestehen bleiben, bis man sich ihnen nähert.\n• Ein neues Trugbild einer Palette wird alle 20 Sekunden an der Position einer willkürlich ausgewählten zerstörten Palette erzeugt.\n• Der Doktor sieht die Auren der Paletten-Trugbilder."
+        },
+        "es": {
+          "name": "Orden (clase II)",
+          "description": "Una terapia de electrochoque de alto estímulo, utilizada como parte de la rutina diaria de los pacientes en el Instituto Conmemorativo Léry. Puede causar confusión moderada a los pacientes.\n• Reduce el tiempo de recarga de Explosión estática en 2,5 segundos.\nLos supervivientes con el efecto de estado Locura sufren el síntoma Orden:\n• Los palés rotos pueden parecer haber sido reemplazados por palés imaginarios, que desaparecen al acercarse.\n• Un nuevo palé imaginario se genera cada 20 segundos en la ubicación de un palé roto al azar.\n• El Doctor ve las auras de los palés imaginarios."
+        },
+        "ja": {
+          "name": "「秩序」- クラスII",
+          "description": "高刺激の電気ショック療法。レリー記念研究所の患者に毎日行われていた。患者に中程度の混乱を引き起こす場合がある。\n• 放電爆破のクールダウンが2.5秒減少する\n狂気状態の生存者は秩序の症状を発症する。\n• 破壊されたパレットが幻覚のパレットに置き換わり、近づくまで視え続けることがある\n• 新しい幻覚のパレットが20秒ごとにランダムな破壊済みパレットの場所に生成される\n• ドクターは幻覚のパレットのオーラを視ることができる"
+        },
+        "pl": {
+          "name": "\"Porządek\" – Klasa II",
+          "description": "Silnie stymulująca procedura elektrowstrząsowa. Stanowiła niegdyś część rutyny pacjenta leczonego w Instytucie Pamięci Léry'ego. Może wywoływać u pacjenta stan umiarkowanej dezorientacji.\n• Skraca czas odnawiania Wybuchu Statycznego o 2,5 sekundy:\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Porządek:\n• Zniszczone palety mogą zostać zastąpione iluzorycznymi paletami, które znikają tylko wtedy, gdy się do nich podejdzie.\n• Nowa iluzoryczna paleta pojawia się co 20 sekund w miejscu losowej zniszczonej palety.\n• Doktor widzi aury iluzorycznych palet."
+        }
+      }
+    },
+    {
+      "id": 116,
+      "name": "\"Discipline\" - Class II",
+      "killer_id": 7,
+      "description": "Project Awakening ECT procedure for disciplinary action which uses a fixed dose at high voltage. Can cause a state of moderate paranoia in the patient.\n• Decreases the detonation delay of Shock Therapy by 0.06 seconds.\nSurvivors with Madness suffer from the Affliction of Discipline:\n• Madness II: While in a chase, Survivors perceive an illusionary Red Stain and Terror Radius as though The Doctor were directly behind them. This effect persists for 6 seconds after the chase ends.\n• Madness III: Illusionary Red Stain and Terror Radius are constantly active.\n• The Doctor also sees the illusionary Red Stain.\n\"\"We re-educate our patients with the greatest care.\" -Léry's Memorial Institute\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_disciplineClassII.png?8fd4b8",
+      "icon_local_path": "icons/addons/discipline_class_ii.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Disziplin“ – Klasse II",
+          "description": "EKT-Verfahren des Erweckungsprojekts zur disziplinarischen Maßregelung unter Anwendung einer festgelegten Dosis bei hohen Spannungswerten. Kann den Patienten in einen Zustand moderater Paranoia versetzen.\n• Verkürzt die Zündungsverzögerung von Schocktherapie um 0,06 Sekunden.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom der Disziplin.\n• Wahnsinn II: Während der Jagd sehen Überlebende ein Trugbild des roten Flecks und den Terrorradius, als wäre der Doktor direkt hinter ihnen. Dieser Effekt hält noch 6 Sekunden lang an, nachdem die Jagd zu Ende ist.\n• Wahnsinn III: Das Trugbild des roten Flecks und der Terrorradius sind dauerhaft aktiv.\n• Der Doktor sieht das Trugbild des roten Flecks.\n\"„Die Umerziehung unserer Patienten erfolgt mit der größtmöglichen Sorgfalt.“ – Lérys Gedenkinstitut\""
+        },
+        "es": {
+          "name": "Disciplina (clase II)",
+          "description": "Una terapia de electrochoque del proyecto Despertar que usa una dosis fija de un elevado voltaje. Puede provocar un estado moderado de paranoia en el paciente.\n• Reduce el retardo de detonación de Terapia de choque en 0,06 segundos.\nLos supervivientes con Locura sufren el síntoma Disciplina:\n• Locura II: Durante una persecución, los supervivientes perciben una marca roja imaginaria y un radio de terror como si tuvieran al Doctor justo detrás. El efecto perdura durante 6 segundos tras el final de la persecución.\n• Locura III: La marca roja imaginaria y el radio de terror están activos constantemente.\n• El Doctor también ve la marca roja imaginaria.\n\"\"Reeducamos a nuestros pacientes con los mejores cuidados\". (Instituto Conmemorativo Léry)\""
+        },
+        "ja": {
+          "name": "「懲罰」- クラスII",
+          "description": "覚醒プロジェクトで懲罰を目的として使用される電気ショック療法。一定量の高圧電流を使用する。患者を中程度の妄想状態にする場合がある。\n• ショック療法のデトネーションの遅れが0.06秒減少する\n狂気状態の生存者は懲罰の症状を発症する。\n• 狂気度II：追いかけられているとき、生存者は6秒間、まるでドクターが真後ろにいるかのように幻覚の赤い光と脅威範囲を認識する\n• 狂気度III：幻覚の赤い光と脅威範囲は常に作用している\n• ドクターは幻覚の赤い光を視ることができる\n\"「当研究所では患者の皆さまを再教育するにあたり、細心の注意を払っています。」 - レリー記念研究所\""
+        },
+        "pl": {
+          "name": "\"Dyscyplina\" – Klasa II",
+          "description": "Procedura elektrowstrząsowa stosowana podczas projektu „Przebudzenie”, mająca na celu karanie krnąbrnych pacjentów poprzez rażenie ich określoną dawką wysokiego napięcia. Może wywołać u pacjenta umiarkowaną paranoję.\n• Skraca opóźnienie detonacji Terapii Szokowej o 0,06 s.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Dyscyplina:\n• Szaleństwo 2: podczas pościgu ocalali widzą iluzoryczną czerwoną poświatę oraz zasięg terroru, tak jakby Doktor znajdował się bezpośrednio za nimi. Ten efekt utrzymuje się przez 6 sekund po zakończeniu pościgu.\n• Szaleństwo 3: iluzoryczna czerwona poświata oraz zasięg terroru są na stałe włączone.\n• Doktor również widzi iluzoryczną czerwoną poświatę.\n\"„Uczymy naszych pacjentów na nowo, okazując im największą troskę”. – Instytut Pamięci Léry'ego\""
+        }
+      }
+    },
+    {
+      "id": 117,
+      "name": "\"Calm\" - Class II",
+      "killer_id": 7,
+      "description": "A risky ECT procedure using a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure can cause moderate anxiety in the patient.\n• Increases Terror Radius by 6 meters while Static Blast is ready.\n• Decreases Terror Radius by 6 meters while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently causes Survivors to hear a distant illusionary Terror Radius.\n• Madness III: Constantly causes Survivors to hear a distant illusionary Terror Radius.\n\"\"Electroconvulsive therapy is one of the safest medical procedures.\" -Léry's Memorial Institute\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_calmClassII.png?6b7f25",
+      "icon_local_path": "icons/addons/calm_class_ii.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Ruhe“ – Klasse II",
+          "description": "Ein riskantes EKT-Verfahren, basierend auf einer tiefen Wellenlänge, die diverse geistige Beschwerden lindert. Da Carters Funke als Quelle genutzt wird, kann die Prozedur beim Patienten moderate Angstgefühle hervorrufen.\n• Vergrößert den Terrorradius um 6 Meter, während statisches Feld bereit ist.\n• Verkleinert den Terrorradius um 6 Meter, während statisches Feld sich in der Abklingzeit befindet.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom der Ruhe.\n• Wahnsinn II: Bewirkt zeitweise, dass Überlebende in der Ferne eine Illusion des Terrorradius hören.\n• Wahnsinn III: Bewirkt dauerhaft, dass Überlebende in der Ferne eine Illusion des Terrorradius hören.\n\"„Die Elektrokrampftherapie ist eine der sichersten medizinischen Methoden.“ – Lérys Gedenkinstitut\""
+        },
+        "es": {
+          "name": "Calma (clase II)",
+          "description": "Una arriesgada terapia de electrochoque que usa ondas profundas para calmar varias enfermedades mentales. Se basa en Chispa de Carter y puede causar ansiedad moderada en el paciente.\n• Aumenta tu radio de terror en 6 metros mientras Explosión estática está lista.\n• Reduce tu radio de terror en 6 metros mientras Explosión estática se está recargando.\nLos supervivientes con Locura sufren el síntoma Calma:\n• Locura II: Hace que los supervivientes oigan de manera intermitente un radio de terror imaginario.\n• Locura III: Hace que los supervivientes oigan de manera constante un radio de terror imaginario.\n\"\"La terapia de electrochoque es uno de los procedimientos médicos más seguros\". (Instituto Conmemorativo Léry)\""
+        },
+        "ja": {
+          "name": "「鎮静」- クラスII",
+          "description": "様々な精神病を和らげるための低周波を使用する、危険な電気ショック療法。カーターのスパークをエネルギー源とするこの処置は、患者に適度な不安を引き起こす。\n• 放電爆破の準備が整っている間、脅威範囲が6メートル増加する\n• 放電爆破がクールダウンの間、脅威範囲が6メートル減少する\n狂気状態の生存者は鎮静の症状を発症する。\n• 狂気度II：生存者は幻覚の脅威範囲の心音が遠くから断続的に聞こえるようになる\n• 狂気度III：生存者は幻覚の脅威範囲の心音が遠くから絶えず聞こえるようになる\n\"「電気ショック療法は最も安全な医療処置の一つです」――レリー記念研究所\""
+        },
+        "pl": {
+          "name": "\"Spokój\" – Klasa II",
+          "description": "Ryzykowna procedura elektrowstrząsowa, która wykorzystuje basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wypacza procedurę i wywołuje umiarkowany niepokój u pacjenta.\n• Zwiększa zasięg terroru o 6 metrów, gdy Wybuch Statyczny jest gotowy.\n• Zmniejsza zasięg terroru o 6 metrów podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• 2. poziom szaleństwa: ocalali co jakiś czas słyszą odległy iluzoryczny zasięg terroru.\n• 3. poziom szaleństwa: ocalali ciągle słyszą odległy iluzoryczny zasięg terroru.\n\"„Terapia elektrokonwulsywna jest jedną z najbezpieczniejszych procedur medycznych”. – Instytut Pamięci Léry'ego\""
+        }
+      }
+    },
+    {
+      "id": 118,
+      "name": "\"Restraint\" - Class II",
+      "killer_id": 7,
+      "description": "An experimental ECT procedure developed within The Fog. Uses a wavelength that links the patient's and Doctor's minds. This procedure is known to cause mild cases of hallucinations in the patient.\n• Reveals Survivors' auras for 1 second when their Madness level increases.\nSurvivors with Madness suffer from the Affliction of Restraint:\n• Increases the duration of illusionary Doctor hallucinations by 6 seconds.\n• Allows The Doctor to see the auras of hallucinations at any level of Madness.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_restraintClassII.png?d76beb",
+      "icon_local_path": "icons/addons/restraint_class_ii.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Zwang“ – Klasse II",
+          "description": "Ein im Nebel entwickeltes, experimentelles EKT-Verfahren. Verwendet eine Wellenlänge, um das Bewusstsein des Patienten mit dem des Doktors zu verbinden. Diese Prozedur ist bekannt dafür, milde Halluzinationen beim Patienten hervorzurufen.\n• Auren von Überlebenden werden 1 Sekunde lang angezeigt, wenn ihre Wahnsinnsstufe zunimmt.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom des Zwangs.\n• Erhöht die Dauer der Erscheinung von Trugbildern des Doktors um 6 Sekunden.\n• Der Doktor sieht die Auren der Halluzinationen bei jeder Stufe des Wahnsinns."
+        },
+        "es": {
+          "name": "Restricción (clase II)",
+          "description": "Una terapia de electrochoque experimental desarrollada en la niebla. Usa una onda para conectar las mentes del paciente y el Doctor. Este procedimiento causa alucinaciones leves al paciente.\n• Se muestran las auras de los supervivientes durante 1 segundo cuando aumenta su nivel de Locura.\nLos supervivientes con el efecto de estado Locura sufren el síntoma Restricción:\n• Aumenta la duración de las alucinaciones imaginarias del Doctor en 6 segundos.\n• Permite que el Doctor vea las auras de las alucinaciones con cualquier nivel de Locura."
+        },
+        "ja": {
+          "name": "「抑制」- クラスII",
+          "description": "霧の中で開発された、実験段階の電気ショック療法。周波数を使用し、患者とドクターの精神を結びつける。この処置は、患者に軽い幻覚症状を引き起こすことで知られている。\n• 生存者の狂気度が進行したとき、その生存者のオーラを1秒間視ることができる\n狂気状態の生存者は抑制の症状を発症する。\n• 幻覚のドクターの出現時間が6秒間増加する\n• ドクターはどの狂気度でも幻覚のオーラを視ることができる"
+        },
+        "pl": {
+          "name": "\"Powściągliwość\" – Klasa II",
+          "description": "Eksperymentalna procedura elektrowstrząsowa doskonalona we Mgle. Wykorzystuje falę dźwiękową, która łączy umysł pacjenta z umysłem Doktora. Wywołuje u pacjenta łagodne halucynacje.\n• Kiedy wzrasta poziom szaleństwa ocalałych, ich aury są widoczne przez 1 sekundę.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Powściągliwość:\n• Wydłuża czas trwania halucynacji iluzorycznego Doktora o 6 sekund.\n• Doktor widzi aury halucynacji na dowolnym poziomie szaleństwa."
+        }
+      }
+    },
+    {
+      "id": 119,
+      "name": "Polished Electrode",
+      "killer_id": 7,
+      "description": "A like-new electrode, standard equipment to conduct electroconvulsive treatments.\n• Increases the range of Shock Therapy by 3 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_polishedElectrode.png?c03a1c",
+      "icon_local_path": "icons/addons/polished_electrode.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glänzende Elektrode",
+          "description": "Eine so gut wie neue Standardelektrode für die Elektrokrampfbehandlung.\n• Erhöht die Reichweite der Schocktherapie um 3 Meter."
+        },
+        "es": {
+          "name": "Electrodo pulido",
+          "description": "Un equipo de electrodos estándar prácticamente nuevo para llevar a cabo tratamientos de electrochoque.\n• Aumenta el alcance de Terapia de choque en 3 metros."
+        },
+        "ja": {
+          "name": "磨かれた電極",
+          "description": "新品のような電極装置。電気ショック療法を実施するために標準装備として使われる。\n• ショック療法の範囲が3メートル増加する"
+        },
+        "pl": {
+          "name": "Wypolerowana Elektroda",
+          "description": "Standardowe urządzenie elektrodowe służące do przeprowadzania terapii elektrowstrząsowych.\n• Zwiększa zasięg Terapii Szokowej o 3 metry."
+        }
+      }
+    },
+    {
+      "id": 120,
+      "name": "Interview Tape",
+      "killer_id": 7,
+      "description": "A compact cassette from Project Awakening containing an un-edited interview of a victim. Opens The Doctor's mind to alternate treatment methods.\n• Shock Therapy special ability changes from a cone to a beam with a 24 meter range and a 2 meter width.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_interviewTape.png?e5a057",
+      "icon_local_path": "icons/addons/interview_tape.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Befragungskassette",
+          "description": "Eine Audiokassette des Erweckungsprojekts mit der ungekürzten Befragung eines Opfers. Öffnet den Verstand des Doktors für alternative Behandlungsmethoden.\n• Die Spezialfähigkeit Schocktherapie wechselt von einem Kegel zu einem Strahl mit einer Reichweite von 24 Metern und einer Breite von 2 Metern."
+        },
+        "es": {
+          "name": "Cinta de entrevista",
+          "description": "Una cinta de casete del proyecto Despertar que contiene una entrevista sin editar con una víctima. Abre la mente del Doctor a métodos de tratamiento alternativos.\n• La habilidad especial Terapia de choque cambia de un cono a un haz con 24 metros de alcance y 2 metros de diámetro."
+        },
+        "ja": {
+          "name": "インタビューテープ",
+          "description": "覚醒プロジェクトのカセットテープで、被害者のインタビューが未編集で収録されている。ドクターの精神を開放し、新しい治療方法に目覚めさせる。\n• 特殊アビリティのショック療法の範囲が、放射状から射程24メートル、幅2メートルのビーム状に変化する"
+        },
+        "pl": {
+          "name": "Kaseta z Przesłuchania",
+          "description": "Kaseta magnetofonowa używana podczas projektu „Przebudzenie”, zawierająca na taśmie oryginalną wersję przesłuchania ofiary. Wyzwala umysł Doktora i pozwala mu stosować alternatywne sposoby leczenia.\n• Terapia Szokowa zmienia się ze stożka w wiązkę mającą zasięg 24 metrów oraz 2 metry szerokości."
+        }
+      }
+    },
+    {
+      "id": 121,
+      "name": "\"Discipline\" - Class III",
+      "killer_id": 7,
+      "description": "Project Awakening ECT procedure for disciplinary action which uses a fixed dose at very high voltage. Can cause a state of serious paranoia in the patient.\n• Decreases the detonation delay of Shock Therapy by 0.08 seconds.\nSurvivors with Madness suffer from the Affliction of Discipline:\n• Madness II: While in a chase, Survivors perceive an illusionary Red Stain and Terror Radius as though The Doctor were directly behind them. This effect persists for 6 seconds after the chase ends.\n• Madness III: Illusionary Red Stain and Terror Radius are constantly active.\n• The Doctor also sees the illusionary Red Stain.\n\"\"Respect for our patients is at the core of our principles.\" -Léry's Memorial Institute\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_disciplineClassIII.png?a860e1",
+      "icon_local_path": "icons/addons/discipline_class_iii.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Disziplin“ – Klasse III",
+          "description": "EKT-Verfahren des Erweckungsprojekts zur disziplinarischen Maßregelung unter Anwendung einer festgelegten Dosis bei sehr hohen Spannungswerten. Kann den Patienten in einen Zustand schwerer Paranoia versetzen.\n• Verkürzt die Zündungsverzögerung von Schocktherapie um 0,08 Sekunden.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom der Disziplin.\n• Wahnsinn II: Während der Jagd sehen Überlebende ein Trugbild des roten Flecks und den Terrorradius, als wäre der Doktor direkt hinter ihnen. Dieser Effekt hält noch 6 Sekunden lang an, nachdem die Jagd zu Ende ist.\n• Wahnsinn III: Das Trugbild des roten Flecks und der Terrorradius sind dauerhaft aktiv.\n• Der Doktor sieht das Trugbild des roten Flecks.\n\"„Eine respektvolle Behandlung unserer Patienten hat für uns höchste Priorität.“ – Lérys Gedenkinstitut\""
+        },
+        "es": {
+          "name": "Disciplina (clase III)",
+          "description": "Una terapia de electrochoque del proyecto Despertar que usa una dosis fija de un elevadísimo voltaje. Puede provocar un estado severo de paranoia en el paciente.\n• Reduce el retardo de detonación de Terapia de choque en 0,08 segundos.\nLos supervivientes con Locura sufren el síntoma Disciplina:\n• Locura II: Durante una persecución, los supervivientes perciben una marca roja imaginaria y un radio de terror como si tuvieran al Doctor justo detrás. El efecto perdura durante 6 segundos tras el final de la persecución.\n• Locura III: La marca roja imaginaria y el radio de terror están activos constantemente.\n• El Doctor también ve la marca roja imaginaria.\n\"\"El respeto por nuestros pacientes es la piedra angular de nuestros principios\". (Instituto Conmemorativo Léry)\""
+        },
+        "ja": {
+          "name": "「懲罰」- クラスIII",
+          "description": "覚醒プロジェクトで懲罰を目的として使用される電気ショック療法。一定量の超高圧電流を使用する。患者を深刻な妄想状態にする場合がある。\n• ショック療法のデトネーションの遅れが0.08秒減少する\n狂気状態の生存者は懲罰の症状を発症する。\n• 狂気度II：追いかけられているとき、生存者は6秒間、まるでドクターが真後ろにいるかのように幻覚の赤い光と脅威範囲を認識する\n• 狂気度III：幻覚の赤い光と脅威範囲は常に作用している\n• ドクターは幻覚の赤い光を視ることができる\n\"「患者の皆さまに敬意を払うことが私たちの理念の根幹です。」 - レリー記念研究所\""
+        },
+        "pl": {
+          "name": "\"Dyscyplina\" – Klasa III",
+          "description": "Procedura elektrowstrząsowa stosowana podczas projektu „Przebudzenie”, mająca na celu karanie krnąbrnych pacjentów poprzez rażenie ich określoną dawką bardzo wysokiego napięcia. Może wywołać u pacjenta stan silnej paranoi.\n• Skraca opóźnienie detonacji Terapii Szokowej o 0,08 s.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Dyscyplina:\n• Szaleństwo 2: podczas pościgu ocalali widzą iluzoryczną czerwoną poświatę oraz zasięg terroru, tak jakby Doktor znajdował się bezpośrednio za nimi. Ten efekt utrzymuje się przez 6 sekund po zakończeniu pościgu.\n• Szaleństwo 3: iluzoryczna czerwona poświata oraz zasięg terroru są na stałe włączone.\n• Doktor również widzi iluzoryczną czerwoną poświatę.\n\"„Okazywanie szacunku naszym pacjentom to jedna z naczelnych zasad panujących w tej placówce”. – Instytut Pamięci Léry'ego\""
+        }
+      }
+    },
+    {
+      "id": 122,
+      "name": "\"Restraint\" - Class III",
+      "killer_id": 7,
+      "description": "An experimental ECT procedure developed within The Fog. Uses a high stimulus wavelength to link the patient's and Doctor's minds. This procedure is known to cause serious cases of hallucinations in the patient.\n• Reveals Survivors' auras for 2 seconds when their Madness level increases.\nSurvivors with Madness suffer from the Affliction of Restraint:\n• Increases the duration of illusionary Doctor hallucinations by 6 seconds.\n• Allows The Doctor to see the auras of hallucinations at any level of Madness.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_restraintClassIII.png?bea196",
+      "icon_local_path": "icons/addons/restraint_class_iii.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Zwang“ – Klasse III",
+          "description": "Ein im Nebel entwickeltes, experimentelles EKT-Verfahren. Verwendet eine starke Reizwellenlänge, um das Bewusstsein des Patienten mit dem des Doktors zu verbinden. Diese Prozedur ist bekannt dafür, äußerst starke Halluzinationen beim Patienten hervorzurufen.\n• Auren von Überlebenden werden 2 Sekunden lang angezeigt, wenn ihre Wahnsinnsstufe zunimmt.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom des Zwangs.\n• Erhöht die Dauer der Erscheinung von Trugbildern des Doktors um 6 Sekunden.\n• Der Doktor sieht die Auren der Halluzinationen bei jeder Stufe des Wahnsinns."
+        },
+        "es": {
+          "name": "Restricción (clase III)",
+          "description": "Una terapia de electrochoque experimental desarrollada en la niebla. Usa una onda de alto estímulo para conectar las mentes del paciente y el Doctor. Este procedimiento causa alucinaciones graves al paciente.\n• Se muestran las auras de los supervivientes durante 2 segundos cuando aumenta su nivel de Locura.\nLos supervivientes con el efecto de estado Locura sufren el síntoma Restricción:\n• Aumenta la duración de las alucinaciones imaginarias del Doctor en 6 segundos.\n• Permite que el Doctor vea las auras de las alucinaciones con cualquier nivel de Locura."
+        },
+        "ja": {
+          "name": "「抑制」- クラスIII",
+          "description": "霧の中で開発された、実験段階の電気ショック療法。刺激の強い周波数を使用し、患者とドクターの精神を結びつける。この処置は、患者に深刻な幻覚症状を引き起こすことで知られている。\n• 生存者の狂気度が進行したとき、その生存者のオーラを2秒間視ることができる\n狂気状態の生存者は抑制の症状を発症する。\n• 幻覚のドクターの出現時間が6秒間増加する\n• ドクターはどの狂気度でも幻覚のオーラを視ることができる"
+        },
+        "pl": {
+          "name": "\"Powściągliwość\" – Klasa III",
+          "description": "Eksperymentalna procedura elektrowstrząsowa doskonalona we Mgle. Wykorzystuje silnie stymulującą falę dźwiękową w celu połączenia umysłu pacjenta z umysłem Doktora. Wywołuje u pacjenta silne halucynacje.\n• Kiedy wzrasta poziom szaleństwa ocalałych, ich aury są widoczne przez 2 sekundy.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Powściągliwość:\n• Wydłuża czas trwania halucynacji iluzorycznego Doktora o 6 sekund.\n• Doktor widzi aury halucynacji na dowolnym poziomie szaleństwa."
+        }
+      }
+    },
+    {
+      "id": 123,
+      "name": "High Stimulus Electrode",
+      "killer_id": 7,
+      "description": "An experimental electrode that can withstand very-high charges for a longer period of time.\n• Increases the range of Shock Therapy by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_highStimulusElectrode.png?a4f757",
+      "icon_local_path": "icons/addons/high_stimulus_electrode.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Starke Reizelektrode",
+          "description": "Eine experimentelle Elektrode, die über längere Zeit hinweg sehr hohen Ladungen standhalten kann.\n• Erhöht die Reichweite der Schocktherapie um 4 Meter."
+        },
+        "es": {
+          "name": "Electrodo de alto estímulo",
+          "description": "Un electrodo experimental capaz de soportar una carga muy grande durante un largo periodo de tiempo.\n• Aumenta el alcance de Terapia de choque en 4 metros."
+        },
+        "ja": {
+          "name": "高刺激電極",
+          "description": "超高電圧にも長時間耐えられる電極の試作品。\n• ショック療法の範囲が4メートル増加する"
+        },
+        "pl": {
+          "name": "Silnie Stymulująca Elektroda",
+          "description": "Eksperymentalna elektroda, która może przyjmować na siebie bardzo duży ładunek elektryczny przez dłuższy czas.\n• Zwiększa zasięg Terapii Szokowej o 4 metry."
+        }
+      }
+    },
+    {
+      "id": 124,
+      "name": "Scrapped Tape",
+      "killer_id": 7,
+      "description": "A compact cassette from Project Awakening containing mostly white noise. Opens The Doctor's mind to alternate treatment methods.\n• Changes the shape of Shock Therapy to a ring with a range of 8 meters, a radius of 4 meters, and a thickness of 1 meter.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scrappedTape.png?d09e3d",
+      "icon_local_path": "icons/addons/scrapped_tape.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Weggeworfene Kassette",
+          "description": "Eine Audiokassette des Erweckungsprojekts, die größtenteils Rauschen enthält. Öffnet den Verstand des Doktors für alternative Behandlungsmethoden.\n• Die Form der Schocktherapie wechselt zu einem Ring mit einer Reichweite von 8 Metern, einem Radius von 4 Metern und einer Stärke von 1 Meter."
+        },
+        "es": {
+          "name": "Cinta desechada",
+          "description": "Una cinta de casete del proyecto Despertar que básicamente contiene ruido blanco. Abre la mente del Doctor a métodos de tratamiento alternativos.\n• La forma de Terapia de choque cambia a un círculo con un alcance de 8 metros, un radio de 4 metros y un grosor de 1 metro."
+        },
+        "ja": {
+          "name": "壊れたテープ",
+          "description": "内容のほとんどがホワイトノイズの、覚醒プロジェクトのカセットテープ。ドクターの精神を開放し、新しい治療方法に目覚めさせる。\n• ショック療法の形状が、範囲8メートル、半径4メートル、厚さ1メートルのリング状に変化する"
+        },
+        "pl": {
+          "name": "Zniszczona kaseta",
+          "description": "Kaseta VHS pochodząca z projektu „Przebudzenie”; zawiera głównie biały szum. Wyzwala umysł Doktora i pozwala mu stosować alternatywne metody leczenia.\n• Zmienia kształt Terapii Szokowej na pierścień o zasięgu 8 metrów, promieniu 4 metrów i grubości 1 metra."
+        }
+      }
+    },
+    {
+      "id": 125,
+      "name": "\"Order\" - Carter's Notes",
+      "killer_id": 7,
+      "description": "An experimental version of the ECT procedure, annotated by Doctor Herman Carter himself. The long, constant stimulus leaves the patient in a state of severe confusion.\n• Decreases Static Blast cooldown by 3 seconds.\nSurvivors with Madness suffer from the Affliction of Order:\n• Broken pallets may appear to be replaced with illusionary pallets that persist until approached.\n• A new illusionary pallet is generated at the location of a random broken pallet every 20 seconds.\n• The Doctor sees the auras of illusionary pallets.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_orderCartersNotes.png?ef764c",
+      "icon_local_path": "icons/addons/order_carters_notes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Ordnung“ – Carters Notizen",
+          "description": "Eine experimentelle Version des EKT-Verfahrens mit Kommentaren von Doktor Herman Carter höchstpersönlich. Der lange, fortdauernde Stimulus versetzt den Patienten in den Zustand schwerer Verwirrung.\n• Verkürzt die Abklingzeit von „Statisches Feld“ um 3 Sekunden.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden unter dem Symptom der Ordnung.\n• Zerstörte Paletten können durch Trugbilder von Paletten ersetzt werden, die bestehen bleiben, bis man sich ihnen nähert.\n• Ein neues Trugbild einer Palette wird alle 20 Sekunden an der Position einer willkürlich ausgewählten zerstörten Palette erzeugt.\n• Der Doktor sieht die Auren der Paletten-Trugbilder."
+        },
+        "es": {
+          "name": "Orden (notas de Carter)",
+          "description": "Una versión experimental de la terapia de electrochoque, con notas del propio doctor Herman Carter. El estímulo constante y prolongado deja a los pacientes en un estado de confusión grave.\n• Reduce el tiempo de recarga de Explosión estática en 3 segundos.\nLos supervivientes con el efecto de estado Locura sufren el síntoma Orden:\n• Los palés rotos pueden parecer haber sido reemplazados por palés imaginarios, que desaparecen al acercarse.\n• Un nuevo palé imaginario se genera cada 20 segundos en la ubicación de un palé roto al azar.\n• El Doctor ve las auras de los palés imaginarios."
+        },
+        "ja": {
+          "name": "「秩序」- カーターのメモ",
+          "description": "実験段階の電気ショック療法。ハーマン・カーター博士自らの注釈付き。強い刺激を均一に、長時間与えることで患者に重篤な混乱を引き起こす。\n• 放電爆破のクールダウンが3秒減少する\n狂気状態の生存者は秩序の症状を発症する。\n• 破壊されたパレットが幻覚のパレットに置き換わり、近づくまで視え続けることがある\n• 新しい幻覚のパレットが20秒ごとにランダムな破壊済みパレットの場所に生成される\n• ドクターは幻覚のパレットのオーラを視ることができる"
+        },
+        "pl": {
+          "name": "\"Porządek\" – Notatki Cartera",
+          "description": "Eksperymentalna wersja procedury elektrowstrząsowej. Została odnotowana przez Doktora Hermana Cartera we własnej osobie. Długi, stały impuls pozostawia pacjenta w stanie silnej dezorientacji.\n• Skraca czas odnawiania Wybuchu Statycznego o 3 sekundy.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Porządek:\n• Zniszczone palety mogą zostać zastąpione iluzorycznymi paletami, które znikają tylko wtedy, gdy się do nich podejdzie.\n• Nowa iluzoryczna paleta pojawia się co 20 sekund.\n• Doktor widzi aury iluzorycznych palet."
+        }
+      }
+    },
+    {
+      "id": 126,
+      "name": "\"Discipline\" - Carter's Notes",
+      "killer_id": 7,
+      "description": "Project Awakening ECT procedure for disciplinary action, annotated by Doctor Herman Carter himself. The intolerably high voltage leaves the patient in a severe state of paranoia.\n• Decreases the detonation delay of Shock Therapy by 0.1 seconds.\nSurvivors with Madness suffer from the Affliction of Discipline:\n• Madness II: While in a chase, Survivors perceive an illusionary Red Stain and Terror Radius as though The Doctor were directly behind them. This effect persists for 6 seconds after the chase ends.\n• Madness III: Illusionary Red Stain and Terror Radius are constantly active.\n• The Doctor also sees the illusionary Red Stain.\n\"\"To avoid relapse from our most tenacious subjects, use maximum levels when proceeding with disciplinary actions.\" -H. Carter\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_disciplineCartersNotes.png?83189f",
+      "icon_local_path": "icons/addons/discipline_carters_notes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Disziplin“ – Carters Notizen",
+          "description": "EKT-Verfahren des Erweckungsprojekts zur disziplinarischen Maßregelung mit Kommentaren von Doktor Herman Carter höchstpersönlich. Die unerträglich hohe Spannung versetzt den Patienten in einen Zustand schwerer Paranoia.\n• Verkürzt die Zündungsverzögerung von Schocktherapie um 0,1 Sekunden.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom der Disziplin.\n• Wahnsinn II: Während der Jagd sehen Überlebende ein Trugbild des roten Flecks und den Terrorradius, als wäre der Doktor direkt hinter ihnen. Dieser Effekt hält noch 6 Sekunden lang an, nachdem die Jagd zu Ende ist.\n• Wahnsinn III: Das Trugbild des roten Flecks und der Terrorradius sind dauerhaft aktiv.\n• Der Doktor sieht das Trugbild des roten Flecks.\n\"„Um zu verhindern, dass unsere beharrlicheren Subjekte einen Rückfall erleiden, ist der Einsatz maximaler Stufen für Disziplinarstrafen genehmigt.“ – H. Carter\""
+        },
+        "es": {
+          "name": "Disciplina (notas de Carter)",
+          "description": "Una terapia de electrochoque del proyecto Despertar, con notas del propio doctor Herman Carter. Una dosis de voltaje intolerablemente alto deja al paciente en un estado severo de paranoia.\n• Reduce el retardo de detonación de Terapia de choque un 0,1 segundos.\nLos supervivientes con Locura sufren el síntoma Disciplina:\n• Locura II: Durante una persecución, los supervivientes perciben una marca roja imaginaria y un radio de terror como si tuvieran al Doctor justo detrás. El efecto perdura durante 6 segundos tras el final de la persecución.\n• Locura III: La marca roja imaginaria y el radio de terror están activos constantemente.\n• El Doctor también ve la marca roja imaginaria.\n\"\"Para evitar que nuestros sujetos más tenaces recaigan, usamos los niveles máximos al aplicar medidas disciplinarias\". (H. Carter)\""
+        },
+        "ja": {
+          "name": "「懲罰」- カーターのメモ",
+          "description": "覚醒プロジェクトで懲罰を目的として使用される電気ショック療法。ハーマン・カーター博士自らの注釈付き。耐えられないほどの高圧電流により、患者を重篤な妄想状態に陥らせる。\n• ショック療法のデトネーションの遅れが0.1秒減少する\n狂気状態の生存者は懲罰の症状を発症する。\n• 狂気度II：追いかけられているとき、生存者は6秒間、まるでドクターが真後ろにいるかのように幻覚の赤い光と脅威範囲を認識する\n• 狂気度III：幻覚の赤い光と脅威範囲は常に作用している\n• ドクターは幻覚の赤い光を視ることができる\n\"「執拗な被験者の再発を防ぐため、懲罰を与える際には最大レベルを使用するように。」 - H. カーター\""
+        },
+        "pl": {
+          "name": "\"Dyscyplina\" – Notatki Cartera",
+          "description": "Procedura elektrowstrząsowa stosowana podczas projektu „Przebudzenie” i opatrzona komentarzami przez samego doktora Hermana Cartera. Niezwykle wysokie napięcie wywołuje u pacjenta stan poważnej paranoi.\n• Skraca opóźnienie detonacji Terapii Szokowej o 0,1 sekundy.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Dyscyplina:\n• Szaleństwo 2: podczas pościgu ocalali widzą iluzoryczną czerwoną poświatę oraz zasięg terroru, tak jakby Doktor znajdował się bezpośrednio za nimi. Ten efekt utrzymuje się przez 6 sekund po zakończeniu pościgu.\n• Szaleństwo 3: iluzoryczna czerwona poświata oraz zasięg terroru są na stałe włączone.\n• Doktor również widzi iluzoryczną czerwoną poświatę.\n\"„Aby uniknąć nawrotu choroby u naszych najbardziej wymagających pacjentów, użyjcie maksymalnej dawki napięcia podczas wykonywania procedury”. – H. Carter\""
+        }
+      }
+    },
+    {
+      "id": 127,
+      "name": "\"Calm\" - Carter's Notes",
+      "killer_id": 7,
+      "description": "An experimental version of the ECT procedure annotated by Doctor Herman Carter himself. Uses a deep wavelength that soothes various mental illness. With Carter's Spark as its source, this procedure causes uncontrollable fear and anxiety in the patient.\n• Increases Terror Radius by 8 meters while Static Blast is ready.\n• Decreases Terror Radius by 8 meters while Static Blast is on cooldown.\nSurvivors with Madness suffer from the Affliction of Calm:\n• Madness II: Intermittently causes Survivors to hear a distant illusionary Terror Radius.\n• Madness III: Constantly causes Survivors to hear a distant illusionary Terror Radius.\n\"\"Higher quality seizures trigger catatonia. At least it gives me peace for the time it lasts.\" -H. Carter\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_calmCartersNotes.png?10a4f5",
+      "icon_local_path": "icons/addons/calm_carters_notes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Ruhe“ – Carters Notizen",
+          "description": "Eine experimentelle Version des EKT-Verfahrens mit Kommentaren von Doktor Herman Carter höchstpersönlich. Es basiert auf einer tiefen Wellenlänge, die diverse geistige Beschwerden lindert. Da Carters Funke als Quelle genutzt wird, kann die Prozedur beim Patienten unkontrollierbare Angst und Panik hervorrufen.\n• Vergrößert den Terrorradius um 8 Meter, während statisches Feld bereit ist.\n• Verkleinert den Terrorradius um 8 Meter, während statisches Feld sich in der Abklingzeit befindet.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom der Ruhe.\n• Wahnsinn II: Bewirkt zeitweise, dass Überlebende in der Ferne eine Illusion des Terrorradius hören.\n• Wahnsinn III: Bewirkt dauerhaft, dass Überlebende in der Ferne eine Illusion des Terrorradius hören.\n\"„Schwerere Anfälle führen zu Katatonie. Aber wenigstens habe ich währenddessen meine Ruhe.“ – H. Carter\""
+        },
+        "es": {
+          "name": "Calma (notas de Carter)",
+          "description": "Una versión experimental de la terapia de electrochoque, con notas del propio doctor Herman Carter. Usa ondas profundas para calmar varias enfermedades mentales. Se basa en Chispa de Carter y puede causar ansiedad y miedo incontrolables en el paciente.\n• Aumenta tu radio de terror en 8 metros mientras Explosión estática está lista.\n• Reduce tu radio de terror en 8 metros mientras Explosión estática se está recargando.\nLos supervivientes con Locura sufren el síntoma Calma:\n• Locura II: Hace que los supervivientes oigan de manera intermitente un radio de terror imaginario.\n• Locura III: Hace que los supervivientes oigan de manera constante un radio de terror imaginario.\n\"\"Las convulsiones de mayor calidad generan catatonia, lo que al menos hace que me sienta en paz mientras dura\". (H. Carter)\""
+        },
+        "ja": {
+          "name": "「鎮静」- カーターのメモ",
+          "description": "実験段階の電気ショック療法。ハーマン・カーター博士自らの注釈付き。様々な精神病を和らげるための低周波を使用する。カーターの電光をエネルギー源とするこの処置は、患者に手に負えない恐怖と不安感を与える。\n• 放電爆破の準備が整っている間、脅威範囲が8メートル増加する\n• 放電爆破がクールダウンの間、脅威範囲が8メートル減少する\n狂気状態の生存者は鎮静の症状が出る。\n• 狂気度II：生存者は幻覚の脅威範囲の心音が遠くから断続的に聞こえるようになる\n• 狂気度III：生存者は幻覚の脅威範囲の心音が遠くから絶えず聞こえるようになる\n\"「より良質の発作は緊張症を引き起こす。少なくとも、それが続く間は私は平穏でいられる」 - H. カーター\""
+        },
+        "pl": {
+          "name": "\"Spokój\" – Notatki Cartera",
+          "description": "Eksperymentalna wersja procedury elektrowstrząsowej opisana przez samego doktora Hermana Cartera. Wykorzystuje basową falę dźwiękową w celu łagodzenia skutków pewnych chorób psychicznych. Fala dźwiękowa nasycona Iskrą Cartera wywołuje niekontrolowany strach i niepokój u pacjenta.\n• Zwiększa zasięg terroru o 8 metrów, gdy Wybuch Statyczny jest gotowy.\n• Zmniejsza zasięg terroru o 8 metrów podczas ładowania Wybuchu Statycznego.\nOcalali z efektem Szaleństwa cierpią na skutek schorzenia Spokój:\n• Szaleństwo 2: ocalali co jakiś czas słyszą odległy iluzoryczny zasięg terroru.\n• Szaleństwo 3: ocalali ciągle słyszą odległy iluzoryczny zasięg terroru.\n\"„Potężniejsze drgawki padaczkowe wywołują katatonię. Przynajmniej jestem spokojny na czas ich trwania”. – H. Carter\""
+        }
+      }
+    },
+    {
+      "id": 128,
+      "name": "\"Restraint\" - Carter's Notes",
+      "killer_id": 7,
+      "description": "An experimental ECT procedure developed within The Fog, crudely annotated. Uses an unbearable stimulus wavelength to link the patient's and Doctor's minds. This procedure is known to cause severe cases of hallucinations in the patient.\n• Reveals Survivors' auras for 3 seconds when their Madness level increases.\nSurvivors with Madness suffer from the Affliction of Restraint:\n• Increases the duration of illusionary Doctor hallucinations by 6 seconds.\n• Allows The Doctor to see the auras of hallucinations at any level of Madness.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_restraintCartersNotes.png?192504",
+      "icon_local_path": "icons/addons/restraint_carters_notes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Zwang“ – Carters Notizen",
+          "description": "Ein im Nebel entwickeltes, experimentelles EKT-Verfahren mit hastig geschriebenen Anmerkungen. Verwendet eine unerträgliche Reizwellenlänge, um das Bewusstsein des Patienten mit dem des Doktors zu verbinden. Diese Prozedur ist bekannt dafür, ernste Halluzinationen beim Patienten hervorzurufen.\n• Auren von Überlebenden werden 3 Sekunden lang angezeigt, wenn ihre Wahnsinnsstufe zunimmt.\nÜberlebende mit dem Statuseffekt Wahnsinn leiden am Symptom des Zwangs.\n• Erhöht die Dauer der Erscheinung von Trugbildern des Doktors um 6 Sekunden.\n• Der Doktor sieht die Auren der Halluzinationen bei jeder Stufe des Wahnsinns."
+        },
+        "es": {
+          "name": "Restricción (notas de Carter)",
+          "description": "Una terapia de electrochoque experimental desarrollada en la niebla, con anotaciones rudimentarias. Usa una onda de estímulo insoportable para conectar las mentes del paciente y el Doctor. Este procedimiento causa alucinaciones severas en el paciente.\n• Se muestran las auras de los supervivientes durante 3 segundos cuando aumenta su nivel de Locura.\nLos supervivientes con el efecto de estado Locura sufren el síntoma Restricción:\n• Aumenta la duración de las alucinaciones imaginarias del Doctor en 6 segundos.\n• Permite que el Doctor vea las auras de las alucinaciones con cualquier nivel de Locura."
+        },
+        "ja": {
+          "name": "「抑制」- カーターのメモ",
+          "description": "霧の中で開発された、実験段階の電気ショック療法。注釈が乱雑に書き込まれている。耐え難い周波数を使用し、患者とドクターの精神を結びつける。この処置は、患者に重篤な幻覚症状を引き起こすことで知られている。\n• 生存者の狂気度が進行したとき、その生存者のオーラを3秒間視ることができる\n狂気状態の生存者は抑制の症状を発症する。\n• 幻覚のドクターの出現時間が6秒間増加する\n• ドクターはどの狂気度でも幻覚のオーラを視ることができる"
+        },
+        "pl": {
+          "name": "\"Powściągliwość\" – Notatki Cartera",
+          "description": "Eksperymentalna procedura elektrowstrząsowa doskonalona we Mgle i opisana na brudno. Wykorzystuje potężną stymulującą falę dźwiękową w celu połączenia umysłu pacjenta z umysłem Doktora. Wywołuje u pacjenta silne halucynacje.\n• Kiedy wzrasta poziom szaleństwa ocalałych, ich aury są widoczne przez 3 sekundy.\nOcalali z efektem szaleństwa cierpią z powodu schorzenia Powściągliwość:\n• Wydłuża czas trwania halucynacji iluzorycznego Doktora o 6 sekund.\n• Doktor widzi aury halucynacji na dowolnym poziomie szaleństwa."
+        }
+      }
+    },
+    {
+      "id": 129,
+      "name": "Iridescent Queen",
+      "killer_id": 7,
+      "description": "A glass-like queen chess piece molded from The Fog itself. It can't be touched without receiving a considerable jolt of electricity.\n• All Survivors struck by Shock Therapy or Static Blast acquire a lingering Static Charge. The Static Charge remains with The Survivor(s) until discharged.\n• Multiple Survivors struck by the same Shock Therapy or Static Blast that are within 4 meters of each other do not acquire a Static Charge.\n• Any time a Survivor is within 4 meters of another Survivor carrying a Static Charge, the Survivor receives a shock identical to Shock Therapy and the Static Charge is discharged immediately.\n\"\"Once we have established an effective method of treatment, we can focus on its efficient means of delivery.\" -H. Carter\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentQueen.png?a2f6f3",
+      "icon_local_path": "icons/addons/iridescent_queen.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Königin",
+          "description": "Eine glasähnliche Schachfigur der Königin, die aus dem Nebel selbst geformt wurde. Es ist nicht möglich, sie zu berühren, ohne einen erheblichen elektrischen Schlag zu bekommen.\n• Alle Überlebenden, die von Schocktherapie oder statisches Feld getroffen werden, erhalten eine andauernde statische Ladung. Die statische Ladung bleibt an den Überlebenden haften, bis sie entladen ist.\n• Werden mehrere Überlebende von derselben Schocktherapie oder demselben statischen Feld getroffen, die sich in einer Reichweite von 4 Metern zueinander befinden, erleiden sie keine statische Ladung.\n• Immer, wenn ein Überlebender in einen Umkreis von 4 Metern zu einem anderen Überlebenden gerät, der eine statische Ladung an sich hat, erleidet der Überlebende einen Schock mit Effekten, die identisch zu denen der Schocktherapie sind, und die statische Ladung wird sofort entladen.\n\"„Sobald wir eine effektive Behandlungsmethode erarbeitet haben, können wir uns auf die Frage konzentrieren, wie man sie effizient nutzt.“ – H. Carter\""
+        },
+        "es": {
+          "name": "Reina iridiscente",
+          "description": "Una reina de ajedrez de aspecto cristalino moldeada a partir de la propia niebla. No se puede tocar sin recibir una descarga considerable de electricidad.\n• Todos los supervivientes golpeados por Terapia de choque o Explosión estática adquieren una Carga estática duradera. La Carga estática afecta al superviviente hasta que se descarga.\n• Si se golpea a varios supervivientes que estén a menos de 4 metros de distancia entre sí con la misma Terapia de choque o Explosión estática, no adquieren ninguna Carga estática.\n• Cuando un superviviente se acerca a menos de 4 metros de otro que esté afectado por una Carga estática, recibe una descarga idéntica a Terapia de choque, pero la Carga estática se descarga de inmediato.\n\"\"Una vez establecida una metodología eficaz, podemos centrarnos en sus medios de suministro más eficientes\". (H. Carter)\""
+        },
+        "ja": {
+          "name": "玉虫色のクイーン",
+          "description": "霧そのものから作られたガラス状のクイーンのチェス駒。触ると相当な電気衝撃を必ず受ける。\n• ショック療法か放電爆破が命中した生存者は長びく静電気を受ける。静電気は放電されるまで生存者につきまとう\n• 4メートル以内に同時にいる複数の生存者に同じショック療法または放電爆破が命中した場合、静電気を受けることはない\n• 生存者の4メートル以内に静電気を持っている別の生存者がいる場合、その生存者はショック療法と同じ電撃を受け、静電気は即座に放電される\n\"「効果的な治療法を確立すれば、その効果的な提供手段に集中できる。」 - H. カーター\""
+        },
+        "pl": {
+          "name": "Opalowa królowa",
+          "description": "Szklana figura szachowa przedstawiająca królową, ukształtowana z samej Mgły. Każde jej dotknięcie karane jest silnym elektrycznym wyładowaniem.\n• Wszyscy ocalali trafieni umiejętnością Terapia Szokowa lub Wybuch Statyczny uzyskują utrzymujący się Ładunek Statyczny. Pozostaje on w ocalałych do rozładowania.\n• Kilku ocalałych jednocześnie trafionych Terapią Szokową lub Wybuchem Statycznym znajdujących się w promieniu 4 metrów od siebie nie gromadzi Ładunku Statycznego.\n• Za każdym razem, gdy ocalały znajduje się w zasięgu 4 metrów od innego ocalałego z Ładunkiem Statycznym, zostaje porażony tak samo jak przez Terapię Szokową, a Ładunek Statyczny zostaje natychmiast wyładowany.\n\"„Gdy ustalimy już skuteczną metodę leczenia, możemy skupić się na wydajnym sposobie jej zastosowania”. – H. Carter\""
+        }
+      }
+    },
+    {
+      "id": 130,
+      "name": "Iridescent King",
+      "killer_id": 7,
+      "description": "A glass-like king chess piece molded from The Fog Itself. The Entity's trace reverberating within can break the most powerful minds.\nSurvivors with Madness status effect suffer from the following Afflictions: Calm, Discipline, Order, and Restraint.\n• Causes Survivors to hear a distant illusionary Terror Radius. The effect is intermittent in Madness II and constant in Madness III.\n• While in a chase, Survivors perceive an illusionary Red Stain and Terror Radius as though The Doctor were directly behind them. This effect persists for 6 seconds after the chase ends in Madness II and is constantly active in Madness III.\n• Broken pallets may appear to be replaced with illusionary pallets that persist until approached. A new illusionary pallets is generated at the location of a random broken pallet every 20 seconds.\n• Increases the duration of illusionary Doctor hallucinations by 6 seconds.\n• The Doctor sees illusionary Red Stains as well as the auras of illusionary Doctors and illusionary pallets.\n\"\"Gazing in the iridescent glass is plunging oneself into madness\" -Unsigned Notes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentKing.png?6bd71a",
+      "icon_local_path": "icons/addons/iridescent_king.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder König",
+          "description": "Eine glasähnliche Schachfigur des Königs, die aus dem Nebel selbst geformt ist. Die darin widerhallende Schwingung des Entitus kann selbst den stärksten Verstand brechen.\nÜberlebende mit dem Statuseffekt Wahnsinn erleiden eines der folgenden Symptome: Ruhe, Disziplin, Ordnung und Zwang.\n• Bewirkt, dass Überlebende in der Ferne eine Illusion des Terrorradius hören. Der Effekt ist bei Wahnsinn II unregelmäßig und bei Wahnsinn III durchgehend.\n• Während der Jagd sehen Überlebende ein Trugbild des roten Flecks und den Terrorradius, als wäre der Doktor direkt hinter ihnen. Dieser Effekt hält bei Wahnsinn II noch 6 Sekunden lang an, nachdem die Jagd zu Ende ist, und ist bei Wahnsinn III dauerhaft aktiv.\n• Zerstörte Paletten können durch Trugbilder von Paletten ersetzt werden, die bestehen bleiben, bis man sich ihnen nähert. Ein neues Trugbild einer Palette wird alle 20 Sekunden an der Position der zerstörten Palette erzeugt.\n• Verlängert die Dauer des Trugbilds des Doktors um 6 Sekunden.\n• Der Doktor sieht die Trugbilder der roten Flecken ebenso wie die Auren der Trugbilder des Doktors und der Paletten.\n\"„Wer in das schillernde Glas blickt, stürzt sich selbst in den Wahnsinn.“ – Nicht unterzeichnete Notizen\""
+        },
+        "es": {
+          "name": "Rey iridiscente",
+          "description": "Un rey de ajedrez de aspecto cristalino moldeado por la mismísima niebla. El rastro del Ente que reverbera dentro puede destrozar hasta las mentes más poderosas.\nLos supervivientes con el efecto de estado Locura sufren los siguientes síntomas: Calma, Disciplina, Orden y Restricción.\n• Hace que los supervivientes oigan de manera constante un radio de terror imaginario. El efecto será intermitente para Locura II y constante en Locura III.\n• Durante una persecución, los supervivientes perciben una marca roja y un radio de terror imaginarios, como si tuvieran al Doctor justo detrás. El efecto perdura durante 6 segundos tras el final de dicha persecución con Locura II y se mantiene activo en todo momento con Locura III.\n• Puede que los palés parezcan haber sido reemplazados por palés imaginarios, que desaparecen al acercarse. Un nuevo palé imaginario se genera cada 20 segundos en la ubicación de un palé roto al azar.\n• Aumenta la duración de las alucinaciones imaginarias del Doctor en 6 segundos.\n• El Doctor ve las marcas rojas imaginarias, al igual que las auras de las manifestaciones imaginarias del Doctor y los palés imaginarios.\n\"\"Observar el cristal iridiscente es zambullirse en la locura\". (Notas anónimas)\""
+        },
+        "ja": {
+          "name": "玉虫色のキング",
+          "description": "霧から作られたガラスのようなチェスのキングの駒。内部で反響するエンティティの痕跡は、強靭な精神の持ち主さえも狂わせる。\n狂気状態の生存者は鎮静、懲罰、秩序、そして抑制の症状を発症する。\n• 生存者は幻覚の脅威範囲の心音が遠くから聞こえるようになる。効果は狂気度IIで断続的に、狂気度IIIで絶え間なく現れる\n• 追いかけられている時、生存者はまるでドクターが真後ろにいるかのように幻覚の赤い光と脅威範囲を認識する。この効果は追跡が終了した時点で狂気度IIの場合は6秒間持続し、狂気度IIIの場合は常に作用する\n• 破壊されたパレットが幻覚のパレットに置き換わり近づくまで視え続けることがある。新しい幻覚のパレットはランダムな破壊済みパレットの場所に20秒ごとに生成される\n• 幻覚のドクターの出現時間が6秒間増加する\n• ドクターは幻覚の赤い光と、幻覚のドクターおよび幻覚のパレットのオーラを視ることができる\n\"「玉虫色のガラスを覗き込むことは、狂気の渦に飛び込むということだ。」 -無記名のメモ\""
+        },
+        "pl": {
+          "name": "Opalowy Król",
+          "description": "Szklany pionek do szachów przedstawiający króla, ukształtowany przez samą Mgłę. Zaklęty w nim pogłos potężnego Bytu może wywołać szaleństwo nawet u najsilniejszych umysłów.\nOcalali z efektem szaleństwa cierpią z powodu następujących schorzeń: Spokój, Dyscyplina, Porządek oraz Powściągliwość.\n• Ocalali słyszą odległy iluzoryczny zasięg terroru. Efekt jest przerywany na drugim poziomie szaleństwa i stały na trzecim poziomie szaleństwa.\n• Podczas pościgu ocalali widzą iluzoryczną czerwoną poświatę oraz zasięg terroru, tak jakby Doktor znajdował się bezpośrednio za nimi. Efekt utrzymuje się przez 6 sekund po zakończeniu pościgu na 2. poziomie szaleństwa i jest stale włączony na 3. poziomie szaleństwa.\n• W miejsce zniszczonych palet mogą pojawiać się iluzoryczne palety, które znikają tylko wtedy, gdy się do nich podejdzie. Nowe iluzoryczne palety są generowane w miejscu losowej zniszczonej palety co 20 sekund.\n• Wydłuża czas trwania halucynacji iluzorycznego Doktora o 6 sekund.\n• Doktor widzi iluzoryczną czerwoną poświatę oraz aury iluzorycznych Doktorów i iluzorycznych palet.\n\"„Wpatrywanie się w opalowe szkło jest równoznaczne z zatapianiem się w otchłanie szaleństwa” – niepodpisane notatki\""
+        }
+      }
+    },
+    {
+      "id": 804,
+      "name": "Mouldy Electrode",
+      "killer_id": 7,
+      "description": "A moldy electrode which nevertheless conducts a weak electrical current.\n• Increases the range of Shock Therapy by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mouldyElectrode.png?ea7dd5",
+      "icon_local_path": "icons/addons/mouldy_electrode.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Alte Elektrode",
+          "description": "Eine modrige Elektrode, die trotzdem noch eine schwache elektrische Ladung leitet.\n• Erhöht die Reichweite der Schocktherapie um 2 Meter."
+        },
+        "en": {
+          "name": "Moldy Electrode"
+        },
+        "es": {
+          "name": "Electrodo mohoso",
+          "description": "Un electrodo mohoso que aún conduce una corriente eléctrica débil.\n• Aumenta el alcance de Terapia de choque en 2 metros."
+        },
+        "ja": {
+          "name": "カビが生えた電極",
+          "description": "カビが生えても弱い電流を通す電極棒。\n• ショック療法の範囲が2メートル増加する"
+        },
+        "pl": {
+          "name": "Spleśniała Elektroda",
+          "description": "Zapleśniała elektroda, która przewodzi jeszcze prąd o słabym natężeniu.\n• Zwiększa zasięg Terapii Szokowej o 2 metry."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 75,
+      "name": "Bloodied Mud",
+      "killer_id": 6,
+      "description": "A handful of mud with veins of deep crimson. The bloody layers empower the mud.\n• Decreases Phantasm Trap trigger range by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodiedMud.png?58c393",
+      "icon_local_path": "icons/addons/bloodied_mud.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Blutiger Schlamm",
+          "description": "Eine Handvoll Schlamm voller karmesinroter Blutadern. Die blutigen Schichten verleihen dem Schlamm Macht.\n• Verkleinert den Auslösungsbereich der Phantomfalle um 30 %."
+        },
+        "es": {
+          "name": "Fango ensangrentado",
+          "description": "Un puñado de lodo con vetas de un intenso color carmesí. Las capas ensangrentadas fortalecen el fango.\n• Reduce el alcance de activación de las trampas fantasma un 30 %."
+        },
+        "ja": {
+          "name": "血が混じった泥",
+          "description": "睡蓮の葉に包まれている汚れた水。\n• 幻像の罠の発動範囲を30%縮小する"
+        },
+        "pl": {
+          "name": "Krwawe błoto",
+          "description": "Garść błota przecięta żyłami głębokiego szkarłatu. Krwawe warstwy przeplatają się z błotem.\n• Zmniejsza zasięg uruchamiania Widmowych Pułapek o 30%."
+        }
+      }
+    },
+    {
+      "id": 76,
+      "name": "Bloodied Water",
+      "killer_id": 6,
+      "description": "Tainted water contained in a folded waterlily leaf.\n• Decreases Phantasm Trap trigger range by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodiedWater.png?2d3352",
+      "icon_local_path": "icons/addons/bloodied_water.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutiges Wasser",
+          "description": "Verdorbenes Wasser, aufgefangen in einem gefalteten Wasserlilienblatt.\n• Verkleinert den Auslösungsbereich der Phantomfalle um 20 %."
+        },
+        "es": {
+          "name": "Agua ensangrentada",
+          "description": "Agua mancillada contenida en una hoja plegada de nenúfar.\n• Reduce el alcance de activación de las trampas fantasma un 20 %."
+        },
+        "ja": {
+          "name": "血染めの水",
+          "description": "睡蓮の葉に包まれている汚れた水。\n• 幻像の罠の発動範囲を20%縮小する"
+        },
+        "pl": {
+          "name": "Krwawa woda",
+          "description": "Skażona woda znajdująca się w złożonym liściu lilii wodnej.\n• Zmniejsza zasięg uruchamiania Widmowych Pułapek o 20%."
+        }
+      }
+    },
+    {
+      "id": 77,
+      "name": "Bog Water",
+      "killer_id": 6,
+      "description": "Murky water contained in a glass pill bottle from another time.\n• Decreases Phantasm Trap trigger range by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bogWater.png?7d10b5",
+      "icon_local_path": "icons/addons/bog_water.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Sumpfwasser",
+          "description": "Trübes Wasser in einem Tablettenfläschchen aus einer anderen Zeit.\n• Verkleinert den Auslösungsbereich der Phantomfalle um 10 %."
+        },
+        "es": {
+          "name": "Agua de pantano",
+          "description": "Agua turbia contenida en un frasco para pastillas de cristal de otra época.\n• Reduce el alcance de activación de las trampas fantasma un 10 %."
+        },
+        "ja": {
+          "name": "沼の水",
+          "description": "古い薬品の瓶に詰まった淀んだ水。\n• 幻像の罠の発動範囲を10%縮小する"
+        },
+        "pl": {
+          "name": "Woda bagienna",
+          "description": "Brudna, ciemna woda znajdująca się w szklanej butelce z dawnych czasów.\n• Zmniejsza zasięg uruchamiania Widmowych Pułapek o 10%."
+        }
+      }
+    },
+    {
+      "id": 78,
+      "name": "Cracked Turtle Egg",
+      "killer_id": 6,
+      "description": "A pale orange turtle egg, cracked and emptied of its content.\n• Increases triggered Phantasm Trap duration by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crackedTurtleEgg.png?d96d66",
+      "icon_local_path": "icons/addons/cracked_turtle_egg.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zerbrochenes Schildkrötenei",
+          "description": "Ein blassoranges Schildkrötenei, das aufgesprungen und leer ist.\n• Erhöht die Dauer der ausgelösten Phantomfalle um 30 %."
+        },
+        "es": {
+          "name": "Huevo de tortuga cascado",
+          "description": "Un huevo de tortuga de color naranja pálido, cascado y vaciado.\n• Aumenta la duración de las trampas fantasma activadas un 30 %."
+        },
+        "ja": {
+          "name": "割れたカメの卵",
+          "description": "薄橙色のカメの卵。殻が割れ中身は無くなっている。\n• 発動した幻像の罠の持続時間が30%増加する"
+        },
+        "pl": {
+          "name": "Pęknięte żółwie jajko",
+          "description": "Bladopomarańczowe, pęknięte i puste żółwie jajo.\n• Zwiększa czas uruchomienia Widmowych Pułapek o 30%."
+        }
+      }
+    },
+    {
+      "id": 79,
+      "name": "Cypress Necklet",
+      "killer_id": 6,
+      "description": "A rigid ornament worn around the neck made from dead plants adorned with crudely attached cypress bark and swamp moss.\n• Increases Phantasm Trap setting speed by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_cypressNecklet.png?225787",
+      "icon_local_path": "icons/addons/cypress_necklet.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zypressen-Halskette",
+          "description": "Ein starres Schmuckstück für den Hals, das aus toten Pflanzen hergestellt wurde und mit plump angefügter Zypressenrinde und Sumpfmoos verziert ist.\n• Erhöht die Geschwindigkeit beim Platzieren von Phantomfallen um 15 %."
+        },
+        "es": {
+          "name": "Collar de ciprés",
+          "description": "Un ornamento rígido para el cuello hecho con plantas muertas y adornado toscamente con corteza de ciprés y musgo de pantano.\n• Aumenta la velocidad de colocación de las trampas fantasma un 15 %."
+        },
+        "ja": {
+          "name": "糸杉の首飾り",
+          "description": "枯れた植物で飾られた檜の首飾り。作りが雑なうえ、すでに苔に覆われている。\n• 幻像の罠の設置時間が15%減少する"
+        },
+        "pl": {
+          "name": "Naszyjnik z cyprysem",
+          "description": "Sztywna ozdoba noszona na szyi, stworzona ze zgniłych roślin, które ktoś ozdobił przyczepioną niezdarnie cyprysową korą i mchem bagiennym.\n• Zwiększa prędkość rozstawiania Widmowych Pułapek o 15%."
+        }
+      }
+    },
+    {
+      "id": 80,
+      "name": "Dead Fly Mud",
+      "killer_id": 6,
+      "description": "A small lump of mud, black with the remains of flies. Devoured to increase stamina.\n• Increases teleportation range by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deadFlyMud.png?9acdd4",
+      "icon_local_path": "icons/addons/dead_fly_mud.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schlamm mit toten Fliegen",
+          "description": "Ein kleiner Schlammbrocken, dessen schwarze Farbe von Überresten toter Fliegen stammt. Erhöht Ausdauer nach Fressen.\n• Erhöht die Teleportationsreichweite um 10 %."
+        },
+        "es": {
+          "name": "Fango con moscas muertas",
+          "description": "Un pequeño montón de fango, ennegrecido con restos de moscas. Se consume para aumentar la resistencia.\n• Aumenta el alcance de teletransporte un 10 %."
+        },
+        "ja": {
+          "name": "ハエの死骸が入った泥",
+          "description": "小さな泥の塊。ハエの死骸で黒ずんでいる。体力をつけるために食される。\n• テレポート可能距離が10%増加する"
+        },
+        "pl": {
+          "name": "Zabłocona martwa mucha",
+          "description": "Mała bryłka błota, czarna od szczątków much. Zjadana w celu zwiększenia wytrzymałości.\n• Zwiększa zasięg teleportacji o 10%."
+        }
+      }
+    },
+    {
+      "id": 81,
+      "name": "Disfigured Ear",
+      "killer_id": 6,
+      "description": "The cannibal village deaf boy's ear. Deformed due to several hits to the head. The trapped life essence within unlocks tremendous potential in The Hag's power.\n• Survivors who trigger a Phantasm Trap will be deafened for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_disfiguredEar.png?a7a46d",
+      "icon_local_path": "icons/addons/disfigured_ear.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Entstelltes Ohr",
+          "description": "Das Ohr des tauben Jungen aus dem Kannibalendorf. Aufgrund diverser Schläge gegen den Kopf etwas deformiert. Die darin befindliche Lebensessenz setzt ungeheure Kräfte in der Macht der Hexe frei.\n• Überlebende, die eine Phantomfalle auslösen, werden für 6 Sekunden taub."
+        },
+        "es": {
+          "name": "Oreja desfigurada",
+          "description": "La oreja del chico sordo del pueblo caníbal. Deformada por los golpes recibidos en la cabeza. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Los supervivientes que activen una trampa fantasma se quedarán sordos durante 6 segundos."
+        },
+        "ja": {
+          "name": "変形した耳",
+          "description": "人食い村の耳が聞こえない少年の耳。頭を何回も殴られたせいで歪んでいる。秘められた生命力は、ハグの隠された大いなる能力を解放する。\n• 幻像の罠を発動させた生存者は6秒間聴力を失う"
+        },
+        "pl": {
+          "name": "Zdeformowane ucho",
+          "description": "Ucho głuchego chłopca pochodzącego z wioski kanibali. Zdeformowane przez wielokrotne uderzenia w głowę. Uwięziona wewnątrz ucha esencja życia odblokowuje potężny potencjał mocy Wiedźmy.\n• Ocalali, którzy aktywowali Widmowe Pułapki, zostaną ogłuszeni na 6 s."
+        }
+      }
+    },
+    {
+      "id": 82,
+      "name": "Dragonfly Wings",
+      "killer_id": 6,
+      "description": "A handful of yellowish wings, dry and crisp. Devoured to increase stamina.\n• Increases teleportation range by 12.5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dragonflyWings.png?c8cb26",
+      "icon_local_path": "icons/addons/dragonfly_wings.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Libellenflügel",
+          "description": "Eine Handvoll gelblicher Flügel, getrocknet und knusprig. Erhöht Ausdauer nach Fressen.\n• Erhöht die Teleportationsreichweite um 12,5 %."
+        },
+        "es": {
+          "name": "Alas de libélula",
+          "description": "Un puñado de alas amarillentas, secas y crujientes. Se consume para aumentar la resistencia.\n• Aumenta el alcance de teletransporte un 12,5 %."
+        },
+        "ja": {
+          "name": "トンボの羽",
+          "description": "片手ほどの大きさの黄色みがかった羽。乾燥しており、パリパリしている。体力をつけるために食す。\n• テレポート可能距離が12.5%増加する"
+        },
+        "pl": {
+          "name": "Skrzydła ważki",
+          "description": "Garść żółtawych skrzydeł, suchych i chrupiących. Zjadana w celu zwiększenia wytrzymałości.\n• Zwiększa zasięg teleportacji o 12,5%."
+        }
+      }
+    },
+    {
+      "id": 83,
+      "name": "Dried Cicada",
+      "killer_id": 6,
+      "description": "A large swamp cicada covered in a fine layer of ash. Crispy. Devoured to increase stamina.\n• Increases teleportation range by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_driedCicada.png?91af31",
+      "icon_local_path": "icons/addons/dried_cicada.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Getrocknete Zikade",
+          "description": "Eine riesige Schlammzikade, mit einer feinen Ascheschicht überzogen. Knusprig. Erhöht Ausdauer nach Fressen.\n• Erhöht die Teleportationsreichweite um 15 %."
+        },
+        "es": {
+          "name": "Cigarra seca",
+          "description": "Una gran cigarra de pantano cubierta con una fina capa de ceniza. Crujiente. Se consume para aumentar la resistencia.\n• Aumenta el alcance de teletransporte un 15 %."
+        },
+        "ja": {
+          "name": "乾燥したセミ",
+          "description": "うっすらと灰がかかっている大きな沼ゼミ。パリパリしている。体力をつけるために食す。\n• テレポート可能距離が15%増加する"
+        },
+        "pl": {
+          "name": "Suszona cykada",
+          "description": "Ogromna cykada bagienna pokryta warstewką popiołu. Chrupiąca. Zjadana w celu zwiększenia wytrzymałości.\n• Zwiększa zasięg teleportacji o 15%."
+        }
+      }
+    },
+    {
+      "id": 84,
+      "name": "Grandma's Heart",
+      "killer_id": 6,
+      "description": "The cold heart of the cannibal village elder. The trapped life essence within unlocks tremendous potential in The Hag's power.\n• Decreases Terror Radius to 0 meters when a Survivor triggers a Phantasm Trap.\n• Increases Mud Phantasms' Terror Radius by 16 meters.\n\"\"Bring me another slice of the girl.\" -Grandma\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_granmasHeart.png?e66792",
+      "icon_local_path": "icons/addons/grandmas_heart.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Großmutters Herz",
+          "description": "Das kalte Herz des Stammesältesten aus dem Kannibalendorf. Die darin befindliche Lebensessenz setzt ungeheure Kräfte in der Macht der Hexe frei.\n• Verringert den Terrorradius auf 0 Meter, wenn ein Überlebender eine Phantomfalle auslöst.\n• Erhöht den Terrorradius des Schlammphantoms um 16 Meter.\n\"„Bring mir ein weiteres Stück des Mädchens.“ – Großmutter\""
+        },
+        "es": {
+          "name": "Corazón de la abuela",
+          "description": "El frío corazón de la anciana del pueblo caníbal. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Reduce el radio de terror a 0 metros cuando un superviviente activa una trampa fantasma.\n• Aumenta el radio de terror del fantasma de fango en 16 metros.\n\"\"Tráeme otro pedazo de la chica\". (La abuela)\""
+        },
+        "ja": {
+          "name": "おばあちゃんの心臓",
+          "description": "人食い村の老人の冷たくなった心臓。秘められた生命力は、ハグの隠された大いなる能力を解放する。\n• 生存者が幻像の罠を発動させると脅威範囲が0メートルに減少する\n• 泥の幻像の脅威範囲が16メートル増加する\n\"「あの子の肉をもう一切れ持っておいで。」- おばあちゃん\""
+        },
+        "pl": {
+          "name": "Serce babci",
+          "description": "Zimne serce starszej z wioski kanibali. Uwięziona wewnątrz serca esencja życia odblokowuje potężny potencjał mocy Wiedźmy.\n• Zmniejsza zasięg terroru do 0 metrów, gdy ocalały aktywuje Widmową Pułapkę.\n• Zwiększa zasięg terroru błotnych fantomów o 16 metrów.\n\"„Przynieś mi kolejny kawałek dziewczyny”. – Babcia\""
+        }
+      }
+    },
+    {
+      "id": 85,
+      "name": "Half Eggshell",
+      "killer_id": 6,
+      "description": "One half of a perfectly round hollow eggshell.\n• Increases triggered Phantasm Trap duration by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_halfEggshell.png?32f0a8",
+      "icon_local_path": "icons/addons/half_eggshell.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Eierschalenhälfte",
+          "description": "Eine Hälfte einer perfekten runden und leeren Eierschale.\n• Erhöht die Dauer von ausgelösten Phantomfallen um 25 %."
+        },
+        "es": {
+          "name": "Media cáscara de huevo",
+          "description": "Media cáscara de huevo redonda y vacía.\n• Aumenta la duración de las trampas fantasma activadas un 25 %."
+        },
+        "ja": {
+          "name": "半分の卵の殻",
+          "description": "半分に割れた丸い卵の殻。\n• 発動した幻像の罠の持続時間が25%増加する"
+        },
+        "pl": {
+          "name": "Połowa skorupki",
+          "description": "Połówka idealnie wydrążonej skorupki.\n• Wydłuża czas działania Widmowych Pułapek o 25%."
+        }
+      }
+    },
+    {
+      "id": 86,
+      "name": "Mint Rag",
+      "killer_id": 6,
+      "description": "A small piece of cotton torn from the dress worn by Lisa Sherwood on the day she disappeared. The trapped life essence within unlocks tremendous potential in The Hag's power.\n• The Hag can teleport to any Phantasm Trap in the level.\n• Phantasm Trap teleport gains a cooldown of 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mintRag.png?f335eb",
+      "icon_local_path": "icons/addons/mint_rag.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Makelloser Stofffetzen",
+          "description": "Ein kleines Stück Baumwollstoff des Kleids, das Lisa Sherwood am Tag ihres Verschwindens trug. Die darin befindliche Lebensessenz setzt ungeheure Kräfte in der Macht der Hexe frei.\n• Die Hexe kann sich zu jeder Phantomfalle im Level teleportieren.\n• Die Teleportation zu Phantomfallen hat eine Abklingzeit von 10 Sekunden."
+        },
+        "es": {
+          "name": "Jirón verde",
+          "description": "Un pequeño trozo de algodón desgarrado del vestido que llevaba Lisa Sherwood el día de su desaparición. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• La Bruja puede teletransportarse a cualquier trampa fantasma del escenario.\n• El teletransporte a una trampa fantasma tiene un tiempo de recarga de 10 segundos."
+        },
+        "ja": {
+          "name": "ミント柄のぼろきれ",
+          "description": "リサ・シャーウッドが失踪した日に着ていた洋服の切れ端。秘められた生命力は、ハグの隠された大いなる能力を解放する。\n• ハグがマップ上のどの幻像の罠にもテレポートできるようになる\n• 幻像の罠のテレポートのクールダウンは10秒"
+        },
+        "pl": {
+          "name": "Miętowy łachman",
+          "description": "Mały kawałek bawełny z rozdartej sukienki noszonej przez Lisę Sherwood w dniu jej zaginięcia. Uwięziona wewnątrz tego skrawka esencja życia odblokowuje potężny potencjał mocy Wiedźmy.\n• Wiedźma może teleportować się do dowolnej Widmowej Pułapki na mapie.\n• Teleport do Widmowej Pułapki otrzymuje czas odnawiania 10 sekund."
+        }
+      }
+    },
+    {
+      "id": 87,
+      "name": "Powdered Eggshell",
+      "killer_id": 6,
+      "description": "Minuscule eggshell fragments shimmering with a pale golden hue.\n• Increases triggered Phantasm Trap duration by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_powderedEggshell.png?1be036",
+      "icon_local_path": "icons/addons/powdered_eggshell.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Pulverisierte Eierschale",
+          "description": "Winzige Eierschalenteile, die blassgolden schimmern.\n• Erhöht die Dauer von ausgelösten Phantomfallen um 20 %."
+        },
+        "es": {
+          "name": "Cáscara de huevo triturada",
+          "description": "Fragmentos diminutos de cáscara de huevo con un pálido brillo dorado.\n• Aumenta la duración de las trampas fantasma activadas un 20 %."
+        },
+        "ja": {
+          "name": "粉々になった卵の殻",
+          "description": "淡い金色に輝く卵の欠片。\n• 発動した幻像の罠の持続時間が20%増加する"
+        },
+        "pl": {
+          "name": "Sproszkowana skorupka",
+          "description": "Maleńkie fragmenty skorupki jaja o lśniącym, złotawym odcieniu.\n• Wydłużają czas działania aktywowanych Widmowych Pułapek o 20%."
+        }
+      }
+    },
+    {
+      "id": 88,
+      "name": "Pussy Willow Catkins",
+      "killer_id": 6,
+      "description": "A handful of small, pristine flower clusters covered in a fine greyish fur.\n• Reveals the Survivor's aura for 3 seconds when they trigger a Phantasm Trap.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pussyWillowCatkins.png?f61077",
+      "icon_local_path": "icons/addons/pussy_willow_catkins.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Weidenkätzchen",
+          "description": "Eine Handvoll kleiner, makelloser Blütenstände, von einem zarten gräulichen Fell bedeckt.\n• Zeigt die Auren des Überlebenden 3 Sekunden lang an, wenn er eine Phantomfalle auslöst."
+        },
+        "es": {
+          "name": "Flores de sauce blanco",
+          "description": "Un puñado de pequeñas flores inmaculadas, organizadas en ramilletes y cubiertas de una fina pelusilla grisácea.\n• Muestra el aura de los supervivientes durante 3 segundos cuando activan trampas fantasma."
+        },
+        "ja": {
+          "name": "ネコヤナギの花々",
+          "description": "灰色の毛で覆われている自然のままの花房。\n• 幻像の罠を発動させた生存者のオーラが3秒視えるようになる"
+        },
+        "pl": {
+          "name": "Bazie kotki",
+          "description": "Mała wiązanka dziewiczych kwiatków pokrytych dobrej jakości szarawym futrem.\n• Ukazuje na 3 sekundy aury ocalałych, którzy aktywowali Widmowe Pułapki."
+        }
+      }
+    },
+    {
+      "id": 89,
+      "name": "Rope Necklet",
+      "killer_id": 6,
+      "description": "A rigid ornament worn around the neck made from dead plants.\n• Increases Phantasm Trap setting speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ropeNecklet.png?93a69d",
+      "icon_local_path": "icons/addons/rope_necklet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Seil-Halskette",
+          "description": "Ein starres Schmuckstück für den Hals, das aus toten Pflanzen hergestellt wurde.\n• Erhöht die Geschwindigkeit beim Platzieren von Phantomfallen um 10 %."
+        },
+        "es": {
+          "name": "Collar de cuerda",
+          "description": "Un ornamento rígido para el cuello hecho con plantas muertas.\n• Aumenta la velocidad de colocación de las trampas fantasma un 10 %."
+        },
+        "ja": {
+          "name": "ロープのネックレス",
+          "description": "枯れた植物からできた、ストイックな首飾り。\n• 幻像の罠の設置時間が10%減少する"
+        },
+        "pl": {
+          "name": "Naszyjnik z liny",
+          "description": "Sztywna ozdoba noszona na szyi, stworzona ze zwiędłych roślin.\n• Zwiększa prędkość rozstawiania Widmowych Pułapek o 10%."
+        }
+      }
+    },
+    {
+      "id": 90,
+      "name": "Rusty Shackles",
+      "killer_id": 6,
+      "description": "Shackles once used to hold prisoners and carcasses in the cannibal village cellar. The trapped life essence within unlocks tremendous potential in The Hag's power.\n• Triggered Phantasm Traps give no indication of being triggered to Survivors and do not spawn a Mud Phantasm.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustyShackles.png?f53174",
+      "icon_local_path": "icons/addons/rusty_shackles.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Rostige Fesseln",
+          "description": "Fesseln, die im Keller des Kannibalendorfs einst zum Festhalten von Gefangenen und Kadavern verwendet wurden. Die darin befindliche Lebensessenz setzt ungeheure Kräfte in der Macht der Hexe frei.\n• Ausgelöste Phantomfallen zeigen dem Überlebenden nicht an, dass sie ausgelöst wurden und erzeugen kein Schlammphantom."
+        },
+        "es": {
+          "name": "Cadenas oxidadas",
+          "description": "Cadenas que se usaron para albergar a prisioneros y cadáveres en el sótano del pueblo caníbal. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Los supervivientes no recibirán ninguna señal de que las trampas fantasma se han activado y no generan un fantasma de fango."
+        },
+        "ja": {
+          "name": "錆びた枷",
+          "description": "人食い村の地下室で囚人や死体を拘束するために使われていた枷。秘められた生命力は、ハグの隠された大いなる能力を解放する。\n• 幻像の罠が発動しても生存者にそれが通知されなくなり、泥の幻像が出現しなくなる"
+        },
+        "pl": {
+          "name": "Zardzewiałe kajdany",
+          "description": "Kajdany te używane były niegdyś do przetrzymywania więźniów i zwłok w piwnicy znajdującej się w wiosce kanibali. Uwięziona wewnątrz kajdan esencja życia odblokowuje potężny potencjał mocy Wiedźmy.\n• Widmowe Pułapki nie informują ocalałego o uruchomieniu i nie aktywują błotnych fantomów."
+        }
+      }
+    },
+    {
+      "id": 91,
+      "name": "Scarred Hand",
+      "killer_id": 6,
+      "description": "The cut up, severed hand of the cannibal village butcher. The trapped life essence within unlocks tremendous potential in The Hag's power.\n• Mud Phantasms become solid and will block Survivors.\n• Removes the ability to teleport to traps.\n• Grants 300% bonus Deviousness Bloodpoints.\n\"\"…\" -The Butcher\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scarredHand.png?64c123",
+      "icon_local_path": "icons/addons/scarred_hand.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Vernarbte Hand",
+          "description": "Die zerfleischte, abgetrennte Hand des Schlachters aus dem Kannibalendorf. Die darin befindliche Lebensessenz setzt ungeheure Kräfte in der Macht der Hexe frei.\n• Schlammphantome werden fest und können Überlebende aufhalten.\n• Entfernt die Fähigkeit, sich zu Fallen zu teleportieren.\n• Gewährt 300 % Bonus-Blutpunkte für Hinterhältigkeit.\n\"„...“ – Der Schlachter\""
+        },
+        "es": {
+          "name": "Mano con cicatrices",
+          "description": "La mano destrozada y cercenada del carnicero del pueblo caníbal. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Los fantasmas de fango se solidifican y bloquearán a los supervivientes.\n• Impide que pueda teletransportarse hasta las trampas.\n• Otorga un 300 % de puntos de sangre por Malicia adicionales.\n\"\"...\". (El Carnicero)\""
+        },
+        "ja": {
+          "name": "切り取られた手",
+          "description": "切断された、人食い村の肉屋の手。秘められた生命力はハグの隠された大いなる能力を解放する。\n• 幻像の罠が固まって生存者を妨害する\n• 罠にテレポートできなくなる\n• 邪悪カテゴリーのブラッドポイントを300%追加取得する\n\"「……」- 村の肉屋\""
+        },
+        "pl": {
+          "name": "Ręka kata",
+          "description": "Odcięta ręka rzeźnika mieszkającego w wiosce kanibali. Uwięziona wewnątrz ręki esencja życia odblokowuje potężny potencjał mocy Wiedźmy.\n• Błotne fantomy stają się twarde i blokują ocalałych.\n• Odbiera zdolność teleportacji do pułapek.\n• Daje 300% więcej Punktów Krwi w kategorii „Przebiegłość”.\n\"„…” – Rzeźnik\""
+        }
+      }
+    },
+    {
+      "id": 92,
+      "name": "Swamp Orchid Necklet",
+      "killer_id": 6,
+      "description": "A rigid ornament worn around the neck made from dead plants adorned with withered orchid petals and leaves.\n• Increases Phantasm Trap setting speed by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_swampOrchidNecklet.png?dad844",
+      "icon_local_path": "icons/addons/swamp_orchid_necklet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sumpforchideen-Halskette",
+          "description": "Ein starres Schmuckstück für den Hals, das aus toten Pflanzen hergestellt wurde und mit verwelkten Orchideenblüten und -blättern verziert ist.\n• Erhöht die Geschwindigkeit beim Platzieren von Phantomfallen um 20 %."
+        },
+        "es": {
+          "name": "Collar de orquídeas de pantano",
+          "description": "Un ornamento rígido para el cuello hecho con plantas muertas y adornado con hojas y pétalos marchitos de orquídea.\n• Aumenta la velocidad de colocación de las trampas fantasma un 20 %."
+        },
+        "ja": {
+          "name": "湿地蘭のネックレス",
+          "description": "枯れた植物で作られた固い首飾り。萎びた蘭の花びらと葉で飾られている。\n• 幻像の罠の設置時間が20%減少する"
+        },
+        "pl": {
+          "name": "Naszyjnik z bagiennej orchidei",
+          "description": "Sztywna ozdoba noszona na szyi, stworzona ze zwiędłych roślin, które ktoś ozdobił uschniętymi płatkami i liśćmi storczyka.\n• Zwiększa prędkość rozstawiania Widmowych Pułapek o 20%."
+        }
+      }
+    },
+    {
+      "id": 93,
+      "name": "Waterlogged Shoe",
+      "killer_id": 6,
+      "description": "A child's shoe, long lost in the bog's waters. The trapped life essence within unlocks tremendous potential in The Hag's power.\n• Survivors in the trigger zone of a triggered Phantasm Trap are Hindered by 9%.\n• Increases movement speed by 7.5%.\n• Removes the ability to teleport to traps.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_waterloggedShoe.png?bf148a",
+      "icon_local_path": "icons/addons/waterlogged_shoe.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Durchnässter Schuh",
+          "description": "Ein Kinderschuh, der lange Zeit im Sumpfwasser verloren war. Die darin befindliche Lebensessenz setzt ungeheure Kräfte in der Macht der Hexe frei.\n• Überlebende in der Reichweite einer ausgelösten Phantomfalle werden um 9 % eingeschränkt.\n• Erhöht die Bewegungsgeschwindigkeit um 7,5 %.\n• Entfernt die Fähigkeit, sich zu Fallen zu teleportieren.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Zapato empapado",
+          "description": "Un zapato de niño, perdido hace mucho tiempo en las aguas del pantano. La esencia de vida atrapada en su interior despierta un enorme potencial en el poder de la Bruja.\n• Los supervivientes en la zona donde hay una trampa fantasma activada sufrirán un 9 % de Entorpecimiento.\n• Aumenta la velocidad de movimiento un 7,5 %.\n• Impide que pueda teletransportarse hasta las trampas.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "ずぶ濡れの靴",
+          "description": "永らく沼の中で失われていた子供の靴。秘められた生命力は、ハグの隠された大いなる能力を解放する。\n• 発動した幻像の罠の効果範囲内にいる生存者は妨害の効果を9%受ける\n• 移動速度が7.5%上昇する\n• 罠にテレポートできなくなる\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Przemoknięty but",
+          "description": "Dziecięcy bucik, dawno zagubiony w torfowisku. Uwięziona wewnątrz esencja życia odblokowuje potężny potencjał mocy Wiedźmy.\n• Ocalali w strefie uruchomienia aktywowanej Widmowej Pułapki zostają Skrępowani o 9%.\n• Zwiększa prędkość ruchu o 7,5%.\n• Odbiera zdolność teleportacji do pułapek.\nSkrępowanie zmniejsza prędkość ruchu ocalałych."
+        }
+      }
+    },
+    {
+      "id": 94,
+      "name": "Willow Wreath",
+      "killer_id": 6,
+      "description": "Three frail willow branches attached to form a triangular wreath.\n• Reveals the Survivor's aura for 5 seconds when they trigger a Phantasm Trap.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_willowWreath.png?16fde5",
+      "icon_local_path": "icons/addons/willow_wreath.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Weidenkranz",
+          "description": "Drei zerbrechliche Weidenzweige, zusammengebunden, um einen dreieckigen Kranz zu formen.\n• Zeigt die Auren von Überlebenden 5 Sekunden lang an, wenn sie eine Phantomfalle auslösen."
+        },
+        "es": {
+          "name": "Guirnalda de sauce",
+          "description": "Tres ramas frágiles de sauce dispuestas en forma de guirnalda triangular.\n• Muestra el aura de los supervivientes durante 5 segundos cuando activan una trampa fantasma."
+        },
+        "ja": {
+          "name": "柳のリース",
+          "description": "脆い柳の枝で組まれた、三角形のリース。\n• 幻像の罠を発動させた生存者のオーラが5秒間視えるようになる"
+        },
+        "pl": {
+          "name": "Wierzbowy wieniec",
+          "description": "Trzy gładkie gałązki wierzby połączone w trójkątny wieniec.\n• Ukazują na 5 sekund aury ocalałych, którzy aktywowali Widmowe Pułapki."
+        }
+      }
+    }
+  ]
+}

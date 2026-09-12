@@ -1,0 +1,143 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 47,
+      "name": "Volcanic Stone",
+      "item_category_id": 4,
+      "description": "The heat of its birthplace glows within this living rock.\nDecreases the Fog Vial cooldown by 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_volcanicStone.png?2668a4",
+      "icon_local_path": "icons/addons/volcanic_stone.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Vulkanstein",
+          "description": "Die Hitze seines Geburtsortes glüht im Inneren dieses lebenden Gesteins.\nVerkürzt die Abklingzeit des Nebelfläschchens um 5 Sek."
+        },
+        "es": {
+          "name": "Piedra volcánica",
+          "description": "El calor de su lugar de nacimiento brilla en esta roca viva.\nReduce el tiempo de recarga del vial de niebla en 5 segundos."
+        },
+        "ja": {
+          "name": "火山石",
+          "description": "この生きた岩は、発祥地の熱で光っている。\n霧の小瓶のクールダウン時間が5秒減少する。"
+        },
+        "pl": {
+          "name": "Wulkaniczny kamień",
+          "description": "Ciepło z jego miejsca narodzin tli się wewnątrz tej żywej skały.\nSkraca czas odnawiania fiolki mgły o 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 48,
+      "name": "Reactive Compound",
+      "item_category_id": 4,
+      "description": "Pressure builds within the vial. Its contents beg for release.\nDecreases the Fog Cloud's expansion time by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_reactiveCompound.png?6da483",
+      "icon_local_path": "icons/addons/reactive_compound.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Reaktive Verbindung",
+          "description": "Druck baut sich in der Ampulle auf. Der Inhalt will hinaus.\nVerringert die Ausbreitungsdauer der Nebelwolke um 1 Sek."
+        },
+        "es": {
+          "name": "Compuesto reactivo",
+          "description": "La presión se acumula dentro del frasco. Su contenido suplica por liberarse.\nReduce el tiempo de expansión de la nube de niebla en 1 segundo."
+        },
+        "ja": {
+          "name": "反応性化合物",
+          "description": "小瓶の中の気圧が高まり、その中身が一気に放たれる。\n煙霧の拡大にかかる時間が1秒減少する。"
+        },
+        "pl": {
+          "name": "Związek reaktywny",
+          "description": "Ciśnienie w fiolce rośnie. Jej zawartość aż prosi się o wydostanie.\nSkraca czas rozszerzania się obłoku mgły 1 sekundę."
+        }
+      }
+    },
+    {
+      "id": 49,
+      "name": "Oily Sap",
+      "item_category_id": 4,
+      "description": "The emerging fog clings to the air, overwhelming the senses for even longer.\nIncreases Fog Cloud duration by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oilySap.png?26f3d7",
+      "icon_local_path": "icons/addons/oily_sap.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Öliger Saft",
+          "description": "Der aufziehende Nebel hängt in der Luft und beeinträchtigt die Sinne noch länger.\nVerlängert die Dauer der Nebelwolke um 2 Sek."
+        },
+        "es": {
+          "name": "Savia oleosa",
+          "description": "La niebla emergente se adhiere al aire, saturando los sentidos durante aún más tiempo.\nAumenta la duración de la nube de niebla en 2 segundos."
+        },
+        "ja": {
+          "name": "油性樹液",
+          "description": "霧が空気に絡みつき、その効果を長引かせる。\n煙霧の持続時間が2秒増加する。"
+        },
+        "pl": {
+          "name": "Oleisty sok",
+          "description": "Opadająca mgła utrzymuje się w powietrzu, przytłaczając zmysły na jeszcze dłużej.\nZwiększa czas trwania obłoku mgły o 2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 50,
+      "name": "Mushroom Formula",
+      "item_category_id": 4,
+      "description": "Blooming wisps of fog grasp at the environment, reaching farther and farther out.\nIncreases maximum Fog Cloud size by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mushroomFormula.png?8eaef3",
+      "icon_local_path": "icons/addons/mushroom_formula.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Pilzformel",
+          "description": "Blühende Nebelsträhnen greifen nach der Umgebung und dehnen sich immer weiter aus.\nVergrößert die maximale Größe der Nebelwolke um 2 Meter."
+        },
+        "es": {
+          "name": "Fórmula fúngica",
+          "description": "Remolinos de niebla floreciente se aferran al entorno, extendiéndose cada vez más.\nAumenta el tamaño máximo de la nube de niebla en 2 metros."
+        },
+        "ja": {
+          "name": "キノコの調合物",
+          "description": "霧のたなびきが、遠くへと伸びていく。\n煙霧の最大サイズが2メートル増加する。"
+        },
+        "pl": {
+          "name": "Grzybowa receptura",
+          "description": "Kwitnące obłoki mgły chwytają otoczenie, sięgając coraz dalej i dalej.\nZwiększa maksymalny rozmiar obłoku mgły o 2 metry."
+        }
+      }
+    },
+    {
+      "id": 51,
+      "name": "Potent Extract",
+      "item_category_id": 4,
+      "description": "One drop is enough to change the consistency of this strange elixir.\n• Increases the Fog Cloud's opacity by 100%.\n• Decreases the Fog Cloud's duration by 50%.\n• Decreases the Fog Cloud's size by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_potentExtract.png?7fdc2f",
+      "icon_local_path": "icons/addons/potent_extract.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Starker Extrakt",
+          "description": "Ein Tropfen reicht, um die Konsistenz dieses seltsamen Elixiers zu verändern.\n• Erhöht die Deckkraft der Nebelwolke um 100 %.\n• Verkürzt die Dauer der Nebelwolke um 50 %.\n• Verkleinert die Nebelwolke um 25 %."
+        },
+        "es": {
+          "name": "Extracto potente",
+          "description": "Una sola gota basta para alterar la consistencia de este extraño elixir.\n• Aumenta la opacidad de la nube de niebla un 100 %.\n• Reduce la duración de la nube de niebla un 50 %.\n• Reduce el tamaño de la nube de niebla un 25 %."
+        },
+        "ja": {
+          "name": "強力なエキス",
+          "description": "このエキスを一滴加えることで、薬の効果を変えられる。\n• 煙霧の不透明度が100%増加する\n• 煙霧の持続時間が50%減少する\n• 煙霧のサイズが25%減少する"
+        },
+        "pl": {
+          "name": "Mocny wyciąg",
+          "description": "Jedna kropla wystarczy, aby zmienić konsystencję tego dziwnego eliksiru.\n• Zwiększa gęstość chmury mgły o 100%.\n• Zmniejsza czas trwania chmury o 50%.\n• Zmniejsza rozmiary chmury mgły o 25%."
+        }
+      }
+    }
+  ]
+}

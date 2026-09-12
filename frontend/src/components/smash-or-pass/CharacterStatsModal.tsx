@@ -15,7 +15,8 @@ import {
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { EntityMetadata, EntityStatItem } from '@/types/smashOrPass';
+import { EntityStatItem } from '@/types/smashOrPass';
+import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 
@@ -41,34 +42,23 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   const slug = rawCharacter?.slug || rawCharacter?.character_slug || rawCharacter?.id || '';
 
-  const meta: EntityMetadata = useMemo(
-    () => ({
-      ...(rawCharacter?.metadata_json || {}),
-      ...(rawCharacter?.metadata || {}),
-    }),
-    [rawCharacter]
-  );
-
+  // Was a merge of `metadata_json` under `metadata`: the API used to send the same dict
+  // twice per entity. There is one dict now, and localizedProfile resolves the locale.
   const currentLoc = locale || 'en';
-  const locMeta = (meta.translations as any)?.[currentLoc] || (meta.i18n as any)?.[currentLoc] || {};
+  const profile = useMemo(
+    () => localizedProfile(rawCharacter?.metadata, currentLoc),
+    [rawCharacter, currentLoc]
+  );
 
   const name = rawCharacter?.name || rawCharacter?.character_name || 'Candidate';
   const role = rawCharacter?.role || 'Survivor';
   const isSurvivor = role === 'Survivor';
-  const title =
-    locMeta.title ||
-    meta.title ||
-    meta.archetype ||
-    locMeta.tagline ||
-    meta.tagline ||
-    role;
+  // The old `title` chain (locMeta.title || meta.title || meta.archetype || ...tagline) is
+  // dropped entirely: it was never rendered here — the modal header shows `name`.
 
-  const bio = locMeta.bio || meta.bio || locMeta.description || meta.description || '';
-  const quote = locMeta.quote || meta.quote || locMeta.lore_quote || meta.lore_quote || '';
-  const greenFlags = locMeta.green_flags || meta.green_flags || (meta as any).greenFlags || [];
-  const redFlags = locMeta.red_flags || meta.red_flags || (meta as any).redFlags || [];
-  const turnOn = locMeta.turn_on || meta.turn_on || (meta as any).turnOn || '';
-  const dealbreaker = locMeta.dealbreaker || meta.dealbreaker || '';
+  const bio = profile.bio;
+  const quote = profile.quote;
+  const dealbreaker = profile.dealbreaker;
 
   const avatarSrc =
     rawCharacter?.media_url?.startsWith('http') || rawCharacter?.media_url?.startsWith('/static')
@@ -261,28 +251,28 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         )}
 
         {/* 5. Green & Red Flags */}
-        {(greenFlags.length > 0 || redFlags.length > 0) && (
+        {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            {greenFlags.length > 0 && (
+            {profile.green_flags.length > 0 && (
               <div className="space-y-1.5 bg-emerald-950/30 border border-emerald-500/20 p-3 rounded-2xl">
                 <span className="flex items-center gap-1.5 font-black text-emerald-700 dark:text-emerald-400 text-[11px] uppercase font-mono">
                   <CheckCircle2 className="h-3.5 w-3.5" /> {greenFlagsLabel}
                 </span>
                 <ul className="text-xs text-emerald-200/90 space-y-1 pl-4 list-disc font-sans">
-                  {greenFlags.map((f: string, i: number) => (
+                  {profile.green_flags.map((f: string, i: number) => (
                     <li key={i}>{f}</li>
                   ))}
                 </ul>
               </div>
             )}
 
-            {redFlags.length > 0 && (
+            {profile.red_flags.length > 0 && (
               <div className="space-y-1.5 bg-rose-950/30 border border-rose-500/20 p-3 rounded-2xl">
                 <span className="flex items-center gap-1.5 font-black text-rose-700 dark:text-rose-400 text-[11px] uppercase font-mono">
                   <AlertTriangle className="h-3.5 w-3.5" /> {redFlagsLabel}
                 </span>
                 <ul className="text-xs text-rose-200/90 space-y-1 pl-4 list-disc font-sans">
-                  {redFlags.map((f: string, i: number) => (
+                  {profile.red_flags.map((f: string, i: number) => (
                     <li key={i}>{f}</li>
                   ))}
                 </ul>
@@ -292,12 +282,12 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         )}
 
         {/* 6. Turn On & Dealbreaker */}
-        {(turnOn || dealbreaker) && (
+        {(profile.turn_on || dealbreaker) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-            {turnOn && (
+            {profile.turn_on && (
               <div className="bg-slate-50 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
                 <span className="font-bold text-[#c40042] dark:text-[#ff0055] uppercase text-[10px] block">{turnOnLabel}</span>
-                <p className="text-zinc-700 dark:text-zinc-300 text-[11px] leading-tight font-sans">{turnOn}</p>
+                <p className="text-zinc-700 dark:text-zinc-300 text-[11px] leading-tight font-sans">{profile.turn_on}</p>
               </div>
             )}
             {dealbreaker && (

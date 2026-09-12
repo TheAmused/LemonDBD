@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 664,
+      "name": "Young Coconut",
+      "killer_id": 38,
+      "description": "Her first meal as a castaway, she shared it with her loyal companion.\n• Increases the Dog's Chase speed by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_youngCoconut.png?40c6a0",
+      "icon_local_path": "icons/addons/young_coconut.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Unreife Kokosnuss",
+          "description": "Ihre erste Mahlzeit als Schiffbrüchige, die sie mit ihrem treuen Begleiter teilte.\n• Erhöht die Geschwindigkeit des Hundes beim „Fass“-Kommando um 5 %."
+        },
+        "es": {
+          "name": "Coco verde",
+          "description": "Su primera comida de náufraga, que compartió con su leal compañero.\n• Aumenta la velocidad de persecución del perro un 5 %."
+        },
+        "ja": {
+          "name": "未熟成のココナッツ",
+          "description": "彼女は漂流後に初めて手にした食料を忠実な友と分け合った。\n• 犬の追いかけ速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Młody kokos",
+          "description": "Jej pierwszy posiłek po rozbiciu. Podzieliła się nim ze swoim wiernym towarzyszem.\n• Zwiększa prędkość Pościgu Psa o5%."
+        }
+      }
+    },
+    {
+      "id": 665,
+      "name": "Sticky Pitch",
+      "killer_id": 38,
+      "description": "A vital commodity for keeping a ship in tip-top shape.\n• Increases The Houndmaster's bonus movement speed gained while running on the Search Path by 2%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stickyPitch.png?88e68e",
+      "icon_local_path": "icons/addons/sticky_pitch.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Klebriges Pech",
+          "description": "Nützliches Material, damit ein Schiff stets seetüchtig bleibt.\n• Beim Laufen auf dem Suchpfad wird die Bonusbewegungsgeschwindigkeit der Hundegebieterin um 2 % erhöht."
+        },
+        "es": {
+          "name": "Brea pegajosa",
+          "description": "Un producto vital para el mantenimiento óptimo de un barco.\n• Aumenta la velocidad de movimiento adicional de la Adiestradora Canina al correr por la ruta de búsqueda un 2 %."
+        },
+        "ja": {
+          "name": "粘着性のある樹脂",
+          "description": "船を申し分のない状態に保つために不可欠なアイテム。\n• 探知進路を走行中に得られるハウンドマスターの移動速度ボーナスが2%増加する"
+        },
+        "pl": {
+          "name": "Lepka smoła",
+          "description": "Kluczowy zasób do utrzymania statku w doskonałej kondycji.\n• Podczas biegu po ścieżce szukania prędkość bonusowa Mistrzyni Ogarów zwiększa się o 2%."
+        }
+      }
+    },
+    {
+      "id": 666,
+      "name": "Creature's Bone",
+      "killer_id": 38,
+      "description": "It was unlike anything she'd ever seen, and the marrow in its bones was delectable.\n• The Dog's stun duration is reduced by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_creaturesBone.png?7250ce",
+      "icon_local_path": "icons/addons/creatures_bone.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Knochen eines Wesens",
+          "description": "So etwas hatte sie noch nie gesehen und das Mark darin war vorzüglich.\n• Die Betäubungsdauer des Hundes wird um 50 % verkürzt."
+        },
+        "es": {
+          "name": "Hueso de criatura",
+          "description": "Nunca había visto nada igual, y el tuétano de sus huesos era todo un manjar.\n• La duración de aturdimiento del perro se reduce un 50 %."
+        },
+        "ja": {
+          "name": "生き物の骨",
+          "description": "それは彼女が知るどんな生き物にも似ていなかったが、骨の髄まで美味しかった。\n• 犬の怯みの持続時間が50%短縮する"
+        },
+        "pl": {
+          "name": "Kość istoty",
+          "description": "Czegoś takiego nigdy wcześniej nie widziała, a szpik w jego kościach był wyśmienity.\n• Czas ogłuszenia psa zostaje skrócony o 50%."
+        }
+      }
+    },
+    {
+      "id": 667,
+      "name": "Trainer's Book",
+      "killer_id": 38,
+      "description": "Some of the advice contained within helped strengthen their bond.\n• Increases Houndsense duration by 35%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trainersBook.png?c8bedc",
+      "icon_local_path": "icons/addons/trainers_book.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Trainerbuch",
+          "description": "Einige der Ratschläge darin halfen dabei, ihre Bindung zu stärken.\n• Verlängert die Dauer von „Hundegespür“ um 35 %."
+        },
+        "es": {
+          "name": "Libro de adiestramiento",
+          "description": "Algunos de los consejos que contenía les ayudó a reforzar su vínculo.\n• Aumenta la duración del olfato de sabueso un 35 %."
+        },
+        "ja": {
+          "name": "犬の訓練法",
+          "description": "彼女はその本のアドバイスを参考にして犬との絆を深めた。\n• 嗅ぎ付けの持続時間が35%増加する"
+        },
+        "pl": {
+          "name": "Podręcznik tresera",
+          "description": "Niektóre z zawartych w nim porad pomogły wzmocnić ich więź.\n• Zwiększa czas trwania Psiego Zmysłu o 35%."
+        }
+      }
+    },
+    {
+      "id": 668,
+      "name": "Barley Meal",
+      "killer_id": 38,
+      "description": "The key ingredient for a bland but reinvigorating porridge.\n• Increases the Dog's initial Chase distance by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_barleyMeal.png?7d36b3",
+      "icon_local_path": "icons/addons/barley_meal.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Gerstenmehl",
+          "description": "Die wichtigste Zutat für einen faden, aber stärkenden Brei.\n• Vergrößert die anfängliche Distanz beim „Fass“-Kommando des Hundes um 20 %."
+        },
+        "es": {
+          "name": "Almuerzo de cebada",
+          "description": "El ingrediente clave para elaborar unas gachas sosas, pero muy nutritivas.\n• Aumenta la distancia inicial de persecución del perro un 20 %."
+        },
+        "ja": {
+          "name": "大麦の粗挽き粉",
+          "description": "味気ないが元気の出るお粥を作るための重要な材料。\n• 最初に追いかけを命じたときの犬の移動距離が20%増加する"
+        },
+        "pl": {
+          "name": "Risotto jęczmienne",
+          "description": "Kluczowy składnik mdłej, ale orzeźwiającej owsianki.\n• Zwiększa początkową odległość Pościgu Psa o 20%."
+        }
+      }
+    },
+    {
+      "id": 669,
+      "name": "Belaying Pins",
+      "killer_id": 38,
+      "description": "Ideal for holding rope, securing knots, and rigging sails.\n• Survivors revealed by Killer Instinct when entering the Houndsense Radius also become Oblivious for 20 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_belayingPins.png?bfd291",
+      "icon_local_path": "icons/addons/belaying_pins.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Belegnägel",
+          "description": "Ideal zum Festmachen von Seilen, Befestigen von Knoten und Auftakeln.\n• Überlebende, die vom Killerinstinkt angezeigt werden, wenn sie den Hundegespür-Radius betreten, leiden auch für 20 Sek. unter Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Cabillas",
+          "description": "Ideales para sujetar cuerdas, asegurar nudos y colocar velas.\n• Los supervivientes que revele Instinto asesino al entrar en el radio del olfato de sabueso también sufren Inconsciencia durante 20 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino"
+        },
+        "ja": {
+          "name": "ビレイピン",
+          "description": "縄を掛けたり、結び目を固定したり、帆を張ったりするのに最適。\n• 嗅ぎ付け範囲に入って殺人鬼の本能により居場所が暴かれた生存者は、無感覚にも20秒間苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Kołki knagowe",
+          "description": "Idealne do trzymania liny, zabezpieczania węzłów i ustawiania żagli.\n• Ocalali ujawnieni przez Instynkt Zabójcy po wejściu w promień Psiego Zmysłu otrzymują efekt Nieświadomy trwający 20 s.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 670,
+      "name": "Smoked Snapper",
+      "killer_id": 38,
+      "description": "A protein-packed foodstuff, preserved to ensure its quality over long expeditions.\n• Power cooldown is reduced by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_smokedSnapper.png?7e39ed",
+      "icon_local_path": "icons/addons/smoked_snapper.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Räucherfisch",
+          "description": "Ein proteinhaltiges Nahrungsmittel, das auch bei langen Expeditionen noch genießbar bleibt.\n• Die Abklingzeit der Stärke ist um 5 % verkürzt."
+        },
+        "es": {
+          "name": "Pargo ahumado",
+          "description": "Una sustancia con alto contenido proteico, preservada para garantizar su calidad en expediciones de larga duración.\n• El tiempo de recarga del poder se reduce un 5 %."
+        },
+        "ja": {
+          "name": "フエダイの燻製",
+          "description": "タンパク質の豊富な食品。長期の遠征でも品質を失わないよう処理されている。\n• 特殊能力のクールダウンが5%減少する"
+        },
+        "pl": {
+          "name": "Wędzona ryba",
+          "description": "Pokarm bogaty w białko, konserwowany w celu zapewnienia jakości podczas długich wypraw.\n• Czas odnowienia mocy jest skrócony o 5%."
+        }
+      }
+    },
+    {
+      "id": 671,
+      "name": "Knotted Rope",
+      "killer_id": 38,
+      "description": "The dog's jaws tightened around the makeshift toy, and he thrashed it back and forth.\n• Reduces the cooldown of basic attacks against Survivors injured while in the Dog's Grab by 2%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_knottedRope.png?de5f57",
+      "icon_local_path": "icons/addons/knotted_rope.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Geknüpftes Seil",
+          "description": "Die Zähne des Hunds packten das provisorische Spielzeug und er schleuderte es hin und her.\n• Verkürzt die Abklingzeit von Grundangriffen gegen Überlebende, die von der Bring-Aktion verletzt werden, um 2 %."
+        },
+        "es": {
+          "name": "Cuerda con nudos",
+          "description": "Las mandíbulas del perro se cerraron alrededor del juguete improvisado, y lo sacudía de un lado a otro.\n• Reduce el tiempo de recarga de los ataques básicos contra los supervivientes heridos por un agarre del perro un 2 %."
+        },
+        "ja": {
+          "name": "結び目のある縄",
+          "description": "犬は間に合わせのオモチャをしっかりと噛み締め、上下に強く打ちつけた。\n• 犬の拘束中に生存者を負傷させると、その生存者に対する通常攻撃のクールダウンが2%減少する"
+        },
+        "pl": {
+          "name": "Związana lina",
+          "description": "Szczęki psa zacisnęły się wokół prowizorycznej zabawki, a on szarpał nią na boki.\n• Skraca czas odnowienia podstawowych ataków przeciwko rannym ocalałym o 2%."
+        }
+      }
+    },
+    {
+      "id": 672,
+      "name": "Spyglass",
+      "killer_id": 38,
+      "description": "Used to spot what one is looking for, no matter how far away.\n• When Houndsense duration ends, the Survivor's aura is revealed for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spyglass.png?6a6e4f",
+      "icon_local_path": "icons/addons/spyglass.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Fernrohr",
+          "description": "Damit findet man, wonach man sucht, egal, wie weit entfernt es ist.\n• Wenn das Hundegespür endet, wird die Aura des Überlebenden für 3 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Catalejo",
+          "description": "Sirve para encontrar lo que alguien busca, sin importar lo lejos que esté.\n• Cuando termine el olfato de sabueso, se revelará el aura del superviviente durante 3 segundos."
+        },
+        "ja": {
+          "name": "見張り望遠鏡",
+          "description": "これを覗けば、どんなに遠くのものでも見つけられる。\n• 嗅ぎ付けの持続時間が終わると、生存者のオーラが3秒間表示される"
+        },
+        "pl": {
+          "name": "Luneta",
+          "description": "Używane do odnalezienia tego, czego się szuka, bez względu na odległość.\n• Gdy czas trwania Psiego Zmysłu dobiega końca, aura ocalałego zostaje ujawniona na 3 s."
+        }
+      }
+    },
+    {
+      "id": 673,
+      "name": "Waterskin",
+      "killer_id": 38,
+      "description": "She gave him the last of her water, knowing he needed the strength to hunt.\n• Increases the Dog's Chase redirect distance by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_waterskin.png?3908f9",
+      "icon_local_path": "icons/addons/waterskin.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Trinkschlauch",
+          "description": "Sie gab ihm ihren letzten Rest Wasser, da sie wusste, dass er Kraft zum Jagen brauchte.\n• Vergrößert die Distanz für die Umleitung des „Fass“-Kommandos um 20 %."
+        },
+        "es": {
+          "name": "Odre",
+          "description": "Le dio el agua que le quedaba, sabiendo que su amigo necesitaba las fuerzas para cazar.\n• Aumenta la distancia de redirección de persecución del perro un 20 %."
+        },
+        "ja": {
+          "name": "革の水筒",
+          "description": "狩りに力を出してもらおうと、彼女は残りの水を彼に与えた。\n• 追いかけの狙いを変更したときの犬の移動距離が20%増加する"
+        },
+        "pl": {
+          "name": "Bukłak",
+          "description": "Dała mu resztę swojej wody, wiedząc, że potrzebuje sił do polowania.\n• Zwiększa odległość zmiany kierunku Pościgu Psa o 20%."
+        }
+      }
+    },
+    {
+      "id": 674,
+      "name": "Unfinished Map",
+      "killer_id": 38,
+      "description": "Features details on the area that would come to be known as the Bermuda Triangle.\n• Survivors revealed by Killer Instinct when entering the Houndsense Radius also become Exhausted for 15 seconds.\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_unfinishedMap.png?6ec148",
+      "icon_local_path": "icons/addons/unfinished_map.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Unvollständige Karte",
+          "description": "Enthält detaillierte Informationen zu dem Gebiet, das heute als Bermudadreieck bekannt ist.\n• Vom Killerinstinkt enthüllte Überlebende leiden für 15 Sekunden unter Erschöpfung, wenn sie den Hundegespür-Radius betreten.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "es": {
+          "name": "Mapa incompleto",
+          "description": "Incluye detalles sobre la zona que terminaría conociéndose como el \"Triángulo de las Bermudas\".\n• Los supervivientes que revele Instinto asesino al entrar en el radio del olfato de sabueso también sufren Agotamiento durante 15 segundos.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "未完成の地図",
+          "description": "この地図に詳細が描かれたエリアは、のちにバミューダトライアングルとして知られるようになった。\n• 嗅ぎ付け範囲に入って殺人鬼の本能により居場所の暴かれた生存者は、15秒間疲労状態にもなる\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Niedokończona mapa",
+          "description": "Zawiera szczegóły dotyczące obszaru, który później stanie się znany jako Trójkąt Bermudzki.\n• Ocalali ujawnieni przez Instynkt Zabójcy po wejściu w promień Psiego Zmysłu otrzymują również efekt Wyczerpania na 15 s.\nWyczerpanie uniemożliwia ocalałym aktywowanie niektórych umiejętności."
+        }
+      }
+    },
+    {
+      "id": 675,
+      "name": "Training Bell",
+      "killer_id": 38,
+      "description": "Even over great distances, it will notify a dog exactly where their owner is.\n• When the Dog is stunned, the responsible Survivor's aura is revealed for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trainingBell.png?50699d",
+      "icon_local_path": "icons/addons/training_bell.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Signalglocke",
+          "description": "Selbst auf große Entfernung informiert sie einen Hund darüber, wo sich sein Besitzer befindet.\n• Wenn der Hund betäubt wird, wird die Aura des dafür verantwortlichen Überlebenden für 8 Sekunden enthüllt."
+        },
+        "es": {
+          "name": "Campana de adiestramiento",
+          "description": "Incluso a grandes distancias, le indica a un perro la ubicación exacta de su dueño.\n• Cuando se aturde al perro, se revela el aura del superviviente responsable durante 8 segundos."
+        },
+        "ja": {
+          "name": "訓練用の鈴",
+          "description": "この鈴は、どんなに離れていても飼い主の居場所を犬に正確に知らせる。\n• 犬が怯んだとき、怯ませた生存者のオーラが8秒間表示される"
+        },
+        "pl": {
+          "name": "Dzwonek treningowy",
+          "description": "Nawet na dużą odległość poinformuje psa, gdzie dokładnie znajduje się jego właściciel.\n• Kiedy pies zostanie ogłuszony, aura odpowiedzialnego za to ocalałego zostaje ujawniona na 8 s."
+        }
+      }
+    },
+    {
+      "id": 676,
+      "name": "Spiked Collar",
+      "killer_id": 38,
+      "description": "A dangerous accessory worn by dogs sent to battle.\n• Survivors injured while in the Dog's grab suffer from Mangled and Hemorrhage for 60 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spikedCollar.png?3e0946",
+      "icon_local_path": "icons/addons/spiked_collar.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stachelhalsband",
+          "description": "Ein gefährliches Accessoire von Hunden, die in den Kampf geschickt werden.\n• Überlebende, die während der Bring-Aktion des Hunds verletzt werden, leiden für 60 Sekunden unter den Statuseffekten Zerfleischt und Blutung.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Collar con pinchos",
+          "description": "Un peligroso accesorio que llevan los perros enviados a luchar en combate.\n• Los supervivientes heridos por un agarre del perro sufren Laceración y Hemorragia durante 60 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "スパイク付きの首輪",
+          "description": "戦いに送られる犬が首に付けた危険なアクセサリー。\n• 犬が拘束している間に負傷した生存者は、重傷と出血に60秒間苦しむ\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Ćwiekowana obroża",
+          "description": "Niebezpieczny dodatek noszony przez psy wysyłane do walki.\n• Na ocalałych rannych podczas Chwytu Psa nakładane są efekty Zmasakrowany i Krwotok na 60 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 677,
+      "name": "Fatty Meat",
+      "killer_id": 38,
+      "description": "A strange and irresistible treat for a canine friend.\n• Survivors who are affected by Houndsense periodically scream without notifying The Houndmaster every 15 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fattyMeat.png?1efc7e",
+      "icon_local_path": "icons/addons/fatty_meat.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Fettes Fleisch",
+          "description": "Ein seltsames, unwiderstehliches Leckerli für einen vierbeinigen Freund.\n• Von „Hundegespür“ betroffene Überlebende schreien regelmäßig alle 15 Sekunden, ohne die Hundegebieterin zu verständigen."
+        },
+        "es": {
+          "name": "Carne magra",
+          "description": "Una golosina inusual e irresistible para un amigo canino.\n• Los supervivientes afectados por el olfato de sabueso gritan de vez en cuando, sin que la Adiestradora Canina reciba notificaciones, cada 15 segundos."
+        },
+        "ja": {
+          "name": "脂身の多い肉",
+          "description": "友の犬にとってはたまらない、ちょっと変わったご馳走。\n• 嗅ぎ付けの効果を受けた生存者は15秒ごとに叫び声を上げる。なお、叫び声を上げた際、そのオーラはハウンドマスターに表示されない"
+        },
+        "pl": {
+          "name": "Tłuste mięso",
+          "description": "Dziwaczny i kuszący przysmak dla psiego przyjaciela.\n• Ocalali dotknięci Psim Zmysłem co jakiś czas krzyczą bez powiadamiania Mistrzyni Ogarów co 15 s."
+        }
+      }
+    },
+    {
+      "id": 678,
+      "name": "Leather Harness",
+      "killer_id": 38,
+      "description": "Allows greater control over a dog’s every movement.\n• Increases the Dog's Chase speed by 20% for 30 seconds after a generator is repaired.\n• This bonus becomes permanent once all generators are repaired.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherHarness.png?dfa46e",
+      "icon_local_path": "icons/addons/leather_harness.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ledergeschirr",
+          "description": "Gewährt bessere Kontrolle über die Bewegung eines Hundes.\n• Erhöht die Geschwindigkeit des Hundes beim „Fass“-Kommando um 20 % für 30 Sekunden, nachdem ein Generator repariert wurde.\n• Dieser Bonus bleibt bestehen, sobald alle Generatoren repariert wurden."
+        },
+        "es": {
+          "name": "Arnés de cuero",
+          "description": "Ofrece un mayor control sobre los movimientos de un perro.\n• Aumenta la velocidad de persecución del perro un 20 % durante 30 segundos después de que se repare un generador.\n• Esta bonificación se vuelve permanente cuando todos los generadores están reparados."
+        },
+        "ja": {
+          "name": "革のハーネス",
+          "description": "これを使えば犬の動きを完璧にコントロールできる。\n• 発電機の修理が完了すると、30秒間、犬の追いかけ速度が20%増加する\n• このボーナスは全ての発電機が修理されると永続的に有効になる"
+        },
+        "pl": {
+          "name": "Skórzane szelki",
+          "description": "Umożliwia większą kontrolę nad każdym ruchem psa.\n• Zwiększa prędkość Pościgu Psa o 20% na 30 s po naprawie generatora.\n• Bonus staje się trwały po naprawie wszystkich generatorów."
+        }
+      }
+    },
+    {
+      "id": 679,
+      "name": "Gunpowder Tin",
+      "killer_id": 38,
+      "description": "Useful for all manner of explosive schemes.\n• Whenever at least one Survivor becomes affected by Houndsense, for 20 seconds, you basic-break Pallets or Breakable walls, and damage Generators 30% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gunpowderTin.png?847ecf",
+      "icon_local_path": "icons/addons/gunpowder_tin.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schießpulverdose",
+          "description": "Nützlich für verschiedenste explosive Pläne.\n• Immer wenn mindestens ein Überlebender von „Hundegespür“ betroffen ist, kannst du 20 Sek. lang 30 % schneller Paletten oder zerstörbare Mauern mit deiner Grundfähigkeit zerstören bzw. Generatoren beschädigen."
+        },
+        "es": {
+          "name": "Lata con pólvora",
+          "description": "Sirve para todo tipo de estrategias explosivas.\n• Cuando al menos un superviviente queda afectado por el olfato de sabueso, durante 20 segundos, dañas generadores y rompes palés y muros destruibles de forma básica un 30 % más rápido."
+        },
+        "ja": {
+          "name": "火薬缶",
+          "description": "様々な爆発作戦に用いられるアイテム。\n• 1人以上の生存者が嗅ぎ付けの効果を受けると、20秒間、パレットや破壊可能な壁を通常破壊する速度や、発電機にダメージを与える速度が30%上昇する"
+        },
+        "pl": {
+          "name": "Puszka z prochem",
+          "description": "Przydatne do wszelkiego rodzaju wybuchowych planów.\n• Za każdym razem, gdy co najmniej jeden ocalały ma efekt Psiego Zmysłu, przez 20 s niszczysz palety lub rozbijalne ściany w podstawowy sposób oraz uszkadzasz generatory 30% szybciej."
+        }
+      }
+    },
+    {
+      "id": 680,
+      "name": "Marlinspike",
+      "killer_id": 38,
+      "description": "As good for unsplicing rope as it is for causing grievous bodily harm.\n• Survivors within 20 meters of a Survivor who is Grabbed by the Dog become afflicted with Houndsense.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_marlinspike.png?715b8a",
+      "icon_local_path": "icons/addons/marlinspike.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Marlspieker",
+          "description": "Gleichermaßen gut geeignet zum Auftrennen von Seilen und zum Verursachen grauenhafter Wunden.\n• Überlebende in einem Umkreis von 20 Metern rund um einen Überlebenden, den der Hund während der Bring-Aktion gepackt hat, sind von „Hundegespür“ betroffen."
+        },
+        "es": {
+          "name": "Punzón para cabos",
+          "description": "Sirve para cortar cuerdas y causar graves daños físicos.\n• Los supervivientes en un radio de 20 metros de un superviviente al que haya agarrado el perro se ven afectados por el olfato de sabueso."
+        },
+        "ja": {
+          "name": "網通しスパイク",
+          "description": "縄を解くのにも、重傷を負わせるのにも使える道具。\n• 犬に拘束された生存者の20メートル以内にいる生存者は、嗅ぎ付けの効果を受ける"
+        },
+        "pl": {
+          "name": "Rożek szkutniczy",
+          "description": "Tak samo dobre do rozplątywania liny, jak do zadawania poważnych obrażeń ciała.\n• Ocalali w promieniu 20 m od ocalałego chwyconego przez Psa otrzymują efekt Psiego Zmysłu."
+        }
+      }
+    },
+    {
+      "id": 681,
+      "name": "Ship Figurehead",
+      "killer_id": 38,
+      "description": "A trophy torn from the bow of another ship.\n• While the Dog is following The Houndmaster, Terror Radius is increased by 8 meters.\n• While the Dog is away from The Houndmaster, Terror Radius is reduced by 8 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shipFigurehead.png?7cfbfb",
+      "icon_local_path": "icons/addons/ship_figurehead.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Galionsfigur",
+          "description": "Eine Trophäe vom Bug eines feindlichen Schiffes.\n• Solange der Hund ihr folgt, ist der Terrorradius der Hundegebieterin um 8 Meter vergrößert.\n• Ist der Hund nicht bei der Hundegebieterin, wird der Terrorradius um 8 Meter verkleinert."
+        },
+        "es": {
+          "name": "Mascarón de proa",
+          "description": "Un trofeo arrancado de la proa de otro barco.\n• Mientras el perro esté siguiendo a la Adiestradora Canina, el radio de terror aumenta en 8 metros.\n• Mientras el perro esté lejos de la Adiestradora Canina, el radio de terror se reduce en 8 metros."
+        },
+        "ja": {
+          "name": "船首像",
+          "description": "別の船の船首から奪い取った戦利品。\n• 犬がハウンドマスターのあとについている間、脅威範囲が8メートル拡大する\n• 犬がハウンドマスターから離れている間、脅威範囲が8メートル縮小する"
+        },
+        "pl": {
+          "name": "Galion",
+          "description": "Trofeum wyrwane z dziobu innego statku.\n• Gdy Pies podąża za Mistrzynią Ogarów, zasięg terroru zwiększa się o 8 m.\n• Gdy Pies jest daleko od Mistrzyni Ogarów, zasięg terroru zmniejsza się o 8 metrów."
+        }
+      }
+    },
+    {
+      "id": 682,
+      "name": "Torn Novel",
+      "killer_id": 38,
+      "description": "A book given to her by her father. All but destroyed after a raid.\n• While aiming the Chase Redirect, auras of Survivors within 10 meters of the Dog are revealed.\n• Upon reassuming control of The Houndmaster, Survivors' auras revealed this way are shown for an additional 2 seconds.\n\"“I’ll find out who they are… and they’ll pay. Every last one.”\n- Portia Maye\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tornNovel.png?621bd0",
+      "icon_local_path": "icons/addons/torn_novel.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Zerfetzter Roman",
+          "description": "Ein Buch, das ihr Vater ihr geschenkt hatte. Es wurde bei einem Überfall fast völlig zerstört.\n• Während das „Fass“-Kommando umgeleitet wird, werden die Auren aller Überlebenden in einem Umkreis von 10 Metern rund um den Hund enthüllt.\n• Sobald die Hundegebieterin wieder gesteuert wird, bleiben die dadurch angezeigten Auren von Überlebenden weitere 2 Sekunden sichtbar.\n\"„Ich werde sie finden ... und sie büßen lassen. Jeden einzelnen von ihnen.“\n– Portia Maye\""
+        },
+        "es": {
+          "name": "Novela desgarrada",
+          "description": "Un libro que le regaló su padre. Quedó prácticamente destruido tras un asalto.\n• Al apuntar para redirigir la persecución, se revelan las auras de supervivientes a 10 metros de distancia del perro.\n• Tras retomar el control de la Adiestradora Canina, las auras de los supervivientes que se hayan revelado de este modo se mostrarán durante 2 segundos más.\n\"\"Averiguaré quiénes son... y les haré pagar por ello. A todos y cada uno de ellos\".\n(Portia Maye)\""
+        },
+        "ja": {
+          "name": "切り裂かれた小説",
+          "description": "彼女が父親から贈られた本。襲撃でボロボロになった。\n• 追いかけの狙いを変更する最中、犬の10メートル以内にいる生存者のオーラが表示される\n• ハウンドマスターの操作に戻ると、この方法で表示された生存者のオーラがさらに2秒間表示される\n\"「やつらの正体を暴いてやる…そして仕返しをしてやる。一人残らずね」- ポーシャ・メイ\""
+        },
+        "pl": {
+          "name": "Podarta powieść",
+          "description": "Książka podarowana jej przez ojca. Zniszczona po ataku.\n• Podczas celowania zmianą kierunku Pościgu aury ocalałych są widoczne w promieniu 10 m od Psa.\n• Po odzyskaniu kontroli nad Mistrzynią Ogarów aury ocalałych ujawnione w ten sposób są widoczne jeszcze przez 2 s.\n\"„Dowiem się, kim są… i zapłacą. Każdy z nich”. – Portia Maye\""
+        }
+      }
+    },
+    {
+      "id": 683,
+      "name": "Iridescent Wheel Handle",
+      "killer_id": 38,
+      "description": "Once used to guide a great vessel across the open seas, its remnants now serve as a memory of times past.\n• Increases the time the Dog lingers at a Search destination by 20%.\n• While the Dog is running to and from the Search destination, The Houndmaster gains the Undetectable status effect.\n• Standing on the Search Path removes the Undetectable status effect.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.\n\"“I fear no obstacle, be it man or storm.” - Portia Maye\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentWheelHandle.png?31a79f",
+      "icon_local_path": "icons/addons/iridescent_wheel_handle.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Steuergriff",
+          "description": "Wurde einst verwendet, um ein großes Schiff über die See zu leiten. Die Überreste erinnern nun an vergangene Zeiten.\n• Verlängert die Dauer, für die der Hund an einer Suchposition verweilt, um 20 %.\n• Während der Hund zwischen der Such- und der Startposition hin- und herläuft, erhält die Hundegebieterin den Statuseffekt Unentdeckbar.\n• Wenn sie auf dem Suchpfad steht, wird der Statuseffekt Unentdeckbar entfernt.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„Ich fürchte kein Hindernis, ob Mensch oder Sturm.“ – Portia Maye\""
+        },
+        "es": {
+          "name": "Mango de timón iridiscente",
+          "description": "Antaño, se había usado para guiar a un gran navío en alta mar; ahora, sus restos encarnan el recuerdo de una época pasada.\n• Aumenta el tiempo que el perro permanece en el punto de destino de una búsqueda un 20 %.\n• Mientras el perro corre hacia o desde el destino de búsqueda, la Adiestradora Canina obtiene el efecto de estado Indetectable.\n• Permanecer en la ruta de búsqueda elimina el efecto de estado Indetectable.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino.\n\"\"No temo a ningún obstáculo, sea hombre o tormenta\". (Portia Maye)\""
+        },
+        "ja": {
+          "name": "玉虫色の舵輪",
+          "description": "かつては大海原を渡る大きな船を導いていたが、今では過去の記憶を思い出させるに過ぎなくなった。\n• 犬が探知の目的位置に残る時間が20%増加する\n• 犬が探知の目的位置まで、そして目的位置から走っている間、ハウンドマスターが探知不可のステータス効果を得る\n• 探知進路に立つと、探知不可のステータス効果を失う\n犬の探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「あたしは人間だろうが嵐だろうが、どんな障害も恐れやしない」- ポーシャ・メイ\""
+        },
+        "pl": {
+          "name": "Opalizujący uchwyt koła",
+          "description": "Kiedyś używany do prowadzenia wielkiego statku po otwartych wodach, dziś jego resztki służą jako wspomnienie dawnych czasów.\n• Wydłuża czas, przez jaki Pies pozostaje w miejscu docelowym szukania, o 20%.\n• Gdy Pies biegnie do miejsca szukania lub z niego wraca, Mistrzyni Ogarów otrzymuje efekt Niewykrywalna.\n• Stanie na ścieżce szukania usuwa Niewykrywalność.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Nie boję się żadnej przeszkody – ani człowieka, ani sztormu”. – Portia Maye\""
+        }
+      }
+    }
+  ]
+}

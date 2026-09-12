@@ -10,32 +10,57 @@ export type TierClassification =
   | 'Friendzone'
   | 'Eldritch Void';
 
-export interface EntityMetadata {
-  title?: string;
-  tagline?: string;
-  bio?: string;
-  quote?: string;
-  lore_quote?: string;
-  green_flags?: string[];
-  greenFlags?: string[];
-  red_flags?: string[];
-  redFlags?: string[];
-  turn_on?: string;
-  turnOn?: string;
-  dealbreaker?: string;
-  dating_vibe?: string;
-  datingVibe?: string;
+/**
+ * The four locales the backend stores overrides for. English is deliberately absent:
+ * it lives on the top-level profile fields, so there is no `en` entry to look up.
+ */
+export type EntityLocale = 'de' | 'es' | 'ja' | 'pl';
+
+/**
+ * The translatable half of an entity's dating profile.
+ *
+ * Every field is required here because the backend always emits the English copy.
+ * A `translations` entry is a Partial of this: a locale only carries the fields that
+ * actually DIFFER from English, so an absent field means "same as English".
+ */
+export interface EntityProfile {
+  archetype: string;
+  bio: string;
+  tagline: string;
+  quote: string;
+  meme: string;
+  turn_on: string;
+  dealbreaker: string;
+  dating_vibe: string;
+  red_flags: string[];
+  green_flags: string[];
+}
+
+/**
+ * Entity metadata as the API now emits it: one spelling per field, no duplicates.
+ *
+ * Gone from this shape, and why:
+ * - `title` — was a verbatim copy of `archetype` on every entity. Use `archetype`.
+ * - `turnOn` / `redFlags` / `greenFlags` / `datingVibe` — camelCase twins of the
+ *   snake_case fields, equal on every entity. Snake_case is the only spelling now.
+ * - `i18n` — a second five-locale blob next to `translations`, with a stale `pl.quote`.
+ *   `translations` was the good copy and is the only one the API sends.
+ * - `lore_quote` / `backstory` / `audio_cue` — never populated by the backend.
+ * - `[key: string]: any` — the index signature that let all of the above survive
+ *   type-checking. Without it, a resurrected duplicate spelling is a compile error.
+ */
+export interface EntityMetadata extends EntityProfile {
   chapter?: string;
   danger_level?: 'Low' | 'Medium' | 'High' | 'Lethal' | 'Eldritch' | string;
-  archetype?: string;
+  chaos_score?: number;
+  /** Derived server-side as [archetype, role, gender]; read-only, never stored here. */
   compatibility_tags?: string[];
-  audio_cue?: string;
-  backstory?: string;
-  [key: string]: any;
+  /** Only the fields that differ from English, per locale. Absent field = English. */
+  translations?: Partial<Record<EntityLocale, Partial<EntityProfile>>>;
 }
 
 export interface EntityStatItem {
-  id: string;
+  // `id` is gone: the stats table is strictly 1:1 with entities, so `entity_id` is the key.
   entity_id: string;
   smash_count: number;
   pass_count: number;
@@ -56,8 +81,8 @@ export interface EntityItem {
   gender: CharacterGender | string;
   media_url?: string | null;
   media_type?: string;
+  // `metadata_json` is gone: the API used to emit the same dict twice per entity.
   metadata?: EntityMetadata;
-  metadata_json?: EntityMetadata;
   order_index?: number;
   is_active?: boolean;
   stat?: EntityStatItem | null;

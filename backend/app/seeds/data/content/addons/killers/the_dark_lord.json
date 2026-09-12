@@ -1,0 +1,563 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 649,
+      "name": "Sylph Feather",
+      "killer_id": 37,
+      "description": "An enchanted feather that grants its holder great agility.\n• Whenever you break a Pallet, earn 1 Token, up to 5. For each Token, Hellfire's cooldown is 5% shorter.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_SylphFeather.png?4b8b3f",
+      "icon_local_path": "icons/addons/sylph_feather.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sylphenfeder",
+          "description": "Eine verzauberte Feder, die dem Besitzer große Beweglichkeit gewährt.\n• Immer wenn du eine Palette zerstörst, verdienst du 1 Zähler, bis zu max. 5. Für jeden Zähler wird die Abklingzeit von Höllenfeuer um 5 % verkürzt."
+        },
+        "es": {
+          "name": "Pluma de sílfide",
+          "description": "Una pluma encantada que concede gran agilidad a quien la porta.\n• Cada vez que rompes un palé, obtienes 1 distintivo, hasta un máximo de 5. Por cada distintivo, el tiempo de recarga de Fuego del infierno se reducirá un 5 %."
+        },
+        "ja": {
+          "name": "シルフの羽",
+          "description": "これを持っているとすばしっこくなる魔法の羽。\n• パレットを破壊するとトークンを1個得る（5個まで）。トークン1個につき、ヘルファイアのクールダウンが5%短縮する。"
+        },
+        "pl": {
+          "name": "Pióro sylfa",
+          "description": "Zaczarowane pióro, które obdarza trzymającego ogromną zwinnością.\n• Za każdym razem, gdy zniszczysz paletę, otrzymujesz 1 żeton (maksymalnie 5). Za każdy żetonczas odnawiania Piekielnego Ognia zostaje skrócony o 5%."
+        }
+      }
+    },
+    {
+      "id": 650,
+      "name": "Ruby Circlet",
+      "killer_id": 37,
+      "description": "An enchanted headpiece that brings even the mightiest of flames to heel.\n• Decreases the cooldown of Hellfire by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RubyCirclet.png?760d73",
+      "icon_local_path": "icons/addons/ruby_circlet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Rubinreif",
+          "description": "Ein verzauberter Kopfschmuck, der selbst die mächtigsten Flammen zu kontrollieren vermag.\n• Verkürzt die Abklingzeit von Höllenfeuer um 5 %."
+        },
+        "es": {
+          "name": "Diadema de rubí",
+          "description": "Un tocado encantado que sofoca hasta las llamaradas más poderosas.\n• Reduce el tiempo de recarga de Fuego del infierno un 5 %."
+        },
+        "ja": {
+          "name": "ルビーの飾り輪",
+          "description": "どれほど強い炎をも太刀打ちできない魔法の髪飾り。\n• ヘルファイアのクールダウンが5%減少する"
+        },
+        "pl": {
+          "name": "Rubinowy diadem",
+          "description": "Zaczarowane nakrycie głowy, które potrafi zapanować nawet nad największymi płomieniami.\n• Skraca czas odnawiania piekielnego ognia o 5%."
+        }
+      }
+    },
+    {
+      "id": 651,
+      "name": "Cerberus Talon",
+      "killer_id": 37,
+      "description": "A sharp memento from one of Dracula’s most terrifying guards.\n• Increases the reveal distance of Scent Orb by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CerberusTalon.png?b2e6cc",
+      "icon_local_path": "icons/addons/cerberus_talon.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerberusklaue",
+          "description": "Ein spitzes Andenken an einen der schrecklichsten Wächter von Dracula.\n• Vergrößert die Enthüllungsreichweite von Geruchskugeln um 100 %."
+        },
+        "es": {
+          "name": "Garra de Cancerbero",
+          "description": "Un afilado recuerdo de uno de los guardianes más aterradores de Drácula.\n• Aumenta la distancia de revelación de los orbes de aroma un 100 %."
+        },
+        "ja": {
+          "name": "ケルベロスの爪",
+          "description": "ドラキュラの最も恐ろしい衛兵を思い出させる鋭利な爪。\n• 香りのオーブを可視できる距離が100%増加する"
+        },
+        "pl": {
+          "name": "Szpon cerbera",
+          "description": "Ostra pamiątka po jednym z najbardziej przerażających strażników Drakuli.\n• Zwiększa odległość wykrywania kuli zapachu o 100%."
+        }
+      }
+    },
+    {
+      "id": 652,
+      "name": "Clock Tower Gear",
+      "killer_id": 37,
+      "description": "A piece of the great clock tower, a reminder of the inevitability of time itself.\n• Reduces the cooldown of Shapeshift by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ClockTowerGear.png?de4f65",
+      "icon_local_path": "icons/addons/clock_tower_gear.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Uhrturm-Zahnrad",
+          "description": "Ein Stück des großen Uhrturms und eine Erinnerung daran, dass man der Zeit nicht entkommen kann.\n• Verkürzt die Abklingzeit von Gestaltwandeln um 5 %."
+        },
+        "es": {
+          "name": "Engranaje de la torre del reloj",
+          "description": "Una pieza de la majestuosa torre del reloj, recordatorio de la inevitabilidad del tiempo.\n• Reduce el tiempo de recarga de Transformación un 5 %."
+        },
+        "ja": {
+          "name": "時計塔の歯車",
+          "description": "大きな時計塔の部品。時間というものの必然性を改めて感じさせる。\n• 変身のクールダウンが5%減少する"
+        },
+        "pl": {
+          "name": "Sprzęt z wieży zegarowej",
+          "description": "Fragment wielkiej wieży zegarowej i przypomnienie o nieuchronności upływu czasu.\n• Skraca czas odnawiania zmiany kształtu o 5%."
+        }
+      }
+    },
+    {
+      "id": 653,
+      "name": "Magical Ticket",
+      "killer_id": 37,
+      "description": "A strange artifact once used to transport across Dracula’s castle.\n• Increases the maximum speed of Teleport by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_MagicalTicket.png?5779b7",
+      "icon_local_path": "icons/addons/magical_ticket.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Magischer Fahrschein",
+          "description": "Ein seltsames Artefakt, das einst für die Fortbewegung in Draculas Burg verwendet wurde.\n• Erhöht die maximale Geschwindigkeit von Teleportieren um 10 %."
+        },
+        "es": {
+          "name": "Billete mágico",
+          "description": "Un extraño artefacto que se empleaba para moverse por el castillo de Drácula.\n• Aumenta la velocidad máxima del teletransporte un 10 %."
+        },
+        "ja": {
+          "name": "マジカルチケット",
+          "description": "その昔ドラキュラの城じゅうを移動するために使われていた奇妙な遺物。\n• テレポートの最大速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Magiczny bilet",
+          "description": "Dziwny artefakt służący niegdyś do przemieszczania się po zamku Drakuli.\n• Zwiększa maksymalną prędkość teleportacji o 10%."
+        }
+      }
+    },
+    {
+      "id": 654,
+      "name": "Moonstone Necklace",
+      "killer_id": 37,
+      "description": "A simple necklace by day, but its power comes to life in the dark.\n• Reduces the size of the Terror Radius in Vampire and Wolf Forms by 8 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_MoonstoneNecklace.png?f203ae",
+      "icon_local_path": "icons/addons/moonstone_necklace.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Mondsteinkette",
+          "description": "Am Tag ist es nur eine Halskette, doch in der Nacht erwacht ihre Kraft.\n• Verringert die Größe des Terrorradius in Vampir- und Wolfsgestalt um 8 Meter."
+        },
+        "es": {
+          "name": "Collar de piedra lunar",
+          "description": "De día, es un simple collar. Cuando oscurece, su poder despierta.\n• Reduce el tamaño del radio de terror en forma vampírica y forma licantrópica en 8 metros."
+        },
+        "ja": {
+          "name": "ムーンストーンのネックレス",
+          "description": "昼間はシンプルなネックレスだが、暗くなるとその力が呼び覚まされる。\n• 吸血鬼とオオカミの姿での脅威範囲が8メートル減少する"
+        },
+        "pl": {
+          "name": "Naszyjnik z Moonstone",
+          "description": "Za dnia zwykły naszyjnik, którego moc budzi się w ciemności.\n• Zmniejsza zasięg terroru w postaci wampira i wilka o 8 m."
+        }
+      }
+    },
+    {
+      "id": 655,
+      "name": "Blood-Filled Goblet",
+      "killer_id": 37,
+      "description": "The blood of his victims sustains him and makes him an even greater hunter.\n• Increases the duration of Scent Orbs by 60%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BloodFilledGoblet.png?1a3475",
+      "icon_local_path": "icons/addons/blood_filled_goblet.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kelch voller Blut",
+          "description": "Das Blut seiner Opfer verleiht ihm Energie und macht ihn zu einem noch besseren Jäger.\n• Verlängert die Dauer von Geruchskugeln um 60 %."
+        },
+        "es": {
+          "name": "Cáliz con sangre",
+          "description": "La sangre de sus víctimas le nutre y lo convierte en un mejor cazador.\n• Aumenta la duración de los orbes de aroma un 60 %."
+        },
+        "ja": {
+          "name": "血の入った酒杯",
+          "description": "犠牲者の血が持続可能な活力となり、狩人としての腕を上げる。\n• 香りのオーブの持続時間が60%増加する"
+        },
+        "pl": {
+          "name": "Kielich napełniony krwią",
+          "description": "Krew ofiar pożywia go i zmienia w jeszcze wspanialszego łowcę.\n• Wydłuża czas trwania kul zapachu o 60%."
+        }
+      }
+    },
+    {
+      "id": 656,
+      "name": "Winged Boots",
+      "killer_id": 37,
+      "description": "Long used by their wearers to move quickly.\n• Increases maximum distance of Teleport by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_WingedBoots.png?d4f74b",
+      "icon_local_path": "icons/addons/winged_boots.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Flügelstiefel",
+          "description": "Wurden lange von ihren Trägern verwendet, um sich schnell fortzubewegen.\n• Vergrößert die maximale Reichweite beim Teleportieren um 20 %."
+        },
+        "es": {
+          "name": "Botas de alas",
+          "description": "Se las ponían para moverse más rápido.\n• Aumenta la distancia máxima del teletransporte un 20 %."
+        },
+        "ja": {
+          "name": "ウィングブーツ",
+          "description": "これを履いていた者は動きが素早くなるため末永く愛用していた。\n• テレポートの最大距離が20%増加する"
+        },
+        "pl": {
+          "name": "Skrzydlate buty",
+          "description": "Umożliwia noszącym szybkie poruszanie się.\n• Zwiększa maksymalny dystans teleportacji o 20%."
+        }
+      }
+    },
+    {
+      "id": 657,
+      "name": "White Wolf Medallion",
+      "killer_id": 37,
+      "description": "A trinket once used to call a great spirit guide.\n• Increases Killer Instinct duration by 1 second while in Wolf Form after Survivors complete rushed actions.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_WhiteWolfMedallion.png?c8f792",
+      "icon_local_path": "icons/addons/white_wolf_medallion.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Weißes Wolfsmedaillon",
+          "description": "Ein Schmuckstück, mit dem einst ein großer Geisterführer gerufen wurde.\n• Verlängert die Dauer des Killerinstinkts in der Wolfsgestalt, nachdem Überlebende übereilte Aktionen ausgeführt haben, um 1 Sekunde."
+        },
+        "es": {
+          "name": "Medallón del lobo blanco",
+          "description": "Un abalorio que se empleaba para llamar a un gran guía espiritual.\n• Aumenta la duración de Instinto asesino 1 segundo con la forma licantrópica después de que los supervivientes completen acciones rápidas."
+        },
+        "ja": {
+          "name": "白オオカミのメダル",
+          "description": "かつて霊魂の導き役を呼び出すのに使われていたメダル。\n• 生存者がせっかちな行動を行ったあと、オオカミの姿での殺人鬼の本能の持続時間が1秒延長する"
+        },
+        "pl": {
+          "name": "Medalion białego wilka",
+          "description": "Błyskotka, za pomocą której wzywano niegdyś wielkiego duchowego przewodnika.\n• Wydłuża czas trwania instynktu zabójcy o 1 s w formie wilka, gdy ocalały ukończy szybką akcję."
+        }
+      }
+    },
+    {
+      "id": 658,
+      "name": "Killer Doll",
+      "killer_id": 37,
+      "description": "One of Dracula’s minions, and a reminder that all are his playthings.\n• Increases the cooldown reduction of Pounce Attacks from Scent Orbs by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_KillerDoll.png?d6f05a",
+      "icon_local_path": "icons/addons/killer_doll.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Killerpuppe",
+          "description": "Eine von Draculas Dienerinnen und eine Erinnerung daran, dass alle seine Spielzeuge sind.\n• Vergrößert die Abklingzeitverringerung von Sprungangriffen durch Geruchskugeln um 30 %."
+        },
+        "es": {
+          "name": "Muñeca asesina",
+          "description": "Una de los esbirros de Drácula y un recordatorio de que todos son sus juguetes.\n• Aumenta la reducción del tiempo de recarga de los ataques en salto por orbes de aroma un 30 %."
+        },
+        "ja": {
+          "name": "キラードール",
+          "description": "ドラキュラの手下の一人。すべては彼のおもちゃに過ぎないという証拠。\n• 香りのオーブを回収した際の飛び付き攻撃のクールダウン減少が30%増加する"
+        },
+        "pl": {
+          "name": "Mordercza lalka",
+          "description": "Jeden ze sług Drakuli, który przypomina, że wszyscy są jego zabawkami.\n• Zwiększa skrócenie czasu odnawiania ataku skokiem z kul zapachu o 30%."
+        }
+      }
+    },
+    {
+      "id": 659,
+      "name": "Sunglasses",
+      "killer_id": 37,
+      "description": "They protect against bright lights, in addition to looking cool.\n• Hellfire has 1 extra pillar. Increases Hellfire charging time by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_Sunglasses.png?fa1391",
+      "icon_local_path": "icons/addons/sunglasses.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sonnenbrille",
+          "description": "Sie sieht nicht nur cool aus, sondern schützt auch vor hellem Licht.\n• Höllenfeuer hat 1 zusätzliche Säule. Erhöht die Aufladegeschwindigkeit von Höllenfeuer um 25 %."
+        },
+        "es": {
+          "name": "Gafas de sol",
+          "description": "Te protegen de las luces intensas y dan un toque misterioso.\n• Fuego del infierno tiene 1 pilar adicional. Aumenta el tiempo de carga de Fuego del infierno un 25 %."
+        },
+        "ja": {
+          "name": "サングラス",
+          "description": "カッコよくなるうえに明るい光から守ってくれる。\n• ヘルファイアに柱が1つ追加される。ヘルファイアのチャージ時間が25%増加する"
+        },
+        "pl": {
+          "name": "Okulary przeciwsłoneczne",
+          "description": "Chronią przed jasnym światłem, no i świetnie wyglądają.\n• Piekielny ogień posiada 1 dodatkową kolumnę. Zwiększa czas ładowania piekielnego ognia o 25%."
+        }
+      }
+    },
+    {
+      "id": 660,
+      "name": "Force of Echo",
+      "killer_id": 37,
+      "description": "An artifact that grants bats even greater senses in the dark.\n• Increases the spawn rate of Scent Orbs by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ForceOfEcho.png?df8ba1",
+      "icon_local_path": "icons/addons/force_of_echo.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Echomacht",
+          "description": "Ein Artefakt, das die Sinne von Fledermäusen in der Dunkelheit noch weiter verstärkt.\n• Erhöht die Entstehungsrate von Geruchskugeln um 10 %."
+        },
+        "es": {
+          "name": "Fuerza de eco",
+          "description": "Un artefacto que agudiza los sentidos de los murciélagos en la oscuridad.\n• Aumenta la velocidad de aparición de los orbes de aroma un 10 %."
+        },
+        "ja": {
+          "name": "クレイジーエコー",
+          "description": "暗闇の中で鋭いコウモリの感覚をさらに強化する遺物。\n• 香りのオーブの出現率が10%上昇する"
+        },
+        "pl": {
+          "name": "Moc echa",
+          "description": "Artefakt, który jeszcze bardziej wyostrza zmysły nietoperzy w ciemności.\n• Zwiększa częstotliwość pojawia się kul zapachu o 10%."
+        }
+      }
+    },
+    {
+      "id": 661,
+      "name": "Cube of Zoe",
+      "killer_id": 37,
+      "description": "A strange box whose presence creates something from nothing.\n• When a generator is completed, creates pillars of Hellfire around The Dark Lord for 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CubeOfZoe.png?38e5de",
+      "icon_local_path": "icons/addons/cube_of_zoe.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zoe-Würfel",
+          "description": "Eine seltsame Kiste, deren Präsenz etwas aus nichts herstellt.\n• Wenn ein Generator fertiggestellt wurde, werden für 10 Sekunden Höllenfeuersäulen rund um den Dunklen Grafen erzeugt."
+        },
+        "es": {
+          "name": "Cubo de Zoe",
+          "description": "Una extraña caja cuya mera presencia logra crear algo a partir de nada.\n• Cuando se completa un generador, crea pilares de Fuego del infierno alrededor del Señor Oscuro durante 10 segundos."
+        },
+        "ja": {
+          "name": "マテライズキューブ",
+          "description": "そこにあるだけで無から何かを生み出す不思議な箱。\n• 発電機の修理が完了すると、ダークロードの周りに10秒間ヘルファイアの柱を作り出す"
+        },
+        "pl": {
+          "name": "Sześcian Zoe",
+          "description": "Dziwne pudełko, którego obecność potrafi stworzyć coś z niczego.\n• Gdy generator zostaje ukończony, tworzy słupy Piekielnego Ognia wokół Pana Ciemności na 10 sekund."
+        }
+      }
+    },
+    {
+      "id": 662,
+      "name": "Lapis Lazuli",
+      "killer_id": 37,
+      "description": "A stone said to bring luck to its holders, or take it from their enemies.\n• After Teleporting to a window vault, the Entity blocks that window for Survivors for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_LapisLazuli.png?5ab0b2",
+      "icon_local_path": "icons/addons/lapis_lazuli.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Lapislazuli",
+          "description": "Ein Stein, der seinen Besitzern Glück bringen oder es den Feinden rauben soll.\n• Nach dem Teleportieren zu einem Fenstersprung blockiert der Entitus dieses Fenster für 8 Sekunden für Überlebende."
+        },
+        "es": {
+          "name": "Lapislázuli",
+          "description": "Se rumorea que esta piedra da suerte a quien la tenga, o bien se la arrebata a sus enemigos.\n• Tras teletransportarte hacia un salto por ventana, el Ente bloquea dicha ventana para los supervivientes durante 8 segundos."
+        },
+        "ja": {
+          "name": "ラピス・ラズリ",
+          "description": "持っていると敵からぶんどった幸運をもたらしてくれると言われている石。\n• 窓枠にテレポートすると、その窓がエンティティによって生存者に対して8秒間ブロックされる"
+        },
+        "pl": {
+          "name": "Lazuryt",
+          "description": "Kamień, który ponoć przynosi właścicielowi szczęście lub odbiera je wrogom.\n• Po teleportacji do przeskoku przez okno, Byt blokuje to okno dla ocalałych na 8 s."
+        }
+      }
+    },
+    {
+      "id": 663,
+      "name": "Iridescent Ring of Vlad",
+      "killer_id": 37,
+      "description": "A unique relic belonging to Dracula. It is said none can approach The Dark Lord without it.\n• Hellfire pillars home in on nearby Survivors.\n\"“Enough talk… have at you!” – Dracula\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_IridescentRingOfVlad.png?d73efd",
+      "icon_local_path": "icons/addons/iridescent_ring_of_vlad.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Ring des Vlad",
+          "description": "Ein einzigartiges Relikt im Besitz von Dracula. Es heißt, ohne es kann sich niemand dem Dunklen Grafen nähern.\n• Höllenfeuersäulen bewegen sich auf nahe Überlebende zu.\n\"„Genug geplaudert ... jetzt geht es dir an den Kragen!“ – Dracula\""
+        },
+        "es": {
+          "name": "Anillo Vlad iridiscente",
+          "description": "Una reliquia única que pertenece a Drácula. Se dice que nadie puede acercarse al Señor Oscuro sin ella.\n• Los pilares de Fuego del infierno se dirigen a los supervivientes más cercanos. Reduce el número de pilares de Fuego del infierno en 1.\n\"\"Basta de charla... ¡Prepárate!\". (Drácula)\""
+        },
+        "ja": {
+          "name": "玉虫色の指輪",
+          "description": "ドラキュラが持っている唯一無二の遺物。それがなくては誰もダークロードに近づくことができないらしい。\n• 放たれたヘルファイアの柱が近くの生存者を追跡する\n\"「話はもういい…行くぞ！」 – ドラキュラ\""
+        },
+        "pl": {
+          "name": "Opalizujący pierścień Vlada",
+          "description": "Unikalny relikt należący do Drakuli. Podobno bez niego nie da się zbliżyć do Pana Ciemności.\n• Słupy Piekielnego Ognia namierzają najbliższych ocalałych.\n\"„Dość gadania... Strzeż się!” – Drakula\""
+        }
+      }
+    },
+    {
+      "id": 872,
+      "name": "Traveller's Hat",
+      "killer_id": 37,
+      "description": "A wide-brimmed hat that once belonged to a well-traveled man.\n• Increases Shapeshift speed by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_TravelersHat.png?8cbd58",
+      "icon_local_path": "icons/addons/travellers_hat.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Reisehut",
+          "description": "Ein Hut mit breiter Krempe, der einst einem vielgereisten Mann gehörte.\n• Erhöht die Geschwindigkeit von „Gestaltwandeln“ um 5 %."
+        },
+        "en": {
+          "name": "Traveler’s Hat"
+        },
+        "es": {
+          "name": "Sombrero de viajero",
+          "description": "Un sombrero de ala ancha que perteneció a un hombre que había viajado mucho.\n• Aumenta la velocidad de Transformación un 5 %."
+        },
+        "ja": {
+          "name": "旅人のつば広帽子",
+          "description": "つばの広い帽子。元の持ち主はよく旅に出ていた。\n• 変身する速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Kapelusz podróżnika",
+          "description": "Kapelusz z szerokim rondem należący kiedyś do obytego podróżnika.\n• Zwiększa prędkość zmiany kształtu o 5%."
+        }
+      }
+    },
+    {
+      "id": 873,
+      "name": "Pocket Watch (The Dark Lord)",
+      "killer_id": 37,
+      "description": "A tool that bends the rules of time itself.\n• Whenever you break Pallets or Breakable Walls, instantly recharge Teleport.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_PocketWatchVampiricShift.png?6caade",
+      "icon_local_path": "icons/addons/pocket_watch_(the_dark_lord).webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Taschenuhr",
+          "description": "Ein Werkzeug, das die Zeit selbst beeinflusst.\n• Immer wenn du Paletten oder zerstörbare Mauern zerstörst, wird Teleportieren sofort neu aufgeladen."
+        },
+        "en": {
+          "name": "Pocket Watch"
+        },
+        "es": {
+          "name": "Reloj de bolsillo",
+          "description": "Una herramienta capaz de doblegar las normas del tiempo.\n• Cada vez que rompes palés o muros destruibles, el teletransporte se recarga al instante."
+        },
+        "ja": {
+          "name": "懐中時計",
+          "description": "時間の規則そのものを捻じ曲げる道具。\n• パレットや破壊可能な壁を破壊すると、即座にテレポートが再チャージされる"
+        },
+        "pl": {
+          "name": "Zegarek Kieszonkowy",
+          "description": "Narzędzie, które zakrzywia reguły czasu.\n• Za każdym razem, gdy niszczysz palety lub rozbijalne ściany, teleportacja natychmiast się odnawia."
+        }
+      }
+    },
+    {
+      "id": 874,
+      "name": "Medusa's Hair",
+      "killer_id": 37,
+      "description": "A snakelike memento from one of Dracula's most ancient and fearsome minions.\n• All Survivors within 8 meters of your teleport destination suffer from an 8% Hindered status effect for 4 seconds.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_MedusasHair.png?4afcd7",
+      "icon_local_path": "icons/addons/medusas_hair.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Medusas Haare",
+          "description": "Ein schlangenähnliches Andenken von einer der ältesten und furchterregendsten Dienerinnen Draculas.\n• Alle Überlebenden in einem Umkreis von 8 Metern rund um dein Teleportziel leiden für 4 Sek. unter dem Statuseffekt Eingeschränkt mit 8 %.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "en": {
+          "name": "Medusa’s Hair"
+        },
+        "es": {
+          "name": "Cabello de Medusa",
+          "description": "Una reliquia con forma de serpiente de uno de los esbirros más antiguos y temibles de Drácula.\n• Todos los supervivientes en un radio de 8 metros de tu destino de teletransporte sufren un 8 % del efecto de estado Entorpecimiento durante 4 segundos.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "メデューサの髪",
+          "description": "蛇のような形見。ドラキュラの最も古く恐ろしい手下の一人が残したもの。\n• テレポート先の8メートル以内にいる生存者全員が8%の妨害ステータス効果に4秒間苦しむ\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Włosy Meduzy",
+          "description": "Wężopodobna pamiątka po jednym z najstarszych i najstraszliwszych sług Drakuli.\n• Wszyscy ocalali w promieniu 8 m od miejsca twojej teleportacji otrzymują efekt 8% Skrępowania na 4 s.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 875,
+      "name": "Warg's Fang",
+      "killer_id": 37,
+      "description": "A mighty tool of destruction taken from one of Dracula’s most dangerous allies.\n• Reveals the auras of all Survivors whose Scent Orbs you have collected whenever Pounce Attack becomes available for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_WargsFang.png?9497fa",
+      "icon_local_path": "icons/addons/wargs_fang.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Wargzahn",
+          "description": "Ein mächtiges Zerstörungswerkzeug, das einem der gefährlichsten Verbündeten Draculas abgenommen wurde.\n• Enthüllt die Auren von allen Überlebenden, deren Geruchskugeln du eingesammelt hast, für 5 Sekunden, wenn ein Sprungangriff verfügbar wird."
+        },
+        "en": {
+          "name": "Warg’s Fang"
+        },
+        "es": {
+          "name": "Colmillo de Warg",
+          "description": "Una poderosa herramienta de destrucción, obtenida de uno de los aliados más peligrosos de Drácula.\n• Revela las auras de todos los supervivientes cuyos orbes de aroma hayas recogido cada vez que el ataque en salto se ponga disponible durante 5 segundos."
+        },
+        "ja": {
+          "name": "アンフアゥグリアの犬歯",
+          "description": "ドラキュラの最も凶暴な味方から取った強力な破壊の道具。\n• 飛び付き攻撃が可能になるたびに、香りのオーブを回収した生存者全員のオーラが5秒間視える"
+        },
+        "pl": {
+          "name": "Kieł warga",
+          "description": "Potężne narzędzie zniszczenia odebrane jednemu z najgroźniejszych sojuszników Drakuli.\n• Ukazuje aury wszystkich ocalałych, których kule zapachu zostały zebrane za każdym razem, gdy atak skokiem jest dostępny (na 5 s)."
+        }
+      }
+    },
+    {
+      "id": 876,
+      "name": "Alucard's Shield",
+      "killer_id": 37,
+      "description": "A family heirloom that blocks its bearer’s enemies at every turn.\n• When the gates are opened, pillars of Hellfire continuously spawn within the exit gates.\n\"“Oh, but this world invited me. Your own kind called me forth with praise and tribute.” – Dracula\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_AlucardsShield.png?b9b08b",
+      "icon_local_path": "icons/addons/alucards_shield.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Alucards Schild",
+          "description": "Ein Erbstück, das die Feinde des Besitzers bei jeder Bewegung ausbremst.\n• Wenn die Ausgangstore geöffnet sind, entstehen ständig neue Höllenfeuersäulen innerhalb der Ausgangstore.\n\"„Oh, aber diese Welt hat mich eingeladen. Deinesgleichen hat mich mit Lob und Tribut gerufen.“ – Dracula\""
+        },
+        "en": {
+          "name": "Alucard’s Shield"
+        },
+        "es": {
+          "name": "Escudo de Alucard",
+          "description": "Una reliquia familiar que bloquea a los enemigos de quien lo porta en todo momento.\n• Cuando se abran las puertas, aparecen continuamente pilares de Fuego del infierno en las puertas de salida.\n\"\"Ah, pero fue este mundo el que me invitó. Tu propia especie me llamó para elogiarme\". (Drácula)\""
+        },
+        "ja": {
+          "name": "アルカードシールド",
+          "description": "この家宝を持っているとどこにいても敵から守ってくれる。\n• 脱出ゲートが開放すると、脱出ゲートの中にヘルファイアの柱が継続的に出現する\n\"「だが私はこの世界に招かれた側だ。私を称賛と賛辞をもって呼び寄せたのは人間なのだよ」– ドラキュラ\""
+        },
+        "pl": {
+          "name": "Tarcza Alukarda",
+          "description": "Rodzinna pamiątka, która na każdym kroku blokuje wrogów właściciela.\n• Gdy bramy zostaną otwarte, słupy Piekielnego Ognia pojawiają się stale w bramach wyjściowych.\n\"„Och, ależ ten świat mnie zaprosił. Twój rodzaj przyzwał mnie pochwałami i ofiarami”. – Drakula\""
+        }
+      }
+    }
+  ]
+}

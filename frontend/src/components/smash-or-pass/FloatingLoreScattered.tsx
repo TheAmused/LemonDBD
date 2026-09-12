@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
 import { EntityItem } from '@/types/smashOrPass';
+import { localizedProfile } from '@/utils/entityProfile';
 
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
@@ -53,19 +54,19 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   const isMonster = character.gender === 'monster_other';
   const isFemale = character.gender === 'female';
 
-  const metadata = character.metadata || (character as any).metadata_json || {};
+  // `metadata_json` is gone from the wire (it was a duplicate of `metadata`), and so is
+  // the `i18n` blob that sat next to `translations`. One profile, one locale overlay.
   const currentLoc = locale || 'en';
-  const locMeta = metadata.translations?.[currentLoc] || metadata.i18n?.[currentLoc] || {};
+  const profile = localizedProfile(character.metadata, currentLoc);
 
+  // The remaining `||` chains here are hardcoded copy defaults for an entity with no
+  // profile yet — not data fallbacks; localizedProfile already resolved locale vs. English.
   const charTitle =
-    locMeta.title ||
-    metadata.title ||
-    metadata.archetype ||
+    profile.archetype ||
     (currentLoc === 'pl' ? (isSurvivor ? 'Ocalały we Mgle' : 'Zabójca we Mgle') : character.role);
 
   const charTagline =
-    locMeta.tagline ||
-    metadata.tagline ||
+    profile.tagline ||
     (isSurvivor
       ? currentLoc === 'pl'
         ? 'Szuka drogi ucieczki w mrocznym wymiarze próby.'
@@ -74,9 +75,12 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       ? 'Poluje na swoje ofiary w królestwie Bytu.'
       : 'Stalking prey in the entity’s realm');
 
-  // Polish quote resolution: priority locMeta -> known quote -> translated fallback
-  let charQuote = locMeta.quote;
-  if (!charQuote || (currentLoc === 'pl' && (!locMeta.quote || locMeta.quote.startsWith('"Plants')))) {
+  // Quote resolution: profile quote -> known Polish quote -> generic copy.
+  // The old `locMeta.quote.startsWith('"Plants')` sniff is gone: it existed only because
+  // the dead `i18n` blob held the untranslated English under `pl.quote`. `translations`
+  // was always the good copy and is now the only one shipped.
+  let charQuote = profile.quote;
+  if (!charQuote) {
     if (currentLoc === 'pl') {
       charQuote =
         KNOWN_QUOTES_PL[character.slug] ||
@@ -84,23 +88,21 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           ? `„W obliczu próby liczy się determinacja i zaufanie.” – ${character.name}`
           : `„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – ${character.name}`);
     } else {
-      charQuote = metadata.quote || metadata.lore_quote || `"${character.name}"`;
+      charQuote = `"${character.name}"`;
     }
   }
 
-  const greenFlags: string[] =
-    locMeta.green_flags ||
-    metadata.green_flags ||
-    metadata.greenFlags ||
-    (currentLoc === 'pl'
-      ? ['Niezłomna lojalność w próbie', 'Instynkt przetrwania']
-      : ['Loyal trial companion', 'Protective instincts']);
+  const displayGreenFlags: string[] = profile.green_flags.length
+    ? profile.green_flags
+    : currentLoc === 'pl'
+    ? ['Niezłomna lojalność w próbie', 'Instynkt przetrwania']
+    : ['Loyal trial companion', 'Protective instincts'];
 
-  const redFlags: string[] =
-    locMeta.red_flags ||
-    metadata.red_flags ||
-    metadata.redFlags ||
-    (currentLoc === 'pl' ? ['Nieprzewidywalność we mgle'] : ['Unpredictable in the fog']);
+  const displayRedFlags: string[] = profile.red_flags.length
+    ? profile.red_flags
+    : currentLoc === 'pl'
+    ? ['Nieprzewidywalność we mgle']
+    : ['Unpredictable in the fog'];
 
   // Localized Labels
   const loreLabels: any = dict?.smashOrPass?.loreLabels || {};
@@ -236,7 +238,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
         </div>
 
         {/* Left Item 3: Trial Green Flag (Scale +10% & Emerald Strobe) */}
-        {greenFlags.length > 0 && (
+        {displayGreenFlags.length > 0 && (
           <div
             key={`green-${character.slug}`}
             className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-110 hover:-rotate-1 cursor-pointer group"
@@ -251,7 +253,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 </span>
               </div>
               <p className="text-xs font-semibold text-text-secondary leading-snug group-hover:text-text-primary transition-colors font-sans">
-                {greenFlags[0]}
+                {displayGreenFlags[0]}
               </p>
             </div>
           </div>
@@ -306,7 +308,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
         </div>
 
         {/* Right Item 3: Trial Warning / Red Flag (Tilt Right +2deg & Warning Flare) */}
-        {redFlags.length > 0 && (
+        {displayRedFlags.length > 0 && (
           <div
             key={`red-${character.slug}`}
             className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-110 hover:rotate-2 cursor-pointer group"
@@ -321,7 +323,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 </span>
               </div>
               <p className="text-xs font-semibold text-text-secondary leading-snug group-hover:text-text-primary transition-colors font-sans">
-                {redFlags[0]}
+                {displayRedFlags[0]}
               </p>
             </div>
           </div>

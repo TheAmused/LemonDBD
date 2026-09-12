@@ -1,13 +1,13 @@
 # backend/app/services/db/seeders.py
 import logging
 from sqlalchemy import select, text
-from app.models import GuesserStat, PerkRule
+from app.models import GuesserStat
 
 logger = logging.getLogger(__name__)
 
 # Tables seeded below with an explicit id=1 -- Postgres never advances a
 # sequence for an explicit-id insert, so it must be synced manually.
-_EXPLICIT_ID_SEEDED_TABLES = ["perk_rules"]
+_EXPLICIT_ID_SEEDED_TABLES: list[str] = []
 
 
 def _sync_id_sequences(db) -> None:
@@ -31,20 +31,6 @@ GUESSER_TYPES: list[str] = [
 def seed_default_configs(db) -> None:
     """Seeds baseline settings and rules into the SQLAlchemy session if not already present."""
     try:
-        default_rule = db.session.get(PerkRule, 1)
-        if not default_rule:
-            db.session.add(
-                PerkRule(
-                    id=1,
-                    name="Default Balanced (2 Own, 1 General, 1 Any)",
-                    is_default=True,
-                    slot1_type="character_own",
-                    slot2_type="character_own",
-                    slot3_type="general_role",
-                    slot4_type="any_role",
-                )
-            )
-
         for g_type in GUESSER_TYPES:
             stat = db.session.scalars(
                 select(GuesserStat).where(GuesserStat.guesser_type == g_type)

@@ -9,7 +9,7 @@ import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl } from '@/components/character-detail/types';
-import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import { CharacterOwnershipOverlay, OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
 import { CATALOG_TTL_MS, fetchCached, invalidate } from '@/services/dataCache';
@@ -697,9 +697,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             const isExpanded = expandedChapter === group.chapterName;
             const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
             const bannerSrc = getChapterBannerSrc(banner, backendBase);
-            const chapterOwned = group.characters.every(
+            const ownedCharacterCount = group.characters.filter(
               (c) => ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
-            );
+            ).length;
+            const chapterOwned = ownedCharacterCount === group.characters.length;
+            const chapterPartiallyOwned = !chapterOwned && ownedCharacterCount > 0;
             // Display only -- expandedChapter/aria-id/banner lookups all key off
             // the canonical group.chapterName above, never this localized text.
             const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
@@ -726,15 +728,21 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         src={bannerSrc}
                         alt=""
                         aria-hidden="true"
-                        className={`h-full w-full object-cover transition-[filter] duration-200 ${chapterOwned ? '' : 'grayscale'}`}
+                        className="h-full w-full object-cover"
                       />
                     ) : (
                       <span className="px-2 text-center text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
                     )}
                     {/* Same washed-out treatment as a locked character card
-                        (CharacterOwnershipOverlay) -- grayscale image plus a
-                        dark scrim, cleared once the chapter is marked owned. */}
-                    {!chapterOwned && <div className="absolute inset-0 bg-slate-950/50" />}
+                        (OwnershipClipOverlay) -- grayscale image plus a dark
+                        scrim, cleared once the chapter is fully owned, and
+                        clipped to the left half while only some of the
+                        chapter's characters are owned. */}
+                    <OwnershipClipOverlay
+                      isOwned={chapterOwned}
+                      isPartial={chapterPartiallyOwned}
+                      imageSrc={bannerSrc}
+                    />
                     <ChevronDown
                       className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                     />

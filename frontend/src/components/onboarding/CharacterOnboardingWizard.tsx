@@ -375,8 +375,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           const chars = charsJson.data || [];
           const perks = perksJson.data || [];
           // Keyed by role + id, not id alone: survivor 7 and killer 7 are
-          // different characters, so a bare id collision here silently paired
-          // a survivor with a killer's translated name.
+          // different characters.
           const translatedByKey = new Map(
             (translatedCharsJson.data || []).map((c) => [ownershipKey(c.id, c.category), c])
           );
@@ -538,10 +537,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     onFinished();
   };
 
-  // Confirmed logged out (auth has finished resolving, not just still
-  // hydrating): the ownership fetch below never runs without a user/token,
-  // so without this the wizard would otherwise sit on its loading spinner
-  // forever instead of ever reaching a usable state.
+  // Auth finished resolving and there's no session -- the fetch below never
+  // runs without a user/token, so this must render something other than the
+  // loading spinner below.
   if (!authLoading && !isAuthenticated) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
@@ -754,10 +752,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned;
             const ownedCharacterCount = group.characters.filter(isCharacterOwned).length;
             const chapterOwned = ownedCharacterCount === group.characters.length;
-            // A chapter with no owned characters still reads as partial, not
-            // fully locked, if any of its characters has perks unlocked by
-            // hand -- same "partially unlocked" signal a character card
-            // itself shows for that case.
             const chapterHasPartialSignal =
               ownedCharacterCount > 0 ||
               group.characters.some(
@@ -795,11 +789,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     ) : (
                       <span className="px-2 text-center text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
                     )}
-                    {/* Same washed-out treatment as a locked character card
-                        (OwnershipClipOverlay) -- grayscale image plus a dark
-                        scrim, cleared once the chapter is fully owned, and
-                        clipped to the left half while only some of the
-                        chapter's characters are owned. */}
                     <OwnershipClipOverlay
                       isOwned={chapterOwned}
                       isPartial={chapterPartiallyOwned}

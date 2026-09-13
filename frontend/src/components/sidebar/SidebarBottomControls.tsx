@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Laptop, Bug, Coffee, Citrus, FlaskConical } from 'lucide-react';
+import { Sun, Moon, Laptop, Bug, Coffee, Citrus } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
@@ -237,16 +237,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           <span className="text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
         </button>
       </div>
-
-      {/* Shortcut to re-run the onboarding wizard without having to register
-          a fresh account every time. */}
-      <Link
-        href={`/${currentLocale}/welcome`}
-        className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-dashed border-accent-amber/50 bg-accent-amber/5 px-2 py-1.5 text-[11px] font-semibold text-accent-amber hover:bg-accent-amber/10 transition-colors cursor-pointer ${FOCUS_RING}`}
-      >
-        <FlaskConical className="h-3.5 w-3.5 shrink-0" />
-        <span className="text-center">{dict?.sidebar?.devOnboarding || 'Dev: Onboarding'}</span>
-      </Link>
     </div>
   );
 };

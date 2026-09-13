@@ -247,7 +247,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md shadow-accent-red/20 hover:opacity-95 disabled:opacity-50 transition-all cursor-pointer font-mono"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs disabled:opacity-50 transition-all cursor-pointer font-mono"
                 >
                   {isUpdating ? (
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />

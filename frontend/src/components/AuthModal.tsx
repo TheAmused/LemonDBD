@@ -343,7 +343,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-accent-red-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md shadow-accent-red/20 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red disabled:opacity-50 transition-all cursor-pointer"
+              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red disabled:opacity-50 transition-all cursor-pointer"
             >
               {loading ? (
                 <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />

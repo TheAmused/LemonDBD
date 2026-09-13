@@ -17,8 +17,6 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
 }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl border border-orange-500/35 bg-bg-surface p-5 sm:p-6 backdrop-blur-xl shadow-md space-y-4 text-text-primary">
-      <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-orange-500/10 blur-3xl opacity-30" />
-
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

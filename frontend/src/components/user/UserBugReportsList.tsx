@@ -187,7 +187,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         <button
           type="button"
           onClick={onOpenReportModal}
-          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-red to-red-700 hover:opacity-90 px-3.5 py-1.5 text-xs font-bold text-text-inverted shadow-sm shadow-accent-red/20 transition-all cursor-pointer font-mono"
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-3.5 py-1.5 text-xs font-bold text-text-inverted shadow-xs transition-all cursor-pointer font-mono"
         >
           <Plus className="h-3.5 w-3.5" />
           <span>{t.reportNewBug || 'Report New Bug'}</span>

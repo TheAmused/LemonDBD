@@ -943,7 +943,7 @@ export function ScraperConfigModal({
                   type="button"
                   onClick={handleExecutePurge}
                   disabled={isPurging || purgeTargets.length === 0}
-                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-red to-red-700 hover:from-red-500 hover:to-accent-red px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
+                  className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-40"
                 >
                   {isPurging ? (
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />

@@ -22,7 +22,6 @@ export default {
   emailNotVerified: "Email not verified. Verify now",
   reportBug: "Report Bug",
   buyCoffee: "Buy Coffee",
-  devOnboarding: "Dev: Onboarding",
   switchLanguage: "Switch Language",
   toggleTheme: "Change Theme",
   collapseSidebar: "Collapse Navigation Sidebar",

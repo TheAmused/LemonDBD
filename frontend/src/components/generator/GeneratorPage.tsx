@@ -280,7 +280,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         </section>
       ) : (
         <>
-          <StageFrame role={role} className="flex-1 min-h-0" topLeft={topLeft} topRight={topRight}>
+          <StageFrame className="flex-1 min-h-0" topLeft={topLeft} topRight={topRight}>
             <motion.div
               key={`${genMode}-${role}`}
               initial={{ opacity: 0 }}

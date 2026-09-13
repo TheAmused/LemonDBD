@@ -557,10 +557,17 @@ class DatabaseExportImportService:
                     "chapter_id": row.get("chapter_id"),
                 }
 
+            def _set_created_at(char_obj: Survivor | Killer, row: dict[str, Any]) -> None:
+                if row.get("created_at"):
+                    parsed_dt = _parse_datetime(row["created_at"])
+                    if parsed_dt:
+                        char_obj.created_at = parsed_dt
+
             _upsert_by_id(
                 data, target_keys, summary, "survivors", Survivor,
                 update_fields=_SHARED_CHARACTER_FIELDS,
                 defaults=_character_defaults,
+                post_process=_set_created_at,
                 asset_fields=["avatar_local_path"], static_dir=static_dir,
             )
 
@@ -578,6 +585,10 @@ class DatabaseExportImportService:
                     Decimal(str(value)) if value not in (None, "") else None
                 )
 
+            def _killer_post_process(killer_obj: Killer, row: dict[str, Any]) -> None:
+                _decimal_speed(killer_obj, row)
+                _set_created_at(killer_obj, row)
+
             # The power columns are on this row now. They used to be a 1:1
             # `killer_profiles` child, nested one level deeper in the payload,
             # which existed only to keep them off the 54 survivors.
@@ -592,7 +603,7 @@ class DatabaseExportImportService:
                     **_character_defaults(row),
                     "power_name": row.get("power_name") or "",
                 },
-                post_process=_decimal_speed,
+                post_process=_killer_post_process,
                 asset_fields=["avatar_local_path", "power_icon_local_path"],
                 static_dir=static_dir,
             )

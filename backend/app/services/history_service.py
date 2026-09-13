@@ -8,6 +8,7 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import HistoryMatchLog, HistoryRun
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.history import fetch_history_user_stats
 from app.services.history.roster import (
     ROW_SIZE,
@@ -18,6 +19,7 @@ from app.services.history.roster import (
     resolve_killer_names_by_ids,
 )
 from app.services.ownership_service import OwnershipService
+from app.services.roster_milestone import get_full_roster_milestone
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +149,8 @@ class HistoryService:
 
         if self._is_unfrozen(run):
             self._freeze_pool(run)
-        owned_names = resolve_killer_names_by_ids(safe_json_loads(run.owned_killers_json, default=[]))
+        owned_ids = safe_json_loads(run.owned_killers_json, default=[])
+        owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:
@@ -177,7 +180,6 @@ class HistoryService:
                 completed = []
                 if run.current_row_index >= len(rows):
                     run.status = "completed"
-                    self._freeze_pool(run)
                 if run.mode == "medium":
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
@@ -185,6 +187,7 @@ class HistoryService:
                     run.checkpoint_unlocked_perk_names_json = safe_json_dumps(unlocked)
         else:
             completed, unlocked = self._resolve_loss(run)
+            run.attempts += 1
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = safe_json_dumps(completed)
@@ -198,6 +201,23 @@ class HistoryService:
             streak_before=streak_before,
             streak_after=streak_after,
         ))
+
+        if result == "win" and run.status == "completed":
+            # owned_ids was captured before this refreeze -- doing it after
+            # would silently pull in a newly-owned character, inflating the count.
+            is_full, _ = get_full_roster_milestone(owned_ids, role="Killer")
+            record_challenge_completion(
+                user_id=user_id,
+                mode="history",
+                variant=run.mode,
+                attempts_taken=run.attempts + 1,
+                matches_played=len(run.match_logs),
+                unlocked_characters_count=len(owned_ids),
+                full_roster=is_full,
+            )
+            self._freeze_pool(run)
+            run.attempts = 0
+
         db.session.commit()
 
         data = self._augment(run)
@@ -214,6 +234,7 @@ class HistoryService:
         row_index_for_log = run.current_row_index
 
         completed, unlocked = self._resolve_loss(run)
+        run.attempts += 1
 
         streak_after = run.total_killers_beaten
         run.completed_killers_json = safe_json_dumps(completed)
@@ -232,3 +253,6 @@ class HistoryService:
 
     def get_stats(self, user_id: int, mode: str) -> dict[str, Any]:
         return fetch_history_user_stats(user_id, mode)
+
+    def get_completions(self, user_id: int, mode: str) -> list[dict[str, Any]]:
+        return fetch_challenge_completions(user_id, "history", mode)

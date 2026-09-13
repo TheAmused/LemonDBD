@@ -1,5 +1,6 @@
 // frontend/src/services/historyStreakApi.ts
 import { HistoryMode, HistoryRun, HistoryRunResponse, HistoryStats, HistoryStatsResponse } from '../types/historyStreak';
+import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('history-streak');
@@ -31,4 +32,8 @@ export async function resetHistoryRun(token: string, mode: HistoryMode): Promise
 export async function fetchHistoryStats(token: string, mode: HistoryMode): Promise<HistoryStats> {
   const data = await getJson<HistoryStatsResponse>(token, `/stats?mode=${mode}`);
   return data.stats;
+}
+
+export async function fetchHistoryCompletions(token: string, mode: HistoryMode): Promise<CompletionsResponse> {
+  return getJson<CompletionsResponse>(token, `/completions?mode=${mode}`);
 }

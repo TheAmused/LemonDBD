@@ -83,6 +83,47 @@ def make_chapter(db_session: Session, name: str = "Test Chapter") -> Chapter:
     return chapter
 
 
+def make_killer(
+    db_session: Session,
+    name: str,
+    id: int | None = None,
+    chapter: Chapter | None = None,
+    **kwargs: object,
+) -> Killer:
+    """A killer row, flushed so `.id` is available. `release_number` no
+    longer exists as a settable field -- it is `== id` now -- so a test that
+    needs to control release order passes `id=` explicitly instead."""
+    killer = Killer(
+        id=id,
+        name=name,
+        chapter_id=(chapter or make_chapter(db_session)).id,
+        power_name=kwargs.pop("power_name", f"{name} Power"),
+        **kwargs,
+    )
+    db_session.add(killer)
+    db_session.flush()
+    return killer
+
+
+def make_survivor(
+    db_session: Session,
+    name: str,
+    id: int | None = None,
+    chapter: Chapter | None = None,
+    **kwargs: object,
+) -> Survivor:
+    """A survivor row, flushed so `.id` is available."""
+    survivor = Survivor(
+        id=id,
+        name=name,
+        chapter_id=(chapter or make_chapter(db_session)).id,
+        **kwargs,
+    )
+    db_session.add(survivor)
+    db_session.flush()
+    return survivor
+
+
 @pytest.fixture
 def seed_chaos_roster(db_session: Session) -> list[Killer]:
     """Seed a representative set of Killers and Perks for Chaos mode testing."""

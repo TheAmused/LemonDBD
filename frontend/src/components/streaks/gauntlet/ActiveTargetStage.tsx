@@ -7,8 +7,6 @@ import type { OwnedCharacterItem } from './useOwnedCharacters';
 import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
   RefreshCw,
-  CheckCircle,
-  XCircle,
   User,
   Skull,
   Sparkles,
@@ -16,33 +14,14 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import { avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
+import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 
-export const avatarUrlFor = (name: string, role: Role) =>
-  name ? avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') : null;
-
-const KILLER_SEND_OFFS = [
-  'Good luck out there.',
-  'The fog is waiting.',
-  'Make it count.',
-  'Go get them.',
-  'Your trial awaits.',
-  'Time to earn it.',
-  'Bring them home.',
-  'Good hunting.',
-  'Off you go.',
-  'Earn it.',
-];
-
-const SURVIVOR_SEND_OFFS = [
-  'Good luck out there.',
-  'Try not to die.',
-  'Run for it.',
-  'Your trial awaits.',
-  'Off you go.',
-  'Earn it.',
-];
+export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
+  if (!name) return null;
+  const owned = characters.find((c) => c.name === name)?.avatar_local_path;
+  return staticUrl(owned) || avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') || null;
+};
 
 const perkIconFor = (perk: Perk) => perkIconUrl(perk);
 
@@ -60,13 +39,14 @@ export interface ActiveTargetStageProps {
   dict?: Dictionary;
 }
 
-const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase }> = ({
+const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; characters: OwnedCharacterItem[] }> = ({
   name,
   role,
   phase,
+  characters,
 }) => {
   const [failed, setFailed] = useState<boolean>(false);
-  const src = name ? avatarUrlFor(name, role) : null;
+  const src = name ? avatarUrlFor(name, role, characters) : null;
 
   useEffect(() => setFailed(false), [name]);
 
@@ -145,15 +125,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const { displayName: reelName, phase, isDrawing, start: startDraw } = useTargetDraw(drawPool, targetName);
   const reelDisplayName = reelName != null ? characterDisplayName(reelName) : null;
 
-  const sendOffPool = role === 'killer' ? KILLER_SEND_OFFS : SURVIVOR_SEND_OFFS;
-  const [sendOff, setSendOff] = useState<string>(sendOffPool[0]);
-
   const beginDraw = useCallback(
     (onDone: () => void) => {
-      setSendOff(sendOffPool[Math.floor(Math.random() * sendOffPool.length)]);
       startDraw(onDone);
     },
-    [startDraw, sendOffPool]
+    [startDraw]
   );
 
   const isRevealed = Boolean(run?.target_revealed);
@@ -207,22 +183,14 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             name={drawing ? reelName ?? undefined : undefined}
             role={role}
             phase={drawing ? phase : 'idle'}
+            characters={characters}
           />
         </div>
 
         {drawing ? (
-          <>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
-              {reelDisplayName ?? ' '}
-            </h2>
-            <p
-              className={`h-6 text-base font-bold text-amber-600 dark:text-amber-400 ${
-                phase === 'landed' ? 'gn-name-in' : ''
-              }`}
-            >
-              {phase === 'landed' ? sendOff : ' '}
-            </p>
-          </>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
+            {reelDisplayName ?? ' '}
+          </h2>
         ) : (
           <>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">
@@ -258,7 +226,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
-  const avatarSrc = avatarUrlFor(targetName, role);
+  const avatarSrc = avatarUrlFor(targetName, role, characters);
   const charPerks = loadout.character_perks;
   const perkSlots = [0, 1, 2, 3];
 
@@ -288,9 +256,6 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           </div>
 
           <div>
-            <div className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-1">
-              {dict?.streaks?.activeGauntletTarget || 'Active Gauntlet Target'}
-            </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               {targetDisplayName}
             </h2>
@@ -328,14 +293,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
       {/* Build guide */}
       <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+        <div className="mb-4">
           <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
             {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {dict?.streaks?.pickTheseInGame || 'Pick these in-game. Nothing to confirm here.'}
-          </p>
         </div>
         {charactersPerksOnly && perkLimit === 0 && (
           <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
@@ -448,26 +410,24 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="space-y-4 pt-2 border-t border-slate-200 dark:border-slate-800/80">
+      <div className="space-y-4">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <button
             type="button"
             onClick={onWin}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center cursor-pointer"
           >
-            <CheckCircle className="w-5 h-5 text-emerald-100" aria-hidden="true" />
-            <span>{dict?.streaks?.winMatch || 'WIN MATCH'}</span>
+            {dict?.streaks?.winMatch || 'WON'}
           </button>
 
           <button
             type="button"
             onClick={onLoss}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center cursor-pointer"
           >
-            <XCircle className="w-5 h-5 text-rose-100" aria-hidden="true" />
-            <span>{dict?.streaks?.loseMatch || 'LOSE MATCH'}</span>
+            {dict?.streaks?.loseMatch || 'LOST'}
           </button>
         </div>
       </div>

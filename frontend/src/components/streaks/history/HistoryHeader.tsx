@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
-import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw, Gauge } from 'lucide-react';
+import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw, Gauge, History } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 
 const MODE_ICON: Record<HistoryMode, React.ElementType> = {
@@ -20,6 +20,7 @@ export interface HistoryHeaderProps {
   poolFrozen?: boolean;
   onOpenRules: () => void;
   onOpenStats: () => void;
+  onOpenHistory: () => void;
   onOpenReset: () => void;
   onChangeMode: () => void;
   dict?: Dictionary;
@@ -33,6 +34,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   poolFrozen = false,
   onOpenRules,
   onOpenStats,
+  onOpenHistory,
   onOpenReset,
   onChangeMode,
   dict,
@@ -125,6 +127,14 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             title={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={onOpenHistory}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
+            title={dict?.streaks?.pastWins || 'Past Wins'}
+          >
+            <History className="w-5 h-5" />
           </button>
 
           <button

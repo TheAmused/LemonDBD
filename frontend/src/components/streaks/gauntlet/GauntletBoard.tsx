@@ -23,6 +23,10 @@ const GauntletStatsDrawer = dynamic(
   () => import('./GauntletStatsDrawer').then((m) => m.GauntletStatsDrawer),
   { ssr: false }
 );
+const ChallengeCompletionHistoryDrawer = dynamic(
+  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
+  { ssr: false }
+);
 const GauntletRulesModal = dynamic(
   () => import('./GauntletRulesModal').then((m) => m.GauntletRulesModal),
   { ssr: false }
@@ -49,6 +53,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   const {
     run,
     stats,
+    completions,
     loading,
     busy,
     error,
@@ -67,6 +72,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   }, [run?.owned_characters, releaseOrder]);
   const rosterCharacters = run ? frozenCharacters : characters;
   const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
@@ -128,8 +134,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
-          poolFrozen={run?.pool_frozen}
+          poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           dict={dict}
@@ -140,12 +147,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
               <Trophy className="h-8 w-8" />
             </div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              {dict?.streaks?.gauntletComplete || 'Gauntlet complete!'}
-            </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              {dict?.streaks?.youWonThe || 'You won the'} {role} {dict?.streaks?.gauntletSuffix || 'Gauntlet.'}
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              {dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
+            </h2>
             <button
               onClick={reset}
               disabled={busy}
@@ -193,7 +200,26 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           dict={dict}
         />
 
-        <GauntletStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <GauntletStatsDrawer
+          isOpen={isStatsOpen}
+          onClose={() => setIsStatsOpen(false)}
+          stats={stats}
+          attempts={run?.attempts}
+          dict={dict}
+        />
+        <ChallengeCompletionHistoryDrawer
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          title={dict?.streaks?.gauntlet || 'Gauntlet'}
+          accent="amber"
+          completions={completions}
+          subjectLabel={
+            role === 'killer'
+              ? dict?.streaks?.killersLabel || 'killers'
+              : dict?.streaks?.survivorsLabel || 'survivors'
+          }
+          dict={dict}
+        />
         <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />
         <CheckpointModal
           checkpoint={justBankedCheckpoint}

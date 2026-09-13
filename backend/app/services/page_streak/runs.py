@@ -1,12 +1,13 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
 from typing import Any
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
+from app.services.challenge_completions import delete_completions, record_challenge_completion
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
 
 
@@ -149,6 +150,14 @@ def record_match_result(
         r.best_page = max(r.best_page, page)
         if page >= run["page_count"]:
             r.status = "completed"
+            record_challenge_completion(
+                user_id=user_id,
+                mode="page_streak",
+                variant=killer,
+                attempts_taken=r.attempt,
+                matches_played=len(r.page_logs),
+                unlocked_characters_count=0,
+            )
         else:
             r.current_page = page + 1
     else:
@@ -203,3 +212,16 @@ def reset_active_run(
     db.session.commit()
 
     return fetch_run(user_id, killer, build_pages_fn)
+
+
+def reset_all_runs(user_id: int) -> None:
+    """Wipe every killer's Page Streak run AND their "already won" badges.
+
+    Deliberately more destructive than reset_active_run: a per-killer reset
+    leaves past completions alone (so the roster badge survives), but this
+    "start completely over" action clears both -- the whole point is a clean
+    slate across the entire roster.
+    """
+    db.session.execute(delete(PageStreakRun).where(PageStreakRun.user_id == user_id))
+    delete_completions(user_id, "page_streak")
+    db.session.commit()

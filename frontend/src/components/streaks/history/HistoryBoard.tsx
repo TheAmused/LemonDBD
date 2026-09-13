@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/history/HistoryBoard.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
@@ -19,6 +19,7 @@ import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -27,6 +28,10 @@ const ResetConfirmModal = dynamic(
 );
 const HistoryStatsDrawer = dynamic(
   () => import('./HistoryStatsDrawer').then((m) => m.HistoryStatsDrawer),
+  { ssr: false }
+);
+const ChallengeCompletionHistoryDrawer = dynamic(
+  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
   { ssr: false }
 );
 const HistoryPerkModal = dynamic(
@@ -48,12 +53,13 @@ interface HistoryBoardProps {
 
 export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const dict = useStreaksDict();
+  const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const mode = (searchParams.get('mode') as HistoryMode) || 'hell';
 
-  const { run, stats, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
+  const { run, stats, completions, loading, busy, error, submitResult, reset } = useHistoryRun(mode);
   const { pool: perkPool } = useKillerPerkPool();
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
@@ -62,6 +68,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [perkModal, setPerkModal] = useState<{ killerName: string; perks: Perk[] } | null>(null);
   const [rowClearedNumber, setRowClearedNumber] = useState<number | null>(null);
   const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
@@ -72,6 +79,19 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
     setSelectedKillerId(null);
     setAcceptedKillerId(null);
   };
+
+  // acceptedKillerId clears after every round (win or loss), so gating the
+  // freeze badge on it directly makes it flicker off between rounds. Track
+  // whether THIS run has ever had a pick accepted at least once instead --
+  // that stays true for the run's whole lifetime, only resetting when
+  // reset/completion swaps in a different run id.
+  const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
+  useEffect(() => {
+    if (acceptedKillerId && run?.id !== engagedRunId) {
+      setEngagedRunId(run?.id ?? null);
+    }
+  }, [acceptedKillerId, run?.id, engagedRunId]);
+  const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
 
   const handleResult = async (result: 'win' | 'loss') => {
     if (!acceptedKillerId) return;
@@ -124,9 +144,10 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           totalKillersBeaten={run?.total_killers_beaten || 0}
           bestKillersBeaten={run?.best_killers_beaten || 0}
           checkpointRowIndex={run?.checkpoint_row_index || 0}
-          poolFrozen={run?.pool_frozen}
+          poolFrozen={poolFrozen}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenStats={() => setIsStatsOpen(true)}
+          onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
           onChangeMode={() => setIsChangeModeOpen(true)}
           dict={dict}
@@ -137,13 +158,12 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
               <Trophy className="h-8 w-8" />
             </div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              {dict?.streaks?.historyStreakComplete || 'History Streak complete!'}
-            </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 capitalize">
-              {dict?.streaks?.youBeatEveryRowOn || 'You beat every row on'} {mode}{' '}
-              {dict?.streaks?.modeSuffix || 'mode.'}
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              {dict?.streaks?.historyStreakComplete || 'You won the History Streak'}
+            </h2>
             <button
               onClick={reset}
               disabled={busy}
@@ -162,10 +182,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               {run && (
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
-                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}{' '}
-                  {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.killerLabel || 'killer'}{' '}
-                  {run.total_killers_beaten + 1} {dict?.streaks?.ofLabel || 'of'}{' '}
-                  {run.total_owned_killers}
+                  {dict?.streaks?.ofLabel || 'of'} {run.total_rows}
                 </p>
               )}
             </div>
@@ -234,7 +251,22 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           dict={dict}
         />
 
-        <HistoryStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+        <HistoryStatsDrawer
+          isOpen={isStatsOpen}
+          onClose={() => setIsStatsOpen(false)}
+          stats={stats}
+          attempts={run?.attempts}
+          dict={dict}
+        />
+        <ChallengeCompletionHistoryDrawer
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          title={dict?.streaks?.historyStreak || 'History Streak'}
+          accent="slate"
+          completions={completions}
+          subjectLabel={dict?.streaks?.killersLabel || 'killers'}
+          dict={dict}
+        />
         <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
         <HistoryPerkModal
           killerName={perkModal?.killerName ?? null}
@@ -247,6 +279,9 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           isOpen={isChangeModeOpen}
           onClose={() => setIsChangeModeOpen(false)}
           currentMode={mode}
+          showIntro={false}
+          completedCounts={completionStatus.completion_counts.history ?? {}}
+          completedFullCounts={completionStatus.full_roster.history ?? {}}
           onSelectMode={(newMode) => {
             saveHistoryMode(newMode);
             setIsChangeModeOpen(false);

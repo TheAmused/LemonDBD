@@ -11,7 +11,7 @@ const MAX_STEPS = 60;
 /** Higher = the reel holds its fast pace longer before braking. */
 const EASE_POWER = 2.6;
 /** Beat spent on the drawn character before the match card replaces the reel. */
-const HOLD_MS = 1600;
+const HOLD_MS = 1000;
 
 /** idle: nothing running. spinning: reel moving. landed: holding on the pick. */
 export type DrawPhase = 'idle' | 'spinning' | 'landed';

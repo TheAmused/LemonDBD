@@ -12,10 +12,11 @@ export interface ChaosStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: ChaosStats | null;
+  attempts?: number;
   dict?: Dictionary;
 }
 
-export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<ChaosMatchLog>
@@ -24,6 +25,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
     accent="violet"
     stats={stats}
+    attempts={attempts}
     dict={dict}
     renderLabel={(log) => (
       <>

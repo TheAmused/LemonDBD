@@ -13,6 +13,14 @@ export interface GauntletModeModalProps {
   onSelectOriginal: () => void;
   role: 'killer' | 'survivor';
   currentMode?: 'original' | 'lemon';
+  /** This role's Original Gauntlet has already been fully cleared. */
+  originalCompleted?: boolean;
+  /** Killer count frozen at that completion. */
+  originalCompletedCount?: number | null;
+  /** This role's Original Gauntlet was cleared with the entire game roster -- upgrades the badge to red. */
+  originalCompletedFull?: boolean;
+  /** Killer count frozen at that full-roster completion. */
+  originalCompletedFullCount?: number | null;
   dict?: Dictionary;
 }
 
@@ -22,6 +30,10 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   onSelectOriginal,
   role,
   currentMode,
+  originalCompleted = false,
+  originalCompletedCount = null,
+  originalCompletedFull = false,
+  originalCompletedFullCount = null,
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -34,6 +46,10 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint banks every 10 wins.',
       icon: Swords,
       accentClassName: 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500',
+      completed: originalCompleted,
+      completedCount: originalCompletedCount,
+      completedFull: originalCompletedFull,
+      completedFullCount: originalCompletedFullCount,
     },
     {
       value: 'lemon',
@@ -71,6 +87,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         escapeDisabled={isRulesOpen}
         selectedValue={currentMode}
         currentLabel={dict?.streaks?.current || 'Current'}
+        dict={dict}
       />
 
       <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />

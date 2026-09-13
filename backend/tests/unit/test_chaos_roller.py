@@ -1,7 +1,8 @@
 # backend/tests/unit/test_chaos_roller.py
 import pytest
 from sqlalchemy.orm import Session
-from app.models import Character, Perk
+from app.models import Killer, Perk, Survivor
+from tests.unit.conftest import make_chapter
 from app.services.chaos.constants import (
     ADDON_RARITY_POOL,
     CHAOS_CHECKPOINT_INTERVAL,
@@ -122,15 +123,16 @@ class TestResolvePerksByNames:
 
     @pytest.fixture(autouse=True)
     def setup_perk_models(self, db_session: Session) -> None:
-        character = Character(name="The Trapper", role="Killer")
-        survivor = Character(name="Dwight Fairfield", role="Survivor")
+        chapter = make_chapter(db_session)
+        character = Killer(name="The Trapper", chapter_id=chapter.id, power_name="Trapper Power")
+        survivor = Survivor(name="Dwight Fairfield", chapter_id=chapter.id)
         db_session.add_all([character, survivor])
         db_session.flush()
 
-        db_session.add(Perk(name="Brutal Strength", character_id=character.id, is_teachable=True, category="Killer"))
-        db_session.add(Perk(name="Unnerving Presence", character_id=None, is_teachable=False, category="Killer"))
-        db_session.add(Perk(name="Hex: Ruin", character_id=None, is_teachable=False, category="Killer"))
-        db_session.add(Perk(name="Sprint Burst", character_id=survivor.id, is_teachable=True, category="Survivor"))
+        db_session.add(Perk(name="Brutal Strength", killer_id=character.id, is_teachable=True, role="Killer"))
+        db_session.add(Perk(name="Unnerving Presence", is_teachable=False, role="Killer"))
+        db_session.add(Perk(name="Hex: Ruin", is_teachable=False, role="Killer"))
+        db_session.add(Perk(name="Sprint Burst", survivor_id=survivor.id, is_teachable=True, role="Survivor"))
         db_session.commit()
 
     def test_resolves_names_to_full_objects_in_order(self) -> None:

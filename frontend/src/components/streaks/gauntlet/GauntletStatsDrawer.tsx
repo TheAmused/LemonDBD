@@ -12,10 +12,11 @@ export interface GauntletStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: GauntletStats | null;
+  attempts?: number;
   dict?: Dictionary;
 }
 
-export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<MatchLog>
@@ -24,6 +25,7 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
     title={dict?.streaks?.gauntlet || 'Gauntlet'}
     accent="amber"
     stats={stats}
+    attempts={attempts}
     dict={dict}
     renderLabel={(log: MatchLog) => (
       <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.character_id)}</div>

@@ -53,20 +53,21 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6" role="list">
       {roster.map((entry) => {
-        const done = entry.status === 'completed';
+        // ever_completed comes from the persistent completion history, so it
+        // survives a per-killer reset (which flips status back to in_progress).
+        // status === 'completed' stays as a fallback for older data.
+        const done = entry.ever_completed || entry.status === 'completed';
         const active = entry.status === 'in_progress';
         const displayName = characterDisplayName(entry.killer);
-        const pct =
-          entry.page_count > 0
-            ? Math.round(((entry.current_page - 1) / entry.page_count) * 100)
-            : 0;
+        const cleared = entry.status === 'not_started' ? 0 : Math.max(0, entry.current_page - 1);
+        const pct = entry.page_count > 0 ? Math.round((cleared / entry.page_count) * 100) : 0;
 
         const progressAriaLabel = dict?.streaks?.progress
           ? `${displayName} - ${dict.streaks.progress} ${pct}%`
           : `${displayName} ${pct}%`;
 
-        const activePageText =
-          `${dict?.streaks?.pageLabel || dict?.generator?.pageLabel || ''} ${entry.current_page} ${dict?.streaks?.ofLabel || ''} ${entry.page_count}`.trim();
+        const progressText =
+          `${cleared} ${dict?.streaks?.ofLabel || 'of'} ${entry.page_count} ${dict?.streaks?.pagesCount || 'pages'}`.trim();
 
         return (
           <Link
@@ -95,7 +96,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
             <div className="text-center text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
               {displayName}
             </div>
-            {active && (
+            {!done && (
               <div
                 className="h-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"
                 role="progressbar"
@@ -120,9 +121,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
             >
               {done
                 ? (dict?.streaks?.completed || '')
-                : active
-                  ? activePageText
-                  : (dict?.streaks?.notStarted || 'Not started')}
+                : progressText}
             </div>
           </Link>
         );

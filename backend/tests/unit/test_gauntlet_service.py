@@ -2,45 +2,46 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, GauntletMatchLog, GauntletRun, Perk
+from app.models import GauntletMatchLog, GauntletRun, Killer, Perk, Survivor
 from app.services.gauntlet import CHECKPOINT_INTERVAL, get_owned_character_names
 from app.services.gauntlet_service import GauntletService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from tests.unit.conftest import make_chapter
 
 
-def seed_killer(name: str, perk_count: int = 3) -> Character:
+def seed_killer(name: str, perk_count: int = 3, id: int | None = None) -> Killer:
     from app.core.extensions import db
 
-    character = Character(name=name, role="Killer")
+    character = Killer(id=id, name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power")
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                killer_id=character.id,
                 is_teachable=True,
-                category="Killer",
+                role="Killer",
             )
         )
     db.session.commit()
     return character
 
 
-def seed_survivor(name: str = "Meg Thomas", perk_count: int = 1) -> Character:
+def seed_survivor(name: str = "Meg Thomas", perk_count: int = 1) -> Survivor:
     from app.core.extensions import db
 
-    character = Character(name=name, role="Survivor")
+    character = Survivor(name=name, chapter_id=make_chapter(db.session).id)
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                survivor_id=character.id,
                 is_teachable=True,
-                category="Survivor",
+                role="Survivor",
             )
         )
     db.session.commit()
@@ -141,12 +142,11 @@ class TestOriginalKillerRosterCap:
 
     @pytest.fixture(autouse=True)
     def setup_cap_roster(self, db_session: Session) -> None:
-        self.trapper = seed_killer("Trapper")
-        self.trapper.release_number = 1
-        self.slasher = seed_killer("The Slasher")
-        self.slasher.release_number = 43
-        self.newer = seed_killer("The Judgment")
-        self.newer.release_number = 44
+        # `release_number` is `== id` now, not a settable field, so cap
+        # ordering is controlled by the id each killer is created with.
+        self.trapper = seed_killer("Trapper", id=1)
+        self.slasher = seed_killer("The Slasher", id=43)
+        self.newer = seed_killer("The Judgment", id=44)
         db_session.commit()
 
     def test_pool_excludes_killers_past_the_original_cutoff(
@@ -211,9 +211,7 @@ class TestGauntletRun:
     def test_runs_are_isolated_per_role(
         self, gauntlet_service: GauntletService, gauntlet_user: int, db_session: Session
     ) -> None:
-        seed_survivor = Character(name="Meg Thomas", role="Survivor")
-        db_session.add(seed_survivor)
-        db_session.commit()
+        seed_survivor()
 
         killer_run = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
         survivor_run = gauntlet_service.get_or_create_run(gauntlet_user, "survivor")
@@ -232,7 +230,7 @@ class TestGauntletRun:
     def test_roll_never_targets_a_locked_character(
         self, gauntlet_service: GauntletService, gauntlet_user: int, ownership_service: OwnershipService
     ) -> None:
-        ownership_service.set_character_ownership(gauntlet_user, self.nurse.id, is_owned=False)
+        ownership_service.set_character_ownership(gauntlet_user, self.nurse.id, is_owned=False, role="Killer")
         for _ in range(10):
             run = gauntlet_service.roll(gauntlet_user, "killer")
             assert run["current_character_id"] == "Trapper"
@@ -293,6 +291,26 @@ class TestGauntletResults:
         target = self.run["current_character_id"]
         updated = self.service.submit_result(self.user_id, self.run["id"], "win")
         assert target in updated["completed_characters"]
+
+    def test_loss_increments_attempts_regardless_of_checkpoint(self) -> None:
+        assert self.run["attempts"] == 0
+        after_first_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        assert after_first_loss["attempts"] == 1
+        for _ in range(10):
+            self.service.submit_result(self.user_id, self.run["id"], "win")
+        after_checkpoint_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        assert after_checkpoint_loss["current_streak"] == 10
+        assert after_checkpoint_loss["attempts"] == 2
+
+    def test_win_does_not_increment_attempts(self) -> None:
+        updated = self.service.submit_result(self.user_id, self.run["id"], "win")
+        assert updated["attempts"] == 0
+
+    def test_inactivity_loss_increments_attempts(self) -> None:
+        updated = self.service.submit_result(
+            self.user_id, self.run["id"], "loss", triggered_by="inactivity"
+        )
+        assert updated["attempts"] == 1
 
     def test_best_streak_is_never_decreased_by_a_loss(self) -> None:
         for _ in range(3):
@@ -443,6 +461,88 @@ class TestGauntletCompletion:
         assert fresh["completed_characters"] == []
         assert fresh["target_revealed"] is False
 
+    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        run = self.service.get_or_create_run(self.user_id, "killer")
+        self.service.submit_result(self.user_id, run["id"], "loss")  # attempts -> 1
+
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+        assert final["attempts"] == 0
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "gauntlet"
+        assert record.variant == "killer_original"
+        assert record.attempts_taken == 2
+        assert record.matches_played == 3
+        assert record.unlocked_characters_count == 2
+        assert record.full_roster is True
+
+    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
+        """Regression: a character un-kill-switched (or otherwise newly
+        owned) after this run's pool was already frozen at 2 must not
+        inflate the count recorded for a run that only had to clear those 2."""
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.get_or_create_run(self.user_id, "killer")  # freezes the pool at 2
+        seed_killer("Ghostface")  # owned by default; the frozen pool stays at 2
+
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.unlocked_characters_count == 2
+
+    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(
+        self, ownership_service: OwnershipService
+    ) -> None:
+        from datetime import datetime, timezone
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        # Predates the owned killers -- it was already in the game all along,
+        # the player just never picked it up. Must count against "full".
+        ghostface = seed_killer("Ghostface")
+        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        db.session.commit()
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
+
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.full_roster is False
+        assert record.unlocked_characters_count == 2
+
+    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.attempts_taken == 1
+
 
 @pytest.mark.unit
 class TestGauntletStats:
@@ -468,8 +568,7 @@ class TestGauntletStats:
         self, gauntlet_service: GauntletService, gauntlet_user: int, db_session: Session
     ) -> None:
         seed_killer("Nurse")
-        db_session.add(Character(name="Meg Thomas", role="Survivor"))
-        db_session.commit()
+        seed_survivor("Meg Thomas")
 
         run = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
         gauntlet_service.submit_result(gauntlet_user, run["id"], "win")

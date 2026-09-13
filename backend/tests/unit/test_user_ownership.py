@@ -136,7 +136,7 @@ class TestUserAndOwnership:
         trapper_perk_ids = {p.id for p in trapper_perks}
 
         res = ownership_service.set_character_ownership(
-            user.id, trapper.id, is_owned=False
+            user.id, trapper.id, is_owned=False, role="Killer"
         )
         assert res["is_owned"] is False
         assert res["auto_locked_teachable_perks_count"] == 3
@@ -163,7 +163,7 @@ class TestUserAndOwnership:
             select(Perk).where(Perk.killer_id == trapper.id)
         ).all()
 
-        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False, role="Killer")
         ownership_service.set_perk_ownership(
             user.id, trapper_perks[0].id, is_unlocked=True
         )
@@ -192,9 +192,9 @@ class TestUserAndOwnership:
             select(Perk).where(Perk.killer_id == trapper.id)
         ).all()
 
-        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False, role="Killer")
 
-        res = ownership_service.set_character_ownership(user.id, trapper.id, is_owned=True)
+        res = ownership_service.set_character_ownership(user.id, trapper.id, is_owned=True, role="Killer")
         assert res["is_owned"] is True
         assert res["auto_unlocked_teachable_perks_count"] == 3
 
@@ -221,7 +221,7 @@ class TestUserAndOwnership:
             select(Survivor).where(Survivor.name == "Dwight Fairfield")
         ).first()
 
-        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False, role="Killer")
 
         bulk_res = ownership_service.bulk_set_character_ownership(
             user.id,
@@ -252,7 +252,7 @@ class TestUserAndOwnership:
         assert summary_default["killers"]["owned"] == summary_default["killers"]["total"]
         assert summary_default["perks"]["unlocked"] == summary_default["perks"]["total"]
 
-        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False)
+        ownership_service.set_character_ownership(user.id, trapper.id, is_owned=False, role="Killer")
 
         summary_after_lock = ownership_service.get_user_ownership_summary(user.id)
         assert (

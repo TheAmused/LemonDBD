@@ -1,6 +1,8 @@
 // frontend/src/components/streaks/RulesModalShell.tsx
 'use client';
 
+import type { Dictionary } from '@/locales/types';
+
 import React, { useEffect } from 'react';
 import { X, LucideIcon } from 'lucide-react';
 
@@ -15,6 +17,7 @@ export interface RulesModalShellProps {
   footerButtonClassName: string;
   footerButtonLabel?: string;
   children: React.ReactNode;
+  dict?: Dictionary;
 }
 
 /**
@@ -92,6 +95,7 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   footerButtonClassName,
   footerButtonLabel = "Got It, Let's Play!",
   children,
+  dict,
 }) => {
   useEffect(() => {
     if (!isOpen) return;
@@ -124,7 +128,8 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+            aria-label={dict?.modal?.close || 'Close'}
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>

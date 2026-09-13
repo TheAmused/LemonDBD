@@ -2,11 +2,14 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, Perk, PageStreakPageLog
+from app.models import Killer, Perk, PageStreakPageLog, Survivor
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak_service import PageStreakService
 from app.services.page_streak.runs import apply_inactivity_loss
+from tests.unit.conftest import make_chapter
+
+_ROLE_MODELS = {"Killer": Killer, "Survivor": Survivor}
 
 GENERAL_CHARACTER = "General"
 
@@ -62,27 +65,31 @@ def make_perks(count: int, category: str = "Killer", character: str = "Trapper",
 def seed_perks(perks: list[dict[str, object]]) -> None:
     from app.core.extensions import db
 
-    char_cache: dict[str, Character] = {}
+    char_cache: dict[str, Killer | Survivor] = {}
     for p in perks:
         char_name = str(p.get("character", ""))
+        role = str(p["category"])
+        model = _ROLE_MODELS[role]
         character = None
         if char_name and char_name != GENERAL_CHARACTER:
             character = char_cache.get(char_name)
             if character is None:
                 character = db.session.scalars(
-                    select(Character).where(Character.name == char_name)
+                    select(model).where(model.name == char_name)
                 ).first()
                 if character is None:
-                    character = Character(name=char_name, role=str(p["category"]))
+                    kwargs = {"power_name": f"{char_name} Power"} if model is Killer else {}
+                    character = model(name=char_name, chapter_id=make_chapter(db.session).id, **kwargs)
                     db.session.add(character)
                     db.session.flush()
                 char_cache[char_name] = character
         db.session.add(
             Perk(
                 name=str(p["name"]),
-                character_id=character.id if character else None,
+                survivor_id=character.id if character and role == "Survivor" else None,
+                killer_id=character.id if character and role == "Killer" else None,
                 is_teachable=True,
-                category=str(p["category"]),
+                role=role,
             )
         )
     db.session.commit()
@@ -92,9 +99,9 @@ def seed_killers(names: list[str]) -> None:
     from app.core.extensions import db
 
     for name in names:
-        if db.session.scalars(select(Character).where(Character.name == name)).first():
+        if db.session.scalars(select(Killer).where(Killer.name == name)).first():
             continue
-        db.session.add(Character(name=name, role="Killer"))
+        db.session.add(Killer(name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"))
     db.session.commit()
 
 
@@ -230,8 +237,8 @@ class TestPageStreakRoster:
     def test_locked_killer_is_excluded_from_roster(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 
-        trapper = db.session.scalars(select(Character).where(Character.name == "Trapper")).first()
-        ownership_service.set_character_ownership(self.user_id, trapper.id, is_owned=False)
+        trapper = db.session.scalars(select(Killer).where(Killer.name == "Trapper")).first()
+        ownership_service.set_character_ownership(self.user_id, trapper.id, is_owned=False, role="Killer")
         names = [entry["killer"] for entry in self.service.get_roster(self.user_id)]
         assert names == ["Nurse"]
 
@@ -239,6 +246,9 @@ class TestPageStreakRoster:
         run = self.service.start_run(self.user_id, "Nurse")
         assert run["snapshot_at"] is not None
         assert run["snapshot_at"].endswith("Z")
+        assert "+00:00" not in run["snapshot_at"]
+        from datetime import datetime
+        datetime.fromisoformat(run["snapshot_at"].replace("Z", "+00:00"))  # must parse cleanly
 
     def test_start_run_freezes_snapshot(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
@@ -366,6 +376,63 @@ class TestPageStreakResults:
         with pytest.raises(ValueError):
             self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
 
+    def test_get_completions_returns_this_killers_past_wins(self) -> None:
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        completions = self.service.get_completions(self.user_id, "Nurse")
+        assert len(completions) == 1
+        assert completions[0]["variant"] == "Nurse"
+        assert completions[0]["attempts_taken"] == 1
+        assert completions[0]["matches_played"] == 3
+
+    def test_winning_last_page_records_a_completion(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "page_streak"
+        assert record.variant == "Nurse"
+        assert record.attempts_taken == 1
+        assert record.matches_played == 3
+
+    def test_completion_survives_a_per_killer_reset(self) -> None:
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        self.service.reset_run(self.user_id, "Nurse")
+
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert roster["Nurse"]["status"] == "in_progress"
+        assert roster["Nurse"]["ever_completed"] is True
+
+    def test_reset_all_wipes_runs_and_completion_badges(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        self.service.reset_all(self.user_id)
+
+        assert self.service.get_run(self.user_id, "Nurse") is None
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert roster["Nurse"]["status"] == "not_started"
+        assert roster["Nurse"]["ever_completed"] is False
+        assert db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first() is None
+
     def test_reset_restarts_with_fresh_snapshot_and_keeps_history(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 
@@ -458,3 +525,94 @@ class TestPageStreakRosterOrder:
     def test_falls_back_to_alphabetical_order_without_release_numbers(self) -> None:
         service = PageStreakService(perk_service=FakePerkService(self.perks))
         assert service.get_killers(self.user_id) == ["Animatronic", "Nurse", "Trapper", "Wraith"]
+
+
+@pytest.mark.unit
+class TestPageStreakRosterMilestone:
+    """Tests for the mode-wide 'full roster' badge (owned killers vs. the whole
+    game), computed LIVE on every read -- unlike gauntlet/chaos/history, Page
+    Streak has no bounded run to freeze a pool against, so nothing here is
+    ever written to ChallengeCompletionRecord; it's recomputed fresh each
+    time from current ownership + the permanent per-killer completions."""
+
+    @pytest.fixture(autouse=True)
+    def setup_milestone(self, streak_user: int) -> None:
+        self.user_id = streak_user
+        self.perks = make_perks(4, character="Trapper") + make_perks(4, character="Nurse")
+        for i, perk in enumerate(self.perks, start=1):
+            perk["name"] = f"Perk {i:03d}"
+        seed_perks(self.perks)
+        self.service = PageStreakService(perk_service=FakePerkService(self.perks))
+
+    def win_killer(self, killer: str) -> dict[str, object]:
+        run = self.service.start_run(self.user_id, killer)
+        page = run["pages"][0]
+        build = page[: self.service.expected_build_size(page)]
+        return self.service.submit_result(self.user_id, killer, 1, build, "win")
+
+    def test_not_full_when_a_killer_exists_that_is_not_owned(
+        self, ownership_service: OwnershipService
+    ) -> None:
+        from app.core.extensions import db
+
+        ghostface = Killer(name="Ghostface", chapter_id=make_chapter(db.session).id, power_name="Ghostface Power")
+        db.session.add(ghostface)
+        db.session.commit()
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
+
+        self.win_killer("Trapper")
+        updated = self.win_killer("Nurse")
+        assert updated["status"] == "completed"
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone["completed"] is True
+        assert milestone["full_roster"] is False
+        assert milestone["killer_count"] == 2
+
+    def test_full_when_the_owned_roster_is_the_whole_game(self) -> None:
+        self.win_killer("Trapper")
+        self.win_killer("Nurse")
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone["completed"] is True
+        assert milestone["full_roster"] is True
+        assert milestone["killer_count"] == 2
+
+    def test_a_new_owned_killer_drops_the_badge_until_it_is_also_cleared(self) -> None:
+        """Live, not permanent: gaining a killer (a new one shipping to the
+        game and defaulting to owned, or the player unlocking one) makes the
+        roster incomplete again until that killer is cleared too."""
+        from app.core.extensions import db
+
+        self.win_killer("Trapper")
+        self.win_killer("Nurse")
+        assert self.service.get_roster_milestone(self.user_id)["full_roster"] is True
+
+        db.session.add(Killer(name="Ghostface", chapter_id=make_chapter(db.session).id, power_name="Ghostface Power"))  # owned by default
+        db.session.commit()
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone == {"completed": False, "full_roster": False, "killer_count": None}
+
+    def test_a_new_owned_killer_mid_grind_also_blocks_the_badge(self) -> None:
+        """No grace period here (unlike gauntlet/chaos/history's frozen-run
+        pools): a killer that becomes owned mid-grind must be cleared too
+        before the badge shows, even though the player was already grinding
+        toward what used to be the whole roster."""
+        from app.core.extensions import db
+
+        self.win_killer("Trapper")
+
+        db.session.add(Killer(name="Ghostface", chapter_id=make_chapter(db.session).id, power_name="Ghostface Power"))  # owned by default
+        db.session.commit()
+
+        updated = self.win_killer("Nurse")
+        assert updated["status"] == "completed"
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone == {"completed": False, "full_roster": False, "killer_count": None}
+
+    def test_no_milestone_before_the_owned_roster_is_fully_cleared(self) -> None:
+        self.win_killer("Trapper")
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone == {"completed": False, "full_roster": False, "killer_count": None}

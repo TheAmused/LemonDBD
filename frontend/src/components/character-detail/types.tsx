@@ -12,10 +12,10 @@ export interface CharacterItem {
   avatar_local_path?: string;
   portrait_url?: string;
   release_number?: number;
-  wiki_slug?: string;
-  short_name?: string;
+  /** `id` above is the stable, translation-proof key. `wiki_slug` and
+   * `short_name` were `name` respelled and are no longer returned. */
+  chapter_id?: number;
   chapter_name?: string;
-  chapter_number?: string;
   dlc_type?: string;
   is_licensed?: boolean;
   release_year?: number;

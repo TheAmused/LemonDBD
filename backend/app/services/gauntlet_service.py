@@ -49,7 +49,7 @@ class GauntletService:
         data["pool_frozen"] = bool(ids)
         if not ids:
             ids = get_owned_character_ids(data["user_id"], data["role"], self.ownership_service)
-        data["owned_characters"] = resolve_character_names_by_ids(ids)
+        data["owned_characters"] = resolve_character_names_by_ids(ids, role=data["role"])
         return data
 
     def get_or_create_run(self, user_id: int, role: str) -> dict[str, Any]:
@@ -182,7 +182,7 @@ class GauntletService:
                 checkpoint_chars = list(completed)
 
             owned_ids = safe_json_loads(r.owned_characters_json, default=[])
-            owned_names = resolve_character_names_by_ids(owned_ids)
+            owned_names = resolve_character_names_by_ids(owned_ids, role=r.role)
             if owned_names and all(name in completed for name in owned_names):
                 r.status = "completed"
         else:

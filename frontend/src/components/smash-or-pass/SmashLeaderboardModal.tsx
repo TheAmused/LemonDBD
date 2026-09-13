@@ -20,7 +20,8 @@ import {
   Users,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import type { LeaderboardItem, EntityMetadata } from '@/types/smashOrPass';
+import type { LeaderboardItem } from '@/types/smashOrPass';
+import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Tooltip } from '@/components/common/Tooltip';
@@ -49,11 +50,8 @@ interface TierConfig {
   range: string;
 }
 
-interface LocalizedMetadata {
-  title?: string;
-  tagline?: string;
-  bio?: string;
-}
+// LocalizedMetadata is gone: it described the duplicate `i18n` / `translations` blobs and
+// the `title` twin of `archetype`. EntityProfile (via localizedProfile) covers it now.
 
 interface CandidateRowProps {
   item: LeaderboardItem;
@@ -120,18 +118,9 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           isSurvivor
         );
 
-  const meta = (item.metadata || {}) as EntityMetadata & {
-    translations?: Record<string, LocalizedMetadata>;
-    i18n?: Record<string, LocalizedMetadata>;
-  };
-  const currentLoc = locale || 'en';
-  const locMeta = meta.translations?.[currentLoc] || meta.i18n?.[currentLoc] || {};
-  const itemSubtitle =
-    locMeta.title ||
-    meta.title ||
-    locMeta.tagline ||
-    meta.tagline ||
-    item.role;
+  const profile = localizedProfile(item.metadata, locale || 'en');
+  // `|| item.role` is the render-level default for an entity with no archetype yet.
+  const itemSubtitle = profile.archetype || profile.tagline || item.role;
 
   const candidateAriaLabel = rawSmashDict?.candidateRankLabel
     ? rawSmashDict.candidateRankLabel

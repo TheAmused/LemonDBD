@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models import Character, Perk
+from app.models import Killer, Perk
 from app.services.chaos.constants import ADDON_RARITY_POOL
 from app.services.ownership_service import OwnershipService
 
@@ -38,7 +38,7 @@ def resolve_perks_by_names(names: list[str]) -> list[dict[str, Any]]:
     """Turns a frozen name list back into full perk dicts (icon, description)."""
     if not names:
         return []
-    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names), Perk.category == "Killer")).all()
+    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names), Perk.role == "Killer")).all()
     by_name = {p.name: p.to_dict() for p in perks}
     return [by_name[n] for n in names if n in by_name]
 
@@ -47,7 +47,7 @@ def resolve_perks_by_ids(ids: list[int]) -> list[dict[str, Any]]:
     """Turns a frozen perk id list back into full perk dicts (icon, description)."""
     if not ids:
         return []
-    perks = db.session.scalars(select(Perk).where(Perk.id.in_(ids), Perk.category == "Killer")).all()
+    perks = db.session.scalars(select(Perk).where(Perk.id.in_(ids), Perk.role == "Killer")).all()
     by_id = {p.id: p.to_dict() for p in perks}
     return [by_id[i] for i in ids if i in by_id]
 
@@ -61,7 +61,9 @@ def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
     """Turns a frozen killer id list back into current names."""
     if not ids:
         return []
-    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
+    # Chaos is a killer mode, so these ids are `killers.id`. They used to be
+    # `characters.id`, which also covered the 54 survivors this never meant.
+    rows = db.session.scalars(select(Killer).where(Killer.id.in_(ids))).all()
     by_id = {c.id: c.name for c in rows}
     return [by_id[i] for i in ids if i in by_id]
 

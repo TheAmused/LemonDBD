@@ -6,10 +6,10 @@ Ensures SQLAlchemy registers all tables and polymorphic relationships upon packa
 """
 
 from app.models.base import utcnow
-from app.models.admin import AdminAuditLog, ChallengeModeSetting
+from app.models.admin import AdminAuditLog, ChallengeModeSetting, SeedUpdateLog
 from app.models.changelog import ChangelogPost
 from app.models.chapter import Chapter
-from app.models.character import Character, Killer, Survivor
+from app.models.character import Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.challenge_completion import ChallengeCompletionRecord
 from app.models.history import HistoryMatchLog, HistoryRun
@@ -19,24 +19,22 @@ from app.models.community import (
     CustomPerk,
     DailyQuest,
 )
-from app.models.equipment import Addon, Item, Offering
+from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.gauntlet import (
     GauntletMatchLog,
     GauntletRun,
 )
-from app.models.map import MapObjective, MapRealm, MapTile, Realm
+from app.models.map import MapRealm, MapSource, Realm
 from app.models.minigames import (
     DraftSession,
     GuesserStat,
-    ScraperSetting,
 )
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
-from app.models.perk import Perk, PerkRule
+from app.models.perk import Perk
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
     Vote,
 )
 from app.models.user import (
@@ -49,7 +47,6 @@ from app.models.user import (
 __all__ = [
     "utcnow",
     "Chapter",
-    "Character",
     "ChaosRun",
     "ChaosMatchLog",
     "ChallengeCompletionRecord",
@@ -58,17 +55,16 @@ __all__ = [
     "Survivor",
     "Killer",
     "Perk",
-    "PerkRule",
     "Item",
-    "Addon",
+    "ItemCategory",
+    "KillerAddon",
+    "ItemAddon",
     "Offering",
     "Realm",
     "MapRealm",
-    "MapTile",
-    "MapObjective",
+    "MapSource",
     "GauntletRun",
     "GauntletMatchLog",
-    "ScraperSetting",
     "PageStreakRun",
     "PageStreakPageLog",
     "DraftSession",
@@ -80,7 +76,6 @@ __all__ = [
     "Entity",
     "EntityStat",
     "Vote",
-    "Translation",
     "BugReport",
     "User",
     "UserCharacterOwnership",
@@ -88,5 +83,6 @@ __all__ = [
     "UserShowcase",
     "ChallengeModeSetting",
     "AdminAuditLog",
+    "SeedUpdateLog",
     "ChangelogPost",
 ]

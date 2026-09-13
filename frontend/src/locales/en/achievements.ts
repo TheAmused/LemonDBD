@@ -1,0 +1,21 @@
+// frontend/src/locales/en/achievements.ts
+export default {
+  comingSoon: "Coming Soon",
+  gauntletShelf: "Gauntlet",
+  chaosShelf: "Chaos Streak",
+  historyShelf: "History Streak",
+  pageStreakShelf: "Page Streak",
+  allKillersLabel: "All Killers",
+  pageStreakOwnedHover: "Complete a full Page Streak run with every killer you own.",
+  pageStreakAllHover: "Complete a full Page Streak run with every killer in the game.",
+  easyLabel: "Easy",
+  mediumLabel: "Medium",
+  hellLabel: "Hell",
+  originalLabel: "Original",
+  ownedBadgeLabel: "Owned roster",
+  allBadgeLabel: "Full roster",
+  beatChallengePrefix: "Beat this challenge at",
+  difficultyWord: "difficulty",
+  ownedCharactersSuffix: "using only your unlocked characters.",
+  allCharactersSuffix: "using every character in the game.",
+};

@@ -1,0 +1,54 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 14,
+      "name": "Broken Bulb",
+      "item_category_id": 1,
+      "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nA damaged bulb that causes a spooky flickering effect.\nCauses the\nFlashlight\nto flicker.\nIncreases\nthe brightness of the Beam by\n+15%\n.\nIncreases\nthe duration of a successful Blind by\n+30%\n.\nIncreases\nthe spookiness.\nThe\nBroken Bulb\nis only available during\nHalloween Events\n.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenBulb.png?ba269e",
+      "icon_local_path": "icons/addons/broken_bulb.webp",
+      "rarity": "Event",
+      "translations": {
+        "de": {
+          "name": "Defekte Glühbirne"
+        },
+        "es": {
+          "name": "Bombilla rota"
+        },
+        "ja": {
+          "name": "壊れた電球"
+        },
+        "pl": {
+          "name": "Uszkodzona żarówka"
+        }
+      }
+    },
+    {
+      "id": 36,
+      "name": "Refined Serum",
+      "item_category_id": 1,
+      "description": "THIS ADD-ON IS NO LONGER AVAILABLE\n(\nThis\nUnlockable\ncan no longer be obtained and stockpiles can no longer be used.\nIf it is an\nEvent Unlockable\n, it may return with its associated Event.\n)\nSTOCKPILES MAY STILL BE USED IN TRIALS\n\"A refined version of the\nPutrid Serum\nthat is mostly safe for human consumption.\nMostly.\"\nWhile healing yourself or another Survivor with the\nMed-Kit\n, press the\nSecondary Action button\nto trigger the following effect for\n16 seconds\n:\nIncreases\nall Movement speeds by\n+5%\n.\nCreates a Blight trail behind the affected Survivor.\nRefined Serum\nconsumes the\nMed-Kit\nafter trigger its effect.\nThe\nRefined Serum\nis only available during\nHalloween Events\n.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_refinedSerum.png?bbd946",
+      "icon_local_path": "icons/addons/refined_serum.webp",
+      "rarity": "Event",
+      "translations": {
+        "de": {
+          "name": "Veredeltes Serum"
+        },
+        "es": {
+          "name": "Suero refinado"
+        },
+        "ja": {
+          "name": "精製された血清"
+        },
+        "pl": {
+          "name": "Dopracowane serum"
+        }
+      }
+    }
+  ]
+}

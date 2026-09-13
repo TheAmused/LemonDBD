@@ -1,0 +1,1412 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.268167+00:00",
+  "source": "LemonDBD",
+  "target": "chapters",
+  "chapters": [
+    {
+      "id": 1,
+      "name": "Base Game",
+      "release_date": "2016-06-14",
+      "release_year": 2016,
+      "is_licensed": false,
+      "dlc_type": "base_game",
+      "banner_url": null,
+      "banner_local_path": null,
+      "translations": {
+        "de": {
+          "name": "Grundspiel"
+        },
+        "en": {
+          "name": "Base Game"
+        },
+        "es": {
+          "name": "Juego base"
+        },
+        "ja": {
+          "name": "本編"
+        },
+        "pl": {
+          "name": "Gra podstawowa"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "The Last Breath Chapter",
+      "release_date": "2016-08-18",
+      "release_year": 2016,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_theLastBreathChapter.png",
+      "banner_local_path": "chapters/the_last_breath_chapter.webp",
+      "translations": {
+        "de": {
+          "name": "Der letzte Atemzug"
+        },
+        "en": {
+          "name": "The Last Breath"
+        },
+        "es": {
+          "name": "El último aliento"
+        },
+        "ja": {
+          "name": "最期の息の根"
+        },
+        "pl": {
+          "name": "Ostatni oddech"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "The HALLOWEEN® Chapter",
+      "release_date": "2016-10-25",
+      "release_year": 2016,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_theHalloweenChapter.png",
+      "banner_local_path": "chapters/the_halloween_chapter.webp",
+      "translations": {
+        "de": {
+          "name": "Das HALLOWEEN®-Kapitel"
+        },
+        "en": {
+          "name": "The HALLOWEEN® Chapter"
+        },
+        "es": {
+          "name": "El capítulo de HALLOWEEN®"
+        },
+        "ja": {
+          "name": "HALLOWEEN®チャプター"
+        },
+        "pl": {
+          "name": "Rozdział HALLOWEEN®"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Of Flesh and Mud",
+      "release_date": "2016-12-08",
+      "release_year": 2016,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_ofFleshAndMud.png",
+      "banner_local_path": "chapters/of_flesh_and_mud.webp",
+      "translations": {
+        "de": {
+          "name": "Aus Fleisch und Schlamm"
+        },
+        "en": {
+          "name": "Of Flesh and Mud"
+        },
+        "es": {
+          "name": "De carne y barro"
+        },
+        "ja": {
+          "name": "肉と泥"
+        },
+        "pl": {
+          "name": "Z ciała i błota"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Left Behind",
+      "release_date": "2017-03-08",
+      "release_year": 2017,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_leftBehind.png",
+      "banner_local_path": "chapters/left_behind.webp",
+      "translations": {
+        "de": {
+          "name": "Zurückgelassen"
+        },
+        "en": {
+          "name": "Left Behind"
+        },
+        "es": {
+          "name": "Abandonados"
+        },
+        "ja": {
+          "name": "残された者たち"
+        },
+        "pl": {
+          "name": "Pozostawieni w tyle"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Spark of Madness",
+      "release_date": "2017-05-11",
+      "release_year": 2017,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_sparkOfMadness.png",
+      "banner_local_path": "chapters/spark_of_madness.webp",
+      "translations": {
+        "de": {
+          "name": "Funke des Wahnsinns"
+        },
+        "en": {
+          "name": "Spark of Madness"
+        },
+        "es": {
+          "name": "Chispa de locura"
+        },
+        "ja": {
+          "name": "狂気の火花"
+        },
+        "pl": {
+          "name": "Iskra szaleństwa"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "A Lullaby for the Dark",
+      "release_date": "2017-07-27",
+      "release_year": 2017,
+      "is_licensed": false,
+      "dlc_type": "free_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_aLullabyForTheDark.png",
+      "banner_local_path": "chapters/a_lullaby_for_the_dark.webp",
+      "translations": {
+        "de": {
+          "name": "Ein Schlaflied für die Dunkelheit"
+        },
+        "en": {
+          "name": "A Lullaby for the Dark"
+        },
+        "es": {
+          "name": "Una nana para la oscuridad"
+        },
+        "ja": {
+          "name": "闇のララバイ"
+        },
+        "pl": {
+          "name": "Kołysanka dla mroku"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "LEATHERFACE™",
+      "release_date": "2017-09-14",
+      "release_year": 2017,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_leatherface.png",
+      "banner_local_path": "chapters/leatherface.webp",
+      "translations": {
+        "de": {
+          "name": "Leatherface™"
+        },
+        "en": {
+          "name": "Leatherface™"
+        },
+        "es": {
+          "name": "Leatherface™"
+        },
+        "ja": {
+          "name": "レザーフェイス™"
+        },
+        "pl": {
+          "name": "Leatherface™"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "A Nightmare on Elm Street™",
+      "release_date": "2017-10-26",
+      "release_year": 2017,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_aNightmareOnElmStreet.png",
+      "banner_local_path": "chapters/a_nightmare_on_elm_street.webp",
+      "translations": {
+        "de": {
+          "name": "A Nightmare on Elm Street™"
+        },
+        "en": {
+          "name": "A Nightmare on Elm Street™"
+        },
+        "es": {
+          "name": "Pesadilla en Elm Street™"
+        },
+        "ja": {
+          "name": "エルム街の悪夢™"
+        },
+        "pl": {
+          "name": "Koszmar z ulicy Wiązów™"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "The SAW™ Chapter",
+      "release_date": "2018-01-23",
+      "release_year": 2018,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_theSawChapter.png",
+      "banner_local_path": "chapters/the_saw_chapter.webp",
+      "translations": {
+        "de": {
+          "name": "SAW™-Kapitel"
+        },
+        "en": {
+          "name": "SAW™ Chapter"
+        },
+        "es": {
+          "name": "Capítulo de SAW™"
+        },
+        "ja": {
+          "name": "SAW™チャプター"
+        },
+        "pl": {
+          "name": "Rozdział SAW™"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Curtain Call",
+      "release_date": "2018-06-12",
+      "release_year": 2018,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_curtainCall.png",
+      "banner_local_path": "chapters/curtain_call.webp",
+      "translations": {
+        "de": {
+          "name": "Vorhang auf"
+        },
+        "en": {
+          "name": "Curtain Call"
+        },
+        "es": {
+          "name": "Llamada a escena"
+        },
+        "ja": {
+          "name": "カーテンコール"
+        },
+        "pl": {
+          "name": "Opadająca kurtyna"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "name": "Shattered Bloodline",
+      "release_date": "2018-09-18",
+      "release_year": 2018,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_shatteredBloodline.png",
+      "banner_local_path": "chapters/shattered_bloodline.webp",
+      "translations": {
+        "de": {
+          "name": "Zersplitterte Blutlinie"
+        },
+        "en": {
+          "name": "Shattered Bloodline"
+        },
+        "es": {
+          "name": "Linaje destrozado"
+        },
+        "ja": {
+          "name": "砕かれた血統"
+        },
+        "pl": {
+          "name": "Roztrzaskana linia krwi"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Darkness Among Us",
+      "release_date": "2018-12-11",
+      "release_year": 2018,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_darknessAmongUs.png",
+      "banner_local_path": "chapters/darkness_among_us.webp",
+      "translations": {
+        "de": {
+          "name": "Dunkelheit unter uns"
+        },
+        "en": {
+          "name": "Darkness Among Us"
+        },
+        "es": {
+          "name": "La oscuridad entre nosotros"
+        },
+        "ja": {
+          "name": "私たちの闇"
+        },
+        "pl": {
+          "name": "Mrok pośród nas"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "name": "Demise of the Faithful",
+      "release_date": "2019-03-19",
+      "release_year": 2019,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_demiseOfTheFaithful.png",
+      "banner_local_path": "chapters/demise_of_the_faithful.webp",
+      "translations": {
+        "de": {
+          "name": "Untergang der Getreuen"
+        },
+        "en": {
+          "name": "Demise of the Faithful"
+        },
+        "es": {
+          "name": "Muerte de los fieles"
+        },
+        "ja": {
+          "name": "信仰の終焉"
+        },
+        "pl": {
+          "name": "Śmierć wiernych"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "name": "Ash vs Evil Dead",
+      "release_date": "2019-04-02",
+      "release_year": 2019,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_ashVsEvilDead.png",
+      "banner_local_path": "chapters/ash_vs_evil_dead.webp",
+      "translations": {
+        "de": {
+          "name": "Ash vs Evil Dead"
+        },
+        "en": {
+          "name": "Ash vs Evil Dead"
+        },
+        "es": {
+          "name": "Ash vs Evil Dead"
+        },
+        "ja": {
+          "name": "死霊のはらわた リターンズ"
+        },
+        "pl": {
+          "name": "Ash kontra martwe zło"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "name": "Ghost Face®",
+      "release_date": "2019-06-18",
+      "release_year": 2019,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_ghostFace.png",
+      "banner_local_path": "chapters/ghost_face.webp",
+      "translations": {
+        "de": {
+          "name": "Ghost Face®"
+        },
+        "en": {
+          "name": "Ghost Face®"
+        },
+        "es": {
+          "name": "Ghost Face®"
+        },
+        "ja": {
+          "name": "ゴーストフェイス®"
+        },
+        "pl": {
+          "name": "Ghost Face®"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Stranger Things",
+      "release_date": "2019-09-17",
+      "release_year": 2019,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_strangerThings.png",
+      "banner_local_path": "chapters/stranger_things.webp",
+      "translations": {
+        "de": {
+          "name": "Stranger Things"
+        },
+        "en": {
+          "name": "Stranger Things"
+        },
+        "es": {
+          "name": "Stranger Things"
+        },
+        "ja": {
+          "name": "ストレンジャー・シングス"
+        },
+        "pl": {
+          "name": "Stranger Things"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Cursed Legacy",
+      "release_date": "2019-12-03",
+      "release_year": 2019,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_cursedLegacy.png",
+      "banner_local_path": "chapters/cursed_legacy.webp",
+      "translations": {
+        "de": {
+          "name": "Verfluchtes Erbe"
+        },
+        "en": {
+          "name": "Cursed Legacy"
+        },
+        "es": {
+          "name": "Legado maldito"
+        },
+        "ja": {
+          "name": "呪われた遺産"
+        },
+        "pl": {
+          "name": "Przeklęte dziedzictwo"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "name": "Chains of Hate",
+      "release_date": "2020-03-10",
+      "release_year": 2020,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_chainsOfHate.png",
+      "banner_local_path": "chapters/chains_of_hate.webp",
+      "translations": {
+        "de": {
+          "name": "Ketten des Hasses"
+        },
+        "en": {
+          "name": "Chains of Hate"
+        },
+        "es": {
+          "name": "Cadenas de odio"
+        },
+        "ja": {
+          "name": "憎しみの連鎖"
+        },
+        "pl": {
+          "name": "Łańcuchy nienawiści"
+        }
+      }
+    },
+    {
+      "id": 20,
+      "name": "Silent Hill",
+      "release_date": "2020-06-16",
+      "release_year": 2020,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_silentHill.png",
+      "banner_local_path": "chapters/silent_hill.webp",
+      "translations": {
+        "de": {
+          "name": "Silent Hill"
+        },
+        "en": {
+          "name": "Silent Hill"
+        },
+        "es": {
+          "name": "Silent Hill"
+        },
+        "ja": {
+          "name": "サイレントヒル"
+        },
+        "pl": {
+          "name": "Silent Hill"
+        }
+      }
+    },
+    {
+      "id": 21,
+      "name": "Descend Beyond",
+      "release_date": "2020-09-08",
+      "release_year": 2020,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_descendBeyond.png",
+      "banner_local_path": "chapters/descend_beyond.webp",
+      "translations": {
+        "de": {
+          "name": "Grenzüberschreitung"
+        },
+        "en": {
+          "name": "Descend Beyond"
+        },
+        "es": {
+          "name": "Descenso al más allá"
+        },
+        "ja": {
+          "name": "彼方への降下"
+        },
+        "pl": {
+          "name": "Przekroczyć granicę"
+        }
+      }
+    },
+    {
+      "id": 22,
+      "name": "A Binding of Kin",
+      "release_date": "2020-12-01",
+      "release_year": 2020,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_aBindingOfKin.png",
+      "banner_local_path": "chapters/a_binding_of_kin.webp",
+      "translations": {
+        "de": {
+          "name": "Eine Bindung der Verwandtschaft"
+        },
+        "en": {
+          "name": "A Binding of Kin"
+        },
+        "es": {
+          "name": "Un lazo de sangre"
+        },
+        "ja": {
+          "name": "肉親の愛"
+        },
+        "pl": {
+          "name": "Więzy krwi"
+        }
+      }
+    },
+    {
+      "id": 23,
+      "name": "All-Kill",
+      "release_date": "2021-03-30",
+      "release_year": 2021,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_all-Kill.png",
+      "banner_local_path": "chapters/all_kill.webp",
+      "translations": {
+        "de": {
+          "name": "All-Kill"
+        },
+        "en": {
+          "name": "All-Kill"
+        },
+        "es": {
+          "name": "All-Kill"
+        },
+        "ja": {
+          "name": "All-Kill"
+        },
+        "pl": {
+          "name": "All-Kill"
+        }
+      }
+    },
+    {
+      "id": 24,
+      "name": "Resident Evil™",
+      "release_date": "2021-06-15",
+      "release_year": 2021,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_residentEvil.png",
+      "banner_local_path": "chapters/resident_evil.webp",
+      "translations": {
+        "de": {
+          "name": "Resident Evil™"
+        },
+        "en": {
+          "name": "Resident Evil™"
+        },
+        "es": {
+          "name": "Resident Evil™"
+        },
+        "ja": {
+          "name": "バイオハザード™"
+        },
+        "pl": {
+          "name": "Resident Evil™"
+        }
+      }
+    },
+    {
+      "id": 25,
+      "name": "Hellraiser™",
+      "release_date": "2021-09-07",
+      "release_year": 2021,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_hellraiser.png",
+      "banner_local_path": "chapters/hellraiser.webp",
+      "translations": {
+        "de": {
+          "name": "Hellraiser™"
+        },
+        "en": {
+          "name": "Hellraiser™"
+        },
+        "es": {
+          "name": "Hellraiser™"
+        },
+        "ja": {
+          "name": "ヘルレイザー™"
+        },
+        "pl": {
+          "name": "Hellraiser™"
+        }
+      }
+    },
+    {
+      "id": 26,
+      "name": "Hour of the Witch",
+      "release_date": "2021-10-19",
+      "release_year": 2021,
+      "is_licensed": false,
+      "dlc_type": "half_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_hourOfTheWitch.png",
+      "banner_local_path": "chapters/hour_of_the_witch.webp",
+      "translations": {
+        "de": {
+          "name": "Stunde der Hexe"
+        },
+        "en": {
+          "name": "Hour of the Witch"
+        },
+        "es": {
+          "name": "La hora de la bruja"
+        },
+        "ja": {
+          "name": "魔女の時"
+        },
+        "pl": {
+          "name": "Godzina czarownic"
+        }
+      }
+    },
+    {
+      "id": 27,
+      "name": "Portrait of a Murder",
+      "release_date": "2021-11-30",
+      "release_year": 2021,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_portraitOfAMurder.png",
+      "banner_local_path": "chapters/portrait_of_a_murder.webp",
+      "translations": {
+        "de": {
+          "name": "Porträt eines Mordes"
+        },
+        "en": {
+          "name": "Portrait of a Murder"
+        },
+        "es": {
+          "name": "Retrato de un asesinato"
+        },
+        "ja": {
+          "name": "殺人の肖像画"
+        },
+        "pl": {
+          "name": "Portret morderstwa"
+        }
+      }
+    },
+    {
+      "id": 28,
+      "name": "Sadako Rising",
+      "release_date": "2022-03-08",
+      "release_year": 2022,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_sadakoRising.png",
+      "banner_local_path": "chapters/sadako_rising.webp",
+      "translations": {
+        "de": {
+          "name": "Sadakos Erwachen"
+        },
+        "en": {
+          "name": "Sadako Rising"
+        },
+        "es": {
+          "name": "El despertar de Sadako"
+        },
+        "ja": {
+          "name": "貞子ライジング"
+        },
+        "pl": {
+          "name": "Przebudzenie Sadako"
+        }
+      }
+    },
+    {
+      "id": 29,
+      "name": "Roots of Dread",
+      "release_date": "2022-06-07",
+      "release_year": 2022,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_rootsOfDread.png",
+      "banner_local_path": "chapters/roots_of_dread.webp",
+      "translations": {
+        "de": {
+          "name": "Wurzeln des Grauens"
+        },
+        "en": {
+          "name": "Roots of Dread"
+        },
+        "es": {
+          "name": "Raíces del pavor"
+        },
+        "ja": {
+          "name": "恐怖の根源"
+        },
+        "pl": {
+          "name": "Korzenie grozy"
+        }
+      }
+    },
+    {
+      "id": 30,
+      "name": "Resident Evil™: PROJECT W",
+      "release_date": "2022-08-30",
+      "release_year": 2022,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_residentEvilProjectW.png",
+      "banner_local_path": "chapters/resident_evil_project_w.webp",
+      "translations": {
+        "de": {
+          "name": "Resident Evil™"
+        },
+        "en": {
+          "name": "Resident Evil™"
+        },
+        "es": {
+          "name": "Resident Evil™"
+        },
+        "ja": {
+          "name": "バイオハザード™"
+        },
+        "pl": {
+          "name": "Resident Evil™"
+        }
+      }
+    },
+    {
+      "id": 31,
+      "name": "Forged in Fog",
+      "release_date": "2022-11-22",
+      "release_year": 2022,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_forgedInFog.png",
+      "banner_local_path": "chapters/forged_in_fog.webp",
+      "translations": {
+        "de": {
+          "name": "Im Nebel geschmiedet"
+        },
+        "en": {
+          "name": "Forged in Fog"
+        },
+        "es": {
+          "name": "Forjado en la niebla"
+        },
+        "ja": {
+          "name": "霧の中の鍛造"
+        },
+        "pl": {
+          "name": "Wykute we mgle"
+        }
+      }
+    },
+    {
+      "id": 32,
+      "name": "Tools of Torment",
+      "release_date": "2023-03-07",
+      "release_year": 2023,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_toolsOfTorment.png",
+      "banner_local_path": "chapters/tools_of_torment.webp",
+      "translations": {
+        "de": {
+          "name": "Werkzeuge der Qual"
+        },
+        "en": {
+          "name": "Tools of Torment"
+        },
+        "es": {
+          "name": "Herramientas de tormento"
+        },
+        "ja": {
+          "name": "苦虐の道具"
+        },
+        "pl": {
+          "name": "Narzędzia udręki"
+        }
+      }
+    },
+    {
+      "id": 33,
+      "name": "End Transmission",
+      "release_date": "2023-06-13",
+      "release_year": 2023,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_endTransmission.png",
+      "banner_local_path": "chapters/end_transmission.webp",
+      "translations": {
+        "de": {
+          "name": "Ende der Übertragung"
+        },
+        "en": {
+          "name": "End Transmission"
+        },
+        "es": {
+          "name": "Fin de transmisión"
+        },
+        "ja": {
+          "name": "通信終了"
+        },
+        "pl": {
+          "name": "Koniec transmisji"
+        }
+      }
+    },
+    {
+      "id": 34,
+      "name": "Nicolas Cage",
+      "release_date": "2023-07-25",
+      "release_year": 2023,
+      "is_licensed": true,
+      "dlc_type": "half_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_nicolasCage.png",
+      "banner_local_path": "chapters/nicolas_cage.webp",
+      "translations": {
+        "de": {
+          "name": "Nicolas Cage"
+        },
+        "en": {
+          "name": "Nicolas Cage"
+        },
+        "es": {
+          "name": "Nicolas Cage"
+        },
+        "ja": {
+          "name": "ニコラス・ケイジ"
+        },
+        "pl": {
+          "name": "Nicolas Cage"
+        }
+      }
+    },
+    {
+      "id": 35,
+      "name": "Alien",
+      "release_date": "2023-08-29",
+      "release_year": 2023,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_alien.png",
+      "banner_local_path": "chapters/alien.webp",
+      "translations": {
+        "de": {
+          "name": "Alien"
+        },
+        "en": {
+          "name": "Alien"
+        },
+        "es": {
+          "name": "Alien"
+        },
+        "ja": {
+          "name": "エイリアン"
+        },
+        "pl": {
+          "name": "Obcy"
+        }
+      }
+    },
+    {
+      "id": 36,
+      "name": "Chucky",
+      "release_date": "2023-11-28",
+      "release_year": 2023,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_chucky.png",
+      "banner_local_path": "chapters/chucky.webp",
+      "translations": {
+        "de": {
+          "name": "Chucky"
+        },
+        "en": {
+          "name": "Chucky"
+        },
+        "es": {
+          "name": "Chucky"
+        },
+        "ja": {
+          "name": "チャッキー"
+        },
+        "pl": {
+          "name": "Chucky"
+        }
+      }
+    },
+    {
+      "id": 37,
+      "name": "Alan Wake®",
+      "release_date": "2024-01-30",
+      "release_year": 2024,
+      "is_licensed": true,
+      "dlc_type": "half_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_alanWake.png",
+      "banner_local_path": "chapters/alan_wake.webp",
+      "translations": {
+        "de": {
+          "name": "Alan Wake®"
+        },
+        "en": {
+          "name": "Alan Wake®"
+        },
+        "es": {
+          "name": "Alan Wake®"
+        },
+        "ja": {
+          "name": "アラン・ウェイク®"
+        },
+        "pl": {
+          "name": "Alan Wake®"
+        }
+      }
+    },
+    {
+      "id": 38,
+      "name": "All Things Wicked",
+      "release_date": "2024-03-12",
+      "release_year": 2024,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_allThingsWicked.png",
+      "banner_local_path": "chapters/all_things_wicked.webp",
+      "translations": {
+        "de": {
+          "name": "Alles Böse"
+        },
+        "en": {
+          "name": "All Things Wicked"
+        },
+        "es": {
+          "name": "Todo lo perverso"
+        },
+        "ja": {
+          "name": "邪悪の全て"
+        },
+        "pl": {
+          "name": "Wszystko, co nikczemne"
+        }
+      }
+    },
+    {
+      "id": 39,
+      "name": "Dungeons & Dragons",
+      "release_date": "2024-06-03",
+      "release_year": 2024,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_dungeonsAndDragons.png",
+      "banner_local_path": "chapters/dungeons_dragons.webp",
+      "translations": {
+        "de": {
+          "name": "Dungeons & Dragons"
+        },
+        "en": {
+          "name": "Dungeons & Dragons"
+        },
+        "es": {
+          "name": "Dungeons & Dragons"
+        },
+        "ja": {
+          "name": "ダンジョンズ&ドラゴンズ"
+        },
+        "pl": {
+          "name": "Dungeons & Dragons"
+        }
+      }
+    },
+    {
+      "id": 40,
+      "name": "Tomb Raider™",
+      "release_date": "2024-07-16",
+      "release_year": 2024,
+      "is_licensed": true,
+      "dlc_type": "half_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_tombRaider.png",
+      "banner_local_path": "chapters/tomb_raider.webp",
+      "translations": {
+        "de": {
+          "name": "Tomb Raider™"
+        },
+        "en": {
+          "name": "Tomb Raider™"
+        },
+        "es": {
+          "name": "Tomb Raider™"
+        },
+        "ja": {
+          "name": "トゥームレイダー™"
+        },
+        "pl": {
+          "name": "Tomb Raider™"
+        }
+      }
+    },
+    {
+      "id": 41,
+      "name": "Castlevania",
+      "release_date": "2024-08-27",
+      "release_year": 2024,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_castlevania.png",
+      "banner_local_path": "chapters/castlevania.webp",
+      "translations": {
+        "de": {
+          "name": "Castlevania"
+        },
+        "en": {
+          "name": "Castlevania"
+        },
+        "es": {
+          "name": "Castlevania"
+        },
+        "ja": {
+          "name": "悪魔城ドラキュラ"
+        },
+        "pl": {
+          "name": "Castlevania"
+        }
+      }
+    },
+    {
+      "id": 42,
+      "name": "Doomed Course",
+      "release_date": "2024-11-28",
+      "release_year": 2024,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_doomedCourse.png",
+      "banner_local_path": "chapters/doomed_course.webp",
+      "translations": {
+        "de": {
+          "name": "Verhängnisvoller Kurs"
+        },
+        "en": {
+          "name": "Doomed Course"
+        },
+        "es": {
+          "name": "Rumbo fatídico"
+        },
+        "ja": {
+          "name": "破滅の進路"
+        },
+        "pl": {
+          "name": "Przeklęty kurs"
+        }
+      }
+    },
+    {
+      "id": 43,
+      "name": "Tokyo Ghoul",
+      "release_date": "2025-04-02",
+      "release_year": 2025,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_tokyoGhoul.png",
+      "banner_local_path": "chapters/tokyo_ghoul.webp",
+      "translations": {
+        "de": {
+          "name": "Tokyo Ghoul"
+        },
+        "en": {
+          "name": "Tokyo Ghoul"
+        },
+        "es": {
+          "name": "Tokyo Ghoul"
+        },
+        "ja": {
+          "name": "東京喰種"
+        },
+        "pl": {
+          "name": "Tokyo Ghoul"
+        }
+      }
+    },
+    {
+      "id": 44,
+      "name": "Steady Pulse",
+      "release_date": "2025-05-06",
+      "release_year": 2025,
+      "is_licensed": false,
+      "dlc_type": "half_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_steadyPulse.png",
+      "banner_local_path": "chapters/steady_pulse.webp",
+      "translations": {
+        "de": {
+          "name": "Ruhiger Puls"
+        },
+        "en": {
+          "name": "Steady Pulse"
+        },
+        "es": {
+          "name": "Pulso firme"
+        },
+        "ja": {
+          "name": "安定した脈動"
+        },
+        "pl": {
+          "name": "Równomierny puls"
+        }
+      }
+    },
+    {
+      "id": 45,
+      "name": "Five Nights at Freddy's",
+      "release_date": "2025-06-17",
+      "release_year": 2025,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_fiveNightsAtFreddys.png",
+      "banner_local_path": "chapters/five_nights_at_freddys.webp",
+      "translations": {
+        "de": {
+          "name": "Five Nights at Freddy's"
+        },
+        "en": {
+          "name": "Five Nights at Freddy's"
+        },
+        "es": {
+          "name": "Five Nights at Freddy's"
+        },
+        "ja": {
+          "name": "Five Nights at Freddy's"
+        },
+        "pl": {
+          "name": "Five Nights at Freddy's"
+        }
+      }
+    },
+    {
+      "id": 46,
+      "name": "The Walking Dead",
+      "release_date": "2025-07-29",
+      "release_year": 2025,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_theWalkingDead.png",
+      "banner_local_path": "chapters/the_walking_dead.webp",
+      "translations": {
+        "de": {
+          "name": "The Walking Dead"
+        },
+        "en": {
+          "name": "The Walking Dead"
+        },
+        "es": {
+          "name": "The Walking Dead"
+        },
+        "ja": {
+          "name": "ウォーキング・デッド"
+        },
+        "pl": {
+          "name": "The Walking Dead"
+        }
+      }
+    },
+    {
+      "id": 47,
+      "name": "Sinister Grace",
+      "release_date": "2025-09-23",
+      "release_year": 2025,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_sinisterGrace.png",
+      "banner_local_path": "chapters/sinister_grace.webp",
+      "translations": {
+        "de": {
+          "name": "Finsterer Anmut"
+        },
+        "en": {
+          "name": "Sinister Grace"
+        },
+        "es": {
+          "name": "Gracia siniestra"
+        },
+        "ja": {
+          "name": "不吉な気品"
+        },
+        "pl": {
+          "name": "Złowroga gracja"
+        }
+      }
+    },
+    {
+      "id": 48,
+      "name": "Stranger Things Chapter 2",
+      "release_date": "2026-01-27",
+      "release_year": 2026,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_strangerThingsChapter2.png",
+      "banner_local_path": "chapters/stranger_things_chapter_2.webp",
+      "translations": {
+        "de": {
+          "name": "Stranger Things"
+        },
+        "en": {
+          "name": "Stranger Things"
+        },
+        "es": {
+          "name": "Stranger Things"
+        },
+        "ja": {
+          "name": "ストレンジャー・シングス"
+        },
+        "pl": {
+          "name": "Stranger Things"
+        }
+      }
+    },
+    {
+      "id": 49,
+      "name": "All-Kill: Comeback",
+      "release_date": "2026-03-17",
+      "release_year": 2026,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_all-KillComeback.png",
+      "banner_local_path": "chapters/all_kill_comeback.webp",
+      "translations": {
+        "de": {
+          "name": "All-Kill"
+        },
+        "en": {
+          "name": "All-Kill"
+        },
+        "es": {
+          "name": "All-Kill"
+        },
+        "ja": {
+          "name": "All-Kill"
+        },
+        "pl": {
+          "name": "All-Kill"
+        }
+      }
+    },
+    {
+      "id": 50,
+      "name": "Jason",
+      "release_date": "2026-06-16",
+      "release_year": 2026,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_jason.png",
+      "banner_local_path": "chapters/jason.webp",
+      "translations": {
+        "de": {
+          "name": "Freitag der 13."
+        },
+        "en": {
+          "name": "Friday the 13th"
+        },
+        "es": {
+          "name": "Viernes 13"
+        },
+        "ja": {
+          "name": "13日の金曜日"
+        },
+        "pl": {
+          "name": "Piątek trzynastego"
+        }
+      }
+    },
+    {
+      "id": 51,
+      "name": "The Life Road",
+      "release_date": "2026-06-25",
+      "release_year": 2026,
+      "is_licensed": false,
+      "dlc_type": "half_chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_theLifeRoad.png",
+      "banner_local_path": "chapters/the_life_road.webp",
+      "translations": {
+        "de": {
+          "name": "Lebensweg"
+        },
+        "en": {
+          "name": "Life Road"
+        },
+        "es": {
+          "name": "Camino de vida"
+        },
+        "ja": {
+          "name": "命の道"
+        },
+        "pl": {
+          "name": "Droga życia"
+        }
+      }
+    },
+    {
+      "id": 52,
+      "name": "Chorus of Sin",
+      "release_date": "2026-08-25",
+      "release_year": 2026,
+      "is_licensed": false,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Logo_chorusOfSin.png",
+      "banner_local_path": "chapters/chorus_of_sin.webp",
+      "translations": {
+        "de": {
+          "name": "Chor der Sünde"
+        },
+        "en": {
+          "name": "Chorus of Sin"
+        },
+        "es": {
+          "name": "Coro del pecado"
+        },
+        "ja": {
+          "name": "罪の合唱"
+        },
+        "pl": {
+          "name": "Chór grzechu"
+        }
+      }
+    }
+  ]
+}

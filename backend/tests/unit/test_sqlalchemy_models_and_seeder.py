@@ -6,7 +6,8 @@ from flask.testing import FlaskClient
 from sqlalchemy import delete, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
-from app.models import Character, Perk
+from tests.unit.conftest import make_chapter
+from app.models import Killer, Perk, Survivor
 
 
 @pytest.mark.unit
@@ -14,40 +15,42 @@ class TestSQLAlchemyModelsAndSeeder:
     """Tests for core SQLAlchemy character/perk mapping, foreign key cascades, upserts, and PostgreSQL URL dialect rewriting."""
 
     def test_character_and_perk_mapped_models(self, db_session: Session) -> None:
-        char = Character(
+        # No `role`: the table is the role. No `code_prefix`, `short_name` or
+        # `release_number` either -- all three were `name` or the primary key
+        # respelled, and are derived now.
+        char = Killer(
             name="Test Trapper",
-            role="Killer",
-            code_prefix="K01",
+            chapter_id=make_chapter(db_session).id,
+            power_name="Bear Trap",
             portrait_url="avatars/killers/test_trapper.png",
             real_name="Evan MacMillan",
-            short_name="test_trapper",
-            release_number=1,
         )
         db_session.add(char)
         db_session.commit()
 
         assert char.id is not None
         assert char.role == "Killer"
-        assert char.code_prefix == "K01"
+        assert char.code_prefix == f"K{char.id:02d}"
+        assert char.release_number == char.id
 
         perk1 = Perk(
             name="Test Unnerving Presence",
-            category="Killer",
+            role="Killer",
             is_teachable=True,
             description="Causes survivors in terror radius to have difficult skill checks.",
-            character_id=char.id,
+            killer_id=char.id,
         )
         perk2 = Perk(
             name="Test Brutal Strength",
-            category="Killer",
+            role="Killer",
             is_teachable=True,
             description="Increases pallet breaking speed.",
-            character_id=char.id,
+            killer_id=char.id,
         )
         db_session.add_all([perk1, perk2])
         db_session.commit()
 
-        stmt = select(Character).where(Character.name == "Test Trapper")
+        stmt = select(Killer).where(Killer.name == "Test Trapper")
         retrieved_char = db_session.scalars(stmt).first()
         assert retrieved_char is not None
         assert len(retrieved_char.perks) == 2
@@ -64,11 +67,11 @@ class TestSQLAlchemyModelsAndSeeder:
         assert perk_dict["is_teachable"] is True
 
     def test_cascade_delete(self, db_session: Session) -> None:
-        char = Character(name="Test Meg", role="Survivor", code_prefix="S01")
+        char = Survivor(name="Test Meg", chapter_id=make_chapter(db_session).id)
         db_session.add(char)
         db_session.commit()
 
-        perk = Perk(name="Test Sprint Burst", category="Survivor", character_id=char.id)
+        perk = Perk(name="Test Sprint Burst", role="Survivor", survivor_id=char.id)
         db_session.add(perk)
         db_session.commit()
 
@@ -79,33 +82,32 @@ class TestSQLAlchemyModelsAndSeeder:
         assert perk_check is None
 
     def test_atomic_upsert_on_conflict(self, db_session: Session) -> None:
-        stmt1 = sqlite_insert(Character).values(
+        chapter_id = make_chapter(db_session).id
+        stmt1 = sqlite_insert(Survivor).values(
             {
                 "name": "Test Claudette",
-                "role": "Survivor",
-                "code_prefix": "S02",
+                "chapter_id": chapter_id,
                 "portrait_url": "old_url.png",
             }
         )
         db_session.execute(stmt1)
         db_session.commit()
 
-        stmt2 = sqlite_insert(Character).values(
+        stmt2 = sqlite_insert(Survivor).values(
             {
                 "name": "Test Claudette",
-                "role": "Survivor",
-                "code_prefix": "S02",
+                "chapter_id": chapter_id,
                 "portrait_url": "updated_url.png",
             }
         )
         stmt2 = stmt2.on_conflict_do_update(
-            index_elements=[Character.name],
+            index_elements=[Survivor.name],
             set_={"portrait_url": stmt2.excluded.portrait_url},
         )
         db_session.execute(stmt2)
         db_session.commit()
 
-        char = db_session.scalars(select(Character).where(Character.name == "Test Claudette")).first()
+        char = db_session.scalars(select(Survivor).where(Survivor.name == "Test Claudette")).first()
         assert char is not None
         assert char.portrait_url == "updated_url.png"
 

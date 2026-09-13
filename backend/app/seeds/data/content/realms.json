@@ -1,0 +1,428 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.271281+00:00",
+  "source": "LemonDBD",
+  "target": "realms",
+  "realms": [
+    {
+      "id": 1,
+      "name": "The Macmillan Estate",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_01.png?ea2add",
+      "image_local_path": "realms/the_macmillan_estate.webp",
+      "translations": {
+        "de": {
+          "name": "MacMillan-Anwesen"
+        },
+        "es": {
+          "name": "La Finca MacMillan"
+        },
+        "ja": {
+          "name": "マクミラン・エステート"
+        },
+        "pl": {
+          "name": "Posiadłość Macmillanów"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Autohaven Wreckers",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_02.png?a91a1d",
+      "image_local_path": "realms/autohaven_wreckers.webp",
+      "translations": {
+        "de": {
+          "name": "Autohaven-Schrottplatz"
+        },
+        "es": {
+          "name": "Desguace Autohaven"
+        },
+        "ja": {
+          "name": "オートヘイヴン・レッカーズ"
+        },
+        "pl": {
+          "name": "Złomowisko Autohaven"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Coldwind Farm",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_03.png?934344",
+      "image_local_path": "realms/coldwind_farm.webp",
+      "translations": {
+        "de": {
+          "name": "Coldwind Farm"
+        },
+        "es": {
+          "name": "Granja Coldwind"
+        },
+        "ja": {
+          "name": "コールドウィンド・ファーム"
+        },
+        "pl": {
+          "name": "Farma Coldwind"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Crotus Prenn Asylum",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_04.png?462de4",
+      "image_local_path": "realms/disturbed_ward.webp",
+      "translations": {
+        "de": {
+          "name": "Crotus-Prenn-Anstalt"
+        },
+        "es": {
+          "name": "Psiquiátrico Crotus Prenn"
+        },
+        "ja": {
+          "name": "クロータス・プレン・アサイラム"
+        },
+        "pl": {
+          "name": "Przytułek Crotus Prenn"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Haddonfield",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_05.png?549ff8",
+      "image_local_path": "realms/haddonfield.webp",
+      "translations": {
+        "de": {
+          "name": "Haddonfield"
+        },
+        "es": {
+          "name": "Haddonfield"
+        },
+        "ja": {
+          "name": "ハドンフィールド"
+        },
+        "pl": {
+          "name": "Haddonfield"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Backwater Swamp",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_06.png?e24cc0",
+      "image_local_path": "realms/backwater_swamp.webp",
+      "translations": {
+        "de": {
+          "name": "Backwater-Sumpf"
+        },
+        "es": {
+          "name": "Pantano de Aguas Estancadas"
+        },
+        "ja": {
+          "name": "バックウォーター・スワンプ"
+        },
+        "pl": {
+          "name": "Bagienne Rozlewisko"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Lery's Memorial Institute",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_07.png?e8373c",
+      "image_local_path": "realms/lerys_memorial_institute.webp",
+      "translations": {
+        "de": {
+          "name": "Lérys Gedenkinstitut"
+        },
+        "es": {
+          "name": "Instituto Conmemorativo Léry"
+        },
+        "ja": {
+          "name": "レリー記念研究所"
+        },
+        "pl": {
+          "name": "Instytut Pamięci Léry'ego"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Red Forest",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_08.png?b4879e",
+      "image_local_path": "realms/red_forest.webp",
+      "translations": {
+        "de": {
+          "name": "Roter Wald"
+        },
+        "es": {
+          "name": "Bosque Rojo"
+        },
+        "ja": {
+          "name": "レッド・フォレスト"
+        },
+        "pl": {
+          "name": "Czerwony Las"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "Springwood",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_09.png?6e8e68",
+      "image_local_path": "realms/springwood.webp",
+      "translations": {
+        "de": {
+          "name": "Springwood"
+        },
+        "es": {
+          "name": "Springwood"
+        },
+        "ja": {
+          "name": "スプリングウッド"
+        },
+        "pl": {
+          "name": "Springwood"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Gideon Meat Plant",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_10.png?4dd50f",
+      "image_local_path": "realms/gideon_meat_plant.webp",
+      "translations": {
+        "de": {
+          "name": "Gideon-Fleischfabrik"
+        },
+        "es": {
+          "name": "Planta Procesadora de Carne Gideon"
+        },
+        "ja": {
+          "name": "ギデオン食肉工場"
+        },
+        "pl": {
+          "name": "Zakład Mięsny Gideon"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Yamaoka Estate",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_11.png?473530",
+      "image_local_path": "realms/yamaoka_estate.webp",
+      "translations": {
+        "de": {
+          "name": "Yamaoka-Anwesen"
+        },
+        "es": {
+          "name": "Residencia Yamaoka"
+        },
+        "ja": {
+          "name": "山岡邸"
+        },
+        "pl": {
+          "name": "Posiadłość Rodziny Yamaoka"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "name": "Ormond",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_12.png?33b52b",
+      "image_local_path": "realms/ormond.webp",
+      "translations": {
+        "de": {
+          "name": "Ormond"
+        },
+        "es": {
+          "name": "Ormond"
+        },
+        "ja": {
+          "name": "オーモンド"
+        },
+        "pl": {
+          "name": "Ormond"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Hawkins National Laboratory",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_13.png?8e5413",
+      "image_local_path": "realms/hawkins_national_laboratory.webp",
+      "translations": {
+        "de": {
+          "name": "Hawkins National Laboratory"
+        },
+        "es": {
+          "name": "Laboratorio Nacional Hawkins"
+        },
+        "ja": {
+          "name": "ホーキンス国立研究所"
+        },
+        "pl": {
+          "name": "Hawkins National Laboratory"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "name": "Grave of Glenvale",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_14.png?294e8a",
+      "image_local_path": "realms/grave_of_glenvale.webp",
+      "translations": {
+        "de": {
+          "name": "Grab von Glenvale"
+        },
+        "es": {
+          "name": "Tumba de Glenvale"
+        },
+        "ja": {
+          "name": "グレンベールの墓場"
+        },
+        "pl": {
+          "name": "Grób w Glenvale"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "name": "Silent Hill",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_15.png?d87a1f",
+      "image_local_path": "realms/silent_hill.webp",
+      "translations": {
+        "de": {
+          "name": "Silent Hill"
+        },
+        "es": {
+          "name": "Silent Hill"
+        },
+        "ja": {
+          "name": "サイレントヒル"
+        },
+        "pl": {
+          "name": "Silent Hill"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "name": "Raccoon City",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_16.png?7db5bd",
+      "image_local_path": "realms/raccoon_city.webp",
+      "translations": {
+        "de": {
+          "name": "Raccoon City"
+        },
+        "es": {
+          "name": "Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ"
+        },
+        "pl": {
+          "name": "Raccoon City"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Forsaken Boneyard",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_17.png?75a33d",
+      "image_local_path": "realms/forsaken_boneyard.webp",
+      "translations": {
+        "de": {
+          "name": "Einsamer Friedhof"
+        },
+        "es": {
+          "name": "Cementerio Abandonado"
+        },
+        "ja": {
+          "name": "荒れ果てた墓場"
+        },
+        "pl": {
+          "name": "Zapomniany Cmentarz"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Withered Isle",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_18.png?a6f84e",
+      "image_local_path": "realms/withered_isle.webp",
+      "translations": {
+        "de": {
+          "name": "Verkümmerte Insel"
+        },
+        "es": {
+          "name": "Isla Marchita"
+        },
+        "ja": {
+          "name": "枯死の島"
+        },
+        "pl": {
+          "name": "Uschnięta Wyspa"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "name": "The Decimated Borgo",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_19.png?3bc063",
+      "image_local_path": "realms/the_decimated_borgo.webp",
+      "translations": {
+        "de": {
+          "name": "Das dezimierte Borgo"
+        },
+        "es": {
+          "name": "El Pueblo Diezmado"
+        },
+        "ja": {
+          "name": "壊滅したボルゴ"
+        },
+        "pl": {
+          "name": "Zdziesiątkowane Borgo"
+        }
+      }
+    },
+    {
+      "id": 20,
+      "name": "Dvarka Deepwood",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_20.png?a7962e",
+      "image_local_path": "realms/dvarka_deepwood.webp",
+      "translations": {
+        "de": {
+          "name": "Dvarka-Dschungel"
+        },
+        "es": {
+          "name": "Bosque Profundo de Dvarka"
+        },
+        "ja": {
+          "name": "ドヴァルカ・ディープウッド"
+        },
+        "pl": {
+          "name": "Gęsty Las Dvarki"
+        }
+      }
+    },
+    {
+      "id": 21,
+      "name": "Sleepless District",
+      "image_url": "https://deadbydaylight.wiki.gg/images/RealmKeyArt_21.png?4f7813",
+      "image_local_path": "realms/sleepless_district.webp",
+      "translations": {
+        "de": {
+          "name": "Schlafloses Viertel"
+        },
+        "es": {
+          "name": "Distrito Insomne"
+        },
+        "ja": {
+          "name": "眠らない界隈"
+        },
+        "pl": {
+          "name": "Bezsenna Dzielnica"
+        }
+      }
+    }
+  ]
+}

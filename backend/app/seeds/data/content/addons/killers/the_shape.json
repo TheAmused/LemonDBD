@@ -1,0 +1,557 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 95,
+      "name": "Boyfriend's Memo",
+      "killer_id": 5,
+      "description": "A \"romantic\", if slightly sleazy, note left around to draw the attention of a female lover.\n• Increases Stalk range by 8 meters.\n\"\"The note is signed: D.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_boyfriendsMemo.png?f14b3c",
+      "icon_local_path": "icons/addons/boyfriends_memo.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Notiz des Freunds",
+          "description": "Eine „romantische“, wenn auch leicht anrüchige Nachricht, um die Aufmerksamkeit einer Geliebten zu erregen.\n• Erhöht die Reichweite für das Verfolgen um 8 Meter.\n\"„Die Nachricht ist unterschrieben mit: D.“\""
+        },
+        "es": {
+          "name": "Nota del novio",
+          "description": "Una nota \"romántica\", aunque algo sórdida, dejada para atraer la atención de una amante.\n• Aumenta el alcance del acecho en 8 metros.\n\"La nota está firmada con una \"D\".\""
+        },
+        "ja": {
+          "name": "ボーイフレンドのメモ",
+          "description": "少し安っぽいかもしれない「ロマンチック」な言葉が書かれたメモ。ガールフレンドの注意を引くために書かれたもの。\n• 凝視できる範囲が8メートル拡大する\n\"「メモには\"D\"というサインがある」\""
+        },
+        "pl": {
+          "name": "Notka od chłopaka",
+          "description": "„Romantyczna”, nieco żenująca notka pozostawiona przez osobę usiłującą zwrócić na siebie uwagę kochanki.\n• Zwiększa zasięg śledzenia o 8 metrów.\n\"„Ta notka jest podpisana: D.”\""
+        }
+      }
+    },
+    {
+      "id": 96,
+      "name": "Dead Rabbit",
+      "killer_id": 5,
+      "description": "A grey rabbit which has been opened from neck to tail.\n• Decreases Terror Radius in Pursuer Mode by 25%.\n• Increases Terror Radius in Evil Incarnate mode by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deadRabbit.png?882841",
+      "icon_local_path": "icons/addons/dead_rabbit.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Toter Hase",
+          "description": "Ein grauer Hase, der vom Kopf bis zum Schwanz aufgeschlitzt wurde.\n• Verringert den Terrorradius im Jägermodus um 25 %.\n• Erhöht den Terrorradius im „Inkarnation des Bösen“-Modus um 25 %."
+        },
+        "es": {
+          "name": "Conejo muerto",
+          "description": "Un conejo gris abierto en canal.\n• Reduce el radio de terror del modo hostigamiento un 25 %.\n• Aumenta el radio de terror del modo Mal encarnado un 25 %."
+        },
+        "ja": {
+          "name": "ウサギの死体",
+          "description": "首から尻尾まで引き裂かれた灰色のウサギ。\n• 追跡者モードの脅威範囲が25%縮小する\n• 邪悪の化身モードの脅威範囲が25%拡大する"
+        },
+        "pl": {
+          "name": "Martwy królik",
+          "description": "Szary królik. Został rozcięty od szyi aż po ogon.\n• Zmniejsza zasięg terroru w trybie Gonitwy o 25%.\n• Zwiększa zasięg terroru w trybie Wcielonego Zła o 25%."
+        }
+      }
+    },
+    {
+      "id": 97,
+      "name": "Fragrant Tuft of Hair",
+      "killer_id": 5,
+      "description": "A tuft of blond hair which was forcefully torn off someone's scalp. Releases hints of feminine floral fragrance.\nIn Evil Incarnate Mode:\n• Survivors are Exposed.\n• Lunge range is increased by 50%.\n• Slaughtering Strike cannot be used.\nExposed survivors will be downed by basic attacks even if uninjured.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fragrantTuftOfHair.png?907532",
+      "icon_local_path": "icons/addons/fragrant_tuft_of_hair.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Duftendes Haarbüschel",
+          "description": "Ein Büschel blonder Haare, das jemandem gewaltsam vom Kopf gerissen wurde. Verströmt einen leichten, femininen Blütenduft.\nIm „Inkarnation des Bösen“-Modus gilt:\n• Überlebende sind gefährdet.\n• Die Reichweite des Sprungangriffs ist um 50 % erhöht.\n• Schlachterhieb kann nicht verwendet werden.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind."
+        },
+        "es": {
+          "name": "Mata de pelo perfumada",
+          "description": "Una mata de pelo rubio arrancado a la fuerza del cuero cabelludo de alguien. Desprende un ligero aroma a fragancia floral de mujer.\nEn el modo Mal encarnado:\n• Los supervivientes sufren Vulnerabilidad.\n• El alcance de la embestida aumenta un 50 %.\n• Golpe masacrante no se puede utilizar.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas."
+        },
+        "ja": {
+          "name": "いい香りがする髪の毛の束",
+          "description": "誰かの頭皮から強引に引きちぎられた金髪の毛の束。かすかに女性らしい花のような香りを放っている。\n邪悪の化身モードで：\n• 生存者が無防備状態になる\n• 突進範囲が50%拡大する\n• 虐殺の一撃は使えない\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。"
+        },
+        "pl": {
+          "name": "Pachnąca kępka włosów",
+          "description": "Kępka jasnych włosów wyrwanych siłą z czyjejś głowy. Uwalnia kwiecisty zapach kobiecych perfum.\nW trybie Zła Wcielonego:\n• Na ocalałych nakładany jest efekt Narażony.\n• Zasięg ataku jest zwiększony o 50%.\n• Nie można użyć Rzeźnickiego uderzenia.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni."
+        }
+      }
+    },
+    {
+      "id": 98,
+      "name": "Glass Fragment",
+      "killer_id": 5,
+      "description": "A tiny piece of tinted glass, probably from a broken object. It is impossible to determine its origin.\n• Increases the movement speed of Slaughtering Strike by 5%.\n• Decreases the charge speed of Slaughtering Strike by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_glassFragment.png?2f2002",
+      "icon_local_path": "icons/addons/glass_fragment.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glasstück",
+          "description": "Ein winziges Stück gefärbten Glases, wahrscheinlich von einem zerbrochenen Gegenstand. Es ist unmöglich, seine genaue Herkunft zu bestimmen.\n• Erhöht die Bewegungsgeschwindigkeit von Schlachterhieb um 5 %.\n• Verringert die Aufladegeschwindigkeit von Schlachterhieb um 10 %."
+        },
+        "es": {
+          "name": "Fragmento de cristal",
+          "description": "Un pequeño fragmento de cristal coloreado, probablemente de algún objeto roto. Es imposible determinar su origen.\n• Aumenta la velocidad de movimiento de Golpe masacrante un 5 %.\n• Reduce la velocidad de carga de Golpe masacrante un 10 %."
+        },
+        "ja": {
+          "name": "ガラスの破片",
+          "description": "小さな色付きガラスの欠片。おそらく壊れた何かの一部だが、出所を確かめることはできないだろう。\n• 虐殺の一撃の移動速度が5%上昇する\n• 虐殺の一撃のチャージ速度が10%低下する"
+        },
+        "pl": {
+          "name": "Odłamek szkła",
+          "description": "Mały kawałek barwionego szkła pochodzący najprawdopodobniej z rozbitego przedmiotu. Ustalenie jego pochodzenia jest niemożliwe.\n• Zwiększa prędkość ruchu Rzeźnickiego uderzenia o 5%.\n• Zmniejsza prędkość ładowania Rzeźnickiego uderzenia o 10%."
+        }
+      }
+    },
+    {
+      "id": 99,
+      "name": "Hair Bow",
+      "killer_id": 5,
+      "description": "A blue tartan ribbon used to tie hair.\n• Increases the duration of Evil Incarnate by 20 seconds.\n• Decreases the Stalk Meter fill rate by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hairBow.png?deaa15",
+      "icon_local_path": "icons/addons/hair_bow.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Haarschleife",
+          "description": "Eine blau karierte Schleife zum Zusammenbinden der Haare.\n• Verlängert die Dauer von Inkarnation des Bösen um 20 Sek.\n• Verringert die Füllrate der Verfolgungsleiste um 20 %."
+        },
+        "es": {
+          "name": "Lazo",
+          "description": "Un lazo a cuadros azul para el pelo.\n• Aumenta la duración de Mal encarnado en 20 segundos.\n• Reduce la velocidad a la que se llena el medidor de acecho un 20 %."
+        },
+        "ja": {
+          "name": "リボンの髪留め",
+          "description": "タータン柄の青いリボン。髪の毛を留めるのに使う。\n• 邪悪の化身の持続時間が20秒増加する\n• 凝視ゲージの貯まる速度が20%低下する"
+        },
+        "pl": {
+          "name": "Kokarda do włosów",
+          "description": "Niebieska tartanowa kokarda służąca do zawiązywania włosów.\n• Wydłuża czas trwania trybu Zła Wcielonego o 20 sekund.\n• Zmniejsza prędkość zapełniania wskaźnika śledzenia o 20%."
+        }
+      }
+    },
+    {
+      "id": 100,
+      "name": "Hair Brush",
+      "killer_id": 5,
+      "description": "A nylon bristle brush used to add body and softness to hair.\n• When Evil Incarnate activates, the next pallet break is 50% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hairBrush.png?1df20c",
+      "icon_local_path": "icons/addons/hair_brush.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Haarbürste",
+          "description": "Eine Bürste mit Nylonborsten, um Struktur und Weichheit ins Haar zu bringen.\n• Bei der Aktivierung von Inkarnation des Bösen wird die nächste Palette um 50 % schneller zerstört."
+        },
+        "es": {
+          "name": "Cepillo",
+          "description": "Un cepillo con cerdas de nailon para suavizar el pelo y darle cuerpo.\n• Cuando se activa Mal encarnado, la siguiente rotura de palé será un 50 % más rápida."
+        },
+        "ja": {
+          "name": "ヘアブラシ",
+          "description": "ナイロン毛のブラシ。髪にハリとやわらかさを出してくれる\n• 邪悪の化身が発動すると、次にパレットを破壊する速度が50%上昇する"
+        },
+        "pl": {
+          "name": "Szczotka do włosów",
+          "description": "Nylonowa szczotka dodająca włosom objętości i miękkości.\n• Gdy tryb Zła Wcielonego jest aktywny, następne niszczenie palety jest o 50% szybsze."
+        }
+      }
+    },
+    {
+      "id": 101,
+      "name": "J.Myers Memorial",
+      "killer_id": 5,
+      "description": "A glossy page ripped from the '65 Haddonfield High School yearbook, one dedicated to the memory of Judith Myers.\n• Increases pickup and hook speeds by 40% in Evil Incarnate Mode.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jMyersMemorial.png?6ff675",
+      "icon_local_path": "icons/addons/j_myers_memorial.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gedenkseite für J. Myers",
+          "description": "Eine Hochglanzseite, die aus dem „Haddonfield High School“-Jahrbuch von 1965 herausgerissen wurde und Judith Myers gewidmet ist.\n• Erhöht im „Inkarnation des Bösen“-Modus die Geschwindigkeit beim Aufheben und Festhaken um 40 %."
+        },
+        "es": {
+          "name": "Homenaje a J. Myers",
+          "description": "Una página brillante arrancada del anuario de 1965 del instituto de Haddonfield, dedicada a la memoria de Judith Myers.\n• Aumenta la velocidad de recoger y colgar un 40 % en el modo Mal encarnado."
+        },
+        "ja": {
+          "name": "J・マイヤーズの思い出",
+          "description": "1965年の卒業アルバムからはぎ取られた光沢紙のページ。ジュディス・マイヤーズにささげられる。\n• 邪悪の化身モードが発動中、生存者を担ぎ上げたり、フックに吊るす速度が40%上昇する"
+        },
+        "pl": {
+          "name": "Pamiątka po J.Myers",
+          "description": "Lśniąca strona wyrwana z klasowej książki pamiątkowej rocznika 1965 w liceum Haddonfield. Jest poświęcona pamięci Judith Myers.\n• Zwiększa prędkość podnoszenia i wieszania na haku w trybie Zła Wcielonego o 40%."
+        }
+      }
+    },
+    {
+      "id": 102,
+      "name": "Judith's Journal",
+      "killer_id": 5,
+      "description": "A journal identified as owned by Judith M. Myers. Most of the pages are defaced with frightening and disturbing drawings.\n• Increases the Stalk Meter fill rate on the Obsession by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_judithsJournal.png?878a2f",
+      "icon_local_path": "icons/addons/judiths_journal.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Judiths Tagebuch",
+          "description": "Ein Tagebuch, das als Eigentum von Judith M. Myers gekennzeichnet ist. Die meisten Seiten sind mit beängstigenden und verstörenden Zeichnungen verunstaltet.\n• Erhöht die Füllrate der Verfolgungsleiste auf das Ziel deiner Besessenheit um 40 %."
+        },
+        "es": {
+          "name": "Diario de Judith",
+          "description": "Un diario que perteneció a Judith M. Myers. La mayoría de las páginas están cubiertas de dibujos macabros.\n• Aumenta la velocidad a la que se llena el medidor de acecho sobre tu obsesión un 40 %."
+        },
+        "ja": {
+          "name": "ジュディスの日記",
+          "description": "ジュディス・M・マイヤーズの持ち物であることが記された日記。大部分のページが恐ろしい乱雑な落書きがあって読めない。\n• オブセッションに対して、凝視ゲージの貯まる速度が40%上昇する"
+        },
+        "pl": {
+          "name": "Dziennik Judith",
+          "description": "Dziennik należący do Judith M. Myers. Większość stron jest oszpecona przerażającymi i niepokojącymi rysunkami.\n• Zwiększa prędkość zapełniania wskaźnika śledzenia obsesji o 40%."
+        }
+      }
+    },
+    {
+      "id": 103,
+      "name": "Judith's Tombstone",
+      "killer_id": 5,
+      "description": "A large and heavy granite tombstone stolen from Mt. Sinclair cemetery, belonging to Judith Myers.\n• Hooking a Survivor during Evil Incarnate refreshes its duration.\n• Limits the duration of Evil Incarnate to 40 seconds.\n\"\"Here lies our beloved daughter.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_judithsTombstone.png?b23550",
+      "icon_local_path": "icons/addons/judiths_tombstone.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Judiths Grabstein",
+          "description": "Ein großer und schwerer Granitgrabstein, der vom „Mt. Sinclair“-Friedhof gestohlen wurde und Judith Myers gehört.\n• Wenn ein Überlebender während Inkarnation des Bösen festgehakt wird, wird dessen Dauer neu gestartet.\n• Beschränkt die Dauer von Inkarnation des Bösen auf 40 Sek.\n\"„Hier ruht unsere geliebte Tochter.“\""
+        },
+        "es": {
+          "name": "Lápida de Judith",
+          "description": "Una lápida de granito grande y pesada, perteneciente a Judith Myers, robada del cementerio de Mt. Sinclair.\n• Colgar a un superviviente durante Mal encarnado reinicia su duración.\n• Limita la duración de Mal encarnado a 40 segundos.\n\"\"Aquí yace nuestra querida hija\".\""
+        },
+        "ja": {
+          "name": "ジュディスの墓石",
+          "description": "シンクレア山墓地にあるジュディス・マイヤーズの墓石。御影石でできていて、大きく重い。\n• 邪悪の化身モードで生存者をフックに吊るすと、このモードのタイマーがリセットされる\n• 邪悪の化身の持続時間が40秒に制限される\n\"「愛する娘、ここに眠る」\""
+        },
+        "pl": {
+          "name": "Nagrobek Judith",
+          "description": "Wielki i ciężki granitowy nagrobek skradziony z cmentarza Mt. Sinclair, należący do Judith Myers.\n• Zawieszenie ocalałego w trybie Zła Wcielonego odnawia jego czas trwania.\n• Ogranicza czas trwania trybu Zła Wcielonego do 40 sekund.\n\"„Spoczywa tu nasza ukochana córka”.\""
+        }
+      }
+    },
+    {
+      "id": 104,
+      "name": "Lock of Hair",
+      "killer_id": 5,
+      "description": "A cut lock of blond hair bunched with a black elastic.\n• While Evil Incarnate is active, hold the Ability button to end it prematurely and retain 50% of the remaining duration as Stalk progress.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lockOfHair.png?ea3568",
+      "icon_local_path": "icons/addons/lock_of_hair.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Haarlocke",
+          "description": "Eine abgeschnittene, blonde Haarlocke, zusammengehalten von einem schwarzen Haargummi.\n• Solange Inkarnation des Bösen aktiv ist, kannst du die Taste für die aktive Fähigkeit gedrückt halten, um sie vorzeitig zu beenden und 50 % der verbleibenden Dauer als Fortschritt für das Verfolgen zu behalten."
+        },
+        "es": {
+          "name": "Mechón de Pelo",
+          "description": "Un mechón de pelo rubio atado con una goma negra.\n• Mientras Mal encarnado esté activo, mantén pulsado el botón de la habilidad para finalizarlo antes de tiempo y mantener el 50 % de la duración restante mientras progresa el acecho."
+        },
+        "ja": {
+          "name": "髪の毛の房",
+          "description": "黒いゴムで結われた、金色の毛髪の一房。\n• 邪悪の化身の発動中にアビリティボタンを長押しして邪悪の化身を早めに終わらせ、残っていた持続時間の50%を凝視の進行に加算する"
+        },
+        "pl": {
+          "name": "Pukiel włosów",
+          "description": "Związany czarną gumką elastyczną ucięty pukiel blond włosów.\n• Gdy tryb Zła Wcielonego jest aktywny, przytrzymaj przycisk umiejętności aby wcześniej wyjść z trybu i zamienić 50% pozostałego czasu trwania jako postęp wskaźnika śledzenia."
+        }
+      }
+    },
+    {
+      "id": 105,
+      "name": "Memorial Flower",
+      "killer_id": 5,
+      "description": "A partially faded and dried pink larkspur picked up from a gravestone.\n• Increases movement speed in Stalker Mode to 4.4 m/s.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_memorialFlower.png?926785",
+      "icon_local_path": "icons/addons/memorial_flower.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Gedenkblume",
+          "description": "Ein rosafarbener, teilweise verblasster und vertrockneter Rittersporn von einem Grabstein.\n• Erhöht die Bewegungsgeschwindigkeit im Verfolgermodus auf 4,4 m/s."
+        },
+        "es": {
+          "name": "Flor de la tumba",
+          "description": "Una consuelda seca y medio descolorida, recogida de una tumba.\n• Aumenta la velocidad de movimiento en el modo acecho a 4,4 m/s."
+        },
+        "ja": {
+          "name": "思い出の花",
+          "description": "一部がしおれてしまっている、ピンク色の乾いた飛燕草。墓石のそばから摘んできたようだ。\n• ストーカーモードでの移動速度が4.4 m/秒に上昇する"
+        },
+        "pl": {
+          "name": "Pamiątkowy kwiat",
+          "description": "Częściowo wyblakła i wysuszona różowa ostróżka zabrana z nagrobka.\n• Zwiększa prędkość ruchu w trybie śledzenia do 4,4 m/s."
+        }
+      }
+    },
+    {
+      "id": 106,
+      "name": "Mirror Shard",
+      "killer_id": 5,
+      "description": "A large and sharp piece of a broken mirror.\n• Increases the base duration of Slaughtering Strike by 0.25 seconds.\n• Decreases the charge speed of Slaughtering Strike by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mirrorShard.png?cceb05",
+      "icon_local_path": "icons/addons/mirror_shard.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Spiegelscherbe",
+          "description": "Ein großes und scharfes Teilstück eines zerbrochenen Spiegels.\n• Verlängert die Basisdauer von Schlachterhieb um 0,25 Sek.\n• Verringert die Aufladegeschwindigkeit von Schlachterhieb um 25 %."
+        },
+        "es": {
+          "name": "Trozo de espejo",
+          "description": "Un trozo grande y afilado de espejo.\n• Aumenta la duración base de Golpe masacrante en 0,25 segundos.\n• Reduce la velocidad de carga de Golpe masacrante un 25 %."
+        },
+        "ja": {
+          "name": "鏡のかけら",
+          "description": "割れた鏡の鋭く大きなかけら。\n• 虐殺の一撃の基礎持続時間が0.25秒増加する\n• 虐殺の一撃のチャージ速度が25%低下する"
+        },
+        "pl": {
+          "name": "Lustrzany odłamek",
+          "description": "Wielki i ostry kawałek pękniętego lustra.\n• Zwiększa podstawowy czas trwania Rzeźnickiego uderzenia o 0,25 sekundy.\n• Zmniejsza prędkość ładowania Rzeźnickiego uderzenia o 25%."
+        }
+      }
+    },
+    {
+      "id": 107,
+      "name": "Reflective Fragment",
+      "killer_id": 5,
+      "description": "A tiny piece of a highly reflective material most probably from a broken mirror.\n• Hitting a Survivor with Slaughtering Strike adds 20 seconds to Evil Incarnate's duration.\n• Slaughtering Strike only deals a single health state of damage.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_reflectiveFragment.png?1032bb",
+      "icon_local_path": "icons/addons/reflective_fragment.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Reflektierende Scherbe",
+          "description": "Ein winziges Stück eines stark reflektierenden Materials, sehr wahrscheinlich von einem zerbrochenen Spiegel.\n• Wird ein Überlebender mit Schlachterhieb getroffen, wird die Dauer von Inkarnation des Bösen um 20 Sek. verlängert.\n• Schlachterhieb verursacht nur Schaden in Höhe eines einzelnen Gesundheitsstatus."
+        },
+        "es": {
+          "name": "Fragmento reflectante",
+          "description": "Un pequeño fragmento de material muy reflectante, probablemente de un espejo roto.\n• Golpear a un superviviente con Golpe masacrante añade 20 segundos a la duración de Mal encarnado.\n• Golpe masacrante solo causa un estado de salud de daño."
+        },
+        "ja": {
+          "name": "キラキラする破片",
+          "description": "非常によく反射する物質の小さなかけら。おそらく壊れた鏡であると思われる。\n• 虐殺の一撃が生存者に命中すると、邪悪の化身の持続時間が20秒延長する\n• 虐殺の一撃は、負傷1段階分しかダメージを与えない"
+        },
+        "pl": {
+          "name": "Odblaskowy odłamek",
+          "description": "Mały, silnie odblaskowy kawałek materiału pochodzący najprawdopodobniej z pękniętego lustra.\n• Trafienie ocalałego Rzeźnickim uderzeniem dodaje 20 sekund do czasu trwania Zła Wcielonego.\n• Rzeźnickie uderzenie zadaje obrażenia tylko w wysokości jednego stanu zdrowia."
+        }
+      }
+    },
+    {
+      "id": 108,
+      "name": "Scratched Mirror",
+      "killer_id": 5,
+      "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• Reveal the auras of Survivors within 32 meters while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits grant 100% more Brutality and 200% more Deviousness Bloodpoints.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scratchedMirror.png?5ca294",
+      "icon_local_path": "icons/addons/scratched_mirror.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Zerkratzter Spiegel",
+          "description": "Ein tragbarer Schminkspiegel, der mit einem scharfen Metallgegenstand heftig zerkratzt wurde.\n• Enthüllt beim Verfolgen die Auren von Überlebenden in einem Umkreis von 32 Metern.\n• Der Verfolgermodus kann nicht verlassen werden.\n• Punktereignisse für Treffer gewähren 100 % mehr Blutpunkte für Brutalität und 200 % mehr Blutpunkte für Hinterhältigkeit."
+        },
+        "es": {
+          "name": "Espejo rayado",
+          "description": "Un espejo de maquillaje portátil brutalmente rayado con algo metálico y afilado.\n• Revela las auras de los supervivientes en un radio de 32 metros mientras acechas.\n• No se puede abandonar el modo acecho.\n• Los eventos de puntuación por golpes otorgan un 100 % más de puntos de sangre por Brutalidad y un 200 % más por Malicia."
+        },
+        "ja": {
+          "name": "傷ついた鏡",
+          "description": "スタンドのついた持ち運べる化粧鏡。鋭い金属のようなもので激しい傷をつけられている。\n• 凝視中に32メートル以内にいる生存者のオーラが視える\n• ストーカーモードから出られない\n• 攻撃の得点が発生した際、ブラッドポイントを残忍カテゴリーで100%追加取得し、邪悪カテゴリーで200%追加取得する"
+        },
+        "pl": {
+          "name": "Strzaskane lusterko",
+          "description": "Stojące lusterko przenośne do makijażu. Zostało zarysowane ostrym, metalowym narzędziem.\n• Ujawnia aury ocalałych w zasięgu 32 metrów podczas śledzenia.\n• Nie można opuścić trybu śledzenia.\n• Wydarzenia punktowane za trafienia dodają 100% więcej Punktów Krwi w kategorii „Brutalność” i 200% więcej Punktów Krwi w kategorii „Przebiegłość”."
+        }
+      }
+    },
+    {
+      "id": 109,
+      "name": "Tacky Earrings",
+      "killer_id": 5,
+      "description": "A very cheap piece of jewelry made from plastic. Painted to resemble precious material.\n• Increases movement speed while stalking by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tackyEarrings.png?6ff679",
+      "icon_local_path": "icons/addons/tacky_earrings.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Billige Ohrringe",
+          "description": "Ein sehr billiges Schmuckstück aus Plastik. Es wurde bemalt, um wertvollerem Material zu ähneln.\n• Erhöht die Bewegungsgeschwindigkeit beim Verfolgen um 20 %."
+        },
+        "es": {
+          "name": "Pendientes horteras",
+          "description": "Bisutería barata hecha de plástico. Pintada para imitar un material precioso.\n• Aumenta la velocidad de movimiento mientras acechas un 20 %."
+        },
+        "ja": {
+          "name": "安っぽいイヤリング",
+          "description": "とても安っぽいプラスチック製のアクセサリー。貴金属に見せるために色が塗られている。\n• 凝視している間の移動速度が20%上昇する。"
+        },
+        "pl": {
+          "name": "Tandetne kolczyki",
+          "description": "Bardzo tani element biżuterii zrobiony z plastiku. Został pomalowany, aby przypominał cenny materiał.\n• Zwiększa prędkość ruchu podczas śledzenia o 20%."
+        }
+      }
+    },
+    {
+      "id": 110,
+      "name": "Tombstone Piece",
+      "killer_id": 5,
+      "description": "A fist-sized granite piece taken from a broken tombstone.\n• When Evil Incarnate activates, you become Undetectable for 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tombstonePiece.png?d00672",
+      "icon_local_path": "icons/addons/tombstone_piece.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Grabsteinstück",
+          "description": "Ein faustgroßes Stück Granit, das von einem zerbrochenen Grabstein stammt.\n• Wenn Inkarnation des Bösen aktiviert wird, wirst du für 20 Sek. unentdeckbar."
+        },
+        "es": {
+          "name": "Trozo de lápida",
+          "description": "Un trozo de granito del tamaño de un puño perteneciente a una lápida rota.\n• Cuando Mal encarnado se activa, obtendrás el efecto Indetectable durante 20 segundos."
+        },
+        "ja": {
+          "name": "墓石の欠片",
+          "description": "壊れた墓石から取られた、こぶし大の御影石の欠片。\n• 邪悪の化身が発動すると、20秒間探知不可になる"
+        },
+        "pl": {
+          "name": "Kawałek nagrobka",
+          "description": "Kawałek granitu wielkości pięści zabrany z uszkodzonego nagrobka.\n• Gdy tryb Zła Wcielonego jest aktywny, gracz otrzymuje efekt Niewykrywalny na 20 sekund."
+        }
+      }
+    },
+    {
+      "id": 111,
+      "name": "Vanity Mirror",
+      "killer_id": 5,
+      "description": "A standing portable vanity mirror in perfect condition except for a fine layer of dust and face powder covering it.\n• When Evil Incarnate ends, you see the auras of all Survivors for 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vanityMirror.png?d4bee1",
+      "icon_local_path": "icons/addons/vanity_mirror.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schminkspiegel",
+          "description": "Ein aufstellbarer, tragbarer Schminkspiegel in perfektem Zustand, abgesehen von einer feinen Schicht aus Staub und Gesichtspuder.\n• Am Ende von Inkarnation des Bösen siehst du die Auren aller Überlebenden für 4 Sek."
+        },
+        "es": {
+          "name": "Espejo de maquillaje",
+          "description": "Un espejo de maquillaje portátil en perfecto estado, salvo por una fina película de suciedad y polvos para la cara.\n• Cuando Mal encarnado finaliza, ves las auras de todos los supervivientes durante 4 segundos."
+        },
+        "ja": {
+          "name": "化粧鏡",
+          "description": "埃とフェイスパウダーに薄く覆われている以外は完璧な状態の、スタンドがついた持ち運べる化粧鏡。\n• 邪悪の化身が終了すると、生存者全員のオーラが4秒間視える"
+        },
+        "pl": {
+          "name": "Stojące lusterko",
+          "description": "Stojące, przenośne lusterko do makijażu. Jest w idealnym stanie, ale pokrywa je cienka warstwa kurzu i pudru.\n• Gdytryb Zła Wcielonego kończy się, gracz widzi aury wszystkich ocalałych przez 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 809,
+      "name": "Blond Hair",
+      "killer_id": 5,
+      "description": "A single slightly wavy blond hair.\n• Scratch marks and pools of blood last 100% longer in Stalker Mode.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blondHair.png?dfcd58",
+      "icon_local_path": "icons/addons/blond_hair.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Blondes Haar",
+          "description": "Ein einzelnes, leicht gelocktes, blondes Haar.\n• Kratzspuren und Blutpfützen bleiben im Verfolgermodus 100 % länger bestehen."
+        },
+        "en": {
+          "name": "Blonde Hair"
+        },
+        "es": {
+          "name": "Pelo Rubio",
+          "description": "Mechón rubio ligeramente ondulado.\n• Las marcas de arañazos y los charcos de sangre duran un 100 % más en el modo acecho."
+        },
+        "ja": {
+          "name": "金色の髪の毛",
+          "description": "少しウェーブがかっている、金色の髪の毛。\n• ストーカーモードの間、傷マークと血痕の持続時間が100%増加する"
+        },
+        "pl": {
+          "name": "Blond włos",
+          "description": "Pojedynczy, lekko skręcony jasny włos.\n• Czerwone zarysowania i ślady krwi trwają 100% dłużej w trybie Śledzenia."
+        }
+      }
+    },
+    {
+      "id": 810,
+      "name": "Jewellery",
+      "killer_id": 5,
+      "description": "A large necklace made of beads and inexpensive metals. One of Judith's favorites.\n• Increases the Stalk Meter fill rate on stationary Survivors by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jewellery.png?8d7439",
+      "icon_local_path": "icons/addons/jewellery.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schmuck",
+          "description": "Eine üppige Halskette, hergestellt aus Glasperlen und preiswertem Metall. Eines von Judiths Lieblingsstücken.\n• Erhöht die Füllrate der Verfolgungsleiste von bewegungslosen Überlebenden um 10 %."
+        },
+        "en": {
+          "name": "Jewelry"
+        },
+        "es": {
+          "name": "Joyería",
+          "description": "Un collar grande hecho con cuentas y metales baratos. Uno de los favoritos de Judith.\n• Aumenta la velocidad a la que se llena el medidor de acecho al acechar a supervivientes inmóviles un 10 %."
+        },
+        "ja": {
+          "name": "ジュエリー",
+          "description": "ビーズと廉価な金属で作られた大きなネックレス。ジュディスのお気に入りのひとつ。\n• 静止状態の生存者に対して、凝視ゲージの貯まる速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Biżuteria",
+          "description": "Duży naszyjnik wykonany z koralików oraz niedrogich metali. Jeden z ulubionych elementów biżuterii Judith.\n• Zwiększa prędkość zapełniania wskaźnika śledzenia nieruchomych ocalałych o 10%."
+        }
+      }
+    },
+    {
+      "id": 811,
+      "name": "Jewellery Box",
+      "killer_id": 5,
+      "description": "A barren wooden box in which vanity items were once stored.\n• Increases the Stalk Meter fill rate by 30%.\n• Decreases stalk range by 16 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jewelleryBox.png?9deebd",
+      "icon_local_path": "icons/addons/jewellery_box.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schmuckkästchen",
+          "description": "Eine karge Holzkiste, in der einst Kosmetikgegenstände aufbewahrt wurden.\n• Erhöht die Füllrate der Verfolgungsleiste um 30 %.\n• Verringert die Reichweite für das Verfolgen um 16 Meter."
+        },
+        "en": {
+          "name": "Jewelry Box"
+        },
+        "es": {
+          "name": "Joyero",
+          "description": "Una caja de madera vacía en la que se solían guardar objetos de tocador.\n• Aumenta la velocidad a la que se llena el medidor de acecho un 30 %.\n• Reduce el alcance del acecho en 16 metros."
+        },
+        "ja": {
+          "name": "ジュエリーボックス",
+          "description": "何の変哲もない木箱。昔はたくさんのものをしまっていたようだ。\n• 凝視ゲージの貯まる速度が30%上昇する\n• 凝視できる範囲が16メートル縮小する"
+        },
+        "pl": {
+          "name": "Pudełko na biżuterię",
+          "description": "Drewniane pudełko, w którym przechowywano kiedyś różne przedmioty.\n• Zwiększa prędkość zapełniania wskaźnika śledzenia o 30%.\n• Zmniejsza zasięg śledzenia o 16 metrów."
+        }
+      }
+    }
+  ]
+}

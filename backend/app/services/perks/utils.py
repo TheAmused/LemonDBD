@@ -92,10 +92,9 @@ def clean_description(text: str) -> str:
 
 
 class CharacterModel(BaseModel):
+    id: int | None = Field(default=None, description="Stable identity of the row")
     name: str = Field(..., description="Canonical title e.g. 'Meg Thomas' or 'The Wraith'")
     real_name: str | None = Field(default="", description="Real name e.g. 'Philip Ojomo'")
-    wiki_slug: str | None = ""
-    short_name: str | None = ""
     category: str = "Survivor"
     avatar_url: str | None = ""
     avatar_local_path: str | None = ""
@@ -105,7 +104,10 @@ class CharacterModel(BaseModel):
 
 
 class ItemModel(BaseModel):
+    id: int | None = None
     name: str
+    category_id: int | None = None
+    #: Display label read through `item_categories`, not a stored column.
     category: str = ""
     role: str | None = "Survivor"
     description: str | None = ""
@@ -117,7 +119,12 @@ class ItemModel(BaseModel):
 
 
 class AddonModel(BaseModel):
+    id: int | None = None
     name: str
+    #: Exactly one of these is set; both are indexed foreign keys.
+    killer_id: int | None = None
+    item_category_id: int | None = None
+    #: Derived display fields, kept for API compatibility.
     associated_target: str | None = ""
     category: str | None = ""
     description: str | None = ""
@@ -132,7 +139,9 @@ class MapModel(BaseModel):
     id: str
     name: str
     realm: str
-    realm_id: str | None = ""
+    #: Integer foreign key. This was a slug string that referenced no column.
+    realm_id: int | None = None
+    source_id: int | None = None
     callout_image_url: str | None = ""
     callout_image_local_path: str | None = ""
     source: str | None = "hens333"

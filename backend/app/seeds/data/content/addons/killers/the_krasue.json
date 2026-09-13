@@ -1,0 +1,554 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 712,
+      "name": "Sticky Lozenge",
+      "killer_id": 41,
+      "description": "A simple tablet to moisten a dry throat, often taken before an audition.\n• When charging Regurgitate, see a preview of the impact zone.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stickyLozenge.png?7bef3f",
+      "icon_local_path": "icons/addons/sticky_lozenge.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Klebrige Pastille",
+          "description": "Eine einfache Pastille, um einen trockenen Hals zu befeuchten. Wird gerne vor einem Vorsingen genommen.\n• Beim Aufladen von Würgen siehst du eine Vorschau auf den Einflussbereich."
+        },
+        "es": {
+          "name": "Píldora pegajosa",
+          "description": "Una simple pastilla para humedecer una garganta seca, que suele tomarse antes de una audición.\n• Al cargar Regurgitar, verás una vista previa de la zona de impacto."
+        },
+        "ja": {
+          "name": "ネバネバしたトローチ",
+          "description": "乾燥した喉を潤す錠剤。オーディションの前によくなめる。\n• 吐き戻しをチャージするとき、当たる範囲が表示される"
+        },
+        "pl": {
+          "name": "Klejąca pastylka",
+          "description": "Prosta tabletka nawilżająca suche gardło, często zażywana przed przesłuchaniem.\n• Podczas ładowania Wymiotu wyświetlana jest podglądowa strefa trafienia."
+        }
+      }
+    },
+    {
+      "id": 713,
+      "name": "Broken Tiara",
+      "killer_id": 41,
+      "description": "A dazzling stage prop worn by a pharaoh's daughter, as distracting as it is fake.\n• Survivors are Oblivious under the Glowing Fungus' effect.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenTiara.png?486bb0",
+      "icon_local_path": "icons/addons/broken_tiara.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kaputte Tiara",
+          "description": "Eine umwerfende Requisite für eine Pharaonentochter, so ablenkend wie gefälscht.\n• Überlebende unter dem Einfluss von Leuchtpilzen sind ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Tiara destruida",
+          "description": "Un deslumbrante accesorio de escenario usado por la hija de un faraón, tan llamativo como falso.\n• Los supervivientes sufren Inconsciencia bajo el efecto del hongo brillante.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino"
+        },
+        "ja": {
+          "name": "壊れたティアラ",
+          "description": "ファラオの娘役が身に着ける、舞台の小道具。きらびやかだが、本物ではない。\n• 光るキノコの効果を受けている生存者が、無感覚に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Uszkodzona tiara",
+          "description": "Olśniewający rekwizyt sceniczny noszony przez córkę faraona – równie zwodniczy, co fałszywy.\n• Ocalali pod wpływem Świecącego Grzyba stają się Nieświadomi.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 714,
+      "name": "Luckless Mouse",
+      "killer_id": 41,
+      "description": "A game of cat and mouse always gets the blood pumping.\n• Increases Headlong Flight's charges by 2.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lucklessMouse.png?ddb2f8",
+      "icon_local_path": "icons/addons/luckless_mouse.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Glücklose Maus",
+          "description": "Ein Katz-und-Maus-Spiel regt den Kreislauf immer an.\n• Erhöht die Aufladungen von Kopfflug um 2."
+        },
+        "es": {
+          "name": "Ratón desdichado",
+          "description": "Un juego del gato y el ratón siempre pone la sangre en movimiento.\n• Aumenta las cargas de Vuelo de cabeza en 2."
+        },
+        "ja": {
+          "name": "不運なネズミ",
+          "description": "猫とネズミの追いかけっこはいつも、血がたぎるものだ。\n• 突進飛行のチャージ量が2増加する"
+        },
+        "pl": {
+          "name": "Pechowa mysz",
+          "description": "Zabawa w kotka i myszkę zawsze podnosi ciśnienie.\n• Zwiększa liczbę ładunków Lotu na Oślep o 2."
+        }
+      }
+    },
+    {
+      "id": 715,
+      "name": "First Libretto",
+      "killer_id": 41,
+      "description": "She felt as if she could walk on the air after landing a role in her first opera.\n• Decreases Headlong Flight's consumption rate by 30% for 15 seconds any time you hook a Leeched Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_firstLibretto.png?900ed4",
+      "icon_local_path": "icons/addons/first_libretto.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Erstes Libretto",
+          "description": "Als sie eine Rolle in ihrer ersten Oper bekam, fühlte sie sich beflügelt.\n• Verringert die Verbrauchsrate von Kopfflug für 15 Sek. um 30 %, wenn du einen ausgesaugten Überlebenden festhakst."
+        },
+        "es": {
+          "name": "Primer libreto",
+          "description": "Sentía como si pudiera caminar sobre el aire tras conseguir su primer papel en una ópera.\n• Reduce la velocidad de consumo de Vuelo de cabeza un 30 % durante 15 segundos cada vez que cuelgas a un superviviente exangüe."
+        },
+        "ja": {
+          "name": "1冊目の台本",
+          "description": "彼女は初めてオペラの役を得たとき、空に舞い上がるような気分だった。\n• ヒル寄生状態となった生存者をフックに吊るすと、突進飛行のチャージが消費される速度が15秒間、30%低下する"
+        },
+        "pl": {
+          "name": "Pierwsze libretto",
+          "description": "Gdy dostała rolę w swojej pierwszej operze, poczuła się, jakby mogła chodzić w powietrzu.\n• Zmniejsza tempo zużycia Lotu na Oślep o 30% na 15 s za każdym razem, gdy zawiesisz zainfekowanego Pasożytem ocalałego."
+        }
+      }
+    },
+    {
+      "id": 716,
+      "name": "Wriggling Parasite",
+      "killer_id": 41,
+      "description": "A fragile organism that has an unusual effect on its host.\n• Increases the passive growth rate to Leeched II by 16%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wrigglingParasite.png?f00bbf",
+      "icon_local_path": "icons/addons/wriggling_parasite.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Sich windender Parasit",
+          "description": "Ein fragiler Organismus mit ungewöhnlicher Wirkung auf seinen Wirt.\n• Erhöht die passive Wachstumsrate von Ausgesaugt II um 16 %."
+        },
+        "es": {
+          "name": "Parásito escurridizo",
+          "description": "Un organismo frágil que tiene un efecto inusual en su huésped.\n• Aumenta la velocidad de crecimiento pasivo de Exangüe II un 16 %."
+        },
+        "ja": {
+          "name": "うごめく寄生虫",
+          "description": "宿主に異常な影響を及ぼす、脆弱な生き物。\n• ヒル寄生IIに達するまでヒルゲージが自動的に貯まる速度が16%上昇する"
+        },
+        "pl": {
+          "name": "Wijący się pasożyt",
+          "description": "Delikatny organizm, który wywołuje nietypowy efekt u swojego nosiciela.\n• Zwiększa pasywne tempo wzrostu efektu Pasożyt II o 16%."
+        }
+      }
+    },
+    {
+      "id": 717,
+      "name": "Chunk of Malai",
+      "killer_id": 41,
+      "description": "A varied source of protein contributes to good gut health.\n• Decreases the Glowing Fungus' cleanse rate by 8% for each Leeched Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chunkOfMalai.png?66da5b",
+      "icon_local_path": "icons/addons/chunk_of_malai.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ein Klumpen Malai",
+          "description": "Eine abwechslungsreiche, eiweißhaltige Ernährung begünstigt eine gute Darmgesundheit.\n• Verringert die Säuberungsrate von Leuchtpilzen pro ausgesaugtem Überlebenden um 8 %."
+        },
+        "es": {
+          "name": "Trozo de Malai",
+          "description": "Una fuente variada de proteína contribuye a una buena salud intestinal.\n• Reduce la velocidad de purificación del hongo brillante un 8 % por cada superviviente exangüe."
+        },
+        "ja": {
+          "name": "マライの肉の塊",
+          "description": "腸の機能を促進する、多様なタンパク質源。\n• 光るキノコの浄化速度が、ヒル寄生状態となった生存者1人につき8%低下する"
+        },
+        "pl": {
+          "name": "Kawałek malai",
+          "description": "Zróżnicowane źródło białka dobrze wpływa na zdrowie jelit.\n• Zmniejsza tempo oczyszczania Świecącego Grzyba o 8% za każdego Ocalałego z Pasożytem."
+        }
+      }
+    },
+    {
+      "id": 718,
+      "name": "Crumpled Sheet Music",
+      "killer_id": 41,
+      "description": "Before her desperation, she hoped that continued practice would be enough to succeed.\n• Gain 12 charges to Headlong Flight when a Survivor is hit by a Leeching Gland.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crumpledSheetMusic.png?48789b",
+      "icon_local_path": "icons/addons/crumpled_sheet_music.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerknitterte Noten",
+          "description": "Bevor die Verzweiflung überhandnahm, hoffte sie noch, dass fleißiges Üben reichen würde.\n• Du erhältst 12 Aufladungen für Kopfflug, wenn ein Überlebender von einer Saugdrüse getroffen wurde."
+        },
+        "es": {
+          "name": "Partitura arrugada",
+          "description": "Antes de caer en la desesperación, confiaba en que la práctica constante bastaría para tener éxito.\n• Obtienes 12 cargas de Vuelo de cabeza cuando golpeas a un superviviente con una Glándula sanguijuela."
+        },
+        "ja": {
+          "name": "しわくちゃの楽譜",
+          "description": "彼女は失望に苛まれる前、地道な努力が成功につながると思っていた。\n• 生存者にヒル分泌腺が命中すると、突進飛行のチャージが12貯まる"
+        },
+        "pl": {
+          "name": "Zmięty zapis nutowy",
+          "description": "Zanim ogarnęła ją desperacja, miała nadzieję, że wystarczy wytrwały trening, by odnieść sukces.\n• Dodaje 12 ładunków do Lotu na Oślep, gdy ocalały jest trafiony umiejętnością Gruczoł Pasożytniczy."
+        }
+      }
+    },
+    {
+      "id": 719,
+      "name": "Defective Metronome",
+      "killer_id": 41,
+      "description": "The metronome sparks as it plays at a frenetic pace.\n• Survivors under the Glowing Fungus' effect are Exhausted.\nExhausted prevents Survivors from activating certain perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_defectiveMetronome.png?23cd87",
+      "icon_local_path": "icons/addons/defective_metronome.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kaputtes Metronom",
+          "description": "Das Metronom sprüht Funken, während es einen hektischen Rhythmus vorgibt.\n• Überlebende unter dem Einfluss von Leuchtpilzen sind erschöpft.\nErschöpfung hindert Überlebende daran, bestimmte Talente zu nutzen."
+        },
+        "es": {
+          "name": "Metrónomo defectuoso",
+          "description": "El metrónomo suelta chispas al moverse a un ritmo frenético.\n• Los supervivientes bajo el efecto del hongo brillante sufren Agotamiento.\nAgotamiento impide a los supervivientes utilizar ciertas habilidades."
+        },
+        "ja": {
+          "name": "壊れたメトロノーム",
+          "description": "猛烈なペースで動き続け、火花を散らして故障したメトロノーム。\n• 光るキノコの効果を受けている生存者が、疲労状態になる\n疲労状態になると生存者は特定のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Zepsuty metronom",
+          "description": "Metronom iskrzy, gdy wybija gorączkowe tempo.\n• Ocalali pod wpływem Świecącego Grzyba zostają Wyczerpani.\nWyczerpanie uniemożliwia ocalałym aktywowanie niektórych umiejętności."
+        }
+      }
+    },
+    {
+      "id": 720,
+      "name": "Pig's Eye",
+      "killer_id": 41,
+      "description": "It still glistens with saliva.\n• When a Survivor eats a Glowing Fungus from further than 40 meters away, their aura is revealed to you for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pigsEye.png?ce1b8b",
+      "icon_local_path": "icons/addons/pigs_eye.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schweineauge",
+          "description": "Der Speichel glänzt noch darauf.\n• Wenn ein Überlebender in mehr als 40 Metern Entfernung einen Leuchtpilz isst, wird dir seine Aura für 6 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Ojo de cerdo",
+          "description": "Todavía brilla con saliva.\n• Cuando un superviviente come un hongo brillante a una distancia mayor de 40 metros, se te revela su aura durante 6 segundos."
+        },
+        "ja": {
+          "name": "ブタの目",
+          "description": "それはまだ、ヨダレを垂らしながら、目を光らせている。\n• 生存者が40メートル以上離れた場所で光るキノコを食べると、その生存者のオーラが6秒間表示される"
+        },
+        "pl": {
+          "name": "Oko świni",
+          "description": "Wciąż lśni od śliny.\n• Gdy ocalały zje Święcący Grzyb w odległości większej, niż 40 m od ciebie, jego aura jest ujawniana na 6 s."
+        }
+      }
+    },
+    {
+      "id": 721,
+      "name": "Janjira's Hand",
+      "killer_id": 41,
+      "description": "One of the few distinguishable parts that remained of her friend.\n• Gain 2 Headlong Flight charges whenever a generator is repaired. Headlong Flight's recharge rate is increased by 25% for 15 seconds.\n• When 5 generators are repaired, Headlong Flight is fully charged and the recharge rate is permanently increased by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_janjirasHand.png?1960f2",
+      "icon_local_path": "icons/addons/janjiras_hand.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Janjiras Hand",
+          "description": "Eines der wenigen erkennbaren Teile, das von ihrer Freundin zurückblieb.\n• Du erhältst 2 Aufladungen für Kopfflug, wenn ein Generator repariert wird. Die Aufladegeschwindigkeit von Kopfflug wird 15 Sekunden lang um 25 % erhöht.\n• Wenn 5 Generatoren repariert wurden, ist Kopfflug vollständig aufgeladen und die Aufladegeschwindigkeit ist dauerhaft um 25 % erhöht."
+        },
+        "es": {
+          "name": "Mano de Janjira",
+          "description": "Una de las pocas partes distinguibles que quedaban de su amiga.\n• Gana 2 cargas de Vuelo de cabeza cada vez que se repara un generador. La velocidad de recarga de Vuelo de cabeza aumenta un 25 % durante 15 segundos.\n• Cuando se reparan 5 generadores, Vuelo de cabeza se carga por completo y la velocidad de recarga aumenta permanentemente un 25 %."
+        },
+        "ja": {
+          "name": "ジャンジラの手首",
+          "description": "彼女の親友の遺体で、形の残っている数少ない部分。\n• 発電機の修理が完了すると、 突進飛行のチャージが2貯まる。突進飛行の再チャージ速度が15秒間、25%上昇する\n• 5台の発電機の修理が完了すると、突進飛行が完全にチャージされ、再チャージ速度が永続的に25%上昇する"
+        },
+        "pl": {
+          "name": "Ręka Janjiry",
+          "description": "Jeden z nielicznych rozpoznawalnych fragmentów, który pozostał po jej przyjacielu.\n• Zyskujesz 2 ładunki Lotu na Oślep za każdym razem, gdy naprawiony zostanie generator. Szybkość odnawiania Lotu na Oślep wzrasta o 25% na 15 s.\n• Gdy 5 generatorów zostanie naprawionych, Lot na Oślep zostaje w pełni naładowany, a tempo odnawiania zostaje trwale zwiększone o 25%."
+        }
+      }
+    },
+    {
+      "id": 722,
+      "name": "Dulled Knife",
+      "killer_id": 41,
+      "description": "A stage prop, symbolic of a woman's gambit in an attempt to save her lover on death's row.\n• Decreases Headlong Flight's charge consumption by 25%.\n• Glowing Fungus grants Survivors 10% Haste for 5 seconds while preventing scratch marks, pools of blood, grunts of pain, and aura reveals.\nHaste increases Survivor's movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dulledKnife.png?b66200",
+      "icon_local_path": "icons/addons/dulled_knife.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stumpfes Messer",
+          "description": "Eine Requisite, die für den Schachzug einer Frau steht, die ihren Liebsten aus dem Todestrakt befreien will.\n• Verringert den Verbrauch von Aufladungen von Kopfflug um 25 %.\n• Leuchtpilze gewähren Überlebenden 5 Sek. lang 10 % Eile und verhindern gleichzeitig Kratzspuren, Blutpfützen, Schmerzenslaute und Aura-Enthüllungen.\nEile erhöht die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Cuchillo romo",
+          "description": "Un decorado de escena, símbolo de la apuesta desesperada de una mujer por salvar a su amante en el corredor de la muerte.\n• Reduce el consumo de carga de Vuelo de cabeza un 25 %.\n• El hongo brillante otorga a los supervivientes un 10 % de Celeridad durante 5 segundos, evitando marcas de arañazos, charcos de sangre, gruñidos de dolor y auras reveladas.\nCeleridad aumenta la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "刃の鈍いナイフ",
+          "description": "舞台の小道具。死刑囚の恋人を救おうとする娘役のために用意された。\n• 突進飛行のチャージが消費される速度が25%低下する\n• 光るキノコが生存者に10%の迅速を5秒間与え、その傷マーク、血痕、うめき声、オーラの表示を抑える\n迅速状態になると生存者は移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Stępiony nóż",
+          "description": "Rekwizyt sceniczny symbolizujący desperacki gambit kobiety, by ocalić ukochanego skazanego na śmierć.\n• Zmniejsza zużycie ładunku Lotu na Oślep o 25%.\n• Świecący Grzyb zapewnia ocalałym 10% Pośpiechu na 5 s, jednocześnie ukrywając czerwone zarysowania, ślady krwi, jęki bólu i aurę.\nPośpiech zwiększa prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 723,
+      "name": "Spattered Handkerchief",
+      "killer_id": 41,
+      "description": "A sign that something was very wrong presented itself but she chose to ignore it.\n• When the exit gates are powered, all Survivors are afflicted with Leeched I. Glowing Fungi begin to decay and activating Corporeal Weave no longer creates new Glowing Fungi.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spottedHandkerchief.png?eafc38",
+      "icon_local_path": "icons/addons/spattered_handkerchief.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Bespritztes Taschentuch",
+          "description": "Sie erhielt das Zeichen, dass etwas absolut nicht stimmte, aber sie beschloss, es zu ignorieren.\n• Wenn die Ausgangstore mit Strom versorgt sind, werden alle Überlebenden mit Ausgesaugt I belegt. Leuchtpilze zerfallen und durch Aktivierung von Körpergeflecht werden keine neuen Leuchtpilze mehr erzeugt."
+        },
+        "es": {
+          "name": "Pañuelo salpicado",
+          "description": "Una señal de que algo iba muy mal se presentó, pero ella eligió ignorarla.\n• Cuando se activan las puertas de salida, todos los supervivientes sufren Exangüe I. Los hongos brillantes comienzan a degradarse y activar Tejido corpóreo ya no crea nuevos hongos brillantes."
+        },
+        "ja": {
+          "name": "血のついたハンカチ",
+          "description": "彼女は体に恐ろしいことが起きている兆しを無視した。\n• 脱出ゲートが通電すると、すべての生存者がヒル寄生Iの状態となる。光るキノコが腐り始め、首の抜き差しを発動しても新しい光るキノコが生成されなくなる。"
+        },
+        "pl": {
+          "name": "Poplamiona chusteczka",
+          "description": "Pojawił się znak, że coś jest bardzo nie w porządku, ale postanowiła go zignorować.\n• Gdy bramy wyjściowe zostaną zasilone, wszyscy ocalali otrzymują efekt Pasożyt I. Świecące Grzyby zaczynają się rozkładać, a aktywacja Tkanki Cielesnej nie tworzy już nowych Świecących Grzybów."
+        }
+      }
+    },
+    {
+      "id": 724,
+      "name": "Framed Newspaper",
+      "killer_id": 41,
+      "description": "She had once made it onto the entertainment section of the city's newspaper but she wanted more.\n• Increases Headlong Flight's charges by 6 and its recharge rate by 15%.\n• Headlong Flight must be at least half-charged to activate.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_framedNewspaper.png?67aff4",
+      "icon_local_path": "icons/addons/framed_newspaper.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gerahmte Zeitung",
+          "description": "Einmal hatte sie es in den Unterhaltungsteil der städtischen Zeitung geschafft, aber sie wollte mehr.\n• Erhöht die Aufladungen von Kopfflug um 6 und die Aufladerate um 15 %.\n• Kopfflug kann erst ab halber Aufladung aktiviert werden."
+        },
+        "es": {
+          "name": "Periódico enmarcado",
+          "description": "En una ocasión, apareció en la sección de entretenimiento del periódico de la ciudad, pero quería más.\n• Aumenta las cargas de Vuelo de cabeza en 6 y su velocidad de recarga un 15 %.\n• Vuelo de cabeza puede activarse cuando está cargado al menos a la mitad."
+        },
+        "ja": {
+          "name": "額に入れた新聞記事",
+          "description": "彼女は一度、町の新聞の娯楽欄に載ったことがあったが、それだけでは満足しなかった。\n• 突進飛行のチャージ量が6増加し、再チャージ速度が15%上昇する\n• 突進飛行は半分以上チャージされないと発動できない"
+        },
+        "pl": {
+          "name": "Obramowana gazeta",
+          "description": "Udało jej się kiedyś trafić do działu rozrywki miejskiej gazety, ale chciała więcej.\n• Zwiększa maksymalną liczbę ładunków Lotu na Oślep o 6 i jego prędkość odnawiania o 15%.\n• Lot na Oślep można aktywować tylko po naładowaniu przynajmniej do połowy."
+        }
+      }
+    },
+    {
+      "id": 725,
+      "name": "Lorenza's Remains",
+      "killer_id": 41,
+      "description": "Even her pet bird would fall victim to the Krasue's thirst for blood.\n• Leeched I applies Blindness.\n• Leeched II applies 4% Hindered.\nBlindness prevents Survivors from seeing auras.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lorenzasRemains.png?dd64c9",
+      "icon_local_path": "icons/addons/lorenzas_remains.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Lorenzas Überreste",
+          "description": "Selbst ihr Vogel wurde Opfer des Blutdursts der Krasue.\n• Ausgesaugt I verursacht Erblindung.\n• Ausgesaugt II verursacht 4 % Eingeschränkt.\nBei Erblindung können Überlebende keine Auren sehen.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Restos de Lorenza",
+          "description": "Hasta su ave mascota cayó víctima de la sed de sangre de la Krasue.\n• Exangüe I aplica Ceguera.\n• Exangüe II aplica un 4 % de Entorpecimiento.\nCeguera impide que los supervivientes vean auras.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "ロレンザの屍",
+          "description": "彼女の飼っていた鳥さえ、ガスーの餌食になった。\n• ヒル寄生Iでは、生存者が目眩まし状態になる\n• ヒル寄生IIでは、生存者が4%の妨害に苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Szczątki Lorenzy",
+          "description": "Nawet jej ptak domowy padł ofiarą pragnienia krwi Krasue.\n• Pasożyt I nakłada Oślepienie.\n• Pasożyt II nakłada 4% Skrępowanie.\nOślepienie uniemożliwia ocalałym widzenie aur.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 726,
+      "name": "Mysterious Elixir",
+      "killer_id": 41,
+      "description": "A liquid moulded from The Fog itself. Though similar to the concoction she drank, there seem to be slight alterations.\n• Whenever you hit a Window with Leeching Gland, it is marked\n• Whenever you vault the marked Window, it is blocked for 10 seconds, then the mark is removed.\n• Only one Window can be marked at a time.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentElixir.png?b568d4",
+      "icon_local_path": "icons/addons/mysterious_elixir.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Geheimnisvolles Elixier",
+          "description": "Eine Flüssigkeit, die aus dem Nebel selbst erschaffen wurde. Sie ist dem Gebräu ähnlich, das sie getrunken hat, es scheint jedoch Abänderungen gegeben zu haben.\n• Immer wenn du ein Fenster mit einer Saugdrüse triffst, wird es gekennzeichnet.\n• Immer wenn du durch das gekennzeichnete Fenster springst, wird es 10 Sek. lang blockiert. Danach wird die Kennzeichnung entfernt.\n• Es kann immer nur ein Fenster gekennzeichnet sein."
+        },
+        "es": {
+          "name": "Elixir misterioso",
+          "description": "Un líquido moldeado por la mismísima niebla. Aunque similar a la poción que había bebido, parece haber ligeras alteraciones.\n• Cada vez que golpeas una ventana con Glándula sanguijuela, la dejas marcada.\n• Cada vez que saltas por la ventana marcada, esta queda bloqueada durante 10 segundos y la marca se elimina.\n• Solo puede haber una ventana marcada a la vez."
+        },
+        "ja": {
+          "name": "謎めいた秘薬",
+          "description": "霧から抽出された液体。彼女が飲んだものと似ているが、すこし違いがあるようだ。\n• 窓にヒル分泌腺を当てると、それがマークされる\n• マークされた窓を乗り越えると、それが10秒間ブロックされ、マークが外れる\n• マークされる窓は一度に一つのみ"
+        },
+        "pl": {
+          "name": "Tajemniczy eliksir",
+          "description": "Ciecz uformowana z samej Mgły. Choć przypomina miksturę, którą wypiła, wydaje się nieco zmodyfikowana.\n• Za każdym razem, gdy uderzysz okno za pomocą Gruczołu Pasożytniczego, zostaje oznaczone.\n• Za każdym razem, gdy wykonujesz przeskok przez oznaczone okno, jest ono zablokowane na 10 s, następnie oznaczenie jest usuwane.\n• W danym momencie można oznaczyć tylko jedno okno."
+        }
+      }
+    },
+    {
+      "id": 727,
+      "name": "Rotten Swine",
+      "killer_id": 41,
+      "description": "A revolting meal that left her disgusted when she awoke.\n• Whenever you hit a Generator, dropped Pallet, or Breakable Wall with Leeching Gland, it is marked.\n• You damage or basic-break the marked object 15% faster, then the mark is removed.\n• Only one object can be marked at a time.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rottenSwine.png?9a9d98",
+      "icon_local_path": "icons/addons/rotten_swine.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Verfaultes Schwein",
+          "description": "Eine abstoßende Mahlzeit, vor der sie sich beim Aufwachen ekelte.\n• Immer wenn du einen Generator, eine umgestoßene Palette oder eine zerstörbare Mauer mit einer Saugdrüse triffst, wird das Objekt gekennzeichnet.\n• Es kann 15 % schneller beschädigt bzw. mit deiner Grundfähigkeit zerstört werden. Danach wird die Kennzeichnung entfernt.\n• Es kann immer nur ein Objekt gekennzeichnet sein."
+        },
+        "es": {
+          "name": "Cerdo podrido",
+          "description": "Una comida repugnante que le produjo asco al despertar.\n• Cada vez que golpeas un generador, palé derribado o muro destruible con Glándula sanguijuela, los dejas marcados.\n• Dañas o rompes de forma básica el objeto marcado un 15 % más rápido y la marca se elimina.\n• Solo puede haber un objeto marcado a la vez."
+        },
+        "ja": {
+          "name": "腐ったブタ",
+          "description": "彼女はこの食事の横で目覚め、そのおぞましさに思わず吐き気を催した。\n• 発電機、倒されたパレット、破壊可能な壁にヒル分泌腺を当てると、それがマークされる\n• マークされたアイテムに対して15%速い速度で通常破壊またはダメージ付加を行い、その後マークが外れる。\n• マークされるアイテムは一度に一つのみ。"
+        },
+        "pl": {
+          "name": "Zgniły wieprz",
+          "description": "Odrażający posiłek, po którym obudziła się z obrzydzeniem.\n• Za każdym razem, gdy uderzysz generator, przewróconą paletę lub rozbijalną ścianę za pomocą Gruczołu Pasożytniczego, zostają one oznaczone.\n• Niszczysz lub uszkadzasz w podstawowy sposób oznaczony obiekt o 15% szybciej, następnie oznaczenie jest usuwane.\n• W danym momencie można oznaczyć tylko jeden obiekt."
+        }
+      }
+    },
+    {
+      "id": 728,
+      "name": "Chicken Head",
+      "killer_id": 41,
+      "description": "Believed by some to have mystical properties, this particular sample was lodged in the Krasue's throat after a feed.\n• All Survivors start afflicted with Leeched I.\n• 2 additional  Glowing Fungi are spawned at the start of the trial.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chickenHead.png?4fc19f",
+      "icon_local_path": "icons/addons/chicken_head.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Hühnerkopf",
+          "description": "Ihm werden mystische Eigenschaften nachgesagt. Dieses Exemplar blieb der Krasue nach dem Fressen im Hals stecken.\n• Alle Überlebenden sind zu Beginn mit Ausgesaugt I belegt.\n• 2 zusätzliche Leuchtpilze erscheinen zu Beginn der Prüfung."
+        },
+        "es": {
+          "name": "Cabeza de pollo",
+          "description": "Se cree que tiene propiedades místicas, esta muestra en particular quedó alojada en la garganta de la Krasue tras alimentarse.\n• Todos los supervivientes empiezan con Exangüe I.\n• Aparecerán 2 hongos brillantes más al comienzo de la partida."
+        },
+        "ja": {
+          "name": "ニワトリの頭",
+          "description": "神秘的な力を持つとも信じられているが、これはガスーが喉に詰まらせたもの。\n• すべての生存者がヒル寄生Iの状態で始まる\n• 儀式の始めに光るキノコが追加で2つ出現する"
+        },
+        "pl": {
+          "name": "Głowa kurczaka",
+          "description": "Niektórzy wierzą, że ma właściwości mistyczne – ta próbka utknęła w gardle Krasue po jednym z posiłków.\n• Wszyscy ocalali rozpoczynają z efektem Pasożyt I.\n• 2 dodatkowe Święcące Grzyby pojawiają się na początku próby."
+        }
+      }
+    },
+    {
+      "id": 729,
+      "name": "Shredded Gown",
+      "killer_id": 41,
+      "description": "She tore at her clothes and into her flesh as her body burnt.\n• Corporeal Weave reveals the auras of all Survivors who are within 8 meters of Glowing Fungus or holding Glowing Fungus of their own for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shreddedGown.png?778978",
+      "icon_local_path": "icons/addons/shredded_gown.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Zerfetzte Robe",
+          "description": "Sie riss an ihren Kleidern und ihrem Fleisch, als ihr Körper brannte.\n• Verwende Körpergeflecht, um 5 Sekunden lang die Auren aller Überlebenden mit eigenen Leuchtpilzen oder im Umkreis von 8 Metern um einen Leuchtpilz zu enthüllen."
+        },
+        "es": {
+          "name": "Vestido desgarrado",
+          "description": "Se desgarró la ropa y la carne mientras su cuerpo ardía.\n• Tejido corpóreo en forma de cuerpo revela las auras de todos los supervivientes durante 5 segundos que estén en un radio 8 metros de un hongo brillante y porten un hongo brillante propio."
+        },
+        "ja": {
+          "name": "ボロボロのガウン",
+          "description": "彼女は身体の熱さにもだえ苦しみ、自分の服、そして皮膚を掻きむしった。\n• 首の抜き差しで姿を変えると、 光るキノコの8メートル以内にいる生存者や、光るキノコを持っている生存者のオーラが5秒間視える"
+        },
+        "pl": {
+          "name": "Porwana suknia",
+          "description": "Rozdzierała ubranie i własne ciało, gdy płonęła od środka.\n• Tkanka Cielesna przełącza w formę ciała, aby na 5 s ujawnić aury wszystkich ocalałych, którzy sami niosą Świecący Grzyb, w promieniu 16 m od innego Świecącego Grzyba."
+        }
+      }
+    },
+    {
+      "id": 868,
+      "name": "Theatre Binoculars",
+      "killer_id": 41,
+      "description": "A pair of glasses that have watched many tragedies.\n• Hitting a non-Leeched Survivor with Intestinal Whip reveals the auras of other Survivors within 24 meters for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theaterBinoculars.png?c9de55",
+      "icon_local_path": "icons/addons/theatre_binoculars.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Opernglas",
+          "description": "Eine Brille, die viele Tragödien gesehen hat.\n• Wird ein nicht ausgesaugter Überlebender mit Darmpeitsche getroffen, werden die Auren von anderen Überlebenden in einem Umkreis von 24 Metern 5 Sekunden lang enthüllt."
+        },
+        "en": {
+          "name": "Theater Binoculars"
+        },
+        "es": {
+          "name": "Prismáticos de teatro",
+          "description": "Un par de gafas que han presenciado muchas tragedias.\n• Golpear a un superviviente que no esté exangüe con Latigazo intestinal revela las auras de los demás supervivientes en un radio de 24 metros durante 5 segundos."
+        },
+        "ja": {
+          "name": "観劇用の双眼鏡",
+          "description": "数多くの悲劇を目にしてきた双眼鏡。\n• ヒル寄生状態ではない生存者に腸の鞭を当てると、24メートル以内にいる他の生存者のオーラを5秒間表示する"
+        },
+        "pl": {
+          "name": "Lornetka teatralna",
+          "description": "Para okularów, które były świadkiem wielu tragedii.\n• Trafienie ocalałego, który nie jest zainfekowany Pasożytem, umiejętnością Flakowego Bata ujawnia aury innych ocalałych w promieniu 24 m na 5 s."
+        }
+      }
+    },
+    {
+      "id": 869,
+      "name": "Queen's Sceptre",
+      "killer_id": 41,
+      "description": "The stage prop of a vengeful queen who demands blood.\n• Successful Intestinal Whip hits cause a Leeching Gland to spatter near the Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_queensScepter.png?53eee4",
+      "icon_local_path": "icons/addons/queens_sceptre.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Königinnenzepter",
+          "description": "Die Requisite einer rachsüchtigen Königin, die nach Blut verlangt.\n• Erfolgreiche Treffer mit Darmpeitsche lassen eine Saugdrüse neben dem Überlebenden platzen."
+        },
+        "en": {
+          "name": "Queen's Scepter"
+        },
+        "es": {
+          "name": "Cetro de reina",
+          "description": "El decorado de una reina vengativa que exige sangre.\n• Asestar golpes con Latigazo intestinal provoca que una Glándula sanguijuela salpique cerca del superviviente."
+        },
+        "ja": {
+          "name": "女王の杖",
+          "description": "舞台の小道具。復讐心に燃える女王が使う。\n• 腸の鞭が命中すると、その生存者の周りにヒル分泌腺が飛び散る"
+        },
+        "pl": {
+          "name": "Berło królowej",
+          "description": "Rekwizyt sceniczny mściwej królowej, która domaga się krwi.\n• Udane trafienia Flakowym Batem powodują, że w pobliżu ocalałego rozpryskuje się Gruczoł Pasożytniczy."
+        }
+      }
+    }
+  ]
+}

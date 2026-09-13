@@ -2,25 +2,30 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, HistoryMatchLog, Perk, User
+from app.models import HistoryMatchLog, Killer, Perk, User
 from app.services.history_service import HistoryService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from tests.unit.conftest import make_chapter
 
 
-def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Character:
+def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Killer:
+    """`release_number` is `== id` now, not a settable field, so it is passed
+    straight through as the killer's id to control release order."""
     from app.core.extensions import db
 
-    character = Character(name=name, role="Killer", release_number=release_number)
+    character = Killer(
+        id=release_number, name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"
+    )
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                killer_id=character.id,
                 is_teachable=True,
-                category="Killer",
+                role="Killer",
             )
         )
     db.session.commit()
@@ -30,7 +35,7 @@ def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Characte
 def seed_general_perk(name: str = "Whispers") -> None:
     from app.core.extensions import db
 
-    db.session.add(Perk(name=name, character_id=None, category="Killer"))
+    db.session.add(Perk(name=name, role="Killer"))
     db.session.commit()
 
 
@@ -212,7 +217,7 @@ class TestSubmitResultWithinARow:
         ghostface = seed_killer("Ghostface", release_number=99)
         ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
         db.session.commit()
-        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
 
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
@@ -417,7 +422,7 @@ class TestOwnershipShrinksMidRun:
             history_service.submit_result(history_user, run["id"], "win", name)
 
         killer_6 = killers["Killer 6"]
-        ownership_service.set_character_ownership(history_user, killer_6.id, is_owned=False)
+        ownership_service.set_character_ownership(history_user, killer_6.id, is_owned=False, role="Killer")
 
         reloaded = history_service.get_or_create_run(history_user, "hell")
         assert reloaded["status"] == "in_progress"

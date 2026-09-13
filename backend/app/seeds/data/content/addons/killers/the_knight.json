@@ -1,0 +1,563 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 529,
+      "name": "Gritty Lump",
+      "killer_id": 30,
+      "description": "A rock-hard, dense loaf filled their stomachs on most days, giving them the energy to commit truly heinous acts.\n• Increases Guards' movement Speed while on Patrol by 9%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_grittyLump.png?b0b338",
+      "icon_local_path": "icons/addons/gritty_lump.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Harter Brocken",
+          "description": "Sie stillten ihren Hunger an den meisten Tagen mit steinhartem, trockenen Brot, das ihnen die Energie für wahrlich schreckliche Taten gab.\n• Erhöht die Bewegungsgeschwindigkeit der Wachen beim Patrouillieren um 9 %."
+        },
+        "es": {
+          "name": "Grumo áspero",
+          "description": "Una hogaza de pan increíblemente dura era el principal alimento la mayoría de los días y les daba la energía necesaria para cometer actos atroces.\n• Aumenta la velocidad de movimiento de los Guardias mientras están patrullando un 9 %."
+        },
+        "ja": {
+          "name": "ザラザラした塊",
+          "description": "彼らは岩のように固くて重いパンで胃を満たして、残虐行為を行う力を回復した。\n• 巡回中の衛兵の移動速度が9%上昇する"
+        },
+        "pl": {
+          "name": "Paskudny guz",
+          "description": "Twardy jak skała bochenek wypełniał ich żołądki przez większość dni, dając im energię do popełniania naprawdę okrutnych czynów.\n• Zwiększa prędkość poruszania się Strażników podczas patrolu o 9%."
+        }
+      }
+    },
+    {
+      "id": 530,
+      "name": "Map of the Realm",
+      "killer_id": 30,
+      "description": "These unique leather maps were not easy to come by, but when they could not be purchased, they could be taken by force.\n• Increases the detection Range for Guards on Patrol by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mapOfTheRealm.png?667544",
+      "icon_local_path": "icons/addons/map_of_the_realm.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Karte des Reichs",
+          "description": "Diese einzigartigen Lederkarten waren schwer zu bekommen. Aber wenn man sie sich nicht kaufen konnte, konnte man sie sich immer noch gewaltsam nehmen.\n• Erhöht die Wahrnehmungsreichweite für Wachen auf einer Patrouille um 2 Meter."
+        },
+        "es": {
+          "name": "Mapa del reino",
+          "description": "Estos mapas de cuero eran difíciles de conseguir. Si no se podían comprar, siempre se podía recurrir a la fuerza.\n• Aumenta el alcance de detección de los Guardias patrullando en 2 metros."
+        },
+        "ja": {
+          "name": "領域の地図",
+          "description": "この珍しい革製の地図は入手するのが難しい。購入できなければ力ずくで手に入れるまでだ。\n• 巡回中の衛兵の探知範囲が2メートル拡大する。"
+        },
+        "pl": {
+          "name": "Mapa wymiaru",
+          "description": "Te wyjątkowe skórzane mapy nie były łatwe do zdobycia, ale jeśli nie można było ich kupić, można je było zabrać siłą.\n• Zwiększa zasięg wykrywania dla Strażników na Patrolu o 2 m."
+        }
+      }
+    },
+    {
+      "id": 531,
+      "name": "Tattered Tabard",
+      "killer_id": 30,
+      "description": "Cloaked in heavy fabrics, neither human nor nature could stop them once they had their target.\n• Increases Patrol time for all Guards by 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tatteredTabard.png?f2bb75",
+      "icon_local_path": "icons/addons/tattered_tabard.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerfetzter Wappenrock",
+          "description": "Sie kleideten sich in schwere Stoffe und weder Mensch noch Natur konnten sie aufhalten, wenn sie ihr Ziel einmal ins Visier genommen hatten.\n• Verlängert die Patrouillenzeit für alle Wachen um 8 Sekunden."
+        },
+        "es": {
+          "name": "Tabardo harapiento",
+          "description": "Envueltos en un tejido pesado, ni los humanos ni la naturaleza pueden detenerlos si ya han detectado a su objetivo.\n• Aumenta el tiempo de patrulla de todos los Guardias en 8 segundos."
+        },
+        "ja": {
+          "name": "ボロボロのタバード",
+          "description": "人間であろうが、自然界の力であろうが、重い布で身を包んで獲物を狙う彼らを止めることはできない。\n• 全衛兵の巡回時間が8秒増加する。"
+        },
+        "pl": {
+          "name": "Zniszczony tabard",
+          "description": "Ani ludzie, ani natura nie mogli ich powstrzymać, gdy byli opatuleni w ciężkie tkaniny i mieli obrany cel.\n• Wydłuża czas patrolu dla wszystkich Strażników o 8 s."
+        }
+      }
+    },
+    {
+      "id": 532,
+      "name": "Pillaged Mead",
+      "killer_id": 30,
+      "description": "Drinks taken from their victims tasted sweet, but such frivolities were often short-lived.\n• Guards special-break Pallets and Breakable walls, and damage Generators 10% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pillagedMead.png?428f43",
+      "icon_local_path": "icons/addons/pillaged_mead.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Geraubter Met",
+          "description": "Die Getränke, die sie ihren Opfern stahlen, schmeckten süß, doch solche Genüsse waren meist nur von kurzer Dauer.\n• Wachen zerstören Paletten und zerstörbare Mauern durch deine Stärke bzw. beschädigen Generatoren um 10 % schneller."
+        },
+        "es": {
+          "name": "Hidromiel de saqueo",
+          "description": "Las bebidas que había arrebatado a sus víctimas tenían buen sabor, pero era un placer demasiado fugaz.\n• Los Guardias dañan generadores y rompen palés y muros destruibles de forma básica un 10 % más rápido."
+        },
+        "ja": {
+          "name": "略奪した蜂蜜酒",
+          "description": "犠牲者から奪い取った酒の味は格別だ。だが、略奪行為の楽しみが長続きすることはない。\n• 衛兵がパレットや破壊可能な壁を特殊破壊する速度や、発電機にダメージを与える速度が10%上昇する。"
+        },
+        "pl": {
+          "name": "Zrabowany miód",
+          "description": "Napoje zabrane ofiarom smakowały słodko, ale takie frywolności były często krótkotrwałe.\n• Strażnik niszczy palety i rozbijalne ściany w specjalny sposób oraz uszkadza generatory 10% szybciej."
+        }
+      }
+    },
+    {
+      "id": 533,
+      "name": "Dried Horsemeat",
+      "killer_id": 30,
+      "description": "Long campaigns often required restocking, and the steeds of fallen enemies were as good as any farm-fresh ration.\n• Increases the amount of time a Guard will Hunt a Survivor by 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_driedHorsemeat.png?fd2bd3",
+      "icon_local_path": "icons/addons/dried_horsemeat.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Pferdedörrfleisch",
+          "description": "Auf langen Märschen mussten oft Vorräte beschafft werden, und die Rösser gefallener Feinde waren so gut wie jede farmfrische Ration.\n• Verlängert die Dauer, für die eine Wache einen Überlebenden jagt, um 4 Sek."
+        },
+        "es": {
+          "name": "Carne de caballo deshidratada",
+          "description": "Las campañas más largas precisaban de reabastecimiento de provisiones, y los corceles de los enemigos caídos eran un sustento tan válido como cualquier otro.\n• Aumenta en 4 segundos el tiempo que acecha un Guardia a un superviviente."
+        },
+        "ja": {
+          "name": "干し馬肉",
+          "description": "長い戦いでは食糧補給が必要となる。倒れた敵の馬は、農場で採れた食料と同じくらい貴重だ。\n• 衛兵が生存者を狩る時間が4秒増加する"
+        },
+        "pl": {
+          "name": "Suszone końskie mięso",
+          "description": "Długie kampanie często wymagały uzupełniania zapasów, a rumaki poległych wrogów były równie dobre, jak każde mięso.\n• Zwiększa czas, przez jaki Strażnik będzie polował na ocalałego, o 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 534,
+      "name": "Treated Blade",
+      "killer_id": 30,
+      "description": "Durkos Malecek stuck to the shadows, and was an efficient slaughterer.\n• Decreases the cooldown after summoning The Assassin by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_treatedBlade.png?83e449",
+      "icon_local_path": "icons/addons/treated_blade.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Behandelte Klinge",
+          "description": "Durkos Malecek hielt sich in den Schatten auf und war ein effizienter Schlächter.\n• Verkürzt die Abklingzeit nach dem Rufen des Meuchlers um 20 %."
+        },
+        "es": {
+          "name": "Hoja tratada",
+          "description": "Durkos Malecek no abandonaba las sombras y era un asesino implacable.\n• Reduce el tiempo de recarga tras invocar al Sicario un 20 %."
+        },
+        "ja": {
+          "name": "研がれた刃",
+          "description": "闇の影で動き回るデュルコス・マレセクは、有能な屠殺者だった。\n• 暗殺者を召喚したあとのクールダウンを20%短縮する"
+        },
+        "pl": {
+          "name": "Zadbane ostrze",
+          "description": "Durkos Malecek trzymał się w cieniu i był skutecznym rzeźnikiem.\n• Skraca czas odnowienia po wezwaniu Asasyna o 20%."
+        }
+      }
+    },
+    {
+      "id": 535,
+      "name": "Cold Steel Manacles",
+      "killer_id": 30,
+      "description": "Alejandro Santiago apprenticed as an armorer, and showed no remorse.\n• Decreases the cooldown after summoning The Jailer by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_coldSteelManacles.png?b93a2e",
+      "icon_local_path": "icons/addons/cold_steel_manacles.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kalte Stahlfesseln",
+          "description": "Alejandro Santiago war ein Waffenmeisterlehrling und zeigte keine Reue.\n• Verkürzt die Abklingzeit nach dem Rufen des Kerkermeisters um 20 %."
+        },
+        "es": {
+          "name": "Grilletes de acero",
+          "description": "Alejandro Santiago fue aprendiz de armero y jamás mostraba ningún remordimiento.\n• Reduce el tiempo de recarga tras invocar al Carcelero un 20 %."
+        },
+        "ja": {
+          "name": "鋼鉄の手錠",
+          "description": "鎧職人として修業を積んだアレハンドロ・サンティアゴは、冷酷無情な男だった。\n• 看守を召喚したあとのクールダウンを20%短縮する"
+        },
+        "pl": {
+          "name": "Kajdany z zimnej stali",
+          "description": "Alejandro Santiago terminował jako płatnerz i nie okazywał skruchy.\n• Skraca czas odnowienia po przyzwaniu Dozorcy o 20%."
+        }
+      }
+    },
+    {
+      "id": 536,
+      "name": "Call To Arms",
+      "killer_id": 30,
+      "description": "Posted across many towns, lords desperate to protect their riches posted for able-bodied mercenaries. None survived.\n• Increases the length of a Patrol Path by 4 meters, and, while creating the path, movement speed is increased by 7%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_callToArms.png?db3b6a",
+      "icon_local_path": "icons/addons/call_to_arms.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ruf zu den Waffen",
+          "description": "In mehreren Städten suchten Fürsten verzweifelt nach fähigen Söldnern, um ihre Reichtümer zu beschützen. Keiner von ihnen überlebte.\n• Verlängert eine Patrouillenstrecke um 4 Meter. Beim Erstellen der Strecke ist die Bewegungsgeschwindigkeit um 7 % erhöht."
+        },
+        "es": {
+          "name": "Grito de guerra",
+          "description": "Los nobles de varias localidades buscaban mercenarios capaces de proteger sus riquezas. Ninguno sobrevivió.\n• Aumenta la longitud de una ruta de patrulla en 4 metros y, mientras se crea la ruta, la velocidad de movimiento aumenta un 7 %."
+        },
+        "ja": {
+          "name": "傭兵の招集",
+          "description": "領主は富を守ろうと傭兵募集の看板を国中に立てた。今となっては、それは全て姿を消したが…\n• 巡回進路の長さが4メートル増加し、進路を作っている間の移動速度が7%上昇する"
+        },
+        "pl": {
+          "name": "Wezwanie do broni",
+          "description": "Lordowie zdesperowani, by chronić swoje bogactwa, wysyłali zdolnych do walki najemników do wielu miast. Żaden nie przeżył.\n• Zwiększa długość Ścieżki Patrolu  o 4 m, a podczas tworzenia ścieżki prędkość ruchu jest większa o 7%."
+        }
+      }
+    },
+    {
+      "id": 537,
+      "name": "Sharpened Mount",
+      "killer_id": 30,
+      "description": "To stand before the Standard of the Guardia Compagnia was to stand at the threshold between life and death.\n• Increases the time it takes for the Standard to spawn by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sharpenedMount.png?83e9c3",
+      "icon_local_path": "icons/addons/sharpened_mount.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Spitze Halterung",
+          "description": "Wenn man vor dem Feldzeichen der Guardia Compagnia stand, stand man an der Schwelle zwischen Leben und Tod.\n• Verlängert die Zeit, bis das Feldzeichen entsteht, um 15 %."
+        },
+        "es": {
+          "name": "Montaña afilada",
+          "description": "Enfrentarse al estandarte de la Compañía de Armas era plantarle cara a la mismísima muerte.\n• Aumenta el tiempo que tarda en aparecer el estandarte un 15 %."
+        },
+        "ja": {
+          "name": "尖った棒",
+          "description": "グラルディア・コンパニーアの記章旗を目の前にすることは、生死の狭間に身を置くことを意味した。\n• 記章旗が出現するまでの時間が15%増加する"
+        },
+        "pl": {
+          "name": "Zaostrzony uchwyt",
+          "description": "Stanięcie przed sztandarem Guardia Compagnia oznaczało stanięcie na progu śmierci.\n• Wydłuża czas potrzebny na pojawienie się sztandaru o 15%."
+        }
+      }
+    },
+    {
+      "id": 538,
+      "name": "Grim Iron Mask",
+      "killer_id": 30,
+      "description": "No method of torture was too base for Guardia Compagnia. Pain and humiliation went hand-in-hand.\n• When a Survivor is Detected by a Guard, the Survivor suffers from Blindness for 75 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_grimIronMask.png?45008f",
+      "icon_local_path": "icons/addons/grim_iron_mask.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Finstere Eisenmaske",
+          "description": "Für die Guardia Compagnia war keine Foltermethode zu simpel. Schmerz und Erniedrigung gingen Hand in Hand.\n• Wenn ein Überlebender von einer Wache gesichtet wird, leidet der Überlebende 75 Sekunden lang unter dem Statuseffekt Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Máscara de hierro sombría",
+          "description": "Ningún método de tortura era demasiado vulgar para la Compañía de Armas. El dolor y la humillación iban de la mano.\n• Cuando un Guardia detecta a un superviviente, este sufre Ceguera durante 75 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "不気味な鉄仮面",
+          "description": "グラルディア・コンパニーアにとって、卑劣すぎる拷問など存在しなかった。目的は苦痛と屈辱を与えることだ。\n• 生存者が衛兵に探知されると、生存者が目眩ましに75秒間苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Ponura żelazna maska",
+          "description": "Żadna metoda torturowania nie była dla Guardii Compagnii zbyt ohydna. Ból i upokorzenie szły w parze.\n• Kiedy ocalały zostanie wykryty przez Strażnika, otrzymuje Oślepienie na 75 s.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 539,
+      "name": "Broken Hilt",
+      "killer_id": 30,
+      "description": "A fresh weapon is clean, even surgical; an attack with a broken one is malicious and desperate.\n• Guards inflict the Hemorrhage and Mangled status effects for 70 seconds when damaging a Survivor.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors.This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brokenHilt.png?861e80",
+      "icon_local_path": "icons/addons/broken_hilt.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zerstörter Griff",
+          "description": "Eine frische Waffe ist sauber, sogar hygienisch. Ein Angriff mit einer kaputten ist boshaft und verzweifelt.\n• Wachen verursachen die Statuseffekte Blutung und Zerfleischt für 70 Sekunden, wenn sie einem Überlebenden Schaden zufügen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Empuñadura rota",
+          "description": "Un arma nueva es limpia, incluso estéril. El ataque asestado con un arma rota es malvado y desesperado.\n• Los Guardias causan los efectos de estado Hemorragia y Laceración durante 70 segundos al dañar a un superviviente.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "折れた柄",
+          "description": "新しい武器は清潔でメスのように切れる。壊れた武器は悪意に満ち、質が悪い。\n• 衛兵が生存者にダメージを与えると出血と重傷のステータス効果を70秒間与える\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Uszkodzona rękojeść",
+          "description": "Świeża broń jest czysta, wręcz chirurgicznie. Atak zepsutą bronią jest złośliwy i desperacki.\n• Strażnicy nakładają efekt Krwotok na 70 s, kiedy zadają obrażenia ocalałemu.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Trwa przez określony czas lub do pełnego wyleczenia.Zmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% na określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 540,
+      "name": "Flint and Steel",
+      "killer_id": 30,
+      "description": "Attacks at night were not uncommon. Fear was often their greatest ally.\n• After summoning The Carnifex, The Knight can see the auras of Survivors within 24 meters of downed pallets for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_flintAndSteel.png?64c80c",
+      "icon_local_path": "icons/addons/flint_and_steel.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Feuerstein und Stahl",
+          "description": "Nächtliche Angriffe waren nichts Ungewöhnliches. Furcht war oft ihre wichtigste Verbündete.\n• Nachdem der Scharfrichter gerufen wurde, kann der Ritter die Auren von Überlebenden in einem Umkreis von 24 Metern um gefallene Paletten 8 Sekunden lang sehen."
+        },
+        "es": {
+          "name": "Pedernal y acero",
+          "description": "Los ataques nocturnos no eran poco comunes. A menudo, el miedo era su mayor aliado.\n• Tras invocar al Matarife, el Caballero puede ver las auras de los supervivientes en un radio de 24 metros de palés derribados durante 8 segundos."
+        },
+        "ja": {
+          "name": "火打ち石と打ち金",
+          "description": "夜に奇襲をかけることは珍しくなかった。闇を恐れる恐怖心がよく味方になったのだ。\n• 執行人を召喚した後、倒されたパレットから24メートル以内にいる生存者のオーラが8秒間視える"
+        },
+        "pl": {
+          "name": "Krzemień i stal",
+          "description": "Ataki w nocy nie należały do rzadkich. Strach był często ich największym sprzymierzeńcem.\n• Po przywołaniu Oprawcy Rycerz widzi aury ocalałych w promieniu 24 m od zniszczonych palet przez 8 s."
+        }
+      }
+    },
+    {
+      "id": 541,
+      "name": "Healing Poultice",
+      "killer_id": 30,
+      "description": "Their reputation was so large, so horrible, that the mere knowledge that they were coming was enough to bring people to their knees.\n• After summoning The Assassin, all Survivors within 8 meters from the Guard's initial position have their aura revealed for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_healingPoultice.png?1caa95",
+      "icon_local_path": "icons/addons/healing_poultice.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Heilender Umschlag",
+          "description": "Ihr Ruf war so weit verbreitet und so schrecklich, dass allein das Wissen, dass sie kommen würden, die Menschen in die Knie zwang.\n• Nachdem der Meuchler gerufen wurde, werden die Auren aller Überlebenden innerhalb von 8 Metern um die anfängliche Position der Wache für 8 Sekunden enthüllt."
+        },
+        "es": {
+          "name": "Cataplasma curativa",
+          "description": "Su reputación era tal que, cuando la gente sabía que se acercaban, se sobrecogían de terror y perdían toda esperanza.\n• Tras invocar al Sicario, todos los supervivientes en un radio de 8 metros de la posición inicial del Guardia gritarán y revelarán su aura durante 8 segundos."
+        },
+        "ja": {
+          "name": "治癒の湿布薬",
+          "description": "彼らの残虐行為はあまりにも有名で、彼らが迫っていることを聞いただけで人々は恐怖で震え上がった。\n• 暗殺者を召喚した後、衛兵の最初の位置から8メートル以内の生存者全員のオーラが8秒間視える"
+        },
+        "pl": {
+          "name": "Leczący okład",
+          "description": "Ich reputacja była tak znaczna, tak straszna, że sama świadomość, że nadchodzą, wystarczała, by rzucić ludzi na kolana.\n• Po przywołaniu Asasyna aury wszystkich ocalałych w promieniu 8 m od początkowej pozycji Strażnika zostają ujawnione na 8 sekund."
+        }
+      }
+    },
+    {
+      "id": 542,
+      "name": "Jailer's Chimes",
+      "killer_id": 30,
+      "description": "Many captives met the same grisly end for attempting to escape his clutches.\n• After summoning The Jailer, Survivors that cross his Patrol Path have their aura revealed for 8 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jailersChimes.png?7508da",
+      "icon_local_path": "icons/addons/jailers_chimes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Glocken des Kerkermeisters",
+          "description": "Viele Gefangene ereilte dasselbe grausige Schicksal, als sie versuchten, seinen Klauen zu entkommen.\n• Nachdem der Kerkermeister gerufen wurde, wird die Aura von Überlebenden, die seine Patrouillenstrecke betreten, für 8 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Campanas del Carcelero",
+          "description": "Muchos prisioneros tuvieron el mismo horripilante final cuando intentaron escapar de sus garras.\n• Tras invocar al Carcelero, se revelarán las auras de los supervivientes que atraviesen su ruta de patrulla durante 8 segundos."
+        },
+        "ja": {
+          "name": "看守の鈴",
+          "description": "数多くの捕虜が彼の手から逃れようとして悲惨な結末を迎えた。\n• 看守を召喚した後、その巡回進路を横切った生存者のオーラが8秒間視える"
+        },
+        "pl": {
+          "name": "Dzwonki Dozorcy",
+          "description": "Wielu jeńców spotkał ten sam makabryczny koniec za próbę ucieczki z jego objęć.\n• Po przywołaniu Dozorcy auty ocalałych, którzy przekroczą jego Ścieżkę Patrolu, zostają ujawnione na 8 s."
+        }
+      }
+    },
+    {
+      "id": 543,
+      "name": "Iridescent Company Banner",
+      "killer_id": 30,
+      "description": "Where this banner was raised, those who called themselves \"civilized\" ran and hid, because for all their codes and laws, they had nothing resembling actual strength.\n• While a Survivor is Hunted by a Guard, spikes block the exit for the Hunted Survivor. When they vault, that vault location is blocked for all Survivors for the duration of the Hunt.\n• While creating a Patrol Path, passing through vault locations will block these locations for 25 seconds after summoning a Guard.\n\"“They huddle in their villages like parasites! They have lost the drive for power.” – Tarhos Kovács\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentCompanyBanner.png?7f970b",
+      "icon_local_path": "icons/addons/iridescent_company_banner.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Kompaniebanner",
+          "description": "Wo dieses Banner gehisst wurde, flüchteten die, die sich „zivilisiert“ nannten, und versteckten sich, denn trotz all ihrer Regeln und Gesetze hatten sie nichts, was wahrer Stärke gleichkam.\n• Solange ein Überlebender von einer Wache gejagt wird, blockieren Stacheln den Ausgang für den gejagten Überlebenden. Wenn er springt, wird der Sprungort für alle Überlebenden für die Dauer der Jagd blockiert.\n• Beim Erstellen einer Patrouillenstrecke, die durch Sprungorte hindurchführt, werden diese Orte für 25 Sekunden blockiert, nachdem eine Wache gerufen wurde.\n\"„Wie Parasiten drängen sie sich in ihren Dörfern zusammen! Sie haben ihr Streben nach Macht verloren.“ – Tarhos Kovács\""
+        },
+        "es": {
+          "name": "Estandarte iridiscente de la compañía",
+          "description": "Allí donde se alzaba este estandarte, los que se consideraban civilizados huían y se escondían. A pesar de todos sus códigos y leyes, no poseían nada que se asemejara a la auténtica fuerza.\n• Cuando un Guardia acecha a un superviviente, unas púas bloquean la salida para este. Al saltar, el lugar de salto quedará bloqueado para todos los supervivientes durante el acecho.\n• Mientras se crea una ruta de patrulla, se bloquearán los lugares de salto durante 25 segundos tras invocar a un Guardia.\n\"\"Se hacinan en sus aldeas como parásitos... Han perdido su ansia de poder\". (Tarhos Kovács)\""
+        },
+        "ja": {
+          "name": "玉虫色の軍旗",
+          "description": "この軍旗が揚げられると、「文明人」と自称した者たちは逃げ出し、身を隠した。彼らは法や秩序に従えるだけで、実際の力は全く持っていなかったのだ。\n• 衛兵が生存者を狩っている間、追われる生存者の出口をクギがブロックする。追われる生存者が障害物を乗り越えると、その障害物はその狩りが終わるまで、全ての生存者に対してブロックされる\n• 巡回進路を作っている間に障害物を乗り越えると、その場所が衛兵を召喚したあと25秒間ブロックされる\n\"「やつらは村に群がる寄生虫だ！力への渇望など、とうに失っている」- タルホーシュ・コバッチ\""
+        },
+        "pl": {
+          "name": "Opalizujący baner kompanii",
+          "description": "Tam, gdzie wzniesiono ten sztandar, ludzie nazywający siebie „cywilizowanymi” uciekali i ukrywali się, ponieważ przy wszystkich swoich kodeksach i prawach nie mieli nic, co choć trochę przypominałoby rzeczywistą siłę.\n• Gdy Strażnik poluje na ocalałego, kolce blokują wyjście dla ofiary. Gdy ocalały przeskoczy, miejsce skoku zostaje zablokowane dla wszystkich ocalałych na czas polowania.\n• Podczas tworzenia Ścieżki Patrolu przechodzenie przez miejsca przeskoków blokuje je na 25 s po wezwaniu Strażnika.\n\"„Tłoczą się w swoich wioskach jak pasożyty! Stracili żądzę władzy”. – Tarhos Kovács\""
+        }
+      }
+    },
+    {
+      "id": 819,
+      "name": "Battle Axe Head",
+      "killer_id": 30,
+      "description": "Sander Rault was a tower of a man, terrifying in form and demeanor.\n• Decreases the cooldown after summoning The Carnifex by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_battleAxeHead.png?ad38f7",
+      "icon_local_path": "icons/addons/battle_axe_head.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Streitaxt-Kopf",
+          "description": "Sander Rault war ein hoch aufragender Mann, der in Gestalt und Gebaren Angst und Schrecken verbreitete.\n• Verkürzt die Abklingzeit nach dem Rufen des Scharfrichters um 20 %."
+        },
+        "en": {
+          "name": "Battleaxe Head"
+        },
+        "es": {
+          "name": "Cabeza de hacha de guerra",
+          "description": "Sander Rault era un hombre de aspecto imponente que resultaba aterrador por su físico y actitud.\n• Reduce el tiempo de recarga tras invocar al Matarife un 20 %."
+        },
+        "ja": {
+          "name": "凶暴な戦斧",
+          "description": "サンダー・ラウトは体も態度も大きな、恐ろしい男だった。\n• 執行人を召喚したあとのクールダウンを20%短縮する"
+        },
+        "pl": {
+          "name": "Głowica topora bojowego",
+          "description": "Sander Rault był wysokim mężczyzną o przerażającej budowie ciała i usposobieniu.\n• Skraca czas odnowienia po wezwaniu Oprawcy o 20%."
+        }
+      }
+    },
+    {
+      "id": 820,
+      "name": "Ironworker's Tongs",
+      "killer_id": 30,
+      "description": "Vital for repairs between battles and a horrifying, gauging, tearing improvisational weapon.\n• When a Survivor escapes a Guard Hunt successfully, they suffer from the Oblivious status effect for 60 seconds.\nOblivious prevents survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ironworkersTongs.png?fa7531",
+      "icon_local_path": "icons/addons/ironworkers_tongs.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Eisenarbeiterzange",
+          "description": "Wichtig für Reparaturen zwischen den Schlachten und eine schreckliche, improvisierte Waffe, die grauenvolle Wunden reißt.\n• Wenn ein Überlebender die Wachenjagd erfolgreich übersteht, erleidet er für 60 Sekunden den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder davon betroffen sind."
+        },
+        "en": {
+          "name": "Ironworker’s Tongs"
+        },
+        "es": {
+          "name": "Tenazas de herrero",
+          "description": "Fundamental para reparaciones entre batalla y batalla, y un arma improvisada absolutamente espantosa.\n• Cuando un superviviente escapa del acecho de un Guardia, sufre el efecto de estado Inconsciencia durante 60 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "鍛冶屋のトング",
+          "description": "戦いの合間の修理に不可欠な道具だが、恐ろしい即興武器にもなる。\n• 生存者が衛兵の狩りから逃れると、生存者が無感覚ステータス効果に60秒間苦しむ。\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Szczypce robotnika",
+          "description": "Niezbędna do napraw pomiędzy walkami, przerażająca i rozdzierająca broń improwizowana.\n• Kiedy ocalały ucieknie przed polowaniem Strażnika, otrzymuje efekt Oślepienie na 60 s.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 821,
+      "name": "Town Watch's Torch",
+      "killer_id": 30,
+      "description": "Upon breaching a village, the first thing they would extinguish was the torches, and with them, hope.\n• While a Guard is actively Hunting a Survivor, gain the Undetectable status effect.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_townWatchsTorch.png?3cd085",
+      "icon_local_path": "icons/addons/town_watchs_torch.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Fackel des Stadtwächters",
+          "description": "Wenn sie in ein Dorf einfielen, löschten sie zuallererst die Fackeln und damit jede Hoffnung.\n• Solange eine Wache einen Überlebenden jagt, erhältst du den Statuseffekt Unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "en": {
+          "name": "Town Watch’s Torch"
+        },
+        "es": {
+          "name": "Antorcha de atalaya del pueblo",
+          "description": "Tras irrumpir en una aldea, lo primero que se apagaban eran las antorchas y, con ellas, la esperanza.\n• Mientras un Guardia acecha activamente a un superviviente, obtiene el efecto de estado Indetectable.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "見張り番のたいまつ",
+          "description": "村に攻め入ったときに最初に消すのは、見張りのたいまつ、その次に消すのは村人の希望の光だった。\n• 衛兵が生存者を追跡している間、探知不可ステータス効果を得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Pochodnia straży miejskiej",
+          "description": "Po zdobyciu wioski pierwszą rzeczą, którą gasili, były pochodnie, a wraz z nimi gasła nadzieja.\n• Gdy Strażnik poluje na ocalałego, otrzymujesz efekt Niewykrywalny.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 822,
+      "name": "Blacksmith's Hammer",
+      "killer_id": 30,
+      "description": "In their hands, everything was a weapon.\n• Guards inflict the Broken status effect for 60 seconds when damaging a Survivor.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blacksmithsHammer.png?3b29c6",
+      "icon_local_path": "icons/addons/blacksmiths_hammer.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schmiedehammer",
+          "description": "In ihren Händen wurde alles zur Waffe.\n• Wachen verursachen den Statuseffekt Gebrochen für 60 Sekunden, wenn sie einem Überlebenden Schaden zufügen.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "en": {
+          "name": "Blacksmith’s Hammer"
+        },
+        "es": {
+          "name": "Martillo de herrero",
+          "description": "En sus manos, todo era un arma.\n• Los Guardias causan el efecto de estado Desesperanza durante 60 segundos al dañar a un superviviente.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "鍛冶屋のハンマー",
+          "description": "彼らの手に入れば、なんでも武器となった。\n• 衛兵が生存者にダメージを与えると衰弱ステータス効果を60秒間与える。\n衰弱状態になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Młot kowalski",
+          "description": "W ich rękach wszystko było bronią.\n• Strażnicy nakładają efekt Okaleczony na 60 s przy zadawaniu obrażeń ocalałemu.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    },
+    {
+      "id": 823,
+      "name": "Knight's Contract",
+      "killer_id": 30,
+      "description": "The original document contracting Tarhos to Vittorio’s employ. The laws of man could not stand up, though, to natural law.\n• After giving an Order, the Guard will remain for an extra 8 seconds, triggering a Hunt if they detect a Survivor.\n\"“I fear he has left me here to die.” – Vittorio Toscano\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_knightsContract.png?13a80d",
+      "icon_local_path": "icons/addons/knights_contract.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Rittervertrag",
+          "description": "Das Originaldokument, mit dem Vittorio Tarhos anstellte. Doch die Gesetze der Natur hatten Vorrang vor den Gesetzen der Menschen.\n• Wenn ein Befehl erteilt wurde, bleibt die Wache noch zusätzliche 8 Sekunden und eine Jagd wird ausgelöst, wenn sie einen Überlebenden entdeckt.\n\"„Ich befürchte, er hat mich hier dem Tod überlassen.“ – Vittorio Toscano\""
+        },
+        "en": {
+          "name": "Knight’s Contract"
+        },
+        "es": {
+          "name": "Contrato de caballero",
+          "description": "El contrato original que Vittorio le entregó a Tarhos. Sin embargo, las leyes de los hombres no pueden hacer nada contra las leyes de la naturaleza.\n• Tras dar una orden, el Guardia se quedará 8 segundos más, lo que activará un acecho si detecta a un superviviente.\n\"\"Temo que me haya encerrado aquí para morir...\". (Vittorio Toscano)\""
+        },
+        "ja": {
+          "name": "騎士の契約",
+          "description": "ビットリオがタルホーシュを雇った契約の原本。人間の交わした約束は、自然の掟には敵わなかった。\n• 命令を出したあと、衛兵が追加で8秒間残り、生存者を探知すると狩りを始める\n\"「奴はここで死ぬよう俺を置いてったんじゃないか」- ビットリオ・トスカーノ\""
+        },
+        "pl": {
+          "name": "Kontrakt rycerski",
+          "description": "Oryginalny dokument, na mocy którego Tarhos został zatrudniony przez Vittoria. Prawa człowieka nie mogły jednak przeciwstawiać się prawu naturalnemu.\n• Po wydaniu rozkazu Strażnik pozostanie dostępny przez dodatkowe 8 s i rozpocznie polowanie, jeśli wykryje ocalałego.\n\"„Obawiam się, że zostawił mnie tu na śmierć”. – Vittorio Toscano\""
+        }
+      }
+    }
+  ]
+}

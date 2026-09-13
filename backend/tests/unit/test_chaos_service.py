@@ -2,25 +2,26 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import ChaosMatchLog, Character, Perk, User
+from app.models import ChaosMatchLog, Killer, Perk, User
 from app.services.chaos_service import ChaosService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from tests.unit.conftest import make_chapter
 
 
-def seed_killer(name: str, perk_count: int = 3) -> Character:
+def seed_killer(name: str, perk_count: int = 3) -> Killer:
     from app.core.extensions import db
 
-    character = Character(name=name, role="Killer")
+    character = Killer(name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power")
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                killer_id=character.id,
                 is_teachable=True,
-                category="Killer",
+                role="Killer",
             )
         )
     db.session.commit()
@@ -30,8 +31,8 @@ def seed_killer(name: str, perk_count: int = 3) -> Character:
 def seed_new_perk(name: str, character_name: str = "The Trapper") -> Perk:
     from app.core.extensions import db
 
-    character = db.session.scalars(select(Character).where(Character.name == character_name)).first()
-    perk = Perk(name=name, character_id=character.id, is_teachable=True, category="Killer")
+    character = db.session.scalars(select(Killer).where(Killer.name == character_name)).first()
+    perk = Perk(name=name, killer_id=character.id, is_teachable=True, role="Killer")
     db.session.add(perk)
     db.session.commit()
     return perk
@@ -178,7 +179,7 @@ class TestHellDifficulty:
         huntress = seed_killer("The Huntress")
         huntress.created_at = datetime(2099, 1, 1, tzinfo=timezone.utc)
         db.session.commit()
-        OwnershipService().set_character_ownership(self.user_id, huntress.id, is_owned=False)
+        OwnershipService().set_character_ownership(self.user_id, huntress.id, is_owned=False, role="Killer")
 
         run = self.run
         remaining = list(run["owned_killers"])
@@ -202,7 +203,7 @@ class TestHellDifficulty:
         ghostface = seed_killer("Ghostface")
         ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
         db.session.commit()
-        OwnershipService().set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+        OwnershipService().set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
 
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")

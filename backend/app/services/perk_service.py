@@ -24,7 +24,6 @@ from app.services.perks import (
     load_fallback_files as _load_fallback_files_fn,
     reload_service_data as _reload_service_data_fn,
     sanitize_name as _sanitize_name_fn,
-    seed_database_from_json_files as _seed_database_from_json_files_fn,
     slugify as _slugify_fn,
 )
 
@@ -74,9 +73,6 @@ class PerkService:
 
     def reload_data(self) -> None:
         _reload_service_data_fn(self)
-
-    def _seed_database_from_json_files(self) -> None:
-        _seed_database_from_json_files_fn(self)
 
     def _load_fallback_files(self) -> None:
         _load_fallback_files_fn(self)
@@ -174,6 +170,12 @@ class PerkService:
         search: str | None = None,
         lang: str | None = None,
     ) -> list[dict[str, Any]]:
+        """Serve `/api/v1/addons` as one list drawn from two tables.
+
+        `category` and `target` keep their meanings and their spellings; they
+        now choose between `killer_addons` and `item_addons` rather than
+        filtering one combined table, and the two result sets are concatenated.
+        """
         return _fetch_addons_fn(self, category=category, target=target, search=search, lang=lang)
 
     def get_maps(
@@ -190,4 +192,10 @@ class PerkService:
         seed: str | None = None,
         floor: int | None = None,
     ) -> dict[str, Any] | None:
+        """Look one map up by the same string handle the map routes take.
+
+        `map_realms.map_id` no longer exists: a numeric value is the integer
+        primary key and anything else is matched against the map's name, which
+        is unique across all 58.
+        """
         return _fetch_map_detail_fn(self, map_id=map_id, seed=seed, floor=floor)

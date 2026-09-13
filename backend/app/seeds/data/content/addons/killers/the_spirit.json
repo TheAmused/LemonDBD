@@ -1,0 +1,540 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 220,
+      "name": "Zōri",
+      "killer_id": 13,
+      "description": "A comfortable pair of flat sandals that can easily be slipped on and off.\n• Increases Yamaoka's Haunting movement speed by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_zori.png?4061e6",
+      "icon_local_path": "icons/addons/zōri.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "description": "Ein bequemes Paar flache Sandalen, das schnell an- und ausgezogen werden kann.\n• Erhöht die Bewegungsgeschwindigkeit bei Yamaokas Spuk um 5 %."
+        },
+        "es": {
+          "name": "Zori",
+          "description": "Un par de sandalias planas muy cómodas, fáciles de poner y de quitar.\n• Aumenta la velocidad de movimiento de Fantasma de Yamaoka un 5 %."
+        },
+        "ja": {
+          "name": "草履",
+          "description": "着脱が容易で快適なサンダル。\n• 山岡の祟りの移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Japońskie Sandały",
+          "description": "Wygodna para sandałów. Łatwe do założenia, łatwe do zsunięcia.\n• Zwiększa prędkość ruchu w trakcie korzystania z mocy Opętania Yamaoki o 5%."
+        }
+      }
+    },
+    {
+      "id": 221,
+      "name": "Shiawase Amulet",
+      "killer_id": 13,
+      "description": "A talisman that makes one happy and enthusiastic.\n• Increases Yamaoka's Haunting duration by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shiawaseAmulet.png?dd6ece",
+      "icon_local_path": "icons/addons/shiawase_amulet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Shiawase-Amulett",
+          "description": "Ein Talisman, der einen zufrieden und tatkräftig stimmt.\n• Erhöht die Dauer von Yamaokas Spuk um 15 %."
+        },
+        "es": {
+          "name": "Amuleto de shiawase",
+          "description": "Un talismán que otorga felicidad y entusiasmo.\n• Aumenta la duración de Fantasma de Yamaoka un 15 %."
+        },
+        "ja": {
+          "name": "幸せのお守り",
+          "description": "着用者に幸福と熱狂をもたらすお守り。\n• 山岡の祟りの持続時間が15%増加する"
+        },
+        "pl": {
+          "name": "Amulet Fortuny",
+          "description": "Talizman na szczęście.\n• Wydłuża czas działania mocy Opętania Yamaoki o 15%."
+        }
+      }
+    },
+    {
+      "id": 222,
+      "name": "Gifted Bamboo Comb",
+      "killer_id": 13,
+      "description": "A narrow tooth bamboo comb to gently untangle disheveled hair.\n• Increases Yamaoka's Haunting charge speed by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_giftedBambooComb.png?52bd0b",
+      "icon_local_path": "icons/addons/gifted_bamboo_comb.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Geschenkter Bambuskamm",
+          "description": "Ein feiner Bambuskamm zum sanften Entwirren zerzauster Haare.\n• Erhöht die Aufladegeschwindigkeit von Yamaokas Spuk um 15 %."
+        },
+        "es": {
+          "name": "Peine de bambú excepcional",
+          "description": "Un fino peine de bambú para desenredar suavemente el pelo enmarañado.\n• Aumenta la velocidad de carga de Fantasma de Yamaoka un 15 %."
+        },
+        "ja": {
+          "name": "贈り物の竹櫛",
+          "description": "乱れた髪をやさしくほぐす、歯の細かな竹櫛。\n• 山岡の祟りの発動する速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Bambusowy Grzebień",
+          "description": "Bambusowy grzebień z wąskimi ząbkami do rozplątywania rozczochranych włosów.\n• Zwiększa prędkość ładowania mocy Opętania Yamaoki o 15%."
+        }
+      }
+    },
+    {
+      "id": 223,
+      "name": "Origami Crane",
+      "killer_id": 13,
+      "description": "One of the one thousand orizuru for your wish to come true.\n• Increases Yamaoka's Haunting recharge rate by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_origamiCrane.png?c84191",
+      "icon_local_path": "icons/addons/origami_crane.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Origamikranich",
+          "description": "Einer der tausend Kraniche, damit dein Wunsch in Erfüllung geht.\n• Erhöht die Geschwindigkeit, mit der sich Yamaokas Spuk wieder auflädt, um 20 %."
+        },
+        "es": {
+          "name": "Grulla de origami",
+          "description": "Uno de los mil orizuru para que se cumpla tu deseo.\n• Aumenta la velocidad de recarga de Fantasma de Yamaoka un 20 %."
+        },
+        "ja": {
+          "name": "折り鶴",
+          "description": "願いをかなえる千羽鶴のうちの一つ。\n• 山岡の祟りの再チャージ速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Żuraw z Origami",
+          "description": "Jeden z tysiąca orizuru mający sprawić, że marzenia staną się rzeczywistością.\n• Przyspiesza odnawianie się mocy Opętania Yamaoki o 20%."
+        }
+      }
+    },
+    {
+      "id": 224,
+      "name": "Kaiun Talisman",
+      "killer_id": 13,
+      "description": "A talisman to get luck on your side.\n• Increases Yamaoka's Haunting duration by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kaiunTalisman.png?e3c1cc",
+      "icon_local_path": "icons/addons/kaiun_talisman.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kaiun-Talisman",
+          "description": "Ein Talisman, damit das Glück auf deiner Seite ist.\n• Erhöht die Dauer von Yamaokas Spuk um 25 %."
+        },
+        "es": {
+          "name": "Talismán de kaiun",
+          "description": "Un talismán para que la suerte esté de tu lado.\n• Aumenta la duración de Fantasma de Yamaoka un 25 %."
+        },
+        "ja": {
+          "name": "開運のお守り",
+          "description": "幸運を呼ぶお守り。\n• 山岡の祟りの持続時間が25%増加する"
+        },
+        "pl": {
+          "name": "Talizman Kaiun",
+          "description": "Talizman mający przynosić szczęście.\n• Wydłuża czas działania mocy Opętania Yamaoki o 25%."
+        }
+      }
+    },
+    {
+      "id": 225,
+      "name": "White Hair Ribbon",
+      "killer_id": 13,
+      "description": "A silken bow to tame wild hair.\n• Increases Yamaoka's Haunting charge speed by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_whiteHairRibbon.png?f83b7d",
+      "icon_local_path": "icons/addons/white_hair_ribbon.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Weißes Haarband",
+          "description": "Eine Seidenschleife zum Bändigen wilder Haare.\n• Erhöht die Aufladegeschwindigkeit von Yamaokas Spuk um 20 %."
+        },
+        "es": {
+          "name": "Cinta blanca",
+          "description": "Una cinta de seda para controlar el cabello rebelde.\n• Aumenta la velocidad de carga de Fantasma de Yamaoka un 20 %."
+        },
+        "ja": {
+          "name": "白のヘアリボン",
+          "description": "乱れた髪をまとめるための絹のリボン。\n• 山岡の祟りの発動する速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Biała Wstążka",
+          "description": "Jedwabny grzebień służący do walki z niesforną fryzurą.\n• Przyspiesza ładowanie mocy Opętania Yamaoki o 20%."
+        }
+      }
+    },
+    {
+      "id": 226,
+      "name": "Muddy Sports Day Cap",
+      "killer_id": 13,
+      "description": "A muddy sport cap with a High School logo. Identified with a sewn name tag to \"Rin\".\n• Increases Yamaoka's Haunting movement speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_muddySportsDayCap.png?293e8b",
+      "icon_local_path": "icons/addons/muddy_sports_day_cap.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schlammige Sportkappe",
+          "description": "Eine schlammige Sportkappe mit einem Highschool-Logo. Laut einem eingenähten Namensschild Eigentum von „Rin“.\n• Erhöht die Bewegungsgeschwindigkeit bei Yamaokas Spuk um 10 %."
+        },
+        "es": {
+          "name": "Gorra deportiva embarrada",
+          "description": "Una gorra deportiva, manchada de barro, con el logotipo de un instituto. Tiene cosida una etiqueta que pone \"Rin\".\n• Aumenta la velocidad de movimiento de Fantasma de Yamaoka un 10 %."
+        },
+        "ja": {
+          "name": "泥だらけの運動会のキャップ",
+          "description": "高校の校章が付いた泥だらけのスポーツキャップ。「凜」という名札が縫い付けられている。\n• 山岡の祟りの移動速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Zabłocona Sportowa Czapka",
+          "description": "Zabłocona czapka z logo szkoły średniej. Wyszyto na niej imię „Rin\".\n• Zwiększa prędkość ruchu podczas korzystania z mocy Opętania Yamaoki o 10%."
+        }
+      }
+    },
+    {
+      "id": 227,
+      "name": "Juniper Bonsai",
+      "killer_id": 13,
+      "description": "Dark blue-green foliage bonsai tree. Once the symbol of Yamaoka family tradition.\n• Increases Passive Phasing frequency by 20%.\n• Increases Passive Phasing duration by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_juniperBonsai.png?815bc0",
+      "icon_local_path": "icons/addons/juniper_bonsai.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wacholderbonsai",
+          "description": "Bonsai mit dunklen, blaugrünen Blättern. Einst das Symbol der traditionsreichen Yamaoka-Familie.\n• Erhöht die Häufigkeit des passiven Phasenwechsels um 20 %.\n• Verlängert die Dauer des passiven Phasenwechsels um 50 %."
+        },
+        "es": {
+          "name": "Bonsái de enebro",
+          "description": "Un bonsái de hojas verde azuladas. En el pasado, fue el símbolo de la familia Yamaoka.\n• Aumenta la frecuencia del cambio de plano pasivo un 20 %.\n• Aumenta la duración del cambio de plano pasivo un 50 %."
+        },
+        "ja": {
+          "name": "杜松の盆栽",
+          "description": "暗藍色の葉をつけた盆栽。かつては山岡家の伝統の象徴だった。\n• パッシブフェージングの頻度が20%増加する\n• パッシブフェージングの持続時間が50%増加する"
+        },
+        "pl": {
+          "name": "Drzewko Bonsai",
+          "description": "Mroczne drzewko bonsai z niebiesko-zielonymi liśćmi. Stanowiło niegdyś tradycyjny symbol rodziny Yamaoka.\n• Zwiększa częstotliwość migania o 20%.\n• Wydłuża czas trwania migania o 50%."
+        }
+      }
+    },
+    {
+      "id": 228,
+      "name": "Rin's Broken Watch",
+      "killer_id": 13,
+      "description": "A wristwatch with a shattered glass. The name \"Rin\" is scribbled on the wristband.\n• Increases Yamaoka's Haunting recharge rate by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rinsBrokenWatch.png?251d7f",
+      "icon_local_path": "icons/addons/rins_broken_watch.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Rins kaputte Uhr",
+          "description": "Eine Armbanduhr mit zerbrochenem Glas. Der Name „Rin“ wurde auf das Band gekritzelt.\n• Erhöht die Erholungsrate von Yamaokas Spuk um 30 %."
+        },
+        "es": {
+          "name": "Reloj roto de Rin",
+          "description": "Un reloj de pulsera con la esfera rota. Tiene escrito en la correa el nombre \"Rin\".\n• Aumenta la velocidad de recuperación de Fantasma de Yamaoka un 30 %."
+        },
+        "ja": {
+          "name": "凜の壊れた腕時計",
+          "description": "風防が割れた腕時計。バンドに「凜」という名前が入っている。\n• 山岡の祟りの再チャージ速度が30%増加する"
+        },
+        "pl": {
+          "name": "Zepsuty Zegarek Rin",
+          "description": "Zepsuty zegarek na rękę. Na opasce znajduje się imię „Rin\".\n• Zwiększa prędkość odnawiania mocy Opętania Yamaoki o 30%."
+        }
+      }
+    },
+    {
+      "id": 229,
+      "name": "Uchiwa",
+      "killer_id": 13,
+      "description": "Handheld fan with a koi motif to create a nice breeze on a hot summer day.\n• Instantly recharges Yamaoka's Haunting when stunned by a pallet.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_uchiwa.png?9f4a30",
+      "icon_local_path": "icons/addons/uchiwa.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "description": "Ein Handfächer mit einem Koi-Motiv für eine angenehme Brise an heißen Sommertagen.\n• Lädt Yamaokas Spuk sofort wieder auf, wenn du von einer Palette betäubt wurdest."
+        },
+        "es": {
+          "description": "Un abanico de mano con el dibujo de un koi, para disfrutar de una agradable brisa en los días más cálidos del verano.\n• Recarga al instante Fantasma de Yamaoka después de que te aturdan con un palé."
+        },
+        "ja": {
+          "name": "うちわ",
+          "description": "鯉柄のうちわ。暑い夏の日にさわやかな風を作り出す。\n• パレットで怯むと山岡の祟りが即時に再チャージされる"
+        },
+        "pl": {
+          "description": "Wachlarz z motywem karpi koi tworzący przyjemną bryzę, która daje wytchnienie w gorące letnie dnie.\n• Natychmiast ładuje Opętanie Yamaoki po ogłuszeniu przez paletę."
+        }
+      }
+    },
+    {
+      "id": 230,
+      "name": "Senko Hanabi",
+      "killer_id": 13,
+      "description": "Thin sparklers that light up summer nights and display the beauty of ephemeral moments in life.\n• When Yamaoka's Haunting ends, The Spirit's husk explodes and any vault locations within 4 meters are blocked for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_senkoHanabi.png?59dcb5",
+      "icon_local_path": "icons/addons/senko_hanabi.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "description": "Dünne Wunderkerzen, die Sommernächte erhellen und die Schönheit vergänglicher Momente im Leben demonstrieren.\n• Wenn Yamaokas Spuk endet, explodiert die Hülle des Gespensts und Sprünge innerhalb von 4 Metern werden für 5 Sekunden blockiert."
+        },
+        "es": {
+          "name": "Senko hanabi",
+          "description": "Unos fuegos artificiales que iluminan las noches estivales y muestran la belleza de los momentos más efímeros de la vida.\n• Cuando termina Fantasma de Yamaoka, la cáscara del Espíritu explota y se bloquea cualquier salto en un radio de 4 metros durante 5 segundos."
+        },
+        "ja": {
+          "name": "線香花火",
+          "description": "夏の夜を灯す繊細な花火。人生のはかない瞬間が生み出す美しさを演出してくれる。\n• 山岡の祟りが終了するとスピリットの抜け殻が爆発し、4メートル以内にあるすべての乗り越え障害物が5秒間ブロックされる"
+        },
+        "pl": {
+          "name": "Senko hanabi",
+          "description": "Zimne ognie, które rozświetlają letnie noce i ukazują piękno ulotnych chwil życia.\n• Gdy Opętanie Yamaoki kończy się, iluzoryczna postać Zjawyeksploduje, a ewentualne miejsca przeskoku w promieniu 4 metrów zostają zablokowane na 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 231,
+      "name": "Mother's Glasses",
+      "killer_id": 13,
+      "description": "Pair of glasses belonging to a loving mother afflicted with a chronic disease.\n• Survivors trigger Killer Instinct when they come within 2 meters of the husk.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mothersGlasses.png?cd43fa",
+      "icon_local_path": "icons/addons/mothers_glasses.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Brille der Mutter",
+          "description": "Die Brille einer liebenden Mutter, die an einer chronischen Krankheit leidet.\n• Überlebende lösen den Killerinstinkt aus, wenn sie sich der Hülle auf 2 Meter nähern."
+        },
+        "es": {
+          "name": "Gafas de madre",
+          "description": "Unas gafas que pertenecieron a una madre cariñosa que padecía una enfermedad crónica.\n• Los supervivientes activan Instinto asesino cuando se acercan a 2 metros de la cáscara."
+        },
+        "ja": {
+          "name": "母の眼鏡",
+          "description": "慢性疾患を患う愛する母が持っていた眼鏡。\n• 生存者が抜け殻の2メートル以内に近づくと殺人鬼の本能が発動する"
+        },
+        "pl": {
+          "name": "Okulary matki",
+          "description": "Okulary kochającej matki cierpiącej na przewlekłą chorobę.\n• Ocaleni uruchamiają Instynkt Zabójcy, gdy zbliżą się na odległość 2 metrów do iluzorycznej postaci."
+        }
+      }
+    },
+    {
+      "id": 232,
+      "name": "Rusty Flute",
+      "killer_id": 13,
+      "description": "A rusty transverse flute with a haunting sound.\n• Increases Yamaoka's Haunting recharge rate by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustyFlute.png?fecbc0",
+      "icon_local_path": "icons/addons/rusty_flute.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rostige Flöte",
+          "description": "Eine rostige Querflöte, die gruselige Töne von sich gibt.\n• Erhöht die Geschwindigkeit, mit der sich Yamaokas Spuk wieder auflädt, um 40 %."
+        },
+        "es": {
+          "name": "Flauta oxidada",
+          "description": "Una flauta travesera oxidada que emite un sonido sobrecogedor.\n• Aumenta la velocidad de recarga de Fantasma de Yamaoka un 40 %."
+        },
+        "ja": {
+          "name": "錆びた横笛",
+          "description": "耳に残る音色を響かせる、錆びた横笛。\n• 山岡の祟りの再チャージ速度が40%上昇する"
+        },
+        "pl": {
+          "name": "Zardzewiały Flet",
+          "description": "Zardzewiały flet poprzeczny, który wydaje przerażający dźwięk.\n• Zwiększa prędkość ładowania Opętania Yamaoki o 40%."
+        }
+      }
+    },
+    {
+      "id": 233,
+      "name": "Katana Tsuba",
+      "killer_id": 13,
+      "description": "The handguard of an ancestral blade. Crafted for the Yamaoka family.\n• Increases Yamaoka's Haunting reappearance duration by 20%.\n• Increases Yamaoka's Haunting reappearance movement speed by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_katanaTsuba.png?eea693",
+      "icon_local_path": "icons/addons/katana_tsuba.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Tsuba eines Katanas",
+          "description": "Der Handschutz einer uralten Klinge. Wurde für die Yamaoka-Familie geschmiedet.\n• Erhöht die Dauer bis zum Wiedererscheinen von Yamaokas Spuk um 20 %.\n• Erhöht die Bewegungsgeschwindigkeit beim Wiedererscheinen von Yamaokas Spuk um 5 %."
+        },
+        "es": {
+          "name": "Tsuba de catana",
+          "description": "El guardamano de una espada ancestral, fabricado para la familia Yamaoka.\n• Aumenta la duración de reaparición de Fantasma de Yamaoka un 20 %.\n• Aumenta la velocidad de movimiento al reaparecer Fantasma de Yamaoka un 5 %."
+        },
+        "ja": {
+          "name": "刀の鍔",
+          "description": "先祖代々伝わる刀の鍔。山岡家のために作られたもの。\n• 山岡の祟り使用後の再出現時間が20%増加する\n• 山岡の祟り使用後の再出現時の移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Garda Katany",
+          "description": "Garda rodowego ostrza. Wykonana dla rodziny Yamaoka.\n• Wydłuża czas trwania ponownego pojawienia się o 20%.\n• Zwiększa prędkość ruchu po ponownym pojawieniu się o 5%."
+        }
+      }
+    },
+    {
+      "id": 234,
+      "name": "Yakuyoke Amulet",
+      "killer_id": 13,
+      "description": "A powerful talisman to protect your endeavors from being hindered by suspicious circumstances.\n• Increases Yamaoka's Haunting duration by 70%.\n• Decreases Yamaoka's Haunting movement speed by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_yakuyokeAmulet.png?4feaf5",
+      "icon_local_path": "icons/addons/yakuyoke_amulet.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Yakuyoke-Amulett",
+          "description": "Ein mächtiger Talisman, der verhindert, dass deine Vorhaben durch verdächtige Umstände vereitelt werden.\n• Erhöht die Dauer von Yamaokas Spuk um 70 %.\n• Verringert die Bewegungsgeschwindigkeit von Yamaokas Spuk um 15 %."
+        },
+        "es": {
+          "name": "Amuleto de yakuyoke",
+          "description": "Un poderoso talismán que te protege contra cualquier circunstancia sospechosa que pueda suponerte una traba.\n• Aumenta la duración de Fantasma de Yamaoka un 70 %.\n• Reduce la velocidad de movimiento de Fantasma de Yamaoka un 15 %."
+        },
+        "ja": {
+          "name": "厄除けのお守り",
+          "description": "怪しげな運命が自分の努力を邪魔するのを防ぐ強力なお守り。\n• 山岡の祟りの持続時間が70%増加する\n• 山岡の祟りの移動速度が15%低下する"
+        },
+        "pl": {
+          "name": "Amulet Yakuyoke",
+          "description": "Talizman chroniący cię przed mrocznymi zakusami losu.\n• Wydłuża czas trwania Opętania Yamaoki o 70%.\n• Zmniejsza prędkość ruchu podczas korzystania z Opętania Yamaoki o 15%."
+        }
+      }
+    },
+    {
+      "id": 235,
+      "name": "Dried Cherry Blossom",
+      "killer_id": 13,
+      "description": "A crumbling, dried cherry flower. Once the symbol of mortality.\n• Survivors trigger Killer Instinct when they come within 3 meters of The Spirit while she is phasing.\n• Scratch marks are no longer visible while using Yamaoka’s Haunting.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_driedCherryBlossom.png?a9c80a",
+      "icon_local_path": "icons/addons/dried_cherry_blossom.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Getrocknete Kirschblüte",
+          "description": "Eine verwelkte, trockene Kirschblüte. Einst das Symbol für Sterblichkeit.\n• Überlebende lösen den Killerinstinkt aus, wenn sie sich dem Gespenst beim Phasenwechsel auf 3 Meter nähern.\n• Kratzspuren sind während der Verwendung von Yamaokas Spuk nicht mehr sichtbar."
+        },
+        "es": {
+          "name": "Flor de cerezo seca",
+          "description": "Una flor de cerezo seca. En el pasado simbolizaba la mortalidad.\n• Los supervivientes activan Instinto asesino cuando se acercan a 3 metros del Espíritu cuando cambia de plano.\n• Las marcas de arañazos ya no se ven cuando utilizas Fantasma de Yamaoka."
+        },
+        "ja": {
+          "name": "桜のドライフラワー",
+          "description": "散り散りになっている桜のドライフラワー。かつては生の儚さの象徴だった。\n• スピリットがフェージング中に生存者が3メートル以内に近づくと殺人鬼の本能が発動する\n• 山岡の祟りを使用中は傷マークが視えなくなる"
+        },
+        "pl": {
+          "name": "Suszony Kwiat Wiśni",
+          "description": "Rozpadający się, wysuszony kwiat wiśni. Niegdyś symbol śmiertelności.\n• Ocalali uruchamiają Instynkt Zabójcy, gdy znajdą się w odległości 3 metrów od Zjawy podczas migania.\n• Czerwone zarysowania przestają być widoczne podczas używania Opętania Yamaoki."
+        }
+      }
+    },
+    {
+      "id": 236,
+      "name": "Furin",
+      "killer_id": 13,
+      "description": "Warm summer breeze chimes the little bell hanging from the balcony ceiling.\n• The phasing sound is heard by all Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_furin.png?a915ed",
+      "icon_local_path": "icons/addons/furin.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "description": "Die warme Sommerbrise lässt die kleine Glocke an der Balkondecke erklingen.\n• Das Geräusch beim Phasenwechsel wird von allen Überlebenden gehört."
+        },
+        "es": {
+          "description": "La cálida brisa del verano agita la pequeña campana que cuelga del balcón.\n• Todos los supervivientes escuchan el sonido del cambio de plano."
+        },
+        "ja": {
+          "name": "風鈴",
+          "description": "軒下にぶら下がった小さな鈴を暑い夏の風が鳴らす。\n• フェージングの音がすべての生存者に聞こえる"
+        },
+        "pl": {
+          "description": "Ciepły letni wietrzyk podzwania dzwoneczkiem zawieszonym pod sufitem balkonu.\n• Dźwięk migania postaci jest słyszany przez wszystkich ocalałych."
+        }
+      }
+    },
+    {
+      "id": 237,
+      "name": "Wakizashi Saya",
+      "killer_id": 13,
+      "description": "The scabbard of an ancestral blade. Once crafted for the Yamaoka family.\n• During Yamaoka's Haunting, use the Active Ability Button to return to the husk and end the haunting.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wakizashiSaya.png?56b5e6",
+      "icon_local_path": "icons/addons/wakizashi_saya.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Wakizashi-Saya",
+          "description": "Der Scheide einer uralten Klinge. Wurde einst für die Yamaoka-Familie hergestellt.\n• Nutze während Yamaokas Spuk die Taste für die aktive Fähigkeit, um zur Hülle zurückzukehren und den Spuk zu beenden."
+        },
+        "es": {
+          "name": "Saya de wakizashi",
+          "description": "La vaina de una hoja ancestral, fabricada para la familia Yamaoka.\n• Durante Fantasma de Yamaoka, usa el botón de la habilidad activa para volver a la cáscara y poner fin al tormento."
+        },
+        "ja": {
+          "name": "脇差の鞘",
+          "description": "先祖代々伝わる刀の鞘。かつて山岡家のために作られたもの。\n• 山岡の祟りの発動中、アビリティ発動のボタンを押すと抜け殻に戻り、祟りが解除される"
+        },
+        "pl": {
+          "name": "Pochwa Miecza Wakizashi",
+          "description": "Pochwa rodowego ostrza. Wykonana dla rodziny Yamaoka.\n• Podczas Opętania Yamaoki użyj przycisku aktywnej umiejętności, aby wrócić do iluzorycznej postaci i zakończyć opętanie."
+        }
+      }
+    },
+    {
+      "id": 238,
+      "name": "Mother-Daughter Ring",
+      "killer_id": 13,
+      "description": "A silver ring engraved with “for my precious daughter.”\n• Increases Yamaoka's Haunting movement speed by 25%.\n• Scratch marks are no longer visible while using Yamaoka’s Haunting.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mother-DaughterRing.png?49f20a",
+      "icon_local_path": "icons/addons/mother_daughter_ring.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Mutter-Tochter-Ring",
+          "description": "Ein Silberring mit der Gravur „für meine geliebte Tochter“.\n• Erhöht die Bewegungsgeschwindigkeit von Yamaokas Spuk um 25 %.\n• Kratzspuren sind während der Verwendung von Yamaokas Spuk nicht mehr sichtbar."
+        },
+        "es": {
+          "name": "Anillo de madre a hija",
+          "description": "Un anillo de plata con la frase \"Para mi querida hija\" grabada.\n• Aumenta la velocidad de movimiento de Fantasma de Yamaoka un 25 %.\n• Las marcas de arañazos ya no se ven cuando utilizas Fantasma de Yamaoka."
+        },
+        "ja": {
+          "name": "母娘の指輪",
+          "description": "「愛しい娘へ」と彫られた銀の指輪。\n• 山岡の祟りの移動速度が25%上昇する\n• 山岡の祟りを使用しているとき、傷マークが見えなくなる"
+        },
+        "pl": {
+          "name": "Pierścionek od Matki",
+          "description": "Srebrny pierścionek z wygrawerowaną dedykacją „dla ukochanej córki”.\n• Zwiększa prędkość ruchu podczas korzystania z Opętania Yamaoki o 25%.\n• Czerwone zarysowania nie są dla ciebie widoczne, gdy korzystasz z Opętania Yamaoki."
+        }
+      }
+    },
+    {
+      "id": 239,
+      "name": "Kintsugi Teacup",
+      "killer_id": 13,
+      "description": "Cup mended and lacquered with powdered gold. Both the breakage and repair are part the cup.\n• Whenever you basic-break Pallets or Breakable Walls, instantly recharge Yamaoka's Haunting.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kintsugiTeacup.png?5a9355",
+      "icon_local_path": "icons/addons/kintsugi_teacup.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Kintsugi-Teetasse",
+          "description": "Eine Tasse, die mit Pulvergold repariert und lackiert wurde. Bruch und Reparatur gehören zur Tasse.\n• Lädt Yamaokas Spuk sofort wieder auf, wenn du Paletten oder zerstörbare Mauern mit deiner Grundfähigkeit zerstörst."
+        },
+        "es": {
+          "name": "Taza de kintsugi",
+          "description": "Una taza arreglada y lacada con oro pulverizado. La ruptura de la taza y la reparación forman parte del proceso.\n• Cada vez que rompes palés o muros destruibles de forma básica, Fantasma de Yamaoka se recarga al instante."
+        },
+        "ja": {
+          "name": "金継ぎの茶碗",
+          "description": "金粉で補修された茶碗。破損箇所も修理箇所も茶碗の一部。\n• パレットや破壊可能な壁を通常破壊すると、即時に山岡の祟りが再チャージされる"
+        },
+        "pl": {
+          "name": "Filiżanka kintsugi",
+          "description": "Filiżanka naprawiona i pokryta laką wymieszaną ze sproszkowanym złotem. Zarówno pęknięcie, jak i spoina są częścią filiżanki.\n• Za każdym razem, gdy niszczysz w podstawowy sposób palety i rozbijalne ściany, natychmiast ładujesz Opętanie Yamaoki."
+        }
+      }
+    }
+  ]
+}

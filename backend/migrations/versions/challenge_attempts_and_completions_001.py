@@ -2,20 +2,23 @@
 """add attempts counter to gauntlet/chaos/history runs and a challenge_completion_records table
 
 Revision ID: challenge_attempts_001
-Revises: drop_generator_tables_001
+Revises: 0001_initial_schema
 Create Date: 2026-09-12 00:00:00.000000
 
 Idempotent: guarded with sqlalchemy.inspect so that create_app()'s
 unconditional db.create_all() (which already creates these on a fresh
 database via the updated models) doesn't cause upgrade() to fail with a
 duplicate column/table error.
+
+Rechained onto `0001_initial_schema` when develop squashed its prior chain
+(`drop_generator_tables_001` and everything before it no longer exist).
 """
 from alembic import op
 import sqlalchemy as sa
 
 
 revision = "challenge_attempts_001"
-down_revision = "drop_generator_tables_001"
+down_revision = "0001_initial_schema"
 branch_labels = None
 depends_on = None
 

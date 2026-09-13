@@ -5,7 +5,7 @@ from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_loads
-from app.models import Character, PageStreakRun
+from app.models import Killer, PageStreakRun
 from app.services.challenge_completions import fetch_completed_variants
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
@@ -59,7 +59,7 @@ def get_killer_avatar_map(user_id: int, ownership_service: OwnershipService) -> 
 
 
 def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> dict[str, int]:
-    """Name -> Character.id for the user's owned, non-disabled killers.
+    """Name -> Killer.id for the user's owned, non-disabled killers.
 
     Keyed by name (to line up with how individual page-streak completions
     are recorded); the id is kept alongside it so a killer rename can't
@@ -100,9 +100,8 @@ def get_live_roster_badge(
         return {"completed": False, "full_roster": False, "killer_count": None}
 
     game_total = db.session.scalar(
-        select(func.count()).select_from(Character).where(
-            Character.role == "Killer",
-            Character.is_disabled.is_(False),
+        select(func.count()).select_from(Killer).where(
+            Killer.is_disabled.is_(False),
         )
     ) or 0
     owned_count = len(owned_ids)

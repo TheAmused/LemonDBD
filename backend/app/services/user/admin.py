@@ -5,7 +5,8 @@ from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
 from app.models import (
-    Character,
+    Killer,
+    Survivor,
     Perk,
     User,
     UserCharacterOwnership,
@@ -128,19 +129,11 @@ def fetch_admin_metrics() -> dict[str, Any]:
         db.session.scalar(select(func.count(User.id)).where(User.role == "admin")) or 0
     )
 
-    total_characters = db.session.scalar(select(func.count(Character.id))) or 0
-    survivors_count = (
-        db.session.scalar(
-            select(func.count(Character.id)).where(Character.role == "Survivor")
-        )
-        or 0
-    )
-    killers_count = (
-        db.session.scalar(
-            select(func.count(Character.id)).where(Character.role == "Killer")
-        )
-        or 0
-    )
+    # One COUNT per table. The role used to be a column to filter on; it is
+    # the table now, so the filter is the table name.
+    survivors_count = db.session.scalar(select(func.count(Survivor.id))) or 0
+    killers_count = db.session.scalar(select(func.count(Killer.id))) or 0
+    total_characters = survivors_count + killers_count
     total_perks = db.session.scalar(select(func.count(Perk.id))) or 0
 
     return {

@@ -1,0 +1,554 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 593,
+      "name": "Strobing Light",
+      "killer_id": 34,
+      "description": "With the right training, can be used to make people more suggestible.\n• Decreases the Terror Radius by 8 meters when Hidey-Ho Mode is in cooldown.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_strobingLight.png?caec26",
+      "icon_local_path": "icons/addons/strobing_light.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Stroboskoplicht",
+          "description": "Mit dem richtigen Training kann man Menschen damit beeinflussbarer machen.\n• Verringert den Terrorradius um 8 Meter, wenn die Abklingzeit des Versteckmodus läuft."
+        },
+        "es": {
+          "name": "Luz estroboscópica",
+          "description": "Con el entrenamiento adecuado, se puede utilizar para sugestionar a la gente.\n• Reduce el radio de terror en 8 metros cuando el modo risa diabólica esté en tiempo de recarga."
+        },
+        "ja": {
+          "name": "ストロボスコープ",
+          "description": "適切なトレーニングを受ければ、この装置で人に暗示がかけられる。\n• ハイディホーモードがクールダウン中、脅威範囲が8メートル減少する"
+        },
+        "pl": {
+          "name": "Światło stroboskopowe",
+          "description": "Po odpowiednim szkoleniu może posłużyć do zwiększania podatności ludzi na sugestie.\n• Zmniejsza zasięg terroru o  8 metrów podczas odnawiania trybu „Dzieńdoberka”."
+        }
+      }
+    },
+    {
+      "id": 594,
+      "name": "Doll Eyes",
+      "killer_id": 34,
+      "description": "One of the advantages of possessing a mass-produced doll is easy access to replacement parts.\n• While in Hidey-Ho Mode, reveals auras of all windows and downed pallets within 20 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dollEyes.png?ad076f",
+      "icon_local_path": "icons/addons/doll_eyes.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Puppenaugen",
+          "description": "Einer der Vorteile, wenn man eine massenproduzierte Puppe besitzt, ist, dass man leicht an Ersatzteile kommt.\n• Im Versteckmodus werden die Auren aller Fenster und umgeworfenen Paletten in einem Umkreis von 20 Metern angezeigt."
+        },
+        "es": {
+          "name": "Ojos de muñeco",
+          "description": "Una de las ventajas de poseer a un muñeco producido en masa es que es fácil encontrar piezas de repuesto.\n• Cuando esté en el modo risa diabólica, revela las auras de todas las ventanas y palés derribados en un radio de 20 metros."
+        },
+        "ja": {
+          "name": "人形の目",
+          "description": "大量生産された人形の利点は、取り換え部品が簡単に手に入ることだ。\n• ハイディホーモード中、20メートル以内にある全ての窓と倒されたパレットのオーラが表示される"
+        },
+        "pl": {
+          "name": "Oczy lalki",
+          "description": "Jedną z zalet posiadania masowo produkowanej lalki jest łatwy dostęp do części zamiennych.\n• W trybie „Dzieńdoberka” ujawnia aury wszystkich okien i powalonych palet w promieniu 20 metrów."
+        }
+      }
+    },
+    {
+      "id": 595,
+      "name": "Tiny Scalpel",
+      "killer_id": 34,
+      "description": "Sometimes, a precision cut can lead to a beautiful bleed.\n• While in Hidey-Ho Mode, pools of blood are brighter.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tinyScalpel.png?1e8399",
+      "icon_local_path": "icons/addons/tiny_scalpel.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Winziges Skalpell",
+          "description": "Manchmal kann ein präziser Schnitt eine wunderbare Blutung auslösen.\n• Im Versteckmodus sind Blutpfützen heller."
+        },
+        "es": {
+          "name": "Bisturí diminuto",
+          "description": "A veces, un corte preciso puede crear un hermoso sangrado.\n• Mientras estés en el modo risa diabólica, los charcos de sangre serán más brillantes."
+        },
+        "ja": {
+          "name": "小さな外科用メス",
+          "description": "正確に切断することで、キレイに血を流せる。\n• ハイディホーモード中、血痕がより鮮明に表示される"
+        },
+        "pl": {
+          "name": "Mały skalpel",
+          "description": "Czasami precyzyjne cięcie może prowadzić do pięknego krwawienia.\n• W trybie „Dzieńdoberka” ślady krwi są jaśniejsze."
+        }
+      }
+    },
+    {
+      "id": 596,
+      "name": "Good Guy Box",
+      "killer_id": 34,
+      "description": "Someone kept this box around in case they needed to bring Chucky back to the store.\n• Decreases Slice & Dice hit cooldown by 7%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_goodGuyBox.png?ca2a91",
+      "icon_local_path": "icons/addons/good_guy_box.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Good Guy“-Karton",
+          "description": "Jemand hat diesen Karton aufbewahrt, falls Chucky zurückgegeben werden sollte.\n• Verringert die Abklingzeit nach einem Scheibenschneider-Angriff um 15 %."
+        },
+        "es": {
+          "name": "Caja de Good Guy",
+          "description": "Alguien guardó esta caja, por si tenían que devolver a Chucky a la tienda.\n• Reduce el tiempo de recarga con Trocear y trinchar un 7 %."
+        },
+        "ja": {
+          "name": "グッドガイ人形の箱",
+          "description": "チャッキーを返品する時のために、念のため誰かが取っておいた箱。\n• 斬り付けが命中した際の、殺人鬼の動きのクールダウンが7%短縮する"
+        },
+        "pl": {
+          "name": "Pudełko Good Guya",
+          "description": "Ktoś trzymał to pudełko na wypadek, gdyby trzeba było oddać Chucky’ego do sklepu.\n• Skraca czas odnawiania Na Plasterki po trafieniu o 7%."
+        }
+      }
+    },
+    {
+      "id": 597,
+      "name": "Power Drill",
+      "killer_id": 34,
+      "description": "Comes with a dozen convenient drill tips. They all make a big mess when applied to people.\n• Reduces Hidey-Ho Mode cooldown by 10% after hitting a Survivor with Slice & Dice.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_powerDrill.png?10ef2c",
+      "icon_local_path": "icons/addons/power_drill.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Elektrische Bohrmaschine",
+          "description": "Mit einem Dutzend praktischen Aufsätzen. Auf Menschen angewendet sorgen sie alle für eine große Sauerei.\n• Verringert die Abklingzeit des Versteckmodus um 10 %, nachdem ein Überlebender mit Scheibenschneider getroffen wurde."
+        },
+        "es": {
+          "name": "Taladro eléctrico",
+          "description": "Incluye un montón de puntas de taladro de lo más prácticas. Siempre lo dejan todo hecho un asco cuando se usan contra personas.\n• Reduce el tiempo de recarga del modo risa diabólica un 10 % tras alcanzar a un superviviente con Trocear y trinchar."
+        },
+        "ja": {
+          "name": "パワードリル",
+          "description": "便利なドリルビットのセットが付いている。この道具を人間に使うと色々飛び散って大変なことになる。\n• 斬り付けが生存者に命中したあとのハイディホーモードのクールダウンが10%短縮する"
+        },
+        "pl": {
+          "name": "Wiertarka elektryczna",
+          "description": "W zestawie z tuzinem wygodnych wierteł. Wszystkie robią duży bałagan, gdy są używane na ludziach.\n• Skraca czas odnawiania trybu „Dzieńdoberka” o 10% po trafieniu ocalałego umiejętnością Na Plasterki."
+        }
+      }
+    },
+    {
+      "id": 598,
+      "name": "Electric Carving Knife",
+      "killer_id": 34,
+      "description": "The annoying buzzing sound means it’s ready to carve some flesh.\n• Decreases Slice & Dice miss cooldown by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_electricCarvingKnife.png?470d3e",
+      "icon_local_path": "icons/addons/electric_carving_knife.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Elektrisches Tranchiermesser",
+          "description": "Das nervige Summen bedeutet, dass es bereit ist, Fleisch zu zerschneiden.\n• Verringert die Abklingzeit nach einem fehlgeschlagenen Scheibenschneider-Angriff um 10 %."
+        },
+        "es": {
+          "name": "Cuchillo de trinchar eléctrico",
+          "description": "Ese molesto zumbido significa que está listo para trinchar carne.\n• Reduce el tiempo de recarga tras un de ataque de Trocear y trinchar fallido un 5 %."
+        },
+        "ja": {
+          "name": "電動肉切り包丁",
+          "description": "耳障りなブーンという音がしたら、さっそく肉を切ろう。\n• 斬り付けが命中しなかった際の、殺人鬼の動きのクールダウンが5%短縮する"
+        },
+        "pl": {
+          "name": "Elektryczny nóż",
+          "description": "Irytujące brzęczenie oznacza, że urządzenie jest gotowe do cięcia mięsa.\n• Skraca czas odnawiania Na Plasterki po spudłowaniu o 5%."
+        }
+      }
+    },
+    {
+      "id": 599,
+      "name": "Hair Spray & Candle",
+      "killer_id": 34,
+      "description": "An aerosolized inferno that will ensure a bad hair day is the least of your worries.\n• Decreases the time that basic attacks remove from Hidey-Ho Mode by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hairSprayCandle.png?9113c3",
+      "icon_local_path": "icons/addons/hair_spray_candle.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Haarspray und Kerze",
+          "description": "Ein Sprühinferno, das dafür sorgt, dass eine schlecht sitzende Frisur deine geringste Sorge ist.\n• Verringert die Zeit, die Grundangriffe vom Versteckmodus abziehen, um 20 %."
+        },
+        "es": {
+          "name": "Laca y vela",
+          "description": "Un infierno de aerosol que hará que tener mal pelo sea la última de tus preocupaciones.\n• Reduce el tiempo que los ataques básicos quitan del modo risa diabólica un 20 %."
+        },
+        "ja": {
+          "name": "ヘアスプレーとキャンドル",
+          "description": "噴霧剤による大炎上で、悪いヘアスタイルなど、どうでもなくなる。\n• ハイディホーモード中に通常攻撃を使った際のパワーゲージのペナルティが20%減少する"
+        },
+        "pl": {
+          "name": "Spray do włosów i świeca",
+          "description": "Piekło w aerozolu, które sprawi, że kiepska fryzura będzie najmniejszym z twoich zmartwień.\n• Skraca czas, który podstawowe ataki zabierają z trybu „Dzieńdoberka”, o 20%."
+        }
+      }
+    },
+    {
+      "id": 600,
+      "name": "Automatic Screwdriver",
+      "killer_id": 34,
+      "description": "A good way to make mechanical adjustments on the fly.\n• Missing a Slice & Dice reduces Hidey-Ho Mode cooldown by 8%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_automaticScrewdriver.png?2cd1b7",
+      "icon_local_path": "icons/addons/automatic_screwdriver.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Automatischer Schraubenzieher",
+          "description": "Eine gute Möglichkeit, um im Handumdrehen mechanische Anpassungen vorzunehmen.\n• Wenn ein Scheibenschneider-Angriff fehlschlägt, wird die Abklingzeit des Versteckmodus um 8 % verringert."
+        },
+        "es": {
+          "name": "Destornillador automático",
+          "description": "Una buena manera de realizar ajustes mecánicos sobre la marcha.\n• Si fallas un ataque de Trocear y trinchar, se reduce el tiempo de recarga del modo risa diabólica un 8 %."
+        },
+        "ja": {
+          "name": "自動スクリュードライバー",
+          "description": "必要に応じて機械的調整を行うのに最適のアイテム。\n• 斬り付けが命中しなかった際のハイディホーモードのクールダウンが8%短縮する"
+        },
+        "pl": {
+          "name": "Automatyczny wkrętak",
+          "description": "Dobry sposób na dokonanie regulacji mechanicznych w locie.\n• Pudło przy Na Plasterki skraca czas odnawiania trybu „Dzieńdoberka” o 8%."
+        }
+      }
+    },
+    {
+      "id": 601,
+      "name": "Portable TV",
+      "killer_id": 34,
+      "description": "Small enough for any room. Just keep it out of the bath.\n• Slice & Dice duration increased by 70% once the Exit Gates have been powered.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_portableTv.png?e8270d",
+      "icon_local_path": "icons/addons/portable_tv.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Tragbarer Fernseher",
+          "description": "Klein genug für jedes Zimmer. Aber ungeeignet fürs Bad.\n• Die Dauer von Scheibenschneider wird um 70 % verlängert, sobald die Ausgangstore mit Strom versorgt sind."
+        },
+        "es": {
+          "name": "Televisor portátil",
+          "description": "Con un tamaño reducido para cualquier habitación. No lo tengas cerca de la bañera.\n• La duración de Trocear y trinchar aumenta un 70 % cuando se pongan en marcha las puertas de salida."
+        },
+        "ja": {
+          "name": "携帯テレビ",
+          "description": "どんな部屋でも使用できる小型タイプ。でもお風呂では使わないようにしよう。\n• 脱出ゲートが通電すると、斬り付けの持続時間が70%増加する"
+        },
+        "pl": {
+          "name": "Przenośny telewizor",
+          "description": "Wystarczająco mały do każdego pomieszczenia. Trzymaj go jednak z dala od wanny.\n• Czas trwania Na Plasterki wydłuża się o 70% po zasileniu bram wyjściowych."
+        }
+      }
+    },
+    {
+      "id": 602,
+      "name": "Silk Pillow",
+      "killer_id": 34,
+      "description": "For when you want to smother your target with silky-smooth softness.\n• Terror Radius is reduced by 6 meters, but Slice & Dice charge time is increased by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_silkPillow.png?a56f4d",
+      "icon_local_path": "icons/addons/silk_pillow.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Seidenkissen",
+          "description": "Wenn du dein Ziel mit seidenweicher Sanftheit ersticken willst.\n• Der Terrorradius wird um 6 Meter verkleinert, aber die Aufladezeit von Scheibenschneider wird um 50 % verlängert."
+        },
+        "es": {
+          "name": "Almohada de seda",
+          "description": "Para cuando quieras ahogar a tu objetivo con suavidad y elegancia.\n• El radio de terror se reduce en 6 metros, pero el tiempo de carga de Trocear y trinchar aumenta un 50 %."
+        },
+        "ja": {
+          "name": "シルクの枕",
+          "description": "獲物を柔らかくて滑らかなシルクで窒息させたいときに使おう。\n• 脅威範囲が6メートル減少する。しかし、斬り付けのチャージ時間が50%増加する"
+        },
+        "pl": {
+          "name": "Jedwabna poduszka",
+          "description": "Gdy chcesz otulić swój cel jedwabistą miękkością.\n• Zasięg terroru jest zmniejszany o 6 metrów, ale czas ładowania Na Plasterki zostaje wydłużony o 50%."
+        }
+      }
+    },
+    {
+      "id": 603,
+      "name": "Iridescent Amulet",
+      "killer_id": 34,
+      "description": "A pendant of great power, recreated within the Realm.\n• Increases duration of Hidey-Ho Mode by 50%. Basic attacks immediately end Hidey-Ho Mode.\n\"“If I don't get out this body soon, I'm screwed.” – Chucky\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentAmulet.png?be00cb",
+      "icon_local_path": "icons/addons/iridescent_amulet.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Amulett",
+          "description": "Ein Anhänger mit großer Macht, der im Reich nachgebildet wurde.\n• Verlängert die Dauer des Versteckmodus um 50 %. Grundangriffe beenden den Versteckmodus sofort.\n\"„Wenn ich nicht bald aus diesem Körper herauskomme, bin ich am Arsch.“ – Chucky\""
+        },
+        "es": {
+          "name": "Talismán iridiscente",
+          "description": "Un colgante de gran poder, recreado en el reino.\n• Aumenta la duración del modo risa diabólica un 50 %. Los ataques básicos finalizan de inmediato el modo risa diabólica.\n\"\"Como no salga pronto de este cuerpo, estoy jodido\". (Chucky)\""
+        },
+        "ja": {
+          "name": "玉虫色のお守り",
+          "description": "絶大なパワーを持ったペンダント。領域で再現された。\n• ハイディホーモードの持続時間が50%増加する。通常攻撃を行うとハイディホーモードが即座に終了する\n\"「早くしねえと、俺は人形から抜け出せなくなるんだ」– チャッキー\""
+        },
+        "pl": {
+          "name": "Opalizujący amulet",
+          "description": "Wisiorek o wielkiej mocy odtworzony w wymiarze.\n• Wydłuża  czas trwania trybu „Dzieńdoberka” o 50%. Podstawowe ataki natychmiast kończą tryb „Dzieńdoberka”.\n\"„Jeśli szybko nie wydostanę się z tego ciała, będę miał przechlapane” – Chucky\""
+        }
+      }
+    },
+    {
+      "id": 604,
+      "name": "Plastic Bag",
+      "killer_id": 34,
+      "description": "Nothing tires out a kill like a lack of oxygen.\n• If a Survivor walks through an illusory Footfall, they suffer from Exhausted for 15 seconds.\nExhausted prevents Survivors from activating other perks that cause Exhausted.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_plasticBag.png?c38945",
+      "icon_local_path": "icons/addons/plastic_bag.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Plastiktüte",
+          "description": "Nichts macht ein Ziel so müde wie Sauerstoffmangel.\n• Wenn ein Überlebender einen täuschenden Schritt passiert, leidet er für 15 Sekunden unter Erschöpfung.\nErschöpfung hindert Überlebende daran, Talente zu nutzen, die Erschöpfung bewirken."
+        },
+        "es": {
+          "name": "Bolsa de plástico",
+          "description": "Nada cansa a una víctima como la falta de oxígeno.\n• Si un superviviente camina sobre una pisada ilusoria, sufre Agotamiento durante 15 segundos.\nAgotamiento impide que los supervivientes activen habilidades que provoquen Agotamiento."
+        },
+        "ja": {
+          "name": "ビニール袋",
+          "description": "酸素の欠乏ほど、殺人を促進するものはない。\n• 生存者が幻の足取りの中を歩くと、その生存者が15秒間疲労に苦しむ\n疲労状態になると生存者は疲労を引き起こす他のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Plastikowy worek",
+          "description": "Nic tak nie męczy zwierzyny jak brak tlenu.\n• Gdy ocalały przejdzie ślad fałszywego kroku, otrzyma efekt Wyczerpania na 15 sekund.\nWyczerpanie uniemożliwia ocalałym aktywowanie innych wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 605,
+      "name": "Pile of Nails",
+      "killer_id": 34,
+      "description": "It’s a lot easier to stay hidden when your target is worried about a pile of nails flying at their head.\n• Upon manually exiting Hidey-Ho Mode, The Good Guy remains Undetectable for 3 seconds.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_pileOfNails.png?be91aa",
+      "icon_local_path": "icons/addons/pile_of_nails.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Nagelhaufen",
+          "description": "Es ist viel einfacher, verborgen zu bleiben, wenn sich dein Ziel um einen Haufen Nägel kümmern muss, der auf seinen Kopf zufliegt.\n• Wenn du den Versteckmodus manuell beendest, bleibt der Good Guy für 3 Sekunden Unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Montón de clavos",
+          "description": "Es mucho más fácil ocultarse cuando a tu blanco le preocupa más el montón de clavos que van directos a su cabeza.\n• Tras salir manualmente del modo risa diabólica, el muñeco Good Guy permanece Indetectable durante 3 segundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "クギの山",
+          "description": "獲物が頭上に降り落ちるクギの山に気を取られていれば、身を隠すのは簡単だろう。\n• ハイディホーモードを手動で終了したあと、グッドガイの探知不可が3秒間持続する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Sterta gwoździ",
+          "description": "O wiele łatwiej jest pozostać w ukryciu, gdy cel boi się chmury gwoździ lecącej w stronę jego głowy.\n• Po ręcznym wyjściu z trybu „Dzieńdoberka” Good Guy pozostaje Niewykrywalny przez 3 sekundy.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 606,
+      "name": "Yardstick",
+      "killer_id": 34,
+      "description": "Good for measuring distance. Even better for laying down a beating.\n• A Scamper reveals Survivor auras within 16 meters of you for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_yardstick.png?62a537",
+      "icon_local_path": "icons/addons/yardstick.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Maßstab",
+          "description": "Gut, um Entfernungen zu messen. Noch besser, um jemanden zu verprügeln.\n• Beim Huschen werden die Auren von Überlebenden in einem Umkreis von 16 Metern um dich für 3 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Vara de medir",
+          "description": "Va bien para medir distancias y también para meter palizas.\n• El correteo revela las auras de los supervivientes en un radio de 16 metros durante 3 segundos."
+        },
+        "ja": {
+          "name": "物差し",
+          "description": "長さを測るのに適しているが、誰かを叩くのにはもっと役に立つ。\n• 駆け抜けを行うと16メートル以内にいる生存者のオーラが3秒間表示される"
+        },
+        "pl": {
+          "name": "Miarka",
+          "description": "Dobry do mierzenia odległości. Jeszcze lepszy do bicia.\n• Człapanie ujawnia aury ocalałych w promieniu 16 metrów na 3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 607,
+      "name": "Running Shoes",
+      "killer_id": 34,
+      "description": "The latest in high-performance killer doll athletic technology.\n• Gain 2% movement speed after a Scamper for 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_runningShoes.png?e1efdd",
+      "icon_local_path": "icons/addons/running_shoes.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Laufschuhe",
+          "description": "Die neueste sportliche Technologie für Hochleistungs-Mörderpuppen.\n• Nach dem Huschen erhältst du einen Bonus von 4 % auf die Bewegungsgeschwindigkeit für 3 Sekunden."
+        },
+        "es": {
+          "name": "Deportivas para correr",
+          "description": "Lo último en diseño atlético para un muñeco asesino de alto rendimiento.\n• Ganas un 2 % de velocidad de movimiento tras un correteo durante 5 segundos."
+        },
+        "ja": {
+          "name": "ランニングシューズ",
+          "description": "殺人人形の運動能力を高める最新技術。\n• 駆け抜けを行ったあと、移動速度が5秒間2%上昇する"
+        },
+        "pl": {
+          "name": "Buty do biegania",
+          "description": "Najnowsza technologia dla wydajnych zabójczych lalek.\n• Otrzymaj 2% do prędkości ruchu po Człapaniu na 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 608,
+      "name": "Rat Poison",
+      "killer_id": 34,
+      "description": "The secret ingredient in a killer chili.\n• While performing a Slice & Dice, the auras of Survivors within 6 meters of you are revealed for 2.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ratPoison.png?482edd",
+      "icon_local_path": "icons/addons/rat_poison.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rattengift",
+          "description": "Die Geheimzutat in einem Killer-Chili.\n• Bei einem Scheibenschneider-Angriff werden die Auren von Überlebenden in einem Umkreis von 6 Metern für 2,5 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Matarratas",
+          "description": "El ingrediente secreto para preparar un chili de muerte.\n• Al realizar un ataque de Trocear y trinchar, se te revelarán las auras de los supervivientes en un radio de 6 metros durante 2,5 segundos."
+        },
+        "ja": {
+          "name": "ネズミ駆除剤",
+          "description": "殺人チリの隠し味。\n• 斬り付けを行っている間、自分の6メートル以内にいる生存者のオーラが2.5秒間表示される"
+        },
+        "pl": {
+          "name": "Trutka na szczury",
+          "description": "Sekretny składnik zabójczego chili.\n• Podczas korzystania z Na Plasterki aury ocalałych w promieniu 6 metrów od ciebie zostają ujawnione na 2,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 609,
+      "name": "Straight Razor",
+      "killer_id": 34,
+      "description": "For when a close shave needs to be really, really close.\n• Slice & Dice attacks inflict the Hemorrhage and Mangled  status effects for 80 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_straightRazor.png?fb4a00",
+      "icon_local_path": "icons/addons/straight_razor.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Gerades Rasiermesser",
+          "description": "Wenn etwas im wahrsten Sinne haarscharf ist.\n• Angriffe mit Scheibenschneider verursachen die Statuseffekte Blutung und Zerfleischt für 80 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Cuchilla recta",
+          "description": "Cuando el afeitado tiene que ser lo más apurado posible.\n• Los ataques de Trocear y trinchar causan los efectos de estado Hemorragia y Laceración durante 80 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "西洋剃刀",
+          "description": "いつも以上に深く深剃りをしたいときに使用する。\n• 斬り付け攻撃に、80秒間出血と重傷のステータス効果が付与される。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Prosta brzytwa",
+          "description": "Gdy golenie musi być naprawdę dokładne.\n• Ataki umiejętnością Na Plasterki nakładają efekty Zmasakrowany i Krwotok na 80 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 610,
+      "name": "Hard Hat",
+      "killer_id": 34,
+      "description": "Keeps the dome intact while performing high-impact activities.\n• Whenever you Scamper under Pallets, they special-break immediately.\n\"“A true classic never goes out of style.” – Chucky\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hardHat.png?377406",
+      "icon_local_path": "icons/addons/hard_hat.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schutzhelm",
+          "description": "Schützt deinen Schädel, während du gefährliche Aktivitäten ausführst.\n• Immer wenn du unter einer Palette hindurchhuschst, wird sie durch deine Stärke sofort zerstört.\n\"„Ein wahrer Klassiker bleibt immer in Mode.“ – Chucky\""
+        },
+        "es": {
+          "name": "Sombrero duro",
+          "description": "Mantiene intacta la cabeza mientras realiza actividades de alto impacto.\n• Cada vez que correteas debajo de palés, los rompes de forma especial inmediatamente.\n\"\"Los clásicos nunca pasan de moda\". (Chucky)\""
+        },
+        "ja": {
+          "name": "安全帽",
+          "description": "衝撃の強いアクティビティを行っても、頭部をしっかり保護してくれる。\n• パレットの下へ駆け抜けを行うと、即座にそのパレットが特殊破壊される\n\"「真のクラシックが廃れることはねえな」– チャッキー\""
+        },
+        "pl": {
+          "name": "Kask",
+          "description": "Utrzymuje kopułę w nienaruszonym stanie podczas intensywnych aktywności.\n• Za każdym razem, gdy wykonujesz Człapanie pod paletami, ulegają one natychmiastowemu zniszczeniu w specjalny sposób.\n\"„Prawdziwa klasyka nigdy nie wychodzi z mody” – Chucky\""
+        }
+      }
+    },
+    {
+      "id": 844,
+      "name": "Jump Rope (The Good Guy)",
+      "killer_id": 34,
+      "description": "Good for a bit of exercise, or for tying up your target.\n• Increases duration of Slice & Dice by 8%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jumpRopePlaytimesOver.png?5467d9",
+      "icon_local_path": "icons/addons/jump_rope_(the_good_guy).webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Springseil",
+          "description": "Eignet sich für eine Sporteinheit zwischendurch oder aber, um dein Ziel zu fesseln.\n• Verlängert die Dauer von Scheibenschneider um 8 %."
+        },
+        "en": {
+          "name": "Jump Rope"
+        },
+        "es": {
+          "name": "Comba",
+          "description": "Está bien para hacer un poco de ejercicio o para atar a tu víctima.\n• Aumenta la duración de Trocear y trinchar un 8 %."
+        },
+        "ja": {
+          "name": "縄跳び用の縄",
+          "description": "運動をするのにも獲物を縛るのにも最適のアイテム。\n• 斬り付けの持続時間が8%増加する"
+        },
+        "pl": {
+          "name": "Skakanka",
+          "description": "Dobra do ćwiczeń lub do wiązania celu.\n• Wydłuża czas trwania Na Plasterki o 8%."
+        }
+      }
+    },
+    {
+      "id": 845,
+      "name": "Mirror Shards (The Good Guy)",
+      "killer_id": 34,
+      "description": "A bunch of shattered mirror pieces that reflect light and shadow, further disorienting the already disoriented.\n• The Good Guy can see the illusory Footfalls around Survivors.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mirrorShards.png?226a74",
+      "icon_local_path": "icons/addons/mirror_shards_(the_good_guy).webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Spiegelscherben",
+          "description": "Ein Haufen Spiegelscherben, die Licht und Schatten reflektieren und die bereits Verwirrten noch weiter verwirren.\n• Der Good Guy sieht die täuschenden Schritte rund um Überlebende."
+        },
+        "en": {
+          "name": "Mirror Shards"
+        },
+        "es": {
+          "name": "Trozos de espejo",
+          "description": "Un montón de trozos de cristal que reflejan la luz y la sombra, y desorientan más a quien ya esté desorientado.\n• El muñeco Good Guy puede ver las pisadas ilusorias alrededor de los supervivientes."
+        },
+        "ja": {
+          "name": "鏡の破片",
+          "description": "光と影を反射する鏡の破片が、切羽詰まった人々をさらに混乱させる。\n• 生存者周辺に現れる幻の足取りがグッドガイに視える"
+        },
+        "pl": {
+          "name": "Odłamki lustra",
+          "description": "Kilka rozbitych kawałków lustra, które odbijają światło i cień i jeszcze bardziej dezorientują i tak już zdezorientowanych.\n• Good Guy widzi ślady fałszywych kroków wokół ocalałych."
+        }
+      }
+    }
+  ]
+}

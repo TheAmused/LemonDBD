@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 184,
+      "name": "Workshop Grease",
+      "killer_id": 11,
+      "description": "A simple tube of grease, used to lubricate the mechanisms of the hidden blade.\n• Increases Ambush attack charge speed by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_workshopGrease.png?f64f48",
+      "icon_local_path": "icons/addons/workshop_grease.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Werkstattschmierfett",
+          "description": "Eine einfache Tube Fett, mit dem der Mechanismus der versteckten Klinge geschmiert wird.\n• Erhöht die Aufladegeschwindigkeit von Angriffen aus dem Hinterhalt um 50 %."
+        },
+        "es": {
+          "name": "Aceite de taller",
+          "description": "Un tubo de grasa normal y corriente que sirve para lubricar los mecanismos de la cuchilla oculta.\n• Aumenta la velocidad de carga del ataque de emboscada un 50 %."
+        },
+        "ja": {
+          "name": "工場の潤滑油",
+          "description": "普通の潤滑油。隠し刃の仕掛けに油を差すために使われる。\n• 奇襲攻撃のチャージ速度が50%上昇する"
+        },
+        "pl": {
+          "name": "Warsztatowy smar",
+          "description": "Zwykła tubka smaru służącego do konserwacji mechanizmu ukrytego ostrza.\n• Zwiększa prędkość ładowania ataku z ukrycia o 50%."
+        }
+      }
+    },
+    {
+      "id": 185,
+      "name": "Razor Wires",
+      "killer_id": 11,
+      "description": "A modification to the Jigsaw Box: The addition of razor-sharp wires makes it extra difficult and potentially painful to search.\n• Jigsaw Box skill check success zones are smaller.\n• Failing a Jigsaw Box skill check while uninjured will injure the Survivor.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_razorWires.png?a16101",
+      "icon_local_path": "icons/addons/razor_wires.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Rasiermesserscharfe Drähte",
+          "description": "Eine Abwandlung der Jigsaw-Kiste: Die zusätzlichen rasiermesserscharfen Drähte machen das Durchsuchen besonders schwierig und unter Umständen auch schmerzhaft.\n• Die Erfolgszonen für Fähigkeitschecks an der Jigsaw-Kiste sind kleiner.\n• Versagt ein unverletzter Überlebender bei einem Fähigkeitscheck an einer Jigsaw-Kiste, so wird er verletzt."
+        },
+        "es": {
+          "name": "Alambre de espinas",
+          "description": "Una modificación para la caja de Puzle: El añadido de alambre de espinas muy afiladas hace que buscar resulte extremadamente difícil y potencialmente doloroso.\n• Las áreas de éxito de las pruebas de habilidad de la caja de Puzle se reducen.\n• Fallar una prueba de habilidad de la caja de Puzle herirá al superviviente sin lesiones."
+        },
+        "ja": {
+          "name": "カミソリワイヤー",
+          "description": "ジグソウボックスの改造。カミソリのように切れるワイヤーを追加することで中を調べるのをさらに困難にして、苦痛の可能性を与える。\n• ジグソウボックスのスキルチェック成功範囲が狭くなる\n• 無傷の状態でジグソウボックスのスキルチェックに失敗した生存者は負傷状態になる"
+        },
+        "pl": {
+          "name": "Ostre Druty",
+          "description": "Modyfikacja skrzynki Jigsawa: dodatek w postaci zaostrzonych drutów sprawiających, że przeszukiwanie skrzynek staje się wyjątkowo trudne i potencjalnie bolesne.\n• Strefy udanych testów umiejętności skrzynki Jigsawa są mniejsze.\n• Nieudany test umiejętności skrzynki Jigsawa spowoduje zranienie zdrowego ocalałego."
+        }
+      }
+    },
+    {
+      "id": 186,
+      "name": "John's Medical File",
+      "killer_id": 11,
+      "description": "The medical file of a cancerous man. Fills the reader with dread and recklessness.\n• Increases crouched move speed by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_johnsMedicalFile.png?fd7514",
+      "icon_local_path": "icons/addons/johns_medical_file.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Johns Krankenakte",
+          "description": "Die Krankenakte eines Krebspatienten. Erfüllt den Leser mit Furcht und Rücksichtlosigkeit.\n• Erhöht die Bewegungsgeschwindigkeit in geduckter Haltung um 5 %."
+        },
+        "es": {
+          "name": "Expediente médico de John",
+          "description": "El expediente médico de un hombre con cáncer. Provoca pavor a quien lo lee y lo lleva a cometer imprudencias.\n• Aumenta la velocidad de movimiento al ir de cuclillas un 5 %."
+        },
+        "ja": {
+          "name": "ジョンのカルテ",
+          "description": "とあるがん患者のカルテ。読んだ者を恐怖感とやけくそな気分で満たす。\n• しゃがみモード時の移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Akta medyczne Johna",
+          "description": "Akta medyczne mężczyzny chorego na raka. Przepełniają czytelnika przerażeniem i lekkomyślnością.\n• Zwiększają prędkość ruchu podczas kucania o 5%."
+        }
+      }
+    },
+    {
+      "id": 187,
+      "name": "Shattered Syringe",
+      "killer_id": 11,
+      "description": "Symbol of a broken way of life. Reminiscing about her past-self hardens her determination.\n• Decreases Ambush attack miss cooldown by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shatteredSyringe.png?b280e1",
+      "icon_local_path": "icons/addons/shattered_syringe.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerbrochene Spritze",
+          "description": "Symbol für ein kaputtes Leben. Erinnerungen an ihr früheres Ich steigern ihre Entschlossenheit.\n• Verringert die Abklingzeit nach fehlgeschlagenen Angriffen aus dem Hinterhalt um 10 %."
+        },
+        "es": {
+          "name": "Jeringuilla rota",
+          "description": "El símbolo de una vida echada a perder. El recuerdo de su pasado refuerza su determinación.\n• Reduce el tiempo de recarga tras un ataque de emboscada fallido un 10 %."
+        },
+        "ja": {
+          "name": "割られた注射器",
+          "description": "壊れた人生の象徴。過去の自分を回想することで、決意を固くする。\n• 奇襲攻撃に失敗したときのクールダウンが10%減少する"
+        },
+        "pl": {
+          "name": "Rozbita Strzykawka",
+          "description": "Symbol nieszczęśliwego życia. Wspomnienia przeszłości wzmacniają jej determinację.\n• Skraca czas odnawiania nietrafionego ataku z ukrycia o 10%."
+        }
+      }
+    },
+    {
+      "id": 188,
+      "name": "Video Tape",
+      "killer_id": 11,
+      "description": "A recording of Jigsaw, explaining the game's rules to Amanda. Reminiscing about her past-self hardens her determination.\n• Survivors begin the trial with Reverse Bear Traps installed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_videoTape.png?b6b920",
+      "icon_local_path": "icons/addons/video_tape.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Videokassette",
+          "description": "Eine Aufnahme von Jigsaw mit Erklärungen der Spielregeln für Amanda. Erinnerungen an ihr früheres Ich steigern ihre Entschlossenheit.\n• Überlebende beginnen die Prüfung mit aufgesetzter umgekehrter Bärenfalle."
+        },
+        "es": {
+          "name": "Cinta de vídeo",
+          "description": "Una grabación de Puzle en la que explica las reglas del juego a Amanda. El recuerdo de su pasado refuerza su determinación.\n• Los supervivientes comienzan la partida con trampas para osos invertidas ya instaladas."
+        },
+        "ja": {
+          "name": "ビデオテープ",
+          "description": "ゲームのルールをアマンダに説明しているジグソウの録画ビデオ。過去の自分を回想することで、決意を固くする。\n• 生存者は逆トラバサミが設置済みの状態で儀式を開始する"
+        },
+        "pl": {
+          "name": "Kaseta VHS",
+          "description": "Nagranie, na którym Jigsaw wyjaśnia Amandzie zasady gry. Wspomnienia przeszłości wzmacniają jej determinację.\n• Ocalali rozpoczynają próbę z założonymi odwróconymi pułapkami na niedźwiedzie."
+        }
+      }
+    },
+    {
+      "id": 189,
+      "name": "Combat Straps",
+      "killer_id": 11,
+      "description": "Leather straps that hold fabric in place for nimbler movement.\n• Increases crouching and uncrouching speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_combatStraps.png?6dafe5",
+      "icon_local_path": "icons/addons/combat_straps.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kampfgurte",
+          "description": "Lederstreifen, die Stoff am richtigen Platz halten und so für mehr Beweglichkeit sorgen.\n• Erhöhen die Geschwindigkeit, um sich zu ducken und aufzustehen, um 10 %."
+        },
+        "es": {
+          "name": "Correas de combate",
+          "description": "Correas de cuero que ajustan la ropa al cuerpo para facilitar los movimientos.\n• Aumenta la velocidad al agacharte y levantarte un 10 %."
+        },
+        "ja": {
+          "name": "軍用の革紐",
+          "description": "素早く動き回れるように、服の裾を固定する革紐。\n• しゃがむ動作と起き上がる動作の速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Pasy Bojowe",
+          "description": "Skórzane paski utrzymujące materiał w miejscu. Umożliwiają wykonywanie zwinnych ruchów.\n• Zwiększają  prędkość kucania i wstawania o 10%."
+        }
+      }
+    },
+    {
+      "id": 190,
+      "name": "Utility Blades",
+      "killer_id": 11,
+      "description": "A modification to the Reverse Bear Trap: Sharp blades attached to the trap's interior lacerate the victim with every movement.\n• Reverse Bear Traps inflict Hemorrhage every time the Survivor is injured by any means.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_utilityBlades.png?ed0ebb",
+      "icon_local_path": "icons/addons/utility_blades.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Nützliche Klingen",
+          "description": "Eine Abwandlung der umgekehrten Bärenfalle: Scharfe Klingen im Inneren der Falle zerfleischen das Opfer bei jeder Bewegung.\n• Die umgekehrte Bärenfalle verursacht jedes Mal Blutung, wenn der Überlebende auf irgendeine Weise verletzt wird.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an."
+        },
+        "es": {
+          "name": "Cuchillas multiuso",
+          "description": "Una modificación para la trampa para osos invertida: Las afiladas cuchillas unidas al interior del mecanismo infligen cortes a la víctima cada vez que se mueve.\n• Las trampas para osos invertidas causan Hemorragia cada vez que el superviviente sea herido del modo que sea.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure."
+        },
+        "ja": {
+          "name": "万能な刃物",
+          "description": "逆トラバサミの改造。罠の内側に取り付けられた鋭い刃が、犠牲者が動く度に深い傷を作る。\n• 逆トラバサミに掛かると取り外されるまで、どんな手段によるものかを問わず、生存者が負傷する度に出血するようになる。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Ostrza użytkowe",
+          "description": "Modyfikacja do odwróconej pułapki na niedźwiedzie: ostrza znajdujące się w pułapce kaleczą ofiarę z każdym jej ruchem.\n• Odwrócone pułapki na niedźwiedzie nakładają efekt Krwotoku za każdym razem, kiedy ocalały zostanie ranny w jakikolwiek sposób.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych."
+        }
+      }
+    },
+    {
+      "id": 191,
+      "name": "Face Mask",
+      "killer_id": 11,
+      "description": "A modification to the Reverse Bear Trap: The heavy cloth face mask, laced with a sedative, partially suffocates the target making it hard to concentrate.\n• Reverse Bear Traps inflict Blindness until removed.\n• Does not affect the Jigsaw Box aura.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_faceMask.png?880cef",
+      "icon_local_path": "icons/addons/face_mask.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Atemmaske",
+          "description": "Eine Abwandlung der umgekehrten Bärenfalle: Die Gesichtsmaske aus schwerem Stoff, die mit einem Beruhigungsmittel versetzt ist, erschwert dem Opfer das Atmen und verringert so seine Konzentration.\n• Umgekehrte Bärenfallen verursachen Erblindung, bis sie abgenommen werden.\n• Hat keinen Einfluss auf die Hervorhebung von Jigsaw-Kisten.\nErblindung hindert Überlebende daran, Auren zu sehen."
+        },
+        "es": {
+          "name": "Máscara facial",
+          "description": "Una modificación para la trampa para osos invertida: la pesada máscara facial de tela, equipada con un sedante, dificulta la respiración del objetivo y dificulta su concentración.\n• Las trampas para osos invertidas causan Ceguera hasta que se eliminan.\n• No afecta al aura de las cajas de Puzle.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "フェイスマスク",
+          "description": "逆トラバサミの改造。鎮静剤を塗った厚手の布製フェイスマスクが対象の呼吸をある程度阻害し、集中できないようにする。\n• 逆トラバサミに掛かると取り外されるまで目眩まし効果を与える\n• ジグソウボックスのオーラには影響しない\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Maska Na Twarz",
+          "description": "Modyfikacja do odwróconej pułapki na niedźwiedzie: maska wykonana z grubej tkaniny i nasączona środkiem usypiającym, który utrudnia oddychanie i przeszkadza w koncentracji.\n• Odwrócone pułapki na niedźwiedzie wywołują efekt Oślepienia do chwili zdjęcia.\n• Nie dotyczy aur skrzynek Jigsawa.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 192,
+      "name": "Rusty Attachments",
+      "killer_id": 11,
+      "description": "A modification to the Reverse Bear Trap: Mouth spikes, covered with crusty and volatile rust spots that make injuries particularly difficult to heal.\n• Reverse Bear Traps inflict Mangled for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustyAttachments.png?fa6757",
+      "icon_local_path": "icons/addons/rusty_attachments.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rostige Befestigung",
+          "description": "Eine Abwandlung der umgekehrten Bärenfalle: Mundfixierung, übersät mit verkrusteten und ätzenden Rostflecken, die es besonders schwierig machen, Verletzungen zu heilen.\n• Umgekehrte Bärenfallen verursachen den Statuseffekt Zerfleischt für 70 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Accesorios oxidados",
+          "description": "Una modificación para la trampa para osos invertida: Pinchos en la boca, recubiertos de una costra de óxido que impide que las heridas se curen fácilmente.\n• Las trampas para osos invertidas causan Laceración durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "錆びた付属品",
+          "description": "逆トラバサミの改造。刃にところどころに固くて剥がれやすい錆が付着しているため、傷がとても治りづらくなる。\n• 逆トラバサミに掛かると取り外されるまで、70秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Zardzewiałe Kolce",
+          "description": "Modyfikacja do odwróconej pułapki na niedźwiedzie: zęby są pokryte kruchą i lotną rdzą. Sprawiają, że rany ofiar, które wpadły w pułapkę, stają się bardzo trudne do wyleczenia.\n• Odwrócone pułapki na niedźwiedzie nakładają efekt Zmasakrowany na 70 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 193,
+      "name": "Slow-Release Toxin",
+      "killer_id": 11,
+      "description": "A modification to the Reverse Bear Trap: A poison that is not fatal but weakens the body and makes it nearly impossible to recover fully from any effort.\n• Reverse Bear Traps inflict Exhausted until removed.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_slow-ReleaseToxin.png?609952",
+      "icon_local_path": "icons/addons/slow_release_toxin.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Langsam wirkendes Gift",
+          "description": "Eine Abwandlung der umgekehrten Bärenfalle: Ein Gift, das nicht tödlich ist, aber den Körper so schwächt, dass er sich von keiner Anstrengung mehr ganz erholen kann.\n• Umgekehrte Bärenfallen verursachen den Statuseffekt Erschöpfung, bis sie abgenommen werden.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Toxina de liberación lenta",
+          "description": "Una modificación para la trampa para osos invertida: un veneno que, sin ser letal, debilita el cuerpo y hace que resulte prácticamente imposible recuperarse completamente tras un esfuerzo.\n• Las trampas para osos invertidas causan Agotamiento hasta que se eliminan.\nAgotamiento impide que los supervivientes activen habilidades de agotamiento."
+        },
+        "ja": {
+          "name": "緩効性毒物",
+          "description": "逆トラバサミの改造。毒が塗られている。致死量ではないが体を弱らせ、どんなに努力をしても完全に回復することはほぼ不可能になる。\n• 逆トラバサミに掛かると取り外されるまで疲労 状態になる\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Powolnie uwalniana toksyna",
+          "description": "Modyfikacja do odwróconej pułapki na niedźwiedzie: trucizna, która nie jest śmiertelna, lecz osłabia ciało i sprawia, że całkowite wyzdrowienie staje się niemal niemożliwe.\n• Odwrócone pułapki na niedźwiedzie nakładają efekt Wyczerpany do chwili zdjęcia.\nWyczerpanie uniemożliwia ocalałym aktywację wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 194,
+      "name": "Bag of Gears",
+      "killer_id": 11,
+      "description": "A few mechanical parts that allow the creation of challenging Jigsaw Boxes and easier to install Reverse Bear Traps.\n• Increases Reverse Bear Trap setting speed by 50%.\n• Increases time required to search a Jigsaw Box by 17%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bagOfGears.png?b9896c",
+      "icon_local_path": "icons/addons/bag_of_gears.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Sack voller Zahnräder",
+          "description": "Ein paar mechanische Teile, mit denen herausfordernde Jigsaw-Kisten und leichter einstellbare, umgekehrte Bärenfallen gebaut werden können.\n• Erhöht die Geschwindigkeit zum Einstellen einer umgekehrten Bärenfalle um 50 %.\n• Verlängert die Zeit, die Überlebende zum Durchsuchen einer Jigsaw-Kiste brauchen, um 17 %."
+        },
+        "es": {
+          "name": "Bolsa de engranajes",
+          "description": "Unas cuantas piezas mecánicas que te permiten crear cajas de Puzle complejas y trampas para osos invertidas más fáciles de instalar.\n• Aumenta la velocidad de colocación de trampas para osos invertidas un 50 %.\n• Aumenta el tiempo que se tarda en buscar una caja de Puzle un 17 %."
+        },
+        "ja": {
+          "name": "機械部品の袋",
+          "description": "数点の機械部品。難しいジグソウボックスと、取り付けが簡単な逆トラバサミを作れるようになる。\n• 逆トラバサミの設置速度が50%上昇する\n• ジグソウボックスを調べるのに必要な時間が17%増加する"
+        },
+        "pl": {
+          "name": "Torba z przyborami",
+          "description": "Kilka mechanicznych części, które umożliwiają tworzenie bardziej wymagających skrzynek Jigsawa i łatwiejsze rozstawianie odwróconych pułapek na niedźwiedzie.\n• Zwiększa prędkość rozstawiania odwróconej pułapki na niedźwiedzie o 50%.\n• Wydłuża czas potrzebny na przeszukanie skrzynki Jigsawa o 17%."
+        }
+      }
+    },
+    {
+      "id": 195,
+      "name": "Crate of Gears",
+      "killer_id": 11,
+      "description": "This collection of mechanical parts allows the creation of extra-challenging Jigsaw Boxes and Reverse Bear Traps that are easier to install.\n• Increases Reverse Bear Trap setting speed by 50%.\n• Increases time required to search a Jigsaw Box by 33%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_crateOfGears.png?32310f",
+      "icon_local_path": "icons/addons/crate_of_gears.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Kiste voller Zahnräder",
+          "description": "Mit dieser Sammlung mechanischer Teile können besonders herausfordernde Jigsaw-Kisten und leichter einstellbare umgekehrte Bärenfallen gebaut werden.\n• Erhöht die Geschwindigkeit zum Einstellen einer umgekehrten Bärenfalle um 50 %.\n• Verlängert die Zeit, die Überlebende zum Durchsuchen einer Jigsaw-Kiste brauchen, um 33 %."
+        },
+        "es": {
+          "name": "Caja de engranajes",
+          "description": "Esta colección de piezas mecánicas te permite crear cajas de Puzle extremadamente complejas y trampas para osos invertidas más fáciles de instalar.\n• Aumenta el tiempo que se tarda en colocar una trampa para osos invertida un 50 %.\n• Aumenta el tiempo que se tarda en buscar una caja de Puzle un 33 %."
+        },
+        "ja": {
+          "name": "機械部品の箱",
+          "description": "機械部品のコレクション。非常に難しいジグソウボックスと取り付けが簡単な逆トラバサミを作れるようになる。\n• 逆トラバサミの設置速度が50%上昇する\n• ジグソウボックスを調べるのに必要な時間が33%増加する"
+        },
+        "pl": {
+          "name": "Skrzynia z przyborami",
+          "description": "Kolekcja mechanicznych części, które umożliwiają tworzenie bardziej wymagających skrzynek Jigsawa i łatwiejsze rozstawianie odwróconych pułapek na niedźwiedzie.\n• Zwiększa prędkość rozstawiania odwróconej pułapki na niedźwiedzie o 50%.\n• Wydłuża czas potrzebny na przeszukanie skrzynki Jigsawa o 33%."
+        }
+      }
+    },
+    {
+      "id": 196,
+      "name": "Jigsaw's Sketch",
+      "killer_id": 11,
+      "description": "A disturbing, yet brilliant, trap design sketched in details on a sheet of paper.\n• Increases available Reverse Bear Traps by 1.\n• When a Survivor with a Reverse Bear Trap is working on a Generator, that Generator's Aura is revealed to you.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jigsawsSketch.png?9e28ce",
+      "icon_local_path": "icons/addons/jigsaws_sketch.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Jigsaws Skizze",
+          "description": "Ein verstörender, aber brillanter Fallenentwurf, der detailliert auf einem Blatt Papier festgehalten wurde.\n• Erhöht die Anzahl verfügbarer umgekehrter Bärenfallen um 1.\n• Wenn ein Überlebender mit einer umgekehrten Bärenfalle an einem Generator arbeitet, wird dir die Aura dieses Generators angezeigt."
+        },
+        "es": {
+          "name": "Boceto de Puzle",
+          "description": "El boceto detallado de una trampa perturbadora, aunque brillante.\n• Aumenta las trampas para osos invertidas disponibles en 1.\n• Cuando un superviviente con una trampa para osos invertida esté arreglando un generador, podrás ver el aura de ese generador."
+        },
+        "ja": {
+          "name": "ジグソウのスケッチ",
+          "description": "不穏だが天才的な罠の設計図。詳細にスケッチされている。\n• 使用可能な逆トラバサミの数が1つ増加する\n• 逆トラバサミを持った生存者が発電機を修理している時、その発電機のオーラが視える"
+        },
+        "pl": {
+          "name": "Szkic Jigsawa",
+          "description": "Niepokojący, lecz znakomity projekt pułapki rozrysowany szczegółowo na kartce papieru.\n• Zwiększaliczbę dostępnych odwróconych pułapek na niedźwiedzie o 1.\n• Kiedy ocalały z odwróconą pułapką na niedźwiedzie pracuje przy generatorze, aura tego generatora zostaje ci ujawniona."
+        }
+      }
+    },
+    {
+      "id": 197,
+      "name": "Jigsaw's Annotated Plan",
+      "killer_id": 11,
+      "description": "A disturbing, yet brilliant, trap design laid down on paper and annotated by Jigsaw.\n• Increases available Reverse Bear Traps by 1.\n• Increases Reverse Bear Trap death timer by 10 seconds.\n• Whenever a generator is completed, 10 seconds is removed from the death timer of all active Reverse Bear Traps.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jigsawsAnnotatedPlan.png?2134f8",
+      "icon_local_path": "icons/addons/jigsaws_annotated_plan.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Jigsaws kommentierter Entwurf",
+          "description": "Ein verstörender, aber brillanter Fallenentwurf, der mit Kommentaren von Jigsaw auf einem Blatt Papier festgehalten wurde.\n• Erhöht die Anzahl verfügbarer umgekehrter Bärenfallen um 1.\n• Erhöht den Todestimer umgekehrter Bärenfallen um 10 Sekunden.\n• Immer wenn ein Generator abgeschlossen wurde, werden 10 Sekunden von allen Todestimern bei aktiven umgekehrten Bärenfallen entfernt."
+        },
+        "es": {
+          "name": "Plano con anotaciones de Puzle",
+          "description": "El boceto y anotaciones de una trampa perturbadora —y brillante— diseñada por Puzle.\n• Aumenta las trampas para osos invertidas disponibles en 1.\n• Aumenta el temporizador mortal de las trampas para osos invertidas en 10 segundos.\n• Cuando se completa un generador, se restarán 10 segundos del temporizador mortal de todas las trampas para osos invertidas activas."
+        },
+        "ja": {
+          "name": "ジグソウの注釈付き設計図",
+          "description": "不穏だが天才的な罠の設計図。ジグソウの注釈付きで紙に記されている。\n• 使用可能な逆トラバサミの数が1つ増加する\n• 逆トラバサミの死亡タイマーが10秒増加する\n• 発電機の修理が完了するたびに、すべての発動中の逆トラバサミの死亡タイマーが10秒減少する"
+        },
+        "pl": {
+          "name": "Plan z Komentarzem Jigsawa",
+          "description": "Niepokojący, lecz genialny projekt pułapki rozrysowany i opisany na kartce przez Jigsawa.\n• Zwiększa liczbę dostępnych odwróconych pułapek na niedźwiedzie o 1.\n• Wydłuża czas, po którym odwrócona pułapka na niedźwiedzie zabija, o 10 sekund.\n• Za każdym razem, gdy generator zostanie naprawiony, 10 sekund jest odejmowane od licznika czasu do śmierci na wszystkich aktywnych odwróconych pułapkach na niedźwiedzie."
+        }
+      }
+    },
+    {
+      "id": 198,
+      "name": "Amanda's Letter",
+      "killer_id": 11,
+      "description": "A blackmailing letter for the attention of Amanda. Fills the reader with rage and focus.\n• While crouched, reveals auras of Survivors within 16 meters.\n• Decreases available Reverse Bear Traps by 2.\n\"\"Amanda, you were with Cecil the night Jill lost Gideon. You killed their child. You know it and I know it.\" -Amanda's Letter\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_amandasLetter.png?31e0e7",
+      "icon_local_path": "icons/addons/amandas_letter.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Amandas Brief",
+          "description": "Ein Erpresserbrief an Amanda. Erfüllt den Leser mit Zorn und Konzentration.\n• In geduckter Haltung werden die Auren Überlebender innerhalb von 16 Metern angezeigt.\n• Reduziert die Anzahl verfügbarer umgekehrter Bärenfallen um 2.\n\"„Amanda, in der Nacht, als Jill Gideon verloren hat, waren Sie mit Cecil zusammen. Sie haben ihr Kind getötet. Sie wissen es und ich weiß es.“ – Amandas Brief\""
+        },
+        "es": {
+          "name": "Carta de Amanda",
+          "description": "Una carta de extorsión dirigida a Amanda. Provoca un arrebato de ira y de determinación a quien la lee.\n• Mientras estás de cuclillas, puedes ver las auras de los supervivientes en un radio de 16 metros.\n• Reduce las trampas para osos invertidas disponibles en 2.\n\"\"Amanda, estabas con Cecil la noche que Jill perdió a Gideon. Vosotros matasteis a su hijo. Tú lo sabes y yo también\". (Carta de Amanda)\""
+        },
+        "ja": {
+          "name": "アマンダへの手紙",
+          "description": "アマンダ宛の脅迫の手紙。読んだ者は怒りと集中力に満ちる。\n• しゃがんでいる間、16メートル以内の生存者のオーラを視ることができる\n• 使用可能な逆トラバサミの数が2つ減少する\n\"「ジルが流産した夜、君はセシルといた。彼らの子供を君が殺した。君も、俺だってわかっている事実だ。」- アマンダの手紙\""
+        },
+        "pl": {
+          "name": "List do Amandy",
+          "description": "Listowny szantaż adresowany do Amandy. Przepełnia czytelnika wściekłością i skupieniem.\n• Gdy kucasz, dostrzegasz aury ocalałych znajdujących się w promieniu 16 metrów.\n• Zmniejsza liczbę dostępnych odwróconych pułapek na niedźwiedzie o 2.\n\"„Amando, byłaś z Cecylem tej nocy, gdy Jill straciła Gideona. Zabiłaś ich dziecko. Ty to wiesz i ja to wiem”. – List do Amandy\""
+        }
+      }
+    },
+    {
+      "id": 199,
+      "name": "Tampered Timer",
+      "killer_id": 11,
+      "description": "A timer that has been fiddled with. A spring in the mechanism forces the gears to turn faster.\n• Decreases the Reverse Bear Trap death timer by 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tamperedTimer.png?e9ed01",
+      "icon_local_path": "icons/addons/tampered_timer.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Manipulierter Timer",
+          "description": "Ein Timer, der modifiziert wurde. Eine Feder im Mechanismus sorgt dafür, dass sich die Zahnräder schneller drehen.\n• Verringert den Todestimer der umgekehrten Bärenfalle um 20 Sekunden."
+        },
+        "es": {
+          "name": "Temporizador manipulado",
+          "description": "Un temporizador adulterado. Un muelle instalado en el mecanismo hace que los engranajes giren a mayor velocidad.\n• Reduce el temporizador mortal de la trampa para osos invertida en 20 segundos."
+        },
+        "ja": {
+          "name": "改造タイマー",
+          "description": "改造されたタイマー。装置に仕掛けられたばねによって歯車の回転速度が上がる。\n• 逆トラバサミの死亡タイマーが20秒減少する"
+        },
+        "pl": {
+          "name": "Zmodyfikowany Regulator Czasowy",
+          "description": "Czasomierz, przy którym ktoś majstrował. Sprężyna w urządzeniu zmusza zębatki do szybszych obrotów.\n• Skraca czas, po którym odwrócona pułapka na niedźwiedzie zabija ocalałych, o20 sekund."
+        }
+      }
+    },
+    {
+      "id": 200,
+      "name": "Last Will",
+      "killer_id": 11,
+      "description": "A latched wooden box with a satin lining, offered as part of a last will.\n• Increases Ambush attack movement speed by 5%.\n• Increases time to charge Ambush attack by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lastWill.png?36b2ae",
+      "icon_local_path": "icons/addons/last_will.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Letzter Wille",
+          "description": "Eine verschließbare, mit Satin ausgekleidete Holzschatulle, in der sich ein Testament befindet.\n• Erhöht die Angriffs-Bewegungsgeschwindigkeit aus dem Hinterhalt um 5 %.\n• Verlängert die Zeit zum Aufladen eines Angriffs aus dem Hinterhalt um 10 %."
+        },
+        "es": {
+          "name": "Última voluntad",
+          "description": "Una caja cerrada de madera, revestida con un material sedoso y ofrecida como parte de una última voluntad.\n• Aumenta la velocidad de movimiento del ataque de emboscada un 5 %.\n• Aumenta el tiempo para cargar el ataque de Emboscada un 10 %."
+        },
+        "ja": {
+          "name": "遺言",
+          "description": "遺言の一部として提供された木箱。掛けがねがかかり、サテンの裏地でしつらえられている。\n• 奇襲攻撃の移動速度が5%上昇する\n• 奇襲攻撃がチャージされるまでの時間が10%増加する"
+        },
+        "pl": {
+          "name": "Ostatnia Wola",
+          "description": "Zatrzaśnięte drewniane pudełko wyłożone satyną. Podarowane jako wyraz ostatniej woli.\n• Zwiększa prędkość ataku z ukrycia o 5%.\n• Wydłuża czas ładowania ataku z ukrycia o 10%."
+        }
+      }
+    },
+    {
+      "id": 201,
+      "name": "Interlocking Razor",
+      "killer_id": 11,
+      "description": "A modification to the Jigsaw Box: The addition of interlocking razor blades makes it impossible to move suddenly in the Jigsaw Box without suffering the consequences.\n• Failing a Jigsaw Box skill check while injured will inflict Deep Wound on Survivor.\nDeep Wound will put a Survivor in the dying state unless it is mended before the timer runs out.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_interlockingRazor.png?e96cdc",
+      "icon_local_path": "icons/addons/interlocking_razor.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ineinandergreifende Klingen",
+          "description": "Eine Abwandlung der Jigsaw-Kiste: Durch die zusätzlichen ineinandergreifenden Rasierklingen kann man seine Hand in der Jigsaw-Kiste nicht schnell bewegen, ohne Konsequenzen befürchten zu müssen.\n• Bei einem fehlgeschlagenen Fähigkeitscheck an der Jigsaw-Kiste erleidet ein verletzter Überlebender eine Tiefe Wunde.\nTiefe Wunde versetzt einen Überlebenden in den Todesstatus, wenn sie nicht versorgt wird, bevor der Timer abläuft."
+        },
+        "es": {
+          "name": "Cuchillas entrecruzadas",
+          "description": "Una modificación para la caja de Puzle: las cuchillas impiden que el superviviente realice movimientos bruscos sin cortarse las muñecas.\n• Al fallar una prueba de habilidad de la caja de Puzle mientras el superviviente está herido, le causará Herida profunda.\nHerida profunda hará que el superviviente entre en estado agonizante excepto si se recupera antes de que se acabe el tiempo."
+        },
+        "ja": {
+          "name": "重なり合うカミソリ刃",
+          "description": "ジグソウボックスの改造。重なり合うカミソリの刃を追加することにより、ジグソウボックス内で急に動くと苦しむ結末を迎えるのが不可避になる。\n• 負傷状態でジグソウボックスのスキルチェックに失敗した生存者は深手状態になる\n深手状態になった生存者はタイマー切れになる前に手当しなければ瀕死状態になる。"
+        },
+        "pl": {
+          "name": "Brzytwa Blokująca",
+          "description": "Modyfikacja do skrzynek Jigsawa. Dodatek w postaci zachodzących na siebie brzytew, które uniemożliwiają gwałtowne poruszanie rękoma w skrzynce Jigsawa bez ponoszenia konsekwencji.\n• Nieudany test umiejętności skrzynki Jigsawa podczas zranienia spowoduje nałożenie efektu Głębokiej Rany na ocalałego.\nGłęboka Rana wprowadzi ocalałego w stan agonii, chyba że zostanie wyleczona przed końcem czasu."
+        }
+      }
+    },
+    {
+      "id": 202,
+      "name": "Amanda's Secret",
+      "killer_id": 11,
+      "description": "A black metal box containing a knife and various medical supplies, such as bandages and compresses. Deep cuts reduce stress and awaken the senses.\n• Gain a notification when a Survivor removes a Reverse Bear Trap.\n• Auras of Survivors removing a Reverse Bear Trap are revealed to you for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_amandasSecret.png?9bed87",
+      "icon_local_path": "icons/addons/amandas_secret.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Amandas Geheimnis",
+          "description": "Eine schwarze Metallkiste mit einem Messer und verschiedenen Sanitätsartikeln, wie Verbände und Kompressen. Tiefe Schnitte verringern den Stress und wecken die Sinne.\n• Du erhältst eine Benachrichtigung, wenn ein Überlebender eine umgekehrte Bärenfalle entfernt.\n• Auren von Überlebenden, die eine umgekehrte Bärenfalle entfernen, werden dir 6 Sekunden lang angezeigt."
+        },
+        "es": {
+          "name": "Secreto de Amanda",
+          "description": "Una caja de metal negra que contiene un cuchillo y varios suministros médicos, como vendas y apósitos. Los cortes profundos reducen el estrés y agudizan los sentidos.\n• Recibes una notificación cuando un superviviente elimina una trampa para osos invertida.\n• Podrás ver el aura de los supervivientes que eliminen una trampa para osos invertida durante 6 segundos."
+        },
+        "ja": {
+          "name": "アマンダの秘密",
+          "description": "1本のナイフと、包帯や湿布などの医療品が入った黒い金属の箱。深い切り傷はストレスを減らし、感覚を呼び覚ます。\n• 生存者が逆トラバサミを解除すると、大きな通知音が作動する\n• 生存者が逆トラバサミを解除すると、その生存者のオーラが6秒間視える"
+        },
+        "pl": {
+          "name": "Sekret Amandy",
+          "description": "Czarne metalowe pudełko, kryjące w swoim wnętrzu nóż i różnego rodzaju medyczne zaopatrzenie, takie jak bandaże i okłady. Głębokie nacięcia zmniejszają stres i pobudzają zmysły.\n• Za każdym razem, gdy ocalały zdejmie z głowy odwróconą pułapkę na niedźwiedzie, otrzymasz specjalne powiadomienie.\n• Aury ocalałych, którzy zdjęli pułapkę z głowy, będą widoczne przez 6 s od chwili pozbycia się pułapki."
+        }
+      }
+    },
+    {
+      "id": 830,
+      "name": "Rules Set No.2",
+      "killer_id": 11,
+      "description": "Not all games need to have the same rules.\n• Disables the Survivors' ability to see Jigsaw Boxes highlighted until their Trap is activated.\n\"\"Listen, there are rules\" -Jigsaw\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rulesSetNo.2.png?f439d3",
+      "icon_local_path": "icons/addons/rules_set_no2.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Regelwerk Nr. 2",
+          "description": "Nicht alle Spiele müssen dieselben Regeln haben.\n• Deaktiviert die Fähigkeit der Überlebenden, hervorgehobene Jigsaw-Kisten zu sehen, bis ihre Falle ausgelöst wurde.\n\"„Hören Sie bitte genau zu, es gibt Spielregeln.“ –Jigsaw\""
+        },
+        "en": {
+          "name": "Rule Set No.2"
+        },
+        "es": {
+          "name": "Conjunto de reglas n.º 2",
+          "description": "Los juegos no tienen por qué tener todos las mismas reglas.\n• Impide  que los supervivientes puedan ver las cajas de Puzle iluminadas hasta que se activa su trampa.\n\"\"Escucha con atención las reglas\". (Puzle)\""
+        },
+        "ja": {
+          "name": "ルールセットNo.2",
+          "description": "全てのゲームが同じルールである必要はない。\n• 罠のタイマーが作動するまでの間、\n生存者がジグソウボックスのオーラを視る能力を無効にする\n\"「よく聞け、ゲームにはルールがある」- ジグソウ\""
+        },
+        "pl": {
+          "name": "Zestaw reguł nr 2",
+          "description": "Nie wszystkie gry muszą się rządzić tymi samymi zasadami.\n• Ocalali z pułapką na głowie nie widzą na mapie aur skrzynek Jigsawa; będą je widzieć dopiero od momentu aktywacji odwróconej pułapki.\n\"„Słuchajcie, oto zasady gry” – Jigsaw\""
+        }
+      }
+    }
+  ]
+}

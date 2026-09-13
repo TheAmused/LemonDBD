@@ -8,8 +8,8 @@ import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
-import { getBackendBaseUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
-import { fetchCached, fetchJson } from '@/services/dataCache';
+import { getCharacterAvatarUrl } from '@/utils/perkUtils';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 
 interface MainCardProps {
   role: RoleCategory;
@@ -42,11 +42,12 @@ export const MainCard: React.FC<MainCardProps> = ({
     setImgError(false);
   }, [loadout.characterName]);
 
-  // Pre-load perks mapping so slot icons render with images
+  // Pre-load perks mapping so slot icons render with images. This is the whole
+  // perk table for four icons, so it leans on the catalog window: the showcase
+  // is reachable from several places and none of them should pay for it twice.
   useEffect(() => {
-    const backendBase = getBackendBaseUrl();
-    const url = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
-    fetchCached<any>(url, () => fetchJson(url))
+    const url = catalogKey('perks', { limit: 1000, lang: locale });
+    fetchCached<any>(url, () => fetchJson(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
         const list: Perk[] = Array.isArray(data) ? data : data?.data || [];
         setAllPerks(list);

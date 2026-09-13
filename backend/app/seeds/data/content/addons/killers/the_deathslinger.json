@@ -1,0 +1,559 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 332,
+      "name": "Rickety Chain",
+      "killer_id": 19,
+      "description": "Weak steel links first used on Caleb's prototype Speargun. Despite the chain's failings, it holds sentimental value.\n• Grants 50% bonus Bloodpoints for Speared score events.\n• Survivors break free 33% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ricketyChain.png?660b70",
+      "icon_local_path": "icons/addons/rickety_chain.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Klapprige Kette",
+          "description": "Schwache Stahlglieder, die zuerst an Calebs Prototyp seiner Harpune Verwendung fanden. Obwohl die Kette fast auseinanderfällt, hat sie für ihn einen ideellen Wert.\n• Gewährt 50 % Bonus-Blutpunkte für Aufgespießt-Punktereignisse.\n• Überlebende können sich 33 % schneller losreißen."
+        },
+        "es": {
+          "name": "Cadena desvencijada",
+          "description": "Eslabones desgastados de acero que Caleb usó en su primer prototipo del lanzaarpones. Pese a la evidente fragilidad de la cadena, alberga un gran valor sentimental para él.\n• Otorga un 50 % de puntos de sangre adicionales por Aciertos con los eventos de puntuación.\n• Los supervivientes se liberan un 33 % más rápido."
+        },
+        "ja": {
+          "name": "ボロボロの鎖",
+          "description": "当初カレブがスピアガンのプロトタイプに使用した壊れやすい鉄の鎖。失敗作だが思い入れがある。\n• 銛命中の得点が発生するとブラッドポイントを50%追加取得する\n• 生存者の銛から逃れる速度が33%上昇する"
+        },
+        "pl": {
+          "name": "Brzęczący łańcuch",
+          "description": "Liche stalowe ogniwa używane przez Caleba w prototypie Kuszy. Mimo słabości łańcucha mają wartość sentymentalną.\n• Dają o 50% więcej Punktów Krwi za punktowane przebicie.\n• Ocalali mogą się uwolnić o 33% szybciej."
+        }
+      }
+    },
+    {
+      "id": 333,
+      "name": "Spit Polish Rag",
+      "killer_id": 19,
+      "description": "A grimy piece of burlap. Spit and elbow grease was enough to wipe down the speargun in the heat of a shootout.\n• Decreases The Redeemer's miss cooldown by 0.25 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spitPolishRag.png?efb40c",
+      "icon_local_path": "icons/addons/spit_polish_rag.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Poliertuch",
+          "description": "Ein schmuddeliges Stück Sackleinen. Spucke und Muskelschmalz haben gereicht, um in einem heißen Gefecht die Harpune abzuwischen.\n• Verringert die Abklingzeit nach Verfehlen mit dem Erlöser um 0,25 Sekunden."
+        },
+        "es": {
+          "name": "Trapo pulidor ensalivado",
+          "description": "Un mugriento jirón de arpillera. Bastaba con un escupitajo y con frotar un poco para limpiar el lanzaarpones en el fragor de un tiroteo.\n• Reduce el tiempo de recarga de ataques de Aprehensor fallidos en 0,25 segundos."
+        },
+        "ja": {
+          "name": "唾磨きのボロ布",
+          "description": "汚れた黄麻布。銃撃戦の真っ最中にスピアガンを拭くなら、唾で必死に磨けばいい。\n• 贖い主を外した時のクールダウンが0.25秒減少する"
+        },
+        "pl": {
+          "name": "Opluta ścierka",
+          "description": "Brudny kawałek juty. Ślina i odrobina wysiłku wystarczyły do wytarcia kuszy w trakcie strzelaniny.\n• Skraca czas odnawiania Wybawcy po spudłowaniu o 0,25 sekundy."
+        }
+      }
+    },
+    {
+      "id": 334,
+      "name": "Modified Ammo Belt",
+      "killer_id": 19,
+      "description": "An old ammo belt Caleb altered for his specialized weaponry. Still holds the fine red dirt of the Arizona Territory desert.\n• Decreases The Redeemer's reload time by 0.25 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_modifiedAmmoBelt.png?a7e748",
+      "icon_local_path": "icons/addons/modified_ammo_belt.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Modifizierter Munitionsgürtel",
+          "description": "Ein alter Munitionsgürtel, der an Calebs spezielle Waffen angepasst ist. Es klebt noch immer der feine rote Dreck der Wüste Arizonas daran.\n• Verringert die Nachladedauer des Erlösers um 0,25 Sekunden."
+        },
+        "es": {
+          "name": "Cartuchera modificada",
+          "description": "Una cartuchera antigua, modificada por Caleb para usarla con su armamento especializado. Sigue conteniendo tierra fina y roja del desierto de Arizona.\n• Reduce el tiempo de recarga de Aprehensor en 0,25 segundos."
+        },
+        "ja": {
+          "name": "改造弾帯",
+          "description": "カレブが特殊兵器のために改造した古い弾帯。アリゾナ準州の砂漠の細かい赤土が今でも付着している。\n• 贖い主のリロード時間が0.25秒減少する"
+        },
+        "pl": {
+          "name": "Zmodyfikowany pas na amunicję",
+          "description": "Stary pas na amunicję, który Caleb dostosował do swojego specjalistycznego arsenału. Wciąż widać na nim drobny czerwony pył z pustyni w Terytorium Arizony.\n• Skraca czas przeładowania Wybawcy o 0,25 sekundy."
+        }
+      }
+    },
+    {
+      "id": 335,
+      "name": "Snake Oil",
+      "killer_id": 19,
+      "description": "A tincture of oils and extracts purchased from a travelling salesman. Purported to cure all that ails you.\n• Increases The Redeemer's reeling speed by 2.5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_snakeOil.png?9013f2",
+      "icon_local_path": "icons/addons/snake_oil.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schlangenöl",
+          "description": "Eine Tinktur aus Ölen und Extrakten, die von einem fahrenden Händler stammen. Sie soll angeblich alles heilen, was einen plagt.\n• Erhöht die Rückziehgeschwindigkeit des Erlösers um 2,5 %."
+        },
+        "es": {
+          "name": "Aceite de serpiente",
+          "description": "Una tintura elaborada a base de aceites y extractos, comprada a un vendedor ambulante. Supuestamente cura cualquier dolencia.\n• Aumenta la velocidad de recogida de Aprehensor un 2,5 %."
+        },
+        "ja": {
+          "name": "インチキ薬",
+          "description": "巡回セールスマンから買ったオイルとエキスのチンキ。あらゆる症状を治すらしい。\n• 贖い主の巻き取り速度が2.5%上昇する"
+        },
+        "pl": {
+          "name": "Wężowy olej",
+          "description": "Mieszanka olejków i wyciągów kupiona od obwoźnego sprzedawcy. Rzekomo leczy wszystkie dolegliwości.\n• Zwiększa szybkość naciągania Wybawcy o 2,5%."
+        }
+      }
+    },
+    {
+      "id": 336,
+      "name": "Rusted Spike",
+      "killer_id": 19,
+      "description": "A railroad spike that Caleb fastened to the front of the Speargun during a moment of morbid curiosity. The dull tip prevents it from cleanly piercing its target.\n• Hitting a Survivor with The Redeemer while they are being reeled in inflicts Mangled for 60 seconds.\nMangled increases time required to heal by 25% for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustedSpike.png?b824ec",
+      "icon_local_path": "icons/addons/rusted_spike.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Rostiger Nagel",
+          "description": "Ein Schwellennagel, den Caleb in einem Moment krankhafter Neugier vorne an der Harpune befestigte. Die stumpfe Spitze verhindert, dass das Ziel sauber durchbohrt wird.\n• Wenn du einen Überlebenden mit dem Erlöser triffst, während dieser herangezogen wird, erleidet er den Statuseffekt Zerfleischt für 60 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Clavo oxidado",
+          "description": "Un clavo de ferrocarril que Caleb amarró al frontal del lanzaarpones en un momento de curiosidad morbosa. La punta roma evita que se clave limpiamente en su objetivo.\n• Golpear a un superviviente con el Aprehensor mientras se está recogiendo causa Laceración durante 60 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "錆びた犬釘",
+          "description": "カレブが病的な好奇心にかられてスピアガンの前部に固定した線路の犬釘。先端の切れ味が鈍く、簡単には貫通しない。\n• 引き寄せられている生存者に贖い主を当てると、その生存者を60秒間重傷状態にできる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Zardzewiały gwóźdź",
+          "description": "Gwóźdź kolejowy, który Caleb przymocował z przodu Kuszy w przypływie chorobliwej ciekawości. Tępy koniec uniemożliwia czyste przebicie celu.\n• Trafienie ocalałego Wybawcą podczas przyciągania nakłada efekt Zmasakrowany na 60 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 337,
+      "name": "Jaw Smasher",
+      "killer_id": 19,
+      "description": "The bullet that ripped through Caleb’s jaw during a frenzied shootout. It brings back a burning desire for revenge.\n• Increases movement speed by 1.5% while aiming down The Redeemer's sights.\n\"\"You called death to your door the instant you done me wrong.\" -Caleb Quinn\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jawSmasher.png?aae4d6",
+      "icon_local_path": "icons/addons/jaw_smasher.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kieferbrecher",
+          "description": "Die Kugel, die Calebs Kiefer bei einer wilden Schießerei durchbohrte. Sie bringt den drängenden Wunsch nach Rache zurück.\n• Erhöht die Bewegungsgeschwindigkeit um 1,5 %, während durchs Visier des Erlösers gezielt wird.\n\"„Mit dieser Schandtat an mir hast du dir den Tod ins Haus geholt.“ – Caleb Quinn\""
+        },
+        "es": {
+          "name": "Destrozamandíbulas",
+          "description": "La bala que atravesó la mandíbula de Caleb durante un frenético tiroteo. Revive un vehemente deseo de venganza.\n• Aumenta la velocidad de movimiento un 1,5 % mientras apuntas con la mira de Aprehensor.\n\"\"Llamaste a la muerte a tu puerta en el instante en que me agraviaste\". (Caleb Quinn)\""
+        },
+        "ja": {
+          "name": "顎粉砕弾",
+          "description": "逆上した銃撃戦でカレブの顎を突き破った弾丸。燃えるような復讐の念が蘇る。\n• 贖い主の照準をのぞき込む間の移動速度が1.5%上昇する\n\"「俺を不当に扱ったその瞬間に、お前は死の淵に立っていた。」 - カレブ・クイン\""
+        },
+        "pl": {
+          "name": "Łamacz szczęk",
+          "description": "Pocisk, który przebił szczękę Caleba podczas szaleńczej strzelaniny. Na nowo pobudza palącą chęć zemsty.\n• Zwiększa szybkość ruchu o 1,5% podczas patrzenia przez celownik Wybawcy.\n\"„Wyrządzając mi krzywdę, ściągnąłeś na siebie śmierć”. – Caleb Quinn\""
+        }
+      }
+    },
+    {
+      "id": 338,
+      "name": "Chewing Tobacco",
+      "killer_id": 19,
+      "description": "A can of clipped and sweetened tobacco leaves lifted from a gutted body in Glenvale. Stimulates the nervous system.\n• Decreases the stun duration when Survivors break free by 0.25 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chewingTobacco.png?6f0d60",
+      "icon_local_path": "icons/addons/chewing_tobacco.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Kautabak",
+          "description": "Eine Dose gestutzter und gesüßter Tabakblätter, die einem ausgeweideten Leichnam in Glenvale entwendet wurde. Stimuliert das Nervensystem.\n• Verkürzt die Betäubungsdauer, wenn Überlebende sich losreißen, um 0,25 Sekunden."
+        },
+        "es": {
+          "name": "Tabaco de mascar",
+          "description": "Una lata de hojas de tabaco machacadas y endulzadas, obtenida de un cadáver destripado en Glenvale. Estimula el sistema nervioso.\n• Reduce la duración del aturdimiento cuando los supervivientes se liberan en 0,25 segundos."
+        },
+        "ja": {
+          "name": "噛み煙草",
+          "description": "缶入りの刻んだ甘い煙草。グレンベールのはらわたを抜かれた死体から盗まれたもの。神経系を刺激する。\n• 生存者が抜け出したときの怯む時間が0.25秒減少する"
+        },
+        "pl": {
+          "name": "Tytoń do żucia",
+          "description": "Puszka przyciętych i posłodzonych liści tytoniu zabrana z wypatroszonego ciała w Glenvale. Pobudza system nerwowy.\n• Skraca czas trwania ogłuszenia o 0,25 sekundy, gdy ocalały się uwolni."
+        }
+      }
+    },
+    {
+      "id": 339,
+      "name": "Poison Oak Leaves",
+      "killer_id": 19,
+      "description": "An ordinary looking plant, Caleb found that spears coated in its oil caused unbearable blistering around wounds.\n• Increases Survivor mend time by 1.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_poisonOakLeaves.png?a901c8",
+      "icon_local_path": "icons/addons/poison_oak_leaves.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Giftiges Eichenlaub",
+          "description": "Caleb fand heraus, dass Pfeile, die mit dem Öl dieser gewöhnlich aussehenden Pflanze eingerieben sind, eine unerträgliche Blasenbildung um die Pfeilwunde bewirken.\n• Erhöht die Genesungsdauer des Überlebenden um 1,5 Sekunden."
+        },
+        "es": {
+          "name": "Hojas de roble venenoso",
+          "description": "Caleb descubrió que los arpones impregnados con la savia de esta planta de aspecto mundano provocaban la aparición de ampollas dolorosísimas alrededor de las heridas.\n• Aumenta el tiempo que tarda en sanarse un superviviente en 1,5 segundos."
+        },
+        "ja": {
+          "name": "漆の葉",
+          "description": "何の変哲もなさそうな植物だが、その油を銛に塗ると傷の周辺に耐え難いほどの水疱ができることをカレブは発見した。\n• 生存者の回復時間が1.5秒増加する"
+        },
+        "pl": {
+          "name": "Trujące dębowe liście",
+          "description": "Zwyczajnie wyglądająca roślina. Caleb zorientował się, że jej olej umieszczony na włóczni powoduje powstawanie bolesnych pęcherzy wokół ran.\n• Wydłuża czas leczenia ocalałego o 1,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 340,
+      "name": "Marshal's Badge",
+      "killer_id": 19,
+      "description": "A silver badge taken from the corpse of a lawman in Arizona Territory who interfered with the Hellshire Gang’s bounties.\n• Decreases Terror Radius by 4 meters while aiming down The Redeemer's sights.\n\"“Get your prayers in, you’ll be swinging by noon.” -Caleb Quinn\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_marshalsBadge.png?117548",
+      "icon_local_path": "icons/addons/marshals_badge.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Abzeichen des Marshals",
+          "description": "Ein silbernes Abzeichen vom Leichnam eines Gesetzeshüters aus Arizona, der sich in die Angelegenheiten der Hellshire-Bande eingemischt hatte.\n• Verkleinert den Terrorradius um 4 Meter, während durchs Visier des Erlösers gezielt wird.\n\"„Sprich ein letztes Gebet, denn zu Mittag wirst du hängen.“ – Caleb Quinn\""
+        },
+        "es": {
+          "name": "Placa de sheriff",
+          "description": "Una placa plateada recogida del cuerpo de un agente del orden público que había metido las narices en los asuntos de la banda de Hellshire en Arizona.\n• Reduce el radio de terror en 4 metros mientras apuntas con la mira de Aprehensor.\n\"\"Ve rezando lo que sepas, estarás colgando del cuello antes del mediodía\". (Caleb Quinn)\""
+        },
+        "ja": {
+          "name": "保安官の記章",
+          "description": "アリゾナ準州の保安官の遺体から奪われた銀バッジ。ヘルシャーギャングの賞金稼ぎを妨害して殺された。\n• 贖い主の照準をのぞき込む間の脅威範囲が4メートル減少する\n\"「葬式の手配をしておけ。昼前には首吊りだ。」- カレブ・クイン\""
+        },
+        "pl": {
+          "name": "Odznaka policjanta",
+          "description": "Srebrna odznaka zdjęta w Terytorium Arizony z ciała stróża prawa, który przeszkodził w łowach gangu z Hellshire.\n• Zmniejsza zasięg terroru o 4 metry podczas patrzenia przez celownik Wybawcy.\n\"„Lepiej się pomódl. Zawiśniesz do południa”. – Caleb Quinn\""
+        }
+      }
+    },
+    {
+      "id": 341,
+      "name": "Tin Oil Can",
+      "killer_id": 19,
+      "description": "A can holding a small amount of oil to reduce friction in machinery. Early models of the Speargun were notorious for jamming, and oil had to be readily available.\n• Decreases The Redeemer's miss cooldown by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tinOilCan.png?29e73a",
+      "icon_local_path": "icons/addons/tin_oil_can.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Öldose",
+          "description": "Eine Dose mit einer kleinen Menge Öl darin, mit dem die Reibung bei Maschinen verringert werden kann. Frühe Modelle der Harpune hatten regelmäßig Ladehemmungen, und Öl musste daher ständig griffbereit sein.\n• Verringert die Abklingzeit nach Verfehlen mit dem Erlöser um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Lata de aceite",
+          "description": "Una lata con una pequeña cantidad de aceite para reducir la fricción en la maquinaria. Los primeros modelos de lanzaarpones tenían la mala reputación de atascarse y hacía falta tener aceite a mano.\n• Reduce el tiempo de recarga de ataques de Aprehensor fallidos en 0,5 segundos."
+        },
+        "ja": {
+          "name": "ブリキのオイル缶",
+          "description": "機械の摩擦を減らすためのオイルを少量入れた缶。スピアガンの初期モデルは引っかかることで有名で、オイルは必需品だった。\n• 贖い主を外した時のクールダウンが0.5秒減少する"
+        },
+        "pl": {
+          "name": "Puszka ze smarem",
+          "description": "Puszka z niewielką ilością oleju zmniejszającego tarcie maszyn. Wczesne modele Kuszy stale się zacinały i wszędzie trzeba było nosić ze sobą smar.\n• Skraca czas odnawiania Wybawcy po spudłowaniu o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 342,
+      "name": "Wanted Poster",
+      "killer_id": 19,
+      "description": "The yellowed remains of a wanted poster for Mason Kelly. Kept Caleb focused on the hunt.\n• Increases movement speed by 3% while aiming down The Redeemer's sights.\n\"\"You'll be met with a fierce reckoning, swear it on my mum’s grave.\" -Caleb Quinn\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wantedPoster.png?3120e6",
+      "icon_local_path": "icons/addons/wanted_poster.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Steckbrief",
+          "description": "Die vergilbten Überreste eines Steckbriefs von Mason Kelly. Hat Caleb bei der Jagd auf Trab gehalten.\n• Erhöht die Bewegungsgeschwindigkeit um 3 %, wenn durchs Visier des Erlösers gezielt wird.\n\"„Die Abrechnung wird gewaltig, das schwöre ich beim Grab meiner Mutter.“ – Caleb Quinn\""
+        },
+        "es": {
+          "name": "Cartel de \"Se busca\"",
+          "description": "Los amarillentos restos de un cartel de \"Se busca\" que muestra a Mason Kelly. Mantenía a Caleb centrado en la caza.\n• Aumenta la velocidad de movimiento un 3 % mientras apuntas con la mira de Aprehensor.\n\"\"Vas a desear no haber nacido, te lo juro por la memoria de mi madre\". (Caleb Quinn)\""
+        },
+        "ja": {
+          "name": "指名手配ポスター",
+          "description": "メイソン・ケリーの指名手配ポスターの黄ばんだ残骸。カレブは狩りに集中していた。\n• 贖い主の照準をのぞき込む間の移動速度が3%上昇する\n\"「お前は苛烈な報いを受けることになる。お袋の墓に誓って言うよ。」 - カレブ・クイン\""
+        },
+        "pl": {
+          "name": "Plakat z poszukiwanym",
+          "description": "Pożółkłe resztki plakatu z poszukiwanym Masonem Kellym. Pozwalały Calebowi skupić się na polowaniu.\n• Zwiększa szybkość ruchu o 3% podczas patrzenia przez celownik Wybawcy.\n\"„Surowo się z tobą policzę, przysięgam na grób matki”. – Caleb Quinn\""
+        }
+      }
+    },
+    {
+      "id": 343,
+      "name": "Barbed Wire",
+      "killer_id": 19,
+      "description": "Pliable American made steel lined with sharp barbs. Despite its simplicity, Caleb found it could be wrapped around a spear to increase its viciousness.\n• Increases Survivor mend time by 3.5 seconds.\n\"“There won’t be nothing to fear soon. Till then, fear me.” -Caleb Quinn\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_barbedWire.png?dcb11e",
+      "icon_local_path": "icons/addons/barbed_wire.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Stacheldraht",
+          "description": "Biegsamer amerikanischer Stahl, der mit Stacheln versehen ist. Trotz seiner Einfachheit stellte Caleb fest, dass er um einen Pfeil gewickelt werden kann, um dessen Bösartigkeit zu erhöhen.\n• Erhöht die Genesungsdauer eines Überlebenden um 3,5 Sekunden.\n\"„Bald gibt es nichts mehr zu fürchten. Bis dahin müsst ihr mich fürchten.“ – Caleb Quinn\""
+        },
+        "es": {
+          "name": "Alambre de espino",
+          "description": "Acero maleable estadounidense con púas. Caleb descubrió que, pese a su simplicidad, se podía acoplar a un arpón para aumentar los daños que este infligía.\n• Aumenta el tiempo que tarda en sanarse un superviviente en 3,5 segundos.\n\"\"Muy pronto ya no habrá nada que temer. Hasta entonces, témeme a mí\". (Caleb Quinn)\""
+        },
+        "ja": {
+          "name": "鉄条",
+          "description": "返しが裏打ちされた、柔軟なアメリカ製の鋼鉄。シンプルだが、カレブはこれを銛に巻きつければ殺傷能力が上がることに気がついた。\n• 生存者の回復時間が3.5秒増加する\n\"「さしあたって恐れる対象は何もない。それまでは俺を恐れておけ。」 - カレブ・クイン\""
+        },
+        "pl": {
+          "name": "Drut kolczasty",
+          "description": "Elastyczna amerykańska stal z ostrymi kolcami. Prosta rzecz, jednak Caleb dostrzegł, że włócznia owinięta drutem będzie bardziej śmiercionośna.\n• Wydłuża czas leczenia ocalałego o 3,5 sekundy.\n\"„Zaraz nie będzie się czego bać. Do tego czasu bój się mnie”. – Caleb Quinn\""
+        }
+      }
+    },
+    {
+      "id": 344,
+      "name": "Gold Creek Whiskey",
+      "killer_id": 19,
+      "description": "Warm comfort in a bottle that quelled Caleb’s anger and slowed his step.\n• Decreases Terror Radius by 8 meters while aiming down The Redeemer's sights.\n\"“A smooth taste for the rugged frontier” -Gold Creek Advertisement, 1876\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_goldCreekWhiskey.png?edfb35",
+      "icon_local_path": "icons/addons/gold_creek_whiskey.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Gold-Creek-Whiskey",
+          "description": "Warmer Trost in einer Flasche, der Calebs Wut unterdrückt und seinen Schritt verlangsamt hat.\n• Verkleinert den Terrorradius, während durchs Visier des Erlösers gezielt wird, um 8 Meter.\n\"„Ein lieblicher Geschmack für die raue Front.“ – Werbeanzeige für „Gold Creek“, 1876\""
+        },
+        "es": {
+          "name": "Whisky Gold Creek",
+          "description": "Cálido solaz en una botella que apaciguaba la furia de Caleb y ralentizaba su paso.\n• Reduce el radio de terror en 8 metros mientras apuntas con la mira de Aprehensor.\n\"\"Un sabor suave para una dura frontera\". (Anuncio de Gold Creek, 1876)\""
+        },
+        "ja": {
+          "name": "ゴールドクリークのウィスキー",
+          "description": "温かい安らぎを与える瓶入りの飲み物。カレブの怒りは鎮まり、足取りはゆっくりとなった。\n• 贖い主の照準をのぞき込む時の脅威範囲が8メートル縮小する\n\"「厳しい辺境にも、やさしい口当たり」- ゴールドクリークの広告（1876年）\""
+        },
+        "pl": {
+          "description": "Ciepła zawartość butelki, która uspokoiła gniew Caleba i spowolniła jego kroki.\n• Zmniejsza zasięg terroru o 8 metrów podczas patrzenia przez celownik Wybawcy.\n\"„Spokojny smak na Dziki Zachód” – ogłoszenie z Gold Creek, 1876 r.\""
+        }
+      }
+    },
+    {
+      "id": 345,
+      "name": "Prison Chain",
+      "killer_id": 19,
+      "description": "A thick, heavy chain that once held a steel ball and latched to Caleb’s ankle. It’s been repurposed to hook onto a spear.\n• Increases time required for a Survivor to break free from a spear by 10%.\n\"“Inmates working beyond the prison yard must be affixed with a steel ball of no less than 18 pounds.” -Hellshire Penitentiary Guard Book\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_prisonChain.png?16f5c5",
+      "icon_local_path": "icons/addons/prison_chain.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Gefängniskette",
+          "description": "Eine dicke, schwere Kette, mit der einst eine Stahlkugel an Calebs Knöchel befestigt war. Sie wurde umfunktioniert, um nun einen Pfeil zu befestigen.\n• Erhöht die Zeit, die ein Überlebender braucht, um sich von einem Pfeil loszureißen, um 10 %.\n\"„Insassen, die außerhalb des Gefängnishofs arbeiten, müssen mit einer Stahlkugel fixiert werden, die nicht weniger als 18 Pfund wiegen darf.“ – Wachhandbuch der Strafanstalt Hellshire\""
+        },
+        "es": {
+          "name": "Cadena de presidio",
+          "description": "Una cadena gruesa y pesada que en su momento sujeto una bola de acero al tobillo de Caleb. Está adaptada para ir enganchada a un arpón.\n• Aumenta el tiempo que tarda un superviviente en liberarse de un arpón un 10 %.\n\"\"Los reclusos que trabajen fuera del patio de la prisión deben llevar una bola de acero de no menos de 8 kilos\". (Libro de guardias de la penitenciaría de Hellshire)\""
+        },
+        "ja": {
+          "name": "刑務所の足かせ",
+          "description": "鉄の球が付いた太くて重い鎖。かつてカレブの足首に掛けられていたが、今では銛につなぐために使われている。\n• 生存者が銛から逃れるために必要な時間が10%増加する\n\"「刑務所の構外で作業する受刑者には18ポンドもの鉄球を装着することとする。」 - ヘルシャー刑務所看守の手引\""
+        },
+        "pl": {
+          "name": "Łańcuch więzienny",
+          "description": "Gruby, ciężki łańcuch, który utrzymywał niegdyś stalową kulę przypiętą do kostki Caleba. Został potem przyczepiony do włóczni.\n• Wydłuża czas potrzebny ocalałemu do uwolnienia się od włóczni o 10%.\n\"„Osadzeni pracujący poza spacerniakiem muszą mieć przypiętą do kostki stalową kulę o wadze co najmniej 8 kilogramów”. – Instrukcje dla strażników więzienia Hellshire\""
+        }
+      }
+    },
+    {
+      "id": 346,
+      "name": "Hellshire Iron",
+      "killer_id": 19,
+      "description": "The Hellshire Gang’s branding iron. Despite folklore, it never made its mark on new initiates, instead having been used to brand particularly quarrelsome bounties.\n• When a Survivor is speared, gain Undetectable. The effect persists for 10 seconds after the Survivor is no longer speared.\nUndetectable hides the Killer's aura, Terror Radius and Red Stain.\n\"“Hellshire Gang: Justice Seekers or Outlaws?” -Glenvale Gazette headline\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_hellshireIron.png?50d1c1",
+      "icon_local_path": "icons/addons/hellshire_iron.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Hellshire-Brandeisen",
+          "description": "Das Brandeisen der Hellshire-Bande. Entgegen der Geschichten wurden damit niemals Neulinge in der Bande gebrandmarkt, sondern ausschließlich besonders streitsüchtige Opfer.\n• Wenn ein Überlebender mit einem Pfeil erwischt wird, wird der Effekt Unentdeckbar aktiviert. Der Effekt hält für 10 Sekunden an, nachdem der Überlebende nicht mehr aufgespießt ist.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„Hellshire-Bande: Kämpfer für Gerechtigkeit oder Gesetzlose?“ – Schlagzeile der Glenvale Gazette\""
+        },
+        "es": {
+          "name": "Hierro de Hellshire",
+          "description": "El hierro de marcar de la banda de Hellshire. A pesar de las historias que contaba la gente, no se utilizaba sobre los nuevos iniciados, sino que se empleaba para marcar a objetivos especialmente beligerantes.\n• Cuando arponeas a un superviviente, obtienes Indetectable. El efecto se mantiene durante 10 segundos después de que ya no se arponee al superviviente.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino.\n\"\"La banda de Hellshire: ¿justicieros o forajidos?\". (Titular de la Glenvale Gazette)\""
+        },
+        "ja": {
+          "name": "ヘルシャーの鉄",
+          "description": "ヘルシャーギャングの焼き印。伝説とは裏腹に実際には新人に使われたことはなく、代わりに血の気の多い賞金首に押すために使われていた。\n• 生存者に銛が刺さると探知不可になる。効果は生存者の銛が抜けた後10秒間持続する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「ヘルシャーギャングは正義の追求者か、無法者か？」 - グレンベール新聞トップ記事\""
+        },
+        "pl": {
+          "name": "Żelazo z Hellshire",
+          "description": "Żelazo do oznaczania gangu z Hellshire. Wbrew pogłoskom grupa nigdy nie wypalała znaku rekrutom, ale używała żelaza do znakowania wyjątkowo problematycznych zdobyczy.\n• Gdy ocalały zostaje przybity włócznią, otrzymujesz efekt Niewykrywalny. Trwa on 10 sekund także po uwolnieniu się ocalałego.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Gang z Hellshire: sprawiedliwi czy przestępcy?” – nagłówek w „Glenvale Gazette”\""
+        }
+      }
+    },
+    {
+      "id": 347,
+      "name": "Iridescent Coin",
+      "killer_id": 19,
+      "description": "A glass-like coin molded from The Fog itself. Payment to the bounty hunter for services rendered.\n• Survivors speared from at least 12 meters away are inflicted with Exposed for as long as they remain speared.\nExposed survivors will be downed by basic attacks even if uninjured.\n\"“Deals made in desperation are paid for in madness.”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentCoin.png?7612ed",
+      "icon_local_path": "icons/addons/iridescent_coin.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernde Münze",
+          "description": "Eine glasähnliche Münze, die aus dem Nebel selbst geformt wurde. Sie ist die Bezahlung für die Dienste des Kopfgeldjägers.\n• Überlebende, die aus mindestens 12 Metern Entfernung mit einem Pfeil erwischt werden, erleiden den Statuseffekt Gefährdet, solange der Pfeil in ihnen steckt.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\"„Handel, die man in Verzweiflung abschließt, werden mit Wahnsinn bezahlt.“\""
+        },
+        "es": {
+          "name": "Moneda iridiscente",
+          "description": "Moneda de aspecto cristalino moldeada por la mismísima niebla. Pago para el cazarrecompensas por los servicios prestados.\n• Los supervivientes arponeados desde una distancia de al menos 12 metros sufren el efecto de estado Vulnerabilidad hasta que se libren del arpón.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\"\"Los acuerdos firmados con desesperación se pagan en locura\".\""
+        },
+        "ja": {
+          "name": "玉虫色のコイン",
+          "description": "霧そのものから作られたガラス状の硬貨。賞金稼ぎが提供したサービスに対する支払い金。\n• 12メートル以上離れた位置で銛に刺さった生存者は、銛が抜けるまで無防備状態に苦しむ\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\"「死物狂いで結んだ取引の対価は、狂気のなかで支払われるのだ。」\""
+        },
+        "pl": {
+          "name": "Opalowa moneta",
+          "description": "Moneta przypominająca szkło, wykonana z samej Mgły. Zapłata dla łowcy nagród za jego usługi.\n• Ocalali trafieni włócznią z odległości co najmniej 12 metrów otrzymują efekt Narażony na czas przebicia.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\"„Desperackie transakcje są opłacane szaleństwem”.\""
+        }
+      }
+    },
+    {
+      "id": 849,
+      "name": "Bayshore's Gold Tooth",
+      "killer_id": 19,
+      "description": "A golden tooth torn from Henry Bayshore as he screamed for mercy, hours before he was finished off.\n• Increases The Redeemer's reeling speed by 5%.\n\"“Know your place, boy. Know your damn place.” -Henry Bayshore\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bayshoresGoldTooth.png?e7d76b",
+      "icon_local_path": "icons/addons/bayshores_gold_tooth.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Bayshores Goldzahn",
+          "description": "Ein goldener Zahn, der Henry Bayshore gezogen wurde, als er um Gnade schrie – Stunden bevor er kaltgemacht wurde.\n• Erhöht die Rückziehgeschwindigkeit des Erlösers um 5 %.\n\"„Du solltest wissen, wo du hingehörst, Junge. Verdammt noch mal.“ – Henry Bayshore\""
+        },
+        "en": {
+          "name": "Bayshore’s Gold Tooth"
+        },
+        "es": {
+          "name": "Diente de oro de Bayshore",
+          "description": "Un diente de oro arrancado a Henry Bayshore mientras pedía clemencia a gritos, horas antes de que lo remataran.\n• Aumenta la velocidad de recogida de Aprehensor un 5 %.\n\"\"Más te vale saber cuál es tu sitio, chico. Tu puñetero sitio\". (Henry Bayshore)\""
+        },
+        "ja": {
+          "name": "ベイショアの金歯",
+          "description": "ヘンリー・ベイショアから引き抜かれた金歯。命乞いの叫び声もむなしく、数時間後にはとどめを刺された。\n• 贖い主の巻き取り速度が5%上昇する\n\"「立場をわきまえろ。身の程を知れってことだよ。」- ヘンリー・ベイショア\""
+        },
+        "pl": {
+          "name": "Złoty ząb Bayshore'a",
+          "description": "Złoty ząb wyrwany Henry'emu Bayshore'owi, który wrzeszczał i błagał o litość przez kilka godzin, zanim został zabity.\n• Zwiększa szybkość naciągania Wybawcy o 5%.\n\"„Znaj swoje miejsce, chłopcze. Znaj swoje cholerne miejsce”. – Henry Bayshore\""
+        }
+      }
+    },
+    {
+      "id": 850,
+      "name": "Honey Locust Thorn",
+      "killer_id": 19,
+      "description": "Angered with a bounty who fled twice before, Caleb twisted thorn branches onto a spear and let it loose.\n• Breaking free from the spear inflicts Mangled for 70 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_honeyLocustThorn.png?1731a4",
+      "icon_local_path": "icons/addons/honey_locust_thorn.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Dornenpfeil",
+          "description": "Voller Wut über ein Opfer, das zuvor schon zweimal geflohen war, drehte Caleb Dornenzweige zu einem Pfeil zusammen, um ihn ins Ziel zu jagen.\n• Das Losreißen von einem Pfeil verursacht Zerfleischt für 70 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "en": {
+          "name": "Honey Locust Thorns"
+        },
+        "es": {
+          "name": "Espinas de acacia",
+          "description": "Encolerizado por un botín que ya se le había escapado dos veces, Caleb retorció ramas espinosas alrededor de un arpón y lo soltó.\n• Los supervivientes que se liberan del arpón sufren Laceración durante 70 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "ハニーローカストの棘",
+          "description": "賞金首に2回も逃げられたことに怒り、カレブは棘のある枝を銛に巻きつけて放った。\n• スピアガンから逃れると、70秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Kolczaste krzewy",
+          "description": "Rozwścieczony przez ofiarę, która uciekła mu dwukrotnie, Caleb nawinął kolczaste gałęzie na włócznię i wypuścił ją.\n• Uwolnienie się od włóczni nakłada efekt Zmasakrowany na 70 s.\nZmasakrowanie wydłuża czas potrzebny do wyleczenia o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 851,
+      "name": "Warden's Keys",
+      "killer_id": 19,
+      "description": "The dull jangle of the keys evokes a furious memory within Caleb.\n• Decreases The Redeemer's reload time by 0.35 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wardensKeys.png?7f1050",
+      "icon_local_path": "icons/addons/wardens_keys.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Direktorenschlüssel",
+          "description": "Das dumpfe Klimpern der Schlüssel lässt in Caleb heftige Erinnerungen hochkochen.\n• Verringert die Nachladedauer des Erlösers um 0,35 Sekunden."
+        },
+        "en": {
+          "name": "Warden’s Keys"
+        },
+        "es": {
+          "name": "Llaves del alcaide",
+          "description": "El leve tintineo de las llaves evoca furibundos recuerdos en Caleb.\n• Reduce el tiempo de recarga de Aprehensor en 0,35 segundos."
+        },
+        "ja": {
+          "name": "看守の鍵",
+          "description": "耳障りな鈍い鍵の金属音がカレブに激高の記憶を呼び起こさせる。\n• 贖い主のリロード時間が0.35秒減少する"
+        },
+        "pl": {
+          "name": "Klucze strażnika",
+          "description": "Stłumione dzwonienie kluczy obudziło w Calebie wściekłe wspomnienie.\n• Skraca czas przeładowania Wybawcy o 0,35 sekundy."
+        }
+      }
+    },
+    {
+      "id": 852,
+      "name": "Bayshore's Cigar",
+      "killer_id": 19,
+      "description": "A quality cigar, plucked from the jacket of Caleb’s boss while he wailed over the spear lodged in his abdomen.\n• Decreases the stun duration when Survivors break free by 0.75 second.\n\"“Do not point that thing at me, you slack-jawed imbecile.” -Henry Bayshore\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bayshoresCigar.png?116fb5",
+      "icon_local_path": "icons/addons/bayshores_cigar.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Bayshores Zigarre",
+          "description": "Eine Qualitätszigarre, die aus der Jackentasche von Calebs Boss gezogen wurde, während er über den Pfeil jammerte, der in seinem Bauch steckte.\n• Verkürzt die Betäubungsdauer, wenn Überlebende sich losreißen, um 0,75 Sekunden.\n\"„Zeig mit dem Ding nicht auf mich, du großmäuliger Schwachkopf.“ – Henry Bayshore\""
+        },
+        "en": {
+          "name": "Bayshore’s Cigar"
+        },
+        "es": {
+          "name": "Puro de Bayshore",
+          "description": "Un puro de calidad, sustraído de la chaqueta del jefe de Caleb mientras gimoteaba debido al arpón que tenía alojado en el abdomen.\n• Reduce la duración del aturdimiento cuando un superviviente se libera del arpón en 0,75 segundos.\n\"\"No me apuntes con esa cosa, pedazo de idiota\". (Henry Bayshore)\""
+        },
+        "ja": {
+          "name": "ベイショアの葉巻",
+          "description": "カレブの上司が持っていた高級葉巻。腹に犬釘が刺さって嘆いているなか上着から引き抜いた。\n• 生存者が抜け出したときの怯む時間が0.75秒減少する\n\"「このたわけめ、そいつをこちらに向けたらただじゃおかんぞ。」- ヘンリー・ベイショア\""
+        },
+        "pl": {
+          "name": "Cygaro Bayshore'a",
+          "description": "Wysokiej jakości cygaro wyrwane z kurtki szefa Caleba, gdy ten jęczał nad włócznią wystającą z jego brzucha.\n• Skraca czas ogłuszenia o 0,75 sekundy, gdy ocalały się uwolni.\n\"„Nie celuj tym we mnie, tępaku”. – Henry Bayshore\""
+        }
+      }
+    }
+  ]
+}

@@ -11,6 +11,7 @@ from app.core.limiter import get_client_ip
 from app.core.security import get_current_user
 from app.models.smash_or_pass import Roster
 from app.services.others.smash_or_pass_service import SmashOrPassService
+from app.utils.lang import extract_lang as _extract_lang
 
 logger = logging.getLogger(__name__)
 
@@ -84,6 +85,7 @@ def get_roster_feed(slug: str):
     role = request.args.get("role")
     gender = request.args.get("gender")
     limit = request.args.get("limit", default=250, type=int)
+    lang = _extract_lang()
 
     current_user = get_current_user()
     if current_user:
@@ -97,6 +99,7 @@ def get_roster_feed(slug: str):
             role=role,
             gender=gender,
             limit=limit,
+            lang=lang,
         )
         if feed_data is None:
             return jsonify({"error": f"Roster '{slug}' not found"}), 404
@@ -121,6 +124,8 @@ def cast_vote():
         or request.headers.get("X-Session-ID")
         or request.cookies.get("session_id")
     )
+
+    lang = _extract_lang()
 
     current_user = get_current_user()
     user_id = current_user.id if current_user else None
@@ -170,6 +175,7 @@ def cast_vote():
             user_id=user_id,
             roster_slug=roster_slug,
             edition=edition,
+            lang=lang,
         )
         return jsonify({"data": result, "status": "success"}), 200
     except ValueError as val_err:
@@ -186,6 +192,7 @@ def get_roster_leaderboard(slug: str):
     role = request.args.get("role")
     gender = request.args.get("gender")
     limit = request.args.get("limit", default=100, type=int)
+    lang = _extract_lang()
 
     try:
         # Column-only select: this is purely an existence check, and selecting
@@ -201,6 +208,7 @@ def get_roster_leaderboard(slug: str):
             gender=gender,
             sort_by=sort_by,
             limit=limit,
+            lang=lang,
         )
         return (
             jsonify(
@@ -332,16 +340,6 @@ def reset_user_votes():
         return jsonify({"error": str(e)}), 500
 
 
-@smash_or_pass_bp.route("/translations", methods=["GET"])
-def get_translations():
-    """Retrieve dynamic translations dictionary for a given locale."""
-    locale = request.args.get("locale", "en")
-    try:
-        translations = smash_service.get_translations(locale=locale)
-        return jsonify({"data": translations, "locale": locale}), 200
-    except Exception as e:
-        logger.error(f"Error fetching translations for locale '{locale}': {e}")
-        return jsonify({"error": str(e)}), 500
 
 
 @smash_or_pass_bp.route("/editions", methods=["GET"])
@@ -362,10 +360,11 @@ def get_characters():
     role = request.args.get("role")
     gender = request.args.get("gender")
     search = request.args.get("q") or request.args.get("search")
+    lang = _extract_lang()
 
     try:
         data = smash_service.get_characters_with_stats(
-            edition=edition, role=role, gender=gender, search=search
+            edition=edition, role=role, gender=gender, search=search, lang=lang
         )
         return jsonify({"count": len(data), "data": data, "edition": edition}), 200
     except Exception as e:
@@ -383,6 +382,7 @@ def get_user_votes():
         or request.headers.get("X-Session-ID")
         or request.cookies.get("session_id")
     )
+    lang = _extract_lang()
 
     current_user = get_current_user()
     if current_user:
@@ -400,6 +400,7 @@ def get_user_votes():
             user_id=target_user_id,
             session_id=session_id,
             edition=edition,
+            lang=lang,
         )
         return jsonify({"data": votes, "count": len(votes), "edition": edition}), 200
     except Exception as e:

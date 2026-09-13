@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 629,
+      "name": "Tattered Headband",
+      "killer_id": 36,
+      "description": "An enchanted accessory once owned by a powerful summoner. It still carries a whisper of its former magic.\n• Increases the distance of Flight of the Damned’s spectral entities by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_TatteredHeadband.png?aee29d",
+      "icon_local_path": "icons/addons/tattered_headband.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerfleddertes Stirnband",
+          "description": "Ein verzaubertes Accessoire, das einst einem mächtigen Beschwörer gehörte. Es trägt noch immer einen Funken seiner früheren Magie in sich.\n• Erhöht die Distanz der Geisterwesen von „Flug der Verdammten“ um 4 Meter."
+        },
+        "es": {
+          "name": "Cinta harapienta",
+          "description": "Un accesorio encantado que antaño perteneció a un poderoso invocador. Sigue llevando un susurro de su antigua magia.\n• Aumenta la distancia de los espectros de Vuelo de los condenados en 4 metros."
+        },
+        "ja": {
+          "name": "タタード・ヘッドバンド",
+          "description": "魔力を帯びた装身具。かつて強力な召喚師が所有したもので、その魔法の余韻が今も残っている。\n• 呪文「フライト・オヴ・ザ・ダムド」が召喚した幽霊の飛行距離が4メートル増加する"
+        },
+        "pl": {
+          "name": "Zniszczona opaska",
+          "description": "Zaklęte akcesorium należące niegdyś do potężnego przywoływacza. Wciąż zawiera w sobie szept dawnej magii.\n• Zwiększa zasięg lotu istot z Przelotu Potępionych o 4 m."
+        }
+      }
+    },
+    {
+      "id": 630,
+      "name": "Raven's Feather",
+      "killer_id": 36,
+      "description": "A material component most typically used for the Fly spell.\n• Increases duration of the Fly spell by 0.5 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RavensFeather.png?b7eda1",
+      "icon_local_path": "icons/addons/ravens_feather.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Rabenfeder",
+          "description": "Eine wichtige Komponente, die meistens für den Zauber „Fliegen“ verwendet wird.\n• Verlängert die Dauer des Zaubers „Fliegen“ um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Pluma de cuervo",
+          "description": "Un componente material que suele emplearse para el hechizo Vuelo.\n• Aumenta la duración del hechizo Vuelo en 0,5 segundos."
+        },
+        "ja": {
+          "name": "レイヴンズ・フェザー",
+          "description": "「フライ」の呪文によく使われる材料。\n• 呪文「フライ」の持続時間が0.5秒延長する"
+        },
+        "pl": {
+          "name": "Krucze pióro",
+          "description": "Składnik materialny używany najczęściej do zaklęcia Lot.\n• Wydłuża czas trwania Lotu o 0,5 s."
+        }
+      }
+    },
+    {
+      "id": 631,
+      "name": "Trickster's Glove",
+      "killer_id": 36,
+      "description": "A glove once belonging to an arcane trickster whose mastery of Mage Hand clings to its fibers.\n• Increases the time Mage Hand holds a pallet up by 0.3 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_TrickstersGlove.png?c8bc02",
+      "icon_local_path": "icons/addons/tricksters_glove.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Handschuh des Schwindlers",
+          "description": "Ein Handschuh, der einst einem arkanen Schwindler gehörte, dessen meisterhafte Beherrschung des Zaubers „Hand des Magiers“ noch immer an den Stofffasern haftet.\n• Verlängert die Zeit, während der eine Palette mit „Hand des Magiers“ gehalten wird, um 0.3 Sekunden."
+        },
+        "es": {
+          "name": "Guante de embaucador",
+          "description": "Un guante que perteneció a un embaucador arcano. Su dominio de Mano de mago quedó unido al tejido de este artículo.\n• Aumenta el tiempo que Mano de mago sujeta un palé en 0.3 segundos."
+        },
+        "ja": {
+          "name": "トリックスターズ・グローブ",
+          "description": "かつてアーケイン・トリックスターが使っていた手袋。メイジ・ハンドを操った力がその繊維にこびり付いている。\n• 呪文「メイジ・ハンド」がパレットを抑えて倒せないようにする時間が0.3秒延長する"
+        },
+        "pl": {
+          "name": "Rękawica oszusta",
+          "description": "Rękawica należąca niegdyś do tajemniczego oszusta, którego mistrzostwo w posługiwaniu się Magiczną Dłonią przeniknęło do włókien.\n• Wydłuża czas przytrzymywania palety Magiczną Dłonią o 0,3 s."
+        }
+      }
+    },
+    {
+      "id": 632,
+      "name": "Crystal Ball",
+      "killer_id": 36,
+      "description": "Used by spellcasters for centuries to scry upon friend and foe alike.\n• When a Survivor is revealed by Dispelling Sphere, the Killer Instinct effect lasts for an additional 1 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CrystalBall.png?7f1efa",
+      "icon_local_path": "icons/addons/crystal_ball.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kristallkugel",
+          "description": "Bei Zauberern seit Jahrhunderten beliebt, um Freunde und Feinde heimlich zu beobachten.\n• Wenn ein Überlebender durch „Sphäre der Verbannung“ enthüllt wird, verlängert sich der Effekt des Killerinstinkts um zusätzliche 1 Sekunden."
+        },
+        "es": {
+          "name": "Bola de cristal",
+          "description": "Empleada por lanzadores de hechizos durante siglos para predecir el futuro de los amigos, y también de los enemigos.\n• Cuando se revela a un superviviente con Esfera de disipación, el efecto Instinto asesino dura 1 segundos adicionales."
+        },
+        "ja": {
+          "name": "クリスタル・ボール",
+          "description": "魔法使いが何世紀にも渡って味方や敵に対して占いをするのに使ってきたもの。\n• 呪文「ディスペリング・スフィアー」が生存者の位置を暴いたとき、殺人鬼の本能の効果が追加で1秒持続する"
+        },
+        "pl": {
+          "name": "Kryształowa kula",
+          "description": "Przedmiot od wieków używany przez czarowników do szpiegowania zarówno przyjaciół, jak i wrogów.\n• Gdy ocalały zostanie ujawniony przez Kulę Rozproszenia, efekt Instynktu Zabójcy trwa przez dodatkową 1 s."
+        }
+      }
+    },
+    {
+      "id": 633,
+      "name": "Lantern of Revealing",
+      "killer_id": 36,
+      "description": "Even those who evade your attacks cannot evade your gaze.\n• Reveals the aura of Survivors narrowly missed by Flight of the Damned for 3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_LanternOfRevealing.png?ca6cb7",
+      "icon_local_path": "icons/addons/lantern_of_revealing.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Laterne der Enthüllung",
+          "description": "Selbst diejenigen, die deinen Angriffen ausweichen, können sich deinem Blick nicht entziehen.\n• Enthüllt 3 Sekunden lang die Auren von Überlebenden, die von „Flug der Verdammten“ knapp verfehlt wurden."
+        },
+        "es": {
+          "name": "Linterna de revelación",
+          "description": "Aunque esquiven tus ataques, no podrán huir de tu mirada.\n• Revela el aura de los supervivientes que han escapado por muy poco de Vuelo de los condenados durante 3 segundos."
+        },
+        "ja": {
+          "name": "ランタン・オヴ・リヴィーリング",
+          "description": "あなたの攻撃を回避できる者でも、あなたの視線を避けることはできない。\n• 呪文「フライト・オヴ・ザ・ダムド」がニアミスした生存者のオーラが3秒間視える"
+        },
+        "pl": {
+          "name": "Latarnia ujawnienia",
+          "description": "Nawet ci, co unikają twoich ataków, nie mogą uniknąć twego spojrzenia.\n• Ujawnia aurę ocalałych, którzy niemal zostali trafieni przez Przelot Potępionych, na 3 s."
+        }
+      }
+    },
+    {
+      "id": 634,
+      "name": "Potion of Speed",
+      "killer_id": 36,
+      "description": "A curious concoction that downgrades the rules of physics to mere suggestions.\n• Decreases the period where you cannot attack after casting Fly by 0.1 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_PotionOfSpeed.png?ee2013",
+      "icon_local_path": "icons/addons/potion_of_speed.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Trank der Hast",
+          "description": "Ein sonderbares Gebräu, das die Regeln der Physik zu bloßen Empfehlungen herabstuft.\n• Verkürzt die Dauer, während der du nach dem Wirken von „Fliegen“ nicht angreifen kannst, um 0.1 Sekunden."
+        },
+        "es": {
+          "name": "Poción de velocidad",
+          "description": "Un extraño brebaje que degrada las leyes de la física a meras sugerencias.\n• Reduce el tiempo por el que no puedes atacar tras lanzar Vuelo en 0.1 segundos."
+        },
+        "ja": {
+          "name": "スピード・ポーション",
+          "description": "奇妙な調合物。物理の法則に逆らうのに使える。\n• 呪文「フライ」発動後、攻撃のできないクールダウン時間が0.1秒短縮する"
+        },
+        "pl": {
+          "name": "Mikstura szybkości",
+          "description": "Osobliwa mikstura, która sprawia, że zasady fizyki stają się tylko sugestiami.\n• Skraca okres, w którym nie możesz atakować po użyciu Lotu, o 0,1 s."
+        }
+      }
+    },
+    {
+      "id": 635,
+      "name": "Ring of Telekinesis",
+      "killer_id": 36,
+      "description": "Its arcane energy crackles to life when its user manipulates objects from afar.\n• Whenever you cast Mage Hand on an upright Pallet, for 10 seconds, you basic-vault Windows 10% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RingOfTelekinesis.png?b169cc",
+      "icon_local_path": "icons/addons/ring_of_telekinesis.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ring der Telekinese",
+          "description": "Seine arkane Energie erwacht knisternd zum Leben, wenn der Träger Objekte aus der Ferne beeinflusst.\n• Immer wenn du „Hand des Magiers“ auf eine stehende Palette wirkst, sind deine Grundfähigkeit-Sprünge durch Fenster 10 Sek. lang um 10 % schneller."
+        },
+        "es": {
+          "name": "Anillo de telequinesis",
+          "description": "Su energía arcana cobra vida cuando su usuario manipula objetos a distancia.\n• Cada vez que lanzas Mano de mago en un palé en vertical, durante 10 segundos, tus saltos básicos por ventanas son un 10 % más rápidos."
+        },
+        "ja": {
+          "name": "テレキネシス・リング",
+          "description": "これを身につけた者が遠くから物体に念力をかけると、神秘的なエネルギーが伝達される。\n• 立っているパレットに呪文「メイジ・ハンド」をかけると、10秒間、窓の通常乗り越えを行う速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Krąg telekinezy",
+          "description": "Tajemna energia ożywa, gdy użytkownik manipuluje obiektami z daleka.\n• Za każdym razem, gdy korzystasz z Magicznej Dłoni na powalonej palecie, przez 10 s wykonujesz podstawowe przeskoki przez okna 10% szybciej."
+        }
+      }
+    },
+    {
+      "id": 636,
+      "name": "Glass Eye",
+      "killer_id": 36,
+      "description": "A material component used to cast spells of detection.\n• Increases the size of Dispelling Sphere by 2 meters and its movement speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_GlassEye.png?ca60ab",
+      "icon_local_path": "icons/addons/glass_eye.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glasauge",
+          "description": "Eine wichtige Komponente beim Wirken von Entdeckungszaubern.\n• Steigert die Größe der Sphäre der Verbannung um 2 Meter und ihre Bewegungsgeschwindigkeit um 10 %."
+        },
+        "es": {
+          "name": "Ojo de cristal",
+          "description": "Un componente de materiales que sirve para lanzar hechizos de detección.\n• Aumenta el tamaño de la Esfera de disipación en 2 metros y su velocidad de movimiento un 10 %."
+        },
+        "ja": {
+          "name": "グラス・アイ",
+          "description": "探知の呪文を唱える際に使用される材料。\n• 呪文「ディスペリング・スフィアー」の領域が2メートル大きくなり、その移動速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Szklane oko",
+          "description": "Składnik materialny używany do rzucania zaklęć wykrywających.\n• Zwiększa rozmiar Kuli Rozproszenia o 2 m i jej szybkość ruchu o 10%."
+        }
+      }
+    },
+    {
+      "id": 637,
+      "name": "Ring of Spell Storing",
+      "killer_id": 36,
+      "description": "A magical ring that rewards those who are well-prepared.\n• Decreases the cooldown of all spells by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RingOfSpellStoring.png?a637fb",
+      "icon_local_path": "icons/addons/ring_of_spell_storing.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Ring der Zauberverwahrung",
+          "description": "Ein magischer Ring, der all jene belohnt, die sich gut vorbereitet haben.\n• Verkürzt die Abklingzeit aller Zauber um 1 Sekunde."
+        },
+        "es": {
+          "name": "Anillo de almacenamiento de hechizos",
+          "description": "Un anillo mágico que recompensa a quienes van bien preparados.\n• Reduce el tiempo de recarga de todos los hechizos en 1 segundo."
+        },
+        "ja": {
+          "name": "スペル・ストアリング・リング",
+          "description": "用意周到な者に恩恵を与える魔法の指輪。\n• 全ての呪文のクールダウン時間が1秒短縮する"
+        },
+        "pl": {
+          "name": "Pierścień przechowania czarów",
+          "description": "Magiczny pierścień nagradzający tych, którzy są dobrze przygotowani.\n• Skraca czas odnowienia wszystkich czarów o 1 s."
+        }
+      }
+    },
+    {
+      "id": 638,
+      "name": "Ornate Horn",
+      "killer_id": 36,
+      "description": "Once used to rally troops to battle, its very presence brings great armies to bear.\n• Increases the number of entities created by Flight of the Damned by 1.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_OrnateHorn.png?53fcc6",
+      "icon_local_path": "icons/addons/ornate_horn.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Verziertes Horn",
+          "description": "Wurde einst zum Sammeln von Truppen auf dem Schlachtfeld verwendet. Seine bloße Präsenz erschafft mächtige Armeen.\n• Erhöht die Anzahl der Geisterwesen, die durch „Flug der Verdammten“ erzeugt werden, um 1."
+        },
+        "es": {
+          "name": "Cuerno ornamentado",
+          "description": "En el pasado, se usó para arengar a las tropas en batalla, y su mera presencia logra atraer a grandes ejércitos.\n• Aumenta el número de espectros creados por Vuelo de los condenados en 1."
+        },
+        "ja": {
+          "name": "オーネイト・ホーン",
+          "description": "かつて戦いに軍隊を結集するのに使われたが、その存在自体に軍力を上げる力がある。\n• 呪文「フライト・オヴ・ザ・ダムド」が召喚する幽霊の数が1つ増加する"
+        },
+        "pl": {
+          "name": "Ozdobny róg",
+          "description": "Przedmiot używany niegdyś do zagrzewania oddziałów do bitwy – sama jego obecność sprowadza wielkie armie.\n• Zwiększa liczbę istot stworzonych przez Przelot Potępionych o 1."
+        }
+      }
+    },
+    {
+      "id": 639,
+      "name": "Cloak of Elvenkind",
+      "killer_id": 36,
+      "description": "Its colors are constantly shifting, making you more difficult to detect from afar.\n• Reduces Terror Radius by 22 meters while the Fly spell is active.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CloakOfElvenkind.png?589e0d",
+      "icon_local_path": "icons/addons/cloak_of_elvenkind.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Umhang des Elfenvolks",
+          "description": "Dank der ständig wechselnden Farben bist du aus der Ferne nur schwer zu erkennen.\n• Verkleinert den Terrorradius um 22 Meter, während der Zauber „Fliegen“ aktiv ist."
+        },
+        "es": {
+          "name": "Manto élfico",
+          "description": "Sus colores cambian constantemente, lo que dificulta que se te vea a distancia.\n• Reduce el radio de terror en 22 metros mientras el hechizo Vuelo está activo."
+        },
+        "ja": {
+          "name": "エルブンカインド・クローク",
+          "description": "その色は常に変化しつづけるため、身に着けた者を遠くから見つけるのが難しくなる。\n• 呪文「フライ」の発動中、脅威範囲が22メートル縮小する"
+        },
+        "pl": {
+          "name": "Elficki płaszcz",
+          "description": "Stale zmieniające się barwy utrudniają dostrzeżenie cię z daleka.\n• Zmniejsza zasięg terroru o 22 m w trakcie działania zaklęcia Lot."
+        }
+      }
+    },
+    {
+      "id": 640,
+      "name": "Boots of Speed",
+      "killer_id": 36,
+      "description": "A simple click of their heels grants their wearer incredible pace.\n• Casting Mage Hand grants you 3% Haste for 2 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BootsOfSpeed.png?5bda97",
+      "icon_local_path": "icons/addons/boots_of_speed.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stiefel der Hast",
+          "description": "Schlägt der Träger die Hacken zusammen, kann er sich mit unglaublicher Geschwindigkeit fortbewegen.\n• Wenn du „Hand des Magiers“ wirkst, erhältst du 2 Sekunden lang 3 % Eile.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Botas de velocidad",
+          "description": "Un simple chasquido de sus talones otorga una gran velocidad a quien se los pone.\n• Lanzar Mano de mago te otorga un 3 % de Celeridad durante 2 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "スピード・ブーツ",
+          "description": "これを履いてかかとを鳴らすだけで、信じられないほどのスピードが得られる。\n• 呪文「メイジ・ハンド」を唱えると、3%の迅速を2秒間得る\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Buty szybkości",
+          "description": "Proste stuknięcie obcasami zapewnia ich użytkownikowi niesamowitą szybkość.\n• Rzucenie Magicznej Dłoni zapewnia ci 3% Pędu na 2 s.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 641,
+      "name": "Staff of Withering",
+      "killer_id": 36,
+      "description": "Its necrotic power brings its targets closer to death.\n• Dispelling Sphere causes the Exhausted status effect for 30 seconds to Survivors who enter its radius.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_StaffOfWithering.png?cc3d7c",
+      "icon_local_path": "icons/addons/staff_of_withering.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stab der Verkümmerung",
+          "description": "Seine nekrotische Macht bringt dein Ziel dem Tod näher.\n• Überlebende, die den Wirkungsbereich von „Sphäre der Verbannung“ betreten, leiden 30 Sekunden lang unter dem Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Bastón de decadencia",
+          "description": "Su poder necrótico acerca más a la muerte a sus objetivos.\n• La Esfera de disipación provoca el efecto de estado Agotamiento durante 30 segundos a los supervivientes que entran en su radio.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "ウィザリング・スタッフ",
+          "description": "その壊死作用が標的を死に近づける。\n• 呪文「ディスペリング・スフィアー」の領域に入った生存者が疲労ステータス効果に30秒間苦しむ\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Kostur usychania",
+          "description": "Nekrotyczna moc przybliża cele do śmierci.\n• Kula Rozproszenia powoduje Wyczerpanie na 30 s u ocalałych, którzy znajdą się w jej promieniu.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 642,
+      "name": "Pearl of Power",
+      "killer_id": 36,
+      "description": "Its shimmering face energizes mages who hold it, allowing them to cast more spells.\n• Reduces the remaining cooldown for your spells by 2 seconds each time you land a basic attack.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_PearlOfPower.png?1b3400",
+      "icon_local_path": "icons/addons/pearl_of_power.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Perle der Macht",
+          "description": "Ihre schimmernde Oberfläche verleiht Zauberern Energie, sodass sie mehr Zauber wirken können.\n• Verkürzt die verbleibende Abklingzeit deiner Zauber bei jedem erfolgreichen Grundangriff um 2 Sekunden."
+        },
+        "es": {
+          "name": "Perla de poder",
+          "description": "Su superficie brillante intensifica el poder de los magos que la sostienen, lo que les permite lanzar más hechizos.\n• Reduce el tiempo de recarga restante de tus hechizos en 2 segundos cada vez que asestas un ataque básico."
+        },
+        "ja": {
+          "name": "パワー・パール",
+          "description": "その輝きが魔術師にエネルギーを与え、より多くの呪文を唱えられるようになる。\n• 通常攻撃が命中するたびに、呪文のクールダウンの残り時間が2秒減る"
+        },
+        "pl": {
+          "name": "Perła mocy",
+          "description": "Połyskująca powierzchnia dodaje energii magom trzymającym ten przedmiot, pozwalając im rzucać więcej zaklęć.\n• Skraca pozostały czas odnowienia zaklęć o 2 s za każdym razem, gdy wykonasz atak podstawowy."
+        }
+      }
+    },
+    {
+      "id": 643,
+      "name": "Robe of Eyes",
+      "killer_id": 36,
+      "description": "When worn, none can escape its bearer’s unyielding gaze.\n• Reveals the auras of Survivors within 6 meters of a Treasure Chest for 4 seconds each time you cast a spell.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RobeOfEyes.png?8777b8",
+      "icon_local_path": "icons/addons/robe_of_eyes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Robe der Augen",
+          "description": "Niemand kann sich dem erbarmungslosen Blick des Trägers entziehen.\n• Immer wenn du einen Zauber wirkst, werden die Auren von Überlebenden, die sich in einem Umkreis von 6 Metern um eine Schatztruhe befinden, 4 Sekunden lang enthüllt."
+        },
+        "es": {
+          "name": "Túnica de ojos",
+          "description": "Nadie puede escapar de la implacable mirada de quien se la pone.\n• Revela las auras de los supervivientes en un radio de 6 metros de un cofre del tesoro durante 4 segundos cada vez que lanzas un hechizo."
+        },
+        "ja": {
+          "name": "アイ・ローブ",
+          "description": "これを身につけた者の揺るぎない視線から逃れられる者はいない。\n• 呪文を唱えると、トレジャーチェストの6メートル以内にいる生存者のオーラが4秒間視える"
+        },
+        "pl": {
+          "name": "Zasłona oczu",
+          "description": "Gdy jest noszona, nikt nie może uciec przed nieugiętym spojrzeniem.\n• Ujawnia aury ocalałych w promieniu 6 m od skrzyni skarbów na 4 s za każdym razem, gdy rzucasz zaklęcie."
+        }
+      }
+    },
+    {
+      "id": 644,
+      "name": "Dragontooth Dagger",
+      "killer_id": 36,
+      "description": "Made from the actual tooth of a dragon, its edge is jagged and cruel.\n• Applies Hemorrhage and Mangled status effects to Survivors hit with a basic attack while holding a Magic Item for 60 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_DragontoothDagger.png?feb06f",
+      "icon_local_path": "icons/addons/dragontooth_dagger.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Drachenzahndolch",
+          "description": "Aus einem echten Drachenzahn gefertigt und mit einer gezackten, bösartigen Klinge versehen.\n• Belegt Überlebende, die mit einem Grundangriff getroffen werden, während sie einen magischen Gegenstand bei sich tragen, 60 Sekunden lang mit den Statuseffekten Blutung und Zerfleischt.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Daga de diente de dragón",
+          "description": "Fabricada con un diente de dragón auténtico, su filo está serrado y raja con crueldad.\n• Aplica los efectos de estado Hemorragia y Laceración a los supervivientes golpeados con un ataque básico mientras sostienen un objeto mágico durante 60 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "ドラゴントゥース・ダガー",
+          "description": "本物のドラゴンの歯から作られ、そのギザギザの刃は容赦なく標的の肉体に食い込む。\n• 魔法のアイテムを持っている生存者に通常攻撃を命中させると、その生存者が出血と重傷のステータス効果に60秒間苦しむ\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Sztylet smoczego kła",
+          "description": "Jest wykonany z prawdziwego zęba smoka, a jego krawędź jest postrzępiona i okrutna.\n• Nakłada efekty Krwotok i Zmasakrowany na 60 s na ocalałych trafionych podstawowym atakiem podczas niesienia magicznego przedmiotu.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 645,
+      "name": "Cloak of Invisibility",
+      "killer_id": 36,
+      "description": "A powerful magic item, envied by rogues and the conflict-averse alike.\n• Gain Undetectable for 20 seconds each time all of your spells are on cooldown at the same time.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CloakOfInvisibility.png?ef9ec4",
+      "icon_local_path": "icons/addons/cloak_of_invisibility.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Umhang der Unsichtbarkeit",
+          "description": "Ein mächtiger magischer Gegenstand, begehrt bei Schurken und allen, die Konflikten lieber aus dem Weg gehen.\n• Immer dann, wenn die Abklingzeit für alle deine Zauber gleichzeitig aktiv ist, wirst du 20 Sekunden lang unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Manto de invisibilidad",
+          "description": "Un poderoso objeto mágico, codiciado a partes iguales por pícaros y quienes huyen de los conflictos.\n• Obtienes Indetectable durante 20 segundos cada vez que todos tus hechizos están en tiempo de recarga a la vez.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "インヴィジビリティ・クローク",
+          "description": "ならず者も争いを嫌う者も欲しがる、強力な魔法のアイテム。\n• 全ての呪文が同時にクールダウンに入っているとき、探知不可を20秒間得る\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Peleryna niewidka",
+          "description": "Potężny magiczny przedmiot, który budzi zazdrość zarówno u łotrzyków, jak i u osób stroniących od konfliktów.\n• Zyskujesz Niewykrywalność na 20 s za każdym razem, gdy wszystkie twoje czary jednocześnie są w trakcie odnawiania.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 646,
+      "name": "Bag of Holding",
+      "killer_id": 36,
+      "description": "The realm itself bends to its astounding capacity, populating trials with even more to take.\n• Two Treasure Chests are guaranteed to roll 1 on the dice roll.\n• Opening Treasure Chests grants the Oblivious status effect to Survivors for 15 seconds.\nOblivious prevents Survivors from hearing and being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BagOfHolding.png?aae9ab",
+      "icon_local_path": "icons/addons/bag_of_holding.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Nimmervoller Beutel",
+          "description": "Das Reich selbst unterwirft sich dem verblüffenden Fassungsvermögen des Beutels und stellt während der Prüfung mehr Gegenstände zur Verfügung.\n• Bei zwei Schatztruhen landet der Würfel garantiert auf 1.\n• Das Öffnen von Schatztruhen belegt Überlebende für 15 Sekunden mit dem Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebenden den Terrorradius des Killers hören oder davon betroffen sind."
+        },
+        "es": {
+          "name": "Bolsa de contención",
+          "description": "El mismísimo reino se doblega ante su increíble capacidad, llenando las partidas de más cosas para llevarse.\n• Dos cofres del tesoro sacarán un 1 asegurado al tirar el dado.\n• Abrir cofres del tesoro aplica el efecto de estado Inconsciencia a los supervivientes durante 15 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "ホールディング・バッグ",
+          "description": "その驚異的な力は領域自体にも影響を及ぼし、さらなる報酬を儀式にもたらす。\n• 2つのトレジャーチェストでダイスが必ず1を出す\n• トレジャーチェストを開けた生存者が、無感覚のステータス効果を15秒間得る\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Pojemna torba",
+          "description": "Sam wymiar rozszerza się do zdumiewających rozmiarów i wypełnia próby jeszcze większą liczbą wyzwań.\n• Dwie skrzynie skarbów gwarantują wylosowanie 1 w rzucie kostką.\n• Otwieranie skrzyń skarbów nakłada na ocalałych efekt Nieświadomy na 15 s.\nNieświadomość uniemożliwia ocalałym słyszenie zasięgu terroru zabójcy i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 647,
+      "name": "Vorpal Sword",
+      "killer_id": 36,
+      "description": "A powerful magical artifact whose blade has severed many a head from its accompanying body.\n• Any injured Survivor that enters a Dispelling Sphere screams and gains Broken for 30 seconds.\n• Whenever you cast Mage Hand on a dropped Pallet, after 4 seconds, it special-breaks.\nBroken prevents Survivors from being healed.\n\"“Only one has ever crossed me and lived to regret\nit.”– Vecna\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_SwordOfKass.png?52b4fa",
+      "icon_local_path": "icons/addons/vorpal_sword.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Tödliches Schwert",
+          "description": "Ein mächtiges, magisches Artefakt, dessen Klinge schon so manchen Kopf von seinem Körper getrennt hat.\n• Jeder verletzte Überlebende, der eine Sphäre der Verbannung betritt, schreit und leidet 30 Sek. lang unter Gebrochen.\n• Immer wenn du „Hand des Magiers“ auf eine umgestoßene Palette wirkst, wird die Palette nach 4 Sek. durch deine Stärke zerstört.\nGebrochen verhindert die Heilung von Überlebenden.\n\"„Nur einer hat es jemals gewagt, mich zu hintergehen, und überlebt. Er hat es bitter bereut.“\n– Vecna\""
+        },
+        "es": {
+          "name": "Espada Vorpal",
+          "description": "Un poderoso artefacto mágico. Su hoja ha separado varias cabezas de sus cuerpos.\n• Cualquier superviviente herido que entra en una Esfera de disipación grita y sufre Desesperanza durante 30 segundos.\n• Cada vez que lanzas Mano de mago en un palé derribado, este se rompe de forma especial tras 4 segundos.\nDesesperanza impide que los supervivientes se curen.\n\"\"Solo hubo alguien que se atrevió a plantarme cara y vivió para arrepentirse de su decisión\".\n(Vecna)\""
+        },
+        "ja": {
+          "name": "ヴォーパル・ソード",
+          "description": "魔法の力を帯びた強力なアーティファクトで、その刃はこれまでに無数の頭を切り落としてきた。\n• 負傷した生存者が呪文「ディスペリング・スフィアー」の領域に入ると、叫び声を上げて衰弱に30秒間苦しむ\n• 倒されたパレットに呪文「メイジ・ハンド」を使うと、そのパレットが4秒後に特殊破壊される\n衰弱になると生存者は回復できなくなる。\n\"「これまで私に逆らい、生き延びてそれを後悔したのはただ一人だけだ」– ヴェクナ\""
+        },
+        "pl": {
+          "name": "Śmiercionośny miecz",
+          "description": "Potężny magiczny artefakt, którego ostrze odłączyło wiele głów od ciał.\n• Każdy ranny ocalały, który znajdzie się w Kuli Rozproszenia, krzyczy i otrzymuje Okaleczenie na 30 s.\n• Za każdym razem, gdy korzystasz z Magicznej Dłoni na powalonej palecie, po 4 s ulega ona zniszczeniu w specjalny sposób.\nOkaleczenie uniemożliwia leczenie ocalałych.\n\"„Tylko jedna osoba stawiła mi opór i przeżyła, by tego pożałować” – Vecna\""
+        }
+      }
+    },
+    {
+      "id": 648,
+      "name": "Iridescent Book of Vile Darkness",
+      "killer_id": 36,
+      "description": "The ultimate compilation of cruelty, wickedness and depravity.\n• Using the Fly spell to pass through any vault location blocks that location for Survivors for 45 seconds.\n• Lowers the number of spectral entities created by Flight of the Damned by 3 and makes them fly lower to the ground.\n\"“What chance do you have against my centuries of preparation?” –Vecna\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_IridescentBookOfVileDarkness.png?a42cf1",
+      "icon_local_path": "icons/addons/iridescent_book_of_vile_darkness.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Buch der niederträchtigen Dunkelheit",
+          "description": "Die ultimative Mischung aus Grausamkeit, Bosheit und Verderbtheit.\n• Wenn du einen Sprungort mithilfe des Zaubers „Fliegen“ überwindest, wird dieser Ort 45 Sekunden lang für Überlebende blockiert.\n• Verringert die Anzahl der Geisterwesen, die durch „Flug der Verdammten“ gerufen werden, um 3 und lässt sie tiefer fliegen.\n\"„Wie groß sind deine Chancen im Angesicht meiner jahrhundertelangen Vorbereitung?“ – Vecna\""
+        },
+        "es": {
+          "name": "Libro de Oscuridad Vil iridiscente",
+          "description": "La compilación definitiva de crueldad, maldad y depravación.\n• Usa el hechizo Vuelo para pasar por cualquier lugar de salto y bloquear esa ubicación para los supervivientes durante 45 segundos.\n• Reduce el número de espectros creados por Vuelo de los condenados en 3 y hace que vuelen más cerca del suelo.\n\"\"Llevo siglos preparándome. ¿De verdad crees que puedes vencerme?\". (Vecna)\""
+        },
+        "ja": {
+          "name": "玉虫色の不浄なる暗黒の書",
+          "description": "残虐性、邪気、堕落の究極の組み合わせ。\n• 呪文「フライ」を使って乗り越え障害物を通過すると、その場所が生存者に対して45秒間ブロックされる\n• 呪文「フライト・オヴ・ザ・ダムド」で召喚される幽霊の数が3つ減り、幽霊が地面近くを飛ぶようになる\n\"「何世紀にも渡って準備してきた私に勝てるとでも言うのか？」– ヴェクナ\""
+        },
+        "pl": {
+          "name": "Opalizująca Księga Plugawego Mroku",
+          "description": "Ostateczna kombinacja okrucieństwa, niegodziwości i zepsucia.\n• Użycie zaklęcia Lot w celu przejścia przez dowolne miejsce skoku blokuje je dla ocalałych na 45 s.\n• Obniża liczbę widmowych istot stworzonych przez Przelot Potępionych o 3 i sprawia, że lecą bliżej ziemi.\n\"„Jakie macie szanse w starciu z moimi wielowiekowymi przygotowaniami?” – Vecna\""
+        }
+      }
+    }
+  ]
+}

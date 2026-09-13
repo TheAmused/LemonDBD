@@ -1,0 +1,563 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 697,
+      "name": "Help Wanted Ad",
+      "killer_id": 40,
+      "description": "We all need a little help sometimes...\nWhile winding up an axe throw, see a preview of the starting trajectory.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_HelpWantedAd.png?1a13bc",
+      "icon_local_path": "icons/addons/help_wanted_ad.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Mitarbeiter gesucht“-Plakat",
+          "description": "Jeder braucht mal Hilfe ...\nWenn du einen Axtwurf auflädst, siehst du den Anfang ihrer Flugbahn."
+        },
+        "es": {
+          "name": "Anuncio de \"Empleo disponible\"",
+          "description": "Todos necesitamos un par de manos de vez en cuando...\nDespués de tirar el hacha, verás una vista previa de la trayectoria inicial."
+        },
+        "ja": {
+          "name": "求人広告",
+          "description": "誰でも助けが必要な時がある…\n斧を構えている間、斧が放たれたときの軌道の始まりが見える。"
+        },
+        "pl": {
+          "name": "Potrzebna pomoc – ulotka",
+          "description": "Wszyscy czasami potrzebujemy trochę pomocy...\nPodczas przygotowywania się do rzutu toporem wyświetlany jest podgląd początkowej trajektorii."
+        }
+      }
+    },
+    {
+      "id": 698,
+      "name": "Restaurant Menu",
+      "killer_id": 40,
+      "description": "The lamination is peeling and crusty. How appetizing.\nDecreases the minimum time required to retrieve an axe embedded in the environment by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RestaurantMenu.png?4cec4a",
+      "icon_local_path": "icons/addons/restaurant_menu.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Speisekarte",
+          "description": "Die Beschichtung blättert ab und ist verkrustet. Sehr appetitlich.\nVerkürzt die Mindestzeit, um eine Axt zurückzuholen, die in der Umgebung steckt, um 20 %."
+        },
+        "es": {
+          "name": "Menú de restaurante",
+          "description": "La laminas se están pelando y tienen costra. ¡Dan ganas de pedir comida!\nReduce el tiempo mínimo necesario para recuperar un hacha incrustada en el entorno un 10 %."
+        },
+        "ja": {
+          "name": "レストランのメニュー",
+          "description": "昔は食欲をそそったかもしれないが、今ではラミネートが剥がれてカリカリになっている。\n周囲の環境に刺さった斧が回収可能になるまでの時間が10%短縮する。"
+        },
+        "pl": {
+          "name": "Menu restauracji",
+          "description": "Powłoka łuszczy się i kruszy. Apetyczne.\nZmniejsza minimalny czas potrzebny na odzyskanie topora wbitego w otoczenie o 10%."
+        }
+      }
+    },
+    {
+      "id": 699,
+      "name": "Rotten Pizza",
+      "killer_id": 40,
+      "description": "Food poisoning is no laughing matter.\nIncreases the duration of Killer Instinct from the Axe's area of effect by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RottenPizza.png?c07e46",
+      "icon_local_path": "icons/addons/rotten_pizza.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Verdorbene Pizza",
+          "description": "Eine Lebensmittelvergiftung ist nicht lustig.\nVerlängert die Dauer des Killerinstinkts durch den Wirkungsbereich der Axt um 100 %."
+        },
+        "es": {
+          "name": "Pizza podrida",
+          "description": "La intoxicación alimentaria es un asunto muy serio.\nAumenta la duración de Instinto asesino del área de efecto del hacha un 100 %."
+        },
+        "ja": {
+          "name": "腐ったピザ",
+          "description": "食中毒は笑い事ではない。\n斧の効果範囲が発動させる殺人鬼の本能の持続時間が100%増加する。"
+        },
+        "pl": {
+          "name": "Zepsuta pizza",
+          "description": "Zatruwanie jedzenia to nie jest temat do żartów.\nZwiększa czas trwania Instynktu Zabójcy w zasięgu działania topora o 100%."
+        }
+      }
+    },
+    {
+      "id": 700,
+      "name": "Ripped Curtain",
+      "killer_id": 40,
+      "description": "Taken from Pirates Cove, caught on the animatronic that lived there.\nWhen an Axe hits a Survivor, they gain the Hemorrhage and Mangled status effects for 60 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RippedCurtain.png?753757",
+      "icon_local_path": "icons/addons/ripped_curtain.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zerrissener Vorhang",
+          "description": "Der Animatronic aus der Pirate Cove hat sich darin verheddert.\nWenn eine Axt einen Überlebenden trifft, leidet dieser 60 Sek. lang unter den Statuseffekten Blutung und Zerfleischt.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Cortina rasgada",
+          "description": "Sacada de Pirate Cove, había quedado enredada en el animatrónico que vivía allí.\nCuando un hacha alcanza a un superviviente, este sufre los efectos de estado Hemorragia y Laceración durante 60 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "破れたカーテン",
+          "description": "あるアニマトロニクスが住んでいた海賊の入り江にあったもの。\n生存者に斧が命中したとき、その生存者が60秒間、出血と重傷のステータス効果を得る。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Podarta kurtyna",
+          "description": "Zabrany z Zatoki Piratów, znaleziony przy animatroniku, który tam żył.\nOcalali trafieni toporem otrzymują efekty Zmasakrowany i Krwotok na 60 sekund.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 701,
+      "name": "Greasy Paper Plate",
+      "killer_id": 40,
+      "description": "It sticks to everything it touches. No amount of soap can wash it off.\nIncreases the time required for Survivors to remove the Axe by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_GreasyPaperPlate.png?7c770d",
+      "icon_local_path": "icons/addons/greasy_paper_plate.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Fettiger Pappteller",
+          "description": "Er haftet an allem, das er berührt. Auch Seife hilft da nicht.\nVerlängert die Zeit, die Überlebende brauchen, um die Axt zu entfernen, um 15 %."
+        },
+        "es": {
+          "name": "Plato de papel grasiento",
+          "description": "Se pega a todo lo que toca, y no puede lavarse ni con jabón.\nAumenta el tiempo que tardan los supervivientes en quitarse el hacha un 15 %."
+        },
+        "ja": {
+          "name": "油で汚れた紙皿",
+          "description": "油がついてベトベトした皿。どんなに洗剤を使ってもキレイにならない。\n生存者が斧を抜くのにかかる時間が15%増加する。"
+        },
+        "pl": {
+          "name": "Tłusty papierowy talerz",
+          "description": "Przykleja się do wszystkiego, co dotknie. Żadna ilość mydła nie zmyje tego.\nZwiększa czas potrzebny ocalałym na usunięcie topora o 15%."
+        }
+      }
+    },
+    {
+      "id": 702,
+      "name": "Streamers",
+      "killer_id": 40,
+      "description": "Employees would throw them over the rafters for a quick decoration.\nIncreases the speed at which you travel through Security Doors by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_Streamers.png?3dd451",
+      "icon_local_path": "icons/addons/streamers.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Luftschlangen",
+          "description": "Die Mitarbeiter warfen sie über die Balken und schon war der Raum dekoriert.\nErhöht die Geschwindigkeit, mit der du dich durch Sicherheitstüren bewegst, um 15 %."
+        },
+        "es": {
+          "name": "Banderines",
+          "description": "Los empleados los tiraban sobre las vigas para decorar el sitio sin complicarse.\nAumenta la velocidad con la que te atraviesas las puertas de seguridad un 15 %."
+        },
+        "ja": {
+          "name": "飾りリボン",
+          "description": "従業員が簡単な飾り付けに使ったもの。\n警備室ドアの間を移動する速度が15%上昇する。"
+        },
+        "pl": {
+          "name": "Taśmy",
+          "description": "Pracownicy przerzucali je przez belki dachowe, aby stworzyć proste dekoracje.\nZwiększa prędkość, z jaką przemieszczasz się przez drzwi bezpieczeństwa o 15%."
+        }
+      }
+    },
+    {
+      "id": 703,
+      "name": "Party Hat",
+      "killer_id": 40,
+      "description": "The party never ends, no matter how much they beg.\nWhen an Axe is embedded in the environment:\n• Increases its area of effect radius to 250% over 3 seconds.\n• Decreases the duration of the area of effect by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_PartyHat.png?a291e0",
+      "icon_local_path": "icons/addons/party_hat.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Partyhut",
+          "description": "Die Party hört nie auf, egal, wie sehr sie betteln.\nWenn eine Axt in der Umgebung steckt, gilt:\n• Der Radius des Wirkungsbereichs wird für 3 Sekunden vergrößern, bis um zu 250 %.\n• Die Dauer des Wirkungsbereichs wird um 20 % verkürzt."
+        },
+        "es": {
+          "name": "Gorro de fiesta",
+          "description": "La fiesta nunca termina, por mucho que rueguen.\nCuando haya un hacha incrustada en el entorno:\n• Aumenta el radio de su área de efecto a un 250 % durante 3 segundos.\n• Reduce la duración del área de efecto un 20 %."
+        },
+        "ja": {
+          "name": "パーティーハット",
+          "description": "どれだけゲストが頼んでも、パーティーはけして終わらない。\n斧が周囲の環境に刺さったとき：\n• 効果範囲の半径が3秒間に渡って250%まで拡大する\n• 効果範囲の持続時間が20%減少する"
+        },
+        "pl": {
+          "name": "Imprezowy kapelusz",
+          "description": "Impreza nigdy się nie skończy, ile by nie błagali.\nGdy topór jest wbity w otoczenie:\n• Zwiększa zasięg działania efektu do 250% przez 3 sekundy.\n• Zmniejsza czas trwania efektu o 20%."
+        }
+      }
+    },
+    {
+      "id": 704,
+      "name": "Office Phone",
+      "killer_id": 40,
+      "description": "He tried to leave messages as a warning. He didn't last long, either.\nSurvivors within 24 meters of a Survivor with an embedded Axe gain the Oblivious and - if injured - Broken status effects. Reveals the aura of the Axe to Survivors within this range.\nDecreases the time required to remove the Axe from another Survivor by 50%.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_OfficePhone.png?246a77",
+      "icon_local_path": "icons/addons/office_phone.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Geschäftstelefon",
+          "description": "Er wollte Nachrichten als Warnung hinterlassen. Er überlebte auch nicht lange.\nÜberlebende in einem Umkreis von 24 Metern um einen Überlebenden mit Axt erhalten den Statuseffekt Ahnungslos, und wenn sie verletzt sind, zusätzlich auch Gebrochen. Zeigt Überlebenden innerhalb dieser Reichweite die Aura der Axt an.\nVerringert die Zeit, die nötig ist, um die Axt aus einem anderen Überlebenden zu ziehen, um 50 %.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "es": {
+          "name": "Teléfono de oficina",
+          "description": "Intentó dejar mensajes a modo de advertencia, pero él tampoco duró mucho...\nLos supervivientes a 24 metros de distancia de un superviviente con un hacha incrustada obtienen los efectos de estado Inconsciencia y, si están heridos, Desesperanza. Revela el aura del hacha a los supervivientes en este radio.\nReduce el tiempo necesario para quitarle el hacha a otro superviviente un 50 %.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "事務所の電話",
+          "description": "彼は警告としてメッセージを残そうとした。彼も長く続かなかった。\n斧が刺さった生存者の24メートル以内にいる生存者が無感覚と衰弱（負傷していた場合）のステータス効果を得る。この範囲内にいる生存者に斧のオーラが視える。\n別の生存者から斧を抜くのに必要な時間が50%減少する。\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。\n衰弱になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Telefon biurowy",
+          "description": "Probówał zostawiać wiadomości z ostrzeżeniami. On także długo nie przetrwał.\nOcalali w promieniu 24 metrów od ocalałego, w którego wbity jest topór, otrzymują efekt Nieświadomy, a jeśli zostaną zranieni, również efekt Okaleczony. Ujawnia aurę topora ocalałym w tym zasięgu.\nSkraca czas potrzebny na usunięcie topora z innego ocalałego o 50%.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    },
+    {
+      "id": 705,
+      "name": "Purple Guy Drawing",
+      "killer_id": 40,
+      "description": "He only takes 10 seconds to draw!\nWhile a Survivor has an Axe embedded in them, any rushed interactions they perform reveal their aura to you for 3 seconds.\nRemoving the Axe from themselves reveals their aura to you for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_PurpleGuyDrawing.png?51e527",
+      "icon_local_path": "icons/addons/purple_guy_drawing.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Zeichnung von Purple Guy",
+          "description": "In 10 Sekunden ist die Zeichnung fertig!\nWährend eine Axt in einem Überlebenden steckt, enthüllen alle seine übereilten Interaktionen seine Aura für 3 Sek.\nWenn er seine Axt selbst entfernt, wird dir seine Aura für 6 Sek. angezeigt."
+        },
+        "es": {
+          "name": "Dibujo del hombre morado",
+          "description": "¡Solo se tarda 10 segundos en dibujarlo!\nCuando un superviviente lleva incrustada un hacha, cualquier interacción rápida que realice hará que puedas ver su aura durante 3 segundos.\nSi se quitan el hacha por sus propios medios, podrás ver su aura durante 6 segundos."
+        },
+        "ja": {
+          "name": "紫の男の絵",
+          "description": "彼の絵は、たった10秒で描けてしまう！\n斧が刺さった生存者がせっかちな行動を行うと、その生存者のオーラが3秒間視える。\n自分に刺さった斧を生存者が抜くと、その生存者のオーラが6秒間視える。"
+        },
+        "pl": {
+          "name": "Rysunek fioletowego gościa",
+          "description": "Zajmuje mu to tylko 10 sekund!\nGdy topór jest wbity w ocalałego, wszystkie pospieszne interakcje odsłaniają jego aurę na 3 sekundy.\nUsunięcie topora z siebie odkrywa jego aurę na 6 sekund."
+        }
+      }
+    },
+    {
+      "id": 706,
+      "name": "Loot Bag",
+      "killer_id": 40,
+      "description": "Open the bag, and see what goodies are inside.\nWhile a Survivor has an Axe embedded in them:\n• Exit gates will be blocked for them and any Survivors within 12 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_LootBag.png?20c024",
+      "icon_local_path": "icons/addons/loot_bag.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Geschenketüte",
+          "description": "Öffne die Tüte und sieh nach, welche Geschenke darin warten.\nWährend eine Axt in einem Überlebenden steckt, gilt:\n• Ausgangstore werden für ihn und Überlebende in einem Umkreis von 12 Metern blockiert."
+        },
+        "es": {
+          "name": "Bolsa de botín",
+          "description": "Abre la bolsa y descubre lo que hay dentro.\nCuando un superviviente tenga un hacha incrustada:\n• Tendrá las puertas de salida bloqueadas, así como los supervivientes en un radio de 12 metros."
+        },
+        "ja": {
+          "name": "お楽しみ袋",
+          "description": "袋を開けて、どんなお楽しみが入っているか見てみよう。\n生存者に斧が刺さっている間：\n• その生存者と12メートル以内の生存者には脱出ゲートがブロックされる"
+        },
+        "pl": {
+          "name": "Torebka na łupy",
+          "description": "Otwórz torbę i zobacz, jakie smakołyki są w środku.\nGdy topór jest wbity w ocalałego:\n• ten ocalały i inni ocalali w zasięgu 12 metrów nie będą mogli korzystać z bram wyjściowych."
+        }
+      }
+    },
+    {
+      "id": 707,
+      "name": "Access Panel",
+      "killer_id": 40,
+      "description": "Gaining control over the security doors is key to getting the job done.\nYour Axe gains the ability to travel through Security Doors, and will exit straight through the connected Security Door.\nWhen aiming your Axe:\n• Gain Killer Instinct on Survivors within 6 meters of any Security Door.\n• Reveals the auras of all Security Door numbers.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_AccessPanel.png?ef4391",
+      "icon_local_path": "icons/addons/access_panel.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zugangspanel",
+          "description": "Die Kontrolle über die Sicherheitstüren zu erlangen, ist wesentlich, um die Arbeit zu erledigen.\nDeine Axt kann sich durch Sicherheitstüren bewegen und kommt direkt aus der verbundenen Sicherheitstür geflogen.\nBeim Zielen deiner Axt gilt:\n• Du erhältst den Killerinstinkt für Überlebende in einem Umkreis von 4 Metern rund um eine Sicherheitstür.\n• Enthüllt die Auren aller Sicherheitstür-Nummern."
+        },
+        "es": {
+          "name": "Panel de acceso",
+          "description": "La clave de tu trabajo es controlar las puertas de seguridad.\nTu hacha obtiene la capacidad de atravesar las puertas de seguridad, y saldrá directamente por la puerta de seguridad conectada.\nAl apuntar con tu hacha:\n• Obtienes Instinto asesino para los supervivientes que estén en un radio de 6 metros de cualquier puerta de seguridad.\n• Muestra las auras de los números de todas las puertas de seguridad."
+        },
+        "ja": {
+          "name": "アクセスパネル",
+          "description": "警備室ドアを上手く管理することが、仕事をこなすカギだ。\n斧が警備室ドア間を移動できるようになり、ドアに投げつけた斧がそのドアとつながった別のドアから放たれる。\n斧を構えているとき：\n• 全警備室ドアの6メートル以内にいる生存者を殺人鬼の本能で探知する\n• 全警備室ドアのナンバーのオーラが視える"
+        },
+        "pl": {
+          "name": "Panel dostępu",
+          "description": "Zdobywanie kontroli nad drzwiami bezpieczeństwa jest kluczem do wykonania pracy.\nTwój topór zyskuje zdolność do przemieszczenia się przez drzwi bezpieczeństwa i wyjdzie od razu przez połączone drzwi bezpieczeństwa.\nGdy celujesz swoim toporem:\n• Zyskaj efekt instynktu zabójcy na ocalałych w zasięgu 6 metrów od każdych drzwi bezpieczeństwa.\n• Ujawnia aury wszystkich numerów drzwi bezpieczeństwa."
+        }
+      }
+    },
+    {
+      "id": 708,
+      "name": "Celebrate! Poster",
+      "killer_id": 40,
+      "description": "The celebration lasts all night long, or until no one is left.\nWhile the Axe is embedded in a Survivor, all players within 32 meters gain 12% Haste and vault 20% faster.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CelebratePoster.png?c3bcbd",
+      "icon_local_path": "icons/addons/celebrate_poster.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Partyplakat",
+          "description": "Die Feier dauert die ganze Nacht lang oder bis niemand mehr übrig ist.\nWenn die Axt in einem Überlebenden steckt, erhalten alle Spieler in einem Umkreis von 32 Metern 12 % Eile und sie springen 20 % schneller.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Cartel de \"¡A celebrar!\"",
+          "description": "La celebración dura toda la noche..., o hasta que no quede nadie con vida.\nMientras el hacha esté incrustada en un superviviente, todos los jugadores en un radio de 32 metros obtienen un 12 % de Celeridad y saltan un 20 % más rápido.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "セレブレート！ポスター",
+          "description": "お祝いは一晩中続く。あるいは誰もいなくなるまで続く。\n生存者に斧が刺さっている間、32メートル以内のすべてのプレイヤーが12%の迅速を得て、乗り越えも20%速くなる。\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Plakat „Świętowanie!”",
+          "description": "Świętowanie trwa całą noc lub dopóki wszyscy się nie rozejdą.\nGdy topór jest wbity w ocalałego, wszyscy gracze w zasięgu 32 metrów zyskują 12% Pośpiechu i przeskakują o 20% szybciej.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 709,
+      "name": "Faz-Coin",
+      "killer_id": 40,
+      "description": "Collecting these tokens comes with a price.\nUpon throwing the Axe, it gains a Terror Radius of 24 meters until it is reclaimed. You gain the Undetectable status effect for 10 seconds.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_FazCoin.png?d91916",
+      "icon_local_path": "icons/addons/faz_coin.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Faz-Münze",
+          "description": "Diese Jetons haben ihren Preis.\nWenn du die Axt wirfst, erhält sie einen Terrorradius von 24 Metern, bis du sie zurückholst. Du erhältst den Statuseffekt Unentdeckbar für 10 Sek.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Moneda Faz",
+          "description": "Recoger estas fichas tiene un precio.\nTras lanzar el hacha, esta obtiene un radio de terror de 24 metros hasta que la recuperes. Obtienes el efecto de estado Indetectable durante 10 segundos.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "ファズコイン",
+          "description": "このトークンを手に入れるには、それなりの代償が伴う。\n斧を投げたとき、斧が手元に戻るまで、斧が24メートルの脅威範囲を得る。自分が10秒間、探知不可のステータス効果を得る。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Faz-coin",
+          "description": "Zbieranie tych żetonów ma swoją cenę.\nGdy rzucasz toporem, twój zasięg terroru zwiększa się o 24 metry, do czasu jego odzyskania. Otrzymujesz status Niewykrywalny na 10 s.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 710,
+      "name": "Endo CPU",
+      "killer_id": 40,
+      "description": "Greater computing power, for greater efficacy.\nWithin the Axe's area of effect, you basic-break Pallets or Breakable Walls, and damage Generators 40% faster. This effect lingers for 5 seconds after leaving the area of effect.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_EndoCPU.png?ab000d",
+      "icon_local_path": "icons/addons/endo_cpu.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Endo-CPU",
+          "description": "Höhere Rechenleistung für größere Effizienz.\nInnerhalb des Wirkungsbereichs der Axt zerstörst du Paletten oder zerstörbare Mauern mit deiner Grundfähigkeit bzw. beschädigst du Generatoren 40 % schneller. Dieser Effekt hält 5 Sek. lang an, nachdem du den Wirkungsbereich verlassen hast."
+        },
+        "es": {
+          "name": "Procesador de Endo",
+          "description": "Un mayor poder de computación para aumentar la eficacia.\nMientras estés en el área de efecto del hacha, dañas generadores y rompes palés y muros destruibles de forma básica un 40 % más rápido. Este efecto dura 5 segundos tras salir del área de efecto."
+        },
+        "ja": {
+          "name": "エンドCPU",
+          "description": "より高い計算能力を備え、より高い効率を実現する。\n斧の効果範囲内にいる間、パレットや破壊可能な壁を通常破壊する速度や、発電機にダメージを与える速度が40%上昇する。この効果は効果範囲を出たあと5秒間継続する。"
+        },
+        "pl": {
+          "name": "Procesor Endo",
+          "description": "Większa moc obliczeniowa dla większej wydajności.\nW zasięgu działania topora, niszczysz w podstawowy sposób palety lub rozbijalne ściany oraz uszkadzasz generatory 40% szybciej. Ten efekt utrzymuje się przez 5 sekund po opuszczeniu zasięgu działania."
+        }
+      }
+    },
+    {
+      "id": 711,
+      "name": "Iridescent Remnant",
+      "killer_id": 40,
+      "description": "Molten metal - in the right hands, it's the key to immortality.\nWhen you start moving to a Security Door, upright pallets within 32 meters of the destination Door are blocked for 12 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_IridescentRemnant.png?4df7a0",
+      "icon_local_path": "icons/addons/iridescent_remnant.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Reststoff",
+          "description": "Geschmolzenes Metall wird in den richtigen Händen zum Schlüssel zur Unsterblichkeit.\nWenn du beginnst, dich zu einer Sicherheitstür zu bewegen, werden stehende Paletten in einem Umkreis von 32 Metern rund um die Zieltür 12 Sek. lang blockiert."
+        },
+        "es": {
+          "name": "Remanente iridiscente",
+          "description": "En las manos adecuadas, el metal fundido puede ser la clave para alcanzar la inmortalidad.\nCuando empieces a moverte a una puerta de seguridad, los palés en vertical en un radio de 32 metros de esa puerta quedarán bloqueados durante 12 segundos."
+        },
+        "ja": {
+          "name": "玉虫色のレムナント",
+          "description": "不死のカギとなり得る物質。\n警備室ドアにテレポートし始めると、移動先のドアの32メートル以内に立っているパレットが12秒間ブロックされる。"
+        },
+        "pl": {
+          "name": "Opalizujące resztki",
+          "description": "We właściwych rękach roztopiony metal to klucz do nieśmiertelności.\nGdy rozpoczniesz podchodzić do drzwi bezpieczeństwa, stojące palety w zasięgu 32 metrów od drzwi są zablokowane na 12 sekund."
+        }
+      }
+    },
+    {
+      "id": 814,
+      "name": "Security Guard's Badge",
+      "killer_id": 40,
+      "description": "The badge comes with certain privileges for whoever carries it.\nWhen exiting a Security Door after a teleport, gain the Undetectable status effect for 25% longer.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_SecurityGuardsBadge.png?798a3e",
+      "icon_local_path": "icons/addons/security_guards_badge.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Sicherheitsdienst-Ausweis",
+          "description": "Der Ausweis verschafft dem Träger bestimmte Privilegien.\nWenn du nach einem Teleport aus der Sicherheitstür kommst, erhältst du den Statuseffekt Unentdeckbar 25 % länger.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "en": {
+          "name": "Security Guard’s Badge"
+        },
+        "es": {
+          "name": "Placa de guardia de seguridad",
+          "description": "La placa dota de ciertos privilegios a quien la lleva.\nAl salir de una puerta de seguridad tras un teletransporte, obtienes el efecto de estado Indetectable un 25 % más de tiempo.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "警備員バッジ",
+          "description": "このバッジには特権がついてくる。\nテレポートして警備室ドアを出たあとに得る探知不可のステータス効果が25%延長する。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Odznaka strażnika ochrony",
+          "description": "Odznaka daje określone przywileje tym, którzy ją noszą.\nPodczas wychodzenia przez drzwi bezpieczeństwa po teleportacji, zyskaj efekt Niewykrywalność o 25% dłużej.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 815,
+      "name": "Bonnie's Guitar Strings",
+      "killer_id": 40,
+      "description": "Worn strings that are off-tune and liable to snap.\nUnlocks potential in one’s aura reading ability.\nWhile moving between Security Doors, the repair progress of generators can be determined by the intensity of their auras.\nDecreases the duration of the Undetectable status effect upon exiting the Security Door by 100%.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BonniesGuitarStrings.png?92b234",
+      "icon_local_path": "icons/addons/bonnies_guitar_strings.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Bonnies Gitarrensaiten",
+          "description": "Alte, verstimmte Saiten, die leicht reißen.\nEntfesselt das Potenzial der Aurawahrnehmungsfähigkeit.\nWährend du dich zwischen Sicherheitstüren bewegst, erkennst du den Reparaturfortschritt von Generatoren an der Intensität ihrer Auren.\nVerkürzt die Dauer des Statuseffekts Unentdeckbar beim Verlassen der Sicherheitstür um 100 %.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "en": {
+          "name": "Bonnie’s Guitar Strings"
+        },
+        "es": {
+          "name": "Cuerdas de guitarra de Bonnie",
+          "description": "Cuerdas desgastadas que no están afinadas y pueden quebrarse.\nDespierta la capacidad de percepción de auras.\nMientras te muevas entre puertas de seguridad, podrás distinguir el progreso de reparación de los generadores por la intensidad de sus auras.\nReduce la duración del efecto de estado Indetectable al salir por la puerta de seguridad un 100 %.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "ボニーのギターの弦",
+          "description": "摩耗した弦。調子が狂っていて、切れやすい。\nオーラを視認できる能力を呼び覚ます。\n警備室ドアに入って移動先を選んでいる間、発電機の修理進行度がオーラの強さで判別できる。\n警備室ドアを出たあとに得る探知不可のステータス効果が100%短縮する。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Struny gitary Bonniego",
+          "description": "Zużyte struny, które nie są dostrojone i mogą pęknąć.\nWyzwala potencjał odczytywania aury.\nGdy przechodzisz przez drzwi bezpieczeństwa, jesteś w stanie określić stopień postępu naprawy generatorów na podstawie intensywności aur generatorów.\nSkraca czas trwania efektu  Niewykrywalny podczas wychodzenia przez drzwi bezpieczeństwa o 100%.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 816,
+      "name": "Chica's Bib",
+      "killer_id": 40,
+      "description": "A good way to keep Mr. Cupcake from making a mess.\nSurvivors within the Axe's area of effect gain the Exhausted status effect for 5 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ChicasBib.png?7c3866",
+      "icon_local_path": "icons/addons/chicas_bib.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Chicas Lätzchen",
+          "description": "Eine gute Möglichkeit, Mr. Cupcake davon abzuhalten, für Chaos zu sorgen.\nÜberlebende im Wirkungsbereich der Axt erleiden für 5 Sekunden den Statuseffekt Erschöpfung.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "en": {
+          "name": "Chica’s Bib"
+        },
+        "es": {
+          "name": "Babero de Chica",
+          "description": "Una buena manera de impedir que Sr. Cupcake manche todo.\nLos supervivientes en el área de efecto del hacha sufren el efecto de estado Agotamiento durante 5 segundos.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "チカのよだれ掛け",
+          "description": "これを使えばミスターカップケーキが汚れない。\n斧の効果範囲内にいる生存者が5秒間、疲労のステータス効果を得る。\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Śliniak Chica",
+          "description": "Dobry sposób, aby powstrzymać pana Babeczkę przed zrobieniem bałaganu.\nOcalali w zasięgu działania topora otrzymują efekt Wyczerpany na 5 sekund.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 817,
+      "name": "Foxy's Hook",
+      "killer_id": 40,
+      "description": "A pirate’s hook that seems more menacing than playful.\nPlayers within range of the Axe's area of effect gain 7% Haste for 6 seconds.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_FoxyHook.png?484011",
+      "icon_local_path": "icons/addons/foxys_hook.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Foxys Haken",
+          "description": "Der Haken eines Piraten, der eher bedrohlich als verspielt wirkt.\nSpieler innerhalb des Wirkungsbereichs der Axt erhalten 7 % Eile für 6 Sek.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "en": {
+          "name": "Foxy’s Hook"
+        },
+        "es": {
+          "name": "Garfio de Foxy",
+          "description": "Un garfio pirata que parece más amenazante que divertido.\nLos jugadores dentro del alcance del área de efecto del hacha obtienen un 7 % de Celeridad durante 6 segundos.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "フォクシーのフック",
+          "description": "ちょと威嚇的な海賊のフック。\n斧の効果範囲内にいるプレイヤーが6秒間、7%の迅速を得る。\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Hak Foxy",
+          "description": "Piracki hak, który wydaje się bardziej groźny, niż zabawny.\nGracze w zasięgu działania topora otrzymują efekt 7% Pośpiechu na 6 sekund.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 818,
+      "name": "Freddy's Hat",
+      "killer_id": 40,
+      "description": "Gabriel trusted the wrong grown-up. Now he's the star of the show.\nIncreases the Axe's weight while throwing by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_FreddysHat.png?1bd4aa",
+      "icon_local_path": "icons/addons/freddys_hat.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Freddys Hut",
+          "description": "Gabriel hat dem falschen Erwachsenen sein Vertrauen geschenkt. Jetzt ist er der Star der Show.\nErhöht das Gewicht der Axt beim Werfen um 100 %."
+        },
+        "en": {
+          "name": "Freddy’s Hat"
+        },
+        "es": {
+          "name": "Sombrero de Freddy",
+          "description": "Gabriel confió en el adulto equivocado y ahora es la estrella del espectáculo.\nAumenta el peso del hacha al lanzarla un 100 %."
+        },
+        "ja": {
+          "name": "フレディの帽子",
+          "description": "ガブリエルは信じる大人を間違えてしまった。そして今、彼はショーの主役になった。\n投げた斧の重量が100%増加する。"
+        },
+        "pl": {
+          "name": "Kapelusz Freddy'ego",
+          "description": "Gabriel zaufał nieodpowiedniemu dorosłemu. Teraz jest gwiazdą programu.\nZwiększa wagę topora podczas rzucania o 100%."
+        }
+      }
+    }
+  ]
+}

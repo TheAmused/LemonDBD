@@ -9,6 +9,7 @@ export default {
   loadingPerks: "Loading Perks Vault...",
   resetFilters: "Reset Filters",
   adminPageTitle: "LemonDBD - Admin Control Center",
+  achievementsPageTitle: "LemonDBD - Achievements",
   buildsPageTitle: "LemonDBD - Community Builds",
   guesserPageTitle: "LemonDBD - Minigames & Guesser",
   charactersPageTitle: "LemonDBD - Characters & Teachables",

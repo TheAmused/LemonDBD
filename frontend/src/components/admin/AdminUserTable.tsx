@@ -88,7 +88,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
           <button
             type="button"
             onClick={onOpenCreateUser}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover px-3.5 py-2 text-xs font-bold text-text-inverted shadow-md shadow-accent-amber/20 hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans"
+            className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-3.5 py-2 text-xs font-bold text-text-inverted shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans"
           >
             <UserPlus className="h-3.5 w-3.5" />
             <span>{dict?.admin?.createUser || 'Create User'}</span>

@@ -39,7 +39,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-color pb-6 w-full">
       <div className="flex items-center gap-3.5">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-lg shadow-accent-red/20">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-xs">
           <Crown className="h-6 w-6" />
         </div>
         <div>

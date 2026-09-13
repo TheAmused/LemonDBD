@@ -558,7 +558,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-red/20 transition-all hover:opacity-95"
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all"
             >
               <UserIcon className="h-4 w-4" />
               <span>{dict?.user?.signIn || 'Sign In / Register'}</span>

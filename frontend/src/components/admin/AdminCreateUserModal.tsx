@@ -142,7 +142,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md shadow-accent-amber/20 hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (
                 <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />

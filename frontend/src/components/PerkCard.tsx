@@ -231,8 +231,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({
               onError={() => setImgError(true)}
               className={`h-full w-full object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] ${
                 size === 'tarot' || size === 'compact'
-                  ? 'group-hover:drop-shadow-[0_0_12px_var(--accent-red)]'
-                  : 'group-hover:drop-shadow-[0_0_18px_var(--accent-red)]'
+                  ? 'group-hover:drop-shadow-[0_0_6px_var(--accent-red)]'
+                  : 'group-hover:drop-shadow-[0_0_8px_var(--accent-red)]'
               } transition-all duration-200 pointer-events-none`}
               loading="lazy"
               decoding="async"

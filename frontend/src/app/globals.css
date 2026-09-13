@@ -70,12 +70,12 @@
     --bg-elevated: #111827;
     --border-color: #1f293d;
     --border-subtle: #111827;
-    --accent-red: #ef4444;
-    --accent-red-hover: #f87171;
+    --accent-red: #b91c1c;
+    --accent-red-hover: #dc2626;
     --accent-amber: #f59e0b;
     --accent-amber-hover: #fbbf24;
-    --accent-green: #22c55e;
-    --accent-green-hover: #4ade80;
+    --accent-green: #16a34a;
+    --accent-green-hover: #22c55e;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
@@ -263,7 +263,7 @@
 }
 
 .dbd-lemon-glow {
-  filter: drop-shadow(0 0 24px var(--accent-red));
+  filter: drop-shadow(0 0 10px var(--accent-red));
 }
 
 [data-placeholder]:empty:before {

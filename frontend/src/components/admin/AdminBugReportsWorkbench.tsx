@@ -430,7 +430,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   <button
                     type="button"
                     onClick={() => onUpdateBug(selectedBug.id)}
-                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-red to-accent-red-hover text-text-inverted px-4 py-2 text-xs font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-accent-red"
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted px-4 py-2 text-xs font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-accent-red"
                   >
                     <Save className="h-3.5 w-3.5" />
                     <span>{dict?.admin?.saveNote || dict?.user?.saveChanges || ''}</span>

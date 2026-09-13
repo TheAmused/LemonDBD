@@ -73,13 +73,6 @@ export const MainCard: React.FC<MainCardProps> = ({
           : 'border-accent-red/35 bg-bg-surface hover:border-accent-red/50'
       }`}
     >
-      {/* Background Accent Glow */}
-      <div
-        className={`pointer-events-none absolute -top-16 h-48 w-48 rounded-full blur-3xl opacity-20 ${
-          isSurvivor ? '-left-16 bg-cyan-500' : '-right-16 bg-accent-red'
-        }`}
-      />
-
       {/* Side-by-side: Survivor (Left = Avatar, Right = Perks) vs Killer (Left = Perks, Right = Avatar) */}
       <div
         className={`relative z-10 flex flex-col sm:flex-row items-center justify-around gap-4 sm:gap-6 ${

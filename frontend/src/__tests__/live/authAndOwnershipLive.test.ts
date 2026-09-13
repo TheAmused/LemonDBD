@@ -63,6 +63,9 @@ test("Live Frontend Workflow: Authentication & Character Ownership Cascade", asy
     headers: authHeaders,
     body: JSON.stringify({
       character_id: trapper.id,
+      // Survivor and killer ids can collide now that they're separate
+      // tables, so the role has to travel alongside the id.
+      role: trapper.role,
       is_owned: false,
     }),
   });

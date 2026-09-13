@@ -290,10 +290,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Link
             href={`/${currentLocale}`}
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-amber rounded-xl"
+            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-accent-red rounded-xl"
             aria-label={dict?.sidebar?.homeAria || 'Home'}
           >
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-accent-amber/15 border border-accent-amber/30 text-text-primary shadow-xs group-hover:scale-105 transition-transform p-1.5">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/15 border border-accent-red/30 text-text-primary shadow-xs group-hover:scale-105 transition-transform p-1.5">
               <LemonIcon className="h-7 w-7" />
             </div>
             <div>
@@ -330,7 +330,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 type="button"
                 onClick={() => setOthersOpen(!othersOpen)}
-                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${
                   isOtherActive
                     ? 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30'
                     : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
@@ -441,15 +441,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
           title={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
           aria-label={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
           aria-expanded={!isCollapsed}
-          className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-surface text-text-primary shadow-md hover:bg-bg-elevated hover:w-7 hover:text-accent-amber active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
+          className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-surface text-text-primary shadow-md hover:bg-bg-elevated hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"
         >
           <ChevronRight
             aria-hidden="true"
-            className="lemon-sidebar-icon-collapsed h-5 w-5 text-accent-amber group-hover:scale-110 transition-transform"
+            className="lemon-sidebar-icon-collapsed h-5 w-5 text-accent-red group-hover:scale-110 transition-transform"
           />
           <ChevronLeft
             aria-hidden="true"
-            className="lemon-sidebar-icon-expanded h-5 w-5 text-accent-amber group-hover:scale-110 transition-transform"
+            className="lemon-sidebar-icon-expanded h-5 w-5 text-accent-red group-hover:scale-110 transition-transform"
           />
         </button>
       </aside>
@@ -460,7 +460,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className="flex items-center gap-2.5"
           aria-label={dict?.sidebar?.homeAria || 'Home'}
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-amber/15 border border-accent-amber/30 text-text-primary p-1">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">
             <LemonIcon className="h-6 w-6" />
           </div>
           <span className="font-extrabold text-sm tracking-wider font-mono text-text-primary">

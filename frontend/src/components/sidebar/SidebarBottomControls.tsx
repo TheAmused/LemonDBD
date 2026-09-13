@@ -60,7 +60,7 @@ function useDismissOnOutsideOrEscape(
   }, [active, ref, onDismiss]);
 }
 
-const FOCUS_RING = 'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
+const FOCUS_RING = 'focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red';
 
 export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   currentLocale,

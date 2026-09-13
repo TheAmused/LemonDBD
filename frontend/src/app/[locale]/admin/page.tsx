@@ -464,7 +464,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'users'}
               onClick={() => setActiveTab('users')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'users'
                   ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
@@ -498,7 +498,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'challenges'}
               onClick={() => setActiveTab('challenges')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'challenges'
                   ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
@@ -513,7 +513,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'challenge_stats'}
               onClick={() => setActiveTab('challenge_stats')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'challenge_stats'
                   ? 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border border-indigo-500/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
@@ -528,7 +528,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               role="tab"
               aria-selected={activeTab === 'audit'}
               onClick={() => setActiveTab('audit')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'audit'
                   ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'

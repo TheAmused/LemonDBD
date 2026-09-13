@@ -10,6 +10,7 @@
   --color-border-color: var(--border-color);
   --color-border-subtle: var(--border-subtle);
   --color-accent-red: var(--accent-red);
+  --color-accent-red-hover: var(--accent-red-hover);
   --color-accent-amber: var(--accent-amber);
   --color-accent-amber-hover: var(--accent-amber-hover);
   --color-accent-green: var(--accent-green);
@@ -31,6 +32,7 @@
     --border-color: #c7ccd1;
     --border-subtle: #dde1e5;
     --accent-red: #c0272d;
+    --accent-red-hover: #96181d;
     --accent-amber: #b3690a;
     --accent-amber-hover: #8f5308;
     --accent-green: #15803d;
@@ -50,6 +52,7 @@
     --border-color: #e8d68c;
     --border-subtle: #f3e7b8;
     --accent-red: #c1272d;
+    --accent-red-hover: #96181d;
     --accent-amber: #9c5f00;
     --accent-amber-hover: #7a4a00;
     --accent-green: #15803d;
@@ -68,6 +71,7 @@
     --border-color: #1f293d;
     --border-subtle: #111827;
     --accent-red: #ef4444;
+    --accent-red-hover: #f87171;
     --accent-amber: #f59e0b;
     --accent-amber-hover: #fbbf24;
     --accent-green: #22c55e;

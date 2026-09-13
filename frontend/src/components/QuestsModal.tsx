@@ -102,7 +102,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+            className="absolute right-4 top-4 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             aria-label={dict?.modal?.close}
           >
             <X className="h-5 w-5" />
@@ -324,7 +324,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary text-xs font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber shadow-xs"
+            className="px-5 py-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary text-xs font-bold transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red shadow-xs"
           >
             {dict?.modal?.close}
           </button>

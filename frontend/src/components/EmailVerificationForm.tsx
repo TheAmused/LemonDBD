@@ -119,7 +119,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             aria-label={t?.digitAriaLabel?.replace('{n}', String(index + 1))}
-            className="h-11 w-9 rounded-lg border border-border-color bg-bg-primary text-center font-mono text-base text-text-primary focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber shadow-inner transition-colors"
+            className="h-11 w-9 rounded-lg border border-border-color bg-bg-primary text-center font-mono text-base text-text-primary focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-red shadow-inner transition-colors"
           />
         ))}
       </div>

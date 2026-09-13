@@ -84,17 +84,17 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       )}
 
       {disabled ? (
-        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-100 dark:bg-amber-950/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+        <span className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-amber">
           <AlertTriangle className="h-3 w-3" />
           {dict?.streaks?.disabled || 'Disabled'}
         </span>
       ) : comingSoon ? (
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <span className="absolute right-3 top-3 z-10 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-text-muted">
           {dict?.streaks?.comingSoon || 'Coming soon.'}
         </span>
       ) : completed && completedFull ? (
         <span
-          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-red-500/50 bg-red-100 dark:bg-red-950/70 px-2 py-1 text-red-600 dark:text-red-400 shadow-sm"
+          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-2 py-1 text-accent-red shadow-sm"
           aria-label={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
           title={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
         >
@@ -105,7 +105,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         </span>
       ) : completed ? (
         <span
-          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 px-2 py-1 text-yellow-600 dark:text-yellow-400 shadow-sm"
+          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2 py-1 text-accent-amber shadow-sm"
           aria-label={dict?.streaks?.completed || 'Completed'}
           title={dict?.streaks?.completed || 'Completed'}
         >
@@ -117,7 +117,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       ) : null}
 
       <div className="relative flex flex-1 items-center pr-24 sm:pr-28">
-        <h3 className={`text-lg sm:text-xl font-extrabold tracking-wide ${comingSoon || disabled ? 'text-slate-400 dark:text-slate-500' : 'text-slate-900 dark:text-slate-100'}`}>
+        <h3 className={`text-lg sm:text-xl font-extrabold tracking-wide ${comingSoon || disabled ? 'text-text-muted' : 'text-text-primary'}`}>
           {title}
         </h3>
       </div>
@@ -132,7 +132,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <button
           type="button"
           onClick={() => setShowDisabledModal(true)}
-          className={`text-left cursor-pointer ${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}
+          className={`text-left cursor-pointer ${base} bg-bg-elevated/50 opacity-70`}
         >
           {body}
         </button>
@@ -147,7 +147,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   }
 
   if (comingSoon) {
-    return <div className={`${base} bg-slate-100/50 dark:bg-slate-900/30 opacity-70`}>{body}</div>;
+    return <div className={`${base} bg-bg-elevated/50 opacity-70`}>{body}</div>;
   }
 
   if (onClick) {
@@ -157,7 +157,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         onClick={onClick}
         onMouseEnter={warm}
         onFocus={warm}
-        className={`group text-left ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${hoverClasses}`}
+        className={`group text-left ${base} bg-bg-surface hover:bg-bg-elevated focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${hoverClasses}`}
       >
         {body}
       </button>
@@ -167,7 +167,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   return (
     <Link
       href={href!}
-      className={`group ${base} bg-white hover:bg-slate-50 dark:bg-slate-900/50 dark:hover:bg-slate-900/80 focus:outline-none focus:ring-2 hover:shadow-lg ${hoverClasses}`}
+      className={`group ${base} bg-bg-surface hover:bg-bg-elevated focus:outline-none focus:ring-2 hover:shadow-lg ${hoverClasses}`}
     >
       {body}
     </Link>

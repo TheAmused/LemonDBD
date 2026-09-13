@@ -17,6 +17,12 @@ export interface ChallengeIntroTile {
   disabledBadge?: string;
   /** This tier has already been fully cleared -- shows a small trophy badge. */
   completed?: boolean;
+  /** Killer count frozen at that completion, shown next to the gold badge. */
+  completedCount?: number | null;
+  /** Upgrades the badge to red -- cleared with the entire game roster. */
+  completedFull?: boolean;
+  /** Killer count frozen at that full-roster completion, shown next to the badge. */
+  completedFullCount?: number | null;
 }
 
 export interface ChallengeIntroModalShellProps {
@@ -163,11 +169,21 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                   isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : ''
                 }`}
               >
-                {tile.completed && (
-                  <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 text-yellow-600 dark:text-yellow-400 shadow-sm">
+                {tile.completed && tile.completedFull ? (
+                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-red-500/50 bg-red-100 dark:bg-red-950/70 px-1.5 py-0.5 text-red-600 dark:text-red-400 shadow-sm">
                     <Trophy className="h-3 w-3" />
+                    {tile.completedFullCount != null && (
+                      <span className="text-[10px] font-black leading-none">{tile.completedFullCount}</span>
+                    )}
                   </span>
-                )}
+                ) : tile.completed ? (
+                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 px-1.5 py-0.5 text-yellow-600 dark:text-yellow-400 shadow-sm">
+                    <Trophy className="h-3 w-3" />
+                    {tile.completedCount != null && (
+                      <span className="text-[10px] font-black leading-none">{tile.completedCount}</span>
+                    )}
+                  </span>
+                ) : null}
                 {content}
               </button>
             );

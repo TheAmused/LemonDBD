@@ -49,6 +49,7 @@ def serialize_character(c: Character) -> dict[str, Any]:
         "terror_radius_meters": c.terror_radius_meters,
         "height": c.height,
         "translations": c.translations or {},
+        "created_at": c.created_at.isoformat() if c.created_at else None,
     }
 
 

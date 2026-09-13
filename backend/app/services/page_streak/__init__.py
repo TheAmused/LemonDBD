@@ -13,9 +13,12 @@ from app.services.page_streak.pool import (
     get_user_killer_pool,
 )
 from app.services.page_streak.roster import (
+    ROSTER_COMPLETE_VARIANT,
     build_roster_summary,
     get_character_release_numbers,
     get_killer_avatar_map,
+    get_live_roster_badge,
+    get_owned_killer_ids,
     get_owned_killers_ordered,
 )
 from app.services.page_streak.runs import (
@@ -42,6 +45,9 @@ __all__ = [
     "get_perk_icon_map",
     "get_character_release_numbers",
     "get_owned_killers_ordered",
+    "get_owned_killer_ids",
+    "get_live_roster_badge",
+    "ROSTER_COMPLETE_VARIANT",
     "get_killer_avatar_map",
     "build_roster_summary",
     "run_to_dict",

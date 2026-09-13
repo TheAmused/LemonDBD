@@ -518,3 +518,94 @@ class TestPageStreakRosterOrder:
     def test_falls_back_to_alphabetical_order_without_release_numbers(self) -> None:
         service = PageStreakService(perk_service=FakePerkService(self.perks))
         assert service.get_killers(self.user_id) == ["Animatronic", "Nurse", "Trapper", "Wraith"]
+
+
+@pytest.mark.unit
+class TestPageStreakRosterMilestone:
+    """Tests for the mode-wide 'full roster' badge (owned killers vs. the whole
+    game), computed LIVE on every read -- unlike gauntlet/chaos/history, Page
+    Streak has no bounded run to freeze a pool against, so nothing here is
+    ever written to ChallengeCompletionRecord; it's recomputed fresh each
+    time from current ownership + the permanent per-killer completions."""
+
+    @pytest.fixture(autouse=True)
+    def setup_milestone(self, streak_user: int) -> None:
+        self.user_id = streak_user
+        self.perks = make_perks(4, character="Trapper") + make_perks(4, character="Nurse")
+        for i, perk in enumerate(self.perks, start=1):
+            perk["name"] = f"Perk {i:03d}"
+        seed_perks(self.perks)
+        self.service = PageStreakService(perk_service=FakePerkService(self.perks))
+
+    def win_killer(self, killer: str) -> dict[str, object]:
+        run = self.service.start_run(self.user_id, killer)
+        page = run["pages"][0]
+        build = page[: self.service.expected_build_size(page)]
+        return self.service.submit_result(self.user_id, killer, 1, build, "win")
+
+    def test_not_full_when_a_killer_exists_that_is_not_owned(
+        self, ownership_service: OwnershipService
+    ) -> None:
+        from app.core.extensions import db
+
+        ghostface = Character(name="Ghostface", role="Killer")
+        db.session.add(ghostface)
+        db.session.commit()
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+
+        self.win_killer("Trapper")
+        updated = self.win_killer("Nurse")
+        assert updated["status"] == "completed"
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone["completed"] is True
+        assert milestone["full_roster"] is False
+        assert milestone["killer_count"] == 2
+
+    def test_full_when_the_owned_roster_is_the_whole_game(self) -> None:
+        self.win_killer("Trapper")
+        self.win_killer("Nurse")
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone["completed"] is True
+        assert milestone["full_roster"] is True
+        assert milestone["killer_count"] == 2
+
+    def test_a_new_owned_killer_drops_the_badge_until_it_is_also_cleared(self) -> None:
+        """Live, not permanent: gaining a killer (a new one shipping to the
+        game and defaulting to owned, or the player unlocking one) makes the
+        roster incomplete again until that killer is cleared too."""
+        from app.core.extensions import db
+
+        self.win_killer("Trapper")
+        self.win_killer("Nurse")
+        assert self.service.get_roster_milestone(self.user_id)["full_roster"] is True
+
+        db.session.add(Character(name="Ghostface", role="Killer"))  # owned by default
+        db.session.commit()
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone == {"completed": False, "full_roster": False, "killer_count": None}
+
+    def test_a_new_owned_killer_mid_grind_also_blocks_the_badge(self) -> None:
+        """No grace period here (unlike gauntlet/chaos/history's frozen-run
+        pools): a killer that becomes owned mid-grind must be cleared too
+        before the badge shows, even though the player was already grinding
+        toward what used to be the whole roster."""
+        from app.core.extensions import db
+
+        self.win_killer("Trapper")
+
+        db.session.add(Character(name="Ghostface", role="Killer"))  # owned by default
+        db.session.commit()
+
+        updated = self.win_killer("Nurse")
+        assert updated["status"] == "completed"
+
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone == {"completed": False, "full_roster": False, "killer_count": None}
+
+    def test_no_milestone_before_the_owned_roster_is_fully_cleared(self) -> None:
+        self.win_killer("Trapper")
+        milestone = self.service.get_roster_milestone(self.user_id)
+        assert milestone == {"completed": False, "full_roster": False, "killer_count": None}

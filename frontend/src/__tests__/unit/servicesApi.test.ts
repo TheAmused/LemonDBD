@@ -130,7 +130,14 @@ test('servicesApi: pageStreakApi and gauntletStreakApi operations', async (t) =>
     globalThis.fetch = async (url: any, opts?: any) => {
       assert.ok(opts?.headers?.Authorization === 'Bearer test-token');
       if (String(url).includes('/roster')) {
-        return { ok: true, json: async () => ({ count: 1, data: [{ killer: 'The Trapper', status: 'not_started', attempt: 1, current_page: 1, best_page: 1, page_count: 5 }] }) } as Response;
+        return {
+          ok: true,
+          json: async () => ({
+            count: 1,
+            data: [{ killer: 'The Trapper', status: 'not_started', attempt: 1, current_page: 1, best_page: 1, page_count: 5 }],
+            milestone: { completed: false, full_roster: false, killer_count: null },
+          }),
+        } as Response;
       }
       if (String(url).includes('/run/start')) {
         return { ok: true, json: async () => ({ run: { killer: 'The Trapper', current_page: 1 } }) } as Response;
@@ -141,9 +148,10 @@ test('servicesApi: pageStreakApi and gauntletStreakApi operations', async (t) =>
       return { ok: true, json: async () => ({ run: null }) } as Response;
     };
 
-    const roster = await fetchRoster('test-token');
+    const { roster, milestone } = await fetchRoster('test-token');
     assert.strictEqual(roster.length, 1);
     assert.strictEqual(roster[0].killer, 'The Trapper');
+    assert.strictEqual(milestone.completed, false);
 
     const started = await startPageRun('test-token', 'The Trapper');
     assert.strictEqual(started.current_page, 1);

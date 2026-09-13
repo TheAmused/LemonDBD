@@ -1,10 +1,12 @@
 # backend/app/models/character.py
+from datetime import datetime
 from typing import TYPE_CHECKING, Any
-from sqlalchemy import JSON, Boolean, Integer, String, Text
+from sqlalchemy import JSON, Boolean, DateTime, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads
+from app.models.base import utcnow
 
 if TYPE_CHECKING:
     from app.models.perk import Perk
@@ -44,6 +46,10 @@ class Character(Base):
     translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
+    # When this row was first scraped in, not the in-game release date --
+    # lets "how many killers existed in the game at time X" be answered
+    # honestly for players whose owned roster was fixed before X.
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
     # Default (lazy) loading: every real reader of `.perks` already opts in
     # via `.options(joinedload(Character.perks))` at its own query site, so

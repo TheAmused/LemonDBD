@@ -13,8 +13,8 @@ get_page_streak_service = make_service_getter("PAGE_STREAK_SERVICE", PageStreakS
 def get_roster():
     """Retrieve the list of eligible characters for page streak runs."""
     service = get_page_streak_service()
-    roster = service.get_roster(g.current_user.id)
-    return jsonify({"count": len(roster), "data": roster}), 200
+    roster, milestone = service.get_roster_with_milestone(g.current_user.id)
+    return jsonify({"count": len(roster), "data": roster, "milestone": milestone}), 200
 
 
 @page_streak_bp.route("/pool", methods=["GET"])

@@ -1,15 +1,17 @@
 'use client';
 // frontend/src/components/onboarding/CharacterOnboardingWizard.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown, Loader2, User as UserIcon } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl } from '@/components/character-detail/types';
-import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import { CharacterOwnershipOverlay, OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
 import { CATALOG_TTL_MS, fetchCached, invalidate } from '@/services/dataCache';
@@ -17,6 +19,9 @@ import { getChapterBannerSrc } from '@/utils/mapUtils';
 import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
+import { LemonIcon } from '@/components/LemonIcon';
+
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 /** Skipped to directly after a language-triggered locale redirect, so the
  * wizard resumes on the roster instead of showing the intro/language steps
@@ -209,6 +214,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const {
     user,
     token,
+    isAuthenticated,
+    isLoading: authLoading,
     bulkUpdateCharacterOwnership,
     bulkUpdatePerkOwnership,
     markOnboardingComplete,
@@ -226,6 +233,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<OnboardingCharacter | null>(null);
   const [chapterBanners, setChapterBanners] = useState<Record<string, ChapterBanner>>({});
   const [translatedChapterNames, setTranslatedChapterNames] = useState<Record<string, string>>({});
@@ -361,16 +369,20 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         ([charsJson, perksJson, translatedCharsJson]: [
           { data?: OnboardingCharacter[] },
           { data?: OnboardingPerk[] },
-          { data?: Array<{ id: number; name: string; chapter_name: string | null }> },
+          { data?: Array<{ id: number; name: string; category: string; chapter_name: string | null }> },
         ]) => {
           if (cancelled) return;
           const chars = charsJson.data || [];
           const perks = perksJson.data || [];
-          const translatedById = new Map((translatedCharsJson.data || []).map((c) => [c.id, c]));
+          // Keyed by role + id, not id alone: survivor 7 and killer 7 are
+          // different characters.
+          const translatedByKey = new Map(
+            (translatedCharsJson.data || []).map((c) => [ownershipKey(c.id, c.category), c])
+          );
 
           const chapterNameTranslations: Record<string, string> = {};
           const localizedChars = chars.map((c) => {
-            const translated = translatedById.get(c.id);
+            const translated = translatedByKey.get(ownershipKey(c.id, c.category));
             if (!translated) return c;
             const canonicalChapterName = c.chapter_name || 'Base Game';
             if (translated.chapter_name && !chapterNameTranslations[canonicalChapterName]) {
@@ -525,7 +537,46 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     onFinished();
   };
 
-  if (loading) {
+  // Auth finished resolving and there's no session -- the fetch below never
+  // runs without a user/token, so this must render something other than the
+  // loading spinner below.
+  if (!authLoading && !isAuthenticated) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+        <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-amber/30 bg-accent-amber/15">
+            <LemonIcon className="h-10 w-10 text-accent-amber" />
+          </div>
+          <h1 className="text-xl font-black tracking-wider text-text-primary">
+            {dict?.user?.authRequiredTitle || 'Authentication Required'}
+          </h1>
+          <p className="text-xs leading-relaxed text-text-secondary">
+            {dict?.user?.authRequiredDesc ||
+              'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
+          </p>
+          <div className="flex flex-col gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-red py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-amber/20 transition-all hover:opacity-95"
+            >
+              <UserIcon className="h-4 w-4" />
+              <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
+            </button>
+            <Link
+              href={`/${locale}`}
+              className="py-1 text-xs text-text-muted transition-colors hover:text-accent-amber"
+            >
+              {dict?.user?.returnToHome || 'Return to Home'}
+            </Link>
+          </div>
+        </div>
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} dict={dict} />
+      </div>
+    );
+  }
+
+  if (loading || authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-accent-amber" />
@@ -697,9 +748,16 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             const isExpanded = expandedChapter === group.chapterName;
             const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
             const bannerSrc = getChapterBannerSrc(banner, backendBase);
-            const chapterOwned = group.characters.every(
-              (c) => ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
-            );
+            const isCharacterOwned = (c: OnboardingCharacter) =>
+              ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned;
+            const ownedCharacterCount = group.characters.filter(isCharacterOwned).length;
+            const chapterOwned = ownedCharacterCount === group.characters.length;
+            const chapterHasPartialSignal =
+              ownedCharacterCount > 0 ||
+              group.characters.some(
+                (c) => !isCharacterOwned(c) && getCharacterPerkStats(c.id, c.category).unlocked > 0,
+              );
+            const chapterPartiallyOwned = !chapterOwned && chapterHasPartialSignal;
             // Display only -- expandedChapter/aria-id/banner lookups all key off
             // the canonical group.chapterName above, never this localized text.
             const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;
@@ -726,15 +784,16 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         src={bannerSrc}
                         alt=""
                         aria-hidden="true"
-                        className={`h-full w-full object-cover transition-[filter] duration-200 ${chapterOwned ? '' : 'grayscale'}`}
+                        className="h-full w-full object-cover"
                       />
                     ) : (
                       <span className="px-2 text-center text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
                     )}
-                    {/* Same washed-out treatment as a locked character card
-                        (CharacterOwnershipOverlay) -- grayscale image plus a
-                        dark scrim, cleared once the chapter is marked owned. */}
-                    {!chapterOwned && <div className="absolute inset-0 bg-slate-950/50" />}
+                    <OwnershipClipOverlay
+                      isOwned={chapterOwned}
+                      isPartial={chapterPartiallyOwned}
+                      imageSrc={bannerSrc}
+                    />
                     <ChevronDown
                       className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                     />

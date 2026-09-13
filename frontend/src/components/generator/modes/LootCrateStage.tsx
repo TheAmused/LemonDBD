@@ -224,11 +224,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             className="cursor-pointer disabled:cursor-default"
           >
             <Gift
-              className={`h-28 w-28 ${
-                role === 'Survivor'
-                  ? 'text-emerald-400 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]'
-                  : 'text-rose-400 drop-shadow-[0_0_20px_rgba(244,63,94,0.5)]'
-              }`}
+              className={`h-28 w-28 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`}
             />
           </motion.button>
           {phase === 'closed' && (
@@ -237,7 +233,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             </p>
           )}
           {phase === 'shaking' && (
-            <p aria-live="polite" className="text-xs font-black uppercase tracking-wide text-amber-600 dark:text-amber-400 animate-pulse">
+            <p aria-live="polite" className="text-xs font-black uppercase tracking-wide text-accent-amber animate-pulse">
               {dict?.generator?.crateOpening || 'Cracking Open...'}
             </p>
           )}
@@ -258,10 +254,10 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 const locked = lockedItems[slotIdx];
                 return locked ? (
                   <div key={`mob-tray-locked-${locked.id}`} className="relative">
-                    <div className="rounded-xl ring-2 ring-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.35)]">
+                    <div className="rounded-xl ring-2 ring-accent-amber/60">
                       <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" dict={dict} />
                     </div>
-                    <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow">
+                    <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                       <Lock className="h-3 w-3" />
                     </div>
                   </div>
@@ -316,10 +312,10 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
               >
                 <div className="relative">
-                  <div className="rounded-xl ring-2 ring-amber-400 shadow-[0_0_18px_rgba(245,158,11,0.4)]">
+                  <div className="rounded-xl ring-2 ring-accent-amber/60">
                     <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} dict={dict} />
                   </div>
-                  <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
+                  <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                     <Lock className="h-3.5 w-3.5" />
                   </div>
                 </div>

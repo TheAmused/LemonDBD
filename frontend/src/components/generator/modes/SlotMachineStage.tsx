@@ -465,7 +465,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
       {(phase === 'spinning' || phase === 'awaiting') && (
         <>
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-black uppercase tracking-wide text-amber-600 dark:text-amber-400">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-black uppercase tracking-wide text-accent-amber">
             <span>{(dict?.generator?.slotCycleLabel || 'Cycle {cycle}/3').replace('{cycle}', String(cycleIndex + 1))}</span>
             <span className="text-text-muted">{'•'}</span>
             <span>{(dict?.generator?.slotLockedCount || '{count}/4 Locked').replace('{count}', String(selected.length))}</span>
@@ -497,12 +497,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       'bg-gradient-to-r from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
                       isClickable && 'cursor-pointer',
                       reel.locked
-                        ? 'border-amber-500 shadow-[0_0_14px_rgba(245,158,11,0.35)]'
+                        ? 'border-accent-amber'
                         : isStaged
-                        ? 'border-emerald-500 shadow-[0_0_14px_rgba(16,185,129,0.35)]'
+                        ? 'border-accent-green'
                         : landedBroken
-                        ? 'border-red-500/70 shadow-[0_0_14px_rgba(239,68,68,0.25)]'
-                        : 'border-border-color hover:border-amber-500/40'
+                        ? 'border-accent-red/70'
+                        : 'border-border-color hover:border-accent-amber/40'
                     )}
                     style={{ height: cellPx, width: cellPx * 3 }}
                   >
@@ -530,7 +530,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                             style={{ width: cellPx, height: cellPx }}
                           >
                             {cell.broken ? (
-                              <Ban className="text-red-500" style={{ height: cellPx * 0.65, width: cellPx * 0.65 }} />
+                              <Ban className="text-accent-red" style={{ height: cellPx * 0.65, width: cellPx * 0.65 }} />
                             ) : cell.perk ? (
                               <img
                                 src={getPerkIconUrl(cell.perk, backendBase) || ''}
@@ -547,7 +547,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                             )}
                             {coordLabel && (
                               <span
-                                className="pointer-events-none absolute left-1 top-1 z-10 whitespace-nowrap font-mono font-black text-amber-600 dark:text-amber-400 drop-shadow-xs"
+                                className="pointer-events-none absolute left-1 top-1 z-10 whitespace-nowrap font-mono font-black text-accent-amber drop-shadow-xs"
                                 style={{ fontSize: Math.max(8, Math.min(11, cellPx * 0.12)) }}
                               >
                                 {coordLabel}
@@ -561,7 +561,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     {/* Center Payline Target Box */}
                     <div
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-y-0 z-10 border-x-2 border-amber-500/70 bg-amber-500/10 shadow-[0_0_10px_rgba(245,158,11,0.2)]"
+                      className="pointer-events-none absolute inset-y-0 z-10 border-x-2 border-accent-amber/70 bg-accent-amber/10"
                       style={{ left: cellPx, width: cellPx }}
                     />
 
@@ -579,11 +579,11 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     className={cn(
                       'flex items-center justify-between gap-2 p-1.5 rounded-xl border transition-all duration-200 w-full',
                       reel.locked
-                        ? 'bg-amber-500/10 border-amber-500/60 shadow-xs'
+                        ? 'bg-accent-amber/10 border-accent-amber/60 shadow-xs'
                         : isStaged
-                        ? 'bg-emerald-500/10 border-emerald-500/60 shadow-xs'
+                        ? 'bg-accent-green/10 border-accent-green/60 shadow-xs'
                         : landedBroken
-                        ? 'bg-red-500/10 border-red-500/50'
+                        ? 'bg-accent-red/10 border-accent-red/50'
                         : 'bg-bg-elevated/40 border-border-color hover:bg-bg-elevated/70'
                     )}
                   >
@@ -593,11 +593,11 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                         className={cn(
                           'text-[11px] sm:text-xs font-black uppercase tracking-wider text-center',
                           reel.locked
-                            ? 'text-amber-600 dark:text-amber-400'
+                            ? 'text-accent-amber'
                             : landedBroken
-                            ? 'text-red-500'
+                            ? 'text-accent-red'
                             : isStaged
-                            ? 'text-emerald-600 dark:text-emerald-400'
+                            ? 'text-accent-green'
                             : 'text-text-secondary'
                         )}
                       >
@@ -608,9 +608,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                           : `#${reel.id + 1}`}
                       </span>
                       {reel.locked ? (
-                        <Lock className="h-4 w-4 text-amber-500 mt-0.5" />
+                        <Lock className="h-4 w-4 text-accent-amber mt-0.5" />
                       ) : landedBroken ? (
-                        <Ban className="h-4 w-4 text-red-500 mt-0.5" />
+                        <Ban className="h-4 w-4 text-accent-red mt-0.5" />
                       ) : null}
                     </div>
 
@@ -638,7 +638,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                           className={cn(
                             'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all cursor-pointer touch-manipulation border shadow-xs',
                             isStaged
-                              ? 'bg-emerald-500 text-white border-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+                              ? 'bg-accent-green text-text-inverted border-accent-green'
                               : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary'
                           )}
                           aria-label={`#${reel.id + 1}`}
@@ -646,7 +646,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                           {isStaged ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
                         </button>
                       ) : reel.locked ? (
-                        <div className="h-10 w-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                        <div className="h-10 w-10 rounded-xl bg-accent-amber/20 border border-accent-amber/40 flex items-center justify-center text-accent-amber">
                           <Lock className="h-5 w-5" />
                         </div>
                       ) : (
@@ -683,11 +683,11 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       'bg-gradient-to-b from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
                       isClickable && 'cursor-pointer',
                       reel.locked
-                        ? 'border-amber-500 shadow-[0_0_16px_rgba(245,158,11,0.4)]'
+                        ? 'border-accent-amber'
                         : isStaged
-                          ? 'border-emerald-500 shadow-[0_0_16px_rgba(16,185,129,0.35)]'
+                          ? 'border-accent-green'
                           : landedBroken
-                            ? 'border-red-500/70 shadow-[0_0_16px_rgba(239,68,68,0.25)]'
+                            ? 'border-accent-red/70'
                             : 'border-border-color hover:border-border-color/80'
                     )}
                     style={{ height: cellPx * 3, width: cellPx }}
@@ -713,7 +713,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                             style={{ height: cellPx }}
                           >
                             {cell.broken ? (
-                              <Ban className="text-red-500" style={{ height: cellPx * 0.58, width: cellPx * 0.58 }} />
+                              <Ban className="text-accent-red" style={{ height: cellPx * 0.58, width: cellPx * 0.58 }} />
                             ) : cell.perk ? (
                               <img
                                 src={getPerkIconUrl(cell.perk, backendBase) || ''}
@@ -727,7 +727,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                             )}
                             {coordLabel && (
                               <span
-                                className="pointer-events-none absolute left-0.5 top-0.5 z-10 whitespace-nowrap font-mono font-black text-amber-600 dark:text-amber-400 drop-shadow-xs"
+                                className="pointer-events-none absolute left-0.5 top-0.5 z-10 whitespace-nowrap font-mono font-black text-accent-amber drop-shadow-xs"
                                 style={{ fontSize: Math.max(7, Math.min(11, cellPx * 0.09)) }}
                               >
                                 {coordLabel}
@@ -741,7 +741,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-bg-surface/85 via-transparent to-bg-surface/85" />
 
                     {reel.locked && (
-                      <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
+                      <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                         <Lock className="h-3.5 w-3.5" />
                       </div>
                     )}
@@ -766,7 +766,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     <span
                       className={cn(
                         'text-[10px] font-black uppercase tracking-wide',
-                        reel.locked ? 'text-amber-600 dark:text-amber-400' : landedBroken ? 'text-red-500' : 'text-text-muted'
+                        reel.locked ? 'text-accent-amber' : landedBroken ? 'text-accent-red' : 'text-text-muted'
                       )}
                     >
                       {reel.locked ? (dict?.generator?.slotLockedLabel || 'Locked') : landedBroken ? (dict?.generator?.slotBrokenLabel || 'Broken') : `#${reel.id + 1}`}

@@ -128,7 +128,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
               </div>
 
               {perk.alternate_name && (
-                <div className="flex items-center gap-1 rounded-lg bg-accent-amber/10 px-2.5 py-1 text-xs font-bold text-amber-700 dark:text-amber-300 border border-accent-amber/30">
+                <div className="flex items-center gap-1 rounded-lg bg-accent-amber/10 px-2.5 py-1 text-xs font-bold text-accent-amber border border-accent-amber/30">
                   <Repeat className="h-3 w-3 text-accent-amber" />
                   <span>
                     {dict?.modal?.alias && `${dict.modal.alias}: `}

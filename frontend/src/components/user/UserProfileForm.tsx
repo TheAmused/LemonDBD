@@ -111,7 +111,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-amber transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
             {dict?.user?.tabSanctum || 'Account Management'}
           </h2>
           <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
@@ -120,7 +120,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown
-            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-amber transition-transform duration-300 ease-in-out ${
+            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
               isExpanded ? 'rotate-180' : 'rotate-0'
             }`}
           />
@@ -169,7 +169,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                       required
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
+                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
                     />
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
+                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
                         />
                         <button
                           type="button"
@@ -225,7 +225,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
                             passwordsMatch
                               ? 'border-emerald-500/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                              : 'border-border-color focus:border-accent-amber focus:ring-1 focus:ring-accent-red'
+                              : 'border-border-color focus:border-accent-red focus:ring-1 focus:ring-accent-red'
                           }`}
                         />
                         <button
@@ -247,7 +247,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-red px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md shadow-accent-amber/20 hover:opacity-95 disabled:opacity-50 transition-all cursor-pointer font-mono"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md shadow-accent-red/20 hover:opacity-95 disabled:opacity-50 transition-all cursor-pointer font-mono"
                 >
                   {isUpdating ? (
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />

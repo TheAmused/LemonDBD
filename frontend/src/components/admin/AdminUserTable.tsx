@@ -71,14 +71,14 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={dict?.admin?.searchUserPlaceholder || ''}
-              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
+              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
             />
           </div>
 
           <select
             value={roleFilter}
             onChange={(e) => onRoleFilterChange(e.target.value)}
-            className="rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-amber focus:outline-none cursor-pointer shadow-inner [&>option]:bg-bg-surface [&>option]:text-text-primary"
+            className="rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-red focus:outline-none cursor-pointer shadow-inner [&>option]:bg-bg-surface [&>option]:text-text-primary"
           >
             <option value="all">{dict?.admin?.allRoles || 'All Roles'}</option>
             <option value="admin">{dict?.admin?.admins || 'Admins'}</option>

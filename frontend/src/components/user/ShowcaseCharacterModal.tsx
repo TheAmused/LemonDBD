@@ -170,7 +170,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={dict?.user?.searchCharacters || 'Search characters...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-amber/60 transition-colors font-mono"
+            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-red/60 transition-colors font-mono"
             autoFocus
           />
         </div>

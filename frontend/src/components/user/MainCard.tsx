@@ -99,7 +99,7 @@ export const MainCard: React.FC<MainCardProps> = ({
             }}
             title={dict?.user?.changeMain || 'Change Main'}
             aria-label={dict?.user?.changeMain || 'Change Main'}
-            className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-amber cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
+            className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-red cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
             {avatarSrc && !imgError ? (
               <Image

@@ -84,7 +84,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder={dict?.admin?.createUserUsernamePlaceholder || ''}
-              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
+              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
             />
           </div>
 
@@ -98,7 +98,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={dict?.admin?.createUserEmailPlaceholder || ''}
-              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
+              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
             />
           </div>
 
@@ -112,7 +112,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder={dict?.admin?.createUserPasswordPlaceholder || ''}
-              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
+              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
             />
           </div>
 
@@ -123,7 +123,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
             <select
               value={role}
               onChange={(e) => setRole(e.target.value as 'user' | 'admin')}
-              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-amber focus:outline-none shadow-inner cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary"
+              className="w-full rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-red focus:outline-none shadow-inner cursor-pointer [&>option]:bg-bg-surface [&>option]:text-text-primary"
             >
               <option value="user">{dict?.admin?.roleStandard || 'Standard User'}</option>
               <option value="admin">{dict?.admin?.roleAdministrator || 'Administrator'}</option>

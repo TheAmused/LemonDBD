@@ -466,7 +466,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               onClick={() => setActiveTab('users')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'users'
-                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/40 shadow-xs'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
               }`}
             >
@@ -636,7 +636,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         message={
           <>
             {dict?.admin?.confirmDeleteUserPrefix || 'Delete'}{' '}
-            <strong className="font-bold text-accent-amber">{userPendingDeletion?.username}</strong>?
+            <strong className="font-bold text-accent-red">{userPendingDeletion?.username}</strong>?
             <br />
             {dict?.admin?.cannotBeUndone || 'This action cannot be undone.'}
           </>

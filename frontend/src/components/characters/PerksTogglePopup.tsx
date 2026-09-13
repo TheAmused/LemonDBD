@@ -94,40 +94,40 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
             {dict.characterDetail.togglePerkOwnershipHelp}
           </p>
         )}
-        <div className="p-5 space-y-2">
-          {characterPerks.map((perk) => {
-            const isUnlocked = isPerkUnlocked(perk.perk_id);
-            return (
-              <button
-                key={perk.perk_id}
-                type="button"
-                onClick={() => onTogglePerk(perk.perk_id)}
-                className={`flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left text-xs font-semibold transition-all hover:scale-[1.01] active:scale-95 ${
-                  isUnlocked
-                    ? 'border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
-                    : 'border-border-color bg-bg-primary text-text-muted hover:border-accent-amber/50'
-                }`}
-              >
-                <div
-                  className={`h-14 w-14 shrink-0 rounded-lg border p-1 flex items-center justify-center bg-slate-900 ${
-                    isUnlocked ? 'border-emerald-500/30' : 'border-border-color'
-                  }`}
+        <div className="p-5">
+          <div className="grid grid-cols-3 gap-4">
+            {characterPerks.map((perk) => {
+              const isUnlocked = isPerkUnlocked(perk.perk_id);
+              return (
+                <button
+                  key={perk.perk_id}
+                  type="button"
+                  onClick={() => onTogglePerk(perk.perk_id)}
+                  className="flex cursor-pointer flex-col items-center gap-1.5 rounded-xl p-1 text-center transition-transform hover:scale-105 active:scale-95"
                 >
-                  <img
-                    src={getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url)}
-                    alt={perk.name}
-                    className={`h-full w-full object-contain ${isUnlocked ? '' : 'grayscale opacity-50'}`}
-                  />
-                </div>
-                <span className="flex-1 text-text-primary">{perk.name}</span>
-                {isUnlocked ? (
-                  <Check className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-                ) : (
-                  <Lock className="h-4 w-4 shrink-0 text-text-muted" />
-                )}
-              </button>
-            );
-          })}
+                  <div className="relative h-20 w-20 sm:h-24 sm:w-24">
+                    <img
+                      src={getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url)}
+                      alt={perk.name}
+                      className={`h-full w-full object-contain ${isUnlocked ? '' : 'grayscale opacity-50'}`}
+                    />
+                    <div
+                      className={`absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border backdrop-blur-md ${
+                        isUnlocked
+                          ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                          : 'border-border-color bg-bg-surface text-text-muted'
+                      }`}
+                    >
+                      {isUnlocked ? <Check className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+                    </div>
+                  </div>
+                  <span className="line-clamp-2 text-[11px] font-semibold leading-tight text-text-primary">
+                    {perk.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
           {characterPerks.length === 0 && (
             <p className="text-xs text-text-muted italic">
               {dict?.characterDetail?.noTeachablePerksForCharacter || dict?.characterDetail?.noPerks}

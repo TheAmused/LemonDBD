@@ -1,10 +1,12 @@
 'use client';
 // frontend/src/components/onboarding/CharacterOnboardingWizard.tsx
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Loader2 } from 'lucide-react';
+import { ChevronDown, Loader2, User as UserIcon } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -17,6 +19,9 @@ import { getChapterBannerSrc } from '@/utils/mapUtils';
 import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
+import { LemonIcon } from '@/components/LemonIcon';
+
+const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 /** Skipped to directly after a language-triggered locale redirect, so the
  * wizard resumes on the roster instead of showing the intro/language steps
@@ -209,6 +214,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const {
     user,
     token,
+    isAuthenticated,
+    isLoading: authLoading,
     bulkUpdateCharacterOwnership,
     bulkUpdatePerkOwnership,
     markOnboardingComplete,
@@ -226,6 +233,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<OnboardingCharacter | null>(null);
   const [chapterBanners, setChapterBanners] = useState<Record<string, ChapterBanner>>({});
   const [translatedChapterNames, setTranslatedChapterNames] = useState<Record<string, string>>({});
@@ -525,7 +533,47 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     onFinished();
   };
 
-  if (loading) {
+  // Confirmed logged out (auth has finished resolving, not just still
+  // hydrating): the ownership fetch below never runs without a user/token,
+  // so without this the wizard would otherwise sit on its loading spinner
+  // forever instead of ever reaching a usable state.
+  if (!authLoading && !isAuthenticated) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+        <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-amber/30 bg-accent-amber/15">
+            <LemonIcon className="h-10 w-10 text-accent-amber" />
+          </div>
+          <h1 className="text-xl font-black tracking-wider text-text-primary">
+            {dict?.user?.authRequiredTitle || 'Authentication Required'}
+          </h1>
+          <p className="text-xs leading-relaxed text-text-secondary">
+            {dict?.user?.authRequiredDesc ||
+              'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
+          </p>
+          <div className="flex flex-col gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-red py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-amber/20 transition-all hover:opacity-95"
+            >
+              <UserIcon className="h-4 w-4" />
+              <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
+            </button>
+            <Link
+              href={`/${locale}`}
+              className="py-1 text-xs text-text-muted transition-colors hover:text-accent-amber"
+            >
+              {dict?.user?.returnToHome || 'Return to Home'}
+            </Link>
+          </div>
+        </div>
+        <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} dict={dict} />
+      </div>
+    );
+  }
+
+  if (loading || authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-accent-amber" />

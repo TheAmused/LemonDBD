@@ -22,6 +22,7 @@ export default {
   emailNotVerified: "メールアドレスが未認証です。今すぐ認証",
   reportBug: "バグ報告",
   buyCoffee: "コーヒーをおごる",
+  devOnboarding: "Dev: Onboarding",
   switchLanguage: "言語を切り替え",
   toggleTheme: "テーマを切り替え",
   collapseSidebar: "ナビゲーションバーを折りたたむ",

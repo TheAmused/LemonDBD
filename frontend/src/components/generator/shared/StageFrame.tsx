@@ -24,7 +24,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
   return (
     <div
       className={cn(
-        'relative z-10 overflow-hidden border-b border-border-color p-2 sm:p-5 lg:p-6 transition-colors duration-300',
+        'relative z-10 flex flex-col overflow-hidden border-b border-border-color p-2 sm:p-5 lg:p-6 transition-colors duration-300',
         className
       )}
     >
@@ -43,7 +43,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
       />
 
       {(topLeft || topRight) && (
-        <div className="relative z-20 mb-3 sm:mb-4 flex flex-col items-center justify-center gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <div className="relative z-20 mb-3 sm:mb-4 flex shrink-0 flex-col items-center justify-center gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full xl:w-auto shrink-0 order-1 xl:order-2">
             {topRight}
           </div>
@@ -53,7 +53,7 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         </div>
       )}
 
-      <div className="relative z-10 flex h-full min-h-[320px] flex-col items-center justify-center sm:min-h-[440px] lg:min-h-[520px]">
+      <div className="relative z-10 flex flex-1 min-h-[320px] flex-col items-center justify-center sm:min-h-[440px] lg:min-h-[520px]">
         {children}
       </div>
     </div>

@@ -1,7 +1,7 @@
 # backend/tests/unit/test_history_roster.py
 import pytest
 from sqlalchemy.orm import Session
-from app.models import Character, Perk
+from app.models import Killer, Perk
 from app.services.history.roster import (
     ROW_SIZE,
     build_rows,
@@ -11,21 +11,26 @@ from app.services.history.roster import (
 )
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from tests.unit.conftest import make_chapter
 
 
-def seed_killer(name: str, release_number: int | None, perk_count: int = 2) -> Character:
+def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Killer:
+    """`release_number` is `== id` now, not a settable field, so it is passed
+    straight through as the killer's id to control release order."""
     from app.core.extensions import db
 
-    character = Character(name=name, role="Killer", release_number=release_number)
+    character = Killer(
+        id=release_number, name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"
+    )
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                killer_id=character.id,
                 is_teachable=True,
-                category="Killer",
+                role="Killer",
             )
         )
     db.session.commit()
@@ -82,21 +87,12 @@ class TestGetOwnedKillerNamesByRelease:
         names = get_owned_killer_names_by_release(roster_user, ownership_service)
         assert names == ["The Trapper", "The Wraith", "The Nurse"]
 
-    def test_null_release_number_sorts_last(
-        self, roster_user: int, ownership_service: OwnershipService
-    ) -> None:
-        seed_killer("The Trapper", release_number=1)
-        seed_killer("The Mystery", release_number=None)
-
-        names = get_owned_killer_names_by_release(roster_user, ownership_service)
-        assert names == ["The Trapper", "The Mystery"]
-
     def test_unowned_killers_excluded(
         self, roster_user: int, ownership_service: OwnershipService
     ) -> None:
         seed_killer("The Trapper", release_number=1)
         char2 = seed_killer("The Wraith", release_number=2)
-        ownership_service.set_character_ownership(roster_user, char2.id, is_owned=False)
+        ownership_service.set_character_ownership(roster_user, char2.id, is_owned=False, role="Killer")
 
         names = get_owned_killer_names_by_release(roster_user, ownership_service)
         assert names == ["The Trapper"]
@@ -107,8 +103,8 @@ class TestPerkNameHelpers:
     """Tests for segregating general baseline killer perks from character teachables."""
 
     def test_general_perks_have_no_character(self, db_session: Session) -> None:
-        db_session.add(Perk(name="Whispers", character_id=None, category="Killer"))
-        db_session.add(Perk(name="A Nurse's Calling", character_id=None, category="Killer"))
+        db_session.add(Perk(name="Whispers", role="Killer"))
+        db_session.add(Perk(name="A Nurse's Calling", role="Killer"))
         db_session.commit()
 
         names = get_general_killer_perk_names()

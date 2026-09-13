@@ -2,11 +2,14 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, Perk, PageStreakPageLog
+from app.models import Killer, Perk, PageStreakPageLog, Survivor
 from app.services.user_service import UserService
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak_service import PageStreakService
 from app.services.page_streak.runs import apply_inactivity_loss
+from tests.unit.conftest import make_chapter
+
+_ROLE_MODELS = {"Killer": Killer, "Survivor": Survivor}
 
 GENERAL_CHARACTER = "General"
 
@@ -62,27 +65,31 @@ def make_perks(count: int, category: str = "Killer", character: str = "Trapper",
 def seed_perks(perks: list[dict[str, object]]) -> None:
     from app.core.extensions import db
 
-    char_cache: dict[str, Character] = {}
+    char_cache: dict[str, Killer | Survivor] = {}
     for p in perks:
         char_name = str(p.get("character", ""))
+        role = str(p["category"])
+        model = _ROLE_MODELS[role]
         character = None
         if char_name and char_name != GENERAL_CHARACTER:
             character = char_cache.get(char_name)
             if character is None:
                 character = db.session.scalars(
-                    select(Character).where(Character.name == char_name)
+                    select(model).where(model.name == char_name)
                 ).first()
                 if character is None:
-                    character = Character(name=char_name, role=str(p["category"]))
+                    kwargs = {"power_name": f"{char_name} Power"} if model is Killer else {}
+                    character = model(name=char_name, chapter_id=make_chapter(db.session).id, **kwargs)
                     db.session.add(character)
                     db.session.flush()
                 char_cache[char_name] = character
         db.session.add(
             Perk(
                 name=str(p["name"]),
-                character_id=character.id if character else None,
+                survivor_id=character.id if character and role == "Survivor" else None,
+                killer_id=character.id if character and role == "Killer" else None,
                 is_teachable=True,
-                category=str(p["category"]),
+                role=role,
             )
         )
     db.session.commit()
@@ -92,9 +99,9 @@ def seed_killers(names: list[str]) -> None:
     from app.core.extensions import db
 
     for name in names:
-        if db.session.scalars(select(Character).where(Character.name == name)).first():
+        if db.session.scalars(select(Killer).where(Killer.name == name)).first():
             continue
-        db.session.add(Character(name=name, role="Killer"))
+        db.session.add(Killer(name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"))
     db.session.commit()
 
 
@@ -230,8 +237,8 @@ class TestPageStreakRoster:
     def test_locked_killer_is_excluded_from_roster(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 
-        trapper = db.session.scalars(select(Character).where(Character.name == "Trapper")).first()
-        ownership_service.set_character_ownership(self.user_id, trapper.id, is_owned=False)
+        trapper = db.session.scalars(select(Killer).where(Killer.name == "Trapper")).first()
+        ownership_service.set_character_ownership(self.user_id, trapper.id, is_owned=False, role="Killer")
         names = [entry["killer"] for entry in self.service.get_roster(self.user_id)]
         assert names == ["Nurse"]
 
@@ -548,10 +555,10 @@ class TestPageStreakRosterMilestone:
     ) -> None:
         from app.core.extensions import db
 
-        ghostface = Character(name="Ghostface", role="Killer")
+        ghostface = Killer(name="Ghostface", chapter_id=make_chapter(db.session).id, power_name="Ghostface Power")
         db.session.add(ghostface)
         db.session.commit()
-        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
 
         self.win_killer("Trapper")
         updated = self.win_killer("Nurse")
@@ -581,7 +588,7 @@ class TestPageStreakRosterMilestone:
         self.win_killer("Nurse")
         assert self.service.get_roster_milestone(self.user_id)["full_roster"] is True
 
-        db.session.add(Character(name="Ghostface", role="Killer"))  # owned by default
+        db.session.add(Killer(name="Ghostface", chapter_id=make_chapter(db.session).id, power_name="Ghostface Power"))  # owned by default
         db.session.commit()
 
         milestone = self.service.get_roster_milestone(self.user_id)
@@ -596,7 +603,7 @@ class TestPageStreakRosterMilestone:
 
         self.win_killer("Trapper")
 
-        db.session.add(Character(name="Ghostface", role="Killer"))  # owned by default
+        db.session.add(Killer(name="Ghostface", chapter_id=make_chapter(db.session).id, power_name="Ghostface Power"))  # owned by default
         db.session.commit()
 
         updated = self.win_killer("Nurse")

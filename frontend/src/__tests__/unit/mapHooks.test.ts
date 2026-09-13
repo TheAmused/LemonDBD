@@ -8,9 +8,10 @@ import {
 } from '@/utils/../hooks/useMapExplorerData';
 import type { MapRealm } from '@/types/map';
 
+// `id` is the integer primary key; the old `hens_<realm>_<name>` slug is gone.
 const sampleMockMaps: MapRealm[] = [
   {
-    id: 'hens_azarovs_resting_place',
+    id: 1,
     name: "Azarov's Resting Place",
     realm: 'Autohaven Wreckers',
     layout_type: 'Dumbbell Narrow',
@@ -22,7 +23,7 @@ const sampleMockMaps: MapRealm[] = [
     source: 'hens333',
   },
   {
-    id: 'hens_blood_lodge',
+    id: 2,
     name: 'Blood Lodge',
     realm: 'Autohaven Wreckers',
     layout_type: 'Open Quad',
@@ -34,7 +35,7 @@ const sampleMockMaps: MapRealm[] = [
     source: 'hens333',
   },
   {
-    id: 'hens_preschool_i',
+    id: 3,
     name: 'Preschool I',
     realm: 'Springwood',
     layout_type: 'Suburban Street',

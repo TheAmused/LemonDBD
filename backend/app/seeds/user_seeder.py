@@ -65,6 +65,11 @@ def seed_default_users() -> None:
                     existing.role = "admin"
                     changed = True
 
+                # Ensure default users are marked verified
+                if existing.username in ("lemon", "user") and not existing.is_verified:
+                    existing.is_verified = True
+                    changed = True
+
                 # Self-heal a stale/incompatible password hash on the seeded
                 # default accounts (e.g. left over from before the password
                 # hashing method changed) -- otherwise the known default

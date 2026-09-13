@@ -3,8 +3,23 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.security import hash_password
-from app.models import User, UserShowcase
+from app.models import Killer, Survivor, User, UserShowcase
 from app.models.base import utcnow
+
+
+def _resolve_main_id(model: type, character_name: str) -> int | None:
+    """A showcase main named by string, resolved to that table's key.
+
+    Clients that predate the split still send `character_name`. Names are
+    unique across survivors and killers, so the lookup is unambiguous -- but it
+    is scoped to the right table anyway, so a survivor's name cannot set the
+    killer main.
+    """
+    name = (character_name or "").strip()
+    if not name:
+        return None
+    row = db.session.scalars(select(model).where(model.name == name)).first()
+    return row.id if row else None
 
 
 def fetch_user_by_id(user_id: int) -> User | None:
@@ -121,10 +136,13 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
             player_title="The Camper",
             devotion_level=0,
             grade_rank="Ash IV",
-            survivor_main_character="Feng Min",
+            # No main until the user picks one. The display name the old
+            # column defaulted to is served by `to_dict` from
+            # DEFAULT_SURVIVOR_MAIN instead of being written into every row.
+            survivor_main_id=None,
             survivor_main_prestige=1,
             survivor_perk_ids=[None, None, None, None],
-            killer_main_character="The Blight",
+            killer_main_id=None,
             killer_main_prestige=1,
             killer_perk_ids=[None, None, None, None],
         )
@@ -167,8 +185,12 @@ def update_user_showcase(
 
     if "survivor_main" in data and isinstance(data["survivor_main"], dict):
         sm = data["survivor_main"]
-        if "character_name" in sm and isinstance(sm["character_name"], str):
-            showcase.survivor_main_character = sm["character_name"].strip()[:100]
+        # A key, not a copied name: renaming a character used to strand every
+        # showcase that had picked them.
+        if "character_id" in sm and str(sm["character_id"]).isdigit():
+            showcase.survivor_main_id = int(sm["character_id"])
+        elif "character_name" in sm and isinstance(sm["character_name"], str):
+            showcase.survivor_main_id = _resolve_main_id(Survivor, sm["character_name"])
         if "prestige" in sm and isinstance(sm["prestige"], (int, float)):
             showcase.survivor_main_prestige = max(1, min(100, int(sm["prestige"])))
         if "perk_ids" in sm and isinstance(sm["perk_ids"], list):
@@ -182,8 +204,10 @@ def update_user_showcase(
 
     if "killer_main" in data and isinstance(data["killer_main"], dict):
         km = data["killer_main"]
-        if "character_name" in km and isinstance(km["character_name"], str):
-            showcase.killer_main_character = km["character_name"].strip()[:100]
+        if "character_id" in km and str(km["character_id"]).isdigit():
+            showcase.killer_main_id = int(km["character_id"])
+        elif "character_name" in km and isinstance(km["character_name"], str):
+            showcase.killer_main_id = _resolve_main_id(Killer, km["character_name"])
         if "prestige" in km and isinstance(km["prestige"], (int, float)):
             showcase.killer_main_prestige = max(1, min(100, int(km["prestige"])))
         if "perk_ids" in km and isinstance(km["perk_ids"], list):

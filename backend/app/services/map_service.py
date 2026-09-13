@@ -3,7 +3,7 @@ import logging
 from typing import Any
 
 from app.services.db_service import DatabaseService
-from app.services.maps import fetch_maps, fetch_realms, seed_maps_if_empty
+from app.services.maps import fetch_maps, fetch_realms
 
 logger = logging.getLogger(__name__)
 
@@ -12,9 +12,6 @@ class MapService:
     def __init__(self, db_service: DatabaseService | None = None):
         self._use_sqlalchemy = db_service is None
         self.db_service = db_service or DatabaseService()
-
-    def _seed_db_if_empty(self, conn) -> None:
-        seed_maps_if_empty(conn, self.db_service)
 
     def get_maps(
         self,

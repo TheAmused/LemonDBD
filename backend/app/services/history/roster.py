@@ -3,7 +3,7 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models import Character, Perk
+from app.models import Killer, Perk
 from app.services.ownership_service import OwnershipService
 
 ROW_SIZE = 5
@@ -45,27 +45,29 @@ def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
     """Turns a frozen killer id list back into current names, in release order."""
     if not ids:
         return []
-    rows = db.session.scalars(select(Character).where(Character.id.in_(ids))).all()
+    # A history run is always against killers, so these are `killers.id`.
+    rows = db.session.scalars(select(Killer).where(Killer.id.in_(ids))).all()
     by_id = {c.id: c.name for c in rows}
     return [by_id[i] for i in ids if i in by_id]
 
 
 def get_general_killer_perk_names() -> list[str]:
     stmt = select(Perk.name).where(
-        Perk.category == "Killer",
-        (Perk.character_id.is_(None)) | (Perk.is_generic_counterpart.is_(True)),
+        Perk.role == "Killer",
+        # A general perk is one no killer teaches.
+        (Perk.killer_id.is_(None)) | (Perk.is_generic_counterpart.is_(True)),
         Perk.is_disabled.is_(False),
     )
     return list(db.session.scalars(stmt).all())
 
 
 def get_killer_teachable_perk_names(killer_name: str) -> list[str]:
-    character = db.session.scalars(
-        select(Character).where(Character.name == killer_name)
+    killer = db.session.scalars(
+        select(Killer).where(Killer.name == killer_name)
     ).first()
-    if not character:
+    if not killer:
         return []
     stmt = select(Perk.name).where(
-        Perk.character_id == character.id, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False)
+        Perk.killer_id == killer.id, Perk.is_teachable.is_(True), Perk.is_disabled.is_(False)
     )
     return list(db.session.scalars(stmt).all())

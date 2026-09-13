@@ -18,6 +18,8 @@
  * library to the bundle that the loading spinner is waiting on.
  */
 
+import { getBackendBaseUrl } from '@/utils/api';
+
 interface CacheEntry<T> {
   data: T;
   /** epoch ms of the last successful write */
@@ -30,6 +32,52 @@ const listeners = new Map<string, Set<() => void>>();
 
 /** Default freshness window. Game data changes on patch days, not per minute. */
 export const DEFAULT_TTL_MS = 5 * 60 * 1000;
+
+/**
+ * Freshness window for the static catalog: perks, characters, survivors,
+ * killers, items, addons, chapters and maps.
+ *
+ * Longer than the default because these endpoints now carry an ETag keyed on a
+ * catalog generation counter, so the two caches divide the work rather than
+ * duplicating it: this one avoids making the *request* at all inside the
+ * window, and the ETag makes the request *cheap* when it is made -- a few
+ * hundred bytes of 304 instead of a megabyte of perk list. Stretching the
+ * client window therefore buys real request savings; what it costs is only the
+ * revalidation that would have happened at the 5-minute mark, and the two
+ * things that genuinely change the catalog are both already covered: a
+ * re-seed or kill-switch toggle bumps the ETag (so the next request after the
+ * window sees it), and an ownership edit calls `invalidate()` directly.
+ */
+export const CATALOG_TTL_MS = 30 * 60 * 1000;
+
+/**
+ * Builds the cache key -- and, since it is a real URL, the request URL -- for a
+ * catalog endpoint.
+ *
+ * Callers used to hand-roll these strings, so two components asking for the
+ * same roster with the query params written in a different order missed each
+ * other's entry and paid for the same megabyte twice. Sorting the params makes
+ * the key depend on what was asked for rather than on how it was spelled, and
+ * skipping empty values keeps `?search=` from forking a second entry for what
+ * is really the unfiltered list.
+ */
+export function catalogKey(
+  name: string,
+  params: Record<string, string | number | boolean | null | undefined> = {}
+): string {
+  const search = new URLSearchParams();
+  Object.keys(params)
+    .sort()
+    .forEach((param) => {
+      const value = params[param];
+      if (value === undefined || value === null || value === '') return;
+      search.set(param, String(value));
+    });
+
+  const path = `${getBackendBaseUrl()}/api/v1/${name.replace(/^\/+/, '')}`;
+  const query = search.toString();
+  return query ? `${path}?${query}` : path;
+}
 
 /**
  * Writes only ever happen from client effects. This guard keeps the map from

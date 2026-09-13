@@ -47,9 +47,9 @@ export interface VoiceCommandBannerProps {
   locale?: string;
   currentSource: 'all' | 'hens333' | 'samoelcolt';
   onSourceChange: (source: 'all' | 'hens333' | 'samoelcolt') => void;
-  onSelectMap: (mapName: string, mapId?: string, source?: string) => void;
+  onSelectMap: (mapName: string, mapId?: number, source?: string) => void;
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
-  availableMaps?: Array<{ id: string; name: string; realm?: string; source?: string }>;
+  availableMaps?: Array<{ id: number; name: string; realm?: string; source?: string }>;
   className?: string;
   dict?: Dictionary | any;
   /** False when the banner is kept mounted but hidden (e.g. behind another

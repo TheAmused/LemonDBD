@@ -1,0 +1,560 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 385,
+      "name": "Cat Figurine",
+      "killer_id": 22,
+      "description": "A wooden figure that had caught young Victor's eye. He shrieked until his mother stole it from the market, nearly blowing their cover.\n• Displays the target location of a Pounce.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_catFigurine.png?44bbb3",
+      "icon_local_path": "icons/addons/cat_figurine.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Katzenfigur",
+          "description": "Eine Holzfigur, die der junge Victor entdeckt hatte. Er kreischte, bis seine Mutter sie auf dem Markt für ihn stahl und damit fast ihre Deckung auffliegen ließ.\n• Zeigt die Zielposition eines Sprungs."
+        },
+        "es": {
+          "name": "Figurilla de gato",
+          "description": "Una figurilla de madera que captó la atención de Victor. Chilló y chilló hasta que su madre lo robó en el mercado, y casi la atrapan.\n• Muestra la ubicación del objetivo del ataque en salto."
+        },
+        "ja": {
+          "name": "猫の置物",
+          "description": "幼いヴィクトルの目に留まった木製の置物。母親が盗んでくれるまで金切り声で喚いたせいで、隠れているのがバレそうだった。\n• 飛び付きのターゲットの位置が表示される"
+        },
+        "pl": {
+          "name": "Figurka kota",
+          "description": "Drewniana figurka, która zwróciła uwagę małego Victora. Piszczał, aż matka ukradła ją z targu, niemal zdradzając ich przykrywkę.\n• Wyświetla docelową lokalizację Skoku."
+        }
+      }
+    },
+    {
+      "id": 386,
+      "name": "Tiny Fingernail",
+      "killer_id": 22,
+      "description": "Charlotte had many ways to mourn Victor’s death. As the fingernails loosened from his rotting hands, she took one in remembrance.\n• Decreases Victor's Unbind time by 33%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tinyFingernail.png?537121",
+      "icon_local_path": "icons/addons/tiny_fingernail.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kleiner Fingernagel",
+          "description": "Charlotte beklagte Victors Tod auf viele Arten. Als die Fingernägel sich von seinen verwesenden Händen lösten, behielt sie einen als Erinnerung.\n• Verkürzt Victors Lösungszeit um 33 %."
+        },
+        "es": {
+          "name": "Uña diminuta",
+          "description": "Charlotte tenía muchas formas de llorar la muerte de Victor. Cuando las uñas se desprendieron de sus manos putrefactas, se quedó una como recuerdo.\n• Reduce el tiempo que tarda Victor en separarse un 33 %."
+        },
+        "ja": {
+          "name": "爪",
+          "description": "ヴィクトルの死を嘆き悲しむシャルロットは、ヴィクトルの腐った手から剥がれた爪を形見にした。\n• ヴィクトルの解放時間が33%減少する"
+        },
+        "pl": {
+          "name": "Mały paznokieć",
+          "description": "Charlotte miała różne sposoby na żałobę po śmierci Victora. Gdy paznokcie odpadły z jego gnijących dłoni, zachowała jeden na pamiątkę.\n• Skraca czas trwania Odłączenia Victora o 33%."
+        }
+      }
+    },
+    {
+      "id": 387,
+      "name": "Soured Milk",
+      "killer_id": 22,
+      "description": "A metal bottle filled with milk that has since soured. Loud as Victor could be, he quieted down when presented with his meal.\n• Increases Victor's alert range by 2 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_souredMilk.png?1995d2",
+      "icon_local_path": "icons/addons/soured_milk.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Saure Milch",
+          "description": "Eine Metallflasche, die mit sauer gewordener Milch gefüllt ist. So laut Victor auch sein konnte, er wurde immer ganz ruhig, wenn man ihm seine Mahlzeit gab.\n• Vergrößert Victors Warnreichweite um 2 Meter."
+        },
+        "es": {
+          "name": "Leche agria",
+          "description": "Una botella metálica llena de leche rancia. Por muy chillón que fuera Victor, siempre se calmaba cuando le daban de comer.\n• Aumenta el rango de alerta de Victor en 2 metros."
+        },
+        "ja": {
+          "name": "酸っぱくなった牛乳",
+          "description": "酸っぱくなってしまった牛乳が入った金属製のボトル。どれほどうるさいヴィクトルでも、食事の時にこれがあると大人しくなった。\n• ヴィクトルの検知範囲が2メートル拡大する"
+        },
+        "pl": {
+          "name": "Kwaśne mleko",
+          "description": "Metalowy pojemnik ze skwaśniałym mlekiem. Choć Victor potrafił być naprawdę głośny, uspokajał się, gdy dostawał posiłek.\n• Zwiększa zasięg czujności Victora o 2 metry."
+        }
+      }
+    },
+    {
+      "id": 388,
+      "name": "Toy Sword",
+      "killer_id": 22,
+      "description": "A miniscule toy sword, only a few inches long. Holding it brought out a violent enthusiasm in Victor.\n• Decreases Pounce charge time by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_toySword.png?a8ce92",
+      "icon_local_path": "icons/addons/toy_sword.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Spielzeugschwert",
+          "description": "Ein winziges Spielzeugschwert, nur wenige Zentimeter lang. Victor brach in wilde Begeisterung aus, wenn er es in der Hand hielt.\n• Verkürzt die Aufladezeit eines Sprungs um 10 %."
+        },
+        "es": {
+          "name": "Espada de juguete",
+          "description": "Una espada de juguete minúscula. Cuando Victor la blandía, sacaba su lado más entusiasta... y agresivo.\n• Reduce el tiempo de carga de los Ataques en salto un 10 %."
+        },
+        "ja": {
+          "name": "おもちゃの剣",
+          "description": "数センチしかないおもちゃのミニ剣。それを持つと、ヴィクトルの中で暴力への強い興味が湧き上がった。\n• 飛び付きのチャージ時間が10%減少する"
+        },
+        "pl": {
+          "name": "Zabawkowy miecz",
+          "description": "Miniaturowy zabawkowy miecz o długości zaledwie kilku centymetrów. Victor czuł przypływ brutalnych emocji, gdy go trzymał.\n• Skraca czas ładowania Skoku o 10%."
+        }
+      }
+    },
+    {
+      "id": 389,
+      "name": "Bloody Black Hood",
+      "killer_id": 22,
+      "description": "A hood from one of the men that hunted Charlotte. Soon, he became the prey.\n• Decreases Charlotte's waking time by 0.5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bloodyBlackHood.png?b0ad4b",
+      "icon_local_path": "icons/addons/bloody_black_hood.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutige schwarze Kapuze",
+          "description": "Eine Kapuze von einem der Männer, die Charlotte gejagt hatten. Schon bald war er zum Gejagten geworden.\n• Verkürzt die Zeit, die Charlotte zum Aufwachen braucht, um 0,5 Sekunden."
+        },
+        "es": {
+          "name": "Capucha negra sangrienta",
+          "description": "La capucha de uno de los hombres que dieron caza a Charlotte, aunque él terminó siendo la presa.\n• Reduce el tiempo que tarda Charlotte en despertarse en 0,5 segundos."
+        },
+        "ja": {
+          "name": "血塗れの黒頭巾",
+          "description": "シャルロットを追っていた男の1人がかぶっていた頭巾。男は間もなく餌食になった。\n• シャルロットの目覚める時間が0.5秒短縮される"
+        },
+        "pl": {
+          "name": "Zakrwawiony czarny kaptur",
+          "description": "Kaptur jednego z mężczyzn, którzy polowali na Charlotte. Mężczyzna szybko sam stał się ofiarą.\n• Skraca czas aktywności Charlotte o 0,5 sekundy."
+        }
+      }
+    },
+    {
+      "id": 390,
+      "name": "Ceremonial Candelabrum",
+      "killer_id": 22,
+      "description": "The candelabrum that Victor tipped over, causing his captors to burn. A symbol of his tenacity.\n• Increases time to crush Victor when he is dormant by 0.2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ceremonialCandelabrum.png?647788",
+      "icon_local_path": "icons/addons/ceremonial_candelabrum.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Zeremonieller Kerzenständer",
+          "description": "Der Kerzenständer, den Victor umgestoßen hatte, was zur Folge hatte, dass seine Kidnapper verbrannten. Ein Symbol seiner Hartnäckigkeit.\n• Verlängert die Zeit, die zum Erschlagen von Victor nötig ist, wenn er schläft, um 0,2 Sekunden."
+        },
+        "es": {
+          "name": "Candelabro ceremonial",
+          "description": "El candelabro que Victor tiró al suelo para quemar a sus captores. Todo un símbolo de su tenacidad.\n• Aumenta el tiempo en machacar a Victor cuando está en letargo en 0,2 segundos."
+        },
+        "ja": {
+          "name": "儀式用のキャンドルスティック",
+          "description": "枝分かれしたキャンドルスティック。ヴィクトルがこれで転倒したおかげで追っ手が燃えた、執念の象徴。\n• 休止状態のヴィクトルを潰すのに要する時間が0.2秒増加する"
+        },
+        "pl": {
+          "name": "Ceremonialny kandelabr",
+          "description": "Przewrócony przez Victora kandelabr. W wywołanym pożarze spłonęli prześladowcy chłopca. To symbol jego uporu.\n• Wydłuża czas potrzebny na zgniecenie uśpionego Victora o 0,2 sekundy."
+        }
+      }
+    },
+    {
+      "id": 391,
+      "name": "Baby Teeth",
+      "killer_id": 22,
+      "description": "Two teeth that Victor lost long ago. They’re unusually sharp.\n• Crushing Victor when attached inflicts Blindness for 30 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_babyTeeth.png?2e0642",
+      "icon_local_path": "icons/addons/baby_teeth.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Milchzähne",
+          "description": "Zwei Zähne, die Victor schon vor langer Zeit verloren hatte. Sie sind ungewöhnlich scharf.\n• Victor zu erschlagen verursacht Erblindung für 30 Sekunden.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Dientes de leche",
+          "description": "Dos dientes que perdió Victor hace mucho tiempo. Sorprendentemente, están muy afilados.\n• Machacar a Victor cuando está acoplado causa Ceguera durante 30 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "乳歯",
+          "description": "ヴィクトルがずっと前に失った2本の歯。異常なほど鋭い。\n• くっついた状態のヴィクトルを潰すと30秒間目眩まし状態になる\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Zęby mleczne",
+          "description": "Dwa zęby, które wypadły Victorowi dawno temu. Są niezwykle ostre.\n• Zgniecenie Victora po połączeniu nakłada Oślepienie na 30 sekund.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 392,
+      "name": "Rusted Needle",
+      "killer_id": 22,
+      "description": "A needle Madeleine used to sew up her children’s tattered clothes.\n• Crushing Victor when attached inflicts Hemorrhage until healed.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustedNeedle.png?211750",
+      "icon_local_path": "icons/addons/rusted_needle.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Rostige Nadel",
+          "description": "Eine Nadel, mit der Madeleine immer die zerrissenen Kleider ihrer Kinder flickte.\n• Wenn Victor klammert, verursacht es Blutung, ihn zu erschlagen.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Aguja oxidada",
+          "description": "Una aguja que Madeleine usaba para coser las ropas deshilachadas de sus hijos.\n• Si se machaca a Victor cuando está acoplado causa Hemorragia hasta que se cure.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "錆びた針",
+          "description": "マドレーヌが子供たちのボロボロの服を縫うために使った針。\n• くっついたヴィクトルを潰すと、回復するまで出血状態になる\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Zardzewiała igła",
+          "description": "Igła, której Madeleine używała do zszywania podartych ubrań dzieci.\n• Zgniecenie Victora po połączeniu nakłada efekt Krwotok do wyleczenia.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 393,
+      "name": "Sewer Sludge",
+      "killer_id": 22,
+      "description": "A disgusting, sticky mixture that covered the Deshayes during an escape attempt through the city sewers.\n• Increases time to crush Victor when attached by 2 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sewerSludge.png?4b9d5b",
+      "icon_local_path": "icons/addons/sewer_sludge.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Kanalschlamm",
+          "description": "Eine ekelhafte, klebrige Mischung, die bei einem Fluchtversuch durch die Kanalisation der Stadt an den Deshayes haften geblieben ist.\n• Verlängert die Zeit, die ein Überlebender braucht, um Victor zu erschlagen, wenn er klammert, um 2 Sekunden."
+        },
+        "es": {
+          "name": "Aguas residuales",
+          "description": "Una mezcla asquerosa y pegajosa de la que quedaron cubiertos los Deshayes durante un intento de huida por las alcantarillas de la ciudad.\n• Aumenta el tiempo para machacar a Victor cuando está acoplado en 2 segundos."
+        },
+        "ja": {
+          "name": "下水道のヘドロ",
+          "description": "町の下水道を逃亡中にデエ姉弟がまみれた汚泥。\n• くっついたヴィクトルを潰すのにかかる時間が2秒増加する"
+        },
+        "pl": {
+          "name": "Szlam ściekowy",
+          "description": "Odrażająca, lepka mikstura, która pokrywała rodzeństwo Deshayes podczas próby ucieczki przez miejskie kanały.\n• Wydłuża czas zgniatania Victora po połączeniu o 2 sekundy"
+        }
+      }
+    },
+    {
+      "id": 394,
+      "name": "Stale Biscuit",
+      "killer_id": 22,
+      "description": "A hard, unleavened biscuit that Madeleine stole from a town’s market. It wasn’t much, but it was better than most meals.\n• Decreases Pounce cooldown by 0.4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_staleBiscuit.png?614a3e",
+      "icon_local_path": "icons/addons/stale_biscuit.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Verdorbener Keks",
+          "description": "Ein harter, ungesäuerter Keks, den Madeleine auf einem Markt in der Stadt gestohlen hat. Es war nicht viel, aber immerhin besser als die meisten Mahlzeiten.\n• Verkürzt die Abklingzeit von Sprung um 0,4 Sekunden."
+        },
+        "es": {
+          "name": "Galleta rancia",
+          "description": "Una galleta dura y ácima que Madeleine robó en el mercado de una aldea. No era gran cosa, pero era mejor que casi todo lo que comían.\n• Reduce el tiempo de recarga del ataque en salto en 0,4 segundos."
+        },
+        "ja": {
+          "name": "硬くなったパン",
+          "description": "マドレーヌが町の市場で盗んだ無発酵の硬いパン。量は少なかったが、大抵の食事に比べマシだった。\n• 飛び付きのクールダウンが0.4秒短縮される"
+        },
+        "pl": {
+          "name": "Czerstwe ciastko",
+          "description": "Twarde, niezakwaszone ciastko, które Madeleine ukradła z targu. Niewielkie, ale lepsze niż większość posiłków.\n• Skraca czas odnowienia Skoku o 0,4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 395,
+      "name": "Weighty Rattle",
+      "killer_id": 22,
+      "description": "A shoddily carved rattle that Victor cried over until his mother stole it for him. It’s entirely too heavy to be trusted to a child.\n• Crushing Victor when attached inflicts Broken for 20 seconds.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_weightyRattle.png?39b4da",
+      "icon_local_path": "icons/addons/weighty_rattle.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schwere Rassel",
+          "description": "Eine minderwertig hergestellte Rassel, wegen der Victor weinte, bis seine Mutter sie für ihn stahl. Für Kinderhände ist sie allerdings viel zu schwer.\n• Victor zu erschlagen verursacht Gebrochen für 20 Sekunden, wenn er klammert.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "es": {
+          "name": "Sonajero pesado",
+          "description": "Un sonajero tosco del que Victor se encaprichó, por lo que su madre tuvo que robarlo. Pesa mucho y no es aconsejable dejárselo a un niño.\n• Machacar a Victor cuando está acoplado causa Desesperanza durante 20 segundos.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "重いガラガラ",
+          "description": "作りが粗悪な乳児用のおもちゃ。母親がそれを盗んでくれるまでヴィクトルは泣き叫んだ。子供に持たせるには全体的に重すぎる。\n• くっついたヴィクトルを潰すと、20秒間衰弱状態になる\n衰弱になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Ciężka grzechotka",
+          "description": "Tandetnie wyrzeźbiona grzechotka, za którą Victor płakał, dopóki matka nie ukradła jej dla niego. Jest zdecydowanie zbyt ciężka, żeby powierzyć ją dziecku.\n• Zgniecenie Victora po połączeniu nakłada efekt Okaleczony na 20 s.\nOkaleczeni ocalali nie mogą być leczeni."
+        }
+      }
+    },
+    {
+      "id": 396,
+      "name": "Forest Stew",
+      "killer_id": 22,
+      "description": "A stew of foraged vegetables mixed with moss and bark to create a false sense of fullness.\n• Increases Victor's movement speed by 0.6 m/s.\n\"\"Eat... eat, child. You’ll feel better when it’s down.\" — Madeleine Deshayes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_forestStew.png?fda550",
+      "icon_local_path": "icons/addons/forest_stew.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Waldeintopf",
+          "description": "Ein Eintopf aus gehamstertem Gemüse. Moos und Rinde sollen als Zutat für ein Völlegefühl sorgen.\n• Erhöht Victors Bewegungsgeschwindigkeit um 0,6 m/s.\n\"„Iss, Kind ... Iss. Sobald es im Bauch ist, wird es dir besser gehen.“ – Madeleine Deshayes\""
+        },
+        "es": {
+          "name": "Guiso silvestre",
+          "description": "Un guiso hecho de verduras silvestres y mezclado con musgo y corteza de árbol para darle consistencia.\n• Aumenta la velocidad de movimiento de Victor en 0,6 metros por segundo.\n\"\"Come... Come, pequeño. Hará que te sientas mejor\". (Madeleine Deshayes)\""
+        },
+        "ja": {
+          "name": "森のシチュー",
+          "description": "略奪した野菜で作ったシチュー。苔や樹皮が混ざり合ってまろやかさが出ているような錯覚を覚える。\n• ヴィクトルの移動速度が秒速0.6メートル上昇する\n\"「ほら…食べて。食べたらきっと良くなるわ。」 — マドレーヌ・デエ\""
+        },
+        "pl": {
+          "name": "Leśny gulasz",
+          "description": "Gulasz ze znalezionych warzyw wymieszanych z mchem i korą, aby stworzyć złudzenie sytości.\n• Zwiększa prędkość Victora o 0,6 m/s.\n\"„Jedz. Jedz, dziecko. Poczujesz się lepiej”. – Madeleine Deshayes\""
+        }
+      }
+    },
+    {
+      "id": 397,
+      "name": "Spinning Top",
+      "killer_id": 22,
+      "description": "A wooden top shared between The Twins, though Victor wanted it for his own. He learned he could get what he wanted if he clung tightly and screamed.\n• Victor's Pounce causes Survivors to drop their carried Survivor items.\n\"\"Hush... hush... it is yours then.\" — Charlotte Deshayes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spinningTop.png?54820c",
+      "icon_local_path": "icons/addons/spinning_top.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Kreisel",
+          "description": "Ein Holzkreisel, den die Zwillinge sich teilten, obwohl Victor ihn für sich alleine haben wollte. Er hatte gelernt, dass er bekommen konnte, was er wollte, wenn er nur ordentlich klammerte und schrie.\n• Wenn Victor sie anspringt, lassen Überlebende ihre Überlebendengegenstände fallen.\n\"„Pst ... Pst ... Dann ist es halt deiner.“ – Charlotte Deshayes\""
+        },
+        "es": {
+          "name": "Peonza",
+          "description": "Una peonza de madera que pertenecía a los Mellizos, aunque a Victor no le gustaba compartirla. Aprendió que podía conseguir lo que quisiera si se aferraba con fuerza a ello y chillaba.\n• El ataque en salto de Victor hace que los supervivientes dejen caer los objetos de superviviente que llevan encima.\n\"\"Calma, calma... Está bien, es tuya\". (Charlotte Deshayes)\""
+        },
+        "ja": {
+          "name": "コマ",
+          "description": "ツインズが持っていた木のコマ。自分だけのコマを欲しがったヴィクトルは、がっしりとしがみついて叫び声を上げれば欲しいものが手に入るということを覚えた。\n• ヴィクトルの飛び付きによって生存者は持っているアイテムを落とす\n\"「シーッ…静かにして、お願い…わかったわ、あなたにあげる。」 — シャルロット・デエ\""
+        },
+        "pl": {
+          "name": "Bączek",
+          "description": "Drewniany bączek, którym Bliźnięta bawiły się wspólnie, chociaż Victor wolał mieć go tylko dla siebie. Nauczył się, że dostaje, co chce, jeśli złapie się mocno i zacznie krzyczeć.\n• Skok Victora powoduje, że ocalali upuszczają trzymane przedmioty.\n\"„Cii… Cichutko. Proszę, jest twój”. – Charlotte Deshayes\""
+        }
+      }
+    },
+    {
+      "id": 398,
+      "name": "Drop of Perfume",
+      "killer_id": 22,
+      "description": "One of the few luxuries Madeleine escaped her past life with. It has a pleasant, disarming scent.\n• Survivors in Victor's alert range while he is dormant are inflicted with Oblivious.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.\n\"\"Beware the deceit of witches, for they exploit the goodness in men’s hearts.\" — A History of Witches and Demons (1602)\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dropOfPerfume.png?5e01c7",
+      "icon_local_path": "icons/addons/drop_of_perfume.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Parfümtropfen",
+          "description": "Einer der wenigen Luxusartikel, die Madeleine aus ihrem vorigen Leben mitgenommen hat. Er hat einen angenehmen, entwaffnenden Duft.\n• Überlebende in Victors Warnreichweite, während er schläft, erleiden den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebenden den Terrorradius des Killers hören oder davon betroffen sind.\n\"„Hüte dich vor den Täuschungen der Hexen, denn sie nutzen das Gute im Herzen der Menschen aus.“ – Die Geschichte der Hexen und Dämonen (1602)\""
+        },
+        "es": {
+          "name": "Gota de perfume",
+          "description": "Uno de los pocos lujos que Madeleine conservaba de su vida pasada. Tiene un aroma agradable y embriagador.\n• Los supervivientes en el rango de alerta de Victor mientras está durmiendo sufrirán Inconsciencia.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino.\n\"\"Protegeos bien de las artes de las brujas, ya que se aprovechan de la bondad de los corazones de los hombres\". (Historia de brujas y demonios, 1602)\""
+        },
+        "ja": {
+          "name": "微量の香水",
+          "description": "マドレーヌが過去の人生から逃げ出した時に持ってきた、数少ない贅沢品のひとつ。爽やかで、怒りを鎮めてくれるような香り。\n• ヴィクトルが休止状態の間、彼の検知範囲内に入った生存者は無感覚状態に陥る。\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。\n\"「男の親切心につけ込む魔女の偽りには、用心しなければならない。」 — 魔女と悪魔の歴史（1602年）\""
+        },
+        "pl": {
+          "name": "Kropla perfum",
+          "description": "Jeden z niewielu luksusów, z którymi Madeleine uciekła od wcześniejszego życia. Ma przyjemny, rozbrajający zapach.\n• Ocalali w zasięgu czujności uśpionego Victora otrzymują efekt Nieświadomy.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ.\n\"„Strzeżcie się przed fałszem wiedźm, wykorzystują one bowiem dobro w ludzkich sercach”. – „Historia wiedźm i demonów” (1602)\""
+        }
+      }
+    },
+    {
+      "id": 399,
+      "name": "Silencing Cloth",
+      "killer_id": 22,
+      "description": "A coarse strip of cloth that a five-year-old Charlotte would put in her mouth. Stopped her from screaming when witch hunters were nearby.\n• Charlotte gains Undetectable for 20 seconds after waking from her dormant state.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.\n\"\"I don’t like this game anymore, Mother...\" — Charlotte Deshayes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_silencingCloth.png?817083",
+      "icon_local_path": "icons/addons/silencing_cloth.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Stoffknebel",
+          "description": "Ein rauer Streifen Stoff, der der fünf Jahre alten Charlotte in den Mund gesteckt wurde. Er sollte sie vom Schreien abhalten, wenn die Hexenjäger in der Nähe waren.\n• Charlotte erhält für 20 Sekunden den Statuseffekt Unentdeckbar, nachdem sie aus ihrem Schlafzustand erwacht ist.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„Ich mag das Spiel nicht mehr, Mutter ...“ – Charlotte Deshayes\""
+        },
+        "es": {
+          "name": "Trapo silenciador",
+          "description": "Un trozo de tela áspera que Charlotte se metía en la boca cuando tenía cinco años Apara no gritar cuando los cazadores de brujas andaban cerca.\n• Charlotte obtiene Indetectable durante 20 segundos tras despertar de su letargo.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino.\n\"\"Mamá, este juego ya no me gusta...\". (Charlotte Deshayes)\""
+        },
+        "ja": {
+          "name": "沈黙の布",
+          "description": "5歳だったシャルロットが口の中に入れていた粗悪な布きれ。口に入れて、魔女狩りのハンターが近くにいる時に叫ばないようにしていた。\n• 待機状態から戻ったシャルロットが、20秒間探知不可になる\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「お母さん、私もうこの遊びイヤなの…」 — シャルロット・デエ\""
+        },
+        "pl": {
+          "name": "Uciszający materiał",
+          "description": "Szorstki pasek tkaniny, który pięcioletnia Charlotte wkładała sobie do ust. Pomagał jej nie krzyczeć, gdy łowcy czarownic byli blisko.\n• Charlotte otrzymuje efekt Niewykrywalny na 20 sekund po wybudzeniu się ze stanu nieaktywności.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\"„Nie podoba mi się już ta zabawa, mamo…”. – Charlotte Deshayes\""
+        }
+      }
+    },
+    {
+      "id": 400,
+      "name": "Iridescent Pendant",
+      "killer_id": 22,
+      "description": "A glass-like pendant molded from The Fog itself. There’s a portrait of Madeleine Deshayes upon it, though something about her depiction seems unsettling.\n• Crushing Victor while he is dormant inflicts Exposed for 45 seconds.\nExposed Survivors will be downed by basic attacks even if uninjured.\n\"\"Your binding is no curse, my loves. It is your strength to draw upon.\" — Madeleine Deshayes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentPendant.png?faedcd",
+      "icon_local_path": "icons/addons/iridescent_pendant.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Anhänger",
+          "description": "Ein glasartiger Anhänger, der aus dem Nebel selbst geformt wurde. Darauf ist ein Porträt von Madeleine Deshayes zu sehen, doch irgendetwas an ihrer Darstellung wirkt beunruhigend.\n• Wird Victor erschlagen, während er schläft, wird für 45 Sekunden der Statuseffekt Gefährdet verursacht.\nGefährdete Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht verletzt sind.\n\"„Eure Verbindung ist kein Fluch, meine Lieben. Ihr könnt daraus Kraft beziehen.“ – Madeleine Deshayes\""
+        },
+        "es": {
+          "name": "Colgante iridiscente",
+          "description": "Un colgante de aspecto cristalino moldeado por la mismísima niebla. Tiene un retrato de Madeleine, aunque hay algo en su semblante que resulta inquietante.\n• Machacar a Victor mientras está dormido causa Vulnerabilidad durante 45 segundos.\nLos supervivientes con Vulnerabilidad se derribarán con ataques básicos aunque no tengan heridas.\n\"\"Vuestra unión no es ninguna condena, amores míos, es una fuerza a la que recurrir\". (Madeleine Deshayes)\""
+        },
+        "ja": {
+          "name": "玉虫色のペンダント",
+          "description": "霧そのものから作られたガラス状のペンダント。マドレーヌ・デエの肖像画が描かれているが、その描写にはどこか不吉なものがある。\n• 休止状態のヴィクトルを潰すと、その生存者が45秒間無防備になる\n無防備状態になると生存者は負傷状態でなくとも通常攻撃によってダウンする。\n\"「私の愛しい子供たち。つながっているのは呪いなんかじゃないわ。活かすことのできる長所なのよ。」 — マドレーヌ・デエ\""
+        },
+        "pl": {
+          "name": "Opalizujący wisiorek",
+          "description": "Wisiorek z materiału przypominającego szkło, uformowany z samej Mgły. Widnieje na nim portret Madeleine Deshayes, chociaż w jej wyglądzie jest coś niepokojącego.\n• Zgniecenie Victora w stanie uśpienia nakłada efekt Narażony na 45 s.\nNarażeni ocalali będą powalani podstawowymi atakami, nawet jeśli nie są ranni.\n\"„Wasze połączenie nie jest klątwą, skarby. To wasza siła!” – Madeleine Deshayes\""
+        }
+      }
+    },
+    {
+      "id": 794,
+      "name": "Cat's Eye",
+      "killer_id": 22,
+      "description": "An eyeball that belonged to a cat eaten by the starving Deshayes’ family. Victor hid it from his mother, using it as a toy.\n• Victor becomes silent while Pounce is fully charged.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_catsEye.png?26bd47",
+      "icon_local_path": "icons/addons/cats_eye.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Katzenauge",
+          "description": "Ein Augapfel, der einmal einer Katze gehört hatte, die von der hungernden Deshayes-Familie gegessen wurde. Victor hatte das Auge vor seiner Mutter versteckt und benutzte es als Spielzeug.\n• Victor wird still, wenn der Sprung vollständig aufgeladen ist."
+        },
+        "en": {
+          "name": "Cat’s Eye"
+        },
+        "es": {
+          "name": "Ojo de gato",
+          "description": "Un globo ocular que perteneció a un gato devorado por la hambrienta familia Deshayes. Victor lo conservó a escondidas de su madre para usarlo como juguete.\n• Victor se queda en silencio cuando el ataque en salto se carga por completo."
+        },
+        "ja": {
+          "name": "猫の眼",
+          "description": "腹をすかせたデエ一家が食べた猫の眼。ヴィクトルが母親に内緒でおもちゃにして遊んでいた。\n• 飛び付きのチャージが満タンになると、ヴィクトルが静かになる"
+        },
+        "pl": {
+          "name": "Kocie oko",
+          "description": "Gałka oczna, która należała do zjedzonego przez głodującą rodzinę Deshayes kota. Victor ukrył ją przed matką i traktował jak zabawkę.\n• Victor cichnie po pełnym naładowaniu Skoku."
+        }
+      }
+    },
+    {
+      "id": 795,
+      "name": "Madeleine's Glove",
+      "killer_id": 22,
+      "description": "A glove once owned by The Twins’ mother. During desperate times, it was held over Victor’s mouth to keep him from making a peep.\n• Increases Victor's alert range by 4 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_madeleinesGlove.png?2bf957",
+      "icon_local_path": "icons/addons/madeleines_glove.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Madeleines Handschuh",
+          "description": "Ein Handschuh, der einmal der Mutter der Zwillinge gehört hat. Manchmal wurde er aus lauter Verzweiflung vor Victors Mund gehalten, damit er keinen Mucks von sich gab.\n• Vergrößert Victors Warnreichweite um 4 Meter."
+        },
+        "en": {
+          "name": "Madeleine’s Glove"
+        },
+        "es": {
+          "name": "Guante de Madeleine",
+          "description": "Un guante que perteneció a la madre de los Mellizos. En los momentos de mayor desesperación, servía para taparle la boca a Victor cuando hacía ruido.\n• Aumenta el rango de alerta de Victor en 4 metros."
+        },
+        "ja": {
+          "name": "マドレーヌの手袋",
+          "description": "ツインズの母親が持っていた手袋。非常時にはヴィクトルの声が漏れないよう、これで口を押さえていた。\n• ヴィクトルの検知範囲が4メートル拡大する"
+        },
+        "pl": {
+          "name": "Rękawiczka Madeleine",
+          "description": "Rękawiczka należąca kiedyś do matki Bliźniąt. W trudnych chwilach zasłaniała usta Victora, żeby był cicho.\n• Zwiększa zasięg czujności Victora o 4 metry."
+        }
+      }
+    },
+    {
+      "id": 796,
+      "name": "Madeleine's Scarf",
+      "killer_id": 22,
+      "description": "A cloth Madeleine wore shortly before her death. The Twins kept it as a memento.\n• Increases Victor's movement speed by 0.3 m/s.\n\"\"...shall hereby be recorded as a service to the greater good and the extermination of evil.\" — Inquiry into the death of Madeleine Deshayes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_madeleinesScarf.png?352d37",
+      "icon_local_path": "icons/addons/madeleines_scarf.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Madeleines Schal",
+          "description": "Ein Kleidungsstück, das Madeleine kurz vor ihrem Tod getragen hat. Die Zwillinge haben es als Erinnerungsstück behalten.\n• Erhöht Victors Bewegungsgeschwindigkeit um 0,3 m/s.\n\"„... soll hiermit als Dienst am Allgemeinwohl und an der Auslöschung alles Bösen vermerkt werden.“ – Untersuchung zum Tod von Madeleine Deshayes\""
+        },
+        "en": {
+          "name": "Madeleine’s Scarf"
+        },
+        "es": {
+          "name": "Bufanda de Madeleine",
+          "description": "Un trapo que Madeleine llevaba puesto justo antes de morir. Los Mellizos lo guardan a modo de recuerdo.\n• Aumenta la velocidad de movimiento de Victor en 0,3 metros por segundo.\n\"\"... quedará registrado como un servicio por un bien mayor y la erradicación del mal\". (Investigación de la muerte de Madeleine Deshayes)\""
+        },
+        "ja": {
+          "name": "マドレーヌのスカーフ",
+          "description": "マドレーヌが死ぬ少し前に着ていた布きれ。ツインズが形見として持っていた。\n• ヴィクトルの移動速度が秒速0.3メートル上昇する\n\"「…大義のため、そして悪の根絶における尽力の記録となるだろう。」 — マドレーヌ・デエに関する調査\""
+        },
+        "pl": {
+          "name": "Szalik Madeleine",
+          "description": "Ubranie, które Madeleine miała na sobie krótko przed śmiercią. Bliźnięta zachowały je na pamiątkę.\n• Zwiększa prędkość Victora o 0,3 m/s.\n\"„...zostaje niniejszym uznane za uczynek mający na celu dążenie do większego dobra i eksterminacji zła”. – Śledztwo w sprawie śmierci Madeleine Deshayes\""
+        }
+      }
+    },
+    {
+      "id": 797,
+      "name": "Victor's Soldier",
+      "killer_id": 22,
+      "description": "A toy soldier Victor clung to when scared. Something about it evoked jealousy in Charlotte.\n• Crushing Victor while he is dormant reveals the Survivor's aura for 6 seconds.\n\"\"Kch--kch—k’ull bawd mennn...\" — Victor Deshayes\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_victorsSoldier.png?2dc10f",
+      "icon_local_path": "icons/addons/victors_soldier.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Victors Soldat",
+          "description": "Ein Spielzeugsoldat, an den Victor sich klammerte, wenn er Angst hatte. Irgendetwas daran rief in Charlotte immer Eifersucht hervor.\n• Wird Victor erschlagen, während er schläft, ist die Aura des Überlebenden für 6 Sekunden zu sehen.\n\"„Ksch ... Ksch ... böhse Mänschen ...“ – Victor Deshayes\""
+        },
+        "en": {
+          "name": "Victor’s Soldier"
+        },
+        "es": {
+          "name": "Soldado de Victor",
+          "description": "Un soldadito de plomo al que Victor se aferraba cuando tenía miedo. Por algún motivo, Charlotte tenía celos de aquel juguete.\n• Al machacar a Victor mientras está durmiendo se muestra el aura del superviviente durante 6 segundos.\n\"\"¡Pam, pam! ¡Mata a los malos!\" (Victor Deshayes)\""
+        },
+        "ja": {
+          "name": "ヴィクトルの兵士",
+          "description": "ヴィクトルが怖い時にしがみついていたおもちゃの兵士。それには、シャルロットの中に嫉妬が湧き上がらせる何かがあった。\n• 休止状態のヴィクトルを潰した生存者のオーラが6秒間視えるようになる\n\"「ワ・ワ・ワル…イヤツラ…コロシて…」 — ヴィクトル・デエ\""
+        },
+        "pl": {
+          "name": "Żołnierzyk Victora",
+          "description": "Zabawkowy żołnierzyk, którego Victor używał, kiedy się bał. Było w nim coś, co wywoływało zazdrość u Charlotte.\n• Zgniecenie uśpionego Victora ujawnia aurę ocalałego na 6 sekund.\n\"„Kch-kch… U… Umrzyć złych ludzi…” – Victor Deshayes\""
+        }
+      }
+    }
+  ]
+}

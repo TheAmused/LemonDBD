@@ -1,0 +1,553 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 544,
+      "name": "High-Power Floodlight",
+      "killer_id": 31,
+      "description": "A sudden and overwhelming light that discombobulates anyone foolish enough to approach.\n• Survivors with a Claw Trap suffer from the Blindness status effect. This effect lasts until the Claw Trap is removed.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_high-PowerFloodlight.png?8760ec",
+      "icon_local_path": "icons/addons/high_power_floodlight.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "description": "Ein plötzliches aufstrahlendes, gleißendes Licht lässt jeden, der so dumm war, sich zu nähern, orientierungslos zurück.\n• Überlebende mit einer Klammerfalle leiden unter dem Statuseffekt Erblindung. Dieser Effekt hält an, bis die Klammerfalle entfernt wurde.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Foco potente",
+          "description": "Una luz repentina y abrumadora que desconcierta a quien tenga la ingenuidad de acercarse.\n• Los supervivientes con una tecnotrampa sufren el efecto de estado Ceguera. Este efecto dura hasta que se elimina la tecnotrampa.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "高出力投光照明",
+          "description": "突然容赦なく降りかかる光線が、歩み寄る愚か者を混乱させる。\n• クロートラップに掛かった生存者は目眩ましのステータス効果に苦しむ。効果はクロートラップが外れるまで持続する。\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Reflektor o wysokiej mocy",
+          "description": "Nagłe i wszechogarniające światło, które dezorientuje każdego, kto jest na tyle głupi, by się do niego zbliżyć.\n• Ocalali ze Szponiastą Pułapką otrzymują efekt Oślepienia. Efekt ten utrzymuje się do zdjęcia Szponiastej Pułapki.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 545,
+      "name": "Geographical Readout",
+      "killer_id": 31,
+      "description": "The drones generate and communicate a detailed three-dimensional map of the terrain, making traversal easier.\n• Whenever you deploy a Drone, for 8 seconds, you basic-vault Windows, basic-break Pallets or Breakable Walls, and damage Generators 20% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_geographicalReadout.png?46b540",
+      "icon_local_path": "icons/addons/geographical_readout.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Topografische Datenerfassung",
+          "description": "Die Drohnen erzeugen und übermitteln eine detaillierte, dreidimensionale Karte des Geländes, sodass es leichter zu durchqueren ist.\n• Immer wenn du eine Drohne einsetzt, sind Grundfähigkeit-Sprünge durch Fenster, das Zerstören von Paletten oder zerstörbaren Mauern mit der Grundfähigkeit und das Beschädigen von Generatoren 8 Sek. lang um 20 % schneller."
+        },
+        "es": {
+          "name": "Lector geográfico",
+          "description": "Los drones generan y transmiten un detallado mapa tridimensional del terreno, lo que facilita moverse por él.\n• Cada vez que despliegas un dron, durante 8 segundos, saltas por ventanas de forma básica, dañas generadores y rompes palés y muros destruibles de forma básica un 20 % más rápido."
+        },
+        "ja": {
+          "name": "地理情報の読み出し",
+          "description": "ドローンが地形の詳細な立体地図を生成して通信する。この地図によって移動が簡単になる。\n• ドローンを配置すると、8秒間、窓の通常乗り越えを行う速度、パレットや破壊可能な壁を通常破壊する速度、発電機にダメージを与える速度が20%上昇する"
+        },
+        "pl": {
+          "name": "Odczyt geograficzny",
+          "description": "Drony generują i przekazują szczegółową, trójwymiarową mapę terenu, ułatwiając poruszanie się po nim.\n• Za każdym razem, gdy wyślesz drona, przez 8 s wykonujesz podstawowe przeskoki przez okna, niszczysz palety i rozbijalne ściany w podstawowy sposób, oraz uszkadzasz generatory o 20% szybciej."
+        }
+      }
+    },
+    {
+      "id": 546,
+      "name": "High Current Upgrade",
+      "killer_id": 31,
+      "description": "A wider cable with low resistance that allows faster recharging of batteries.\n• Increases the time Survivors appear on the radar when detected by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_high-CurrentUpgrade.png?c6c1fa",
+      "icon_local_path": "icons/addons/high_current_upgrade.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Hochspannungsupgrade",
+          "description": "Ein stärkeres Kabel mit geringerem Widerstand sorgt dafür, dass die Batterien schneller aufgeladen werden.\n• Verlängert die Dauer, für die entdeckte Überlebende auf dem Radar zu sehen sind, um 1 Sek.."
+        },
+        "es": {
+          "name": "Mejora de alta corriente",
+          "description": "Un cable más ancho con poca resistencia que permite que las baterías se carguen más rápido.\n• Aumenta el tiempo que aparecen los supervivientes en el radar cuando se los detecta en 1 segundo."
+        },
+        "ja": {
+          "name": "高電流アップグレード",
+          "description": "低抵抗の幅の広いケーブルが電池の素早い再充電を可能にする。\n• 検出されたときに生存者がレーダーに表示される時間が1秒増加する"
+        },
+        "pl": {
+          "name": "ULEPSZENIE DO WYSOKIEGO PRĄDU",
+          "description": "Szerszy kabel o niskiej oporności, który pozwala na szybsze ładowanie baterii.\n• Skraca  czas wyświetlania wykrytych ocalałych na radarze o 1 s."
+        }
+      }
+    },
+    {
+      "id": 547,
+      "name": "Adaptive Lighting",
+      "killer_id": 31,
+      "description": "The drone takes account of the surrounding area and casts lights in a bewildering manner that obscures movement.\n• Increases the duration of the Undetectable status effect by 20%.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_adaptiveLighting.png?f1f18a",
+      "icon_local_path": "icons/addons/adaptive_lighting.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Adaptive Beleuchtung",
+          "description": "Unter Berücksichtigung der Umgebung setzt die Drohne eine verwirrende Beleuchtung ein, um Bewegungen zu verdecken.\n• Erhöht die Dauer des Statuseffekts Unentdeckbar um 20 %.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers."
+        },
+        "es": {
+          "name": "Luz adaptativa",
+          "description": "El dron inspecciona los alrededores y proyecta luces desconcertantes que ocultan el movimiento.\n• Aumenta la duración del efecto de estado Indetectable un 20 %.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino."
+        },
+        "ja": {
+          "name": "状況適応照明",
+          "description": "ドローンが周囲の状況を分析し、状況に合わせて自分の動きを覆い隠すような光を放つ。\n• 探知不可のステータス効果時間が20%増加する\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。"
+        },
+        "pl": {
+          "name": "Oświetlenie adaptacyjne",
+          "description": "Dron bierze pod uwagę otoczenie i rzuca światła w oszałamiający sposób, który utrudnia poruszanie się.\n• Wydłuża czas trwania efektu Niewykrywalny o 20%.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy."
+        }
+      }
+    },
+    {
+      "id": 548,
+      "name": "Stereo Remote Mic",
+      "killer_id": 31,
+      "description": "An upgrade that allows increased three-dimensional audio tracking.\n• Decreases the Disabled state duration of Drones by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stereoRemoteMic.png?ab250e",
+      "icon_local_path": "icons/addons/stereo_remote_mic.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Stereo-Richtmikrofon",
+          "description": "Ein Upgrade, das eine verbesserte dreidimensionale Schallortung ermöglicht.\n• Verkürzt die Dauer des Status „Deaktiviert“ von Drohnen um 15 %."
+        },
+        "es": {
+          "name": "Micrófono remoto estéreo",
+          "description": "Una mejora que permite aumentar el rastro sonoro tridimensional.\n• Reduce la duración del estado Inutilización de los drones un 15 %."
+        },
+        "ja": {
+          "name": "ステレオ遠隔マイク",
+          "description": "3次元オーディオトラッキングを向上させるアップグレード。\n• ドローンの無効時間が15%減少する"
+        },
+        "pl": {
+          "name": "Stereofoniczny mikrofon zdalny",
+          "description": "Ulepszenie umożliwiające sprawniejsze trójwymiarowe śledzenie dźwięku.\n• Skraca czas trwania wyłączenia dronów o 15%."
+        }
+      }
+    },
+    {
+      "id": 549,
+      "name": "Supercharge",
+      "killer_id": 31,
+      "description": "The batteries may run a little hot, but removing the safety protocols from the cells makes them last a little longer.\n• Increases the battery life of Claw Traps by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_supercharge.png?bf45bf",
+      "icon_local_path": "icons/addons/supercharge.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Superladung",
+          "description": "Die Batterien werden zwar ein wenig heiß, aber sie halten auch etwas länger, wenn man die Sicherheitsvorkehrungen für die Batteriezellen außer Kraft setzt.\n• Erhöht die Batterielaufzeit von Klammerfallen um 15 %."
+        },
+        "es": {
+          "name": "Sobrecarga",
+          "description": "Las baterías se pueden calentar, pero, si se eliminan los protocolos de seguridad de las celdas, duran un poco más.\n• Aumenta la duración de la batería de las tecnotrampas un 15 %."
+        },
+        "ja": {
+          "name": "過充電",
+          "description": "電池が少し加熱されるが、電池のセルから安全装置を取り除くことで電池の寿命が少し長くなる。\n• クロートラップの電池の寿命が15%増加する"
+        },
+        "pl": {
+          "name": "Przeciążenie",
+          "description": "Akumulatory mogą się nieco nagrzewać, ale usunięcie protokołów bezpieczeństwa z ogniw sprawia, że działają nieco dłużej.\n• Zwiększa żywotność baterii w Szponiastych Pułapkach o 15%."
+        }
+      }
+    },
+    {
+      "id": 550,
+      "name": "Shotgun Speakers",
+      "killer_id": 31,
+      "description": "Capable of directing high-frequency noises in a single direction over great distances, the drones can focus in on one individual and distract them from danger for some time.\n• Survivors with a Claw Trap have no skill check warning. This effect lasts until the Claw Trap is removed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shotgunSpeakers.png?75c308",
+      "icon_local_path": "icons/addons/shotgun_speakers.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Richtlautsprecher",
+          "description": "Die Drohnen können gezielt hochfrequente Geräusche über große Distanzen aussenden. So nehmen sie einzelne Personen ins Visier, um sie vorübergehend von Gefahren abzulenken.\n• Überlebende mit einer Klammerfalle erhalten keine Fähigkeitscheckwarnung. Dieser Effekt hält an, bis die Klammerfalle entfernt wurde."
+        },
+        "es": {
+          "name": "Altavoces escopeta",
+          "description": "Capaces de dirigir ruidos de alta frecuencia en una sola dirección a gran distancia, los drones se pueden centrar en un individuo y distraerlo del peligro durante un tiempo.\n• Los supervivientes con una tecnotrampa no reciben sonidos de advertencia previos a las pruebas de habilidad. Este efecto dura hasta que se elimina la tecnotrampa."
+        },
+        "ja": {
+          "name": "ショットガンスピーカー",
+          "description": "ドローンが一方向に長距離高周波ノイズを発し、しばらくの間、狙った特定のターゲットの注意を危険からそらす。\n• クロートラップに掛かっている生存者はスキルチェック前の警告音が聞こえなくなる。この効果はクロートラップが外れるまで続く"
+        },
+        "pl": {
+          "name": "Strzelające głośniki",
+          "description": "Dzięki przesyłaniu dźwięków o wysokiej częstotliwości w jednym kierunku na duże odległości drony mogą skupić się na danej osobie i na jakiś czas odwrócić jej uwagę od niebezpieczeństwa.\n• Ocalali ze Szponiastą Pułapką nie otrzymują ostrzeżenia przed testem umiejętności. Efekt utrzymuje się do zdjęcia Szponiastej Pułapki."
+        }
+      }
+    },
+    {
+      "id": 551,
+      "name": "Low-Power Mode",
+      "killer_id": 31,
+      "description": "By intermittently powering off and on non-vital components, the drone can stay on for longer.\n• Decreases Drone Rotation speed by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_low-PowerMode.png?269eb3",
+      "icon_local_path": "icons/addons/low_power_mode.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Stromsparmodus",
+          "description": "Indem sie nicht benötigte Komponenten vorübergehend abschaltet, kann die Drohne länger aktiv bleiben.\n• Verringert die Drehgeschwindigkeit von Drohnen um 100 %."
+        },
+        "es": {
+          "name": "Modo de ahorro de energía",
+          "description": "Al encender y apagar de forma intermitente componentes no vitales, el dron permanecerá activo más tiempo.\n• Reduce la velocidad de rotación del dron un 100 %."
+        },
+        "ja": {
+          "name": "低電力モード",
+          "description": "二次的なコンポーネントの電源を断続的に入れることでドローンをより長く稼働する。\n• ドローンの回転速度が100%低下する"
+        },
+        "pl": {
+          "name": "Tryb niskiego poboru mocy",
+          "description": "Dzięki powtarzającemu się wyłączaniu i włączaniu nieistotnych komponentów dron może dłużej pozostać aktywny.\n• Zmniejsza prędkość obrotu drona o 100%."
+        }
+      }
+    },
+    {
+      "id": 552,
+      "name": "Powdered Glass",
+      "killer_id": 31,
+      "description": "Once used on the strings used for battle kites, this powdered glass took on a much more nefarious purpose on her blade.\n• Claw Trapped Survivors you hit suffer from the Hemorrhage and Mangled status effects for 70 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_powderedGlass.png?2f7f71",
+      "icon_local_path": "icons/addons/powdered_glass.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Glaspulver",
+          "description": "Dieses zerstoßene Glas wurde einst für die Leinen von Kampfdrachen benutzt und fand nun auf ihrer Klinge eine deutlich grausamere Verwendung.\n• Triffst du mit einer Klammerfalle versehene Überlebende mit einem Angriff, erleiden diese die Statuseffekte Blutung und Zerfleischt für 70 Sekunden.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Polvo de vidrio",
+          "description": "En el pasado se utilizaba para las cuerdas de las cometas de combate. Este vidrio pulverizado sirvió un propósito mucho más siniestro en su cuchilla.\n• Los supervivientes con una tecnotrampa a los que golpees sufren los efectos de estado Hemorragia y Laceración durante 70 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "ガラス粉",
+          "description": "この粉状のガラスはカイトファイトで凧の糸に使用されていたもの。彼女の刃に使用され、その目的は人を傷つけることに変わった。\n• クロートラップに掛かった生存者に攻撃を命中させると、70秒間出血と重傷のステータス効果に苦しむ。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Sproszkowane szkło",
+          "description": "Niegdyś używane do produkcji sznurków wykorzystywanych w latawcach bojowych, to sproszkowane szkło zyskało na jej ostrzu o wiele bardziej nikczemne zastosowanie.\n• Uwięzieni w Szponiastej Pułapce ocalali, których trafisz, otrzymują efekty Krwotok i Zmasakrowany na 70 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 553,
+      "name": "Vital Targeting Processor",
+      "killer_id": 31,
+      "description": "An additional process in the drone’s programming more accurately predicts the weaknesses of potential prey.\n• Increases the Hindered status effect gained by Claw Trapped Survivors when detected by a Drone by 2%.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vitalTargetingProcessor.png?e00397",
+      "icon_local_path": "icons/addons/vital_targeting_processor.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Vitalzeichen-Prozessor",
+          "description": "Ein zusätzlicher Prozess in der Software der Drohne sorgt für eine genauere Prognose der Schwachstellen potenzieller Beute.\n• Erhöht den Statuseffekt Eingeschränkt, den Überlebende mit Klammerfalle erleiden, wenn sie von einer Drohne entdeckt werden, um 2 %.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "es": {
+          "name": "Procesador vital de objetivos",
+          "description": "Un proceso adicional en la programación del dron predice con más precisión las debilidades de la posible presa.\n• Aumenta un 2 % el efecto de estado Entorpecimiento que obtienen los supervivientes con una tecnotrampa cuando un dron los detecta.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "ターゲット分析プロセッサ",
+          "description": "ドローンのプログラムに追加された処理により、ターゲットの弱点をより正確に分析する。\n• クロートラップに掛かった生存者がドローンに検出された時に得る妨害のステータス効果が2%上昇する\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Procesor namierzania funkcji życiowych",
+          "description": "Dodatkowy proces w oprogramowaniu drona dokładniej przewiduje słabe punkty potencjalnej ofiary.\n• Wzmacnia o 2% efekt Skrępowany nakładany na ocalałych uwięzionych w Szponiastych Pułapkach po wykryciu przez drona.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    },
+    {
+      "id": 554,
+      "name": "Brown Noise Generator",
+      "killer_id": 31,
+      "description": "An ominous hum disseminates from the drone, blanketing the soundscape and making it difficult to hear anything else.\n• Survivors with a Claw Trap suffer from the Oblivious status effect. This lasts until the Claw Trap is removed.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brownNoiseGenerator.png?5f1a10",
+      "icon_local_path": "icons/addons/brown_noise_generator.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Brownsches-Rauschen-Erzeuger",
+          "description": "Die Drohne gibt ein bedrohliches Brummen von sich. Dieses legt sich über alle anderen Geräusche in der Umgebung, sodass sie kaum noch auszumachen sind.\n• Überlebende mit einer Klammerfalle leiden unter dem Statuseffekt Ahnungslos. Dieser Effekt hält an, bis die Klammerfalle entfernt wurde.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Generador de ruido marrón",
+          "description": "Un zumbido inquietante brota del dron, camuflando el sonido ambiental y dificultando que se pueda escuchar otra cosa.\n• Los supervivientes con una tecnotrampa sufren el efecto de estado Inconsciencia. Esto dura hasta que se elimina la tecnotrampa.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "信号雑音発生器",
+          "description": "ドローンから発せられた不気味な機械音が周囲に響き渡り、他の音が聞こえにくくなる。\n• クロートラップに掛かった生存者は忘却のステータス効果に苦しむ。効果はクロートラップが外れるまで持続する。\n忘却状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Generator brązowego szumu",
+          "description": "Złowieszczy szum wydobywa się z drona, zakłócając krajobraz dźwiękowy i utrudniając usłyszenie czegokolwiek innego.\n• Ocalali ze Szponiastą Pułapką otrzymują efekt Nieświadomy. Utrzymuje się on do zdjęcia Szponiastej Pułapki.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 555,
+      "name": "Loose Screw",
+      "killer_id": 31,
+      "description": "A bone-chilling rattling emanates from the drone, and it seems like it make fall at any minute, distracting Survivors from complicated tasks.\n• Survivors with a Claw Trap suffer from the Exhausted status effect for 6 seconds.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_looseScrew.png?36a982",
+      "icon_local_path": "icons/addons/loose_screw.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Lockere Schraube",
+          "description": "Die Drohne gibt ein schreckliches Klappern von sich und scheint jeden Augenblick abzustürzen. Das lenkt Überlebende von anspruchsvollen Aufgaben ab.\n• Überlebende mit einer Klammerfalle erleiden den Statuseffekt Erschöpfung für 6 Sek..\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Tornillo suelto",
+          "description": "El dron emite un ruido estremecedor. Parece que se va a desplomar en cualquier momento, lo que distrae a los supervivientes cuando realizan tareas complicadas.\n• Los supervivientes con una tecnotrampa sufren el efecto de estado Agotamiento durante 6 segundos\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "緩んだネジ",
+          "description": "ガタガタという背筋が凍るような音がドローンから発せられる。生存者はドローンが落下してくることを恐れ、複雑な作業に集中できなくなる。\n• クロートラップに掛かった生存者が疲労ステータス効果に6秒間苦しむ疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Luźna śruba",
+          "description": "Z drona wydobywa się mrożący krew w żyłach terkot i wydaje się, że urządzenie może w każdej chwili spaść. Odciąga to ocalałych od skomplikowanych zadań.\n• Ocalali ze Szponiastą Pułapką otrzymują efekt Wyczerpany na 6 s.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 556,
+      "name": "Infrared Upgrade",
+      "killer_id": 31,
+      "description": "Heat-detecting cameras focus in on high-stress individuals with pinpoint accuracy.\n• Anytime a Claw Trap is removed, the Survivor's aura is revealed for 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_infraredUpgrade.png?3edb87",
+      "icon_local_path": "icons/addons/infrared_upgrade.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Infrarot-Upgrade",
+          "description": "Wärmebildkameras nehmen unter hoher Belastung stehende Personen präzise ins Visier.\n• Immer, wenn eine Klammerfalle entfernt wird, wird die Aura des Überlebenden 4 Sekunden lang sichtbar."
+        },
+        "es": {
+          "name": "Mejora de infrarrojos",
+          "description": "Las cámaras termográficas detectan con una precisión única a individuos que sufren mucho estrés.\n• Cada vez que se quite un cepo para osos, se revelará el aura del superviviente durante 4 segundos."
+        },
+        "ja": {
+          "name": "熱感知アップグレード",
+          "description": "熱感知カメラが、高いストレスを感じている生存者の位置を極めて正確に検出する。\n• クロートラップが解除されると、4秒間その生存者のオーラが視えるようになる"
+        },
+        "pl": {
+          "name": "Ulepszenie z podczerwienią",
+          "description": "Kamery wykrywające ciepło skupiają się na zestresowanych osobach z wysoką dokładnością.\n• Za każdym razem, gdy Szponiasta Pułapka zostaje usunięta, aura ocalałego ujawnia się na 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 557,
+      "name": "Advanced Movement Prediction",
+      "killer_id": 31,
+      "description": "Even after they leave the zone of influence, a refined AI program predicts with high accuracy where a person will go next.\n• When a Survivor receives a Claw Trap, reveal their aura for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_advancedMovementPrediction.png?5bde23",
+      "icon_local_path": "icons/addons/advanced_movement_prediction.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Erweiterte Bewegungsvorhersage",
+          "description": "Selbst nachdem sie den Wirkungsbereich verlassen hat, kann ein ausgefeiltes KI-Programm mit hoher Genauigkeit vorhersagen, wohin eine Person als Nächstes gehen wird.\n• Wenn ein Überlebender eine Klammerfalle erhält, wird seine Aura für 6 Sekunden angezeigt."
+        },
+        "es": {
+          "name": "Predicción avanzada de movimientos",
+          "description": "Incluso después de abandonar la zona de influencia, un programa refinado de inteligencia artificial predice con mucha precisión el lugar al que se dirigirá una persona.\n• Cuando un superviviente recibe una tecnotrampa, muestra su aura durante 6 segundos."
+        },
+        "ja": {
+          "name": "高度移動予測プログラム",
+          "description": "ターゲットがドローンの効果範囲から出た後も、高度なAIプログラムがターゲットの移動を正確に予測する。\n• クロートラップに掛かった生存者のオーラが6秒間表示される"
+        },
+        "pl": {
+          "name": "Zaawansowane przewidywanie ruchu",
+          "description": "Nawet gdy ktoś opuści strefę wpływu, wysokiej jakości program SI przewiduje z dużą dokładnością, dokąd ta osoba się uda.\n• Kiedy ocalały otrzymuje Szponiastą Pułapkę, ujawnia swoją aurę na 6 s."
+        }
+      }
+    },
+    {
+      "id": 558,
+      "name": "Ultrasonic Speaker",
+      "killer_id": 31,
+      "description": "A high-frequency noise blaster that fills the sonic spectrum with disorienting sounds, making it impossible for observers to pick out more important noises.\n• Decreases Survivors' scan line immunity duration by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ultrasonicSpeaker.png?92e3b1",
+      "icon_local_path": "icons/addons/ultrasonic_speaker.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ultraschall-Lautsprecher",
+          "description": "Eine Hochfrequenz-Geräuschquelle, die die Umgebung mit verwirrenden Geräuschen erfüllt, wodurch Überlebende keine wichtigen Geräusche mehr erfassen können.\n• Verkürzt die Dauer, in der Überlebende nicht gescannt werden können, um 10 %."
+        },
+        "es": {
+          "name": "Altavoz ultrasónico",
+          "description": "Un arma ruidosa de alta frecuencia que inunda el espectro sónico con sonidos desorientadores. Imposibilita que los observadores detecten ruidos importantes.\n• Reduce la duración de inmunidad a la línea de escaneo de los supervivientes un 10 %."
+        },
+        "ja": {
+          "name": "超音波スピーカー",
+          "description": "高周波ノイズを発して可聴周波数帯域を方向感覚を失わせる音で満たし、危険を察知させる音を聞こえなくする。\n• 生存者のスキャン線に対する耐性の持続時間が10%減少する"
+        },
+        "pl": {
+          "name": "Głośnik ultradźwiękowy",
+          "description": "Hałasujący blaster o wysokiej częstotliwości, który wypełnia spektrum dźwiękowe dezorientującymi dźwiękami i uniemożliwia obserwatorom wyłapanie ważniejszych odgłosów.\n• Skraca czas trwania odporności ocalałego na linie skanowania o 10%."
+        }
+      }
+    },
+    {
+      "id": 559,
+      "name": "Expired Batteries",
+      "killer_id": 31,
+      "description": "The batteries on these Claw Traps have been swapped out with old alkaline batteries. Recharging is not recommended.\n• All Survivors start the trial with a Claw Trap, which has 50% less battery life.\n• Claw Trap battery life increases by 10% for each Claw Trap received, up to 150%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_expiredBatteries.png?492c7a",
+      "icon_local_path": "icons/addons/expired_batteries.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Leere Batterien",
+          "description": "Die Batterien dieser Klammerfallen wurden gegen alte Alkalibatterien ausgetauscht. Nicht wiederaufladbar.\n• Alle Überlebenden starten die Prüfung mit einer Klammerfalle, die über 50 % weniger Akku verfügt.\n• Der Akku der Klammerfalle wird pro erhaltener Klammerfalle um 10 % erhöht, bis zu 150 %."
+        },
+        "es": {
+          "name": "Pilas caducadas",
+          "description": "Las baterías de estas tecnotrampas se han cambiado por pilas alcalinas viejas. No se recomienda recargarlas.\n• Todos los supervivientes empiezan la partida con una tecnotrampa con un 50 % menos de duración de batería.\n• La duración batería de la tecnotrampa aumenta un 10 % por cada tecnotrampa recibida, hasta un máximo del 150 %."
+        },
+        "ja": {
+          "name": "期限切れ電池",
+          "description": "このクロートラップには古いアルカリ電池が使われていて、再充電は推奨されない。\n• すべての生存者がクロートラップに掛かった状態で儀式を始める。その電池の寿命は50%短い。\n• クロートラップを掛けるたびにクロートラップの電池の寿命が10%延長する（150%まで）。"
+        },
+        "pl": {
+          "name": "Wyczerpane baterie",
+          "description": "Akumulatory w tych Szponiastych Pułapkach zostały wymienione na stare baterie alkaliczne. Nie zaleca się ich ponownego ładowania.\n• Wszyscy ocalali rozpoczynają próbę ze Szponiastą Pułapką, która ma 50% mniej akumulatora.\n• Akumulator Szponiastej Pułapki wzrasta o 10% za każdą zebraną pułapkę – do 150%."
+        }
+      }
+    },
+    {
+      "id": 560,
+      "name": "Prototype Rotor",
+      "killer_id": 31,
+      "description": "The cutting-edge design allows the drone to move with razor-sharp precision.\n• Increases Drones' rotation speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_prototypeRotor.png?c7a214",
+      "icon_local_path": "icons/addons/prototype_rotor.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Rotor-Prototyp",
+          "description": "Dank der innovativen Konstruktion kann die Drohne mit rasiermesserscharfer Präzision manövrieren.\n• Erhöht die Drehgeschwindigkeit von Drohnen um 10 %."
+        },
+        "es": {
+          "name": "Prototipo de rotor",
+          "description": "Su diseño de vanguardia permite que el dron se mueva con una precisión impecable.\n• Aumenta la velocidad de rotación de los drones un 10 %."
+        },
+        "ja": {
+          "name": "試作回転翼",
+          "description": "最先端の設計により、ドローンが非常に高い精度で移動できる。\n• ドローンの回転速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Prototypowe śmigło",
+          "description": "Najnowocześniejsza konstrukcja pozwala dronowi poruszać się z niesamowitą precyzją.\n• Zwiększa prędkość obrotu dronów o 10%."
+        }
+      }
+    },
+    {
+      "id": 561,
+      "name": "Iridescent Unpublished Manuscript",
+      "killer_id": 31,
+      "description": "Before he disappeared, Adriana’s father had started a newer, darker manga, Sonhadores Sombrios.\n• When a Drone is disabled, it gains a 32-meter Terror Radius for 15 seconds. During this time, gain the Undetectable status effect.\nUndetectable hides the Killer's aura, Terror Radius, and Red Stain.\n\"“When evil is on the loose, it cannot escape from Adi Valente!” – Quote on the cover of Adi Valente #1\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentUnpublishedManuscript.png?44807e",
+      "icon_local_path": "icons/addons/iridescent_unpublished_manuscript.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes unveröffentlichtes Manuskript",
+          "description": "Vor seinem Verschwinden hatte Adrianas Vater mit der Arbeit an einem neuen, düstereren Manga begonnen: Sonhadores Sombrios.\n• Wird eine Drohne deaktiviert, erhält sie für 15 Sekunden einen Terrorradius von 32 Metern. Während dieser Zeit erhältst du den Statuseffekt Unentdeckbar.\nUnentdeckbar verbirgt Aura, Terrorradius und roten Fleck des Killers.\n\"„Das Böse greift um sich, aber Adi Valente entkommt es nicht!“ – Zitat auf dem Cover von Adi Valente Nr. 1\""
+        },
+        "es": {
+          "name": "Manuscrito sin publicar iridiscente",
+          "description": "Antes de desaparecer, el padre de Adriana había comenzado un manga nuevo, mucho más siniestro: Sonhadores Sombrios.\n• Cuando se inutiliza un dron, se obtiene un radio de terror de 32 metros durante 15 segundos. Durante ese tiempo, obtiene el efecto de estado Indetectable.\nIndetectable oculta el aura, el radio de terror y la marca roja del asesino.\n\"\"Cuando el mal anda suelto, ¡no podrá escapar de Adi Valente!\". (Frase de la portada de \"Adi Valente\", n.º 1).\""
+        },
+        "ja": {
+          "name": "玉虫色の未発表原稿",
+          "description": "アドリアナの父は姿を消す前に、よりダークな新作マンガ『ソーニャドレス・ソンブリオス』を描き始めていた。\n• 無効時、ドローンに32メートルの脅威範囲が15秒間発生する。この間、探知不可のステータス効果を得る。\n探知不可になると殺人鬼のオーラ、脅威範囲、赤い光が隠れた状態になる。\n\"「野放しになった悪も、アディ・ヴァレンテからは逃れられない！」 –『アディ・ヴァレンテ』創刊号の表紙に書かれた引用文\""
+        },
+        "pl": {
+          "name": "Opalizujący niepublikowany rękopis",
+          "description": "Zanim zniknął, ojciec Adriany rozpoczął nowszą, mroczniejszą mangę, „Sonhadores Sombrios”.\n• Kiedy dron jest wyłączony, zyskuje 32-metrowy zasięg terroru na 15 sekund. W tym czasie otrzymujesz efekt Niewykrywalny.\nNiewykrywalność ukrywa aurę, zasięg terroru i czerwoną poświatę zabójcy.\n\".„Kiedy zło jest na wolności, nie zdoła uciec przed Adi Valente!” – Cytat na okładce „Adi Valente” nr 1\""
+        }
+      }
+    },
+    {
+      "id": 812,
+      "name": "Adi Valente Issue 1",
+      "killer_id": 31,
+      "description": "An original copy of the first issue of Adi Valente, the comic her father made while Adriana was a child.\n• Survivors with a Claw Trap suffer from 20% smaller skill checks. This effect lasts until the Claw Trap is removed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_adiValenteIssue1.png?edfa60",
+      "icon_local_path": "icons/addons/adi_valente_issue_1.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Adi Valente Nr. 1",
+          "description": "Eine Originalausgabe des ersten Hefts von „Adi Valente“, dem Comic, an dem Adrianas Vater arbeitete, als sie ein Kind war.\n• Überlebende mit einer Klammerfalle sehen um 20 % kleinere Fähigkeitschecks. Dieser Effekt hält an, bis die Klammerfalle entfernt wurde."
+        },
+        "en": {
+          "name": "Adi Valente #1"
+        },
+        "es": {
+          "name": "Adi Valente, n.º 1",
+          "description": "Una copia original del primer número de \"Adi Valente\", el cómic que su padre hizo cuando Adriana era una niña.\n• Los supervivientes con una tecnotrampa se enfrentarán a pruebas de habilidad un 20 % más pequeñas. Este efecto dura hasta que se elimina la tecnotrampa."
+        },
+        "ja": {
+          "name": "アディ・ヴァレンテ創刊号",
+          "description": "アドリアナが子供の頃に父親が描いたコミック『アディ・ヴァレンテ』創刊号の原本。\n• クロートラップに掛かった生存者のスキルチェック範囲が20%縮小する。効果はクロートラップが外れるまで持続する。"
+        },
+        "pl": {
+          "name": "„Adi Valente” nr 1",
+          "description": "Oryginalny egzemplarz pierwszego numeru „Adi Valente”, komiksu, który jej ojciec tworzył, gdy Adriana była dzieckiem.\n• Ocalali ze Szponiastą Pułapką otrzymują o 20% mniejsze testy umiejętności. Efekt ten trwa do zdjęcia Szponiastej Pułapki."
+        }
+      }
+    },
+    {
+      "id": 813,
+      "name": "Randomised Strobes",
+      "killer_id": 31,
+      "description": "Lights flash randomly on the ground, making it harder to find purchase on the uneven terrain.\n• Increases the duration of the Hindered status effect Claw Trapped Survivors suffer from when detected by a Drone by 1 second.\nHindered reduces Survivor movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_randomisedStrobes.png?60929e",
+      "icon_local_path": "icons/addons/randomised_strobes.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Zufällige Lichtimpulse",
+          "description": "Willkürliche Stellen am Boden werden blitzartig beleuchtet, was das Vorankommen in unebenem Gelände deutlich erschwert.\n• Verlängert die Dauer des Statuseffekts Eingeschränkt, den Überlebende mit Klammerfalle erleiden, wenn sie von einer Drohne entdeckt werden, um 1 Sekunde.\nEingeschränkt verringert die Bewegungsgeschwindigkeit von Überlebenden."
+        },
+        "en": {
+          "name": "Randomized Strobes"
+        },
+        "es": {
+          "name": "Luz aleatoria",
+          "description": "Las luces iluminan el suelo aleatoriamente, lo que dificulta moverse por terreno inestable.\n• Aumenta en un 1 segundo la duración del efecto de estado Entorpecimiento que sufren los supervivientes con una tecnotrampa cuando un dron los detecta.\nEntorpecimiento reduce la velocidad de movimiento del superviviente."
+        },
+        "ja": {
+          "name": "不規則発光装置",
+          "description": "不規則に地面を照らす光のよって、デコボコの地形で足元を確認するのが難しくなる。\n• クロートラップに掛かった生存者がドローンに検出された時に苦しむ妨害のステータス効果の持続時間が1秒増加する\n妨害によって生存者は移動速度が低下する。"
+        },
+        "pl": {
+          "name": "Losowe migotanie",
+          "description": "Światła migają losowo na ziemi, co utrudnia utrzymanie stabilności na nierównym terenie.\n• Wydłuża o 1 sekundę czas trwania efektu Skrępowany, który dotyka ocalałych uwięzionych w Szponiastej Pułapce po wykryciu przez drona.\nSkrępowanie zmniejsza prędkość ruchu ocalałego."
+        }
+      }
+    }
+  ]
+}

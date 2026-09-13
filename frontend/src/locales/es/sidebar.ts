@@ -17,7 +17,6 @@ export default {
   others: "Otros",
   admin: "ADMIN",
   adminControlCenter: "Centro de Control Admin",
-  soon: "Próximamente",
   signIn: "Iniciar Sesión / Registrarse",
   signOut: "Cerrar Sesión",
   emailNotVerified: "Correo no verificado. Verificar ahora",

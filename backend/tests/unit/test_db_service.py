@@ -31,7 +31,6 @@ class TestDatabaseService:
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = [row[0] for row in cursor.fetchall()]
 
-        assert "perk_rules" in tables
         assert "gauntlet_runs" in tables
         assert "gauntlet_match_logs" in tables
         conn.close()
@@ -42,7 +41,7 @@ class TestDatabaseService:
         temp_db_service.init_db()
         conn = temp_db_service.get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM perk_rules;")
+        cursor.execute("SELECT COUNT(*) FROM gauntlet_runs;")
         count = cursor.fetchone()[0]
         assert count >= 0
         conn.close()
@@ -52,7 +51,7 @@ class TestDatabaseService:
         conn = temp_db_service.get_connection()
         assert isinstance(conn, sqlite3.Connection)
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM perk_rules;")
+        cursor.execute("SELECT COUNT(*) FROM gauntlet_runs;")
         result = cursor.fetchone()
         assert result is not None
         conn.close()

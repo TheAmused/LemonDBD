@@ -1,21 +1,24 @@
 # backend/app/services/db/export_import.py
 import logging
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, select
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps
-from app.models.character import Character
-from app.models.perk import Perk, PerkRule
-from app.models.equipment import Item, Addon, Offering
+from app.core.redis_cache import bump_catalog_version
+from app.models.character import Killer, Survivor
+from app.models.perk import Perk
+from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.chapter import Chapter
-from app.models.map import MapRealm, MapTile, MapObjective, Realm
+from app.services.db.parsing import parse_movement_speed, parse_release_date
+from app.models.map import MapRealm, MapSource, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
 from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
-from app.models.minigames import DraftSession, GuesserStat, ScraperSetting
+from app.models.minigames import DraftSession, GuesserStat
 from app.models.admin import ChallengeModeSetting, AdminAuditLog
 from app.models.changelog import ChangelogPost
 from app.models.gauntlet import GauntletRun, GauntletMatchLog
@@ -23,26 +26,33 @@ from app.models.chaos import ChaosRun, ChaosMatchLog
 from app.models.history import HistoryRun, HistoryMatchLog
 from app.models.page_streak import PageStreakRun, PageStreakPageLog
 from app.services.db.run_family_export import export_run_family, import_run_family
-from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote, Translation
+from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 from app.services.db.serializers import (
-    serialize_character, serialize_perk, serialize_item, serialize_addon, serialize_realm,
-    serialize_offering, serialize_chapter, serialize_user, serialize_user_showcase,
-    serialize_admin_audit_log, serialize_changelog_post, serialize_smash_entity, serialize_roster,
+    serialize_survivor, serialize_killer, serialize_perk, serialize_item,
+    serialize_item_category,
+    serialize_killer_addon, serialize_item_addon, serialize_realm, serialize_offering,
+    serialize_chapter, serialize_user,
+    serialize_user_showcase, serialize_admin_audit_log, serialize_changelog_post,
+    serialize_smash_entity, serialize_roster,
 )
 
 logger = logging.getLogger(__name__)
 
 TARGET_GROUPS: dict[str, list[str]] = {
     "content": [
-        "characters",
+        "chapters",
+        "realms",
+        "item_categories",
+        "map_sources",
+        "survivors",
+        "killers",
         "perks",
         "items",
-        "addons",
+        "killer_addons",
+        "item_addons",
         "offerings",
-        "chapters",
         "maps",
-        "realms",
     ],
     "users": [
         "users",
@@ -60,12 +70,9 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "history_runs",
         "page_streak_runs",
         "rosters",
-        "smash_translations",
     ],
     "settings": [
-        "perk_rules",
         "draft_sessions",
-        "scraper_settings",
         "challenge_mode_settings",
         "admin_audit_logs",
         "guesser_stats",
@@ -74,6 +81,33 @@ TARGET_GROUPS: dict[str, list[str]] = {
 
 SUPPORTED_EXPORT_TARGETS = [
     target for targets in TARGET_GROUPS.values() for target in targets
+]
+
+#: Entity columns an import may set, matching `serialize_smash_entity`. The
+#: profile half of this list used to travel as one `metadata_json` blob.
+#: `slug` is the natural key and is never reassigned here.
+SMASH_ENTITY_FIELDS = [
+    "name",
+    "role",
+    "gender",
+    "media_url",
+    "media_type",
+    "archetype",
+    "bio",
+    "tagline",
+    "quote",
+    "meme",
+    "turn_on",
+    "dealbreaker",
+    "dating_vibe",
+    "red_flags",
+    "green_flags",
+    "chapter",
+    "danger_level",
+    "chaos_score",
+    "translations",
+    "order_index",
+    "is_active",
 ]
 
 
@@ -95,7 +129,14 @@ def _with_asset(row: dict[str, Any], path_field: str, static_dir: Path, include_
     `include_assets` is true and `row[path_field]` is a real path."""
     if not include_assets:
         return
-    row[f"{path_field}_data"] = read_asset_base64(static_dir, row.get(path_field) or None)
+    container, _, leaf = path_field.rpartition(".")
+    holder = row
+    if container:
+        for step in container.split("."):
+            holder = holder.get(step) if isinstance(holder, dict) else None
+            if not isinstance(holder, dict):
+                return
+    holder[f"{leaf}_data"] = read_asset_base64(static_dir, holder.get(leaf) or None)
 
 
 def _export_entity(
@@ -126,10 +167,14 @@ def _export_entity(
 # The 4th tuple element lists which serialized fields hold a static-dir-relative
 # image path and should get a base64 "<field>_data" sibling embedded.
 _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], list[str]]] = [
-    ("characters", Character, serialize_character, ["avatar_local_path", "power_icon_local_path"]),
+    ("survivors", Survivor, serialize_survivor, ["avatar_local_path"]),
+    ("killers", Killer, serialize_killer, ["avatar_local_path", "power_icon_local_path"]),
     ("perks", Perk, serialize_perk, ["icon_local_path"]),
+    ("item_categories", ItemCategory, serialize_item_category, []),
+    ("map_sources", MapSource, lambda s: {"id": s.id, "code": s.code, "label": s.label}, []),
     ("items", Item, serialize_item, ["icon_local_path"]),
-    ("addons", Addon, serialize_addon, ["icon_local_path"]),
+    ("killer_addons", KillerAddon, serialize_killer_addon, ["icon_local_path"]),
+    ("item_addons", ItemAddon, serialize_item_addon, ["icon_local_path"]),
     ("offerings", Offering, serialize_offering, ["icon_local_path"]),
     ("chapters", Chapter, serialize_chapter, ["banner_local_path"]),
     ("users", User, serialize_user, ["avatar_relative_path"]),
@@ -138,9 +183,7 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("daily_quests", DailyQuest, lambda q: q.to_dict(), []),
     ("bug_reports", BugReport, lambda r: r.to_dict(), []),
     ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
-    ("perk_rules", PerkRule, lambda pr: pr.to_dict(), []),
     ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
-    ("scraper_settings", ScraperSetting, lambda ss: ss.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
     ("admin_audit_logs", AdminAuditLog, serialize_admin_audit_log, []),
     ("changelog_posts", ChangelogPost, serialize_changelog_post, []),
@@ -154,16 +197,17 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("community_builds", CommunityBuild),
     ("custom_perks", CustomPerk),
     ("daily_quests", DailyQuest),
-    ("addons", Addon),
+    ("killer_addons", KillerAddon),
+    ("item_addons", ItemAddon),
     ("offerings", Offering),
-    ("chapters", Chapter),
     ("items", Item),
+    ("item_categories", ItemCategory),
     ("perks", Perk),
-    ("characters", Character),
+    ("survivors", Survivor),
+    ("killers", Killer),
+    ("chapters", Chapter),
     ("guesser_stats", GuesserStat),
-    ("perk_rules", PerkRule),
     ("draft_sessions", DraftSession),
-    ("scraper_settings", ScraperSetting),
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
     ("admin_audit_logs", AdminAuditLog),
@@ -184,35 +228,27 @@ def _upsert_entity(
     unique_field: str,
     update_fields: list[str],
     defaults: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
-    post_process: Callable[[Any, dict[str, Any]], None] | None = None,
-    skip_none: bool = False,
-    key_default: Any = None,
-    asset_fields: list[str] | None = None,
-    static_dir: Path | None = None,
 ) -> None:
-    """Upsert every row in `data[name]` into `model`, keyed by `unique_field`.
+    """Upsert rows keyed by a natural text field.
 
-    A missing row is created with `unique_field` plus whatever `defaults(row)`
-    returns; an existing row only has `update_fields` (present in `row`) applied.
-    `post_process` runs after field assignment, for cross-entity resolution
-    (e.g. perks resolving their owning character). When `asset_fields` is given,
-    each listed field's sibling "<field>_data" base64 payload (if present in
-    `row`) is decoded and written back to disk under `static_dir`.
+    Used only by the community and settings tables -- community builds keyed by
+    title, custom perks by name, guesser stats by `guesser_type`, challenge
+    modes by `mode`. Those are user-authored rows with no curated id space, and
+    their "natural key" really is the text.
+
+    Static content does NOT come through here: it is addressed by primary key
+    in `_upsert_by_id`.
     """
     if name not in target_keys or name not in data:
         return
 
     created = updated = 0
     for row in data[name]:
-        key_val = row.get(unique_field, key_default)
+        key_val = row.get(unique_field)
         if not key_val:
-            # key_default only substitutes a missing key -- a present-but-falsy
-            # value (e.g. "" or null) falls back to it too when one exists,
-            # matching entities that never skip a row for a missing unique key
-            # (e.g. generator_settings always defaulting role to "Survivor").
-            if key_default is None:
-                continue
-            key_val = key_default
+            continue
+        if isinstance(key_val, str):
+            key_val = key_val.strip()
 
         obj = db.session.scalar(select(model).where(getattr(model, unique_field) == key_val))
         if not obj:
@@ -223,11 +259,64 @@ def _upsert_entity(
         else:
             updated += 1
 
-        for k in update_fields:
-            if k in row:
-                if skip_none and row[k] is None:
-                    continue
-                setattr(obj, k, row[k])
+        for field in update_fields:
+            if field in row:
+                setattr(obj, field, row[field])
+
+    db.session.flush()
+    summary[name] = {"created": created, "updated": updated}
+
+
+def _upsert_by_id(
+    data: dict[str, Any],
+    target_keys: set[str],
+    summary: dict[str, dict[str, int]],
+    name: str,
+    model: type,
+    update_fields: list[str],
+    defaults: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+    post_process: Callable[[Any, dict[str, Any]], None] | None = None,
+    asset_fields: list[str] | None = None,
+    static_dir: Path | None = None,
+) -> None:
+    """Upsert every row in `data[name]` into `model`, keyed by primary key.
+
+    The row's `id` is the only thing consulted to decide which database row it
+    is. No name comparison, no case-insensitive fallback, no slug lookup: seed
+    files and backups carry explicit ids, foreign keys in them are integers,
+    and a row whose id is absent is a new row inserted at that id.
+
+    This replaces a lookup that ran `lower(trim(name)) = ?` once per row --
+    935 sequential full scans for the add-on file alone, since no index can
+    serve a function over a column.
+
+    A row with no `id` is rejected rather than guessed at, and counted in the
+    summary as `skipped`; that only happens for payloads written before the
+    export carried ids, which `backend/scripts/normalize_static_export.py`
+    converts.
+    """
+    if name not in target_keys or name not in data:
+        return
+
+    created = updated = skipped = 0
+    for row in data[name]:
+        row_id = row.get("id")
+        if not isinstance(row_id, int):
+            skipped += 1
+            continue
+
+        obj = db.session.get(model, row_id)
+        if obj is None:
+            extra = defaults(row) if defaults else {}
+            obj = model(id=row_id, **extra)
+            db.session.add(obj)
+            created += 1
+        else:
+            updated += 1
+
+        for field in update_fields:
+            if field in row:
+                setattr(obj, field, row[field])
 
         if post_process:
             post_process(obj, row)
@@ -238,6 +327,13 @@ def _upsert_entity(
 
     db.session.flush()
     summary[name] = {"created": created, "updated": updated}
+    if skipped:
+        summary[name]["skipped_without_id"] = skipped
+        logger.warning(
+            "[import] %d %s row(s) had no id and were skipped -- regenerate the "
+            "payload with backend/scripts/normalize_static_export.py",
+            skipped, name,
+        )
 
 
 class DatabaseExportImportService:
@@ -261,47 +357,18 @@ class DatabaseExportImportService:
             realms = db.session.scalars(select(MapRealm).order_by(MapRealm.id)).all()
             map_list = []
             for r in realms:
-                tiles = [
-                    {
-                        "name": t.name,
-                        "type": t.type,
-                        "x": t.x,
-                        "y": t.y,
-                        "seed_variant": t.seed_variant,
-                        "floor": t.floor,
-                        "has_pallet": t.has_pallet,
-                        "has_window": t.has_window,
-                    }
-                    for t in r.tiles
-                ]
-                objectives = [
-                    {
-                        "type": o.type,
-                        "x": o.x,
-                        "y": o.y,
-                        "floor": o.floor,
-                    }
-                    for o in r.objectives
-                ]
                 map_list.append({
-                    "map_id": r.map_id,
+                    "id": r.id,
                     "name": r.name,
-                    "realm": r.realm,
                     "realm_id": r.realm_id,
-                    "source": r.source,
-                    "source_label": r.source_label,
-                    "layout_type": r.layout_type,
-                    "jungle_gyms_count": r.jungle_gyms_count,
-                    "totem_spawns_count": r.totem_spawns_count,
-                    "pallet_density": r.pallet_density,
-                    "shack_has_basement": r.shack_has_basement,
+                    "source_id": r.source_id,
                     "description": r.description,
-                    "image_url": r.image_url,
+                    # `image_url` is not exported: it held a byte-identical
+                    # copy of `callout_image_url` on all 58 rows. `source` and
+                    # `source_label` are read through `source_id`.
                     "callout_image_url": r.callout_image_url,
                     "callout_image_local_path": r.callout_image_local_path,
                     "translations": r.translations or {},
-                    "tiles": tiles,
-                    "objectives": objectives,
                 })
             for row in map_list:
                 _with_asset(row, "callout_image_local_path", static_dir, include_assets)
@@ -319,6 +386,10 @@ class DatabaseExportImportService:
                     {
                         "username": co.user.username if co.user else None,
                         "character_name": co.character.name if co.character else None,
+                        # Names are unique across both tables, so the role is
+                        # not needed to resolve the row -- it is exported so a
+                        # reader does not have to know that to trust the file.
+                        "character_role": co.character.role if co.character else None,
                         "is_owned": co.is_owned,
                     }
                     for co in char_owns
@@ -357,8 +428,6 @@ class DatabaseExportImportService:
             export_data["rosters"] = [serialize_roster(r, username_by_user_id) for r in rosters]
             counts["rosters"] = len(export_data["rosters"])
 
-        if "smash_translations" in target_set:
-            _export_entity(export_data, counts, "smash_translations", Translation, lambda t: t.to_dict(), [], static_dir, include_assets)
 
         # Organize export into semantic groups
         grouped_data: dict[str, dict[str, Any]] = {}
@@ -373,7 +442,6 @@ class DatabaseExportImportService:
             "source": "LemonDBD",
             "counts": counts,
             "groups": grouped_data,
-            "data": export_data,
         }
 
     @classmethod
@@ -407,8 +475,6 @@ class DatabaseExportImportService:
                     db.session.execute(delete(UserCharacterOwnership))
                     db.session.execute(delete(UserPerkOwnership))
                 if "maps" in target_keys:
-                    db.session.execute(delete(MapObjective))
-                    db.session.execute(delete(MapTile))
                     db.session.execute(delete(MapRealm))
                 if "maps" in target_keys or "realms" in target_keys:
                     db.session.execute(delete(Realm))
@@ -417,191 +483,265 @@ class DatabaseExportImportService:
                     db.session.execute(delete(EntityStat))
                     db.session.execute(delete(Entity))
                     db.session.execute(delete(Roster))
-                if "smash_translations" in target_keys:
-                    db.session.execute(delete(Translation))
                 for key, model in _SIMPLE_DELETE_TARGETS:
                     if key in target_keys:
                         db.session.execute(delete(model))
                 db.session.flush()
 
-            if "characters" in target_keys and "characters" in data:
-                c_created, c_updated = 0, 0
-                for row in data["characters"]:
-                    name = row.get("name")
-                    wiki_slug = row.get("wiki_slug")
-                    if not name and not wiki_slug:
-                        continue
+            # ---------------------------------------------------------------
+            # Static content, parents first.
+            #
+            # Every row is addressed by its own integer id, and every
+            # cross-entity reference in the payload is an integer foreign key.
+            # Parents still go first so the foreign keys they satisfy exist by
+            # the time the children are flushed.
+            #
+            # The old order (characters -> perks -> items -> addons ->
+            # offerings -> chapters -> maps -> realms) only worked because
+            # nothing referenced anything: every link was a copied string.
+            # ---------------------------------------------------------------
 
-                    char_obj = None
-                    if name:
-                        char_obj = db.session.scalar(select(Character).where(Character.name == name))
-                    if not char_obj and wiki_slug:
-                        char_obj = db.session.scalar(select(Character).where(Character.wiki_slug == wiki_slug))
+            def _release_date(chapter_obj: Chapter, row: dict[str, Any]) -> None:
+                if "release_date" in row:
+                    chapter_obj.release_date = parse_release_date(row.get("release_date"))
 
-                    if not char_obj:
-                        char_obj = Character(
-                            name=name or wiki_slug,
-                            role=row.get("role", "Survivor"),
-                        )
-                        db.session.add(char_obj)
-                        c_created += 1
-                    else:
-                        c_updated += 1
-
-                    if name:
-                        name_conflict = db.session.scalar(
-                            select(Character).where(Character.name == name, Character.id != char_obj.id)
-                        )
-                        if not name_conflict:
-                            char_obj.name = name
-
-                    for k in [
-                        "role", "code_prefix", "portrait_url", "real_name", "short_name",
-                        "wiki_slug", "avatar_local_path", "release_number", "chapter_name",
-                        "chapter_number", "dlc_type", "is_licensed", "release_year",
-                        "release_date", "dlc_counterparts", "lore", "power_name",
-                        "power_description", "power_icon_url", "movement_speed",
-                        "terror_radius", "terror_radius_meters", "height", "translations",
-                    ]:
-                        if k in row:
-                            setattr(char_obj, k, row[k])
-
-                    if row.get("created_at"):
-                        parsed_dt = _parse_datetime(row["created_at"])
-                        if parsed_dt:
-                            char_obj.created_at = parsed_dt
-
-                    if static_dir is not None:
-                        for field in ["avatar_local_path", "power_icon_local_path"]:
-                            write_asset_base64(static_dir, row.get(field), row.get(f"{field}_data"))
-
-                db.session.flush()
-                summary["characters"] = {"created": c_created, "updated": c_updated}
-
-            char_map: dict[str, int] = {}
-            for c in db.session.scalars(select(Character)).all():
-                char_map[c.name.strip().lower()] = c.id
-                if c.real_name:
-                    char_map[c.real_name.strip().lower()] = c.id
-                if c.wiki_slug:
-                    char_map[c.wiki_slug.strip().lower()] = c.id
-
-            def _resolve_perk_character(perk_obj: Perk, row: dict[str, Any]) -> None:
-                char_name = row.get("character_name")
-                if char_name:
-                    char_id = char_map.get(char_name.strip().lower())
-                    if char_id:
-                        perk_obj.character_id = char_id
-
-            _upsert_entity(
-                data, target_keys, summary, "perks", Perk, "name",
+            _upsert_by_id(
+                data, target_keys, summary, "chapters", Chapter,
                 update_fields=[
-                    "alternate_name", "is_generic_counterpart", "is_teachable",
-                    "category", "description", "icon_url", "icon_local_path", "translations",
+                    "name", "release_year", "is_licensed", "dlc_type",
+                    "banner_url", "banner_local_path", "translations",
                 ],
-                post_process=_resolve_perk_character,
-                asset_fields=["icon_local_path"], static_dir=static_dir,
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "items", Item, "name",
-                update_fields=["category", "role", "description", "icon_url", "icon_local_path", "rarity", "translations"],
-                asset_fields=["icon_local_path"], static_dir=static_dir,
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "addons", Addon, "name",
-                update_fields=["associated_target", "category", "description", "icon_url", "icon_local_path", "rarity", "translations"],
-                asset_fields=["icon_local_path"], static_dir=static_dir,
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "offerings", Offering, "name",
-                update_fields=["category", "role", "description", "icon_url", "icon_local_path", "rarity", "translations"],
-                asset_fields=["icon_local_path"], static_dir=static_dir,
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "chapters", Chapter, "name",
-                update_fields=["banner_url", "banner_local_path"],
+                defaults=lambda row: {"name": row.get("name") or ""},
+                post_process=_release_date,
                 asset_fields=["banner_local_path"], static_dir=static_dir,
             )
 
+            if "maps" in target_keys or "realms" in target_keys:
+                # Gated by "maps" OR "realms" because an old backup may carry
+                # realm banners only under the "maps" target.
+                _upsert_by_id(
+                    data, {"realms"}, summary, "realms", Realm,
+                    update_fields=["name", "image_url", "image_local_path", "translations"],
+                    defaults=lambda row: {"name": row.get("name") or ""},
+                    asset_fields=["image_local_path"], static_dir=static_dir,
+                )
+
+            _upsert_by_id(
+                data, target_keys, summary, "map_sources", MapSource,
+                update_fields=["code", "label"],
+                defaults=lambda row: {
+                    "code": row.get("code") or "", "label": row.get("label") or "",
+                },
+            )
+
+            _upsert_by_id(
+                data, target_keys, summary, "item_categories", ItemCategory,
+                update_fields=["name", "addon_target_label", "role"],
+                defaults=lambda row: {
+                    "name": row.get("name") or "",
+                    "addon_target_label": row.get("addon_target_label") or row.get("name") or "",
+                },
+            )
+
+            db.session.flush()
+
+            _SHARED_CHARACTER_FIELDS = [
+                "name", "chapter_id", "portrait_url", "real_name",
+                "avatar_local_path", "is_disabled", "disabled_reason",
+                "lore", "translations",
+            ]
+
+            def _character_defaults(row: dict[str, Any]) -> dict[str, Any]:
+                return {
+                    "name": row.get("name") or "",
+                    "chapter_id": row.get("chapter_id"),
+                }
+
+            def _set_created_at(char_obj: Survivor | Killer, row: dict[str, Any]) -> None:
+                if row.get("created_at"):
+                    parsed_dt = _parse_datetime(row["created_at"])
+                    if parsed_dt:
+                        char_obj.created_at = parsed_dt
+
+            _upsert_by_id(
+                data, target_keys, summary, "survivors", Survivor,
+                update_fields=_SHARED_CHARACTER_FIELDS,
+                defaults=_character_defaults,
+                post_process=_set_created_at,
+                asset_fields=["avatar_local_path"], static_dir=static_dir,
+            )
+
+            def _decimal_speed(killer_obj: Killer, row: dict[str, Any]) -> None:
+                """`movement_speed_ms` arrives as a string; the column is NUMERIC.
+
+                Only the m/s figure is carried: the percentage the source
+                printed beside it is ms / 4.0 * 100, the survivor baseline,
+                exactly, for all 44 killers.
+                """
+                if "movement_speed_ms" not in row:
+                    return
+                value = row.get("movement_speed_ms")
+                killer_obj.movement_speed_ms = (
+                    Decimal(str(value)) if value not in (None, "") else None
+                )
+
+            def _killer_post_process(killer_obj: Killer, row: dict[str, Any]) -> None:
+                _decimal_speed(killer_obj, row)
+                _set_created_at(killer_obj, row)
+
+            # The power columns are on this row now. They used to be a 1:1
+            # `killer_profiles` child, nested one level deeper in the payload,
+            # which existed only to keep them off the 54 survivors.
+            _upsert_by_id(
+                data, target_keys, summary, "killers", Killer,
+                update_fields=_SHARED_CHARACTER_FIELDS + [
+                    "power_name", "power_description", "power_icon_url",
+                    "power_icon_local_path", "terror_radius",
+                    "terror_radius_meters", "height",
+                ],
+                defaults=lambda row: {
+                    **_character_defaults(row),
+                    "power_name": row.get("power_name") or "",
+                },
+                post_process=_killer_post_process,
+                asset_fields=["avatar_local_path", "power_icon_local_path"],
+                static_dir=static_dir,
+            )
+
+            db.session.flush()
+
+            def _perk_owner(perk_obj: Perk, row: dict[str, Any]) -> None:
+                """Same rule as add-ons: at most one owner, absent means none.
+
+                The 27 general perks have neither key, so the seed files carry
+                neither, and `role` is what still places them on a side.
+                """
+                if "survivor_id" in row or "killer_id" in row:
+                    perk_obj.survivor_id = row.get("survivor_id")
+                    perk_obj.killer_id = row.get("killer_id")
+
+            _upsert_by_id(
+                data, target_keys, summary, "perks", Perk,
+                post_process=_perk_owner,
+                update_fields=[
+                    "name", "survivor_id", "killer_id", "alternate_name",
+                    "is_generic_counterpart", "is_teachable", "role",
+                    "description", "icon_url", "icon_local_path", "translations",
+                ],
+                defaults=lambda row: {
+                    "name": row.get("name") or "",
+                    # `category` is the pre-split spelling; an older backup
+                    # still carries it.
+                    "role": row.get("role") or row.get("category") or "Survivor",
+                },
+                asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
+            _upsert_by_id(
+                data, target_keys, summary, "items", Item,
+                update_fields=[
+                    "name", "category_id", "description", "icon_url",
+                    "icon_local_path", "rarity", "translations",
+                ],
+                defaults=lambda row: {
+                    "name": row.get("name") or "", "category_id": row.get("category_id"),
+                },
+                asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
+            # One table per owner, each key NOT NULL, so there is no
+            # exclusivity to police on the way in any more -- the table an
+            # add-on lands in *is* which kind it is.
+            _upsert_by_id(
+                data, target_keys, summary, "killer_addons", KillerAddon,
+                update_fields=[
+                    "name", "killer_id", "description", "icon_url",
+                    "icon_local_path", "rarity", "translations",
+                ],
+                defaults=lambda row: {
+                    "name": row.get("name") or "", "killer_id": row.get("killer_id"),
+                },
+                asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
+            _upsert_by_id(
+                data, target_keys, summary, "item_addons", ItemAddon,
+                update_fields=[
+                    "name", "item_category_id", "description", "icon_url",
+                    "icon_local_path", "rarity", "translations",
+                ],
+                defaults=lambda row: {
+                    "name": row.get("name") or "",
+                    "item_category_id": row.get("item_category_id"),
+                },
+                asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
+            _upsert_by_id(
+                data, target_keys, summary, "offerings", Offering,
+                update_fields=[
+                    "name", "role", "realm_id", "description", "icon_url",
+                    "icon_local_path", "rarity", "translations",
+                ],
+                defaults=lambda row: {"name": row.get("name") or ""},
+                asset_fields=["icon_local_path"], static_dir=static_dir,
+            )
+
             if "maps" in target_keys and "maps" in data:
-                raw_maps = data["maps"]
-                created, updated = 0, 0
-                for mdata in raw_maps:
-                    map_id = mdata.get("map_id")
-                    if not map_id:
-                        continue
-                    realm_obj = db.session.scalar(select(MapRealm).where(MapRealm.map_id == map_id))
-                    if not realm_obj:
-                        realm_obj = MapRealm(
-                            map_id=map_id,
-                            name=mdata.get("name", map_id),
-                            realm=mdata.get("realm", "Unknown Realm"),
+                created = updated = 0
+                for mdata in data["maps"]:
+                    # The primary key is the only identity a map has now.
+                    # `map_id` -- `hens_autohaven_wreckers_azarovs_resting_place`
+                    # -- spelled out the provider, the realm and the name, all
+                    # three of which are columns on this row, and the tables
+                    # that referenced it are gone. An older backup still
+                    # carries it, and the name it held is matched as a
+                    # fallback so such a backup still restores.
+                    row_id = mdata.get("id")
+                    map_obj = (
+                        db.session.get(MapRealm, row_id) if isinstance(row_id, int) else None
+                    )
+                    if map_obj is None:
+                        name = mdata.get("name") or mdata.get("map_id")
+                        if not name:
+                            continue
+                        map_obj = db.session.scalar(
+                            select(MapRealm).where(MapRealm.name == name)
                         )
-                        db.session.add(realm_obj)
+                    if not map_obj:
+                        map_obj = MapRealm(
+                            name=mdata.get("name") or mdata.get("map_id"),
+                            realm_id=mdata.get("realm_id"),
+                            source_id=mdata.get("source_id"),
+                        )
+                        if isinstance(row_id, int):
+                            map_obj.id = row_id
+                        db.session.add(map_obj)
                         created += 1
                     else:
                         updated += 1
 
                     for k in [
-                        "name", "realm", "realm_id", "source", "source_label",
-                        "layout_type", "jungle_gyms_count", "totem_spawns_count",
-                        "pallet_density", "shack_has_basement", "description",
-                        "image_url", "callout_image_url", "callout_image_local_path",
-                        "translations",
+                        "name", "realm_id", "source_id", "description",
+                        "callout_image_url", "callout_image_local_path", "translations",
                     ]:
                         if k in mdata:
-                            setattr(realm_obj, k, mdata[k])
+                            setattr(map_obj, k, mdata[k])
 
-                    if "tiles" in mdata:
-                        db.session.execute(delete(MapTile).where(MapTile.map_id == map_id))
-                        for tdata in mdata["tiles"]:
-                            tile = MapTile(
-                                map_id=map_id,
-                                name=tdata.get("name", "Tile"),
-                                type=tdata.get("type", "standard"),
-                                x=float(tdata.get("x", 0.0)),
-                                y=float(tdata.get("y", 0.0)),
-                                seed_variant=tdata.get("seed_variant", "seed_a"),
-                                floor=int(tdata.get("floor", 1)),
-                                has_pallet=bool(tdata.get("has_pallet", False)),
-                                has_window=bool(tdata.get("has_window", False)),
-                            )
-                            db.session.add(tile)
+                    # `tiles` and `objectives` in an older backup are read
+                    # and discarded: neither table exists. `map_objectives` was
+                    # empty for all 58 maps, and the 290 `map_tiles` rows were
+                    # five generic placeholder names copied onto every map,
+                    # which the frontend's own utils/mapLandmarks.ts supersedes
+                    # with real per-map callouts.
 
-                    if "objectives" in mdata:
-                        db.session.execute(delete(MapObjective).where(MapObjective.map_id == map_id))
-                        for odata in mdata["objectives"]:
-                            obj = MapObjective(
-                                map_id=map_id,
-                                type=odata.get("type", "generator"),
-                                x=float(odata.get("x", 0.0)),
-                                y=float(odata.get("y", 0.0)),
-                                floor=int(odata.get("floor", 1)),
-                            )
-                            db.session.add(obj)
-                    write_asset_base64(static_dir, mdata.get("callout_image_local_path"), mdata.get("callout_image_local_path_data"))
+                    write_asset_base64(
+                        static_dir,
+                        mdata.get("callout_image_local_path"),
+                        mdata.get("callout_image_local_path_data"),
+                    )
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
-
-            if "maps" in target_keys or "realms" in target_keys:
-                # Realms restore is gated by this outer "maps" OR "realms" check
-                # (an old backup may carry realm banners only under the "maps"
-                # target). The synthetic {"realms"} passed below only satisfies
-                # _upsert_entity's own internal target-key gate -- it does not
-                # replace the real gating condition above.
-                _upsert_entity(
-                    data, {"realms"}, summary, "realms", Realm, "name",
-                    update_fields=["image_url", "image_local_path", "translations"],
-                    defaults=lambda row: {
-                        "image_url": row.get("image_url", ""),
-                        "image_local_path": row.get("image_local_path", ""),
-                    },
-                    asset_fields=["image_local_path"], static_dir=static_dir,
-                )
 
             if "users" in target_keys and "users" in data:
                 u_created, u_updated = 0, 0
@@ -626,15 +766,18 @@ class DatabaseExportImportService:
                             role=row.get("role", "user"),
                             avatar_url=row.get("avatar_url", "default_avatar"),
                             is_active=row.get("is_active", True),
+                            is_verified=row.get("is_verified", True if username in ("lemon", "user") else False),
                         )
                         db.session.add(user_obj)
                         u_created += 1
                     else:
                         if not email_conflict:
                             user_obj.email = candidate_email
-                        for field in ["password_hash", "role", "avatar_url", "is_active"]:
+                        for field in ["password_hash", "role", "avatar_url", "is_active", "is_verified"]:
                             if field in row and row[field] is not None:
                                 setattr(user_obj, field, row[field])
+                        if username in ("lemon", "user"):
+                            user_obj.is_verified = True
                         u_updated += 1
 
                     if row.get("created_at"):
@@ -649,27 +792,44 @@ class DatabaseExportImportService:
 
             user_map: dict[str, int] = {u.username: u.id for u in db.session.scalars(select(User)).all()}
             perk_map: dict[str, int] = {p.name.strip().lower(): p.id for p in db.session.scalars(select(Perk)).all()}
+            # Ownership rows name their character. An id alone would not
+            # identify one any more -- survivor 7 and killer 7 both exist -- so
+            # the map carries the side with it. `char_map` was referenced here
+            # without ever being built, which made any ownerships import raise
+            # NameError.
+            char_map: dict[str, tuple[str, int]] = {
+                **{s_.name.strip().lower(): ("Survivor", s_.id)
+                   for s_ in db.session.scalars(select(Survivor)).all()},
+                **{k_.name.strip().lower(): ("Killer", k_.id)
+                   for k_ in db.session.scalars(select(Killer)).all()},
+            }
 
             if "ownerships" in target_keys and "ownerships" in data:
                 raw_owns = data["ownerships"]
                 char_created, char_updated = 0, 0
                 perk_created, perk_updated = 0, 0
 
-                existing_char_owns: dict[tuple[int, int], UserCharacterOwnership] = {
-                    (co.user_id, co.character_id): co
+                existing_char_owns: dict[tuple[int, str, int], UserCharacterOwnership] = {
+                    (co.user_id, "Survivor" if co.survivor_id else "Killer",
+                     co.survivor_id or co.killer_id): co
                     for co in db.session.scalars(select(UserCharacterOwnership)).all()
                 }
                 for co_data in raw_owns.get("characters", []):
                     uname = co_data.get("username")
                     cname = co_data.get("character_name")
                     u_id = user_map.get(uname) if uname else None
-                    c_id = char_map.get(cname.strip().lower()) if cname else None
-                    if u_id and c_id:
-                        co = existing_char_owns.get((u_id, c_id))
+                    found = char_map.get(cname.strip().lower()) if cname else None
+                    if u_id and found:
+                        role, c_id = found
+                        co = existing_char_owns.get((u_id, role, c_id))
                         if not co:
-                            co = UserCharacterOwnership(user_id=u_id, character_id=c_id)
+                            co = UserCharacterOwnership(
+                                user_id=u_id,
+                                survivor_id=c_id if role == "Survivor" else None,
+                                killer_id=c_id if role == "Killer" else None,
+                            )
                             db.session.add(co)
-                            existing_char_owns[(u_id, c_id)] = co
+                            existing_char_owns[(u_id, role, c_id)] = co
                             char_created += 1
                         else:
                             char_updated += 1
@@ -698,29 +858,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["character_ownerships"] = {"created": char_created, "updated": char_updated}
                 summary["perk_ownerships"] = {"created": perk_created, "updated": perk_updated}
-
-            if "perk_rules" in target_keys and "perk_rules" in data:
-                created, updated = 0, 0
-                existing_rules: dict[str, PerkRule] = {
-                    pr.name: pr for pr in db.session.scalars(select(PerkRule)).all()
-                }
-                for row in data["perk_rules"]:
-                    name = row.get("name", "Standard")
-                    rule = existing_rules.get(name)
-                    if not rule:
-                        rule = PerkRule(name=name)
-                        db.session.add(rule)
-                        existing_rules[name] = rule
-                        created += 1
-                    else:
-                        updated += 1
-                    rule.is_default = row.get("is_default", False)
-                    rule.slot1_type = row.get("slot1_type", "character_own")
-                    rule.slot2_type = row.get("slot2_type", "character_own")
-                    rule.slot3_type = row.get("slot3_type", "general_role")
-                    rule.slot4_type = row.get("slot4_type", "any_role")
-                db.session.flush()
-                summary["perk_rules"] = {"created": created, "updated": updated}
 
 
             if "draft_sessions" in target_keys and "draft_sessions" in data:
@@ -752,19 +889,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["draft_sessions"] = {"created": ds_created, "updated": ds_updated}
 
-            if "scraper_settings" in target_keys and "scraper_settings" in data and data["scraper_settings"]:
-                row = data["scraper_settings"][0] if isinstance(data["scraper_settings"], list) else data["scraper_settings"]
-                existing_setting = db.session.scalars(select(ScraperSetting)).first()
-                was_new = existing_setting is None
-                if not existing_setting:
-                    existing_setting = ScraperSetting()
-                    db.session.add(existing_setting)
-                existing_setting.source = row.get("source", "wikigg")
-                existing_setting.fallback_to_wiki = row.get("fallback_to_wiki", False)
-                existing_setting.last_used_source = row.get("last_used_source", "wikigg")
-                existing_setting.last_run_timestamp = row.get("last_run_timestamp")
-                db.session.flush()
-                summary["scraper_settings"] = {"created": 1 if was_new else 0, "updated": 0 if was_new else 1}
 
             _upsert_entity(
                 data, target_keys, summary, "challenge_mode_settings", ChallengeModeSetting, "mode",
@@ -786,11 +910,24 @@ class DatabaseExportImportService:
                         sc_updated += 1
                     for field in [
                         "player_title", "devotion_level", "grade_rank",
-                        "survivor_main_character", "survivor_main_prestige", "survivor_perk_ids",
-                        "killer_main_character", "killer_main_prestige", "killer_perk_ids",
+                        "survivor_main_id", "survivor_main_prestige", "survivor_perk_ids",
+                        "killer_main_id", "killer_main_prestige", "killer_perk_ids",
                     ]:
                         if field in row:
                             setattr(existing_showcase, field, row[field])
+
+                    # A backup written before the mains became foreign keys
+                    # carries the character's name instead. Resolve it, so an
+                    # old export still restores a showcase.
+                    for legacy, column, want_role in (
+                        ("survivor_main_character", "survivor_main_id", "Survivor"),
+                        ("killer_main_character", "killer_main_id", "Killer"),
+                    ):
+                        if legacy not in row or row.get(column) is not None:
+                            continue
+                        found = char_map.get(str(row[legacy] or "").strip().lower())
+                        if found and found[0] == want_role:
+                            setattr(existing_showcase, column, found[1])
                 db.session.flush()
                 summary["user_showcases"] = {"created": sc_created, "updated": sc_updated}
 
@@ -870,19 +1007,27 @@ class DatabaseExportImportService:
                             entity_obj = Entity(roster_id=roster_obj.id, slug=e_row.get("slug"), name=e_row.get("name", ""))
                             db.session.add(entity_obj)
                             db.session.flush()
-                        for field in ["name", "role", "gender", "media_url", "media_type", "order_index", "is_active"]:
+                        # The profile fields are columns now, so they set like
+                        # any other column. `set_metadata()` and the
+                        # `metadata_json` blob it wrote are gone.
+                        for field in SMASH_ENTITY_FIELDS:
                             if field in e_row:
                                 setattr(entity_obj, field, e_row[field])
-                        if "metadata_json" in e_row:
-                            entity_obj.set_metadata(e_row["metadata_json"])
 
                         stat_row = e_row.get("stat")
                         if stat_row:
+                            # `entity_id` is the primary key of entity_stats now
+                            # -- the surrogate `id` is gone -- so this lookup is
+                            # the identity lookup.
                             stat_obj = db.session.scalar(select(EntityStat).where(EntityStat.entity_id == entity_obj.id))
                             if not stat_obj:
                                 stat_obj = EntityStat(entity_id=entity_obj.id)
                                 db.session.add(stat_obj)
-                            for field in ["smash_count", "pass_count", "super_smash_count", "total_votes", "smash_rate", "chaos_rating"]:
+                            # `total_votes` and `smash_rate` are deliberately
+                            # absent: they are generated columns, assigning them
+                            # raises, and the database derives them from the
+                            # three counts below.
+                            for field in ["smash_count", "pass_count", "super_smash_count", "chaos_rating"]:
                                 if field in stat_row:
                                     setattr(stat_obj, field, stat_row[field])
 
@@ -902,21 +1047,6 @@ class DatabaseExportImportService:
                 db.session.flush()
                 summary["rosters"] = {"created": r_created, "updated": r_updated}
 
-            if "smash_translations" in target_keys and "smash_translations" in data:
-                st_created = st_updated = 0
-                for row in data["smash_translations"]:
-                    existing_translation = db.session.scalar(
-                        select(Translation).where(Translation.locale == row.get("locale"), Translation.key == row.get("key"))
-                    )
-                    if not existing_translation:
-                        existing_translation = Translation(locale=row.get("locale"), key=row.get("key"), value=row.get("value", ""))
-                        db.session.add(existing_translation)
-                        st_created += 1
-                    else:
-                        existing_translation.value = row.get("value", existing_translation.value)
-                        st_updated += 1
-                db.session.flush()
-                summary["smash_translations"] = {"created": st_created, "updated": st_updated}
 
             _upsert_entity(
                 data, target_keys, summary, "community_builds", CommunityBuild, "title",
@@ -968,6 +1098,10 @@ class DatabaseExportImportService:
                 perk_service.reload_data()
             except Exception as reload_err:
                 logger.debug(f"PerkService reload_data notice during import: {reload_err}")
+
+            # After the commit, so nothing can repopulate the cache from the
+            # pre-import state between the bump and the write landing.
+            bump_catalog_version()
 
             return {
                 "status": "success",

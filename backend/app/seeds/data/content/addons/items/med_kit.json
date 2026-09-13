@@ -1,0 +1,332 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 24,
+      "name": "Bandages",
+      "item_category_id": 7,
+      "description": "A pack of bandages usually found in first aid kits.\n• Adds 8 charges to the Med-kit.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bandages.png?eb0625",
+      "icon_local_path": "icons/addons/bandages.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Bandagen",
+          "description": "Ein Pack Bandagen, normalerweise im Erste-Hilfe-Kasten zu finden.\n• Fügt 8 Einheiten zum Sani-Kasten hinzu."
+        },
+        "es": {
+          "name": "Vendajes",
+          "description": "Paquete de apósitos muy habitual en botiquines de primeros auxilios.\n• Añade 8 cargas al botiquín."
+        },
+        "ja": {
+          "name": "包帯",
+          "description": "救急箱の中によく入っている包帯セット。\n• 医療キットに8チャージ追加する"
+        },
+        "pl": {
+          "name": "Bandaże",
+          "description": "Zestaw bandaży znajdujący się zazwyczaj w apteczkach pierwszej pomocy.\n• Dodaje 8 ładunków do apteczki."
+        }
+      }
+    },
+    {
+      "id": 25,
+      "name": "Butterfly Tape",
+      "item_category_id": 7,
+      "description": "Medical quality tape used to close small wounds.\n• Increases healing speed by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_butterflyTape.png?f18e7b",
+      "icon_local_path": "icons/addons/butterfly_tape.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Schmetterlingsband",
+          "description": "Medizinisch geeignetes Band zum Verschließen kleinerer Wunden.\n• Erhöht die Heilungsgeschwindigkeit um 5 %."
+        },
+        "es": {
+          "name": "Sutura Adhesiva",
+          "description": "Esparadrapo que se usa para cerrar heridas menores.\n• Aumenta la velocidad de curación un 5 %."
+        },
+        "ja": {
+          "name": "バタフライテープ",
+          "description": "小さな傷を塞ぐための医療用テープ。\n• 治療速度が5%上昇する"
+        },
+        "pl": {
+          "name": "Plaster Motylkowy",
+          "description": "Taśma medyczna wysokiej jakości służąca do zamykania małych ran.\n• Zwiększa prędkość leczenia o5%."
+        }
+      }
+    },
+    {
+      "id": 26,
+      "name": "Medical Scissors",
+      "item_category_id": 7,
+      "description": "Scissors designed to easily cut through textiles.\n• Increases healing speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_medicalScissors.png?ec20a2",
+      "icon_local_path": "icons/addons/medical_scissors.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Medizinische Schere",
+          "description": "Eine Schere, entworfen, um einfach durch Stoffe zu schneiden.\n• Erhöht die Heilungsgeschwindigkeit um 10 %."
+        },
+        "es": {
+          "name": "Tijeras Médicas",
+          "description": "Tijeras diseñadas para cortar la tela fácilmente.\n• Aumentan la velocidad de curación un 10 %."
+        },
+        "ja": {
+          "name": "医療用ハサミ",
+          "description": "衣服を簡単に切断できるように設計されたハサミ。\n• 治療速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Medyczne Nożyce",
+          "description": "Nożyczki zaprojektowane do łatwego przecinania tkanin.\n• Zwiększają prędkość leczenia o 10%."
+        }
+      }
+    },
+    {
+      "id": 27,
+      "name": "Needle & Thread",
+      "item_category_id": 7,
+      "description": "A medical device used to close and hold body tissue. Even though it's very effective, the surgical suture is challenging to use.\n• Increases the chances of triggering a Skill Check by 15%.\n• Increases progression bonus for succeeding Great Skill Checks by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_needle%26Thread.png?a433ea",
+      "icon_local_path": "icons/addons/needle_thread.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Nadel und Faden",
+          "description": "Ein medizinisches Gerät zum Verschließen und Stützen von Körpergewebe. Es ist zwar sehr effektiv, aber auch sehr schwierig zu benutzen.\n• Erhöht die Wahrscheinlichkeit, einen Fähigkeitscheck auszulösen, um 15 %.\n• Erhöht den Fortschrittsbonus für erfolgreiche großartige Fähigkeitschecks um 10 %."
+        },
+        "es": {
+          "name": "Aguja e hilo",
+          "description": "Un artilugio médico que sirve para cerrar y mantener en su sitio los tejidos corporales. Es muy efectivo, pero no resulta nada fácil de usar.\n• Aumenta la probabilidad de que aparezca una prueba de habilidad un 15 %.\n• Aumenta la bonificación de progreso al realizar pruebas de habilidad excelentes un 10 %."
+        },
+        "ja": {
+          "name": "針と糸",
+          "description": "身体の組織を縫合し、固定するために使われる医療器具。非常に効果が高いが、使用難度は高い。\n• スキルチェックの発生確率が15%上昇する\n• スキルチェックでグレイトを出した際に追加される進行度が10%増加する"
+        },
+        "pl": {
+          "name": "Igła i nić",
+          "description": "Szwy używane do zamykania ran i łączenia tkanki. Mimo że szwy chirurgiczne są bardzo skuteczne, są także trudne w użyciu.\n• Zwiększają szansę na wywołanie testu umiejętności o 15%.\n• Zwiększają bonus postępu za zaliczenie świetnego testu umiejętności o 10%."
+        }
+      }
+    },
+    {
+      "id": 28,
+      "name": "Self Adherent Wrap",
+      "item_category_id": 7,
+      "description": "A pack of gel forming pads used to patch up heavily exudating wounds.\n• Adds 16 charges to the Med-kit.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_selfAdherentWrap.png?cb4dfe",
+      "icon_local_path": "icons/addons/self_adherent_wrap.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Selbsthaftende Bandagen",
+          "description": "Eine Packung Gelpolster zum Verschließen stark nässender Wunden.\n• Fügt 16 Einheiten zum Sani-Kasten hinzu."
+        },
+        "es": {
+          "name": "Venda adhesiva",
+          "description": "Un gel que forma apósitos para tratar heridas que sangran con intensidad.\n• Añade 16 cargas al botiquín."
+        },
+        "ja": {
+          "name": "テーピングテープ",
+          "description": "出血が激しい傷を手当てするための、ゲル状のパッド。\n• 医療キットに16チャージ追加する"
+        },
+        "pl": {
+          "name": "Samoprzylepny bandaż",
+          "description": "Opakowanie żelowych opatrunków stosowanych do opatrywania ciężkich ran.\n• Dodaje 16 ładunków do apteczki."
+        }
+      }
+    },
+    {
+      "id": 29,
+      "name": "Sponge",
+      "item_category_id": 7,
+      "description": "A mundane sponge used to soak up extra blood, providing easier access to wounds.\n• Increases the Bonus skill check size by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_sponge.png?cb4971",
+      "icon_local_path": "icons/addons/sponge.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Schwamm",
+          "description": "Ein gewöhnlicher Schwamm, mit dem Blut aufgesaugt werden kann, um leichteren Zugang zu Wunden zu erhalten.\n• Erhöht die Größe eines Bonus-Fähigkeitschecks um 20 %."
+        },
+        "es": {
+          "name": "Esponja",
+          "description": "Esponja común y corriente que sirve para absorber el exceso de sangre y facilitar el acceso a las heridas.\n• Aumenta el tamaño de la prueba de habilidad adicional un 20 %."
+        },
+        "ja": {
+          "name": "スポンジ",
+          "description": "あふれた血を吸い取り、傷口を見やすくするスポンジ。\n• スキルチェックのボーナス範囲が20%増加する"
+        },
+        "pl": {
+          "name": "Gąbka",
+          "description": "Pospolita gąbka służąca do pochłaniania dodatkowej ilości krwi. Zapewnia łatwiejszy dostęp do ran.\n• Zwiększa rozmiar bonusowego testu umiejętności o20%."
+        }
+      }
+    },
+    {
+      "id": 30,
+      "name": "Gauze Roll",
+      "item_category_id": 7,
+      "description": "A sterile gauze used for a variety of wounds. Part of a total wound care system.\n• Adds 10 charges to the Med-kit.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gauzeRoll.png?a94896",
+      "icon_local_path": "icons/addons/gauze_roll.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Mullbinde",
+          "description": "Eine sterile Gaze, die bei vielen Arten von Wunden zum Einsatz kommt. Teil eines umfassenden Wundbehandlungssystems.\n• Fügt 10 Einheiten zum Sani-Kasten hinzu."
+        },
+        "es": {
+          "name": "Rollo de gasa",
+          "description": "Una gasa estéril que se puede usar para diversas heridas. Forma parte de un sistema completo de tratamiento.\n• Añade 10 cargas al botiquín."
+        },
+        "ja": {
+          "name": "ガーゼのロール",
+          "description": "様々な傷に使える、滅菌ガーゼ。外傷用応急処置セットの1つ。\n• 医療キットに10チャージ追加する"
+        },
+        "pl": {
+          "name": "Zwój gazy",
+          "description": "Sterylna gaza używana do opatrywania różnych ran. Stanowi część zestawu pielęgnacyjnego.\n• Dodaje 10 ładunków do apteczki."
+        }
+      }
+    },
+    {
+      "id": 31,
+      "name": "Surgical Suture",
+      "item_category_id": 7,
+      "description": "A medical device used to close and hold body tissue. Even though it's very effective, the surgical suture is challenging to use.\n• Increases the chances of triggering a Skill Check by 15%.\n• Increases progression bonus for succeeding Great Skill Checks by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_surgicalSuture.png?b14f4b",
+      "icon_local_path": "icons/addons/surgical_suture.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Chirurgischer Faden",
+          "description": "Ein medizinisches Gerät zum Verschließen und Stützen von Körpergewebe. Es ist zwar sehr effektiv, aber auch sehr schwierig zu benutzen.\n• Erhöht die Wahrscheinlichkeit, einen Fähigkeitscheck auszulösen, um 15 %.\n• Erhöht den Fortschrittsbonus für erfolgreiche großartige Fähigkeitschecks um 10 %."
+        },
+        "es": {
+          "name": "Sutura quirúrgica",
+          "description": "Un artilugio médico que sirve para cerrar y mantener en su sitio los tejidos corporales. Es muy efectivo, pero no resulta nada fácil de usar.\n• Aumenta la probabilidad de que aparezca una prueba de habilidad un 15 %.\n• Aumenta la bonificación de progreso al realizar pruebas de habilidad excelentes un 10 %."
+        },
+        "ja": {
+          "name": "外科用縫合糸",
+          "description": "身体の組織を縫合し、固定するために使われる医療器具。非常に効果が高いが、使用難度は高い。\n• スキルチェックの発生確率が15%上昇する\n• スキルチェックでグレイトを出した際に追加される進行度が10%増加する"
+        },
+        "pl": {
+          "name": "Chirurgiczny szew",
+          "description": "Szwy używane do zamykania ran i łączenia tkanki. Mimo że szwy chirurgiczne są bardzo skuteczne, są także trudne w użyciu.\n• Zwiększają szansę na wywołanie testu umiejętności o 15%.\n• Zwiększają bonus postępu za zaliczenie świetnego testu umiejętności o 10%."
+        }
+      }
+    },
+    {
+      "id": 32,
+      "name": "Abdominal Dressing",
+      "item_category_id": 7,
+      "description": "A highly absorbent pad that prevents bodily fluid leakage when applied to large abdominal wounds.\n• Increases healing speed by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_abdominalDressing.png?279ed7",
+      "icon_local_path": "icons/addons/abdominal_dressing.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Unterleibsverband",
+          "description": "Ein äußerst saugfähiges Polster, um das Austreten von Körperflüssigkeiten bei großen Bauchwunden zu verhindern.\n• Erhöht die Heilungsgeschwindigkeit um 15 %."
+        },
+        "es": {
+          "name": "Apósito abdominal",
+          "description": "Una venda con gran capacidad de absorción que evita la pérdida de fluidos corporales cuando se aplica sobre heridas abdominales de gran tamaño.\n• Aumenta la velocidad de curación un 15 %."
+        },
+        "ja": {
+          "name": "腹部用パッド",
+          "description": "腹部に重傷を負ったとき、体液が漏れ出すのを防ぐことができる吸収性のパッド。\n• 治療速度が15%上昇する"
+        },
+        "pl": {
+          "name": "Opatrunek na brzuch",
+          "description": "Opatrunek o właściwościach absorpcyjnych zapobiegający wyciekom płynów ustrojowych. Jest stosowany do opatrywania dużych ran brzucha.\n• Zwiększa prędkość leczenia o 15%."
+        }
+      }
+    },
+    {
+      "id": 33,
+      "name": "Styptic Agent",
+      "item_category_id": 7,
+      "description": "A white powder with coagulant properties. Apply the agent to a wound to stop it from hemorrhaging.\nIncreases the efficiency when healing yourself with a Medkit by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stypticAgent.png?f659ee",
+      "icon_local_path": "icons/addons/styptic_agent.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Blutstillungsmittel",
+          "description": "Ein weißes Pulver mit Gerinnungsmitteleigenschaften. Streue dieses Mittel auf eine Wunde, um die Blutung zu stoppen.\nErhöht die Wirksamkeit, wenn du dich selbst mit einem Sani-Kasten heilst, um 15 %."
+        },
+        "es": {
+          "name": "Astringente",
+          "description": "Un polvo blanco con propiedades coagulantes. Aplica la sustancia a una herida para detener la hemorragia.\nAumenta la eficacia al curarte con un botiquín un 15 %."
+        },
+        "ja": {
+          "name": "止血剤",
+          "description": "凝固性を持つ白い粉。薬品を創傷に使うことにより止血する。\n医療キットで自己治療する際の効率が15%上昇する。"
+        },
+        "pl": {
+          "name": "Odczynnik",
+          "description": "Biały proszek o właściwościach koagulacyjnych. Po naniesieniu na ranę zatrzymuje krwotok.\nZwiększa skuteczność leczenia podczas leczena siebie z apteczką o 15%."
+        }
+      }
+    },
+    {
+      "id": 34,
+      "name": "Anti-Exhaustion Syringe",
+      "item_category_id": 7,
+      "description": "A mysterious fluid that reinvigorates both body and mind.\n• Press the Secondary Action button while healing with the Med-kit to use the Anti-Exhaustion Syringe.\n• The affected Survivor loses the Exhausted Status Effect upon use.\n• Consumes the Med-kit on use.\nExhausted prevents Survivors from activating exhausting perks.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_anti-haemorrhagicSyringe.png?871c87",
+      "icon_local_path": "icons/addons/anti_exhaustion_syringe.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Erquickungsspritze",
+          "description": "Eine geheimnisvolle Flüssigkeit, die Körper und Geist belebt.\n• Drücke die Taste für die Sekundäraktion während der Heilung mit dem Sani-Kasten, um die Erquickungsspritze zu verwenden.\n• Der betroffene Überlebende verliert dadurch den Statuseffekt Erschöpfung.\n• Verbraucht bei Nutzung den Sani-Kasten.\nErschöpfung hindert Überlebende daran, erschöpfende Talente zu nutzen."
+        },
+        "es": {
+          "name": "Jeringa antiagotamiento",
+          "description": "Un fluido misterioso que sirve para fortalecer cuerpo y mente.\n• Pulsa el botón de acción secundaria mientras estás curando con el botiquín para usar la jeringa antiagotamiento.\n• El superviviente afectado pierde el efecto de estado Agotamiento tras usarla.\n• Consume por completo el botiquín.\nAgotamiento impide que los supervivientes activen habilidades de este tipo."
+        },
+        "ja": {
+          "name": "抗疲労注射器",
+          "description": "心身の元気を回復する不思議な液体。\n• 医療キットで治療中にセカンダリアクションボタンを押して抗疲労注射器を使用する\n• 効果を受けた生存者は、使用時に疲労のステータス効果を失う\n• 使用時に医療キットを消費する\n疲労状態になると生存者は疲労のパークが使用不可になる。"
+        },
+        "pl": {
+          "name": "Zastrzyk przeciw zmęczeniu",
+          "description": "Tajemniczy płyn, który działa orzeźwiająco na ciało i umysł.\n• Naciśnij przycisk drugiej akcji podczas leczenia apteczką, aby skorzystać z zastrzyku przeciw zmęczeniu.\n• Ocalały podlegający działaniu substancji po użyciu traci efekt Wyczerpanie.\n• Zużywa apteczkę.\nWyczerpanie uniemożliwia ocalałym korzystanie z wyczerpujących umiejętności."
+        }
+      }
+    },
+    {
+      "id": 35,
+      "name": "Gel Dressings",
+      "item_category_id": 7,
+      "description": "A pack of gel forming pads used to patch up heavily exudating wounds.\n• Adds 16 charges to the Med-kit.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gelDressings.png?f8cce7",
+      "icon_local_path": "icons/addons/gel_dressings.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Gelkompressen",
+          "description": "Eine Packung Gelpolster zum Verschließen stark nässender Wunden.\n• Fügt 16 Einheiten zum Sani-Kasten hinzu."
+        },
+        "es": {
+          "name": "Apósitos de hidrogel",
+          "description": "Un gel que forma apósitos para tratar heridas que sangran con intensidad.\n• Añade 16 cargas al botiquín."
+        },
+        "ja": {
+          "name": "ジェルのパッド",
+          "description": "出血が激しい傷を手当てするための、ゲル状のパッド。\n• 医療キットに16チャージ追加する"
+        },
+        "pl": {
+          "name": "Żelowy opatrunek",
+          "description": "Opakowanie żelowych opatrunków stosowanych do opatrywania ciężkich ran.\n• Dodaje 16 ładunków do apteczki."
+        }
+      }
+    }
+  ]
+}

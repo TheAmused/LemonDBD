@@ -10,7 +10,8 @@ from sqlalchemy import event
 
 from app.core.extensions import db
 from app.core.security import generate_token
-from app.models import Character, User, UserCharacterOwnership, UserPerkOwnership, Perk
+from app.models import Killer, User, UserCharacterOwnership, UserPerkOwnership, Perk
+from tests.unit.conftest import make_chapter
 
 
 @pytest.mark.unit
@@ -54,14 +55,14 @@ class TestAdminUserDirectoryRoute:
     def test_lists_users_with_owned_counts(
         self, client: FlaskClient, db_session, admin_user: User, admin_headers: dict[str, str]
     ) -> None:
-        char = Character(name="The Trapper", role="Killer")
+        char = Killer(name="The Trapper", chapter_id=make_chapter(db_session).id, power_name="Trapper Power")
         db_session.add(char)
         db_session.flush()
-        perk = Perk(name="Brutal Strength", character_id=char.id, category="Killer")
+        perk = Perk(name="Brutal Strength", killer_id=char.id, role="Killer")
         db_session.add(perk)
         db_session.flush()
 
-        db_session.add(UserCharacterOwnership(user_id=admin_user.id, character_id=char.id, is_owned=True))
+        db_session.add(UserCharacterOwnership(user_id=admin_user.id, killer_id=char.id, is_owned=True))
         db_session.add(UserPerkOwnership(user_id=admin_user.id, perk_id=perk.id, is_unlocked=True))
         db_session.commit()
 
@@ -111,10 +112,10 @@ class TestAdminUserDirectoryRoute:
     ) -> None:
         """Regression test: this used to run 2 extra COUNT queries *per user*
         row (an N+1). It must now stay flat as the page grows."""
-        char = Character(name="The Wraith", role="Killer")
+        char = Killer(name="The Wraith", chapter_id=make_chapter(db_session).id, power_name="Wraith Power")
         db_session.add(char)
         db_session.flush()
-        perk = Perk(name="Predator", character_id=char.id, category="Killer")
+        perk = Perk(name="Predator", killer_id=char.id, role="Killer")
         db_session.add(perk)
         db_session.flush()
 
@@ -122,7 +123,7 @@ class TestAdminUserDirectoryRoute:
             u = User(username=f"n1_user_{i}", email=f"n1_{i}@example.com", password_hash="hashed")
             db_session.add(u)
             db_session.flush()
-            db_session.add(UserCharacterOwnership(user_id=u.id, character_id=char.id, is_owned=True))
+            db_session.add(UserCharacterOwnership(user_id=u.id, killer_id=char.id, is_owned=True))
             db_session.add(UserPerkOwnership(user_id=u.id, perk_id=perk.id, is_unlocked=True))
         db_session.commit()
 

@@ -60,3 +60,27 @@ class AdminAuditLog(Base):
             "details": self.details,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
+
+
+class SeedUpdateLog(Base):
+    """Tracks applied seed files and update patches by file path and content SHA256 hash."""
+
+    __tablename__ = "seed_update_logs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    file_identifier: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    summary_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    applied_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, str | int | None]:
+        return {
+            "id": self.id,
+            "file_identifier": self.file_identifier,
+            "content_hash": self.content_hash,
+            "summary_json": self.summary_json,
+            "applied_at": self.applied_at.isoformat() if self.applied_at else None,
+        }
+

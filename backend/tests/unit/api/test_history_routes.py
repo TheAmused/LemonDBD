@@ -2,23 +2,28 @@
 import pytest
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
-from app.models import Character, Perk
+from app.models import Killer, Perk
 from app.services.user_service import UserService
+from tests.unit.conftest import make_chapter
 
 
-def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Character:
+def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Killer:
+    """`release_number` is `== id` now, not a settable field, so it is passed
+    straight through as the killer's id to control release order."""
     from app.core.extensions import db
 
-    character = Character(name=name, role="Killer", release_number=release_number)
+    character = Killer(
+        id=release_number, name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"
+    )
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                killer_id=character.id,
                 is_teachable=True,
-                category="Killer",
+                role="Killer",
             )
         )
     db.session.commit()

@@ -86,10 +86,42 @@ def is_local_traffic() -> bool:
         return False
 
 
+def _ratelimit_storage_uri() -> str:
+    """Where the limiter keeps its counters.
+
+    `memory://` under gunicorn is one counter set per worker, so a "5 per
+    minute" limit lets 5 requests through per worker -- 20 with the default 4
+    workers, and the caller only has to be unlucky with the load balancer to
+    find that out. Redis, where it is configured, is the one counter all the
+    workers increment, which is the number the limit was written as.
+    """
+    explicit = os.getenv("RATELIMIT_STORAGE_URI")
+    if explicit:
+        return explicit
+
+    redis_url = os.getenv("REDIS_URL")
+    if not redis_url:
+        return "memory://"
+    try:
+        # Unlike the catalog cache, Flask-Limiter has no fallback of its own:
+        # handed a redis:// URI it cannot open, it raises at init_app and the
+        # app never starts. `redis` is an optional dependency here, so the
+        # import is checked before the limiter is told to rely on it.
+        import redis  # noqa: F401
+    except ImportError:
+        logger.warning(
+            "[limiter] REDIS_URL is set but the redis package is not installed; "
+            "rate-limit counters stay per-worker and every limit is effectively "
+            "multiplied by the worker count."
+        )
+        return "memory://"
+    return redis_url
+
+
 limiter = Limiter(
     key_func=get_client_ip,
     default_limits=[],
-    storage_uri=os.getenv("RATELIMIT_STORAGE_URI", "memory://"),
+    storage_uri=_ratelimit_storage_uri(),
     strategy="fixed-window",
     enabled=os.getenv("RATELIMIT_ENABLED", "true").lower() in ("true", "1", "yes"),
 )

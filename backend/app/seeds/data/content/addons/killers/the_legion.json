@@ -1,0 +1,547 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 240,
+      "name": "Friendship Bracelet",
+      "killer_id": 14,
+      "description": "A wide gray and red braided rope bracelet. The inscription \"F J S J\" can be seen, crudely written in bold black ink.\n• Increases duration of lunges during Feral Frenzy by 0.3 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_friendshipBracelet.png?ac282c",
+      "icon_local_path": "icons/addons/friendship_bracelet.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Freundschaftsband",
+          "description": "Ein breites, aus grauen und roten Schnüren geflochtenes Armband. Jemand hat mit dickem schwarzen Filzstift „F J S J“ darauf geschrieben.\n• Erhöht die Dauer von Sprüngen während Wilde Raserei um 0,3 Sekunden."
+        },
+        "es": {
+          "name": "Pulsera de la amistad",
+          "description": "Una pulsera amplia de cuerdas rojas y grises trenzadas entre sí. Lleva la inscripción \"F. J. S. J.\" escrita con tinta de un intenso color negro.\n• Aumenta la duración de las embestidas durante Frenesí salvaje en 0,3 segundos."
+        },
+        "ja": {
+          "name": "友情のブレスレット",
+          "description": "灰色と赤の編み込みロープでできた幅広のブレスレット。太い黒文字で「F J S J」と雑に書かれている。\n• 愚連の狂乱発動中の突進時間が0.3秒上昇する"
+        },
+        "pl": {
+          "name": "Bransoletka przyjaźni",
+          "description": "Szeroka, szaro-czerwona pleciona bransoletka. Widać na niej proste litery „F J S J” naniesione czarnym atramentem.\n• Wydłuża czas działania skoków podczas Dzikiego Szału o 0,3 sekundy."
+        }
+      }
+    },
+    {
+      "id": 241,
+      "name": "Mischief List",
+      "killer_id": 14,
+      "description": "A list of mischievous missions to accomplish; memento of brighter days.\n• Increases the duration of Feral Frenzy by 1 second.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_mischiefList.png?de3411",
+      "icon_local_path": "icons/addons/mischief_list.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Unfugliste",
+          "description": "Eine Liste mit schelmischen Missionen, die es zu erledigen gilt. Eine Erinnerung an unbeschwertere Tage.\n• Verlängert die Dauer von Wilde Raserei um 1 Sekunde."
+        },
+        "es": {
+          "name": "Lista de malas acciones",
+          "description": "Una lista de misiones mezquinas que cumplir, recuerdo de días mejores.\n• Aumenta la duración de Frenesí salvaje en 1 segundo."
+        },
+        "ja": {
+          "name": "いたずらリスト",
+          "description": "いたずら作戦の達成リスト。輝いていた日々を思い出させてくれる。\n• 愚連の狂乱の持続時間が1秒増加する"
+        },
+        "pl": {
+          "name": "Lista łobuzerstw",
+          "description": "Lista łobuzerskich zadań do wykonania, pamiątka z lepszych czasów.\n• Wydłuża czas trwania Dzikiego Szału o 1 s."
+        }
+      }
+    },
+    {
+      "id": 242,
+      "name": "Smiley Face Pin",
+      "killer_id": 14,
+      "description": "A friendly-looking bright yellow button used as a sarcastic statement.\n• Survivors who self-mend a Deep Wound from Feral Frenzy are inflicted with Blindness for 60 seconds.\nBlindness prevents Survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_smileyFacePin.png?a64889",
+      "icon_local_path": "icons/addons/smiley_face_pin.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Smiley-Button",
+          "description": "Ein freundlich dreinblickender, leuchtend gelber Anstecker, der als sarkastisches Statement getragen wird.\n• Überlebende, die eine durch Wilde Raserei verursachte Tiefe Wunde selbst heilen, erleiden für 60 Sekunden den Statuseffekt Erblindung.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "Chapa de carita sonriente",
+          "description": "Un botón amarillo brillante de aspecto simpático que se usa de manera sarcástica.\n• Los supervivientes que se autosanen de Herida profunda provocada por Frenesí salvaje sufren Ceguera durante 60 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "スマイリーフェイスのバッジ",
+          "description": "友好的なデザインの明るい黄色のバッジ。皮肉の意味で使われる。\n• 愚連の狂乱で受けた深手を自分で手当した生存者は60秒間目眩ましに苦しむ\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "Przypinka z uśmieszkiem",
+          "description": "Sympatyczna żółta przypinka służąca jako sarkastyczny manifest.\n• Ocalali, którzy uleczą głębokie rany spowodowane Dzikim Szałem, otrzymują trwający 60 sekund efekt Oślepienie.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 243,
+      "name": "Scratched Ruler",
+      "killer_id": 14,
+      "description": "A wooden ruler deeply scratched with hash marks.\n• Decreases Feral Frenzy recharge time by 5 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scratchedRuler.png?322b67",
+      "icon_local_path": "icons/addons/scratched_ruler.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Zerkratztes Lineal",
+          "description": "Ein Holzlineal mit tief eingeritzten Doppelkreuzen.\n• Verkürzt die Aufladedauer von Wilde Raserei um 5 Sekunden."
+        },
+        "es": {
+          "name": "Regla rayada",
+          "description": "Una regla de madera plagada de arañazos profundos.\n• Reduce el tiempo de recarga de Frenesí salvaje en 5 segundos."
+        },
+        "ja": {
+          "name": "傷のついた定規",
+          "description": "ハッシュ記号が深く彫られた木製定規。\n• 愚連の狂乱のチャージ時間が5秒減少する"
+        },
+        "pl": {
+          "name": "Porysowana linijka",
+          "description": "Drewniana linijka z głęboko wydrapanymi znakami.\n• Skraca czas potrzebny na naładowanie Dzikiego Szału o 5 sekund."
+        }
+      }
+    },
+    {
+      "id": 244,
+      "name": "Mural Sketch",
+      "killer_id": 14,
+      "description": "A rough sketch of The Legion mural torn from a notebook.\n• Increases speed bonus per hit during Feral Frenzy to 0.32 m/s.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_muralSketch.png?83f022",
+      "icon_local_path": "icons/addons/mural_sketch.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wandbildskizze",
+          "description": "Die aus einem Notizbuch gerissene Seite zeigt eine grobe Skizze des Wandbilds der Legion.\n• Erhöht den Geschwindigkeitsbonus pro Treffer bei Wilde Raserei auf 0,32 m/s."
+        },
+        "es": {
+          "name": "Boceto de mural",
+          "description": "Un esbozo del mural de la Legión arrancado de un cuaderno.\n• Aumenta la bonificación de velocidad por golpe durante Frenesí salvaje en 0,32 m/s."
+        },
+        "ja": {
+          "name": "壁画のスケッチ",
+          "description": "ノートから切り取られた、リージョンの壁画のラフスケッチ。\n• 愚連の狂乱発動中の攻撃命中1回ごとの速度上昇幅が秒速0.32メートルに増加する"
+        },
+        "pl": {
+          "name": "Szkic muralu",
+          "description": "Wyrwany z zeszytu szkic muralu przedstawiającego Legion.\n• Zwiększa premię do szybkości za każde trafienie podczas trwania Dzikiego Szału o 0,32 m/s."
+        }
+      }
+    },
+    {
+      "id": 245,
+      "name": "Never-Sleep Pills",
+      "killer_id": 14,
+      "description": "Highly caffeinated tablets to make you extra sharp for exams or other draining activities.\n• The Legion's base move speed during Feral Frenzy is 4.6 m/s.\n• Increases the duration of Feral Frenzy by 10 seconds.\n• Gain 100 to 500 bonus Bloodpoints for each successive hit on a Survivor during Feral Frenzy.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_never-SleepPills.png?7f71ae",
+      "icon_local_path": "icons/addons/never_sleep_pills.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wachhaltepillen",
+          "description": "Koffeintabletten, mit denen du bei Prüfungen und anderen anstrengenden Aktivitäten auf Zack bleibst.\n• Die Grundbewegungsgeschwindigkeit der Legion während Wilde Raserei beträgt 4,6 m/s.\n• Erhöht die Dauer von Wilde Raserei um 10 Sekunden.\n• Du erhältst 100 bis 500 Bonus-Blutpunkte für jeden Treffer in Folge, den du einem Überlebenden während Wilde Raserei zufügst."
+        },
+        "es": {
+          "name": "Pastillas para no dormir",
+          "description": "Pastillas con alta concentración de cafeína para aumentar tu concentración en época de exámenes... o para otras actividades extenuantes.\n• La velocidad de movimiento básica de la Legión durante Frenesí salvaje es de 4,6 m/s.\n• Aumenta la duración de Frenesí salvaje en 10 segundos.\n• Obtienes entre 100 y 500 puntos de sangre adicionales por cada golpe consecutivo a un superviviente durante Frenesí salvaje."
+        },
+        "ja": {
+          "name": "眠気覚まし薬",
+          "description": "カフェインを多く含む錠剤。テストなど疲れる活動に取り組む時に感覚が研ぎ澄まされる。\n• 愚連の狂乱発動中のリージョンの基本移動速度が秒速4.6メートルになる\n• 愚連の狂乱の持続時間が 10秒増加する\n• 愚連の狂乱発動中、生存者に攻撃が連続ヒットするたびに100から500のブラッドポイントを追加取得する"
+        },
+        "pl": {
+          "name": "Tabletki na koncentrację",
+          "description": "Tabletki o wysokiej zawartości kofeiny, które zwiększą wydajność podczas egzaminów i innych wyczerpujących zajęć.\n• Podstawowa prędkość ruchu Legionu podczas Dzikiego Szału wynosi 4,6 m/s.\n• Wydłuża czas trwania Dzikiego Szału o 10 sekund.\n• Zyskujesz od 100 do 500 dodatkowych Punktów Krwi za każde udane trafienie ocalałego podczas trwania Dzikiego Szału."
+        }
+      }
+    },
+    {
+      "id": 246,
+      "name": "Etched Ruler",
+      "killer_id": 14,
+      "description": "A wooden ruler deeply etched with the names of enemies.\n• Survivors hit by a Feral Slash are inflicted with Oblivious for 60 seconds.\nOblivious prevents Survivors from hearing or being affected by the Killer's Terror Radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_etchedRuler.png?5c0516",
+      "icon_local_path": "icons/addons/etched_ruler.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Lineal mit Namen",
+          "description": "Ein Holzlineal, in das die Namen von Feinden eingeritzt sind.\n• Überlebende, die von Wilder Schlitzerei getroffen werden, erleiden für 60 Sekunden den Statuseffekt Ahnungslos.\nAhnungslos verhindert, dass Überlebende den Terrorradius des Killers hören oder darauf reagieren."
+        },
+        "es": {
+          "name": "Regla grabada",
+          "description": "Una regla de madera con los nombres de los enemigos firmemente grabados.\n• Los supervivientes a los que se alcance con Corte salvaje sufren Inconsciencia durante 60 segundos.\nInconsciencia impide que los supervivientes escuchen o les afecte el radio de terror del asesino."
+        },
+        "ja": {
+          "name": "エッチングされた定規",
+          "description": "敵の名前が深く刻まれた、木製の定規。\n• 愚連の切り裂きが命中した生存者は60秒間無感覚に苦しむ\n無感覚状態になると生存者は殺人鬼の脅威範囲による心音が聞こえなくなり、脅威範囲の影響を受けなくなる。"
+        },
+        "pl": {
+          "name": "Grawerowana linijka",
+          "description": "Drewniana linijka z głęboko wyrytymi imionami wrogów.\n• Ocalali trafieniDzikim Cięciem otrzymują trwający 60 sekund efekt Nieświadomy.\nNieświadomość uniemożliwia ocalałym usłyszenie zasięgu terroru i niweluje jego wpływ."
+        }
+      }
+    },
+    {
+      "id": 247,
+      "name": "Julie's Mix Tape",
+      "killer_id": 14,
+      "description": "A dark mix tape made out from mainly power ballads and gloomy rock.\n• If The Legion is stunned while in Feral Frenzy, the power gauge refills once the duration of the stun ends.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_juliesMixTape.png?874cc7",
+      "icon_local_path": "icons/addons/julies_mix_tape.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Julies Mixkassette",
+          "description": "Ein finsteres Mixtape, das vor allem Powerballaden und düsteren Rock enthält.\n• Wenn die Legion während Wilde Raserei betäubt wird, wird die Stärkeleiste neu gefüllt, sobald die Dauer der Betäubung beendet ist."
+        },
+        "es": {
+          "name": "Casete de Julie",
+          "description": "Una siniestra cinta principalmente compuesta por intensas baladas y rock depresivo.\n• Si se aturde a la Legión con Frenesí salvaje activo, el indicador de poder se llena una vez cuando termine el aturdimiento."
+        },
+        "ja": {
+          "name": "ジュリーのミックステープ",
+          "description": "パワーバラードや陰気なロックばかりが入った暗いミックステープ。\n• リージョンが愚連の狂乱中に怯むと、効果が終わった時に能力ゲージが満タンになる"
+        },
+        "pl": {
+          "name": "Składanka Julie",
+          "description": "Mroczna składanka, na którą składają się głównie potężne ballady i ponury rock.\n• Gdy Legion jest ogłuszony w trakcie trwania Dzikiego Szału wskaźnik mocy napełnia się po zakończeniu ogłuszenia."
+        }
+      }
+    },
+    {
+      "id": 248,
+      "name": "Defaced Smiley Pin",
+      "killer_id": 14,
+      "description": "A once friendly-looking bright yellow button of a defaced smiley. A signature icon of The Legion.\n• Survivors who self-mend a Deep Wound from Feral Frenzy are inflicted with Mangled for 60 seconds.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_defacedSmileyPin.png?1f6357",
+      "icon_local_path": "icons/addons/defaced_smiley_pin.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Entstellter Smiley-Button",
+          "description": "Ein einstmals freundlich dreinblickender, leuchtend gelber Anstecker mit einem entstellten Smiley. Ein Erkennungszeichen der Legion.\n• Überlebende, die eine durch Wilde Raserei verursachte Tiefe Wunde selbst heilen, erleiden den Statuseffekt Zerfleischt für 60 Sekunden.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Chapa de carita sonriente desfigurada",
+          "description": "Un botón amarillo brillante de una desfigurada carita sonriente, en su momento de aspecto simpático. Un símbolo característico de la Legión.\n• Los supervivientes que se autosanen de Herida profunda con Frenesí salvaje sufren Laceración durante 60 segundos.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "落書きされたスマイリーバッジ",
+          "description": "以前は友好の象徴だった、落書きされた明るい黄色のスマイリーのバッジ。リージョンの特徴的なアイコン。\n• 愚連の狂乱で受けた深手を自分で手当した生存者は、60秒間重傷状態になる。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Zniszczona przypinka z uśmieszkiem",
+          "description": "Niegdyś przyjaźnie wyglądający żółty guzik przedstawiający oszpeconą buźkę. Symbol Legionu.\n• Ocalali, którzy uleczą głębokie rany spowodowane Dzikim Szałem, otrzymują efekt Zmasakrowany na 60 s.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 249,
+      "name": "Susie's Mix Tape",
+      "killer_id": 14,
+      "description": "A thrilling mix tape with energizing songs and intricate guitar riffs.\n• Increases Killer Instinct detection range by 20 meters.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_susiesMixTape.png?c2b32b",
+      "icon_local_path": "icons/addons/susies_mix_tape.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Susies Mixkassette",
+          "description": "Ein aufregendes Mixtape mit energiegeladenen Songs und vertrackten Gitarrenriffs.\n• Erhöht die Wahrnehmungsreichweite von Killerinstinkt um 20 Meter."
+        },
+        "es": {
+          "name": "Casete de Susie",
+          "description": "Un casete cañero con canciones llenas de energía y complejos riffs de guitarra.\n• Aumenta el alcance de detección de Instinto asesino en 20 metros."
+        },
+        "ja": {
+          "name": "スージーのミックステープ",
+          "description": "スリリングなミックステープ。エネルギッシュな曲と複雑なギターのリフが入っている。\n• 殺人鬼の本能の探知範囲が20メートル拡大する"
+        },
+        "pl": {
+          "name": "Składanka Susie",
+          "description": "Ekscytująca składanka z energetycznymi piosenkami i misternymi gitarowymi riffami.\n• Zwiększa zasięg wykrywania Instynktu Zabójcy o 20 metrów."
+        }
+      }
+    },
+    {
+      "id": 250,
+      "name": "Stolen Sketch Book",
+      "killer_id": 14,
+      "description": "A sketch book with imaginative and evocative, if not slightly bizarre, sketches.\n• During Feral Frenzy, from the second chained hit onward, hit survivors drop their item.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stolenSketchBook.png?4bbbea",
+      "icon_local_path": "icons/addons/stolen_sketch_book.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Gestohlenes Skizzenbuch",
+          "description": "Ein Skizzenbuch mit einfallsreichen, sinnträchtigen, aber leicht bizarren Entwürfen.\n• Während Wilde Raserei verlieren getroffene Überlebende ihren Gegenstand ab dem zweiten aufeinanderfolgenden Treffer."
+        },
+        "es": {
+          "name": "Cuaderno de bocetos robado",
+          "description": "Un cuaderno con bocetos creativos y evocadores, aunque quizás algo estrambóticos.\n• Durante Frenesí salvaje, los supervivientes alcanzados soltarán su objeto a partir del segundo ataque encadenado."
+        },
+        "ja": {
+          "name": "盗まれたスケッチブック",
+          "description": "少し奇妙とは言わないまでも、創造的で心揺さぶるスケッチが描かれたスケッチブック。\n• 愚連の狂乱中、2回目以降の連続ヒットで生存者がアイテムを落とす"
+        },
+        "pl": {
+          "name": "Skradziony szkicownik",
+          "description": "Szkicownik z wyjątkowo kreatywnymi i sugestywnymi, by nie rzec dziwnymi, rysunkami.\n• Podczas Dzikiego Szału, począwszy od drugiego uderzenia w serii, ocalali upuszczają niesiony przedmiot."
+        }
+      }
+    },
+    {
+      "id": 251,
+      "name": "The Legion Pin",
+      "killer_id": 14,
+      "description": "A handmade button with the face of The Legion. To use exclusively on intimidation dares.\n• Survivors who self-mend a Deep Wound from Feral Frenzy are inflicted with Broken for 60 seconds.\nBroken prevents Survivors from being healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theLegionPin.png?6dd908",
+      "icon_local_path": "icons/addons/the_legion_pin.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Legion-Button",
+          "description": "Ein handgemachter Anstecker mit dem Gesicht der Legion. Dient allein der Einschüchterung.\n• Überlebende, die eine von Wilde Raserei verursachte Tiefe Wunde selbst heilen, erleiden für 60 Sekunden den Statuseffekt Gebrochen.\nGebrochen verhindert die Heilung von Überlebenden."
+        },
+        "es": {
+          "name": "Pin de la Legión",
+          "description": "Un pin hecho a mano con la cara de la Legión. Solo se puede usar en retos intimidatorios.\n• Los supervivientes que se autosanen de Herida profunda provocada por Frenesí salvaje sufren Desesperanza durante 60 segundos.\nDesesperanza impide que los supervivientes se curen."
+        },
+        "ja": {
+          "name": "リージョンのバッジ",
+          "description": "リージョンの顔が描かれた手製のバッジ。脅迫を試みる時だけに使う。\n• 愚連の狂乱で受けた深手を自分で手当した生存者は60秒間衰弱に苦しむ\n衰弱になると生存者は回復できなくなる。"
+        },
+        "pl": {
+          "name": "Przypinka Legionu",
+          "description": "Ręcznie robiony guzik z twarzą Legionu. Do użycia jedynie przy zastraszaniu.\n• Ocalali, którzy uleczą głębokie rany spowodowane Dzikim Szałem, otrzymują trwający 60 sekund efekt Okaleczony.\nOkaleczenie uniemożliwia leczenie ocalałych."
+        }
+      }
+    },
+    {
+      "id": 252,
+      "name": "Stylish Sunglasses",
+      "killer_id": 14,
+      "description": "Oval-shaped sunglasses that exude poise and cool. Their color tinted lenses add an understated appeal.\n• Shows the auras of Survivors who are mending within a 24-meter radius.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stylishSunglasses.png?644f12",
+      "icon_local_path": "icons/addons/stylish_sunglasses.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Stilvolle Sonnenbrille",
+          "description": "Ovale Sonnenbrille, die Gelassenheit und Coolness versprüht. Die farbigen Brillengläser sorgen für das gewisse Understatement.\n• Zeigt die Auren von genesenden Überlebenden innerhalb eines Radius von 24 Metern."
+        },
+        "es": {
+          "name": "Gafas de sol estilosas",
+          "description": "Unas gafas de sol ovaladas que evocan elegancia y carisma. Las lentes tintadas les dan un toque interesante.\n• Muestra las auras de los supervivientes que se estén sanando en un radio de 24 metros."
+        },
+        "ja": {
+          "name": "スタイリッシュなサングラス",
+          "description": "落ち着きと平静を醸し出す楕円形のサングラス。彼らのテーマカラーで色づいたレンズの色が、控えめなアピールになっている。\n• 24メートル範囲内で自身の深手を手当している生存者のオーラが視える"
+        },
+        "pl": {
+          "name": "Stylowe okulary",
+          "description": "Okulary przeciwsłoneczne z owalnymi szkłami, które emanują opanowaniem i spokojem. Barwione soczewki dodają im dyskretnego uroku.\n• Ukazują aurę ocalałych znajdujących się w promieniu 24 m, którzy leczą rany."
+        }
+      }
+    },
+    {
+      "id": 253,
+      "name": "Joey's Mix Tape",
+      "killer_id": 14,
+      "description": "A mix of bangin' tracks and slammin' beats for when life's a bitch.\n• Survivors who self-mend a Deep Wound from Feral Frenzy are inflicted with Hemorrhage until fully healed.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_joeysMixTape.png?7399ff",
+      "icon_local_path": "icons/addons/joeys_mix_tape.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Joeys Mixkassette",
+          "description": "Dieser Mix aus heftigen Songs und hämmernden Rhythmen kommt genau richtig, wenn einem das Leben übel mitspielt.\n• Überlebende, die eine durch Wilde Raserei verursachte Tiefe Wunde selbst heilen, erleiden Blutung bis zur vollständigen Heilung.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "Casete de Joey",
+          "description": "Una mezcla de temas y ritmos geniales con los que relajarte cuando la vida sea un asco.\n• Los supervivientes que se autosanen de una Herida profunda causada por Frenesí salvaje sufren Hemorragia hasta que se curen por completo.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "ジョーイのミックステープ",
+          "description": "人生に行き詰まった時に最適な、力強いトラックと激しいビートのミックス。\n• 愚連の狂乱で受けた深手を自分で手当した生存者は完全に回復するまで出血状態になる\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "Składanka Joeya",
+          "description": "Miks mocnych kawałków i tłustych bitów idealnych na doła.\n• Ocalali, którzy uleczą głębokie rany spowodowane Dzikim Szałem, otrzymują efekt Krwotok do chwili pełnego wyleczenia.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 254,
+      "name": "Filthy Blade",
+      "killer_id": 14,
+      "description": "This blade is stained with foul spots of blood and grime that make injuries particularly difficult to mend.\n• Increases time required for Survivors to mend by 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_filthyBlade.png?48576f",
+      "icon_local_path": "icons/addons/filthy_blade.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Schmutzige Klinge",
+          "description": "Diese Klinge ist mit altem Blut und Dreck besudelt, wodurch sich damit verursachte Verletzungen nur schwer behandeln lassen.\n• Erhöht die benötigte Zeit, die Überlebende zum Genesen brauchen, um 4 Sekunden."
+        },
+        "es": {
+          "name": "Cuchilla asquerosa",
+          "description": "Esta cuchilla tiene unas manchas asquerosas de sangre y suciedad que dificultan particularmente la sanación de las heridas.\n• Aumenta el tiempo que los supervivientes necesitan para sanarse en 4 segundos."
+        },
+        "ja": {
+          "name": "汚れた刃",
+          "description": "血液と垢の不潔な染みで汚れた刃が、傷の治りを非常に悪くする。\n• 生存者が回復するのに必要な時間が4秒増加する"
+        },
+        "pl": {
+          "name": "Brudne ostrze",
+          "description": "To ostrze jest zakrwawione i brudne, co sprawia, że rany nim zadane nie goją się dobrze.\n• Wydłuża czas potrzebny ocalałym na leczenie o 4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 255,
+      "name": "Frank's Mix Tape",
+      "killer_id": 14,
+      "description": "Never go on a kill mission without your tunes. A track list of massive distortion and loud percussion that stabs at your eardrums.\nWhile using Feral Frenzy:\n• Damaging generators is 20% faster.\n• Breaking walls is 30% faster.\n• The Power gauge pauses while damaging a generator or breaking a wall.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_franksMixTape.png?a2f4f0",
+      "icon_local_path": "icons/addons/franks_mix_tape.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Franks Mixkassette",
+          "description": "Geh niemals ohne deine Lieblingslieder auf die Jagd. Eine Tracklist mit heftiger Verzerrung und lauten Schlagzeugpassagen, die dein Trommelfell malträtieren.\nBei Verwendung von Wilde Raserei:\n• Das Beschädigen von Generatoren funktioniert 20 % schneller.\n• Das Zerstören von Mauern funktioniert 30 % schneller.\n• Die Stärkeleiste wird beim Beschädigen eines Generators oder Zerstören einer Mauer angehalten."
+        },
+        "es": {
+          "name": "Casete de Frank",
+          "description": "Nunca vayas de matanza sin tu música. Una lista de canciones llena de efectos ensordecedores y de una percusión atronadora de las que revientan los tímpanos.\nMientras usas Frenesí salvaje:\n• Los generadores se dañan un 20 % más rápido.\n• Rompes muros un 30 % más rápido.\n• El indicador de poder se detiene al dañar un generador o romper un muro."
+        },
+        "ja": {
+          "name": "フランクのミックステープ",
+          "description": "音楽なしで殺人任務を遂行するなかれ。重厚なディストーションと、鼓膜に突き刺さる大音響でパーカッションを奏でる再生リスト。\n愚連の狂乱発動中：\n• 発電機の破壊速度が20%上昇する\n• 壁の破壊速度が30%上昇する\n• 発電機または壁の破壊中は能力ゲージが一時的に停止する"
+        },
+        "pl": {
+          "name": "Składanka Franka",
+          "description": "Nigdy nie ruszaj na misję bez swojej muzyki. Kakofonia dźwięków i perkusja wbijająca się w uszy jak ostrze.\nGdy korzystasz z Dzikiego Szału:\n• uszkadzanie generatorów jest o 20% szybsze.\n• Przebijanie ścian jest o 30% szybsze.\n• Wskaźnik mocy zatrzymuje się w trakcie uszkadzania generatora lub przebijania ściany."
+        }
+      }
+    },
+    {
+      "id": 256,
+      "name": "BFFs",
+      "killer_id": 14,
+      "description": "An unnaturally cold silver necklace split into four, one for each best friend.\nEarn tokens for hitting Survivors during Feral Frenzy:\n• Second chained hit: 2 tokens\n• Third chained hit: 3 tokens\n• Fourth chained hit: 4 tokens\n• Fifth chained hit: 5 tokens\nOnce the gates are powered, if 15 or more tokens have been collected, gain 6% Haste when not using Feral Frenzy.\nHaste increases Killer movement speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bffs.png?e4e8d2",
+      "icon_local_path": "icons/addons/bffs.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "description": "Eine unnatürlich kalte Silberhalskette, die in vier Stücke zerbrochen wurde, eines für jeden der besten Freunde.\nVerdiene Zähler, wenn du Überlebende während Wilde Raserei triffst:\n• Zweiter Treffer in Folge: 2 Zähler\n• Dritter Treffer in Folge: 3 Zähler\n• Vierter Treffer in Folge: 4 Zähler\n• Fünfter Treffer in Folge: 5 Zähler\nWenn die Ausgangstore mit Strom versorgt werden und du mindestens 15 Zähler gesammelt hast, erhältst du 6 % Eile, solange du nicht Wilde Raserei verwendest.\nEile erhöht die Bewegungsgeschwindigkeit des Killers."
+        },
+        "es": {
+          "name": "Amigos del alma",
+          "description": "Un colgante de plata sorprendentemente frío dividido en 4 partes, una para cada amigo del alma.\nGana distintivos por golpear a supervivientes durante Frenesí salvaje:\n• Segundo golpe encadenado: 2 distintivos\n• Tercer golpe encadenado: 3 distintivos\n• Cuarto golpe encadenado: 4 distintivos\n• Quinto golpe encadenado: 5 distintivos\nCuando se activen las puertas, si has reunido 15 distintivos o más, obtienes un 6 % de Celeridad mientras uses Frenesí salvaje.\nCeleridad aumenta la velocidad de movimiento del asesino."
+        },
+        "ja": {
+          "name": "永遠のベストフレンド",
+          "description": "異常なほど冷たいシルバーのネックレス。親友にそれぞれ1個ずつ、4つに分かれている。\n愚連の狂乱発動中に生存者に攻撃を命中させるとトークンを獲得する。\n• 連続ヒット2回目：2トークン\n• 連続ヒット3回目：3トークン\n• 連続ヒット4回目：4トークン\n• 連続ヒット5回目：5トークン\n15トークン以上集めた状態で脱出ゲートが通電すると、愚連の狂乱が発動していない時に6%の迅速を得る。\n殺人鬼は迅速状態になると移動速度が上昇する。"
+        },
+        "pl": {
+          "name": "Przyjaciele na zawsze",
+          "description": "Nienaturalnie zimny srebrny wisiorek podzielony na cztery części – po jednej dla każdego najlepszego przyjaciela.\nOtrzymujesz żeton za każde trafienie ocalałego podczas trwania Dzikiego Szału:\n• Drugie trafienie z rzędu: 2 żetony.\n• Trzecie trafienie z rzędu: 3 żetony.\n• Czwarte trafienie z rzędu: 4 żetony.\n• Piąte trafienie z rzędu: 5 żetonów.\nGdy bramy zostaną zasilone, a tobie uda się zebrać co najmniej 15 żetonów, zyskujesz premię 6% Pośpiechu, kiedy nie korzystasz z Dzikiego Szału.\nPośpiech zwiększa prędkość ruchu zabójcy."
+        }
+      }
+    },
+    {
+      "id": 257,
+      "name": "Stab Wounds Study",
+      "killer_id": 14,
+      "description": "A printed medical article stolen from Ormond's public library vulgarizing a study on lesions and stab wounds.\n• The auras of Survivors who self-mend a Deep Wound from Feral Frenzy are shown for 4 seconds afterward.\nDeep Wound will put a Survivor in the dying state unless it is mended before the timer runs out.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_stabWoundsStudy.png?cf67d7",
+      "icon_local_path": "icons/addons/stab_wounds_study.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Studie über Stichwunden",
+          "description": "Ein medizinischer Artikel, der aus Ormonds öffentlicher Bücherei entwendet wurde und eine Studie über Wunden und Stichverletzungen verständlich darstellt.\n• Die Auren von Überlebenden, die eine durch Wilde Raserei verursachte tiefe Wunde selbst heilen, werden danach für 4 Sekunden angezeigt.\nTiefe Wunde versetzt einen Überlebenden in den Todesstatus, wenn sie nicht versorgt wird, bevor der Timer abläuft."
+        },
+        "es": {
+          "name": "Estudio de heridas de arma blanca",
+          "description": "Un artículo médico robado de la biblioteca pública de Ormond que vulgariza un estudio sobre lesiones y heridas de arma blanca.\n• Las auras de los supervivientes que se autosanen de una Herida profunda causada por Frenesí salvaje se muestran durante los 4 segundos posteriores.\nHerida profunda hará que el superviviente entre en estado agonizante excepto si se recupera antes de que se acabe el tiempo."
+        },
+        "ja": {
+          "name": "刺し傷の研究",
+          "description": "オーモンドの公共図書館から盗まれた、医療関連の印刷記事。損傷や刺し傷についての研究が大衆向けに記述されている。\n• 愚連の狂乱で受けた深手を手当した生存者のオーラが手当完了後に4秒間表示される\n深手状態になった生存者はタイマー切れになる前に手当しなければ瀕死状態になる。"
+        },
+        "pl": {
+          "name": "Opracowanie na temat ran kłutych",
+          "description": "Artykuł medyczny skradziony z biblioteki publicznej w Ormond. Prosto – aż za prosto – objaśnia badania nad ranami kłutymi.\n• Aury ocalałych, którzy sami leczą Głęboką Ranę spowodowaną Dzikim Szałem są widoczne przez kolejne 4 sekundy.\nGłęboka Rana wprowadzi ocalałego w stan agonii, chyba że zostanie wyleczona przed końcem czasu."
+        }
+      }
+    },
+    {
+      "id": 258,
+      "name": "Fuming Mix Tape",
+      "killer_id": 14,
+      "description": "Dark beats, violent shreds and unfathomable sounds from another world fill the mind with a vibrating sixth sense.\nWhile using Feral Frenzy:\n• The repair progress of Generators can be determined by the intensity of their Auras.\n• Generators not being repaired regress at 100% speed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_fumingMixTape.png?40dd40",
+      "icon_local_path": "icons/addons/fuming_mix_tape.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Aggressive Mixkassette",
+          "description": "Düstere Rhythmen, rabiate Gitarrenklänge und abgründige Geräusche aus einer anderen Welt erfüllen den Geist mit einem vibrierenden sechsten Sinn.\nBei der Verwendung von Wilde Raserei gilt:\n• Der Reparaturfortschritt von Generatoren ist an der Intensität ihrer Auren erkennbar.\n• Generatoren, die nicht repariert werden, verlieren Fortschritt mit einer Geschwindigkeit von 100 %."
+        },
+        "es": {
+          "name": "Casete humeante",
+          "description": "Ritmos oscuros y acordes violentos en una jerga incomprensible que aporta a tu mente un vibrante sexto sentido.\nMientras usas Frenesí salvaje:\n• puedes distinguir el progreso de reparación de los generadores según la intensidad de sus auras.\n• Los generadores que no se estén reparando se revierten al 100 % de velocidad."
+        },
+        "ja": {
+          "name": "煙を吐くミックステープ",
+          "description": "暗いビート、暴力的な早弾き、この世のものとは思えない底知れぬ音が精神を満たし、第六感を震わせる。\n愚連の狂乱の発動中:\n• 発電機の修理進行度がオーラの強さで判別できる\n• 修理していない発電機は進行度が100%の速度で後退する"
+        },
+        "pl": {
+          "name": "Dymiąca składanka",
+          "description": "Mroczne rytmy, szybkie solówki i głębokie dźwięki nie z tej ziemi wypełniają umysł wibrującym szóstym zmysłem.\nGdy korzystasz z Dzikiego Szału:\n• postęp naprawy generatorów można określić poprzez intensywność ich aury;\n• postęp nienaprawianych generatorów cofa się ze 100% prędkości."
+        }
+      }
+    },
+    {
+      "id": 259,
+      "name": "Iridescent Button",
+      "killer_id": 14,
+      "description": "A glass-like button molded from The Fog that captures The Legion’s likeness. The surface is warm and reverberating with The Entity's power.\n• While in Feral Frenzy, whenever you special-vault Pallets, the Pallets special-break.\n• While in Feral Frenzy, during a special-vault you cannot be blinded.\n\"“The youth consumed by the iridescent glass magnifies and widens the reach of The Entity.”\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentButton.png?6c2eed",
+      "icon_local_path": "icons/addons/iridescent_button.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillernder Button",
+          "description": "Ein glasartiger Anstecker, der nach dem Vorbild der Legion aus dem Nebel erschaffen wurde. Die Oberfläche ist warm und verströmt die Macht des Entitus.\n• Während Wilde Raserei werden Paletten durch deine Stärke zerstört, wenn du mit deinem Spezialfähigkeit-Sprung über sie springst.\n\"„Die Jugend, die vom schillernden Glas vereinnahmt wird, stärkt und erweitert den Einflussbereich des Entitus.“\""
+        },
+        "es": {
+          "name": "Botón iridiscente",
+          "description": "Un botón de aspecto cristalino moldeado a partir de la niebla que representa los gustos de la Legión. La superficie es cálida y reverbera con el poder del Ente.\n• Durante Frenesí salvaje, cada vez que realizas saltos especiales sobre palés, estos se rompen de forma especial.\n\"\"La juventud consumida por el cristal iridiscente magnifica el alcance del Ente\".\""
+        },
+        "ja": {
+          "name": "玉虫色のバッジ",
+          "description": "霧から作られたガラス状のバッジ。リージョンの特徴をよくとらえていて表面は温かく、エンティティの力が反響している。\n• 愚連の狂乱の発動中に、パレットの特殊乗り越えを行うと、そのパレットが特殊破壊される。\n• 愚連の狂乱の発動中、特殊乗り越えを行っている間は目眩しされない。\n\"「玉虫色のガラスに貪られた若者たちは、エンティティが及ぶ範囲を強化して広げる」\""
+        },
+        "pl": {
+          "name": "Opalizujący guzik",
+          "description": "Wyglądający jak ze szkła guzik uformowany z samej Mgły, który przedstawia podobiznę Legionu. Powierzchnia guzika jest ciepła i promieniuje mocą Bytu.\n• Podczas działania Dzikiego Szału za każdym razem, gdy wykonujesz specjalny przeskok przez palety, ulegają one zniszczeniu w specjalny sposób.\n\"„Młodość pochłonięta przez opalizujące szkło powiększa i poszerza zasięg Bytu”.\""
+        }
+      }
+    }
+  ]
+}

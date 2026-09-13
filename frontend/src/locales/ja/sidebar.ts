@@ -17,7 +17,6 @@ export default {
   others: "その他",
   admin: "管理者",
   adminControlCenter: "管理コントロールセンター",
-  soon: "近日公開",
   signIn: "ログイン / 新規登録",
   signOut: "ログアウト",
   emailNotVerified: "メールアドレスが未認証です。今すぐ認証",

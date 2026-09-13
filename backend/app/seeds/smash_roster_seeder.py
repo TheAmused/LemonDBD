@@ -7,95 +7,70 @@ import uuid
 from typing import Any, Dict, List, Tuple
 from sqlalchemy import select
 from app.core.extensions import db
+from app.core.redis_cache import bump_catalog_version
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
 )
 
 logger = logging.getLogger(__name__)
 
-ROSTERS_DIR = Path(__file__).resolve().parent / "rosters"
+ROSTERS_DIR = Path(__file__).resolve().parent / "data" / "smash_or_pass" / "rosters"
 
-# Default fallback translations for UI keys
-DEFAULT_GLOBAL_TRANSLATIONS: Dict[str, Dict[str, str]] = {
-    "en": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Rate Dead by Daylight candidates, discover your Trial Romance Archetype, and vote.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Leaderboard",
-        "smashOrPass.tiers.godTier": "God Tier",
-        "smashOrPass.tiers.fatalAttraction": "Fatal Attraction",
-        "smashOrPass.tiers.friendzone": "Friendzone",
-        "smashOrPass.tiers.eldritchVoid": "Eldritch Void",
-    },
-    "pl": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Oceń kandydatów Dead by Daylight, odkryj swój Archetyp Randkowy Próby i głosuj.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Tabela Wyników",
-        "smashOrPass.tiers.godTier": "Boski Poziom",
-        "smashOrPass.tiers.fatalAttraction": "Fatalne Zauroczenie",
-        "smashOrPass.tiers.friendzone": "Strefa Przyjaźni",
-        "smashOrPass.tiers.eldritchVoid": "Przedwieczna Pustka",
-    },
-    "es": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Califica a los candidatos de Dead by Daylight y descubre tu Arquetipo.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Clasificación",
-        "smashOrPass.tiers.godTier": "Nivel Dios",
-        "smashOrPass.tiers.fatalAttraction": "Atracción Fatal",
-        "smashOrPass.tiers.friendzone": "Zona de Amigos",
-        "smashOrPass.tiers.eldritchVoid": "Vacío Primigenio",
-    },
-    "de": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Bewerte Dead by Daylight Charaktere und finde deinen Romanzen-Archetyp.",
-        "smashOrPass.ui.smash": "Smash",
-        "smashOrPass.ui.pass": "Pass",
-        "smashOrPass.ui.leaderboard": "Rangliste",
-        "smashOrPass.tiers.godTier": "Götter-Stufe",
-        "smashOrPass.tiers.fatalAttraction": "Fatale Anziehung",
-        "smashOrPass.tiers.friendzone": "Friendzone",
-        "smashOrPass.tiers.eldritchVoid": "Eldritch-Leere",
-    },
-    "ja": {
-        "smashOrPass.title": "Smash or Pass",
-        "smashOrPass.subtitle": "Dead by Daylightのキャラクターを評価し、ロマンスの原型を見つけよう。",
-        "smashOrPass.ui.smash": "スマッシュ",
-        "smashOrPass.ui.pass": "パス",
-        "smashOrPass.ui.leaderboard": "リーダーボード",
-        "smashOrPass.tiers.godTier": "神ティア",
-        "smashOrPass.tiers.fatalAttraction": "致命的魅力",
-        "smashOrPass.tiers.friendzone": "フレンドゾーン",
-        "smashOrPass.tiers.eldritchVoid": "狂気の虚無",
-    },
-}
+#: The profile columns a seed entity may carry, at the top level of its dict.
+#: They used to arrive as one `metadata_json` blob; they are columns now, and
+#: the seed files spell them exactly as the model does.
+ENTITY_TEXT_FIELDS = (
+    "bio",
+    "tagline",
+    "quote",
+    "meme",
+    "turn_on",
+    "dealbreaker",
+    "dating_vibe",
+)
 
 
-def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List[Dict[str, Any]]], Dict[str, Dict[str, str]]]:
+def _entity_profile(e_data: Dict[str, Any]) -> Dict[str, Any]:
+    """The profile columns for one seed entity, defaulted like the model.
+
+    `normalize_smash_rosters.py` drops empty values from the files, so every
+    field here has to survive being absent.
     """
-    Dynamically scans and loads all roster definitions from backend/app/seeds/rosters/*.json
-    Returns (rosters_list, entities_by_roster_map, translations_map).
+    profile: Dict[str, Any] = {
+        "archetype": e_data.get("archetype"),
+        "red_flags": list(e_data.get("red_flags") or []),
+        "green_flags": list(e_data.get("green_flags") or []),
+        "chapter": e_data.get("chapter"),
+        "danger_level": e_data.get("danger_level"),
+        "chaos_score": e_data.get("chaos_score"),
+        # de/es/ja/pl differences only; an "en" entry would restate a column.
+        "translations": e_data.get("translations") or {},
+    }
+    for field in ENTITY_TEXT_FIELDS:
+        profile[field] = e_data.get(field) or ""
+    return profile
+
+
+def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List[Dict[str, Any]]]]:
+    """
+    Dynamically scans and loads all roster definitions from backend/app/seeds/data/smash_or_pass/rosters/*.json
+    Returns (rosters_list, entities_by_roster_map).
     """
     rosters_list: List[Dict[str, Any]] = []
     entities_by_roster: Dict[str, List[Dict[str, Any]]] = {}
-    translations_map: Dict[str, Dict[str, str]] = {
-        lang: dict(kvs) for lang, kvs in DEFAULT_GLOBAL_TRANSLATIONS.items()
-    }
 
-    if not ROSTERS_DIR.exists():
-        logger.warning(f"Rosters directory does not exist: {ROSTERS_DIR}")
-        return rosters_list, entities_by_roster, translations_map
+    # There used to be a fallback to data/static_export/smash_or_pass/rosters
+    # here. That directory does not exist anywhere in the repo, so the fallback
+    # could only ever turn a missing seed directory into an empty, silent seed.
+    target_dir = ROSTERS_DIR
+    if not target_dir.exists():
+        raise FileNotFoundError(f"Rosters directory does not exist: {ROSTERS_DIR}")
 
     # Sort JSON files (canon first, then alphabetically)
     json_files = sorted(
-        ROSTERS_DIR.glob("*.json"),
+        target_dir.glob("*.json"),
         key=lambda p: (0 if p.stem == "canon" else 1, p.stem),
     )
 
@@ -104,29 +79,36 @@ def load_rosters_from_json_files() -> Tuple[List[Dict[str, Any]], Dict[str, List
             with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            r_data = data.get("roster")
-            if not r_data or not r_data.get("slug"):
-                continue
+            raw_rosters = []
+            if "rosters" in data and isinstance(data["rosters"], list):
+                raw_rosters = data["rosters"]
+            elif "roster" in data and isinstance(data["roster"], dict):
+                legacy_r = dict(data["roster"])
+                if "entities" in data and "entities" not in legacy_r:
+                    legacy_r["entities"] = data["entities"]
+                raw_rosters = [legacy_r]
 
-            slug = r_data["slug"]
-            rosters_list.append(r_data)
-            entities_by_roster[slug] = data.get("entities", [])
+            for r_data in raw_rosters:
+                slug = r_data.get("slug")
+                if not slug:
+                    continue
 
-            # Merge translations
-            file_translations = data.get("translations", {})
-            for lang, kv_pairs in file_translations.items():
-                if lang not in translations_map:
-                    translations_map[lang] = {}
-                translations_map[lang].update(kv_pairs)
+                entities_list = r_data.get("entities", [])
+                entities_by_roster[slug] = entities_list
+
+                clean_r = {k: v for k, v in r_data.items() if k != "entities"}
+                rosters_list.append(clean_r)
 
         except Exception as e:
             logger.error(f"Error loading roster JSON file {file_path}: {e}")
 
-    return rosters_list, entities_by_roster, translations_map
+    return rosters_list, entities_by_roster
 
 
-# Dynamically load data for module-level access
-ROSTERS_SEED_DATA, ENTITIES_BY_ROSTER, TRANSLATIONS_DATA = load_rosters_from_json_files()
+# `ROSTERS_SEED_DATA` / `ENTITIES_BY_ROSTER` used to be loaded here at import
+# time. Nothing ever read them -- `_seed_smash_rosters_impl` calls the loader
+# itself -- and now that a missing rosters directory raises instead of being
+# papered over, an import-time call would take the whole app down with it.
 
 
 def seed_smash_rosters():
@@ -145,20 +127,17 @@ def seed_smash_rosters():
 
 def ensure_roster_assets(static_dir: Path | None = None) -> None:
     """Ensures roster covers and special cosmetic avatars exist in static avatars dir."""
-    try:
-        if static_dir is None:
-            static_dir = Path(__file__).resolve().parent.parent / "static"
-        from app.scrapers.roster_images import RosterImageScraperDriver
-        driver = RosterImageScraperDriver(timeout=10)
-        driver.sync_all_rosters(static_dir)
-    except Exception as e:
-        logger.debug(f"Non-critical asset sync check: {e}")
+    if static_dir is None:
+        static_dir = Path(__file__).resolve().parent.parent / "static"
+    rosters_dir = static_dir / "avatars" / "rosters"
+    if not rosters_dir.exists():
+        logger.debug(f"[smash_seeder] Roster assets directory notice: {rosters_dir} not found")
 
 
 def _seed_smash_rosters_impl():
     try:
         ensure_roster_assets()
-        rosters_list, entities_by_roster, translations_map = load_rosters_from_json_files()
+        rosters_list, entities_by_roster = load_rosters_from_json_files()
 
         # 1. Seed / Upsert Rosters
         for r_data in rosters_list:
@@ -196,6 +175,7 @@ def _seed_smash_rosters_impl():
                         Entity.slug == e_data["slug"],
                     )
                 )
+                profile = _entity_profile(e_data)
                 if not entity:
                     entity = Entity(
                         id=str(uuid.uuid4()),
@@ -205,10 +185,10 @@ def _seed_smash_rosters_impl():
                         role=e_data.get("role", "Survivor"),
                         gender=e_data.get("gender", "female"),
                         media_url=e_data.get("media_url"),
-                        media_type="image",
-                        metadata_json=e_data.get("metadata", {}),
+                        media_type=e_data.get("media_type", "image"),
                         order_index=idx,
                         is_active=True,
+                        **profile,
                     )
                     db.session.add(entity)
                     db.session.flush()
@@ -217,49 +197,35 @@ def _seed_smash_rosters_impl():
                     entity.role = e_data.get("role", entity.role)
                     entity.gender = e_data.get("gender", entity.gender)
                     entity.media_url = e_data.get("media_url")
-                    entity.metadata_json = e_data.get("metadata", entity.metadata_json)
+                    for field, value in profile.items():
+                        setattr(entity, field, value)
                     entity.order_index = idx
                     entity.is_active = True
                     db.session.flush()
 
-                # Ensure associated EntityStat exists
+                # Ensure associated EntityStat exists. Only the three counts and
+                # `chaos_rating` are assignable: `total_votes` and `smash_rate`
+                # are generated columns the database computes, and the surrogate
+                # `id` is gone -- `entity_id` is the primary key.
                 stat = db.session.scalar(
                     select(EntityStat).where(EntityStat.entity_id == entity.id)
                 )
                 if not stat:
+                    s_data = e_data.get("stat") or {}
                     stat = EntityStat(
-                        id=str(uuid.uuid4()),
                         entity_id=entity.id,
-                        smash_count=0,
-                        pass_count=0,
-                        super_smash_count=0,
-                        total_votes=0,
-                        smash_rate=0.0,
-                        chaos_rating=50.0,
+                        smash_count=int(s_data.get("smash_count") or 0),
+                        pass_count=int(s_data.get("pass_count") or 0),
+                        super_smash_count=int(s_data.get("super_smash_count") or 0),
+                        chaos_rating=float(s_data.get("chaos_rating") or 50.0),
                     )
                     db.session.add(stat)
 
-        # 3. Seed / Upsert Multi-Locale Translations
-        for loc, kv_map in translations_map.items():
-            for key, value in kv_map.items():
-                trans = db.session.scalar(
-                    select(Translation).where(
-                        Translation.locale == loc,
-                        Translation.key == key,
-                    )
-                )
-                if not trans:
-                    trans = Translation(
-                        id=str(uuid.uuid4()),
-                        locale=loc,
-                        key=key,
-                        value=value,
-                    )
-                    db.session.add(trans)
-                else:
-                    trans.value = value
 
         db.session.commit()
+        # Rosters and entities feed catalog responses in every worker; the seed
+        # just changed what those would return.
+        bump_catalog_version()
         logger.info(f"Successfully seeded all {len(rosters_list)} rosters from JSON files into the database.")
     except Exception as e:
         db.session.rollback()

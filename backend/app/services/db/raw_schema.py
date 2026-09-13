@@ -4,17 +4,12 @@ import sqlite3
 
 logger = logging.getLogger(__name__)
 
+# Hand-written DDL for the SQLite fallback path. It had drifted from the
+# SQLAlchemy models -- `map_realms` here was missing `realm_id`,
+# `callout_image_url`, `callout_image_local_path` and `translations`, all of
+# which the model and the seed data have -- so a fallback database silently
+# lost those columns. Keep this in step with app/models/ when either changes.
 SQLITE_FALLBACK_DDL = """
-CREATE TABLE IF NOT EXISTS perk_rules (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    is_default BOOLEAN NOT NULL DEFAULT 0,
-    slot1_type TEXT NOT NULL DEFAULT 'character_own',
-    slot2_type TEXT NOT NULL DEFAULT 'character_own',
-    slot3_type TEXT NOT NULL DEFAULT 'general_role',
-    slot4_type TEXT NOT NULL DEFAULT 'any_role',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 CREATE TABLE IF NOT EXISTS gauntlet_runs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -109,10 +104,6 @@ CREATE TABLE IF NOT EXISTS history_match_logs (
     FOREIGN KEY (run_id) REFERENCES history_runs(id) ON DELETE CASCADE
 );
 
-INSERT INTO perk_rules (id, name, is_default, slot1_type, slot2_type, slot3_type, slot4_type)
-SELECT 1, 'Default Balanced (2 Own, 1 General, 1 Any)', 1, 'character_own', 'character_own', 'general_role', 'any_role'
-WHERE NOT EXISTS (SELECT 1 FROM perk_rules WHERE id = 1);
-
 CREATE TABLE IF NOT EXISTS draft_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     room_code TEXT UNIQUE NOT NULL,
@@ -142,7 +133,7 @@ CREATE TABLE IF NOT EXISTS community_builds (
     description TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('survivor', 'killer')),
     category TEXT NOT NULL CHECK (category IN ('otzdarva', 'meta', 'meme', 'stealth', 'chase')),
-    character_id TEXT NOT NULL DEFAULT 'all',
+    character_id TEXT NOT NULL DEFAULT 'all',  -- a character slug or 'all', not a characters.id
     perks_json TEXT NOT NULL DEFAULT '[]',
     upvotes INTEGER NOT NULL DEFAULT 0,
     author TEXT NOT NULL DEFAULT 'Community',
@@ -162,53 +153,31 @@ CREATE TABLE IF NOT EXISTS custom_perks (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS map_realms (
+CREATE TABLE IF NOT EXISTS realms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    map_id TEXT UNIQUE NOT NULL,
-    name TEXT NOT NULL,
-    realm TEXT NOT NULL,
-    source TEXT NOT NULL DEFAULT 'hens333',
-    source_label TEXT NOT NULL DEFAULT 'Hens333 12-Clock Callouts',
-    layout_type TEXT,
-    jungle_gyms_count INTEGER DEFAULT 0,
-    totem_spawns_count INTEGER DEFAULT 5,
-    pallet_density TEXT,
-    shack_has_basement BOOLEAN DEFAULT 1,
-    description TEXT,
+    name TEXT UNIQUE NOT NULL,
     image_url TEXT,
+    image_local_path TEXT,
+    translations TEXT DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS map_tiles (
+CREATE TABLE IF NOT EXISTS map_sources (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    map_id TEXT NOT NULL,
-    seed_variant TEXT NOT NULL DEFAULT 'seed_a',
-    floor INTEGER NOT NULL DEFAULT 1,
-    name TEXT NOT NULL,
-    type TEXT NOT NULL,
-    x REAL NOT NULL,
-    y REAL NOT NULL,
-    has_pallet BOOLEAN NOT NULL DEFAULT 0,
-    pallet_safety_rating TEXT CHECK (pallet_safety_rating IS NULL OR pallet_safety_rating IN ('god', 'safe', 'mindgameable', 'unsafe')),
-    has_window BOOLEAN NOT NULL DEFAULT 0,
-    vault_directions TEXT DEFAULT '[]',
-    looping_tips TEXT NOT NULL DEFAULT '',
-    mindgame_counter TEXT NOT NULL DEFAULT '',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
+    code TEXT UNIQUE NOT NULL,
+    label TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS map_objectives (
+CREATE TABLE IF NOT EXISTS map_realms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    map_id TEXT NOT NULL,
-    seed_variant TEXT NOT NULL DEFAULT 'seed_a',
-    floor INTEGER NOT NULL DEFAULT 1,
-    type TEXT NOT NULL CHECK (type IN ('totem', 'generator', 'exit_gate', 'hatch', 'chest', 'basement')),
-    x REAL NOT NULL,
-    y REAL NOT NULL,
-    location_description TEXT NOT NULL DEFAULT '',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (map_id) REFERENCES map_realms(map_id) ON DELETE CASCADE
+    name TEXT UNIQUE NOT NULL,
+    realm_id INTEGER NOT NULL REFERENCES realms(id),
+    source_id INTEGER NOT NULL REFERENCES map_sources(id),
+    callout_image_url TEXT,
+    callout_image_local_path TEXT,
+    translations TEXT DEFAULT '{}',
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS page_streak_runs (
@@ -274,7 +243,21 @@ CREATE TABLE IF NOT EXISTS entities (
     gender TEXT NOT NULL DEFAULT 'female',
     media_url TEXT,
     media_type TEXT NOT NULL DEFAULT 'image',
-    metadata_json TEXT DEFAULT '{}',
+    -- Was one `metadata_json` blob; the profile is columns now.
+    archetype TEXT,
+    bio TEXT NOT NULL DEFAULT '',
+    tagline TEXT NOT NULL DEFAULT '',
+    quote TEXT NOT NULL DEFAULT '',
+    meme TEXT NOT NULL DEFAULT '',
+    turn_on TEXT NOT NULL DEFAULT '',
+    dealbreaker TEXT NOT NULL DEFAULT '',
+    dating_vibe TEXT NOT NULL DEFAULT '',
+    red_flags TEXT NOT NULL DEFAULT '[]',
+    green_flags TEXT NOT NULL DEFAULT '[]',
+    chapter TEXT,
+    danger_level TEXT,
+    chaos_score SMALLINT CHECK (chaos_score IS NULL OR (chaos_score >= 0 AND chaos_score <= 100)),
+    translations TEXT DEFAULT '{}',
     order_index INTEGER NOT NULL DEFAULT 0,
     is_active BOOLEAN NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -282,13 +265,14 @@ CREATE TABLE IF NOT EXISTS entities (
 );
 
 CREATE TABLE IF NOT EXISTS entity_stats (
-    id TEXT PRIMARY KEY,
-    entity_id TEXT UNIQUE NOT NULL,
+    -- The surrogate `id` is gone: this table is strictly 1:1 with entities.
+    entity_id TEXT PRIMARY KEY,
     smash_count INTEGER NOT NULL DEFAULT 0,
     pass_count INTEGER NOT NULL DEFAULT 0,
     super_smash_count INTEGER NOT NULL DEFAULT 0,
-    total_votes INTEGER NOT NULL DEFAULT 0,
-    smash_rate REAL NOT NULL DEFAULT 0.0,
+    -- Generated, so they cannot drift from the three counts above.
+    total_votes INTEGER NOT NULL GENERATED ALWAYS AS (smash_count + pass_count + super_smash_count) STORED,
+    smash_rate REAL NOT NULL GENERATED ALWAYS AS (COALESCE((smash_count + super_smash_count) * 100.0 / NULLIF(smash_count + pass_count + super_smash_count, 0), 0)) STORED,
     chaos_rating REAL NOT NULL DEFAULT 50.0,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
@@ -304,38 +288,61 @@ CREATE TABLE IF NOT EXISTS votes (
     FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS translations (
-    id TEXT PRIMARY KEY,
-    locale TEXT NOT NULL,
-    key TEXT NOT NULL,
-    value TEXT NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 """
 
 
 def init_raw_sqlite_schema(conn: sqlite3.Connection) -> None:
     try:
         cursor = conn.cursor()
+
+        # `map_tiles` held five generic placeholder tile names copied onto every
+        # map, and `map_objectives` was empty for all 58 of them. Neither is in
+        # the model any more, and both had a foreign key onto the `map_id` slug
+        # that `map_realms` no longer has -- so they go first, unconditionally,
+        # before anything looks at `map_realms` itself.
+        cursor.execute("DROP TABLE IF EXISTS map_objectives;")
+        cursor.execute("DROP TABLE IF EXISTS map_tiles;")
+        conn.commit()
+
         cursor.execute("PRAGMA table_info(map_realms);")
         cols = [row[1] for row in cursor.fetchall()]
         if cols:
-            if "map_id" not in cols:
+            # Every one of these is a column the current model does NOT have,
+            # or a column it requires and an old table lacks:
+            #
+            #   `realm` / `source`  -- denormalized names, replaced by the
+            #                          `realm_id` / `source_id` integer keys.
+            #   `map_id`            -- a slug ("azarovs_resting_place") that
+            #                          duplicated `name` and shadowed the real
+            #                          integer primary key. Dropped.
+            #   `image_url`         -- a byte-identical copy of
+            #                          `callout_image_url`. Dropped.
+            #
+            # A table carrying any of them predates the current schema and
+            # cannot be patched column-by-column in SQLite, so it is rebuilt.
+            # That is safe: these are seed tables, refilled on the next boot.
+            stale = (
+                "map_id" in cols
+                or "image_url" in cols
+                or "realm" in cols
+                or "source" in cols
+                or "realm_id" not in cols
+                or "source_id" not in cols
+            )
+            if stale:
                 cursor.execute("DROP TABLE IF EXISTS map_realms;")
-                cursor.execute("DROP TABLE IF EXISTS map_tiles;")
-                cursor.execute("DROP TABLE IF EXISTS map_objectives;")
                 conn.commit()
             else:
-                if "source" not in cols:
-                    try:
-                        cursor.execute("ALTER TABLE map_realms ADD COLUMN source TEXT NOT NULL DEFAULT 'hens333';")
-                    except Exception:
-                        pass
-                if "source_label" not in cols:
-                    try:
-                        cursor.execute("ALTER TABLE map_realms ADD COLUMN source_label TEXT NOT NULL DEFAULT 'Hens333 12-Clock Callouts';")
-                    except Exception:
-                        pass
+                for column, ddl in (
+                    ("callout_image_url", "TEXT"),
+                    ("callout_image_local_path", "TEXT"),
+                    ("translations", "TEXT DEFAULT '{}'"),
+                ):
+                    if column not in cols:
+                        try:
+                            cursor.execute(f"ALTER TABLE map_realms ADD COLUMN {column} {ddl};")
+                        except Exception:
+                            pass
                 conn.commit()
 
         cursor.executescript(SQLITE_FALLBACK_DDL)

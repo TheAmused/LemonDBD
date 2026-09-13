@@ -1,0 +1,548 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 19,
+      "name": "\"All Seeing\" - Spirit",
+      "killer_id": 2,
+      "description": "The Kra-Frabai symbol, representing The Entity watching over us, glows ominously on the head of the bell.\n• Unlocks awesome potential in one's aura reading ability. While Cloaked, the repair progress of generators can be determined by the intensity of their auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_allSeeing-Spirit.png?507fed",
+      "icon_local_path": "icons/addons/all_seeing_spirit.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "„Allsehend“ – Gespenst",
+          "description": "Das Kra-Frabai-Symbol, das für den uns überwachenden Entitus steht, glüht ominös auf der Glockenkrone.\n• Entfesselt unglaubliches Potenzial der Aurawahrnehmungsfähigkeit. Im verhüllten Zustand kann der Reparaturfortschritt von Generatoren an der Intensität ihrer Auren abgelesen werden."
+        },
+        "es": {
+          "name": "\"Lo veo todo\" - Espíritu",
+          "description": "El símbolo de Kra-Frabai, que representa al Ente que nos cuida, brilla ominosamente en la parte superior de la campana.\n• Despierta la increíble capacidad de percibir auras. Mientras estás oculto, el progreso de reparación de los generadores puede distinguirse según la intensidad de sus auras."
+        },
+        "ja": {
+          "name": "「全能視」- 魂",
+          "description": "鐘の上部で不吉に光るシンボル\n「すべてを見通すエンティティ」を表す\"クラ-フラバイ\"。\n• オーラを視認できる能力を呼び覚ます。透明化時、発電機の修理進行度がオーラの強さで判別できる"
+        },
+        "pl": {
+          "name": "„Wszystkowidzący” – Duch",
+          "description": "Symbol Kra-Frabai. Żarzy się złowrogo na czaszce dzwonu. Reprezentuje spoglądający na nas Byt.\n• Wyzwala niesamowity potencjał odczytywania aury. Gdy znajdujesz się w trybie niewidzialności, jesteś w stanie określić stopień postępu naprawy generatorów na podstawie intensywności aur generatorów."
+        }
+      }
+    },
+    {
+      "id": 20,
+      "name": "\"The Serpent\" - Soot",
+      "killer_id": 2,
+      "description": "The Oas-Nek symbol, representing cunning, is finger-drawn out of soot on the body of the bell.\n• While Cloaked, uncloak whenever you basic-break Pallets or Breakable Walls, and damage or explode Generators.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theSerpent-Soot.png?e8616f",
+      "icon_local_path": "icons/addons/the_serpent_soot.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Die Schlange“ – Ruß",
+          "description": "Das Oas-Nek-Symbol, das für Gerissenheit steht, wurde mit rußigen Fingern auf den Glockenkörper gemalt.\n• Wenn du verhüllt bist, wirst du enthüllt, wenn du mit deiner Grundfähigkeit Paletten oder zerstörbare Mauern zerstörst und wenn du Generatoren beschädigst oder sprengst."
+        },
+        "es": {
+          "name": "\"La serpiente\" Hollín",
+          "description": "El símbolo de Oas-Nek, que representa la astucia, está dibujado con el dedo en hollín en el medio de la campana.\n• Mientras estás oculto, reapareces cuando rompes palés o muros destruibles de forma básica, o cuando dañas o haces explotar generadores."
+        },
+        "ja": {
+          "name": "「蛇」- 煤",
+          "description": "「狡猾」を表す「オアス-ネク」のシンボルが鐘の胴体に煤を使い指で描かれている。\n• 透明化した状態で、パレットや破壊可能な壁を通常破壊したり、発電機にダメージを与えたり爆発させたりすると、透明化解除する"
+        },
+        "pl": {
+          "name": "„Wąż” – Sadza",
+          "description": "Symbol Oas-Nek narysowany palcem zanurzonym w sadzy na korpusie Dzwonu. Reprezentuje przebiegłość.\n• W trybie niewidzialności, wychodzisz z trybu za każdym razem, gdy wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób palety i rozbijalne ściany, i gdy uszkadzasz lub powodujesz eksplozję generatorów."
+        }
+      }
+    },
+    {
+      "id": 21,
+      "name": "\"Shadow Dance\" - White",
+      "killer_id": 2,
+      "description": "The Yiwarick symbol, representing dark synergy, is finger-drawn in white ink on the body of the Bell.\n• While Cloaked, you basic-vault Windows, basic-break Pallets and Breakable Walls, and damage Generators 40% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shadowDance-White.png?2ea0b9",
+      "icon_local_path": "icons/addons/shadow_dance_white.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Schattentanz“ – Weiß",
+          "description": "Das Yiwarick-Symbol, das für dunkle Synergie steht, wurde mit weißer Tinte von Fingern auf den Glockenkörper gezeichnet.\n• Wenn du verhüllt bist, bist du 40 % schneller, wenn du mit deiner Grundfähigkeit durch Fenster springst und Paletten bzw. zerstörbare Mauern zerstörst und wenn du Generatoren beschädigst."
+        },
+        "es": {
+          "name": "\"Danza Sombría\" - Blanco",
+          "description": "El símbolo de Yiwarick, que representa la sinergia oscura, está dibujado con el dedo en tinta blanca en el medio de la campana.\n• Mientras estás oculto, realizas saltos básicos, dañas generadores y rompes palés y muros destruibles de forma básica un 40 % más rápido."
+        },
+        "ja": {
+          "name": "「影舞」- 白",
+          "description": "「相乗効果」を表す「イワリック」のシンボルが鐘の胴に指で白インクを塗って描かれている。\n• 透明化した状態での、窓の通常乗り越えを行う速度、パレットや破壊可能な壁を通常破壊する速度、発電機にダメージを与える速度が40%上昇する"
+        },
+        "pl": {
+          "name": "„Taniec Cienia” – Biel",
+          "description": "Symbol Yiwarick, reprezentujący mroczną jedność, jest ręcznie narysowany białym tuszem na korpusie Dzwonu.\n• W trybie niewidzialności, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób palety i rozbijalne ściany oraz uszkadzasz generatory 40% szybciej."
+        }
+      }
+    },
+    {
+      "id": 22,
+      "name": "\"Shadow Dance\" - Blood",
+      "killer_id": 2,
+      "description": "The Yiwarick symbol, representing dark synergy, is stamped in blood on the body of the Bell.\n• While Cloaked, you basic-vault Windows, basic-break Pallets and Breakable Walls, and damage Generators 60% faster.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shadowDance-Blood.png?a518d7",
+      "icon_local_path": "icons/addons/shadow_dance_blood.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Schattentanz“ – Blut",
+          "description": "Das Yiwarick-Symbol, das für dunkle Synergie steht, wurde mit Blut auf den Glockenkörper gestempelt.\n• Wenn du verhüllt bist, bist du 60 % schneller, wenn du mit deiner Grundfähigkeit durch Fenster springst und Paletten bzw. zerstörbare Mauern zerstörst und wenn du Generatoren beschädigst."
+        },
+        "es": {
+          "name": "\"Danza sombría\" - Sangre",
+          "description": "El símbolo de Yiwarick, que representa la sinergia oscura, está estampado con sangre en el medio de la campana.\n• Mientras estás oculto, realizas saltos básicos, dañas generadores y rompes palés y muros destruibles de forma básica un 60 % más rápido."
+        },
+        "ja": {
+          "name": "「影舞」- 血",
+          "description": "「相乗効果」を表す「イワリック」のシンボルが鐘の胴体に血で刻印されている。\n• 透明化した状態での、窓の通常乗り越えを行う速度、パレットや破壊可能な壁を通常破壊する速度、発電機にダメージを与える速度が60%上昇する"
+        },
+        "pl": {
+          "name": "„Taniec Cienia” – Krew",
+          "description": "Symbol Yiwarick odciśnięty krwią na korpusie Dzwonu. Reprezentuje mroczną jedność.\n• W trybie niewidzialności, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób palety i rozbijalne ściany oraz uszkadzasz generatory 60% szybciej."
+        }
+      }
+    },
+    {
+      "id": 23,
+      "name": "\"Blind Warrior\" - White",
+      "killer_id": 2,
+      "description": "The Baikra-Kaeug symbol, representing ferocity, is finger-drawn in white ink on the body of the Bell.\n• Uncloak surprise attacks inflict Mangled and Hemorrhage for 70 seconds.\nHemorrhage regresses healing progress when not healing, and increases blood trails left by injured survivors. This lasts for a set duration or until fully healed.\nMangled increases time required to heal by 25% and lasts for a set duration or until fully healed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blindWarrior-White.png?cf8ab3",
+      "icon_local_path": "icons/addons/blind_warrior_white.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Blinder Krieger“ – Weiß",
+          "description": "Das Baikra-Kaeug-Symbol, das für Wildheit steht, wurde mit lehmigen Fingern auf den Glockenkörper gemalt.\n• Enthüllte Überraschungsangriffe fügen die Statuseffekte Zerfleischt und Blutung für 70 Sekunden zu.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die verletzte Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nZerfleischt erhöht die Heilungsdauer um 25 % und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+        },
+        "es": {
+          "name": "\"Guerrero ciego\" - Blanco",
+          "description": "El símbolo de Baikra-Kaeug, que representa la ferocidad, está dibujado con el dedo en tinta blanca en el medio de la campana.\n• Los ataques sorpresa al reaparecer infligen Laceración y Hemorragia durante 70 segundos.\nHemorragia revierte el progreso de curación cuando no se está curando y aumenta el rastro de sangre que dejan los supervivientes heridos. Esto dura un tiempo determinado o hasta que se cure por completo.\nLaceración aumenta el tiempo que tarda en curarse un 25 % y dura un tiempo determinado o hasta que se cure por completo."
+        },
+        "ja": {
+          "name": "「盲目の戦士」- 白",
+          "description": "「残虐性」を表す「バイクラ-カユーグ」のシンボルが鐘の胴体に白インクを使い指で描かれている。\n• 透明化解除の奇襲で、70秒間重傷と出血状態にする。\n出血状態になると治療していない時に治療の進行度が後退し、負傷による血痕の量が増加する。この状態は一定時間、もしくは治療が完了するまで持続する。\n重傷状態になると治療に必要な時間が25%増加し、その状態が一定時間、もしくは治療が完了するまで持続する。"
+        },
+        "pl": {
+          "name": "„Ślepy wojownik” – Biel",
+          "description": "Symbol Baikra-Kaeug narysowany palcem zamoczonym w białym atramencie na korpusie Dzwonu. Reprezentuje okrucieństwo.\n• Niespodziewane ataki poza trybem niewidzialności nakładają na ocalałych efekty Zmasakrowania i Krwotoku, które trwają 70 s.\nKrwotok cofa postęp leczenia, gdy akcja ta nie jest wykonywana, i zwiększa krwawy ślad zostawiany przez rannych ocalałych. Efekt trwa przez określony czas lub do pełnego wyleczenia.\nZmasakrowanie wydłuża czas potrzebny na wyleczenie o 25% i trwa przez określony czas lub do pełnego wyleczenia."
+        }
+      }
+    },
+    {
+      "id": 24,
+      "name": "Coxcombed Clapper",
+      "killer_id": 2,
+      "description": "A simple coxcomb knotted rope wrapped around the bell clapper to muffle its sound. A malevolent aura emanates from it.\n• Renders the Wailing Bell completely silent.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_coxcombedClapper.png?4e0cdc",
+      "icon_local_path": "icons/addons/coxcombed_clapper.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Zierknoten-Klöppel",
+          "description": "Ein mit einem geknoteten Strick umwickelter Glockenklöppel, der einen gedämpften Ton erzeugt. Er verströmt eine übelwollende Aura.\n• Macht die Jammerglocke vollkommen geräuschlos."
+        },
+        "es": {
+          "name": "Badajo trenzado",
+          "description": "Cuerda trenzada que rodea al badajo para amortiguar los sonidos. Un aura malévola emana de ella.\n• Silencia completamente la Campana gimiente."
+        },
+        "ja": {
+          "name": "音無しの鳴子",
+          "description": "鐘の鳴子に鶏冠結びで結われたロープ。音を消すために巻きつけられていて、邪悪なオーラが出ている。\n• 悲哀の鐘の音を完全に聞こえなくする"
+        },
+        "pl": {
+          "name": "Obwiązane serce dzwonu",
+          "description": "Węzeł zawiązany wokół serca Dzwonu. Tłumi dźwięki wydawane przez Dzwon. Emanuje złowrogą aurą.\n• Całkowicie wycisza dźwięk Zawodzącego Dzwonu."
+        }
+      }
+    },
+    {
+      "id": 25,
+      "name": "\"Swift Hunt\" - White",
+      "killer_id": 2,
+      "description": "The Kuntin-Takkho symbol, representing rapid descent on prey, is finger-drawn in white ink on the body of the Bell.\n• Increases uncloaking speed by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_swiftHunt-White.png?36831d",
+      "icon_local_path": "icons/addons/swift_hunt_white.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Flinke Jagd“ – Weiß",
+          "description": "Das Kuntin-Takkho-Symbol, das für ein rasches Herabstürzen auf die Beute steht, wurde mit weißer Tinte auf den Glockenkörper gemalt.\n• Erhöht die Geschwindigkeit beim Enthüllen um 10 %."
+        },
+        "es": {
+          "name": "\"Cacería rápida\" - Blanco",
+          "description": "El símbolo de Kuntin-Takkho, que representa el descenso rápido sobre una presa, está dibujado con el dedo en tinta blanca en el medio de la campana.\n• Aumenta la velocidad de reaparición un 10 %."
+        },
+        "ja": {
+          "name": "「俊足の狩人」- 白",
+          "description": "「獲物への強襲」を表す「クンティン-タコホ」のシンボルが鐘の胴体に白インクを使い指で描かれている。\n• 透明化解除の速度が10%上昇する"
+        },
+        "pl": {
+          "name": "„Szybkie Łowy” – Biel",
+          "description": "Symbol Kuntin-Takkho narysowany palcem zamoczonym w białym atramencie na korpusie Dzwonu. Reprezentuje gwałtowny skok na ofiarę.\n• Skraca czas ponownego pojawiania się o 10%."
+        }
+      }
+    },
+    {
+      "id": 26,
+      "name": "\"Windstorm\" - Blood",
+      "killer_id": 2,
+      "description": "The Ohuwe-Onmnea symbol, representing a howling storm, is stamped in blood on the body of the bell.\n• Increases the Wraith's movement speed while cloaked by 9%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_windstorm-Blood.png?9cde03",
+      "icon_local_path": "icons/addons/windstorm_blood.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Windsturm“ – Blut",
+          "description": "Das Ohuwe-Onmnea-Symbol, das für einen gewaltigen Sturm steht, wurde mit Blut auf den Glockenkörper gestempelt.\n• Erhöht die Bewegungsgeschwindigkeit des Geistes, während er verhüllt ist, um 9 %."
+        },
+        "es": {
+          "name": "\"Vendaval\" - Sangre",
+          "description": "El símbolo de Ohuwe-Onmnea, que representa una tormenta aullante, está estampado con sangre en el medio de la campana.\n• Aumenta la velocidad de movimiento del Espectro mientras está oculto un 9 %."
+        },
+        "ja": {
+          "name": "「暴風」- 血",
+          "description": "「暴風」を表す「オフウィ-オンムニア」のシンボルが鐘の胴体に血で刻印されている。\n• 透明化状態の間、レイスの移動速度が9%上昇する"
+        },
+        "pl": {
+          "name": "„Wichura” – Krew",
+          "description": "Symbol Ohuwe-Onmnea odciśnięty krwią na korpusie Dzwonu. Reprezentuje gwałtowną burzę.\n• Zwiększa prędkość ruchu Widma w trybie niewidzialności o 9%."
+        }
+      }
+    },
+    {
+      "id": 27,
+      "name": "Bone Clapper",
+      "killer_id": 2,
+      "description": "A bell clapper made from a highly polished piece of bone. Causes the sounds of the Wailing Bell to echo and warp chaotically.\n• Survivors can no longer discern the Wailing Bell's distance or direction.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_boneClapper.png?ff789f",
+      "icon_local_path": "icons/addons/bone_clapper.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Knochenklöppel",
+          "description": "Ein Glockenklöppel, hergestellt aus einem glattpolierten Knochenstück. Wirft den Klang der Jammerglocke auf verwirrende Art und Weise zurück.\n• Überlebende können die Entfernung und Richtung der Jammerglocke nicht mehr ausmachen."
+        },
+        "es": {
+          "name": "Badajo de hueso",
+          "description": "Badajo hecho con un hueso muy pulido. Hace que los tañidos de la Campana gimiente reverberen y se distorsionen de forma caótica.\n• Los supervivientes ya no podrán distinguir a qué distancia ni en qué dirección se encuentra la campana."
+        },
+        "ja": {
+          "name": "骨の鳴子",
+          "description": "滑らかに研磨された骨でできた鳴子。鐘の音を歪んだ状態で響かせ、聞いた者を混乱させる。\n• 悲哀の鐘の距離と方向が認識できなくなる"
+        },
+        "pl": {
+          "name": "Kościana Grzechotka",
+          "description": "Grzechotka wykonana z wypolerowanych kawałków kości. Dołączona do Zawodzącego Dzwonu sprawia, że dźwięk odbija się i chaotycznie zmienia kierunek brzmienia.\n• Ocalali nie mogą już określić dystansu ani kierunku, z którego rozbrzmiewa dźwięk Zawodzącego Dzwonu."
+        }
+      }
+    },
+    {
+      "id": 28,
+      "name": "\"The Ghost\" - Soot",
+      "killer_id": 2,
+      "description": "The Khugwemuu symbol, representing the spirit world, is finger-drawn out of soot on the body of the bell.\n• After Uncloaking, the Wraith's Terror Radius and Red Stain will remain suppressed for 6 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theGhost-Soot.png?566ff4",
+      "icon_local_path": "icons/addons/the_ghost_soot.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Der Geist“ – Ruß",
+          "description": "Das Khugwemuu-Symbol, das für die Geisterwelt steht, wurde mit rußigen Fingern auf den Glockenkörper gemalt.\n• Nach dem Enthüllen bleiben Terrorradius und roter Fleck des Geists 6 Sekunden lang unterdrückt."
+        },
+        "es": {
+          "name": "\"El Fantasma\" - Hollín",
+          "description": "El símbolo de Khugwemuu, que representa el reino de los espíritus, está dibujado con el dedo en hollín en el medio de la campana.\n• Cuando el Espectro se materializa, el radio de terror y la marca roja se suprimen durante 6 segundos."
+        },
+        "ja": {
+          "name": "「亡霊」- 煤",
+          "description": "「霊界」を表す「クグウェムウ」のシンボルが鐘の胴体に煤を使い指で描かれている。\n• 透明化解除後、レイスの脅威範囲と赤い光が6秒間抑制される"
+        },
+        "pl": {
+          "name": "„Duch” – Sadza",
+          "description": "Symbol Khugwemuu. Został narysowany palcem zanurzonym w sadzy na korpusie Dzwonu. Reprezentuje niematerialny wymiar.\n• Po wyjściu z trybu niewidzialności zasięg terroru i czerwona poświata Widma pozostają nieaktywne przez 6 sekund."
+        }
+      }
+    },
+    {
+      "id": 29,
+      "name": "\"The Hound\" - Soot",
+      "killer_id": 2,
+      "description": "The Wonnug symbol, representing a peerless tracker, is finger-drawn out of soot on the body of the bell.\n• While Cloaked, fresh blood marks are brighter than normal.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theHound-Soot.png?bad05b",
+      "icon_local_path": "icons/addons/the_hound_soot.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Der Spürhund“ – Ruß",
+          "description": "Das Wonnug-Symbol, das für einen unvergleichlichen Fährtenleser steht, wurde mit rußigen Fingern auf den Glockenkörper gemalt.\n• Während der Geist verhüllt ist, sind frische Blutspuren heller als gewöhnlich."
+        },
+        "es": {
+          "name": "\"El sabueso\" - Hollín",
+          "description": "El símbolo de Wonnug, que representa a un rastreador sin parangón, está dibujado con el dedo en hollín en el medio de la campana.\n• Mientras estás oculto, las marcas de sangre fresca brillan más de lo normal."
+        },
+        "ja": {
+          "name": "「猟犬」- 煤",
+          "description": "「無類の追跡者」を表す「グド-ボイ」のシンボルが鐘の胴体に煤を使い指で描かれている。\n• 透明化状態の間、新しい血痕が通常よりも明るくなる"
+        },
+        "pl": {
+          "name": "„Pies” – Sadza",
+          "description": "Symbol Wonnug. Został narysowany palcem zanurzonym w sadzy na korpusie Dzwonu. Reprezentuje niezrównanego tropiciela.\n• Świeże ślady krwi są jaśniejsze, gdy znajdujesz się w trybie niewidzialności."
+        }
+      }
+    },
+    {
+      "id": 30,
+      "name": "\"Blind Warrior\" - Mud",
+      "killer_id": 2,
+      "description": "The Baikra-Kaeug symbol, representing ferocity, is finger-drawn in mud on the body of the Bell.\n• Uncloak surprise attacks inflict Survivors with Blindness for 60 seconds.\nBlindness prevents survivors from seeing auras.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blindWarrior-Mud.png?4d255b",
+      "icon_local_path": "icons/addons/blind_warrior_mud.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Blinder Krieger“ – Schlamm",
+          "description": "Das Baikra-Kaeug-Symbol, das für Wildheit steht, wurde mit lehmigen Fingern auf den Glockenkörper gemalt.\n• Enthüllte Überraschungsangriffe fügen Überlebenden für 60 Sekunden Erblindung zu.\nBei Erblindung können Überlebende keine Auren sehen."
+        },
+        "es": {
+          "name": "\"Guerrero ciego\" - Barro",
+          "description": "El símbolo de Baikra-Kaeug, que representa la ferocidad, está dibujado con el dedo en barro en el medio de la campana.\n• Los ataques sorpresa reaparecidos infligen Ceguera a los supervivientes durante 60 segundos.\nCeguera impide que los supervivientes vean auras."
+        },
+        "ja": {
+          "name": "「盲目の戦士」- 泥",
+          "description": "「残虐性」を表す「バイクラ-カユーグ」のシンボルが鐘の胴体に泥を使い指で描かれている。\n• 透明化解除の奇襲で生存者を60秒間目眩まし状態にする\n目眩まし状態になると生存者はオーラが視えなくなる。"
+        },
+        "pl": {
+          "name": "„Ślepy wojownik” – Błoto",
+          "description": "Symbol Baikra-Kaeug narysowany palcem zanurzonym w błocie na korpusie Dzwonu. Reprezentuje okrucieństwo.\n• Niespodziewane ataki nakładają na ocalałych efekt Oślepienie na 60 sekund.\nOślepienie uniemożliwia ocalałym widzenie aur."
+        }
+      }
+    },
+    {
+      "id": 31,
+      "name": "\"Swift Hunt\" - Mud",
+      "killer_id": 2,
+      "description": "The Kuntin-Takkho symbol, representing rapid descent on prey, is finger-drawn in mud on the body of the Bell.\n• Increases uncloaking speed by 8%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_swiftHunt-Mud.png?77b1f2",
+      "icon_local_path": "icons/addons/swift_hunt_mud.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Flinke Jagd“ – Schlamm",
+          "description": "Das Kuntin-Takkho-Symbol, das für ein rasches Herabstürzen auf die Beute steht, wurde mit schlammigen Fingern auf den Glockenkörper gemalt.\n• Erhöht die Geschwindigkeit beim Enthüllen um 8 %."
+        },
+        "es": {
+          "name": "\"Cacería rápida\" - Barro",
+          "description": "El símbolo de Kuntin-Takkho, que representa el descenso rápido sobre una presa, está dibujado con el dedo en barro en el medio de la campana.\n• Aumenta la velocidad de reaparición un 8 %."
+        },
+        "ja": {
+          "name": "「俊足の狩人」- 泥",
+          "description": "「獲物への強襲」を表す「クンティン-タコホ」のシンボルが鐘の胴体に泥を使い指で描かれている。\n• 透明化解除の速度が8%上昇する"
+        },
+        "pl": {
+          "name": "„Szybkie Łowy” – Błoto",
+          "description": "Symbol Kuntin-Takkho narysowany palcem zamoczonym w błocie na korpusie Dzwonu. Reprezentuje gwałtowny skok na ofiarę.\n• Skraca czas ponownego pojawiania się o 8%."
+        }
+      }
+    },
+    {
+      "id": 32,
+      "name": "\"Swift Hunt\" - Blood",
+      "killer_id": 2,
+      "description": "The Kuntin-Takkho symbol, representing rapid descent on prey, is stamped in blood on the head of the Bell.\n• Increases uncloaking speed by 12%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_swiftHunt-Blood.png?ec375b",
+      "icon_local_path": "icons/addons/swift_hunt_blood.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Flinke Jagd“ – Blut",
+          "description": "Das Kuntin-Takkho-Symbol, das für ein rasches Herabstürzen auf die Beute steht, wurde mit Blut auf die Glockenkrone gestempelt.\n• Erhöht die Geschwindigkeit beim Enthüllen um 12 %."
+        },
+        "es": {
+          "name": "\"Cacería rápida\" - Sangre",
+          "description": "El símbolo de Kuntin-Takkho, que representa el descenso rápido sobre una presa, está estampado con sangre en la parte superior de la campana.\n• Aumenta la velocidad de reaparición un 12 %."
+        },
+        "ja": {
+          "name": "「俊足の狩人」- 血",
+          "description": "「獲物への強襲」を表す「クンティン-タコホ」のシンボルが鐘の上部に血で刻印されている。\n• 透明化解除の速度が12%上昇する"
+        },
+        "pl": {
+          "name": "„Szybkie Łowy” – Krew",
+          "description": "Symbol Kuntin-Takkho odciśnięty krwią na głowicy Dzwonu. Reprezentuje gwałtowny skok na ofiarę.\n• Skraca czas ponownego pojawiania się o 12%."
+        }
+      }
+    },
+    {
+      "id": 33,
+      "name": "\"The Beast\" - Soot",
+      "killer_id": 2,
+      "description": "The Kunwulju symbol, representing the realm of fear, is finger-drawn out of soot on the body of the bell.\n• The Wraith's Terror Radius is no longer suppressed while Cloaked.\n• Bloodpoints granted for Stalking and surprise attacks are increased by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_theBeast-Soot.png?a915d6",
+      "icon_local_path": "icons/addons/the_beast_soot.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "„Die Bestie“ – Ruß",
+          "description": "Das Kunwulju-Symbol, das für das Reich der Furcht steht, wurde mit rußigen Fingern auf den Glockenkörper gemalt.\n• Der Terrorradius des Geists wird nicht mehr unterdrückt, wenn er verhüllt ist.\n• Blutpunkte für Verfolgungen und Überraschungsangriffe sind um 100 % erhöht."
+        },
+        "es": {
+          "name": "\"La bestia\" - Hollín",
+          "description": "El símbolo de Kunwulju, que representa el reino del miedo, está dibujado con el dedo en hollín en el medio de la campana.\n• El radio de terror del Espectro ya no se suprime mientras está oculto.\n• Los puntos de sangre por acechar y llevar a cabo ataques sorpresa aumentan un 100 %."
+        },
+        "ja": {
+          "name": "「暗獣」- 煤",
+          "description": "「恐怖の世界」を表す「クグフェルウ」のシンボルが鐘の胴体に煤を使い指で描かれている。\n• 透明化した際に、レイスの脅威範囲が抑制されなくなる\n• 凝視と奇襲で得られるブラッドポイントが100％まで増加する"
+        },
+        "pl": {
+          "name": "„Bestia” – Sadza",
+          "description": "Reprezentujący świat grozy symbol Kunwulju został narysowany na Dzwonie palcem zanurzonym w sadzy.\n• Zasięg terroru Widma nie jest już stłumiony, gdy znajdujesz się w trybie niewidzialności.\n• Zapewnia 100% premii do Punktów Krwi za śledzenie i niespodziewane ataki."
+        }
+      }
+    },
+    {
+      "id": 34,
+      "name": "\"All Seeing\" - Blood",
+      "killer_id": 2,
+      "description": "The Kra-Frabai symbol, representing The Entity watching over us, is stamped in blood on the head of the Bell.\n• Unlocks hidden potential in one's aura reading ability. While Cloaked, the auras of Survivors within 8 meters are revealed to you.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_allSeeing-Blood.png?6030ac",
+      "icon_local_path": "icons/addons/all_seeing_blood.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "„Allsehend“ – Blut",
+          "description": "Das Kra-Frabai-Symbol, das für den uns überwachenden Entitus steht, wurde mit Blut auf die Glockenkrone gestempelt.\n• Entfesselt das versteckte Potenzial der Aurawahrnehmungsfähigkeit. Im verhüllten Zustand werden dir die Auren der Überlebenden im Umkreis von 8 Metern angezeigt."
+        },
+        "es": {
+          "name": "\"Lo veo todo\" - Sangre",
+          "description": "El símbolo de Kra-Frabai, que representa al Ente que nos cuida, está estampado con sangre en la parte superior de la campana.\n• Despierta el potencial oculto que permite percibir auras. Mientras estás oculto, se te mostrarán las auras de los supervivientes en un radio de 8 metros."
+        },
+        "ja": {
+          "name": "「全能視」- 血",
+          "description": "「すべてを見通すエンティティ」を表す「クラ-フラバイ」のシンボルが、鐘の上部に血で刻印されている。\n• 隠し持ったオーラを視認できる能力を呼び覚ます。透明化している間、8メートル以内にいる生存者のオーラを探知できる"
+        },
+        "pl": {
+          "name": "„Wszystkowidzący” – Krew",
+          "description": "Symbol Kra-Frabai odciśnięty krwią na głowicy Dzwonu. Reprezentuje spoglądający na nas Byt.\n• Odblokowuje ukryty talent odczytywania aury. Gdy poruszasz się w trybie niewidzialności, dostrzegasz aury ocalałych znajdujących się w zasięgu 8 metrów od ciebie."
+        }
+      }
+    },
+    {
+      "id": 35,
+      "name": "\"Windstorm\"- Mud",
+      "killer_id": 2,
+      "description": "The Ohuwe-Onmnea symbol, representing a howling storm, is finger-drawn in mud on the body of the Bell.\n• Increases the Wraith's movement speed while cloaked by 5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_windstorm-Mud.png?a8a4c7",
+      "icon_local_path": "icons/addons/windstorm_mud.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Windsturm“ – Schlamm",
+          "description": "Das Ohuwe-Onmnea-Symbol, das für einen gewaltigen Sturm steht, wurde mit lehmigen Fingern auf den Glockenkörper gemalt.\n• Erhöht die Bewegungsgeschwindigkeit des Geistes, während er verhüllt ist, um 5 %."
+        },
+        "es": {
+          "name": "\"Vendaval\" - Barro",
+          "description": "El símbolo de Ohuwe-Onmnea, que representa una tormenta aullante, está dibujado con el dedo en barro en el medio de la campana.\n• Aumenta la velocidad de movimiento del Espectro mientras está oculto un 5 %."
+        },
+        "ja": {
+          "name": "「暴風」- 泥",
+          "description": "「暴風」を表す「オフウィ-オンムニア」のシンボルが鐘の胴体に泥を使い指で描かれている。\n• 透明化状態の間、レイスの移動速度が5%上昇する"
+        },
+        "pl": {
+          "name": "„Wichura” – Błoto",
+          "description": "Symbol Ohuwe-Onmnea narysowany palcem zamoczonym w błocie na korpusie Dzwonu. Reprezentuje gwałtowną burzę.\n• Zwiększa prędkość ruchu Widma w trybie niewidzialności o 5%."
+        }
+      }
+    },
+    {
+      "id": 36,
+      "name": "\"Windstorm\" - White",
+      "killer_id": 2,
+      "description": "The Ohuwe-Onmnea symbol, representing a howling storm, is finger-drawn in white ink on the body of the Bell.\n• Increases the Wraith's movement speed while cloaked by 7%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_windstorm-White.png?bc1c50",
+      "icon_local_path": "icons/addons/windstorm_white.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Windsturm“ – Weiß",
+          "description": "Das Ohuwe-Onmnea-Symbol, das für einen gewaltigen Sturm steht, wurde mit weißer Tinte von Fingern auf den Glockenkörper gemalt.\n• Erhöht die Bewegungsgeschwindigkeit des Geistes, während er verhüllt ist, um 7 %."
+        },
+        "es": {
+          "name": "\"Vendaval\" - Blanco",
+          "description": "El símbolo de Ohuwe-Onmnea, que representa una tormenta aullante, está dibujado con el dedo en tinta blanca en el medio de la campana.\n• Aumenta la velocidad de movimiento del Espectro mientras está oculto un 7 %."
+        },
+        "ja": {
+          "name": "「暴風」- 白",
+          "description": "「暴風」を表す「オフウィ-オンムニア」のシンボルが鐘の胴体に白インクを使い指で描かれている。\n• 透明化状態の間、レイスの移動速度が7%上昇する"
+        },
+        "pl": {
+          "name": "„Wichura” – Biel",
+          "description": "Symbol Ohuwe-Onmnea narysowany palcem zamoczonym w białym atramencie na korpusie Dzwonu. Reprezentuje gwałtowną burzę.\n• Zwiększa prędkość ruchu Widma w trybie niewidzialności o 7%."
+        }
+      }
+    },
+    {
+      "id": 37,
+      "name": "\"Blink\" - Mud",
+      "killer_id": 2,
+      "description": "The Kratin symbol, representing quick passing, is finger-drawn in mud on the body of the Bell.\n• Increases cloaking speed by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blink-Mud.png?941e1d",
+      "icon_local_path": "icons/addons/blink_mud.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "„Flimmer“ – Schlamm",
+          "description": "Das Kratin-Symbol, das für schnelles Passieren steht, wurde mit lehmigen Fingern auf den Glockenkörper gemalt.\n• Erhöht die Geschwindigkeit für die Verhüllung um 40 %."
+        },
+        "es": {
+          "name": "\"Proyección\" - Barro",
+          "description": "El símbolo de Kratin, que representa la muerte rápida, está dibujado con el dedo en barro en el medio de la campana.\n• Aumenta la velocidad para ocultarse un 40 %."
+        },
+        "ja": {
+          "name": "「ブリンク」- 泥",
+          "description": "「刹那」を表す「クラティン」のシンボルが鐘の胴体に泥を使い指で描かれている。\n• 透明化の速度が40%上昇する"
+        },
+        "pl": {
+          "name": "„Mignięcie” – Błoto",
+          "description": "Symbol Kratin narysowany palcem zanurzonym w błocie na korpusie Dzwonu. Reprezentuje szybkie przemijanie.\n• Zwiększa prędkość przechodzenia do trybu niewidzialności o 40%."
+        }
+      }
+    },
+    {
+      "id": 38,
+      "name": "\"Blink\" - White",
+      "killer_id": 2,
+      "description": "The Kratin symbol, representing quick passing, is finger-drawn in white ink on the body of the Bell.\n• Increases cloaking speed by 60%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blink-White.png?9a60cf",
+      "icon_local_path": "icons/addons/blink_white.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "„Flimmer“ – Weiß",
+          "description": "Das Kratin-Symbol, das für schnelles Passieren steht, wurde mit weißer Tinte auf den Glockenkörper gemalt.\n• Erhöht die Geschwindigkeit für die Verhüllung um 60 %."
+        },
+        "es": {
+          "name": "\"Proyección\" - Blanco",
+          "description": "El símbolo de Kratin, que representa la muerte rápida, está dibujado con el dedo en tinta blanca en el medio de la campana.\n• Aumenta la velocidad para ocultarse un 60 %."
+        },
+        "ja": {
+          "name": "「ブリンク」- 白",
+          "description": "「刹那」を表す「クラティン」のシンボルが鐘の胴体に白インクを使い指で描かれている。\n• 透明化の速度が60%上昇する"
+        },
+        "pl": {
+          "name": "„Mignięcie” – Biel",
+          "description": "Symbol Kratin narysowany palcem zamoczonym w białym atramencie na korpusie Dzwonu. Reprezentuje szybkie przemijanie.\n• Zwiększa prędkość przechodzenia do trybu niewidzialności o 60%."
+        }
+      }
+    }
+  ]
+}

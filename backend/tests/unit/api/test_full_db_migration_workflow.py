@@ -18,7 +18,8 @@ from flask import Flask
 from sqlalchemy import select, delete
 from app import create_app
 from app.core.extensions import db
-from app.models.character import Character
+from app.models.chapter import Chapter
+from app.models.character import Killer
 from app.models.user import User
 from app.services.db import export_import as export_import_module
 from app.services.db.export_import import DatabaseExportImportService, SUPPORTED_EXPORT_TARGETS
@@ -38,8 +39,12 @@ def seeded_app(tmp_path: Path, monkeypatch) -> Flask:
     with test_app.app_context():
         db.create_all()
         db.session.add(User(username="migrator", email="migrator@test.com", password_hash="h", role="admin"))
-        db.session.add(Character(
-            name="The Trapper", role="Killer", avatar_local_path="icons/characters/trapper.webp",
+        chapter = Chapter(name="Base Game")
+        db.session.add(chapter)
+        db.session.flush()
+        db.session.add(Killer(
+            name="The Trapper", chapter_id=chapter.id, power_name="Bear Trap",
+            avatar_local_path="icons/characters/trapper.webp",
         ))
         db.session.commit()
         yield test_app
@@ -54,18 +59,20 @@ def test_full_export_then_wipe_then_import_restores_everything(seeded_app: Flask
 
         static_dir = export_import_module.get_static_dir()
         icon_path = static_dir / "icons" / "characters" / "trapper.webp"
-        assert exported["data"]["characters"][0]["avatar_local_path_data"] == base64.b64encode(icon_path.read_bytes()).decode("ascii")
+        # `characters` is no longer an export target -- the roster is two tables
+        # now, so the Trapper travels under `killers`.
+        assert exported["groups"]["content"]["killers"][0]["avatar_local_path_data"] == base64.b64encode(icon_path.read_bytes()).decode("ascii")
 
         # Wipe: drop every row and delete the asset file, simulating a brand-new target instance.
         icon_path.unlink()
         for table in reversed(db.metadata.sorted_tables):
             db.session.execute(delete(table))
         db.session.commit()
-        assert db.session.scalars(select(Character)).first() is None
+        assert db.session.scalars(select(Killer)).first() is None
 
         summary = DatabaseExportImportService.import_database(exported, mode="merge", targets=SUPPORTED_EXPORT_TARGETS)
 
-        restored_char = db.session.scalars(select(Character).where(Character.name == "The Trapper")).one()
+        restored_char = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).one()
         assert restored_char.avatar_local_path == "icons/characters/trapper.webp"
         assert icon_path.read_bytes() == b"real-trapper-bytes"
-        assert summary["summary"]["characters"]["created"] == 1
+        assert summary["summary"]["killers"]["created"] == 1

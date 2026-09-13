@@ -25,6 +25,7 @@ import killerCalculator from './killerCalculator';
 import customPerks from './customPerks';
 import changelog from './changelog';
 import onboarding from './onboarding';
+import achievements from './achievements';
 
 const es = {
   app,
@@ -53,6 +54,7 @@ const es = {
   customPerks,
   changelog,
   onboarding,
+  achievements,
 };
 
 export default es;

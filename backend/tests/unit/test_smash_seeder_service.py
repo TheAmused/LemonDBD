@@ -6,7 +6,7 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Translation,
+    Vote,
 )
 from app.seeds.smash_roster_seeder import seed_smash_rosters
 from app.services.others.smash_or_pass_service import SmashOrPassService
@@ -74,21 +74,16 @@ class TestSmashSeederService:
             assert "quote" in entity.metadata_json
             assert "compatibility_tags" in entity.metadata_json
 
-        locales = db_session.scalars(select(Translation.locale).distinct()).all()
-        assert set(locales) == {"en", "es", "de", "ja", "pl"}
-
     def test_seed_smash_rosters_idempotency(self, db_session: Session) -> None:
         seed_smash_rosters()
         initial_roster_count = db_session.scalar(select(func.count(Roster.id)))
         initial_entity_count = db_session.scalar(select(func.count(Entity.id)))
         initial_stat_count = db_session.scalar(select(func.count(EntityStat.id)))
-        initial_trans_count = db_session.scalar(select(func.count(Translation.id)))
 
         seed_smash_rosters()
         assert db_session.scalar(select(func.count(Roster.id))) == initial_roster_count
         assert db_session.scalar(select(func.count(Entity.id))) == initial_entity_count
         assert db_session.scalar(select(func.count(EntityStat.id))) == initial_stat_count
-        assert db_session.scalar(select(func.count(Translation.id))) == initial_trans_count
 
     def test_service_get_rosters(self, db_session: Session) -> None:
         seed_smash_rosters()
@@ -298,26 +293,6 @@ class TestSmashSeederService:
         assert user_reset_res["status"] == "success"
         assert user_reset_res["reset_count"] == 1
         assert service.get_character_stat("ada_wong")["super_smash_count"] == 0
-
-    def test_service_get_translations(self, db_session: Session) -> None:
-        seed_smash_rosters()
-        service = SmashOrPassService()
-
-        en_dict = service.get_translations("en")
-        assert en_dict["smashOrPass.rosters.canon.name"] == "Dead by Daylight: Fog Canon"
-        assert en_dict["smashOrPass.tiers.godTier"] == "God Tier"
-
-        es_dict = service.get_translations("es")
-        assert en_dict["smashOrPass.rosters.canon.name"] is not None
-        assert es_dict["smashOrPass.tiers.godTier"] == "Nivel Dios"
-
-        ja_dict = service.get_translations("ja")
-        assert "霧の正史" in ja_dict["smashOrPass.rosters.canon.name"]
-        assert ja_dict["smashOrPass.tiers.godTier"] == "神ティア"
-
-        pl_dict = service.get_translations("pl")
-        assert pl_dict["smashOrPass.rosters.canon.name"] == "Dead by Daylight: Kanon Mgły"
-        assert pl_dict["smashOrPass.tiers.godTier"] == "Boski Poziom"
 
     def test_service_legacy_methods_compatibility(self, db_session: Session) -> None:
         seed_smash_rosters()

@@ -1,0 +1,351 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "item_addons",
+  "item_addons": [
+    {
+      "id": 1,
+      "name": "Battery",
+      "item_category_id": 3,
+      "description": "A standard battery of unknown brand.\nIncreases\nthe Battery life by\n+2 seconds\n.\n\"Another nearly empty battery.\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_battery.png?a920d6",
+      "icon_local_path": "icons/addons/battery.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Batterie"
+        },
+        "es": {
+          "name": "Pila"
+        },
+        "ja": {
+          "name": "電池"
+        },
+        "pl": {
+          "name": "Bateria"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Leather Grip",
+      "item_category_id": 3,
+      "description": "A leather strip wrapped around the Flashlight for more grip.\n• Increases the accuracy of the Flashlight beam by 20%.\n\"\"Too many have fallen due to sweaty hands.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_leatherGrip.png?a65ecf",
+      "icon_local_path": "icons/addons/leather_grip.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Ledergriff",
+          "description": "Ein Lederband, das für bessere Griffigkeit um die Taschenlampe gewickelt wurde.\n• Verstärkt die Genauigkeit des Lichtstrahls um 20 %.\n\"„Für zu viele waren schwitzige Hände das Todesurteil.“\""
+        },
+        "es": {
+          "name": "Mango de cuero",
+          "description": "Una tira de cuero atada alrededor de la linterna para mayor agarre.\n• Aumenta la precisión del haz de la linterna un 20 %.\n\"\"Demasiados han caído por culpa de unas manos sudorosas\".\""
+        },
+        "ja": {
+          "name": "革のグリップ",
+          "description": "グリップを強化するために懐中電灯に巻かれた革の紐。\n• 懐中電灯の光の精度が20%上昇する\n\"「手汗のせいで命を落とした奴は数え切れん」\""
+        },
+        "pl": {
+          "name": "Skórzany Uchwyt",
+          "description": "Skórzany pasek owinięty wokół latarki. Poprawia chwyt.\n• Zwiększa celność światła latarki o 20%.\n\"„Zbyt wielu zginęło przez spocone dłonie”.\""
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Power Bulb",
+      "item_category_id": 3,
+      "description": "A tiny Flashlight bulb that packs more wattage for a brighter, more powerful light beam.\n• Increases the brightness of the Flashlight beam by 20%.\n• Increases Blindness duration by 10%.\n\"\"Even the most powerful light cannot pierce through The Black Fog's darkness.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_powerBulb.png?5ed525",
+      "icon_local_path": "icons/addons/power_bulb.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Powerglühbirne",
+          "description": "Eine winzige Taschenlampenglühbirne mit höherer Wattzahl für einen helleren, kraftvolleren Lichtstrahl.\n• Erhöht die Helligkeit des Lichtstrahls um 20 %.\n• Erhöht die Dauer der Erblindung um 10 %.\n\"„Selbst das kräftigste Licht kann die Dunkelheit des schwarzen Nebels nicht durchdringen.“\""
+        },
+        "es": {
+          "name": "Bombilla de alta potencia",
+          "description": "Una diminuta bombilla de mayor potencia para emitir un haz más brillante y potente.\n• Aumenta el brillo del haz de la linterna un 20 %.\n• Aumenta la duración de Ceguera un 10 %.\n\"\"Ni siquiera la luz más poderosa puede atravesar la oscuridad de la niebla negra\".\""
+        },
+        "ja": {
+          "name": "強力電球",
+          "description": "強い光を発する高ワットの小さな電球。\n• 懐中電灯の光の明るさが20%減少する\n• 目眩ましの効果時間が10%増加する\n\"「どんなに強い光であっても黒い霧の闇を照らすことはできない」\""
+        },
+        "pl": {
+          "name": "Mocna Żarówka",
+          "description": "Malutka żarówka latarki o większej mocy, zapewniająca jaśniejszą i silniejszą wiązkę światła.\n• Zwiększa jasność światła latarki o 20%.\n• Zwiększa czas trwania Oślepienia o 10%.\n\"„Nawet najsilniejsze światło nie przebije się przez ciemność czarnej mgły”.\""
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Wide Lens",
+      "item_category_id": 3,
+      "description": "A thin wide lens in perfect condition. Designed to spread the Flashlight beam at the cost of reducing its range of effectiveness.\n• Decreases the range of the Flashlight beam by 25%.\n• Increases the width of the Flashlight beam by 25%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_wideLens.png?c54743",
+      "icon_local_path": "icons/addons/wide_lens.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Streulinse",
+          "description": "Eine dünne, breite Linse in perfektem Zustand. Streut das Licht der Taschenlampe, verringert jedoch die Reichweite des Lichtstrahls.\n• Verringert  die Reichweite des Lichtstrahls um 25 .\n• Weitet den Lichtstrahl um 25 %."
+        },
+        "es": {
+          "name": "Lente ancha",
+          "description": "Una lente delgada y amplia en perfectas condiciones. Diseñada para ensanchar el haz de la linterna al precio de reducir su alcance.\n• Reduce el alcance del haz de la linterna un 25 %.\n• Aumenta la anchura del haz de la linterna un 25 %."
+        },
+        "ja": {
+          "name": "広角レンズ",
+          "description": "薄い広角レンズ。傷一つない状態で、照射距離と引き換えに懐中電灯の光を拡散するように作られている。\n• 懐中電灯の照射距離が25%減少する\n• 懐中電灯の照射半径が25%増加する"
+        },
+        "pl": {
+          "name": "Szeroka Soczewka",
+          "description": "Cienka, szeroka soczewka w idealnym stanie. Została zaprojektowana tak, aby poszerzyć wiązkę światła kosztem jej zasięgu.\n• Zmniejsza zasięg wiązki światła latarki o 25%.\n• Rozszerza wiązkę światła latarki o 25%."
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Focus Lens",
+      "item_category_id": 3,
+      "description": "A thick glass lens that focuses the Flashlight beam to increase its intensity.\n• Increases the range of the Flashlight beam by 25%.\n• Decreases the width of the Flashlight beam by 15%.\n• Increases the brightness of the Flashlight beam by 20%.\n• Increases Blindness duration by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_focusLens.png?10aa35",
+      "icon_local_path": "icons/addons/focus_lens.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Fokuslinse",
+          "description": "Eine dicke Glaslinse, die den Taschenlampenlichtstrahl bündelt, um seine Intensität zu erhöhen.\n• Erhöht die Reichweite des Lichtstrahls um 25 %.\n• Verringert die Breite des Lichtstrahls um 15 %.\n• Erhöht die Helligkeit des Lichtstrahls um 20 %.\n• Erhöht die Dauer der Erblindung um 10 %."
+        },
+        "es": {
+          "name": "Lente de enfoque",
+          "description": "Una lente de cristal gruesa que concentra el haz de la linterna para incrementar su intensidad.\n• Aumenta el alcance del haz de la linterna un 25 %.\n• Reduce la anchura del haz de la linterna un 15 %.\n• Aumenta el brillo del haz de la linterna un 20 %.\n• Aumenta la duración de Ceguera un 10%."
+        },
+        "ja": {
+          "name": "集光レンズ",
+          "description": "懐中電灯の光を収束し、強さを増すことができる厚いレンズ。\n• 懐中電灯の照射距離が25%増加する\n• 懐中電灯の照射半径が15%減少する\n• 光の明るさが20%増加する\n• 目眩ましの効果時間が10%増加する"
+        },
+        "pl": {
+          "name": "Soczewka Skupiająca",
+          "description": "Gruba szklana soczewka skupiająca światło latarki i zwiększająca jego intensywność.\n• Zwiększa zasięg wiązki światła latarki o 25%.\n• Zwęża wiązkę światła latarki o 15%.\n• Zwiększa jasność światła latarki o 20%.\n• Wydłuża czas trwania Oślepienia o 10%."
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Heavy Duty Battery",
+      "item_category_id": 3,
+      "description": "A battery marked as\n\"industrial strength\"\n.\nIncreases\nthe Battery life by\n+4 seconds\n.\n\"A battery advertised as lasting 8 hours lasts only a couple of seconds in The Black Fog.\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_heavyDutyBattery.png?35eb69",
+      "icon_local_path": "icons/addons/heavy_duty_battery.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Hochleistungsbatterie"
+        },
+        "es": {
+          "name": "Pila de gran autonomía"
+        },
+        "ja": {
+          "name": "大容量電池"
+        },
+        "pl": {
+          "name": "Pojemna Bateria"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Low Amp Filament",
+      "item_category_id": 3,
+      "description": "A filament bulb designed to extend a Flashlight battery's life.\n• Decreases Flashlight battery consumption by 24%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lowAmpFilament.png?f5a968",
+      "icon_local_path": "icons/addons/low_amp_filament.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Einfacher Verstärkerdraht",
+          "description": "Eine Glühbirne, dafür bestimmt, das Leben einer Taschenlampenbatterie zu verlängern.\n• Verringert den Verbrauch der Taschenlampenbatterie um 24 %."
+        },
+        "es": {
+          "name": "Filamento de Bajo Amperaje",
+          "description": "Una bombilla incandescente diseñada para extender la vida útil de una pila para linterna.\n• Reduce el consumo de la pila para linterna un 24 %."
+        },
+        "ja": {
+          "name": "低電流フィラメント",
+          "description": "懐中電灯の電池の寿命を延ばすように設計された白熱電球。\n• 懐中電灯の電池消費量が24%減少する"
+        },
+        "pl": {
+          "name": "Energooszczędna Żarówka",
+          "description": "Żarówka żarnikowa mająca zwiększać żywotność baterii.\n• Zmniejsza prędkość zużywania się baterii latarki o 24%."
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Rubber Grip",
+      "item_category_id": 3,
+      "description": "A rubber grip specifically fitting Flashlights for more grip.\n• Increases the accuracy of the Flashlight beam by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rubberGrip.png?22b372",
+      "icon_local_path": "icons/addons/rubber_grip.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Gummigriff",
+          "description": "Ein Gummigriff für besseren Halt, speziell für Taschenlampen.\n• Erhöht die Genauigkeit des Lichtstrahls um 40 %."
+        },
+        "es": {
+          "name": "Mango de goma",
+          "description": "Un mango de goma ideal para conseguir un mejor agarre con la linterna.\n• Aumenta la precisión del haz de la linterna un 40 %."
+        },
+        "ja": {
+          "name": "ゴム製のグリップ",
+          "description": "懐中電灯にぴったりはまる、ゴム製のグリップ。\n• 懐中電灯の光の精度が40%上昇する"
+        },
+        "pl": {
+          "name": "Gumowy uchwyt",
+          "description": "Dopasowany gumowy uchwyt poprawiający chwyt latarki.\n• Zwiększa celność latarki o 40%."
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "TIR Optic",
+      "item_category_id": 3,
+      "description": "A lens and reflector combo which can magnify a Flashlight's beam.\n• Increases the brightness of the Flashlight beam by 30%.\n• Increases Blindness duration by 15%.\n\"\"Let the light burn them out of their dark shroud.\"\"",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tirOptic.png?3ff606",
+      "icon_local_path": "icons/addons/tir_optic.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Totalreflexions-Optik",
+          "description": "Eine Linsen- und Reflektorkombination, welche den Lichtstrahl der Taschenlampe verstärkt.\n• Erhöht die Helligkeit des Lichtstrahls um 30 %.\n• Erhöht die Dauer der Erblindung um 15 %.\n\"„Möge das Licht sie aus dem Schleier der Dunkelheit herausbrennen.“\""
+        },
+        "es": {
+          "name": "Lentes TIR",
+          "description": "Una combinación de lente y reflector que magnifica el haz de la linterna.\n• Aumenta el brillo del haz de la linterna un 30 %.\n• Aumenta la duración de Ceguera un 15 %.\n\"\"Que la luz los libere de su manto de oscuridad\".\""
+        },
+        "ja": {
+          "name": "全反射レンズ",
+          "description": "懐中電灯の光を増大させる、レンズと反射器のセット。\n• 懐中電灯の光の明るさが30%増加する\n• 目眩ましの効果時間が15%増加する\n\"「この光で奴らを闇から引きずり出してやる」\""
+        },
+        "pl": {
+          "name": "Jaskrawy Filtr",
+          "description": "Soczewka i reflektor wzmacniające wiązkę latarki.\n• Zwiększa jasność światła latarki o 30%.\n• Wydłuża czas trwania Oślepienia o 15%.\n\"„Niech światło wypali ich mroczną zasłonę”.\""
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Intense Halogen",
+      "item_category_id": 3,
+      "description": "A chemical bulb that generates an intensely clear light.\n• Increases the brightness of the Flashlight beam by 40%.\n• Increases Blindness duration by 20%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_intenseHalogen.png?63ceae",
+      "icon_local_path": "icons/addons/intense_halogen.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Starke Halogenlampe",
+          "description": "Eine chemische Glühbirne, die ein intensives, helles Licht erzeugt.\n• Erhöht die Helligkeit des Lichtstrahls um 40 %.\n• Erhöht die Dauer der Erblindung um 20 %."
+        },
+        "es": {
+          "name": "Halógeno potente",
+          "description": "Una bombilla química que genera una intensa luz clara.\n• Aumenta el brillo del haz de la linterna un 40 %.\n• Aumenta la duración de Ceguera un 20 %."
+        },
+        "ja": {
+          "name": "強力なハロゲンランプ",
+          "description": "強力な光を放つ化学電球。\n• 懐中電灯の光の明るさが40%増加する\n• 目眩ましの持続時間が20%増加する"
+        },
+        "pl": {
+          "name": "Intensywny halogen",
+          "description": "Chemiczna żarówka emitująca intensywnie jasne światło.\n• Zwiększa jasność światła latarki o 40%.\n• Wydłuża czas trwania Oślepienia o 20%."
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Long Life Battery",
+      "item_category_id": 3,
+      "description": "A recent model of battery that lasts longer.\n• Adds 6 seconds of use to the Flashlight.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_longLifeBattery.png?7901dd",
+      "icon_local_path": "icons/addons/long_life_battery.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Langlebige Batterie",
+          "description": "Ein neues Batteriemodell, das länger anhält.\n• Fügt der Taschenlampe 6 Sekunden Nutzungsdauer hinzu."
+        },
+        "es": {
+          "name": "Pila de larga duración",
+          "description": "Un modelo reciente de pila que dura más tiempo.\n• Añade 6 segundos de uso a la linterna."
+        },
+        "ja": {
+          "name": "長寿命の電池",
+          "description": "長持ちする最新モデルの乾電池。\n• 懐中電灯の使用可能時間が6秒増加する"
+        },
+        "pl": {
+          "name": "Długo trzymająca bateria",
+          "description": "Ostatni model baterii o większej trwałości.\n• Wydłuża działanie latarki o 6 s."
+        }
+      }
+    },
+    {
+      "id": 12,
+      "name": "High-end Sapphire lens",
+      "item_category_id": 3,
+      "description": "A wide lens made of unscratchable sapphire that optimises the power and range of the light beam.\n• Increases the range of the Flashlight beam by 25%.\n• Increases the width of the Flashlight beam by 25%.\n• Increases the brightness of the Flashlight beam by 30%.\n• Increases Blindness duration by 15%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_high-EndSapphireLens.png?366d07",
+      "icon_local_path": "icons/addons/high_end_sapphire_lens.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Premium-Saphirlinse",
+          "description": "Eine breite Linse aus kratzfestem Saphir, die die Stärke und die Reichweite des Lichtstrahls optimiert.\n• Erhöht die Reichweite des Lichtstrahls um 25 %.\n• Erhöht die Breite des Lichtstrahls um 25 %.\n• Erhöht die Helligkeit des Lichtstrahls um 30 %.\n• Erhöht die Dauer der Erblindung um 15 %."
+        },
+        "es": {
+          "name": "Lente de zafiro de calidad superior",
+          "description": "Una lente grande hecha de zafiro resistente a los arañazos que optimiza la potencia y el alcance del haz de la linterna.\n• Aumenta el alcance del haz de la linterna un 25 %.\n• Aumenta la anchura del haz de la linterna un 25 %.\n• Aumenta el brillo del haz de la linterna un 30 %.\n• Aumenta la duración de Ceguera un 15%."
+        },
+        "ja": {
+          "name": "高性能サファイアレンズ",
+          "description": "傷に耐性があるサファイアでできた広角レンズ。光の強さと距離を調整する。\n• 懐中電灯の照射距離が25%増加する\n• 懐中電灯の照射半径が25%増加する\n• 懐中電灯の光の明るさが30%増加する\n• 目眩ましの効果時間が15%増加する"
+        },
+        "pl": {
+          "name": "Dalekosiężna szafirowa soczewka",
+          "description": "Szeroka soczewka wykonana z nierysującego się szafiru. Optymalizuje moc i zasięg wiązki światła.\n• Zwiększa zasięg wiązki światła latarki o 25%.\n• Poszerza wiązkę światła latarki o 25%.\n• Zwiększa jasność światła latarki o 30%.\n• Wydłuża czas trwania Oślepienia o 15%."
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Odd Bulb",
+      "item_category_id": 3,
+      "description": "A heavy and completely opaque bulb of unknown origin which emits a faint light even when turned off.\n• Increases the brightness of the Flashlight beam by 50%.\n• Increases Blindness duration by 25%.\n• Increases Flashlight battery consumption by 12%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oddBulb.png?3dac55",
+      "icon_local_path": "icons/addons/odd_bulb.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Merkwürdige Glühbirne",
+          "description": "Eine schwere und völlig trübe Glühbirne unbekannter Herkunft, die ein schwaches Licht ausstrahlt, selbst wenn sie ausgeschaltet ist.\n• Erhöht die Helligkeit des Lichtstrahls um 50 %.\n• Erhöht die Dauer der Erblindung um 25 %.\n• Erhöht den Batterieverbrauch der Taschenlampe um 12 %."
+        },
+        "es": {
+          "name": "Bombilla rara",
+          "description": "Una bombilla dura y totalmente opaca de origen desconocido que emite una luz mortecina incluso cuando está apagada.\n• Aumenta el brillo del haz de la linterna un 50 %.\n• Aumenta la duración de Ceguera un 25 %.\n• Aumenta el consumo de energía de la linterna un 12 %."
+        },
+        "ja": {
+          "name": "変わった電球",
+          "description": "スイッチを切ってもぼんやりと明かりを放つ、製造元不明の重くくすんだ電球。\n• 懐中電灯の光の明るさが50%増加する\n• 目眩ましの持続時間が25%増加する\n• 懐中電灯の電池消費量が12%増加する"
+        },
+        "pl": {
+          "name": "Dziwna żarówka",
+          "description": "Ciężka i nieprzezroczysta żarówka nieznanego pochodzenia. Emituje słabe światło nawet wtedy, gdy jest wyłączona.\n• Zwiększa jasność światła latarki o 50%.\n• Wydłuża czas trwania Oślepienia o 25%.\n• Zwiększa prędkość zużywania się baterii latarki o 12%."
+        }
+      }
+    }
+  ]
+}

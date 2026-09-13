@@ -9,13 +9,13 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.core.security import admin_required, login_required
 from app.models import (
-    Addon,
-    Character,
+    ItemAddon,
+    Killer,
+    KillerAddon,
+    Survivor,
     GauntletRun,
     Item,
-    MapObjective,
     MapRealm,
-    MapTile,
     PageStreakRun,
     Perk,
     Realm,
@@ -175,25 +175,39 @@ def purge_database_tables():
 
     purged: list[str] = []
     try:
+        # Order matters now that these are real foreign keys: add-ons
+        # reference both characters and item categories, perks reference
+        # characters, items reference item categories. Children first.
         if "perks" in targets:
             db.session.execute(delete(Perk))
             purged.append("perks")
 
+        if "addons" in targets:
+            # One target, two tables: `addons` split into `killer_addons` (880
+            # rows) and `item_addons` (51). The purge target keeps its name
+            # because it is what the admin UI sends, and it still means every
+            # add-on in the game.
+            db.session.execute(delete(KillerAddon))
+            db.session.execute(delete(ItemAddon))
+            purged.append("addons")
+
         if "characters" in targets:
-            db.session.execute(delete(Character))
+            # Only `killer_addons` references a killer, so only it has to be
+            # cleared ahead of the characters; the 51 item add-ons hang off
+            # `item_categories` and survive a character purge.
+            db.session.execute(delete(KillerAddon))
+            db.session.execute(delete(Survivor))
+            db.session.execute(delete(Killer))
             purged.append("characters")
 
         if "items" in targets:
             db.session.execute(delete(Item))
             purged.append("items")
 
-        if "addons" in targets:
-            db.session.execute(delete(Addon))
-            purged.append("addons")
-
         if "maps" in targets:
-            db.session.execute(delete(MapObjective))
-            db.session.execute(delete(MapTile))
+            # `map_tiles` and `map_objectives` used to be cleared here. Neither
+            # table exists: one was empty on all 58 maps and the other held
+            # five placeholder names copied onto every one of them.
             db.session.execute(delete(MapRealm))
             db.session.execute(delete(Realm))
             purged.append("maps")
@@ -325,13 +339,23 @@ def set_single_character_ownership(user_id: int):
 
     data = request.get_json(silent=True) or {}
     character_id = data.get("character_id")
+    role = data.get("role")
     is_owned = bool(data.get("is_owned", True))
 
     if not character_id:
         return jsonify({"error": "character_id is required.", "status": 400}), 400
+    if not role:
+        # Survivor 7 and killer 7 are different characters, so an id alone
+        # would silently toggle whichever table happened to be checked first.
+        return jsonify({
+            "error": "role is required and must be 'survivor' or 'killer'.",
+            "status": 400,
+        }), 400
 
     try:
-        result = ownership_service.set_character_ownership(user_id, int(character_id), is_owned)
+        result = ownership_service.set_character_ownership(
+            user_id, int(character_id), is_owned, role=role
+        )
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return jsonify({"error": str(ve), "status": 404}), 404
@@ -348,7 +372,10 @@ def bulk_set_character_ownership(user_id: int):
     updates = data.get("updates", [])
 
     if not isinstance(updates, list):
-        return jsonify({"error": "updates must be a list of {character_id, is_owned}.", "status": 400}), 400
+        return jsonify({
+            "error": "updates must be a list of {character_id, role, is_owned}.",
+            "status": 400,
+        }), 400
 
     result = ownership_service.bulk_set_character_ownership(user_id, updates)
     return jsonify({"status": "success", "data": result}), 200

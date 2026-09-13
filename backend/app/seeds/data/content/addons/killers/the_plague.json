@@ -1,0 +1,551 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-10T12:16:35.206520+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 260,
+      "name": "Healing Salve",
+      "killer_id": 15,
+      "description": "A bitterly pungent paste of crushed roots, which were marinated in fish brine for three days and in wine for two. Applied on skin rashes.\n• Decreases cooldown of Vile Purge and Corrupt Purge by 0.25 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_healingSalve.png?30bb48",
+      "icon_local_path": "icons/addons/healing_salve.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Heilsalbe",
+          "description": "Eine bitter riechende Paste aus zerdrückten Wurzeln, die drei Tage lang in Fischlake und zwei Tage lang in Wein mariniert wurden. Wird auf Hautauschläge aufgetragen.\n• Verkürzt die Abklingzeit von Reinigung der Bösartigkeit und Reinigung des Verderbens um 0,25 Sekunden."
+        },
+        "es": {
+          "name": "Ungüento curativo",
+          "description": "Una pasta tremendamente acre elaborada a base de raíces molidas que posteriormente han sido maceradas en salmuera durante tres días y en vino durante otros dos. Se aplica en erupciones cutáneas.\n• Reduce el tiempo de recarga de Purga vil y Purga corrupta en 0,25 segundos."
+        },
+        "ja": {
+          "name": "治癒の軟膏",
+          "description": "酷い刺激臭のする、根を潰したペースト状の軟膏。魚の塩漬けに3日、ワインに2日漬け込まれている。皮膚の発疹に塗布する。\n• 黒死の吐瀉と汚濁の吐瀉のクールダウン時間が0.25秒減少する"
+        },
+        "pl": {
+          "name": "Balsam leczniczy",
+          "description": "Pasta o gryzącym zapachu zrobiona z kruszonych korzeni, marynowanych przez trzy dni w wodzie po rybach i przez dwa dni w winie. Stosowana na wysypki.\n• Skraca czas odnawiania Podłego Oczyszczenia i Skażonego Oczyszczenia o 0,25 sekundy."
+        }
+      }
+    },
+    {
+      "id": 261,
+      "name": "Prayer Tablet Fragment",
+      "killer_id": 15,
+      "description": "A fragmented stone tablet with a corrupted incantation originally used to purge illnesses and feelings of general malaise.\n• Vile Purge no longer affects Survivors.\n• Increases object infection duration by 40 seconds.\n• Increases infection from infected objects by 100%.\n• Increases Devious Bloodpoints by 100%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_prayerTabletFragment.png?443d57",
+      "icon_local_path": "icons/addons/prayer_tablet_fragment.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Teil einer Gebetstafel",
+          "description": "Teil einer zerbrochenen Gebetstafel mit einer verdorbenen Beschwörung, die ursprünglich genutzt wurde, um Krankheiten und allgemeines Unwohlsein zu beseitigen.\n• Reinigung der Bösartigkeit wirkt sich nicht mehr auf Überlebende aus.\n• Erhöht die Infektionszeit von Objekten um 40 Sekunden.\n• Erhöht die Infektion durch infizierte Objekte um 100 %.\n• Erhöht die Blutpunkte in der Kategorie Hinterhältigkeit um 100 %."
+        },
+        "es": {
+          "name": "Fragmento de tablilla de oraciones",
+          "description": "Una tablilla de piedra fragmentada sobre la que se ha escrito un ensalmo corrupto que originalmente servía para eliminar las enfermedades y la sensación de malestar general.\n• Purga vil deja de afectar a los supervivientes.\n• Aumenta la duración de la infección en los objetos en 40 segundos.\n• Aumenta la intensidad de los objetos infectados un 100 %.\n• Aumenta los puntos de sangre maliciosos un 100 %."
+        },
+        "ja": {
+          "name": "祈りの石版片",
+          "description": "石版の破片。元来は病魔や不快感を取り除くために使われた、堕落の呪文が刻まれている。\n• 生存者に対して黒死の吐瀉の効果が無効になる\n• オブジェクトの感染時間が40秒増加する\n• 感染されたオブジェクトからの感染率が100%上昇する\n• 邪悪カテゴリーのブラッドポイントが100%増加する"
+        },
+        "pl": {
+          "name": "Fragment tabliczki modlitewnej",
+          "description": "Rozbita kamienna tabliczka z nieczystym zaklęciem używanym pierwotnie do wypędzania chorób i poczucia ogólnej niemocy.\n• Podłe Oczyszczenie nie ma już wpływu na ocalałych.\n• Wydłuża czas zakażenia obiektów o 40 sekund.\n• Zwiększa zarażanie z zakażonych obiektów o 100%.\n• Zwiększa liczbę punktów krwi w kategorii Przebiegłość o 100%."
+        }
+      }
+    },
+    {
+      "id": 262,
+      "name": "Olibanum Incense",
+      "killer_id": 15,
+      "description": "Precious resin extracted from Boswellia trees, used during ceremonies for their sweet citrusy fragrance.\n• Survivors who cleanse at fountains have their auras revealed for 4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_olibanumIncense.png?91e43f",
+      "icon_local_path": "icons/addons/olibanum_incense.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Weihrauchharz",
+          "description": "Ein wertvolles Harz, das aus Weihrauchbäumen gewonnen und aufgrund des süßen Zitrusduftes bei Zeremonien eingesetzt wird.\n• Überlebende, die sich an Brunnen säubern, zeigen ihre Auren für 4 Sekunden."
+        },
+        "es": {
+          "name": "Incienso de olíbano",
+          "description": "Valiosa resina de olíbano, el llamado árbol del incienso, usada en ceremonias por su fragancia dulce y cítrica.\n• Se muestran las auras de los supervivientes que se purifiquen en las fuentes durante 4 segundos."
+        },
+        "ja": {
+          "name": "オリバナムのお香",
+          "description": "ボスウェリアの木から抽出された希少な樹液。甘い柑橘系の香りで、儀式の最中に使用される。\n• 泉で浄化した生存者のオーラが4秒間視えるようになる"
+        },
+        "pl": {
+          "name": "Aromatyczne kadzidło",
+          "description": "Cenna żywica pobrana z kadzidłowców i wykorzystywana podczas ceremonii ze względu na słodki, cytrusowy zapach.\n• Aury ocalałych dokonujących oczyszczenia przy fontannach zostają ujawnione na 4 s."
+        }
+      }
+    },
+    {
+      "id": 263,
+      "name": "Limestone Seal",
+      "killer_id": 15,
+      "description": "A cylindrical seal made from porous stone that displays a ritualistic scene with winged deities.\n• Increases object infection duration by 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_limestoneSeal.png?9ac872",
+      "icon_local_path": "icons/addons/limestone_seal.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Kalksteinsiegel",
+          "description": "Ein zylinderförmiges Siegel, das aus porösem Stein gefertigt wurde und die Szene eines Rituals mit geflügelten Gottheiten zeigt.\n• Verlängert die Infektionszeit von Objekten um 20 Sekunden."
+        },
+        "es": {
+          "name": "Sello de piedra caliza",
+          "description": "Un sello cilíndrico de piedra porosa que muestra un ritual con deidades aladas.\n• Aumenta la duración de la infección en los objetos en 20 segundos."
+        },
+        "ja": {
+          "name": "石灰岩の印章",
+          "description": "多孔質の石でできた円筒形の印章。翼を持つ神々が登場する儀式の光景が描かれている。\n• オブジェクトの感染時間が20秒増加する"
+        },
+        "pl": {
+          "name": "Wapienna pieczęć",
+          "description": "Cylindryczna pieczęć wykonana z porowatego kamienia, przedstawiająca rytualną scenę ze skrzydlatymi bóstwami.\n• Wydłuża czas zakażenia przedmiotów o 20 s."
+        }
+      }
+    },
+    {
+      "id": 264,
+      "name": "Blessed Apple",
+      "killer_id": 15,
+      "description": "A perfectly ripe fruit to break fast during the purification ceremony. Delicious.\n• Start the Trial with 1 additional Pool of Devotion already corrupted.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blessedApple.png?29eeeb",
+      "icon_local_path": "icons/addons/blessed_apple.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Gesegneter Apfel",
+          "description": "Eine perfekt gereifte Frucht zum Verzehr während der Reinigungszeremonie. Lecker.\n• Starte die Prüfung mit 1 zusätzlichen bereits verdorbenen Brunnen der Hingabe."
+        },
+        "es": {
+          "name": "Manzana bendita",
+          "description": "Una fruta en su punto álgido de maduración para romper el ayuno durante la ceremonia de purificación. Deliciosa.\n• Comienzas la partida con 1 fuente de devoción adicional ya corrupta."
+        },
+        "ja": {
+          "name": "祝福のりんご",
+          "description": "美味しい完熟りんご。浄化の儀式中の朝食にぴったり。\n• 儀式開始時に出現する汚れた献身の淀みの数が1つ増える"
+        },
+        "pl": {
+          "name": "Błogosławione jabłko",
+          "description": "Doskonale dojrzały owoc do spożycia podczas ceremonii oczyszczenia. Przepyszny.\n• Rozpoczynasz próbę z 1 dodatkowym zbiornikiem ze skażonymi Wodami Pobożności."
+        }
+      }
+    },
+    {
+      "id": 265,
+      "name": "Prophylactic Amulet",
+      "killer_id": 15,
+      "description": "A soapstone amulet crudely engraved with a winged deity that wards off sickness. Fills the wearer with devotion.\n• Decreases the number of Pools of Devotion in the Trial by 2.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_prophylacticAmulet.png?7767e3",
+      "icon_local_path": "icons/addons/prophylactic_amulet.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Prophylaktisches Amulett",
+          "description": "Ein Specksteinamulett, in das grob eine geflügelte Gottheit eingraviert ist, die Krankheiten abwehrt. Erfüllt den Träger mit Hingabe.\n• Verringert die Anzahl von Brunnen der Hingabe in der Prüfung um 2."
+        },
+        "es": {
+          "name": "Amuleto profiláctico",
+          "description": "Un amuleto de esteatita con la imagen toscamente grabada de una deidad alada que protege contra las enfermedades. Imbuye al portador con devoción.\n• Reduce el número de fuentes de devoción en la partida en 2."
+        },
+        "ja": {
+          "name": "予防のお守り",
+          "description": "翼を持つ神々が大ざっぱに彫刻されたせっけん石のお守り。病魔を退け、身に着けた者は献身で満たされる。\n• 儀式の献身の淀みの数が2つ減少する"
+        },
+        "pl": {
+          "name": "Amulet profilaktyczny",
+          "description": "Steatytowy amulet z prymitywnie wygrawerowanym skrzydlatym bóstwem. Odpędza chorobę, a noszącą go osobę napełnia lojalnością.\n• Zmniejsza liczbę zbiorników z Wodami Pobożności podczas próby o 2."
+        }
+      }
+    },
+    {
+      "id": 266,
+      "name": "Potent Tincture",
+      "killer_id": 15,
+      "description": "A frothing, murky liquid that permeates the air with an acute aroma of herbs and alcohol. Applied directly on blisters.\n• Decreases cooldown of Vile Purge and Corrupt Purge by 0.4 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_potentTincture.png?4560d8",
+      "icon_local_path": "icons/addons/potent_tincture.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Wirkungsvolle Tinktur",
+          "description": "Eine schäumende, trübe Flüssigkeit, die ein starkes Aroma von Kräutern und Alkohol verbreitet. Wird direkt auf Blasen aufgetragen.\n• Verkürzt die Abklingzeit von Reinigung der Bösartigkeit und Reinigung des Verderbens um 0,4 Sekunden."
+        },
+        "es": {
+          "name": "Tintura potente",
+          "description": "Un líquido turbio y espumoso que impregna el ambiente con un fuerte aroma a hierbas y alcohol. Se aplica directamente sobre las ampollas.\n• Reduce el tiempo de recarga de Purga vil y Purga corrupta en 0,4 segundos."
+        },
+        "ja": {
+          "name": "強力チンキ",
+          "description": "ハーブとアルコールのつんとした匂いを放つ、泡立って濁った液体。水膨れに塗布する。\n• 黒死の吐瀉と汚濁の吐瀉のクールダウンが0.4秒減少する"
+        },
+        "pl": {
+          "name": "Silna nalewka",
+          "description": "Spieniona, mętna ciecz wypełniająca powietrze wyraźnym zapachem ziół i alkoholu. Stosowana bezpośrednio na pęcherze.\n• Skraca czas odnawiania Podłego Oczyszczenia i Skażonego Oczyszczenia o 0,4 sekundy."
+        }
+      }
+    },
+    {
+      "id": 267,
+      "name": "Emetic potion",
+      "killer_id": 15,
+      "description": "A mustard-water based syrup that induces vomiting when consumed. Used to purge evil from the body.\n• Increases the effectiveness of Vile Purge by 30%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_emeticPotion.png?b9be5d",
+      "icon_local_path": "icons/addons/emetic_potion.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Brechtrank",
+          "description": "Ein auf Senfwasser basierender Sirup, der beim Verzehr Erbrechen bewirkt. Wird benutzt, um das Böse aus dem Körper zu entfernen.\n• Erhöht die Wirksamkeit von Reinigung der Bösartigkeit um 30 %."
+        },
+        "es": {
+          "name": "Poción emética",
+          "description": "Un líquido espeso elaborado a base de mostaza y agua, cuya ingestión induce el vómito. Sirve para expulsar el mal del cuerpo.\n• Aumenta la efectividad de Purga vil un 30 %."
+        },
+        "ja": {
+          "name": "催吐薬",
+          "description": "辛子入りの水でできたシロップ剤。体内から悪を一掃する。\n• 黒死の吐瀉の効果が30%上昇する"
+        },
+        "pl": {
+          "name": "Mikstura wymiotna",
+          "description": "Syrop na bazie wody i musztardy, który powoduje wymioty po spożyciu. Służy do wypędzania zła z ciała.\n• Zwiększa skuteczność Podłego Oczyszczenia o 30%."
+        }
+      }
+    },
+    {
+      "id": 268,
+      "name": "Incensed Ointment",
+      "killer_id": 15,
+      "description": "A dark waxy paste, laced with cedar sap that diffuse a sweet and earthy aroma. Applied directly on infected skin.\n• Ingesting the corruption at a Pool of Devotion causes all Survivors within The Plague's Terror Radius to scream and reveal their locations.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_incensedOintment.png?9d0739",
+      "icon_local_path": "icons/addons/incensed_ointment.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Weihrauchsalbe",
+          "description": "Eine dunkle, wachsartige Paste, die mit Zedernsaft gestreckt wurde und ein süßes, erdiges Aroma verströmt. Wird direkt auf infizierte Haut aufgetragen.\n• Wenn sie das Verderben am Brunnen der Hingabe schlucken, schreien alle Überlebenden innerhalb des Terrorradius der Seuche und enthüllen ihren Standort."
+        },
+        "es": {
+          "name": "Ungüento aromático",
+          "description": "Una pasta oscura y cerosa, mezclada con sabia de cedro, que desprende un dulce aroma a tierra. Se aplica directamente sobre la piel infectada.\n• Consumir la corrupción de una fuente de devoción hace que todos los supervivientes en el radio de terror de la Plaga se pongan a gritar y muestren sus ubicaciones."
+        },
+        "ja": {
+          "name": "香る軟膏",
+          "description": "暗い色をした、蝋質のペースト。織り交ぜられた杉の樹液が甘く土のような芳香を放っている。感染した皮膚に直接塗布する。\n• 献身の淀みで腐敗を摂取するとプレイグの脅威範囲内にいるすべての生存者が叫び声を上げ、その位置が判明する"
+        },
+        "pl": {
+          "name": "Aromatyczna maść",
+          "description": "Ciemna woskowata pasta wymieszana z cedrowym sokiem, który wydziela słodki, ziemisty aromat. Stosowana bezpośrednio na skażoną skórę.\n• Pochłonięcie skażenia w Wodach Pobożności wywołuje krzyk wszystkich ocalałych w zasięgu terroru Plagi i ujawnia ich lokalizację."
+        }
+      }
+    },
+    {
+      "id": 269,
+      "name": "Infected Emetic",
+      "killer_id": 15,
+      "description": "A disgusting syrup of unknown origin. The thick yellow liquid is consumed to induce vomiting. Used to purge evil from the body.\n• Increases the effectiveness of Vile Purge by 40%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_infectedEmetic.png?d482f8",
+      "icon_local_path": "icons/addons/infected_emetic.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Infiziertes Brechmittel",
+          "description": "Ein ekliger Sirup unbekannten Ursprungs. Nimmt man die gelbe Paste zu sich, muss man sich übergeben. Wird benutzt, um das Böse aus dem Körper zu entfernen.\n• Erhöht die Wirksamkeit von Reinigung der Bösartigkeit um 40 %."
+        },
+        "es": {
+          "name": "Emético infectado",
+          "description": "Un denso líquido cetrino de origen desconocido. Su ingestión induce el vómito. Sirve para expulsar el mal del cuerpo.\n• Aumenta la efectividad de Purga vil un 40 %."
+        },
+        "ja": {
+          "name": "感染催吐薬",
+          "description": "原料不明の吐き気を催す甘い汁。濃厚な黄色い液体は、飲用すると嘔吐を誘発する。体内から悪を一掃する。\n• 黒死の吐瀉の効果が40%上昇する"
+        },
+        "pl": {
+          "name": "Skażona substancja wymiotna",
+          "description": "Obrzydliwy syrop nieznanego pochodzenia. Tę żółtą, gęstą ciecz pije się, aby wywołać wymioty. Służy do wypędzania zła z ciała.\n• Zwiększa skuteczność Podłego Oczyszczenia o 40%."
+        }
+      }
+    },
+    {
+      "id": 270,
+      "name": "Ashen Apple",
+      "killer_id": 15,
+      "description": "A peeled apple rolled into sanctified ashes. Eating such a fruit warded off the malignantly envious spirits of the deceased.\n• Start the Trial with 1 additional Pool of Devotion already corrupted.\n• Increases the number of Pools of Devotion in the trial by 1.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ashenApple.png?b81181",
+      "icon_local_path": "icons/addons/ashen_apple.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Aschgrauer Apfel",
+          "description": "Ein geschälter Apfel, der in geweihter Asche gewälzt wurde. Der Verzehr einer solchen Frucht vertreibt die bösen Geister der Verstorbenen.\n• Starte die Prüfung mit 1 zusätzlichen bereits verdorbenen Brunnen der Hingabe.\n• Erhöht die Anzahl von Brunnen der Hingabe in der Prüfung um 1."
+        },
+        "es": {
+          "name": "Manzana con cenizas",
+          "description": "Una manzana pelada cubierta de cenizas santificadas. Comerla servía para repeler a los espíritus malignos y envidiosos de los fallecidos.\n• Comienzas la partida con 1 fuente de devoción adicional que ya esté corrupta.\n• Aumenta el número de fuentes de devoción en la partida en 1."
+        },
+        "ja": {
+          "name": "灰色のりんご",
+          "description": "神聖な灰に塗れた、皮を剥いたりんご。このような果物を食べることで、邪悪で嫉妬深い死者の霊魂を撃退した。\n• 汚れた献身の淀みが1つ増えた状態で儀式を開始する\n• 儀式内の献身の淀みの数が1つ増加する"
+        },
+        "pl": {
+          "name": "Popielate Jabłko",
+          "description": "Obrane jabłko obtoczone w uświęconych prochach. Zjedzenie takiego owocu chroniło przed zawistnymi duchami zmarłych.\n• Rozpocznij próbę z 1 dodatkowym zbiornikiem ze skażonymi Wodami Pobożności.\n• Zwiększa liczbę zbiorników z Wodami Pobożności podczas próby o 1."
+        }
+      }
+    },
+    {
+      "id": 271,
+      "name": "Rubbing Oil",
+      "killer_id": 15,
+      "description": "A beaker of rubbing oil with expectorant quality. Exudes the evergreen scent of laurel and rosemary.\n• Increases the charge rate of Vile Purge and Corrupt Purge by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rubbingOil.png?357fb8",
+      "icon_local_path": "icons/addons/rubbing_oil.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Einreibeöl",
+          "description": "Ein Becher voller Einreibeöl mit hustenlösender Wirkung. Verströmt den Duft von Lorbeer und Rosmarin.\n• Erhöht die Aufladegeschwindigkeit von Reinigung der Bösartigkeit und Reinigung des Verderbens um 50 %."
+        },
+        "es": {
+          "name": "Aceite cutáneo",
+          "description": "Un recipiente con aceite cutáneo de cualidades expectorantes. Desprende los perennes aromas del laurel y el romero.\n• Aumenta la velocidad de carga de Purga vil y Purga corrupta un 50 %."
+        },
+        "ja": {
+          "name": "マッサージ用オイル",
+          "description": "去痰作用のあるマッサージ用オイルの入ったビーカー。月桂樹とローズマリーの新鮮な香りを放っている。\n• 黒死の吐瀉と汚濁の吐瀉のチャージ速度が50%上昇する"
+        },
+        "pl": {
+          "name": "Olejek",
+          "description": "Puchar olejku o właściwościach wykrztuśnych. Wydziela świeży zapach lauru i rozmarynu.\n• Zwiększa prędkość ładowania Podłego Oczyszczenia i Skażonego Oczyszczenia o 50%."
+        }
+      }
+    },
+    {
+      "id": 272,
+      "name": "Exorcism Amulet",
+      "killer_id": 15,
+      "description": "An obsidian amulet to ward off sickness during exorcism rituals. Inscribed with a prayer to the god of mayhem and pestilence. Fills the wearer with fierce devotion.\n• Increases the duration of Corrupt Purge by 10 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_exorcismAmulet.png?b87faf",
+      "icon_local_path": "icons/addons/exorcism_amulet.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Exorzismusamulett",
+          "description": "Ein Amulett aus Obsidian, das bei Exorzismusritualen die Übelkeit abwehrt. Ein Gebet an den Gott des Wahnsinns und der Seuchen ist als Inschrift darauf zu sehen. Es erfüllt den Träger mit leidenschaftlicher Hingabe.\n• Erhöht die Dauer von Reinigung des Verderbens um 10 Sekunden."
+        },
+        "es": {
+          "name": "Amuleto de exorcismo",
+          "description": "Un amuleto de obsidiana para inhibir las náuseas durante los rituales de exorcismo. Tiene grabada una oración al dios del caos y las plagas. Imbuye al portador con una fuerte devoción.\n• Aumenta la duración de la Purga corrupta en 10 segundos."
+        },
+        "ja": {
+          "name": "退魔のお守り",
+          "description": "悪魔祓いの儀式中に病魔を退ける黒曜石のお守り。騒乱と疫病を司る神への祈りが刻み込まれていて、身に着けた者は激しい献身で満たされる。\n• 汚濁の吐瀉の持続時間が10秒増加する"
+        },
+        "pl": {
+          "name": "Amulet Egzorcysty",
+          "description": "Obsydianowy amulet odpędzający mdłości podczas egzorcyzmów. Zawiera modlitwę do boga chaosu i zarazy. Napełnia noszącego zagorzałą lojalnością.\n• Wydłuża czas trwania Skażonego Oczyszczenia o 10 sekund."
+        }
+      }
+    },
+    {
+      "id": 273,
+      "name": "Vile Emetic",
+      "killer_id": 15,
+      "description": "A foul-smelling and half-congealed potion of unidentifiable ingredients. Consumed to rapidly induce vomiting. Used to purge evil from the body.\n• Increases velocity of vomit projectiles by 10%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vileEmetic.png?7b2b3b",
+      "icon_local_path": "icons/addons/vile_emetic.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Ekliges Brechmittel",
+          "description": "Ein übel riechender und halb geronnener Trank aus nicht identifizierbaren Zutaten. Wird getrunken, um schnelles Erbrechen zu bewirken. So wird das Böse aus dem Körper entfernt.\n• Erhöht die Geschwindigkeit von geschossenem Erbrochenem um 10 %."
+        },
+        "es": {
+          "name": "Emético vil",
+          "description": "Una poción de textura pastosa y olor nauseabundo, elaborada a base de ingredientes desconocidos. Su ingestión induce rápidamente el vómito. Sirve para expulsar el mal del cuerpo.\n• Aumenta la velocidad para vomitar proyectiles un 10 %."
+        },
+        "ja": {
+          "name": "穢れの吐剤",
+          "description": "腐敗臭のする、原料が不明な半ば凝固した薬。服用するとすぐに嘔吐を引き起こし、体内から悪を一掃する。\n• 嘔吐物の飛び出す速度が10%上昇する"
+        },
+        "pl": {
+          "name": "Wstrętna substancja wymiotna",
+          "description": "W połowie zakrzepła mikstura o okropnym zapachu zrobiona z nieokreślonych składników. Pita w celu szybkiego wywołania wymiotów. Używana do wypędzania zła z ciała.\n• Zwiększa prędkość wymiotów o 10%."
+        }
+      }
+    },
+    {
+      "id": 274,
+      "name": "Devotee's Amulet",
+      "killer_id": 15,
+      "description": "A bloodstone amulet carved intricately with the effigy of the Babylonian god of mayhem and pestilence. Fills the wearer with boundless devotion.\n• Increases duration of Corrupt Purge by 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_devoteesAmulet.png?a2db9c",
+      "icon_local_path": "icons/addons/devotees_amulet.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Amulett des Verehrers",
+          "description": "Ein Blutsteinamulett, in welches das Abbild des babylonischen Gottes des Wahnsinns und der Seuchen eingraviert ist. Es erfüllt den Träger mit grenzenloser Hingabe.\n• Erhöht die Dauer von Reinigung des Verderbens um 20 Sekunden."
+        },
+        "es": {
+          "name": "Amuleto de devoción",
+          "description": "Un amuleto hecho de heliotropo, tallado con la efigie del dios babilonio del caos y las plagas. Imbuye al portador con una devoción desmedida.\n• Aumenta la duración de la Purga corrupta en 20 segundos."
+        },
+        "ja": {
+          "name": "狂信者のお守り",
+          "description": "騒乱と疫病を司るバビロニアの神の姿が複雑に彫刻された、血玉髄のアミュレット。身に着けた者は限りない献身で満たされる。\n• 汚濁の吐瀉の持続時間が20秒増加する"
+        },
+        "pl": {
+          "name": "Amulet Czciciela",
+          "description": "Amulet ze skomplikowanymi żłobieniami tworzącymi wizerunek babilońskiego boga chaosu i zarazy. Napełnia noszącego bezgraniczną lojalnością.\n• Wydłuża czas trwania Skażonego Oczyszczenia o 20 s."
+        }
+      }
+    },
+    {
+      "id": 275,
+      "name": "Worship Tablet",
+      "killer_id": 15,
+      "description": "A stone tablet adorned with gold showing the drawings and writings of a corrupted incantation used originally to worship forgotten deities.\n• Increases speed of ingesting corruption at a Pool of Devotion by 100%.\n• Increases movement speed while holding Corrupt Purge by 4.5%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_worshipTablet.png?7e6a88",
+      "icon_local_path": "icons/addons/worship_tablet.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Verehrungstafel",
+          "description": "Eine Steintafel, die mit Gold verziert ist und die Zeichnungen und Schriften einer verdorbenen Beschwörung zeigt, die ursprünglich genutzt wurde, um vergessene Gottheiten zu verehren.\n• Erhöht die Geschwindigkeit beim Schlucken von Verderben am Brunnen der Hingabe um 100 %.\n• Erhöht die Bewegungsgeschwindigkeit, während Reinigung des Verderbens aktiv ist, um 4,5 %."
+        },
+        "es": {
+          "name": "Tablilla de rituales",
+          "description": "Una tablilla de piedra adornada con oro que muestra dibujos y escrituras de conjuros corruptos usados originalmente para adorar a deidades olvidadas.\n• Aumenta la velocidad en la que se consume corrupción en una fuente de devoción un 100 %.\n• Aumenta la velocidad de movimiento mientras mantienes Purga corrupta un 4,5 %."
+        },
+        "ja": {
+          "name": "崇拝の石版",
+          "description": "金で装飾された石版。元は忘れ去られた神々を崇めるために用いられた、堕落の呪文の線画や文字が記されている。\n• 献身の淀みで腐敗を摂取する速度が100%上昇する\n• 汚濁の吐瀉を実行中の移動速度が4.5%上昇する"
+        },
+        "pl": {
+          "name": "Tabliczka kultu",
+          "description": "Ozdobiona złotem kamienna tabliczka, która przedstawia rysunki i nieczyste zaklęcia służące początkowo do czczenia zapomnianych bóstw.\n• Zwiększa prędkość skażania Wód Pobożności o 100%.\n• Zwiększa prędkość ruchu podczas trzymania Skażonego Oczyszczenia o 4,5%."
+        }
+      }
+    },
+    {
+      "id": 276,
+      "name": "Severed Toe",
+      "killer_id": 15,
+      "description": "The decaying severed toe of Adiris, weaved on a thread and worn as an amulet around the neck. Radiates with vile power.\n• Increases infection rate for Survivors who are performing interactions by 50%.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_severedToe.png?606774",
+      "icon_local_path": "icons/addons/severed_toe.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Abgetrennter Zeh",
+          "description": "Der an einem Faden befestigte faulende Zeh von Adiris kann als Amulett um den Hals getragen werden. Strahlt abscheuliche Macht aus.\n• Erhöht die Infektionsrate von Überlebenden, die Interaktionen ausführen, um 50 %."
+        },
+        "es": {
+          "name": "Dedo amputado",
+          "description": "El dedo del pie putrefacto de Adiris, unido a una cadena y portado como amuleto en el cuello. Irradia un poder vil.\n• Aumenta el ritmo al que los supervivientes se infectan mediante interacciones un 50 %."
+        },
+        "ja": {
+          "name": "切断された足の指",
+          "description": "アディリスの切断された腐りかけの足の指。糸で繋いでお守りとして首の周りに掛ける。穢れの力を放っている。\n• 生存者がアクション中に感染する確率が50%上昇する"
+        },
+        "pl": {
+          "name": "Odcięty palec",
+          "description": "Gnijący odcięty palec stopy Adiris, nawleczony na nić i noszony na szyi jako amulet. Promieniuje złowrogą mocą.\n• Zwiększa prędkość zarażania ocalałych w trakcie ich interakcji o 50%."
+        }
+      }
+    },
+    {
+      "id": 277,
+      "name": "Black Incense",
+      "killer_id": 15,
+      "description": "A dark paste made of sharp osseous shavings. The inhaling of its foul fumes sharpens the mind's eye.\n• Survivors' auras are revealed to you for 3 seconds when they vomit.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blackIncense.png?e8d6b7",
+      "icon_local_path": "icons/addons/black_incense.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schwarzer Weihrauch",
+          "description": "Eine dunkle Paste, die aus spitzen Knochenspänen hergestellt wurde. Inhaliert man die üblen Dämpfe, wird der Verstand geschärft.\n• Die Auren von Überlebenden werden dir für 3 Sekunden angezeigt, wenn diese sich übergeben."
+        },
+        "es": {
+          "name": "Incienso negro",
+          "description": "Una pasta oscura hecha de virutas de huesos. Inhalar sus nauseabundos vapores agudiza la visión mental.\n• Las auras de los supervivientes se te mostrarán durante 3 segundos cuando vomiten."
+        },
+        "ja": {
+          "name": "黒のお香",
+          "description": "鋭い骨の削り屑でできた、黒いペースト状のお香。その悪臭を吸い込むと、心眼が研ぎ澄まされる。\n• 嘔吐した生存者のオーラが3秒間視えるようになる"
+        },
+        "pl": {
+          "name": "Czarne Kadzidło",
+          "description": "Ciemna pasta wykonana z ostrych kawałków kości. Wdychanie jej oparów pobudza trzecie oko.\n• Widzisz aury wymiotujących ocalałych przez 3 s."
+        }
+      }
+    },
+    {
+      "id": 278,
+      "name": "Iridescent Seal",
+      "killer_id": 15,
+      "description": "A translucent cylindrical seal molded from The Fog Itself with the effigy of The Plague. Its surface is warm and pulsates with The Entity's power.\n• Corrupt Purge activates every time a generator is completed.\n• Decreases duration of Corrupt Purge by 20 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentSeal.png?201c5d",
+      "icon_local_path": "icons/addons/iridescent_seal.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Schillerndes Siegel",
+          "description": "Ein durchscheinendes, zylinderförmiges Siegel, das aus dem Nebel selbst gegossen wurde. Es trägt das Abbild der Seuche. Seine Oberfläche fühlt sich warm an und pulsiert mit der Macht des Entitus.\n• Reinigung des Verderbens wird bei jedem Abschluss eines Generators aktiviert.\n• Verringert die Dauer von Reinigung des Verderbens um 20 Sekunden."
+        },
+        "es": {
+          "name": "Sello iridiscente",
+          "description": "Un sello cilíndrico y translúcido con la efigie de la Plaga moldeado a partir de la mismísima niebla. Su superficie está caliente y late con el poder del Ente.\n• Purga corrupta se activa cada vez que se completa un generador.\n• Reduce la duración de Purga corrupta en 20 segundos."
+        },
+        "ja": {
+          "name": "玉虫色の印章",
+          "description": "プレイグの姿が刻まれた半透明で円筒形の印章。霧そのものから作られた。表面は暖かく、エンティティの力で脈打っている。\n• 発電機の修理が完了するたびに汚濁の吐瀉が発動する\n• 汚濁の吐瀉の持続時間が20秒減少する"
+        },
+        "pl": {
+          "name": "Opalizująca pieczęć",
+          "description": "Prześwitująca cylindryczna pieczęć z wizerunkiem Plagi, uformowana z samej Mgły. Jej powierzchnia jest ciepła i pulsuje energią Bytu.\n• Skażone Oczyszczenie aktywuje się po każdej naprawie generatora.\n• Skraca czas trwania Skażonego Oczyszczenia o 20 s."
+        }
+      }
+    },
+    {
+      "id": 877,
+      "name": "Haematite Seal",
+      "killer_id": 15,
+      "description": "A cylindrical seal forged from a metallic hardstone, engraved with bird-headed beings that stood next to strange machines. Used as a container for sanctified ashes.\n• Increases object infection duration by 30 seconds.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_haematiteSeal.png?5c9203",
+      "icon_local_path": "icons/addons/haematite_seal.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Hämatitsiegel",
+          "description": "Ein zylinderförmiges Siegel aus einem metallischen Hartstein. Eine Gravur zeigt vogelköpfige Wesen, die neben seltsamen Maschinen stehen. Wird als Behälter für geweihte Asche genutzt.\n• Verlängert die Infektionszeit von Objekten um 30 Sekunden."
+        },
+        "en": {
+          "name": "Hematite Seal"
+        },
+        "es": {
+          "name": "Sello de hematita",
+          "description": "Un sello cilíndrico metálico, con incrustaciones de seres con cabeza de pájaro junto a máquinas extrañas. Sirve de recipiente para cenizas santificadas.\n• Aumenta la duración de la infección en los objetos en 30 segundos."
+        },
+        "ja": {
+          "name": "赤鉄鉱の印章",
+          "description": "金属質の貴石でできた円筒形の印章。奇妙な機械の隣に立つ鳥の頭を持つ生き物の姿が刻まれている。神聖な灰の容器として用いられる。\n• オブジェクトの感染時間が30秒増加する"
+        },
+        "pl": {
+          "name": "Hematytowa pieczęć",
+          "description": "Cylindryczna pieczęć wykuta z metalicznego kamienia, z wygrawerowanymi postaciami o ptasich głowach stojącymi obok dziwnych maszyn. Używana do przechowywania uświęconych prochów.\n• Wydłuża czas zarażenia przedmiotów o 30 s."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+// frontend/src/locales/pl/achievements.ts
+export default {
+  comingSoon: "Wkrótce",
+  gauntletShelf: "Gauntlet",
+  chaosShelf: "Seria Chaosu",
+  historyShelf: "Seria Historyczna",
+  pageStreakShelf: "Seria Stron",
+  allKillersLabel: "Wszyscy zabójcy",
+  pageStreakOwnedHover: "Ukończ pełną Serię Stron każdym posiadanym zabójcą.",
+  pageStreakAllHover: "Ukończ pełną Serię Stron każdym zabójcą dostępnym w grze.",
+  easyLabel: "Łatwy",
+  mediumLabel: "Średni",
+  hellLabel: "Hell",
+  originalLabel: "Original",
+  ownedBadgeLabel: "Posiadana pula",
+  allBadgeLabel: "Pełna pula",
+  beatChallengePrefix: "Ukończ to wyzwanie na poziomie",
+  difficultyWord: "trudności",
+  ownedCharactersSuffix: "używając tylko posiadanych postaci.",
+  allCharactersSuffix: "używając wszystkich postaci dostępnych w grze.",
+};

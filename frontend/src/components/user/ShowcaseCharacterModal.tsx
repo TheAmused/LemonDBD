@@ -7,7 +7,7 @@ import { Search, UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
-import { fetchCached, fetchJson } from '@/services/dataCache';
+import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 
 interface ShowcaseCharacterModalProps {
@@ -114,11 +114,13 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const backendBase = getBackendBaseUrl();
-    const url = `${backendBase}/api/v1/characters?category=all&lang=${locale}`;
+    // Catalog window rather than the default one: this modal is opened and
+    // dismissed repeatedly while someone picks their two mains, and the roster
+    // it lists cannot change in between.
+    const url = catalogKey('characters', { category: 'all', lang: locale });
 
     setLoading(true);
-    fetchCached<any>(url, () => fetchJson(url))
+    fetchCached<any>(url, () => fetchJson(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
         const list = Array.isArray(data) ? data : data?.data || [];
         setCharacters(list);

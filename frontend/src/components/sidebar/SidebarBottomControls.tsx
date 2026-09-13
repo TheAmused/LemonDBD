@@ -238,17 +238,15 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
         </button>
       </div>
 
-      {/* Dev-only shortcut to re-run the onboarding wizard without having to
-          register a fresh account every time. Never shipped to production. */}
-      {process.env.NODE_ENV !== 'production' && (
-        <Link
-          href={`/${currentLocale}/welcome`}
-          className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-dashed border-accent-amber/50 bg-accent-amber/5 px-2 py-1.5 text-[11px] font-semibold text-accent-amber hover:bg-accent-amber/10 transition-colors cursor-pointer ${FOCUS_RING}`}
-        >
-          <FlaskConical className="h-3.5 w-3.5 shrink-0" />
-          <span className="text-center">Dev: Onboarding</span>
-        </Link>
-      )}
+      {/* Shortcut to re-run the onboarding wizard without having to register
+          a fresh account every time. */}
+      <Link
+        href={`/${currentLocale}/welcome`}
+        className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-dashed border-accent-amber/50 bg-accent-amber/5 px-2 py-1.5 text-[11px] font-semibold text-accent-amber hover:bg-accent-amber/10 transition-colors cursor-pointer ${FOCUS_RING}`}
+      >
+        <FlaskConical className="h-3.5 w-3.5 shrink-0" />
+        <span className="text-center">Dev: Onboarding</span>
+      </Link>
     </div>
   );
 };

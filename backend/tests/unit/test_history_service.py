@@ -181,6 +181,48 @@ class TestSubmitResultWithinARow:
         assert record.attempts_taken == 2
         assert record.matches_played == 4
         assert record.unlocked_characters_count == 3
+        assert record.full_roster is True
+
+    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
+        """Regression: a killer un-kill-switched (or otherwise newly owned)
+        after this run's pool was already frozen at 3 must not inflate the
+        count recorded for a run that only had to clear those 3."""
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        seed_killer("Ghostface", release_number=99)  # owned by default; frozen pool stays at 3
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.unlocked_characters_count == 3
+
+    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(
+        self, ownership_service: OwnershipService
+    ) -> None:
+        from datetime import datetime, timezone
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        ghostface = seed_killer("Ghostface", release_number=99)
+        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        db.session.commit()
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.full_roster is False
 
     def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
         from app.core.extensions import db

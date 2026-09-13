@@ -48,6 +48,26 @@ class TestPageStreakRoutes:
         assert len(body["data"]) == 1
         assert body["data"][0]["killer"] == "Nurse"
         assert body["data"][0]["status"] == "not_started"
+        assert body["milestone"] == {"completed": False, "full_roster": False, "killer_count": None}
+
+    def test_roster_milestone_after_clearing_the_only_killer_in_the_game(
+        self, client: FlaskClient, streak_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = streak_auth_setup
+        run = client.post(
+            "/api/v1/page-streak/run/start", json={"killer": "Nurse"}, headers=headers
+        ).get_json()["run"]
+
+        for page_index, page in enumerate(run["pages"], start=1):
+            res = client.post(
+                "/api/v1/page-streak/run/result",
+                json={"killer": "Nurse", "page": page_index, "perks": page[:4], "result": "win"},
+                headers=headers,
+            )
+        assert res.get_json()["run"]["status"] == "completed"
+
+        res = client.get("/api/v1/page-streak/roster", headers=headers)
+        assert res.get_json()["milestone"] == {"completed": True, "full_roster": True, "killer_count": 1}
 
     def test_run_lifecycle(
         self, client: FlaskClient, streak_auth_setup: tuple[int, str, dict[str, str]]

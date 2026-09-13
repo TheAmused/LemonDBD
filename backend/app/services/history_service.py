@@ -19,6 +19,7 @@ from app.services.history.roster import (
     resolve_killer_names_by_ids,
 )
 from app.services.ownership_service import OwnershipService
+from app.services.roster_milestone import get_full_roster_milestone
 
 logger = logging.getLogger(__name__)
 
@@ -148,7 +149,8 @@ class HistoryService:
 
         if self._is_unfrozen(run):
             self._freeze_pool(run)
-        owned_names = resolve_killer_names_by_ids(safe_json_loads(run.owned_killers_json, default=[]))
+        owned_ids = safe_json_loads(run.owned_killers_json, default=[])
+        owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:
@@ -201,15 +203,19 @@ class HistoryService:
         ))
 
         if result == "win" and run.status == "completed":
-            self._freeze_pool(run)
+            # owned_ids was captured before this refreeze -- doing it after
+            # would silently pull in a newly-owned character, inflating the count.
+            is_full, _ = get_full_roster_milestone(owned_ids, role="Killer")
             record_challenge_completion(
                 user_id=user_id,
                 mode="history",
                 variant=run.mode,
                 attempts_taken=run.attempts + 1,
                 matches_played=len(run.match_logs),
-                unlocked_characters_count=len(safe_json_loads(run.owned_killers_json, default=[])),
+                unlocked_characters_count=len(owned_ids),
+                full_roster=is_full,
             )
+            self._freeze_pool(run)
             run.attempts = 0
 
         db.session.commit()

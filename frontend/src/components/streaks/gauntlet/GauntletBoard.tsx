@@ -147,8 +147,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
               <Trophy className="h-8 w-8" />
             </div>
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              {dict?.streaks?.victoryCongrats || 'Congratulations'}
+            </p>
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              {dict?.streaks?.gauntletComplete || 'Gauntlet complete!'}
+              {dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
             </h2>
             <button
               onClick={reset}

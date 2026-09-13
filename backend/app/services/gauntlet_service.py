@@ -11,6 +11,8 @@ from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.gauntlet import (
     CHECKPOINT_INTERVAL,
+    ORIGINAL_KILLER_ROSTER_LIMIT,
+    ORIGINAL_SURVIVOR_ROSTER_LIMIT,
     fetch_gauntlet_user_stats,
     get_character_teachable_perks,
     get_owned_character_ids,
@@ -21,6 +23,7 @@ from app.services.gauntlet import (
 )
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
+from app.services.roster_milestone import get_full_roster_milestone
 
 logger = logging.getLogger(__name__)
 
@@ -208,15 +211,23 @@ class GauntletService:
         )
 
         if result == "win" and r.status == "completed":
-            self._freeze_pool(r)
+            # owned_ids was captured before this refreeze -- doing it after
+            # would silently pull in a newly-owned character, inflating the count.
+            is_full, _ = get_full_roster_milestone(
+                owned_ids,
+                role="Killer" if r.role == "killer" else "Survivor",
+                roster_limit=ORIGINAL_KILLER_ROSTER_LIMIT if r.role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT,
+            )
             record_challenge_completion(
                 user_id=user_id,
                 mode="gauntlet",
                 variant=f"{r.role}_{r.game_mode}",
                 attempts_taken=r.attempts + 1,
                 matches_played=len(r.match_logs),
-                unlocked_characters_count=len(safe_json_loads(r.owned_characters_json, default=[])),
+                unlocked_characters_count=len(owned_ids),
+                full_roster=is_full,
             )
+            self._freeze_pool(r)
             r.attempts = 0
         elif result == "loss" and streak_after == 0:
             self._freeze_pool(r)

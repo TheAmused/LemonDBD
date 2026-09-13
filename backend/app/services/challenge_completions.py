@@ -13,6 +13,7 @@ def record_challenge_completion(
     attempts_taken: int,
     matches_played: int,
     unlocked_characters_count: int,
+    full_roster: bool = False,
 ) -> None:
     """Snapshot a fully-completed challenge run so it survives the run's own reset.
 
@@ -27,6 +28,7 @@ def record_challenge_completion(
             attempts_taken=attempts_taken,
             matches_played=matches_played,
             unlocked_characters_count=unlocked_characters_count,
+            full_roster=full_roster,
         )
     )
 
@@ -77,6 +79,49 @@ def fetch_completed_variants_by_mode(user_id: int) -> dict[str, list[str]]:
     for mode, variant in rows:
         result.setdefault(mode, []).append(variant)
     return result
+
+
+def _fetch_counts_by_mode(user_id: int, *, full_roster_only: bool) -> dict[str, dict[str, int]]:
+    """Shared query behind `fetch_completion_counts_by_mode` and
+    `fetch_full_roster_counts_by_mode` -- every (mode, variant) this user has
+    completed (optionally restricted to full-roster clears), grouped by mode,
+    with the roster size frozen at the most recent such completion."""
+    conditions = [ChallengeCompletionRecord.user_id == user_id]
+    if full_roster_only:
+        conditions.append(ChallengeCompletionRecord.full_roster.is_(True))
+
+    rows = db.session.execute(
+        select(
+            ChallengeCompletionRecord.mode,
+            ChallengeCompletionRecord.variant,
+            ChallengeCompletionRecord.unlocked_characters_count,
+        )
+        .where(*conditions)
+        .order_by(ChallengeCompletionRecord.completed_at.desc(), ChallengeCompletionRecord.id.desc())
+    ).all()
+    result: dict[str, dict[str, int]] = {}
+    for mode, variant, count in rows:
+        result.setdefault(mode, {})
+        result[mode].setdefault(variant, count)
+    return result
+
+
+def fetch_completion_counts_by_mode(user_id: int) -> dict[str, dict[str, int]]:
+    """Every (mode, variant) this user has ever completed, grouped by mode,
+    with the roster size frozen at the most recent such completion --
+    regardless of whether it was a full-roster clear. Drives the killer
+    count shown next to the normal (gold) "already beaten" badge; see
+    `fetch_full_roster_counts_by_mode` for the red variant's own count."""
+    return _fetch_counts_by_mode(user_id, full_roster_only=False)
+
+
+def fetch_full_roster_counts_by_mode(user_id: int) -> dict[str, dict[str, int]]:
+    """Every (mode, variant) this user has ever completed with a full-roster
+    pool, grouped by mode, with the roster size frozen at the most recent
+    such completion -- permanent, like `fetch_completed_variants_by_mode`.
+    Drives the red "full roster" card badge (a variant's presence as a key
+    means it's earned) and the killer-count shown next to it."""
+    return _fetch_counts_by_mode(user_id, full_roster_only=True)
 
 
 def fetch_active_run_variants_by_mode(user_id: int) -> dict[str, list[str]]:

@@ -28,7 +28,8 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
     setLoading(true);
     setError(null);
     try {
-      setRoster(await fetchRoster(token));
+      const { roster: fetchedRoster } = await fetchRoster(token);
+      setRoster(fetchedRoster);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load the roster');
     } finally {

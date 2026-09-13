@@ -152,13 +152,66 @@ class TestHellDifficulty:
         self.service = chaos_service
         self.run = chaos_service.get_or_create_run(self.user_id, "hell")
 
+    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
+        """Regression: a killer un-kill-switched (or otherwise newly owned)
+        after this run's pool was already frozen at 2 must not inflate the
+        count recorded for a run that only ever had to clear those 2."""
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        seed_killer("The Huntress")  # owned by default; the frozen pool stays at 2
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.unlocked_characters_count == 2
+
     def test_new_killer_mid_run_is_not_in_the_completion_check(self) -> None:
-        seed_killer("The Huntress")
+        from datetime import datetime, timezone
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        huntress = seed_killer("The Huntress")
+        huntress.created_at = datetime(2099, 1, 1, tzinfo=timezone.utc)
+        db.session.commit()
+        OwnershipService().set_character_ownership(self.user_id, huntress.id, is_owned=False)
+
         run = self.run
         remaining = list(run["owned_killers"])
         for killer in remaining:
             run = self.service.submit_result(self.user_id, run["id"], "win", killer)
         assert run["status"] == "completed"
+
+        # The Huntress arrived after this roster was already frozen -- it
+        # doesn't cost the full-roster trophy, nor inflate its count.
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.full_roster is True
+        assert record.unlocked_characters_count == 2
+
+    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(self) -> None:
+        from datetime import datetime, timezone
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        ghostface = seed_killer("Ghostface")
+        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        db.session.commit()
+        OwnershipService().set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.full_roster is False
 
     def test_new_perk_mid_run_is_not_drawn(self) -> None:
         run = self.service.submit_result(self.user_id, self.run["id"], "win", self.run["owned_killers"][0])
@@ -224,6 +277,7 @@ class TestHellDifficulty:
         assert record is not None
         assert record.attempts_taken == 1
         assert record.unlocked_characters_count == 2
+        assert record.full_roster is True
 
     def test_one_loss_resets_everything_in_hell(self) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")

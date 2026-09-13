@@ -13,6 +13,22 @@ export interface RosterEntry {
   ever_completed: boolean;
 }
 
+/** Mode-wide "every owned killer cleared" trophy. `full_roster` means the
+ *  owned roster was, at the time it was cleared, every killer in the game --
+ *  `killer_count` is frozen to that moment and never changes afterward. Not
+ *  rendered on this page (see the hub card's badge instead); kept for any
+ *  other caller of `fetchRoster`. */
+export interface RosterMilestone {
+  completed: boolean;
+  full_roster: boolean;
+  killer_count: number | null;
+}
+
+export interface RosterResponse {
+  roster: RosterEntry[];
+  milestone: RosterMilestone;
+}
+
 export interface HistoryEntry {
   attempt: number;
   page_number: number;

@@ -21,6 +21,12 @@ interface StreakPanelBaseProps {
   disabledReason?: string | null;
   /** Shows a trophy badge -- this challenge has already been fully cleared. */
   completed?: boolean;
+  /** Killer count frozen at that completion, shown next to the gold badge. */
+  completedCount?: number | null;
+  /** Upgrades the badge to red -- cleared with the entire game roster. */
+  completedFull?: boolean;
+  /** Killer count frozen at that full-roster completion, shown next to the badge. */
+  completedFullCount?: number | null;
   dict?: Dictionary;
   /**
    * Routes this panel may navigate to. Panels that pick their destination at
@@ -48,6 +54,9 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   disabled,
   disabledReason,
   completed,
+  completedCount,
+  completedFull,
+  completedFullCount,
   dict,
   prefetchHrefs,
 }) => {
@@ -83,13 +92,27 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <span className="absolute right-3 top-3 z-10 rounded-full border border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-800/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {dict?.streaks?.comingSoon || 'Coming soon.'}
         </span>
+      ) : completed && completedFull ? (
+        <span
+          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-red-500/50 bg-red-100 dark:bg-red-950/70 px-2 py-1 text-red-600 dark:text-red-400 shadow-sm"
+          aria-label={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
+          title={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
+        >
+          <Trophy className="h-3.5 w-3.5" />
+          {completedFullCount != null && (
+            <span className="text-xs font-black leading-none">{completedFullCount}</span>
+          )}
+        </span>
       ) : completed ? (
         <span
-          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 text-yellow-600 dark:text-yellow-400 shadow-sm"
+          className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 px-2 py-1 text-yellow-600 dark:text-yellow-400 shadow-sm"
           aria-label={dict?.streaks?.completed || 'Completed'}
           title={dict?.streaks?.completed || 'Completed'}
         >
           <Trophy className="h-3.5 w-3.5" />
+          {completedCount != null && (
+            <span className="text-xs font-black leading-none">{completedCount}</span>
+          )}
         </span>
       ) : null}
 

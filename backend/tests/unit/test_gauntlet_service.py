@@ -484,6 +484,51 @@ class TestGauntletCompletion:
         assert record.attempts_taken == 2
         assert record.matches_played == 3
         assert record.unlocked_characters_count == 2
+        assert record.full_roster is True
+
+    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
+        """Regression: a character un-kill-switched (or otherwise newly
+        owned) after this run's pool was already frozen at 2 must not
+        inflate the count recorded for a run that only had to clear those 2."""
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.get_or_create_run(self.user_id, "killer")  # freezes the pool at 2
+        seed_killer("Ghostface")  # owned by default; the frozen pool stays at 2
+
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.unlocked_characters_count == 2
+
+    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(
+        self, ownership_service: OwnershipService
+    ) -> None:
+        from datetime import datetime, timezone
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        # Predates the owned killers -- it was already in the game all along,
+        # the player just never picked it up. Must count against "full".
+        ghostface = seed_killer("Ghostface")
+        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        db.session.commit()
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False)
+
+        self.service.get_or_create_run(self.user_id, "killer")
+        self._clear("Trapper")
+        final = self._clear("Nurse")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.full_roster is False
+        assert record.unlocked_characters_count == 2
 
     def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
         from app.core.extensions import db

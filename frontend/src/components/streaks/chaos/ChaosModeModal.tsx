@@ -7,7 +7,7 @@ import { Coins, Flame, Skull } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChaosRulesModal } from './ChaosRulesModal';
-import { cascadeCompletedTiers, CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
+import { cascadeCompletedTiers, tierCompletionCount, CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
 
 export interface ChaosModeModalProps {
   isOpen: boolean;
@@ -17,9 +17,13 @@ export interface ChaosModeModalProps {
   /** False when switching difficulty mid-run from the board header -- skips
    *  the explanatory intro, since the player already knows how Chaos works. */
   showIntro?: boolean;
-  /** Difficulties this user has ever fully completed -- clearing a harder one
-   *  marks every easier tile as done too. */
-  completedDifficulties?: Difficulty[];
+  /** Difficulties this user has ever fully completed, mapped to the killer
+   *  count frozen at that completion -- clearing a harder one marks every
+   *  easier tile as done too, inheriting its count. */
+  completedCounts?: Record<string, number>;
+  /** Difficulties ever completed with the entire game roster -- same shape
+   *  and cascade, upgrades the badge to red. */
+  completedFullCounts?: Record<string, number>;
   dict?: Dictionary;
 }
 
@@ -29,11 +33,13 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
   onSelectDifficulty,
   currentDifficulty,
   showIntro = true,
-  completedDifficulties = [],
+  completedCounts = {},
+  completedFullCounts = {},
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const completedTiers = cascadeCompletedTiers(CHAOS_DIFFICULTY_ORDER, completedDifficulties);
+  const completedTiers = cascadeCompletedTiers(CHAOS_DIFFICULTY_ORDER, Object.keys(completedCounts));
+  const completedFullTiers = cascadeCompletedTiers(CHAOS_DIFFICULTY_ORDER, Object.keys(completedFullCounts));
 
   const tiles: ChallengeIntroTile[] = [
     {
@@ -43,6 +49,9 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       icon: Coins,
       accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
       completed: completedTiers.has('easy'),
+      completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'easy'),
+      completedFull: completedFullTiers.has('easy'),
+      completedFullCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedFullCounts, 'easy'),
     },
     {
       value: 'medium',
@@ -51,6 +60,9 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       icon: Flame,
       accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
       completed: completedTiers.has('medium'),
+      completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'medium'),
+      completedFull: completedFullTiers.has('medium'),
+      completedFullCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedFullCounts, 'medium'),
     },
     {
       value: 'hell',
@@ -59,6 +71,9 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       icon: Skull,
       accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
       completed: completedTiers.has('hell'),
+      completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'hell'),
+      completedFull: completedFullTiers.has('hell'),
+      completedFullCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedFullCounts, 'hell'),
     },
   ];
 

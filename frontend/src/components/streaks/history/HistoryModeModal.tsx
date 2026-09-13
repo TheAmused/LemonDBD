@@ -7,7 +7,7 @@ import { Shield, Skull } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { HistoryRulesModal } from './HistoryRulesModal';
-import { cascadeCompletedTiers, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
+import { cascadeCompletedTiers, tierCompletionCount, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
@@ -17,8 +17,13 @@ export interface HistoryModeModalProps {
   /** False when switching mode mid-run from the board header -- skips the
    *  explanatory intro, since the player already knows how History works. */
   showIntro?: boolean;
-  /** Modes this user has ever fully completed -- clearing Hell marks Medium done too. */
-  completedModes?: HistoryMode[];
+  /** Modes this user has ever fully completed, mapped to the killer count
+   *  frozen at that completion -- clearing Hell marks Medium done too,
+   *  inheriting its count. */
+  completedCounts?: Record<string, number>;
+  /** Modes ever completed with the entire game roster -- same shape and
+   *  cascade, upgrades the badge to red. */
+  completedFullCounts?: Record<string, number>;
   dict?: Dictionary;
 }
 
@@ -28,11 +33,13 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
   onSelectMode,
   currentMode,
   showIntro = true,
-  completedModes = [],
+  completedCounts = {},
+  completedFullCounts = {},
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const completedTiers = cascadeCompletedTiers(HISTORY_MODE_ORDER, completedModes);
+  const completedTiers = cascadeCompletedTiers(HISTORY_MODE_ORDER, Object.keys(completedCounts));
+  const completedFullTiers = cascadeCompletedTiers(HISTORY_MODE_ORDER, Object.keys(completedFullCounts));
 
   const tiles: ChallengeIntroTile[] = [
     {
@@ -42,6 +49,9 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       icon: Shield,
       accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
       completed: completedTiers.has('medium'),
+      completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'medium'),
+      completedFull: completedFullTiers.has('medium'),
+      completedFullCount: tierCompletionCount(HISTORY_MODE_ORDER, completedFullCounts, 'medium'),
     },
     {
       value: 'hell',
@@ -50,6 +60,9 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       icon: Skull,
       accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
       completed: completedTiers.has('hell'),
+      completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'hell'),
+      completedFull: completedFullTiers.has('hell'),
+      completedFullCount: tierCompletionCount(HISTORY_MODE_ORDER, completedFullCounts, 'hell'),
     },
   ];
 

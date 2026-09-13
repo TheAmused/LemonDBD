@@ -466,6 +466,11 @@ class DatabaseExportImportService:
                         if k in row:
                             setattr(char_obj, k, row[k])
 
+                    if row.get("created_at"):
+                        parsed_dt = _parse_datetime(row["created_at"])
+                        if parsed_dt:
+                            char_obj.created_at = parsed_dt
+
                     if static_dir is not None:
                         for field in ["avatar_local_path", "power_icon_local_path"]:
                             write_asset_base64(static_dir, row.get(field), row.get(f"{field}_data"))

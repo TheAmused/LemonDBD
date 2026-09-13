@@ -1,13 +1,16 @@
 // frontend/src/services/pageStreakApi.ts
-import { PageStreakRun, PageStreakStats, PoolSummary, RosterEntry } from '../types/pageStreak';
+import { PageStreakRun, PageStreakStats, PoolSummary, RosterMilestone, RosterResponse } from '../types/pageStreak';
 import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('page-streak');
 
-export async function fetchRoster(token: string): Promise<RosterEntry[]> {
-  const data = await getJson<{ count: number; data: RosterEntry[] }>(token, '/roster');
-  return data.data;
+export async function fetchRoster(token: string): Promise<RosterResponse> {
+  const data = await getJson<{ count: number; data: RosterResponse['roster']; milestone: RosterMilestone }>(
+    token,
+    '/roster'
+  );
+  return { roster: data.data, milestone: data.milestone };
 }
 
 export async function fetchPoolSummary(token: string): Promise<PoolSummary> {

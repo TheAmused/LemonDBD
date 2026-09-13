@@ -12,6 +12,8 @@
   --color-accent-red: var(--accent-red);
   --color-accent-amber: var(--accent-amber);
   --color-accent-amber-hover: var(--accent-amber-hover);
+  --color-accent-green: var(--accent-green);
+  --color-accent-green-hover: var(--accent-green-hover);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
@@ -31,6 +33,8 @@
     --accent-red: #c0272d;
     --accent-amber: #b3690a;
     --accent-amber-hover: #8f5308;
+    --accent-green: #15803d;
+    --accent-green-hover: #166534;
     --text-primary: #14171a;
     --text-secondary: #454b52;
     --text-muted: #767d85;
@@ -48,6 +52,8 @@
     --accent-red: #c1272d;
     --accent-amber: #9c5f00;
     --accent-amber-hover: #7a4a00;
+    --accent-green: #15803d;
+    --accent-green-hover: #166534;
     --text-primary: #221b06;
     --text-secondary: #5c4f24;
     --text-muted: #8f8256;
@@ -64,6 +70,8 @@
     --accent-red: #ef4444;
     --accent-amber: #f59e0b;
     --accent-amber-hover: #fbbf24;
+    --accent-green: #22c55e;
+    --accent-green-hover: #4ade80;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
@@ -251,7 +259,7 @@
 }
 
 .dbd-lemon-glow {
-  filter: drop-shadow(0 0 24px var(--accent-amber));
+  filter: drop-shadow(0 0 24px var(--accent-red));
 }
 
 [data-placeholder]:empty:before {
@@ -353,7 +361,7 @@ strong {
   }
 
   50% {
-    box-shadow: 0 0 0 6px var(--accent-amber);
+    box-shadow: 0 0 0 6px var(--accent-green);
   }
 }
 
@@ -401,7 +409,7 @@ strong {
 
 @keyframes gnLandGlow {
   0% {
-    box-shadow: 0 0 0 0 var(--accent-amber);
+    box-shadow: 0 0 0 0 var(--accent-red);
   }
 
   70% {

@@ -104,7 +104,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
   const coordinate = page !== undefined && slot !== undefined ? { page, slot } : undefined;
 
   return (
-    <div className={cn('relative', isActive && 'rounded-2xl ring-2 ring-amber-500/60')}>
+    <div className={cn('relative', isActive && 'rounded-2xl ring-2 ring-accent-red/60')}>
       <PerkCard
         perk={perk}
         onSelect={() => onClick?.()}

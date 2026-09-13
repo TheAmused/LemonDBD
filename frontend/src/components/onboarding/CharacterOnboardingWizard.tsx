@@ -772,7 +772,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     onClick={() => toggleChapterExpanded(group.chapterName)}
                     aria-expanded={isExpanded}
                     aria-controls={chapterPanelId}
-                    className="group relative flex aspect-video w-full items-center justify-center overflow-hidden bg-bg-elevated cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+                    className="group relative flex aspect-video w-full items-center justify-center overflow-hidden bg-bg-elevated cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
                   >
                     {bannerSrc ? (
                       // object-cover, not object-contain -- these are ~616x353
@@ -808,7 +808,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     role="switch"
                     aria-checked={chapterOwned}
                     aria-label={chapterSwitchLabel}
-                    className="flex w-full items-center justify-between gap-2 border-t border-border-color px-3 py-2.5 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+                    className="flex w-full items-center justify-between gap-2 border-t border-border-color px-3 py-2.5 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
                   >
                     <h3 className="flex-1 truncate text-sm font-extrabold">{chapterDisplayName}</h3>
                     <span

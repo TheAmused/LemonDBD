@@ -70,7 +70,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           type="button"
           onClick={onClose}
           aria-label={dict?.modal?.close}
-          className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber cursor-pointer"
+          className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>

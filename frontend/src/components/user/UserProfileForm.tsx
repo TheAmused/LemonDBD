@@ -169,7 +169,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                       required
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner font-mono"
+                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
                     />
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner font-mono"
+                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
                         />
                         <button
                           type="button"
@@ -225,7 +225,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
                             passwordsMatch
                               ? 'border-emerald-500/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                              : 'border-border-color focus:border-accent-amber focus:ring-1 focus:ring-accent-amber'
+                              : 'border-border-color focus:border-accent-amber focus:ring-1 focus:ring-accent-red'
                           }`}
                         />
                         <button

@@ -308,7 +308,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
-              className="pl-7 pr-3 py-1.5 rounded-lg bg-bg-primary border border-border-color text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent-amber"
+              className="pl-7 pr-3 py-1.5 rounded-lg bg-bg-primary border border-border-color text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent-red"
             />
           </div>
         </div>

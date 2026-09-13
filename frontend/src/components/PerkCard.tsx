@@ -106,7 +106,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label={ariaLabel}
-          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-amber-500/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-amber-500/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
         >
           <div
             className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-border-color p-1 ${
@@ -205,7 +205,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         aria-label={ariaLabel}
         className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
           size === 'tarot' || size === 'compact' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
-        } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
+        } touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red rounded-2xl ${GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
           <span

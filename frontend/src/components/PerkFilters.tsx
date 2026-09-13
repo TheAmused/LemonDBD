@@ -282,7 +282,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             }}
             placeholder={dict?.filters?.searchPlaceholder}
             aria-label={dict?.filters?.searchPlaceholder}
-            className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-amber/20 transition-all"
+            className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
           />
           {search && (
             <button

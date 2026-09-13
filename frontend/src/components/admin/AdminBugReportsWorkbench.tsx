@@ -128,7 +128,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           type="button"
           onClick={() => onStatusFilterChange('in_progress')}
           aria-pressed={bugStatusFilter === 'in_progress'}
-          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-amber ${
+          className={`rounded-2xl border p-4 transition-all cursor-pointer text-left focus:outline-none focus:ring-2 focus:ring-accent-red ${
             bugStatusFilter === 'in_progress'
               ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-300 shadow-sm ring-1 ring-amber-500/30'
               : 'border-amber-200 bg-amber-50/70 text-amber-800 dark:border-amber-500/20 dark:bg-amber-950/20 dark:text-amber-400 hover:border-amber-300'
@@ -430,7 +430,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   <button
                     type="button"
                     onClick={() => onUpdateBug(selectedBug.id)}
-                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover text-text-inverted px-4 py-2 text-xs font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-accent-amber"
+                    className="flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover text-text-inverted px-4 py-2 text-xs font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-accent-red"
                   >
                     <Save className="h-3.5 w-3.5" />
                     <span>{dict?.admin?.saveNote || dict?.user?.saveChanges || ''}</span>

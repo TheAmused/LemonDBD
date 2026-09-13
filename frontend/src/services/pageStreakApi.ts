@@ -1,12 +1,16 @@
 // frontend/src/services/pageStreakApi.ts
-import { PageStreakRun, PageStreakStats, PoolSummary, RosterEntry } from '../types/pageStreak';
+import { PageStreakRun, PageStreakStats, PoolSummary, RosterMilestone, RosterResponse } from '../types/pageStreak';
+import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('page-streak');
 
-export async function fetchRoster(token: string): Promise<RosterEntry[]> {
-  const data = await getJson<{ count: number; data: RosterEntry[] }>(token, '/roster');
-  return data.data;
+export async function fetchRoster(token: string): Promise<RosterResponse> {
+  const data = await getJson<{ count: number; data: RosterResponse['roster']; milestone: RosterMilestone }>(
+    token,
+    '/roster'
+  );
+  return { roster: data.data, milestone: data.milestone };
 }
 
 export async function fetchPoolSummary(token: string): Promise<PoolSummary> {
@@ -47,7 +51,15 @@ export async function resetRun(token: string, killer: string): Promise<PageStrea
   return data.run;
 }
 
+export async function resetAllRuns(token: string): Promise<void> {
+  await postJson<{ success: boolean }>(token, '/run/reset-all', {});
+}
+
 export async function fetchStats(token: string): Promise<PageStreakStats> {
   const data = await getJson<{ stats: PageStreakStats }>(token, '/stats');
   return data.stats;
+}
+
+export async function fetchCompletions(token: string, killer: string): Promise<CompletionsResponse> {
+  return getJson<CompletionsResponse>(token, `/completions?killer=${encodeURIComponent(killer)}`);
 }

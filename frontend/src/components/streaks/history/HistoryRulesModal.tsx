@@ -21,6 +21,7 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
     iconClassName="bg-slate-500/10 border-slate-500/20 text-slate-600 dark:text-slate-400"
     footerButtonClassName="bg-slate-600 hover:bg-slate-500"
     footerButtonLabel={dict?.streaks?.gotItLetsPlay || "Got It, Let's Play!"}
+    dict={dict}
   >
     <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-2">

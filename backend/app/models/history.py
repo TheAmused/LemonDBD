@@ -30,6 +30,7 @@ class HistoryRun(Base):
     checkpoint_completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     checkpoint_unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -54,6 +55,7 @@ class HistoryRun(Base):
             "unlocked_perk_names": safe_json_loads(self.unlocked_perk_names_json, default=[]),
             "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
             "checkpoint_row_index": self.checkpoint_row_index,
+            "attempts": self.attempts,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

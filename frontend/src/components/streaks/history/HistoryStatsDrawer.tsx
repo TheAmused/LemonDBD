@@ -11,10 +11,11 @@ export interface HistoryStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: HistoryStats | null;
+  attempts?: number;
   dict?: Dictionary;
 }
 
-export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, dict }) => {
+export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, onClose, stats, attempts, dict }) => {
   const characterDisplayName = useCharacterDisplayName();
   return (
   <StreakStatsDrawer<HistoryMatchLog>
@@ -23,6 +24,7 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
     title={dict?.streaks?.historyStreak || 'History Streak'}
     accent="slate"
     stats={stats}
+    attempts={attempts}
     dict={dict}
     renderLabel={(log) => (
       <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.killer_id)}</div>

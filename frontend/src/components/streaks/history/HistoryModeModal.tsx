@@ -7,12 +7,23 @@ import { Shield, Skull } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { HistoryRulesModal } from './HistoryRulesModal';
+import { cascadeCompletedTiers, tierCompletionCount, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectMode: (mode: HistoryMode) => void;
   currentMode?: HistoryMode;
+  /** False when switching mode mid-run from the board header -- skips the
+   *  explanatory intro, since the player already knows how History works. */
+  showIntro?: boolean;
+  /** Modes this user has ever fully completed, mapped to the killer count
+   *  frozen at that completion -- clearing Hell marks Medium done too,
+   *  inheriting its count. */
+  completedCounts?: Record<string, number>;
+  /** Modes ever completed with the entire game roster -- same shape and
+   *  cascade, upgrades the badge to red. */
+  completedFullCounts?: Record<string, number>;
   dict?: Dictionary;
 }
 
@@ -21,9 +32,14 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
   onClose,
   onSelectMode,
   currentMode,
+  showIntro = true,
+  completedCounts = {},
+  completedFullCounts = {},
   dict,
 }) => {
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const completedTiers = cascadeCompletedTiers(HISTORY_MODE_ORDER, Object.keys(completedCounts));
+  const completedFullTiers = cascadeCompletedTiers(HISTORY_MODE_ORDER, Object.keys(completedFullCounts));
 
   const tiles: ChallengeIntroTile[] = [
     {
@@ -32,6 +48,10 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       description: dict?.streaks?.historyMediumDesc || 'A checkpoint banks every row you clear.',
       icon: Shield,
       accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
+      completed: completedTiers.has('medium'),
+      completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'medium'),
+      completedFull: completedFullTiers.has('medium'),
+      completedFullCount: tierCompletionCount(HISTORY_MODE_ORDER, completedFullCounts, 'medium'),
     },
     {
       value: 'hell',
@@ -39,6 +59,10 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       description: dict?.streaks?.historyHellDesc || 'No checkpoints. One loss resets everything.',
       icon: Skull,
       accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
+      completed: completedTiers.has('hell'),
+      completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'hell'),
+      completedFull: completedFullTiers.has('hell'),
+      completedFullCount: tierCompletionCount(HISTORY_MODE_ORDER, completedFullCounts, 'hell'),
     },
   ];
 
@@ -51,17 +75,20 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         iconClassName="bg-slate-500/10 border-slate-500/20 text-slate-600 dark:text-slate-400"
         title={dict?.streaks?.chooseMode || 'Choose a mode'}
         intro={
-          dict?.streaks?.historyIntro ||
-          'Your owned killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next one and add its teachable perks to your pool.'
+          showIntro
+            ? dict?.streaks?.historyIntro ||
+              'Your owned killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next one and add its teachable perks to your pool.'
+            : undefined
         }
-        rulesLabel={dict?.streaks?.rules || 'Rules'}
-        onOpenRules={() => setIsRulesOpen(true)}
+        rulesLabel={showIntro ? dict?.streaks?.rules || 'Rules' : undefined}
+        onOpenRules={showIntro ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={(value) => onSelectMode(value as HistoryMode)}
         tileGridClassName="sm:grid-cols-2"
         escapeDisabled={isRulesOpen}
         selectedValue={currentMode}
         currentLabel={dict?.streaks?.current || 'Current'}
+        dict={dict}
       />
 
       <HistoryRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

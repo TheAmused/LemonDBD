@@ -1,8 +1,10 @@
 // frontend/src/components/streaks/ChallengeIntroModalShell.tsx
 'use client';
 
+import type { Dictionary } from '@/locales/types';
+
 import React, { useEffect } from 'react';
-import { X, BookOpen, type LucideIcon } from 'lucide-react';
+import { X, BookOpen, Trophy, type LucideIcon } from 'lucide-react';
 
 export interface ChallengeIntroTile {
   value: string;
@@ -13,6 +15,14 @@ export interface ChallengeIntroTile {
   accentClassName: string;
   disabled?: boolean;
   disabledBadge?: string;
+  /** This tier has already been fully cleared -- shows a small trophy badge. */
+  completed?: boolean;
+  /** Killer count frozen at that completion, shown next to the gold badge. */
+  completedCount?: number | null;
+  /** Upgrades the badge to red -- cleared with the entire game roster. */
+  completedFull?: boolean;
+  /** Killer count frozen at that full-roster completion, shown next to the badge. */
+  completedFullCount?: number | null;
 }
 
 export interface ChallengeIntroModalShellProps {
@@ -21,15 +31,18 @@ export interface ChallengeIntroModalShellProps {
   icon: LucideIcon;
   iconClassName: string;
   title: string;
-  intro: string;
-  rulesLabel: string;
-  onOpenRules: () => void;
+  /** Omit to skip the explanatory intro box entirely, e.g. when a player is
+   *  just switching difficulty mid-run and already knows how the mode works. */
+  intro?: string;
+  rulesLabel?: string;
+  onOpenRules?: () => void;
   tiles: ChallengeIntroTile[];
   onSelectTile: (value: string) => void;
   tileGridClassName: string;
   escapeDisabled?: boolean;
   selectedValue?: string;
   currentLabel: string;
+  dict?: Dictionary;
 }
 
 export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> = ({
@@ -47,6 +60,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   escapeDisabled,
   selectedValue,
   currentLabel,
+  dict,
 }) => {
   useEffect(() => {
     if (!isOpen || escapeDisabled) return;
@@ -79,27 +93,32 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/60 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
+            aria-label={dict?.modal?.close || 'Close'}
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="px-6 pb-5">
-          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm text-center">
-            <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-              {intro}
-            </p>
-            <button
-              type="button"
-              onClick={onOpenRules}
-              className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              {rulesLabel}
-            </button>
+        {intro && (
+          <div className="px-6 pb-5">
+            <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm text-center">
+              <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                {intro}
+              </p>
+              {onOpenRules && (
+                <button
+                  type="button"
+                  onClick={onOpenRules}
+                  className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {rulesLabel}
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className={`grid grid-cols-1 gap-4 px-6 pb-6 ${tileGridClassName}`}>
           {tiles.map((tile) => {
@@ -146,10 +165,25 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               <button
                 key={tile.value}
                 onClick={() => onSelectTile(tile.value)}
-                className={`group flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
+                className={`group relative flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
                   isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : ''
                 }`}
               >
+                {tile.completed && tile.completedFull ? (
+                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-red-500/50 bg-red-100 dark:bg-red-950/70 px-1.5 py-0.5 text-red-600 dark:text-red-400 shadow-sm">
+                    <Trophy className="h-3 w-3" />
+                    {tile.completedFullCount != null && (
+                      <span className="text-[10px] font-black leading-none">{tile.completedFullCount}</span>
+                    )}
+                  </span>
+                ) : tile.completed ? (
+                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 px-1.5 py-0.5 text-yellow-600 dark:text-yellow-400 shadow-sm">
+                    <Trophy className="h-3 w-3" />
+                    {tile.completedCount != null && (
+                      <span className="text-[10px] font-black leading-none">{tile.completedCount}</span>
+                    )}
+                  </span>
+                ) : null}
                 {content}
               </button>
             );

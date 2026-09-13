@@ -8,8 +8,11 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import GauntletMatchLog, GauntletRun
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.gauntlet import (
     CHECKPOINT_INTERVAL,
+    ORIGINAL_KILLER_ROSTER_LIMIT,
+    ORIGINAL_SURVIVOR_ROSTER_LIMIT,
     fetch_gauntlet_user_stats,
     get_character_teachable_perks,
     get_owned_character_ids,
@@ -20,6 +23,7 @@ from app.services.gauntlet import (
 )
 from app.services.ownership_service import OwnershipService
 from app.services.perk_service import PerkService
+from app.services.roster_milestone import get_full_roster_milestone
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +49,7 @@ class GauntletService:
         data["pool_frozen"] = bool(ids)
         if not ids:
             ids = get_owned_character_ids(data["user_id"], data["role"], self.ownership_service)
-        data["owned_characters"] = resolve_character_names_by_ids(ids)
+        data["owned_characters"] = resolve_character_names_by_ids(ids, role=data["role"])
         return data
 
     def get_or_create_run(self, user_id: int, role: str) -> dict[str, Any]:
@@ -178,24 +182,20 @@ class GauntletService:
                 checkpoint_chars = list(completed)
 
             owned_ids = safe_json_loads(r.owned_characters_json, default=[])
-            owned_names = resolve_character_names_by_ids(owned_ids)
+            owned_names = resolve_character_names_by_ids(owned_ids, role=r.role)
             if owned_names and all(name in completed for name in owned_names):
                 r.status = "completed"
         else:
             streak_after = last_checkpoint if CHECKPOINT_INTERVAL > 0 else 0
             completed = list(checkpoint_chars)
             best_after = best_streak
+            r.attempts += 1
 
         r.current_streak = streak_after
         r.best_streak = best_after
         r.last_checkpoint_streak = last_checkpoint
         r.completed_characters_json = safe_json_dumps(completed)
         r.checkpoint_characters_json = safe_json_dumps(checkpoint_chars)
-
-        if result == "win" and r.status == "completed":
-            self._freeze_pool(r)
-        elif result == "loss" and streak_after == 0:
-            self._freeze_pool(r)
 
         db.session.add(
             GauntletMatchLog(
@@ -209,6 +209,29 @@ class GauntletService:
                 streak_after=streak_after,
             )
         )
+
+        if result == "win" and r.status == "completed":
+            # owned_ids was captured before this refreeze -- doing it after
+            # would silently pull in a newly-owned character, inflating the count.
+            is_full, _ = get_full_roster_milestone(
+                owned_ids,
+                role="Killer" if r.role == "killer" else "Survivor",
+                roster_limit=ORIGINAL_KILLER_ROSTER_LIMIT if r.role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT,
+            )
+            record_challenge_completion(
+                user_id=user_id,
+                mode="gauntlet",
+                variant=f"{r.role}_{r.game_mode}",
+                attempts_taken=r.attempts + 1,
+                matches_played=len(r.match_logs),
+                unlocked_characters_count=len(owned_ids),
+                full_roster=is_full,
+            )
+            self._freeze_pool(r)
+            r.attempts = 0
+        elif result == "loss" and streak_after == 0:
+            self._freeze_pool(r)
+
         db.session.commit()
 
         data = self._with_owned_characters(r.to_dict())
@@ -217,3 +240,11 @@ class GauntletService:
 
     def get_stats(self, user_id: int, role: str) -> dict[str, Any]:
         return fetch_gauntlet_user_stats(user_id, role)
+
+    def get_completions(self, user_id: int, role: str) -> list[dict[str, Any]]:
+        # game_mode isn't yet a user-facing choice at this layer (every run is
+        # created with the model's "original" default), so completions are
+        # only ever recorded/queried under that variant today. The stored
+        # variant string still carries game_mode from the run itself (see
+        # submit_result) so this stays correct if that ever changes.
+        return fetch_challenge_completions(user_id, "gauntlet", f"{role}_original")

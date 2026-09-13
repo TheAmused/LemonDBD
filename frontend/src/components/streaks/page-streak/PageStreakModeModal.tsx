@@ -47,6 +47,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
         tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto"
         escapeDisabled={isRulesOpen}
         currentLabel={dict?.streaks?.current || 'Current'}
+        dict={dict}
       />
 
       <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />

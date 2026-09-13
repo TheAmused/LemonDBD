@@ -852,4 +852,42 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             reloaded_p3 = db.session.scalar(select(Perk).where(Perk.name == "Dead Hard"))
             assert reloaded_p3.description == "Original Dead Hard Description"
 
+    def test_export_import_character_created_at_roundtrip(self, export_import_app):
+        """Killer.created_at (and Survivor.created_at) drive the roster
+        full-roster milestone's cutoff -- a restore that silently reset it to
+        "now" for every character would collapse that feature's whole notion
+        of "who existed before whom"."""
+        from datetime import datetime, timezone
+        from app.services.db.serializers import serialize_killer
+
+        with export_import_app.app_context():
+            chapter = db.session.scalar(select(Chapter)) or Chapter(name="Roundtrip Chapter")
+            if chapter.id is None:
+                db.session.add(chapter)
+                db.session.flush()
+
+            trapper = Killer(
+                name="Export Roundtrip Trapper",
+                chapter_id=chapter.id,
+                power_name="Bear Trap",
+                created_at=datetime(2020, 5, 1, tzinfo=timezone.utc),
+            )
+            db.session.add(trapper)
+            db.session.commit()
+
+            exported = serialize_killer(trapper)
+            assert exported["created_at"].startswith("2020-05-01T00:00:00")
+
+            db.session.delete(trapper)
+            db.session.commit()
+
+            DatabaseExportImportService.import_database(
+                {"killers": [exported]}, mode="merge", targets=["killers"]
+            )
+
+            restored = db.session.scalar(
+                select(Killer).where(Killer.name == "Export Roundtrip Trapper")
+            )
+            assert restored.created_at.replace(tzinfo=None) == datetime(2020, 5, 1)
+
 

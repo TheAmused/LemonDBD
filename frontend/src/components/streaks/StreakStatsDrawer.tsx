@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, BarChart2, CheckCircle2, XCircle, Trophy, Percent, Activity, Clock } from 'lucide-react';
+import { X, BarChart2, CheckCircle2, XCircle, Trophy, Percent, Activity, Clock, RotateCcw } from 'lucide-react';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -51,6 +51,8 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   title: string;
   accent: StreakAccent;
   stats: StreakStatsBase<TLog> | null;
+  /** Losses since the current run's pool was last (re)frozen -- from the live run, not the match-log aggregate, so it survives independently of `stats`. */
+  attempts?: number;
   /** The main label for a match row: character/killer name, or the "Auto-loss" badge is handled for you. */
   renderLabel: (log: TLog) => React.ReactNode;
   /** Secondary line under the label, e.g. "Streak: 3 -> 4" or "Attempt 2, Page 3". */
@@ -71,6 +73,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
   title,
   accent,
   stats,
+  attempts,
   renderLabel,
   renderMeta,
   dict,
@@ -140,7 +143,17 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
               <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{totalMatches}</div>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex justify-between items-center shadow-sm">
+            {attempts !== undefined && (
+              <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm">
+                <div className="flex items-center gap-2 text-xs uppercase font-bold text-slate-500 dark:text-slate-400">
+                  <RotateCcw className="w-4 h-4 text-slate-600 dark:text-slate-300" />
+                  {dict?.streaks?.attempts || 'Attempts'}
+                </div>
+                <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">{attempts}</div>
+              </div>
+            )}
+
+            <div className="col-span-2 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex justify-between items-center shadow-sm">
               <div>
                 <div className="text-xs uppercase font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> {dict?.streaks?.wins || 'Wins'}

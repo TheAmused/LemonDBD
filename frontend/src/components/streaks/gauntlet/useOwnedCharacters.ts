@@ -43,7 +43,9 @@ export function useOwnedCharacters(role: Role, rosterLimit?: number) {
         if (rosterLimit != null) {
           owned = owned.filter((c: any) => c.release_number == null || c.release_number <= rosterLimit);
         }
-        setCharacters(sortByReleaseNumber(owned).map((c: any) => ({ name: c.name })));
+        setCharacters(
+          sortByReleaseNumber(owned).map((c: any) => ({ name: c.name, avatar_local_path: c.avatar_local_path }))
+        );
       }
     } catch (err) {
       console.error('Failed to load owned characters:', err);

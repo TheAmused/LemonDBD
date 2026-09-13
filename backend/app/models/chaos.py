@@ -32,6 +32,7 @@ class ChaosRun(Base):
     owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     unlocked_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     perks_revealed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -67,6 +68,7 @@ class ChaosRun(Base):
             "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
             "unlocked_perk_ids": safe_json_loads(self.unlocked_perks_json, default=[]),
             "perks_revealed": self.perks_revealed,
+            "attempts": self.attempts,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

@@ -2,25 +2,30 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Character, HistoryMatchLog, Perk, User
+from app.models import HistoryMatchLog, Killer, Perk, User
 from app.services.history_service import HistoryService
 from app.services.ownership_service import OwnershipService
 from app.services.user_service import UserService
+from tests.unit.conftest import make_chapter
 
 
-def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Character:
+def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Killer:
+    """`release_number` is `== id` now, not a settable field, so it is passed
+    straight through as the killer's id to control release order."""
     from app.core.extensions import db
 
-    character = Character(name=name, role="Killer", release_number=release_number)
+    character = Killer(
+        id=release_number, name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"
+    )
     db.session.add(character)
     db.session.flush()
     for i in range(1, perk_count + 1):
         db.session.add(
             Perk(
                 name=f"{name} Perk {i}",
-                character_id=character.id,
+                killer_id=character.id,
                 is_teachable=True,
-                category="Killer",
+                role="Killer",
             )
         )
     db.session.commit()
@@ -30,7 +35,7 @@ def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Characte
 def seed_general_perk(name: str = "Whispers") -> None:
     from app.core.extensions import db
 
-    db.session.add(Perk(name=name, character_id=None, category="Killer"))
+    db.session.add(Perk(name=name, role="Killer"))
     db.session.commit()
 
 
@@ -156,6 +161,89 @@ class TestSubmitResultWithinARow:
         assert log.result == "loss"
         assert log.triggered_by == "inactivity"
 
+    def test_inactivity_loss_increments_attempts(self) -> None:
+        self.service.apply_inactivity_loss(self.run["id"])
+        reloaded = self.service.get_or_create_run(self.user_id, "hell")
+        assert reloaded["attempts"] == 1
+
+    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.apply_inactivity_loss(self.run["id"])  # attempts -> 1
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+        assert final["attempts"] == 0
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.mode == "history"
+        assert record.variant == "hell"
+        assert record.attempts_taken == 2
+        assert record.matches_played == 4
+        assert record.unlocked_characters_count == 3
+        assert record.full_roster is True
+
+    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
+        """Regression: a killer un-kill-switched (or otherwise newly owned)
+        after this run's pool was already frozen at 3 must not inflate the
+        count recorded for a run that only had to clear those 3."""
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        seed_killer("Ghostface", release_number=99)  # owned by default; frozen pool stays at 3
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.unlocked_characters_count == 3
+
+    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(
+        self, ownership_service: OwnershipService
+    ) -> None:
+        from datetime import datetime, timezone
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        ghostface = seed_killer("Ghostface", release_number=99)
+        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
+        db.session.commit()
+        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record.full_roster is False
+
+    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
+        from app.core.extensions import db
+        from app.models import ChallengeCompletionRecord
+
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
+        self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
+        final = self.service.submit_result(self.user_id, self.run["id"], "win", "The Hillbilly")
+        assert final["status"] == "completed"
+
+        record = db.session.scalars(
+            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
+        ).first()
+        assert record is not None
+        assert record.attempts_taken == 1
+
     def test_apply_inactivity_loss_is_a_noop_on_a_completed_run(self, db_session: Session) -> None:
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Trapper")
         self.service.submit_result(self.user_id, self.run["id"], "win", "The Wraith")
@@ -187,6 +275,7 @@ class TestHellModeLoss:
         assert after_loss["completed_killers"] == []
         assert after_loss["unlocked_perk_names"] == ["Whispers"]
         assert after_loss["total_killers_beaten"] == 0
+        assert after_loss["attempts"] == 1
 
     def test_loss_after_clearing_a_row_still_resets_to_zero(self, db_session: Session) -> None:
         for name in ["Killer 0", "Killer 1", "Killer 2", "Killer 3", "Killer 4"]:
@@ -333,7 +422,7 @@ class TestOwnershipShrinksMidRun:
             history_service.submit_result(history_user, run["id"], "win", name)
 
         killer_6 = killers["Killer 6"]
-        ownership_service.set_character_ownership(history_user, killer_6.id, is_owned=False)
+        ownership_service.set_character_ownership(history_user, killer_6.id, is_owned=False, role="Killer")
 
         reloaded = history_service.get_or_create_run(history_user, "hell")
         assert reloaded["status"] == "in_progress"

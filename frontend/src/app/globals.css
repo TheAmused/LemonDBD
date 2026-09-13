@@ -488,18 +488,6 @@ strong {
   }
 }
 
-@keyframes chaosMarqueeGlow {
-
-  0%,
-  100% {
-    opacity: .35;
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
 @keyframes historyLockShake {
 
   0%,
@@ -549,30 +537,6 @@ strong {
   animation: chaosBadgePop 380ms cubic-bezier(.22, 1.4, .36, 1) both;
 }
 
-.chaos-marquee-bulb {
-  animation: chaosMarqueeGlow 2.4s ease-in-out infinite;
-}
-
-.slot-cabinet-bulb {
-  animation: chaosMarqueeGlow 2.2s ease-in-out infinite;
-}
-
-@keyframes slotCabinetHum {
-
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-
-  50% {
-    opacity: 0.85;
-  }
-}
-
-.slot-cabinet-hum {
-  animation: slotCabinetHum 3.2s ease-in-out infinite;
-}
-
 .history-lock-shake {
   animation: historyLockShake 380ms ease-in-out;
 }
@@ -588,17 +552,6 @@ strong {
   .history-lock-shake,
   .history-lock-break {
     animation: none;
-  }
-
-  .chaos-marquee-bulb,
-  .slot-cabinet-bulb {
-    animation: none;
-    opacity: .7;
-  }
-
-  .slot-cabinet-hum {
-    animation: none;
-    opacity: 0.7;
   }
 }
 

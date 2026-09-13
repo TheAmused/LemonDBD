@@ -45,6 +45,7 @@ def serialize_survivor(s: Survivor) -> dict[str, Any]:
         "disabled_reason": s.disabled_reason,
         "lore": s.lore,
         "translations": s.translations or {},
+        "created_at": s.created_at.isoformat() if s.created_at else None,
     }
 
 
@@ -80,6 +81,7 @@ def serialize_killer(k: Killer) -> dict[str, Any]:
         "terror_radius_meters": k.terror_radius_meters,
         "height": k.height,
         "translations": k.translations or {},
+        "created_at": k.created_at.isoformat() if k.created_at else None,
     }
 
 

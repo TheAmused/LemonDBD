@@ -8,6 +8,7 @@ from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import ChaosMatchLog, ChaosRun
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.chaos import (
     checkpoint_interval,
     draw_addon_rarities,
@@ -20,6 +21,7 @@ from app.services.chaos import (
     resolve_perks_by_ids,
 )
 from app.services.ownership_service import OwnershipService
+from app.services.roster_milestone import get_full_roster_milestone
 
 logger = logging.getLogger(__name__)
 
@@ -197,6 +199,7 @@ class ChaosService:
                 checkpoint_killers,
                 checkpoint_used_perks,
             ) = self._compute_loss_outcome(r)
+            r.attempts += 1
 
         db.session.add(ChaosMatchLog(
             run_id=run_id,
@@ -215,11 +218,25 @@ class ChaosService:
         r.checkpoint_killers_json = safe_json_dumps(checkpoint_killers)
         r.checkpoint_used_perks_json = safe_json_dumps(checkpoint_used_perks)
 
-        owned_names = resolve_killer_names_by_ids(safe_json_loads(r.owned_killers_json, default=[]))
+        owned_ids = safe_json_loads(r.owned_killers_json, default=[])
+        owned_names = resolve_killer_names_by_ids(owned_ids)
         if result == "win" and owned_names and all(name in completed for name in owned_names):
             r.status = "completed"
             r.used_perks_json = safe_json_dumps(used_perks)
+            # owned_ids was captured before this refreeze -- doing it after
+            # would silently pull in a newly-owned character, inflating the count.
+            is_full, _ = get_full_roster_milestone(owned_ids, role="Killer")
+            record_challenge_completion(
+                user_id=user_id,
+                mode="chaos",
+                variant=r.difficulty,
+                attempts_taken=r.attempts + 1,
+                matches_played=len(r.match_logs),
+                unlocked_characters_count=len(owned_ids),
+                full_roster=is_full,
+            )
             self._freeze_pools(r)
+            r.attempts = 0
         else:
             self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
@@ -261,9 +278,13 @@ class ChaosService:
         r.completed_killers_json = safe_json_dumps(completed)
         r.checkpoint_killers_json = safe_json_dumps(checkpoint_killers)
         r.checkpoint_used_perks_json = safe_json_dumps(checkpoint_used_perks)
+        r.attempts += 1
 
         self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
 
     def get_stats(self, user_id: int, difficulty: str) -> dict[str, Any]:
         return fetch_chaos_user_stats(user_id, difficulty)
+
+    def get_completions(self, user_id: int, difficulty: str) -> list[dict[str, Any]]:
+        return fetch_challenge_completions(user_id, "chaos", difficulty)

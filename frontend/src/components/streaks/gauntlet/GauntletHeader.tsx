@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen, RotateCcw } from 'lucide-react';
+import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen, RotateCcw, History } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 
 export interface GauntletHeaderProps {
@@ -14,6 +14,7 @@ export interface GauntletHeaderProps {
   lastCheckpointStreak: number;
   poolFrozen?: boolean;
   onOpenStats: () => void;
+  onOpenHistory: () => void;
   onOpenRules: () => void;
   onOpenReset: () => void;
   dict?: Dictionary;
@@ -26,6 +27,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   lastCheckpointStreak,
   poolFrozen = false,
   onOpenStats,
+  onOpenHistory,
   onOpenRules,
   onOpenReset,
   dict,
@@ -101,6 +103,14 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             title={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={onOpenHistory}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
+            title={dict?.streaks?.pastWins || 'Past Wins'}
+          >
+            <History className="w-5 h-5" />
           </button>
 
           <button

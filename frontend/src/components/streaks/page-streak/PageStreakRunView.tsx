@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Trophy, RotateCcw } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -12,6 +12,7 @@ import { PageStreakRulesModal } from './PageStreakRulesModal';
 import { PageStreakStatsDrawer } from './PageStreakStatsDrawer';
 import { Confetti } from '../Confetti';
 import { ResetConfirmModal } from '../ResetConfirmModal';
+import { ChallengeCompletionHistoryDrawer } from '../ChallengeCompletionHistoryDrawer';
 import { staticUrl } from '@/utils/staticUrl';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
@@ -31,7 +32,7 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
   const dict = useStreaksDict();
   const killerDisplayName = useCharacterDisplayName()(killer);
-  const { run, stats, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
+  const { run, stats, completions, loading, busy, error, startRun, submitResult, resetRun } = usePageStreakRun(killer);
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
     return Object.fromEntries(
@@ -44,6 +45,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [lastWasLoss, setLastWasLoss] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
 
@@ -116,22 +118,38 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             onOpenReset={() => setConfirmingReset(true)}
             onOpenRules={() => setIsRulesOpen(true)}
             onOpenStats={() => setIsStatsOpen(true)}
+            onOpenHistory={() => setIsHistoryOpen(true)}
             dict={dict}
           />
 
           {run.status === 'completed' ? (
-            <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] px-5 py-6 text-center">
-              <p className="text-sm font-extrabold text-emerald-400">
-                {dict?.streaks?.allPagesClearedPrefix || 'All'} {run.page_count} {dict?.streaks?.pagesClearedOnSuffix || 'pages cleared on'} {killerDisplayName}
+            <div className="mb-8 mt-6 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+                <Trophy className="h-8 w-8" />
+              </div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                {dict?.streaks?.victoryCongrats || 'Congratulations'}
               </p>
-              <p className="mt-1 text-xs text-slate-400">
-                {dict?.streaks?.resetRunPrompt || 'Reset the run if you want to go through it again.'}
+              <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                {dict?.streaks?.pageStreakVictoryTitle || 'You won the Page Streak'}
+              </h2>
+              <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
+                {dict?.streaks?.pageStreakVictoryPrefix || 'on'} {killerDisplayName}
               </p>
+              <button
+                type="button"
+                onClick={() => setConfirmingReset(true)}
+                disabled={busy}
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+              >
+                <RotateCcw className="h-4 w-4" />
+                {dict?.streaks?.startNewRun || 'Start a new run'}
+              </button>
             </div>
           ) : (
             <>
               {confirmed && (
-                <div className="mt-5 flex flex-wrap gap-3 ps-rise">
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3 ps-rise">
                   <button
                     type="button"
                     disabled={busy}
@@ -139,9 +157,9 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       setLastWasLoss(false);
                       submitResult(run.current_page, selected, 'win');
                     }}
-                    className="flex-1 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-emerald-400 transition-colors hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 motion-reduce:transition-none"
+                    className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
                   >
-                    {dict?.stats?.win || 'Win'}
+                    {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </button>
                   <button
                     type="button"
@@ -150,9 +168,9 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       setLastWasLoss(true);
                       submitResult(run.current_page, selected, 'loss');
                     }}
-                    className="flex-1 rounded-xl border border-rose-500/35 bg-rose-500/10 px-8 py-4 text-base font-extrabold tracking-wide text-rose-400 transition-colors hover:bg-rose-500/20 focus:outline-none focus:ring-2 focus:ring-rose-500 disabled:opacity-50 motion-reduce:transition-none"
+                    className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
                   >
-                    {dict?.stats?.loss || 'Loss'}
+                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
                   </button>
                 </div>
               )}
@@ -205,6 +223,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     }`}
                   >
                     <div className="overflow-hidden">
+                      <PerkPageGrid perks={nextPagePerks} dimmed iconByPerk={iconByPerk} />
                     </div>
                   </div>
                 </>
@@ -226,6 +245,14 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
 
           <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
           <PageStreakStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} dict={dict} />
+          <ChallengeCompletionHistoryDrawer
+            isOpen={isHistoryOpen}
+            onClose={() => setIsHistoryOpen(false)}
+            title={killerDisplayName}
+            accent="orange"
+            completions={completions}
+            dict={dict}
+          />
         </div>
       )}
     </div>

@@ -204,7 +204,7 @@ class UserPerkOwnership(Base):
             "user_id": self.user_id,
             "perk_id": self.perk_id,
             "perk_name": self.perk.name if self.perk else None,
-            "perk_category": self.perk.category if self.perk else None,
+            "perk_category": self.perk.role if self.perk else None,
             "is_unlocked": self.is_unlocked,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

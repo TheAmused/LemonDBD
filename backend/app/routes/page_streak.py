@@ -13,8 +13,8 @@ get_page_streak_service = make_service_getter("PAGE_STREAK_SERVICE", PageStreakS
 def get_roster():
     """Retrieve the list of eligible characters for page streak runs."""
     service = get_page_streak_service()
-    roster = service.get_roster(g.current_user.id)
-    return jsonify({"count": len(roster), "data": roster}), 200
+    roster, milestone = service.get_roster_with_milestone(g.current_user.id)
+    return jsonify({"count": len(roster), "data": roster, "milestone": milestone}), 200
 
 
 @page_streak_bp.route("/pool", methods=["GET"])
@@ -111,3 +111,29 @@ def reset_run():
         return jsonify({"error": str(err), "status": 400}), 400
 
     return jsonify({"run": run}), 200
+
+
+@page_streak_bp.route("/completions", methods=["GET"])
+@login_required
+def get_completions():
+    """Retrieve this killer's completion history (past full clears)."""
+    killer = request.args.get("killer", "").strip()
+    if not killer:
+        return jsonify({"error": "Query parameter 'killer' is required", "status": 400}), 400
+
+    service = get_page_streak_service()
+    completions = service.get_completions(g.current_user.id, killer)
+    return jsonify({"completions": completions}), 200
+
+
+@page_streak_bp.route("/run/reset-all", methods=["POST"])
+@login_required
+def reset_all_runs():
+    """Wipe every killer's Page Streak progress and completion badges."""
+    service = get_page_streak_service()
+    try:
+        service.reset_all(g.current_user.id)
+    except ValueError as err:
+        return jsonify({"error": str(err), "status": 400}), 400
+
+    return jsonify({"success": True}), 200

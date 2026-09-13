@@ -24,6 +24,7 @@ exactly their old `release_number`. Names are unique across both tables (no
 survivor shares a name with a killer), so `/characters/<name>/detail` stays
 unambiguous.
 """
+from datetime import datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any
 
@@ -31,6 +32,7 @@ from sqlalchemy import (
     JSON,
     Boolean,
     CheckConstraint,
+    DateTime,
     ForeignKey,
     Numeric,
     SmallInteger,
@@ -41,6 +43,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, declared_attr, mapped_column, relationship
 
 from app.core.extensions import Base
+from app.models.base import utcnow
 from app.models.chapter import dlc_type_label
 
 if TYPE_CHECKING:
@@ -88,6 +91,10 @@ class _CharacterMixin:
     is_disabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     disabled_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
     lore: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # When this row was first created, not the in-game release date -- lets
+    # "how many killers/survivors existed in the game at time X" be answered
+    # honestly for players whose owned roster was fixed before X.
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
 
     @declared_attr
     def chapter_id(cls) -> Mapped[int]:

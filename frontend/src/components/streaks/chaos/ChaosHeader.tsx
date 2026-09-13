@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
-import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw, Gauge } from 'lucide-react';
+import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw, Gauge, History } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 
 const DIFFICULTY_ICON: Record<Difficulty, React.ElementType> = {
@@ -20,6 +20,7 @@ export interface ChaosHeaderProps {
   lastCheckpointStreak: number;
   poolFrozen?: boolean;
   onOpenStats: () => void;
+  onOpenHistory: () => void;
   onOpenRules: () => void;
   onOpenPerkPool: () => void;
   onOpenReset: () => void;
@@ -34,6 +35,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   lastCheckpointStreak,
   poolFrozen = false,
   onOpenStats,
+  onOpenHistory,
   onOpenRules,
   onOpenPerkPool,
   onOpenReset,
@@ -132,6 +134,14 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
             title={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={onOpenHistory}
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer"
+            title={dict?.streaks?.pastWins || 'Past Wins'}
+          >
+            <History className="w-5 h-5" />
           </button>
 
           <button

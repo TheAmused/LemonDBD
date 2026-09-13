@@ -253,6 +253,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
       iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
       footerButtonClassName="bg-amber-500 hover:bg-amber-400 !text-slate-950 shadow-amber-500/20"
       footerButtonLabel={rawStreaks.gotItLetsPlay || "Got It, Let's Play!"}
+      dict={dict}
     >
       <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
         <h3 className="text-sm font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-2">

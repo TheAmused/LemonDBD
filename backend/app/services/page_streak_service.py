@@ -3,6 +3,7 @@ import logging
 from typing import Any
 
 from app.services.admin_control_service import assert_challenge_mode_enabled
+from app.services.challenge_completions import fetch_challenge_completions, fetch_completed_variants
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak import (
     BUILD_SIZE,
@@ -13,11 +14,13 @@ from app.services.page_streak import (
     fetch_run,
     get_configured_perks_per_page,
     get_killer_avatar_map,
+    get_live_roster_badge,
     get_owned_killers_ordered,
     get_perk_icon_map,
     get_user_killer_pool,
     record_match_result,
     reset_active_run,
+    reset_all_runs,
 )
 from app.services.perk_service import PerkService
 
@@ -44,6 +47,19 @@ class PageStreakService:
     def get_roster(self, user_id: int) -> list[dict[str, Any]]:
         return build_roster_summary(user_id, self.perk_service, self.ownership_service, self.build_pages)
 
+    def get_roster_with_milestone(self, user_id: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """Roster list plus the live mode-wide badge, sharing a single
+        completions fetch instead of each querying it separately."""
+        completed = fetch_completed_variants(user_id, "page_streak")
+        roster = build_roster_summary(
+            user_id, self.perk_service, self.ownership_service, self.build_pages, completed_killers=completed
+        )
+        badge = get_live_roster_badge(user_id, self.ownership_service, completed_killers=completed)
+        return roster, badge
+
+    def get_roster_milestone(self, user_id: int) -> dict[str, Any]:
+        return get_live_roster_badge(user_id, self.ownership_service)
+
     def _with_artwork(self, user_id: int, data: dict[str, Any] | None) -> dict[str, Any] | None:
         if data is None:
             return None
@@ -63,11 +79,19 @@ class PageStreakService:
 
     def submit_result(self, user_id: int, killer: str, page: int, perks: list[str], result: str) -> dict[str, Any] | None:
         assert_challenge_mode_enabled("page_streak")
-        return self._with_artwork(user_id, record_match_result(user_id, killer, page, perks, result, self.build_pages))
+        run = record_match_result(user_id, killer, page, perks, result, self.build_pages)
+        return self._with_artwork(user_id, run)
 
     def reset_run(self, user_id: int, killer: str) -> dict[str, Any] | None:
         assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, reset_active_run(user_id, killer, self.build_pages))
 
+    def reset_all(self, user_id: int) -> None:
+        assert_challenge_mode_enabled("page_streak")
+        reset_all_runs(user_id)
+
     def get_stats(self, user_id: int) -> dict[str, Any]:
         return fetch_page_streak_user_stats(user_id)
+
+    def get_completions(self, user_id: int, killer: str) -> list[dict[str, Any]]:
+        return fetch_challenge_completions(user_id, "page_streak", killer)

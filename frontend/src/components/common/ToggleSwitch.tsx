@@ -30,7 +30,7 @@ export interface ToggleSwitchProps<T extends string> {
   className?: string;
 }
 
-const DEFAULT_THUMB = 'bg-accent-amber text-text-inverted';
+const DEFAULT_THUMB = 'bg-accent-red text-text-inverted';
 
 export function resolveActiveIndex<T extends string>(
   value: T,

@@ -256,7 +256,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               onClick={() => setSubTab('killers')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 subTab === 'killers'
-                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/30'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
@@ -268,7 +268,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               onClick={() => setSubTab('perks')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider cursor-pointer transition-colors ${
                 subTab === 'perks'
-                  ? 'bg-accent-amber/15 text-accent-amber border border-accent-amber/30'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/30'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >

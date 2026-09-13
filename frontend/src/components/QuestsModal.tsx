@@ -144,14 +144,14 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
 
             <div className="flex items-center justify-between rounded-xl bg-bg-surface border border-border-color p-3 shadow-xs">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle2 className="h-4 w-4 text-accent-green" />
                 {dict?.stats?.completed && (
                   <span className="text-xs font-semibold text-text-secondary">
                     {dict.stats.completed}
                   </span>
                 )}
               </div>
-              <span className="text-sm font-black font-mono text-emerald-700 dark:text-emerald-400">
+              <span className="text-sm font-black font-mono text-accent-green">
                 {totalQuestsCompleted} / {quests.length}
               </span>
             </div>
@@ -161,9 +161,9 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
         {claimedToast && (
           <div
             role="status"
-            className="bg-emerald-50 text-emerald-800 border-b border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-500/30 px-6 py-2.5 text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2"
+            className="bg-accent-green/10 text-accent-green border-b border-accent-green/30 px-6 py-2.5 text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2"
           >
-            <Sparkles className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <Sparkles className="h-4 w-4 text-accent-green shrink-0" />
             <span>{claimedToast}</span>
           </div>
         )}
@@ -174,7 +174,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             onClick={() => setFilterCategory('all')}
             className={`px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'all'
-                ? 'bg-bg-surface text-accent-amber border-t-2 border-accent-amber shadow-xs'
+                ? 'bg-bg-surface text-accent-red border-t-2 border-accent-red shadow-xs'
                 : 'text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -185,7 +185,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             onClick={() => setFilterCategory('daily')}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'daily'
-                ? 'bg-bg-surface text-accent-amber border-t-2 border-accent-amber shadow-xs'
+                ? 'bg-bg-surface text-accent-red border-t-2 border-accent-red shadow-xs'
                 : 'text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -197,7 +197,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
             onClick={() => setFilterCategory('weekly')}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer ${
               filterCategory === 'weekly'
-                ? 'bg-bg-surface text-accent-amber border-t-2 border-accent-amber shadow-xs'
+                ? 'bg-bg-surface text-accent-red border-t-2 border-accent-red shadow-xs'
                 : 'text-text-secondary hover:text-text-primary'
             }`}
           >
@@ -267,7 +267,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                             style={{ width: `${pct}%` }}
                             className={`h-full transition-all duration-500 ${
                               quest.is_completed
-                                ? 'bg-emerald-500'
+                                ? 'bg-accent-green'
                                 : isReadyToClaim
                                   ? 'bg-accent-amber animate-pulse'
                                   : 'bg-accent-amber'
@@ -287,7 +287,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                       </div>
 
                       {quest.is_completed ? (
-                        <div className="flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
+                        <div className="flex items-center gap-1 text-xs font-bold text-accent-green bg-accent-green/10 border border-accent-green/20 px-3 py-1.5 rounded-xl">
                           <CheckCircle2 className="h-4 w-4" />
                           <span>{dict?.sidebar?.claimed}</span>
                         </div>
@@ -298,7 +298,7 @@ export const QuestsModal: React.FC<QuestsModalProps> = ({ isOpen, onClose, dict 
                           disabled={!isReadyToClaim || claimingId === quest.id}
                           className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                             isReadyToClaim
-                              ? 'bg-accent-amber hover:bg-accent-amber-hover text-text-inverted shadow-md shadow-accent-amber/20 animate-bounce'
+                              ? 'bg-accent-red hover:bg-accent-red-hover text-text-inverted shadow-md shadow-accent-red/20 animate-bounce'
                               : 'bg-bg-elevated text-text-muted cursor-not-allowed opacity-60'
                           }`}
                         >

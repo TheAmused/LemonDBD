@@ -165,7 +165,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
     {
       value: 'all',
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
@@ -179,7 +179,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
@@ -197,12 +197,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'name',
       label: dict?.filters?.sortByName,
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
     {
       value: 'character',
       label: dict?.filters?.sortByCharacter,
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
   ];
 
@@ -211,13 +211,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       value: 'asc',
       icon: <ArrowUpAZ className="h-3.5 w-3.5" />,
       label: dict?.filters?.orderAsc,
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
     {
       value: 'desc',
       icon: <ArrowDownZA className="h-3.5 w-3.5" />,
       label: dict?.filters?.orderDesc,
-      activeClassName: 'bg-accent-amber text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
   ];
 
@@ -246,7 +246,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             type="checkbox"
             checked={scope === 'general'}
             onChange={(e) => setScope(e.target.checked ? 'general' : 'all')}
-            className="h-3.5 w-3.5 shrink-0 rounded border-border-color accent-accent-amber"
+            className="h-3.5 w-3.5 shrink-0 rounded border-border-color accent-accent-red"
           />
           <Sparkles className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
           {dict?.filters?.generalOnly && <span>{dict.filters.generalOnly}</span>}
@@ -282,7 +282,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             }}
             placeholder={dict?.filters?.searchPlaceholder}
             aria-label={dict?.filters?.searchPlaceholder}
-            className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
+            className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2.5 pl-10 pr-9 text-xs font-medium text-text-primary placeholder:text-text-muted focus:border-accent-red focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
           />
           {search && (
             <button
@@ -348,7 +348,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             aria-label={dict?.filters?.gridView}
             className={`rounded-full p-2 transition-all cursor-pointer ${
               viewMode === 'grid'
-                ? 'bg-bg-surface text-accent-amber border border-border-color shadow-xs'
+                ? 'bg-bg-surface text-accent-red border border-border-color shadow-xs'
                 : 'text-text-muted hover:text-text-primary'
             }`}
           >
@@ -360,7 +360,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             aria-label={dict?.filters?.listView}
             className={`rounded-full p-2 transition-all cursor-pointer ${
               viewMode === 'list'
-                ? 'bg-bg-surface text-accent-amber border border-border-color shadow-xs'
+                ? 'bg-bg-surface text-accent-red border border-border-color shadow-xs'
                 : 'text-text-muted hover:text-text-primary'
             }`}
           >

@@ -544,8 +544,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
         <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-amber/30 bg-accent-amber/15">
-            <LemonIcon className="h-10 w-10 text-accent-amber" />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15">
+            <LemonIcon className="h-10 w-10 text-accent-red" />
           </div>
           <h1 className="text-xl font-black tracking-wider text-text-primary">
             {dict?.user?.authRequiredTitle || 'Authentication Required'}
@@ -558,14 +558,14 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-red py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-amber/20 transition-all hover:opacity-95"
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-red to-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-red/20 transition-all hover:opacity-95"
             >
               <UserIcon className="h-4 w-4" />
               <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
             </button>
             <Link
               href={`/${locale}`}
-              className="py-1 text-xs text-text-muted transition-colors hover:text-accent-amber"
+              className="py-1 text-xs text-text-muted transition-colors hover:text-accent-red"
             >
               {dict?.user?.returnToHome || 'Return to Home'}
             </Link>
@@ -579,7 +579,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (loading || authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-amber" />
+        <Loader2 className="h-8 w-8 animate-spin text-accent-red" />
       </div>
     );
   }
@@ -596,7 +596,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           <button
             type="button"
             onClick={() => setView('language')}
-            className="w-full rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted cursor-pointer"
+            className="w-full rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted cursor-pointer"
           >
             {t?.introContinueButton || 'Get Started'}
           </button>
@@ -622,8 +622,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                 aria-pressed={selectedLanguage === lang.code}
                 className={`flex items-center gap-3 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer ${
                   selectedLanguage === lang.code
-                    ? 'border-accent-amber bg-accent-amber/10 text-accent-amber'
-                    : 'border-border-color text-text-secondary hover:border-accent-amber/50'
+                    ? 'border-accent-red bg-accent-red/10 text-accent-red'
+                    : 'border-border-color text-text-secondary hover:border-accent-red/50'
                 }`}
               >
                 <FlagIcon code={lang.code} className="h-4 w-[22px] rounded-sm shrink-0" />
@@ -635,7 +635,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             type="button"
             disabled={savingLanguage}
             onClick={handleLanguageContinue}
-            className="w-full rounded-xl bg-accent-amber hover:bg-accent-amber-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
+            className="w-full rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
           >
             {savingLanguage
               ? t?.savingLabel || 'Saving...'
@@ -674,7 +674,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             {t?.legendTitle || 'How this works'}
           </h2>
           <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-emerald-500/40 bg-emerald-500/20">
+            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-accent-green/40 bg-accent-green/20">
               {legendCharacter && (
                 <img
                   src={resolveOnboardingAvatar(backendBase, legendCharacter)}
@@ -692,7 +692,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             {t?.legendOwned || 'Owned - fully available'}
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-accent-amber bg-bg-elevated">
+            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-accent-red bg-bg-elevated">
               {legendCharacter && (
                 <img
                   src={resolveOnboardingAvatar(backendBase, legendCharacter)}
@@ -766,7 +766,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
             return (
               <React.Fragment key={group.chapterName}>
-                <div className={`flex flex-col overflow-hidden rounded-2xl border-2 bg-bg-surface ${isExpanded ? 'border-accent-amber' : 'border-border-color'}`}>
+                <div className={`flex flex-col overflow-hidden rounded-2xl border-2 bg-bg-surface ${isExpanded ? 'border-accent-red' : 'border-border-color'}`}>
                   <button
                     type="button"
                     onClick={() => toggleChapterExpanded(group.chapterName)}
@@ -814,7 +814,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     <span
                       aria-hidden="true"
                       className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-                        chapterOwned ? 'bg-accent-amber' : 'bg-bg-elevated border border-border-color'
+                        chapterOwned ? 'bg-accent-green' : 'bg-bg-elevated border border-border-color'
                       }`}
                     >
                       <span
@@ -921,7 +921,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             type="button"
             disabled={saving}
             onClick={handleContinue}
-            className="w-full max-w-sm rounded-xl bg-accent-amber hover:bg-accent-amber-hover px-6 py-3.5 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
+            className="w-full max-w-sm rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-3.5 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
           >
             {saving ? t?.savingLabel || 'Saving...' : t?.continueButton || 'Continue'}
           </button>

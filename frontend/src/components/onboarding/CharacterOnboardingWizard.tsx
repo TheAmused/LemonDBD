@@ -745,11 +745,20 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             const isExpanded = expandedChapter === group.chapterName;
             const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
             const bannerSrc = getChapterBannerSrc(banner, backendBase);
-            const ownedCharacterCount = group.characters.filter(
-              (c) => ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
-            ).length;
+            const isCharacterOwned = (c: OnboardingCharacter) =>
+              ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned;
+            const ownedCharacterCount = group.characters.filter(isCharacterOwned).length;
             const chapterOwned = ownedCharacterCount === group.characters.length;
-            const chapterPartiallyOwned = !chapterOwned && ownedCharacterCount > 0;
+            // A chapter with no owned characters still reads as partial, not
+            // fully locked, if any of its characters has perks unlocked by
+            // hand -- same "partially unlocked" signal a character card
+            // itself shows for that case.
+            const chapterHasPartialSignal =
+              ownedCharacterCount > 0 ||
+              group.characters.some(
+                (c) => !isCharacterOwned(c) && getCharacterPerkStats(c.id, c.category).unlocked > 0,
+              );
+            const chapterPartiallyOwned = !chapterOwned && chapterHasPartialSignal;
             // Display only -- expandedChapter/aria-id/banner lookups all key off
             // the canonical group.chapterName above, never this localized text.
             const chapterDisplayName = translatedChapterNames[group.chapterName] || group.chapterName;

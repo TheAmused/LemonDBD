@@ -65,21 +65,21 @@
 
   .dark {
     color-scheme: dark;
-    --bg-primary: #030712;
-    --bg-surface: #0b0f19;
-    --bg-elevated: #111827;
-    --border-color: #1f293d;
-    --border-subtle: #111827;
+    --bg-primary: #0a0a0c;
+    --bg-surface: #17171a;
+    --bg-elevated: #212124;
+    --border-color: #313136;
+    --border-subtle: #212124;
     --accent-red: #b91c1c;
     --accent-red-hover: #dc2626;
     --accent-amber: #f59e0b;
     --accent-amber-hover: #fbbf24;
     --accent-green: #16a34a;
     --accent-green-hover: #22c55e;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    --text-inverted: #030712;
+    --text-primary: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --text-inverted: #0a0a0c;
   }
 
   body {

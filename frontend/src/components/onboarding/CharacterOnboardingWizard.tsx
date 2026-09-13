@@ -369,16 +369,21 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         ([charsJson, perksJson, translatedCharsJson]: [
           { data?: OnboardingCharacter[] },
           { data?: OnboardingPerk[] },
-          { data?: Array<{ id: number; name: string; chapter_name: string | null }> },
+          { data?: Array<{ id: number; name: string; category: string; chapter_name: string | null }> },
         ]) => {
           if (cancelled) return;
           const chars = charsJson.data || [];
           const perks = perksJson.data || [];
-          const translatedById = new Map((translatedCharsJson.data || []).map((c) => [c.id, c]));
+          // Keyed by role + id, not id alone: survivor 7 and killer 7 are
+          // different characters, so a bare id collision here silently paired
+          // a survivor with a killer's translated name.
+          const translatedByKey = new Map(
+            (translatedCharsJson.data || []).map((c) => [ownershipKey(c.id, c.category), c])
+          );
 
           const chapterNameTranslations: Record<string, string> = {};
           const localizedChars = chars.map((c) => {
-            const translated = translatedById.get(c.id);
+            const translated = translatedByKey.get(ownershipKey(c.id, c.category));
             if (!translated) return c;
             const canonicalChapterName = c.chapter_name || 'Base Game';
             if (translated.chapter_name && !chapterNameTranslations[canonicalChapterName]) {

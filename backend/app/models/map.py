@@ -126,6 +126,15 @@ class MapRealm(Base):
     (`source`, `source_label`) became `map_sources`; the five layout figures
     are gone until there is per-map data to put in them, and `to_dict` still
     emits them from module-level defaults so the API shape is unchanged.
+
+    `tiles` and `objectives` are gone from `to_dict` too, not just from the
+    database. `map_objectives` was empty for all 58 maps; `map_tiles` was 290
+    rows containing five generic placeholder names ("12 O'Clock: Main Landmark
+    / North Exit Gate") copied onto every map -- the same five, so the table
+    distinguished nothing. What the UI renders as the callout system is the
+    image at `callout_image_url`; no client has ever drawn these rows, so
+    unlike the layout figures above there was no live API shape worth holding
+    stable for them.
     """
 
     __tablename__ = "map_realms"
@@ -180,13 +189,4 @@ class MapRealm(Base):
             "pallet_density": DEFAULT_PALLET_DENSITY,
             "shack_has_basement": DEFAULT_SHACK_HAS_BASEMENT,
             "description": self.description,
-            # Both were stored, neither held data. `map_objectives` was empty
-            # for all 58 maps; `map_tiles` was 290 rows containing five generic
-            # placeholder names ("12 O'Clock: Main Landmark / North Exit Gate")
-            # copied onto every map -- the same five, so the table distinguished
-            # nothing. What the UI renders as the callout system is the image at
-            # `callout_image_url`; no client has ever drawn these rows.
-            # Emitted empty so the API shape is unchanged.
-            "tiles": [],
-            "objectives": [],
         }

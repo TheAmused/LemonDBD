@@ -15,8 +15,8 @@ export interface UserShowcaseState {
 }
 
 export const PLAYER_TITLES = [
-  'The Camper',
-  'The Slasher',
+  'Survivor',
+  'Killer',
 ] as const;
 
 export type PlayerTitle = (typeof PLAYER_TITLES)[number];
@@ -34,7 +34,7 @@ export const GRADE_EMBLEMS = [
 export type GradeEmblem = (typeof GRADE_EMBLEMS)[number];
 
 export const DEFAULT_SHOWCASE_STATE: UserShowcaseState = {
-  playerTitle: 'The Camper',
+  playerTitle: 'Survivor',
   devotionLevel: 0,
   gradeRank: 'Ash IV',
   survivorMain: {

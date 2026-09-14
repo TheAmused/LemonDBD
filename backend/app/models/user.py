@@ -223,7 +223,7 @@ class UserShowcase(Base):
     user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False, index=True
     )
-    player_title: Mapped[str] = mapped_column(String(100), default="The Camper", nullable=False)
+    player_title: Mapped[str] = mapped_column(String(100), default="Survivor", nullable=False)
     devotion_level: Mapped[int] = mapped_column(Integer, default=14, nullable=False)
     grade_rank: Mapped[str] = mapped_column(String(50), default="Iridescent I", nullable=False)
     # Was a free-text character name that nothing validated and a rename would

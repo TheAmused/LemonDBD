@@ -52,20 +52,18 @@ const CharacterGridItem: React.FC<{
         onSelect(char.name);
         onClose();
       }}
-      className={`relative flex flex-col items-center p-3 rounded-2xl border transition-all cursor-pointer text-center group ${
-        isSelected
-          ? 'border-accent-amber bg-accent-amber/15 shadow-md shadow-accent-amber/15'
-          : 'border-border-color bg-bg-surface hover:border-accent-amber/50 hover:bg-bg-elevated'
+      className={`relative flex flex-col items-center p-3 rounded-2xl transition-all cursor-pointer text-center group ${
+        isSelected ? 'bg-accent-amber/15' : 'bg-bg-surface hover:bg-bg-elevated'
       }`}
     >
-      {/* Character Avatar */}
-      <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-border-color group-hover:border-accent-amber/60 transition-colors bg-bg-elevated mb-2">
+      {/* Character Avatar — the only border on this card */}
+      <div className="relative w-[84px] h-[84px] rounded-full overflow-hidden border-2 border-border-color group-hover:border-accent-amber/60 transition-colors bg-bg-elevated mb-2">
         {activeSrc && !imgError ? (
           <Image
             src={activeSrc}
             alt={char.name}
             fill
-            sizes="56px"
+            sizes="84px"
             className="object-cover"
             onError={() => {
               if (!useFallback && char.portrait_url && primaryAvatarSrc !== char.portrait_url) {
@@ -77,7 +75,7 @@ const CharacterGridItem: React.FC<{
             unoptimized
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary text-xs font-bold font-mono">
+          <div className="w-full h-full flex flex-col items-center justify-center text-text-primary text-sm font-bold font-mono">
             <span>{char.name.slice(0, 2).toUpperCase()}</span>
           </div>
         )}
@@ -156,13 +154,14 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       onClose={onClose}
       size="2xl"
       title={`${dict?.user?.selectCharacter || 'Select Character'} (${role})`}
-      subtitle={dict?.user?.chooseCharacterDesc || 'Choose your primary character to showcase at the Campfire.'}
       icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-cyan-400' : 'text-accent-red'}`} />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
+      borderless
+      centerTitle
     >
       {/* Search Bar */}
-      <div className="p-4 border-b border-border-color bg-bg-elevated/40 shrink-0">
+      <div className="p-4 bg-bg-elevated/40 shrink-0">
         <div className="relative">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
           <input
@@ -170,7 +169,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={dict?.user?.searchCharacters || 'Search characters...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-amber/60 transition-colors font-mono"
+            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none transition-colors font-mono"
             autoFocus
           />
         </div>

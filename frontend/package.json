@@ -13,7 +13,9 @@
     "test:workflows": "tsx --test src/__tests__/live/*.test.ts",
     "check:perk-format": "tsx scripts/analyze-perk-formatting.tsx --size 12000",
     "check:i18n": "tsx scripts/check-hardcoded-strings.ts",
-    "check:i18n:strict": "tsx scripts/check-hardcoded-strings.ts --strict"
+    "check:i18n:strict": "tsx scripts/check-hardcoded-strings.ts --strict",
+    "check:styles": "tsx scripts/check-global-styles.ts",
+    "check:styles:strict": "tsx scripts/check-global-styles.ts --strict"
   },
   "dependencies": {
     "@tsparticles/engine": "^4.3.2",

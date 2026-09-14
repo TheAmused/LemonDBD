@@ -102,7 +102,9 @@ class TestSmashModels:
         # there is no `calculate_rate()` to call, and no `id` to key on: the
         # entity is the primary key.
         assert stat.total_votes == 60
-        assert stat.smash_rate == 83.3
+        # `smash_rate` is the database's raw, unrounded division -- `to_dict`
+        # is what rounds it for display -- so compare the rounded form here.
+        assert round(stat.smash_rate, 1) == 83.3
         assert stat.entity.slug == "feng_min"
         assert entity.stat.smash_count == 40
 

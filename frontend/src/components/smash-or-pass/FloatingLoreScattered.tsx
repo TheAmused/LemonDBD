@@ -143,7 +143,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 text-right opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           onMouseEnter={handleCardHover}
         >
-          <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
+          <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_rgba(220,38,38,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
             {firstName}
           </span>
         </div>
@@ -156,7 +156,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             style={{ animationDelay: '100ms' }}
             onMouseEnter={handleCardHover}
           >
-            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-zinc-900 dark:text-zinc-100 font-mono group-hover:text-pink-500 group-hover:drop-shadow-[0_0_60px_rgba(255,0,85,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
+            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_rgba(220,38,38,0.8)] transition-all duration-500 inline-block group-hover:scale-105 transform">
               {lastName}
             </span>
           </div>
@@ -175,10 +175,10 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           <div
             className={`relative overflow-hidden p-4 rounded-3xl border-2 bg-bg-surface/95 backdrop-blur-2xl shadow-2xl transition-all duration-300 ${
               isSurvivor
-                ? 'border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.2)] group-hover:border-emerald-400 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.5)]'
+                ? 'border-accent-green/50 group-hover:border-accent-green'
                 : isMonster
-                ? 'border-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.2)] group-hover:border-purple-400 group-hover:shadow-[0_0_50px_rgba(168,85,247,0.5)]'
-                : 'border-rose-500/50 shadow-[0_0_30px_rgba(255,0,85,0.2)] group-hover:border-rose-400 group-hover:shadow-[0_0_50px_rgba(255,0,85,0.5)]'
+                ? 'border-border-color group-hover:border-border-subtle'
+                : 'border-accent-red/50 group-hover:border-accent-red'
             }`}
           >
             {/* Holographic scanlines */}
@@ -189,23 +189,23 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 <span
                   className={`flex h-11 w-11 items-center justify-center rounded-2xl border shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-inner ${
                     isSurvivor
-                      ? 'bg-emerald-500/10 border-emerald-500/30 group-hover:border-emerald-400/60'
+                      ? 'bg-accent-green/10 border-accent-green/30 group-hover:border-accent-green/60'
                       : isMonster
-                      ? 'bg-purple-500/10 border-purple-500/30 group-hover:border-purple-400/60'
-                      : 'bg-rose-500/10 border-rose-500/30 group-hover:border-rose-400/60'
+                      ? 'bg-bg-elevated border-border-color group-hover:border-border-subtle'
+                      : 'bg-accent-red/10 border-accent-red/30 group-hover:border-accent-red/60'
                   }`}
                 >
                   {isSurvivor ? (
-                    <Shield className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                    <Shield className="h-5 w-5 text-accent-green" />
                   ) : (
-                    <Skull className="h-5 w-5 text-rose-600 dark:text-rose-400" />
+                    <Skull className="h-5 w-5 text-accent-red" />
                   )}
                 </span>
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted block group-hover:text-text-secondary transition-colors">
                     {trialClassificationLabel}
                   </span>
-                  <span className="text-sm font-black font-mono tracking-tight text-text-primary block group-hover:text-pink-500 dark:group-hover:text-pink-300 transition-colors">
+                  <span className="text-sm font-black font-mono tracking-tight text-text-primary block group-hover:text-accent-red  transition-colors">
                     {roleLabel}
                   </span>
                 </div>
@@ -221,14 +221,14 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-pink-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-pink-500 group-hover:shadow-[0_0_50px_rgba(255,0,85,0.5)]">
-            <div className="flex items-center gap-1.5 text-pink-600 dark:text-pink-400">
+          <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_50px_rgba(220,38,38,0.5)]">
+            <div className="flex items-center gap-1.5 text-accent-red">
               <Sparkles className="h-3.5 w-3.5 animate-spin group-hover:scale-125 transition-transform" style={{ animationDuration: '4s' }} />
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                 {datingArchetypeLabel}
               </span>
             </div>
-            <p className="text-sm font-black font-mono tracking-tight text-text-primary group-hover:text-pink-500 dark:group-hover:text-pink-300 transition-colors">
+            <p className="text-sm font-black font-mono tracking-tight text-text-primary group-hover:text-accent-red  transition-colors">
               {charTitle}
             </p>
             <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors font-sans">
@@ -245,8 +245,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-bg-surface/95 border-2 border-emerald-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-400 group-hover:shadow-[0_0_45px_rgba(16,185,129,0.5)]">
-              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_45px_rgba(22,163,74,0.5)]">
+              <div className="flex items-center gap-1.5 text-accent-green">
                 <CheckCircle2 className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                   {greenFlagLabel}
@@ -269,21 +269,21 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           style={{ animationDelay: '40ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative overflow-hidden flex items-center justify-between p-4 rounded-3xl bg-bg-surface/95 border-2 border-cyan-500/40 backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-cyan-400 group-hover:shadow-[0_0_50px_rgba(6,182,212,0.5)]">
+          <div className="relative overflow-hidden flex items-center justify-between p-4 rounded-3xl bg-bg-surface/95 border-2 border-border-color backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-border-subtle group-hover:shadow-[0_0_50px_rgba(0,0,0,0)]">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/30 shrink-0 text-cyan-600 dark:text-cyan-400 group-hover:scale-115 group-hover:-rotate-6 transition-transform shadow-inner">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-border-color shrink-0 text-text-secondary group-hover:scale-115 group-hover:-rotate-6 transition-transform shadow-inner">
                 <User className="h-5 w-5" />
               </span>
               <div>
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted block group-hover:text-text-secondary transition-colors">
                   {identityProfileLabel}
                 </span>
-                <span className="text-sm font-black font-mono tracking-tight text-text-primary capitalize block group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                <span className="text-sm font-black font-mono tracking-tight text-text-primary capitalize block group-hover:text-text-primary  transition-colors">
                   {genderLabel}
                 </span>
               </div>
             </div>
-            <Zap className="h-4 w-4 text-cyan-600/70 dark:text-cyan-400/70 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 group-hover:scale-125 animate-pulse transition-transform" />
+            <Zap className="h-4 w-4 text-text-muted group-hover:text-text-secondary group-hover:scale-125 animate-pulse transition-transform" />
           </div>
         </div>
 
@@ -315,8 +315,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             style={{ animationDelay: '200ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-bg-surface/95 border-2 border-rose-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-400 group-hover:shadow-[0_0_45px_rgba(255,0,85,0.5)]">
-              <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
+            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_45px_rgba(220,38,38,0.5)]">
+              <div className="flex items-center gap-1.5 text-accent-red">
                 <AlertTriangle className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:-rotate-12 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                   {redFlagLabel}

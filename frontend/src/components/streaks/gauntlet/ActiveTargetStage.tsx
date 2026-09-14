@@ -55,7 +55,7 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; ch
   if (!src || failed) {
     return (
       <div
-        className={`w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400 ${motion}`}
+        className={`w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-accent-red ${motion}`}
       >
         {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <Skull className="w-10 h-10" aria-hidden="true" />}
       </div>
@@ -81,17 +81,17 @@ const PerkIcon: React.FC<{ perk: Perk; size?: string }> = ({ perk, size = 'w-12 
   return (
     <div
       title={displayName}
-      className={`relative ${size} shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center p-1 overflow-hidden`}
+      className={`relative ${size} shrink-0 bg-bg-elevated border border-border-color rounded-lg flex items-center justify-center p-1 overflow-hidden`}
     >
       {src && !failed ? (
         <img
           src={src}
           alt={displayName}
-          className="w-full h-full object-contain filter drop-shadow-md"
+          className="w-full h-full object-contain"
           onError={() => setFailed(true)}
         />
       ) : (
-        <Sparkles className="w-5 h-5 text-amber-500/60 dark:text-amber-400/60" aria-hidden="true" />
+        <Sparkles className="w-5 h-5 text-text-muted" aria-hidden="true" />
       )}
     </div>
   );
@@ -158,11 +158,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run || !run.current_loadout) {
     return (
-      <div className="w-full bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center backdrop-blur-md mb-8">
-        <div className="animate-spin text-amber-500 mx-auto w-8 h-8 mb-3 flex items-center justify-center">
+      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-8 text-center backdrop-blur-md mb-8">
+        <div className="animate-spin text-accent-red mx-auto w-8 h-8 mb-3 flex items-center justify-center">
           <RefreshCw className="w-8 h-8" />
         </div>
-        <p className="text-slate-500 dark:text-slate-400 text-sm">
+        <p className="text-text-muted text-sm">
           {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
         </p>
       </div>
@@ -172,9 +172,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (!run.target_revealed || isDrawing || awaitingDraw || revealing) {
     const drawing = isDrawing || awaitingDraw || revealing;
     return (
-      <div className="w-full min-h-[420px] flex flex-col items-center justify-center bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl px-8 py-4 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
+      <div className="w-full min-h-[420px] flex flex-col items-center justify-center bg-bg-surface border border-border-color rounded-2xl px-8 py-4 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
         <div
-          className={`w-36 h-36 sm:w-40 sm:h-40 mx-auto rounded-2xl p-1.5 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden mb-6 ${
+          className={`w-36 h-36 sm:w-40 sm:h-40 mx-auto rounded-2xl p-1.5 bg-accent-red border-2 border-accent-red flex items-center justify-center overflow-hidden mb-6 ${
             phase === 'landed' ? 'gn-land-glow' : ''
           }`}
         >
@@ -188,12 +188,12 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
         </div>
 
         {drawing ? (
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-3">
+          <h2 className="text-2xl sm:text-3xl font-black text-text-primary mb-3">
             {reelDisplayName ?? ' '}
           </h2>
         ) : (
           <>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mb-8">
+            <h2 className="text-2xl sm:text-3xl font-black text-text-primary mb-8">
               {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
             </h2>
             <button
@@ -206,7 +206,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 });
               }}
               disabled={loading}
-              className="bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-slate-950 font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+              className="bg-accent-red hover:bg-accent-red-hover disabled:opacity-60 text-white font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg transition-all cursor-pointer"
             >
               {dict?.streaks?.startGame || 'START GAME'}
             </button>
@@ -231,12 +231,12 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const perkSlots = [0, 1, 2, 3];
 
   return (
-    <div className="w-full min-h-[420px] bg-gradient-to-b from-white to-slate-50 dark:from-slate-900/90 dark:to-slate-950/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
+    <div className="w-full min-h-[420px] bg-bg-surface border border-border-color rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-6 mb-6">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-border-color pb-6 mb-6">
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
           <div className="relative">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-1 bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-500 border-2 border-amber-400 shadow-lg shadow-amber-500/20 flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl p-1 bg-accent-red border-2 border-accent-red flex items-center justify-center overflow-hidden">
               {avatarSrc && !avatarError ? (
                 <img
                   src={avatarSrc}
@@ -245,44 +245,44 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                   onError={() => setAvatarError(true)}
                 />
               ) : (
-                <div className="w-full h-full bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center text-amber-500 dark:text-amber-400">
+                <div className="w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-accent-red">
                   {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <Skull className="w-10 h-10" aria-hidden="true" />}
                 </div>
               )}
             </div>
-            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap tracking-wider shadow-sm">
+            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-accent-red text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap tracking-wider shadow-sm">
               {dict?.streaks?.target || 'TARGET'}
             </span>
           </div>
 
           <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
               {targetDisplayName}
             </h2>
-            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center justify-center sm:justify-start gap-2">
+            <div className="text-xs text-text-muted mt-1 flex items-center justify-center sm:justify-start gap-2">
               <span>
                 {dict?.characterDetail?.role || 'Role'}:{' '}
-                <strong className="text-slate-700 dark:text-slate-200 capitalize">
+                <strong className="text-text-secondary capitalize">
                   {role === 'survivor' ? (dict?.filters?.survivor || 'Survivor') : (dict?.filters?.killer || 'Killer')}
                 </strong>
               </span>
               <span>{dict?.streaks?.bulletSeparator || '•'}</span>
               <span>
                 {dict?.stats?.streak || 'Streak'}:{' '}
-                <strong className="text-amber-600 dark:text-amber-400 font-mono">{run.current_streak}</strong>
+                <strong className="text-accent-red font-mono">{run.current_streak}</strong>
               </span>
             </div>
           </div>
         </div>
 
         {/* Active Perk Tier Badge */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-800 dark:text-amber-300 w-full md:w-auto justify-center">
-          <Lock className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" aria-hidden="true" />
+        <div className="flex items-center gap-3 px-4 py-3 bg-accent-amber/10 border border-accent-amber/30 rounded-xl text-accent-amber w-full md:w-auto justify-center">
+          <Lock className="w-5 h-5 text-accent-amber shrink-0" aria-hidden="true" />
           <div>
-            <div className="text-[10px] uppercase font-black text-amber-600 dark:text-amber-400 tracking-wider">
+            <div className="text-[10px] uppercase font-black text-accent-amber tracking-wider">
               {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level}: {tierInfo.name}
             </div>
-            <div className="text-xs font-bold text-slate-900 dark:text-white">
+            <div className="text-xs font-bold text-text-primary">
               {perkLimit === 0
                 ? dict?.streaks?.perklessTrial || '0 Perks (Perkless Trial)'
                 : `${perkLimit} ${perkLimit > 1 ? (dict?.streaks?.perksAllowedPlural || 'Perks Allowed') : (dict?.streaks?.perksAllowedSingular || 'Perk Allowed')}`}
@@ -294,13 +294,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       {/* Build guide */}
       <div className="mb-8">
         <div className="mb-4">
-          <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" aria-hidden="true" />
+          <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-accent-red" aria-hidden="true" />
             {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
           </h3>
         </div>
         {charactersPerksOnly && perkLimit === 0 && (
-          <p className="mb-4 text-xs text-slate-600 dark:text-slate-300">
+          <p className="mb-4 text-xs text-text-secondary">
             {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {targetDisplayName}{' '}
             {dict?.streaks?.goesInBare || 'goes in bare.'}
           </p>
@@ -312,16 +312,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               return (
                 <div
                   key={`locked-${idx}`}
-                  className="bg-slate-100/60 border border-slate-200 border-dashed dark:bg-slate-950/40 dark:border-slate-800/80 rounded-xl p-4 flex items-center gap-3 opacity-60 select-none"
+                  className="bg-bg-elevated/60 border border-border-color border-dashed rounded-xl p-4 flex items-center gap-3 opacity-60 select-none"
                 >
-                  <div className="w-16 h-16 shrink-0 bg-slate-200/80 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-600" aria-hidden="true">
+                  <div className="w-16 h-16 shrink-0 bg-bg-elevated border border-border-color rounded-lg flex items-center justify-center text-text-muted" aria-hidden="true">
                     <Lock className="w-7 h-7" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    <h4 className="text-xs font-bold text-text-muted uppercase tracking-wider">
                       {dict?.streaks?.slotLabel || 'Slot'} {idx + 1} {dict?.streaks?.lockedSuffix || 'locked'}
                     </h4>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                    <p className="text-xs text-text-muted mt-0.5">
                       {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level} {dict?.streaks?.ruleSuffix || 'rule'}
                     </p>
                   </div>
@@ -333,24 +333,24 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               return (
                 <div
                   key={`char-slot-${idx}`}
-                  className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex items-center gap-3"
+                  className="bg-accent-red/10 border border-accent-red/40 rounded-xl p-4 flex items-center gap-3"
                 >
-                  <div className="relative w-16 h-16 shrink-0 bg-amber-500/10 border border-amber-500/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400" aria-hidden="true">
+                  <div className="relative w-16 h-16 shrink-0 bg-accent-red/10 border border-accent-red/30 rounded-lg flex items-center justify-center text-accent-red" aria-hidden="true">
                     <HelpCircle className="w-9 h-9" />
                     {avatarSrc && !avatarError && (
                       <img
                         src={avatarSrc}
                         alt=""
                         aria-hidden="true"
-                        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full object-cover border-2 border-amber-400 bg-white dark:bg-slate-950 shadow-sm"
+                        className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full object-cover border-2 border-accent-red bg-bg-surface shadow-sm"
                       />
                     )}
                   </div>
                   <div className="overflow-hidden">
-                    <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                    <h4 className="text-xs font-black text-accent-red uppercase tracking-wider">
                       {dict?.streaks?.slotLabel || 'Slot'} {idx + 1}
                     </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                    <p className="text-[11px] text-text-muted mt-0.5 truncate">
                       {dict?.streaks?.ownPerkOf || 'Own perk:'} {targetDisplayName}
                     </p>
                   </div>
@@ -362,13 +362,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
               return (
                 <div
                   key="character-slot"
-                  className="bg-amber-500/[0.07] border border-amber-500/40 rounded-xl p-4 flex flex-col gap-3"
+                  className="bg-accent-red/10 border border-accent-red/40 rounded-xl p-4 flex flex-col gap-3"
                 >
                   <div>
-                    <h4 className="text-xs font-black text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                    <h4 className="text-xs font-black text-accent-red uppercase tracking-wider">
                       {dict?.streaks?.slotOneOfThese || 'Slot 1: one of these'}
                     </h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-text-muted mt-0.5">
                       {dict?.streaks?.ownPerksOf || 'Own perks:'} {targetDisplayName}
                     </p>
                   </div>
@@ -379,7 +379,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                       ))}
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-400 dark:text-slate-500 italic">
+                    <p className="text-xs text-text-muted italic">
                       {dict?.streaks?.noTeachablePerks || 'No teachable perks on record for this character.'}
                     </p>
                   )}
@@ -390,16 +390,16 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             return (
               <div
                 key={`free-${idx}`}
-                className="bg-white dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center gap-3"
+                className="bg-bg-surface border border-border-color rounded-xl p-4 flex items-center gap-3"
               >
-                <div className="w-16 h-16 shrink-0 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center justify-center text-slate-400 dark:text-slate-500" aria-hidden="true">
+                <div className="w-16 h-16 shrink-0 bg-bg-elevated border border-border-color rounded-lg flex items-center justify-center text-text-muted" aria-hidden="true">
                   <HelpCircle className="w-9 h-9" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-text-secondary uppercase tracking-wider">
                     {dict?.swf?.slot || 'Slot'} {idx + 1}
                   </h4>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                  <p className="text-[11px] text-text-muted mt-0.5">
                     {dict?.streaks?.anyPerkYouLike || 'Any perk you like'}
                   </p>
                 </div>
@@ -416,7 +416,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             type="button"
             onClick={onWin}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-950/30 transition-all flex items-center justify-center cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center cursor-pointer"
           >
             {dict?.streaks?.winMatch || 'WON'}
           </button>
@@ -425,7 +425,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             type="button"
             onClick={onLoss}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 active:bg-rose-700 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg shadow-rose-950/30 transition-all flex items-center justify-center cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center cursor-pointer"
           >
             {dict?.streaks?.loseMatch || 'LOST'}
           </button>

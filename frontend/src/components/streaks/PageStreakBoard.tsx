@@ -59,7 +59,7 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
     <div>
       <Link
         href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
@@ -70,9 +70,9 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
           <img
             src="/images/streaks/page-streak.jpg"
             alt=""
-            className="h-11 w-11 rounded-xl border border-orange-500/20 object-cover shadow-sm"
+            className="h-11 w-11 rounded-xl border border-border-color object-cover shadow-sm"
           />
-          <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
+          <h2 className="text-lg font-extrabold tracking-wide text-text-primary">
             {dict?.streaks?.pageStreak || 'Page streak'}
           </h2>
         </div>
@@ -80,7 +80,7 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
         <button
           type="button"
           onClick={() => setConfirmingResetAll(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-300 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           {dict?.streaks?.resetAllRuns || 'Reset all killers'}

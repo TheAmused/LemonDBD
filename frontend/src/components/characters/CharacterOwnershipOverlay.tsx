@@ -2,6 +2,42 @@
 import React from 'react';
 import { Lock, Check } from 'lucide-react';
 
+export interface OwnershipClipOverlayProps {
+  isOwned: boolean;
+  isPartial: boolean;
+  imageSrc?: string;
+}
+
+/** The grayscale-clip + dark-scrim treatment for a locked or partially-owned
+ * item: fully desaturated and dimmed when fully locked, or muted on the left
+ * half / full color showing through on the right half when partially owned.
+ * Pure visual, no badges -- shared by character portraits
+ * (CharacterOwnershipOverlay below) and chapter banners so "partially owned"
+ * reads identically everywhere a set of characters can be partly unlocked. */
+export const OwnershipClipOverlay: React.FC<OwnershipClipOverlayProps> = ({
+  isOwned,
+  isPartial,
+  imageSrc,
+}) => {
+  if (isOwned) return null;
+
+  return (
+    <>
+      {imageSrc && (
+        <img
+          src={imageSrc}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
+          style={{ clipPath: isPartial ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
+        />
+      )}
+      {!isPartial && <div className="absolute inset-0 bg-slate-950/50" />}
+      {isPartial && <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />}
+    </>
+  );
+};
+
 export interface CharacterOwnershipOverlayProps {
   isOwned: boolean;
   hasPartialPerks: boolean;
@@ -21,11 +57,9 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
   lockedTitle,
   ownedTitle,
 }) => {
-  const showLockedOverlay = !isOwned;
-
   return (
     <>
-      {showLockedOverlay && (
+      {!isOwned && (
         <div
           className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-surface border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md"
           title={lockedTitle}
@@ -35,25 +69,13 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
       )}
       {isOwned && (
         <div
-          className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-xs"
+          className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-accent-green/20 border border-accent-green/40 text-accent-green backdrop-blur-md shadow-xs"
           title={ownedTitle}
         >
           <Check className="h-3.5 w-3.5" />
         </div>
       )}
-      {showLockedOverlay && avatarSrc && (
-        <img
-          src={avatarSrc}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
-          style={{ clipPath: hasPartialPerks ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
-        />
-      )}
-      {showLockedOverlay && !hasPartialPerks && (
-        <div className="absolute inset-0 bg-slate-950/50" />
-      )}
-      {hasPartialPerks && <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />}
+      <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} />
     </>
   );
 };

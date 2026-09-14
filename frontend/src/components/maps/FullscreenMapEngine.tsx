@@ -190,7 +190,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label={dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
-      className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden select-none text-slate-100"
+      className="fixed inset-0 z-50 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary"
     >
       {/* Top Tactical Command Ribbon */}
       <header className="absolute top-0 inset-x-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-slate-950/90 backdrop-blur-2xl border-b border-slate-800/80 shadow-2xl">
@@ -229,7 +229,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               type="button"
               onClick={onClose}
               aria-label={dict?.modal?.close || 'Close'}
-              className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-700 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+              className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-700 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <X className="w-5 h-5" />
             </button>
@@ -331,7 +331,11 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
         style={{ touchAction: 'none' }}
+<<<<<<< HEAD
         className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-slate-950 pt-24 sm:pt-20 pb-16 px-4"
+=======
+        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-20 pb-24 px-6"
+>>>>>>> develop
       >
         {imageSrc && !imageFailed ? (
           <img
@@ -348,7 +352,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             onError={() => setImageFailed(true)}
           />
         ) : (
-          <div className="flex flex-col items-center gap-3 text-slate-600">
+          <div className="flex flex-col items-center gap-3 text-text-muted">
             <ImageOff className="w-12 h-12" />
             <span className="text-xs font-bold uppercase tracking-wider">
               {dict?.maps?.noMapsFound || 'No Tactical Callout Image Available'}
@@ -501,39 +505,38 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         <div
           role="toolbar"
           aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}
-          className="pointer-events-auto ml-auto flex items-center gap-2 bg-slate-950/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
+          className="pointer-events-auto ml-auto flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
+            className="p-2 rounded-xl text-text-muted hover:text-white hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             title={dict?.maps?.zoomOut || 'Zoom Out'}
             aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
 
-          <span className="text-xs font-mono font-bold text-amber-400 px-2 min-w-[50px] text-center">
-            {Math.round(zoom * 100)}
-            {dict?.maps?.percentSign || '%'}
+          <span className="text-xs font-mono font-bold text-text-primary px-2 min-w-[50px] text-center">
+            {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
           </span>
 
           <button
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
+            className="p-2 rounded-xl text-text-muted hover:text-white hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             title={dict?.maps?.zoomIn || 'Zoom In'}
             aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
 
-          <div className="w-px h-4 bg-slate-800 my-auto" />
+          <div className="w-px h-4 bg-border-color my-auto" />
 
           <button
             type="button"
             onClick={handleResetView}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
+            className="p-2 rounded-xl text-text-muted hover:text-white hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             title={dict?.maps?.resetPanZoom || 'Reset Pan and Zoom'}
             aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
           >

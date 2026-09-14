@@ -294,13 +294,13 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         onClick={handleOpen}
         title={t?.triggerTitle || "What's New?"}
         aria-label={t?.triggerTitle || "What's New?"}
-        className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-amber-500/50 hover:text-amber-400 hover:bg-amber-500/10 cursor-pointer ${className}`}
+        className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
       >
         <Megaphone className="h-4 w-4" />
         {hasUnread && (
           <span className="absolute -right-0.5 -top-0.5 flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-bg-surface" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-red opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
           </span>
         )}
       </button>
@@ -317,15 +317,11 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-red-900/40 bg-bg-surface/98 shadow-2xl shadow-black/70 cursor-default animate-in zoom-in-95 duration-200"
+              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-accent-red/40 bg-bg-surface/98 shadow-2xl shadow-black/70 cursor-default animate-in zoom-in-95 duration-200"
             >
-              {/* Heartbeat glow accent */}
-              <div className="pointer-events-none absolute -top-16 right-0 h-48 w-48 rounded-full bg-red-600/10 blur-3xl" />
-              <div className="pointer-events-none absolute -bottom-16 left-0 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl" />
-
               <div className="relative flex items-center justify-between border-b border-border-color px-6 py-5">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/10 text-amber-400 shadow-inner">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/10 text-accent-red shadow-inner">
                     <Sparkles className="h-4 w-4" />
                   </span>
                   <h2 id="whats-new-title" className="text-base font-black tracking-tight text-text-primary">
@@ -341,7 +337,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         setEditorOpen(true);
                       }}
                       title={t?.newEntry || 'New entry'}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle text-text-secondary hover:border-amber-500/50 hover:text-amber-400 cursor-pointer"
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
@@ -412,7 +408,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                       onPointerCancel={endDrag}
                       className={`rounded-2xl border transition-all ${
                         isDragging
-                          ? 'border-amber-500/60 bg-bg-elevated/80 shadow-lg shadow-amber-950/30 scale-[1.01] z-10 relative'
+                          ? 'border-accent-amber/60 bg-bg-elevated/80 shadow-lg scale-[1.01] z-10 relative'
                           : post.is_published
                             ? 'border-border-color bg-bg-elevated/50'
                             : 'border-dashed border-border-subtle bg-bg-elevated/20'
@@ -427,7 +423,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                             onPointerDown={(e) => beginDrag(e, post.id)}
                             style={{ touchAction: 'none' }}
                             className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-text-muted hover:bg-bg-elevated hover:text-text-secondary cursor-grab active:cursor-grabbing ${
-                              isDragging ? 'text-amber-400' : ''
+                              isDragging ? 'text-accent-amber' : ''
                             }`}
                           >
                             <GripVertical className="h-4 w-4" />
@@ -471,7 +467,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         <div className="overflow-hidden">
                           <div className="px-4 pb-4 pl-[2.75rem]">
                             <div
-                              className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-amber-400 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-sky-400 [&_a]:underline"
+                              className="dbd-changelog-body text-xs leading-relaxed text-text-muted [&_h3]:text-sm [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_a]:text-accent-red [&_a]:underline"
                               dangerouslySetInnerHTML={{ __html: post.content_html }}
                             />
                             <div className="mt-2.5 flex items-center justify-between gap-2">
@@ -499,7 +495,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                                   <IconButton
                                     icon={Pencil}
                                     label={t?.edit || 'Edit'}
-                                    hoverClass="hover:text-amber-400"
+                                    hoverClass="hover:text-accent-red"
                                     onClick={() => {
                                       setEditingPost(post);
                                       setEditorOpen(true);
@@ -508,7 +504,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                                   <IconButton
                                     icon={Trash2}
                                     label={t?.delete || 'Delete'}
-                                    hoverClass="hover:text-rose-400"
+                                    hoverClass="hover:text-accent-red"
                                     onClick={() => setPendingDeleteId(post.id)}
                                   />
                                 </div>
@@ -572,7 +568,7 @@ const FilterChip: React.FC<{ active: boolean; onClick: () => void; label: string
     onClick={onClick}
     className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold transition-all cursor-pointer ${
       active
-        ? 'border-amber-500/50 bg-amber-500/10 text-amber-400'
+        ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
         : 'border-border-color text-text-muted hover:text-text-secondary'
     }`}
   >

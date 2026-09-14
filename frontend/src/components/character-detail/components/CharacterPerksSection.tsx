@@ -48,7 +48,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                 rect,
                 badge: localizedBadge,
                 category: character.name || perk.character || localizedBadge,
-                accentColor: 'text-amber-400',
+                accentColor: isSurvivor ? 'text-accent-green' : 'text-accent-red',
               });
             }}
             onMouseLeave={() => setActiveHover(null)}
@@ -66,13 +66,13 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   icon_local_path: perk.icon_local_path || '',
                 })
               }
-              className="h-24 w-24 sm:h-32 sm:w-32 flex items-center justify-center hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded-2xl transition-all duration-300 cursor-pointer"
+              className="h-24 w-24 sm:h-32 sm:w-32 flex items-center justify-center hover:scale-110 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red rounded-2xl transition-all duration-300 cursor-pointer"
               aria-label={`${perk.name} - ${t.clickToInspect || 'Click to inspect perk'}`}
             >
               <img
                 src={iconSrc}
                 alt={perk.name}
-                className={`h-full w-full object-contain filter drop-shadow-[0_0_14px_rgba(245,158,11,0.6)] ${
+                className={`h-full w-full object-contain ${
                   perk.is_disabled ? 'grayscale opacity-50' : ''
                 }`}
                 loading="lazy"

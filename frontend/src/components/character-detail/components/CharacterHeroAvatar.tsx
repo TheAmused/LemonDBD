@@ -48,7 +48,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             onOpenModelModal();
           }
         }}
-        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950 shadow-lg dark:shadow-2xl cursor-pointer hover:border-amber-500/60 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all duration-300 flex items-center justify-center"
+        className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
         title={t.view3DModel || ''}
         aria-label={heroAriaLabel}
       >
@@ -63,14 +63,14 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             onError={() => setImgFailed(true)}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center p-6 text-center text-slate-500">
+          <div className="flex flex-col items-center justify-center p-6 text-center text-text-muted">
             <User className="h-16 w-16 mb-2 opacity-50" />
-            <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-400">{character.name}</span>
+            <span className="text-xs font-mono font-bold text-text-secondary">{character.name}</span>
           </div>
         )}
 
         <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center transition-opacity duration-200">
-          <div className="h-12 w-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 mb-2 shadow-lg">
+          <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg">
             <Eye className="h-6 w-6" />
           </div>
           <span className="text-xs font-black text-white uppercase tracking-wider">
@@ -86,15 +86,15 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
           <span
             className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-black border backdrop-blur-md ${isSurvivor
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm shadow-emerald-950/50'
-                : 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-sm shadow-rose-950/50'
+                ? 'bg-accent-green/20 text-accent-green border-accent-green/40 shadow-sm'
+                : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-sm'
               }`}
           >
             {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
             {roleLabel}
           </span>
 
-          <span className="rounded-full bg-slate-900/80 border border-slate-700/80 px-2.5 py-0.5 text-[10px] font-bold text-slate-300 backdrop-blur-md">
+          <span className="rounded-full bg-bg-elevated/80 border border-border-color px-2.5 py-0.5 text-[10px] font-bold text-text-secondary backdrop-blur-md">
             {character.is_licensed ? (t.dlcLicensed || '') : (t.dlcOriginal || '')}
           </span>
         </div>

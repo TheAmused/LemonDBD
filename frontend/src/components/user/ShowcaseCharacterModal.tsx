@@ -154,7 +154,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       onClose={onClose}
       size="2xl"
       title={`${dict?.user?.selectCharacter || 'Select Character'} (${role})`}
-      icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-cyan-400' : 'text-accent-red'}`} />}
+      icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless

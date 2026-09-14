@@ -14,7 +14,7 @@ export const FlavorPill: React.FC<FlavorPillProps> = ({ flavorLine, className })
     <div
       aria-live="polite"
       className={cn(
-        'max-w-xs sm:max-w-md mx-auto min-h-[44px] sm:min-h-[52px] px-4 py-1.5 rounded-full bg-amber-100/90 dark:bg-amber-950/70 border border-amber-400/50 dark:border-amber-500/40 text-xs sm:text-sm font-black text-amber-900 dark:text-amber-300 text-center shadow-md animate-fade-in break-words transition-colors flex items-center justify-center',
+        'max-w-xs sm:max-w-md mx-auto min-h-[44px] sm:min-h-[52px] px-4 py-1.5 rounded-full bg-accent-green/10 border border-accent-green/40 text-xs sm:text-sm font-black text-accent-green text-center shadow-xs animate-fade-in break-words transition-colors flex items-center justify-center',
         !flavorLine && 'invisible',
         className
       )}

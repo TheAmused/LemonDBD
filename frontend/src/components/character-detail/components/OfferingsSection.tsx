@@ -275,20 +275,20 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   return (
     <section className="space-y-6 w-full pt-2" aria-labelledby="offerings-heading">
       {/* Top Controls Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-color pb-3">
         <div className="flex items-center gap-2.5">
           <span
             className={`flex h-8 w-8 items-center justify-center rounded-xl border ${
               isKiller
-                ? 'bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30'
-                : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
+                ? 'bg-accent-red/10 text-accent-red border-accent-red/30'
+                : 'bg-accent-green/10 text-accent-green border-accent-green/30'
             }`}
             aria-hidden="true"
           >
             <Gift className="h-4 w-4" />
           </span>
           <div>
-            <h2 id="offerings-heading" className="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
+            <h2 id="offerings-heading" className="text-lg sm:text-xl font-black text-text-primary font-mono tracking-tight">
               {t.offeringsTitle || 'Offerings & Sacrificial Rites'}
             </h2>
           </div>
@@ -297,12 +297,12 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       </div>
 
       {/* Main Container with Centered Category Buttons Straddling the Top Border */}
-      <div className="relative mt-8 pt-8 pb-5 px-5 sm:px-6 rounded-3xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg w-full">
+      <div className="relative mt-8 pt-8 pb-5 px-5 sm:px-6 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg w-full">
         <div className="absolute -top-5 inset-x-0 flex justify-center z-10 px-2 pointer-events-none">
           <div
             role="tablist"
             aria-label={t.offeringCategories || 'Offering categories'}
-            className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-xl backdrop-blur-md pointer-events-auto max-w-full"
+            className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-2xl bg-bg-surface border border-border-color shadow-lg dark:shadow-xl backdrop-blur-md pointer-events-auto max-w-full"
           >
             {categories.map((cat) => {
               const Icon = cat.icon;
@@ -317,9 +317,9 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer text-xs font-bold ${
                     isSelected
                       ? isKiller
-                        ? 'bg-rose-500/20 border border-rose-500/60 text-rose-700 dark:text-rose-300 shadow-md shadow-rose-900/10 dark:shadow-rose-950/50 scale-105'
-                        : 'bg-emerald-500/20 border border-emerald-500/60 text-emerald-700 dark:text-emerald-300 shadow-md shadow-emerald-900/10 dark:shadow-emerald-950/50 scale-105'
-                      : 'bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/80'
+                        ? 'bg-accent-red/20 border border-accent-red/60 text-accent-red shadow-md scale-105'
+                        : 'bg-accent-green/20 border border-accent-green/60 text-accent-green shadow-md scale-105'
+                      : 'bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:bg-bg-surface'
                   }`}
                   title={`${cat.label} - ${cat.desc}`}
                 >
@@ -328,7 +328,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   {isSelected && (
                     <span
                       className={`h-1.5 w-1.5 rounded-full ${
-                        isKiller ? 'bg-rose-400' : 'bg-emerald-400'
+                        isKiller ? 'bg-accent-red' : 'bg-accent-green'
                       }`}
                       aria-hidden="true"
                     />
@@ -340,10 +340,10 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         </div>
 
         {/* Section Subtitle */}
-        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-2.5 mb-4">
+        <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-4">
           <h3
             className={`text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5 ${
-              isKiller ? 'text-rose-700 dark:text-rose-400' : 'text-emerald-700 dark:text-emerald-400'
+              isKiller ? 'text-accent-red' : 'text-accent-green'
             }`}
           >
             <Gift className="h-4 w-4" aria-hidden="true" />
@@ -353,7 +353,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
 
         {/* Offerings Grid */}
         {sortedAndFilteredOfferings.length === 0 ? (
-          <div className="flex items-center justify-center p-12 text-center text-slate-500 text-xs italic">
+          <div className="flex items-center justify-center p-12 text-center text-text-muted text-xs italic">
             {t.noOfferingsFound || 'No offerings found in this category matching your active filter.'}
           </div>
         ) : (
@@ -379,13 +379,13 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     setActiveHover({ item: offering, rect, category: activeCategoryConfig.label });
                   }}
                   onMouseLeave={() => setActiveHover(null)}
-                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
                   <img
                     src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
                     alt={offering.name}
-                    className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
+                    className="h-full w-full object-contain"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}

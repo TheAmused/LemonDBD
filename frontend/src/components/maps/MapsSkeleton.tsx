@@ -32,7 +32,7 @@ export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({
       <DbdSpinner
         size="responsive"
         layout="inline"
-        accent="cyan"
+        accent="blood"
         needleSpeed={1.6}
         label={loadingLabel}
         dict={dict}

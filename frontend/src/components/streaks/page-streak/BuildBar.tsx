@@ -31,24 +31,24 @@ export const BuildBar: React.FC<BuildBarProps> = ({
     <div
       role="region"
       aria-label={dict?.streaks?.yourBuildForMatch || 'Perk Build Selection'}
-      className="flex flex-wrap items-center gap-2.5 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50 p-3 shadow-sm"
+      className="flex flex-wrap items-center gap-2.5 rounded-xl border border-border-color bg-bg-surface p-3 shadow-sm"
     >
       {slots.map((name, index) => (
         <div
           key={index}
           className={`flex h-16 min-w-[145px] flex-1 items-center gap-2.5 rounded-lg px-3 text-xs transition-colors ${
             name
-              ? 'border border-orange-500/50 bg-orange-500/10 font-semibold text-slate-900 dark:text-slate-100'
-              : 'border border-dashed border-slate-300 dark:border-slate-700 font-mono text-slate-400 dark:text-slate-600'
+              ? 'border border-accent-red/50 bg-accent-red/10 font-semibold text-text-primary'
+              : 'border border-dashed border-border-color font-mono text-text-muted'
           }`}
         >
           {name && (
             <span
-              className="grid h-11 w-11 flex-none place-items-center bg-orange-400/60"
+              className="grid h-11 w-11 flex-none place-items-center bg-accent-red/60"
               style={{ clipPath: DIAMOND_CLIP_PATH }}
             >
               <span
-                className="grid h-[82%] w-[82%] place-items-center bg-gradient-to-br from-amber-900/80 to-slate-950"
+                className="grid h-[82%] w-[82%] place-items-center bg-bg-primary"
                 style={{ clipPath: DIAMOND_CLIP_PATH }}
               >
                 {iconByPerk[name] && (
@@ -69,7 +69,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({
         type="button"
         onClick={onConfirm}
         disabled={selected.length !== size || confirmed}
-        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-2 text-xs font-extrabold text-white transition-opacity disabled:opacity-40 shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+        className="rounded-lg bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-extrabold text-text-inverted transition-opacity disabled:opacity-40 shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
       >
         {confirmed
           ? (dict?.streaks?.buildLocked || 'Build locked')

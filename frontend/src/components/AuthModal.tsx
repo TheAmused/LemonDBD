@@ -156,14 +156,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+          className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           aria-label={dict?.modal?.close}
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-amber/15 p-2.5 border border-accent-amber/30 text-accent-amber shadow-xs">
+          <div className="relative mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-red/15 p-2.5 border border-accent-red/30 text-accent-red shadow-xs">
             <LemonIcon className="h-9 w-9 animate-pulse" />
           </div>
           <h2
@@ -272,7 +272,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder={dict?.user?.usernameOrEmailPlaceholder}
-                    className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner"
+                    className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
                   />
                 </div>
               </div>
@@ -293,7 +293,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={dict?.user?.emailPlaceholder}
-                    className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner"
+                    className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
                   />
                 </div>
               </div>
@@ -314,7 +314,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none focus:ring-1 focus:ring-accent-amber transition-all shadow-inner"
+                    className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
                   />
                 </div>
               </div>
@@ -343,7 +343,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md shadow-accent-amber/20 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber disabled:opacity-50 transition-all cursor-pointer"
+              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red disabled:opacity-50 transition-all cursor-pointer"
             >
               {loading ? (
                 <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />
@@ -386,7 +386,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => handleFillDemo('player')}
-                className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 text-[11px] font-semibold text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+                className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-1.5 text-[11px] font-semibold text-accent-amber hover:bg-accent-amber/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               >
                 <Sparkles className="h-3 w-3 text-accent-amber" />
                 <span>{dict?.user?.userDemo}</span>

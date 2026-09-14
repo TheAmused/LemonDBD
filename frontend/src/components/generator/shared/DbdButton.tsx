@@ -5,17 +5,11 @@
 // Pull the Lever, Spin for Perk Slot, Roll, Shuffle & Draw, Crack Open the
 // Crate, Confirm Selection, Draw Again.
 //
-// Previously this was a bespoke dark bevelled panel with a diamond
-// clip-path notch and an amber *border* only -- a completely different
-// visual language from every other primary button on the rest of the site
-// (AuthModal's submit button, UserProfileForm's save button, BuildVault's
-// and CustomPerkStudio's submit buttons, etc.), which all share the same
-// convention: a solid amber-to-red gradient fill, rounded-xl corners, white
-// uppercase text, and an amber drop shadow. That mismatch is exactly why
-// this button stood out. It's now built on that same shared convention so
-// it reads as part of the app instead of a different app pasted into it --
-// the role accent (Survivor/Killer) survives only as a thin focus/idle ring
-// tint, not as a whole separate shape or color scheme.
+// Built on the same shared convention as every other primary button on the
+// site (AuthModal's submit button, UserProfileForm's save button, etc.): a
+// solid accent-red fill, rounded-xl corners, white uppercase text. The role
+// accent (Survivor/Killer) survives only as a thin focus-ring tint, not a
+// whole separate shape or color scheme.
 import React from 'react';
 import { cn } from '@/utils/cn';
 
@@ -47,12 +41,11 @@ const ICON_SIZE: Record<DbdButtonSize, string> = {
   sm: 'h-4 w-4',
 };
 
-// Role identity now lives only in the focus ring + idle shadow tint --
-// Survivor leans the shared amber-red gradient slightly warmer/greener at
-// the ring, Killer slightly redder -- instead of a differently-shaped panel.
+// Role identity lives only in the focus ring tint -- Survivor green, Killer
+// red -- instead of a differently-shaped panel.
 const ROLE_RING: Record<DbdButtonRole, string> = {
-  Survivor: 'focus-visible:ring-emerald-400',
-  Killer: 'focus-visible:ring-rose-400',
+  Survivor: 'focus-visible:ring-accent-green',
+  Killer: 'focus-visible:ring-accent-red',
 };
 
 export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(function DbdButton(
@@ -73,8 +66,8 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
         SIZE_STYLES[size],
         ROLE_RING[role],
         active
-          ? 'cursor-pointer bg-gradient-to-r from-amber-600 via-amber-500 to-red-600 shadow-lg shadow-amber-900/30 hover:from-amber-500 hover:via-amber-400 hover:to-red-500 active:scale-[0.97]'
-          : 'cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 opacity-60',
+          ? 'cursor-pointer bg-accent-red shadow-xs hover:bg-accent-red-hover active:scale-[0.97]'
+          : 'cursor-not-allowed bg-bg-elevated text-text-muted opacity-60',
         className
       )}
     >

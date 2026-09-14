@@ -67,11 +67,9 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
       }
     }, duration + 100);
 
-    // Color Palettes
-    // Palette: Deep void (#09090b), Neon Crimson (#ff0055), Cyber Mint (#00f5d4), Deep Velvet Purple (#2e0854), Eldritch Gold (#ffd166)
-    const crimsonPalette = ['#ff0055', '#ff2a7a', '#fb7185', '#2e0854', '#fda4af', '#ffffff'];
-    const goldPalette = ['#ffd166', '#f59e0b', '#fbbf24', '#ff0055', '#fff1f2', '#ffffff'];
-    const voidCyanPalette = ['#00f5d4', '#06b6d4', '#2e0854', '#09090b', '#334155', '#64748b'];
+    const crimsonPalette =['#dc2626', '#b91c1c', '#ef4444', '#f87171', '#fecaca', '#ffffff'];
+    const goldPalette = ['#fbbf24', '#f59e0b', '#fde68a', '#d97706', '#fff7ed', '#ffffff'];
+    const voidCyanPalette = ['#71717a', '#52525b', '#a1a1aa', '#09090b', '#3f3f46', '#27272a'];
 
     // Spawn Particles
     const particles: Particle[] = [];
@@ -186,7 +184,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         ctx.save();
         const grad = ctx.createLinearGradient(0, 0, 0, height);
         grad.addColorStop(0, `rgba(9, 9, 11, ${sweepProgress * 0.95})`);
-        grad.addColorStop(0.5, `rgba(46, 8, 84, ${sweepProgress * 0.6})`);
+        grad.addColorStop(0.5, `rgba(39, 39, 42, ${sweepProgress * 0.6})`);
         grad.addColorStop(1, `rgba(9, 9, 11, ${sweepProgress * 0.98})`);
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
@@ -198,7 +196,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
           ctx.save();
           ctx.translate(shift, 0);
           ctx.fillStyle = `rgba(9, 9, 11, ${Math.max(0, 0.9 - progress * 0.85)})`;
-          ctx.strokeStyle = `rgba(0, 245, 212, ${Math.max(0, 0.7 - progress * 0.7)})`;
+          ctx.strokeStyle = `rgba(161, 161, 170, ${Math.max(0, 0.7 - progress * 0.7)})`;
           ctx.lineWidth = 1.5;
           ctx.fillRect(0, slice.y, width, slice.height);
           ctx.strokeRect(0, slice.y, width, slice.height);
@@ -210,7 +208,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         ctx.save();
         for (let s = 0; s < scanlineCount; s++) {
           const y = s * 4;
-          ctx.fillStyle = s % 2 === 0 ? 'rgba(0, 245, 212, 0.08)' : 'rgba(9, 9, 11, 0.25)';
+          ctx.fillStyle = s % 2 === 0 ? 'rgba(161, 161, 170, 0.08)' : 'rgba(9, 9, 11, 0.25)';
           ctx.fillRect(0, y, width, 1.5);
         }
 
@@ -221,10 +219,10 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
           const glitchShift = (Math.random() - 0.5) * 35;
 
           // Cyan / Crimson Chromatic Split Bars
-          ctx.fillStyle = 'rgba(0, 245, 212, 0.35)';
+          ctx.fillStyle = 'rgba(161, 161, 170, 0.35)';
           ctx.fillRect(glitchShift, glitchY, width, glitchH);
 
-          ctx.fillStyle = 'rgba(255, 0, 85, 0.3)';
+          ctx.fillStyle = 'rgba(220, 38, 38, 0.3)';
           ctx.fillRect(-glitchShift, glitchY + 2, width, glitchH);
         }
         ctx.restore();
@@ -253,9 +251,9 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         for (let r = 1; r <= rings; r++) {
           const rSize = (progress * width * 1.1 * r) / rings;
           ctx.save();
-          ctx.strokeStyle = `rgba(255, 209, 102, ${Math.max(0, 0.9 - progress)})`;
+          ctx.strokeStyle = `rgba(251, 191, 36, ${Math.max(0, 0.9 - progress)})`;
           ctx.lineWidth = 6 * (1 - progress);
-          ctx.shadowColor = '#ffd166';
+          ctx.shadowColor = '#fbbf24';
           ctx.shadowBlur = 24;
           ctx.beginPath();
           ctx.arc(width / 2, height / 2, rSize, 0, Math.PI * 2);
@@ -269,7 +267,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
           width / 2,
           height / 2 - 20,
           65 * (1 + progress * 0.4),
-          '#ffd166',
+          '#fbbf24',
           1 - progress * 0.8
         );
 
@@ -300,9 +298,9 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         // Expanding Crimson Shockwave
         const shockRadius = progress * width * 0.95;
         ctx.save();
-        ctx.strokeStyle = `rgba(255, 0, 85, ${Math.max(0, 0.9 - progress)})`;
+        ctx.strokeStyle = `rgba(220, 38, 38, ${Math.max(0, 0.9 - progress)})`;
         ctx.lineWidth = 7 * (1 - progress);
-        ctx.shadowColor = '#ff0055';
+        ctx.shadowColor = '#dc2626';
         ctx.shadowBlur = 28;
         ctx.beginPath();
         ctx.arc(width / 2, height / 2, shockRadius, 0, Math.PI * 2);
@@ -315,7 +313,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
           width / 2,
           height / 2 - 25,
           60 * (1 + progress * 0.35),
-          '#ff0055',
+          '#dc2626',
           1 - progress * 0.75
         );
 

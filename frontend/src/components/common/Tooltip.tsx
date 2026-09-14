@@ -127,10 +127,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
               className
             )}
           >
-            <span className="relative block overflow-hidden rounded-lg border border-accent-amber/40 bg-bg-surface px-3.5 py-2.5 shadow-lg backdrop-blur-sm">
+            <span className="relative block overflow-hidden rounded-lg border border-border-color bg-bg-surface px-3.5 py-2.5 shadow-lg backdrop-blur-sm">
               <span className="pointer-events-none absolute inset-0 opacity-[0.03] [background-image:repeating-linear-gradient(45deg,currentColor_0,currentColor_1px,transparent_1px,transparent_10px)]" />
-              <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-accent-amber to-transparent" />
-              <span className="relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-accent-amber">
+              <span className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-border-color to-transparent" />
+              <span className="relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-text-primary">
                 {title}
               </span>
               {description && (

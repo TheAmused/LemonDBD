@@ -8,7 +8,7 @@ from app.models.character import Killer, Survivor
 from app.models.perk import Perk
 from app.models.smash_or_pass import Roster
 from app.models.admin import SeedUpdateLog
-from app.seeds.static_db_seeder import seed_from_static_json, import_update_file, apply_pending_updates, SEEDS_UPDATES_DIR
+from app.seeds.static_db_seeder import seed_from_static_json, import_update_file, apply_pending_updates
 
 
 def test_static_db_seeder_initializes_empty_db(app):
@@ -42,12 +42,18 @@ def test_static_db_seeder_applies_folder_update(app, tmp_path, monkeypatch):
         fake_updates_dir.mkdir(parents=True, exist_ok=True)
         monkeypatch.setattr("app.seeds.static_db_seeder._find_updates_dirs", lambda: [fake_updates_dir])
 
+        # `_upsert_by_id` keys strictly on an integer `id` now -- no name
+        # lookup -- so the patch has to carry Sprint Burst's real seeded id.
+        sprint_burst_before = db.session.scalar(select(Perk).where(Perk.name == "Sprint Burst"))
+        assert sprint_burst_before is not None
+
         patch_file = fake_updates_dir / "001_sprint_burst_update.json"
         updated_desc = "TEST PATCH: Sprint Burst granted 200% movement speed for 5 seconds."
         patch_file.write_text(
             json.dumps({
                 "perks": [
                     {
+                        "id": sprint_burst_before.id,
                         "name": "Sprint Burst",
                         "description": updated_desc,
                     }
@@ -81,12 +87,21 @@ def test_import_update_file_directly(app, tmp_path):
     with app.app_context():
         seed_from_static_json(force=True)
 
+        # `_upsert_by_id` (the generic importer's row matcher) keys strictly
+        # on an integer `id` -- no name lookup, no slug fallback -- so the
+        # patch has to carry The Trapper's real id under the "killers" target
+        # (there is no top-level "characters" target; that split into
+        # "survivors" / "killers" along with the model).
+        trapper_before = db.session.scalar(select(Killer).where(Killer.name == "The Trapper"))
+        assert trapper_before is not None
+
         custom_patch = tmp_path / "custom_patch.json"
         new_lore = "TEST CUSTOM LORE: The Trapper became the ultimate guardian."
         custom_patch.write_text(
             json.dumps({
-                "characters": [
+                "killers": [
                     {
+                        "id": trapper_before.id,
                         "name": "The Trapper",
                         "lore": new_lore,
                     }

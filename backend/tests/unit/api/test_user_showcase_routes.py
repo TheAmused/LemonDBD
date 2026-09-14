@@ -8,7 +8,7 @@ from flask import Flask
 from flask.testing import FlaskClient
 
 from app.core.security import generate_token
-from app.models import User
+from app.models import Chapter, Killer, Survivor, User
 
 
 @pytest.mark.unit
@@ -68,8 +68,18 @@ class TestUserShowcaseRoutes:
         assert res.status_code == 403
 
     def test_update_showcase_persists_to_database(
-        self, client: FlaskClient, user: User, user_headers: dict
+        self, client: FlaskClient, user: User, user_headers: dict, db_session
     ) -> None:
+        # A showcase "main" is a foreign key to a real Survivor/Killer row now
+        # -- `character_name` is resolved against the table, not stored as a
+        # free-text label -- so the character it names has to exist first.
+        chapter = Chapter(name="Test Chapter")
+        db_session.add(chapter)
+        db_session.flush()
+        db_session.add(Survivor(name="Meg Thomas", chapter_id=chapter.id))
+        db_session.add(Killer(name="The Trapper", chapter_id=chapter.id, power_name="Bear Trap"))
+        db_session.commit()
+
         payload = {
             "player_title": "Apex Predator",
             "devotion_level": 25,

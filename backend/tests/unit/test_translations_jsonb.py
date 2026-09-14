@@ -84,12 +84,16 @@ class TestTranslationsJSONB:
 
     def test_character_translations_model(self, app: Flask) -> None:
         with app.app_context():
-            chapter = Chapter(name="Base Game")
-            db.session.add(chapter)
-            db.session.flush()
             # No `role` (the table is the role) and no `chapter_name` -- the
             # chapter title lived on every character and its translation lived
-            # in every character's blob; both come from the chapter now.
+            # in every character's blob; both come from the chapter now, so
+            # the chapter carries its own `translations` blob instead.
+            chapter = Chapter(
+                name="Base Game",
+                translations={"pl": {"name": "Gra Podstawowa"}},
+            )
+            db.session.add(chapter)
+            db.session.flush()
             char = Killer(
                 name="The Trapper",
                 chapter_id=chapter.id,

@@ -14,11 +14,13 @@ def test_chapter_upsert_and_to_dict(db_session: Session) -> None:
     found = db_session.scalars(select(Chapter).where(Chapter.name == "Test Chapter")).first()
     assert found is not None
     d = found.to_dict()
-    assert d == {
-        "name": "Test Chapter",
-        "banner_url": "https://example.com/banner.png",
-        "banner_local_path": "chapters/test_chapter.png",
-    }
+    assert d["name"] == "Test Chapter"
+    assert d["raw_name"] == "Test Chapter"
+    assert d["banner_url"] == "https://example.com/banner.png"
+    assert d["banner_local_path"] == "chapters/test_chapter.png"
+    assert d["id"] == found.id
+    assert d["dlc_type"] == "chapter"
+    assert d["is_licensed"] is False
 
 
 def test_chapter_name_is_unique(db_session: Session) -> None:
@@ -32,15 +34,21 @@ def test_chapter_name_is_unique(db_session: Session) -> None:
 
 
 def test_sync_chapters_to_db_updates_existing_row_on_case_and_whitespace_drift(db_session: Session) -> None:
-    """Importing chapter with case/whitespace drift updates the existing Chapter row."""
+    """Re-importing a chapter payload for the same id updates the existing row in place.
+
+    `_upsert_by_id` (the generic importer's row matcher) keys strictly on an
+    integer `id` now -- no name lookup, no case/whitespace-insensitive
+    fallback -- so both payloads have to carry the same id for the second
+    import to update rather than create a new row.
+    """
     DatabaseExportImportService.import_database({
         "chapters": [
-            {"name": "All-Kill", "banner_url": "https://example.com/a.png", "banner_local_path": "chapters/all_kill.png"}
+            {"id": 501, "name": "All-Kill", "banner_url": "https://example.com/a.png", "banner_local_path": "chapters/all_kill.png"}
         ]
     })
     DatabaseExportImportService.import_database({
         "chapters": [
-            {"name": "  all-kill  ", "banner_url": "https://example.com/b.png", "banner_local_path": "chapters/all_kill.png"}
+            {"id": 501, "name": "  all-kill  ", "banner_url": "https://example.com/b.png", "banner_local_path": "chapters/all_kill.png"}
         ]
     })
 

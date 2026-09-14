@@ -357,7 +357,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       {previewImage && mounted && typeof document !== 'undefined' &&
         createPortal(
           <div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-bg-primary/85 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
             onClick={() => setPreviewImage(null)}
             role="dialog"
             aria-modal="true"
@@ -378,7 +378,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
               </button>
 
               {/* High-res Image Preview */}
-              <div className="relative max-h-[82vh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-black/60 flex items-center justify-center">
+              <div className="relative max-h-[82vh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
                 <img
                   src={previewImage}
                   alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}

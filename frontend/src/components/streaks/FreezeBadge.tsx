@@ -37,10 +37,8 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
               position: 'fixed',
               top: rect.bottom + 8,
               left: Math.max(12, Math.min(window.innerWidth - 236, rect.left + rect.width / 2 - 112)),
-              width: 224,
-              zIndex: 99999,
             }}
-            className="pointer-events-none rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-[11px] leading-snug text-text-secondary shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
+            className="pointer-events-none w-56 z-[99999] rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-[11px] leading-snug text-text-secondary shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
           >
             <span className="font-bold text-accent-amber">
               {dict?.streaks?.challengeStarted || 'Challenge started.'}

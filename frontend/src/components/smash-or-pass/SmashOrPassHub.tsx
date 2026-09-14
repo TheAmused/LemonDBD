@@ -1007,7 +1007,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             {thirdCharacter && (
               <div
                 key={`queue-3-${thirdCharacter.id || thirdCharacter.slug}`}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none anim-card-queue-enter"
+                className="absolute inset-0 z-[5] flex items-center justify-center pointer-events-none anim-card-queue-enter"
                 style={{
                   transform: dragPhysics.isDragging
                     ? `scale(${0.86 + Math.min(0.07, Math.abs(dragPhysics.x) / 1200)}) translateY(${Math.max(14, 28 - Math.abs(dragPhysics.x) * 0.025)}px)`
@@ -1024,7 +1024,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     : isExiting
                       ? 'brightness(0.9)'
                       : 'brightness(0.75)',
-                  zIndex: 5,
                   willChange: 'transform, opacity, filter',
                   transition: isExiting
                     ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
@@ -1045,7 +1044,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             {nextCharacter && (
               <div
                 key={`queue-2-${nextCharacter.id || nextCharacter.slug}`}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
                 style={{
                   transform: dragPhysics.isDragging
                     ? `scale(${0.93 + Math.min(0.07, Math.abs(dragPhysics.x) / 900)}) translateY(${Math.max(0, 14 - Math.abs(dragPhysics.x) * 0.035)}px)`
@@ -1062,7 +1061,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     : isExiting
                       ? 'brightness(1)'
                       : 'brightness(0.9)',
-                  zIndex: 10,
                   willChange: 'transform, opacity, filter',
                   transition: isExiting
                     ? 'transform 480ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 480ms cubic-bezier(0.2, 0.9, 0.2, 1), filter 480ms cubic-bezier(0.2, 0.9, 0.2, 1)'
@@ -1274,7 +1272,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
           <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
             <Heart className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
-            <span className="text-xl font-mono font-black tracking-widest text-white uppercase">
+            <span className="text-xl font-mono font-black tracking-widest text-text-primary uppercase">
               {getRosterDisplayName({ slug: rosterSwitchEffect })}
             </span>
           </div>

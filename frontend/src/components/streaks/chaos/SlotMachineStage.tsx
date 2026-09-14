@@ -127,7 +127,7 @@ const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rari
       <img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
-        className="h-9 w-9 rounded object-cover border border-white/10"
+        className="h-9 w-9 rounded object-cover border border-border-color"
       />
       {rarity}
     </span>

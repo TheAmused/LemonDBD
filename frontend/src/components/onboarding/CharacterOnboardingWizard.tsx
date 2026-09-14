@@ -883,7 +883,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                                 lockedTitle={dict?.modal?.unownedPerk}
                                 ownedTitle={dict?.filters?.ownedOnly}
                               />
-                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-slate-950/70 px-1.5 py-0.5 text-[10px] font-bold text-white text-center">
+                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/70 px-1.5 py-0.5 text-[10px] font-bold text-white text-center">
                                 {c.name}
                               </span>
                             </button>

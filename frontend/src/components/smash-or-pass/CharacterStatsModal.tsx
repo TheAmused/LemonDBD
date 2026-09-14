@@ -178,7 +178,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {/* 1. Consensus Tier Badge & Global Smash Rate Bar */}
         <div className={`p-4 rounded-2xl border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-primary/40 border border-white/10">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-primary/40 border border-border-color">
               {tierInfo.icon}
             </div>
             <div>

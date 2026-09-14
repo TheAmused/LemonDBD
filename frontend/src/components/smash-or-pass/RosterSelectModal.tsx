@@ -496,14 +496,18 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20 pointer-events-none" aria-hidden="true" />
 
                   {isRosterEnabled && (
-                    <div className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none">
+                    <div
+                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none"
+                    >
                       <Flame className="h-4 w-4 text-accent-red fill-accent-red" aria-hidden="true" />
                       <span>{count}</span>
                     </div>
                   )}
 
                   {isCurrentlyActive && (
-                    <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-white text-xs font-mono font-black pointer-events-none">
+                    <div
+                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-white text-xs font-mono font-black pointer-events-none"
+                    >
                       <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
                       <span>{rawSmash?.active || ''}</span>
                     </div>

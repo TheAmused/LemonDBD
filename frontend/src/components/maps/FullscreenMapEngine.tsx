@@ -162,28 +162,17 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   const getPalletBadge = (density?: string) => {
     switch (density) {
       case 'Very High':
-        return 'text-emerald-300 bg-emerald-950/70 border-emerald-500/40';
       case 'High':
-        return 'text-teal-300 bg-teal-950/70 border-teal-500/40';
+        return 'text-accent-green bg-accent-green/10 border-accent-green/40';
       case 'Low':
-        return 'text-rose-300 bg-rose-950/70 border-rose-500/40';
+        return 'text-accent-red bg-accent-red/10 border-accent-red/40';
       case 'Medium':
       default:
-        return 'text-amber-300 bg-amber-950/70 border-amber-500/40';
+        return 'text-accent-amber bg-accent-amber/10 border-accent-amber/40';
     }
   };
 
-  const getLayoutBadge = (layout?: string) => {
-    switch (layout) {
-      case 'Indoor':
-        return 'text-purple-300 bg-purple-950/70 border-purple-500/40';
-      case 'Hybrid':
-        return 'text-amber-300 bg-amber-950/70 border-amber-500/40';
-      case 'Outdoor':
-      default:
-        return 'text-sky-300 bg-sky-950/70 border-sky-500/40';
-    }
-  };
+  const getLayoutBadge = () => 'text-text-secondary bg-bg-elevated border-border-color';
 
   return (
     <div
@@ -193,18 +182,18 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       className="fixed inset-0 z-50 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary"
     >
       {/* Top Tactical Command Ribbon */}
-      <header className="absolute top-0 inset-x-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-slate-950/90 backdrop-blur-2xl border-b border-slate-800/80 shadow-2xl">
+      <header className="absolute top-0 inset-x-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary/90 backdrop-blur-2xl border-b border-border-color/80 shadow-2xl">
         <div className="flex items-center justify-between gap-3">
           {activeMap && (
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 leading-none mb-1">
-                <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-amber-400">
+                <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-text-secondary">
                   {activeMap.realm}
                 </span>
-                <span className="text-slate-600 text-[10px]">•</span>
-                <span className="text-[10px] font-mono text-slate-400 hidden xs:inline">{dict?.maps?.twelveClockCallouts || '12-Clock Callouts'}</span>
+                <span className="text-text-muted text-[10px]">•</span>
+                <span className="text-[10px] font-mono text-text-muted hidden xs:inline">{dict?.maps?.twelveClockCallouts || '12-Clock Callouts'}</span>
               </div>
-              <h1 className="text-sm sm:text-base md:text-lg font-black text-white tracking-wide truncate leading-tight">
+              <h1 className="text-sm sm:text-base md:text-lg font-black text-text-primary tracking-wide truncate leading-tight">
                 {activeMap.name}
               </h1>
             </div>
@@ -217,11 +206,11 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               onClick={() => setIsDrawerOpen((prev) => !prev)}
               aria-pressed={isDrawerOpen}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${isDrawerOpen
-                  ? 'bg-amber-500/15 border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.25)]'
-                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                  ? 'bg-accent-red/15 border-accent-red/50 text-accent-red'
+                  : 'bg-bg-elevated border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
                 }`}
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-accent-red" />
               <span className="hidden sm:inline">{dict?.maps?.tacticalDossier || 'Tactical Dossier'}</span>
             </button>
 
@@ -229,7 +218,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               type="button"
               onClick={onClose}
               aria-label={dict?.modal?.close || 'Close'}
-              className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-700 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              className="rounded-xl p-2 text-text-muted hover:text-text-primary hover:bg-bg-elevated border border-transparent hover:border-border-subtle transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <X className="w-5 h-5" />
             </button>
@@ -242,16 +231,16 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
          * screen size, not just wide desktops. */}
         {activeMap && (
           <div
-            className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-800/60 overflow-x-auto text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex items-center gap-2 mt-2 pt-2 border-t border-border-color/60 overflow-x-auto text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {/* Size / sqT Badge */}
             {activeMap.size_sq_tiles != null ? (
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-indigo-500/40 text-indigo-200 font-mono shadow-sm shrink-0">
-                <Maximize2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                <span className="font-bold text-white text-xs">{activeMap.size_sq_tiles}</span>
-                <span className="text-indigo-400 font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
+                <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
+                <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
+                <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
                 {activeMap.size_sq_meters != null && (
-                  <span className="text-slate-400 text-[10px] pl-0.5">
+                  <span className="text-text-muted text-[10px] pl-0.5">
                     {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
                       '{value}',
                       activeMap.size_sq_meters.toLocaleString()
@@ -264,9 +253,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             {/* Layout Type */}
             {activeMap.layout_type && (
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
-                  activeMap.layout_type
-                )}`}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge()}`}
               >
                 <Compass className="w-3.5 h-3.5 shrink-0" />
                 {activeMap.layout_type}
@@ -287,16 +274,16 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
             {/* Maze Tiles */}
             {activeMap.jungle_gyms_count != null && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 font-mono text-xs shrink-0">
-                <Grid className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
+                <Grid className="w-3.5 h-3.5 text-text-muted shrink-0" />
                 {(dict?.maps?.gymsSuffix || '{count} Gyms').replace('{count}', String(activeMap.jungle_gyms_count))}
               </span>
             )}
 
             {/* Totems */}
             {activeMap.totem_spawns_count != null && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 font-mono text-xs shrink-0">
-                <Flame className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
+                <Flame className="w-3.5 h-3.5 text-text-muted shrink-0" />
                 {(dict?.maps?.totemsSuffix || '{count} Totems').replace('{count}', String(activeMap.totem_spawns_count))}
               </span>
             )}
@@ -304,8 +291,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             {/* Killer Shack */}
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${activeMap.shack_has_basement
-                  ? 'text-emerald-300 bg-emerald-950/60 border-emerald-600/40'
-                  : 'text-slate-400 bg-slate-900/60 border-slate-800'
+                  ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
+                  : 'text-text-muted bg-bg-elevated border-border-color'
                 }`}
             >
               <Home className="w-3.5 h-3.5 shrink-0" />
@@ -343,7 +330,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               transformOrigin: 'center center',
               transition: isDragging ? 'none' : 'transform 75ms ease-out',
             }}
-            className={`max-w-full max-h-full object-contain select-none shadow-[0_0_60px_rgba(0,0,0,0.85)] ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            className={`max-w-full max-h-full object-contain select-none shadow-2xl ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
               }`}
             onError={() => setImageFailed(true)}
           />
@@ -365,19 +352,19 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         <aside
           role="complementary"
           aria-label={dict?.maps?.specsAndIntelAria || 'Map Specifications and Intel'}
-          className="absolute inset-x-3 bottom-20 top-auto max-h-[60dvh] sm:inset-x-auto sm:top-24 sm:right-4 sm:bottom-20 sm:max-h-none z-40 sm:w-80 lg:w-96 rounded-2xl bg-slate-950/95 border border-slate-800/90 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.85)] flex flex-col p-4 text-xs transition-all overflow-y-auto"
+          className="absolute inset-x-3 bottom-20 top-auto max-h-[60dvh] sm:inset-x-auto sm:top-24 sm:right-4 sm:bottom-20 sm:max-h-none z-40 sm:w-80 lg:w-96 rounded-2xl bg-bg-surface border border-border-color backdrop-blur-2xl shadow-2xl flex flex-col p-4 text-xs transition-all overflow-y-auto"
         >
-          <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-800">
+          <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-border-color">
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-              <span className="font-mono text-xs font-bold tracking-wider uppercase text-amber-400">
+              <div className="h-2 w-2 rounded-full bg-accent-red animate-pulse" />
+              <span className="font-mono text-xs font-bold tracking-wider uppercase text-accent-red">
                 {dict?.maps?.tacticalDossier || 'Tactical Dossier'}
               </span>
             </div>
             <button
               type="button"
               onClick={() => setIsDrawerOpen(false)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              className="text-text-muted hover:text-text-primary p-1 rounded-lg hover:bg-bg-elevated transition-colors cursor-pointer"
               aria-label={dict?.maps?.closeDossierAria || 'Close Dossier'}
             >
               <X className="w-4 h-4" />
@@ -386,21 +373,21 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
           {/* Prominent Surface Area Card */}
           {activeMap.size_sq_tiles != null && (
-            <div className="mb-3 p-3 rounded-xl bg-gradient-to-r from-indigo-950/50 via-slate-900/60 to-slate-950/50 border border-indigo-500/30 flex items-center justify-between">
+            <div className="mb-3 p-3 rounded-xl bg-bg-elevated border border-accent-red/30 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+                <div className="p-2 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red">
                   <Maximize2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-text-muted block">
                     {dict?.maps?.surfaceArea || 'Surface Area'}
                   </span>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-xl font-mono font-black text-white">
+                    <span className="text-xl font-mono font-black text-text-primary">
                       {activeMap.size_sq_tiles} {dict?.maps?.sqTilesUnit || 'sqT'}
                     </span>
                     {activeMap.size_sq_meters != null && (
-                      <span className="text-xs font-mono text-indigo-300 font-medium">
+                      <span className="text-xs font-mono text-text-secondary font-medium">
                         {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
                           '{value}',
                           activeMap.size_sq_meters.toLocaleString()
@@ -415,29 +402,29 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
 
           {/* Metric Specifications Grid */}
           <div className="grid grid-cols-2 gap-2 text-[11px] mb-3">
-            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
+              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
                 {dict?.maps?.layoutLabel || 'Layout'}
               </span>
-              <strong className="font-semibold text-slate-200">
+              <strong className="font-semibold text-text-secondary">
                 {activeMap.layout_type || 'Outdoor'}
               </strong>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
+              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
                 {dict?.maps?.palletDensityLabel || 'Pallet Density'}
               </span>
-              <strong className="font-semibold text-slate-200">
+              <strong className="font-semibold text-text-secondary">
                 {activeMap.pallet_density || 'Medium'}
               </strong>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
+              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
                 {dict?.maps?.mazeTilesLabel || 'Maze Tiles'}
               </span>
-              <strong className="font-semibold text-slate-200">
+              <strong className="font-semibold text-text-secondary">
                 {activeMap.jungle_gyms_count != null
                   ? activeMap.jungle_gyms_count === 0
                     ? (dict?.maps?.corridorsLabel || '0 (Corridors)')
@@ -449,11 +436,11 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               </strong>
             </div>
 
-            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
-              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
+              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
                 {dict?.maps?.dullTotemsLabel || 'Dull Totems'}
               </span>
-              <strong className="font-semibold text-slate-200">
+              <strong className="font-semibold text-text-secondary">
                 {(dict?.maps?.spawnsSuffix || '{count} Spawns').replace(
                   '{count}',
                   String(activeMap.totem_spawns_count ?? 5)
@@ -461,14 +448,14 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               </strong>
             </div>
 
-            <div className="col-span-2 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between">
-              <span className="text-[10px] text-slate-400 uppercase font-mono">
+            <div className="col-span-2 p-2.5 rounded-xl bg-bg-elevated border border-border-color flex items-center justify-between">
+              <span className="text-[10px] text-text-muted uppercase font-mono">
                 {dict?.maps?.killerShackLabel || 'Killer Shack'}
               </span>
               <span
                 className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${activeMap.shack_has_basement
-                    ? 'text-emerald-300 bg-emerald-950/60 border-emerald-600/40'
-                    : 'text-slate-400 bg-slate-950/60 border-slate-700/40'
+                    ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
+                    : 'text-text-muted bg-bg-primary border-border-color'
                   }`}
               >
                 {activeMap.shack_has_basement
@@ -479,7 +466,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           </div>
 
           {activeMap.description && (
-            <p className="mt-auto pt-2.5 border-t border-slate-800/80 text-[11px] text-slate-400 leading-relaxed">
+            <p className="mt-auto pt-2.5 border-t border-border-color text-[11px] text-text-muted leading-relaxed">
               {activeMap.description}
             </p>
           )}
@@ -491,7 +478,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         {/* Subtle Callout Instruction Note at Bottom Center-Left */}
         <div className="pointer-events-auto hidden md:block">
           {activeMap?.description && (
-            <span className="text-[11px] font-mono text-slate-400 bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-xl backdrop-blur-md">
+            <span className="text-[11px] font-mono text-text-muted bg-bg-surface border border-border-color px-3 py-1.5 rounded-xl backdrop-blur-md">
               {activeMap.description}
             </span>
           )}
@@ -506,7 +493,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
-            className="p-2 rounded-xl text-text-muted hover:text-white hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
+            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             title={dict?.maps?.zoomOut || 'Zoom Out'}
             aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
           >
@@ -520,7 +507,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            className="p-2 rounded-xl text-text-muted hover:text-white hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
+            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             title={dict?.maps?.zoomIn || 'Zoom In'}
             aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
           >
@@ -532,7 +519,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <button
             type="button"
             onClick={handleResetView}
-            className="p-2 rounded-xl text-text-muted hover:text-white hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
+            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             title={dict?.maps?.resetPanZoom || 'Reset Pan and Zoom'}
             aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
           >

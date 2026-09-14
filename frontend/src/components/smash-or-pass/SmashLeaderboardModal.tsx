@@ -174,7 +174,11 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           }`}
         >
           {isTop3 ? (
-            index === 0 ? <Crown className="h-5 w-5 fill-zinc-950 stroke-zinc-950" /> : <Medal className="h-5 w-5" />
+            index === 0 ? (
+              <Crown className="h-5 w-5 fill-zinc-950 stroke-zinc-950" />
+            ) : (
+              <Medal className="h-5 w-5" />
+            )
           ) : (
             `#${index + 1}`
           )}

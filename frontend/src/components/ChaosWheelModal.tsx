@@ -257,7 +257,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       aria-labelledby="chaos-modal-title"
       aria-describedby="chaos-modal-desc"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-3 sm:p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200 select-none lemon-modal-overlay-sidebar-aware"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-bg-primary/70 p-3 sm:p-4 backdrop-blur-md cursor-pointer animate-in fade-in duration-200 select-none lemon-modal-overlay-sidebar-aware"
     >
       <div
         onClick={(e) => e.stopPropagation()}

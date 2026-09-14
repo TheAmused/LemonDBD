@@ -28,11 +28,11 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
     attempts={attempts}
     dict={dict}
     renderLabel={(log: MatchLog) => (
-      <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.character_id)}</div>
+      <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.character_id)}</div>
     )}
     renderMeta={(log: MatchLog) => (
       <span className="inline-flex items-center gap-1">
-        <Flame className="w-3 h-3 text-amber-500" />
+        <Flame className="w-3 h-3 text-accent-red" />
         {dict?.streaks?.streakLabel || 'Streak:'} {log.streak_before} {dict?.streaks?.streakArrow || '→'}{' '}
         {log.streak_after}
       </span>

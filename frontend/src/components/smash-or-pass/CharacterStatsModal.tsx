@@ -85,36 +85,36 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     if (smashRate >= 85) {
       return {
         tier: rawSmashDict?.tiers?.godTier || 'God Tier',
-        color: 'text-amber-700 dark:text-[#ffd166]',
-        bg: 'bg-[#ffd166]/15 border-[#ffd166]/40',
-        glow: 'shadow-[0_0_20px_rgba(255,209,102,0.35)]',
-        icon: <Sparkles className="h-4 w-4 text-amber-700 dark:text-[#ffd166]" />,
+        color: 'text-accent-amber',
+        bg: 'bg-accent-amber/15 border-accent-amber/40',
+        glow: '',
+        icon: <Sparkles className="h-4 w-4 text-accent-amber" />,
       };
     }
     if (smashRate >= 65) {
       return {
         tier: rawSmashDict?.tiers?.fatalAttraction || 'Fatal Attraction',
-        color: 'text-[#c40042] dark:text-[#ff0055]',
-        bg: 'bg-[#ff0055]/15 border-[#ff0055]/40',
-        glow: 'shadow-[0_0_20px_rgba(255,0,85,0.35)]',
-        icon: <Flame className="h-4 w-4 text-[#c40042] dark:text-[#ff0055]" />,
+        color: 'text-accent-red',
+        bg: 'bg-accent-red/15 border-accent-red/40',
+        glow: '',
+        icon: <Flame className="h-4 w-4 text-accent-red" />,
       };
     }
     if (smashRate >= 40) {
       return {
         tier: rawSmashDict?.tiers?.friendzone || 'Friendzone',
-        color: 'text-teal-700 dark:text-[#00f5d4]',
-        bg: 'bg-[#00f5d4]/15 border-[#00f5d4]/40',
-        glow: 'shadow-[0_0_20px_rgba(0,245,212,0.35)]',
-        icon: <Shield className="h-4 w-4 text-teal-700 dark:text-[#00f5d4]" />,
+        color: 'text-text-secondary',
+        bg: 'bg-bg-elevated border-border-color',
+        glow: '',
+        icon: <Shield className="h-4 w-4 text-text-secondary" />,
       };
     }
     return {
       tier: rawSmashDict?.tiers?.eldritchVoid || 'Eldritch Void',
-      color: 'text-purple-700 dark:text-purple-400',
-      bg: 'bg-purple-950/40 border-purple-500/40',
-      glow: 'shadow-[0_0_20px_rgba(168,85,247,0.35)]',
-      icon: <Skull className="h-4 w-4 text-purple-700 dark:text-purple-400" />,
+      color: 'text-text-muted',
+      bg: 'bg-bg-elevated border-border-color',
+      glow: '',
+      icon: <Skull className="h-4 w-4 text-text-muted" />,
     };
   }, [smashRate, rawSmashDict]);
 
@@ -140,8 +140,8 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
     <span
       className={`text-[10px] font-black uppercase font-mono px-2 py-0.5 rounded-lg border ${
         isSurvivor
-          ? 'bg-[#00f5d4]/15 text-teal-700 dark:text-[#00f5d4] border-[#00f5d4]/40 shadow-[0_0_8px_rgba(0,245,212,0.25)]'
-          : 'bg-[#ff0055]/15 text-pink-700 dark:text-pink-300 border-[#ff0055]/40 shadow-[0_0_8px_rgba(255,0,85,0.25)]'
+          ? 'bg-accent-green/15 text-accent-green border-accent-green/40'
+          : 'bg-accent-red/15 text-accent-red border-accent-red/40'
       }`}
     >
       {roleLabel}
@@ -149,7 +149,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
   );
 
   const headerAvatar = (
-    <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-2xl overflow-hidden border border-pink-500/40 shrink-0 bg-black shadow-md">
+    <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-2xl overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
       <img
         src={avatarSrc}
         alt={name}
@@ -178,11 +178,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {/* 1. Consensus Tier Badge & Global Smash Rate Bar */}
         <div className={`p-4 rounded-2xl border ${tierInfo.bg} ${tierInfo.glow} flex items-center justify-between`}>
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-black/40 border border-white/10">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-primary/40 border border-white/10">
               {tierInfo.icon}
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-zinc-400 block font-mono">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted block font-mono">
                 {communityConsensusLabel}
               </span>
               <span className={`text-sm font-black font-mono ${tierInfo.color}`}>
@@ -192,34 +192,34 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           </div>
 
           <div className="text-right font-mono">
-            <span className="text-[10px] text-slate-500 dark:text-zinc-400 block">{smashRateLabel}</span>
-            <span className="text-xl font-black text-[#c40042] dark:text-[#ff0055] flex items-center gap-1 justify-end">
-              <Heart className="h-4 w-4 fill-[#ff0055]" /> {smashRate}{percentSign}
+            <span className="text-[10px] text-text-muted block">{smashRateLabel}</span>
+            <span className="text-xl font-black text-accent-red flex items-center gap-1 justify-end">
+              <Heart className="h-4 w-4 fill-accent-red" /> {smashRate}{percentSign}
             </span>
           </div>
         </div>
 
         {/* 2. Vote Breakdown Progress Bar */}
-        <div className="space-y-1.5 p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800 font-mono">
+        <div className="space-y-1.5 p-3.5 rounded-2xl bg-bg-elevated border border-border-color font-mono">
           <div className="flex justify-between text-xs font-bold">
-            <span className="flex items-center gap-1 text-[#c40042] dark:text-[#ff0055]">
-              <Heart className="h-3.5 w-3.5 fill-[#ff0055]" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{percentSign})
+            <span className="flex items-center gap-1 text-accent-red">
+              <Heart className="h-3.5 w-3.5 fill-accent-red" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{percentSign})
             </span>
-            <span className="flex items-center gap-1 text-slate-500 dark:text-zinc-400">
+            <span className="flex items-center gap-1 text-text-muted">
               <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}{percentSign})
             </span>
           </div>
-          <div className="h-3 w-full bg-slate-200 dark:bg-zinc-800 rounded-full overflow-hidden flex shadow-inner">
+          <div className="h-3 w-full bg-bg-elevated rounded-full overflow-hidden flex shadow-inner">
             <div
               style={{ width: `${smashPct}%` }}
-              className="h-full bg-gradient-to-r from-rose-600 to-[#ff0055] transition-all duration-500"
+              className="h-full bg-accent-red transition-all duration-500"
             />
             <div
               style={{ width: `${passPct}%` }}
-              className="h-full bg-slate-300 dark:bg-zinc-700 transition-all duration-500"
+              className="h-full bg-border-color transition-all duration-500"
             />
           </div>
-          <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 pt-1">
+          <div className="flex justify-between text-[10px] text-text-muted pt-1">
             <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
             {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
           </div>
@@ -227,12 +227,12 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
         {/* 3. Lore Quote */}
         {quote && (
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-950/60 border border-slate-200 dark:border-zinc-800 space-y-1">
-            <div className="flex items-center gap-1 text-amber-700 dark:text-amber-400 text-[10px] uppercase font-bold font-mono">
+          <div className="p-3.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
+            <div className="flex items-center gap-1 text-accent-amber text-[10px] uppercase font-bold font-mono">
               <Quote className="h-3.5 w-3.5" />
               <span>{loreQuoteLabel}</span>
             </div>
-            <p className="text-xs text-amber-100/90 font-serif italic leading-relaxed">
+            <p className="text-xs text-text-secondary font-serif italic leading-relaxed">
               {quote}
             </p>
           </div>
@@ -241,10 +241,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {/* 4. Bio Profile */}
         {bio && (
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-mono">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted font-mono">
               {loreProfileLabel}
             </span>
-            <p className="text-xs text-zinc-700 dark:text-zinc-300 leading-relaxed bg-slate-50 dark:bg-zinc-950/70 p-3 rounded-2xl border border-slate-200 dark:border-zinc-800 font-sans">
+            <p className="text-xs text-text-secondary leading-relaxed bg-bg-elevated p-3 rounded-2xl border border-border-color font-sans">
               {bio}
             </p>
           </div>
@@ -254,11 +254,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {profile.green_flags.length > 0 && (
-              <div className="space-y-1.5 bg-emerald-950/30 border border-emerald-500/20 p-3 rounded-2xl">
-                <span className="flex items-center gap-1.5 font-black text-emerald-700 dark:text-emerald-400 text-[11px] uppercase font-mono">
+              <div className="space-y-1.5 bg-accent-green/10 border border-accent-green/20 p-3 rounded-2xl">
+                <span className="flex items-center gap-1.5 font-black text-accent-green text-[11px] uppercase font-mono">
                   <CheckCircle2 className="h-3.5 w-3.5" /> {greenFlagsLabel}
                 </span>
-                <ul className="text-xs text-emerald-200/90 space-y-1 pl-4 list-disc font-sans">
+                <ul className="text-xs text-accent-green/90 space-y-1 pl-4 list-disc font-sans">
                   {profile.green_flags.map((f: string, i: number) => (
                     <li key={i}>{f}</li>
                   ))}
@@ -267,11 +267,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             )}
 
             {profile.red_flags.length > 0 && (
-              <div className="space-y-1.5 bg-rose-950/30 border border-rose-500/20 p-3 rounded-2xl">
-                <span className="flex items-center gap-1.5 font-black text-rose-700 dark:text-rose-400 text-[11px] uppercase font-mono">
+              <div className="space-y-1.5 bg-accent-red/10 border border-accent-red/20 p-3 rounded-2xl">
+                <span className="flex items-center gap-1.5 font-black text-accent-red text-[11px] uppercase font-mono">
                   <AlertTriangle className="h-3.5 w-3.5" /> {redFlagsLabel}
                 </span>
-                <ul className="text-xs text-rose-200/90 space-y-1 pl-4 list-disc font-sans">
+                <ul className="text-xs text-accent-red/90 space-y-1 pl-4 list-disc font-sans">
                   {profile.red_flags.map((f: string, i: number) => (
                     <li key={i}>{f}</li>
                   ))}
@@ -285,15 +285,15 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         {(profile.turn_on || dealbreaker) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
             {profile.turn_on && (
-              <div className="bg-slate-50 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
-                <span className="font-bold text-[#c40042] dark:text-[#ff0055] uppercase text-[10px] block">{turnOnLabel}</span>
-                <p className="text-zinc-700 dark:text-zinc-300 text-[11px] leading-tight font-sans">{profile.turn_on}</p>
+              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
+                <span className="font-bold text-accent-red uppercase text-[10px] block">{turnOnLabel}</span>
+                <p className="text-text-secondary text-[11px] leading-tight font-sans">{profile.turn_on}</p>
               </div>
             )}
             {dealbreaker && (
-              <div className="bg-slate-50 dark:bg-zinc-950/70 border border-slate-200 dark:border-zinc-800 p-2.5 rounded-2xl space-y-0.5">
-                <span className="font-bold text-amber-700 dark:text-[#ffd166] uppercase text-[10px] block">{dealbreakerLabel}</span>
-                <p className="text-zinc-700 dark:text-zinc-300 text-[11px] leading-tight font-sans">{dealbreaker}</p>
+              <div className="bg-bg-elevated border border-border-color p-2.5 rounded-2xl space-y-0.5">
+                <span className="font-bold text-accent-amber uppercase text-[10px] block">{dealbreakerLabel}</span>
+                <p className="text-text-secondary text-[11px] leading-tight font-sans">{dealbreaker}</p>
               </div>
             )}
           </div>

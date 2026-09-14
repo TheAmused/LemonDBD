@@ -52,7 +52,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const isPickerPage = segmentsAfterStreaks.length <= 1;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -71,7 +71,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         )}
 
         {authLoading ? (
-          <p className="py-10 text-center text-xs text-slate-500">
+          <p className="py-10 text-center text-xs text-text-muted">
             {dict?.streaks?.loadingStreak || 'Loading…'}
           </p>
         ) : isAuthenticated && user?.is_verified ? (
@@ -79,11 +79,11 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
           </StreaksDictProvider>
         ) : isAuthenticated ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-50 dark:bg-slate-900/60">
-              <MailWarning className="h-5 w-5 text-amber-500" />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-amber/20 bg-accent-amber/10">
+              <MailWarning className="h-5 w-5 text-accent-amber" />
             </div>
-            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-800 dark:text-slate-300">
+            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict?.streaks?.verifyEmailToTrack || 'Verify your email to track challenges'}
             </h2>
             <button
@@ -92,21 +92,21 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
                 setAuthModalIntent('verify');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-4 rounded-xl bg-amber-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-amber-900/30 hover:bg-amber-500 transition-colors cursor-pointer"
+              className="mt-4 rounded-xl bg-accent-red px-5 py-2.5 text-xs font-bold text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
             >
               {dict?.streaks?.verifyEmail || 'Verify email'}
             </button>
           </div>
         ) : (
 
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-orange-500/20 bg-orange-50 dark:bg-slate-900/60">
-              <Lock className="h-5 w-5 text-orange-500" />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-red/20 bg-accent-red/10">
+              <Lock className="h-5 w-5 text-accent-red" />
             </div>
-            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-800 dark:text-slate-300">
+            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict?.streaks?.loginToTrack || 'Log in to track your challenges'}
             </h2>
-            <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-slate-500 dark:text-slate-500">
+            <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-text-muted">
               {dict?.streaks?.loginToTrackDesc || 'Challenges use the killers and perks you own, so we need to know who you are first.'}
             </p>
             <button
@@ -115,7 +115,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
                 setAuthModalIntent('login');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-5 rounded-xl bg-orange-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-orange-900/30 hover:bg-orange-500 transition-colors"
+              className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 text-xs font-bold text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
             >
               {dict?.streaks?.logIn || 'Log in'}
             </button>

@@ -47,16 +47,16 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
             </>
           ) : isVerified ? (
             <>
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <ShieldCheck className="w-3.5 h-3.5 text-accent-green shrink-0" />
               {verifiedText && (
-                <span className="text-emerald-700 dark:text-emerald-400 font-bold">{verifiedText}</span>
+                <span className="text-accent-green font-bold">{verifiedText}</span>
               )}
             </>
           ) : error ? (
             <>
-              <ShieldAlert className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
+              <ShieldAlert className="w-3.5 h-3.5 text-accent-red shrink-0" />
               {failedText && (
-                <span className="text-rose-700 dark:text-rose-400 font-bold">{failedText}</span>
+                <span className="text-accent-red font-bold">{failedText}</span>
               )}
               {onRetry && retryLabel && (
                 <button

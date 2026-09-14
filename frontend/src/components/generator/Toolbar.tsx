@@ -77,7 +77,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             isActive={noRepeatPerks}
             badge={noRepeatPerks ? `${playableCount}/${ownedCount}` : undefined}
             onClick={onToggleNoRepeat}
-            tone="cyan"
           />
         </Tooltip>
 
@@ -90,7 +89,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             label={dict?.generator?.blindModeTooltip || 'Hide Perk Icons (Blind Mode)'}
             isActive={blindMode}
             onClick={onToggleBlindMode}
-            tone="purple"
           />
         </Tooltip>
 
@@ -107,7 +105,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             label={activeMutator ? activeMutator.name : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
             isActive={Boolean(activeMutator)}
             onClick={onOpenChaosModal}
-            tone="fuchsia"
           />
         </Tooltip>
 
@@ -128,7 +125,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             }
             isActive={audioEnabled}
             onClick={onToggleAudio}
-            tone="amber"
           />
         </Tooltip>
 
@@ -141,7 +137,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             icon={<RotateCcw className="h-5 w-5" />}
             label={dict?.generator?.resetAllTooltip || 'Reset wheels, loadout slots, and memory'}
             onClick={onResetAll}
-            tone="red"
           />
         </Tooltip>
     </div>

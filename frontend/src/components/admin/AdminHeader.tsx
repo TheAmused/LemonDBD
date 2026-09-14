@@ -39,7 +39,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-color pb-6 w-full">
       <div className="flex items-center gap-3.5">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-lg shadow-accent-red/20">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-xs">
           <Crown className="h-6 w-6" />
         </div>
         <div>
@@ -56,7 +56,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           title={dict?.admin?.exportBackupTitle || 'Export Database Backup'}
           className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
         >
-          <Download className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+          <Download className="h-3.5 w-3.5 text-text-secondary" />
           <span className="hidden md:inline">{dict?.admin?.export || 'Export'}</span>
         </button>
 
@@ -66,7 +66,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           title={dict?.admin?.importBackupTitle || 'Import Database Backup'}
           className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
         >
-          <Upload className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+          <Upload className="h-3.5 w-3.5 text-text-secondary" />
           <span className="hidden md:inline">{dict?.admin?.import || 'Import'}</span>
         </button>
 
@@ -75,9 +75,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           target="_blank"
           rel="noopener noreferrer"
           title={dict?.admin?.pgAdminTitle || 'pgAdmin Database Manager'}
-          className="flex items-center justify-center gap-2 rounded-xl border border-indigo-300 dark:border-indigo-500/40 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-800 dark:text-indigo-300 px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
+          className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
         >
-          <Database className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+          <Database className="h-3.5 w-3.5 text-text-secondary" />
           <span>{dict?.admin?.pgAdmin || 'pgAdmin (DB)'}</span>
         </a>
 
@@ -99,7 +99,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             title={dict?.admin?.analyticsTitle || 'Analytics'}
             className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
           >
-            <LineChart className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
+            <LineChart className="h-3.5 w-3.5 text-text-secondary" />
             <span className="hidden md:inline">{dict?.admin?.analytics || 'Analytics'}</span>
           </a>
         )}

@@ -19,7 +19,7 @@ interface Piece {
   color: string;
 }
 
-const COLORS = ['#fb923c', '#f97316', '#34d399', '#fbbf24', '#f87171', '#e2e8f0'];
+const COLORS = ['#b91c1c', '#dc2626', '#16a34a', '#22c55e', '#f59e0b', '#e4e4e7'];
 const PIECE_COUNT = 140;
 const DURATION_MS = 3800;
 const FADE_MS = 900;

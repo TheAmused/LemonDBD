@@ -41,22 +41,14 @@ function LandingContent() {
       mainClassName="flex items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen"
     >
         <div className="relative flex flex-col items-center text-center w-full max-w-xl mx-auto z-10 py-8 sm:py-12">
-          {/* Ambient Glow */}
-          <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-accent-red/15 blur-3xl" />
-
           {/* Big Animated Lemon Icon */}
-          <div className="relative mb-8 flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center rounded-3xl bg-gradient-to-br from-accent-amber/20 via-accent-amber/5 to-accent-red/20 border-2 border-accent-amber/40 p-6 shadow-2xl shadow-accent-amber/20 hover:scale-105 transition-transform duration-300 group">
-            {/* Halo sits directly behind the icon (an earlier sibling paints
-                first) instead of the old page-level glow blob, which was
-                anchored to the hero column's top edge and floated well
-                above the icon instead of forming a backdrop behind it. */}
-            <div className="pointer-events-none absolute -inset-6 rounded-full bg-accent-amber/20 blur-3xl" />
+          <div className="relative mb-8 flex h-36 w-36 sm:h-44 sm:w-44 items-center justify-center rounded-3xl bg-bg-elevated border-2 border-accent-red/40 p-6 shadow-md hover:scale-105 transition-transform duration-300 group">
             <LemonIcon className="h-full w-full dbd-lemon-glow group-hover:rotate-6 transition-transform duration-300 animate-pulse" />
           </div>
 
           {/* Badge */}
           {dict?.landing?.welcomeBadge && (
-            <div className="inline-flex items-center rounded-full border border-accent-amber/30 bg-accent-amber/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-accent-amber mb-5">
+            <div className="inline-flex items-center rounded-full border border-accent-red/30 bg-accent-red/10 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-accent-red mb-5">
               <span>{dict.landing.welcomeBadge}</span>
             </div>
           )}
@@ -79,7 +71,7 @@ function LandingContent() {
             <div className="mt-8">
               <Link
                 href={`/${locale}/perks`}
-                className="inline-flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-accent-amber to-accent-amber-hover px-7 py-3.5 text-sm font-black text-text-inverted shadow-xl shadow-accent-amber/20 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover px-7 py-3.5 text-sm font-black text-text-inverted shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{dict.landing.enterButton}</span>
@@ -99,7 +91,7 @@ function LandingFallback() {
     <DbdSpinner
       layout="fullscreen"
       size="responsive"
-      accent="amber"
+      accent="blood"
       needleSpeed={1.3}
     />
   );

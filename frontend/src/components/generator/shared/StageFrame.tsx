@@ -2,11 +2,9 @@
 'use client';
 
 import React from 'react';
-import { RoleCategory } from '@/types/perks';
 import { cn } from '@/utils/cn';
 
 interface StageFrameProps {
-  role: RoleCategory;
   children: React.ReactNode;
   className?: string;
   /** Floats bare (no banner/background of its own) over the stage's
@@ -18,9 +16,7 @@ interface StageFrameProps {
   topRight?: React.ReactNode;
 }
 
-export const StageFrame: React.FC<StageFrameProps> = ({ role, children, className, topLeft, topRight }) => {
-  const isSurvivor = role === 'Survivor';
-
+export const StageFrame: React.FC<StageFrameProps> = ({ children, className, topLeft, topRight }) => {
   return (
     <div
       className={cn(
@@ -28,14 +24,6 @@ export const StageFrame: React.FC<StageFrameProps> = ({ role, children, classNam
         className
       )}
     >
-      {/* Survivor-only Atmospheric Top Mist */}
-      {isSurvivor && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 transition-opacity duration-500 dbd-ambient-mist--survivor"
-        />
-      )}
-
       {/* Cinematic Edge Vignette */}
       <div
         aria-hidden="true"

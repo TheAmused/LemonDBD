@@ -515,7 +515,7 @@ export function ScraperConfigModal({
                   : 'text-text-secondary hover:text-text-primary'
               }`}
             >
-              <Download className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+              <Download className="h-3.5 w-3.5 text-accent-red" />
               <span>{dict?.admin?.exportJson}</span>
             </button>
 
@@ -528,7 +528,7 @@ export function ScraperConfigModal({
                   : 'text-text-secondary hover:text-text-primary'
               }`}
             >
-              <Upload className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+              <Upload className="h-3.5 w-3.5 text-accent-green" />
               <span>{dict?.admin?.importJson}</span>
             </button>
 
@@ -557,7 +557,7 @@ export function ScraperConfigModal({
               )}
 
               {exportSuccess && (
-                <div role="status" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-semibold">
+                <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   <span>{exportSuccess}</span>
                 </div>
@@ -616,13 +616,13 @@ export function ScraperConfigModal({
                               onClick={() => toggleExportTarget(target.id)}
                               className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
                                 isSelected
-                                  ? 'border-blue-500/50 bg-blue-500/10 text-blue-900 dark:text-blue-200'
+                                  ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
                                   : 'border-border-color bg-bg-surface hover:border-border-subtle'
                               }`}
                             >
                               <div className="pt-0.5">
                                 {isSelected ? (
-                                  <CheckSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                  <CheckSquare className="h-4 w-4 text-accent-red" />
                                 ) : (
                                   <Square className="h-4 w-4 text-text-muted" />
                                 )}
@@ -645,7 +645,7 @@ export function ScraperConfigModal({
                   type="button"
                   onClick={handleExecuteExport}
                   disabled={isExporting || exportTargets.length === 0}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-5 py-2 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-40"
+                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-40"
                 >
                   {isExporting ? (
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -671,7 +671,7 @@ export function ScraperConfigModal({
               )}
 
               {importSuccess && (
-                <div role="status" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-semibold">
+                <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   <span>{importSuccess}</span>
                 </div>
@@ -702,15 +702,15 @@ export function ScraperConfigModal({
                 onDrop={handleDrop}
                 className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center group select-none ${
                   isDragging
-                    ? 'border-emerald-500 bg-emerald-500/20 ring-4 ring-emerald-500/30 scale-[1.01] shadow-xl'
-                    : 'border-border-color bg-bg-primary hover:border-emerald-500 hover:bg-bg-elevated/40'
+                    ? 'border-accent-green bg-accent-green/20 ring-4 ring-accent-green/30 scale-[1.01] shadow-xl'
+                    : 'border-border-color bg-bg-primary hover:border-accent-green hover:bg-bg-elevated/40'
                 }`}
               >
                 <div
                   className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all mb-2 ${
                     isDragging
-                      ? 'bg-emerald-500/25 text-emerald-400 scale-125 ring-2 ring-emerald-500/40 animate-pulse'
-                      : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110'
+                      ? 'bg-accent-green/25 text-accent-green scale-125 ring-2 ring-accent-green/40 animate-pulse'
+                      : 'bg-accent-green/10 text-accent-green group-hover:scale-110'
                   }`}
                 >
                   <FileJson className="h-7 w-7" />
@@ -718,7 +718,7 @@ export function ScraperConfigModal({
 
                 {isDragging ? (
                   <div>
-                    <p className="text-sm font-black text-emerald-600 dark:text-emerald-400 animate-bounce">
+                    <p className="text-sm font-black text-accent-green animate-bounce">
                       {dict?.admin?.dropFilePrompt || 'Drop the .json backup file here...'}
                     </p>
                   </div>
@@ -738,7 +738,7 @@ export function ScraperConfigModal({
                         <X className="h-3.5 w-3.5" />
                       </button>
                     </div>
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <p className="text-[11px] text-accent-green font-semibold">
                       {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
                     </p>
                     <p className="text-[10px] text-text-muted hover:text-text-secondary transition-colors">
@@ -749,7 +749,7 @@ export function ScraperConfigModal({
                   <div>
                     <p className="text-xs font-bold text-text-secondary">
                       {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
-                      <span className="text-emerald-600 dark:text-emerald-400 font-mono font-black">.json</span>{' '}
+                      <span className="text-accent-green font-mono font-black">.json</span>{' '}
                       {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
                     </p>
                   </div>
@@ -765,11 +765,11 @@ export function ScraperConfigModal({
                     onClick={() => setImportMode('merge')}
                     className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
                       importMode === 'merge'
-                        ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200'
+                        ? 'border-accent-green/50 bg-accent-green/10 text-accent-green'
                         : 'border-border-color bg-bg-primary'
                     }`}
                   >
-                    <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                    <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
                     <div>
                       <p className="text-xs font-bold">{dict?.admin?.mergeUpdate}</p>
                       <p className="text-[10px] text-text-muted">{dict?.admin?.mergeUpdateDesc}</p>
@@ -802,7 +802,7 @@ export function ScraperConfigModal({
                     {Object.entries(importSummary).map(([key, counts]) => (
                       <div key={key} className="rounded-lg bg-bg-surface p-1.5 border border-border-color">
                         <p className="text-[10px] font-bold text-text-muted capitalize">{key}</p>
-                        <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        <p className="text-xs font-bold text-accent-green">
                           {dict?.admin?.createdCountPrefix || '+'}
                           {counts.created}{' '}
                           <span className="text-text-muted font-normal">
@@ -820,7 +820,7 @@ export function ScraperConfigModal({
                   type="button"
                   onClick={handleExecuteImport}
                   disabled={isImporting || !importFile}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-5 py-2 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-40"
+                  className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-40"
                 >
                   {isImporting ? (
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -846,7 +846,7 @@ export function ScraperConfigModal({
               )}
 
               {purgeSuccess && (
-                <div role="status" className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-700 dark:text-emerald-400 flex items-center gap-2 font-semibold">
+                <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   <span>{purgeSuccess}</span>
                 </div>
@@ -943,7 +943,7 @@ export function ScraperConfigModal({
                   type="button"
                   onClick={handleExecutePurge}
                   disabled={isPurging || purgeTargets.length === 0}
-                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-red to-red-700 hover:from-red-500 hover:to-accent-red px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
+                  className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-40"
                 >
                   {isPurging ? (
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />

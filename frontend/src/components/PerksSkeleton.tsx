@@ -29,7 +29,7 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({
       <DbdSpinner
         size="responsive"
         layout="inline"
-        accent="crimson"
+        accent="blood"
         needleSpeed={1.2}
         label={loadingLabel}
         dict={dict}

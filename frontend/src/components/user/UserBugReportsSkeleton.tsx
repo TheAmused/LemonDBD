@@ -22,7 +22,7 @@ export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = ({ 
       <DbdSpinner
         size="lg"
         layout="inline"
-        accent="amber"
+        accent="blood"
         needleSpeed={1.3}
         label={loadingLabel}
         dict={dict}

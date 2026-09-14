@@ -23,7 +23,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
   const [imgError, setImgError] = useState<boolean>(false);
 
   return (
-    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80">
+    <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-bg-elevated border border-border-color">
       {src && !imgError ? (
         <img
           src={src}
@@ -33,10 +33,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
         />
       ) : (
         <Skull
-          className={`h-7 w-7 ${done
-              ? 'text-emerald-500/80 dark:text-emerald-400/70'
-              : 'text-slate-400 dark:text-slate-600'
-            }`}
+          className={`h-7 w-7 ${done ? 'text-accent-green/80' : 'text-text-muted'}`}
           aria-hidden="true"
         />
       )}
@@ -73,16 +70,16 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
           <Link
             key={entry.killer}
             href={`/${locale}/streaks/killer/page-streak/${encodeURIComponent(entry.killer)}`}
-            className={`relative flex flex-col gap-2 rounded-xl border p-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${done
-                ? 'border-emerald-500/40 bg-emerald-500/[0.07] hover:border-emerald-400/60 ps-complete-pulse'
+            className={`relative flex flex-col gap-2 rounded-xl border p-3 transition-all shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-accent-red ${done
+                ? 'border-accent-green/40 bg-accent-green/[0.07] hover:border-accent-green/60 ps-complete-pulse'
                 : active
-                  ? 'border-orange-500/45 bg-orange-500/[0.07] hover:border-orange-400/70'
-                  : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-900/80'
+                  ? 'border-accent-amber/45 bg-accent-amber/[0.07] hover:border-accent-amber/70'
+                  : 'border-border-color bg-bg-surface hover:border-border-color hover:bg-bg-elevated'
               }`}
           >
             {done && (
               <span
-                className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 dark:bg-emerald-400 text-white dark:text-slate-950 shadow-sm"
+                className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-accent-green text-text-inverted shadow-sm"
                 aria-label={dict?.streaks?.completed || ''}
               >
                 <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
@@ -93,12 +90,12 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
               src={staticUrl(entry.avatar_local_path)}
               done={done}
             />
-            <div className="text-center text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+            <div className="text-center text-xs font-bold text-text-secondary truncate">
               {displayName}
             </div>
             {!done && (
               <div
-                className="h-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"
+                className="h-1 overflow-hidden rounded-full bg-bg-elevated"
                 role="progressbar"
                 aria-valuenow={pct}
                 aria-valuemin={0}
@@ -106,17 +103,17 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({
                 aria-label={progressAriaLabel}
               >
                 <div
-                  className="h-full rounded-full bg-orange-500 dark:bg-orange-400"
+                  className="h-full rounded-full bg-accent-amber"
                   style={{ width: `${pct}%` }}
                 />
               </div>
             )}
             <div
               className={`text-center font-mono text-[10px] font-semibold ${done
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-accent-green'
                   : active
-                    ? 'text-orange-600 dark:text-orange-400'
-                    : 'text-slate-400 dark:text-slate-500'
+                    ? 'text-accent-amber'
+                    : 'text-text-muted'
                 }`}
             >
               {done

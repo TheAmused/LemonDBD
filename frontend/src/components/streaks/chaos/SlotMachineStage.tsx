@@ -19,7 +19,7 @@ const PerkImg: React.FC<{ perk: Perk | null; className: string }> = ({ perk, cla
   const displayName = usePerkDisplayName()(perk?.name || '');
   const src = perk ? perkIconFor(perk) : undefined;
   if (!perk || !src || failed) {
-    return <Sparkles className="w-5 h-5 text-violet-400/50" />;
+    return <Sparkles className="w-5 h-5 text-text-muted" />;
   }
   return (
     <img src={src} alt={displayName} className={className} draggable={false} onError={() => setFailed(true)} />
@@ -88,8 +88,8 @@ const ReelStrip: React.FC<{
       ref={windowRef}
       className={`relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 shrink-0 overflow-hidden rounded-xl border-2 transition-shadow ${
         !spinning && finalPerk
-          ? 'border-violet-400 shadow-[0_0_14px_rgba(167,139,250,0.5)]'
-          : 'border-violet-500/30'
+          ? 'border-accent-red'
+          : 'border-accent-red/30'
       }`}
     >
       {spinning ? (
@@ -106,13 +106,13 @@ const ReelStrip: React.FC<{
           }}
         >
           {strip.map((perk, i) => (
-            <div key={i} className="flex items-center justify-center bg-violet-50 dark:bg-slate-950" style={{ height: itemPx }}>
+            <div key={i} className="flex items-center justify-center bg-bg-elevated" style={{ height: itemPx }}>
               <PerkImg perk={perk} className="w-full h-full object-contain p-1.5" />
             </div>
           ))}
         </div>
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-violet-50 dark:bg-slate-950">
+        <div className="w-full h-full flex items-center justify-center bg-bg-elevated">
           <PerkImg perk={finalPerk} className="w-full h-full object-contain p-1.5" />
         </div>
       )}
@@ -123,7 +123,7 @@ const ReelStrip: React.FC<{
 const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rarity, visible }) => {
   if (!visible) return <div className="h-10" />;
   return (
-    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-violet-500/30 bg-white/80 dark:bg-slate-950/60 pl-1 pr-3 py-1 text-sm font-bold text-violet-900 dark:text-violet-100">
+    <span className="chaos-badge-pop inline-flex items-center gap-2 rounded-lg border border-accent-red/30 bg-bg-surface/80 pl-1 pr-3 py-1 text-sm font-bold text-text-primary">
       <img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
@@ -182,7 +182,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-violet-300 dark:border-violet-500/40 bg-gradient-to-b from-violet-100 to-white dark:from-[#1a0b2e] dark:to-[#0d0517] p-6 sm:p-8 shadow-xl shadow-violet-300/40 dark:shadow-violet-950/50">
+    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-border-color bg-bg-elevated p-6 sm:p-8 shadow-sm">
       <div className="relative z-10">
         <div className="flex items-center justify-center gap-4 sm:gap-6">
           <div className="flex items-end gap-2">
@@ -208,7 +208,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                 <RarityBadge rarity={addonRarities[1]} visible={hasSpunThisBuild} />
               </div>
             ) : (
-              <p className="text-lg sm:text-xl font-black leading-tight text-violet-900 dark:text-violet-100">
+              <p className="text-lg sm:text-xl font-black leading-tight text-text-primary">
                 {dict?.streaks?.pullTheLever || 'Pull the lever!'}
               </p>
             )}
@@ -217,7 +217,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
       </div>
 
       <div
-        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-violet-500/70 dark:text-violet-300/60 text-xs ${
+        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-text-muted text-xs ${
           loading ? 'visible' : 'invisible'
         }`}
       >

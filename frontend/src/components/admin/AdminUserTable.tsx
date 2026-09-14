@@ -71,14 +71,14 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               placeholder={dict?.admin?.searchUserPlaceholder || ''}
-              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-amber focus:outline-none shadow-inner"
+              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
             />
           </div>
 
           <select
             value={roleFilter}
             onChange={(e) => onRoleFilterChange(e.target.value)}
-            className="rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-amber focus:outline-none cursor-pointer shadow-inner [&>option]:bg-bg-surface [&>option]:text-text-primary"
+            className="rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-red focus:outline-none cursor-pointer shadow-inner [&>option]:bg-bg-surface [&>option]:text-text-primary"
           >
             <option value="all">{dict?.admin?.allRoles || 'All Roles'}</option>
             <option value="admin">{dict?.admin?.admins || 'Admins'}</option>
@@ -88,7 +88,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
           <button
             type="button"
             onClick={onOpenCreateUser}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-accent-amber to-accent-amber-hover px-3.5 py-2 text-xs font-bold text-text-inverted shadow-md shadow-accent-amber/20 hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans"
+            className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-3.5 py-2 text-xs font-bold text-text-inverted shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans"
           >
             <UserPlus className="h-3.5 w-3.5" />
             <span>{dict?.admin?.createUser || 'Create User'}</span>
@@ -140,12 +140,12 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
 
               <div className="flex items-center justify-between pt-1 border-t border-border-color">
                 {u.is_active ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-accent-green font-semibold">
                     <CheckCircle className="h-3.5 w-3.5" />
                     <span>{dict?.stats?.active || 'Active'}</span>
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[11px] text-rose-700 dark:text-rose-400 font-semibold">
+                  <span className="inline-flex items-center gap-1 text-[11px] text-accent-red font-semibold">
                     <XCircle className="h-3.5 w-3.5" />
                     <span>{dict?.sidebar?.disabled || 'Disabled'}</span>
                   </span>
@@ -166,7 +166,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     onClick={() => onToggleActive(u)}
                     title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
                     aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
-                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-xs cursor-pointer"
+                    className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer"
                   >
                     <Lock className="h-4 w-4" />
                   </button>
@@ -176,7 +176,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       onClick={() => onDeleteUser(u)}
                       title={dict?.admin?.deleteUserTitle || 'Delete'}
                       aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
-                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-xs cursor-pointer"
+                      className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-accent-red/30 bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -244,12 +244,12 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   </td>
                   <td className="px-4 py-3">
                     {u.is_active ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-accent-green font-semibold">
                         <CheckCircle className="h-3.5 w-3.5" />
                         <span>{dict?.stats?.active || 'Active'}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-rose-700 dark:text-rose-400 font-semibold">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-accent-red font-semibold">
                         <XCircle className="h-3.5 w-3.5" />
                         <span>{dict?.sidebar?.disabled || 'Disabled'}</span>
                       </span>
@@ -272,7 +272,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         onClick={() => onToggleActive(u)}
                         title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
                         aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
-                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-cyan-500 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                        className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
                         <Lock className="h-3.5 w-3.5" />
                       </button>
@@ -283,7 +283,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                           onClick={() => onDeleteUser(u)}
                           title={dict?.admin?.deleteUserTitle || 'Delete'}
                           aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
-                          className="relative rounded-lg border border-rose-300 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-950/30 p-1.5 text-rose-700 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
+                          className="relative rounded-lg border border-accent-red/30 bg-accent-red/10 p-1.5 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>

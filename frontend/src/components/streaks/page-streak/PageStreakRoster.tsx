@@ -26,7 +26,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({
   return (
     <div>
       {error && (
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-rose-500/30 bg-rose-500/[0.07] px-4 py-3 text-xs text-rose-300">
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-accent-red/30 bg-accent-red/[0.07] px-4 py-3 text-xs text-accent-red">
           <span>{error}</span>
           <button onClick={onRetry} className="font-bold underline cursor-pointer">
             {dict?.streaks?.retry || 'Retry'}
@@ -35,7 +35,7 @@ export const PageStreakRoster: React.FC<PageStreakRosterProps> = ({
       )}
 
       {loading ? (
-        <p className="py-10 text-center text-xs text-slate-500">
+        <p className="py-10 text-center text-xs text-text-muted">
           {dict?.streaks?.loadingRoster || 'Loading roster…'}
         </p>
       ) : (

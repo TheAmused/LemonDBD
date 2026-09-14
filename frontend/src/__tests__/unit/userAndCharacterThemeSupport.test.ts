@@ -121,7 +121,7 @@ describe('User Profile Theme Support', () => {
         );
       } else if (status === 'resolved') {
         assert.ok(
-          html.includes('text-emerald-600 dark:text-emerald-400'),
+          html.includes('text-accent-green') || html.includes('text-emerald-600 dark:text-emerald-400'),
           'Resolved badge must have contrast text'
         );
       } else if (status === 'rejected') {

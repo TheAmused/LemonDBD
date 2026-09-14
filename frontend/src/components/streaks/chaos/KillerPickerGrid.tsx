@@ -21,10 +21,10 @@ const KillerTile: React.FC<{
   const src = avatarUrlFor(name);
 
   const cardBorder = isCompleted
-    ? 'border-emerald-500 shadow-emerald-500/20 bg-emerald-500/10 dark:bg-emerald-950/30 border-2'
+    ? 'border-accent-green bg-accent-green/10 border-2'
     : isSelected
-    ? 'border-violet-400 bg-violet-500/10 ring-2 ring-violet-400'
-    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 hover:border-violet-400/60';
+    ? 'border-accent-red bg-accent-red/10 ring-2 ring-accent-red'
+    : 'border-border-color bg-bg-surface hover:border-accent-red/60';
 
   return (
     <button
@@ -37,11 +37,11 @@ const KillerTile: React.FC<{
       } ${cardBorder}`}
     >
       {isCompleted && (
-        <div className="absolute -top-2 -right-2 bg-emerald-500 text-white dark:text-slate-950 p-1 rounded-full shadow-md z-10">
+        <div className="absolute -top-2 -right-2 bg-accent-green text-text-inverted p-1 rounded-full shadow-xs z-10">
           <Check className="w-3.5 h-3.5 stroke-[3]" />
         </div>
       )}
-      <div className="relative w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+      <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-primary flex items-center justify-center">
         {!failed ? (
           <img
             src={src}
@@ -50,10 +50,10 @@ const KillerTile: React.FC<{
             onError={() => setFailed(true)}
           />
         ) : (
-          <Skull className="w-6 h-6 text-slate-400" />
+          <Skull className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-slate-700 dark:text-slate-200 truncate w-full">
+      <span className="text-[11px] font-medium text-center text-text-secondary truncate w-full">
         {displayName}
       </span>
     </button>
@@ -85,7 +85,7 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
 
   if (loading) {
     return (
-      <p className="text-xs text-slate-500 dark:text-slate-400">
+      <p className="text-xs text-text-secondary">
         {dict?.streaks?.loadingKillers || 'Loading your killers...'}
       </p>
     );

@@ -20,7 +20,7 @@ export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf, dict }) => {
   const allSuffix = t?.allCharactersSuffix || 'using every character in the game.';
 
   return (
-    <div className="rounded-2xl border border-amber-800/30 bg-gradient-to-b from-amber-950/10 to-amber-900/5 dark:from-amber-950/20 dark:to-black/10 p-5 shadow-sm">
+    <div className="rounded-2xl border border-accent-amber/30 bg-gradient-to-b from-accent-amber/10 to-accent-amber/5 p-5 shadow-sm">
       <h2 className="mb-4 text-lg font-extrabold tracking-wide text-text-primary">
         {shelf.title}
       </h2>
@@ -44,7 +44,7 @@ export const TrophyShelf: React.FC<TrophyShelfProps> = ({ shelf, dict }) => {
         })}
       </div>
 
-      <div className="mt-5 h-2 rounded-full bg-gradient-to-r from-transparent via-amber-800/40 to-transparent" />
+      <div className="mt-5 h-2 rounded-full bg-gradient-to-r from-transparent via-accent-amber/40 to-transparent" />
     </div>
   );
 };

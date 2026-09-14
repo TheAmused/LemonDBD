@@ -204,7 +204,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               } ${
                 isActive
                   ? `translate-y-1 ${cap.colorTheme.bgActive} ${cap.colorTheme.borderActive} ${cap.colorTheme.glowActive} border-2`
-                  : `translate-y-0 ${cap.colorTheme.bg} ${cap.colorTheme.border} ${cap.colorTheme.glow} border bg-bg-surface shadow-[0_4px_0_0_rgba(0,0,0,0.15)] dark:shadow-[0_4px_0_0_rgba(0,0,0,0.6)]`
+                  : `translate-y-0 ${cap.colorTheme.bg} ${cap.colorTheme.border} ${cap.colorTheme.glow} border bg-bg-surface shadow-[0_4px_0_0_var(--border-color)]`
               } ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'active:translate-y-1'}`}
             >
               {/* Primary Key / Icon */}

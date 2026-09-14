@@ -113,21 +113,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
 
   return (
     <>
-      <style jsx global>{`
-        @keyframes entityCoffeeSpawn {
-          0% {
-            opacity: 0;
-            transform: scale(0.92) translateY(20px);
-            filter: blur(6px);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            filter: blur(0);
-          }
-        }
-      `}</style>
-
       <div
         className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -138,7 +123,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       >
         <div
           onClick={onClose}
-          className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity duration-300"
+          className="fixed inset-0 bg-bg-primary/80 backdrop-blur-md transition-opacity duration-300"
         />
 
         <div className="fixed -top-20 -right-20 h-80 w-80 rounded-full bg-accent-red/10 blur-[90px] pointer-events-none" />

@@ -109,7 +109,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-border-color bg-bg-surface px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-bg-elevated hover:border-accent-red/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
         >
           <div
-            className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-border-color p-1 ${
+            className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color p-1 ${
               perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
             }`}
           >
@@ -118,18 +118,18 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                 src={iconSrc}
                 alt={perk.name}
                 onError={() => setImgError(true)}
-                className="h-full w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.85)] pointer-events-none"
+                className="h-full w-full object-contain filter drop-shadow-lg pointer-events-none"
                 loading="lazy"
                 decoding="async"
               />
             ) : (
-              <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-border-color">
+              <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-elevated border border-border-color">
                 <ImageOff className="-rotate-45 h-5 w-5 text-text-muted" />
               </div>
             )}
 
             {avatarSrc && !avatarError && !isGeneral && (
-              <div className="absolute bottom-0 right-0 h-5 w-5 sm:h-6 sm:w-6 overflow-hidden rounded-full pointer-events-none bg-slate-950 shadow-lg border border-border-color">
+              <div className="absolute bottom-0 right-0 h-5 w-5 sm:h-6 sm:w-6 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color">
                 <img
                   src={avatarSrc}
                   alt={perk.character}
@@ -145,7 +145,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               {coordinateLabel && (
-                <span className="shrink-0 font-mono text-[10px] font-black text-amber-700 dark:text-amber-400/90">
+                <span className="shrink-0 font-mono text-[10px] font-black text-accent-amber">
                   {coordinateLabel}
                 </span>
               )}
@@ -229,7 +229,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
               src={iconSrc}
               alt={perk.name}
               onError={() => setImgError(true)}
-              className={`h-full w-full object-contain filter drop-shadow-[0_6px_14px_rgba(0,0,0,0.85)] ${
+              className={`h-full w-full object-contain filter drop-shadow-xl ${
                 size === 'tarot' || size === 'compact'
                   ? 'group-hover:drop-shadow-[0_0_6px_var(--accent-red)]'
                   : 'group-hover:drop-shadow-[0_0_8px_var(--accent-red)]'
@@ -238,14 +238,14 @@ export const PerkCard: React.FC<PerkCardProps> = ({
               decoding="async"
             />
           ) : (
-            <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-slate-900 border border-border-color">
+            <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-elevated border border-border-color">
               <ImageOff className="-rotate-45 h-10 w-10 text-text-muted" />
             </div>
           )}
 
           {avatarSrc && !avatarError && !isGeneral && (
             <div
-              className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-slate-950 shadow-lg border border-border-color ${
+              className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color ${
                 size === 'tarot' || size === 'compact'
                   ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7'
                   : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
@@ -268,7 +268,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         ) : (
           !isOwned && (
             <div
-              className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950/90 shadow-xs border border-border-color"
+              className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
               title={dict?.modal?.unownedPerk}
             >
               <Lock className="h-3.5 w-3.5 text-text-muted" />

@@ -478,7 +478,7 @@ export function ScraperConfigModal({
         onDrop={(e) => e.preventDefault()}
       >
         <div
-          className="fixed inset-0 bg-slate-950/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+          className="fixed inset-0 bg-bg-primary/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
           onClick={() => !isExporting && !isImporting && !isPurging && onClose()}
         />
 
@@ -780,7 +780,7 @@ export function ScraperConfigModal({
                     onClick={() => setImportMode('replace')}
                     className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
                       importMode === 'replace'
-                        ? 'border-accent-amber/50 bg-accent-amber/10 text-amber-900 dark:text-amber-200'
+                        ? 'border-accent-amber/50 bg-accent-amber/10 text-accent-amber'
                         : 'border-border-color bg-bg-primary'
                     }`}
                   >

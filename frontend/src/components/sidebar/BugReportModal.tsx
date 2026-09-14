@@ -256,7 +256,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
     >
       <div
         onClick={() => !isSubmitting && onClose()}
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity duration-300"
+        className="fixed inset-0 bg-bg-primary/80 backdrop-blur-md transition-opacity duration-300"
         aria-hidden="true"
       />
 

@@ -159,7 +159,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
               onClear();
               onClose();
             }}
-            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-rose-950/40 text-xs font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer"
+            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-accent-red/10 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-colors cursor-pointer"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>{dict?.user?.clearPerk || 'Clear Slot'}</span>

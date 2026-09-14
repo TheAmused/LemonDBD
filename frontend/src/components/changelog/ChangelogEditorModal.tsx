@@ -121,13 +121,13 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-bg-primary/85 backdrop-blur-md animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-3xl border-2 border-border-color bg-bg-surface shadow-2xl shadow-black/60 animate-in zoom-in-95 duration-200"
+        className="relative flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-3xl border-2 border-border-color bg-bg-surface shadow-2xl animate-in zoom-in-95 duration-200"
       >
         <div className="flex items-center justify-between border-b border-border-color px-6 py-4">
           <h2 className="text-lg font-black tracking-tight text-text-primary">

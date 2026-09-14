@@ -32,8 +32,8 @@ export const OwnershipClipOverlay: React.FC<OwnershipClipOverlayProps> = ({
           style={{ clipPath: isPartial ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
         />
       )}
-      {!isPartial && <div className="absolute inset-0 bg-slate-950/50" />}
-      {isPartial && <div className="absolute inset-y-0 left-0 w-1/2 bg-slate-950/50" />}
+      {!isPartial && <div className="absolute inset-0 bg-black/50" />}
+      {isPartial && <div className="absolute inset-y-0 left-0 w-1/2 bg-black/50" />}
     </>
   );
 };

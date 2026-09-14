@@ -97,7 +97,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
               <img
                 src={iconSrc}
                 alt={displayItem.name}
-                className="h-full w-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.7)]"
+                className="h-full w-full object-contain filter drop-shadow-lg"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}

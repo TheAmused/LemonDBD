@@ -490,7 +490,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         >
           <div
             onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200"
+            className="fixed inset-0 bg-bg-primary/60 backdrop-blur-sm animate-in fade-in duration-200"
           />
           <div className="fixed inset-y-0 left-0 w-72 max-w-[80vw] border-r border-border-color bg-bg-surface shadow-2xl animate-in slide-in-from-left duration-200">
             <button

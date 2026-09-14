@@ -101,7 +101,7 @@ if (-not $skipUpFlow) {
 
     # 1.1 Backend Unit Tests
     Write-Host ""
-    Write-Host "> [1/2] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
+    Write-Host "> [1/3] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
     $env:PYTHONPATH = "$PSScriptRoot\backend"
     & $pythonCmd -m pytest backend/tests/unit -v --tb=short
 
@@ -116,7 +116,7 @@ if (-not $skipUpFlow) {
 
     # 1.2 Frontend Unit Tests & Checks
     Write-Host ""
-    Write-Host "> [2/2] Running Frontend Unit Tests (npm run test:unit)..." -ForegroundColor Yellow
+    Write-Host "> [2/3] Running Frontend Unit Tests (npm run test:unit)..." -ForegroundColor Yellow
     Push-Location "$PSScriptRoot\frontend"
     try {
         npm run test:unit
@@ -130,6 +130,23 @@ if (-not $skipUpFlow) {
         Pop-Location
     }
     Write-Host "[PASS] Frontend Unit Tests Passed." -ForegroundColor Green
+
+    # 1.3 Frontend Global/Hardcoded Style Check
+    Write-Host ""
+    Write-Host "> [3/3] Running Frontend Style Check (npm run check:styles)..." -ForegroundColor Yellow
+    Push-Location "$PSScriptRoot\frontend"
+    try {
+        npm run check:styles
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host ""
+            Write-Host "[FAIL] Frontend style check failed!" -ForegroundColor Red
+            Write-Host "[STOP] Docker build and startup has been ABORTED." -ForegroundColor Red
+            exit 1
+        }
+    } finally {
+        Pop-Location
+    }
+    Write-Host "[PASS] Frontend Style Check Passed." -ForegroundColor Green
 
 
     # ====================================================================

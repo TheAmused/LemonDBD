@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff } from 'lucide-react';
+import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff, Info } from 'lucide-react';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { IconToggleButton } from './shared/IconToggleButton';
@@ -45,6 +45,24 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+        {/* Explains the [P/S] tag every drawn perk carries, across every mode
+         * (Wheel, Instant, Slot Machine, Tarot, Loot Crate) since this toolbar
+         * is mounted regardless of which one is active. Purely informational --
+         * onClick is a no-op, the tooltip (hover/focus/touch) is the point. */}
+        <Tooltip
+          title={dict?.generator?.coordinateLegendTooltipTitle || 'Page / Slot'}
+          description={
+            dict?.generator?.coordinateLegendTooltipDesc ||
+            "Each perk is tagged with where to find it in your in-game inventory: [P3/S7] means Page 3, Slot 7 — the first number is the Page, the second is the Slot on that page."
+          }
+        >
+          <IconToggleButton
+            icon={<Info className="h-5 w-5" />}
+            label={dict?.generator?.coordinateLegendTooltip || 'What P/S Means'}
+            onClick={() => {}}
+          />
+        </Tooltip>
+
         <Tooltip
           title={dict?.generator?.noRepeatTooltipTitle || 'No-Repeat Perks'}
           description={

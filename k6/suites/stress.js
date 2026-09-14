@@ -1,3 +1,4 @@
+// k6/suites/stress.js
 import { defaultTrafficMix } from '../scenarios/index.js';
 import { stressThresholds } from '../config/thresholds.js';
 import { stressStages } from '../config/stages.js';

@@ -1,3 +1,4 @@
+// k6/scenarios/randomizer_streaks.js
 import { defaultClient, thinkTime } from '../lib/http_client.js';
 
 export function runScenario(client = defaultClient) {

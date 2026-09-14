@@ -1,3 +1,4 @@
+# legacy/services/scraper_pipeline/__init__.py
 # backend/app/services/scraper/__init__.py
 from app.services.scraper.assets import (
     PERK_FRAME_TEMPLATE_PATH,

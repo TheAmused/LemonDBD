@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_scraper_config.py
 # backend/tests/unit/scrapers/test_scraper_config.py
 import json
 import tempfile

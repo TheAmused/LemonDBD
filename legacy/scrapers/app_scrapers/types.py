@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/types.py
 # backend/app/scrapers/types.py
 from dataclasses import asdict, dataclass, field, fields
 from typing import Any

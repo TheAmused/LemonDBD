@@ -1,3 +1,4 @@
+// k6/scenarios/search_autocomplete.js
 import { defaultClient, searchDuration, thinkTime } from '../lib/http_client.js';
 import { getRandomPerkQuery, getRandomCharacterQuery } from '../lib/data_generator.js';
 

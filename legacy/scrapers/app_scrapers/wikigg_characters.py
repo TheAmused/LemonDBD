@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/wikigg_characters.py
 # backend/app/scrapers/wikigg_characters.py
 from __future__ import annotations
 

@@ -1,3 +1,4 @@
+// k6/scenarios/browse_perks.js
 import { defaultClient, browseDuration, thinkTime } from '../lib/http_client.js';
 
 export function runScenario(client = defaultClient) {

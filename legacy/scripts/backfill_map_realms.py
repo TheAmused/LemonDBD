@@ -1,3 +1,4 @@
+# legacy/scripts/backfill_map_realms.py
 # backend/scripts/backfill_map_realms.py
 """One-time backfill: recompute `realm` for existing Hens333 map_realms rows
 using the folder segment already stored in callout_image_url. Safe to re-run;

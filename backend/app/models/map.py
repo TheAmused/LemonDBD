@@ -5,7 +5,9 @@ from typing import TYPE_CHECKING, Any
 from sqlalchemy import (
     JSON,
     DateTime,
+    Float,
     ForeignKey,
+    Integer,
     String,
     Text,
 )
@@ -22,23 +24,16 @@ if TYPE_CHECKING:
 DEFAULT_SOURCE_CODE = "hens333"
 DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
 
-#: Layout figures that were stored per map but never varied. They stay in the
-#: API response; when real per-map values exist, give them columns again --
-#: with values that actually differ.
-DEFAULT_LAYOUT_TYPE = "Standard"
+#: Fallback layout figures if a map record has not defined specific values.
+DEFAULT_LAYOUT_TYPE = "Outdoor"
 DEFAULT_PALLET_DENSITY = "Medium"
-DEFAULT_JUNGLE_GYMS = 4
+DEFAULT_JUNGLE_GYMS = 3
 DEFAULT_TOTEM_SPAWNS = 5
 DEFAULT_SHACK_HAS_BASEMENT = True
 
 
 class Realm(Base):
-    """A realm -- the themed environment a set of maps belongs to.
-
-    `map_realms.realm_id` used to be a slug *string* ("autohaven_wreckers")
-    that matched no column here, while the actual link was the display name
-    repeated in `map_realms.realm`. It is an integer foreign key now.
-    """
+    """A realm -- the themed environment a set of maps belongs to."""
 
     __tablename__ = "realms"
 
@@ -74,17 +69,7 @@ class Realm(Base):
 
 
 class MapSource(Base):
-    """Who produced a set of map callouts.
-
-    `map_realms` carried `source` ("hens333") and `source_label` ("Hens333
-    12-Clock Callouts") as strings on all 58 rows -- 58 copies of one label,
-    for a column the API already exposes as a filter and that the frontend
-    already anticipates a second value for ("samoelcolt", in
-    utils/mapLandmarks.ts). One row per provider instead.
-
-    `code` is not a join key -- `map_realms.source_id` is -- it is the literal
-    value the public API accepts as `?source=hens333`.
-    """
+    """Who produced a set of map callouts."""
 
     __tablename__ = "map_sources"
 
@@ -99,49 +84,12 @@ class MapSource(Base):
 
 
 class MapRealm(Base):
-    """A single map within a realm.
-
-    `realm` (the display name) and `realm_id` (a slug string that matched no
-    column anywhere) are replaced by one integer foreign key. The realm name
-    was also duplicated into this row's `translations` under a `realm` key,
-    once per map per language -- 232 copies of 21 names. That is gone too;
-    the name comes from the realm.
-
-    `map_id` is gone. It was a second identity on a table that already had a
-    primary key -- and it spelled out `hens_autohaven_wreckers_azarovs_resting_place`:
-    the callout provider, the realm and the map name, which are `source_id`,
-    `realm_id` and `name` on the same row. The tile and objective tables that
-    referenced it no longer exist, so nothing needed a string key. `to_dict`
-    emits the integer id under `id`, as it always did under that name.
-
-    `image_url` is gone: it was a byte-identical copy of `callout_image_url`
-    on all 58 rows. `to_dict` still emits both names from the one column.
-
-    Seven more columns are gone. Each held exactly one value across all 58
-    rows: `source` ("hens333"), `source_label` ("Hens333 12-Clock Callouts"),
-    `layout_type` ("Standard"), `pallet_density` ("Medium"),
-    `jungle_gyms_count` (4), `totem_spawns_count` (5) and `shack_has_basement`
-    (true) -- 406 cells storing seven constants, and nothing in the frontend
-    reads five of them outside a type declaration. The two that are real
-    (`source`, `source_label`) became `map_sources`; the five layout figures
-    are gone until there is per-map data to put in them, and `to_dict` still
-    emits them from module-level defaults so the API shape is unchanged.
-
-    `tiles` and `objectives` are gone from `to_dict` too, not just from the
-    database. `map_objectives` was empty for all 58 maps; `map_tiles` was 290
-    rows containing five generic placeholder names ("12 O'Clock: Main Landmark
-    / North Exit Gate") copied onto every map -- the same five, so the table
-    distinguished nothing. What the UI renders as the callout system is the
-    image at `callout_image_url`; no client has ever drawn these rows, so
-    unlike the layout figures above there was no live API shape worth holding
-    stable for them.
-    """
+    """A single map within a realm, including layout figures and sizes."""
 
     __tablename__ = "map_realms"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(150), nullable=False)
-    # Both NOT NULL: every one of the 58 maps resolves to a realm and a source.
     realm_id: Mapped[int] = mapped_column(
         ForeignKey("realms.id", ondelete="RESTRICT"), nullable=False, index=True
     )
@@ -151,6 +99,28 @@ class MapRealm(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     callout_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     callout_image_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+    # Specific DbD Map Layout Parameters
+    layout_type: Mapped[str] = mapped_column(
+        String(50), nullable=False, default=DEFAULT_LAYOUT_TYPE
+    )
+    pallet_density: Mapped[str] = mapped_column(
+        String(50), nullable=False, default=DEFAULT_PALLET_DENSITY
+    )
+    jungle_gyms_count: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=DEFAULT_JUNGLE_GYMS
+    )
+    totem_spawns_count: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=DEFAULT_TOTEM_SPAWNS
+    )
+    shack_has_basement: Mapped[bool] = mapped_column(
+        nullable=False, default=DEFAULT_SHACK_HAS_BASEMENT
+    )
+
+    # Size measurements (Wiki.gg: sqT = 8x8m tiles, sq_meters = sqT * 64)
+    size_sq_tiles: Mapped[float | None] = mapped_column(Float, nullable=True)
+    size_sq_meters: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
     translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
@@ -178,15 +148,25 @@ class MapRealm(Base):
             "source_label": self.source.label if self.source else DEFAULT_SOURCE_LABEL,
             "callout_image_url": self.callout_image_url or "",
             "callout_image_local_path": self.callout_image_local_path or "",
-            # One stored URL, two names on the wire: `image_url` held a
-            # byte-identical copy of `callout_image_url` on all 58 rows.
             "image_url": self.callout_image_url or "",
-            # Unchanged on the wire, served from the defaults below rather than
-            # from five columns that held the same value 58 times each.
-            "layout_type": DEFAULT_LAYOUT_TYPE,
-            "jungle_gyms_count": DEFAULT_JUNGLE_GYMS,
-            "totem_spawns_count": DEFAULT_TOTEM_SPAWNS,
-            "pallet_density": DEFAULT_PALLET_DENSITY,
-            "shack_has_basement": DEFAULT_SHACK_HAS_BASEMENT,
+            "layout_type": self.layout_type or DEFAULT_LAYOUT_TYPE,
+            "jungle_gyms_count": (
+                self.jungle_gyms_count
+                if self.jungle_gyms_count is not None
+                else DEFAULT_JUNGLE_GYMS
+            ),
+            "totem_spawns_count": (
+                self.totem_spawns_count
+                if self.totem_spawns_count is not None
+                else DEFAULT_TOTEM_SPAWNS
+            ),
+            "pallet_density": self.pallet_density or DEFAULT_PALLET_DENSITY,
+            "shack_has_basement": (
+                self.shack_has_basement
+                if self.shack_has_basement is not None
+                else DEFAULT_SHACK_HAS_BASEMENT
+            ),
+            "size_sq_tiles": self.size_sq_tiles,
+            "size_sq_meters": self.size_sq_meters,
             "description": self.description,
         }

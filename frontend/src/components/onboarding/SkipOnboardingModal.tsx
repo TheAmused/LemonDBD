@@ -1,3 +1,4 @@
+// frontend/src/components/onboarding/SkipOnboardingModal.tsx
 'use client';
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';

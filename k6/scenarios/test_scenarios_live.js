@@ -1,3 +1,4 @@
+// k6/scenarios/test_scenarios_live.js
 import { check } from 'k6';
 import { defaultClient } from '../lib/http_client.js';
 import { runScenario as runBrowse } from './browse_perks.js';

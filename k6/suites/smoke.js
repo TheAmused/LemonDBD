@@ -1,3 +1,4 @@
+// k6/suites/smoke.js
 ﻿import {
   browsePerks,
   searchAutocomplete,

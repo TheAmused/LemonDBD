@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_wikigg_items_addons.py
 # backend/tests/unit/scrapers/test_wikigg_items_addons.py
 import pytest
 from app.scrapers.wikigg import WikiGGScraperDriver

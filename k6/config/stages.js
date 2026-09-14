@@ -1,3 +1,4 @@
+// k6/config/stages.js
 export const smokeStages = [
   { duration: '5s', target: 2 },
   { duration: '15s', target: 2 },

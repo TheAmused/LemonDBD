@@ -1,3 +1,4 @@
+// k6/suites/soak.js
 import { defaultTrafficMix } from '../scenarios/index.js';
 import { soakThresholds } from '../config/thresholds.js';
 import { soakStages } from '../config/stages.js';

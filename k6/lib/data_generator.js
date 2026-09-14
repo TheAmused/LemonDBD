@@ -1,3 +1,4 @@
+// k6/lib/data_generator.js
 ﻿export const PERK_SEARCH_QUERIES = [
   'dead', 'sprint', 'strike', 'deliver', 'adren', 'unbreakable',
   'bbq', 'chili', 'pop', 'ruin', 'corrupt', 'pain', 'nowhere'

@@ -1,3 +1,4 @@
+# legacy/services/scraper_pipeline/pipeline.py
 # backend/app/services/scraper/pipeline.py
 import asyncio
 import logging

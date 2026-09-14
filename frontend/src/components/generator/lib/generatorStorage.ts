@@ -1,3 +1,4 @@
+// frontend/src/components/generator/lib/generatorStorage.ts
 import { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 

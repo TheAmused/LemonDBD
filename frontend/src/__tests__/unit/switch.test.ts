@@ -1,3 +1,4 @@
+// frontend/src/__tests__/unit/switch.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
 import { Switch } from '@/components/common/Switch';

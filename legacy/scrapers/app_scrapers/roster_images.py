@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/roster_images.py
 # backend/app/scrapers/roster_images.py
 import logging
 from pathlib import Path

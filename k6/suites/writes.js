@@ -1,3 +1,4 @@
+// k6/suites/writes.js
 import { defaultClient, thinkTime } from '../lib/http_client.js';
 import { writesStages } from '../config/stages.js';
 import { writesThresholds } from '../config/thresholds.js';

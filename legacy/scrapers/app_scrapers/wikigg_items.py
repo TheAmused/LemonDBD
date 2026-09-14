@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/wikigg_items.py
 # backend/app/scrapers/wikigg_items.py
 from __future__ import annotations
 

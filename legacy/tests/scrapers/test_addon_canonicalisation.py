@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_addon_canonicalisation.py
 # backend/tests/unit/scrapers/test_addon_canonicalisation.py
 """Add-on naming must be decided once, after every source has been merged.
 

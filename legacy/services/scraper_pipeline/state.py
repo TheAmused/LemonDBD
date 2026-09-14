@@ -1,3 +1,4 @@
+# legacy/services/scraper_pipeline/state.py
 # backend/app/services/scraper/state.py
 import json
 import logging

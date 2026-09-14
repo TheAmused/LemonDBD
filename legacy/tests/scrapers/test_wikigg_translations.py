@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_wikigg_translations.py
 # backend/tests/unit/scrapers/test_wikigg_translations.py
 from unittest.mock import MagicMock
 import pytest

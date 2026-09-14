@@ -1,3 +1,4 @@
+// k6/suites/spike.js
 import { defaultTrafficMix } from '../scenarios/index.js';
 import { spikeThresholds } from '../config/thresholds.js';
 import { spikeStages } from '../config/stages.js';

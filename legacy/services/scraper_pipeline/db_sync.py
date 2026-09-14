@@ -1,3 +1,4 @@
+# legacy/services/scraper_pipeline/db_sync.py
 # backend/app/services/scraper/db_sync.py
 import logging
 from sqlalchemy import select

@@ -1,3 +1,4 @@
+// k6/lib/test_sanity.js
 import { check } from 'k6';
 import { getBaseUrl, getTimeout } from '../config/env.js';
 import {

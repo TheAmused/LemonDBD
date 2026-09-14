@@ -1,3 +1,4 @@
+// k6/lib/auth.js
 import { defaultClient, authDuration } from './http_client.js';
 
 export function registerUser(vuId = (typeof __VU !== 'undefined' ? __VU : 1), iter = (typeof __ITER !== 'undefined' ? __ITER : 0), client = defaultClient) {

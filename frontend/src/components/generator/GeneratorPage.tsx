@@ -282,7 +282,19 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         <>
           <StageFrame role={role} className="flex-1 min-h-0" topLeft={topLeft} topRight={topRight}>
             <motion.div
-              key={`${genMode}-${role}`}
+              // Remounting on every role switch used to be universal here, which is
+              // what made the Wheel of Fortune feel laggy when toggling Survivor/
+              // Killer: WheelStage keeps an <img> cache and a live canvas render
+              // loop, and destroying + rebuilding all of that (plus re-downloading
+              // every perk icon from scratch, even ones already fetched) on each
+              // toggle is real, visible work. WheelStage already reacts correctly
+              // to `role` as a prop -- loadout/revealedSlots are reset by the
+              // parent's handleRoleChange, and drawUnifiedWheel redraws whenever
+              // `role` changes -- so it doesn't need the remount at all. The other
+              // modes keep it: their lighter per-draw local state (locked/scattered
+              // items, flipped cards, spun reels) was written to be cleared by a
+              // fresh mount on role change, not by a prop.
+              key={genMode === 'wheel' ? genMode : `${genMode}-${role}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.18, ease: 'easeOut' }}

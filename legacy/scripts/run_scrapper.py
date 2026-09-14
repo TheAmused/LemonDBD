@@ -1,3 +1,4 @@
+# legacy/scripts/run_scrapper.py
 # backend/scripts/run_scrapper.py
 import os
 import sys

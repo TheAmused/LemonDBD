@@ -1,3 +1,4 @@
+# legacy/scripts/rescrape_chapter_banners.py
 # backend/scripts/rescrape_chapter_banners.py
 """One-off backfill: re-scrape chapter banner images, now preferring the
 homepage's illustrated "Chapter DLC" capsule art over the small text-logo

@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/__init__.py
 # backend/app/scrapers/__init__.py
 from app.scrapers.constants import (
     GENERIC_PERK_CANONICAL_MAP,

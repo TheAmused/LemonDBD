@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/wikigg_realms.py
 # backend/app/scrapers/wikigg_realms.py
 from __future__ import annotations
 

@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_character_scraper.py
 # backend/tests/unit/scrapers/test_character_scraper.py
 import gc
 import tempfile

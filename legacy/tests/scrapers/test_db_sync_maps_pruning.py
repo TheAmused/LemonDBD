@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_db_sync_maps_pruning.py
 # backend/tests/unit/scrapers/test_db_sync_maps_pruning.py
 """Regression test for the stale Hens333 map-row pruning fix in
 sync_maps_to_db(): a re-scrape must delete rows whose map_id no longer

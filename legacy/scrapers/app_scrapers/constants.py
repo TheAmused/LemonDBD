@@ -1,3 +1,4 @@
+# legacy/scrapers/app_scrapers/constants.py
 # backend/app/scrapers/constants.py
 GENERIC_PERK_CANONICAL_MAP: dict[str, tuple[str, str]] = {
     "will to live": ("Decisive Strike", "Will to Live"),

@@ -1,3 +1,4 @@
+// k6/suites/frontend.js
 import { defaultClient, thinkTime } from '../lib/http_client.js';
 import { frontendStages } from '../config/stages.js';
 import { frontendThresholds } from '../config/thresholds.js';

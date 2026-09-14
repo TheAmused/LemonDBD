@@ -1,3 +1,4 @@
+# legacy/tests/scrapers/test_roster_image_scraper.py
 # backend/tests/unit/scrapers/test_roster_image_scraper.py
 from pathlib import Path
 import pytest

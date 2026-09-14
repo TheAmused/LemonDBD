@@ -68,22 +68,25 @@ class TestSmashSeederService:
             assert entity.stat.super_smash_count == 0
             assert entity.stat.total_votes == 0
             assert entity.stat.smash_rate == 0.0
-            assert entity.metadata_json is not None
-            assert "chaos_score" in entity.metadata_json
-            assert "danger_level" in entity.metadata_json
-            assert "quote" in entity.metadata_json
-            assert "compatibility_tags" in entity.metadata_json
+            entity_metadata = entity.metadata_dict()
+            assert entity_metadata is not None
+            assert "chaos_score" in entity_metadata
+            assert "danger_level" in entity_metadata
+            assert "quote" in entity_metadata
+            assert "compatibility_tags" in entity_metadata
 
     def test_seed_smash_rosters_idempotency(self, db_session: Session) -> None:
         seed_smash_rosters()
         initial_roster_count = db_session.scalar(select(func.count(Roster.id)))
         initial_entity_count = db_session.scalar(select(func.count(Entity.id)))
-        initial_stat_count = db_session.scalar(select(func.count(EntityStat.id)))
+        # `EntityStat` has no surrogate `id` any more -- `entity_id` is its
+        # primary key.
+        initial_stat_count = db_session.scalar(select(func.count(EntityStat.entity_id)))
 
         seed_smash_rosters()
         assert db_session.scalar(select(func.count(Roster.id))) == initial_roster_count
         assert db_session.scalar(select(func.count(Entity.id))) == initial_entity_count
-        assert db_session.scalar(select(func.count(EntityStat.id))) == initial_stat_count
+        assert db_session.scalar(select(func.count(EntityStat.entity_id))) == initial_stat_count
 
     def test_service_get_rosters(self, db_session: Session) -> None:
         seed_smash_rosters()

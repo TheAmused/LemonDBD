@@ -5,9 +5,10 @@ from sqlalchemy import select
 from app import create_app
 from app.core.config import Config
 from app.core.extensions import db
-from app.models.character import Character
+from app.models.chapter import Chapter
+from app.models.character import Killer, Survivor
 from app.models.perk import Perk
-from app.models.equipment import Item, Addon
+from app.models.equipment import Item, ItemCategory, KillerAddon
 from app.services.translations import TranslationService
 
 
@@ -34,18 +35,27 @@ class TestTranslationsVerification:
 
     def test_translations_sync_and_retrieval(self, app: Flask) -> None:
         with app.app_context():
+            chapter = db.session.scalars(
+                select(Chapter).where(Chapter.name == "Base Game")
+            ).first()
+            if not chapter:
+                chapter = Chapter(name="Base Game", dlc_type="base_game")
+                db.session.add(chapter)
+                db.session.flush()
+
             trapper = db.session.scalars(
-                select(Character).where(Character.name == "The Trapper")
+                select(Killer).where(Killer.name == "The Trapper")
             ).first()
             if not trapper:
-                trapper = Character(
+                trapper = Killer(
                     name="The Trapper",
-                    role="Killer",
-                    code_prefix="K01",
+                    chapter_id=chapter.id,
                     lore="Evan MacMillan idolized his father.",
-                    chapter_name="Base Game",
+                    power_name="Bear Trap",
+                    power_description="Set traps to catch survivors.",
                 )
                 db.session.add(trapper)
+                db.session.flush()
 
             unnerving = db.session.scalars(
                 select(Perk).where(Perk.name == "Unnerving Presence")
@@ -53,11 +63,23 @@ class TestTranslationsVerification:
             if not unnerving:
                 unnerving = Perk(
                     name="Unnerving Presence",
-                    category="Killer",
+                    role="Killer",
                     description="Your presence alone instills great fear.",
-                    character=trapper,
+                    killer=trapper,
                 )
                 db.session.add(unnerving)
+
+            med_kit_category = db.session.scalars(
+                select(ItemCategory).where(ItemCategory.name == "Firecracker")
+            ).first()
+            if not med_kit_category:
+                med_kit_category = ItemCategory(
+                    name="Firecracker",
+                    addon_target_label="Firecrackers",
+                    role="Survivor",
+                )
+                db.session.add(med_kit_category)
+                db.session.flush()
 
             item = db.session.scalars(
                 select(Item).where(Item.name == "Chinese Firecracker")
@@ -65,35 +87,30 @@ class TestTranslationsVerification:
             if not item:
                 item = Item(
                     name="Chinese Firecracker",
-                    category="Survivor",
-                    role="Survivor",
+                    category_id=med_kit_category.id,
                     description="A row of small explosive devices wrapped in heavy paper casing.",
                 )
                 db.session.add(item)
 
             addon = db.session.scalars(
-                select(Addon).where(Addon.name == "Trapper Gloves")
+                select(KillerAddon).where(KillerAddon.name == "Trapper Gloves")
             ).first()
             if not addon:
-                addon = Addon(
+                addon = KillerAddon(
                     name="Trapper Gloves",
-                    associated_target="The Trapper",
-                    category="Killer",
+                    killer_id=trapper.id,
                     description="Setting speed of Bear Traps by protective gloves made out of thick leather.",
                 )
                 db.session.add(addon)
 
             ash = db.session.scalars(
-                select(Character).where(Character.name == "Ash Williams")
+                select(Survivor).where(Survivor.name == "Ash Williams")
             ).first()
             if not ash:
-                ash = Character(
+                ash = Survivor(
                     name="Ash Williams",
-                    role="Survivor",
-                    code_prefix="S17",
+                    chapter_id=chapter.id,
                     real_name="Ash Williams",
-                    short_name="ash_williams",
-                    wiki_slug="Ash_Williams",
                 )
                 db.session.add(ash)
 
@@ -108,7 +125,7 @@ class TestTranslationsVerification:
             assert res["addons_updated"] >= 1
 
             loaded_trapper = db.session.scalars(
-                select(Character).where(Character.name == "The Trapper")
+                select(Killer).where(Killer.name == "The Trapper")
             ).first()
             assert loaded_trapper is not None
             for lang in ["en", "pl", "de", "es", "ja"]:

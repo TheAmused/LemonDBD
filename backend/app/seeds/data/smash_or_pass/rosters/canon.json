@@ -9706,7 +9706,7 @@
           "is_active": true,
           "stat": {
             "smash_count": 0,
-            "pass_count": 1,
+            "pass_count": 0,
             "super_smash_count": 0,
             "chaos_rating": 50.0
           }

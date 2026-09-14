@@ -5,71 +5,87 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app import create_app
-from app.models import Item, Addon
+from app.models import Item, ItemAddon, ItemCategory
 from app.services.perk_service import PerkService
 
 
 @pytest.fixture(autouse=True)
 def setup_items_and_addons(db_session: Session) -> None:
+    medkit_category = db_session.scalars(
+        select(ItemCategory).where(ItemCategory.name == "Med-Kit")
+    ).first()
+    if not medkit_category:
+        medkit_category = ItemCategory(
+            name="Med-Kit", addon_target_label="Med-Kits", role="Survivor"
+        )
+        db_session.add(medkit_category)
+        db_session.flush()
+
+    flashlight_category = db_session.scalars(
+        select(ItemCategory).where(ItemCategory.name == "Flashlight")
+    ).first()
+    if not flashlight_category:
+        flashlight_category = ItemCategory(
+            name="Flashlight", addon_target_label="Flashlights", role="Survivor"
+        )
+        db_session.add(flashlight_category)
+        db_session.flush()
+
     existing_medkit = db_session.scalars(select(Item).where(Item.name == "Emergency Med-Kit")).first()
     if not existing_medkit:
         db_session.add(
             Item(
                 name="Emergency Med-Kit",
-                category="Med-Kit",
-                role="Survivor",
+                category_id=medkit_category.id,
                 description="Heals survivors quickly",
                 rarity="Rare",
             )
         )
     else:
-        existing_medkit.category = "Med-Kit"
+        existing_medkit.category_id = medkit_category.id
 
     existing_flash = db_session.scalars(select(Item).where(Item.name == "Flashlight")).first()
     if not existing_flash:
         db_session.add(
             Item(
                 name="Flashlight",
-                category="Flashlight",
-                role="Survivor",
+                category_id=flashlight_category.id,
                 description="Blinds killers",
                 rarity="Uncommon",
             )
         )
     else:
-        existing_flash.category = "Flashlight"
+        existing_flash.category_id = flashlight_category.id
         existing_flash.description = "Blinds killers"
 
-    existing_gel = db_session.scalars(select(Addon).where(Addon.name == "Gel Dressings")).first()
+    db_session.flush()
+
+    existing_gel = db_session.scalars(select(ItemAddon).where(ItemAddon.name == "Gel Dressings")).first()
     if not existing_gel:
         db_session.add(
-            Addon(
+            ItemAddon(
                 name="Gel Dressings",
-                associated_target="Emergency Med-Kit",
-                category="Med-Kit",
+                item_category_id=medkit_category.id,
                 description="Adds charges",
                 rarity="Rare",
             )
         )
     else:
-        existing_gel.category = "Med-Kit"
-        existing_gel.associated_target = "Emergency Med-Kit"
+        existing_gel.item_category_id = medkit_category.id
         existing_gel.description = "Adds charges"
 
-    existing_battery = db_session.scalars(select(Addon).where(Addon.name == "Heavy Duty Battery")).first()
+    existing_battery = db_session.scalars(select(ItemAddon).where(ItemAddon.name == "Heavy Duty Battery")).first()
     if not existing_battery:
         db_session.add(
-            Addon(
+            ItemAddon(
                 name="Heavy Duty Battery",
-                associated_target="Flashlight",
-                category="Flashlight",
+                item_category_id=flashlight_category.id,
                 description="Increases battery duration",
                 rarity="Uncommon",
             )
         )
     else:
-        existing_battery.category = "Flashlight"
-        existing_battery.associated_target = "Flashlight"
+        existing_battery.item_category_id = flashlight_category.id
 
     db_session.commit()
 
@@ -110,7 +126,7 @@ class TestItemRoutes:
         assert len(search_result) >= 1
         assert any(i["name"] == "Flashlight" for i in search_result)
 
-        medkit_addons = service.get_addons(category="Med-Kit")
+        medkit_addons = service.get_addons(category="Survivor", target="Med-Kit")
         assert len(medkit_addons) >= 1
         assert any(a["name"] == "Gel Dressings" for a in medkit_addons)
 

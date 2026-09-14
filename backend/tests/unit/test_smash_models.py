@@ -42,11 +42,9 @@ class TestSmashModels:
             gender="male",
             media_url="/images/roster/trickster.png",
             media_type="image",
-            metadata_json={
-                "chaos_score": 92,
-                "danger_level": "Lethal",
-                "archetype": "Neon Idol",
-            },
+            chaos_score=92,
+            danger_level="Lethal",
+            archetype="Neon Idol",
             order_index=1,
         )
         db_session.add(entity)
@@ -55,8 +53,8 @@ class TestSmashModels:
         assert entity.id is not None
         assert len(entity.id) == 36
         assert entity.roster.slug == "test_cyberpunk"
-        assert entity.metadata_json["chaos_score"] == 92
-        assert entity.get_metadata()["danger_level"] == "Lethal"
+        assert entity.chaos_score == 92
+        assert entity.metadata_dict()["danger_level"] == "Lethal"
         assert len(roster.entities) == 1
         assert roster.entities[0].slug == "cyber_trickster"
 
@@ -98,10 +96,12 @@ class TestSmashModels:
         )
         db_session.add(stat)
         db_session.commit()
+        db_session.refresh(stat)
 
-        rate = stat.calculate_rate()
+        # `total_votes` and `smash_rate` are database-generated columns now --
+        # there is no `calculate_rate()` to call, and no `id` to key on: the
+        # entity is the primary key.
         assert stat.total_votes == 60
-        assert rate == round(((40 + 10) / 60) * 100.0, 1)
         assert stat.smash_rate == 83.3
         assert stat.entity.slug == "feng_min"
         assert entity.stat.smash_count == 40
@@ -112,9 +112,19 @@ class TestSmashModels:
         assert stat_dict["smash_rate"] == 83.3
         assert stat_dict["chaos_rating"] == 75.5
 
-        zero_stat = EntityStat(entity_id="dummy_id")
-        assert zero_stat.calculate_rate() == 0.0
+        zero_entity = Entity(
+            roster_id=roster.id,
+            slug="zero_votes_entity",
+            name="Zero Votes",
+        )
+        db_session.add(zero_entity)
+        db_session.commit()
+        zero_stat = EntityStat(entity_id=zero_entity.id)
+        db_session.add(zero_stat)
+        db_session.commit()
+        db_session.refresh(zero_stat)
         assert zero_stat.total_votes == 0
+        assert zero_stat.smash_rate == 0.0
 
     def test_vote_model_and_relationship(self, db_session: Session) -> None:
         roster = Roster(
@@ -178,14 +188,16 @@ class TestSmashModels:
         db_session.commit()
 
         entity_id = entity.id
-        stat_id = stat.id
+        # `EntityStat` has no surrogate id any more -- `entity_id` is its
+        # primary key, so that is what a post-delete lookup keys on too.
+        stat_entity_id = stat.entity_id
         vote_id = vote.id
 
         db_session.delete(roster)
         db_session.commit()
 
         assert db_session.get(Entity, entity_id) is None
-        assert db_session.get(EntityStat, stat_id) is None
+        assert db_session.get(EntityStat, stat_entity_id) is None
         assert db_session.get(Vote, vote_id) is None
 
     def test_raw_sqlite_schema_init(self) -> None:

@@ -3,23 +3,25 @@ import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { MapCard } from '@/utils/../components/maps/MapCard';
+import { MapCard } from '@/components/maps/MapCard';
 import type { MapRealm } from '@/types/map';
 
 const sampleMap: MapRealm = {
-  // The primary key, not the old `hens_<realm>_<name>` slug: it spelled out
-  // the callout provider, the realm and the name, all three of which this row
-  // already carries as `source`, `realm` and `name`.
   id: 1,
   name: "Azarov's Resting Place",
   realm: 'Autohaven Wreckers',
-  layout_type: 'Dumbbell Narrow',
-  jungle_gyms_count: 5,
-  totem_spawns_count: 5,
-  pallet_density: 'High',
-  shack_has_basement: false,
-  description: 'Iconic dumbbell-shaped map',
+  realm_id: 2,
+  source_id: 1,
   source: 'hens333',
+  source_label: 'Hens333 12-Clock Callouts',
+  layout_type: 'Outdoor',
+  jungle_gyms_count: 4,
+  totem_spawns_count: 5,
+  pallet_density: 'Medium',
+  shack_has_basement: true,
+  size_sq_tiles: 176.0,
+  size_sq_meters: 11264,
+  description: 'Iconic dumbbell-shaped map',
   callout_image_url: 'https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp',
   callout_image_local_path: 'maps/callouts/hens333/azarovs/azarovs_resting_place.webp',
 };

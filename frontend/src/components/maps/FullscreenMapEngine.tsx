@@ -1,8 +1,20 @@
 'use client';
-// frontend/src/components/maps/FullscreenMapEngine.tsx
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { X, ZoomIn, ZoomOut, RotateCcw, ImageOff } from 'lucide-react';
+import {
+  X,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  ImageOff,
+  Compass,
+  Layers,
+  Grid,
+  Flame,
+  Home,
+  Maximize2,
+  SlidersHorizontal,
+} from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
 import { getMapImageSrc } from '@/utils/mapUtils';
@@ -23,6 +35,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   dict,
 }) => {
   const [imageFailed, setImageFailed] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setImageFailed(false);
@@ -146,31 +159,160 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     setPan({ x: 0, y: 0 });
   }, []);
 
+  const getPalletBadge = (density?: string) => {
+    switch (density) {
+      case 'Very High':
+        return 'text-emerald-300 bg-emerald-950/70 border-emerald-500/40';
+      case 'High':
+        return 'text-teal-300 bg-teal-950/70 border-teal-500/40';
+      case 'Low':
+        return 'text-rose-300 bg-rose-950/70 border-rose-500/40';
+      case 'Medium':
+      default:
+        return 'text-amber-300 bg-amber-950/70 border-amber-500/40';
+    }
+  };
+
+  const getLayoutBadge = (layout?: string) => {
+    switch (layout) {
+      case 'Indoor':
+        return 'text-purple-300 bg-purple-950/70 border-purple-500/40';
+      case 'Hybrid':
+        return 'text-amber-300 bg-amber-950/70 border-amber-500/40';
+      case 'Outdoor':
+      default:
+        return 'text-sky-300 bg-sky-950/70 border-sky-500/40';
+    }
+  };
+
   return (
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={dict?.maps?.fullscreenEngineAria || ''}
+      aria-label={dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
       className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden select-none text-slate-100"
     >
-      <header className="absolute top-0 inset-x-0 z-40 h-20 px-4 bg-gradient-to-b from-slate-950/95 via-slate-950/80 to-transparent backdrop-blur-md flex items-center justify-between gap-4 border-b border-slate-800/50">
+      {/* Top Tactical Command Ribbon */}
+      <header className="absolute top-0 inset-x-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-slate-950/90 backdrop-blur-2xl border-b border-slate-800/80 shadow-2xl">
+        <div className="flex items-center justify-between gap-3">
+          {activeMap && (
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 leading-none mb-1">
+                <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-amber-400">
+                  {activeMap.realm}
+                </span>
+                <span className="text-slate-600 text-[10px]">•</span>
+                <span className="text-[10px] font-mono text-slate-400 hidden xs:inline">12-Clock Callouts</span>
+              </div>
+              <h1 className="text-sm sm:text-base md:text-lg font-black text-white tracking-wide truncate leading-tight">
+                {activeMap.name}
+              </h1>
+            </div>
+          )}
+
+          {/* Right Header Actions */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsDrawerOpen((prev) => !prev)}
+              aria-pressed={isDrawerOpen}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${isDrawerOpen
+                  ? 'bg-amber-500/15 border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.25)]'
+                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline">Tactical Dossier</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={dict?.modal?.close || 'Close'}
+              className="rounded-xl p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 border border-transparent hover:border-slate-700 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Tactical Telemetry Strip -- always visible (horizontally scrollable
+         * on narrow viewports) rather than hidden below the `lg` breakpoint,
+         * so the map's size and other stats are actually reachable on every
+         * screen size, not just wide desktops. */}
         {activeMap && (
-          <div>
-            <h1 className="text-base font-extrabold text-white tracking-wide">{activeMap.name}</h1>
-            <span className="text-xs text-amber-400/90 font-medium">{activeMap.realm}</span>
+          <div
+            className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-800/60 overflow-x-auto text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {/* Size / sqT Badge */}
+            {activeMap.size_sq_tiles != null ? (
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-indigo-500/40 text-indigo-200 font-mono shadow-sm shrink-0">
+                <Maximize2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                <span className="font-bold text-white text-xs">{activeMap.size_sq_tiles}</span>
+                <span className="text-indigo-400 font-bold">sqT</span>
+                {activeMap.size_sq_meters != null && (
+                  <span className="text-slate-400 text-[10px] pl-0.5">
+                    ({activeMap.size_sq_meters.toLocaleString()} m²)
+                  </span>
+                )}
+              </div>
+            ) : null}
+
+            {/* Layout Type */}
+            {activeMap.layout_type && (
+              <span
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
+                  activeMap.layout_type
+                )}`}
+              >
+                <Compass className="w-3.5 h-3.5 shrink-0" />
+                {activeMap.layout_type}
+              </span>
+            )}
+
+            {/* Pallet Density */}
+            {activeMap.pallet_density && (
+              <span
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getPalletBadge(
+                  activeMap.pallet_density
+                )}`}
+              >
+                <Layers className="w-3.5 h-3.5 shrink-0" />
+                {activeMap.pallet_density} Pallets
+              </span>
+            )}
+
+            {/* Maze Tiles */}
+            {activeMap.jungle_gyms_count != null && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 font-mono text-xs shrink-0">
+                <Grid className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                {activeMap.jungle_gyms_count === 0 ? '0 Gyms' : `${activeMap.jungle_gyms_count} Gyms`}
+              </span>
+            )}
+
+            {/* Totems */}
+            {activeMap.totem_spawns_count != null && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-300 font-mono text-xs shrink-0">
+                <Flame className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                {activeMap.totem_spawns_count} Totems
+              </span>
+            )}
+
+            {/* Killer Shack */}
+            <span
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${activeMap.shack_has_basement
+                  ? 'text-emerald-300 bg-emerald-950/60 border-emerald-600/40'
+                  : 'text-slate-400 bg-slate-900/60 border-slate-800'
+                }`}
+            >
+              <Home className="w-3.5 h-3.5 shrink-0" />
+              {activeMap.shack_has_basement ? 'Shack Basement' : 'No Shack'}
+            </span>
           </div>
         )}
-
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={dict?.modal?.close || ''}
-          className="shrink-0 rounded-xl p-2 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
-        >
-          <X className="w-5 h-5" />
-        </button>
       </header>
 
+      {/* Main Map Viewport Canvas */}
       <div
         ref={containerRef}
         onWheel={handleWheel}
@@ -184,7 +326,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
         style={{ touchAction: 'none' }}
-        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-slate-950 pt-20 pb-24 px-6"
+        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-slate-950 pt-24 sm:pt-20 pb-16 px-4"
       >
         {imageSrc && !imageFailed ? (
           <img
@@ -196,43 +338,176 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               transformOrigin: 'center center',
               transition: isDragging ? 'none' : 'transform 75ms ease-out',
             }}
-            className={`max-w-full max-h-full object-contain select-none shadow-2xl ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            className={`max-w-full max-h-full object-contain select-none shadow-[0_0_60px_rgba(0,0,0,0.85)] ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+              }`}
             onError={() => setImageFailed(true)}
           />
         ) : (
           <div className="flex flex-col items-center gap-3 text-slate-600">
             <ImageOff className="w-12 h-12" />
-            <span className="text-xs font-bold uppercase tracking-wide">{dict?.maps?.noMapsFound || ''}</span>
+            <span className="text-xs font-bold uppercase tracking-wider">
+              {dict?.maps?.noMapsFound || 'No Tactical Callout Image Available'}
+            </span>
           </div>
         )}
       </div>
 
-      <footer className="absolute bottom-6 inset-x-6 z-40 flex items-center justify-end pointer-events-none">
+      {/* Tactical Dossier: a bottom sheet on phones (full width, capped height,
+       * safely clear of the zoom toolbar) so it never overflows a narrow
+       * viewport, and the original right-anchored floating panel from `sm`
+       * up, unchanged. */}
+      {isDrawerOpen && activeMap && (
+        <aside
+          role="complementary"
+          aria-label="Map Specifications and Intel"
+          className="absolute inset-x-3 bottom-20 top-auto max-h-[60dvh] sm:inset-x-auto sm:top-24 sm:right-4 sm:bottom-20 sm:max-h-none z-40 sm:w-80 lg:w-96 rounded-2xl bg-slate-950/95 border border-slate-800/90 backdrop-blur-2xl shadow-[0_10px_40px_rgba(0,0,0,0.85)] flex flex-col p-4 text-xs transition-all overflow-y-auto"
+        >
+          <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="font-mono text-xs font-bold tracking-wider uppercase text-amber-400">
+                Tactical Dossier
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsDrawerOpen(false)}
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Close Dossier"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Prominent Surface Area Card */}
+          {activeMap.size_sq_tiles != null && (
+            <div className="mb-3 p-3 rounded-xl bg-gradient-to-r from-indigo-950/50 via-slate-900/60 to-slate-950/50 border border-indigo-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+                  <Maximize2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block">
+                    Surface Area
+                  </span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-xl font-mono font-black text-white">
+                      {activeMap.size_sq_tiles} sqT
+                    </span>
+                    {activeMap.size_sq_meters != null && (
+                      <span className="text-xs font-mono text-indigo-300 font-medium">
+                        ({activeMap.size_sq_meters.toLocaleString()} m²)
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Metric Specifications Grid */}
+          <div className="grid grid-cols-2 gap-2 text-[11px] mb-3">
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+                Layout
+              </span>
+              <strong className="font-semibold text-slate-200">
+                {activeMap.layout_type || 'Outdoor'}
+              </strong>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+                Pallet Density
+              </span>
+              <strong className="font-semibold text-slate-200">
+                {activeMap.pallet_density || 'Medium'}
+              </strong>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+                Maze Tiles
+              </span>
+              <strong className="font-semibold text-slate-200">
+                {activeMap.jungle_gyms_count != null
+                  ? activeMap.jungle_gyms_count === 0
+                    ? '0 (Corridors)'
+                    : `${activeMap.jungle_gyms_count} Gyms`
+                  : '—'}
+              </strong>
+            </div>
+
+            <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block mb-0.5">
+                Dull Totems
+              </span>
+              <strong className="font-semibold text-slate-200">
+                {activeMap.totem_spawns_count ?? 5} Spawns
+              </strong>
+            </div>
+
+            <div className="col-span-2 p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between">
+              <span className="text-[10px] text-slate-400 uppercase font-mono">
+                Killer Shack
+              </span>
+              <span
+                className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${activeMap.shack_has_basement
+                    ? 'text-emerald-300 bg-emerald-950/60 border-emerald-600/40'
+                    : 'text-slate-400 bg-slate-950/60 border-slate-700/40'
+                  }`}
+              >
+                {activeMap.shack_has_basement ? 'Basement Possible' : 'No Shack Basement'}
+              </span>
+            </div>
+          </div>
+
+          {activeMap.description && (
+            <p className="mt-auto pt-2.5 border-t border-slate-800/80 text-[11px] text-slate-400 leading-relaxed">
+              {activeMap.description}
+            </p>
+          )}
+        </aside>
+      )}
+
+      {/* Floating Bottom Navigation Bar */}
+      <footer className="absolute bottom-4 inset-x-4 sm:inset-x-6 z-40 flex items-center justify-between pointer-events-none">
+        {/* Subtle Callout Instruction Note at Bottom Center-Left */}
+        <div className="pointer-events-auto hidden md:block">
+          {activeMap?.description && (
+            <span className="text-[11px] font-mono text-slate-400 bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-xl backdrop-blur-md">
+              {activeMap.description}
+            </span>
+          )}
+        </div>
+
+        {/* Viewport Zoom & Pan Controls */}
         <div
           role="toolbar"
-          aria-label={dict?.maps?.engineControlsAria || ''}
-          className="pointer-events-auto flex items-center gap-2 bg-slate-900/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
+          aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}
+          className="pointer-events-auto ml-auto flex items-center gap-2 bg-slate-950/90 border border-slate-800 p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
           <button
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
-            title={dict?.maps?.zoomOut || ''}
-            aria-label={dict?.maps?.zoomOutAria || ''}
+            title={dict?.maps?.zoomOut || 'Zoom Out'}
+            aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
 
           <span className="text-xs font-mono font-bold text-amber-400 px-2 min-w-[50px] text-center">
-            {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
+            {Math.round(zoom * 100)}
+            {dict?.maps?.percentSign || '%'}
           </span>
 
           <button
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
-            title={dict?.maps?.zoomIn || ''}
-            aria-label={dict?.maps?.zoomInAria || ''}
+            title={dict?.maps?.zoomIn || 'Zoom In'}
+            aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
@@ -243,8 +518,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             type="button"
             onClick={handleResetView}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-amber-500"
-            title={dict?.maps?.resetPanZoom || ''}
-            aria-label={dict?.maps?.resetPanAndZoomAria || ''}
+            title={dict?.maps?.resetPanZoom || 'Reset Pan and Zoom'}
+            aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
           >
             <RotateCcw className="w-4 h-4" />
           </button>

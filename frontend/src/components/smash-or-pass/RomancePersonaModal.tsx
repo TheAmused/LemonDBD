@@ -205,7 +205,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
         ) : (
           /* Unlocked / Shared Archetype View */
           <>
-            {/* Thematic Hero Banner */}
             <div
               className={`relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-white shadow-2xl transition-all`}
               style={{ boxShadow: `0 0 40px ${persona.glowColor}` }}

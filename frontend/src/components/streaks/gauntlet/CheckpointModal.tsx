@@ -38,7 +38,7 @@ export const CheckpointModal: React.FC<CheckpointModalProps> = ({
       aria-modal="true"
       aria-labelledby="checkpoint-modal-title"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md cursor-pointer select-none"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer select-none"
     >
       <div
         onClick={(e) => e.stopPropagation()}

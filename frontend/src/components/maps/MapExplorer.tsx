@@ -327,11 +327,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                       <ImageOff className="h-8 w-8 text-text-muted" />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
                   <h2 className="absolute bottom-2 left-2 right-2 text-sm sm:text-base font-black text-white tracking-tight line-clamp-2">
                     {realm}
                   </h2>
-                  <span className="absolute top-2 left-2 rounded-full bg-slate-950/60 px-2 py-0.5 text-xs font-mono text-white/90">
+                  <span className="absolute top-2 left-2 rounded-full bg-black/60 px-2 py-0.5 text-xs font-mono text-white/90">
                     {realmMaps.length}
                   </span>
                 </button>

@@ -444,6 +444,19 @@ strong {
   animation: freezeBadgeIn 480ms cubic-bezier(.22, 1.4, .36, 1) both;
 }
 
+@keyframes entityCoffeeSpawn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
 @keyframes freezeBadgeIn {
   from {
     opacity: 0;

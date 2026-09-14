@@ -60,7 +60,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
       aria-labelledby="perk-modal-title"
       aria-describedby="perk-modal-description"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-bg-primary/70 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -82,7 +82,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
                 src={iconSrc}
                 alt={perk.name}
                 onError={() => setImgError(true)}
-                className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]"
+                className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-lg"
               />
             ) : (
               <ImageOff className="h-8 w-8 text-text-muted" />

@@ -35,7 +35,7 @@ export const VariantSwitcherBar: React.FC<VariantSwitcherBarProps> = ({
     <div
       role="group"
       aria-label={dict?.maps?.mapVariantsAria || 'Map Realm Variants'}
-      className={`flex flex-wrap items-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/10 dark:bg-amber-950/20 p-2.5 backdrop-blur-sm shadow-sm ${className}`}
+      className={`flex flex-wrap items-center gap-2 rounded-2xl border border-accent-amber/30 bg-accent-amber/10 p-2.5 backdrop-blur-sm shadow-sm ${className}`}
       data-testid="variant-switcher-bar"
     >
       <div className="flex items-center gap-1.5 text-xs font-bold text-text-secondary pl-1 pr-2 select-none">

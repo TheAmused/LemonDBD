@@ -66,7 +66,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <>
           <div
             aria-hidden="true"
-            className="dark:hidden pointer-events-none absolute -right-6 -bottom-6 h-44 w-44 rounded-full bg-black/90 blur-xl"
+            className="dark:hidden pointer-events-none absolute -right-6 -bottom-6 h-44 w-44 rounded-full bg-bg-primary/90 blur-xl"
           />
           <img
             src={watermark}

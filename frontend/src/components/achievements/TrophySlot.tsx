@@ -24,18 +24,18 @@ export const TrophySlot: React.FC<TrophySlotProps> = ({ variant, badgeLabel, hov
       title={hoverText}
       className={`flex flex-col items-center gap-1.5 rounded-xl border p-3 w-24 transition-colors ${
         unlocked
-          ? 'border-amber-500/40 bg-amber-500/10'
-          : 'border-slate-300/70 dark:border-slate-700/70 bg-slate-200/60 dark:bg-slate-800/60'
+          ? 'border-accent-amber/40 bg-accent-amber/10'
+          : 'border-border-color bg-bg-surface'
       }`}
     >
       <Icon
         className={`h-9 w-9 ${
-          unlocked ? 'text-amber-500 fill-amber-500/20' : 'text-slate-500 dark:text-slate-600 fill-slate-500/40 dark:fill-slate-600/40'
+          unlocked ? 'text-accent-amber fill-accent-amber/20' : 'text-text-muted fill-text-muted/40'
         }`}
         strokeWidth={1.5}
         aria-hidden="true"
       />
-      <span className="text-center text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500">
+      <span className="text-center text-[9px] font-bold uppercase tracking-wider text-text-muted">
         {badgeLabel}
       </span>
     </div>

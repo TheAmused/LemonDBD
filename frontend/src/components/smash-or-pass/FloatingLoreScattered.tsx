@@ -182,7 +182,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             }`}
           >
             {/* Holographic scanlines */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] pointer-events-none opacity-10 dark:opacity-40 group-hover:opacity-20 dark:group-hover:opacity-70 transition-opacity" />
+            <div className="absolute inset-0 crt-scanlines pointer-events-none opacity-10 dark:opacity-40 group-hover:opacity-20 dark:group-hover:opacity-70 transition-opacity" />
 
             <div className="relative z-10 flex items-center justify-between">
               <div className="flex items-center gap-3">

@@ -22,11 +22,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { getBackendBaseUrl } from '@/utils/api';
 
-const QuestsModal = dynamic(
-  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
-  { ssr: false }
-);
-
 export default function CharacterDetailPage() {
   const params = useParams();
   const rawLocale = params?.locale;
@@ -36,7 +31,6 @@ export default function CharacterDetailPage() {
 
 
   const dict = useDictionary();
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const [notFound, setNotFound] = useState<boolean>(false);
 
 
@@ -89,7 +83,6 @@ export default function CharacterDetailPage() {
       locale={locale}
       dict={dict}
       activeCategory="characters"
-      onOpenQuests={() => setIsQuestsOpen(true)}
       mainClassName="overflow-y-auto"
     >
         {loading ? (
@@ -125,14 +118,6 @@ export default function CharacterDetailPage() {
               allCharacters={allCharacters}
             />
           </Suspense>
-        )}
-
-        {isQuestsOpen && (
-          <QuestsModal
-            isOpen={isQuestsOpen}
-            onClose={() => setIsQuestsOpen(false)}
-            dict={dict}
-          />
         )}
     </PageShell>
   );

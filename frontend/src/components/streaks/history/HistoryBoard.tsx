@@ -167,7 +167,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             <button
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-white shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
               {dict?.streaks?.startNewRun || 'Start a new run'}
@@ -203,7 +203,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 <button
                   onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                   disabled={busy || !selectedKillerId}
-                  className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                  className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                 >
                   {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
                 </button>
@@ -212,14 +212,14 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                   <button
                     onClick={() => handleResult('win')}
                     disabled={busy}
-                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
                     {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </button>
                   <button
                     onClick={() => handleResult('loss')}
                     disabled={busy}
-                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
                     {dict?.streaks?.loseMatch || 'LOSE MATCH'}
                   </button>

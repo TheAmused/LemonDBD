@@ -69,7 +69,7 @@ const PerkGridItem: React.FC<{
 
       {/* Selected Indicator */}
       {isSelected && (
-        <div className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-white">
+        <div className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted">
           <Check className="h-2.5 w-2.5 stroke-[3]" />
         </div>
       )}

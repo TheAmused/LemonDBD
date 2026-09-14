@@ -69,19 +69,19 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           </div>
         )}
 
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center transition-opacity duration-200">
+        <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center transition-opacity duration-200">
           <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg">
             <Eye className="h-6 w-6" />
           </div>
-          <span className="text-xs font-black text-white uppercase tracking-wider">
+          <span className="text-xs font-black text-text-inverted uppercase tracking-wider">
             {t.view3DModel || ''}
           </span>
-          <span className="text-[10px] text-white/70 mt-1">
+          <span className="text-[10px] text-text-inverted/70 mt-1">
             {t.interactiveViewer || ''}
           </span>
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 via-transparent to-transparent pointer-events-none" />
 
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
           <span

@@ -22,10 +22,6 @@ const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
   { ssr: false }
 );
-const QuestsModal = dynamic(
-  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
-  { ssr: false }
-);
 
 function MapsPageInner() {
   const params = useParams();
@@ -33,7 +29,6 @@ function MapsPageInner() {
   const locale = (params?.locale as Locale) || 'en';
 
   const dict = useDictionary();
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
   const initialMapName = searchParams?.get('mapName') || '';
 
   const [searchMode, setSearchMode] = useState<'text' | 'voice'>('text');
@@ -105,7 +100,6 @@ function MapsPageInner() {
       dict={dict}
       activeCategory="maps"
       onSelectCategory={handleSelectCategory}
-      onOpenQuests={() => setIsQuestsOpen(true)}
       customPadding="p-4 sm:p-6 lg:p-7"
       mainClassName="min-h-screen flex flex-col gap-4"
     >
@@ -130,8 +124,6 @@ function MapsPageInner() {
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}
         />
-
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
     </PageShell>
   );
 }

@@ -9,7 +9,7 @@ from app.models.smash_or_pass import (
     Vote,
 )
 from app.seeds.smash_roster_seeder import seed_smash_rosters
-from app.services.others.smash_or_pass_service import SmashOrPassService
+from app.services.smash_or_pass_service import SmashOrPassService
 
 
 @pytest.mark.unit
@@ -47,7 +47,7 @@ class TestSmashSeederService:
         assert len(hoy_roster.entities) == 8
 
         leg_roster = db_session.scalar(select(Roster).where(Roster.slug == "legendary_cosplay"))
-        assert len(leg_roster.entities) == 12
+        assert len(leg_roster.entities) == 47
 
         cyber_roster = db_session.scalar(select(Roster).where(Roster.slug == "cyberpunk_2077"))
         assert len(cyber_roster.entities) == 10
@@ -59,7 +59,7 @@ class TestSmashSeederService:
         assert len(gothic_roster.entities) == 10
 
         all_entities = db_session.scalars(select(Entity)).all()
-        assert len(all_entities) == 98 + 8 + 12 + 10 + 10 + 10
+        assert len(all_entities) == 98 + 8 + 47 + 10 + 10 + 10
 
         for entity in all_entities:
             assert entity.stat is not None

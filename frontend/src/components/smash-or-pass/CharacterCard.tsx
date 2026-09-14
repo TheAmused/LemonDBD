@@ -388,7 +388,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.flipToDatingProfile || ''}
                 aria-label={rawSmashDict?.flipToDatingProfile || ''}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-white hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -404,7 +404,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.zoomFullPortrait || ''}
                 aria-label={rawSmashDict?.zoomFullPortrait || ''}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-white hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
                 <Maximize2 className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -438,9 +438,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.smash || ''}
                 aria-label={rawSmashDict?.smash || ''}
-                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
-                <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-white" aria-hidden="true" />
+                <Heart className="h-6 w-6 sm:h-7 sm:w-7 fill-text-inverted" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -465,7 +465,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.flipBack || ''}
                 aria-label={rawSmashDict?.flipBack || ''}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-white hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
+                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -603,9 +603,9 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.smash || ''}
                 aria-label={rawSmashDict?.smash || ''}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white text-xs font-black hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-black hover:scale-105 active:scale-95 transition-all cursor-pointer"
               >
-                <Heart className="h-4 w-4 fill-white" aria-hidden="true" />
+                <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
                 <span>{rawSmashDict?.smash || ''}</span>
               </button>
             </div>

@@ -166,16 +166,16 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl font-black font-mono text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
             isTop3
               ? index === 0
-                ? 'bg-gradient-to-br from-amber-300 via-[#ffd166] to-amber-500 text-zinc-950 shadow-[0_0_20px_rgba(255,209,102,0.6)] border border-amber-200 ring-2 ring-amber-400/30'
+                ? 'medal-gold'
                 : index === 1
-                  ? 'bg-gradient-to-br from-slate-100 via-slate-300 to-slate-400 text-zinc-950 shadow-[0_0_15px_rgba(226,232,240,0.5)] border border-white ring-2 ring-slate-300/30'
-                  : 'bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900 text-amber-100 shadow-[0_0_15px_rgba(180,83,9,0.5)] border border-amber-500 ring-2 ring-amber-600/30'
+                  ? 'medal-silver'
+                  : 'medal-bronze'
               : 'bg-bg-elevated text-text-muted border border-border-color'
           }`}
         >
           {isTop3 ? (
             index === 0 ? (
-              <Crown className="h-5 w-5 fill-zinc-950 stroke-zinc-950" />
+              <Crown className="h-5 w-5 fill-current stroke-current" />
             ) : (
               <Medal className="h-5 w-5" />
             )
@@ -202,11 +202,11 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           />
           {hasUserSmashed && (
             <div
-              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-white ring-2 ring-bg-surface"
+              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted ring-2 ring-bg-surface"
               title={rawSmashDict?.youSmashedThis || ''}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
-              <Heart className="h-2.5 w-2.5 fill-white text-white" />
+              <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
             </div>
           )}
         </div>
@@ -214,7 +214,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
         {/* Details: Name + Icon-Only Badges */}
         <div className="min-w-0 text-left flex-1">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="text-sm sm:text-base font-black font-mono text-text-primary group-hover:text-white truncate">
+            <span className="text-sm sm:text-base font-black font-mono text-text-primary group-hover:text-accent-red truncate">
               {itemName}
             </span>
 

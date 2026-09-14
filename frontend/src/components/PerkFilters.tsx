@@ -133,12 +133,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Survivor',
       icon: <Shield className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-accent-green text-white',
+      activeClassName: 'bg-accent-green text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.survivor && <span>{dict.filters.survivor}</span>}
           {typeof survivorCount === 'number' && (
-            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {survivorCount}
             </span>
           )}
@@ -148,12 +148,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Killer',
       icon: <Skull className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.killer && <span>{dict.filters.killer}</span>}
           {typeof killerCount === 'number' && (
-            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {killerCount}
             </span>
           )}
@@ -165,12 +165,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
     {
       value: 'all',
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
           {typeof allCount === 'number' && (
-            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {allCount}
             </span>
           )}
@@ -179,12 +179,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
-      activeClassName: 'bg-accent-red text-white',
+      activeClassName: 'bg-accent-red text-text-inverted',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
           {typeof ownedCount === 'number' && (
-            <span className="rounded-full bg-black/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
+            <span className="rounded-full bg-text-inverted/20 px-1.5 py-0.5 text-[10px] font-black leading-none">
               {ownedCount}
             </span>
           )}

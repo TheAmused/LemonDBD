@@ -905,7 +905,7 @@ export function VoiceCommandBanner({
               onClick={() => onSourceChange('hens333')}
               aria-pressed={currentSource === 'hens333'}
               className={`rounded-full px-3 py-1 text-[13px] font-extrabold transition-all cursor-pointer font-mono ${currentSource === 'hens333'
-                  ? 'bg-accent-red text-white shadow-sm font-black'
+                  ? 'bg-accent-red text-text-inverted shadow-sm font-black'
                   : 'text-text-secondary hover:bg-bg-surface hover:text-text-primary'
                 }`}
             >

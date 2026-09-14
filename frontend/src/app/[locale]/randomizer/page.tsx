@@ -18,10 +18,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
-const QuestsModal = dynamic(
-  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
-  { ssr: false }
-);
 const CampfireParticles = dynamic(
   () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
   { ssr: false }
@@ -40,7 +36,6 @@ function RandomizerContent() {
   // (identical) skeleton until the data is in, so there is one transition.
   const [perksLoading, setPerksLoading] = useState<boolean>(true);
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   const [survivorCount, setSurvivorCount] = useState<number>(0);
   const [killerCount, setKillerCount] = useState<number>(0);
@@ -83,7 +78,6 @@ function RandomizerContent() {
       locale={locale}
       dict={dict}
       activeCategory="generator"
-      onOpenQuests={() => setIsQuestsOpen(true)}
       totalPerksCount={allPerks.length}
       survivorCount={survivorCount}
       killerCount={killerCount}
@@ -104,13 +98,6 @@ function RandomizerContent() {
 
         {selectedPerk && (
           <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} dict={dict} />
-        )}
-        {isQuestsOpen && (
-          <QuestsModal
-            isOpen={isQuestsOpen}
-            onClose={() => setIsQuestsOpen(false)}
-            dict={dict}
-          />
         )}
       </div>
     </PageShell>

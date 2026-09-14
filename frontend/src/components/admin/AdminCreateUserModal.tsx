@@ -48,7 +48,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-bg-primary/80 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
         onClick={() => !isSubmitting && onClose()}
       />
 

@@ -141,10 +141,10 @@
           "chaos_score": 75,
           "translations": {
             "de": {
-              "archetype": "HUNK (Grim Reaper): Killer im Nebel",
-              "bio": "HUNK (Grim Reaper) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "archetype": "HUNK: Killer im Nebel",
+              "bio": "HUNK ist eine ikonische Gestalt in den Prüfungen des Wesens.",
               "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: HUNK (Grim Reaper) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
+              "meme": "Meme: HUNK in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
               "turn_on": "Mut und Standhaftigkeit unter Druck",
               "dealbreaker": "Verrat und Feigheit",
               "dating_vibe": "Spannende, düstere Romanze im Nebel",
@@ -158,10 +158,10 @@
               ]
             },
             "es": {
-              "archetype": "HUNK (Grim Reaper): Asesino en la Niebla",
-              "bio": "HUNK (Grim Reaper) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
+              "archetype": "HUNK: Asesino en la Niebla",
+              "bio": "HUNK es una figura destacada en las pruebas del Ente, dispuesta a todo.",
               "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: HUNK (Grim Reaper) en la partida – pura adrenalina y caos en los motores.",
+              "meme": "Meme: HUNK en la partida – pura adrenalina y caos en los motores.",
               "turn_on": "Valentía y elegancia bajo presión",
               "dealbreaker": "La traición y la cobardía",
               "dating_vibe": "Romance intenso y peligroso en la Niebla",
@@ -175,10 +175,10 @@
               ]
             },
             "ja": {
-              "archetype": "HUNK (Grim Reaper): 霧のキラー",
-              "bio": "HUNK (Grim Reaper)はエンティティの試練において際立った存在感を放つキャラクターです。",
+              "archetype": "HUNK: 霧のキラー",
+              "bio": "HUNKはエンティティの試練において際立った存在感を放つキャラクターです。",
               "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のHUNK (Grim Reaper) – 発電機とチェイスで常に戦場をかき乱す。",
+              "meme": "ミーム: 試練のHUNK – 発電機とチェイスで常に戦場をかき乱す。",
               "turn_on": "極限状態での勇気と冷静さ",
               "dealbreaker": "裏切りと逃走",
               "dating_vibe": "妖しく危険に満ちた霧のロマンス",
@@ -192,21 +192,21 @@
               ]
             },
             "pl": {
-              "archetype": "HUNK (Grim Reaper): Zabójca we Mgle",
-              "bio": "HUNK (Grim Reaper) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – HUNK (Grim Reaper)",
-              "meme": "Meme: HUNK (Grim Reaper) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "HUNK: Zabójca we Mgle",
+              "bio": "HUNK to elitarny żołnierz Umbrella Corporation, znany jako Ponury Żniwiarz.",
+              "tagline": "Maska gazowa, bezwzględna dyscyplina i 100% szans na ekstrakcję.",
+              "quote": "„Mój punkt ewakuacji. Twoje przetrwanie to misja priorytetowa.”",
+              "meme": "Meme: HUNK we Mgle – 100% adrenaliny i zero litości przy generatorach.",
+              "turn_on": "Precyzja, dyscyplina wojskowa i taktyczna ochrona",
+              "dealbreaker": "Spóźnienie się na helikopter ewakuacyjny",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Nigdy nie zdejmuje maski",
+                "Misja zawsze ważniejsza niż rozmowa o uczuciach"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+                "Zawsze dotrzymuje słowa",
+                "Obroni cię przed każdym zagrożeniem"
               ]
             }
           },
@@ -292,21 +292,21 @@
               ]
             },
             "pl": {
-              "archetype": "James Sunderland: Ocalały we Mgle",
-              "bio": "James Sunderland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-              "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – James Sunderland",
-              "meme": "Meme: James Sunderland we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "James Sunderland: Poszukiwacz Odkupienia",
+              "bio": "Mroczny i melancholijny wdowiec z Silent Hill 2, który przybył we Mgłę wiedzony listem od ukochanej.",
+              "tagline": "Wojskowa kurtka, ciężkie wspomnienia i bezgraniczne oddanie.",
+              "quote": "„Czekałaś na mnie w naszym specjalnym miejscu?”",
+              "meme": "Meme: James widzący piramidogłowego i pytający, czy to randka w ciemno.",
+              "turn_on": "Listy miłosne, cicha kawa w opuszczonym barze i głębokie rozmowy",
+              "dealbreaker": "Kłamstwa i poduszki hotelowe",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Zbyt bliska relacja z poduszkami",
+                "Ciągnie go do nawiedzonych miasteczek"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Lojalność wobec sojuszników"
+                "Przejdzie przez piekło, by cię odnaleźć",
+                "Nie boi się trudnych emocji"
               ]
             }
           },
@@ -392,21 +392,22 @@
               ]
             },
             "pl": {
-              "archetype": "Maria: Ocalały we Mgle",
-              "bio": "Maria to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-              "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Maria",
-              "meme": "Meme: Maria we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Maria: Zmysłowa Enigma",
+              "bio": "Zadziorna, intrygująca i pewna siebie femme fatale z Silent Hill, która wie, jak zawrócić w głowie.",
+              "tagline": "Panterkowy print, tatuaż motyla i spojrzenie, które hipnotyzuje.",
+              "quote": "„Widzisz? Jestem prawdziwa. Nie chcesz mnie przytulić?”",
+              "meme": "Meme: Maria mówiąca ci, że nie jest twoją byłą, robiąc dokładnie to samo co ona.",
+              "turn_on": "Flirt w mrocznych zaułkach i bezwarunkowe oddanie",
+              "dealbreaker": "Wspominanie o Mary i porównywanie jej do kogokolwiek",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Może być tylko projekcją twoich najgłębszych pragnień",
+                "Gwałtowne zmiany nastroju"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Lojalność wobec sojuszników"
+                "Magnetyczna charyzma",
+                "Nieziemski styl",
+                "Nigdy się przy niej nie znudzisz"
               ]
             }
           },
@@ -492,21 +493,22 @@
               ]
             },
             "pl": {
-              "archetype": "Cybil Bennett: Ocalały we Mgle",
-              "bio": "Cybil Bennett to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-              "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Cybil Bennett",
-              "meme": "Meme: Cybil Bennett we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Cybil Bennett: Nieugięta Policjantka",
+              "bio": "Odważna funkcjonariuszka z Brahms Police Department, która nie cofnie się przed niczym, by cię uratować.",
+              "tagline": "Motocyklowe buty, odznaka i bezkompromisowa lojalność.",
+              "quote": "„Trzymaj się blisko mnie i nie wychylaj.”",
+              "meme": "Meme: Cybil próbująca wlepić mandat Pyramid Headowi za brak tablicy rejestracyjnej na mieczu.",
+              "turn_on": "Uczciwość, prawdomówność i nocne przejażdżki motocyklem",
+              "dealbreaker": "Łamanie przepisów i ucieczka przed policją",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Nieustannie na patrolu",
+                "Podejrzliwa wobec nieznanych ziół i płynów"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Lojalność wobec sojuszników"
+                "Gotowa zasłonić cię własnym ciałem",
+                "Świetnie prowadzi motocykl",
+                "Niezrównany instynkt ochronny"
               ]
             }
           },
@@ -592,21 +594,21 @@
               ]
             },
             "pl": {
-              "archetype": "Lisa Garland: Ocalały we Mgle",
-              "bio": "Lisa Garland to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-              "quote": "„W obliczu grozy liczy się determinacja i zaufanie.” – Lisa Garland",
-              "meme": "Meme: Lisa Garland we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Lisa Garland: Troskliwa Pielęgniarka",
+              "bio": "Wrażliwa pielęgniarka ze szpitala Alchemilla, która potrzebuje kogoś, kto rozproszy mrok jej samotności.",
+              "tagline": "Klasyczny czepek pielęgniarki, kojący dotyk i złote serce.",
+              "quote": "„Proszę, nie zostawiaj mnie samej w ciemności.”",
+              "meme": "Meme: Lisa opatrująca twoje rany po nieudanym flashlight save.",
+              "turn_on": "Ciepłe słowa, spokojne wieczory przy herbacie i szczera obecność",
+              "dealbreaker": "Obojętność na cudzy ból",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Koszmary ze szpitalnej piwnicy",
+                "Niewyjaśnione krwawienia z czoła"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Lojalność wobec sojuszników"
+                "Najlepsze wsparcie medyczne w całym realmie",
+                "Prawdziwe ciepło i empatia"
               ]
             }
           },
@@ -692,22 +694,22 @@
               ]
             },
             "pl": {
-              "archetype": "Naughty Bear: Zabójca we Mgle",
-              "bio": "Naughty Bear to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Naughty Bear",
-              "meme": "Meme: Naughty Bear we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "archetype": "Naughty Bear: Mściwy Pluszak",
+              "bio": "Zignorowany miś z wyspy Perfection, który pragnie tylko przyjaźni... i krwawej zemsty na imprezie urodzinowej.",
+              "tagline": "Pluszowe futro, czapka urodzinowa i własny narrator.",
+              "quote": "„Nikt nie odmawia zaproszenia na herbatkę u Naughty'ego!”",
+              "meme": "Meme: Naughty Bear wykonujący unikalne mori, podczas gdy narrator śmieje się z ciebie w tle.",
+              "turn_on": "Wspólne przyjęcia urodzinowe, muffinki i pluszowe przytulasy",
+              "dealbreaker": "Brak odpowiedzi na RSVP",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Mściwy psychopata w pluszu",
+                "Zbyt dosłownie bierze 'rozbijanie imprezy'"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
-              ]
+                "Darmowe uściski do końca życia",
+                "Własny brytyjski lektor opisujący twoje randki"
+              ],
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle"
             }
           },
           "order_index": 6,
@@ -792,21 +794,22 @@
               ]
             },
             "pl": {
-              "archetype": "Baba Yaga: Zabójca we Mgle",
-              "bio": "Baba Yaga to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Baba Yaga",
-              "meme": "Meme: Baba Yaga we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Baba Jaga: Słowiańska Wiedźma",
+              "bio": "Pradawna wiedźma z leśnej głuszy, która w kociołku uwarzy dla ciebie eliksiry miłosne albo zamieni w leśnego grzyba.",
+              "tagline": "Chatka na kurzej nóżce, kościane toporki i tradycyjne słowiańskie kołysanki.",
+              "quote": "„Rozwiąż mą zagadkę, a ogień w piecu zapłonie dla ciebie.”",
+              "meme": "Meme: Baba Jaga rzucająca toporkami przez całą mapę niczym snajper ze wschodu.",
+              "turn_on": "Bystrość umysłu, ziołolecznictwo i szacunek dla tradycji",
+              "dealbreaker": "Niechęć do jedzenia leśnych potraw",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Jej dom ma tendencję do uciekania na kurzych nogach",
+                "Osobliwe menu obiadowe"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+                "Ciepły kominek",
+                "Magiczna ochrona",
+                "Niezrównane baśnie przy ognisku"
               ]
             }
           },
@@ -892,21 +895,21 @@
               ]
             },
             "pl": {
-              "archetype": "The Look-See: Zabójca we Mgle",
-              "bio": "The Look-See to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Look-See",
-              "meme": "Meme: The Look-See we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "The Look-See: Elegancki Koszmar",
+              "bio": "Upiór z uniwersum Crypt TV w nienagannie skrojonym garniturze. Nauczy cię porzucać przeszłość.",
+              "tagline": "Garnitur na miarę, wieczny uśmiech pełen kłów i bezlitosna terapia.",
+              "quote": "„Jeśli nie potrafisz tego odpuścić... zabiorę cząstkę ciebie.”",
+              "meme": "Meme: The Look-See pytający cię na pierwszej randce, czy przepracowałeś traumę z gimnazjum.",
+              "turn_on": "Dojrzałość emocjonalna, elegancki ubiór i zamykanie starych rozdziałów",
+              "dealbreaker": "Trzymanie pamiątek po toksycznym eks",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Dosłownie ucina to, czego nie chcesz odpuścić",
+                "Nigdy nie mruga"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+                "Nienaganny styl",
+                "Uśmiech nie schodzi mu z twarzy"
               ]
             }
           },
@@ -992,21 +995,21 @@
               ]
             },
             "pl": {
-              "archetype": "The Minotaur: Zabójca we Mgle",
-              "bio": "The Minotaur to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Minotaur",
-              "meme": "Meme: The Minotaur we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Minotaur: Strażnik Labiryntu",
+              "bio": "Mityczna bestia z Krety zakuta w brąz i furia Oni, która przeprowadzi cię przez każdy życiowy labirynt.",
+              "tagline": "Potężne rogi, antyczny pancerz i szarża krusząca palety.",
+              "quote": "„Żaden labirynt nie ukryje cię przed moim gniewem.”",
+              "meme": "Meme: Minotaur biegnący przez korytarz w Hawkins jak wściekły pociąg towarowy.",
+              "turn_on": "Siła fizyczna, starożytne mity i wspólne rozwiązywanie zagadek",
+              "dealbreaker": "Zostawianie kłębków czerwonej nici na dywanie",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Taranuje ściany w złości",
+                "Je za czterech"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+                "Nigdy nie gubi się w IKEA",
+                "Zapewnia poczucie totalnego bezpieczeństwa"
               ]
             }
           },
@@ -1092,21 +1095,22 @@
               ]
             },
             "pl": {
-              "archetype": "Tiffany Valentine: Zabójca we Mgle",
-              "bio": "Tiffany Valentine to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Tiffany Valentine",
-              "meme": "Meme: Tiffany Valentine we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Tiffany Valentine: Narzeczona Laleczki Chucky",
+              "bio": "Zabójcza blondynka w skórze i welonie. Szuka partnera do szalonych zbrodni i romantycznych kolacji przy świecach.",
+              "tagline": "Skórzana ramoneska, welon ślubny i szwedzkie klopsiki.",
+              "quote": "„Jesteś jedyną osobą, z którą chcę zabijać aż po grób.”",
+              "meme": "Meme: Tiffany kłócąca się z Chuckym o to, kto ma pójść sprawdzić piwnicę.",
+              "turn_on": "Rock'n'rollowy styl, lojalność bez granic i poczucie humoru",
+              "dealbreaker": "Zdrada i krytykowanie jej kuchni",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Ciało opętanej lalki",
+                "Podpalenia traktuje jako randkową niespodziankę"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+                "Oddana na śmierć i życie",
+                "Świetnie gotuje",
+                "Nieziemski styl"
               ]
             }
           },
@@ -1192,25 +1196,3534 @@
               ]
             },
             "pl": {
-              "archetype": "Chatterer Cenobite: Zabójca we Mgle",
-              "bio": "Chatterer Cenobite to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – Chatterer Cenobite",
-              "meme": "Meme: Chatterer Cenobite we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
+              "archetype": "Chatterer: Rytmiczny Cenobita",
+              "bio": "Członek Zakonu Szczeliny z Hellraisera. Komunikuje się wyłącznie hipnotyzującym szczękaniem zębami.",
+              "tagline": "Szczękające zęby, skórzane szaty i doznania poza granicami bólu i rozkoszy.",
+              "quote": "*Klak-klak-klak-klak...*",
+              "meme": "Meme: Chatterer próbujący zaśpiewać ci sto lat przez szczękanie zębami.",
+              "turn_on": "Rozwiązywanie Kostki Lemarchanda i ekstremalne bodźce zmysłowe",
+              "dealbreaker": "Zatyczki do uszu i strach przed igłami",
               "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
               "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "Wystrój wnętrz oparty wyłącznie na łańcuchach i hakach",
+                "Zimny jak marmur"
               ],
               "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+                "Nigdy nie marudzi na głos",
+                "Świetne wyczucie rytmu",
+                "Zawsze przyniesie ci prezent w kostce"
               ]
             }
           },
           "order_index": 11,
+          "is_active": true
+        },
+        {
+          "slug": "geralt_of_rivia",
+          "name": "Geralt of Rivia",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/geralt_of_rivia.webp",
+          "media_type": "image",
+          "archetype": "The White Wolf",
+          "bio": "A hardened monster slayer from the Continent who found himself dragged into The Fog. Equipped with silver patience, mutant senses, and an undying urge to play a round of Gwent.",
+          "tagline": "White wolf medallion, cat eyes, and grunts that say everything.",
+          "quote": "\"Wind's howling... and so are the Survivors.\"",
+          "meme": "Meme: Geralt challenging the Killer to a game of Gwent before they can pick up a downed teammate.",
+          "turn_on": "Lilac and gooseberries, herbal decoctions, and confident sorceresses",
+          "dealbreaker": "Portals and unfinished contracts",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Emotionally stoic exterior",
+            "Constantly complains about portals"
+          ],
+          "green_flags": [
+            "Kills the monsters so you don't have to",
+            "Voiced by Doug Cockle",
+            "Incredible campfire stories"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Geralt von Riva: Der Weiße Wolf",
+              "bio": "Geralt von Riva ist eine ikonische Gestalt in den Prüfungen des Wesens.",
+              "tagline": "Hexersinne und stoische Gelassenheit.",
+              "meme": "Meme: Geralt fordert den Killer zu einer Runde Gwent heraus.",
+              "turn_on": "Flieder und Stachelbeeren",
+              "dealbreaker": "Portale",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Verschlossen",
+                "Wanderleben"
+              ],
+              "green_flags": [
+                "Hervorragender Beschützer",
+                "Treu zu seinen Freunden"
+              ]
+            },
+            "es": {
+              "archetype": "Geralt de Rivia: El Lobo Blanco",
+              "bio": "Un brujo legendario con sentidos mutados listo para sobrevivir a la Niebla.",
+              "tagline": "Medallón de lobo, ojos de gato y voz profunda.",
+              "meme": "Meme: Geralt ofreciendo jugar al Gwynt en mitad de una persecución.",
+              "turn_on": "Grosellas y lilas",
+              "dealbreaker": "Los portales mágicos",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Estoico en exceso",
+                "Vida errante"
+              ],
+              "green_flags": [
+                "Protector inigualable",
+                "Sentidos agudos"
+              ]
+            },
+            "ja": {
+              "archetype": "リヴィアのゲラルト: 白狼",
+              "bio": "エンティティの領域に現れた歴戦のウィッチャー。",
+              "tagline": "狼の流派のメダリオンと超人的な反射神経。",
+              "meme": "ミーム: チェイス中にグウェントを持ちかけるゲラルト。",
+              "turn_on": "ライラックとスグリの香り",
+              "dealbreaker": "ポータル",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "感情を表に出さない",
+                "放浪癖"
+              ],
+              "green_flags": [
+                "圧倒的な戦闘技術",
+                "絶対的な頼もしさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Geralt z Rivii: Biały Wilk",
+              "bio": "Legendarny wiedźmin cechu wilka z głosem Douga Cockle'a. Zamienił zlecenia na potwory na niekończące się ucieczki przez Mgłę Bytu.",
+              "tagline": "Srebrny miecz na plecach, kocie oczy i mruknięcie załatwiające sprawę.",
+              "quote": "„Zaraza... znowu generator padł.”",
+              "meme": "Meme: Geralt proponujący Zabójcy partię Gwinta zamiast wieszania na haku.",
+              "turn_on": "Zapach bzu i agrestu, zwinność i cięty język",
+              "dealbreaker": "Magiczne portale i niedotrzymane umowy",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Nienawidzi portali",
+                "Mruczy zamiast mówić o uczuciach"
+              ],
+              "green_flags": [
+                "Zabije każdego potwora w Mgle",
+                "Lojalny do grobowej deski",
+                "Wspaniały głos"
+              ]
+            }
+          },
+          "order_index": 12,
+          "is_active": true
+        },
+        {
+          "slug": "chris_redfield",
+          "name": "Chris Redfield",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/chris_redfield.webp",
+          "media_type": "image",
+          "archetype": "The Boulder Puncher",
+          "bio": "Former S.T.A.R.S. alpha and BSAA captain. Built like a brick fortress, he treats pallet saves like bench press warmups and will never leave a partner behind.",
+          "tagline": "Massive biceps, tactical vest, and boulder-punching pedigree.",
+          "quote": "\"I've survived Wesker, I can survive this Fog.\"",
+          "meme": "Meme: Chris punching a map obstacle out of the way to rescue a teammate.",
+          "turn_on": "Heavy lifting, field discipline, and protein shakes",
+          "dealbreaker": "Bioweapons and corporate conspiracies",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Partner survival rate is statistically questionable",
+            "Takes the gym too seriously"
+          ],
+          "green_flags": [
+            "Can punch literal boulders for you",
+            "Peak physical form",
+            "Unmatched combat bravery"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Chris Redfield: Der Felsensprenger",
+              "bio": "BSAA-Veteran mit unbändiger Entschlossenheit.",
+              "tagline": "Taktische Rüstung und Muskelkraft pur.",
+              "meme": "Meme: Chris boxt Felsbrocken im Nebel weg.",
+              "turn_on": "Disziplin und Teamgeist",
+              "dealbreaker": "Viren und Betrug",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Überfürsorglich",
+                "Traumatisiert"
+              ],
+              "green_flags": [
+                "Stark wie ein Bär",
+                "Loyal"
+              ]
+            },
+            "es": {
+              "archetype": "Chris Redfield: El Capitán de la BSAA",
+              "bio": "Veterano curtido contra el bioterrorismo que nunca se rinde.",
+              "tagline": "Brazos gigantes y táctica impecable.",
+              "meme": "Meme: Chris moviendo rocas a puñetazos para salvar al equipo.",
+              "turn_on": "Entrenamiento físico y valentía",
+              "dealbreaker": "Traiciones y armas biológicas",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Obsesionado con la misión",
+                "Carga con traumas"
+              ],
+              "green_flags": [
+                "Protección militar garantizada",
+                "Determinación de hierro"
+              ]
+            },
+            "ja": {
+              "archetype": "クリス・レッドフィールド: BSAA隊長",
+              "bio": "バイオテロと戦い続けてきた伝説の兵士。",
+              "tagline": "鍛え抜かれた肉体と揺るぎない正義感。",
+              "meme": "ミーム: 霧の中でも岩を殴って壊しそうなクリス。",
+              "turn_on": "規律と筋力トレーニング",
+              "dealbreaker": "裏切りとウイルス兵器",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "過去の仲間の死を引きずりがち",
+                "筋肉至上主義"
+              ],
+              "green_flags": [
+                "頼もしすぎる腕力",
+                "仲間思い"
+              ]
+            },
+            "pl": {
+              "archetype": "Chris Redfield: Pogromca Głazów",
+              "bio": "Kapitan BSAA o ramionach z litej stali. Przeżył Raccoon City i zniszczył Weskera – we Mgle wyrywa ocalałych z rąk zabójcy samą siłą woli.",
+              "tagline": "Bicepsy wielkości generatorów i taktyczna kamizelka.",
+              "quote": "„Nie zostawię cię tutaj. Uderzam w głazy, uderzę i w tego killera.”",
+              "meme": "Meme: Chris robiący serie na klatę używając powalonych palet.",
+              "turn_on": "Trening na siłowni, lojalność oddziału i zdrowe proteiny",
+              "dealbreaker": "Bioterroryzm i sprzedawanie informacji korporacjom",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Jego partnerzy w terenie mają podejrzanie niski współczynnik przeżycia",
+                "Wieczny syndrom ocalonego"
+              ],
+              "green_flags": [
+                "Może cię przenieść na rękach przez całą mapę",
+                "Lojalny obrońca"
+              ]
+            }
+          },
+          "order_index": 13,
+          "is_active": true
+        },
+        {
+          "slug": "claire_redfield",
+          "name": "Claire Redfield",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/claire_redfield.webp",
+          "media_type": "image",
+          "archetype": "The Fearless Sibling",
+          "bio": "Resourceful, compassionate, and determined. She will hotwire an exit gate, comfort a panicking teammate, and ride into danger without a second thought.",
+          "tagline": "Red leather jacket, high ponytail, and fierce protectiveness.",
+          "quote": "\"Hang in there, I've got you covered!\"",
+          "meme": "Meme: Claire dodging the Killer on a stolen motorcycle through the Macmillan Estate.",
+          "turn_on": "Motorcycle road trips, sibling loyalty, and fearless bravery",
+          "dealbreaker": "Neglecting someone who needs help",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Always looks for missing family members in zombie apocalypses",
+            "Too selfless"
+          ],
+          "green_flags": [
+            "Elite survival instincts",
+            "Incredible emotional warmth",
+            "Never gives up on you"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Claire Redfield: Die Mutige Schwester",
+              "bio": "Claire trotzt jeder Gefahr mit Mitgefühl und Scharfsinn.",
+              "tagline": "Rote Lederjacke und ein unerschütterlicher Wille.",
+              "meme": "Meme: Claire entkommt dem Killer mit purem Geschick.",
+              "turn_on": "Freiheit und Herzenswärme",
+              "dealbreaker": "Feigheit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Sturköpfig",
+                "Geht zu hohe Risiken ein"
+              ],
+              "green_flags": [
+                "Mitfühlend",
+                "Unaufhaltbar"
+              ]
+            },
+            "es": {
+              "archetype": "Claire Redfield: La Hermana Audaz",
+              "bio": "Compasiva y valiente superviviente de Raccoon City.",
+              "tagline": "Chaqueta de cuero roja y corazón de oro.",
+              "meme": "Meme: Claire salvando a todos a un segundo de morir.",
+              "turn_on": "Aventura y generosidad",
+              "dealbreaker": "El egoísmo en equipo",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Se arriesga demasiado",
+                "No sabe decir que no"
+              ],
+              "green_flags": [
+                "Protectora nata",
+                "Instintos de supervivencia"
+              ]
+            },
+            "ja": {
+              "archetype": "クレア・レッドフィールド: 不屈の生存者",
+              "bio": "数々の惨劇を乗り越えてきた心優しき女性。",
+              "tagline": "赤いレザージャケットと強い信念。",
+              "meme": "ミーム: 誰よりも早くフック救助に駆けつけるクレア。",
+              "turn_on": "思いやりと行動力",
+              "dealbreaker": "仲間を見捨てること",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "自己犠牲が過ぎる",
+                "無鉄砲"
+              ],
+              "green_flags": [
+                "圧倒的な安心感",
+                "最後まで諦めない心"
+              ]
+            },
+            "pl": {
+              "archetype": "Claire Redfield: Niezłomna Opiekunka",
+              "bio": "Bohaterka z Raccoon City w czerwonej kurtce 'Made in Heaven'. Łączy empatię z niesamowitymi umiejętnościami przetrwania.",
+              "tagline": "Czerwona ramoneska, kucyk i determinacja, by ocalić każdego.",
+              "quote": "„Trzymaj się, wyciągnę cię stąd!”",
+              "meme": "Meme: Claire robiąca 360-stopniowy obrót wokół Weskera i uciekająca na motorze.",
+              "turn_on": "Motocykle, rodzinne ciepło i sprawiedliwość",
+              "dealbreaker": "Zostawianie rannych na pastwę losu",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Wpycha się w paszczę lwa, żeby ratować obcych",
+                "Nigdy nie odpoczywa"
+              ],
+              "green_flags": [
+                "Zawsze zdejmie cię z haka",
+                "Nie panikuje w kryzysie",
+                "Ciepła i serdeczna"
+              ]
+            }
+          },
+          "order_index": 14,
+          "is_active": true
+        },
+        {
+          "slug": "carlos_oliveira",
+          "name": "Carlos Oliveira",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/carlos_oliveira.webp",
+          "media_type": "image",
+          "archetype": "The Charming Mercenary",
+          "bio": "U.B.C.S. mercenary with unmatched hair volume and irresistible charm. He will crack jokes in the face of death and make sure you leave the trial with a smile.",
+          "tagline": "Glorious wavy hair, tactical combat gear, and flawless pickup lines.",
+          "quote": "\"I won't leave you in a cold, cruel, Carlos-less world.\"",
+          "meme": "Meme: Carlos fixing his hair while looping the Killer around a shack pallet.",
+          "turn_on": "Witty banter, tactical teamwork, and appreciating good hair products",
+          "dealbreaker": "Cold, Carlos-less environments",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Works for questionable corporate PMCs",
+            "Flirts during active chases"
+          ],
+          "green_flags": [
+            "10/10 hair care routine",
+            "Unshakable bravery under fire",
+            "Always cheers you up"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Carlos Oliveira: Der Charmante Söldner",
+              "bio": "U.B.C.S.-Kämpfer mit Humor und Charisma.",
+              "tagline": "Perfekte Locken und treffsicherer Humor.",
+              "meme": "Meme: Carlos flirtet mitten im Generator-Reparieren.",
+              "turn_on": "Humor und Teamgeist",
+              "dealbreaker": "Humorlosigkeit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Leichtsinnig",
+                "Söldner-Vergangenheit"
+              ],
+              "green_flags": [
+                "Zuverlässig",
+                "Tolles Lächeln"
+              ]
+            },
+            "es": {
+              "archetype": "Carlos Oliveira: El Mercenario Apuesto",
+              "bio": "Miembro del U.B.C.S. capaz de sonreír ante el peor apocalipsis.",
+              "tagline": "Pelo perfecto, carisma letal y lealtad militar.",
+              "meme": "Meme: Carlos soltando piropos mientras evade a Nemesis.",
+              "turn_on": "Complicidad y sentido del humor",
+              "dealbreaker": "La falta de empatía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Coquetea en momentos inoportunos",
+                "Pasado corporativo"
+              ],
+              "green_flags": [
+                "Jamás te dejará atrás",
+                "Caballero valiente"
+              ]
+            },
+            "ja": {
+              "archetype": "カルロス・オリヴェイラ: 陽気な傭兵",
+              "bio": "絶望的な状況でも軽口を忘れないU.B.C.S.の精鋭。",
+              "tagline": "豊かな巻き毛と頼れる戦闘力。",
+              "meme": "ミーム: チェイス中もヘアスタイルを気にするカルロス。",
+              "turn_on": "ウィットに富んだ会話と笑顔",
+              "dealbreaker": "冷淡な態度",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "軽薄に見えるときがある",
+                "傭兵稼業の影"
+              ],
+              "green_flags": [
+                "抜群の頼もしさ",
+                "どんな時も場を和ませる"
+              ]
+            },
+            "pl": {
+              "archetype": "Carlos Oliveira: Szarmancki Najemnik",
+              "bio": "Najemnik U.B.C.S. o bujnej fryzurze i rozbrajającym uśmiechu. Nie zostawi cię w zimnym, okrutnym świecie pozbawionym Carlosa.",
+              "tagline": "Gęste loki, kamizelka bojowa i teksty na podryw w sercu zarazy.",
+              "quote": "„Nie mógłbym zostawić cię w świecie bez Carlosa.”",
+              "meme": "Meme: Carlos poprawiający grzywkę przed zrobieniem 360 na Nemesisie.",
+              "turn_on": "Poczucie humoru, zgrany teamwork i dobra odżywka do włosów",
+              "dealbreaker": "Brak uśmiechu w trudnych chwilach",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Pracował dla podejrzanej korporacji",
+                "Rzuca żartami w trakcie wykrwawiania się"
+              ],
+              "green_flags": [
+                "Nigdy cię nie opuści",
+                "Zawsze rozładuje napięcie",
+                "Włosy marzenie"
+              ]
+            }
+          },
+          "order_index": 15,
+          "is_active": true
+        },
+        {
+          "slug": "sheva_alomar",
+          "name": "Sheva Alomar",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/sheva_alomar.webp",
+          "media_type": "image",
+          "archetype": "The Agile Marksman",
+          "bio": "BSAA Western Africa Branch operative with lightning reflexes and unwavering loyalty. She will keep you supplied with first-aid sprays and watch your back from across the realm.",
+          "tagline": "Tactical harness, unmatched agility, and surgical support.",
+          "quote": "\"Partners to the end, no matter what.\"",
+          "meme": "Meme: Sheva spamming 'I need an egg!' around the campfire.",
+          "turn_on": "Team coordination, athletic prowess, and sincere trust",
+          "dealbreaker": "Wasting medical supplies and solo rushing",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Inventory management perfectionist",
+            "Demands instant partner check-ins"
+          ],
+          "green_flags": [
+            "Top-tier support reflexes",
+            "Incredible agility",
+            "Loyal partner for life"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Sheva Alomar: Die Taktische Partnerin",
+              "bio": "BSAA-Scharfschützin mit unübertroffener Treue.",
+              "tagline": "Präzision, Beweglichkeit und Teamgeist.",
+              "meme": "Meme: Sheva verteilt Erste-Hilfe-Sprays im Akkord.",
+              "turn_on": "Koordination und Ehrlichkeit",
+              "dealbreaker": "Verschwendung",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Strikte Kontrolle",
+                "Arbeitssüchtig"
+              ],
+              "green_flags": [
+                "Zuverlässigste Partnerin",
+                "Agil"
+              ]
+            },
+            "es": {
+              "archetype": "Sheva Alomar: La Agente de la BSAA",
+              "bio": "Agente ágil y leal que nunca abandona a su compañero de armas.",
+              "tagline": "Puntería letal y apoyo médico constante.",
+              "meme": "Meme: Sheva curándote antes de que toques el suelo.",
+              "turn_on": "Trabajo en equipo y confianza mutua",
+              "dealbreaker": "Jugar de lobo solitario",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Muy estricta con los suministros",
+                "Exigente"
+              ],
+              "green_flags": [
+                "La mejor compañera de equipo",
+                "Reflejos sobrehumanos"
+              ]
+            },
+            "ja": {
+              "archetype": "シェバ・アローマ: BSAA西部アフリカ支部",
+              "bio": "高い運動能力と狙撃技術を誇る聡明なエージェント。",
+              "tagline": "素早い身のこなしと確かな援護射撃。",
+              "meme": "ミーム: 味方に即座にスプレーを届けるシェバ。",
+              "turn_on": "信頼関係と連携プレイ",
+              "dealbreaker": "身勝手な単独行動",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "アイテム管理に厳格すぎる",
+                "任務優先"
+              ],
+              "green_flags": [
+                "最高のサポート力",
+                "絶対に裏切らない"
+              ]
+            },
+            "pl": {
+              "archetype": "Sheva Alomar: Perfekcyjna Partnerka",
+              "bio": "Agentka BSAA z oddziału zachodnioafrykańskiego. Zapewnia wsparcie medyczne, osłonę i bezbłędną koordynację w każdym meczu.",
+              "tagline": "Sprinterka, taktyczna uprząż i niezawodny partner w akcji.",
+              "quote": "„Partnerzy do samego końca. Osłaniam cię!”",
+              "meme": "Meme: Sheva zużywająca całą apteczkę na twoje najmniejsze zadrapanie.",
+              "turn_on": "Wzajemne zaufanie, atletyczna sylwetka i dyscyplina",
+              "dealbreaker": "Marnowanie zasobów i solowe popisy",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Obsesyjna na punkcie zarządzania ekwipunkiem",
+                "Zawsze oczekuje natychmiastowego 'Dzięki!'"
+              ],
+              "green_flags": [
+                "Najlepszy support w całym zespole",
+                "Zdejmie cię z haka w ułamku sekundy",
+                "Lojalna do samego końca"
+              ]
+            }
+          },
+          "order_index": 16,
+          "is_active": true
+        },
+        {
+          "slug": "tubarao",
+          "name": "Tubarão",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/tubarao.webp",
+          "media_type": "image",
+          "archetype": "The Cryo Specialist",
+          "bio": "Portuguese tactical specialist from Rainbow Six Siege. Cool under pressure, disciplined, and knows how to freeze any crisis in its tracks.",
+          "tagline": "Tactical scuba dive armor, icy calm, and unbreakable focus.",
+          "quote": "\"Keep cool. Precision wins every mission.\"",
+          "meme": "Meme: Tubarão freezing the Killer's ankles in place with cryo canisters.",
+          "turn_on": "Tactical discipline, swimming, and chilling under pressure",
+          "dealbreaker": "Panic under fire and messy team comms",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Too cold and analytical at times",
+            "Smells faintly of liquid nitrogen"
+          ],
+          "green_flags": [
+            "Never loses his cool",
+            "Elite tactical protector",
+            "Calming deep voice"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Tubarão: Der Eisspezialist",
+              "bio": "Spezialist aus Rainbow Six mit eiserner Ruhe.",
+              "tagline": "Kaltblütig, fokussiert und taktisch versiert.",
+              "meme": "Meme: Tubarão behält immer die Ruhe im Match.",
+              "turn_on": "Ruhe und Professionalität",
+              "dealbreaker": "Panik",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Sehr distanziert",
+                "Stur"
+              ],
+              "green_flags": [
+                "Eiskalt unter Druck",
+                "Beschützer"
+              ]
+            },
+            "es": {
+              "archetype": "Tubarão: Especialista Táctico",
+              "bio": "Operador portugués de Rainbow Six Siege de sangre fría.",
+              "tagline": "Armadura de buzo táctico y concentración absoluta.",
+              "meme": "Meme: Tubarão congelando el pánico de los compañeros.",
+              "turn_on": "Serenidad y precisión táctica",
+              "dealbreaker": "El descontrol",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Emocionalmente frío",
+                "Calculador"
+              ],
+              "green_flags": [
+                "Nunca se asusta",
+                "Protección táctica"
+              ]
+            },
+            "ja": {
+              "archetype": "トゥバラン: 冷静沈着な戦術兵",
+              "bio": "レインボーシックスから参戦した氷のような冷静さを持つオペレーター。",
+              "tagline": "ダイビング装備と徹底した戦術眼。",
+              "meme": "ミーム: どんなピンチでも眉一つ動かさないトゥバラン。",
+              "turn_on": "冷静さとプロ意識",
+              "dealbreaker": "規律の乱れ",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "感情表現が乏しい",
+                "任務第一"
+              ],
+              "green_flags": [
+                "冷静な判断力",
+                "揺るぎない安心感"
+              ]
+            },
+            "pl": {
+              "archetype": "Tubarão: Mistrz Krio-Taktyki",
+              "bio": "Portugalski operator jednostek specjalnych z Rainbow Six Siege. Zimnokrwisty profesjonalista, który zamrozi każdy kryzys.",
+              "tagline": "Taktyczny kombinezon, lodowaty spokój i zero paniki.",
+              "quote": "„Zachowaj chłód. Precyzja rozwiązuje każdy problem.”",
+              "meme": "Meme: Tubarão spokojnie naprawiający generator, podczas gdy wokół szaleje Oni w Blood Fury.",
+              "turn_on": "Opanowanie, pływanie i zimna krew w trudnych chwilach",
+              "dealbreaker": "Histeryzowanie i nieprzemyślane decyzje",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Emocjonalny lodowiec",
+                "Trudno odgadnąć, co czuje"
+              ],
+              "green_flags": [
+                "Oaza spokoju",
+                "Nigdy cię nie zawiedzie w kryzysie",
+                "Głęboki, kojący głos"
+              ]
+            }
+          },
+          "order_index": 17,
+          "is_active": true
+        },
+        {
+          "slug": "alucard",
+          "name": "Alucard",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/alucard.webp",
+          "media_type": "image",
+          "archetype": "The Dhampir Prince",
+          "bio": "The half-vampire son of Dracula himself. Elegant, poetic, and blessed with flowing golden locks. He defies his dark lineage to protect humanity from the shadows.",
+          "tagline": "Flowing silver coat, golden hair, and aristocratic melancholia.",
+          "quote": "\"The only thing necessary for evil to triumph is for good men to do nothing.\"",
+          "meme": "Meme: Alucard back-dashing across the entire map instead of sprinting.",
+          "turn_on": "Gothic architecture, classical harpsichord, and poetic souls",
+          "dealbreaker": "Vampiric bloodlust and disrespecting his mother's memory",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Family reunions are a bloodbath",
+            "Likes sleeping in coffins for centuries"
+          ],
+          "green_flags": [
+            "Ethereal aristocratic beauty",
+            "Gentle protector",
+            "Voiced by Yuri Lowenthal"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Alucard: Der Dhampir-Prinz",
+              "bio": "Draculas Sohn mit aristokratischer Eleganz.",
+              "tagline": "Goldenes Haar und zeitlose Anmut.",
+              "meme": "Meme: Alucard gleitet rückwärts durch die Prüfung.",
+              "turn_on": "Poesie und Kunst",
+              "dealbreaker": "Blutdurst",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Familiendrama",
+                "Sehr melancholisch"
+              ],
+              "green_flags": [
+                "Edler Beschützer",
+                "Wunderschön"
+              ]
+            },
+            "es": {
+              "archetype": "Alucard: El Hijo de Drácula",
+              "bio": "Elegante y melancólico dhampir con gracia inmortal.",
+              "tagline": "Capa ondeante, cabello dorado y elegancia gótica.",
+              "meme": "Meme: Alucard esquivando golpes con movimientos imposibles.",
+              "turn_on": "Música clásica y devoción sincera",
+              "dealbreaker": "La tiranía vampírica",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Drama familiar extremo",
+                "Duerme demasiado"
+              ],
+              "green_flags": [
+                "Caballero protector",
+                "Belleza sobrenatural"
+              ]
+            },
+            "ja": {
+              "archetype": "アルカード: 悲劇のダンピール",
+              "bio": "ドラキュラの息子でありながら人類を守るために戦う貴公子。",
+              "tagline": "黄金の長髪と高貴な立ち振る舞い。",
+              "meme": "ミーム: バックダッシュでマップを駆け抜けるアルカード。",
+              "turn_on": "詩的な心とクラシック音楽",
+              "dealbreaker": "吸血鬼の暴虐",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "複雑すぎる家庭環境",
+                "時折見せる暗い影"
+              ],
+              "green_flags": [
+                "息をのむような美貌",
+                "揺るぎない優しさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Alucard: Książę Dhampir",
+              "bio": "Syn Drakuli z Castlevanii: Symphony of the Night. Arystokratyczny, poetycki półwampir o złotych włosach, który sprzeciwił się własnemu ojcu.",
+              "tagline": "Zwiewny płaszcz, złote loki i arystokratyczna melancholia.",
+              "quote": "„Zło triumfuje tylko wtedy, gdy dobrzy ludzie nic nie robią.”",
+              "meme": "Meme: Alucard robiący backdash zamiast normalnego biegania po mapie.",
+              "turn_on": "Gotycka poezja, klawesyn i głęboka wrażliwość",
+              "dealbreaker": "Nienawiść do ludzi i brak szacunku dla pamięci jego matki",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Spotkania rodzinne zawsze kończą się masakrą",
+                "Lubi uciąć sobie stuletnią drzemkę w trumnie"
+              ],
+              "green_flags": [
+                "Nierealnie przystojny",
+                "Szlachetny obrońca",
+                "Legendarny głos"
+              ]
+            }
+          },
+          "order_index": 18,
+          "is_active": true
+        },
+        {
+          "slug": "soma_cruz",
+          "name": "Soma Cruz",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/soma_cruz.webp",
+          "media_type": "image",
+          "archetype": "The Reincarnated Soul",
+          "bio": "A high school transfer student who happens to carry the reincarnation of the Dark Lord within. Clad in a white trench coat, he fights against destiny to keep his humanity.",
+          "tagline": "White designer coat, blue jeans, and resisting a dark prophecy.",
+          "quote": "\"I will decide my own destiny, not darkness.\"",
+          "meme": "Meme: Soma absorbing the Killer's soul after hitting a 360 spin.",
+          "turn_on": "Sunny days, modern anime culture, and supportive friendships",
+          "dealbreaker": "Dark cultists trying to turn him evil",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Technically the reincarnation of Dracula",
+            "Surrounded by suspicious cults"
+          ],
+          "green_flags": [
+            "Strong willpower against evil",
+            "Modern high school charm",
+            "Stylish wardrobe"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Soma Cruz: Die Wiedergeborene Seele",
+              "bio": "Soma kämpft gegen seine düstere Bestimmung an.",
+              "tagline": "Weißer Mantel und moderne Entschlossenheit.",
+              "meme": "Meme: Soma kontrolliert seine dunkle Seite im Nebel.",
+              "turn_on": "Freundschaft und Loyalität",
+              "dealbreaker": "Finsterer Verrat",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Dunkle Bestimmung",
+                "Gefahr des Kontrollverlusts"
+              ],
+              "green_flags": [
+                "Reines Herz",
+                "Stilsicher"
+              ]
+            },
+            "es": {
+              "archetype": "Soma Cruz: El Heredero del Destino",
+              "bio": "Joven estudiante que lucha contra su oscuro linaje profético.",
+              "tagline": "Abrigo blanco elegante y coraje moderno.",
+              "meme": "Meme: Soma absorbiendo las almas de los cuervos de la niebla.",
+              "turn_on": "Amistad leal y sinceridad",
+              "dealbreaker": "Cultos oscuros",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Reencarnación del Señor Oscuro",
+                "Atrae cultistas"
+              ],
+              "green_flags": [
+                "Fuerte voluntad",
+                "Aspecto moderno y elegante"
+              ]
+            },
+            "ja": {
+              "archetype": "来須蒼真: 運命に抗う魂",
+              "bio": "魔王の魂を宿しながらも自らの意志で光を歩む高校生。",
+              "tagline": "白いコートと揺るぎなき人間性。",
+              "meme": "ミーム: 試練の最中にソウルを集めようとする蒼真。",
+              "turn_on": "温かい絆と穏やかな日常",
+              "dealbreaker": "闇の儀式と狂信者",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "魔王の生まれ変わりという重すぎる宿命",
+                "カルトに狙われがち"
+              ],
+              "green_flags": [
+                "運命に負けない強い意志",
+                "爽やかな魅力"
+              ]
+            },
+            "pl": {
+              "archetype": "Soma Cruz: Odrodzona Dusza",
+              "bio": "Bohater gier Castlevania: Aria of Sorrow. Zwykły uczeń w stylowym białym płaszczu, w którym drzemie reinkarnacja Mrocznego Władcy.",
+              "tagline": "Biały trencz, młodzieńczy urok i walka z własnym przeznaczeniem.",
+              "quote": "„Sam wybiorę swój los. Ciemność mną nie zawładnie.”",
+              "meme": "Meme: Soma absorbujący duszę Killera po udanym zrzuceniu palety.",
+              "turn_on": "Słoneczne dni, lojalność w przyjaźni i wsparcie w trudnych chwilach",
+              "dealbreaker": "Mroczne sekty próbujące uczynić go królem zła",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Technicznie jest reinkarnacją Drakuli",
+                "Prześladują go podejrzani kultyści"
+              ],
+              "green_flags": [
+                "Potrafi przeciwstawić się każdemu mrokowi",
+                "Świetne wyczucie mody",
+                "Dobre serce"
+              ]
+            }
+          },
+          "order_index": 19,
+          "is_active": true
+        },
+        {
+          "slug": "richter_belmont",
+          "name": "Richter Belmont",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/richter_belmont.webp",
+          "media_type": "image",
+          "archetype": "The Legendary Whipmaster",
+          "bio": "The boldest and most acrobatic vampire hunter of the Belmont clan. Clad in his iconic blue tunic and headband, he faces any terror with fiery passion.",
+          "tagline": "Blue tunic, martial arts kicks, and fearless Belmont pride.",
+          "quote": "\"Die monster! You don't belong in this world!\"",
+          "meme": "Meme: Richter backflipping over the Killer's basic attack.",
+          "turn_on": "Martial arts practice, righteous indignation, and classic rock energy",
+          "dealbreaker": "Mind control spells and blood sacrifices",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Overconfident",
+            "Prone to dramatic monologue deliveries"
+          ],
+          "green_flags": [
+            "Incredible physical agility",
+            "Passionate defender",
+            "Iconic style"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Richter Belmont: Der Peitschenmeister",
+              "bio": "Akrobatischer und stolzer Vampirjäger.",
+              "tagline": "Blaue Tunika und Belmont-Stolz.",
+              "meme": "Meme: Richter macht Saltos über den Killer.",
+              "turn_on": "Mut und Kampfkunst",
+              "dealbreaker": "Gedankenkontrolle",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Überheblich",
+                "Lautstark"
+              ],
+              "green_flags": [
+                "Extrem athletisch",
+                "Furchtlos"
+              ]
+            },
+            "es": {
+              "archetype": "Richter Belmont: El Cazador Acróbata",
+              "bio": "El cazador de vampiros más dinámico de la estirpe Belmont.",
+              "tagline": "Túnica azul, saltos mortales y orgullo guerrero.",
+              "meme": "Meme: Richter dando volteretas sobre el asesino.",
+              "turn_on": "Artes marciales y pasión por la justicia",
+              "dealbreaker": "La hechicería mental",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Exceso de confianza",
+                "Monólogos dramáticos"
+              ],
+              "green_flags": [
+                "Agilidad asombrosa",
+                "Corazón ardiente"
+              ]
+            },
+            "ja": {
+              "archetype": "リヒター・ベルモンド: 最強のヴァンパイアハンター",
+              "bio": "卓越した身のこなしと炎のような情熱を秘めたベルモンド家の末裔。",
+              "tagline": "青い装束と神速の体術。",
+              "meme": "ミーム: キラーの攻撃を宙返りで回避するリヒター。",
+              "turn_on": "正義感とストイックな修練",
+              "dealbreaker": "精神支配と暗黒魔法",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "自信過剰になりがち",
+                "芝居がかったセリフ"
+              ],
+              "green_flags": [
+                "圧倒的な身体能力",
+                "頼れるリーダーシップ"
+              ]
+            },
+            "pl": {
+              "archetype": "Richter Belmont: Akrobatyczny Łowca",
+              "bio": "Najbardziej dynamiczny łowca z rodu Belmontów (Rondo of Blood / Nocturne). W niebieskiej tunice i z opaską na czole stawia czoła każdemu monstrum.",
+              "tagline": "Błękitna tunika, akrobatyczne salta i bezgraniczna duma klanu.",
+              "quote": "„Giń, potworze! Nie należysz do tego świata!”",
+              "meme": "Meme: Richter robiący salto nad ciosem Killera i lądujący prosto w hatchu.",
+              "turn_on": "Sztuki walki, żarliwa pasja i rockowa energia",
+              "dealbreaker": "Klątwy kontroli umysłu i zdrada",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Czasem zjada go pycha",
+                "Uwielbia wygłaszać dramatyczne monologi w trakcie ucieczki"
+              ],
+              "green_flags": [
+                "Niewiarygodna zwinność",
+                "Obroni cię przed każdym złem",
+                "Czysta charyzma"
+              ]
+            }
+          },
+          "order_index": 20,
+          "is_active": true
+        },
+        {
+          "slug": "saga_anderson",
+          "name": "Saga Anderson",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/saga_anderson.webp",
+          "media_type": "image",
+          "archetype": "The Mind Place Detective",
+          "bio": "Brilliant FBI profiler capable of piecing together the most convoluted mysteries. She brings forensic precision, mental fortitude, and warm empathy to the darkness of the Fog.",
+          "tagline": "FBI windbreaker, knit sweater, and instant crime scene profiling.",
+          "quote": "\"There is always a pattern. We just have to piece it together.\"",
+          "meme": "Meme: Saga retreating into her Mind Place mid-chase to deduce which perk the Killer brought.",
+          "turn_on": "Good detective mysteries, thermos coffee, and cozy knitwear",
+          "dealbreaker": "Supernatural horror altering personal family memories",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Spends 20 minutes in her head profiling your messages",
+            "Attracts dark rituals"
+          ],
+          "green_flags": [
+            "Brilliant puzzle solver",
+            "Warm and emotionally grounded",
+            "Never gives up on family"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Saga Anderson: Die Profilerin",
+              "bio": "Scharfsinnige FBI-Agentin mit detektivischem Genie.",
+              "tagline": "FBI-Jacke und messerscharfer Verstand.",
+              "meme": "Meme: Saga analysiert den Killer im 'Mind Place'.",
+              "turn_on": "Rätsel und guter Kaffee",
+              "dealbreaker": "Wahnvorstellungen",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Überanalytisch",
+                "Zieht Kulte an"
+              ],
+              "green_flags": [
+                "Hochintelligent",
+                "Empathisch"
+              ]
+            },
+            "es": {
+              "archetype": "Saga Anderson: La Detective del FBI",
+              "bio": "Perfiladora de élite capaz de desentrañar el horror más oscuro.",
+              "tagline": "Chaqueta del FBI, suéter nórdico y lógica implacable.",
+              "meme": "Meme: Saga entrando en su 'Palacio Mental' mientras la persiguen.",
+              "turn_on": "Misterios inteligentes y café caliente",
+              "dealbreaker": "Las sectas oscuras",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Analiza cada mensaje tuyo como un crimen",
+                "Atrae sucesos extraños"
+              ],
+              "green_flags": [
+                "Mente brillante",
+                "Cálida y protectora"
+              ]
+            },
+            "ja": {
+              "archetype": "サーガ・アンダーソン: 敏腕プロファイラー",
+              "bio": "事件の真相を暴く『マインド・プレイス』を持つFBI捜査官。",
+              "tagline": "FBIのジャケットと類まれな推理力。",
+              "meme": "ミーム: チェイス中に脳内捜査を開始するサーガ。",
+              "turn_on": "謎解きと温かいコーヒー",
+              "dealbreaker": "怪奇現象による記憶の改ざん",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "何でもプロファイリングしてしまう癖",
+                "カルトを引き寄せる体質"
+              ],
+              "green_flags": [
+                "抜群の知性と洞察力",
+                "思いやり深く頼れる"
+              ]
+            },
+            "pl": {
+              "archetype": "Saga Anderson: Profilerka FBI",
+              "bio": "Błyskotliwa agentka FBI z Alan Wake 2, posiadająca unikalną zdolność 'Pokoju Myśli'. Z analityczną precyzją rozpracuje każdy krok Zabójcy.",
+              "tagline": "Kurtka FBI, wełniany sweter w skandynawskie wzory i niezawodna dedukcja.",
+              "quote": "„Wszystko układa się w całość. Znamy już motyw.”",
+              "meme": "Meme: Saga wchodząca do Mind Place w trakcie pościgu, żeby rozpracować build Killera.",
+              "turn_on": "Dobre kryminały, gorąca kawa z termosu i logiczne myślenie",
+              "dealbreaker": "Mroczne sekty piszące ci fałszywe wspomnienia",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Analizuje każde twoje słowo jak dowód na miejscu zbrodni",
+                "Przyciąga zjawiska paranormalne"
+              ],
+              "green_flags": [
+                "Niewiarygodna bystrość umysłu",
+                "Ciepła, wspierająca i opanowana"
+              ]
+            }
+          },
+          "order_index": 21,
+          "is_active": true
+        },
+        {
+          "slug": "rose_marigold",
+          "name": "Rose Marigold",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/rose_marigold.webp",
+          "media_type": "image",
+          "archetype": "The Number One Fan",
+          "bio": "Bright Falls diner waitress and Alan Wake's self-proclaimed biggest fan. Armed with cherry pie, a pump-action shotgun spirit, and relentless adoration.",
+          "tagline": "Oh Deer Diner uniform, thermos in hand, and unconditional fangirl devotion.",
+          "quote": "\"I would cross the dark place for you, my favorite writer!\"",
+          "meme": "Meme: Rose serving coffee to the Killer hoping they leave an autograph for Alan.",
+          "turn_on": "Autographed hardcover novels, cherry pie, and enthusiastic praise",
+          "dealbreaker": "Bad reviews of her idol's books",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Uncomfortably intense fandom energy",
+            "Might be influenced by the Dark Presence"
+          ],
+          "green_flags": [
+            "Will literally fight monsters for you",
+            "Bakes amazing pies",
+            "Endless enthusiasm"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Rose Marigold: Der Größte Fan",
+              "bio": "Kellnerin aus Bright Falls mit grenzenloser Hingabe.",
+              "tagline": "Diner-Uniform und frischer Kirschkuchen.",
+              "meme": "Meme: Rose bittet den Killer um ein Autogramm.",
+              "turn_on": "Gute Bücher und süßer Kuchen",
+              "dealbreaker": "Kritik an ihren Idolen",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Fangirl-Wahnsinn",
+                "Leichtgläubig"
+              ],
+              "green_flags": [
+                "Extrem treu",
+                "Backt köstlich"
+              ]
+            },
+            "es": {
+              "archetype": "Rose Marigold: La Fan Número Uno",
+              "bio": "Camarera de Bright Falls dispuesta a todo por su autor favorito.",
+              "tagline": "Uniforme del Oh Deer Diner y tarta de cereza.",
+              "meme": "Meme: Rose ofreciendo café al asesino para ganar tiempo.",
+              "turn_on": "Literatura de suspense y elogios sinceros",
+              "dealbreaker": "Burlarse de su pasión",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Obsesiva con sus ídolos",
+                "Influenciable"
+              ],
+              "green_flags": [
+                "Lealtad ciega y feroz",
+                "Excelente cocinera"
+              ]
+            },
+            "ja": {
+              "archetype": "ローズ・マリーゴールド: 熱狂的なファン",
+              "bio": "ブライトフォールズのダイナーで働く、アラン・ウェイクの最大の熱狂者。",
+              "tagline": "ダイナーのエプロンとチェリーパイの香り。",
+              "meme": "ミーム: キラーにサインをねだりそうなローズ。",
+              "turn_on": "サイン入り小説と甘いパイ",
+              "dealbreaker": "推しへの批判",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "推し活への執着が強すぎる",
+                "闇の力に影響されやすい"
+              ],
+              "green_flags": [
+                "命がけで守ってくれる忠誠心",
+                "底抜けに明るい"
+              ]
+            },
+            "pl": {
+              "archetype": "Rose Marigold: Najwierniejsza Fanka",
+              "bio": "Urocza kelnerka z Oh Deer Diner w Bright Falls. Jej uwielbienie dla Alana Wake'a przerodziło się w gotowość do walki z koszmarami ciemności za pomocą strzelby.",
+              "tagline": "Różowy fartuszek kawiarniany, ciasto wiśniowe i fanowska pasja.",
+              "quote": "„Zrobię dla ciebie wszystko... a potem upiekę ciasto wiśniowe!”",
+              "meme": "Meme: Rose pytająca Killera, czy też uważa, że pierwsza książka Alana była niedoceniona.",
+              "turn_on": "Książki z autografem, słodkie wypieki i szczera uwaga",
+              "dealbreaker": "Pisanie negatywnych recenzji jej ulubionemu pisarzowi",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Jej poziom fangirlizmu bywa przerażający",
+                "Czasem słyszy głosy Mrocznej Obecności"
+              ],
+              "green_flags": [
+                "Pójdzie za tobą w ogień",
+                "Pyszne domowe ciasta",
+                "Czysty optymizm"
+              ]
+            }
+          },
+          "order_index": 22,
+          "is_active": true
+        },
+        {
+          "slug": "rain_carradine",
+          "name": "Rain Carradine",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/rain_carradine.webp",
+          "media_type": "image",
+          "archetype": "The Resilient Colonist",
+          "bio": "Young mining colonist from Alien: Romulus who dared to dream of sunshine beyond the Weyland-Yutani colonies. Tough, resourceful, and fiercely devoted to her synthetic brother.",
+          "tagline": "Pulse rifle harness, heavy space boots, and unyielding will to see the sun.",
+          "quote": "\"We are getting out of here together. No matter what.\"",
+          "meme": "Meme: Rain checking the hatch to see if Weyland-Yutani taxes your escape points.",
+          "turn_on": "Open blue skies, family loyalty, and practical mechanic skills",
+          "dealbreaker": "Corporate exploitation and synthetic discrimination",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Attracts facehuggers on weekend excursions",
+            "Workaholic miner schedule"
+          ],
+          "green_flags": [
+            "Fiercely protective of loved ones",
+            "Fixes anything broken",
+            "Courageous survivor"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Rain Carradine: Die Kolonistin",
+              "bio": "Mutige junge Frau aus Alien: Romulus auf der Suche nach Freiheit.",
+              "tagline": "Raumanzug und unbezwingbarer Überlebenswille.",
+              "meme": "Meme: Rain repariert Generatoren wie Kolonieschiffe.",
+              "turn_on": "Freiheit und Loyalität",
+              "dealbreaker": "Konzernausbeutung",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Risikofreudig",
+                "Traumatisiert"
+              ],
+              "green_flags": [
+                "Technisch begabt",
+                "Beschützerin"
+              ]
+            },
+            "es": {
+              "archetype": "Rain Carradine: La Colonizadora Rebelde",
+              "bio": "Joven minera de Alien: Romulus que desafió al destino espacial.",
+              "tagline": "Botas pesadas, coraje de acero y amor fraternal.",
+              "meme": "Meme: Rain esquivando ataques alienígenas sin soltar la linterna.",
+              "turn_on": "Libertad sincera y lealtad familiar",
+              "dealbreaker": "La codicia de Weyland-Yutani",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Imán para monstruos biológicos",
+                "Desconfiada"
+              ],
+              "green_flags": [
+                "Valiente hasta el final",
+                "Habilidades mecánicas"
+              ]
+            },
+            "ja": {
+              "archetype": "レイン・キャラダイン: 太陽を求める開拓者",
+              "bio": "『エイリアン：ロムルス』の過酷な運命に立ち向かった少女。",
+              "tagline": "過酷な採掘コロニー育ちの不屈のサバイバル力。",
+              "meme": "ミーム: 霧の中でも弟を守り抜くレイン。",
+              "turn_on": "青い空と家族への愛",
+              "dealbreaker": "企業の非道な搾取",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "フェイスハガーを引き寄せがち",
+                "警戒心が強い"
+              ],
+              "green_flags": [
+                "驚異的な対応力",
+                "仲間を見捨てない強い絆"
+              ]
+            },
+            "pl": {
+              "archetype": "Rain Carradine: Niezłomna Kolonistka",
+              "bio": "Główna bohaterka filmu Alien: Romulus (z podobizną Cailee Spaeny). Młoda górniczka z kolonii Weyland-Yutani, która dla rodziny stawi czoła ksenomorfom.",
+              "tagline": "Pulsacyjny karabin, kombinezon górniczy i pragnienie ujrzenia słońca.",
+              "quote": "„Wydostaniemy się stąd razem. Nikt nie zostaje w tyle.”",
+              "meme": "Meme: Rain sprawdzająca, czy korporacja potrąci jej punkty krwi za ucieczkę.",
+              "turn_on": "Błękitne niebo, majsterkowanie i bezgraniczna opiekuńczość",
+              "dealbreaker": "Dyskryminacja syntetyków i bezduszne korporacje",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Przyciąga kosmiczne pasożyty",
+                "Prawie nigdy nie odpoczywa"
+              ],
+              "green_flags": [
+                "Naprawi każdy zepsuty silnik",
+                "Będzie walczyć o ciebie jak lwica"
+              ]
+            }
+          },
+          "order_index": 23,
+          "is_active": true
+        },
+        {
+          "slug": "william_hudson",
+          "name": "William Hudson",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/william_hudson.webp",
+          "media_type": "image",
+          "archetype": "The Ultimate Marine",
+          "bio": "Colonial Marine from Aliens who panicked, rallied, and went down shooting. Loud, dramatic, and surprisingly brave when his team is on the brink of disaster.",
+          "tagline": "Body armor, motion tracker, and unforgettable one-liners.",
+          "quote": "\"Game over, man! Game over!\"",
+          "meme": "Meme: Hudson screaming 'Game over, man!' at 5 generators remaining.",
+          "turn_on": "State of the art firepower, military humor, and surviving impossible odds",
+          "dealbreaker": "Motion tracker beeping in the ventilation shafts",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Dramatic existential panicking",
+            "Talks loudly during stealth"
+          ],
+          "green_flags": [
+            "Becomes an absolute badass when backed into a corner",
+            "Extremely funny",
+            "Loyal marine"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "William Hudson: Der Colonial Marine",
+              "bio": "Lautstarker und am Ende heldenhafter Marine aus Aliens.",
+              "tagline": "Kugelsichere Weste und berühmte Zitate.",
+              "meme": "Meme: Hudson schreit 'Game over, man!' bei Matchbeginn.",
+              "turn_on": "Schwarzer Humor und Mut",
+              "dealbreaker": "Krabbelnde Geräusche in den Schächten",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Neigt zur Panik",
+                "Laut"
+              ],
+              "green_flags": [
+                "Kämpft bis zur letzten Patrone",
+                "Herrlich witzig"
+              ]
+            },
+            "es": {
+              "archetype": "William Hudson: El Soldado Bocazas",
+              "bio": "Marine colonial que pasa del pánico al heroísmo puro.",
+              "tagline": "Armadura de combate, detector de movimiento y carisma.",
+              "meme": "Meme: Hudson gritando que se acabó el juego al oír el radio de terror.",
+              "turn_on": "Humor castrense y compañerismo",
+              "dealbreaker": "Los pasillos estrechos a oscuras",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Entra en pánico con facilidad",
+                "Grita demasiado"
+              ],
+              "green_flags": [
+                "Un héroe cuando las papas queman",
+                "Hilarante"
+              ]
+            },
+            "ja": {
+              "archetype": "ウィリアム・ハドソン: 叫ぶ海兵隊員",
+              "bio": "『エイリアン2』屈指の名言を持つ、お調子者で頼もしいコロニアル・マリーン。",
+              "tagline": "アーマーとモーショントラッカー、そして絶叫。",
+              "meme": "ミーム: 試合開始直後に「もう終わりだ！」と叫ぶハドソン。",
+              "turn_on": "熱い友情とミリタリージョーク",
+              "dealbreaker": "天井のダクトからの物音",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "パニックになりやすい",
+                "隠密行動が苦手"
+              ],
+              "green_flags": [
+                "土壇場での圧倒的な勇気",
+                "最高に場を盛り上げる"
+              ]
+            },
+            "pl": {
+              "archetype": "William Hudson: Szeregowiec z Aliens",
+              "bio": "Kultowy kolonialny marine z filmu Aliens Jamesa Camerona. Mistrz paniki i dramatycznych tekstów, który pod presją staje się prawdziwym bohaterem.",
+              "tagline": "Pancerz piechoty kosmicznej, wykrywacz ruchu i legendarne teksty.",
+              "quote": "„Game over, stary! Po nas!”",
+              "meme": "Meme: Hudson krzyczący 'Game over!' przy pierwszym dźwięku bicia serca Killera.",
+              "turn_on": "Cięty żołnierski humor, ciężka artyleria i lojalność wobec kumpli",
+              "dealbreaker": "Dźwięk pikania wykrywacza ruchu w kanałach wentylacyjnych",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Lubi histeryzować na głos",
+                "Nie umie siedzieć cicho w krzakach"
+              ],
+              "green_flags": [
+                "W krytycznym momencie wystrzela cały magazynek, by cię ratować",
+                "Genialny kompan"
+              ]
+            }
+          },
+          "order_index": 24,
+          "is_active": true
+        },
+        {
+          "slug": "glenn_rhee",
+          "name": "Glenn Rhee",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/glenn_rhee.webp",
+          "media_type": "image",
+          "archetype": "The Resourceful Runner",
+          "bio": "Former pizza delivery guy turned apocalypse lifeline. Quick on his feet, pure-hearted, and always ready to make supply runs into dangerous zones for the people he loves.",
+          "tagline": "Baseball cap, walkie-talkie, and the quickest boots in Georgia.",
+          "quote": "\"Hey you... dumbass. Yeah, you in the tank.\"",
+          "meme": "Meme: Glenn delivering a toolbox to your generator under 30 seconds or it's free.",
+          "turn_on": "Radio communications, baseball hats, and genuine romantic loyalty",
+          "dealbreaker": "Barbed wire baseball bats",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Volunteers for dangerous scouting missions too often"
+          ],
+          "green_flags": [
+            "Sweetest boyfriend material in the apocalypse",
+            "Incredible agility",
+            "Deeply faithful"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Glenn Rhee: Der Flinke Versorger",
+              "bio": "Herzlicher und blitzschneller Überlebender aus The Walking Dead.",
+              "tagline": "Baseball-Cap und unübertroffene Schnelligkeit.",
+              "meme": "Meme: Glenn sprintet durch die Horde.",
+              "turn_on": "Loyalität und Humor",
+              "dealbreaker": "Stacheldraht",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Zu mutig",
+                "Bringt sich in Gefahr"
+              ],
+              "green_flags": [
+                "Liebevoll",
+                "Zuverlässig"
+              ]
+            },
+            "es": {
+              "archetype": "Glenn Rhee: El Repartidor Valiente",
+              "bio": "El corazón y la velocidad del grupo en The Walking Dead.",
+              "tagline": "Gorra de béisbol, walkie y pies ligeros.",
+              "meme": "Meme: Glenn entregando botiquines en tiempo récord.",
+              "turn_on": "Confianza pura y romanticismo",
+              "dealbreaker": "Bates de béisbol con alambre",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Se arriesga en exceso",
+                "Demasiado noble"
+              ],
+              "green_flags": [
+                "El novio ideal",
+                "Lealtad indestructible"
+              ]
+            },
+            "ja": {
+              "archetype": "グレン・リー: 俊足の調達屋",
+              "bio": "ウォーキング・デッド屈指の人気を誇る、機転と優しさに満ちた青年。",
+              "tagline": "キャップ帽と危険地帯を駆け抜けるスピード。",
+              "meme": "ミーム: ピザ配達のノリで発電機を修理しに来るグレン。",
+              "turn_on": "誠実さと純粋な信頼",
+              "dealbreaker": "有刺鉄線バット",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "危険なスカウト任務に志願しがち"
+              ],
+              "green_flags": [
+                "最高のパートナー",
+                "俊敏で機転が利く"
+              ]
+            },
+            "pl": {
+              "archetype": "Glenn Rhee: Zwinny Zwiadowca",
+              "bio": "Ukochany bohater The Walking Dead. Dawny dostawca pizzy z Atlanty, który dzięki sprytowi i zwinności stał się sercem całej grupy ocalałych.",
+              "tagline": "Czapka z daszkiem, krótkofalówka i najszybszy biegacz we Mgle.",
+              "quote": "„Hej ty... głupku w czołgu. Pora się stąd zmywać.”",
+              "meme": "Meme: Glenn przynoszący apteczkę w 20 sekund albo zwrot punktów krwi.",
+              "turn_on": "Szczera miłość, lojalność i nocne rozmowy przez radio",
+              "dealbreaker": "Kije bejsbolowe owinięte drutem kolczastym",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Zawsze zgłasza się na najbardziej ryzykowne misje zwiadowcze"
+              ],
+              "green_flags": [
+                "Najwspanialszy materiał na partnera",
+                "Zwinny jak kot",
+                "Kocha całym sercem"
+              ]
+            }
+          },
+          "order_index": 25,
+          "is_active": true
+        },
+        {
+          "slug": "daryl_dixon",
+          "name": "Daryl Dixon",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/daryl_dixon.webp",
+          "media_type": "image",
+          "archetype": "The Lone Tracker",
+          "bio": "Quiet survivalist who speaks through actions rather than words. Master tracker, fiercely protective of his chosen family, and comes with a motorcycle soul.",
+          "tagline": "Angel wings leather vest, crossbow expertise, and untamed woodsman grit.",
+          "quote": "\"Keep quiet, stay behind me.\"",
+          "meme": "Meme: Daryl tracking the Killer by sniffing crow feathers on the ground.",
+          "turn_on": "Wilderness tracking, motorcycle rides, and unspoken loyalty",
+          "dealbreaker": "Betraying family or hurting dogs",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Rarely showers in an apocalypse",
+            "Grumpy exterior"
+          ],
+          "green_flags": [
+            "Ride-or-die protector",
+            "Elite wilderness survival skills",
+            "Soft heart under tough leather"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Daryl Dixon: Der Fährtensucher",
+              "bio": "Stiller Überlebenskünstler mit Engelsflügeln auf der Weste.",
+              "tagline": "Armbrust, Motorrad und eiserne Treue.",
+              "meme": "Meme: Daryl spürt den Killer blind auf.",
+              "turn_on": "Wildnis und Loyalität",
+              "dealbreaker": "Verrat",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Verschlossen",
+                "Wortkarg"
+              ],
+              "green_flags": [
+                "Unbezwingbarer Beschützer",
+                "Treu"
+              ]
+            },
+            "es": {
+              "archetype": "Daryl Dixon: El Rastreador Silencioso",
+              "bio": "El superviviente más duro y leal del apocalipsis zombie.",
+              "tagline": "Chaleco de alas de ángel y ballesta certera.",
+              "meme": "Meme: Daryl siguiendo al asesino por el bosque sin hacer ruido.",
+              "turn_on": "Motos, supervivencia y lealtad tácita",
+              "dealbreaker": "Dañar a los animales o traicionar al grupo",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Poco comunicativo",
+                "Aspecto descuidado"
+              ],
+              "green_flags": [
+                "Te protegerá con su vida",
+                "Corazón noble"
+              ]
+            },
+            "ja": {
+              "archetype": "ダリル・ディクソン: 孤高の追跡者",
+              "bio": "クロスボウを背負い、家族同然の仲間を守り抜くサバイバルの達人。",
+              "tagline": "天使の翼のベストと野性的な勘。",
+              "meme": "ミーム: カラスの羽一本からキラーの位置を特定するダリル。",
+              "turn_on": "バイクツーリングと寡黙な信頼",
+              "dealbreaker": "仲間への裏切り",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "言葉少なすぎる",
+                "風呂嫌い"
+              ],
+              "green_flags": [
+                "絶対的な頼もしさ",
+                "不器用だが深い優しさ"
+              ]
+            },
+            "pl": {
+              "archetype": "Daryl Dixon: Mistrz Tropienia",
+              "bio": "Kultowy traper z The Walking Dead. Cichy samotnik w kamizelce ze skrzydłami anioła, który dla bliskich skoczy w ogień bez mrugnięcia okiem.",
+              "tagline": "Skórzana kamizelka ze skrzydłami, motocyklowy ryk i zmysł trapera.",
+              "quote": "„Trzymaj się z tyłu i bądź cicho. Ja prowadzę.”",
+              "meme": "Meme: Daryl wąchający gałąź na Dead Dawg Saloon, by sprawdzić build Killera.",
+              "turn_on": "Jazda na motocyklu, przetrwanie w dziczy i czyny zamiast słów",
+              "dealbreaker": "Krzywdzenie psów i zdrada grupy",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Prysznic bierze raz na sezon apokalipsy",
+                "Trzeba z niego wyciągać słowa siłą"
+              ],
+              "green_flags": [
+                "Zasłoni cię przed każdym ciosem",
+                "Znakomity myśliwy",
+                "Wrażliwy pod szorstką skórą"
+              ]
+            }
+          },
+          "order_index": 26,
+          "is_active": true
+        },
+        {
+          "slug": "maggie_rhee",
+          "name": "Maggie Rhee",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/maggie_rhee.webp",
+          "media_type": "image",
+          "archetype": "The Resolute Leader",
+          "bio": "Hilltop leader who turned grief into fierce leadership. Stalwart, protective, and commanding, she will rebuild a sanctuary in the middle of any nightmare.",
+          "tagline": "Brown leather jacket, farm girl tenacity, and indomitable grit.",
+          "quote": "\"We fought through hell to get here, and we aren't stopping now.\"",
+          "meme": "Meme: Maggie organizing generator shifts like a community agricultural plan.",
+          "turn_on": "Strong leadership, community loyalty, and country farming values",
+          "dealbreaker": "Showing mercy to tyrants and betrayal",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Holds grudges for decades",
+            "Intimidating glare"
+          ],
+          "green_flags": [
+            "Natural born leader",
+            "Fierce family devotion",
+            "Incredible resilience"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Maggie Rhee: Die Anführerin",
+              "bio": "Entschlossene Anführerin aus The Walking Dead.",
+              "tagline": "Stärke, Führungsqualitäten und Kampfgeist.",
+              "meme": "Meme: Maggie managt das Team mit eiserner Hand.",
+              "turn_on": "Entschlossenheit und Loyalität",
+              "dealbreaker": "Tyrannei",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Nachtragend",
+                "Hart"
+              ],
+              "green_flags": [
+                "Starke Beschützerin",
+                "Mutig"
+              ]
+            },
+            "es": {
+              "archetype": "Maggie Rhee: La Líder de Hilltop",
+              "bio": "Líder inquebrantable forjada en la pérdida y la resiliencia.",
+              "tagline": "Coraje rural, liderazgo férreo y voluntad indomable.",
+              "meme": "Meme: Maggie coordinando reparaciones como cosechas comunitarias.",
+              "turn_on": "Carácter fuerte y compromiso",
+              "dealbreaker": "La debilidad moral",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Rencorosa con sus enemigos",
+                "Muy exigente"
+              ],
+              "green_flags": [
+                "Líder nata",
+                "Leal y protectora"
+              ]
+            },
+            "ja": {
+              "archetype": "マギー・リー: 不屈のリーダー",
+              "bio": "悲しみを力に変え、共同体を導いてきたヒルトップの指導者。",
+              "tagline": "強い眼差しと仲間を守る統率力。",
+              "meme": "Meme: 発電機修理を完璧にスケジュール管理するマギー。",
+              "turn_on": "誠実さと決断力",
+              "dealbreaker": "裏切りと残虐行為",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "敵への恨みを決して忘れない",
+                "威圧感がある"
+              ],
+              "green_flags": [
+                "卓越した統率力",
+                "家族への深い愛"
+              ]
+            },
+            "pl": {
+              "archetype": "Maggie Rhee: Niezłomna Liderka",
+              "bio": "Przywódczyni Wzgórza z The Walking Dead. Zahartowana przez tragedie, łączy farmerską siłę z charyzmą urodzonego lidera.",
+              "tagline": "Skórzana kurtka, determinacja i spojrzenie, które stawia do pionu.",
+              "quote": "„Przeszliśmy przez piekło i nikt nas teraz nie zatrzyma.”",
+              "meme": "Meme: Maggie rozdzielająca zadania przy generatorach niczym plan zasiewów na farmie Hershela.",
+              "turn_on": "Odwaga cywilna, szacunek do pracy i rodzinne wartości",
+              "dealbreaker": "Zdrada i pobłażliwość dla tyranów",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Pamiętliwa aż do grobu",
+                "Jej wzrok potrafi zamrozić krew w żyłach"
+              ],
+              "green_flags": [
+                "Urodzona przywódczyni",
+                "Zawsze zorganizuje drogę ucieczki",
+                "Niezłomna siła ducha"
+              ]
+            }
+          },
+          "order_index": 27,
+          "is_active": true
+        },
+        {
+          "slug": "robin_buckley",
+          "name": "Robin Buckley",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/robin_buckley.webp",
+          "media_type": "image",
+          "archetype": "The Witty Cryptographer",
+          "bio": "Scoops Ahoy and Family Video veteran with fluent Russian-translation skills and dry, sarcastic wit. She talks fast, thinks faster, and will crack codes to get you out alive.",
+          "tagline": "Sailor hat, quirky energy, and multilingual code-breaking talent.",
+          "quote": "\"We all die, my strange little friend. It's just a matter of how and when.\"",
+          "meme": "Meme: Robin tracking the Killer's patrol route on a Scoops Ahoy whiteboard.",
+          "turn_on": "Witticisms, band geeks, and quirky honesty",
+          "dealbreaker": "Pretentious jocks and secret Russian radio codes",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Talks at 200 words per minute when nervous",
+            "Easily distracted by video tapes"
+          ],
+          "green_flags": [
+            "Brilliant codebreaker",
+            "Hilarious banter",
+            "Loyal best friend in Hawkins"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Robin Buckley: Die Scharfzüngige Freundin",
+              "bio": "Clevere und sarkastische Überlebende aus Stranger Things.",
+              "tagline": "Matrosenmütze und messerscharfer Verstand.",
+              "meme": "Meme: Robin analysiert den Killer auf der Anzeigetafel.",
+              "turn_on": "Wortwitz und Musik",
+              "dealbreaker": "Überheblichkeit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Redet ununterbrochen",
+                "Zynisch"
+              ],
+              "green_flags": [
+                "Brillant",
+                "Treue Freundin"
+              ]
+            },
+            "es": {
+              "archetype": "Robin Buckley: La Criptógrafa Ingeniosa",
+              "bio": "La mente rápida y sarcástica favorita de Hawkins.",
+              "tagline": "Gorro marinero de Scoops Ahoy y humor mordaz.",
+              "meme": "Meme: Robin descifrando los perks del asesino en segundos.",
+              "turn_on": "Chistes ingeniosos y autenticidad",
+              "dealbreaker": "La hipocresía",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Habla a mil por hora nerviosa",
+                "Sarcasmo constante"
+              ],
+              "green_flags": [
+                "Inteligencia brillante",
+                "Divertida y única"
+              ]
+            },
+            "ja": {
+              "archetype": "ロビン・バックリー: 機知に富んだ相棒",
+              "bio": "『ストレンジャー・シングス』でおなじみの、早口で皮肉屋だが最高に頼れる少女。",
+              "tagline": "セーラー帽と多言語を操る知性。",
+              "meme": "ミーム: スクープス・アホイのボードで脱出ルートを計算するロビン。",
+              "turn_on": "ウィットと音楽の趣味の一致",
+              "dealbreaker": "気取った態度",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "緊張するとマシンガントークが止まらない"
+              ],
+              "green_flags": [
+                "暗号解読の天才",
+                "ユーモアのセンス抜群"
+              ]
+            },
+            "pl": {
+              "archetype": "Robin Buckley: Błyskotliwa Sarkastyczka",
+              "bio": "Ulubienica fanów ze Stranger Things. Pracownica Scoops Ahoy, która rozszyfrowała radzieckie transmisje i potrafi rozbawić w najbardziej beznadziejnej sytuacji.",
+              "tagline": "Czapka marynarska, cięty język i poliglotyczny talent.",
+              "quote": "„Wszyscy kiedyś zginiemy, mój mały przyjacielu. Chodzi tylko o to, jak i kiedy!”",
+              "meme": "Meme: Robin zapisująca na tablicy 'You Rule / You Suck' po każdym udanym flashlight save.",
+              "turn_on": "Sarkastyczny humor, gra w orkiestrze szkolnej i szczerość",
+              "dealbreaker": "Zadufani w sobie atleci i nudne pogawędki",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Mówi z prędkością karabinu maszynowego, gdy się stresuje",
+                "Współczynnik sarkazmu ponad normę"
+              ],
+              "green_flags": [
+                "Złamie każdy szyfr bramy wyjściowej",
+                "Genialne poczucie humoru",
+                "Najlepsza przyjaciółka we Mgle"
+              ]
+            }
+          },
+          "order_index": 28,
+          "is_active": true
+        },
+        {
+          "slug": "jonathan_byers",
+          "name": "Jonathan Byers",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/jonathan_byers.webp",
+          "media_type": "image",
+          "archetype": "The Devoted Outsider",
+          "bio": "Quiet, artistic photographer who cares deeply about his family. He won't hesitate to set bear traps or wield baseball bats with nails when the monsters come knocking.",
+          "tagline": "Sherpa jacket, 35mm camera, and fiercely protective brotherly devotion.",
+          "quote": "\"Nobody normal ever accomplished anything meaningful in this world.\"",
+          "meme": "Meme: Jonathan taking moody black-and-white photos of the Killer mid-chase.",
+          "turn_on": "Mixtapes, punk rock photography, and genuine conversations",
+          "dealbreaker": "Bullying and fake popularity",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Brooding quietness",
+            "Prone to taking photos without asking first"
+          ],
+          "green_flags": [
+            "Will literally fight interdimensional monsters for you",
+            "Great music taste",
+            "Deeply loyal"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Jonathan Byers: Der Beschützer",
+              "bio": "Künstlerischer und loyaler Bruder aus Stranger Things.",
+              "tagline": "Kamera, Jeansjacke und Familiensinn.",
+              "meme": "Meme: Jonathan fotografiert den Nebel.",
+              "turn_on": "Musik und Fotografie",
+              "dealbreaker": "Oberflächlichkeit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Sehr verschlossen",
+                "Melancholisch"
+              ],
+              "green_flags": [
+                "Selbstlos",
+                "Treu"
+              ]
+            },
+            "es": {
+              "archetype": "Jonathan Byers: El Hermano Protector",
+              "bio": "Chico reservado con gran corazón artístico de Hawkins.",
+              "tagline": "Cámara analógica, chaqueta de pana y valentía callada.",
+              "meme": "Meme: Jonathan sacando fotos al Demogorgon en vez de correr.",
+              "turn_on": "Música alternativa y sinceridad",
+              "dealbreaker": "La arrogancia",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Demasiado retraído",
+                "Observador silencioso"
+              ],
+              "green_flags": [
+                "Daría su vida por los suyos",
+                "Gran sensibilidad"
+              ]
+            },
+            "ja": {
+              "archetype": "ジョナサン・バイヤーズ: 寡黙な写真家",
+              "bio": "家族を何よりも大切にする、芸術的で心優しい青年。",
+              "tagline": "一眼レフカメラとボアジャケット、静かな勇気。",
+              "meme": "ミーム: チェイス中にモノクロ写真を撮影するジョナサン。",
+              "turn_on": "パンクロックと深い会話",
+              "dealbreaker": "いじめや不誠実さ",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "内向的すぎる",
+                "写真を勝手に撮りがち"
+              ],
+              "green_flags": [
+                "家族思いで自己犠牲を厭わない",
+                "音楽センス抜群"
+              ]
+            },
+            "pl": {
+              "archetype": "Jonathan Byers: Cichy Obrońca",
+              "bio": "Wrażliwy fotograf z Hawkins. Pod pozorem skrytego introwertyka kryje się człowiek gotowy walczyć z potworami z Drugiej Strony za pomocą kija z gwoździami.",
+              "tagline": "Kurtka z kożuchem, aparat analogowy i bezgraniczna opiekuńczość.",
+              "quote": "„Nikt normalny nigdy nie osiągnął niczego znaczącego.”",
+              "meme": "Meme: Jonathan robiący klimatyczne czarno-białe zdjęcie Demogorgona podczas ucieczki.",
+              "turn_on": "Dobre kasety z punk rockiem, fotografia i szczerość",
+              "dealbreaker": "Płycizna emocjonalna i szkolne gwiazdorzenie",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Lubi znikać w ciemni fotograficznej",
+                "Trudno wyciągnąć z niego emocje"
+              ],
+              "green_flags": [
+                "Dla bliskich podłoży pułapkę pod każdego demona",
+                "Świetny gust muzyczny",
+                "Oddany i opiekuńczy"
+              ]
+            }
+          },
+          "order_index": 29,
+          "is_active": true
+        },
+        {
+          "slug": "eddie_munson",
+          "name": "Eddie Munson",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/survivors/eddie_munson.webp",
+          "media_type": "image",
+          "archetype": "The Hellfire Metalhead",
+          "bio": "Dungeon Master of the Hellfire Club and guitar hero of Hawkins High. He didn't run away this time—he shreds solos on top of RVs to draw the bats away from his friends.",
+          "tagline": "Hellfire Club raglan shirt, patched denim vest, and blistering heavy metal solos.",
+          "quote": "\"This is music! Don't look at me, look at the guitar!\"",
+          "meme": "Meme: Eddie shredding Master of Puppets while looping the Killer around the shack.",
+          "turn_on": "D&D campaigns, 80s heavy metal, and fellow outcasts",
+          "dealbreaker": "Satanic panic witch-hunts and canceling game night",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Accused of murder by local angry mobs",
+            "Dramatic flair in everything"
+          ],
+          "green_flags": [
+            "Ultimate shredder",
+            "Never abandons friends when it counts",
+            "Charismatic Dungeon Master"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Eddie Munson: Der Hellfire-Gitarrist",
+              "bio": "Metalhead und stolzer Außenseiter aus Hawkins.",
+              "tagline": "E-Gitarre, Lederweste und Heavy Metal im Blut.",
+              "meme": "Meme: Eddie spielt Metallica mitten in der Prüfung.",
+              "turn_on": "D&D und Heavy Metal",
+              "dealbreaker": "Vorurteile",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Chaotisch",
+                "Drama-Queen"
+              ],
+              "green_flags": [
+                "Held bis zum Schluss",
+                "Genialer Spielleiter"
+              ]
+            },
+            "es": {
+              "archetype": "Eddie Munson: El Rey del Hellfire",
+              "bio": "Metalero de corazón y líder indiscutible del Club Hellfire.",
+              "tagline": "Chaleco de parches, melena ochentera y solos épicos.",
+              "meme": "Meme: Eddie tocando Master of Puppets para distraer al asesino.",
+              "turn_on": "Juegos de rol y rock and roll",
+              "dealbreaker": "La histeria moralina",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Prófugo de la justicia injustamente",
+                "Un poco histriónico"
+              ],
+              "green_flags": [
+                "Un héroe legendario",
+                "Carisma desbordante"
+              ]
+            },
+            "ja": {
+              "archetype": "エディ・マンソン: ヘルファイアの英雄",
+              "bio": "ヘヴィメタルとD&Dを愛するヘルファイア・クラブのリーダー。",
+              "tagline": "デニムベストと魂を揺さぶるギターソロ。",
+              "meme": "ミーム: 試練の真ん中でギターソロをかき鳴らすエディ。",
+              "turn_on": "HR/HMとテーブルトークRPG",
+              "dealbreaker": "偏見による魔女狩り",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "指名手配されがち",
+                "オーバーリアクション"
+              ],
+              "green_flags": [
+                "仲間を決して見捨てない真のヒーロー",
+                "圧倒的なカリスマ"
+              ]
+            },
+            "pl": {
+              "archetype": "Eddie Munson: Mistrz Hellfire",
+              "bio": "Lider Hellfire Club i gitarowy geniusz z Hawkins. Nie ucieka – gra solówkę życia, by odciągnąć nietoperze i dać ci czas na ucieczkę.",
+              "tagline": "Koszulka Hellfire Club, dżinsowa kamizelka z naszywkami i gitara Warlock.",
+              "quote": "„Nie uciekłem tym razem, prawda? To się nazywa muzyka!”",
+              "meme": "Meme: Eddie grający Master of Puppets na dachu szopy w trakcie pościgu.",
+              "turn_on": "Sesje RPG, klasyczny metal lat 80. i bycie sobą bez kompromisów",
+              "dealbreaker": "Odwoływanie sesji D&D w ostatniej chwili i polowania na czarownice",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Ściga go połowa miasta z widłami",
+                "Czysty teatr w każdej sytuacji życiowej"
+              ],
+              "green_flags": [
+                "Prawdziwy bohater, który nigdy nie zostawia przyjaciół",
+                "Znakomity mistrz gry",
+                "Niezrównana energia"
+              ]
+            }
+          },
+          "order_index": 30,
+          "is_active": true
+        },
+        {
+          "slug": "forest_guide",
+          "name": "Forest Guide",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/forest_guide.webp",
+          "media_type": "image",
+          "archetype": "The Kitsune Spirit",
+          "bio": "A mystical guardian spirit dwelling within Yui Kimura's ancestral lore. Adorned with fox ears, ceremonial robes, and spiritual foxfire to guide lost souls through the deepest woods.",
+          "tagline": "Fox ears, ceremonial shrine garments, and mystical foxfire.",
+          "quote": "\"Follow the foxfire, and the forest shall shield your path.\"",
+          "meme": "Meme: Forest Guide appearing with a unique HUD name and confusing everyone in lobby chat.",
+          "turn_on": "Sacred shrine rituals, motorcycle spirit runs, and ancient fox folklore",
+          "dealbreaker": "Desecrating sacred woods",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Mystical tails occasionally clip through locker doors"
+          ],
+          "green_flags": [
+            "Enchanted forest navigation",
+            "Stunning mythical aesthetic",
+            "Fierce spiritual protector"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Forest Guide: Der Kitsune-Geist",
+              "bio": "Mystische Gestalt aus den Tiefen des Waldes.",
+              "tagline": "Fuchsohren und rituelle Roben.",
+              "meme": "Meme: Forest Guide verwirrt alle mit eigenem HUD-Namen.",
+              "turn_on": "Rituale und Natur",
+              "dealbreaker": "Naturzerstörung",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Geheimnisvoll",
+                "Entrückt"
+              ],
+              "green_flags": [
+                "Spirituelle Führung",
+                "Wunderschön"
+              ]
+            },
+            "es": {
+              "archetype": "Forest Guide: El Espíritu Kitsune",
+              "bio": "Espíritu sagrado del bosque que guía a las almas descarriadas.",
+              "tagline": "Orejas de zorro, ropajes tradicionales y fuego fatuo.",
+              "meme": "Meme: Forest Guide cambiando de nombre en el marcador del juego.",
+              "turn_on": "Respeto ancestral y leyendas místicas",
+              "dealbreaker": "La falta de respeto a la naturaleza",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Naturaleza esquiva"
+              ],
+              "green_flags": [
+                "Guía protectora inigualable",
+                "Estilo espiritual"
+              ]
+            },
+            "ja": {
+              "archetype": "森の案内人: 狐の精霊",
+              "bio": "木村結衣の魂に宿る、迷い人を導く神秘の狐精霊。",
+              "tagline": "狐耳と神聖なる装束、導きの狐火。",
+              "meme": "ミーム: 独自の名前表示でロビーをざわつかせる森の案内人。",
+              "turn_on": "神社の静寂と古き良き伝統",
+              "dealbreaker": "神聖な森を荒らす者",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "尻尾がロッカーからはみ出がち"
+              ],
+              "green_flags": [
+                "神秘的な加護",
+                "霧の中の確かな道標"
+              ]
+            },
+            "pl": {
+              "archetype": "Forest Guide: Duch Przewodniczki",
+              "bio": "Mistyczny duch lisa (Kitsune) związany z Yui Kimura. Prowadzi zagubione dusze przez najgłębsze ostępy i mroki próby Bytu za pomocą lśniących ogników.",
+              "tagline": "Lisie uszy, tradycyjne szaty chramowe i błękitne lisie ognie.",
+              "quote": "„Podążaj za ognikami, a las ukryje twoje ślady.”",
+              "meme": "Meme: Forest Guide mająca własną unikalną nazwę na scoreboardzie i wprawiająca w osłupienie cały lobby.",
+              "turn_on": "Chramy shinto, mistycyzm i nocne przejażdżki przez las",
+              "dealbreaker": "Niszczenie natury i brak szacunku dla duchów",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Lisie ogony mają tendencję do wystawania z szafek"
+              ],
+              "green_flags": [
+                "Nigdy nie pozwoli ci się zgubić",
+                "Cudowny mistyczny urok",
+                "Duchowa tarcza"
+              ]
+            }
+          },
+          "order_index": 31,
+          "is_active": true
+        },
+        {
+          "slug": "hinako_shimizu",
+          "name": "Hinako Shimizu",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/hinako_shimizu.webp",
+          "media_type": "image",
+          "archetype": "The Petal in the Fog",
+          "bio": "High school student from 1960s rural Japan (Silent Hill f). Entangled in a surreal psychological nightmare where crimson spider lily flowers bloom from terror and trauma.",
+          "tagline": "Vintage Japanese school uniform, red spider lilies, and delicate psychological resilience.",
+          "quote": "\"The flowers are blooming... and the fog won't let me go.\"",
+          "meme": "Meme: Hinako getting chased through Midwich and planting spider lilies at every loop.",
+          "turn_on": "Botanical sketches, traditional Japanese tea, and quiet understanding",
+          "dealbreaker": "Rotting plants and oppressive village curses",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Creepy red spider lilies sprouting in her footprints"
+          ],
+          "green_flags": [
+            "Poetic beauty",
+            "Unbelievable psychological strength",
+            "Delicate and deeply loyal"
+          ],
+          "danger_level": "Low",
+          "chaos_score": 50,
+          "translations": {
+            "de": {
+              "archetype": "Hinako Shimizu: Die Scharlachrote Blüte",
+              "bio": "Schülerin aus dem ländlichen Japan der 60er Jahre (Silent Hill f).",
+              "tagline": "Rote Spinnenlilien und zarte Eleganz.",
+              "meme": "Meme: Hinako trotzt dem Nebel mit Blumenkraft.",
+              "turn_on": "Stille und Poesie",
+              "dealbreaker": "Grausamkeit",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Melancholisch",
+                "Fluchbeladen"
+              ],
+              "green_flags": [
+                "Sanftmütig",
+                "Widerstandsfähig"
+              ]
+            },
+            "es": {
+              "archetype": "Hinako Shimizu: El Lirio Carmesí",
+              "bio": "Protagonista de Silent Hill f atrapada en una pesadilla floral.",
+              "tagline": "Uniforme escolar clásico y lirios araña rojos.",
+              "meme": "Meme: Hinako corriendo entre flores malditas.",
+              "turn_on": "Paz interior y naturaleza",
+              "dealbreaker": "La traición en el pueblo",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Pesadillas psicológicas intensas"
+              ],
+              "green_flags": [
+                "Belleza poética",
+                "Gran resiliencia"
+              ]
+            },
+            "ja": {
+              "archetype": "清水雛子: 曼珠沙華の少女",
+              "bio": "『SILENT HILL f』の1960年代の日本で狂気の霧と狂い咲く彼岸花に抗う女子高生。",
+              "tagline": "セーラー服と紅く咲き乱れる曼珠沙華。",
+              "meme": "ミーム: チェイスしながら彼岸花を咲かせる雛子。",
+              "turn_on": "静けさと温かい緑茶、心を通わせる時間",
+              "dealbreaker": "村の因習と裏切り",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "足元から彼岸花が生えてくる怪奇現象"
+              ],
+              "green_flags": [
+                "儚くも強い精神力",
+                "心優しい純粋さ"
+              ]
+            },
+            "pl": {
+              "archetype": "Hinako Shimizu: Szkarłatny Kwiat",
+              "bio": "Bohaterka gry Silent Hill f osadzonej w Japonii lat 60. Uczennica uwikłana w psychologiczny koszmar, gdzie z traumy i mroku wyrastają krwistoczerwone likorysy.",
+              "tagline": "Klasyczny mundurek szkolny, czerwone kwiaty pajęcze i krucha determinacja.",
+              "quote": "„Kwiaty znów zakwitają... a mgła nie pozwala mi odejść.”",
+              "meme": "Meme: Hinako sadząca czerwone likorysy przy każdym generatorze.",
+              "turn_on": "Botanika, tradycyjna zielona herbata i ciche, spokojne popołudnia",
+              "dealbreaker": "Mroczne klątwy wiejskie i niszczenie kwiatów",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Czerwone kwiaty lilii pajęczych rosną w jej śladach"
+              ],
+              "green_flags": [
+                "Poetycka uroda",
+                "Niewiarygodny hart ducha w obliczu horroru",
+                "Czuła obecność"
+              ]
+            }
+          },
+          "order_index": 32,
+          "is_active": true
+        },
+        {
+          "slug": "attack_titan",
+          "name": "The Attack Titan",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/attack_titan.webp",
+          "media_type": "image",
+          "archetype": "The Vanguard of Freedom",
+          "bio": "Eren Jaeger's Attack Titan manifested as a colossal Legendary force. Driven by an unrelenting quest for freedom, it crushes everything beneath thunderous footsteps.",
+          "tagline": "Exposed muscular jaw, steaming body, and thunderous titanic roar.",
+          "quote": "\"Tatakae! If we don't fight, we can't win!\"",
+          "meme": "Meme: The Attack Titan trying to set a bear trap with giant fingers.",
+          "turn_on": "Uncompromising freedom, unstoppable willpower, and intense eye contact",
+          "dealbreaker": "Cages, walls, and submissive surrender",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Screams TATAKAE at 3 AM",
+            "Emits boiling steam when excited"
+          ],
+          "green_flags": [
+            "Will literally destroy the world for you",
+            "Peak physical colossus",
+            "Never backs down"
+          ],
+          "danger_level": "High",
+          "chaos_score": 80,
+          "translations": {
+            "de": {
+              "archetype": "Der Angreifende Titan: Koloss der Freiheit",
+              "bio": "Legendäre Titanengestalt angetrieben vom Willen zur Freiheit.",
+              "tagline": "Glühender Dampf und titanische Stärke.",
+              "meme": "Meme: Attack Titan versucht Bärenfallen zu platzieren.",
+              "turn_on": "Freiheit und Kampfgeist",
+              "dealbreaker": "Käfige und Mauern",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Zerstörerisch",
+                "Dampfend heiß"
+              ],
+              "green_flags": [
+                "Unaufhaltbar",
+                "Beschützerinstinkt"
+              ]
+            },
+            "es": {
+              "archetype": "El Titán de Ataque: La Furia de la Libertad",
+              "bio": "Fuerza colosal que no descansará hasta destruir toda atadura.",
+              "tagline": "Vapor hirviente, mandíbula descubierta y rugido ensordecedor.",
+              "meme": "Meme: El Titán de Ataque poniendo cepos del tamaño de un ratón.",
+              "turn_on": "La búsqueda incondicional de la libertad",
+              "dealbreaker": "El sometimiento y los muros",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Grita demasiado",
+                "Su cuerpo quema al contacto"
+              ],
+              "green_flags": [
+                "Poder absoluto",
+                "Luchará por ti hasta el final"
+              ]
+            },
+            "ja": {
+              "archetype": "進撃の巨人: 自由を求める巨躯",
+              "bio": "エレン・イェーガーの巨人がトラッパーのレジェンダリーとして顕現。",
+              "tagline": "剥き出しの筋肉、熱蒸気、そして自由への咆哮。",
+              "meme": "ミーム: 巨大な指でちまちまトラバサミを設置する進撃の巨人。",
+              "turn_on": "不屈の闘志と自由への執念",
+              "dealbreaker": "自由を奪う檻と壁",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "夜中に「戦え」と叫びだす",
+                "体温が高すぎて火傷する"
+              ],
+              "green_flags": [
+                "あなたのために世界を敵に回す覚悟",
+                "圧倒的なパワー"
+              ]
+            },
+            "pl": {
+              "archetype": "Tytan Atakujący: Awangarda Wolności",
+              "bio": "Legendarne wcielenie Tytana Erena Jaegera z Attack on Titan dla Trappera. Porusza się spowity wrzącą parą, miażdżąc każdą przeszkodę na drodze ku wolności.",
+              "tagline": "Odsłonięta szczęka, kłęby gorącej pary i ryk wstrząsający ziemią.",
+              "quote": "„Tatakae! Walcz, bo inaczej nie wygrasz!”",
+              "meme": "Meme: Gigantyczny Tytan Atakujący próbujący ostrożnie nastawić malutką pułapkę na niedźwiedzie.",
+              "turn_on": "Bezwzględne dążenie do wolności, żelazna wola i pasja",
+              "dealbreaker": "Mury, klatki i uległość",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Krzyczy TATAKAE o trzeciej w nocy",
+                "Parzy przy każdym przytuleniu"
+              ],
+              "green_flags": [
+                "Zniszczy cały świat, byle cię obronić",
+                "Kolosalna siła",
+                "Nigdy się nie poddaje"
+              ]
+            }
+          },
+          "order_index": 33,
+          "is_active": true
+        },
+        {
+          "slug": "armored_titan",
+          "name": "The Armored Titan",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/armored_titan.webp",
+          "media_type": "image",
+          "archetype": "The Living Fortress",
+          "bio": "Kazan Yamaoka reborn with hardened armored plating. Built like an impenetrable battering ram, this titan shatters pallets and walls with devastating charging force.",
+          "tagline": "Golden hardened armor plates, fiery breath, and unstoppable charge.",
+          "quote": "\"Stand firm. The shield never cracks.\"",
+          "meme": "Meme: The Armored Titan sprinting through four walls and ending up in a different trial.",
+          "turn_on": "Heavy armor maintenance, disciplined training, and unwavering stoicism",
+          "dealbreaker": "Thunder spears aimed at the neck joint",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Runs headfirst through interior walls when startled",
+            "Hard to cuddle through thick armor"
+          ],
+          "green_flags": [
+            "Indestructible human shield",
+            "Incredible defensive power",
+            "Golden plated physique"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Der Gepanzerte Titan: Die Festung",
+              "bio": "Oni im gepanzerten Gewand des Titanen.",
+              "tagline": "Goldene Panzerplatten und unbrechbarer Sturmlauf.",
+              "meme": "Meme: Gepanzerter Titan bricht durch jede Wand.",
+              "turn_on": "Disziplin und Härte",
+              "dealbreaker": "Donnerspeere",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Zerstört Wände",
+                "Sehr schwer"
+              ],
+              "green_flags": [
+                "Unverwundbarer Schutz",
+                "Gewaltige Kraft"
+              ]
+            },
+            "es": {
+              "archetype": "El Titán Acorazado: La Muralla Viviente",
+              "bio": "Encarnación de puro blindaje y choque implacable para el Oni.",
+              "tagline": "Placas de blindaje dorado y carga demoledora.",
+              "meme": "Meme: El Titán Acorazado atravesando palés como si fueran cartón.",
+              "turn_on": "Resistencia física y disciplina marcial",
+              "dealbreaker": "Lanzas relámpago",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "No sabe frenar a tiempo",
+                "Pesa toneladas"
+              ],
+              "green_flags": [
+                "El escudo definitivo",
+                "Fuerza titánica"
+              ]
+            },
+            "ja": {
+              "archetype": "鎧の巨人: 鋼の戦士",
+              "bio": "硬質化プレートで全身を覆った鬼の巨体スキン。",
+              "tagline": "金色の装甲プレートと怒涛のタックル。",
+              "meme": "ミーム: 板をものともせず体当たりで粉砕する鎧の巨人。",
+              "turn_on": "鍛え抜かれた肉体と揺るがぬ忠誠",
+              "dealbreaker": "雷槍",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "ドアを開けずに壁を突き破る",
+                "ハグが痛い"
+              ],
+              "green_flags": [
+                "鉄壁の防御力",
+                "全身が金色の装甲"
+              ]
+            },
+            "pl": {
+              "archetype": "Tytan Opancerzony: Żywy Taran",
+              "bio": "Kazan Yamaoka przeobrażony w Tytana Opancerzonego z Attack on Titan. Jego ciało pokrywają utwardzone płyty pancerza, które taranują palety niczym zapałki.",
+              "tagline": "Złociste płyty pancerza, płonący oddech i szarża krusząca mury.",
+              "quote": "„Żadna przeszkoda nie zatrzyma tego pancerza.”",
+              "meme": "Meme: Tytan Opancerzony taranujący trzy ściany pod rząd i wpadający prosto do piwnicy.",
+              "turn_on": "Twardy charakter, wojskowa dyscyplina i polerowanie zbroi",
+              "dealbreaker": "Włócznie grzmotu wymierzone w kark",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Wbiega w ściany zamiast korzystać z drzwi",
+                "Trudno się przytulić przez gruby pancerz"
+              ],
+              "green_flags": [
+                "Żywa niezniszczalna tarcza",
+                "Zapewnia totalną nietykalność",
+                "Monumentalna sylwetka"
+              ]
+            }
+          },
+          "order_index": 34,
+          "is_active": true
+        },
+        {
+          "slug": "war_hammer_titan",
+          "name": "The War Hammer Titan",
+          "role": "Killer",
+          "gender": "female",
+          "media_url": "/static/avatars/killers/war_hammer_titan.webp",
+          "media_type": "image",
+          "archetype": "The Crystalline Maiden",
+          "bio": "Lara Tybur's War Hammer Titan adapted for The Spirit. Elegant, mysterious, and veiled in pure white hardened crystal, she crafts devastating weaponry from thin air.",
+          "tagline": "Pure white crystalline shell, slitted mask, and weaponized hardening.",
+          "quote": "\"Usurper, your trial ends here.\"",
+          "meme": "Meme: The War Hammer Titan crafting an entire gazebo out of crystal while camping a hook.",
+          "turn_on": "Aristocratic poise, sculptural crystal art, and quiet elegance",
+          "dealbreaker": "Unruly brawlers breaking crystal structures",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Hides in an underground crystal egg when socializing gets tough"
+          ],
+          "green_flags": [
+            "Flawless marble aesthetic",
+            "Creates custom jewelry from hardened crystal",
+            "Silent grace"
+          ],
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Der Kriegshammer-Titan: Kristallene Eleganz",
+              "bio": "Elegante Titanin mit der Macht gehärteter Kristallwaffen.",
+              "tagline": "Weißer Kristallpanzer und lautlose tödliche Präzision.",
+              "meme": "Meme: War Hammer Titan baut Kristallburgen im Nebel.",
+              "turn_on": "Eleganz und Kunst",
+              "dealbreaker": "Chaos",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Sehr distanziert",
+                "Verkapselt"
+              ],
+              "green_flags": [
+                "Elegante Erscheinung",
+                "Tödliche Präzision"
+              ]
+            },
+            "es": {
+              "archetype": "El Titán Martillo de Guerra: La Dama de Cristal",
+              "bio": "Elegante titanina cubierta de una coraza de cristal blanco puro.",
+              "tagline": "Piel blanca cristalina y creación de armas letales.",
+              "meme": "Meme: Creando martillos gigantes en mitad de un bucle.",
+              "turn_on": "La elegancia aristocrática y la quietud",
+              "dealbreaker": "El alboroto vulgar",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Se aísla en un capullo de cristal",
+                "Inexpresiva"
+              ],
+              "green_flags": [
+                "Belleza escultural",
+                "Poder silencioso y letal"
+              ]
+            },
+            "ja": {
+              "archetype": "戦鎚の巨人: 結晶の貴婦人",
+              "bio": "スピリットに宿る、タイバー家の白い硬質化巨人の姿。",
+              "tagline": "純白の結晶覆面と自在に生み出される戦鎚。",
+              "meme": "ミーム: 試練の合間にクリスタル家具を精製する戦鎚の巨人。",
+              "turn_on": "貴族的な気品と静寂",
+              "dealbreaker": "結晶を壊す乱暴者",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "気まずくなると地下の水晶玉に引きこもる"
+              ],
+              "green_flags": [
+                "白銀の彫刻のような美しさ",
+                "静謐な佇まい"
+              ]
+            },
+            "pl": {
+              "archetype": "Tytan Młot Bojowy: Krystaliczna Dama",
+              "bio": "Wcielenie Tytana Młota Bojowego (Lara Tybur) dla Spirit. Elegancka, spowita białym, utwardzonym kryształem postać, potrafiąca formować zabójczą broń z czystej materii.",
+              "tagline": "Śnieżnobiały pancerz, maska z nacięciami i krystaliczna śmiercionośność.",
+              "quote": "„Uzurpatorze... to twoja ostatnia próba.”",
+              "meme": "Meme: Tytan Młot Bojowy tworzący cały zestaw mebli ogrodowych z kryształu przy generatorze.",
+              "turn_on": "Arystokratyczna duma, rzeźbiarska precyzja i chłodna elegancja",
+              "dealbreaker": "Prostackie niszczenie kryształów i hałas",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Zamyka się w podziemnym krysztale, gdy ma gorszy dzień"
+              ],
+              "green_flags": [
+                "Rzeźbi unikalną biżuterię z kryształu",
+                "Niezrównana gracja",
+                "Zabójczo cicha"
+              ]
+            }
+          },
+          "order_index": 35,
+          "is_active": true
+        },
+        {
+          "slug": "mina",
+          "name": "MiNA",
+          "role": "Killer",
+          "gender": "female",
+          "media_url": "/static/avatars/killers/mina.webp",
+          "media_type": "image",
+          "archetype": "The Virtual K-Pop Diva",
+          "bio": "The virtual K-Pop idol created in the Trickster's blood-soaked image. Flamboyant, lethal, and demanding of worldwide adoration, she turns every trial into an electrifying sold-out concert.",
+          "tagline": "Neon streetwear, bat with razor edges, and hypnotic pop vocals.",
+          "quote": "\"Did you enjoy the show? The encore is in blood!\"",
+          "meme": "Meme: MiNA doing full dance choreo over your body during her Visceral mori.",
+          "turn_on": "VIP backstage passes, chart-topping pop hits, and cheering stadium crowds",
+          "dealbreaker": "Boos from the audience and off-pitch singing",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Treats murders as album release hype",
+            "Needs 3 hours of neon styling before chases"
+          ],
+          "green_flags": [
+            "Unmatched showmanship",
+            "Korean pop vocals",
+            "Flawless wardrobe aesthetics"
+          ],
+          "danger_level": "High",
+          "chaos_score": 80,
+          "translations": {
+            "de": {
+              "archetype": "MiNA: Die Virtuelle K-Pop Diva",
+              "bio": "Virtuelles Idol nach dem Vorbild des Tricksters mit mörderischem Charme.",
+              "tagline": "Neonfarben, K-Pop Rhythmen und tödliche Performance.",
+              "meme": "Meme: MiNA tanzt Choreo über dem Moriopfer.",
+              "turn_on": "Applaus und Ruhm",
+              "dealbreaker": "Schlechter Musikgeschmack",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Egozentrisch",
+                "Tödlich eitel"
+              ],
+              "green_flags": [
+                "Atemberaubender Style",
+                "Bühnenpräsenz"
+              ]
+            },
+            "es": {
+              "archetype": "MiNA: La Diva Virtual",
+              "bio": "Ídolo virtual letal nacida de la mente sanguinaria de Trickster.",
+              "tagline": "Moda urbana flúor, bate cortante y voz hipnótica.",
+              "meme": "Meme: MiNA bailando una coreografía completa en pleno mori.",
+              "turn_on": "Fama mundial y multitudes aclamando",
+              "dealbreaker": "Los abucheos",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Te usará para ganar visitas en streaming",
+                "Narcisista"
+              ],
+              "green_flags": [
+                "Estilo 10/10",
+                "Pura energía escénica"
+              ]
+            },
+            "ja": {
+              "archetype": "MiNA: バーチャルK-POPアイドル",
+              "bio": "トリックスターのイメージから生まれた血塗られたバーチャル歌姫。",
+              "tagline": "ネオンのストリートウェアと狂気のダンスビート。",
+              "meme": "ミーム: メメント・モリ中に完璧なK-POPダンスを披露するMiNA。",
+              "turn_on": "スタンディングオベーションと完璧なハーモニー",
+              "dealbreaker": "音痴とアンチコメント",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "殺人をライブ配信の演出だと思っている",
+                "超ナルシスト"
+              ],
+              "green_flags": [
+                "圧倒的なビジュアル",
+                "華麗なパフォーマンス"
+              ]
+            },
+            "pl": {
+              "archetype": "MiNA: Wirtualna Diwa K-Popu",
+              "bio": "Wirtualna idolka stworzona na podobieństwo Trickstera (Visceral Skin). Przemienia każdą próbę w krwawy, wyprzedany koncert pełen neonów, koreańskich kwestii i zabójczego uroku.",
+              "tagline": "Neonowy streetwear, wysadzany ostrzami kij i hipnotyzujący wokal.",
+              "quote": "„Podobał ci się występ? Bis będzie we krwi!”",
+              "meme": "Meme: MiNA tańcząca pełną choreografię k-popową nad twoją postacią podczas mori.",
+              "turn_on": "Status gwiazdy pop, bilety VIP i tłumy skandujące jej imię",
+              "dealbreaker": "Fałszowanie pod prysznicem i hejt w komentarzach",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Traktuje twoje poświęcenie jako chwyt marketingowy pod nowy singiel",
+                "Zabójczo próżna"
+              ],
+              "green_flags": [
+                "Zawsze wygląda jak milion dolarów",
+                "Własny dubbing i autorska muzyka",
+                "Nigdy się przy niej nie znudzisz"
+              ]
+            }
+          },
+          "order_index": 36,
+          "is_active": true
+        },
+        {
+          "slug": "tomie_kawakami",
+          "name": "Tomie Kawakami",
+          "role": "Killer",
+          "gender": "female",
+          "media_url": "/static/avatars/killers/tomie_kawakami.webp",
+          "media_type": "image",
+          "archetype": "The Immortal Beauty",
+          "bio": "The legendary succubus from Junji Ito's masterpieces (The Spirit skin). Her unearthly beauty drives anyone who looks upon her into maddening obsession, jealousy, and violent despair.",
+          "tagline": "Beauty mark beneath the eye, dark flowing hair, and maddening fatal charm.",
+          "quote": "\"You will love me... until it destroys you completely.\"",
+          "meme": "Meme: All four survivors throwing the game just to look at Tomie's face in chase.",
+          "turn_on": "Absolute infatuation, devotion to the point of insanity, and luxury pampering",
+          "dealbreaker": "Ignoring her beauty or showing interest in anyone else",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Drives suitors to murderous madness",
+            "Multiplies if chopped into pieces"
+          ],
+          "green_flags": [
+            "Literally the most beautiful creature in existence",
+            "Immortal",
+            "Timeless Japanese horror icon"
+          ],
+          "danger_level": "High",
+          "chaos_score": 85,
+          "translations": {
+            "de": {
+              "archetype": "Tomie Kawakami: Die Unsterbliche Schönheit",
+              "bio": "Junji Itos furchterregende Ikone der Besessenheit.",
+              "tagline": "Schönheitsfleck und verführerischer Wahnsinn.",
+              "meme": "Meme: Überlebende geben freiwillig auf, um Tomie anzuschauen.",
+              "turn_on": "Besessenheit und Luxus",
+              "dealbreaker": "Ignoranz",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Tödlicher Wahnsinn",
+                "Narzissmus pur"
+              ],
+              "green_flags": [
+                "Unsterblich schön",
+                "Kultstatus"
+              ]
+            },
+            "es": {
+              "archetype": "Tomie Kawakami: La Belleza Fatal",
+              "bio": "La creación definitiva de Junji Ito que vuelve locos a quienes la admiran.",
+              "tagline": "Lunar bajo el ojo, cabello negro y atracción mortal.",
+              "meme": "Meme: Todo el equipo muriendo embobado con Tomie.",
+              "turn_on": "La devoción enloquecida y los halagos eternos",
+              "dealbreaker": "Cualquier muestra de desinterés",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Provoca homicidios involuntarios",
+                "Se regenera sin fin"
+              ],
+              "green_flags": [
+                "Belleza absoluta sobrenatural",
+                "Eterna"
+              ]
+            },
+            "ja": {
+              "archetype": "川上富江: 狂気を呼ぶ不滅の美女",
+              "bio": "伊藤潤二作品の象徴。男たちを狂気と破滅へと駆り立てる絶世の美少女。",
+              "tagline": "目元の泣きぼくろと、人を狂わせる魔性の美貌。",
+              "meme": "ミーム: 富江の美しさに魅了されて自らフックに向かうサバイバーたち。",
+              "turn_on": "狂気じみた崇拝と贅沢なもてなし",
+              "dealbreaker": "富江以外の女に目を向けること",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "愛する者を破滅させずにはいられない",
+                "バラバラにしても増殖する"
+              ],
+              "green_flags": [
+                "世界で最も美しい存在",
+                "不老不死"
+              ]
+            },
+            "pl": {
+              "archetype": "Tomie Kawakami: Zguba Ludzkich Serc",
+              "bio": "Mityczna femme fatale z mangi Junji Ito dla The Spirit. Jej nadludzkie piękno wpędza każdego, kto na nią spojrzy, w obłędną obsesję, zazdrość i krwawy szał.",
+              "tagline": "Pieprzyk pod okiem, lśniące czarne włosy i urok prowadzący prosto w szaleństwo.",
+              "quote": "„Będziesz mnie kochać... aż po kres twojego zmysłu i życia.”",
+              "meme": "Meme: Wszyscy czterej ocalali rzucający latarki na ziemię, byle Tomie na nich spojrzała.",
+              "turn_on": "Ślepe uwielbienie, podarki i chorobliwe oddanie",
+              "dealbreaker": "Odwrócenie wzroku i patrzenie na inną kobietę",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Doprowadza swoich adoratorów do obłędu",
+                "Po poćwiartowaniu odrasta w kilka nowych Tomie"
+              ],
+              "green_flags": [
+                "Najpiękniejsza istota w całym kosmosie mangi grozy",
+                "Nieśmiertelna",
+                "Kultowy magnetyzm"
+              ]
+            }
+          },
+          "order_index": 37,
+          "is_active": true
+        },
+        {
+          "slug": "rize_kamishiro",
+          "name": "Rize Kamishiro",
+          "role": "Killer",
+          "gender": "female",
+          "media_url": "/static/avatars/killers/rize_kamishiro.webp",
+          "media_type": "image",
+          "archetype": "The Binge Eater",
+          "bio": "The notorious Binge Eater Ghoul from Tokyo Ghoul (Legendary skin for The Ghoul). Sophisticated, bookish, and secretly possessing a bottomless predatory appetite.",
+          "tagline": "Purple glasses, elegant dress, and four monstrous crimson kagune tentacles.",
+          "quote": "\"Reading is wonderful, isn't it? But dining together is even better.\"",
+          "meme": "Meme: Rize inviting the Survivor on a coffee date before impaling them on a tentacle.",
+          "turn_on": "Classic literature, quiet romantic dinners, and high-taste culinary dishes",
+          "dealbreaker": "Dieting and construction sites with dropping steel beams",
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Considers you dinner rather than a date",
+            "Appetite has no off-switch"
+          ],
+          "green_flags": [
+            "Fascinating conversation partner about novels",
+            "Extremely chic glasses look",
+            "Deadly kagune agility"
+          ],
+          "danger_level": "High",
+          "chaos_score": 80,
+          "translations": {
+            "de": {
+              "archetype": "Rize Kamishiro: Die Vielfraßin",
+              "bio": "Elegante Ghul-Jägerin aus Tokyo Ghoul.",
+              "tagline": "Brille, violette Eleganz und tödliche Kagune.",
+              "meme": "Meme: Rize bestellt 'Frischfleisch' im Café.",
+              "turn_on": "Literatur und gutes Essen",
+              "dealbreaker": "Stahlträger",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Frisst ihre Dates auf",
+                "Unersättlich"
+              ],
+              "green_flags": [
+                "Sehr belesen",
+                "Elegantes Auftreten"
+              ]
+            },
+            "es": {
+              "archetype": "Rize Kamishiro: La Glotona",
+              "bio": "Sofisticada devoradora de hombres con tentáculos kagune carmesí.",
+              "tagline": "Gafas elegantes, vestido violeta y apetito voraz.",
+              "meme": "Meme: Rize ligando en una librería antes de la cacería.",
+              "turn_on": "Novelas clásicas y cenas a la luz de las velas",
+              "dealbreaker": "Vigas de construcción cayendo del techo",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Te considera su próximo aperitivo",
+                "Insaciable"
+              ],
+              "green_flags": [
+                "Conversación literaria fascinante",
+                "Estilo refinado"
+              ]
+            },
+            "ja": {
+              "archetype": "神代利世: 大喰い",
+              "bio": "『東京喰種』の物語の発端となった、美しき大喰いの喰種。",
+              "tagline": "紫の眼鏡、淑女の装い、そして獰猛な赫子。",
+              "meme": "ミーム: 読書デートに誘ってから捕食にかかる利世。",
+              "turn_on": "高槻泉の小説と上質な食事",
+              "dealbreaker": "鉄骨落下事故",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "デート相手を胃袋に収める癖がある",
+                "底なしの食欲"
+              ],
+              "green_flags": [
+                "文学への深い造詣",
+                "知的な眼鏡スタイル"
+              ]
+            },
+            "pl": {
+              "archetype": "Rize Kamishiro: Żarłoczna Koneserka",
+              "bio": "Słynna 'Żarłoczka' z Tokyo Ghoul (Legendarny skin dla The Ghoul). Wyrafinowana miłośniczka ambitnej literatury o nienasyconym drapieżnym apetycie.",
+              "tagline": "Fioletowe oprawki, elegancka sukienka i cztery szkarłatne macki kagune.",
+              "quote": "„Książki są cudowne, prawda? Ale kolacja z tobą będzie jeszcze lepsza.”",
+              "meme": "Meme: Rize zapraszająca cię na kawkę do kawiarni Anteiku, podczas gdy jej kagune już ostrzy noże.",
+              "turn_on": "Czytanie poezji, kolacje przy świecach i inteligencja",
+              "dealbreaker": "Spadające z dźwigu stalowe belki i diety odchudzające",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Jesteś dla niej przystawką, a nie partnerem",
+                "Nigdy nie ma dość jedzenia"
+              ],
+              "green_flags": [
+                "Wspaniały gust literacki",
+                "Zabójczo urocza w okularach",
+                "Niezrównana gracja w walce"
+              ]
+            }
+          },
+          "order_index": 38,
+          "is_active": true
+        },
+        {
+          "slug": "yellow_rabbit",
+          "name": "The Yellow Rabbit",
+          "role": "Killer",
+          "gender": "male",
+          "media_url": "/static/avatars/killers/yellow_rabbit.webp",
+          "media_type": "image",
+          "archetype": "The Man Behind the Slaughter",
+          "bio": "William Afton in his tattered yellow bunny costume from the Five Nights at Freddy's movie, brought to life with original voice acting by Matthew Lillard.",
+          "tagline": "Springlock golden bunny suit, pizza knife, and theatrical sinister charisma.",
+          "quote": "\"I always come back!\"",
+          "meme": "Meme: The Yellow Rabbit dancing while waiting for the exit gate to regress.",
+          "turn_on": "Mechanical robotics, singing animatronics, and grand theatrical entrances",
+          "dealbreaker": "Moisture leaks causing springlock failures",
+          "danger_level": "High",
+          "chaos_score": 85,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Unhealthy affinity for yellow rabbit suits",
+            "Serial child kidnapper record"
+          ],
+          "green_flags": [
+            "Voiced by Matthew Lillard",
+            "Master mechanic and inventor",
+            "Always comes back for you"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "The Yellow Rabbit: Der Springlock-Mörder",
+              "bio": "William Afton im berüchtigten gelben Hasenkostüm (FNAF Film).",
+              "tagline": "Gelber Animatronic-Anzug und unheimliches Lachen.",
+              "meme": "Meme: 'I always come back!' ertönt im ganzen Match.",
+              "turn_on": "Roboter und Nostalgie",
+              "dealbreaker": "Feuchtigkeit im Anzug",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Serienmörder",
+                "Geisteskrank"
+              ],
+              "green_flags": [
+                "Matthew Lillards Stimme",
+                "Gibt niemals auf"
+              ]
+            },
+            "es": {
+              "archetype": "The Yellow Rabbit: El Asesino de Freddy's",
+              "bio": "William Afton con el traje de conejo amarillo de la película de FNAF.",
+              "tagline": "Traje dorado desgastado, cuchillo de pizza y voz de Matthew Lillard.",
+              "meme": "Meme: El Conejo Amarillo reapareciendo cuando creías haber ganado.",
+              "turn_on": "Robótica de pizzería y teatros mecánicos",
+              "dealbreaker": "Goteras que activen los springlocks",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Psicópata obsesionado con conejos",
+                "Historial oscuro"
+              ],
+              "green_flags": [
+                "Siempre regresa",
+                "Voz legendaria"
+              ]
+            },
+            "ja": {
+              "archetype": "イエロー・ラビット: スプリングロックの狂人",
+              "bio": "映画版『FNAF』のマシュー・リラード演じるウィリアム・アフトンの狂気。",
+              "tagline": "朽ちた黄色いウサギの着ぐるみと不敵な笑み。",
+              "meme": "ミーム: どんな絶望的な試合でも「俺は必ず戻ってくる」と宣言するアフトン。",
+              "turn_on": "アニマトロニクス技術と劇的な演出",
+              "dealbreaker": "スプリングロックを狂わせる水滴",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "ウサギの着ぐるみを脱がない",
+                "子供向けピザ屋の闇"
+              ],
+              "green_flags": [
+                "マシュー・リラードの怪演ボイス",
+                "絶対に諦めない執念"
+              ]
+            },
+            "pl": {
+              "archetype": "Żółty Królik: William Afton",
+              "bio": "William Afton w znoszonym kostiumie żółtego królika z filmu Five Nights at Freddy's, z unikalnym głosem Matthew Lillarda. Seryjny morderca z pizzerii Freddy'ego, który zawsze powraca.",
+              "tagline": "Kostium sprężynowy, nóż do pizzy i teatralne szaleństwo.",
+              "quote": "„I always come back!”",
+              "meme": "Meme: Żółty Królik tańczący przy generatorze po udanym cofnięciu postępu bramy.",
+              "turn_on": "Inżynieria animatroników, retro pizzerie i mroczne sekrety",
+              "dealbreaker": "Krople wody uruchamiające mechanizm zatrzaskowy (springlocks)",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Dziwna obsesja na punkcie pluszowych królików",
+                "Mroczna kryminalna przeszłość"
+              ],
+              "green_flags": [
+                "Głos Matthew Lillarda",
+                "Genialny konstruktor maszyn",
+                "Zawsze do ciebie wróci"
+              ]
+            }
+          },
+          "order_index": 39,
+          "is_active": true
+        },
+        {
+          "slug": "glitchtrap",
+          "name": "Glitchtrap",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/glitchtrap.webp",
+          "media_type": "image",
+          "archetype": "The Digital Anomaly",
+          "bio": "A virus born of malignant code from FNAF: Help Wanted. Dancing eerily in a sewn patchwork bunny suit, Glitchtrap seeks to overwrite your consciousness with pure madness.",
+          "tagline": "Handmade patchwork bunny suit, eerie waving, and digital mind corruption.",
+          "quote": "\"Join us in the backstage lobby. Forever.\"",
+          "meme": "Meme: Glitchtrap menacingly waving at you from behind a doorway while music glithes.",
+          "turn_on": "VR software glitches, retro code hacking, and puppet mastery",
+          "dealbreaker": "Antivirus software and system reboots",
+          "danger_level": "High",
+          "chaos_score": 80,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Tries to upload a malware virus into your brain",
+            "Silent, unsettling dancing"
+          ],
+          "green_flags": [
+            "Digital immortality",
+            "Always waves hello",
+            "Fun retro aesthetic"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "Glitchtrap: Die Digitale Anomalie",
+              "bio": "Ein virtueller Albtraum im genähten Hasenkostüm.",
+              "tagline": "Flickenanzug, unheimliches Winken und digitaler Schrecken.",
+              "meme": "Meme: Glitchtrap tanzt im Türrahmen.",
+              "turn_on": "VR und Glitches",
+              "dealbreaker": "Firewalls",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Überschreibt dein Bewusstsein",
+                "Gruselig"
+              ],
+              "green_flags": [
+                "Unsterblicher Code",
+                "Einzigartig"
+              ]
+            },
+            "es": {
+              "archetype": "Glitchtrap: La Anomalía Virtual",
+              "bio": "Virus digital del juego FNAF: Help Wanted con traje de retazos.",
+              "tagline": "Conejo cosido a mano, saludo perturbador y corrupción digital.",
+              "meme": "Meme: Glitchtrap saludando lentamente desde la puerta del sótano.",
+              "turn_on": "Realidad virtual y programación",
+              "dealbreaker": "Los reinicios de sistema",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Intenta poseer tu mente",
+                "Baila sin emitir sonido"
+              ],
+              "green_flags": [
+                "Inmortalidad en la red",
+                "Estilo perturbador único"
+              ]
+            },
+            "ja": {
+              "archetype": "グリッチトラップ: 侵食するデジタルウイルス",
+              "bio": "VRゲームのコードから生まれた、手縫いのウサギ姿をした怪異。",
+              "tagline": "ツギハギのウサギスーツと不気味な手招き。",
+              "meme": "ミーム: ロッカーの隙間からこちらに手を振るグリッチトラップ。",
+              "turn_on": "VR空間のバグと精神支配",
+              "dealbreaker": "アンチウイルスソフト",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "プレイヤーの精神を乗っ取ろうとする",
+                "無言で踊り狂う"
+              ],
+              "green_flags": [
+                "電脳世界での不死性",
+                "いつでも歓迎の手を振ってくれる"
+              ]
+            },
+            "pl": {
+              "archetype": "Glitchtrap: Cyfrowa Anomalia",
+              "bio": "Wirusowa manifestacja Aftona z Five Nights at Freddy's: Help Wanted. W ręcznie szytym, patchworkowym kostiumie królika macha do ciebie zza rogu, próbując zainfekować twój umysł.",
+              "tagline": "Szyty żółty kostium, psychodeliczne machanie i cyfrowy obłęd.",
+              "quote": "„Wkrocz do wirtualnego świata. Zostań ze mną na zawsze.”",
+              "meme": "Meme: Glitchtrap powoli machający łapką z drugiego końca mapy zamiast gonić ocalałych.",
+              "turn_on": "Gry VR, błędy w kodzie i manipulowanie cudzą świadomością",
+              "dealbreaker": "Programy antywirusowe i formatowanie dysku",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Chce skopiować swoją świadomość do twojego mózgu",
+                "Upiornie milczy i tańczy w przejściu"
+              ],
+              "green_flags": [
+                "Wieczna egzystencja w chmurze",
+                "Niezwykle oryginalny styl vintage",
+                "Zawsze macha na powitanie"
+              ]
+            }
+          },
+          "order_index": 40,
+          "is_active": true
+        },
+        {
+          "slug": "henry_creel",
+          "name": "Henry Creel (001)",
+          "role": "Killer",
+          "gender": "male",
+          "media_url": "/static/avatars/killers/henry_creel.webp",
+          "media_type": "image",
+          "archetype": "Subject One",
+          "bio": "Henry Creel in his Hawkins Lab orderly attire before mutating into Vecna (The First skin). Armed with terrifying telekinetic dominance, grand misanthropy, and ticking grandfather clocks.",
+          "tagline": "Orderly uniform, cold calculating gaze, and godlike telekinesis.",
+          "quote": "\"They are pests. But together, we can reshape the world.\"",
+          "meme": "Meme: Henry snapping Survivor bones using only the power of his mind.",
+          "turn_on": "Black widow spiders, grand classical music, and breaking societal constructs",
+          "dealbreaker": "Hawkins Lab shock collars and Eleven's psychic resistance",
+          "danger_level": "High",
+          "chaos_score": 85,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Snaps human bones with telekinesis",
+            "Thinks humanity is an infestation of spiders"
+          ],
+          "green_flags": [
+            "Brilliant psychic intellect",
+            "Handsome lab orderly exterior",
+            "Never loses control"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "Henry Creel: Subjekt 001",
+              "bio": "Die menschliche Gestalt von Vecna vor dem Exil im Upside Down.",
+              "tagline": "Weißer Kittel, eiskalter Verstand und Psychokinese.",
+              "meme": "Meme: Henry bricht Knochen im Takt der Standuhr.",
+              "turn_on": "Klassische Musik und Spinnen",
+              "dealbreaker": "Widerworte",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Misanthropisch",
+                "Gefährlich telekinetisch"
+              ],
+              "green_flags": [
+                "Genialer Verstand",
+                "Charismatisch"
+              ]
+            },
+            "es": {
+              "archetype": "Henry Creel: Sujeto Uno",
+              "bio": "La forma humana de Vecna trabajando en el laboratorio de Hawkins.",
+              "tagline": "Uniforme blanco, mirada penetrante y telequinesis divina.",
+              "meme": "Meme: Henry levitando generadores por pura diversión.",
+              "turn_on": "Arañas viuda negra y conciertos de ópera",
+              "dealbreaker": "Los experimentos del Dr. Brenner",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Considera a la humanidad una plaga",
+                "Rompe huesos mentales"
+              ],
+              "green_flags": [
+                "Inteligencia suprema",
+                "Atractivo y calculador"
+              ]
+            },
+            "ja": {
+              "archetype": "ヘンリー・クリール: 被験体001",
+              "bio": "ヴェクナへと変貌する前の、ホーキンス研究所の冷徹な青年。",
+              "tagline": "白衣姿、怜悧な眼光、そして圧倒的な念動力。",
+              "meme": "ミーム: 柱時計の音と共にサバイバーを宙に浮かせるヘンリー。",
+              "turn_on": "クロゴケグモと静かなクラシック音楽",
+              "dealbreaker": "イレブンの抵抗と研究所の首輪",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "人類を害虫扱いしている",
+                "念力で骨を折る癖がある"
+              ],
+              "green_flags": [
+                "神がかり的な知性とサイコキネシス",
+                "端正なルックス"
+              ]
+            },
+            "pl": {
+              "archetype": "Henry Creel: Obiekt 001",
+              "bio": "Henry Creel w stroju sanitariusza z Hawkins Lab zanim stał się Vecną (skin dla The First / Vecna). Opanowany do perfekcji socjopata o boskich mocach telekinetycznych.",
+              "tagline": "Biały uniform sanitariusza, hipnotyzujące spojrzenie i telekineza krusząca kości.",
+              "quote": "„Ludzie są jak pasożyty. Ale razem możemy przebudować ten świat.”",
+              "meme": "Meme: Henry unoszący cię telekinezą na wysokość 5 metrów, bo zapomniałeś nastawić budzika z kukułką.",
+              "turn_on": "Czarne wdowy, muzyka symfoniczna i absolutna władza umysłu",
+              "dealbreaker": "Obroże tłumiące moc i opór Nastki",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Łamie ludzkie kości samym spojrzeniem",
+                "Uważa ludzi za szkodniki do eksterminacji"
+              ],
+              "green_flags": [
+                "Genialny intelekt",
+                "Przystojny i nienaganny z wyglądu",
+                "Zawsze ma absolutną kontrolę nad sytuacją"
+              ]
+            }
+          },
+          "order_index": 41,
+          "is_active": true
+        },
+        {
+          "slug": "xenomorph_queen",
+          "name": "The Queen Xenomorph",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/xenomorph_queen.webp",
+          "media_type": "image",
+          "archetype": "The Hive Matriarch",
+          "bio": "Towering matriarch of the Xenomorph hive. Crowned with an enormous armored crest, she commands terror with whip-fast tail strikes and supreme apex predator dominance.",
+          "tagline": "Massive armored headcrest, secondary arms, and supreme matriarchal power.",
+          "quote": "*Hssssssssssss-screeeeech!*",
+          "meme": "Meme: The Queen Xenomorph trying to fit her massive headcrest through the shack window.",
+          "turn_on": "Egg incubation, hive expansion, and absolute obedience",
+          "dealbreaker": "Power loaders and flame throwers",
+          "danger_level": "High",
+          "chaos_score": 85,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Acidic blood that dissolves floors",
+            "Uses you as host for eggs"
+          ],
+          "green_flags": [
+            "Ultimate matriarch",
+            "Imposing 9-foot stature",
+            "Fiercely protective of her nest"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "Xenomorph Königin: Die Matriarchin",
+              "bio": "Monumentale Herrscherin des Kellers und des Bienenstocks.",
+              "tagline": "Gewaltige Krone, Säureblut und pure Dominanz.",
+              "meme": "Meme: Königin bleibt im Fensterrahmen stecken.",
+              "turn_on": "Gehorsam und Koloniebau",
+              "dealbreaker": "Flammenwerfer",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Säureblut",
+                "Brutwütig"
+              ],
+              "green_flags": [
+                "Majestätisch",
+                "Herrscherin"
+              ]
+            },
+            "es": {
+              "archetype": "La Reina Xenomorfa: La Matriarca del Nido",
+              "bio": "Imponente reina biomecánica con una corona acorazada gigantesca.",
+              "tagline": "Cresta colosal, brazos secundarios y cola letal.",
+              "meme": "Meme: La Reina intentando cruzar puertas estrechas.",
+              "turn_on": "La expansión de la colmena y la sumisión",
+              "dealbreaker": "Los lanzallamas",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Sangre ácida altamente corrosiva",
+                "Pone huevos en tus amigos"
+              ],
+              "green_flags": [
+                "Presencia imperial",
+                "La cúspide biológica"
+              ]
+            },
+            "ja": {
+              "archetype": "エイリアン・クイーン: 巣の女帝",
+              "bio": "巨大な頭部冠と圧倒的な威容を誇るゼノモーフの絶対君主。",
+              "tagline": "巨大な装甲冠と酸性の体液、頂点捕食者。",
+              "meme": "ミーム: 小屋のドアに頭部冠がつっかえるクイーン。",
+              "turn_on": "ハイヴの繁栄と完全なる服従",
+              "dealbreaker": "火炎放射器とパワーローダー",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "血液が強酸で床を溶かす",
+                "フェイスハガーの宿主にされる"
+              ],
+              "green_flags": [
+                "圧倒的な巨躯とカリスマ",
+                "巣を守る母性"
+              ]
+            },
+            "pl": {
+              "archetype": "Królowa Ksenomorfów: Matriarchini Roju",
+              "bio": "Monstrualna królowa roju Obcych (Legendarny skin dla Ksenomorfa). Posiada gigantyczny koronny pancerz głowy, drugą parę ramion i niepowstrzymany instynkt drapieżcy.",
+              "tagline": "Ogromna korona głowy, kwasowa krew i bezlitosny ogon biczowy.",
+              "quote": "*Syczenie rozpuszczające stal...*",
+              "meme": "Meme: Królowa Ksenomorfów klinująca się głową w oknie szopy na Dead Dawg.",
+              "turn_on": "Ciepłe gniazda, posłuszeństwo i składanie jaj",
+              "dealbreaker": "Miotacze ognia i wózki widłowe Power Loader",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Jej krew wytapia dziury w podłodze",
+                "Chętnie zamieni cię w inkubator"
+              ],
+              "green_flags": [
+                "Prawdziwa monarchini",
+                "Monumentalna sylwetka",
+                "Obroni swoje gniazdo za wszelką cenę"
+              ]
+            }
+          },
+          "order_index": 42,
+          "is_active": true
+        },
+        {
+          "slug": "true_form_dracula",
+          "name": "True Form Dracula",
+          "role": "Killer",
+          "gender": "male",
+          "media_url": "/static/avatars/killers/true_form_dracula.webp",
+          "media_type": "image",
+          "archetype": "The Primordial Dark Lord",
+          "bio": "Dracula unleashed in his final monstrous form from Castlevania. Bathed in demonic fury and gothic majesty, this Visceral entity towers over the Fog in all his unholy glory.",
+          "tagline": "Gargantuan demonic wings, blazing crimson eyes, and ultimate vampiric supremacy.",
+          "quote": "\"What is a man? A miserable little pile of secrets!\"",
+          "meme": "Meme: Dracula shattering a wine glass on the ground after missing a hellfire pillar.",
+          "turn_on": "Vintage blood wine, gothic castle architecture, and orchestral organ music",
+          "dealbreaker": "Holy water, sunlight, and the Belmont clan",
+          "danger_level": "High",
+          "chaos_score": 85,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Destroys civilizations when grieving his wife",
+            "Turns into a giant demonic beast"
+          ],
+          "green_flags": [
+            "Unmatched gothic romanticism",
+            "Lord of the night",
+            "Immortal royal dignity"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "Wahrer Dracula: Der Dämonenfürst",
+              "bio": "Draculas finale dämonische Form aus Castlevania.",
+              "tagline": "Dämonenschwingen, Rotwein und göttliche Macht.",
+              "meme": "Meme: Dracula wirft sein Weinglas vor Wut um.",
+              "turn_on": "Gothic und Wein",
+              "dealbreaker": "Sonnenlicht",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Herrschsüchtig",
+                "Monströs"
+              ],
+              "green_flags": [
+                "Adelig",
+                "Unsterbliche Macht"
+              ]
+            },
+            "es": {
+              "archetype": "Drácula Forma Verdadera: El Señor Oscuro",
+              "bio": "La forma final colosal y demoníaca de Drácula en Castlevania.",
+              "tagline": "Alas gigantescas, fuego infernal y elegancia gótica eterna.",
+              "meme": "Meme: Drácula rompiendo copas de vino en mitad de la partida.",
+              "turn_on": "Sangre añeja y castillos góticos",
+              "dealbreaker": "El clan Belmont y el agua bendita",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Venganza apocalíptica",
+                "Transformación demoníaca"
+              ],
+              "green_flags": [
+                "Realeza gótica inmortal",
+                "Poder sin igual"
+              ]
+            },
+            "ja": {
+              "archetype": "真のドラキュラ: 暗黒の魔王",
+              "bio": "悪魔城ドラキュラの最終形態。巨大な翼と魔力を解き放った真の姿。",
+              "tagline": "漆黒の翼と深紅の瞳、究極の吸血鬼君主。",
+              "meme": "ミーム: 攻撃を外すたびにワイングラスを床に叩きつけるドラキュラ。",
+              "turn_on": "極上のヴィンテージワインとパイプオルガン",
+              "dealbreaker": "聖水とベルモンド一族",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "妻を失うと人類滅亡を企てる",
+                "怒ると巨大な怪物になる"
+              ],
+              "green_flags": [
+                "比類なき気品と魔力",
+                "夜の絶対支配者"
+              ]
+            },
+            "pl": {
+              "archetype": "Prawdziwa Forma Drakuli: Władca Mroku",
+              "bio": "Ostateczna, gigantyczna i demoniczna forma Drakuli z Castlevanii (Visceral Skin). Skrzydła z koszmaru, piekielny ogień i arystokratyczna duma władcy wampirów.",
+              "tagline": "Monstrualne skrzydła nietoperza, szkarłatne ślepia i gotycka potęga.",
+              "quote": "„Czymże jest człowiek? Nędznym stosem tajemnic!”",
+              "meme": "Meme: Drakula teatralnie tłukący kieliszek wina o podłogę po chybionym Hellfire.",
+              "turn_on": "Stare roczniki czerwonego wina, gotyckie zamki i muzyka organowa",
+              "dealbreaker": "Święcona woda, świt i nazwisko Belmont",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "W żałobie próbuje wymazać całą ludzkość z powierzchni ziemi",
+                "Zmienia się w potwora wielkości budynku"
+              ],
+              "green_flags": [
+                "Nieśmiertelny król ciemności",
+                "Głęboki gotycki romantyzm",
+                "Majestat i styl"
+              ]
+            }
+          },
+          "order_index": 43,
+          "is_active": true
+        },
+        {
+          "slug": "samurai_eddie",
+          "name": "Samurai Eddie",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/samurai_eddie.webp",
+          "media_type": "image",
+          "archetype": "The Heavy Metal Ronin",
+          "bio": "Iron Maiden's Senjutsu incarnation of Eddie adapted for The Oni. Wielding a demonic katana and adorned in samurai armor, this heavy metal mascot turns the trial into a thunderous mosh pit.",
+          "tagline": "Senjutsu armor, skeletal katana strikes, and heavy metal roar.",
+          "quote": "\"Scream for me, Fog realm!\"",
+          "meme": "Meme: Fear of the Dark blasting at 150 decibels whenever Samurai Eddie enters Blood Fury.",
+          "turn_on": "Twin guitar harmonies, Iron Maiden riffs, and honorable martial code",
+          "dealbreaker": "Acoustic elevator jazz and unplugged guitars",
+          "danger_level": "High",
+          "chaos_score": 80,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Solos his electric guitar while you're trying to communicate"
+          ],
+          "green_flags": [
+            "Legendary metal icon",
+            "Epic samurai armor",
+            "Plays Fear of the Dark in your lobby"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "Samurai Eddie: Die Metal-Legende",
+              "bio": "Iron Maidens Maskottchen in Senjutsu-Rüstung für den Oni.",
+              "tagline": "Samurai-Klingen und Heavy-Metal-Power.",
+              "meme": "Meme: 'Fear of the Dark' dröhnt durch den Wald.",
+              "turn_on": "Metal-Riffs und Gitarrensoli",
+              "dealbreaker": "Popmusik",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Laut",
+                "Brutal"
+              ],
+              "green_flags": [
+                "Kultstatus",
+                "Großartige Musik"
+              ]
+            },
+            "es": {
+              "archetype": "Samurai Eddie: El Ronin del Metal",
+              "bio": "La encarnación de Senjutsu de Eddie para The Oni.",
+              "tagline": "Armadura samurái, catana espectral y poder heavy metal.",
+              "meme": "Meme: Fear of the Dark sonando a todo volumen en persecución.",
+              "turn_on": "Solos de guitarra y conciertos de estadio",
+              "dealbreaker": "El reggaetón",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Volumen al máximo siempre"
+              ],
+              "green_flags": [
+                "Icono del rock mundial",
+                "Estilo demoledor"
+              ]
+            },
+            "ja": {
+              "archetype": "サムライ・エディ: 鋼鉄の戦士",
+              "bio": "アイアン・メイデンの『戦術』アルバムから鬼に降臨したエディ。",
+              "tagline": "戦術の鎧兜、妖刀、そしてヘヴィメタルの熱気。",
+              "meme": "ミーム: 血の怒り発動時に『Fear of the Dark』を爆音で流すエディ。",
+              "turn_on": "ヘヴィメタルのリフと武士道",
+              "dealbreaker": "静かすぎる部屋",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "常にギターの音がうるさい"
+              ],
+              "green_flags": [
+                "世界屈指のメタルアイコン",
+                "圧倒的な甲冑美"
+              ]
+            },
+            "pl": {
+              "archetype": "Samurai Eddie: Żelazny Ronin",
+              "bio": "Oficjalna maskotka Iron Maiden w wersji z albumu Senjutsu dla The Oni (Legendary Outfit). W pełnej zbroi samurajskiej i z kataną rozgrzewa Mgłę do czerwoności przy dźwiękach 'Fear of the Dark'.",
+              "tagline": "Zbroja Senjutsu, kościana katana i heavy metal w żyłach.",
+              "quote": "„Scream for me, Fog!”",
+              "meme": "Meme: Fear of the Dark grające na 100% głośności w słuchawkach, gdy Eddie odpala Blood Fury.",
+              "turn_on": "Koncerty stadionowe, gitary elektryczne i szacunek dla metalowych legend",
+              "dealbreaker": "Muzyka z windy i brak poczucia rytmu",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Zamiast rozmawiać, gra solówkę na wyimaginowanej gitarze"
+              ],
+              "green_flags": [
+                "Ikona muzyki rockowej",
+                "Niezrównany styl samuraja",
+                "Własna ścieżka dźwiękowa"
+              ]
+            }
+          },
+          "order_index": 44,
+          "is_active": true
+        },
+        {
+          "slug": "were_elk",
+          "name": "The Were-Elk",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/were_elk.webp",
+          "media_type": "image",
+          "archetype": "The Forest Cryptid",
+          "bio": "A primeval antlered nightmare from folklore (Huntress Visceral skin). Haunting the woods with mournful, guttural roars and throwing ancient stone axes with bone-crushing ferocity.",
+          "tagline": "Towering elk antlers, skull mask, and eerie throat-singing lullaby.",
+          "quote": "*Guttural primeval bellow echoing across the pines...*",
+          "meme": "Meme: The Were-Elk throat singing so loudly that the Survivors fail every skill check.",
+          "turn_on": "Forest primeval solitude, ancient bone totems, and the hunt",
+          "dealbreaker": "Deforestation and modern city noise",
+          "danger_level": "High",
+          "chaos_score": 80,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Mournful roars keep you awake at night",
+            "Throws axes at moving shadows"
+          ],
+          "green_flags": [
+            "Massive imposing cryptid physique",
+            "Hypnotic primeval singing",
+            "Master hunter"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "The Were-Elk: Der Wald-Kryptid",
+              "bio": "Uralter Gehörnter Schrecken aus den Tiefen der Wildnis.",
+              "tagline": "Elchgeweih, Knochenmaske und Kehlkopfgesang.",
+              "meme": "Meme: Were-Elk bringt Skillchecks mit seinem Gesang zum Scheitern.",
+              "turn_on": "Stille der Natur und Jagd",
+              "dealbreaker": "Lärm",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Wild und unberechenbar"
+              ],
+              "green_flags": [
+                "Kraftvoll",
+                "Naturverbunden"
+              ]
+            },
+            "es": {
+              "archetype": "The Were-Elk: El Criptido Ancestral",
+              "bio": "Pesadilla cornuda y salvaje que acecha en la espesura del bosque.",
+              "tagline": "Astas gigantescas, máscara de calavera y cánticos guturales.",
+              "meme": "Meme: El Were-Elk cantando guturalmente a dos metros de ti.",
+              "turn_on": "La soledad del bosque y el arte de la caza",
+              "dealbreaker": "La deforestación",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Brama en mitad de la noche",
+                "Lanza hachas de piedra"
+              ],
+              "green_flags": [
+                "Porte mítico imponente",
+                "Cazador supremo"
+              ]
+            },
+            "ja": {
+              "archetype": "ウェア・エルク: 原初の角獣",
+              "bio": "ハントレスのヴィセラルスキン。巨大なヘラジカの角を持つ森の神話生物。",
+              "tagline": "巨大な角、獣骨の仮面、不気味な喉歌の子守唄。",
+              "meme": "ミーム: 独特の喉歌でサバイバーの集中力を削ぐウェア・エルク。",
+              "turn_on": "太古の森の静寂と狩りの掟",
+              "dealbreaker": "都市の騒音と森林伐採",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "夜中に遠吠えをあげる癖がある"
+              ],
+              "green_flags": [
+                "威厳ある巨躯",
+                "神秘的な原初の歌声"
+              ]
+            },
+            "pl": {
+              "archetype": "Were-Elk: Pradawny Bies",
+              "bio": "Pierwotne rogate monstrum z leśnych mitów (Visceral Skin dla Huntress). Przeraża upiornym śpiewem gardłowym i ciska kamiennymi toporami z niszczycielską precyzją.",
+              "tagline": "Monumentalne rosochy łosia, czaszka zamiast twarzy i gardłowa kołysanka.",
+              "quote": "*Głęboki, basowy ryk niosący się echem pośród sosen...*",
+              "meme": "Meme: Were-Elk nucący gardłowo tak głośno, że ocalali oblewają skill checki na generatorze.",
+              "turn_on": "Leśna głusza, rzeźbienie w kości i szacunek dla pradawnych sił przyrody",
+              "dealbreaker": "Wycinka lasu i hałas wielkiego miasta",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Jego ryki nie dają spać po nocach",
+                "Rzuca toporami w każdy szelest w krzakach"
+              ],
+              "green_flags": [
+                "Niesamowity mityczny wygląd",
+                "Hipnotyzujący śpiew",
+                "Władca dzikiego lasu"
+              ]
+            }
+          },
+          "order_index": 45,
+          "is_active": true
+        },
+        {
+          "slug": "leshen",
+          "name": "The Leshen",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/leshen.webp",
+          "media_type": "image",
+          "archetype": "The Forest Guardian",
+          "bio": "Ancient woodland relict from The Witcher (The Artist skin). Guardian of the primeval woods who commands swarms of crows, shifting roots, and primeval nature.",
+          "tagline": "Deer skull visage, wooden branch limbs, and crow murder flock.",
+          "quote": "*Creaking of ancient timber and cawing of scavenger crows...*",
+          "meme": "Meme: The Leshen standing motionless in a corner until you try to touch his totem.",
+          "turn_on": "Protected sacred groves, crow nests, and forest silence",
+          "dealbreaker": "Lumberjacks and silver swords",
+          "danger_level": "High",
+          "chaos_score": 75,
+          "dating_vibe": "High-stakes Fog romance",
+          "red_flags": [
+            "Totems require periodic animal sacrifices",
+            "Wooden hands with no pulse"
+          ],
+          "green_flags": [
+            "Controls swarms of cute crows",
+            "Ancient nature wisdom",
+            "Imposing mystical aesthetic"
+          ],
+          "translations": {
+            "de": {
+              "archetype": "Der Waldschrat: Wächter des Urwalds",
+              "bio": "Uraltes Waldwesen aus The Witcher für die Künstlerin.",
+              "tagline": "Hirschschädel, Zweigkrallen und Krähenschwärme.",
+              "meme": "Meme: Waldschrat bewacht stoisch seinen Hain.",
+              "turn_on": "Waldruhe und Raben",
+              "dealbreaker": "Silberschwerter",
+              "dating_vibe": "Spannende, düstere Romanze im Nebel",
+              "red_flags": [
+                "Gefährliche Holzmagie"
+              ],
+              "green_flags": [
+                "Naturverbunden",
+                "Magische Aura"
+              ]
+            },
+            "es": {
+              "archetype": "El Leshen: El Guardián del Bosque",
+              "bio": "Relicto ancestral del universo The Witcher.",
+              "tagline": "Cráneo de ciervo, ramas retorcidas y cuervos sombríos.",
+              "meme": "Meme: El Leshen invocando raíces gigantescas bajo los motores.",
+              "turn_on": "Los bosques intocados y el canto de los cuervos",
+              "dealbreaker": "Las espadas de plata de brujo",
+              "dating_vibe": "Romance intenso y peligroso en la Niebla",
+              "red_flags": [
+                "Requiere pactos con tótems",
+                "Hecho de madera fría"
+              ],
+              "green_flags": [
+                "Presencia mitológica sobrecogedora",
+                "Guardián eterno"
+              ]
+            },
+            "ja": {
+              "archetype": "レーシェン: 森の主",
+              "bio": "『ウィッチャー』の世界からアーティストの姿として顕現した森の精霊。",
+              "tagline": "鹿の頭蓋骨、木の枝の四肢、群れ飛ぶカラス。",
+              "meme": "ミーム: トーテムの横で微動だにせず立ち尽くすレーシェン。",
+              "turn_on": "静謐な森の聖域とカラスたちの歌",
+              "dealbreaker": "銀の剣を持ったウィッチャー",
+              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
+              "red_flags": [
+                "怒ると木の根で串刺しにしてくる"
+              ],
+              "green_flags": [
+                "神秘的な森の守護者",
+                "カラスを手懐けている"
+              ]
+            },
+            "pl": {
+              "archetype": "Leszy: Relikt Puszczy",
+              "bio": "Starożytny potwór z uniwersum Wiedźmina dla Artystki. Strażnik puszczy z jelenią czaszką zamiast głowy, władający cierniami i chmarami kruków.",
+              "tagline": "Czaszka jelenia, sękate konary zamiast rąk i mordercze stada kruków.",
+              "quote": "*Trzask pękającego drewna i skrzek żerujących kruków...*",
+              "meme": "Meme: Leszy stojący nieruchomo obok heksu, dopóki ktoś nie spróbuje go oczyścić.",
+              "turn_on": "Święte gaje, gniazda kruków i leśna cisza",
+              "dealbreaker": "Wiedźmińskie srebrne miecze i drwale",
+              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
+              "red_flags": [
+                "Wymaga wiązania dusz z totemami",
+                "Zamiast dłoni ma ostre sęki"
+              ],
+              "green_flags": [
+                "Rozumie mowę ptaków",
+                "Potęga prastarej natury",
+                "Unikalny wiedźmiński klimat"
+              ]
+            }
+          },
+          "order_index": 46,
           "is_active": true
         }
       ]

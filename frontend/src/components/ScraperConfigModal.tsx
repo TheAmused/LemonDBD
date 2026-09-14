@@ -645,7 +645,7 @@ export function ScraperConfigModal({
                   type="button"
                   onClick={handleExecuteExport}
                   disabled={isExporting || exportTargets.length === 0}
-                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-40"
+                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
                 >
                   {isExporting ? (
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />
@@ -820,7 +820,7 @@ export function ScraperConfigModal({
                   type="button"
                   onClick={handleExecuteImport}
                   disabled={isImporting || !importFile}
-                  className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-white shadow-md transition-all cursor-pointer disabled:opacity-40"
+                  className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
                 >
                   {isImporting ? (
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />

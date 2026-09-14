@@ -180,7 +180,7 @@ export const GauntletFireBackground: React.FC<GauntletFireBackgroundProps> = ({ 
         <Particles
           id="gauntlet-fire-particles"
           options={particleOptions}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+          className="absolute inset-0 w-full h-full"
         />
       </ParticlesProvider>
     </div>

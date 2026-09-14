@@ -62,7 +62,7 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
       disabled={disabled}
       {...rest}
       className={cn(
-        'inline-flex items-center justify-center rounded-xl font-black uppercase tracking-wider text-white transition-all duration-200 focus:outline-none focus-visible:ring-2',
+        'inline-flex items-center justify-center rounded-xl font-black uppercase tracking-wider text-text-inverted transition-all duration-200 focus:outline-none focus-visible:ring-2',
         SIZE_STYLES[size],
         ROLE_RING[role],
         active

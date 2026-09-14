@@ -795,7 +795,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                       imageSrc={bannerSrc}
                     />
                     <ChevronDown
-                      className={`absolute top-2 right-2 h-5 w-5 text-white drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                      className={`absolute top-2 right-2 h-5 w-5 text-text-inverted drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                     />
                   </button>
                   {/* The whole footer toggles ownership, not just the small
@@ -818,7 +818,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                       }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                        className={`inline-block h-4 w-4 transform rounded-full bg-text-inverted shadow transition-transform ${
                           chapterOwned ? 'translate-x-6' : 'translate-x-1'
                         }`}
                       />
@@ -883,7 +883,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                                 lockedTitle={dict?.modal?.unownedPerk}
                                 ownedTitle={dict?.filters?.ownedOnly}
                               />
-                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white text-center">
+                              <span className="absolute bottom-1 left-1 right-1 truncate rounded bg-bg-primary/80 px-1.5 py-0.5 text-[10px] font-bold text-text-inverted text-center">
                                 {c.name}
                               </span>
                             </button>

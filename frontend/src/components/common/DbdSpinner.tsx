@@ -277,7 +277,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
             strokeDasharray="66 298"
             strokeDashoffset="-210"
             strokeLinecap="round"
-            className="text-slate-400 dark:text-slate-200 opacity-95"
+            className="text-text-muted opacity-95"
           />
 
           <circle

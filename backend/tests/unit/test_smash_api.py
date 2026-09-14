@@ -7,9 +7,9 @@ from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
 from app.core.security import generate_token, hash_password
 from app.models.user import User
-from app.routes.others.smash_or_pass import vote_rate_limiter
+from app.routes.smash_or_pass import vote_rate_limiter
 from app.seeds.smash_roster_seeder import seed_smash_rosters
-from app.services.others.smash_or_pass_service import SmashOrPassService
+from app.services.smash_or_pass_service import SmashOrPassService
 
 
 @pytest.fixture(autouse=True)

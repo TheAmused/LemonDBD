@@ -555,7 +555,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               type="button"
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
-              className="px-6 py-2 rounded-xl text-xs font-bold bg-accent-green text-white shadow-md hover:bg-accent-green-hover transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
+              className="px-6 py-2 rounded-xl text-xs font-bold bg-accent-green text-text-inverted shadow-md hover:bg-accent-green-hover transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
             >
               {ownershipSaving ? dict?.characterDetail?.saving : dict?.characterDetail?.accept}
             </button>
@@ -566,7 +566,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {showSavedToast && (
         <div
           role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-white shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
+          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <Check className="h-5 w-5" />
           <span>{dict?.characterDetail?.changesSaved}</span>
@@ -587,7 +587,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               setAuthModalIntent('verify');
               setIsAuthModalOpen(true);
             }}
-            className="rounded-lg bg-white/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-white/30 transition-colors cursor-pointer"
+            className="rounded-lg bg-text-inverted/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-text-inverted/30 transition-colors cursor-pointer"
           >
             {dict?.streaks?.verifyEmail}
           </button>

@@ -206,7 +206,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 });
               }}
               disabled={loading}
-              className="bg-accent-red hover:bg-accent-red-hover disabled:opacity-60 text-white font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg transition-all cursor-pointer"
+              className="bg-accent-red hover:bg-accent-red-hover disabled:opacity-60 text-text-inverted font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg transition-all cursor-pointer"
             >
               {dict?.streaks?.startGame || 'START GAME'}
             </button>
@@ -250,7 +250,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 </div>
               )}
             </div>
-            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-accent-red text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap tracking-wider shadow-sm">
+            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-accent-red text-text-inverted text-[10px] font-black uppercase px-2 py-0.5 rounded-full whitespace-nowrap tracking-wider shadow-sm">
               {dict?.streaks?.target || 'TARGET'}
             </span>
           </div>
@@ -416,7 +416,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             type="button"
             onClick={onWin}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center cursor-pointer"
           >
             {dict?.streaks?.winMatch || 'WON'}
           </button>
@@ -425,7 +425,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
             type="button"
             onClick={onLoss}
             disabled={loading}
-            className="w-full sm:w-auto flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center cursor-pointer"
+            className="w-full sm:w-auto flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center cursor-pointer"
           >
             {dict?.streaks?.loseMatch || 'LOST'}
           </button>

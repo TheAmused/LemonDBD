@@ -33,10 +33,6 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
-const QuestsModal = dynamic(
-  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
-  { ssr: false }
-);
 
 interface PerksResponse {
   data?: Perk[];
@@ -57,7 +53,6 @@ function PerksContent() {
   const [perks, setPerks] = useState<Perk[]>([]);
   const [allPerksForStats, setAllPerksForGenerator] = useState<Perk[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   const [role, setRole] = useState<RoleCategory>('Survivor');
   const [scope, setScope] = useState<ScopeFilter>('all');
@@ -243,7 +238,6 @@ function PerksContent() {
       dict={dict}
       activeCategory="perks"
       onSelectCategory={handleSelectCategoryFromSidebar}
-      onOpenQuests={() => setIsQuestsOpen(true)}
       totalPerksCount={totalVaultPerks}
       survivorCount={survivorCount}
       killerCount={killerCount}
@@ -352,13 +346,6 @@ function PerksContent() {
           <PerkModal
             perk={selectedPerk}
             onClose={() => setSelectedPerk(null)}
-            dict={dict}
-          />
-        )}
-        {isQuestsOpen && (
-          <QuestsModal
-            isOpen={isQuestsOpen}
-            onClose={() => setIsQuestsOpen(false)}
             dict={dict}
           />
         )}

@@ -132,20 +132,20 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const renderIcon = (name: RomancePersonaResult['iconName']) => {
     switch (name) {
       case 'compass':
-        return <Compass className="h-6 w-6 text-white animate-spin-slow" />;
+        return <Compass className="h-6 w-6 text-text-inverted animate-spin-slow" />;
       case 'skull':
-        return <Skull className="h-6 w-6 text-white" />;
+        return <Skull className="h-6 w-6 text-text-inverted" />;
       case 'flame':
-        return <Flame className="h-6 w-6 text-white" />;
+        return <Flame className="h-6 w-6 text-text-inverted" />;
       case 'shield':
-        return <Shield className="h-6 w-6 text-white" />;
+        return <Shield className="h-6 w-6 text-text-inverted" />;
       case 'heart':
-        return <Heart className="h-6 w-6 text-white fill-white" />;
+        return <Heart className="h-6 w-6 text-text-inverted fill-text-inverted" />;
       case 'zap':
-        return <Zap className="h-6 w-6 text-white" />;
+        return <Zap className="h-6 w-6 text-text-inverted" />;
       case 'sparkles':
       default:
-        return <Sparkles className="h-6 w-6 text-white" />;
+        return <Sparkles className="h-6 w-6 text-text-inverted" />;
     }
   };
 
@@ -196,7 +196,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="mt-2 flex items-center gap-2 py-3 px-6 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
+              className="mt-2 flex items-center gap-2 py-3 px-6 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
             >
               <span>{startVotingLabel}</span>
               <ArrowRight className="h-4 w-4" />
@@ -206,13 +206,13 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
           /* Unlocked / Shared Archetype View */
           <>
             <div
-              className={`relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-white shadow-2xl transition-all`}
+              className={`relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-2xl transition-all`}
               style={{ boxShadow: `0 0 40px ${persona.glowColor}` }}
             >
               {isSharedView && (
                 <div className="mb-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/50 border border-white/25 text-[11px] font-mono font-bold tracking-wider text-white backdrop-blur-md shadow-sm">
-                    <Sparkles className="h-3 w-3 text-white" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-bg-primary/50 border border-border-color text-[11px] font-mono font-bold tracking-wider text-text-inverted backdrop-blur-md shadow-sm">
+                    <Sparkles className="h-3 w-3 text-text-inverted" />
                     {sharedResultBadge}
                   </span>
                 </div>
@@ -220,17 +220,17 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1 min-w-0">
-                  <h3 className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-white drop-shadow-md">
+                  <h3 className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-text-inverted drop-shadow-md">
                     {persona.title}
                   </h3>
                   {persona.subtitle && (
-                    <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-sans font-medium">
+                    <p className="text-xs sm:text-sm text-text-inverted/90 leading-relaxed font-sans font-medium">
                       {persona.subtitle}
                     </p>
                   )}
                 </div>
 
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-black/40 border border-white/20 backdrop-blur-md shrink-0 shadow-lg">
+                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0 shadow-lg">
                   {renderIcon(persona.iconName)}
                 </div>
               </div>
@@ -318,7 +318,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
                   >
                     <Gamepad2 className="h-4 w-4" />
                     <span>{playToDiscoverLabel}</span>
@@ -328,7 +328,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
                   >
                     {copied ? <Check className="h-4 w-4 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
                     <span>{copied ? copiedToClipboardLabel : shareArchetypeLabel}</span>

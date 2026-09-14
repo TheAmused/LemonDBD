@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { LemonIcon } from '@/components/LemonIcon';
-import { QuestsModal } from '@/components/QuestsModal';
 import { i18n, type Locale } from '@/i18n/config';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
@@ -20,7 +19,6 @@ function LandingContent() {
   const { prefetchImages } = useImagePrefetch();
 
   const dict = useDictionary();
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     prefetchImages([
@@ -34,7 +32,6 @@ function LandingContent() {
       locale={locale}
       dict={dict}
       activeCategory=""
-      onOpenQuests={() => setIsQuestsOpen(true)}
       outerClassName="relative min-h-screen overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
       decoration={<FogHeartbeatBackground />}
       customPadding="p-4 sm:p-8 lg:p-12"
@@ -80,8 +77,6 @@ function LandingContent() {
             </div>
           )}
         </div>
-
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
     </PageShell>
   );
 }

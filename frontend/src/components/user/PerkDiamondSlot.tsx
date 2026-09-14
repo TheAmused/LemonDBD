@@ -74,7 +74,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             onClear(e);
           }}
           title={clearLabel}
-          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-white shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
+          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
         >
           <X className="h-3 w-3" />
         </button>

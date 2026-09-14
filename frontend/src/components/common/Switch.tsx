@@ -22,7 +22,7 @@ export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, cl
       } ${className}`}
     >
       <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+        className={`inline-block h-4 w-4 transform rounded-full bg-text-inverted shadow transition-transform ${
           checked ? 'translate-x-6' : 'translate-x-1'
         }`}
       />

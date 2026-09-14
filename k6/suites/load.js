@@ -1,3 +1,4 @@
+// k6/suites/load.js
 import { defaultTrafficMix } from '../scenarios/index.js';
 import { loadThresholds } from '../config/thresholds.js';
 import { loadStages } from '../config/stages.js';

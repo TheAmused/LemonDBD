@@ -1,3 +1,4 @@
+// k6/config/env.js
 ﻿export function getBaseUrl() {
   return (typeof __ENV !== 'undefined' && __ENV.BASE_URL) || 'http://localhost';
 }

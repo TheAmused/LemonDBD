@@ -1,3 +1,4 @@
+// k6/suites/streaks.js
 import { defaultClient, thinkTime } from '../lib/http_client.js';
 import { streaksStages } from '../config/stages.js';
 import { streaksThresholds } from '../config/thresholds.js';

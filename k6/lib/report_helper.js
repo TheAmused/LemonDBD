@@ -1,3 +1,4 @@
+// k6/lib/report_helper.js
 /**
  * LemonDBD K6 Performance Testing Suite - Production-Grade HTML Report Helper
  * Generates an interactive, modern, user-friendly performance dashboard.

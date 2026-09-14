@@ -1,3 +1,4 @@
+// k6/scenarios/smash_or_pass.js
 import { defaultClient, voteDuration, thinkTime } from '../lib/http_client.js';
 
 export function runScenario(client = defaultClient) {

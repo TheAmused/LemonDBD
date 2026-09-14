@@ -1,3 +1,4 @@
+// frontend/src/components/common/Switch.tsx
 'use client';
 import React from 'react';
 

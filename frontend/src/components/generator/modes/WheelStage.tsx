@@ -376,6 +376,31 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     }
   }, [effectiveTotalPages]);
 
+  // The Wheel now stays mounted across a Survivor/Killer role switch (see
+  // GeneratorPage's key) instead of being torn down and rebuilt, so it no
+  // longer gets a fresh `activePageRef`/`wheelPhase` for free. Without this,
+  // a page landed on for the old role (its label, its slice count) would
+  // keep showing after the switch until the next spin recomputed it -- back
+  // to the page wheel and a clean angle, same starting point a fresh mount
+  // would have given it.
+  useEffect(() => {
+    if (isSpinning) return;
+    wheelAngleRef.current = 0;
+    setStatusText('');
+    if (effectiveTotalPages > 1) {
+      wheelPhaseRef.current = 'page';
+      activePageRef.current = 1;
+      setWheelPhase('page');
+      setSelectedPageUI(1);
+    } else {
+      wheelPhaseRef.current = 'perk';
+      activePageRef.current = 1;
+      setWheelPhase('perk');
+      setSelectedPageUI(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role]);
+
   useEffect(() => {
     return () => {
       if (emberAnimFrameRef.current !== null) {
@@ -671,7 +696,18 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
             <div
-              className={`w-full max-w-[62vw] min-w-[200px] max-h-[36dvh] sm:max-w-[285px] sm:max-h-[38dvh] md:max-w-[320px] lg:max-w-[350px] xl:max-w-[430px] 2xl:max-w-[530px] min-[1800px]:max-w-[620px] min-[1800px]:max-h-[50dvh] aspect-square transition-all duration-500 ease-out transform ${
+              // Width and height are driven by the *same* min() expression at every
+              // breakpoint (matching PerkSlot's `fill` size pattern) instead of an
+              // independent max-w (vw-based) paired with an independent max-h
+              // (dvh-based) constrained via aspect-square. Those two caps could land
+              // on different pixel values -- e.g. a wide-but-short window, or a
+              // mobile browser's dvh shrinking as the post-spin result text and
+              // flavor line grow the page below the wheel -- and since the width
+              // here is a definite size (not auto), CSS clamps height to max-h
+              // without re-deriving width from the new aspect ratio, flattening the
+              // circle into an oval. Deriving both axes from one shared min()
+              // makes them structurally identical, so they can never diverge.
+              className={`w-[min(62vw,36dvh)] h-[min(62vw,36dvh)] min-w-[200px] min-h-[200px] sm:w-[min(285px,38dvh)] sm:h-[min(285px,38dvh)] md:w-[min(320px,38dvh)] md:h-[min(320px,38dvh)] lg:w-[min(350px,38dvh)] lg:h-[min(350px,38dvh)] xl:w-[min(430px,38dvh)] xl:h-[min(430px,38dvh)] 2xl:w-[min(530px,38dvh)] 2xl:h-[min(530px,38dvh)] min-[1800px]:w-[min(620px,50dvh)] min-[1800px]:h-[min(620px,50dvh)] transition-all duration-500 ease-out transform ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
               }`}
             >

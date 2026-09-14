@@ -1,3 +1,4 @@
+// k6/suites/queries.js
 import { defaultClient, thinkTime } from '../lib/http_client.js';
 import { queriesStages } from '../config/stages.js';
 import { queriesThresholds } from '../config/thresholds.js';

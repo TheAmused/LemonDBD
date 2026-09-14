@@ -1,3 +1,4 @@
+// k6/scenarios/index.js
 import { runScenario as browsePerks } from './browse_perks.js';
 import { runScenario as searchAutocomplete } from './search_autocomplete.js';
 import { runScenario as smashOrPass } from './smash_or_pass.js';

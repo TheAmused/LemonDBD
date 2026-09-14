@@ -32,8 +32,6 @@ def fetch_maps(
         try:
             if current_app:
                 stmt = select(MapRealm)
-                # `realm` and `search` match on the realms table itself now,
-                # not on a name copied into every map row.
                 if (realm and realm.lower() != "all") or (search and search.strip()):
                     stmt = stmt.join(Realm, MapRealm.realm_id == Realm.id)
                 if realm and realm.lower() != "all":
@@ -52,7 +50,6 @@ def fetch_maps(
                     )
                 stmt = stmt.order_by(MapRealm.name.asc())
                 rows = db.session.scalars(stmt).unique().all()
-                # Only fall through to the legacy seed path if the table is fully unseeded.
                 table_has_any_rows = rows or db.session.scalar(select(MapRealm.id).limit(1)) is not None
                 if table_has_any_rows:
                     return [r.to_dict(lang=lang) for r in rows]
@@ -63,17 +60,12 @@ def fetch_maps(
             except Exception:
                 pass
 
-    # No seeding on the read path: an empty table means the static seeder has
-    # not run yet, and inventing six placeholder maps to fill the gap is what
-    # used to collide with the real ids in maps.json.
     conn = db_service.get_connection()
     cursor = conn.cursor()
 
     cursor.execute("PRAGMA table_info(map_realms);")
     cols = {row[1] for row in cursor.fetchall()}
 
-    # The realm name lives in `realms` now; the raw path joins for it instead
-    # of reading a copy off each map row.
     query = (
         "SELECT mr.*, r.name AS realm_name, "
         "ms.code AS source_code, ms.label AS source_label "
@@ -100,27 +92,43 @@ def fetch_maps(
 
     maps = []
     for r in rows:
+        row_keys = r.keys()
         maps.append({
-            # `map_realms.map_id` is gone; `id` on the wire is the integer
-            # primary key, the same key name the payload always used.
             "id": r["id"],
             "name": r["name"],
-            "realm": r["realm_name"] if "realm_name" in r.keys() else "",
+            "realm": r["realm_name"] if "realm_name" in row_keys else "",
             "realm_id": r["realm_id"],
             "source_id": r["source_id"],
             "source": r["source_code"] or DEFAULT_SOURCE_CODE,
             "source_label": r["source_label"] or DEFAULT_SOURCE_LABEL,
-            # Not columns any more -- they held one value each across all 58
-            # rows. Same values, served from the model's defaults.
-            "layout_type": DEFAULT_LAYOUT_TYPE,
-            "jungle_gyms_count": DEFAULT_JUNGLE_GYMS,
-            "totem_spawns_count": DEFAULT_TOTEM_SPAWNS,
-            "pallet_density": DEFAULT_PALLET_DENSITY,
-            "shack_has_basement": DEFAULT_SHACK_HAS_BASEMENT,
+            "layout_type": (
+                r["layout_type"]
+                if "layout_type" in row_keys and r["layout_type"] is not None
+                else DEFAULT_LAYOUT_TYPE
+            ),
+            "jungle_gyms_count": (
+                r["jungle_gyms_count"]
+                if "jungle_gyms_count" in row_keys and r["jungle_gyms_count"] is not None
+                else DEFAULT_JUNGLE_GYMS
+            ),
+            "totem_spawns_count": (
+                r["totem_spawns_count"]
+                if "totem_spawns_count" in row_keys and r["totem_spawns_count"] is not None
+                else DEFAULT_TOTEM_SPAWNS
+            ),
+            "pallet_density": (
+                r["pallet_density"]
+                if "pallet_density" in row_keys and r["pallet_density"] is not None
+                else DEFAULT_PALLET_DENSITY
+            ),
+            "shack_has_basement": (
+                bool(r["shack_has_basement"])
+                if "shack_has_basement" in row_keys and r["shack_has_basement"] is not None
+                else DEFAULT_SHACK_HAS_BASEMENT
+            ),
+            "size_sq_tiles": r["size_sq_tiles"] if "size_sq_tiles" in row_keys else None,
+            "size_sq_meters": r["size_sq_meters"] if "size_sq_meters" in row_keys else None,
             "description": r["description"],
-            # `image_url` is no longer stored: it was a byte-identical copy of
-            # `callout_image_url` on all 58 rows. The key stays on the wire,
-            # served from the one column that survived.
             "image_url": r["callout_image_url"],
         })
     return maps
@@ -139,11 +147,3 @@ def fetch_realms(lang: str | None = None) -> list[dict[str, Any]]:
         except Exception:
             pass
     return []
-
-
-# `fetch_map_by_id` lived here, backing `GET /api/v1/maps/<map_id>`. develop
-# removed that endpoint in the same pass that deleted `utils/mapLandmarks.ts`,
-# and it is consistent: the detail it returned was `tiles` and `objectives`,
-# both of which are permanently empty now that `map_tiles` and `map_objectives`
-# are dropped. Nothing in the frontend called it. `fetch_maps` already returns
-# every field a single map has.

@@ -1,3 +1,4 @@
+// frontend/src/utils/staticUrl.ts
 import { getBackendBaseUrl, apiUrl, staticUrl, backendBase } from './api';
 
 export { getBackendBaseUrl, apiUrl, staticUrl, backendBase };

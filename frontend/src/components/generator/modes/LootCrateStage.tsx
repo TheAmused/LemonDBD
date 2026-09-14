@@ -72,6 +72,29 @@ function buildScatterLayout(count: number): { xPct: number; yPct: number }[] {
   }));
 }
 
+/**
+ * A percentage position alone isn't safe here: each card is centered ON that
+ * point (`-translate-x-1/2 -translate-y-1/2`), so what actually needs to stay
+ * on-screen is the point plus half the card's rendered width/height in
+ * pixels -- and the card's size comes from `PerkSlot`'s own Tailwind
+ * breakpoints (up to 240px at 2xl+), which don't scale with how wide this
+ * particular scatter field happens to be. A 6%-from-the-edge point is only
+ * safe in a container wide enough that 6% is more than half the card's
+ * pixel width; in anything narrower -- which is normal, since this field
+ * sits inside the page's own layout, not the full viewport -- the card
+ * spills off-screen. `clamp()` with a pixel floor/ceiling guarantees at
+ * least that much room from every edge regardless of container width, while
+ * still following the intended percentage wherever there's space for it.
+ */
+const SCATTER_EDGE_MARGIN_PX = 130;
+
+function scatterPointStyle(point: { xPct: number; yPct: number }): { left: string; top: string } {
+  return {
+    left: `clamp(${SCATTER_EDGE_MARGIN_PX}px, ${point.xPct}%, calc(100% - ${SCATTER_EDGE_MARGIN_PX}px))`,
+    top: `clamp(${SCATTER_EDGE_MARGIN_PX}px, ${point.yPct}%, calc(100% - ${SCATTER_EDGE_MARGIN_PX}px))`,
+  };
+}
+
 export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   role,
   activePlayablePerks,
@@ -310,7 +333,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               <motion.div
                 key={`locked-${item.id}`}
                 className="absolute -translate-x-1/2 -translate-y-1/2"
-                style={{ left: `${item.xPct}%`, top: `${item.yPct}%` }}
+                style={scatterPointStyle(item)}
                 initial={reduceMotion ? false : { scale: item.scale * 1.3, opacity: 0.4 }}
                 animate={{ scale: item.scale, opacity: 1, rotate: 0 }}
                 transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
@@ -331,7 +354,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 <motion.div
                   key={item.id}
                   className="absolute -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: `${item.xPct}%`, top: `${item.yPct}%` }}
+                  style={scatterPointStyle(item)}
                   initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
                   animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}
                   exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, rotate: item.rotate + 50, transition: { duration: 0.25 } }}

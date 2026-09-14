@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# backend/scripts/normalize_static_export.py
 """Rewrite the baseline seed content JSON into the normalized, id-keyed shape.
 
 Identity

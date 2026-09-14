@@ -1,3 +1,4 @@
+// k6/scenarios/auth_profile.js
 import { defaultClient, thinkTime } from '../lib/http_client.js';
 import { registerAndLoginUser, getAuthHeaders } from '../lib/auth.js';
 

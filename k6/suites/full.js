@@ -1,3 +1,4 @@
+// k6/suites/full.js
 import {
   defaultClient,
   thinkTime,

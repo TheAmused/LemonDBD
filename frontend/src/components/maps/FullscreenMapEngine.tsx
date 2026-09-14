@@ -331,11 +331,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
         style={{ touchAction: 'none' }}
-<<<<<<< HEAD
-        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-slate-950 pt-24 sm:pt-20 pb-16 px-4"
-=======
-        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-20 pb-24 px-6"
->>>>>>> develop
+        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-24 sm:pt-20 pb-16 px-4"
       >
         {imageSrc && !imageFailed ? (
           <img

@@ -2,6 +2,7 @@
 import pytest
 from flask.testing import FlaskClient
 from app import create_app
+from app.seeds.static_db_seeder import seed_from_static_json
 from app.services.map_service import MapService
 
 
@@ -20,6 +21,11 @@ class TestMapService:
         return app.test_client()
 
     def test_get_maps_list(self, service: MapService) -> None:
+        # Real map rows -- unlike everything else in this file, this test
+        # asserts on the actual seeded catalog (down to a specific map's
+        # name), so it needs the static seed run rather than a hand-built
+        # fixture row.
+        seed_from_static_json(force=True)
         maps = service.get_maps()
         assert len(maps) >= 6
         names = [m["name"] for m in maps]

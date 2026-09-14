@@ -103,14 +103,18 @@ class TestTranslationsVerification:
                 )
                 db.session.add(addon)
 
+            # The in-game/translations.json name is "Ashley J. Williams", not
+            # the "Ash Williams" nickname -- `sync_all_locales_to_db` matches
+            # by `simplify_lookup_key(name)`, so the row has to carry the same
+            # name the translation bundle does for the match (and later the
+            # `ashley_j_williams` slug lookup) to succeed.
             ash = db.session.scalars(
-                select(Survivor).where(Survivor.name == "Ash Williams")
+                select(Survivor).where(Survivor.name == "Ashley J. Williams")
             ).first()
             if not ash:
                 ash = Survivor(
-                    name="Ash Williams",
+                    name="Ashley J. Williams",
                     chapter_id=chapter.id,
-                    real_name="Ash Williams",
                 )
                 db.session.add(ash)
 

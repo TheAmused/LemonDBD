@@ -1,14 +1,9 @@
 // frontend/src/components/streaks/panels.ts
 import type { Dictionary } from '@/locales/types';
-import type { PanelColor } from './panelColors';
 
 export interface StreakPanelDef {
   id: string;
   title: string;
-  /** Tailwind border color class for the card. */
-  accentBorder: string;
-  /** Color family driving this panel's hover and focus states, matching its accent. */
-  color: PanelColor;
   comingSoon?: boolean;
   /** Themed artwork shown as a background watermark on the card. */
   image?: string;
@@ -23,44 +18,32 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t?.gauntletStreakTitle || 'Gauntlet streak',
-      accentBorder: 'border-amber-500/20',
-      color: 'amber',
       image: '/images/streaks/gauntlet-streak.jpg',
     },
     {
       id: 'page-streak',
       title: t?.pageStreakPanelTitle || 'Page streak',
-      accentBorder: 'border-orange-500/20',
-      color: 'orange',
       image: '/images/streaks/page-streak.jpg',
     },
     {
       id: 'history-streak',
       title: t?.historyStreakPanelTitle || 'History streak',
-      accentBorder: 'border-slate-700/60',
-      color: 'slate',
       image: '/images/streaks/history-streak.jpg',
     },
     {
       id: 'chaos-streak',
       title: t?.chaosStreakPanelTitle || 'Chaos streak',
-      accentBorder: 'border-violet-500/20',
-      color: 'violet',
       image: '/images/streaks/chaos-streak.jpg',
     },
     {
       id: 'nice-guy-streak',
       title: t?.niceGuyStreakTitle || 'Nice Guy streak',
-      accentBorder: 'border-emerald-500/20',
-      color: 'emerald',
       comingSoon: true,
       image: '/images/streaks/nice-guy-streak.jpg',
     },
     {
       id: 'blood-money-streak',
       title: t?.bloodMoneyStreakTitle || 'Blood Money streak',
-      accentBorder: 'border-rose-500/20',
-      color: 'rose',
       comingSoon: true,
       image: '/images/streaks/blood-money-streak.jpg',
     },
@@ -76,15 +59,11 @@ export function getSurvivorStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t?.gauntletStreakTitle || 'Gauntlet streak',
-      accentBorder: 'border-amber-500/20',
-      color: 'amber',
       image: '/images/streaks/gauntlet-streak.jpg',
     },
     {
       id: 'copycat-streak',
       title: t?.copycatStreakTitle || 'Copycat streak',
-      accentBorder: 'border-sky-500/20',
-      color: 'sky',
       comingSoon: true,
       image: '/images/streaks/copycat-streak.jpg',
     },
@@ -100,8 +79,6 @@ export function getChallengeStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'copycat-streak',
       title: t?.copycatStreakTitle || 'Copycat streak',
-      accentBorder: 'border-cyan-500/20',
-      color: 'cyan',
       comingSoon: true,
       image: '/images/streaks/copycat-streak.jpg',
     },

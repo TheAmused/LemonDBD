@@ -31,7 +31,7 @@ export const StreaksHubSkeleton: React.FC<StreaksSkeletonProps> = ({
       <DbdSpinner
         size="responsive"
         layout="inline"
-        accent="violet"
+        accent="blood"
         needleSpeed={1.1}
         label={loadingLabel}
         dict={dict}
@@ -60,7 +60,7 @@ export const StreakBoardSkeleton: React.FC<StreaksSkeletonProps> = ({
       <DbdSpinner
         size="responsive"
         layout="inline"
-        accent="violet"
+        accent="blood"
         needleSpeed={1.1}
         label={loadingLabel}
         dict={dict}

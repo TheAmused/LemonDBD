@@ -13,7 +13,7 @@ export default function PerksLoading() {
         <DbdSpinner
           size="responsive"
           layout="inline"
-          accent="crimson"
+          accent="blood"
           needleSpeed={1.2}
           label="Calibrating Perks Vault..."
           sublabel="Synchronizing survivor & killer trial perks"

@@ -93,7 +93,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
         speedX: (Math.random() - 0.5) * 0.3,
         alpha: Math.random() * 0.4 + 0.1,
         baseAlpha: Math.random() * 0.4 + 0.1,
-        color: Math.random() > 0.5 ? '#f43f5e' : '#fb923c',
+        color: Math.random() > 0.5 ? '#dc2626' : '#f59e0b',
         type: 'ember',
         rotation: 0,
         rotationSpeed: 0,
@@ -102,7 +102,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     // Dynamic Smash Hearts Pool (Falling / Floating)
     const smashHearts: Particle[] = [];
-    const pinkPalette = ['#f43f5e', '#fb7185', '#fda4af', '#ec4899', '#f472b6', '#ff2d55'];
+    const pinkPalette = ['#dc2626', '#ef4444', '#f87171', '#b91c1c', '#fca5a5', '#e11d48'];
     for (let i = 0; i < 40; i++) {
       smashHearts.push({
         x: Math.random() * width,
@@ -121,7 +121,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
     // Dynamic Sad Ash / Broken Heart Rain Pool
     const sadParticles: Particle[] = [];
-    const sadPalette = ['#64748b', '#475569', '#334155', '#1e293b', '#94a3b8', '#0f172a'];
+    const sadPalette = ['#71717a', '#52525b', '#3f3f46', '#27272a', '#a1a1aa', '#18181b'];
     for (let i = 0; i < 35; i++) {
       sadParticles.push({
         x: Math.random() * width,
@@ -182,7 +182,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
       context.scale(size / 20, size / 20);
       context.globalAlpha = Math.max(0, Math.min(1, alpha));
       context.fillStyle = color;
-      context.strokeStyle = '#020617';
+      context.strokeStyle = '#18181b';
       context.lineWidth = 2;
 
       context.beginPath();
@@ -193,7 +193,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
       context.stroke();
 
       // Jagged crack down center
-      context.strokeStyle = '#0f172a';
+      context.strokeStyle = '#27272a';
       context.beginPath();
       context.moveTo(0, -5);
       context.lineTo(-2, 4);
@@ -265,7 +265,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
               speedY: Math.sin(angle) * spd + 2.5, // dropping heavy
               alpha: 1,
               baseAlpha: 1,
-              color: '#0f172a',
+              color: '#18181b',
               type: 'shattered_shard',
               rotation: Math.random() * Math.PI,
               rotationSpeed: (Math.random() - 0.5) * 0.2,
@@ -306,8 +306,8 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           height * 0.5,
           Math.max(width, height) * 0.6
         );
-        grad.addColorStop(0, `rgba(244, 63, 94, ${curState.smashIntensity * 0.18})`);
-        grad.addColorStop(0.5, `rgba(225, 29, 72, ${curState.smashIntensity * 0.08})`);
+        grad.addColorStop(0, `rgba(220, 38, 38, ${curState.smashIntensity * 0.18})`);
+        grad.addColorStop(0.5, `rgba(185, 28, 28, ${curState.smashIntensity * 0.08})`);
         grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
@@ -320,8 +320,8 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           height * 0.5,
           Math.max(width, height) * 0.6
         );
-        grad.addColorStop(0, `rgba(15, 23, 42, ${curState.passIntensity * 0.3})`);
-        grad.addColorStop(0.5, `rgba(30, 41, 59, ${curState.passIntensity * 0.15})`);
+        grad.addColorStop(0, `rgba(9, 9, 11, ${curState.passIntensity * 0.3})`);
+        grad.addColorStop(0.5, `rgba(39, 39, 42, ${curState.passIntensity * 0.15})`);
         grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
@@ -390,8 +390,8 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
           ctx.translate(p.x, p.y);
           ctx.rotate(p.rotation);
           ctx.globalAlpha = alpha;
-          ctx.fillStyle = '#020617';
-          ctx.strokeStyle = '#475569';
+          ctx.fillStyle = '#18181b';
+          ctx.strokeStyle = '#52525b';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(-p.size / 2, -p.size / 2);

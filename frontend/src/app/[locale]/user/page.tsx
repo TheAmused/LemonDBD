@@ -165,7 +165,7 @@ export default function UserProfilePage() {
             <button
               type="button"
               onClick={() => setAuthModalOpen(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent-amber to-accent-red py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg shadow-accent-amber/20 hover:opacity-95 transition-all cursor-pointer font-mono"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer font-mono"
             >
               <User className="h-4 w-4" />
               <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
@@ -229,7 +229,7 @@ export default function UserProfilePage() {
                 type="button"
                 onClick={handleResetAvatar}
                 disabled={isUploadingAvatar}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-500/30 bg-rose-50 dark:bg-rose-950/40 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all cursor-pointer font-mono"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-accent-red/30 bg-accent-red/10 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-all cursor-pointer font-mono"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 <span>{dict?.user?.removeAvatar || 'Reset to Default Avatar'}</span>

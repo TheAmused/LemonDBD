@@ -47,7 +47,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       label: dict?.streaks?.chaosEasyLabel || 'Easy',
       description: dict?.streaks?.chaosEasyDesc || 'A checkpoint banks every 5 wins.',
       icon: Coins,
-      accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('easy'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'easy'),
       completedFull: completedFullTiers.has('easy'),
@@ -58,7 +58,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       label: dict?.streaks?.chaosMediumLabel || 'Medium',
       description: dict?.streaks?.chaosMediumDesc || 'A checkpoint banks every 10 wins.',
       icon: Flame,
-      accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'medium'),
       completedFull: completedFullTiers.has('medium'),
@@ -69,7 +69,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       label: dict?.streaks?.chaosHellLabel || 'Hell',
       description: dict?.streaks?.chaosHellDesc || 'No checkpoints. One loss resets everything.',
       icon: Skull,
-      accentClassName: 'border-violet-500/30 bg-violet-500/5 hover:bg-violet-500/10 text-violet-400',
+      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'hell'),
       completedFull: completedFullTiers.has('hell'),
@@ -83,7 +83,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         icon={Flame}
-        iconClassName="bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400"
+        iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
         title={dict?.streaks?.chooseDifficulty || 'Choose a difficulty'}
         intro={
           showIntro

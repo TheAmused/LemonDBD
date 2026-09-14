@@ -116,8 +116,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              accentBorder={panel.accentBorder}
-              color={panel.color}
               image={panel.image}
               comingSoon
               dict={dict}
@@ -134,8 +132,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              accentBorder={panel.accentBorder}
-              color={panel.color}
               image={panel.image}
               href={`/${locale}/streaks/${role}/${panel.id}`}
               disabled
@@ -150,8 +146,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              accentBorder={panel.accentBorder}
-              color={panel.color}
               image={panel.image}
               dict={dict}
               completed={gauntletCardCompleted}
@@ -178,8 +172,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              accentBorder={panel.accentBorder}
-              color={panel.color}
               image={panel.image}
               dict={dict}
               completed={chaosCardCompleted}
@@ -205,8 +197,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              accentBorder={panel.accentBorder}
-              color={panel.color}
               image={panel.image}
               dict={dict}
               completed={historyCardCompleted}
@@ -232,8 +222,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
             <StreakPanel
               key={panel.id}
               title={panel.title}
-              accentBorder={panel.accentBorder}
-              color={panel.color}
               image={panel.image}
               dict={dict}
               completed={pageStreakCardCompleted}
@@ -256,8 +244,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           <StreakPanel
             key={panel.id}
             title={panel.title}
-            accentBorder={panel.accentBorder}
-            color={panel.color}
             image={panel.image}
             href={`/${locale}/streaks/${role}/${panel.id}`}
             dict={dict}

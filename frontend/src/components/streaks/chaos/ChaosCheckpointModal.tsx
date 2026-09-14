@@ -30,24 +30,24 @@ export const ChaosCheckpointModal: React.FC<ChaosCheckpointModalProps> = ({ chec
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-violet-400 bg-gradient-to-b from-violet-500/15 via-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-violet-500/20 cursor-default"
+        className="relative w-full max-w-sm rounded-2xl border-2 border-accent-green bg-gradient-to-b from-accent-green/15 via-bg-surface to-bg-primary p-8 text-center shadow-2xl cursor-default"
       >
-        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-violet-400 bg-violet-500/15 text-violet-400">
+        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
           <ShieldCheck className="h-10 w-10" />
         </div>
-        <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-violet-400">
+        <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-accent-green">
           <PartyPopper className="h-3.5 w-3.5" />
           {dict?.streaks?.checkpointBanked || 'Checkpoint banked'}
         </div>
-        <h2 className="mt-2 text-3xl font-black tracking-tight text-white">
+        <h2 className="mt-2 text-3xl font-black tracking-tight text-text-primary">
           {checkpoint} {dict?.streaks?.winsSuffix || 'wins'}
         </h2>
-        <p className="mt-2 text-sm text-slate-300">
-          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-violet-300">{checkpoint}</strong>{dict?.streaks?.notToZero || ', not to zero.'}
+        <p className="mt-2 text-sm text-text-secondary">
+          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-accent-green">{checkpoint}</strong>{dict?.streaks?.notToZero || ', not to zero.'}
         </p>
         <button
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-violet-500 py-3 text-sm font-extrabold text-slate-950 shadow-lg shadow-violet-500/20 transition-all hover:bg-violet-400 cursor-pointer"
+          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-all hover:bg-accent-green-hover cursor-pointer"
         >
           {dict?.streaks?.keepGoing || 'Keep going'}
         </button>

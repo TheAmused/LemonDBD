@@ -150,13 +150,13 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
   return (
     <section className="space-y-4 w-full" aria-labelledby="survivor-equipment-heading">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-color pb-3">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30" aria-hidden="true">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green border border-accent-green/30" aria-hidden="true">
             <Package className="h-4 w-4" />
           </span>
           <div>
-            <h2 id="survivor-equipment-heading" className="text-lg sm:text-xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
+            <h2 id="survivor-equipment-heading" className="text-lg sm:text-xl font-black text-text-primary font-mono tracking-tight">
               {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
             </h2>
           </div>
@@ -167,7 +167,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         <div
           role="tablist"
           aria-label={t.equipmentCategories || 'Survivor item categories'}
-          className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 shrink-0 overflow-x-auto md:overflow-x-visible"
+          className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0 overflow-x-auto md:overflow-x-visible"
         >
           {categories.map((cat) => {
             const Icon = cat.icon;
@@ -181,8 +181,8 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
                 className={`relative h-12 w-14 sm:h-14 sm:w-16 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
                   isSelected
-                    ? 'bg-emerald-500/20 border-2 border-emerald-500 text-emerald-700 dark:text-emerald-400 shadow-lg shadow-emerald-900/10 dark:shadow-emerald-950/60 scale-105'
-                    : 'bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50'
+                    ? 'bg-accent-green/20 border-2 border-accent-green text-accent-green shadow-lg scale-105'
+                    : 'bg-bg-surface border border-border-color hover:border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
                 }`}
                 title={`${cat.label} - ${cat.desc}`}
                 aria-label={cat.label}
@@ -192,7 +192,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                   {cat.label.split(' ')[0]}
                 </span>
                 {isSelected && (
-                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-emerald-500 dark:bg-emerald-400 ring-2 ring-white dark:ring-slate-950" aria-hidden="true" />
+                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-accent-green ring-2 ring-bg-surface" aria-hidden="true" />
                 )}
               </button>
             );
@@ -200,16 +200,16 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
         </div>
 
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="flex flex-col p-4 rounded-3xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+          <div className="flex flex-col p-4 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg">
+            <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
+              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent-green flex items-center gap-1.5">
                 <Package className="h-4 w-4" aria-hidden="true" />
                 {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 dark:text-slate-500 text-xs italic">
+              <div className="flex-1 flex items-center justify-center p-8 text-center text-text-muted text-xs italic">
                 {t.noItemsFound || 'No items found in this category matching your filter.'}
               </div>
             ) : (
@@ -232,16 +232,16 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       }}
                       onMouseEnter={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-emerald-400' });
+                        setActiveHover({ item, rect, accentColor: 'text-accent-green' });
                       }}
                       onMouseLeave={() => setActiveHover(null)}
-                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       aria-label={`${t.inspectItemPrefix || 'Inspect item:'} ${item.name}`}
                     >
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
                         alt={item.name}
-                        className="h-full w-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]"
+                        className="h-full w-full object-contain"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = 'none';
                         }}
@@ -253,36 +253,36 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             )}
           </div>
 
-          <div className="flex flex-col p-4 rounded-3xl bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-lg">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5 mb-3">
-              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+          <div className="flex flex-col p-4 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg">
+            <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
+              <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 {selectedCategory === 'trial_exclusive'
                   ? t.artifactMechanics || 'Artifact Mechanics'
                   : `${t.compatibleAddons || 'Compatible Add-ons'} (${categorizedData.displayedAddons.length})`}
               </h3>
               {selectedCategory === 'trial_exclusive' && (
-                <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+                <span className="text-[10px] font-mono text-accent-amber">
                   {t.specialTrialRules || 'Special Trial Rules'}
                 </span>
               )}
             </div>
 
             {selectedCategory === 'trial_exclusive' ? (
-              <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-500/30 text-xs space-y-3">
-                <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-mono font-black text-sm">
+              <div className="flex-1 flex flex-col justify-center p-4 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs space-y-3">
+                <div className="flex items-center gap-2 text-accent-amber font-mono font-black text-sm">
                   <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
                   <span>{t.inTrialArtifactsHeading || 'In-Trial Killer Counters & Artifacts'}</span>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-text-secondary leading-relaxed">
                   {t.trialArtifactsDesc1 || 'These unique artifacts (such as Hand & Eye of Vecna, Lament Configuration, Remote Flame Turrets, EMPs, First Aid Sprays, and Vaccines) cannot be equipped in the pre-game lobby.'}
                 </p>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-text-secondary leading-relaxed">
                   {t.trialArtifactsDesc2 || "They are spawned inside the Trial grounds to interact directly with specific Killers' powers and counteract their special abilities."}
                 </p>
               </div>
             ) : categorizedData.displayedAddons.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-slate-500 dark:text-slate-500 text-xs italic">
+              <div className="flex-1 flex items-center justify-center p-8 text-center text-text-muted text-xs italic">
                 {t.noCompatibleAddons || 'No compatible add-ons found for this item type.'}
               </div>
             ) : (

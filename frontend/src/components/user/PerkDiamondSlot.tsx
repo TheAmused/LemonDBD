@@ -38,7 +38,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
         onClick={onClick}
         className={`relative flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rotate-45 rounded-xl border-2 transition-all cursor-pointer shadow-md ${
           perk
-            ? 'border-purple-500/80 bg-gradient-to-br from-purple-950/80 via-bg-surface to-purple-900/80 hover:scale-105 hover:border-purple-400 hover:shadow-purple-500/25'
+            ? 'border-accent-red/80 bg-bg-elevated hover:scale-105 hover:border-accent-red'
             : 'border-dashed border-border-color bg-bg-elevated/40 hover:border-accent-amber/60 hover:bg-accent-amber/5 hover:scale-105'
         }`}
         title={perk?.name || emptyLabel}
@@ -57,7 +57,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
               unoptimized
             />
           ) : perk ? (
-            <Sparkles className="h-5 w-5 text-purple-400" />
+            <Sparkles className="h-5 w-5 text-accent-red" />
           ) : (
             <Plus className="h-5 w-5 text-text-muted group-hover:text-accent-amber transition-colors" />
           )}
@@ -73,7 +73,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             onClear(e);
           }}
           title={clearLabel}
-          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
+          className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-white shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
         >
           <X className="h-3 w-3" />
         </button>

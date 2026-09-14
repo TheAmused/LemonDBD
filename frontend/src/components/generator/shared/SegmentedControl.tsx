@@ -21,7 +21,7 @@ interface SegmentedControlProps<T extends string> {
   ariaLabel: string;
   className?: string;
   /** Drops the pill-container background/padding and the filled-pill active
-   * state -- just bare tabs with an amber underline on the active one. Used
+   * state -- just bare tabs with a red underline on the active one. Used
    * where the control has to float directly over a stage/view instead of
    * sitting in its own banner bar. */
   bare?: boolean;
@@ -56,10 +56,10 @@ export function SegmentedControl<T extends string>({
             className={cn(
               'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 text-[10px] xs:text-[11px] sm:text-xs 2xl:text-sm min-[1800px]:text-base font-black tracking-wide sm:tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[42px] 2xl:min-h-[48px] select-none text-center',
               bare
-                ? cn('pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5', isActive ? 'text-amber-600 dark:text-amber-400 font-extrabold' : 'text-text-secondary hover:text-text-primary')
+                ? cn('pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5', isActive ? 'text-accent-red font-extrabold' : 'text-text-secondary hover:text-text-primary')
                 : cn(
                     'rounded-xl px-2 sm:px-3 2xl:px-4 py-1.5 sm:py-2 2xl:py-2.5',
-                    isActive ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-text-secondary hover:text-text-primary'
+                    isActive ? 'bg-accent-red text-text-inverted shadow-xs' : 'text-text-secondary hover:text-text-primary'
                   )
             )}
           >
@@ -70,7 +70,7 @@ export function SegmentedControl<T extends string>({
               <span
                 aria-hidden="true"
                 className={cn(
-                  'absolute inset-x-0 bottom-0 h-[2.5px] rounded-full bg-amber-600 dark:bg-amber-400 transition-opacity duration-200',
+                  'absolute inset-x-0 bottom-0 h-[2.5px] rounded-full bg-accent-red transition-opacity duration-200',
                   isActive ? 'opacity-100' : 'opacity-0'
                 )}
               />

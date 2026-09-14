@@ -31,7 +31,7 @@ export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({
       <DbdSpinner
         size="responsive"
         layout="inline"
-        accent="amber"
+        accent="blood"
         needleSpeed={0.9}
         label={loadingLabel}
         dict={dict}

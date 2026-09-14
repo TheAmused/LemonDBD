@@ -139,10 +139,10 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
     const lightnings: LightningBolt[] = [];
 
     // Theme Palettes
-    // Neon Crimson: #ff0055, Deep Velvet Purple: #2e0854, Cyber Mint: #00f5d4, Eldritch Gold: #ffd166
-    const crimsonPalette = ['#ff0055', '#ff2a7a', '#e11d48', '#fb7185', '#2e0854', '#ffffff'];
-    const goldPalette = ['#ffd166', '#f59e0b', '#fbbf24', '#ff0055', '#00f5d4', '#ffffff'];
-    const passPalette = ['#00f5d4', '#06b6d4', '#334155', '#1e293b', '#64748b', '#09090b'];
+    // Neon Crimson: #dc2626, Deep Velvet Purple: #27272a, Cyber Mint: #71717a, Eldritch Gold: #fbbf24
+    const crimsonPalette = ['#dc2626', '#ff2a7a', '#e11d48', '#fb7185', '#27272a', '#ffffff'];
+    const goldPalette = ['#fbbf24', '#f59e0b', '#fbbf24', '#dc2626', '#71717a', '#ffffff'];
+    const passPalette = ['#71717a', '#52525b', '#3f3f46', '#27272a', '#a1a1aa', '#09090b'];
 
     // 1. Initialize Shockwaves
     if (triggerType === 'super_smash') {
@@ -153,7 +153,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 10,
           maxRadius: Math.max(width, height) * 0.75,
           speed: 18,
-          color: '#ffd166',
+          color: '#fbbf24',
           lineWidth: 8,
           alpha: 1.0,
           decay: 0.02,
@@ -164,7 +164,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 5,
           maxRadius: Math.max(width, height) * 0.55,
           speed: 12,
-          color: '#ff0055',
+          color: '#dc2626',
           lineWidth: 5,
           alpha: 0.9,
           decay: 0.025,
@@ -192,7 +192,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
         lightnings.push({
           segments: createLightningPath(spawnX, spawnY, endX, endY, 60, 0.45),
-          color: b % 2 === 0 ? '#ffd166' : '#ffffff',
+          color: b % 2 === 0 ? '#fbbf24' : '#ffffff',
           width: Math.random() * 2.5 + 1.5,
           alpha: 1.0,
           decay: 0.035,
@@ -206,7 +206,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 10,
           maxRadius: Math.max(width, height) * 0.6,
           speed: 14,
-          color: '#ff0055',
+          color: '#dc2626',
           lineWidth: 7,
           alpha: 1.0,
           decay: 0.024,
@@ -217,7 +217,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
           radius: 0,
           maxRadius: Math.max(width, height) * 0.45,
           speed: 9,
-          color: '#2e0854',
+          color: '#27272a',
           lineWidth: 4,
           alpha: 0.8,
           decay: 0.03,
@@ -231,7 +231,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
         radius: 5,
         maxRadius: Math.max(width, height) * 0.4,
         speed: 10,
-        color: '#00f5d4',
+        color: '#71717a',
         lineWidth: 3,
         alpha: 0.7,
         decay: 0.03,
@@ -498,7 +498,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
     <div
       className={`pointer-events-none fixed inset-0 z-50 overflow-hidden transition-all duration-300 ${
         chromaticShift
-          ? 'backdrop-blur-[1px] filter drop-shadow-[-3px_0_0_rgba(255,0,85,0.6)] drop-shadow-[3px_0_0_rgba(0,245,212,0.6)]'
+          ? 'backdrop-blur-[1px] filter drop-shadow-[-3px_0_0_rgba(220,38,38,0.6)] drop-shadow-[3px_0_0_rgba(113,113,122,0.6)]'
           : ''
       }`}
       aria-hidden="true"
@@ -507,14 +507,14 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
       {/* Screen Vignette Overlay: SMASH */}
       {activeOverlay === 'smash' && (
-        <div className="absolute inset-0 bg-radial from-[#ff0055]/20 via-[#2e0854]/10 to-transparent animate-out fade-out duration-400">
+        <div className="absolute inset-0 bg-radial from-[#dc2626]/20 via-[#27272a]/10 to-transparent animate-out fade-out duration-400">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
-                <Heart className="h-16 w-16 sm:h-20 sm:w-20 text-[#ff0055] fill-[#ff0055] drop-shadow-[0_0_30px_rgba(255,0,85,0.9)] animate-pulse" />
-                <Skull className="absolute h-8 w-8 sm:h-10 sm:w-10 text-slate-950/80 drop-shadow" />
+                <Heart className="h-16 w-16 sm:h-20 sm:w-20 text-[#dc2626] fill-[#dc2626] drop-shadow-[0_0_30px_rgba(220,38,38,0.9)] animate-pulse" />
+                <Skull className="absolute h-8 w-8 sm:h-10 sm:w-10 text-bg-primary/80 drop-shadow" />
               </div>
-              <span className="text-xl sm:text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-[#ff0055] to-red-400 drop-shadow-[0_0_20px_rgba(255,0,85,0.8)] font-mono">
+              <span className="text-xl sm:text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-[#dc2626] to-red-400 drop-shadow-[0_0_20px_rgba(220,38,38,0.8)] font-mono">
                 {smashLabel}
               </span>
             </div>
@@ -524,14 +524,14 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
       {/* Screen Vignette Overlay: SUPER SMASH */}
       {activeOverlay === 'super_smash' && (
-        <div className="absolute inset-0 bg-radial from-[#ffd166]/25 via-[#ff0055]/15 to-[#09090b]/30 animate-out fade-out duration-450">
+        <div className="absolute inset-0 bg-radial from-[#fbbf24]/25 via-[#dc2626]/15 to-[#09090b]/30 animate-out fade-out duration-450">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
-                <Flame className="h-20 w-20 sm:h-24 sm:w-24 text-[#ffd166] fill-[#ffd166] drop-shadow-[0_0_35px_rgba(255,209,102,0.95)] animate-bounce" />
-                <Zap className="absolute h-10 w-10 sm:h-12 sm:w-12 text-[#ff0055] fill-[#ff0055] drop-shadow-[0_0_20px_rgba(255,0,85,0.9)] animate-pulse" />
+                <Flame className="h-20 w-20 sm:h-24 sm:w-24 text-[#fbbf24] fill-[#fbbf24] drop-shadow-[0_0_35px_rgba(251,191,36,0.95)] animate-bounce" />
+                <Zap className="absolute h-10 w-10 sm:h-12 sm:w-12 text-[#dc2626] fill-[#dc2626] drop-shadow-[0_0_20px_rgba(220,38,38,0.9)] animate-pulse" />
               </div>
-              <span className="text-2xl sm:text-3xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#ffd166] via-amber-200 to-[#ff0055] drop-shadow-[0_0_25px_rgba(255,209,102,0.9)] font-mono">
+              <span className="text-2xl sm:text-3xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#fbbf24] via-amber-200 to-[#dc2626] drop-shadow-[0_0_25px_rgba(251,191,36,0.9)] font-mono">
                 {superSmashLabel}
               </span>
             </div>
@@ -541,11 +541,11 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({
 
       {/* Screen Vignette Overlay: PASS */}
       {activeOverlay === 'pass' && (
-        <div className="absolute inset-0 bg-radial from-[#00f5d4]/15 via-[#09090b]/40 to-transparent animate-out fade-out duration-350">
+        <div className="absolute inset-0 bg-radial from-[#71717a]/15 via-[#09090b]/40 to-transparent animate-out fade-out duration-350">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-150 opacity-90">
-              <Skull className="h-16 w-16 sm:h-20 sm:w-20 text-[#00f5d4] drop-shadow-[0_0_25px_rgba(0,245,212,0.8)]" />
-              <span className="text-lg sm:text-xl font-black uppercase tracking-widest text-[#00f5d4] drop-shadow font-mono">
+              <Skull className="h-16 w-16 sm:h-20 sm:w-20 text-[#71717a] drop-shadow-[0_0_25px_rgba(113,113,122,0.8)]" />
+              <span className="text-lg sm:text-xl font-black uppercase tracking-widest text-[#71717a] drop-shadow font-mono">
                 {passLabel}
               </span>
             </div>

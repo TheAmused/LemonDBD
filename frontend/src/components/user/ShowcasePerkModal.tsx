@@ -43,12 +43,12 @@ const PerkGridItem: React.FC<{
       }}
       className={`relative flex flex-col items-center p-3 rounded-2xl border transition-all cursor-pointer text-center group ${
         isSelected
-          ? 'border-purple-500 bg-purple-500/20 shadow-md shadow-purple-950/40'
-          : 'border-border-color bg-bg-surface hover:border-purple-500/50 hover:bg-bg-elevated'
+          ? 'border-accent-red bg-accent-red/20 shadow-md'
+          : 'border-border-color bg-bg-surface hover:border-accent-red/50 hover:bg-bg-elevated'
       }`}
     >
       {/* Perk Diamond Icon */}
-      <div className="w-12 h-12 rotate-45 rounded-lg border border-purple-500/60 bg-gradient-to-br from-purple-900/80 via-bg-surface to-purple-950/80 flex items-center justify-center shadow-md mb-2 group-hover:scale-105 transition-transform">
+      <div className="w-12 h-12 rotate-45 rounded-lg border border-accent-red/60 bg-bg-elevated flex items-center justify-center shadow-md mb-2 group-hover:scale-105 transition-transform">
         <div className="-rotate-45 relative w-8 h-8 flex items-center justify-center pointer-events-none">
           {iconSrc && !imgError ? (
             <Image
@@ -61,13 +61,13 @@ const PerkGridItem: React.FC<{
               unoptimized
             />
           ) : (
-            <Sparkles className="h-4 w-4 text-purple-400" />
+            <Sparkles className="h-4 w-4 text-accent-red" />
           )}
         </div>
       </div>
 
       {/* Name */}
-      <span className="text-xs font-bold font-mono text-text-primary group-hover:text-purple-400 line-clamp-1">
+      <span className="text-xs font-bold font-mono text-text-primary group-hover:text-accent-red line-clamp-1">
         {perk.name}
       </span>
 
@@ -78,7 +78,7 @@ const PerkGridItem: React.FC<{
 
       {/* Selected Indicator */}
       {isSelected && (
-        <div className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-white">
+        <div className="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-white">
           <Check className="h-2.5 w-2.5 stroke-[3]" />
         </div>
       )}
@@ -142,7 +142,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       size="2xl"
       title={`${dict?.user?.selectPerk || 'Select Perk'} (${role})`}
       subtitle={dict?.user?.choosePerkDesc || 'Choose a perk to equip into your signature 4-perk diamond loadout.'}
-      icon={<Sparkles className="h-5 w-5 text-purple-400" />}
+      icon={<Sparkles className="h-5 w-5 text-accent-red" />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
     >
@@ -155,7 +155,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={dict?.user?.searchPerks || 'Search perks...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-purple-500/60 transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-red/60 transition-colors"
             autoFocus
           />
         </div>
@@ -179,15 +179,15 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
-            <span className="h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+            <span className="h-8 w-8 animate-spin rounded-full border-2 border-accent-red border-t-transparent" />
             <p className="text-xs text-text-muted font-mono">
               {dict?.user?.loadingPerks || 'Channeling teachable knowledge...'}
             </p>
           </div>
         ) : !isSearchActive ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/25">
-              <Search className={`h-6 w-6 text-purple-400 ${cleanQuery.length > 0 ? 'animate-pulse' : ''}`} />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/25">
+              <Search className={`h-6 w-6 text-accent-red ${cleanQuery.length > 0 ? 'animate-pulse' : ''}`} />
             </div>
             <p className="text-xs sm:text-sm font-mono text-text-secondary">
               {cleanQuery.length === 0

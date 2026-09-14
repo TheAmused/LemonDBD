@@ -35,7 +35,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
   return (
     <div>
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm">
+        <div className="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-sm">
           {avatarSrc && !imgError ? (
             <img
               src={avatarSrc}
@@ -44,36 +44,36 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
               className="h-full w-full object-cover"
             />
           ) : (
-            <Skull className="h-7 w-7 text-slate-400 dark:text-slate-600" aria-hidden="true" />
+            <Skull className="h-7 w-7 text-text-muted" aria-hidden="true" />
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100">
+          <h2 className="text-lg font-extrabold tracking-wide text-text-primary">
             {killerDisplayName}
           </h2>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
           <FreezeBadge frozen={run.pool_frozen} dict={dict} />
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-orange-500/30 text-orange-600 dark:text-orange-400 shadow-sm">
-            <Flame className="w-5 h-5 text-orange-500 fill-orange-500/20" aria-hidden="true" />
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-accent-red/30 text-accent-red shadow-sm">
+            <Flame className="w-5 h-5 text-accent-red fill-accent-red/20" aria-hidden="true" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
+              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.current || 'Current'}
               </span>
-              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
                 {cleared}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-yellow-500/30 text-yellow-600 dark:text-yellow-400 shadow-sm">
-            <Trophy className="w-5 h-5 text-yellow-500 dark:text-yellow-400" aria-hidden="true" />
+          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm">
+            <Trophy className="w-5 h-5 text-accent-amber" aria-hidden="true" />
             <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold leading-none">
+              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.best || 'Best'}
               </span>
-              <span className="text-lg font-black text-slate-900 dark:text-white leading-none mt-0.5 font-mono">
+              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
                 {run.best_page}
               </span>
             </div>
@@ -82,18 +82,18 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenRules}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-orange-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-orange-400 border border-slate-200 dark:border-slate-700 font-bold text-xs transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             title={dict?.streaks?.rules || 'Rules'}
             aria-label={dict?.streaks?.rules || 'Rules'}
           >
-            <BookOpen className="w-4 h-4 text-orange-500 dark:text-orange-400" aria-hidden="true" />
+            <BookOpen className="w-4 h-4" aria-hidden="true" />
             <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
           </button>
 
           <button
             type="button"
             onClick={onOpenStats}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             title={dict?.streaks?.stats || 'Statistics'}
             aria-label={dict?.streaks?.stats || 'Statistics'}
           >
@@ -103,7 +103,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenHistory}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             title={dict?.streaks?.pastWins || 'Past Wins'}
             aria-label={dict?.streaks?.pastWins || 'Past Wins'}
           >
@@ -113,7 +113,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <button
             type="button"
             onClick={onOpenReset}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-600 dark:bg-slate-800 dark:hover:bg-rose-950/60 dark:text-slate-200 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             title={dict?.streaks?.resetRun || 'Reset this streak'}
             aria-label={dict?.streaks?.resetRun || 'Reset this streak'}
           >
@@ -123,7 +123,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
       </div>
 
       <div className="mt-4">
-        <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-wider text-slate-500">
+        <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-wider text-text-muted">
           <span>
             {run.status === 'completed'
               ? (dict?.streaks?.allPagesCleared || 'All pages cleared')
@@ -132,7 +132,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           <span className="tabular-nums font-semibold">{pct}{dict?.streaks?.percentSign || '%'}</span>
         </div>
         <div
-          className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"
+          className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-bg-elevated"
           role="progressbar"
           aria-valuenow={pct}
           aria-valuemin={0}
@@ -140,7 +140,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           aria-label={`${dict?.stats?.progress || 'Progress'}: ${pct}%`}
         >
           <div
-            className="h-full rounded-full bg-gradient-to-r from-orange-400 to-orange-600 transition-[width] duration-500"
+            className="h-full rounded-full bg-accent-red transition-[width] duration-500"
             style={{ width: `${pct}%` }}
           />
         </div>

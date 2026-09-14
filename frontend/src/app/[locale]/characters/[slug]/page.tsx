@@ -96,21 +96,21 @@ export default function CharacterDetailPage() {
           <CharacterDetailSkeleton dict={dict} />
         ) : notFound || !detailData ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-5 text-center p-6">
-            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 border border-slate-800 text-slate-400">
+            <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-bg-elevated border border-border-color text-text-muted">
               <UserX className="h-8 w-8" />
             </div>
             <div className="space-y-1 max-w-md">
-              <h2 className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
+              <h2 className="text-xl sm:text-2xl font-black text-text-primary font-mono">
                 {t.notFoundTitle || 'Character Not Found'}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
                 {t.notFoundDesc ||
                   'The character you are looking for does not exist or could not be found in the archives.'}
               </p>
             </div>
             <Link
               href={`/${locale}/characters`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-bold transition-all shadow-xs active:scale-95 cursor-pointer"
             >
               <ChevronLeft className="h-4 w-4" />
               <span>{t.backToCharacters || 'Back to Characters'}</span>

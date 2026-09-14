@@ -22,12 +22,12 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
     isOpen={isOpen}
     onClose={onClose}
     title={dict?.streaks?.historyStreak || 'History Streak'}
-    accent="slate"
+    accent="amber"
     stats={stats}
     attempts={attempts}
     dict={dict}
     renderLabel={(log) => (
-      <div className="text-sm font-bold text-slate-900 dark:text-white">{characterDisplayName(log.killer_id)}</div>
+      <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
     )}
     renderMeta={(log) => (
       <span>

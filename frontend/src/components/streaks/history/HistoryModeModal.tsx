@@ -47,7 +47,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       label: dict?.streaks?.historyMediumLabel || 'Medium',
       description: dict?.streaks?.historyMediumDesc || 'A checkpoint banks every row you clear.',
       icon: Shield,
-      accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
+      accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'medium'),
       completedFull: completedFullTiers.has('medium'),
@@ -58,7 +58,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       label: dict?.streaks?.historyHellLabel || 'Hell',
       description: dict?.streaks?.historyHellDesc || 'No checkpoints. One loss resets everything.',
       icon: Skull,
-      accentClassName: 'border-slate-400/30 bg-slate-500/5 hover:bg-slate-500/10 text-slate-500 dark:text-slate-400',
+      accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'hell'),
       completedFull: completedFullTiers.has('hell'),
@@ -72,7 +72,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         icon={Shield}
-        iconClassName="bg-slate-500/10 border-slate-500/20 text-slate-600 dark:text-slate-400"
+        iconClassName="bg-bg-elevated border-border-color text-text-secondary"
         title={dict?.streaks?.chooseMode || 'Choose a mode'}
         intro={
           showIntro

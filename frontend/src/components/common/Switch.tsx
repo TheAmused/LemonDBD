@@ -16,8 +16,8 @@ export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, cl
       aria-checked={checked}
       aria-label={ariaLabel}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber ${
-        checked ? 'bg-accent-amber' : 'bg-bg-elevated border border-border-color'
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${
+        checked ? 'bg-accent-green' : 'bg-bg-elevated border border-border-color'
       } ${className}`}
     >
       <span

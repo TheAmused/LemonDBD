@@ -25,36 +25,36 @@ const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
   const killerPct = 100 - survivorPct;
 
   return (
-    <div className="mt-3 rounded-2xl border border-slate-200/80 bg-slate-100/60 p-3 dark:border-slate-800/80 dark:bg-slate-900/50 backdrop-blur-sm shadow-xs">
+    <div className="mt-3 rounded-2xl border border-border-color bg-bg-elevated p-3 backdrop-blur-sm shadow-xs">
       <div className="flex items-center justify-between mb-2.5">
-        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-          <Database className="h-3 w-3 text-red-500" aria-hidden="true" />
+        <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+          <Database className="h-3 w-3 text-accent-red" aria-hidden="true" />
           {dict?.stats?.vaultStats || 'Vault Statistics'}
         </span>
-        <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+        <span className="flex h-2 w-2 rounded-full bg-accent-green animate-pulse" aria-hidden="true" />
       </div>
 
       <div className="grid grid-cols-2 gap-2 mb-2.5">
-        <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
-          <div className="flex items-center gap-1 text-slate-400 mb-0.5">
+        <div className="rounded-xl border border-border-color bg-bg-surface p-2">
+          <div className="flex items-center gap-1 text-text-muted mb-0.5">
             <Layers className="h-3 w-3" aria-hidden="true" />
             <span className="text-[10px] font-semibold">
               {dict?.stats?.totalPerks || 'Perks'}
             </span>
           </div>
-          <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
+          <p className="text-sm font-black text-text-primary font-mono">
             {totalPerksCount}
           </p>
         </div>
 
-        <div className="rounded-xl border border-slate-200/60 bg-white/80 p-2 dark:border-slate-800/60 dark:bg-slate-950/60">
-          <div className="flex items-center gap-1 text-slate-400 mb-0.5">
+        <div className="rounded-xl border border-border-color bg-bg-surface p-2">
+          <div className="flex items-center gap-1 text-text-muted mb-0.5">
             <Users className="h-3 w-3" aria-hidden="true" />
             <span className="text-[10px] font-semibold">
               {dict?.stats?.characters || 'Cast'}
             </span>
           </div>
-          <p className="text-sm font-black text-slate-900 dark:text-slate-100 font-mono">
+          <p className="text-sm font-black text-text-primary font-mono">
             {characterCount}
           </p>
         </div>
@@ -62,19 +62,19 @@ const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
 
       <div className="space-y-1 pt-0.5">
         <div className="flex justify-between text-[10px] font-extrabold">
-          <span className="text-emerald-500 flex items-center gap-1">
+          <span className="text-accent-green flex items-center gap-1">
             <Shield className="h-2.5 w-2.5" aria-hidden="true" /> {survivorCount}
           </span>
-          <span className="text-slate-400 text-[9px] font-normal">
+          <span className="text-text-muted text-[9px] font-normal">
             {dict?.stats?.ratio || 'Ratio'}
           </span>
-          <span className="text-rose-500 flex items-center gap-1">
+          <span className="text-accent-red flex items-center gap-1">
             {killerCount} <Skull className="h-2.5 w-2.5" aria-hidden="true" />
           </span>
         </div>
 
         <div
-          className="flex h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800"
+          className="flex h-1.5 w-full overflow-hidden rounded-full bg-bg-surface"
           role="progressbar"
           aria-valuenow={survivorPct}
           aria-valuemin={0}
@@ -83,12 +83,12 @@ const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
         >
           <div
             style={{ width: `${survivorPct}%` }}
-            className="bg-emerald-500 transition-all duration-500"
+            className="bg-accent-green transition-all duration-500"
             title={`${dict?.generator?.survivor || 'Survivors'}: ${survivorPct}%`}
           />
           <div
             style={{ width: `${killerPct}%` }}
-            className="bg-rose-500 transition-all duration-500"
+            className="bg-accent-red transition-all duration-500"
             title={`${dict?.generator?.killer || 'Killers'}: ${killerPct}%`}
           />
         </div>

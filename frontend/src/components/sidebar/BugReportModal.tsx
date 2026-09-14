@@ -260,27 +260,27 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
         aria-hidden="true"
       />
 
-      <div className="fixed -top-24 -left-24 h-80 w-80 rounded-full bg-red-600/15 blur-[90px] pointer-events-none" aria-hidden="true" />
-      <div className="fixed -bottom-24 -right-24 h-80 w-80 rounded-full bg-amber-600/15 blur-[90px] pointer-events-none" aria-hidden="true" />
+      <div className="fixed -top-24 -left-24 h-80 w-80 rounded-full bg-accent-red/15 blur-[90px] pointer-events-none" aria-hidden="true" />
+      <div className="fixed -bottom-24 -right-24 h-80 w-80 rounded-full bg-accent-red/15 blur-[90px] pointer-events-none" aria-hidden="true" />
 
       <div
-        className="relative w-full max-w-xl my-8 rounded-3xl border border-rose-500/40 bg-bg-surface p-6 sm:p-8 text-text-primary backdrop-blur-2xl z-10 space-y-6 overflow-hidden shadow-2xl"
+        className="relative w-full max-w-xl my-8 rounded-3xl border border-accent-red/40 bg-bg-surface p-6 sm:p-8 text-text-primary backdrop-blur-2xl z-10 space-y-6 overflow-hidden shadow-2xl"
       >
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent opacity-80 pointer-events-none" aria-hidden="true" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-red to-transparent opacity-80 pointer-events-none" aria-hidden="true" />
 
         <button
           type="button"
           onClick={onClose}
           disabled={isSubmitting}
           aria-label={t.bugCloseButton || ''}
-          className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-rose-500/10 hover:text-rose-500 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+          className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-accent-red/10 hover:text-accent-red transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
 
         {isSuccess ? (
           <div className="text-center py-8 space-y-5">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-lg shadow-emerald-950/40" aria-hidden="true">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-green/10 border border-accent-green/30 text-accent-green shadow-lg" aria-hidden="true">
               <CheckCircle2 className="h-9 w-9 animate-bounce" />
             </div>
             <div className="space-y-1.5">
@@ -291,8 +291,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-3.5 border-b border-rose-500/20 dark:border-rose-950/60 pb-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-600/10 border border-rose-500/40 text-rose-500 shadow-md shadow-rose-950/50" aria-hidden="true">
+            <div className="flex items-center gap-3.5 border-b border-accent-red/20 pb-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/40 text-accent-red shadow-md" aria-hidden="true">
                 <Bug className="h-6 w-6" />
               </div>
               <div>
@@ -301,14 +301,14 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   className="text-lg font-black tracking-wider font-mono text-text-primary flex items-center gap-2"
                 >
                   <span>{t.bugReportModalTitle || ''}</span>
-                  <Flame className="h-4 w-4 text-rose-500" aria-hidden="true" />
+                  <Flame className="h-4 w-4 text-accent-red" aria-hidden="true" />
                 </h2>
               </div>
             </div>
 
             {errorMsg && (
-              <div className="flex items-center gap-2.5 rounded-xl border border-rose-500/40 bg-rose-50 dark:bg-rose-950/50 p-3 text-xs text-rose-700 dark:text-rose-300 shadow-sm" role="alert">
-                <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" aria-hidden="true" />
+              <div className="flex items-center gap-2.5 rounded-xl border border-accent-red/40 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm" role="alert">
+                <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" aria-hidden="true" />
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -317,7 +317,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               {isAuthenticated && user ? (
                 <div className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/60 p-3 text-xs">
                   <div className="flex items-center gap-2.5 text-text-secondary">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400" aria-hidden="true">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
                       <LemonIcon className="h-4 w-4" />
                     </div>
                     <div>
@@ -329,7 +329,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                       </p>
                     </div>
                   </div>
-                  <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                  <span className="rounded-md bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green border border-accent-green/20 flex items-center gap-1">
                     <UserCheck className="h-3 w-3" aria-hidden="true" />
                     {t.verified || ''}
                   </span>
@@ -337,8 +337,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               ) : (
                 <div>
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />
-                    {t.bugGuestEmailLabel || ''} <span className="text-rose-500">*</span>
+                    <Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+                    {t.bugGuestEmailLabel || ''} <span className="text-accent-red">*</span>
                   </label>
                   <input
                     type="email"
@@ -346,7 +346,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
                     placeholder={t.bugGuestEmailPlaceholder || ''}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 transition-all shadow-inner"
+                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
                   />
                 </div>
               )}
@@ -354,7 +354,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="sm:col-span-2">
                   <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
-                    {t.bugTitleLabel || ''} <span className="text-rose-500">*</span>
+                    {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
                   </label>
                   <input
                     type="text"
@@ -362,7 +362,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder={t.bugTitlePlaceholder || ''}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 transition-all shadow-inner"
+                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
                   />
                 </div>
 
@@ -374,7 +374,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     aria-label={t.bugCategoryLabel || ''}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3 py-2.5 text-xs text-text-primary focus:border-rose-500 focus:outline-none transition-all cursor-pointer shadow-inner [&>option]:bg-bg-surface"
+                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3 py-2.5 text-xs text-text-primary focus:border-accent-red focus:outline-none transition-all cursor-pointer shadow-inner [&>option]:bg-bg-surface"
                   >
                     {bugCategories.map((cat) => (
                       <option key={cat.key} value={cat.key}>
@@ -388,7 +388,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
                   {t.bugDescriptionLabel || ''}{' '}
-                  <span className="text-rose-500">*</span>
+                  <span className="text-accent-red">*</span>
                 </label>
                 <textarea
                   required
@@ -396,14 +396,14 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder={t.bugDescriptionPlaceholder || ''}
-                  className="w-full rounded-xl border border-border-color bg-bg-elevated/80 p-3.5 text-xs text-text-primary placeholder-text-muted focus:border-rose-500 focus:outline-none focus:ring-1 focus:ring-rose-500 transition-all shadow-inner resize-y"
+                  className="w-full rounded-xl border border-border-color bg-bg-elevated/80 p-3.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner resize-y"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-                    <ImageIcon className="h-3.5 w-3.5 text-rose-500" aria-hidden="true" />
+                    <ImageIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
                     {t.bugScreenshotsLabel || ''}
                   </label>
                   <span className="text-[10px] text-text-muted font-mono">
@@ -415,7 +415,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   {images.map((imgSrc, idx) => (
                     <div
                       key={idx}
-                      className="relative h-16 w-16 rounded-xl border border-rose-500/40 bg-bg-elevated overflow-hidden shadow-sm group"
+                      className="relative h-16 w-16 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-sm group"
                     >
                       <img
                         src={imgSrc}
@@ -426,7 +426,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                         type="button"
                         onClick={() => handleRemoveImage(idx)}
                         aria-label={t.bugRemoveScreenshot ? `${t.bugRemoveScreenshot} ${idx + 1}` : `${idx + 1}`}
-                        className="absolute inset-0 bg-red-950/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-red-300 transition-opacity focus:opacity-100"
+                        className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity focus:opacity-100"
                       >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
                       </button>
@@ -437,7 +437,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-rose-500/10 dark:hover:bg-rose-950/20 hover:border-rose-500/50 text-text-muted hover:text-rose-500 dark:hover:text-rose-400 transition-all cursor-pointer text-[10px]"
+                      className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer text-[10px]"
                     >
                       <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
                       <span>{t.bugUploadImage || ''}</span>
@@ -465,11 +465,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 honeypotProps={honeypotProps}
               />
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-rose-500/20 dark:border-rose-950/60">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-accent-red/20">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rose-600 via-red-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-rose-950/50 transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>

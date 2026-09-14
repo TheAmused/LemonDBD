@@ -6,12 +6,14 @@ import { Skull, Sparkles, X, Check, Trash2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
 import { CHAOS_MUTATORS } from '@/constants/chaosMutators';
+import { DbdButton, DbdButtonRole } from './generator/shared/DbdButton';
 
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
 interface ChaosWheelModalProps {
   isOpen: boolean;
+  role: DbdButtonRole;
   onClose: () => void;
   onSelectMutator: (mutator: ChaosMutator) => void;
   onClearMutator?: () => void;
@@ -49,6 +51,7 @@ export function getMutatorDisplayLines(m: ChaosMutator | string | null | undefin
 
 export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
   isOpen,
+  role,
   onClose,
   onSelectMutator,
   onClearMutator,
@@ -95,8 +98,8 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
 
       const grad = ctx.createRadialGradient(center, center, hubRadius, center, center, radius);
       if (m.type === 'curse') {
-        grad.addColorStop(0, '#2e1035');
-        grad.addColorStop(1, i % 2 === 0 ? '#18061a' : '#110313');
+        grad.addColorStop(0, i % 2 === 0 ? '#4a0d0d' : '#5c1414');
+        grad.addColorStop(1, i % 2 === 0 ? '#1c0404' : '#1a0505');
       } else {
         grad.addColorStop(0, '#064e3b');
         grad.addColorStop(1, '#022c22');
@@ -106,7 +109,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.fill();
 
       ctx.lineWidth = 2.5 * scale;
-      ctx.strokeStyle = m.type === 'curse' ? '#9333ea' : '#10b981';
+      ctx.strokeStyle = m.type === 'curse' ? '#b91c1c' : '#16a34a';
       ctx.stroke();
 
       const midAngle = startAngle + sliceAngle / 2;
@@ -141,16 +144,16 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.beginPath();
     ctx.arc(center, center, radius, 0, 2 * Math.PI);
     ctx.lineWidth = 3 * scale;
-    ctx.strokeStyle = '#c084fc';
+    ctx.strokeStyle = '#dc2626';
     ctx.stroke();
 
     // Center hub
     ctx.beginPath();
     ctx.arc(center, center, hubRadius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#090d16';
+    ctx.fillStyle = '#0a0a0c';
     ctx.fill();
     ctx.lineWidth = 3.5 * scale;
-    ctx.strokeStyle = '#c084fc';
+    ctx.strokeStyle = '#dc2626';
     ctx.stroke();
 
     ctx.fillStyle = '#f59e0b';
@@ -158,7 +161,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('CHAOS', center, center - 7 * scale);
-    ctx.fillStyle = '#94a3b8';
+    ctx.fillStyle = '#a1a1aa';
     ctx.font = `800 ${Math.round(10 * scale)}px system-ui, -apple-system, sans-serif`;
     ctx.fillText('WHEEL', center, center + 9 * scale);
 
@@ -168,7 +171,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.lineTo(center + 18 * scale, 6 * scale);
     ctx.lineTo(center, 40 * scale);
     ctx.closePath();
-    ctx.fillStyle = '#ef4444';
+    ctx.fillStyle = '#b91c1c';
     ctx.fill();
     ctx.lineWidth = 2.5 * scale;
     ctx.strokeStyle = '#ffffff';
@@ -264,28 +267,27 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           type="button"
           onClick={onClose}
           aria-label={dict?.modal?.close}
-          className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+          className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
 
         <div className="flex items-center gap-3 mb-3 sm:mb-4 pr-8">
-          <div className="flex h-9 w-9 sm:h-10 sm:w-10 xl:h-11 xl:w-11 shrink-0 items-center justify-center rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-600 dark:text-purple-400 shadow-xs" aria-hidden="true">
+          <div className="flex h-9 w-9 sm:h-10 sm:w-10 xl:h-11 xl:w-11 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-xs" aria-hidden="true">
             <Skull className="h-5 w-5 sm:h-6 sm:w-6 xl:h-7 xl:w-7 animate-pulse" />
           </div>
-          <div>
-            {dict?.generator?.chaosWheelTitle && (
-              <h2 id="chaos-modal-title" className="text-base sm:text-lg xl:text-xl font-black tracking-wide text-text-primary">
-                {dict.generator.chaosWheelTitle}
-              </h2>
-            )}
-            {dict?.generator?.chaosWheelDesc && (
-              <p id="chaos-modal-desc" className="text-xs sm:text-sm text-text-secondary line-clamp-2 sm:line-clamp-none">
-                {dict.generator.chaosWheelDesc}
-              </p>
-            )}
-          </div>
+          {dict?.generator?.chaosWheelTitle && (
+            <h2 id="chaos-modal-title" className="text-base sm:text-lg xl:text-xl font-black tracking-wide text-text-primary">
+              {dict.generator.chaosWheelTitle}
+            </h2>
+          )}
         </div>
+
+        {dict?.generator?.chaosWheelDesc && (
+          <p id="chaos-modal-desc" className="max-w-lg mx-auto text-center text-xs sm:text-sm font-bold text-text-secondary">
+            {dict.generator.chaosWheelDesc}
+          </p>
+        )}
 
         <div className="relative flex flex-col items-center justify-center my-2 sm:my-4">
           <canvas
@@ -293,26 +295,21 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             width={800}
             height={800}
             aria-label={dict?.generator?.chaosWheelTitle}
-            className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[480px] xl:h-[480px] 2xl:w-[540px] 2xl:h-[540px] max-w-full aspect-square drop-shadow-[0_0_25px_rgba(147,51,234,0.35)] transition-all duration-300"
+            className="w-[260px] h-[260px] xs:w-[290px] xs:h-[290px] sm:w-[330px] sm:h-[330px] md:w-[370px] md:h-[370px] lg:w-[370px] lg:h-[370px] xl:w-[480px] xl:h-[480px] 2xl:w-[540px] 2xl:h-[540px] max-w-full aspect-square transition-all duration-300"
           />
 
-          <button
-            type="button"
+          <DbdButton
+            role={role}
+            size="md"
             onClick={spinChaosWheel}
             disabled={isSpinning}
-            className={`mt-3 sm:mt-4 xl:mt-5 flex items-center gap-2 rounded-2xl px-5 sm:px-6 xl:px-8 py-2.5 sm:py-3 xl:py-3.5 font-extrabold text-xs sm:text-sm xl:text-base shadow-lg transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
-              isSpinning
-                ? 'bg-bg-elevated text-text-muted cursor-not-allowed'
-                : 'bg-gradient-to-r from-purple-600 via-rose-600 to-amber-600 text-white hover:brightness-110 active:scale-95 shadow-purple-900/40'
-            }`}
+            className="mt-3 sm:mt-4 xl:mt-5"
+            icon={<Sparkles className={`h-4 w-4 xl:h-5 xl:w-5 ${isSpinning ? 'animate-spin' : ''}`} />}
           >
-            <Sparkles className={`h-4 w-4 xl:h-5 xl:w-5 ${isSpinning ? 'animate-spin' : ''}`} aria-hidden="true" />
-            <span>
-              {isSpinning
-                ? dict?.generator?.spinningCurses
-                : dict?.generator?.spinChaosWheel}
-            </span>
-          </button>
+            {isSpinning
+              ? dict?.generator?.spinningCurses
+              : dict?.generator?.spinChaosWheel}
+          </DbdButton>
         </div>
 
         {wonMutator && (
@@ -339,12 +336,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
                   type="button"
                   onClick={handleClearCurse}
                   title={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
-                  className="flex items-center gap-1 text-xs sm:text-sm text-rose-500 hover:text-rose-400 font-bold px-2 py-1 rounded-lg hover:bg-rose-500/10 transition-colors cursor-pointer"
+                  className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
                 >
                   <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
                 </button>
-                <div className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                <div className="flex items-center gap-1 text-accent-green font-bold text-xs sm:text-sm bg-accent-green/10 px-2.5 py-1 rounded-lg border border-accent-green/30">
                   <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
                   <span>{dict?.smashOrPass?.active || 'Active'}</span>
                 </div>
@@ -352,16 +349,6 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             </div>
           </div>
         )}
-
-        <div className="mt-4 sm:mt-6 flex justify-end">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-5 py-2 sm:py-2.5 font-bold text-xs sm:text-sm text-text-primary transition-colors cursor-pointer shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
-          >
-            {dict?.modal?.done || dict?.generator?.done || 'Done'}
-          </button>
-        </div>
       </div>
     </div>
   );

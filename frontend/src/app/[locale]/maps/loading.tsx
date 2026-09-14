@@ -12,7 +12,7 @@ export default function MapsLoading() {
         <DbdSpinner
           size="responsive"
           layout="inline"
-          accent="cyan"
+          accent="blood"
           needleSpeed={1.6}
           label="Surveying Realms & Seeds..."
           sublabel="Mapping tile variants, loops, and spawn coordinates"

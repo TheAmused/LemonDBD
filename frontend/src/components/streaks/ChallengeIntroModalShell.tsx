@@ -76,10 +76,10 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-md overflow-y-auto cursor-pointer"
     >
       <div
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden my-auto cursor-default"
+        className="relative w-full max-w-2xl bg-bg-surface border border-border-color rounded-2xl shadow-2xl overflow-hidden my-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 pb-4">
@@ -87,14 +87,14 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             <div className={`p-2.5 border rounded-xl ${iconClassName}`}>
               <Icon className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-xl font-black text-text-primary tracking-tight">
               {title}
             </h2>
           </div>
           <button
             onClick={onClose}
             aria-label={dict?.modal?.close || 'Close'}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -102,15 +102,15 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
 
         {intro && (
           <div className="px-6 pb-5">
-            <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm text-center">
-              <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm text-center">
+              <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">
                 {intro}
               </p>
               {onOpenRules && (
                 <button
                   type="button"
                   onClick={onOpenRules}
-                  className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
+                  className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   {rulesLabel}
@@ -125,12 +125,12 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             const TileIcon = tile.icon;
             const isCurrent = tile.value === selectedValue;
             const labelClassName = tile.disabled
-              ? 'font-bold text-slate-500 dark:text-slate-400'
-              : 'font-bold text-slate-900 dark:text-white';
+              ? 'font-bold text-text-secondary'
+              : 'font-bold text-text-primary';
             const descriptionClassName = tile.disabled
-              ? 'text-xs text-slate-400 dark:text-slate-500 text-balance'
-              : 'text-xs text-slate-500 dark:text-slate-400 text-balance';
-            const badgeClassName = 'text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500';
+              ? 'text-xs text-text-muted text-balance'
+              : 'text-xs text-text-secondary text-balance';
+            const badgeClassName = 'text-[10px] font-bold uppercase tracking-wider text-text-muted';
 
             const content = (
               <>
@@ -141,7 +141,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                     className="h-10 w-10 rounded-xl object-cover shadow-sm"
                   />
                 ) : (
-                  <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-slate-400' : ''}`} />
+                  <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
                 )}
                 <span className={labelClassName}>{tile.label}</span>
                 <span className={descriptionClassName}>{tile.description}</span>
@@ -154,7 +154,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               return (
                 <div
                   key={tile.value}
-                  className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30 p-5 text-center opacity-70"
+                  className="flex flex-col items-center gap-2 rounded-2xl border border-border-color bg-bg-elevated/50 p-5 text-center opacity-70"
                 >
                   {content}
                 </div>
@@ -166,18 +166,18 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 key={tile.value}
                 onClick={() => onSelectTile(tile.value)}
                 className={`group relative flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
-                  isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : ''
+                  isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-bg-surface' : ''
                 }`}
               >
                 {tile.completed && tile.completedFull ? (
-                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-red-500/50 bg-red-100 dark:bg-red-950/70 px-1.5 py-0.5 text-red-600 dark:text-red-400 shadow-sm">
+                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-1.5 py-0.5 text-accent-red shadow-sm">
                     <Trophy className="h-3 w-3" />
                     {tile.completedFullCount != null && (
                       <span className="text-[10px] font-black leading-none">{tile.completedFullCount}</span>
                     )}
                   </span>
                 ) : tile.completed ? (
-                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-yellow-500/40 bg-yellow-100 dark:bg-yellow-950/60 px-1.5 py-0.5 text-yellow-600 dark:text-yellow-400 shadow-sm">
+                  <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-1.5 py-0.5 text-accent-amber shadow-sm">
                     <Trophy className="h-3 w-3" />
                     {tile.completedCount != null && (
                       <span className="text-[10px] font-black leading-none">{tile.completedCount}</span>

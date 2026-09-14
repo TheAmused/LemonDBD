@@ -11,7 +11,7 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     icon: '🚫',
     badgeBg: 'bg-rose-950/90',
     borderColor: 'border-rose-500',
-    textColor: 'text-rose-300',
+    textColor: 'text-accent-red',
     blockedPerkKeywords: ['exhausted', 'exhaustion'],
   },
   {
@@ -23,7 +23,7 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     icon: '👁️',
     badgeBg: 'bg-purple-950/90',
     borderColor: 'border-purple-500',
-    textColor: 'text-purple-300',
+    textColor: 'text-accent-red',
   },
   {
     id: 'meme_loadout',
@@ -34,7 +34,7 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     icon: '🤡',
     badgeBg: 'bg-amber-950/90',
     borderColor: 'border-amber-500',
-    textColor: 'text-amber-300',
+    textColor: 'text-accent-red',
   },
   {
     id: 'hex_boon_only',
@@ -45,7 +45,7 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     icon: '🔮',
     badgeBg: 'bg-indigo-950/90',
     borderColor: 'border-indigo-500',
-    textColor: 'text-indigo-300',
+    textColor: 'text-accent-red',
   },
   {
     id: 'negative_only',
@@ -56,7 +56,7 @@ export const CHAOS_MUTATORS: readonly ChaosMutator[] = [
     icon: '💀',
     badgeBg: 'bg-rose-950/90',
     borderColor: 'border-rose-600',
-    textColor: 'text-rose-300',
+    textColor: 'text-accent-red',
   },
 ];
 

@@ -175,7 +175,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     type="button"
                     onClick={() => handleFlip(idx)}
                     disabled={card.flipped}
-                    className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-purple-950 to-slate-950 cursor-pointer disabled:cursor-default"
+                    className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default"
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
                     <CardBackImage type={card.type} />
@@ -191,7 +191,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                       revealing the perk in its center window instead of
                       turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-amber-500/30 bg-gradient-to-b from-slate-100 via-amber-50/50 to-white dark:from-slate-900 dark:via-[#120a1c] dark:to-slate-950 p-2 sm:p-2.5"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-accent-amber/30 bg-bg-surface p-2 sm:p-2.5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
@@ -199,11 +199,11 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     }}
                   >
                     {/* Inner card-stock border only */}
-                    <span className="pointer-events-none absolute inset-1 sm:inset-1.5 rounded-xl border border-amber-500/20" />
+                    <span className="pointer-events-none absolute inset-1 sm:inset-1.5 rounded-xl border border-accent-amber/20" />
                     {card.flipped && (
                       <>
                         <div className="relative z-10 pt-1 text-center">
-                          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400 drop-shadow-xs">
+                          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-accent-amber drop-shadow-xs">
                             {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                           </span>
                         </div>
@@ -229,7 +229,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           })}
         </div>
       ) : (
-        <Layers className="h-16 w-16 text-text-muted" />
+        <Layers className={`h-28 w-28 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />
       )}
 
       <DbdButton

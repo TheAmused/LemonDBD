@@ -69,7 +69,7 @@ export const MainCard: React.FC<MainCardProps> = ({
       aria-label={isSurvivor ? (dict?.user?.survivorMain || 'Survivor Main') : (dict?.user?.killerMain || 'Killer Main')}
       className={`relative overflow-hidden rounded-2xl border p-4 sm:p-5 backdrop-blur-xl shadow-md transition-all ${
         isSurvivor
-          ? 'border-cyan-500/35 bg-bg-surface hover:border-cyan-500/50'
+          ? 'border-accent-green/35 bg-bg-surface hover:border-accent-green/50'
           : 'border-accent-red/35 bg-bg-surface hover:border-accent-red/50'
       }`}
     >

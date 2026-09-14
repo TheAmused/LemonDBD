@@ -69,7 +69,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
       )}
       {isOwned && (
         <div
-          className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 backdrop-blur-md shadow-xs"
+          className="absolute top-2 left-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-accent-green/20 border border-accent-green/40 text-accent-green backdrop-blur-md shadow-xs"
           title={ownedTitle}
         >
           <Check className="h-3.5 w-3.5" />

@@ -24,7 +24,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
       label: dict?.streaks?.normal || 'Normal',
       description: dict?.streaks?.pageStreakNormalDesc || 'Every perk page counts.',
       icon: BookOpen,
-      accentClassName: 'border-orange-500/30 bg-orange-500/5 hover:bg-orange-500/10 text-orange-400',
+      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
     },
   ];
 
@@ -34,7 +34,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
         isOpen={isOpen}
         onClose={onClose}
         icon={BookOpen}
-        iconClassName="bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400"
+        iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
         title={dict?.streaks?.pageStreak || 'Page streak'}
         intro={
           dict?.streaks?.pageStreakIntro ||

@@ -16,17 +16,17 @@ const DIFFICULTY_ROWS = [
   {
     labelKey: 'chaosEasyLabel', defaultLabel: 'Easy',
     textKey: 'chaosEasyDesc', defaultText: 'A checkpoint banks every 5 wins.',
-    badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
   {
     labelKey: 'chaosMediumLabel', defaultLabel: 'Medium',
     textKey: 'chaosMediumDesc', defaultText: 'A checkpoint banks every 10 wins.',
-    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
   {
     labelKey: 'chaosHellLabel', defaultLabel: 'Hell',
     textKey: 'chaosHellDesc', defaultText: 'No checkpoints.',
-    badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+    badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
   },
 ] as const;
 
@@ -36,27 +36,27 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     onClose={onClose}
     icon={BookOpen}
     title={dict?.streaks?.chaosRulesTitle || 'Chaos Streak Rules'}
-    iconClassName="bg-violet-500/10 border-violet-500/20 text-violet-600 dark:text-violet-400"
-    footerButtonClassName="bg-violet-600 hover:bg-violet-500 shadow-violet-500/20"
+    iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
+    footerButtonClassName="bg-accent-red hover:bg-accent-red-hover"
     footerButtonLabel={dict?.streaks?.gotItLetsPlay || "Got It, Let's Play!"}
     dict={dict}
   >
-    <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 rounded-xl p-4 shadow-sm">
-      <h3 className="text-sm font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+    <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+      <h3 className="text-sm font-bold text-accent-red uppercase tracking-wider mb-2 flex items-center gap-2">
         <Trophy className="w-4 h-4" />
         {dict?.streaks?.chaosConcept || 'Chaos Concept'}
       </h3>
-      <p className="leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+      <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">
         {dict?.streaks?.chaosConceptShort ||
           'Pull the lever for 4 random perks plus 2 add-on rarities. Pick a killer to run the build, then play the trial.'}
       </p>
     </div>
 
     <div>
-      <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">
+      <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-3">
         {dict?.streaks?.howItWorks || 'How it works'}
       </h3>
-      <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed list-disc pl-4 marker:text-violet-500">
+      <ul className="space-y-2 text-xs sm:text-sm text-text-secondary leading-relaxed list-disc pl-4 marker:text-accent-red">
         <li>{dict?.streaks?.chaosWinCondition || 'Win = 3 kills or more.'}</li>
         <li>{dict?.streaks?.chaosNoRepeatRule || "Perks don't repeat until the whole pool has been drawn."}</li>
         <li>{dict?.streaks?.chaosAddonRule || 'Add-ons must match the 2 drawn rarities.'}</li>
@@ -66,20 +66,20 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     </div>
 
     <div>
-      <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-        <Flame className="w-4 h-4 text-violet-500" />
+      <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+        <Flame className="w-4 h-4 text-accent-red" />
         {dict?.streaks?.difficultyAndCheckpoints || 'Difficulty'}
       </h3>
       <div className="grid grid-cols-1 gap-2.5">
         {DIFFICULTY_ROWS.map((row) => (
           <div
             key={row.labelKey}
-            className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl gap-2 shadow-sm"
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 bg-bg-elevated border border-border-color rounded-xl gap-2 shadow-sm"
           >
             <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${row.badgeColor} whitespace-nowrap w-fit`}>
               {dict?.streaks?.[row.labelKey] || row.defaultLabel}
             </span>
-            <p className="text-xs text-slate-600 dark:text-slate-300">{dict?.streaks?.[row.textKey] || row.defaultText}</p>
+            <p className="text-xs text-text-secondary">{dict?.streaks?.[row.textKey] || row.defaultText}</p>
           </div>
         ))}
       </div>
@@ -89,8 +89,8 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
       icon={AlertTriangle}
       title={dict?.streaks?.exceptions || 'Exceptions'}
       intro={dict?.streaks?.voidMatchNotice || 'These void the match. Replay it.'}
-      headerColorClassName="text-violet-600 dark:text-violet-400"
-      boxClassName="border-violet-500/20"
+      headerColorClassName="text-accent-red"
+      boxClassName="border-accent-red/20"
       items={[
         {
           label: dict?.streaks?.excGameCancelledLabel || 'Game cancelled',
@@ -110,8 +110,8 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     <RulesModalListSection
       icon={AlertTriangle}
       title={dict?.streaks?.clarifications || 'Clarifications'}
-      headerColorClassName="text-violet-600 dark:text-violet-400"
-      boxClassName="border-slate-200 dark:border-slate-800/80"
+      headerColorClassName="text-accent-red"
+      boxClassName="border-border-color"
       items={[
         {
           label: dict?.streaks?.excSurvDcLabel || 'Survivor disconnects',
@@ -125,7 +125,7 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     />
 
     <RulesModalNotices
-      accentClassName="border-violet-500/20 bg-violet-500/5 text-violet-800 dark:text-violet-300"
+      accentClassName="border-accent-amber/20 bg-accent-amber/5 text-accent-amber"
       notices={[
         {
           icon: Snowflake,

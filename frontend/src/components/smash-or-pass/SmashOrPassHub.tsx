@@ -210,7 +210,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         description_i18n_key: 'smashOrPass.rosters.canon.desc',
         name: 'Dead by Daylight: Fog Canon',
         description: 'Official 98 Characters',
-        theme_color: '#ff0055',
+        theme_color: '#dc2626',
         category: 'DBD Canon',
         is_nsfw: false,
         is_active: true,
@@ -695,31 +695,31 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       {/* ========================================================================= */}
       {/* REDESIGNED UNIFIED COMMAND DOCK (LEFT STATS | CENTER ROSTER | RIGHT ICONS) */}
       {/* ========================================================================= */}
-      <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-white/90 dark:bg-zinc-950/85 border border-pink-500/25 shadow-[0_12px_30px_rgba(15,23,42,0.10)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_35px_rgba(255,0,85,0.08)] backdrop-blur-2xl p-3.5 sm:p-4 md:p-5 space-y-3.5 transition-all cockpit-neon-pulse">
+      <header className="relative z-20 mx-auto w-full max-w-6xl rounded-3xl bg-bg-surface border border-border-color backdrop-blur-2xl p-3.5 sm:p-4 md:p-5 space-y-3.5 transition-all">
         {/* MAIN ROW: Left Stats + Centered Roster Pill + Right Action Cluster */}
         <div className="flex flex-col lg:flex-row items-center justify-between gap-3 sm:gap-4 w-full">
           {/* LEFT: Live Session Telemetry Capsule */}
           <div className="flex items-center justify-center lg:justify-start w-full lg:w-auto order-2 lg:order-1 shrink-0">
-            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-100 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 text-xs sm:text-sm font-mono shadow-inner">
-              <span className="flex items-center gap-1.5 text-cyan-700 dark:text-cyan-400 font-bold">
-                <Layers className="h-4 w-4 text-cyan-600 dark:text-cyan-400/90" />
-                <span className="text-zinc-900 dark:text-zinc-100 font-black text-sm sm:text-base">{remainingInDeck}</span>
-                <span className="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-400 font-medium">
+            <div className="flex items-center gap-2 sm:gap-2.5 px-3.5 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs sm:text-sm font-mono shadow-inner">
+              <span className="flex items-center gap-1.5 text-text-secondary font-bold">
+                <Layers className="h-4 w-4 text-text-secondary" />
+                <span className="text-text-primary font-black text-sm sm:text-base">{remainingInDeck}</span>
+                <span className="text-[11px] sm:text-xs text-text-muted font-medium">
                   {hudLabels.left || (locale === 'pl' ? 'pozostało' : 'left')}
                 </span>
               </span>
-              <span className="text-zinc-300 dark:text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1.5 text-[#c40042] dark:text-[#ff0055] font-black text-xs sm:text-sm">
-                <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-[#ff0055]" />
+              <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="flex items-center gap-1.5 text-accent-red font-black text-xs sm:text-sm">
+                <Heart className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-accent-red" />
                 <span>{sessionSmashes}</span>
               </span>
-              <span className="text-zinc-300 dark:text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-black text-xs sm:text-sm">
-                <ThumbsDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 dark:text-slate-400" />
+              <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="flex items-center gap-1.5 text-text-muted font-black text-xs sm:text-sm">
+                <ThumbsDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-text-muted" />
                 <span>{sessionPasses}</span>
               </span>
-              <span className="text-zinc-300 dark:text-zinc-700">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
-              <span className="text-amber-700 dark:text-amber-300 font-black text-xs sm:text-sm tracking-wide">
+              <span className="text-border-color">{dict?.smashOrPass?.pipeSeparator || '|'}</span>
+              <span className="text-accent-amber font-black text-xs sm:text-sm tracking-wide">
                 {sessionSmashRate}{dict?.smashOrPass?.percentSign || '%'}
               </span>
             </div>
@@ -727,14 +727,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
           {/* CENTER: Heart-Flanked Dynamic Roster Selector */}
           <div className="flex items-center justify-center gap-2.5 sm:gap-3 w-full lg:w-auto order-1 lg:order-2">
-            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-[#ff0055] fill-[#ff0055] animate-pulse drop-shadow-[0_0_12px_rgba(255,0,85,0.9)] shrink-0" />
+            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red fill-accent-red animate-pulse shrink-0" />
 
             <button
               type="button"
               onClick={() => setIsRosterModalOpen(true)}
-              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-white dark:bg-zinc-900/95 border border-pink-500/50 hover:border-[#ff0055] hover:shadow-[0_0_25px_rgba(255,0,85,0.25)] dark:hover:shadow-[0_0_25px_rgba(255,0,85,0.4)] text-xs sm:text-sm font-mono font-bold text-pink-700 dark:text-pink-100 transition-all cursor-pointer group shrink-0 touch-manipulation"
+              className="flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 min-h-[44px] rounded-2xl bg-bg-surface border border-accent-red/50 hover:border-accent-red text-xs sm:text-sm font-mono font-bold text-accent-red transition-all cursor-pointer group shrink-0 touch-manipulation"
             >
-              <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-pink-500/60 shrink-0">
+              <span className="relative flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-lg overflow-hidden border border-accent-red/60 shrink-0">
                 <img
                   src={getRosterCover(activeRoster)}
                   alt=""
@@ -744,16 +744,16 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   className="h-full w-full object-cover"
                 />
               </span>
-              <span className="truncate max-w-[150px] sm:max-w-[220px] text-zinc-900 dark:text-zinc-100 group-hover:text-black dark:group-hover:text-white font-black tracking-wide">
+              <span className="truncate max-w-[150px] sm:max-w-[220px] text-text-primary group-hover:text-white font-black tracking-wide">
                 {getRosterDisplayName(activeRoster)}
               </span>
-              <span className="px-2 py-0.5 rounded-lg bg-pink-500/20 dark:bg-pink-500/25 text-pink-700 dark:text-pink-300 text-[10px] sm:text-xs font-black">
+              <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-[10px] sm:text-xs font-black">
                 {activeRoster.entity_count ?? activeRoster.character_count ?? totalRemaining ?? deck.length}
               </span>
-              <ChevronDown className="h-4 w-4 text-pink-600 dark:text-pink-400 group-hover:translate-y-0.5 transition-transform" />
+              <ChevronDown className="h-4 w-4 text-accent-red group-hover:translate-y-0.5 transition-transform" />
             </button>
 
-            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-[#ff0055] fill-[#ff0055] animate-pulse drop-shadow-[0_0_12px_rgba(255,0,85,0.9)] shrink-0" />
+            <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red fill-accent-red animate-pulse shrink-0" />
           </div>
 
           {/* RIGHT: Action Cluster (Icons with Tooltips and >=44px Touch Targets) */}
@@ -770,13 +770,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 aria-label={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
                 className={`relative flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${
                   isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all'
-                    ? 'bg-pink-500/20 border-pink-500/60 text-pink-700 dark:text-pink-300 shadow-[0_0_14px_rgba(255,0,85,0.25)] dark:shadow-[0_0_14px_rgba(255,0,85,0.4)]'
-                    : 'bg-white dark:bg-zinc-900/90 border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:border-slate-300 dark:hover:border-zinc-700'
+                    ? 'bg-accent-red/20 border-accent-red/60 text-accent-red'
+                    : 'bg-bg-surface border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
                 }`}
               >
                 <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4" />
                 {(roleFilter !== 'all' || genderFilter !== 'all') && (
-                  <span className="absolute 1.5 sm:-top-0.5 1.5 sm:-right-0.5 h-2.5 w-2.5 rounded-full bg-[#ff0055] ring-2 ring-white dark:ring-zinc-950" />
+                  <span className="absolute 1.5 sm:-top-0.5 1.5 sm:-right-0.5 h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
                 )}
               </button>
             </Tooltip>
@@ -793,11 +793,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 aria-label={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || '') : (dict?.smashOrPass?.tooltips?.unmuteAudio || '')}
                 className={`flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${
                   isSoundActive
-                    ? 'bg-rose-50 dark:bg-rose-950/90 border-[#ff0055] text-rose-700 dark:text-pink-300 shadow-[0_0_16px_rgba(255,0,85,0.3)] dark:shadow-[0_0_16px_rgba(255,0,85,0.5)]'
-                    : 'bg-white dark:bg-zinc-900/90 border-slate-200 dark:border-zinc-800 text-slate-400 dark:text-zinc-600 hover:text-slate-700 dark:hover:text-zinc-400 hover:border-slate-300 dark:hover:border-zinc-700'
+                    ? 'bg-accent-red/10 border-accent-red text-accent-red'
+                    : 'bg-bg-surface border-border-color text-text-muted hover:text-text-secondary hover:border-border-subtle'
                 }`}
               >
-                {isSoundActive ? <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-pink-600 dark:text-pink-400 animate-pulse" /> : <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />}
+                {isSoundActive ? <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red animate-pulse" /> : <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />}
               </button>
             </Tooltip>
 
@@ -811,9 +811,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsPersonaOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.archetype || dict?.smashOrPass?.modals?.personaTitle || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-pink-500/15 border border-pink-500/30 hover:border-pink-500/60 text-pink-700 dark:text-pink-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-red/15 border border-accent-red/30 hover:border-accent-red/60 text-accent-red transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Sparkles className="h-4 w-4 sm:h-4 sm:w-4 text-pink-600 dark:text-pink-400" />
+                <Sparkles className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red" />
               </button>
             </Tooltip>
 
@@ -827,9 +827,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsLeaderboardOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.leaderboard || dict?.smashOrPass?.modals?.leaderboardTitle || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-500/30 hover:border-amber-500/60 text-amber-700 dark:text-amber-300 transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 hover:border-accent-amber/60 text-accent-amber transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Trophy className="h-4 w-4 sm:h-4 sm:w-4 text-amber-600 dark:text-amber-400" />
+                <Trophy className="h-4 w-4 sm:h-4 sm:w-4 text-accent-amber" />
               </button>
             </Tooltip>
 
@@ -843,7 +843,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={shuffleDeck}
                 aria-label={dict?.smashOrPass?.tooltips?.shuffle || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-white dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:border-slate-300 dark:hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-bg-surface border border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
                 <Shuffle className="h-4 w-4 sm:h-4 sm:w-4" />
               </button>
@@ -859,7 +859,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.resetAllVotes || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-white dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-500/40 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-bg-surface border border-border-color text-text-muted hover:text-accent-red hover:border-accent-red/40 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
                 <Trash2 className="h-4 w-4 sm:h-4 sm:w-4" />
               </button>
@@ -875,7 +875,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsHowToPlayOpen(true)}
                 aria-label={dict?.smashOrPass?.tooltips?.howToPlay || ''}
-                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-white dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 hover:border-slate-300 dark:hover:border-zinc-700 transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
+                className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-bg-surface border border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
                 <HelpCircle className="h-4 w-4 sm:h-4 sm:w-4" />
               </button>
@@ -892,18 +892,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="overflow-hidden border-t border-slate-200 dark:border-zinc-800/80 pt-3"
+              className="overflow-hidden border-t border-border-color pt-3"
             >
               <div className="flex flex-col md:flex-row items-center justify-between gap-3">
                 {/* Role Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
                     className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'all'
-                        ? 'bg-gradient-to-r from-rose-600 to-[#ff0055] text-white shadow-[0_0_12px_rgba(255,0,85,0.5)]'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+                        ? 'bg-accent-red text-white'
+                        : 'text-text-muted hover:text-text-primary'
                     }`}
                   >
                     {allRolesLabel}
@@ -913,8 +913,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('role', 'Survivor')}
                     className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'Survivor'
-                        ? 'bg-[#00f5d4] text-zinc-950 font-black shadow-[0_0_14px_rgba(0,245,212,0.45)]'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-teal-600 dark:hover:text-[#00f5d4]'
+                        ? 'bg-accent-green text-white font-black'
+                        : 'text-text-muted hover:text-accent-green'
                     }`}
                   >
                     <Shield className="h-3.5 w-3.5" />
@@ -925,8 +925,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('role', 'Killer')}
                     className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'Killer'
-                        ? 'bg-[#ff0055] text-white shadow-[0_0_14px_rgba(255,0,85,0.45)]'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-[#ff0055]'
+                        ? 'bg-accent-red text-white'
+                        : 'text-text-muted hover:text-accent-red'
                     }`}
                   >
                     <Skull className="h-3.5 w-3.5" />
@@ -935,14 +935,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 </div>
 
                 {/* Gender Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800/90 rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'all'
-                        ? 'bg-slate-800 dark:bg-zinc-800 text-white border border-slate-700 dark:border-zinc-700 shadow'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200'
+                        ? 'bg-accent-red text-white'
+                        : 'text-text-muted hover:text-text-primary'
                     }`}
                   >
                     {allGendersLabel}
@@ -952,8 +952,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('gender', 'female')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'female'
-                        ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(219,39,119,0.45)]'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-pink-600 dark:hover:text-pink-300'
+                        ? 'bg-accent-red text-white'
+                        : 'text-text-muted hover:text-accent-red'
                     }`}
                   >
                     {femaleOnlyLabel}
@@ -963,8 +963,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('gender', 'male')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'male'
-                        ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.45)]'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-cyan-600 dark:hover:text-cyan-300'
+                        ? 'bg-accent-green text-white'
+                        : 'text-text-muted hover:text-accent-green'
                     }`}
                   >
                     {maleOnlyLabel}
@@ -974,8 +974,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('gender', 'monster_other')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'monster_other'
-                        ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.45)]'
-                        : 'text-slate-500 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-purple-300'
+                        ? 'bg-border-subtle text-text-primary'
+                        : 'text-text-muted hover:text-text-primary'
                     }`}
                   >
                     {monstersLabel}
@@ -991,13 +991,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       <main className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
         {loading ? (
           <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
-            <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-zinc-950 border-2 border-pink-500/30 flex flex-col items-center justify-center p-6 space-y-4 shadow-[0_0_35px_rgba(255,0,85,0.15)]">
-              <Heart className="h-12 w-12 text-rose-500 fill-rose-500/30 animate-pulse" />
-              <span className="text-xs font-mono text-zinc-300 text-center font-semibold">
+            <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
+              <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
+              <span className="text-xs font-mono text-text-secondary text-center font-semibold">
                 {dict?.smashOrPass?.loadingRosterPrefix || 'Loading'} {activeRoster.name || selectedRosterSlug} {dict?.smashOrPass?.loadingRosterSuffix || 'from Database...'}
               </span>
-              <div className="h-1.5 w-32 rounded-full bg-zinc-800 overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-pink-500 to-[#ff0055] animate-[shimmer_1.5s_infinite]" />
+              <div className="h-1.5 w-32 rounded-full bg-bg-elevated overflow-hidden">
+                <div className="h-full bg-accent-red animate-[shimmer_1.5s_infinite]" />
               </div>
             </div>
           </div>
@@ -1098,27 +1098,27 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           </div>
         ) : (
           // Finished Deck State
-          <div className="max-w-md w-full rounded-3xl border border-pink-500/30 bg-white dark:bg-[#09090b]/95 p-8 text-center space-y-5 shadow-xl dark:shadow-2xl backdrop-blur-md pointer-events-auto">
-            <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-pink-500/15 border border-pink-500/30 text-pink-600 dark:text-pink-400">
-              <Heart className="h-8 w-8 fill-pink-400 animate-bounce" />
+          <div className="max-w-md w-full rounded-3xl border border-accent-red/30 bg-bg-surface p-8 text-center space-y-5 shadow-xl dark:shadow-2xl backdrop-blur-md pointer-events-auto">
+            <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
+              <Heart className="h-8 w-8 fill-accent-red animate-bounce" />
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-xl font-black font-mono text-zinc-900 dark:text-zinc-100">{dict?.smashOrPass?.empty?.title || 'All Candidates Evaluated!'}</h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">
+              <h3 className="text-xl font-black font-mono text-text-primary">{dict?.smashOrPass?.empty?.title || 'All Candidates Evaluated!'}</h3>
+              <p className="text-xs text-text-muted">
                 {dict?.smashOrPass?.empty?.subtitle || `You have completed all available candidates in ${activeRoster.name || selectedRosterSlug}.`}
               </p>
             </div>
 
             {/* Session Stats Summary */}
             <div className="grid grid-cols-2 gap-3 py-2 font-mono">
-              <div className="bg-slate-50 dark:bg-zinc-950/80 p-4 rounded-2xl border border-slate-200 dark:border-zinc-800">
-                <span className="text-xs text-rose-700 dark:text-rose-400 font-bold uppercase">{dict?.smashOrPass?.smash || 'Smash'}</span>
-                <p className="text-2xl font-black text-zinc-900 dark:text-zinc-100">{sessionSmashes}</p>
+              <div className="bg-bg-elevated p-4 rounded-2xl border border-border-color">
+                <span className="text-xs text-accent-red font-bold uppercase">{dict?.smashOrPass?.smash || 'Smash'}</span>
+                <p className="text-2xl font-black text-text-primary">{sessionSmashes}</p>
               </div>
-              <div className="bg-slate-50 dark:bg-zinc-950/80 p-4 rounded-2xl border border-slate-200 dark:border-zinc-800">
-                <span className="text-xs text-zinc-600 dark:text-zinc-400 font-bold uppercase">{dict?.smashOrPass?.pass || 'Pass'}</span>
-                <p className="text-2xl font-black text-zinc-900 dark:text-zinc-100">{sessionPasses}</p>
+              <div className="bg-bg-elevated p-4 rounded-2xl border border-border-color">
+                <span className="text-xs text-text-muted font-bold uppercase">{dict?.smashOrPass?.pass || 'Pass'}</span>
+                <p className="text-2xl font-black text-text-primary">{sessionPasses}</p>
               </div>
             </div>
 
@@ -1126,7 +1126,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsPersonaOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black text-xs transition-all shadow-lg shadow-rose-950/40 cursor-pointer font-mono"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white font-black text-xs transition-all shadow-lg cursor-pointer font-mono"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{hudLabels.archetype || 'View Romance Archetype'}</span>
@@ -1135,9 +1135,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-100 dark:text-zinc-200 font-black text-xs transition-all border border-slate-700 dark:border-zinc-700 cursor-pointer font-mono"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-bg-elevated hover:bg-bg-surface text-text-primary font-black text-xs transition-all border border-border-color cursor-pointer font-mono"
               >
-                <RotateCcw className="h-4 w-4 text-slate-300 dark:text-zinc-400" />
+                <RotateCcw className="h-4 w-4 text-text-muted" />
                 <span>{dict?.smashOrPass?.empty?.resetAction || 'Reset & Play Again'}</span>
               </button>
             </div>
@@ -1152,62 +1152,62 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           aria-modal="true"
           aria-labelledby="how-to-play-title"
           onClick={() => setIsHowToPlayOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-[#09090b]/85 backdrop-blur-xl animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-3xl border border-pink-300 dark:border-pink-500/40 bg-white dark:bg-[#09090b] p-6 space-y-5 shadow-2xl text-left text-zinc-900 dark:text-zinc-100 font-mono"
+            className="w-full max-w-lg rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-5 shadow-2xl text-left text-text-primary font-mono"
           >
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-zinc-800 pb-3">
+            <div className="flex items-center justify-between border-b border-border-color pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-500/20 text-pink-700 dark:text-pink-400 border border-pink-500/30">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-red/20 text-accent-red border border-accent-red/30">
                   <Gamepad2 className="h-5 w-5" />
                 </span>
-                <h3 id="how-to-play-title" className="text-base font-black text-zinc-900 dark:text-zinc-100">
+                <h3 id="how-to-play-title" className="text-base font-black text-text-primary">
                   {dict?.smashOrPass?.howToPlayModal?.title || hudLabels.howToPlay || 'How to Play Smash or Pass'}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setIsHowToPlayOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                className="flex h-8 w-8 items-center justify-center rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="space-y-3.5 text-xs text-zinc-700 dark:text-zinc-300 font-sans">
+            <div className="space-y-3.5 text-xs text-text-secondary font-sans">
               {/* 1. Drag / Swipe */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800">
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
                 <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
                 <div>
-                  <span className="font-bold text-pink-700 dark:text-pink-300 block text-xs font-mono">
+                  <span className="font-bold text-accent-red block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
                   </span>
-                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed pt-0.5">
+                  <p className="text-text-muted leading-relaxed pt-0.5">
                     {dict?.smashOrPass?.howToPlayModal?.swipeDesc || 'Drag card Right to Smash or drag Left to Pass.'}
                   </p>
                 </div>
               </div>
 
               {/* 2. On-card Tactile Buttons */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800">
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
                 <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
                 <div>
-                  <span className="font-bold text-pink-700 dark:text-pink-300 block text-xs font-mono">
+                  <span className="font-bold text-accent-red block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
                   </span>
-                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed pt-0.5">
+                  <p className="text-text-muted leading-relaxed pt-0.5">
                     {dict?.smashOrPass?.howToPlayModal?.iconsDesc || 'Click Flip to read bio and memes. Click Zoom for high-res portrait art.'}
                   </p>
                 </div>
               </div>
 
               {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
-              <div className="space-y-2 p-3 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800">
+              <div className="space-y-2 p-3 rounded-2xl bg-bg-elevated border border-border-color">
                 <div className="flex items-center gap-2">
                   <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
-                  <span className="font-bold text-pink-700 dark:text-pink-300 block text-xs font-mono">
+                  <span className="font-bold text-accent-red block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
                   </span>
                 </div>
@@ -1234,27 +1234,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               </div>
 
               {/* 4. Background Lore & Atmosphere */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800">
+              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
                 <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
                 <div>
-                  <span className="font-bold text-pink-700 dark:text-pink-300 block text-xs font-mono">
+                  <span className="font-bold text-accent-red block text-xs font-mono">
                     {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
                   </span>
-                  <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed pt-0.5">
+                  <p className="text-text-muted leading-relaxed pt-0.5">
                     {dict?.smashOrPass?.howToPlayModal?.atmosphereDesc || 'Hover over background text elements to inspect quotes and lore with glowing effects.'}
                   </p>
                 </div>
               </div>
-            </div>
-
-            <div className="pt-2 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setIsHowToPlayOpen(false)}
-                className="px-5 py-2 rounded-xl bg-pink-600 hover:bg-pink-500 text-xs font-bold font-mono text-white transition-colors cursor-pointer"
-              >
-                {dict?.smashOrPass?.howToPlayModal?.letsPlay || "Got It, Let's Play!"}
-              </button>
             </div>
           </div>
         </div>
@@ -1281,10 +1271,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       {/* ROSTER SWITCH STARTING ANIMATION EFFECT */}
       {rosterSwitchEffect && (
         <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center animate-in fade-in duration-300">
-          <div className="absolute inset-0 bg-[#ff0055]/15 backdrop-blur-sm animate-pulse" />
-          <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-black/90 border-2 border-[#ff0055] shadow-[0_0_80px_rgba(255,0,85,0.7)] text-center animate-in zoom-in-75 duration-300">
-            <Heart className="h-14 w-14 text-[#ff0055] fill-[#ff0055] animate-bounce" />
-            <span className="text-xl font-mono font-black tracking-widest text-pink-100 uppercase drop-shadow-[0_0_20px_rgba(255,0,85,0.8)]">
+          <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
+          <div className="relative flex flex-col items-center gap-2 p-6 rounded-3xl bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
+            <Heart className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
+            <span className="text-xl font-mono font-black tracking-widest text-white uppercase">
               {getRosterDisplayName({ slug: rosterSwitchEffect })}
             </span>
           </div>
@@ -1331,21 +1321,21 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           role="dialog"
           aria-modal="true"
           onClick={() => setIsResetConfirmOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-[#09090b]/85 backdrop-blur-xl animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-3xl border border-rose-300 dark:border-rose-500/40 bg-white dark:bg-[#09090b] p-6 space-y-4 shadow-2xl text-center font-mono"
+            className="w-full max-w-sm rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-4 shadow-2xl text-center font-mono"
           >
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-rose-500/15 border border-rose-500/30 text-rose-700 dark:text-rose-400">
+            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
               <AlertTriangle className="h-6 w-6" />
             </div>
 
             <div className="space-y-1 font-sans">
-              <h3 className="text-base font-black font-mono text-zinc-900 dark:text-zinc-100">
+              <h3 className="text-base font-black font-mono text-text-primary">
                 {dict?.smashOrPass?.modals?.resetConfirmTitle || 'Reset All Votes?'}
               </h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-xs text-text-muted leading-relaxed">
                 {dict?.smashOrPass?.modals?.resetConfirmDesc || `This will clear your voting history for ${activeRoster.name || selectedRosterSlug} and restore all candidates to your deck.`}
               </p>
             </div>
@@ -1354,14 +1344,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsResetConfirmOpen(false)}
-                className="flex-1 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-300 transition-colors cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
               >
                 {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
               </button>
               <button
                 type="button"
                 onClick={handleResetAllVotes}
-                className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-black text-white transition-colors shadow-lg cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-white transition-colors shadow-lg cursor-pointer"
               >
                 {dict?.smashOrPass?.modals?.confirm || 'Yes, Reset All'}
               </button>

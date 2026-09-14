@@ -71,7 +71,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           onClick={onClick}
           className={cn(
             SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-purple-400/50 dark:border-purple-800/60 bg-purple-50/90 dark:bg-purple-950/70 text-purple-700 dark:text-purple-400 cursor-pointer shadow-xs transition-colors backdrop-blur-xs'
+            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs transition-colors backdrop-blur-xs'
           )}
         >
           <EyeOff className="h-10 w-10 animate-pulse" />
@@ -89,11 +89,11 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         <div
           className={cn(
             SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-slate-400 dark:text-slate-500 transition-colors shadow-xs backdrop-blur-xs'
+            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted transition-colors shadow-xs backdrop-blur-xs'
           )}
         >
-          <ImageOff className="h-8 w-8 text-slate-400 dark:text-slate-600" />
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 text-center px-2">
+          <ImageOff className="h-8 w-8 text-text-muted" />
+          <span className="text-[11px] font-bold text-text-muted text-center px-2">
             {dict?.generator?.emptySlot || 'Empty Slot'}
           </span>
         </div>

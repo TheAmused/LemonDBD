@@ -52,7 +52,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const isPickerPage = segmentsAfterStreaks.length <= 1;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
+    <div className="min-h-screen bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300">
       <Sidebar
         currentLocale={locale}
         dict={dict}
@@ -71,7 +71,7 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         )}
 
         {authLoading ? (
-          <p className="py-10 text-center text-xs text-slate-500">
+          <p className="py-10 text-center text-xs text-text-muted">
             {dict?.streaks?.loadingStreak || 'Loading…'}
           </p>
         ) : isAuthenticated && user?.is_verified ? (
@@ -79,11 +79,11 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
           </StreaksDictProvider>
         ) : isAuthenticated ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 px-6 py-20 text-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-50 dark:bg-slate-900/60">
-              <MailWarning className="h-5 w-5 text-amber-500" />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-accent-amber/20 bg-accent-amber/10">
+              <MailWarning className="h-5 w-5 text-accent-amber" />
             </div>
-            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-slate-800 dark:text-slate-300">
+            <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict?.streaks?.verifyEmailToTrack || 'Verify your email to track challenges'}
             </h2>
             <button

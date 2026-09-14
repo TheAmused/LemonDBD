@@ -438,8 +438,8 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               aria-live="polite"
               className={`flex items-center justify-between rounded-xl border p-4 text-xs font-semibold shadow-xs ${
                 actionMessage.type === 'success'
-                  ? 'border-emerald-500/40 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400'
-                  : 'border-rose-500/40 bg-rose-50 text-rose-800 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-400'
+                  ? 'border-accent-green/40 bg-accent-green/10 text-accent-green'
+                  : 'border-accent-red/40 bg-accent-red/10 text-accent-red'
               }`}
             >
               <span>{actionMessage.text}</span>
@@ -500,7 +500,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               onClick={() => setActiveTab('challenges')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'challenges'
-                  ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400 border border-cyan-500/40 shadow-xs'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
               }`}
             >
@@ -515,7 +515,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               onClick={() => setActiveTab('challenge_stats')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'challenge_stats'
-                  ? 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400 border border-indigo-500/40 shadow-xs'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
               }`}
             >
@@ -530,7 +530,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               onClick={() => setActiveTab('audit')}
               className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
                 activeTab === 'audit'
-                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/40 shadow-xs'
+                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
               }`}
             >

@@ -29,7 +29,7 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ dict, cl
         <DbdSpinner
           size="responsive"
           layout="inline"
-          accent="gold"
+          accent="blood"
           needleSpeed={1.3}
           label={loadingLabel}
           dict={dict}

@@ -115,7 +115,7 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
     assert.ok(html.includes('Empty Slot'));
   });
 
-  it('renders equipped perk with purple diamond border and perk name', () => {
+  it('renders equipped perk with accent diamond border and perk name', () => {
     const mockPerk: Perk = {
       id: 99,
       name: 'Sprint Burst',
@@ -136,7 +136,7 @@ describe('Campfire Dossier: PerkDiamondSlot', () => {
     );
 
     assert.ok(html.includes('Sprint Burst'));
-    assert.ok(html.includes('border-purple-500'));
+    assert.ok(html.includes('border-accent-red'));
   });
 });
 

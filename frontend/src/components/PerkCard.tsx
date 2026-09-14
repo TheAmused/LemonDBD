@@ -106,7 +106,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label={ariaLabel}
-          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-amber-500/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-border-color bg-bg-surface px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-bg-elevated hover:border-accent-red/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
         >
           <div
             className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-slate-900 border border-border-color p-1 ${
@@ -149,7 +149,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                   {coordinateLabel}
                 </span>
               )}
-              <p className="truncate text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">{perk.name}</p>
+              <p className="truncate text-sm sm:text-base font-bold text-text-primary">{perk.name}</p>
             </div>
             <p className="truncate text-xs text-text-secondary">
               {isGeneral ? generalLabel : perk.character}
@@ -211,7 +211,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           <span
             className={`absolute z-10 font-mono font-black pointer-events-none ${
               size === 'tarot' || size === 'compact'
-                ? 'top-0 left-0 text-[8px] sm:text-[9px] md:text-[10px] text-accent-amber bg-slate-950/80 px-1 py-0.5 rounded shadow-xs'
+                ? 'top-0 left-0 text-[8px] sm:text-[9px] md:text-[10px] text-accent-amber bg-bg-primary/80 px-1 py-0.5 rounded shadow-xs'
                 : 'top-1 left-1 text-[10px] text-accent-amber'
             }`}
           >

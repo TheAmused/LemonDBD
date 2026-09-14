@@ -11,9 +11,9 @@ export interface RulesModalShellProps {
   onClose: () => void;
   icon: LucideIcon;
   title: string;
-  /** Tailwind classes for the header icon chip, e.g. "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400". */
+  /** Tailwind classes for the header icon chip, e.g. "bg-accent-red/10 border-accent-red/20 text-accent-red". */
   iconClassName: string;
-  /** Tailwind classes for the footer button, e.g. "bg-amber-600 hover:bg-amber-500". */
+  /** Tailwind classes for the footer button, e.g. "bg-accent-red hover:bg-accent-red-hover". */
   footerButtonClassName: string;
   footerButtonLabel?: string;
   children: React.ReactNode;
@@ -69,13 +69,13 @@ export const RulesModalListSection: React.FC<{
   headerColorClassName: string;
   boxClassName: string;
 }> = ({ icon: Icon, title, intro, items, headerColorClassName, boxClassName }) => (
-  <div className={`bg-slate-50 dark:bg-slate-950/80 border rounded-xl p-4 space-y-3 shadow-sm ${boxClassName}`}>
+  <div className={`bg-bg-elevated border rounded-xl p-4 space-y-3 shadow-sm ${boxClassName}`}>
     <h3 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${headerColorClassName}`}>
       <Icon className="w-4 h-4" aria-hidden="true" />
       <span>{title}</span>
     </h3>
-    {intro && <p className="text-xs text-slate-500 dark:text-slate-400">{intro}</p>}
-    <ul className="space-y-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+    {intro && <p className="text-xs text-text-secondary">{intro}</p>}
+    <ul className="space-y-2 text-xs sm:text-sm text-text-secondary leading-relaxed">
       {items.map((item, i) => (
         <li key={i}>
           <strong>{item.label}: </strong>
@@ -111,38 +111,38 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 dark:bg-slate-950/80 backdrop-blur-md overflow-y-auto cursor-pointer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-md overflow-y-auto cursor-pointer"
     >
       <div
-        className="relative w-full max-w-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto cursor-default"
+        className="relative w-full max-w-3xl bg-bg-surface border border-border-color rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
+        <div className="flex items-center justify-between p-6 border-b border-border-color bg-bg-elevated">
           <div className="flex items-center gap-3">
             <div className={`p-2.5 border rounded-xl ${iconClassName}`}>
               <Icon className="w-6 h-6" />
             </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight capitalize">
+            <h2 className="text-xl sm:text-2xl font-black text-text-primary tracking-tight capitalize">
               {title}
             </h2>
           </div>
           <button
             onClick={onClose}
             aria-label={dict?.modal?.close || 'Close'}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto space-y-6 text-sm text-slate-700 dark:text-slate-300">
+        <div className="p-6 overflow-y-auto space-y-6 text-sm text-text-secondary">
           {children}
         </div>
 
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex justify-end">
+        <div className="p-4 border-t border-border-color bg-bg-elevated flex justify-end">
           <button
             onClick={onClose}
-            className={`px-5 py-2.5 text-white font-bold rounded-xl text-sm transition-all cursor-pointer shadow-md ${footerButtonClassName}`}
+            className={`px-5 py-2.5 text-text-inverted font-bold rounded-xl text-sm transition-all cursor-pointer shadow-md ${footerButtonClassName}`}
           >
             {footerButtonLabel}
           </button>

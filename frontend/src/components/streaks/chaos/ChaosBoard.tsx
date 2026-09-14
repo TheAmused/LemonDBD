@@ -180,7 +180,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
       <Link
         href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-violet-500 dark:text-slate-400 dark:hover:text-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
         <span>{dict?.streaks?.backToKillerStreaks || ''}</span>
@@ -188,7 +188,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
       <div className="mt-4">
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg" role="alert">
+          <div className="mb-6 p-4 rounded-xl bg-accent-red/15 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-xs" role="alert">
             <span>{error}</span>
           </div>
         )}
@@ -209,21 +209,21 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         />
 
         {isCompleted ? (
-          <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400" aria-hidden="true">
+          <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-gradient-to-b from-accent-green/10 to-accent-green/[0.03] px-6 py-10 text-center shadow-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green" aria-hidden="true">
               <Trophy className="h-8 w-8" />
             </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+            <h2 className="text-2xl font-black tracking-tight text-text-primary">
               {completionTitle}
             </h2>
             <button
               type="button"
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               <span>{dict?.streaks?.startNewRun || ''}</span>
@@ -242,8 +242,8 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 dict={dict}
               />
             </div>
-            <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 pb-24 shadow-sm">
-              <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+            <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 pb-24 shadow-sm">
+              <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-3">
                 {dict?.streaks?.pickYourKiller || ''}
               </h3>
 
@@ -273,7 +273,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                     type="button"
                     onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                     disabled={busy || !run?.perks_revealed || !selectedKillerId}
-                    className="flex-1 max-w-xs bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer"
                   >
                     {dict?.streaks?.acceptPick || ''}
                   </button>
@@ -283,7 +283,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                       type="button"
                       onClick={() => handleResult('win')}
                       disabled={busy}
-                      className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                      className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer"
                     >
                       {dict?.streaks?.winMatch || ''}
                     </button>
@@ -291,7 +291,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                       type="button"
                       onClick={() => handleResult('loss')}
                       disabled={busy}
-                      className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                      className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer"
                     >
                       {dict?.streaks?.loseMatch || ''}
                     </button>
@@ -303,13 +303,13 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         )}
 
         {!isCompleted && isAdmin && (
-          <div className="mt-10 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm px-4 py-4 shadow-sm">
+          <div className="mt-10 rounded-2xl border border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
             <button
               type="button"
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
               title={dict?.streaks?.devSkipWinTitle || ''}
-              className="inline-flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
+              className="inline-flex items-center gap-2 text-xs font-bold text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{dict?.streaks?.devSkipWinLabel || ''}</span>
@@ -337,7 +337,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
           title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
-          accent="violet"
+          accent="amber"
           completions={completions}
           subjectLabel={dict?.streaks?.killersLabel || 'killers'}
           dict={dict}

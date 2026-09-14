@@ -91,7 +91,7 @@ function LandingFallback() {
     <DbdSpinner
       layout="fullscreen"
       size="responsive"
-      accent="amber"
+      accent="blood"
       needleSpeed={1.3}
     />
   );

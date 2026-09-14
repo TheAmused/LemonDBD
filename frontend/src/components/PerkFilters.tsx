@@ -133,7 +133,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Survivor',
       icon: <Shield className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-emerald-600 text-text-inverted',
+      activeClassName: 'bg-accent-green text-white',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.survivor && <span>{dict.filters.survivor}</span>}
@@ -148,7 +148,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'Killer',
       icon: <Skull className="h-3.5 w-3.5" />,
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.killer && <span>{dict.filters.killer}</span>}
@@ -165,7 +165,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
     {
       value: 'all',
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.allPerks && <span>{dict.filters.allPerks}</span>}
@@ -179,7 +179,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
     {
       value: 'owned',
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
       label: (
         <span className="inline-flex items-center gap-1.5">
           {dict?.filters?.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
@@ -197,12 +197,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     {
       value: 'name',
       label: dict?.filters?.sortByName,
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
     },
     {
       value: 'character',
       label: dict?.filters?.sortByCharacter,
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
     },
   ];
 
@@ -211,13 +211,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       value: 'asc',
       icon: <ArrowUpAZ className="h-3.5 w-3.5" />,
       label: dict?.filters?.orderAsc,
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
     },
     {
       value: 'desc',
       icon: <ArrowDownZA className="h-3.5 w-3.5" />,
       label: dict?.filters?.orderDesc,
-      activeClassName: 'bg-accent-red text-text-inverted',
+      activeClassName: 'bg-accent-red text-white',
     },
   ];
 

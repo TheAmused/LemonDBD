@@ -45,7 +45,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       description:
         dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint banks every 10 wins.',
       icon: Swords,
-      accentClassName: 'border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 text-amber-500',
+      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: originalCompleted,
       completedCount: originalCompletedCount,
       completedFull: originalCompletedFull,
@@ -56,7 +56,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       label: dict?.streaks?.lemonVersion || 'Lemon version',
       description: dict?.streaks?.gauntletLemonDesc || 'A lightly modified, easier take on the Gauntlet.',
       icon: Lock,
-      accentClassName: 'border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/30',
+      accentClassName: 'border-border-color bg-bg-elevated/50',
       disabled: true,
       disabledBadge: dict?.streaks?.comingSoon || 'Coming soon.',
     },
@@ -68,7 +68,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         isOpen={isOpen}
         onClose={onClose}
         icon={Swords}
-        iconClassName="bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
+        iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
         title={dict?.streaks?.chooseGauntletMode || 'Choose a Gauntlet Mode'}
         intro={
           role === 'killer'

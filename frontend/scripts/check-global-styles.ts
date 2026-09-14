@@ -210,7 +210,7 @@ const ARBITRARY_COLOR_REGEX =
 let hasErrors = false;
 
 function reportError(filePath: string, line: number, message: string) {
-  console.error(`❌ ${message} at ${filePath}:${line}`);
+  console.error(`[ERROR] ${message} at ${filePath}:${line}`);
   hasErrors = true;
 }
 
@@ -401,9 +401,9 @@ for (const sourceFile of project.getSourceFiles()) {
 
 if (hasErrors) {
   console.error(
-    "\n🚫 Build blocked: move hardcoded/global styling into Tailwind classes or app/globals.css.\n"
+    "\n[FAIL] Build blocked: move hardcoded/global styling into Tailwind classes or app/globals.css.\n"
   );
   process.exit(1);
 } else {
-  console.log("✅ No unscoped global styles or hardcoded inline styles found.");
+  console.log("[SUCCESS] No unscoped global styles or hardcoded inline styles found.");
 }

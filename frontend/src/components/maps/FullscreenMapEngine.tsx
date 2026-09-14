@@ -25,6 +25,7 @@ interface FullscreenMapEngineProps {
   availableMaps?: MapRealm[];
   backendBase: string;
   dict?: Dictionary;
+  initialDrawerOpen?: boolean;
 }
 
 export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
@@ -33,9 +34,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   availableMaps = [],
   backendBase,
   dict,
+  initialDrawerOpen = false,
 }) => {
   const [imageFailed, setImageFailed] = useState<boolean>(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(initialDrawerOpen);
 
   useEffect(() => {
     setImageFailed(false);

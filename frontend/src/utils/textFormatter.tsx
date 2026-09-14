@@ -802,7 +802,7 @@ function parsePlainTextSubTokens(
           return (
             <em
               key={`${baseKey}-h-${idx}`}
-              className="italic font-bold text-slate-100 dark:text-white"
+              className="italic font-bold text-text-primary"
             >
               {part}
             </em>
@@ -817,7 +817,7 @@ function parsePlainTextSubTokens(
           return (
             <kbd
               key={`${baseKey}-btn-${idx}`}
-              className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-slate-800/95 border border-amber-500/50 text-amber-300 shadow-xs align-baseline whitespace-nowrap"
+              className="inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap"
             >
               {part}
             </kbd>
@@ -834,7 +834,7 @@ function parsePlainTextSubTokens(
           return (
             <strong
               key={`${baseKey}-v-${idx}`}
-              className="font-black text-amber-400 dark:text-amber-400 inline-block drop-shadow-xs"
+              className="font-black text-accent-amber inline-block drop-shadow-xs"
             >
               {part}
             </strong>
@@ -873,7 +873,7 @@ export function parseLineTokens(
           return (
             <strong
               key={key}
-              className="font-bold text-amber-400 dark:text-amber-400 inline-block drop-shadow-xs"
+              className="font-bold text-accent-amber inline-block drop-shadow-xs"
             >
               {parsePlainTextSubTokens(inner, key, tokenRegex, highlightName)}
             </strong>
@@ -885,7 +885,7 @@ export function parseLineTokens(
         if (italicMatch) {
           const inner = italicMatch[1];
           return (
-            <em key={key} className="italic text-slate-200">
+            <em key={key} className="italic text-text-secondary">
               {parsePlainTextSubTokens(inner, key, tokenRegex, highlightName)}
             </em>
           );
@@ -899,7 +899,7 @@ export function parseLineTokens(
           return (
             <kbd
               key={key}
-              className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-800 border border-slate-600 text-amber-300 shadow-xs mx-0.5"
+              className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold bg-bg-elevated border border-border-color text-accent-amber shadow-xs mx-0.5"
             >
               {label}
             </kbd>
@@ -1045,7 +1045,7 @@ export function renderFormattedDbdText(
       elements.push(
         <div
           key={`q-${lineIdx}`}
-          className={`rounded-2xl border-l-3 border-amber-500/90 bg-gradient-to-r from-amber-500/10 via-slate-950/80 to-transparent px-3.5 py-2.5 italic text-slate-300 dark:text-slate-300 font-serif shadow-inner ${
+          className={`rounded-2xl border-l-3 border-accent-amber/90 bg-gradient-to-r from-accent-amber/10 via-bg-primary/80 to-transparent px-3.5 py-2.5 italic text-text-secondary font-serif shadow-inner ${
             isCompact ? 'my-1.5 text-[11px]' : 'my-3 text-xs sm:text-sm'
           }`}
         >
@@ -1061,9 +1061,9 @@ export function renderFormattedDbdText(
       elements.push(
         <div
           key={`ev-${lineIdx}`}
-          className="p-3 my-2 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs font-semibold text-amber-300 flex items-start gap-2.5 shadow-sm"
+          className="p-3 my-2 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs font-semibold text-accent-amber flex items-start gap-2.5 shadow-sm"
         >
-          <span className="shrink-0 font-mono font-bold uppercase tracking-wider text-[10px] bg-amber-500/25 px-2 py-0.5 rounded-lg text-amber-300">
+          <span className="shrink-0 font-mono font-bold uppercase tracking-wider text-[10px] bg-accent-amber/25 px-2 py-0.5 rounded-lg text-accent-amber">
             {noticeLabel}
           </span>
           <span className="leading-relaxed">{line}</span>
@@ -1086,7 +1086,7 @@ export function renderFormattedDbdText(
       bullets.push(
         <li
           key={`li-${lineIdx}`}
-          className={`leading-relaxed text-slate-300 marker:text-amber-400 transition-colors ${
+          className={`leading-relaxed text-text-secondary marker:text-accent-amber transition-colors ${
             isCompact ? 'text-xs' : 'text-xs sm:text-sm'
           }`}
         >
@@ -1101,7 +1101,7 @@ export function renderFormattedDbdText(
     elements.push(
       <p
         key={`p-${lineIdx}`}
-        className={`leading-relaxed text-slate-300 ${
+        className={`leading-relaxed text-text-secondary ${
           isCompact ? 'mb-1 text-xs' : 'mb-2.5 text-xs sm:text-sm'
         }`}
       >

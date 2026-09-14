@@ -574,3 +574,53 @@ strong {
 .gn-name-in {
   animation: gnNameIn 260ms ease-out both;
 }
+
+/*
+ * ---------------------------------------------------------------------------
+ * Specialized UI & Atmospheric Treatments (globals.css single source of truth)
+ * ---------------------------------------------------------------------------
+ */
+
+/* Leaderboard podium medals */
+.medal-gold {
+  background: linear-gradient(135deg, #fcd34d 0%, #ffd166 50%, #f59e0b 100%);
+  color: #09090b;
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.6);
+  border: 1px solid #fde68a;
+  outline: 2px solid rgba(251, 191, 36, 0.3);
+}
+
+.medal-silver {
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%);
+  color: #09090b;
+  box-shadow: 0 0 15px rgba(226, 232, 240, 0.5);
+  border: 1px solid #ffffff;
+  outline: 2px solid rgba(203, 213, 225, 0.3);
+}
+
+.medal-bronze {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 50%, #78350f 100%);
+  color: #fef3c7;
+  box-shadow: 0 0 15px rgba(180, 83, 9, 0.5);
+  border: 1px solid #f59e0b;
+  outline: 2px solid rgba(217, 119, 6, 0.3);
+}
+
+/* CRT scanlines effect */
+.crt-scanlines {
+  background: linear-gradient(rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+}
+
+/* Landing page atmospheric effects */
+.landing-heartbeat-vignette {
+  background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(190, 18, 60, 0.16), transparent 70%);
+}
+
+.landing-ember-glow {
+  box-shadow: 0 0 6px 2px color-mix(in srgb, var(--accent-amber) 50%, transparent);
+}
+
+.landing-static-fog {
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(7, 11, 18, 0.6) 100%);
+}

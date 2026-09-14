@@ -69,6 +69,7 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
       mapId: 1,
       availableMaps: [sampleOutdoorMap],
       backendBase: 'http://localhost:5000',
+      initialDrawerOpen: true,
       onClose: () => {},
     })
   );
@@ -90,6 +91,7 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
       mapId: 43,
       availableMaps: [sampleIndoorMap],
       backendBase: 'http://localhost:5000',
+      initialDrawerOpen: true,
       onClose: () => {},
     })
   );
@@ -110,6 +112,7 @@ test('FullscreenMapEngine renders float tile size accurately', () => {
       mapId: 45,
       availableMaps: [sampleMidwichMap],
       backendBase: 'http://localhost:5000',
+      initialDrawerOpen: true,
       onClose: () => {},
     })
   );

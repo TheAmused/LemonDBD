@@ -306,8 +306,8 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                                     draggable={false}
                                     className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
                                   />
-                                  <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                    <Maximize2 className="h-4 w-4 text-white" />
+                                  <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                    <Maximize2 className="h-4 w-4 text-text-inverted" />
                                   </div>
                                 </button>
                               );

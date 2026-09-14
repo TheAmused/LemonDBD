@@ -327,7 +327,7 @@ const SwatchPopover: React.FC<{
         title={c.name}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => onPick(c.value)}
-        className="h-6 w-6 rounded-full border border-white/20 cursor-pointer hover:scale-110 transition-transform"
+        className="h-6 w-6 rounded-full border border-border-color cursor-pointer hover:scale-110 transition-transform"
         style={{ backgroundColor: c.value }}
       />
     ))}

@@ -23,7 +23,6 @@ interface PageShellProps {
   dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
-  onOpenQuests?: () => void;
   totalPerksCount?: number;
   survivorCount?: number;
   killerCount?: number;
@@ -59,7 +58,6 @@ export function PageShell({
   dict,
   activeCategory,
   onSelectCategory,
-  onOpenQuests,
   totalPerksCount,
   survivorCount,
   killerCount,
@@ -95,7 +93,6 @@ export function PageShell({
         dict={dict}
         activeCategory={activeCategory}
         onSelectCategory={onSelectCategory}
-        onOpenQuests={onOpenQuests}
         totalPerksCount={totalPerksCount}
         survivorCount={survivorCount}
         killerCount={killerCount}

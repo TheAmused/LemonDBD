@@ -179,8 +179,8 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
                     <CardBackImage type={card.type} />
-                    <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-black/70 via-transparent to-transparent p-3">
-                      <span className="text-[11px] font-black uppercase tracking-wide text-white drop-shadow">
+                    <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-bg-primary/80 via-transparent to-transparent p-3">
+                      <span className="text-[11px] font-black uppercase tracking-wide text-text-inverted drop-shadow">
                         {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                       </span>
                     </div>

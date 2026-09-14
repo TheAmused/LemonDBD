@@ -386,7 +386,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             onClick={stepPrev}
-            className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-white hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+            className="absolute left-2 sm:left-4 md:left-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >
             <ChevronLeft className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" aria-hidden="true" />
           </button>
@@ -399,7 +399,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             onMouseDown={(e) => e.stopPropagation()}
             onTouchStart={(e) => e.stopPropagation()}
             onClick={stepNext}
-            className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-white hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+            className="absolute right-2 sm:right-4 md:right-8 z-50 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-bg-surface border border-accent-red/40 text-accent-red hover:bg-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all cursor-pointer pointer-events-auto select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >
             <ChevronRight className="h-6 w-6 sm:h-7 sm:w-7 stroke-[2.5]" aria-hidden="true" />
           </button>
@@ -493,11 +493,11 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     className="absolute inset-0 h-full w-full object-cover object-center pointer-events-none"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20 pointer-events-none" aria-hidden="true" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/95 via-bg-primary/40 to-bg-primary/20 pointer-events-none" aria-hidden="true" />
 
                   {isRosterEnabled && (
                     <div
-                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-black/80 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none"
+                      className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted text-xs sm:text-sm font-mono font-bold shadow-md pointer-events-none"
                     >
                       <Flame className="h-4 w-4 text-accent-red fill-accent-red" aria-hidden="true" />
                       <span>{count}</span>
@@ -506,7 +506,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
                   {isCurrentlyActive && (
                     <div
-                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-white text-xs font-mono font-black pointer-events-none"
+                      className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-accent-red text-text-inverted text-xs font-mono font-black pointer-events-none"
                     >
                       <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />
                       <span>{rawSmash?.active || ''}</span>
@@ -535,7 +535,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   )}
 
                   <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 text-center flex flex-col items-center justify-end z-10 pointer-events-none">
-                    <h3 className="text-base sm:text-lg md:text-xl font-black font-mono tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)] mb-1">
+                    <h3 className="text-base sm:text-lg md:text-xl font-black font-mono tracking-wide text-text-inverted drop-shadow-md mb-1">
                       {getRosterDisplayName(r)}
                     </h3>
 
@@ -572,7 +572,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               <button
                 type="button"
                 onClick={() => commitSelection()}
-                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-accent-red text-white font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase border border-accent-red/60 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-accent-red text-text-inverted font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase border border-accent-red/60 hover:scale-105 active:scale-95 transition-all cursor-pointer"
               >
                 <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[3]" aria-hidden="true" />
                 <span>

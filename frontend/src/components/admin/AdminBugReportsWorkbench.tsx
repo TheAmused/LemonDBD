@@ -404,7 +404,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                           alt={dict?.admin?.attachmentsLabel ? `${dict.admin.attachmentsLabel} ${i + 1}` : ''}
                           className="h-full w-full object-cover group-hover:opacity-85 transition-opacity"
                         />
-                        <div className="absolute inset-0 bg-bg-primary/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-white">
+                        <div className="absolute inset-0 bg-bg-primary/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-text-inverted">
                           <ExternalLink className="h-5 w-5" />
                         </div>
                       </a>

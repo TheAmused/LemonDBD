@@ -38,14 +38,6 @@ from app.schemas.community import (
     BugReportBase,
     BugReportCreate,
     BugReportResponse,
-    CommunityBuildBase,
-    CommunityBuildCreate,
-    CommunityBuildResponse,
-    CustomPerkBase,
-    CustomPerkCreate,
-    CustomPerkResponse,
-    DailyQuestBase,
-    DailyQuestResponse,
 )
 from app.schemas.equipment import (
     ItemAddonBase,
@@ -77,12 +69,6 @@ from app.schemas.history import (
     HistoryMatchLogResponse,
     HistoryRunBase,
     HistoryRunResponse,
-)
-from app.schemas.minigames import (
-    DraftSessionBase,
-    DraftSessionResponse,
-    GuesserStatBase,
-    GuesserStatResponse,
 )
 from app.schemas.page_streak import (
     PageStreakPageLogBase,
@@ -146,18 +132,6 @@ __all__ = [
     "PageStreakRunResponse",
     "PageStreakPageLogBase",
     "PageStreakPageLogResponse",
-    "DraftSessionBase",
-    "DraftSessionResponse",
-    "GuesserStatBase",
-    "GuesserStatResponse",
-    "DailyQuestBase",
-    "DailyQuestResponse",
-    "CommunityBuildBase",
-    "CommunityBuildCreate",
-    "CommunityBuildResponse",
-    "CustomPerkBase",
-    "CustomPerkCreate",
-    "CustomPerkResponse",
     "BugReportBase",
     "BugReportCreate",
     "BugReportResponse",

@@ -111,12 +111,12 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                 title={`${displayName(char.name)}${statusSuffix}`}
               >
                 {completed && (
-                  <div className="absolute -top-2 -right-2 bg-accent-green text-white p-1 rounded-full shadow-md z-10">
+                  <div className="absolute -top-2 -right-2 bg-accent-green text-text-inverted p-1 rounded-full shadow-md z-10">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                 )}
                 {checkpoint && !completed && !active && (
-                  <div className="absolute -top-2 -right-2 bg-accent-amber text-white p-1 rounded-full shadow-md z-10">
+                  <div className="absolute -top-2 -right-2 bg-accent-amber text-text-inverted p-1 rounded-full shadow-md z-10">
                     <ShieldCheck className="w-3 h-3" />
                   </div>
                 )}

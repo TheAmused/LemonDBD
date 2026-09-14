@@ -17,7 +17,6 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { getBackendBaseUrl } from '@/utils/api';
 
-const QuestsModal = dynamic(() => import('@/components/QuestsModal').then((m) => m.QuestsModal), { ssr: false });
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 export default function StreaksLayout({ children }: { children: React.ReactNode }) {
@@ -29,7 +28,6 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
 
   const dict = useDictionary();
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
 
 
   const backendBase = getBackendBaseUrl();
@@ -58,7 +56,6 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         dict={dict}
         activeCategory="streaks"
         onSelectCategory={handleSelectCategory}
-        onOpenQuests={() => setIsQuestsOpen(true)}
       />
 
       <main
@@ -123,7 +120,6 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
         )}
 
 
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
         <AuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}

@@ -14,18 +14,11 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { getBackendBaseUrl } from '@/utils/api';
 
-const QuestsModal = dynamic(
-  () => import('@/components/QuestsModal').then((m) => m.QuestsModal),
-  { ssr: false }
-);
-
 export default function CharactersPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
 
   const dict = useDictionary();
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
-
 
   const backendBase = getBackendBaseUrl();
 
@@ -36,15 +29,11 @@ export default function CharactersPage() {
       locale={locale}
       dict={dict}
       activeCategory="characters"
-      onOpenQuests={() => setIsQuestsOpen(true)}
       mainClassName="overflow-y-auto"
     >
       <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
         <CharactersHub dict={dict} />
       </Suspense>
-      {isQuestsOpen && (
-        <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />
-      )}
     </PageShell>
   );
 }

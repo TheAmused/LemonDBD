@@ -10,7 +10,7 @@ from app.core.extensions import db
 from app.core.limiter import get_client_ip
 from app.core.security import get_current_user
 from app.models.smash_or_pass import Roster
-from app.services.others.smash_or_pass_service import SmashOrPassService
+from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
 
 logger = logging.getLogger(__name__)

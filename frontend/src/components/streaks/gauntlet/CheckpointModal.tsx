@@ -73,7 +73,7 @@ export const CheckpointModal: React.FC<CheckpointModalProps> = ({
         <button
           type="button"
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-white shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
         >
           {dict?.streaks?.keepGoing || 'Keep going'}
         </button>

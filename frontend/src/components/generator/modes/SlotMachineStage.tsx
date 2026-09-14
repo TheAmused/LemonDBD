@@ -535,7 +535,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                               <img
                                 src={getPerkIconUrl(cell.perk, backendBase) || ''}
                                 alt=""
-                                className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]"
+                                className="object-contain drop-shadow-md"
                                 style={{ height: cellPx * 0.72, width: cellPx * 0.72 }}
                                 loading="lazy"
                               />
@@ -718,7 +718,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                               <img
                                 src={getPerkIconUrl(cell.perk, backendBase) || ''}
                                 alt=""
-                                className="object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]"
+                                className="object-contain drop-shadow-md"
                                 style={{ height: cellPx * 0.62, width: cellPx * 0.62 }}
                                 loading="lazy"
                               />

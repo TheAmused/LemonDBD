@@ -85,7 +85,7 @@ export const VoiceEngineInfoModal: React.FC<VoiceEngineInfoModalProps> = ({
       {/* Fullscreen Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+        className="fixed inset-0 bg-bg-primary/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
         aria-hidden="true"
       />
 

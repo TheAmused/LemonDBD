@@ -43,7 +43,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <div
       onClick={onCancel}
-      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md cursor-pointer"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
       role="dialog"
       aria-modal="true"
     >

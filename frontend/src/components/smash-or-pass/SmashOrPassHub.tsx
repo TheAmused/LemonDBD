@@ -744,7 +744,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   className="h-full w-full object-cover"
                 />
               </span>
-              <span className="truncate max-w-[150px] sm:max-w-[220px] text-text-primary group-hover:text-white font-black tracking-wide">
+              <span className="truncate max-w-[150px] sm:max-w-[220px] text-text-primary group-hover:text-accent-red font-black tracking-wide">
                 {getRosterDisplayName(activeRoster)}
               </span>
               <span className="px-2 py-0.5 rounded-lg bg-accent-red/20 text-accent-red text-[10px] sm:text-xs font-black">
@@ -902,7 +902,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('role', 'all')}
                     className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'all'
-                        ? 'bg-accent-red text-white'
+                        ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-text-primary'
                     }`}
                   >
@@ -913,7 +913,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('role', 'Survivor')}
                     className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'Survivor'
-                        ? 'bg-accent-green text-white font-black'
+                        ? 'bg-accent-green text-text-inverted font-black'
                         : 'text-text-muted hover:text-accent-green'
                     }`}
                   >
@@ -925,7 +925,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('role', 'Killer')}
                     className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
                       roleFilter === 'Killer'
-                        ? 'bg-accent-red text-white'
+                        ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-accent-red'
                     }`}
                   >
@@ -941,7 +941,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('gender', 'all')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'all'
-                        ? 'bg-accent-red text-white'
+                        ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-text-primary'
                     }`}
                   >
@@ -952,7 +952,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('gender', 'female')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'female'
-                        ? 'bg-accent-red text-white'
+                        ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-accent-red'
                     }`}
                   >
@@ -963,7 +963,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     onClick={() => handleFilterChange('gender', 'male')}
                     className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
                       genderFilter === 'male'
-                        ? 'bg-accent-green text-white'
+                        ? 'bg-accent-green text-text-inverted'
                         : 'text-text-muted hover:text-accent-green'
                     }`}
                   >
@@ -1124,7 +1124,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={() => setIsPersonaOpen(true)}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-white font-black text-xs transition-all shadow-lg cursor-pointer font-mono"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black text-xs transition-all shadow-lg cursor-pointer font-mono"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>{hudLabels.archetype || 'View Romance Archetype'}</span>
@@ -1349,7 +1349,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               <button
                 type="button"
                 onClick={handleResetAllVotes}
-                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-white transition-colors shadow-lg cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
               >
                 {dict?.smashOrPass?.modals?.confirm || 'Yes, Reset All'}
               </button>

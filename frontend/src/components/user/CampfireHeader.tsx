@@ -76,14 +76,14 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   showAdminBadge={true}
                   borderClassName="border-0"
                 />
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs rounded-2xl sm:rounded-3xl">
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/60 text-text-inverted opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-xs rounded-2xl sm:rounded-3xl">
                   <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-red" />
                   <span className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider">
                     {dict?.user?.changeAvatar || 'Change'}
                   </span>
                 </div>
                 {isUploadingAvatar && (
-                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-black/60 backdrop-blur-xs">
+                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-bg-primary/70 backdrop-blur-xs">
                     <span className="h-7 w-7 animate-spin rounded-full border-2 border-accent-red border-t-transparent" />
                   </div>
                 )}

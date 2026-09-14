@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { SmashOrPassHub } from '@/components/smash-or-pass/SmashOrPassHub';
-import { QuestsModal } from '@/components/QuestsModal';
 import { Locale } from '@/i18n/config';
 import { PerkItem, CharacterItem } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -20,8 +19,6 @@ export default function SmashOrPassPage() {
   const locale = (params?.locale as Locale) || 'en';
 
   const dict = useDictionary();
-  const [isQuestsOpen, setIsQuestsOpen] = useState<boolean>(false);
-
 
   const backendBase = getBackendBaseUrl();
 
@@ -32,7 +29,6 @@ export default function SmashOrPassPage() {
       locale={locale}
       dict={dict || ({} as Dictionary)}
       activeCategory="smash-or-pass"
-      onOpenQuests={() => setIsQuestsOpen(true)}
       mainClassName="overflow-y-auto"
     >
       <React.Suspense fallback={<SmashHubSkeleton />}>
@@ -42,7 +38,6 @@ export default function SmashOrPassPage() {
           <SmashHubSkeleton />
         )}
       </React.Suspense>
-      {dict && <QuestsModal isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} dict={dict} />}
     </PageShell>
   );
 }

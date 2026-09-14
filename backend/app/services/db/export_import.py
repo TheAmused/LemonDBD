@@ -17,8 +17,7 @@ from app.models.chapter import Chapter
 from app.services.db.parsing import parse_movement_speed, parse_release_date
 from app.models.map import MapRealm, MapSource, Realm
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
-from app.models.community import DailyQuest, CommunityBuild, CustomPerk, BugReport
-from app.models.minigames import DraftSession, GuesserStat
+from app.models.community import BugReport
 from app.models.admin import ChallengeModeSetting, AdminAuditLog
 from app.models.changelog import ChangelogPost
 from app.models.gauntlet import GauntletRun, GauntletMatchLog
@@ -60,9 +59,6 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "user_showcases",
     ],
     "community": [
-        "community_builds",
-        "custom_perks",
-        "daily_quests",
         "bug_reports",
         "changelog_posts",
         "gauntlet_runs",
@@ -72,10 +68,8 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "rosters",
     ],
     "settings": [
-        "draft_sessions",
         "challenge_mode_settings",
         "admin_audit_logs",
-        "guesser_stats",
     ],
 }
 
@@ -178,12 +172,7 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("offerings", Offering, serialize_offering, ["icon_local_path"]),
     ("chapters", Chapter, serialize_chapter, ["banner_local_path"]),
     ("users", User, serialize_user, ["avatar_relative_path"]),
-    ("community_builds", CommunityBuild, lambda b: b.to_dict(), []),
-    ("custom_perks", CustomPerk, lambda cp: cp.to_dict(), []),
-    ("daily_quests", DailyQuest, lambda q: q.to_dict(), []),
     ("bug_reports", BugReport, lambda r: r.to_dict(), []),
-    ("guesser_stats", GuesserStat, lambda gs: gs.to_dict(), []),
-    ("draft_sessions", DraftSession, lambda ds: ds.to_dict(), []),
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
     ("admin_audit_logs", AdminAuditLog, serialize_admin_audit_log, []),
     ("changelog_posts", ChangelogPost, serialize_changelog_post, []),
@@ -194,9 +183,6 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
 # characters (perk.character_id FK), mirroring the plan's original ordering.
 _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("bug_reports", BugReport),
-    ("community_builds", CommunityBuild),
-    ("custom_perks", CustomPerk),
-    ("daily_quests", DailyQuest),
     ("killer_addons", KillerAddon),
     ("item_addons", ItemAddon),
     ("offerings", Offering),
@@ -206,8 +192,6 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("survivors", Survivor),
     ("killers", Killer),
     ("chapters", Chapter),
-    ("guesser_stats", GuesserStat),
-    ("draft_sessions", DraftSession),
     ("challenge_mode_settings", ChallengeModeSetting),
     ("user_showcases", UserShowcase),
     ("admin_audit_logs", AdminAuditLog),
@@ -1052,46 +1036,12 @@ class DatabaseExportImportService:
 
 
             _upsert_entity(
-                data, target_keys, summary, "community_builds", CommunityBuild, "title",
-                update_fields=["description", "role", "category", "character_id", "perks_json", "upvotes", "author"],
-                defaults=lambda row: {
-                    "description": row.get("description", ""),
-                    "role": row.get("role", "Survivor"),
-                    "category": row.get("category", "Meta"),
-                },
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "custom_perks", CustomPerk, "name",
-                update_fields=["role", "character_name", "rarity", "icon_preset", "description", "upvotes", "author"],
-                defaults=lambda row: {
-                    "role": row.get("role", "Survivor"),
-                    "rarity": row.get("rarity", "Very Rare"),
-                    "description": row.get("description", ""),
-                },
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "daily_quests", DailyQuest, "title",
-                update_fields=["description", "category", "progress", "goal", "xp_reward", "is_completed"],
-                defaults=lambda row: {
-                    "description": row.get("description", ""),
-                    "category": row.get("category", "General"),
-                },
-            )
-
-            _upsert_entity(
                 data, target_keys, summary, "bug_reports", BugReport, "title",
                 update_fields=["reporter_name", "reporter_email", "category", "message", "images_json", "status", "admin_notes"],
                 defaults=lambda row: {
                     "reporter_name": row.get("reporter_name", "Anonymous"),
                     "message": row.get("message", ""),
                 },
-            )
-
-            _upsert_entity(
-                data, target_keys, summary, "guesser_stats", GuesserStat, "guesser_type",
-                update_fields=["current_streak", "best_streak", "total_guesses", "correct_guesses"],
             )
 
             db.session.commit()

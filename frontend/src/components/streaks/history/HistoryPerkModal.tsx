@@ -134,7 +134,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
 
         <button
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-white shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
+          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
         >
           {dict?.streaks?.continueButton || 'Continue'}
         </button>

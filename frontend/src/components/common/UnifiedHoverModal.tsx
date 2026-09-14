@@ -197,8 +197,8 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
             className={`flex items-center gap-1 text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-full border shrink-0 ${
               isPerkItem
                 ? isSurvivor
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border-emerald-500/30'
-                  : 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/80 dark:text-rose-300 dark:border-rose-500/30'
+                  ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
+                  : 'bg-accent-red/15 text-accent-red border-accent-red/30'
                 : rarityStyle.badge
             }`}
           >

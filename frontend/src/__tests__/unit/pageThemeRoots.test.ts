@@ -17,17 +17,10 @@ describe('Page Root Theme Wrapper Consistency', () => {
     'perks/page.tsx',
     'characters/page.tsx',
     'characters/[slug]/page.tsx',
-    'characters/guesser/page.tsx',
     'randomizer/page.tsx',
     'smash-or-pass/page.tsx',
     'user/page.tsx',
-    'builds/page.tsx',
-    'custom-perks/page.tsx',
-    'draft/page.tsx',
-    'killer-calculator/page.tsx',
     'maps/page.tsx',
-    'quests/page.tsx',
-    'swf/page.tsx',
   ];
 
   for (const relPath of shellPageRoutes) {

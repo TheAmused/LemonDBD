@@ -426,7 +426,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                         type="button"
                         onClick={() => handleRemoveImage(idx)}
                         aria-label={t.bugRemoveScreenshot ? `${t.bugRemoveScreenshot} ${idx + 1}` : `${idx + 1}`}
-                        className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity focus:opacity-100"
+                        className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-text-inverted transition-opacity focus:opacity-100"
                       >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
                       </button>
@@ -469,11 +469,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white shadow-lg transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
-                      <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" aria-hidden="true" />
+                      <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" aria-hidden="true" />
                       <span>{t.bugSubmitting || ''}</span>
                     </>
                   ) : (

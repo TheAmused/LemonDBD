@@ -1,7 +1,6 @@
 # backend/tests/live/services/test_live_services_integration.py
 import pytest
-from flask import Flask
-from app.services.others.smash_or_pass_service import SmashOrPassService
+from app.services.smash_or_pass_service import SmashOrPassService
 from app.services.perk_service import PerkService
 from app.services.user_service import UserService
 

@@ -38,7 +38,7 @@ describe('Campfire Dossier: CampfireHeader', () => {
     );
 
     assert.ok(html.includes('CampfireMaster'));
-    assert.ok(html.includes('The Camper'));
+    assert.ok(html.includes('Survivor'));
     // Omitted / hidden per user mandate
     assert.ok(!html.includes('Saved to Database'));
     assert.ok(!html.includes('Lvl'));

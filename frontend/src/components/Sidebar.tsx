@@ -6,23 +6,16 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';
 import {
-  Flame,
   Sparkles,
   Dices,
   Menu,
   X,
   Users,
   Trophy,
-  Scroll,
-  Calculator,
-  Wand2,
   Compass,
   Swords,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
-  Folder,
-  Gamepad2,
   Heart,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
@@ -52,7 +45,6 @@ interface SidebarProps {
   dict: Dictionary;
   activeCategory?: string;
   onSelectCategory?: (category: string) => void;
-  onOpenQuests?: () => void;
   totalPerksCount?: number;
   survivorCount?: number;
   killerCount?: number;
@@ -63,7 +55,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentLocale: propLocale,
   dict,
   activeCategory,
-  onOpenQuests,
   totalPerksCount,
   survivorCount,
   killerCount,
@@ -96,7 +87,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
   const [bugModalOpen, setBugModalOpen] = useState(false);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
-  const [othersOpen, setOthersOpen] = useState(false);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
@@ -134,8 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         activeCategory === 'characters' ||
         pathname === `/${currentLocale}/characters` ||
         pathname === `/${currentLocale}/characters/` ||
-        (pathname.startsWith(`/${currentLocale}/characters/`) &&
-          !pathname.includes('/guesser'))
+        pathname.startsWith(`/${currentLocale}/characters/`)
       );
     }
 
@@ -214,74 +203,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ], [dict, currentLocale]);
 
-  const otherNavItems = useMemo(() => [
-    {
-      id: 'guesser',
-      label: dict?.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',
-      icon: Gamepad2,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/characters/guesser`,
-    },
-    {
-      id: 'draft',
-      label: dict?.sidebar?.draftRoom || 'Draft Room',
-      icon: Trophy,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/draft`,
-    },
-    {
-      id: 'swf',
-      label: dict?.sidebar?.swfPlanner || 'SWF Planner',
-      icon: Users,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/swf`,
-    },
-    {
-      id: 'killer-calculator',
-      label: dict?.sidebar?.killerCalc || 'Killer Calc',
-      icon: Calculator,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/killer-calculator`,
-    },
-    {
-      id: 'builds',
-      label: dict?.sidebar?.buildVault || 'Builds',
-      icon: Flame,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/builds`,
-    },
-    {
-      id: 'custom-perks',
-      label: dict?.sidebar?.perkStudio || 'Perk Studio',
-      icon: Wand2,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/custom-perks`,
-    },
-    {
-      id: 'quests',
-      label: dict?.sidebar?.quests || 'Quests',
-      icon: Scroll,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/quests`,
-    },
-  ], [dict, currentLocale]);
 
-  const isOtherActive = otherNavItems.some((item) =>
-    checkIsActive(item.id, item.href)
-  );
-
-  useEffect(() => {
-    if (isOtherActive && isAdmin) {
-      setOthersOpen(true);
-    }
-  }, [isOtherActive, isAdmin]);
 
   const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between p-4 overflow-y-auto">
@@ -325,72 +247,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
             />
           ))}
 
-          {isAdmin && (
-            <div className="pt-1">
-              <button
-                type="button"
-                onClick={() => setOthersOpen(!othersOpen)}
-                className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                  isOtherActive
-                    ? 'bg-accent-red/10 text-accent-red border border-accent-red/30'
-                    : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Folder className="h-4 w-4 text-text-secondary" />
-                  <span className="flex items-center gap-1.5">
-                    <span>{dict?.sidebar?.others || 'Others'}</span>
-                    <span className="rounded bg-accent-amber/15 px-1 py-0.2 text-[9px] font-extrabold text-accent-amber border border-accent-amber/30">
-                      {dict?.sidebar?.admin || 'ADMIN'}
-                    </span>
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  {isOtherActive && (
-                    <span className="h-2 w-2 rounded-full bg-accent-red animate-pulse" />
-                  )}
-                  <ChevronDown
-                    className={`h-4 w-4 text-text-muted transition-transform duration-200 ${
-                      othersOpen ? 'rotate-180' : 'rotate-0'
-                    }`}
-                  />
-                </div>
-              </button>
-
-              {othersOpen && (
-                <div className="mt-1 ml-3 pl-2.5 space-y-3 border-l-2 border-border-color">
-                  <div className="space-y-1">
-                    {otherNavItems.map((item) => (
-                      <SidebarNavLink
-                        key={item.id}
-                        id={item.id}
-                        label={item.label}
-                        icon={item.icon}
-                        color={item.color}
-                        activeBg={item.activeBg}
-                        href={item.href}
-                        isActive={checkIsActive(item.id, item.href)}
-                        onClick={() => {
-                          if (item.id === 'quests' && onOpenQuests) {
-                            onOpenQuests();
-                          }
-                          setMobileOpen(false);
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  <SidebarStatsCard
-                    dict={dict}
-                    totalPerksCount={stats.totalPerksCount}
-                    survivorCount={stats.survivorCount}
-                    killerCount={stats.killerCount}
-                    characterCount={stats.characterCount}
-                  />
-                </div>
-              )}
-            </div>
-          )}
+          <div className="pt-2">
+            <SidebarStatsCard
+              dict={dict}
+              totalPerksCount={stats.totalPerksCount}
+              survivorCount={stats.survivorCount}
+              killerCount={stats.killerCount}
+              characterCount={stats.characterCount}
+            />
+          </div>
         </nav>
 
         <SidebarUserSection

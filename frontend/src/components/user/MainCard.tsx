@@ -114,7 +114,7 @@ export const MainCard: React.FC<MainCardProps> = ({
                 </span>
               </div>
             )}
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-white uppercase tracking-wider backdrop-blur-xs font-mono">
+            <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-text-inverted uppercase tracking-wider backdrop-blur-xs font-mono">
               {dict?.user?.changeMain || 'Change'}
             </div>
           </div>

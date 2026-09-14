@@ -530,25 +530,21 @@ class TestDatabaseExportImportSettingsTables:
     def test_export_import_settings_tables_roundtrip(self, export_import_app):
         with export_import_app.app_context():
             from sqlalchemy import delete as sa_delete
-            from app.models.minigames import DraftSession
             from app.models.admin import ChallengeModeSetting
             from app.models.user import UserShowcase
 
             user = db.session.scalars(select(User).where(User.username == "player_test")).first()
-            db.session.add(DraftSession(room_code="ABC123"))
             db.session.add(ChallengeModeSetting(mode="gauntlet", is_enabled=True))
             db.session.add(UserShowcase(user_id=user.id, player_title="The Camper"))
             db.session.commit()
 
             targets = [
-                "draft_sessions",
                 "challenge_mode_settings", "user_showcases",
             ]
             exported = DatabaseExportImportService.export_database(targets=targets)
             for t in targets:
                 assert exported["counts"][t] == 1
 
-            db.session.execute(sa_delete(DraftSession))
             db.session.execute(sa_delete(ChallengeModeSetting))
             db.session.execute(sa_delete(UserShowcase))
             db.session.commit()
@@ -757,39 +753,7 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             # Email was protected from causing a unique constraint crash
             assert reloaded_beta.email == "beta@conflict.com"
 
-    def test_import_database_upsert_draft_sessions(self, export_import_app):
-        with export_import_app.app_context():
-            from app.models.minigames import DraftSession
-            session = DraftSession(
-                room_code="ROOM_TEST_UPSERT",
-                phase="bans",
-                banned_perks="[]",
-                picked_survivor_perks="[]",
-                picked_killer_perks="[]",
-            )
-            db.session.add(session)
-            db.session.commit()
 
-            payload = {
-                "data": {
-                    "draft_sessions": [
-                        {
-                            "room_code": "ROOM_TEST_UPSERT",
-                            "phase": "picks",
-                            "banned_perks": ["Sprint Burst"],
-                        }
-                    ]
-                }
-            }
-            summary = DatabaseExportImportService.import_database(payload, mode="merge", targets=["draft_sessions"])
-            assert summary["summary"]["draft_sessions"]["updated"] == 1
-            assert summary["summary"]["draft_sessions"]["created"] == 0
-
-            reloaded_session = db.session.scalar(
-                select(DraftSession).where(DraftSession.room_code == "ROOM_TEST_UPSERT")
-            )
-            assert reloaded_session.phase == "picks"
-            assert "Sprint Burst" in reloaded_session.banned_perks
 
     def test_import_database_partial_perks_update_descriptions_only(self, export_import_app):
         with export_import_app.app_context():

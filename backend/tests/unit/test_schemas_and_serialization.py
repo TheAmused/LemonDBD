@@ -5,9 +5,6 @@ from pydantic import ValidationError
 from app.schemas.community import (
     BugReportCreate,
     BugReportResponse,
-    CommunityBuildCreate,
-    CustomPerkCreate,
-    DailyQuestResponse,
 )
 from app.schemas.equipment import (
     ItemAddonBase,
@@ -78,26 +75,14 @@ class TestUserSchemas:
 class TestCommunityAndStreakSchemas:
     """Tests for Community builds and challenge streak request payloads."""
 
-    def test_community_build_create_validation(self) -> None:
-        valid_build = CommunityBuildCreate(
-            title="Gen Rush Meta 2026",
-            description="Optimal perks for rapid repair efficiency",
-            role="Survivor",
-            category="Objective",
-            character_id="all",
-            perks=["Prove Thyself", "Deja Vu", "Resilience", "Fast Track"],
+    def test_bug_report_create_validation(self) -> None:
+        report = BugReportCreate(
+            reporter_name="TrapperMain",
+            title="Trap stuck in rock",
+            message="Bear trap placed near rock became unreachable.",
         )
-        assert len(valid_build.perks) == 4
-
-        with pytest.raises(ValidationError):
-            CommunityBuildCreate(
-                title="Gen Rush Meta 2026",
-                description="Too many perks",
-                role="Survivor",
-                category="Objective",
-                character_id="all",
-                perks=["Perk1", "Perk2", "Perk3", "Perk4", "Perk5"],
-            )
+        assert report.reporter_name == "TrapperMain"
+        assert report.title == "Trap stuck in rock"
 
     def test_gauntlet_run_create_validation(self) -> None:
         run_req = GauntletRunCreate(

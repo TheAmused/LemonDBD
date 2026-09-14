@@ -69,17 +69,10 @@ export const MainCard: React.FC<MainCardProps> = ({
       aria-label={isSurvivor ? (dict?.user?.survivorMain || 'Survivor Main') : (dict?.user?.killerMain || 'Killer Main')}
       className={`relative overflow-hidden rounded-2xl border p-4 sm:p-5 backdrop-blur-xl shadow-md transition-all ${
         isSurvivor
-          ? 'border-cyan-500/35 bg-bg-surface hover:border-cyan-500/50'
+          ? 'border-accent-green/35 bg-bg-surface hover:border-accent-green/50'
           : 'border-accent-red/35 bg-bg-surface hover:border-accent-red/50'
       }`}
     >
-      {/* Background Accent Glow */}
-      <div
-        className={`pointer-events-none absolute -top-16 h-48 w-48 rounded-full blur-3xl opacity-20 ${
-          isSurvivor ? '-left-16 bg-cyan-500' : '-right-16 bg-accent-red'
-        }`}
-      />
-
       {/* Side-by-side: Survivor (Left = Avatar, Right = Perks) vs Killer (Left = Perks, Right = Avatar) */}
       <div
         className={`relative z-10 flex flex-col sm:flex-row items-center justify-around gap-4 sm:gap-6 ${
@@ -99,7 +92,7 @@ export const MainCard: React.FC<MainCardProps> = ({
             }}
             title={dict?.user?.changeMain || 'Change Main'}
             aria-label={dict?.user?.changeMain || 'Change Main'}
-            className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-amber cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-amber"
+            className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden border-2 border-border-color hover:border-accent-red cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
           >
             {avatarSrc && !imgError ? (
               <Image

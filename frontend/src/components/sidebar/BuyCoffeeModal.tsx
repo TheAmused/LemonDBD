@@ -87,9 +87,8 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       url: buyMeCoffeeUrl,
       tagline: t.coffeeBuyMeCoffeeTagline || 'Quick 1-click coffee & support',
       accentColor:
-        'border-amber-500/40 bg-amber-500/10 text-amber-400 hover:border-amber-400 hover:bg-amber-500/20',
-      buttonBg:
-        'bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950',
+        'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
+      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
       icon: Coffee,
     },
     {
@@ -97,9 +96,8 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       url: kofiUrl,
       tagline: t.coffeeKofiTagline || '0% fee donations & one-time tips',
       accentColor:
-        'border-orange-500/40 bg-orange-500/10 text-orange-400 hover:border-orange-400 hover:bg-orange-500/20',
-      buttonBg:
-        'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white',
+        'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
+      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
       icon: Heart,
     },
     {
@@ -107,9 +105,8 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       url: patreonUrl,
       tagline: t.coffeePatreonTagline || 'Monthly supporter perks & early features',
       accentColor:
-        'border-rose-500/40 bg-rose-500/10 text-rose-400 hover:border-rose-400 hover:bg-rose-500/20',
-      buttonBg:
-        'bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white',
+        'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
+      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
       icon: Crown,
     },
   ];
@@ -129,17 +126,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
             filter: blur(0);
           }
         }
-        @keyframes entityAuraAmber {
-          0%,
-          100% {
-            box-shadow: 0 0 25px 1px rgba(234, 179, 8, 0.2),
-              inset 0 0 15px rgba(220, 38, 38, 0.1);
-          }
-          50% {
-            box-shadow: 0 0 45px 5px rgba(234, 179, 8, 0.4),
-              inset 0 0 25px rgba(220, 38, 38, 0.2);
-          }
-        }
       `}</style>
 
       <div
@@ -155,18 +141,16 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
           className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity duration-300"
         />
 
-        <div className="fixed -top-20 -right-20 h-80 w-80 rounded-full bg-amber-500/10 blur-[90px] pointer-events-none" />
-        <div className="fixed -bottom-20 -left-20 h-80 w-80 rounded-full bg-red-600/10 blur-[90px] pointer-events-none" />
+        <div className="fixed -top-20 -right-20 h-80 w-80 rounded-full bg-accent-red/10 blur-[90px] pointer-events-none" />
+        <div className="fixed -bottom-20 -left-20 h-80 w-80 rounded-full bg-accent-red/10 blur-[90px] pointer-events-none" />
 
         <div
-          className="relative w-full max-w-lg my-8 rounded-3xl border border-amber-500/40 bg-bg-surface p-6 sm:p-8 text-text-primary backdrop-blur-2xl z-10 space-y-6 overflow-hidden"
+          className="relative w-full max-w-lg my-8 rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-8 text-text-primary backdrop-blur-2xl z-10 space-y-6 overflow-hidden"
           style={{
-            animation: isOpen
-              ? 'entityCoffeeSpawn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards, entityAuraAmber 4s ease-in-out infinite'
-              : 'none',
+            animation: isOpen ? 'entityCoffeeSpawn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards' : 'none',
           }}
         >
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-80 pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-red to-transparent opacity-80 pointer-events-none" />
 
           <button
             type="button"
@@ -178,7 +162,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
           </button>
 
           <div className="flex items-center gap-3.5 border-b border-border-color pb-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-500 shadow-md shadow-amber-950/40">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/30 text-accent-red shadow-md">
               <Coffee className="h-6 w-6" />
             </div>
             <div>
@@ -191,8 +175,8 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
             </div>
           </div>
 
-          <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent p-4 text-xs text-text-secondary leading-relaxed space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-amber-400 mb-1">
+          <div className="rounded-2xl border border-border-color bg-bg-elevated p-4 text-xs text-text-secondary leading-relaxed space-y-1">
+            <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
               <Sparkles className="h-4 w-4" />
               <span>{t.coffeeFuelNotice || 'Entity Fuel Notice'}</span>
             </div>
@@ -231,7 +215,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
                       <span>{t.coffeeVisit || 'Visit'}</span>
                       <ExternalLink className="h-3 w-3" />
                     </span>
-                    <ExternalLink className="sm:hidden h-4 w-4 text-text-muted group-hover:text-amber-400 transition-colors" />
+                    <ExternalLink className="sm:hidden h-4 w-4 text-text-muted group-hover:text-accent-red transition-colors" />
                   </div>
                 </a>
               );

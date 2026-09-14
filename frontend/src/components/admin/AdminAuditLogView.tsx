@@ -12,13 +12,13 @@ function authHeaders(token: string): HeadersInit {
 }
 
 const ACTION_COLORS: Record<string, string> = {
-  character_disabled: 'text-rose-700 dark:text-rose-400',
-  perk_disabled: 'text-rose-700 dark:text-rose-400',
-  challenge_mode_disabled: 'text-rose-700 dark:text-rose-400',
-  character_enabled: 'text-emerald-700 dark:text-emerald-400',
-  perk_enabled: 'text-emerald-700 dark:text-emerald-400',
-  challenge_mode_enabled: 'text-emerald-700 dark:text-emerald-400',
-  user_deleted: 'text-rose-700 dark:text-rose-400',
+  character_disabled: 'text-accent-red',
+  perk_disabled: 'text-accent-red',
+  challenge_mode_disabled: 'text-accent-red',
+  character_enabled: 'text-accent-green',
+  perk_enabled: 'text-accent-green',
+  challenge_mode_enabled: 'text-accent-green',
+  user_deleted: 'text-accent-red',
 };
 
 export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => {
@@ -69,7 +69,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
     <div className="rounded-2xl border border-border-color bg-bg-surface p-4 sm:p-6 shadow-sm backdrop-blur-sm transition-colors duration-200">
       <div className="flex items-center justify-between mb-4">
         <h3 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-text-primary">
-          <ScrollText className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+          <ScrollText className="h-4 w-4 text-text-secondary" />
           <span>{dict?.admin?.auditLog || 'Activity Log'}</span>
         </h3>
         <span className="text-xs text-text-secondary font-medium">

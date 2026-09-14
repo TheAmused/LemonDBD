@@ -157,7 +157,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       size="2xl"
       title={`${dict?.user?.selectCharacter || 'Select Character'} (${role})`}
       subtitle={dict?.user?.chooseCharacterDesc || 'Choose your primary character to showcase at the Campfire.'}
-      icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-cyan-400' : 'text-accent-red'}`} />}
+      icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
     >
@@ -170,7 +170,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={dict?.user?.searchCharacters || 'Search characters...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-amber/60 transition-colors font-mono"
+            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-red/60 transition-colors font-mono"
             autoFocus
           />
         </div>

@@ -34,7 +34,7 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({
       <DbdSpinner
         size="responsive"
         layout="inline"
-        accent="emerald"
+        accent="blood"
         needleSpeed={1.4}
         label={loadingLabel}
         sublabel={sublabel ?? 'Loading survivor & killer dossiers'}

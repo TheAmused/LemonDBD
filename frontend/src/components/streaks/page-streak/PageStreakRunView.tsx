@@ -23,9 +23,9 @@ interface PageStreakRunViewProps {
 }
 
 const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2.5 mt-6 flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-widest text-slate-600">
+  <div className="mb-2.5 mt-6 flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-widest text-text-muted">
     <span>{children}</span>
-    <span className="h-px flex-1 bg-slate-800" />
+    <span className="h-px flex-1 bg-border-color" />
   </div>
 );
 
@@ -86,20 +86,20 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
       <Confetti active={celebrating} />
       <Link
         href={`/${locale}/streaks/killer/page-streak`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 transition-colors hover:text-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary transition-colors hover:text-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{dict?.streaks?.backToKillers || 'Back to killers'}</span>
       </Link>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/[0.07] px-4 py-3 text-xs text-rose-300">
+        <p className="mt-4 rounded-xl border border-accent-red/30 bg-accent-red/[0.07] px-4 py-3 text-xs text-accent-red">
           {error}
         </p>
       )}
 
       {loading && (
-        <p className="py-10 text-center text-xs text-slate-500">
+        <p className="py-10 text-center text-xs text-text-muted">
           {dict?.streaks?.loadingStreak || 'Loading streak…'}
         </p>
       )}
@@ -123,24 +123,24 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           />
 
           {run.status === 'completed' ? (
-            <div className="mb-8 mt-6 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+            <div className="mb-8 mt-6 rounded-2xl border-2 border-accent-green/40 bg-accent-green/[0.07] px-6 py-10 text-center shadow-lg">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
                 <Trophy className="h-8 w-8" />
               </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
                 {dict?.streaks?.victoryCongrats || 'Congratulations'}
               </p>
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              <h2 className="text-2xl font-black tracking-tight text-text-primary">
                 {dict?.streaks?.pageStreakVictoryTitle || 'You won the Page Streak'}
               </h2>
-              <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-sm font-semibold text-text-secondary">
                 {dict?.streaks?.pageStreakVictoryPrefix || 'on'} {killerDisplayName}
               </p>
               <button
                 type="button"
                 onClick={() => setConfirmingReset(true)}
                 disabled={busy}
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
               >
                 <RotateCcw className="h-4 w-4" />
                 {dict?.streaks?.startNewRun || 'Start a new run'}
@@ -157,7 +157,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       setLastWasLoss(false);
                       submitResult(run.current_page, selected, 'win');
                     }}
-                    className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
+                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
                   >
                     {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </button>
@@ -168,7 +168,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       setLastWasLoss(true);
                       submitResult(run.current_page, selected, 'loss');
                     }}
-                    className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
+                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
                   >
                     {dict?.streaks?.loseMatch || 'LOSE MATCH'}
                   </button>
@@ -203,7 +203,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     type="button"
                     onClick={() => setShowNextPage((open) => !open)}
                     aria-expanded={showNextPage}
-                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-slate-600 transition-colors hover:text-orange-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 motion-reduce:transition-none"
+                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
                   >
                     <ChevronRight
                       className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${
@@ -213,7 +213,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     <span>
                       {dict?.streaks?.nextUpPagePrefix || 'Next up, page'} {run.current_page + 1}
                     </span>
-                    <span className="h-px flex-1 bg-slate-800" />
+                    <span className="h-px flex-1 bg-border-color" />
                   </button>
                   {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
                   <div
@@ -249,7 +249,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
             isOpen={isHistoryOpen}
             onClose={() => setIsHistoryOpen(false)}
             title={killerDisplayName}
-            accent="orange"
+            accent="amber"
             completions={completions}
             dict={dict}
           />

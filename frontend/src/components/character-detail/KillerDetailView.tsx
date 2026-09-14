@@ -113,7 +113,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsPowerModalOpen(true)}
-                  className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-950 to-slate-900 border-2 border-rose-500/60 hover:border-rose-400 p-2.5 flex items-center justify-center shadow-xl shadow-rose-950/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                  className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-2xl bg-bg-elevated border-2 border-accent-red/60 hover:border-accent-red p-2.5 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
                   title={powerTitle}
                   aria-label={powerAriaLabel}
                 >
@@ -121,7 +121,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                     <img
                       src={getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
                       alt={killerPower.name}
-                      className="h-full w-full object-contain filter drop-shadow-[0_0_10px_rgba(244,63,94,0.8)] group-hover:scale-105 transition-transform"
+                      className="h-full w-full object-contain group-hover:scale-105 transition-transform"
                       onError={(e) => {
                         const img = e.target as HTMLImageElement;
                         if (killerPower.icon_url && img.src !== killerPower.icon_url) {
@@ -130,29 +130,29 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                       }}
                     />
                   ) : (
-                    <Flame className="h-10 w-10 text-rose-400 animate-pulse" aria-hidden="true" />
+                    <Flame className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
                   )}
                   <span className="absolute -bottom-1 -right-1 flex h-4 w-4" aria-hidden="true">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-4 w-4 bg-rose-500 border-2 border-slate-950" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-red opacity-75" />
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-accent-red border-2 border-bg-primary" />
                   </span>
                 </button>
               )}
 
               <div>
-                <span className="text-xs font-mono font-bold tracking-wider text-rose-700 dark:text-rose-500 uppercase">
+                <span className="text-xs font-mono font-bold tracking-wider text-accent-red uppercase">
                   {t.roleKiller || ''}{' '}
                   {character.is_licensed
                     ? `• ${t.dlcLicensed || ''}`
                     : `• ${t.dlcOriginal || ''}`}
                 </span>
-                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary font-mono tracking-tight">
                   {character.name}
                 </h1>
                 {character.real_name && character.real_name !== character.name && (
-                  <p className="text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-xs sm:text-sm font-semibold text-text-secondary mt-0.5">
                     {t.realName || ''}:{' '}
-                    <span className="text-slate-700 dark:text-slate-200">{character.real_name}</span>
+                    <span className="text-text-primary">{character.real_name}</span>
                   </p>
                 )}
               </div>
@@ -162,25 +162,25 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
               <button
                 type="button"
                 onClick={() => setIsLoreModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-400 border border-purple-500/30 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
+                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               >
                 <BookOpen className="h-4 w-4" aria-hidden="true" />
                 <span>{t.viewLore || ''}</span>
               </button>
 
               {chapterName && (
-                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-700 dark:text-amber-400 select-none">
+                <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
                   <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                   {chapterName}
                 </span>
               )}
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-700 dark:text-blue-400 select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
                 <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {releaseDate}
               </span>
 
-              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-xs font-bold text-purple-700 dark:text-purple-400 select-none">
+              <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">
                 <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
                   ? t.licensedFranchise || t.dlcLicensed || ''

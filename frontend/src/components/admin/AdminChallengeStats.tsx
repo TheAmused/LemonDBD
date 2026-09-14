@@ -7,10 +7,10 @@ import { Trophy, Skull, Rows3, BookOpen } from 'lucide-react';
 import { AdminStats, ChallengeCompletionBreakdown } from '@/types/admin';
 
 const MODE_CARD_CONFIG = [
-  { key: 'gauntlet', icon: Trophy, color: 'text-amber-600 dark:text-amber-400', border: 'border-amber-500/30' },
-  { key: 'chaos', icon: Skull, color: 'text-violet-600 dark:text-violet-400', border: 'border-violet-500/30' },
+  { key: 'gauntlet', icon: Trophy, color: 'text-text-secondary', border: 'border-border-color' },
+  { key: 'chaos', icon: Skull, color: 'text-text-secondary', border: 'border-border-color' },
   { key: 'history', icon: Rows3, color: 'text-text-secondary', border: 'border-border-color' },
-  { key: 'page_streak', icon: BookOpen, color: 'text-orange-600 dark:text-orange-400', border: 'border-orange-500/30' },
+  { key: 'page_streak', icon: BookOpen, color: 'text-text-secondary', border: 'border-border-color' },
 ] as const;
 
 interface AdminChallengeStatsProps {

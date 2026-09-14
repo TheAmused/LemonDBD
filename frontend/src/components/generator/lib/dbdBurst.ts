@@ -14,8 +14,8 @@ interface BurstParticle {
 }
 
 const ROLE_PALETTES: Record<RoleCategory, string[]> = {
-  Survivor: ['#10b981', '#34d399', '#f59e0b', '#dc2626'],
-  Killer: ['#f43f5e', '#fb7185', '#f59e0b', '#7f1d1d'],
+  Survivor: ['#16a34a', '#22c55e', '#f59e0b', '#dc2626'],
+  Killer: ['#b91c1c', '#dc2626', '#f59e0b', '#7f1d1d'],
 };
 
 let sharedCanvas: HTMLCanvasElement | null = null;

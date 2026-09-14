@@ -294,7 +294,7 @@ function PerksContent() {
             <EmptyState
               variant="solid"
               icon={Shield}
-              iconClassName="mx-auto h-12 w-12 text-slate-500 dark:text-slate-500 mb-3"
+              iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
               title={dict?.empty?.title || 'No Perks Found'}
               subtitle={
                 dict?.empty?.subtitle ||

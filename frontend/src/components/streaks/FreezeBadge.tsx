@@ -24,9 +24,9 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
       ref={ref}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="freeze-badge-in flex items-center justify-center px-3.5 py-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-sky-500/30 text-sky-600 dark:text-sky-400 shadow-sm"
+      className="freeze-badge-in flex items-center justify-center px-3.5 py-3 rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm"
     >
-      <Snowflake className="w-6 h-6 text-sky-500 dark:text-sky-400" />
+      <Snowflake className="w-6 h-6 text-accent-amber" />
 
       {hovered &&
         rect &&
@@ -40,9 +40,9 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
               width: 224,
               zIndex: 99999,
             }}
-            className="pointer-events-none rounded-xl border border-sky-500/30 bg-slate-950/95 px-3 py-2.5 text-[11px] leading-snug text-slate-200 shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
+            className="pointer-events-none rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-[11px] leading-snug text-text-secondary shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
           >
-            <span className="font-bold text-sky-400">
+            <span className="font-bold text-accent-amber">
               {dict?.streaks?.challengeStarted || 'Challenge started.'}
             </span>{' '}
             {dict?.streaks?.freezeNotice ||

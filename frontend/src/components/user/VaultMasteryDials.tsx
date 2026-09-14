@@ -179,8 +179,8 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
           count={survOwned}
           total={survTotal}
           percentage={survPercent}
-          colorHex="#06b6d4" // Cyan-500
-          accentClass="bg-cyan-500/15 text-cyan-500 dark:text-cyan-400"
+          colorHex="#16a34a"
+          accentClass="bg-accent-green/15 text-accent-green"
           icon={<Shield className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
         />
@@ -191,7 +191,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
           count={killerOwned}
           total={killerTotal}
           percentage={killerPercent}
-          colorHex="#ef4444" // Red-500
+          colorHex="#b91c1c"
           accentClass="bg-accent-red/15 text-accent-red"
           icon={<Skull className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
@@ -203,7 +203,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
           count={perkUnlocked}
           total={perkTotal}
           percentage={perkPercent}
-          colorHex="#f59e0b" // Amber-500
+          colorHex="#f59e0b"
           accentClass="bg-accent-amber/15 text-accent-amber"
           icon={<Sparkles className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}

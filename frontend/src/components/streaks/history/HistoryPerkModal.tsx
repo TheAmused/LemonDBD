@@ -27,13 +27,13 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
     <div
       className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-colors duration-500 overflow-hidden ${
         isRevealed
-          ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-800/60'
-          : 'bg-slate-50 dark:bg-slate-950/60 border-slate-400/60 dark:border-slate-700'
+          ? 'bg-accent-green/10 border-accent-green/40'
+          : 'bg-bg-elevated border-border-color'
       }`}
       style={delay}
     >
       <div
-        className={`w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center transition-all duration-500 ${
+        className={`w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center transition-all duration-500 ${
           isRevealed ? '' : 'grayscale opacity-40'
         }`}
         style={delay}
@@ -42,30 +42,30 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           <img
             src={src}
             alt={displayName}
-            className="w-full h-full object-contain filter drop-shadow-md"
+            className="w-full h-full object-contain"
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="w-5 h-5 text-emerald-400" />
+          <Sparkles className="w-5 h-5 text-accent-green" />
         )}
       </div>
-      <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate w-full text-center">
+      <span className="text-[10px] font-bold text-text-secondary truncate w-full text-center">
         {displayName}
       </span>
 
       {!isUnlocked && (
         <div
-          className={`absolute inset-0 bg-slate-950/60 flex items-center justify-center transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-bg-primary/70 flex items-center justify-center transition-opacity duration-300 ${
             phase === 'breaking' ? 'opacity-0' : 'opacity-100'
           }`}
         >
           <div
-            className={`p-1.5 rounded-full bg-slate-900 border border-slate-700 ${
+            className={`p-1.5 rounded-full bg-bg-elevated border border-border-color ${
               phase === 'shaking' ? 'history-lock-shake' : ''
             }`}
             style={animationDelay}
           >
-            <Lock className="w-3.5 h-3.5 text-slate-300" />
+            <Lock className="w-3.5 h-3.5 text-text-secondary" />
           </div>
         </div>
       )}
@@ -109,19 +109,19 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-emerald-400 bg-gradient-to-b from-emerald-500/15 via-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-emerald-500/20 cursor-default"
+        className="relative w-full max-w-sm rounded-2xl border-2 border-accent-green bg-bg-surface p-8 text-center shadow-2xl cursor-default"
       >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-400">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
           <PartyPopper className="h-8 w-8" />
         </div>
 
-        <h2 className="text-xl font-black tracking-tight text-white">{killerDisplayName} {dict?.stats?.win || 'beaten'}!</h2>
-        <p className="mt-1 text-xs text-slate-400 uppercase tracking-wider font-bold">
+        <h2 className="text-xl font-black tracking-tight text-text-primary">{killerDisplayName} {dict?.stats?.win || 'beaten'}!</h2>
+        <p className="mt-1 text-xs text-text-muted uppercase tracking-wider font-bold">
           {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
         </p>
 
         {perks.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-300">
+          <p className="mt-4 text-sm text-text-secondary">
             {dict?.streaks?.noNewPerks || 'No new perks this time.'}
           </p>
         ) : (
@@ -134,7 +134,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
 
         <button
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-emerald-500 py-3 text-sm font-extrabold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-400 cursor-pointer"
+          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-white shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
         >
           {dict?.streaks?.continueButton || 'Continue'}
         </button>

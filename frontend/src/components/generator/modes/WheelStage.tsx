@@ -250,7 +250,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.lineWidth = 4;
-        ctx.strokeStyle = isBlocked ? '#e11d48' : role === 'Survivor' ? '#047857' : '#be123c';
+        ctx.strokeStyle = isBlocked ? '#e11d48' : role === 'Survivor' ? '#15803d' : '#991b1b';
         ctx.stroke();
 
         ctx.save();
@@ -267,16 +267,13 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           ctx.save();
           if (isBlocked) ctx.globalAlpha = 0.25;
 
-          ctx.shadowColor = role === 'Survivor' ? '#10b981' : '#f43f5e';
-          ctx.shadowBlur = 16;
-
           ctx.drawImage(imgObj, -iconSize / 2, iconRadiusPos - iconSize / 2, iconSize, iconSize);
           ctx.restore();
         } else {
           ctx.save();
           ctx.translate(0, iconRadiusPos);
           ctx.rotate(Math.PI / 4);
-          ctx.fillStyle = isBlocked ? '#4c0519' : role === 'Survivor' ? '#047857' : '#9f1239';
+          ctx.fillStyle = isBlocked ? '#4c0519' : role === 'Survivor' ? '#15803d' : '#7f1d1d';
           ctx.fillRect(-24, -24, 48, 48);
           ctx.strokeStyle = '#f59e0b';
           ctx.lineWidth = 2.5;
@@ -292,7 +289,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
         if (isBlocked) {
           ctx.font = 'bold 24px sans-serif';
-          ctx.fillStyle = '#f43f5e';
+          ctx.fillStyle = '#b91c1c';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText('🚫', 0, iconRadiusPos);
@@ -306,10 +303,10 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.fillStyle = '#0f172a';
       ctx.fill();
       ctx.lineWidth = 5;
-      ctx.strokeStyle = role === 'Survivor' ? '#10b981' : '#f43f5e';
+      ctx.strokeStyle = role === 'Survivor' ? '#16a34a' : '#b91c1c';
       ctx.stroke();
 
-      ctx.fillStyle = role === 'Survivor' ? '#34d399' : '#fb7185';
+      ctx.fillStyle = role === 'Survivor' ? '#22c55e' : '#dc2626';
       ctx.font = '900 16px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -679,11 +676,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
                 ref={wheelCanvasRef}
                 width={800}
                 height={800}
-                className={`h-full w-full ${
-                  role === 'Survivor'
-                    ? 'drop-shadow-[0_0_24px_rgba(16,185,129,0.35)]'
-                    : 'drop-shadow-[0_0_24px_rgba(244,63,94,0.35)]'
-                }`}
+                className="h-full w-full"
               />
             </div>
           </div>
@@ -693,14 +686,14 @@ export const WheelStage: React.FC<WheelStageProps> = ({
             size="md"
             onClick={handleStartSpin}
             disabled={isSpinning || sortedPerks.length === 0}
-            className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
           >
             {spinButtonText}
           </DbdButton>
 
           {statusText && (
-            <p aria-live="polite" className={`mt-2 text-xs font-black text-amber-600 dark:text-amber-400 font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
+            <p aria-live="polite" className={`mt-2 text-xs font-black text-accent-amber font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
               {statusText}
             </p>
           )}

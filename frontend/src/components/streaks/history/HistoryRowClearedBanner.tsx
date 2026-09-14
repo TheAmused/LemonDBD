@@ -26,9 +26,9 @@ export const HistoryRowClearedBanner: React.FC<HistoryRowClearedBannerProps> = (
 
   return (
     <div className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
-      <div className="chaos-badge-pop flex items-center gap-2.5 rounded-xl border-2 border-amber-400 bg-slate-950/95 px-5 py-3 shadow-xl shadow-amber-500/20">
-        <Trophy className="h-5 w-5 text-amber-400" />
-        <span className="text-sm font-extrabold text-white">
+      <div className="chaos-badge-pop flex items-center gap-2.5 rounded-xl border-2 border-accent-green bg-bg-surface px-5 py-3 shadow-xl">
+        <Trophy className="h-5 w-5 text-accent-green" />
+        <span className="text-sm font-extrabold text-text-primary">
           {dict?.streaks?.rowClearedPrefix || 'Row cleared! Row'} {rowNumber + 1}{' '}
           {dict?.streaks?.rowUnlockedSuffix || 'unlocked.'}
         </span>

@@ -298,7 +298,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             aria-hidden="true"
             className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl shadow-md transition-transform duration-300 ease-out ${
               activeTab === 'Survivor'
-                ? 'translate-x-0 bg-emerald-600'
+                ? 'translate-x-0 bg-accent-green'
                 : 'translate-x-[calc(100%+8px)] bg-accent-red'
             }`}
           />
@@ -309,7 +309,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             className={`relative z-10 flex-1 flex items-center justify-center gap-1.5 h-full min-h-[40px] rounded-xl text-xs font-bold transition-colors cursor-pointer touch-manipulation ${
               activeTab === 'Survivor'
                 ? 'text-text-inverted'
-                : 'text-text-secondary hover:text-emerald-600'
+                : 'text-text-secondary hover:text-accent-green'
             }`}
           >
             <Shield className="h-3.5 w-3.5" />
@@ -442,8 +442,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${
                       isSurvivor
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border-emerald-500/30'
-                        : 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/80 dark:text-rose-300 dark:border-rose-500/30'
+                        ? 'bg-accent-green/10 text-accent-green border-accent-green/30'
+                        : 'bg-accent-red/10 text-accent-red border-accent-red/30'
                     }`}
                   >
                     {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
@@ -463,7 +463,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   />
                 )}
 
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-slate-900">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-bg-elevated">
                   <img
                     src={avatarSrc}
                     alt={char.name}
@@ -492,7 +492,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       ownedTitle={dict?.filters?.ownedOnly}
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/70 via-transparent to-transparent" />
                 </div>
 
                 <div className="p-3.5 space-y-1">
@@ -555,7 +555,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
               type="button"
               onClick={handleSaveOwnership}
               disabled={ownershipSaving}
-              className="px-6 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-text-inverted shadow-md hover:bg-emerald-500 transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
+              className="px-6 py-2 rounded-xl text-xs font-bold bg-accent-green text-white shadow-md hover:bg-accent-green-hover transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
             >
               {ownershipSaving ? dict?.characterDetail?.saving : dict?.characterDetail?.accept}
             </button>
@@ -566,7 +566,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       {showSavedToast && (
         <div
           role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-emerald-600 px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-emerald-400/50 animate-in fade-in slide-in-from-top-4 duration-300"
+          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-white shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
         >
           <Check className="h-5 w-5" />
           <span>{dict?.characterDetail?.changesSaved}</span>

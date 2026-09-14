@@ -739,30 +739,36 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                     </div>
 
                     <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-bg-surface/85 via-transparent to-bg-surface/85" />
-
-                    {reel.locked && (
-                      <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
-                        <Lock className="h-3.5 w-3.5" />
-                      </div>
-                    )}
                   </div>
                 );
 
                 return (
                   <div key={reel.id} className="flex shrink-0 flex-col items-center gap-1.5" style={{ width: cellPx }}>
-                    {landedBroken ? (
-                      <Tooltip
-                        title={dict?.generator?.slotJammedTitle || 'Jammed'}
-                        description={
-                          dict?.generator?.slotJammedDesc ||
-                          'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
-                        }
-                      >
-                        {reelWindow}
-                      </Tooltip>
-                    ) : (
-                      reelWindow
-                    )}
+                    {/* Wrapping the window (rather than nesting the badge inside
+                        it) keeps the lock badge un-clipped: the window itself
+                        needs `overflow-hidden` to mask the spinning strip, and
+                        a badge positioned with a negative offset to "peek out"
+                        of a clipped ancestor gets clipped right along with it. */}
+                    <div className="relative">
+                      {landedBroken ? (
+                        <Tooltip
+                          title={dict?.generator?.slotJammedTitle || 'Jammed'}
+                          description={
+                            dict?.generator?.slotJammedDesc ||
+                            'This reel is broken for the whole draw, so it can never be picked. Pull a brand-new draw to clear it.'
+                          }
+                        >
+                          {reelWindow}
+                        </Tooltip>
+                      ) : (
+                        reelWindow
+                      )}
+                      {reel.locked && (
+                        <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-slate-950 shadow-lg">
+                          <Lock className="h-3.5 w-3.5" />
+                        </div>
+                      )}
+                    </div>
                     <span
                       className={cn(
                         'text-[10px] font-black uppercase tracking-wide',

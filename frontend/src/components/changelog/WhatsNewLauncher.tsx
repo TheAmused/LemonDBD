@@ -313,11 +313,11 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
             role="dialog"
             aria-modal="true"
             aria-labelledby="whats-new-title"
-            className="fixed inset-0 z-[75] flex items-center justify-center p-4 sm:p-8 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
+            className="fixed inset-0 z-[75] flex items-center justify-center p-4 sm:p-8 bg-bg-primary/80 backdrop-blur-md animate-in fade-in duration-200 cursor-pointer"
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-accent-red/40 bg-bg-surface/98 shadow-2xl shadow-black/70 cursor-default animate-in zoom-in-95 duration-200"
+              className="relative flex w-full max-w-2xl max-h-[85vh] flex-col overflow-hidden rounded-3xl border border-accent-red/40 bg-bg-surface/98 shadow-2xl cursor-default animate-in zoom-in-95 duration-200"
             >
               <div className="relative flex items-center justify-between border-b border-border-color px-6 py-5">
                 <div className="flex items-center gap-3">

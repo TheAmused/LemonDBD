@@ -122,7 +122,7 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
             onClick={closeOnBackdropClick ? onClose : undefined}
-            className="fixed inset-0 bg-slate-950/70 backdrop-blur-md"
+            className="fixed inset-0 bg-bg-primary/70 backdrop-blur-md"
             aria-hidden="true"
           />
 

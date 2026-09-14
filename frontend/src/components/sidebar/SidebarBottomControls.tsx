@@ -233,7 +233,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           aria-label={dict?.sidebar?.buyCoffee || 'Buy Coffee'}
           className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
-          <Coffee className="h-3.5 w-3.5 shrink-0 text-amber-500" />
+          <Coffee className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
           <span className="text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
         </button>
       </div>

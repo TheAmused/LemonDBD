@@ -71,7 +71,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
       aria-modal="true"
       aria-labelledby="perks-toggle-popup-title"
     >
-      <div onClick={onClose} className="fixed inset-0 bg-slate-950/70 backdrop-blur-md" />
+      <div onClick={onClose} className="fixed inset-0 bg-bg-primary/70 backdrop-blur-md" />
       <div
         onClick={(e) => e.stopPropagation()}
         className="relative z-10 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-border-color bg-bg-surface shadow-2xl text-text-primary transition-colors"

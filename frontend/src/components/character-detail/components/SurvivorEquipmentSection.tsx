@@ -315,7 +315,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       <img
                         src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
                         alt={displayItem.name}
-                        className="h-full w-full object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]"
+                        className="h-full w-full object-contain filter drop-shadow-md"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = 'none';
                         }}

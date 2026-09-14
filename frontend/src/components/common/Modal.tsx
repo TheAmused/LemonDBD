@@ -175,7 +175,7 @@ export const Modal: React.FC<ModalProps> = ({
                       type="button"
                       onClick={onClose}
                       aria-label={closeButtonAriaLabel}
-                      className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-bg-surface border border-border-color text-text-secondary hover:text-text-primary hover:border-accent-red hover:bg-bg-elevated transition-all cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                      className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
                     >
                       <X className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                     </button>

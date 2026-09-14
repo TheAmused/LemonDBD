@@ -114,7 +114,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
                     <div
                       className={`absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border backdrop-blur-md ${
                         isUnlocked
-                          ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                          ? 'border-accent-green/40 bg-accent-green/20 text-accent-green'
                           : 'border-border-color bg-bg-surface text-text-muted'
                       }`}
                     >

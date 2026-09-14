@@ -127,16 +127,16 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-3xl border-2 border-amber-500/30 bg-gradient-to-b from-slate-900 to-slate-950 shadow-2xl shadow-black/60 animate-in zoom-in-95 duration-200"
+        className="relative flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-3xl border-2 border-border-color bg-bg-surface shadow-2xl shadow-black/60 animate-in zoom-in-95 duration-200"
       >
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h2 className="text-lg font-black tracking-tight text-slate-100">
+        <div className="flex items-center justify-between border-b border-border-color px-6 py-4">
+          <h2 className="text-lg font-black tracking-tight text-text-primary">
             {post ? (t?.editTitle || 'Edit Changelog Entry') : (t?.newTitle || 'New Changelog Entry')}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-slate-100 cursor-pointer"
+            className="rounded-lg p-1.5 text-text-muted hover:bg-bg-elevated hover:text-text-primary cursor-pointer"
           >
             <X className="h-5 w-5" />
           </button>
@@ -147,7 +147,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t?.titlePlaceholder || "Patch title, e.g. 'The Entity Stirs — Balance Update'"}
-            className="w-full rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-2.5 text-sm font-bold text-slate-100 placeholder:text-slate-500 outline-none focus:border-amber-500/60"
+            className="w-full rounded-xl border border-border-color bg-bg-elevated px-4 py-2.5 text-sm font-bold text-text-primary placeholder:text-text-muted outline-none focus:border-accent-red/60"
           />
 
           <div className="flex flex-wrap gap-2">
@@ -160,7 +160,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
                   type="button"
                   onClick={() => setTag(tg)}
                   className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all cursor-pointer ${
-                    active ? theme.badgeClass : 'border-slate-800 text-slate-500 hover:text-slate-300'
+                    active ? theme.badgeClass : 'border-border-color text-text-muted hover:text-text-secondary'
                   }`}
                 >
                   <span className={`h-1.5 w-1.5 rounded-full ${theme.dotClass}`} />
@@ -170,8 +170,8 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
             })}
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
-            <div className="relative flex flex-wrap items-center gap-0.5 border-b border-slate-800 bg-slate-900/80 px-2 py-1.5">
+          <div className="rounded-xl border border-border-color bg-bg-elevated/50 overflow-hidden">
+            <div className="relative flex flex-wrap items-center gap-0.5 border-b border-border-color bg-bg-elevated/80 px-2 py-1.5">
               <ToolbarButton icon={Bold} onClick={() => exec('bold')} label="Bold" />
               <ToolbarButton icon={Italic} onClick={() => exec('italic')} label="Italic" />
               <ToolbarButton icon={Underline} onClick={() => exec('underline')} label="Underline" />
@@ -225,7 +225,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
               ref={editorRef}
               contentEditable
               suppressContentEditableWarning
-              className="dbd-changelog-body min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-slate-200 leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-amber-400 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-sky-400 [&_a]:underline"
+              className="dbd-changelog-body min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
               data-placeholder={
                 t?.bodyPlaceholder ||
                 'Describe what changed... use the toolbar to bold key terms, align a callout, or highlight balance notes.'
@@ -233,23 +233,23 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
             />
           </div>
 
-          <label className="flex items-center gap-2 text-xs font-bold text-slate-400 cursor-pointer select-none">
+          <label className="flex items-center gap-2 text-xs font-bold text-text-muted cursor-pointer select-none">
             <input
               type="checkbox"
               checked={isPublished}
               onChange={(e) => setIsPublished(e.target.checked)}
-              className="h-4 w-4 rounded border-slate-700 bg-slate-900 accent-amber-500"
+              className="h-4 w-4 rounded border-border-color bg-bg-elevated accent-accent-red"
             />
             {t?.publishedLabel || 'Published (visible in the "What\'s New?" feed)'}
           </label>
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-t border-slate-800 px-6 py-4">
+        <div className="flex items-center justify-between gap-3 border-t border-border-color px-6 py-4">
           {post && onDelete ? (
             <button
               type="button"
               onClick={onDelete}
-              className="flex items-center gap-1.5 rounded-xl border border-rose-500/30 px-3 py-2 text-xs font-bold text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+              className="flex items-center gap-1.5 rounded-xl border border-accent-red/30 px-3 py-2 text-xs font-bold text-accent-red hover:bg-accent-red/10 cursor-pointer"
             >
               <Trash2 className="h-3.5 w-3.5" />
               {t?.delete || 'Delete'}
@@ -261,7 +261,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-xl border border-slate-800 px-4 py-2 text-xs font-bold text-slate-400 hover:text-slate-200 cursor-pointer"
+              className="rounded-xl border border-border-color px-4 py-2 text-xs font-bold text-text-muted hover:text-text-secondary cursor-pointer"
             >
               {t?.cancel || 'Cancel'}
             </button>
@@ -269,7 +269,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
               type="button"
               onClick={handleSave}
               disabled={saving || !title.trim()}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-2 text-xs font-black text-slate-950 shadow-lg shadow-amber-950/40 disabled:opacity-50 disabled:cursor-wait cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform"
+              className="flex items-center gap-1.5 rounded-xl bg-accent-red px-5 py-2 text-xs font-black text-text-inverted shadow-lg hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-wait cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform"
             >
               {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               {post ? (t?.saveChanges || 'Save Changes') : (t?.publishEntry || 'Publish Entry')}
@@ -292,15 +292,15 @@ const ToolbarButton: React.FC<{
     title={label}
     onMouseDown={(e) => e.preventDefault()}
     onClick={onClick}
-    className={`flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-colors cursor-pointer hover:bg-slate-800 hover:text-slate-100 ${
-      active ? 'bg-slate-800 text-amber-400' : ''
+    className={`flex h-7 w-7 items-center justify-center rounded-lg text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated hover:text-text-primary ${
+      active ? 'bg-bg-elevated text-accent-red' : ''
     }`}
   >
     <Icon className="h-3.5 w-3.5" />
   </button>
 );
 
-const ToolbarDivider: React.FC = () => <span className="mx-1 h-4 w-px bg-slate-800" />;
+const ToolbarDivider: React.FC = () => <span className="mx-1 h-4 w-px bg-border-color" />;
 
 const SwatchPopover: React.FC<{
   swatches: { name: string; value: string }[];
@@ -308,14 +308,14 @@ const SwatchPopover: React.FC<{
   onClear?: () => void;
   clearLabel?: string;
 }> = ({ swatches, onPick, onClear, clearLabel }) => (
-  <div className="absolute left-0 top-full z-10 mt-1 flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 p-2 shadow-xl">
+  <div className="absolute left-0 top-full z-10 mt-1 flex items-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated p-2 shadow-xl">
     {onClear && (
       <button
         type="button"
         title={clearLabel || 'No highlight'}
         onMouseDown={(e) => e.preventDefault()}
         onClick={onClear}
-        className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-slate-600 text-[9px] text-slate-500 cursor-pointer hover:border-slate-400"
+        className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-border-color text-[9px] text-text-muted cursor-pointer hover:border-accent-red"
       >
         ×
       </button>

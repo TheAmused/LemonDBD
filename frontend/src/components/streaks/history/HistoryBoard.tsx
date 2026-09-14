@@ -126,7 +126,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
       <Link
         href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
+        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-muted hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>{dict?.streaks?.backToKillerStreaks || 'Back to killer streaks'}</span>
@@ -134,7 +134,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
       <div className="mt-4">
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg">
+          <div className="mb-6 p-4 rounded-xl bg-accent-red/10 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-lg">
             <span>{error}</span>
           </div>
         )}
@@ -154,33 +154,33 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         />
 
         {isCompleted ? (
-          <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+          <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-accent-green/10 px-6 py-10 text-center shadow-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
               <Trophy className="h-8 w-8" />
             </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+            <h2 className="text-2xl font-black tracking-tight text-text-primary">
               {dict?.streaks?.historyStreakComplete || 'You won the History Streak'}
             </h2>
             <button
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-white shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
               {dict?.streaks?.startNewRun || 'Start a new run'}
             </button>
           </div>
         ) : (
-          <div className="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/85 backdrop-blur-sm p-5 shadow-sm">
+          <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3 text-center sm:text-left">
-              <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider">
                 {dict?.streaks?.pickYourKiller || 'Pick your killer'}
               </h3>
               {run && (
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">
+                <p className="text-xs text-text-muted font-mono">
                   {dict?.streaks?.rowLabel || 'Row'} {run.current_row_index + 1}{' '}
                   {dict?.streaks?.ofLabel || 'of'} {run.total_rows}
                 </p>
@@ -203,7 +203,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 <button
                   onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                   disabled={busy || !selectedKillerId}
-                  className="flex-1 max-w-xs bg-slate-700 hover:bg-slate-600 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                  className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                 >
                   {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
                 </button>
@@ -212,14 +212,14 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                   <button
                     onClick={() => handleResult('win')}
                     disabled={busy}
-                    className="flex-1 max-w-xs bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
                     {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </button>
                   <button
                     onClick={() => handleResult('loss')}
                     disabled={busy}
-                    className="flex-1 max-w-xs bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
+                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-white font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
                   >
                     {dict?.streaks?.loseMatch || 'LOSE MATCH'}
                   </button>
@@ -262,7 +262,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
           title={dict?.streaks?.historyStreak || 'History Streak'}
-          accent="slate"
+          accent="amber"
           completions={completions}
           subjectLabel={dict?.streaks?.killersLabel || 'killers'}
           dict={dict}

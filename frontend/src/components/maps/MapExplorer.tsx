@@ -225,7 +225,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       <div className="grid">
         <div className={`[grid-area:1/1] flex flex-col justify-center space-y-6 ${hideSearch ? 'invisible' : 'visible'}`}>
           <div className="relative w-full sm:max-w-lg sm:mx-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
             <input
               type="text"
               value={search}
@@ -233,7 +233,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
               aria-label={dict?.maps?.searchAria || 'Search map or realm'}
               tabIndex={hideSearch ? -1 : undefined}
-              className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-2xl border border-border-color bg-bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red"
             />
           </div>
 
@@ -246,8 +246,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 aria-pressed={realmFilter === null}
                 className={`cursor-pointer rounded-full px-3 py-1 text-xs font-bold transition-colors ${
                   realmFilter === null
-                    ? 'bg-amber-500 text-slate-950'
-                    : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-accent-red text-text-inverted'
+                    : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
                 }`}
               >
                 {dict?.maps?.all || 'All'}
@@ -261,8 +261,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   aria-pressed={realmFilter === realm}
                   className={`cursor-pointer inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition-colors ${
                     realmFilter === realm
-                      ? 'bg-amber-500 text-slate-950'
-                      : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-accent-red text-text-inverted'
+                      : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
                   }`}
                 >
                   <MapPin className="h-3 w-3" aria-hidden="true" />
@@ -281,13 +281,13 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       </div>
 
       {loading && (
-        <div className="py-16 text-center text-xs text-slate-500 font-mono">
+        <div className="py-16 text-center text-xs text-text-muted font-mono">
           {dict?.maps?.loadingTacticalMaps || 'Loading Tactical Maps...'}
         </div>
       )}
 
       {!loading && groupedMapsByRealm.length === 0 && (
-        <div className="py-16 text-center text-xs text-slate-500 font-mono">
+        <div className="py-16 text-center text-xs text-text-muted font-mono">
           {dict?.maps?.noMapsFound || 'No Maps Found'}
         </div>
       )}
@@ -312,7 +312,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
                   aria-label={`${expanded ? dict?.maps?.collapseRealmAria || 'Collapse realm' : dict?.maps?.expandRealmAria || 'Expand realm'}: ${realm}`}
-                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 ${expanded ? 'border-amber-400' : 'border-slate-200 dark:border-slate-800'}`}
+                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color'}`}
                 >
                   {bannerSrc ? (
                     <img
@@ -323,8 +323,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                       className="absolute inset-0 h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-900">
-                      <ImageOff className="h-8 w-8 text-slate-400" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-bg-elevated">
+                      <ImageOff className="h-8 w-8 text-text-muted" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/10 to-transparent" />
@@ -343,11 +343,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                     style={{ gridColumn: '1 / -1', gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                   >
                     <div className="overflow-hidden">
-                      <div className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-3">
+                      <div className="space-y-4 rounded-2xl border border-border-color bg-bg-surface/50 p-3">
                         {(panelGroups ?? []).map((group) => (
                           <div key={group.realm} className="space-y-2">
                             {(panelGroups?.length ?? 0) > 1 && (
-                              <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                              <h3 className="text-xs font-bold text-text-muted uppercase tracking-wide">
                                 {group.realm}
                               </h3>
                             )}

@@ -23,7 +23,7 @@ export const AdminTabContentSkeleton: React.FC<AdminTabContentSkeletonProps> = (
       <DbdSpinner
         size="lg"
         layout="inline"
-        accent="gold"
+        accent="blood"
         needleSpeed={1.3}
         label={loadingLabel}
         dict={dict}

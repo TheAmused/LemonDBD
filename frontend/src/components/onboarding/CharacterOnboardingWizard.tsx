@@ -586,7 +586,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   if (view === 'intro') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t?.introTitle || 'Welcome to LemonDBD'}</h1>
           <p className="text-sm text-text-secondary">
@@ -607,7 +607,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   if (view === 'language') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t?.languageStepTitle || 'Choose your language'}</h1>
           <p className="text-sm text-text-secondary">
@@ -647,7 +647,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-4 sm:p-8">
+    <div className="min-h-screen bg-bg-primary p-4 sm:p-8">
       <div className="mx-auto max-w-5xl 2xl:max-w-[90rem] space-y-6">
         <header className="text-center space-y-2">
           <div className="flex items-center justify-between gap-4">
@@ -915,7 +915,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
       {/* Sticky so Continue stays reachable while scrolling a long chapter
           list, instead of requiring a scroll to the very bottom. */}
-      <div className="sticky bottom-0 z-20 w-full border-t border-border-color bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md">
+      <div className="sticky bottom-0 z-20 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl justify-center px-4 py-3 sm:px-8">
           <button
             type="button"

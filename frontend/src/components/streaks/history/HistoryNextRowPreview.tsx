@@ -19,16 +19,16 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   return (
     <div
       title={name}
-      className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-1.5 grayscale opacity-50"
+      className="flex flex-col items-center gap-1.5 rounded-lg border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
     >
-      <div className="relative w-full aspect-square rounded-md overflow-hidden bg-slate-100 dark:bg-slate-900 flex items-center justify-center">
+      <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">
         {!failed ? (
           <img src={src} alt={name} className="w-full h-full object-cover" onError={() => setFailed(true)} />
         ) : (
-          <Skull className="w-6 h-6 text-slate-400" />
+          <Skull className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-slate-500 dark:text-slate-400 truncate w-full">
+      <span className="text-[11px] font-medium text-center text-text-muted truncate w-full">
         {name}
       </span>
     </div>
@@ -48,17 +48,17 @@ export const HistoryNextRowPreview: React.FC<HistoryNextRowPreviewProps> = ({
   if (nextRow.length === 0) return null;
 
   return (
-    <div className="mt-5 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
+    <div className="mt-5 pt-4 border-t border-border-color">
       <button
         onClick={() => setExpanded((v) => !v)}
         className="flex w-full items-center justify-center gap-1.5 text-left cursor-pointer"
       >
-        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+        <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
           {dict?.streaks?.nextRowPreviewLabel || 'Next row preview'}{' '}
           {dict?.streaks?.middotSeparator || '·'} {dict?.streaks?.rowLabel || 'Row'} {currentRowIndex + 2}
         </span>
         <ChevronDown
-          className={`h-4 w-4 text-slate-400 transition-transform ${expanded ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 text-text-muted transition-transform ${expanded ? 'rotate-180' : ''}`}
         />
       </button>
 

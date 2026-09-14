@@ -140,7 +140,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
               <div
                 className={`max-w-2xl mx-auto flex items-center gap-2.5 rounded-2xl border p-3 text-xs shadow-sm font-mono ${
                   statusMessage.type === 'success'
-                    ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                    ? 'border-accent-green/30 bg-accent-green/10 text-accent-green'
                     : 'border-accent-red/30 bg-accent-red/10 text-accent-red'
                 }`}
               >
@@ -223,9 +223,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
-                            passwordsMatch
-                              ? 'border-emerald-500/50 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                              : 'border-border-color focus:border-accent-red focus:ring-1 focus:ring-accent-red'
+                            !confirmPassword
+                              ? 'border-border-color focus:border-accent-red focus:ring-1 focus:ring-accent-red'
+                              : passwordsMatch
+                                ? 'border-accent-green/50 focus:border-accent-green focus:ring-1 focus:ring-accent-green'
+                                : 'border-accent-red/50 focus:border-accent-red focus:ring-1 focus:ring-accent-red'
                           }`}
                         />
                         <button

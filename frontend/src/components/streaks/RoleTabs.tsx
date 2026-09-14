@@ -33,21 +33,21 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
       href: `/${locale}/streaks/survivor`,
       icon: <Shield className="h-3.5 w-3.5" />,
       label: survivorLabel,
-      activeClassName: 'bg-emerald-600 text-text-inverted',
+      activeClassName: 'bg-accent-green text-text-inverted',
     },
     {
       value: 'killer',
       href: `/${locale}/streaks/killer`,
       icon: <Skull className="h-3.5 w-3.5" />,
       label: killerLabel,
-      activeClassName: 'bg-rose-600 text-text-inverted',
+      activeClassName: 'bg-accent-red text-text-inverted',
     },
     {
       value: 'challenge',
       href: `/${locale}/streaks/challenge`,
       icon: <Puzzle className="h-3.5 w-3.5" />,
       label: `${survivorLabel}/${killerLabel}`,
-      activeClassName: 'bg-cyan-600 text-text-inverted',
+      activeClassName: 'bg-bg-elevated border border-border-color text-text-primary',
     },
   ];
 

@@ -168,48 +168,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'generator',
       label: dict?.filters?.generatorTab || dict?.generator?.title || 'Randomizer',
       icon: Dices,
-      color: 'text-accent-amber',
-      activeBg: 'bg-accent-amber/10 text-accent-amber border border-accent-amber/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/randomizer`,
     },
     {
       id: 'streaks',
       label: dict?.sidebar?.challenges || 'Challenges',
       icon: Swords,
-      color: 'text-orange-500 dark:text-orange-400',
-      activeBg: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/streaks`,
     },
     {
       id: 'maps',
       label: dict?.sidebar?.mapExplorer || 'Maps',
       icon: Compass,
-      color: 'text-cyan-600 dark:text-cyan-400',
-      activeBg: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/maps`,
     },
     {
       id: 'characters',
       label: dict?.sidebar?.characters || 'Characters',
       icon: Users,
-      color: 'text-indigo-600 dark:text-indigo-400',
-      activeBg: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/characters`,
     },
     {
       id: 'smash-or-pass',
       label: dict?.sidebar?.smashOrPass || 'Smash or Pass',
       icon: Heart,
-      color: 'text-pink-600 dark:text-pink-400',
-      activeBg: 'bg-pink-500/10 text-pink-600 dark:text-pink-400 border border-pink-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/smash-or-pass`,
     },
     {
       id: 'trophies',
       label: dict?.sidebar?.trophies || 'Trophies',
       icon: Trophy,
-      color: 'text-accent-amber',
-      activeBg: 'bg-accent-amber/10 text-accent-amber border border-accent-amber/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/achievements`,
     },
   ], [dict, currentLocale]);
@@ -219,32 +219,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'guesser',
       label: dict?.guesser?.navLink ? `🎮 ${dict.guesser.navLink}` : '🎮 Guesser',
       icon: Gamepad2,
-      color: 'text-violet-600 dark:text-violet-400',
-      activeBg: 'bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/characters/guesser`,
     },
     {
       id: 'draft',
       label: dict?.sidebar?.draftRoom || 'Draft Room',
       icon: Trophy,
-      color: 'text-rose-600 dark:text-rose-400',
-      activeBg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/draft`,
     },
     {
       id: 'swf',
       label: dict?.sidebar?.swfPlanner || 'SWF Planner',
       icon: Users,
-      color: 'text-emerald-600 dark:text-emerald-400',
-      activeBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/swf`,
     },
     {
       id: 'killer-calculator',
       label: dict?.sidebar?.killerCalc || 'Killer Calc',
       icon: Calculator,
-      color: 'text-purple-600 dark:text-purple-400',
-      activeBg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/killer-calculator`,
     },
     {
@@ -259,16 +259,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'custom-perks',
       label: dict?.sidebar?.perkStudio || 'Perk Studio',
       icon: Wand2,
-      color: 'text-pink-600 dark:text-pink-400',
-      activeBg: 'bg-pink-500/10 text-pink-600 dark:text-pink-400 border border-pink-500/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/custom-perks`,
     },
     {
       id: 'quests',
       label: dict?.sidebar?.quests || 'Quests',
       icon: Scroll,
-      color: 'text-accent-amber',
-      activeBg: 'bg-accent-amber/10 text-accent-amber border border-accent-amber/20',
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/quests`,
     },
   ], [dict, currentLocale]);
@@ -332,12 +332,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => setOthersOpen(!othersOpen)}
                 className={`w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${
                   isOtherActive
-                    ? 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30'
+                    ? 'bg-accent-red/10 text-accent-red border border-accent-red/30'
                     : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Folder className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                  <Folder className="h-4 w-4 text-text-secondary" />
                   <span className="flex items-center gap-1.5">
                     <span>{dict?.sidebar?.others || 'Others'}</span>
                     <span className="rounded bg-accent-amber/15 px-1 py-0.2 text-[9px] font-extrabold text-accent-amber border border-accent-amber/30">
@@ -347,7 +347,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
                 <div className="flex items-center gap-1.5">
                   {isOtherActive && (
-                    <span className="h-2 w-2 rounded-full bg-cyan-600 dark:bg-cyan-400 animate-pulse" />
+                    <span className="h-2 w-2 rounded-full bg-accent-red animate-pulse" />
                   )}
                   <ChevronDown
                     className={`h-4 w-4 text-text-muted transition-transform duration-200 ${

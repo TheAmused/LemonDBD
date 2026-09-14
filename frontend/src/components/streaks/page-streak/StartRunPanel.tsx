@@ -40,20 +40,20 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
   }, [token]);
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-slate-300 bg-white/60 dark:border-slate-800 dark:bg-slate-900/30 px-6 py-14 text-center shadow-sm">
-      <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100">
+    <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-color bg-bg-surface/60 px-6 py-14 text-center shadow-sm">
+      <h3 className="text-base font-extrabold text-text-primary">
         {dict?.streaks?.readyForPrefix || 'Ready for'} {pageCount ?? '…'} {dict?.streaks?.pagesOnSuffix || 'pages on'} {killer}?
       </h3>
-      <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-slate-500">
-        <span>{dict?.streaks?.perksCount || 'perks'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{poolSize ?? '—'}</b></span>
-        <span>{dict?.streaks?.pagesCount || 'pages'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{pageCount ?? '—'}</b></span>
-        <span>{dict?.streaks?.lastPage || 'last page'} <b className="text-slate-800 dark:text-slate-200 tabular-nums">{lastPageSize ?? '—'}</b> {dict?.streaks?.perksCount || 'perks'}</span>
+      <div className="flex flex-wrap justify-center gap-5 font-mono text-[11px] text-text-muted">
+        <span>{dict?.streaks?.perksCount || 'perks'} <b className="text-text-primary tabular-nums">{poolSize ?? '—'}</b></span>
+        <span>{dict?.streaks?.pagesCount || 'pages'} <b className="text-text-primary tabular-nums">{pageCount ?? '—'}</b></span>
+        <span>{dict?.streaks?.lastPage || 'last page'} <b className="text-text-primary tabular-nums">{lastPageSize ?? '—'}</b> {dict?.streaks?.perksCount || 'perks'}</span>
       </div>
       <button
         type="button"
         onClick={onStart}
         disabled={busy}
-        className="rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2.5 text-xs font-extrabold text-white disabled:opacity-60 shadow-sm cursor-pointer"
+        className="rounded-lg bg-accent-red hover:bg-accent-red-hover px-5 py-2.5 text-xs font-extrabold text-text-inverted disabled:opacity-60 shadow-sm cursor-pointer"
       >
         {busy ? (dict?.streaks?.starting || 'Starting…') : (dict?.streaks?.startStreak || 'Start streak')}
       </button>

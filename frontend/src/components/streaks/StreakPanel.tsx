@@ -5,7 +5,8 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, Trophy } from 'lucide-react';
-import { PANEL_HOVER_CLASSES, type PanelColor } from './panelColors';
+
+const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
@@ -14,8 +15,6 @@ const DisabledReasonModal = dynamic(
 
 interface StreakPanelBaseProps {
   title: string;
-  accentBorder: string;
-  color: PanelColor;
   image?: string;
   disabled?: boolean;
   disabledReason?: string | null;
@@ -45,8 +44,6 @@ type StreakPanelProps = StreakPanelBaseProps &
 
 export const StreakPanel: React.FC<StreakPanelProps> = ({
   title,
-  accentBorder,
-  color,
   image,
   href,
   onClick,
@@ -62,7 +59,6 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
 }) => {
   const router = useRouter();
   const [showDisabledModal, setShowDisabledModal] = useState(false);
-  const hoverClasses = PANEL_HOVER_CLASSES[color];
   const watermark = image?.replace(/\.jpg$/, '-watermark.png');
   const body = (
     <>
@@ -124,7 +120,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
     </>
   );
 
-  const base = `relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-2xl border p-5 backdrop-blur-sm transition-all shadow-sm ${accentBorder}`;
+  const base = 'relative flex h-full min-h-[120px] touch-manipulation flex-col overflow-hidden rounded-2xl border border-border-color p-5 backdrop-blur-sm transition-all shadow-sm';
 
   if (disabled) {
     return (
@@ -157,7 +153,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         onClick={onClick}
         onMouseEnter={warm}
         onFocus={warm}
-        className={`group text-left ${base} bg-bg-surface hover:bg-bg-elevated focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${hoverClasses}`}
+        className={`group text-left ${base} bg-bg-surface hover:bg-bg-elevated focus:outline-none focus:ring-2 hover:shadow-lg cursor-pointer ${PANEL_HOVER_CLASSES}`}
       >
         {body}
       </button>
@@ -167,7 +163,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   return (
     <Link
       href={href!}
-      className={`group ${base} bg-bg-surface hover:bg-bg-elevated focus:outline-none focus:ring-2 hover:shadow-lg ${hoverClasses}`}
+      className={`group ${base} bg-bg-surface hover:bg-bg-elevated focus:outline-none focus:ring-2 hover:shadow-lg ${PANEL_HOVER_CLASSES}`}
     >
       {body}
     </Link>

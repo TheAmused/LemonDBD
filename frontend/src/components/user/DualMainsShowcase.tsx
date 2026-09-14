@@ -65,7 +65,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
 
         <div className="relative z-10 w-8 hidden sm:block" aria-hidden="true" />
         <div className="relative z-10 flex-1 text-center">
-          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-amber transition-colors">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
             {dict?.user?.dualMainsTitle || 'Signature Loadouts'}
           </h2>
           <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono">
@@ -74,7 +74,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
         </div>
         <div className="relative z-10 w-8 flex justify-end">
           <ChevronDown
-            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-amber transition-transform duration-300 ease-in-out ${
+            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
               isExpanded ? 'rotate-180' : 'rotate-0'
             }`}
           />

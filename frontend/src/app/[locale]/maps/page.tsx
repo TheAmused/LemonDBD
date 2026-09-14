@@ -63,13 +63,13 @@ function MapsPageInner() {
       value: 'text',
       icon: <Search className="h-4 w-4" aria-hidden="true" />,
       label: dict?.maps?.searchTextTab || 'Search',
-      activeClassName: 'bg-gradient-to-r from-amber-500 to-amber-600',
+      activeClassName: 'bg-accent-red',
     },
     {
       value: 'voice',
       icon: <Mic className="h-4 w-4" aria-hidden="true" />,
       label: dict?.maps?.searchVoiceTab || 'Voice',
-      activeClassName: 'bg-gradient-to-r from-amber-500 to-amber-600',
+      activeClassName: 'bg-accent-red',
     },
   ];
 

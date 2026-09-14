@@ -114,7 +114,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
 
       <Link
         href={`/${locale}/streaks/${role}`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span className="capitalize">
@@ -124,7 +124,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
 
       <div className="mt-4">
         {error && (
-          <div className="mb-6 p-4 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-sm flex items-center justify-between shadow-lg">
+          <div className="mb-6 p-4 rounded-xl bg-accent-red/15 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-xs">
             <span>{error}</span>
           </div>
         )}
@@ -143,20 +143,20 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
         />
 
         {isCompleted ? (
-          <div className="mb-8 rounded-2xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 to-emerald-500/[0.03] px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-emerald-400 bg-emerald-500/15 text-emerald-500 dark:text-emerald-400">
+          <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-gradient-to-b from-accent-green/10 to-accent-green/[0.03] px-6 py-10 text-center shadow-lg">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
               <Trophy className="h-8 w-8" />
             </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
             </p>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+            <h2 className="text-2xl font-black tracking-tight text-text-primary">
               {dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
             </h2>
             <button
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-emerald-950/30 transition-colors hover:bg-emerald-500 disabled:opacity-50 cursor-pointer"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
             >
               <RotateCcw className="h-4 w-4" />
               {dict?.streaks?.startNewRun || 'Start a new run'}

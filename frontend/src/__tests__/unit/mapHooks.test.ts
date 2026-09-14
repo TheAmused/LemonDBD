@@ -5,46 +5,60 @@ import {
   normalizeMapSearch,
   groupMapsByRealmSorted,
   useMapExplorerData,
-} from '@/utils/../hooks/useMapExplorerData';
+} from '@/hooks/useMapExplorerData';
 import type { MapRealm } from '@/types/map';
 
-// `id` is the integer primary key; the old `hens_<realm>_<name>` slug is gone.
 const sampleMockMaps: MapRealm[] = [
   {
     id: 1,
     name: "Azarov's Resting Place",
     realm: 'Autohaven Wreckers',
-    layout_type: 'Dumbbell Narrow',
-    jungle_gyms_count: 5,
-    totem_spawns_count: 5,
-    pallet_density: 'High',
-    shack_has_basement: false,
-    description: 'Iconic dumbbell-shaped map',
+    realm_id: 2,
+    source_id: 1,
     source: 'hens333',
+    source_label: 'Hens333 12-Clock Callouts',
+    layout_type: 'Outdoor',
+    jungle_gyms_count: 4,
+    totem_spawns_count: 5,
+    pallet_density: 'Medium',
+    shack_has_basement: true,
+    size_sq_tiles: 176.0,
+    size_sq_meters: 11264,
+    description: 'Iconic dumbbell-shaped map',
   },
   {
     id: 2,
     name: 'Blood Lodge',
     realm: 'Autohaven Wreckers',
-    layout_type: 'Open Quad',
+    realm_id: 2,
+    source_id: 1,
+    source: 'hens333',
+    source_label: 'Hens333 12-Clock Callouts',
+    layout_type: 'Outdoor',
     jungle_gyms_count: 4,
     totem_spawns_count: 5,
     pallet_density: 'High',
     shack_has_basement: true,
+    size_sq_tiles: 156.0,
+    size_sq_meters: 9984,
     description: 'Open yard lodge',
-    source: 'hens333',
   },
   {
-    id: 3,
+    id: 6,
     name: 'Preschool I',
     realm: 'Springwood',
-    layout_type: 'Suburban Street',
-    jungle_gyms_count: 4,
-    totem_spawns_count: 5,
-    pallet_density: 'High',
-    shack_has_basement: true,
-    description: 'Badham Variant 1',
+    realm_id: 9,
+    source_id: 1,
     source: 'hens333',
+    source_label: 'Hens333 12-Clock Callouts',
+    layout_type: 'Hybrid',
+    jungle_gyms_count: 2,
+    totem_spawns_count: 5,
+    pallet_density: 'Medium',
+    shack_has_basement: true,
+    size_sq_tiles: 144.0,
+    size_sq_meters: 9216,
+    description: 'Badham Variant 1',
   },
 ];
 
@@ -72,10 +86,6 @@ test('useMapExplorerData is an exported hook function', () => {
 });
 
 test('groupMapsByRealmSorted never produces an empty-map section, satisfying "hides non-matching sections"', () => {
-  // Search filtering happens server-side (fetchMaps' existing name/realm ilike filter, already
-  // covered by backend tests) — maps passed into this function are always pre-filtered, so a
-  // realm with zero matches simply never appears as a key here. This test documents that
-  // guarantee at the grouping boundary rather than re-testing the backend filter in JS.
   const partial = sampleMockMaps.filter((m) => m.name.toLowerCase().includes('preschool'));
   const grouped = groupMapsByRealmSorted(partial);
   assert.deepStrictEqual(

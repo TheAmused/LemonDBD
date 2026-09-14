@@ -172,7 +172,17 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     }
   };
 
-  const getLayoutBadge = () => 'text-text-secondary bg-bg-elevated border-border-color';
+  const getLayoutBadge = (layout?: string) => {
+    switch (layout) {
+      case 'Indoor':
+        return 'text-accent-red bg-accent-red/10 border-accent-red/40';
+      case 'Hybrid':
+        return 'text-accent-amber bg-accent-amber/10 border-accent-amber/40';
+      case 'Outdoor':
+      default:
+        return 'text-accent-green bg-accent-green/10 border-accent-green/40';
+    }
+  };
 
   return (
     <div
@@ -253,7 +263,9 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             {/* Layout Type */}
             {activeMap.layout_type && (
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge()}`}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
+                  activeMap.layout_type
+                )}`}
               >
                 <Compass className="w-3.5 h-3.5 shrink-0" />
                 {activeMap.layout_type}

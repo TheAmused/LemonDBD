@@ -72,7 +72,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
       aria-modal="true"
       aria-labelledby="chaos-perk-pool-title"
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 dark:bg-slate-950/80 backdrop-blur-md cursor-pointer select-none"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-md cursor-pointer select-none"
     >
       <div
         className="relative w-full max-w-6xl bg-bg-surface border border-border-color rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] cursor-default"

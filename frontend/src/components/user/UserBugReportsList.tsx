@@ -208,14 +208,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             {t.noReportsSubtitle ||
               'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'}
           </p>
-          <button
-            type="button"
-            onClick={onOpenReportModal}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-accent-red/30 bg-accent-red/10 px-3.5 py-1.5 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-colors cursor-pointer font-mono"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            <span>{t.submitBugReport || 'Submit a Bug Report'}</span>
-          </button>
         </div>
       ) : (
         /* Scrollable and Drag-to-Scroll container on PC & Mobile */

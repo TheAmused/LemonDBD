@@ -46,6 +46,7 @@ class GauntletRunResponse(GauntletRunBase):
     checkpoint_characters: list[str] = []
     current_loadout: dict[str, Any] = {}
     owned_character_ids: list[str] = []
+    attempts: int = 0
     created_at: datetime | None = None
     updated_at: datetime | None = None
 

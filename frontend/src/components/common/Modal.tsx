@@ -32,6 +32,8 @@ export interface ModalProps {
   ariaLabel?: string;
   ariaDescribedBy?: string;
   closeButtonAriaLabel?: string;
+  /** Strips the outer panel border, the header's bottom border, and the close button's border. */
+  borderless?: boolean;
 }
 
 const SIZE_MAP: Record<ModalSize, string> = {
@@ -71,6 +73,7 @@ export const Modal: React.FC<ModalProps> = ({
   ariaLabel,
   ariaDescribedBy,
   closeButtonAriaLabel,
+  borderless = false,
 }) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -129,11 +132,11 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative flex flex-col w-full ${maxWidthClass} overflow-hidden rounded-[28px] sm:rounded-[36px] border border-border-color bg-bg-surface shadow-2xl text-text-primary font-mono z-10 ${className}`}
+            className={`relative flex flex-col w-full ${maxWidthClass} overflow-hidden rounded-[28px] sm:rounded-[36px] ${borderless ? '' : 'border border-border-color'} bg-bg-surface shadow-2xl text-text-primary font-mono z-10 ${className}`}
           >
             {hasHeader && (
               <div
-                className={`relative flex items-center justify-between border-b border-border-color p-4 sm:p-5 bg-bg-elevated/40 shrink-0 ${headerClassName}`}
+                className={`relative flex items-center justify-between ${borderless ? '' : 'border-b border-border-color'} p-4 sm:p-5 bg-bg-elevated/40 shrink-0 ${headerClassName}`}
               >
                 {centerTitle ? (
                   <div className="flex items-center w-10 sm:w-11 shrink-0">
@@ -175,7 +178,7 @@ export const Modal: React.FC<ModalProps> = ({
                       type="button"
                       onClick={onClose}
                       aria-label={closeButtonAriaLabel}
-                      className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-bg-surface border border-border-color text-text-secondary hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated transition-all cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
+                      className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-bg-surface ${borderless ? '' : 'border border-border-color'} text-text-secondary hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated transition-all cursor-pointer shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber`}
                     >
                       <X className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
                     </button>

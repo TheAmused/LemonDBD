@@ -35,6 +35,7 @@ class HistoryRunResponse(HistoryRunBase):
     unlocked_perk_names: list[str] = []
     owned_killer_ids: list[str] = []
     checkpoint_row_index: int = 0
+    attempts: int = 0
     created_at: datetime | None = None
     updated_at: datetime | None = None
 

@@ -68,7 +68,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               aria-label={dict?.user?.changeAvatar || 'Change Avatar'}
             >
               <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-tr from-accent-amber to-accent-red opacity-30 blur-xs group-hover:opacity-75 transition-opacity" />
-              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden p-0.5 border-2 border-accent-amber/60 bg-bg-surface shadow-md">
+              <div className="relative rounded-2xl sm:rounded-3xl p-0.5 border-2 border-accent-amber/60 bg-bg-surface shadow-md">
                 <UserAvatar
                   user={user}
                   previewUrl={previewUrl}

@@ -27,7 +27,11 @@ class ChangelogPostResponse(BaseModel):
     title: str
     content_html: str
     tag: str
+    #: Manual admin sort order for the "What's New?" feed. On the model and on
+    #: `to_dict()`, but was missing here.
+    position: int = 0
     is_published: bool
+    author_id: int | None = None
     author_name: str
     created_at: datetime | None = None
     updated_at: datetime | None = None

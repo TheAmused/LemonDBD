@@ -42,6 +42,7 @@ class ChaosRunResponse(ChaosRunBase):
     current_addon_rarities: list[str] = []
     owned_killer_ids: list[str] = []
     unlocked_perk_ids: list[str] = []
+    attempts: int = 0
     created_at: datetime | None = None
     updated_at: datetime | None = None
 

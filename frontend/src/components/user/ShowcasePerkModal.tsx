@@ -41,39 +41,30 @@ const PerkGridItem: React.FC<{
           onClose();
         }
       }}
-      className={`relative flex flex-col items-center p-3 rounded-2xl border transition-all cursor-pointer text-center group ${
-        isSelected
-          ? 'border-purple-500 bg-purple-500/20 shadow-md shadow-purple-950/40'
-          : 'border-border-color bg-bg-surface hover:border-purple-500/50 hover:bg-bg-elevated'
+      className={`relative flex flex-col items-center p-3 rounded-2xl transition-all cursor-pointer text-center group ${
+        isSelected ? 'bg-purple-500/20' : 'bg-bg-surface hover:bg-bg-elevated'
       }`}
     >
-      {/* Perk Diamond Icon */}
-      <div className="w-12 h-12 rotate-45 rounded-lg border border-purple-500/60 bg-gradient-to-br from-purple-900/80 via-bg-surface to-purple-950/80 flex items-center justify-center shadow-md mb-2 group-hover:scale-105 transition-transform">
-        <div className="-rotate-45 relative w-8 h-8 flex items-center justify-center pointer-events-none">
-          {iconSrc && !imgError ? (
-            <Image
-              src={iconSrc}
-              alt={perk.name}
-              width={32}
-              height={32}
-              className="object-contain"
-              onError={() => setImgError(true)}
-              unoptimized
-            />
-          ) : (
-            <Sparkles className="h-4 w-4 text-purple-400" />
-          )}
-        </div>
+      {/* Perk Icon — just the icon, no shape/background/border behind it */}
+      <div className="relative w-[84px] h-[84px] flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
+        {iconSrc && !imgError ? (
+          <Image
+            src={iconSrc}
+            alt={perk.name}
+            width={84}
+            height={84}
+            className="object-contain"
+            onError={() => setImgError(true)}
+            unoptimized
+          />
+        ) : (
+          <Sparkles className="h-8 w-8 text-purple-400" />
+        )}
       </div>
 
       {/* Name */}
       <span className="text-xs font-bold font-mono text-text-primary group-hover:text-purple-400 line-clamp-1">
         {perk.name}
-      </span>
-
-      {/* Character / Teachable Origin */}
-      <span className="text-[10px] font-mono text-text-muted line-clamp-1">
-        {perk.character || 'General'}
       </span>
 
       {/* Selected Indicator */}
@@ -141,13 +132,14 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       onClose={onClose}
       size="2xl"
       title={`${dict?.user?.selectPerk || 'Select Perk'} (${role})`}
-      subtitle={dict?.user?.choosePerkDesc || 'Choose a perk to equip into your signature 4-perk diamond loadout.'}
       icon={<Sparkles className="h-5 w-5 text-purple-400" />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
+      borderless
+      centerTitle
     >
       {/* Search & Actions Bar */}
-      <div className="p-4 border-b border-border-color bg-bg-elevated/40 flex flex-col sm:flex-row items-center gap-3 shrink-0">
+      <div className="p-4 bg-bg-elevated/40 flex flex-col sm:flex-row items-center gap-3 shrink-0">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
           <input
@@ -155,7 +147,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={dict?.user?.searchPerks || 'Search perks...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface border border-border-color rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-purple-500/60 transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none transition-colors"
             autoFocus
           />
         </div>
@@ -167,7 +159,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
               onClear();
               onClose();
             }}
-            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-rose-500/30 bg-rose-950/40 text-xs font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer"
+            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-rose-950/40 text-xs font-bold text-rose-400 hover:bg-rose-900/60 transition-colors cursor-pointer"
           >
             <Trash2 className="h-3.5 w-3.5" />
             <span>{dict?.user?.clearPerk || 'Clear Slot'}</span>
@@ -186,7 +178,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
           </div>
         ) : !isSearchActive ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/25">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10">
               <Search className={`h-6 w-6 text-purple-400 ${cleanQuery.length > 0 ? 'animate-pulse' : ''}`} />
             </div>
             <p className="text-xs sm:text-sm font-mono text-text-secondary">

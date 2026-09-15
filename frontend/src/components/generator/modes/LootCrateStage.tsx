@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Gift, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -245,8 +245,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             transition={{ duration: reduceMotion ? 0 : 0.7 }}
             className="cursor-pointer disabled:cursor-default"
           >
-            <Gift
-              className={`h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`}
+            <img
+              src="/images/randomizer/crate.webp"
+              alt=""
+              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none"
+              draggable={false}
             />
           </motion.button>
           {phase === 'closed' && (

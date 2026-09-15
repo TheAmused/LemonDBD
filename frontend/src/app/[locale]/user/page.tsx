@@ -18,12 +18,9 @@ import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserCampfireParticles } from '@/components/user/UserCampfireParticles';
 import { Locale } from '@/i18n/config';
 import { UserBugReport, StatusFeedback } from '@/types/userProfile';
-import { fetchMyBugReports, uploadAvatar, resetAvatar, ApiError } from '@/services/userProfileApi';
+import { fetchMyBugReports, uploadAvatar, ApiError } from '@/services/userProfileApi';
 import { useUserShowcase } from '@/hooks/useUserShowcase';
-import {
-  User,
-  Trash2,
-} from 'lucide-react';
+import { User } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
@@ -126,24 +123,6 @@ export default function UserProfilePage() {
     }
   };
 
-  const handleResetAvatar = async () => {
-    setIsUploadingAvatar(true);
-    setAvatarFeedback(null);
-    setOptimisticPreview(null);
-
-    try {
-      await resetAvatar();
-      setAvatarFeedback({ type: 'success', text: dict?.user?.avatarResetSuccessMsg || 'Avatar reset to default.' });
-      await refreshUser();
-    } catch (err: unknown) {
-      const fallback = dict?.user?.avatarResetFailed || 'Failed to reset avatar.';
-      const errorMsg = err instanceof ApiError ? err.message || fallback : fallback;
-      setAvatarFeedback({ type: 'error', text: errorMsg });
-    } finally {
-      setIsUploadingAvatar(false);
-    }
-  };
-
   if (!dict || isLoading) {
     return <UserProfileSkeleton dict={dict} />;
   }
@@ -184,8 +163,6 @@ export default function UserProfilePage() {
     );
   }
 
-  const hasCustomAvatar = Boolean(user.avatar_url && user.avatar_url !== 'default_avatar');
-
   return (
     <PageShell
       locale={currentLocale}
@@ -221,21 +198,6 @@ export default function UserProfilePage() {
             onAvatarClick={() => fileInputRef.current?.click()}
             avatarFeedback={avatarFeedback}
           />
-
-          {/* Reset to Default Avatar Action when custom avatar is active */}
-          {(hasCustomAvatar || optimisticPreview) && (
-            <div className="flex justify-end -mt-2 sm:-mt-4">
-              <button
-                type="button"
-                onClick={handleResetAvatar}
-                disabled={isUploadingAvatar}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-accent-red/30 bg-accent-red/10 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-all cursor-pointer font-mono"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span>{dict?.user?.removeAvatar || 'Reset to Default Avatar'}</span>
-              </button>
-            </div>
-          )}
 
           {/* 1. TOP BLOCK: Account Management */}
           <UserProfileForm

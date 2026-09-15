@@ -26,7 +26,6 @@ export default {
   newPassword: "Neues Passwort",
   confirmPassword: "Neues Passwort bestätigen",
   passwordPlaceholder: "Leer lassen, um aktuelles beizubehalten",
-  confirmPasswordPlaceholder: "Neues Passwort wiederholen",
   adminBadge: "Administrator-Abzeichen",
   forgotSentNotice: "Falls diese E-Mail registriert ist, wurde ein Link zum Zurücksetzen versandt.",
   usernameOrEmailPlaceholder: "Benutzername oder E-Mail eingeben",

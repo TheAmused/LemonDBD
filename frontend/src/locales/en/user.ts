@@ -26,7 +26,6 @@ export default {
   newPassword: "New Password",
   confirmPassword: "Confirm New Password",
   passwordPlaceholder: "Leave blank to keep current",
-  confirmPasswordPlaceholder: "Repeat new password",
   adminBadge: "Administrator badge",
   forgotSentNotice: "If that email is registered, a password reset link is on its way.",
   usernameOrEmailPlaceholder: "Enter username or email",

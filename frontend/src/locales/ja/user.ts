@@ -26,7 +26,6 @@ export default {
   newPassword: "新しいパスワード",
   confirmPassword: "新しいパスワード（確認）",
   passwordPlaceholder: "変更しない場合は空欄のまま",
-  confirmPasswordPlaceholder: "新しいパスワードを再入力",
   adminBadge: "管理者バッジ",
   forgotSentNotice: "そのメールアドレスが登録されている場合、パスワード再設定リンクを送信しました。",
   usernameOrEmailPlaceholder: "ユーザー名またはメールアドレスを入力",

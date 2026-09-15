@@ -26,7 +26,6 @@ export default {
   newPassword: "Nueva Contraseña",
   confirmPassword: "Confirmar Nueva Contraseña",
   passwordPlaceholder: "Dejar en blanco para conservar la actual",
-  confirmPasswordPlaceholder: "Repetir nueva contraseña",
   adminBadge: "Insignia de Administrador",
   forgotSentNotice: "Si ese correo está registrado, te hemos enviado un enlace para restablecer la contraseña.",
   usernameOrEmailPlaceholder: "Ingresa usuario o correo electrónico",

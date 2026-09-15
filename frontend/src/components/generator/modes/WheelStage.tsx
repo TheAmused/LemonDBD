@@ -308,10 +308,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.font = '900 16px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`PAGE ${pageNumber}`, centerX, centerY - 10);
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = '700 12px system-ui, sans-serif';
-      ctx.fillText(`${maxSlotsOnPage} PERKS`, centerX, centerY + 12);
+      ctx.fillText(`PAGE ${pageNumber}`, centerX, centerY);
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
@@ -321,17 +318,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       drawThornedRim(ctx, centerX, centerY, radius);
     }
 
-    // Top Pointer: a dripping 3-claw shape instead of a single triangle
+    // Top Pointer: a plain downward-pointing triangle
     ctx.beginPath();
-    ctx.moveTo(centerX - 22, 2);
-    ctx.lineTo(centerX - 14, 2);
-    ctx.lineTo(centerX - 9, 30);
-    ctx.lineTo(centerX - 3, 8);
-    ctx.lineTo(centerX, 46);
-    ctx.lineTo(centerX + 3, 8);
-    ctx.lineTo(centerX + 9, 30);
-    ctx.lineTo(centerX + 14, 2);
-    ctx.lineTo(centerX + 22, 2);
+    ctx.moveTo(centerX - 18, 2);
+    ctx.lineTo(centerX + 18, 2);
+    ctx.lineTo(centerX, 40);
     ctx.closePath();
     ctx.fillStyle = '#b91c1c';
     ctx.fill();

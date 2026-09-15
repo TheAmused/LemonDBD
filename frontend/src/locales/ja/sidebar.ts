@@ -46,7 +46,7 @@ export default {
   bugScreenshotsLabel: "スクリーンショット添付（最大3枚、各2MBまで）",
   bugUploadImage: "画像をアップロード",
   bugSecurityVerification: "セキュリティ認証",
-  bugSubmitButton: "バグレポートを送信",
+  bugSubmitButton: "送信",
   bugSubmitting: "送信中...",
   bugSuccessMessage: "バグレポートを送信しました！LemonDBDの改善にご協力いただきありがとうございます。",
   bugErrorMessage: "レポートの送信に失敗しました。もう一度お試しください。",

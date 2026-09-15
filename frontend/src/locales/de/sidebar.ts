@@ -46,7 +46,7 @@ export default {
   bugScreenshotsLabel: "Screenshots anhängen (Max. 3, je 2 MB)",
   bugUploadImage: "Bild hochladen",
   bugSecurityVerification: "Sicherheitsüberprüfung",
-  bugSubmitButton: "Fehlerbericht absenden",
+  bugSubmitButton: "Absenden",
   bugSubmitting: "Wird gesendet...",
   bugSuccessMessage: "Fehlerbericht erfolgreich übermittelt! Vielen Dank für deine Hilfe.",
   bugErrorMessage: "Fehler beim Absenden des Berichts. Bitte versuche es erneut.",

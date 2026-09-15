@@ -195,7 +195,6 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                       <div className="relative">
                         <input
                           type={showNewPassword ? 'text' : 'password'}
-                          placeholder={t.passwordPlaceholder || 'Leave blank to keep current'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
@@ -219,7 +218,6 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                       <div className="relative">
                         <input
                           type={showConfirmPassword ? 'text' : 'password'}
-                          placeholder={t.confirmPasswordPlaceholder || 'Repeat new password'}
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
@@ -249,15 +247,12 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs disabled:opacity-50 transition-all cursor-pointer font-mono"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black tracking-wider text-text-inverted shadow-xs disabled:opacity-50 transition-all cursor-pointer font-mono"
                 >
                   {isUpdating ? (
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />
                   ) : (
-                    <>
-                      <CheckCircle2 className="h-4 w-4" />
-                      <span>{t.saveChanges || 'Save Changes'}</span>
-                    </>
+                    <span>{t.saveChanges || 'Save'}</span>
                   )}
                 </button>
               </div>

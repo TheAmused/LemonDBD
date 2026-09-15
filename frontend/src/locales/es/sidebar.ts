@@ -46,7 +46,7 @@ export default {
   bugScreenshotsLabel: "Adjuntar Capturas de Pantalla (Máx 3, 2MB cada una)",
   bugUploadImage: "Subir Imagen",
   bugSecurityVerification: "Verificación de Seguridad",
-  bugSubmitButton: "Enviar Reporte de Error",
+  bugSubmitButton: "Enviar",
   bugSubmitting: "Enviando...",
   bugSuccessMessage: "¡Reporte de error enviado con éxito! Gracias por ayudar a mejorar LemonDBD.",
   bugErrorMessage: "Error al enviar el reporte. Por favor, inténtalo de nuevo.",

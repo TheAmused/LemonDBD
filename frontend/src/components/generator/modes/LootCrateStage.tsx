@@ -13,7 +13,6 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -114,7 +113,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef(true);
   const timeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -413,8 +412,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           </DbdButton>
         </>
       )}
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

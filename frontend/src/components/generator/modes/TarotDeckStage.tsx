@@ -13,7 +13,6 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playCardFlip } from '@/utils/perkAudio';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -103,7 +102,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
 }) => {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   const typeNames = dict?.generator?.tarotCardNames || DEFAULT_TYPE_NAMES;
@@ -241,8 +240,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       >
         {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
       </DbdButton>
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

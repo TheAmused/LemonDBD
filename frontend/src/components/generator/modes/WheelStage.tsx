@@ -12,7 +12,6 @@ import { isPerkBlockedByMutator, filterPerksByMutator } from '../lib/perkPicker'
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -80,7 +79,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const emberAnimFrameRef = useRef<number | null>(null);
 
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
@@ -733,8 +732,6 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               {statusText}
             </p>
           )}
-
-          <FlavorPill flavorLine={flavorLine} className="mt-2" />
         </div>
 
         <div className="order-3 grid grid-cols-2 gap-2 sm:gap-3 xl:order-3 xl:grid-cols-1 xl:gap-4 2xl:gap-6 min-[1800px]:gap-8">

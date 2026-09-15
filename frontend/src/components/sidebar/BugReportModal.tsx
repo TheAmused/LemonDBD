@@ -19,7 +19,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Trash2,
-  Send,
   UserCheck,
   Mail,
 } from 'lucide-react';
@@ -475,10 +474,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                       <span>{t.bugSubmitting || ''}</span>
                     </>
                   ) : (
-                    <>
-                      <Send className="h-3.5 w-3.5" aria-hidden="true" />
-                      <span>{t.bugSubmitButton || ''}</span>
-                    </>
+                    <span>{t.bugSubmitButton || ''}</span>
                   )}
                 </button>
               </div>

@@ -46,7 +46,7 @@ export default {
   bugScreenshotsLabel: "Attach Screenshots (Max 3, 2MB each)",
   bugUploadImage: "Upload Image",
   bugSecurityVerification: "Security Verification",
-  bugSubmitButton: "Submit Bug Report",
+  bugSubmitButton: "Submit",
   bugSubmitting: "Submitting...",
   bugSuccessMessage: "Bug report submitted successfully! Thank you for helping improve LemonDBD.",
   bugErrorMessage: "Failed to submit report. Please try again.",

@@ -46,7 +46,7 @@ export default {
   bugScreenshotsLabel: "Załącz zrzuty ekranu (Maks. 3, po 2MB)",
   bugUploadImage: "Prześlij obraz",
   bugSecurityVerification: "Weryfikacja bezpieczeństwa",
-  bugSubmitButton: "Wyślij zgłoszenie",
+  bugSubmitButton: "Wyślij",
   bugSubmitting: "Wysyłanie...",
   bugSuccessMessage: "Zgłoszenie wysłane pomyślnie! Dziękujemy za pomoc w rozwoju LemonDBD.",
   bugErrorMessage: "Nie udało się wysłać zgłoszenia. Spróbuj ponownie.",

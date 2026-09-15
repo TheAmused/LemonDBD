@@ -21,7 +21,7 @@ export default {
   reportedOn: "報告日時",
   attachments: "添付ファイル",
   devResponse: "開発者からの回答",
-  saveChanges: "変更を保存",
+  saveChanges: "保存",
   currentPassword: "現在のパスワード",
   newPassword: "新しいパスワード",
   confirmPassword: "新しいパスワード（確認）",

@@ -21,7 +21,7 @@ export default {
   reportedOn: "Reported on",
   attachments: "Attachments",
   devResponse: "Developer Response",
-  saveChanges: "Save Changes",
+  saveChanges: "Save",
   currentPassword: "Current Password",
   newPassword: "New Password",
   confirmPassword: "Confirm New Password",

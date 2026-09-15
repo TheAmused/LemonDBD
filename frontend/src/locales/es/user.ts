@@ -21,7 +21,7 @@ export default {
   reportedOn: "Reportado el",
   attachments: "Archivos Adjuntos",
   devResponse: "Respuesta del Desarrollador",
-  saveChanges: "Guardar Cambios",
+  saveChanges: "Guardar",
   currentPassword: "Contraseña Actual",
   newPassword: "Nueva Contraseña",
   confirmPassword: "Confirmar Nueva Contraseña",

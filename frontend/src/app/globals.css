@@ -49,6 +49,15 @@
   --animate-chaos-pop: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-lock-shake: historyLockShake 380ms ease-in-out;
   --animate-lock-break: historyLockBreak 380ms cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+
+  /* Named ultra-wide breakpoints (registered in the theme scale, not as
+   * arbitrary min-[Npx] variants) so Tailwind sorts their generated media
+   * queries correctly against the built-in sm/md/lg/xl/2xl ones instead of
+   * emitting them in source-scan order, where a later 2xl block can win
+   * the cascade at viewports that should hit these wider tiers instead. */
+  --breakpoint-wide: 1800px;
+  --breakpoint-wide-2k: 2400px;
+  --breakpoint-wide-4k: 3400px;
 }
 
 /* ---------------------------------------------------------------------------

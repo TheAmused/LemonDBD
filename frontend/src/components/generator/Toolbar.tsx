@@ -53,7 +53,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           title={dict?.generator?.coordinateLegendTooltipTitle || 'Page / Slot'}
           description={
             dict?.generator?.coordinateLegendTooltipDesc ||
-            "Each perk is tagged with where to find it in your in-game inventory: [P3/S7] means Page 3, Slot 7. The first number is the Page, the second is the Slot on that page."
+            "Each perk is tagged with where to find it in your in-game inventory. The first number is the Page, the second is the Slot on that page: [P3/S7] means Page 3, Slot 7."
           }
         >
           <IconToggleButton

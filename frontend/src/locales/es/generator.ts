@@ -114,7 +114,7 @@ export default {
   chaosMutatorTooltipDesc: "Gira para obtener una maldición o bendición aleatoria que altere este equipo de perks.",
   coordinateLegendTooltip: "Qué significa P/C",
   coordinateLegendTooltipTitle: "Página / Casilla",
-  coordinateLegendTooltipDesc: "Cada perk indica dónde encontrarlo en tu inventario dentro del juego: [P3/C7] significa Página 3, Casilla 7. El primer número es la Página, el segundo es la Casilla en esa página.",
+  coordinateLegendTooltipDesc: "Cada perk indica dónde encontrarlo en tu inventario dentro del juego. El primer número es la Página, el segundo es la Casilla en esa página: [P3/C7] significa Página 3, Casilla 7.",
   soundTooltipTitle: "Efectos de Sonido",
   soundTooltipDescOn: "Activado: se reproducirán los tics de los rodillos, golpes y fanfarrias.",
   soundTooltipDescOff: "Silenciado: todos los efectos están apagados.",

@@ -137,14 +137,14 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 sm:gap-6 py-2 sm:py-6">
-      <p className="max-w-lg text-center text-xs sm:text-base font-semibold text-text-secondary">
+    <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
+      <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
         {dict?.generator?.tarotTapToFlip ||
           'Tap any card to flip it and reveal the perk hidden beneath. Flip all four to lock in your loadout.'}
       </p>
 
       {cards ? (
-        <div ref={resultsRef} className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 min-[1800px]:gap-12">
+        <div ref={resultsRef} className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
           {cards.map((card, idx) => {
             const { isObscured, onClick } = getSlotInteraction(
               idx,
@@ -158,7 +158,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
             return (
               <div key={idx} style={{ perspective: '1200px' }}>
                 <motion.div
-                  className="relative h-44 w-32 xs:h-48 xs:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-64 lg:w-44 xl:h-72 xl:w-48 2xl:h-88 2xl:w-60 min-[1800px]:h-96 min-[1800px]:w-68"
+                  className="relative h-44 w-32 xs:h-48 xs:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-68 lg:w-48 xl:h-88 xl:w-60 2xl:h-[440px] 2xl:w-72 wide:h-[510px] wide:w-[336px] wide-2k:h-[580px] wide-2k:w-[384px] wide-4k:h-[680px] wide-4k:w-[440px]"
                   style={{ transformStyle: 'preserve-3d' }}
                   animate={{
                     rotateY: card.flipped ? 180 : 0,
@@ -178,8 +178,8 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
                     <CardBackImage type={card.type} />
-                    <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-bg-primary/80 via-transparent to-transparent p-3">
-                      <span className="text-[11px] font-black uppercase tracking-wide text-text-inverted drop-shadow">
+                    <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-bg-primary/80 via-transparent to-transparent p-3 sm:p-4 xl:p-5 2xl:p-6 wide:p-7">
+                      <span className="text-[11px] sm:text-xs xl:text-sm 2xl:text-base wide:text-lg font-black uppercase tracking-wide text-text-inverted drop-shadow">
                         {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                       </span>
                     </div>
@@ -190,7 +190,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                       revealing the perk in its center window instead of
                       turning into a bare icon. */}
                   <div
-                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-accent-amber/30 bg-bg-surface p-2 sm:p-2.5"
+                    className="absolute inset-0 flex flex-col items-center justify-between overflow-hidden rounded-2xl border-2 border-accent-amber/30 bg-bg-surface p-2 sm:p-2.5 xl:p-3 2xl:p-4 wide:p-5"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
@@ -198,11 +198,11 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     }}
                   >
                     {/* Inner card-stock border only */}
-                    <span className="pointer-events-none absolute inset-1 sm:inset-1.5 rounded-xl border border-accent-amber/20" />
+                    <span className="pointer-events-none absolute inset-1 sm:inset-1.5 xl:inset-2 2xl:inset-2.5 rounded-xl border border-accent-amber/20" />
                     {card.flipped && (
                       <>
                         <div className="relative z-10 pt-1 text-center">
-                          <span className="text-[9px] sm:text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-accent-amber drop-shadow-xs">
+                          <span className="text-[9px] sm:text-[10px] md:text-[11px] xl:text-xs 2xl:text-sm wide:text-base font-black uppercase tracking-[0.2em] text-accent-amber drop-shadow-xs">
                             {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                           </span>
                         </div>
@@ -228,7 +228,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           })}
         </div>
       ) : (
-        <Layers className={`h-28 w-28 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />
+        <Layers className={`h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />
       )}
 
       <DbdButton

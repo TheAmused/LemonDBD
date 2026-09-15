@@ -462,11 +462,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 honeypotProps={honeypotProps}
               />
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-accent-red/20">
+              <div className="flex items-center justify-end gap-3 pt-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>

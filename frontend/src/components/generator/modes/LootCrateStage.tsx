@@ -243,12 +243,14 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 : { rotate: 0, scale: 1 }
             }
             transition={{ duration: reduceMotion ? 0 : 0.7 }}
-            className="cursor-pointer disabled:cursor-default"
+            whileHover={!reduceMotion && phase === 'closed' ? { scale: 1.05 } : undefined}
+            whileTap={!reduceMotion && phase === 'closed' ? { scale: 0.95 } : undefined}
+            className="group cursor-pointer disabled:cursor-default"
           >
             <img
               src="/images/randomizer/crate.webp"
               alt=""
-              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none"
+              className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
               draggable={false}
             />
           </motion.button>
@@ -317,8 +319,9 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3 }}
                     transition={{ duration: 0.2 }}
+                    whileHover={reduceMotion ? undefined : { scale: 1.08, zIndex: 10 }}
                     whileTap={{ scale: 0.94 }}
-                    className="cursor-pointer shrink-0"
+                    className="cursor-pointer shrink-0 transition-transform"
                   >
                     <PerkSlot
                       perk={item.perk}
@@ -361,13 +364,13 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               {scatterPool.map((item) => (
                 <motion.div
                   key={item.id}
-                  className="absolute -translate-x-1/2 -translate-y-1/2"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 group hover:drop-shadow-[0_0_16px_var(--color-accent-amber)] transition-[filter] duration-200"
                   style={scatterPointStyle(item)}
                   initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
                   animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}
                   exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, rotate: item.rotate + 50, transition: { duration: 0.25 } }}
                   transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
-                  whileHover={reduceMotion ? undefined : { scale: item.scale * 1.08, rotate: 0, zIndex: 20 }}
+                  whileHover={reduceMotion ? undefined : { scale: item.scale * 1.1, rotate: 0, zIndex: 20 }}
                 >
                   <PerkSlot
                     perk={item.perk}

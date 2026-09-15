@@ -66,7 +66,7 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
         SIZE_STYLES[size],
         ROLE_RING[role],
         active
-          ? 'cursor-pointer bg-accent-red shadow-xs hover:bg-accent-red-hover active:scale-[0.97]'
+          ? 'cursor-pointer bg-accent-red shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]'
           : 'cursor-not-allowed bg-bg-elevated text-text-muted opacity-60',
         className
       )}

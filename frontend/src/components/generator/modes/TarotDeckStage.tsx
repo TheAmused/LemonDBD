@@ -173,12 +173,12 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     type="button"
                     onClick={() => handleFlip(idx)}
                     disabled={card.flipped}
-                    className="absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default"
+                    className="group absolute inset-0 overflow-hidden rounded-2xl bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
                     <CardBackImage type={card.type} />
                     <div className="absolute inset-0 flex flex-col items-center justify-end gap-1 bg-gradient-to-t from-bg-primary/80 via-transparent to-transparent p-3 sm:p-4 xl:p-5 2xl:p-6 wide:p-7">
-                      <span className="text-[11px] sm:text-xs xl:text-sm 2xl:text-base wide:text-lg font-black uppercase tracking-wide text-text-inverted drop-shadow">
+                      <span className="text-[11px] sm:text-xs xl:text-sm 2xl:text-base wide:text-lg font-black uppercase tracking-wide text-text-inverted drop-shadow group-hover:text-accent-amber transition-colors duration-200">
                         {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
                       </span>
                     </div>
@@ -231,12 +231,12 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           type="button"
           onClick={handleShuffle}
           disabled={activePlayablePerks.length === 0}
-          className="cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+          className="group cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
         >
           <img
             src="/images/randomizer/tarot.webp"
             alt=""
-            className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none"
+            className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
             draggable={false}
           />
         </button>

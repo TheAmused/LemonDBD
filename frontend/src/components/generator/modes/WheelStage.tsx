@@ -718,7 +718,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           </DbdButton>
 
           {statusText && (
-            <p aria-live="polite" className={`mt-2 text-xs font-black text-accent-amber font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
+            <p aria-live="polite" className="sr-only">
               {statusText}
             </p>
           )}

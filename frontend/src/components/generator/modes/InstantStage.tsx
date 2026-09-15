@@ -3,7 +3,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Zap } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -13,7 +12,6 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud } from '@/utils/perkAudio';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface InstantStageProps {
   role: RoleCategory;
@@ -43,7 +41,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -85,7 +83,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
         size="lg"
         onClick={handleRoll}
         disabled={activePlayablePerks.length === 0}
-        icon={<Zap className="h-6 w-6" />}
       >
         {dict?.generator?.rollCompleteLoadout || `Roll Complete ${role} Loadout`}
       </DbdButton>
@@ -126,8 +123,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
           );
         })}
       </div>
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

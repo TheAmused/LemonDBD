@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Play } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -12,7 +11,6 @@ import { isPerkBlockedByMutator, filterPerksByMutator } from '../lib/perkPicker'
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -80,7 +78,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const emberAnimFrameRef = useRef<number | null>(null);
 
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
@@ -310,10 +308,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.font = '900 16px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(`PAGE ${pageNumber}`, centerX, centerY - 10);
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = '700 12px system-ui, sans-serif';
-      ctx.fillText(`${maxSlotsOnPage} PERKS`, centerX, centerY + 12);
+      ctx.fillText(`PAGE ${pageNumber}`, centerX, centerY);
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
@@ -323,17 +318,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       drawThornedRim(ctx, centerX, centerY, radius);
     }
 
-    // Top Pointer: a dripping 3-claw shape instead of a single triangle
+    // Top Pointer: a plain downward-pointing triangle
     ctx.beginPath();
-    ctx.moveTo(centerX - 22, 2);
-    ctx.lineTo(centerX - 14, 2);
-    ctx.lineTo(centerX - 9, 30);
-    ctx.lineTo(centerX - 3, 8);
-    ctx.lineTo(centerX, 46);
-    ctx.lineTo(centerX + 3, 8);
-    ctx.lineTo(centerX + 9, 30);
-    ctx.lineTo(centerX + 14, 2);
-    ctx.lineTo(centerX + 22, 2);
+    ctx.moveTo(centerX - 18, 2);
+    ctx.lineTo(centerX + 18, 2);
+    ctx.lineTo(centerX, 40);
     ctx.closePath();
     ctx.fillStyle = '#b91c1c';
     ctx.fill();
@@ -660,6 +649,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         isActive={activeSlotIdx === idx}
         isObscured={isObscured}
         isBlind={isBlind}
+        size="wheelFlank"
         onClick={onClick}
         dict={dict}
       />
@@ -677,8 +667,8 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           'Spin the Page Wheel to land on a random page, then the Perk Wheel to land on a random perk from it, one slot at a time until all four are filled.'}
       </p>
 
-      <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 xl:flex-row xl:items-center xl:justify-center xl:gap-6 2xl:gap-14 min-[1800px]:gap-20">
-        <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 xl:order-1 xl:grid-cols-1 xl:gap-4 2xl:gap-6 min-[1800px]:gap-8">
+      <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 xl:flex-row xl:items-center xl:justify-center xl:gap-6 2xl:gap-14 wide:gap-20 wide-2k:gap-28 wide-4k:gap-36">
+        <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 xl:order-1 xl:grid-cols-1 xl:gap-4 2xl:gap-6 wide:gap-8 wide-2k:gap-10 wide-4k:gap-14">
           {renderFlankSlot(0)}
           {renderFlankSlot(1)}
         </div>
@@ -704,7 +694,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               // without re-deriving width from the new aspect ratio, flattening the
               // circle into an oval. Deriving both axes from one shared min()
               // makes them structurally identical, so they can never diverge.
-              className={`w-[min(62vw,36dvh)] h-[min(62vw,36dvh)] min-w-[200px] min-h-[200px] sm:w-[min(285px,38dvh)] sm:h-[min(285px,38dvh)] md:w-[min(320px,38dvh)] md:h-[min(320px,38dvh)] lg:w-[min(350px,38dvh)] lg:h-[min(350px,38dvh)] xl:w-[min(430px,38dvh)] xl:h-[min(430px,38dvh)] 2xl:w-[min(530px,38dvh)] 2xl:h-[min(530px,38dvh)] min-[1800px]:w-[min(620px,50dvh)] min-[1800px]:h-[min(620px,50dvh)] transition-all duration-500 ease-out transform ${
+              className={`w-[min(62vw,36dvh)] h-[min(62vw,36dvh)] min-w-[200px] min-h-[200px] sm:w-[min(285px,38dvh)] sm:h-[min(285px,38dvh)] md:w-[min(320px,38dvh)] md:h-[min(320px,38dvh)] lg:w-[min(350px,38dvh)] lg:h-[min(350px,38dvh)] xl:w-[min(480px,46dvh)] xl:h-[min(480px,46dvh)] 2xl:w-[min(600px,52dvh)] 2xl:h-[min(600px,52dvh)] wide:w-[min(720px,58dvh)]! wide:h-[min(720px,58dvh)]! wide-2k:w-[min(900px,60dvh)]! wide-2k:h-[min(900px,60dvh)]! wide-4k:w-[min(1100px,62dvh)]! wide-4k:h-[min(1100px,62dvh)]! transition-all duration-500 ease-out transform ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'
               }`}
             >
@@ -723,21 +713,18 @@ export const WheelStage: React.FC<WheelStageProps> = ({
             onClick={handleStartSpin}
             disabled={isSpinning || sortedPerks.length === 0}
             className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
           >
             {spinButtonText}
           </DbdButton>
 
           {statusText && (
-            <p aria-live="polite" className={`mt-2 text-xs font-black text-accent-amber font-mono text-center ${reduceMotion ? '' : 'animate-pulse'}`}>
+            <p aria-live="polite" className="sr-only">
               {statusText}
             </p>
           )}
-
-          <FlavorPill flavorLine={flavorLine} className="mt-2" />
         </div>
 
-        <div className="order-3 grid grid-cols-2 gap-2 sm:gap-3 xl:order-3 xl:grid-cols-1 xl:gap-4 2xl:gap-6 min-[1800px]:gap-8">
+        <div className="order-3 grid grid-cols-2 gap-2 sm:gap-3 xl:order-3 xl:grid-cols-1 xl:gap-4 2xl:gap-6 wide:gap-8 wide-2k:gap-10 wide-4k:gap-14">
           {renderFlankSlot(2)}
           {renderFlankSlot(3)}
         </div>

@@ -131,8 +131,6 @@ describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
   type GeneratorLocaleDict = {
     generator: {
       [key: string]: unknown;
-      jackpotLines?: readonly string[];
-      jackpotLinesKiller?: readonly string[];
     };
   };
 
@@ -164,82 +162,8 @@ describe('Randomizer: i18n Localization Parity Across All 5 Locales', () => {
           `Locale '${code}' missing or empty key 'generator.${key}'`
         );
       }
-
-      const jackpotLines = dict.generator?.jackpotLines;
-      assert.ok(
-        Array.isArray(jackpotLines) && jackpotLines.length >= 5,
-        `Locale '${code}' must contain at least 5 funny jackpot celebratory lines`
-      );
-      for (const line of jackpotLines) {
-        assert.ok(
-          typeof line === 'string' && line.length > 0,
-          `Locale '${code}' jackpot line must be a non-empty string`
-        );
-        assert.ok(!line.includes('—'), `Locale '${code}' survivor line contains em dash: "${line}"`);
-      }
-
-      const jackpotLinesKiller = dict.generator?.jackpotLinesKiller;
-      assert.ok(
-        Array.isArray(jackpotLinesKiller) && jackpotLinesKiller.length >= 5,
-        `Locale '${code}' must contain at least 5 funny killer jackpot celebratory lines`
-      );
-      for (const line of jackpotLinesKiller) {
-        assert.ok(
-          typeof line === 'string' && line.length > 0,
-          `Locale '${code}' killer jackpot line must be a non-empty string`
-        );
-        assert.ok(!line.includes('—'), `Locale '${code}' killer line contains em dash: "${line}"`);
-      }
     });
   }
-
-  it('All locale jackpot lines contain no em dashes (—)', () => {
-    for (const { code, dict } of locales) {
-      const survivorLines = dict.generator.jackpotLines ?? [];
-      const killerLines = dict.generator.jackpotLinesKiller ?? [];
-
-      for (const line of survivorLines) {
-        assert.ok(!line.includes('—'), `Locale '${code}' survivor line contains em dash: "${line}"`);
-      }
-      for (const line of killerLines) {
-        assert.ok(!line.includes('—'), `Locale '${code}' killer line contains em dash: "${line}"`);
-      }
-    }
-  });
-});
-
-describe('Randomizer: Jackpot Celebration Role Branching', () => {
-  it('selects killer lines for Killer role and survivor lines for Survivor role', async () => {
-    const { getJackpotCelebrationLines } = await import(
-      '@/components/generator/shared/useJackpotCelebration'
-    );
-    const killerLines = getJackpotCelebrationLines(enDict, 'Killer');
-    assert.deepEqual(killerLines, enDict.generator.jackpotLinesKiller);
-
-    const survivorLines = getJackpotCelebrationLines(enDict, 'Survivor');
-    assert.deepEqual(survivorLines, enDict.generator.jackpotLines);
-  });
-
-  it('falls back to default killer/survivor lines when dict is undefined', async () => {
-    const { getJackpotCelebrationLines } = await import(
-      '@/components/generator/shared/useJackpotCelebration'
-    );
-    const killerFallback = getJackpotCelebrationLines(undefined, 'Killer');
-    assert.ok(killerFallback.length >= 3);
-    assert.ok(
-      killerFallback.some(
-        (l) => l.toLowerCase().includes('entity') || l.toLowerCase().includes('hook') || l.toLowerCase().includes('fog')
-      )
-    );
-
-    const survivorFallback = getJackpotCelebrationLines(undefined, 'Survivor');
-    assert.ok(survivorFallback.length >= 3);
-    assert.ok(
-      survivorFallback.some(
-        (l) => l.toLowerCase().includes('entity') || l.toLowerCase().includes('fog') || l.toLowerCase().includes('hook')
-      )
-    );
-  });
 });
 
 describe('Randomizer: Tarot Deck Sizing & Frame Integrity', () => {

@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Gift, Sparkles, Lock } from 'lucide-react';
+import { Gift, Lock } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -13,7 +13,6 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud, playCardFlip } from '@/utils/perkAudio';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -114,7 +113,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef(true);
   const timeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -407,14 +406,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             role={role}
             size="md"
             onClick={handleReset}
-            icon={<Sparkles className="h-5 w-5" />}
           >
             {dict?.generator?.crateOpenAnother || 'Crack Open Another'}
           </DbdButton>
         </>
       )}
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

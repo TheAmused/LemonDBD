@@ -454,12 +454,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               type="button"
               onClick={handlePullLever}
               disabled={activePlayablePerks.length === 0}
-              className="cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+              className="group cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
             >
               <img
                 src="/images/randomizer/lever.webp"
                 alt=""
-                className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none"
+                className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
                 draggable={false}
               />
             </button>
@@ -592,10 +592,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       reel.locked
                         ? 'bg-accent-amber/10 border-accent-amber/60 shadow-xs'
                         : isStaged
-                        ? 'bg-accent-green/10 border-accent-green/60 shadow-xs'
+                        ? 'bg-accent-green/10 border-accent-green/60 shadow-xs hover:border-accent-green hover:shadow-sm hover:shadow-accent-green/30'
                         : landedBroken
                         ? 'bg-accent-red/10 border-accent-red/50'
-                        : 'bg-bg-elevated/40 border-border-color hover:bg-bg-elevated/70'
+                        : isClickable
+                        ? 'bg-bg-elevated/40 border-border-color hover:bg-bg-elevated/70 hover:border-accent-amber/70 hover:shadow-sm hover:shadow-accent-amber/25'
+                        : 'bg-bg-elevated/40 border-border-color'
                     )}
                   >
                     {/* Reel Identifier / Status Badge */}
@@ -647,10 +649,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                           type="button"
                           onClick={() => toggleStage(reel.id)}
                           className={cn(
-                            'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all cursor-pointer touch-manipulation border shadow-xs',
+                            'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
                             isStaged
-                              ? 'bg-accent-green text-text-inverted border-accent-green'
-                              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary'
+                              ? 'bg-accent-green text-text-inverted border-accent-green hover:bg-accent-green/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-green/40'
+                              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-amber/35'
                           )}
                           aria-label={`#${reel.id + 1}`}
                         >
@@ -690,16 +692,18 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                         : undefined
                     }
                     className={cn(
-                      'relative overflow-hidden rounded-lg border-2 shadow-inner transition-colors duration-200',
+                      'relative overflow-hidden rounded-lg border-2 shadow-inner transition-all duration-200',
                       'bg-gradient-to-b from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
-                      isClickable && 'cursor-pointer',
+                      isClickable && 'cursor-pointer hover:scale-[1.03] active:scale-[0.98]',
                       reel.locked
                         ? 'border-accent-amber'
                         : isStaged
-                          ? 'border-accent-green'
+                          ? 'border-accent-green hover:border-accent-green hover:shadow-md hover:shadow-accent-green/40'
                           : landedBroken
                             ? 'border-accent-red/70'
-                            : 'border-border-color hover:border-border-color/80'
+                            : isClickable
+                              ? 'border-border-color hover:border-accent-amber hover:shadow-md hover:shadow-accent-amber/40'
+                              : 'border-border-color'
                     )}
                     style={{ height: cellPx * 3, width: cellPx }}
                   >

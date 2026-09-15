@@ -76,7 +76,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
           onClick={onClick}
           className={cn(
             SLOT_SIZE_CLASSES[size],
-            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs transition-colors backdrop-blur-xs'
+            'flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-accent-red/50 bg-accent-red/10 text-accent-red cursor-pointer shadow-xs backdrop-blur-xs transition-all duration-200 hover:border-accent-red hover:bg-accent-red/20 hover:scale-105 active:scale-95 hover:shadow-md hover:shadow-accent-red/35'
           )}
         >
           <EyeOff className="h-10 w-10 animate-pulse" />

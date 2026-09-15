@@ -65,7 +65,7 @@ graph TD
   - In `backend/tests/scrapers/test_wikigg_items_addons.py`, assert `self.by_name["Flashlight"].role == "Survivor"` and `self.by_name["Flashlight"].category == "Flashlight"`.
 
 - [ ] **Step 2: Fix mocked roster edition test in `test_roster_image_scraper.py`**
-  - In `backend/tests/test_roster_image_scraper.py`, test with a valid edition key (`hooked_on_you` or `legendary_cosplay`) or verify fallback parsing so that `scrape_roster_portraits` returns expected results.
+  - In `backend/tests/test_roster_image_scraper.py`, test with a valid edition key (`hooked_on_you` or `legendary_characters`) or verify fallback parsing so that `scrape_roster_portraits` returns expected results.
 
 - [ ] **Step 3: Fix default character ownership expectation in `test_user_ownership.py`**
   - In `backend/tests/unit/test_user_ownership.py`, update `test_auth_and_user_routes` to assert free characters (`Dwight`, `Trapper`, etc.) are owned and licensed characters default to locked, matching current registration rules.

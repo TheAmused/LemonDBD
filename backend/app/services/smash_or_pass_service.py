@@ -33,8 +33,8 @@ EDITIONS: list[dict[str, Any]] = [
         "character_count": 8,
     },
     {
-        "id": "legendary_cosplay",
-        "slug": "legendary_cosplay",
+        "id": "legendary_characters",
+        "slug": "legendary_characters",
         "name": "Legendary Skins & Collabs",
         "description": "Iconic legendary skins and crossover collabs from gaming history.",
         "icon": "Flame",

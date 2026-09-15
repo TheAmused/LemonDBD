@@ -4,10 +4,10 @@
   "target": "rosters",
   "rosters": [
     {
-      "slug": "legendary_cosplay",
-      "name_i18n_key": "smashOrPass.rosters.legendary_cosplay.name",
-      "description_i18n_key": "smashOrPass.rosters.legendary_cosplay.desc",
-      "cover_image_url": "/static/avatars/rosters/legendary_cosplay.webp",
+      "slug": "legendary_characters",
+      "name_i18n_key": "smashOrPass.rosters.legendary_characters.name",
+      "description_i18n_key": "smashOrPass.rosters.legendary_characters.desc",
+      "cover_image_url": "/static/avatars/rosters/legendary_characters.webp",
       "theme_color": "#ffd166",
       "category": "Collabs",
       "is_nsfw": false,

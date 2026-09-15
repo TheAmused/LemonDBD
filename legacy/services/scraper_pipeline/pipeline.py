@@ -166,7 +166,7 @@ def execute_sync_pipeline(
         try:
             from app.scrapers.roster_images import RosterImageScraperDriver
             roster_driver = RosterImageScraperDriver(timeout=request_timeout)
-            for ed in ["hooked_on_you", "legendary_cosplay"]:
+            for ed in ["hooked_on_you", "legendary_characters"]:
                 roster_driver.sync_edition_assets(ed, static_dir)
         except Exception as ed_asset_err:
             logger.warning(f"Could not sync custom edition assets: {ed_asset_err}")

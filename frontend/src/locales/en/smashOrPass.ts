@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Island Romance',
       description: 'Tropical paradise dating simulator characters.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Legendary Skins & Collabs',
       description: 'Iconic crossover legends and special cosmetics.',
     },

@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Romance Isleño',
       description: 'Personajes del simulador de citas tropical.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Skins Legendarias y Colaboraciones',
       description: 'Leyendas icónicas de crossover y cosméticos de élite.',
     },

@@ -99,7 +99,7 @@ LemonDBD/
 │   │   │   │   ├── cyberpunk_2077.json
 │   │   │   │   ├── gothic_eldritch.json
 │   │   │   │   ├── hooked_on_you.json
-│   │   │   │   └── legendary_cosplay.json
+│   │   │   │   └── legendary_characters.json
 │   │   │   ├── __init__.py
 │   │   │   ├── smash_roster_seeder.py
 │   │   │   └── user_seeder.py

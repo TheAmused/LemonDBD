@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: アイランドロマンス',
       description: '南国恋愛シミュレーションのキャラクター。',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'レジェンダリースキン＆コラボ',
       description: '特別なコラボスキンとレジェンダリーキャラ。',
     },

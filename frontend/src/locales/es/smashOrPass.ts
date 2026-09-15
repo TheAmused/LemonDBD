@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Romance Isleño',
       description: 'Personajes del simulador de citas tropical.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Skins Legendarias y Colaboraciones',
       description: 'Leyendas icónicas de crossover y cosméticos de élite.',
     },
@@ -275,5 +275,16 @@ export default {
     playBgm: 'Reproducir música (B)',
     unmute: 'Activar sonido FX (M)',
     mute: 'Silenciar sonido FX (M)',
+  },
+  sharing: {
+    backToBreakdownTitle: 'Volver al resumen',
+    backAriaLabel: 'Volver',
+    shareDirectly: 'Compartir directamente',
+    directLink: 'Enlace directo al Arquetipo',
+    copied: '¡Copiado!',
+    copyLink: 'Copiar enlace',
+    copiedQuote: '¡Cita con estadísticas copiada!',
+    copyQuote: 'Copiar cita y enlace (para Discord)',
+    backToBreakdown: 'Volver al análisis del Arquetipo',
   },
 } as const;

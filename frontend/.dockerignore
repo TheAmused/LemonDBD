@@ -8,3 +8,5 @@ README.md
 out/
 build/
 *.tsbuildinfo
+scripts/
+playwright-debug/

@@ -275,7 +275,7 @@ static_export/
 │       ├── cyberpunk_2077.json
 │       ├── gothic_eldritch.json
 │       ├── hooked_on_you.json
-│       └── legendary_cosplay.json
+│       └── legendary_characters.json
 └── users/
     ├── admin_lemon.json        (Admin 'lemon' user record)
     └── default_user.json       (Default 'user' record)

@@ -37,8 +37,8 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         className={cn(
           'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-lg text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
           !isKiller
-            ? 'bg-accent-green text-text-inverted shadow-xs font-black'
-            : 'text-text-secondary hover:text-text-primary'
+            ? 'bg-accent-green text-text-inverted shadow-xs font-black hover:brightness-110 active:scale-95'
+            : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
         )}
       >
         <Shield className="h-4 w-4 sm:h-5 w-5 shrink-0" />
@@ -51,8 +51,8 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
         className={cn(
           'flex items-center gap-2 px-3.5 sm:px-4 py-2 min-h-[40px] sm:min-h-[44px] rounded-lg text-xs sm:text-sm font-black transition-all duration-200 cursor-pointer select-none touch-manipulation',
           isKiller
-            ? 'bg-accent-red text-text-inverted shadow-xs font-black'
-            : 'text-text-secondary hover:text-text-primary'
+            ? 'bg-accent-red text-text-inverted shadow-xs font-black hover:brightness-110 active:scale-95'
+            : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
         )}
       >
         <Skull className="h-4 w-4 sm:h-5 w-5 shrink-0" />

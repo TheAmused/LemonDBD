@@ -27,7 +27,7 @@ class TestSmashSeederService:
         assert roster_slugs == {
             "canon",
             "hooked_on_you",
-            "legendary_cosplay",
+            "legendary_characters",
             "cyberpunk_2077",
             "anime_manga",
             "gothic_eldritch",
@@ -46,7 +46,7 @@ class TestSmashSeederService:
         hoy_roster = db_session.scalar(select(Roster).where(Roster.slug == "hooked_on_you"))
         assert len(hoy_roster.entities) == 8
 
-        leg_roster = db_session.scalar(select(Roster).where(Roster.slug == "legendary_cosplay"))
+        leg_roster = db_session.scalar(select(Roster).where(Roster.slug == "legendary_characters"))
         assert len(leg_roster.entities) == 47
 
         cyber_roster = db_session.scalar(select(Roster).where(Roster.slug == "cyberpunk_2077"))

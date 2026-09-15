@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Rows3, Lock, Sparkles, Ban, Check, Plus } from 'lucide-react';
+import { Lock, Ban, Check, Plus } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -17,7 +17,6 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
 import { DbdButton } from '../shared/DbdButton';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface SlotMachineStageProps {
   role: RoleCategory;
@@ -149,7 +148,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const tickIntervalsRef = useRef<Map<number, ReturnType<typeof setInterval>>>(new Map());
   const pendingDoneRef = useRef<{ remaining: Set<number>; onAllDone: () => void } | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -443,25 +442,37 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         <div ref={reelAreaRef} aria-hidden="true" className="pointer-events-none invisible absolute inset-0" />
 
         {phase === 'idle' && (
-        <>
-          <p className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
-            {dict?.generator?.slotMachinePrompt ||
-              'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
-            {' '}
-            {dict?.generator?.slotCursedFlavor ||
-              "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
-          </p>
-          <DbdButton
-            role={role}
-            size="lg"
-            onClick={handlePullLever}
-            disabled={activePlayablePerks.length === 0}
-            icon={<Rows3 className="h-6 w-6" />}
-          >
-            {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
-          </DbdButton>
-        </>
-      )}
+          <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
+            <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary leading-relaxed">
+              {dict?.generator?.slotMachinePrompt ||
+                'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
+              {' '}
+              {dict?.generator?.slotCursedFlavor ||
+                "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
+            </p>
+            <button
+              type="button"
+              onClick={handlePullLever}
+              disabled={activePlayablePerks.length === 0}
+              className="group cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+            >
+              <img
+                src="/images/randomizer/lever.webp"
+                alt=""
+                className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none group-hover:drop-shadow-[0_0_24px_var(--color-accent-amber)] transition-all duration-300"
+                draggable={false}
+              />
+            </button>
+            <DbdButton
+              role={role}
+              size="lg"
+              onClick={handlePullLever}
+              disabled={activePlayablePerks.length === 0}
+            >
+              {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
+            </DbdButton>
+          </div>
+        )}
 
       {(phase === 'spinning' || phase === 'awaiting') && (
         <>
@@ -581,10 +592,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                       reel.locked
                         ? 'bg-accent-amber/10 border-accent-amber/60 shadow-xs'
                         : isStaged
-                        ? 'bg-accent-green/10 border-accent-green/60 shadow-xs'
+                        ? 'bg-accent-green/10 border-accent-green/60 shadow-xs hover:border-accent-green hover:shadow-sm hover:shadow-accent-green/30'
                         : landedBroken
                         ? 'bg-accent-red/10 border-accent-red/50'
-                        : 'bg-bg-elevated/40 border-border-color hover:bg-bg-elevated/70'
+                        : isClickable
+                        ? 'bg-bg-elevated/40 border-border-color hover:bg-bg-elevated/70 hover:border-accent-amber/70 hover:shadow-sm hover:shadow-accent-amber/25'
+                        : 'bg-bg-elevated/40 border-border-color'
                     )}
                   >
                     {/* Reel Identifier / Status Badge */}
@@ -636,10 +649,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                           type="button"
                           onClick={() => toggleStage(reel.id)}
                           className={cn(
-                            'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all cursor-pointer touch-manipulation border shadow-xs',
+                            'h-10 w-10 rounded-xl flex items-center justify-center font-black transition-all duration-200 cursor-pointer touch-manipulation border shadow-xs',
                             isStaged
-                              ? 'bg-accent-green text-text-inverted border-accent-green'
-                              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary'
+                              ? 'bg-accent-green text-text-inverted border-accent-green hover:bg-accent-green/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-green/40'
+                              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary hover:border-accent-amber hover:bg-bg-elevated/90 hover:scale-110 active:scale-95 hover:shadow-md hover:shadow-accent-amber/35'
                           )}
                           aria-label={`#${reel.id + 1}`}
                         >
@@ -679,16 +692,18 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                         : undefined
                     }
                     className={cn(
-                      'relative overflow-hidden rounded-lg border-2 shadow-inner transition-colors duration-200',
+                      'relative overflow-hidden rounded-lg border-2 shadow-inner transition-all duration-200',
                       'bg-gradient-to-b from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
-                      isClickable && 'cursor-pointer',
+                      isClickable && 'cursor-pointer hover:scale-[1.03] active:scale-[0.98]',
                       reel.locked
                         ? 'border-accent-amber'
                         : isStaged
-                          ? 'border-accent-green'
+                          ? 'border-accent-green hover:border-accent-green hover:shadow-md hover:shadow-accent-green/40'
                           : landedBroken
                             ? 'border-accent-red/70'
-                            : 'border-border-color hover:border-border-color/80'
+                            : isClickable
+                              ? 'border-border-color hover:border-accent-amber hover:shadow-md hover:shadow-accent-amber/40'
+                              : 'border-border-color'
                     )}
                     style={{ height: cellPx * 3, width: cellPx }}
                   >
@@ -801,7 +816,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               size="md"
               onClick={handleConfirm}
               disabled={!canConfirm || phase !== 'awaiting'}
-              icon={<Lock className="h-5 w-5" />}
             >
               {dict?.generator?.slotConfirmSelection || 'Confirm Selection'}
             </DbdButton>
@@ -844,15 +858,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             role={role}
             size="md"
             onClick={handleReset}
-            icon={<Sparkles className="h-5 w-5" />}
           >
             {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
           </DbdButton>
         </>
       )}
       </div>
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

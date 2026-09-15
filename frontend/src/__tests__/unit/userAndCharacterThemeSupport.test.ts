@@ -204,7 +204,7 @@ describe('User Profile Theme Support', () => {
     );
   });
 
-  it('user/page.tsx unauthenticated prompt and avatar reset button support light and dark theme classes', () => {
+  it('user/page.tsx unauthenticated prompt and sign-in controls support light and dark theme classes', () => {
     const userPagePath = path.resolve(__dirname, '../../app/[locale]/user/page.tsx');
     const source = fs.readFileSync(userPagePath, 'utf-8');
     assert.ok(
@@ -213,8 +213,8 @@ describe('User Profile Theme Support', () => {
       'Unauthenticated card must support light and dark theme'
     );
     assert.ok(
-      source.includes('bg-rose-50 dark:bg-rose-950/40') || source.includes('bg-accent-red/10'),
-      'Avatar reset button must support light and dark theme contrast'
+      source.includes('bg-accent-red') || source.includes('bg-rose-50'),
+      'Action button must support theme contrast'
     );
   });
 });

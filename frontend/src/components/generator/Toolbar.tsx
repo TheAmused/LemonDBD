@@ -7,6 +7,7 @@ import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { IconToggleButton } from './shared/IconToggleButton';
 import { Tooltip } from '@/components/common/Tooltip';
+import { getLocalizedMutator } from './lib/chaosMutatorLocalization';
 
 export interface ToolbarProps {
   noRepeatPerks: boolean;
@@ -53,7 +54,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           title={dict?.generator?.coordinateLegendTooltipTitle || 'Page / Slot'}
           description={
             dict?.generator?.coordinateLegendTooltipDesc ||
-            "Each perk is tagged with where to find it in your in-game inventory: [P3/S7] means Page 3, Slot 7 — the first number is the Page, the second is the Slot on that page."
+            "Each perk is tagged with where to find it in your in-game inventory. The first number is the Page, the second is the Slot on that page: [P3/S7] means Page 3, Slot 7."
           }
         >
           <IconToggleButton
@@ -93,16 +94,20 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </Tooltip>
 
         <Tooltip
-          title={activeMutator ? activeMutator.name : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
+          title={activeMutator
+            ? getLocalizedMutator(activeMutator, dict).name
+            : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
           description={
             activeMutator
-              ? activeMutator.description
+              ? getLocalizedMutator(activeMutator, dict).description
               : dict?.generator?.chaosMutatorTooltipDesc || 'Spin for a random Trial curse or buff to twist this loadout.'
           }
         >
           <IconToggleButton
             icon={<span className="text-lg leading-none">{activeMutator ? activeMutator.icon : '🔮'}</span>}
-            label={activeMutator ? activeMutator.name : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
+            label={activeMutator
+              ? getLocalizedMutator(activeMutator, dict).name
+              : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
             isActive={Boolean(activeMutator)}
             onClick={onOpenChaosModal}
           />

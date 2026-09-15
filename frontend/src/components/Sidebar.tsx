@@ -19,12 +19,10 @@ import {
   Heart,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
-import { useVaultStats } from '@/context/VaultStatsContext';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import dynamic from 'next/dynamic';
 import { SidebarNavLink } from './sidebar/SidebarNavLink';
-import { SidebarStatsCard } from './sidebar/SidebarStatsCard';
 import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
@@ -60,13 +58,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   killerCount,
   characterCount,
 }) => {
-  const vaultStats = useVaultStats();
-  const stats = {
-    totalPerksCount: totalPerksCount ?? vaultStats.totalPerksCount,
-    survivorCount: survivorCount ?? vaultStats.survivorCount,
-    killerCount: killerCount ?? vaultStats.killerCount,
-    characterCount: characterCount ?? vaultStats.characterCount,
-  };
   const pathname = usePathname() || '';
   const params = useParams();
 
@@ -246,16 +237,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={closeMobile}
             />
           ))}
-
-          <div className="pt-2">
-            <SidebarStatsCard
-              dict={dict}
-              totalPerksCount={stats.totalPerksCount}
-              survivorCount={stats.survivorCount}
-              killerCount={stats.killerCount}
-              characterCount={stats.characterCount}
-            />
-          </div>
         </nav>
 
         <SidebarUserSection

@@ -135,7 +135,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
               </span>
               {description && (
                 <span className="relative mt-1 block whitespace-normal text-[11px] font-medium italic leading-snug text-text-secondary">
-                  {`“${description}”`}
+                  {description}
                 </span>
               )}
             </span>

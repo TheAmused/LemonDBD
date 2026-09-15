@@ -15,57 +15,6 @@ from app.seeds.smash_roster_seeder import seed_smash_rosters
 
 logger = logging.getLogger(__name__)
 
-EDITIONS: list[dict[str, Any]] = [
-    {
-        "id": "canon",
-        "slug": "canon",
-        "name": "Dead by Daylight: Fog Canon",
-        "description": "The complete 98-character roster of all official Killers and Survivors.",
-        "icon": "Heart",
-        "character_count": 98,
-    },
-    {
-        "id": "hooked_on_you",
-        "slug": "hooked_on_you",
-        "name": "Hooked on You: Island Romance",
-        "description": "Tropical paradise dating sim edition with beach outfits and sunny vibes.",
-        "icon": "Sparkles",
-        "character_count": 8,
-    },
-    {
-        "id": "legendary_cosplay",
-        "slug": "legendary_cosplay",
-        "name": "Legendary Skins & Collabs",
-        "description": "Iconic legendary skins and crossover collabs from gaming history.",
-        "icon": "Flame",
-        "character_count": 12,
-    },
-    {
-        "id": "cyberpunk_2077",
-        "slug": "cyberpunk_2077",
-        "name": "Cyberpunk Fog 2077 Edition",
-        "description": "High-tech neon augmented champions fighting in a dystopian fog.",
-        "icon": "Cpu",
-        "character_count": 10,
-    },
-    {
-        "id": "anime_manga",
-        "slug": "anime_manga",
-        "name": "Fog Anime / Manga Aesthetic",
-        "description": "Stylized anime aesthetic adaptations of your favorite Fog characters.",
-        "icon": "Sparkle",
-        "character_count": 10,
-    },
-    {
-        "id": "gothic_eldritch",
-        "slug": "gothic_eldritch",
-        "name": "Victorian & Gothic Eldritch Legends",
-        "description": "Dark fantasy, Bloodborne aesthetics, and Victorian eldritch horrors.",
-        "icon": "Skull",
-        "character_count": 10,
-    },
-]
-
 
 def _enrich_with_stat(
     entity: Entity, stat: EntityStat | None, edition: str, lang: str | None = None

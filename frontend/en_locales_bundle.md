@@ -1055,7 +1055,7 @@ export default {
       "name": "Hooked on You: Island Romance",
       "desc": "Tropical paradise dating sim edition with beach outfits and sunny vibes."
     },
-    "legendary_cosplay": {
+    "legendary_characters": {
       "name": "Legendary Skins & Collabs",
       "desc": "Iconic legendary skins and crossover collabs from gaming history."
     },

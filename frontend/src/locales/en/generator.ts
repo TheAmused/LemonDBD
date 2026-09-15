@@ -114,7 +114,7 @@ export default {
   chaosMutatorTooltipDesc: "Spin for a random Trial curse or buff to twist this loadout.",
   coordinateLegendTooltip: "What P/S Means",
   coordinateLegendTooltipTitle: "Page / Slot",
-  coordinateLegendTooltipDesc: "Each perk is tagged with where to find it in your in-game inventory: [P3/S7] means Page 3, Slot 7. The first number is the Page, the second is the Slot on that page.",
+  coordinateLegendTooltipDesc: "Each perk is tagged with where to find it in your in-game inventory. The first number is the Page, the second is the Slot on that page: [P3/S7] means Page 3, Slot 7.",
   soundTooltipTitle: "Sound Effects",
   soundTooltipDescOn: "On: reel ticks, thuds, and fanfare will play.",
   soundTooltipDescOff: "Muted: every effect is silenced.",

@@ -8,7 +8,7 @@ import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { PerkCard } from '@/components/PerkCard';
 
-export type PerkSlotSize = 'default' | 'large' | 'fill' | 'tarot' | 'compact';
+export type PerkSlotSize = 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
 
 // Matches PerkCard's own grid-view footprint exactly, so an empty/obscured
 // slot takes up the same space as a filled one and nothing jumps around.
@@ -18,6 +18,10 @@ const SLOT_SIZE_CLASSES: Record<PerkSlotSize, string> = {
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
   tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-44 xl:w-44 2xl:h-52 2xl:w-52 min-[1800px]:h-60 min-[1800px]:w-60',
   compact: 'h-[78px] w-[78px] xs:h-[84px] xs:w-[84px] sm:h-24 sm:w-24 md:h-26 md:w-26',
+  // Same as 'default' through lg (tablet/phone already reads fine); shrinks
+  // a step further from xl up so the wheel itself can claim the freed space
+  // on wide monitors instead of the two loadout slots matching its growth.
+  wheelFlank: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-36 xl:w-36 2xl:h-44 2xl:w-44 wide:h-52! wide:w-52! wide-2k:h-60! wide-2k:w-60! wide-4k:h-72! wide-4k:w-72!',
 };
 
 export interface PerkSlotProps {
@@ -49,6 +53,7 @@ const SLOT_OUTER_PADDING: Record<PerkSlotSize, string> = {
   fill: 'p-1',
   tarot: 'p-0.5',
   compact: 'p-0.5',
+  wheelFlank: 'p-2 sm:p-3',
 };
 
 export const PerkSlot: React.FC<PerkSlotProps> = ({

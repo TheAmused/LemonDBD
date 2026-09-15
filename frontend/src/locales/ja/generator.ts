@@ -114,7 +114,7 @@ export default {
   chaosMutatorTooltipDesc: "回してランダムなトライアルの呪いや恩恵を引き、この編成を変化させます。",
   coordinateLegendTooltip: "P/Sの意味",
   coordinateLegendTooltipTitle: "ページ / スロット",
-  coordinateLegendTooltipDesc: "各パークには、ゲーム内の所持アイテムでの場所が表示されます: ［P3 / S7］はページ3、スロット7を意味します。最初の数字がページ、2番目の数字がそのページ内のスロットです。",
+  coordinateLegendTooltipDesc: "各パークには、ゲーム内の所持アイテムでの場所が表示されます。最初の数字がページ、2番目の数字がそのページ内のスロットです: ［P3 / S7］はページ3、スロット7を意味します。",
   soundTooltipTitle: "効果音",
   soundTooltipDescOn: "オン:リールの音、衝撃音、ファンファーレが再生されます。",
   soundTooltipDescOff: "ミュート:すべての効果音が無音になります。",

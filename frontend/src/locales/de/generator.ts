@@ -114,7 +114,7 @@ export default {
   chaosMutatorTooltipDesc: "Drehe für einen zufälligen Fluch oder Segen der Prüfung, der dieses Perk-Set verändert.",
   coordinateLegendTooltip: "Was S/S bedeutet",
   coordinateLegendTooltipTitle: "Seite / Slot",
-  coordinateLegendTooltipDesc: "Jeder Perk zeigt, wo du ihn in deinem Inventar im Spiel findest: [S3/S7] bedeutet Seite 3, Slot 7. Die erste Zahl ist die Seite, die zweite der Slot auf dieser Seite.",
+  coordinateLegendTooltipDesc: "Jeder Perk zeigt, wo du ihn in deinem Inventar im Spiel findest. Die erste Zahl ist die Seite, die zweite der Slot auf dieser Seite: [S3/S7] bedeutet Seite 3, Slot 7.",
   soundTooltipTitle: "Soundeffekte",
   soundTooltipDescOn: "An: Walzen-Klicks, Wummser und Fanfaren werden abgespielt.",
   soundTooltipDescOff: "Stumm: alle Effekte sind ausgeschaltet.",

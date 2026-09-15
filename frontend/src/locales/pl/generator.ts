@@ -114,7 +114,7 @@ export default {
   chaosMutatorTooltipDesc: "Zakręć, aby otrzymać losową klątwę lub błogosławieństwo próby, które zmieni ten zestaw perków.",
   coordinateLegendTooltip: "Co oznacza S/S",
   coordinateLegendTooltipTitle: "Strona / Slot",
-  coordinateLegendTooltipDesc: "Każdy perk pokazuje, gdzie go znaleźć w ekwipunku w grze: [S3/S7] oznacza Stronę 3, Slot 7. Pierwsza liczba to Strona, druga to Slot na tej stronie.",
+  coordinateLegendTooltipDesc: "Każdy perk pokazuje, gdzie go znaleźć w ekwipunku w grze. Pierwsza liczba to Strona, druga to Slot na tej stronie: [S3/S7] oznacza Stronę 3, Slot 7.",
   soundTooltipTitle: "Efekty Dźwiękowe",
   soundTooltipDescOn: "Włączone: będą odtwarzane stuknięcia bębnów, uderzenia i fanfary.",
   soundTooltipDescOff: "Wyciszone: wszystkie efekty są wyłączone.",

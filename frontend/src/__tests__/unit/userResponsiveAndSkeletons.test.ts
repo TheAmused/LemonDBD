@@ -162,8 +162,6 @@ describe('User Page: i18n key parity across all supported locales', () => {
     'avatarSizeLimit',
     'avatarUploadFailed',
     'avatarUpdateSuccess',
-    'avatarResetFailed',
-    'avatarResetSuccessMsg',
     'authTokenMissing',
     'profileUpdateFailedMsg',
     'profileUpdateSuccessMsg',

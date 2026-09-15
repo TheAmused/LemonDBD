@@ -135,20 +135,3 @@ export async function uploadAvatar(file: File): Promise<any> {
   return data;
 }
 
-export async function resetAvatar(): Promise<any> {
-  const token = getToken();
-  if (!token) {
-    throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
-  }
-
-  const res = await fetch(`${apiBase()}/api/v1/auth/avatar`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  const data = await parseJsonSafely(res);
-  if (!res.ok) {
-    throw new ApiError(data.error || 'Failed to reset avatar.', res.status, data.error_code);
-  }
-  return data;
-}

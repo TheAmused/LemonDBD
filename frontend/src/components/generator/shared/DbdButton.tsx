@@ -30,15 +30,15 @@ export interface DbdButtonProps
 // could run wider than a narrow phone viewport once its icon + label text
 // were accounted for.
 const SIZE_STYLES: Record<DbdButtonSize, string> = {
-  lg: 'gap-2 px-6 py-3.5 text-sm sm:gap-3 sm:px-10 sm:py-4 sm:text-base',
-  md: 'gap-2 px-5 py-3 text-xs sm:gap-2.5 sm:px-8 sm:py-3.5 sm:text-sm',
-  sm: 'gap-1.5 px-4 py-2.5 text-[11px] sm:gap-2 sm:px-6 sm:py-3 sm:text-xs',
+  lg: 'gap-2 px-6 py-3.5 text-sm sm:gap-3 sm:px-10 sm:py-4 sm:text-base xl:gap-3.5 xl:px-12 xl:py-4.5 xl:text-lg 2xl:gap-4 2xl:px-14 2xl:py-5 2xl:text-xl wide:gap-4.5 wide:px-16 wide:py-5.5 wide:text-2xl wide-2k:gap-5 wide-2k:px-20 wide-2k:py-6 wide-2k:text-2xl',
+  md: 'gap-2 px-5 py-3 text-xs sm:gap-2.5 sm:px-8 sm:py-3.5 sm:text-sm xl:gap-3 xl:px-10 xl:py-4 xl:text-base 2xl:px-12 2xl:py-4.5 2xl:text-lg',
+  sm: 'gap-1.5 px-4 py-2.5 text-[11px] sm:gap-2 sm:px-6 sm:py-3 sm:text-xs xl:px-7 xl:py-3 xl:text-sm',
 };
 
 const ICON_SIZE: Record<DbdButtonSize, string> = {
-  lg: 'h-5 w-5 sm:h-6 sm:w-6',
-  md: 'h-4 w-4 sm:h-5 sm:w-5',
-  sm: 'h-4 w-4',
+  lg: 'h-5 w-5 sm:h-6 sm:w-6 xl:h-7 xl:w-7 2xl:h-8 2xl:w-8 wide:h-9 wide:w-9 wide-2k:h-10 wide-2k:w-10',
+  md: 'h-4 w-4 sm:h-5 sm:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7',
+  sm: 'h-4 w-4 xl:h-5 xl:w-5',
 };
 
 // Role identity lives only in the focus ring tint -- Survivor green, Killer
@@ -66,7 +66,7 @@ export const DbdButton = React.forwardRef<HTMLButtonElement, DbdButtonProps>(fun
         SIZE_STYLES[size],
         ROLE_RING[role],
         active
-          ? 'cursor-pointer bg-accent-red shadow-xs hover:bg-accent-red-hover active:scale-[0.97]'
+          ? 'cursor-pointer bg-accent-red shadow-xs hover:bg-accent-red-hover hover:scale-[1.02] hover:shadow-md hover:shadow-accent-red/40 active:scale-[0.97]'
           : 'cursor-not-allowed bg-bg-elevated text-text-muted opacity-60',
         className
       )}

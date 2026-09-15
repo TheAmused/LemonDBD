@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Insel-Romanze',
       description: 'Charaktere aus der tropischen Dating-Simulation.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Legendäre Skins & Kollaborationen',
       description: 'Kultige Crossover-Legenden und Elite-Skins.',
     },
@@ -275,5 +275,16 @@ export default {
     playBgm: 'Hintergrundmusik abspielen (B)',
     unmute: 'Soundeffekte einschalten (M)',
     mute: 'Soundeffekte stummstellen (M)',
+  },
+  sharing: {
+    backToBreakdownTitle: 'Zurück zur Übersicht',
+    backAriaLabel: 'Zurück',
+    shareDirectly: 'Direkt teilen',
+    directLink: 'Direktlink zum Archetyp',
+    copied: 'Kopiert!',
+    copyLink: 'Link kopieren',
+    copiedQuote: 'Zitat mit Statistiken kopiert!',
+    copyQuote: 'Zitat & Link kopieren (für Discord)',
+    backToBreakdown: 'Zurück zur Archetyp-Analyse',
   },
 } as const;

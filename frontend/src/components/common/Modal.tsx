@@ -34,6 +34,10 @@ export interface ModalProps {
   closeButtonAriaLabel?: string;
   /** Strips the outer panel border, the header's bottom border, and the close button's border. */
   borderless?: boolean;
+  /** Custom class for outer wrapper z-index (default: z-50) */
+  zIndexClassName?: string;
+  /** Custom extra classes for outer fixed container */
+  containerClassName?: string;
 }
 
 const SIZE_MAP: Record<ModalSize, string> = {
@@ -74,6 +78,8 @@ export const Modal: React.FC<ModalProps> = ({
   ariaDescribedBy,
   closeButtonAriaLabel,
   borderless = false,
+  zIndexClassName = 'z-50',
+  containerClassName = '',
 }) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -114,7 +120,7 @@ export const Modal: React.FC<ModalProps> = ({
           aria-modal="true"
           aria-label={typeof title === 'string' ? title : ariaLabel}
           aria-describedby={ariaDescribedBy}
-          className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 md:p-6 select-none"
+          className={`fixed inset-0 ${zIndexClassName} flex items-center justify-center p-2.5 sm:p-4 md:p-6 select-none ${containerClassName}`}
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -132,7 +138,7 @@ export const Modal: React.FC<ModalProps> = ({
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative flex flex-col w-full ${maxWidthClass} overflow-hidden rounded-[28px] sm:rounded-[36px] ${borderless ? '' : 'border border-border-color'} bg-bg-surface shadow-2xl text-text-primary font-mono z-10 ${className}`}
+            className={`relative flex flex-col w-full ${maxWidthClass} max-h-[92dvh] sm:max-h-[90dvh] overflow-hidden rounded-[28px] sm:rounded-[36px] ${borderless ? '' : 'border border-border-color'} bg-bg-surface shadow-2xl text-text-primary font-mono z-10 ${className}`}
           >
             {hasHeader && (
               <div

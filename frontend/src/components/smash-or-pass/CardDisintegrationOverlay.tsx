@@ -172,7 +172,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
     };
 
     const render = (now: number) => {
-      const elapsed = now - startTime;
+      const elapsed = Math.max(0, now - startTime);
       const progress = Math.min(1, elapsed / duration);
 
       ctx.clearRect(0, 0, width, height);
@@ -249,7 +249,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         // Concentric Golden Shockwave Rings
         const rings = 3;
         for (let r = 1; r <= rings; r++) {
-          const rSize = (progress * width * 1.1 * r) / rings;
+          const rSize = Math.max(0, (progress * width * 1.1 * r) / rings);
           ctx.save();
           ctx.strokeStyle = `rgba(251, 191, 36, ${Math.max(0, 0.9 - progress)})`;
           ctx.lineWidth = 6 * (1 - progress);
@@ -296,7 +296,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
       } else {
         // =========================== SMASH: NEON CRIMSON BLOOM ===========================
         // Expanding Crimson Shockwave
-        const shockRadius = progress * width * 0.95;
+        const shockRadius = Math.max(0, progress * width * 0.95);
         ctx.save();
         ctx.strokeStyle = `rgba(220, 38, 38, ${Math.max(0, 0.9 - progress)})`;
         ctx.lineWidth = 7 * (1 - progress);

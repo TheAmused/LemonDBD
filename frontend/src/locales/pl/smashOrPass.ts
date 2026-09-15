@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Romans na Wyspie',
       description: 'Bohaterowie tropikalnego symulatora randkowego.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Legendarne Skórki i Kolaboracje',
       description: 'Kultowe postacie z kolaboracji i skórki elitarne.',
     },
@@ -275,5 +275,16 @@ export default {
     playBgm: 'Włącz muzykę (B)',
     unmute: 'Włącz dźwięki FX (M)',
     mute: 'Wycisz dźwięki FX (M)',
+  },
+  sharing: {
+    backToBreakdownTitle: 'Wróć do opisu',
+    backAriaLabel: 'Wróć',
+    shareDirectly: 'Udostępnij bezpośrednio',
+    directLink: 'Bezpośredni link do archetypu',
+    copied: 'Skopiowano!',
+    copyLink: 'Kopiuj link',
+    copiedQuote: 'Skopiowano treść ze statystykami!',
+    copyQuote: 'Kopiuj treść z linkiem (na Discord)',
+    backToBreakdown: 'Wróć do analizy profilu',
   },
 } as const;

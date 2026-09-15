@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Island Romance',
       description: 'Tropical paradise dating simulator characters.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Legendary Skins & Collabs',
       description: 'Iconic crossover legends and special cosmetics.',
     },
@@ -275,5 +275,16 @@ export default {
     playBgm: 'Play BGM (B)',
     unmute: 'Unmute Sound FX (M)',
     mute: 'Mute Sound FX (M)',
+  },
+  sharing: {
+    backToBreakdownTitle: 'Back to breakdown',
+    backAriaLabel: 'Back',
+    shareDirectly: 'Share Directly',
+    directLink: 'Direct Link to Archetype',
+    copied: 'Copied!',
+    copyLink: 'Copy Link',
+    copiedQuote: 'Copied quote with stats!',
+    copyQuote: 'Copy quote & link (for Discord)',
+    backToBreakdown: 'Back to Archetype Breakdown',
   },
 } as const;

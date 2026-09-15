@@ -1,7 +1,15 @@
 // frontend/src/components/generator/lib/perkPicker.ts
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
-import { EXHAUSTION_PERK_NAMES, MEME_PERK_NAMES, NEGATIVE_PERK_NAMES } from '@/constants/chaosMutators';
+import {
+  EXHAUSTION_PERK_NAMES,
+  GEN_REGRESSION_PERK_NAMES,
+  AURA_PERK_NAMES,
+  HEALING_ALTRUISM_PERK_NAMES,
+  CHASE_PERK_NAMES,
+  MEME_PERK_NAMES,
+  NEGATIVE_PERK_NAMES,
+} from '@/constants/chaosMutators';
 import {
   AURA_KEYWORDS,
   GENERATOR_KEYWORDS,
@@ -36,22 +44,107 @@ export function isMemePerk(perk: Perk): boolean {
   return MEME_PERK_NAMES.has(perk.name.toLowerCase().trim());
 }
 
+const GEN_REGRESSION_KEYWORDS: readonly string[] = [
+  'regression',
+  'regress',
+  'regressing',
+  'damage generator',
+  'damage a generator',
+  'generator loses',
+  'generator explodes',
+  'blocked by the entity',
+  'regresja',
+  'regresji',
+  'kopnięcie generatora',
+  'zablokowany przez byt',
+];
+
+export function isGenRegressionPerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase().trim();
+  if (GEN_REGRESSION_PERK_NAMES.has(nameLower)) return true;
+  return descriptionMatchesAny(perk, GEN_REGRESSION_KEYWORDS);
+}
+
+export function isHealingOrAltruismPerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase().trim();
+  if (HEALING_ALTRUISM_PERK_NAMES.has(nameLower)) return true;
+  return descriptionMatchesAny(perk, HEALING_KEYWORDS);
+}
+
+export function isChasePerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase().trim();
+  if (CHASE_PERK_NAMES.has(nameLower)) return true;
+  return descriptionMatchesAny(perk, CHASE_KEYWORDS);
+}
+
 export function isPerkBlockedByMutator(
   perk: Perk,
   mutator?: ChaosMutator | null
 ): boolean {
   if (!mutator) return false;
   if (mutator.id === 'no_exhaustion') return isExhaustionPerk(perk);
+  if (mutator.id === 'no_slowdown') return isGenRegressionPerk(perk);
   return false;
 }
 
 /**
- * Applies the active Chaos Mutator to a perk pool: first excludes any perk
- * explicitly blocked by the mutator (currently only `no_exhaustion`), then —
- * for inclusion-style mutators (`hex_boon_only`, `meme_loadout`) — narrows to
- * matching perks, falling back to the not-blocked list if that would empty
- * the pool. Shared by every draw mode so mutator behavior is identical
- * everywhere (previously only the Wheel applied hex_boon_only/meme_loadout).
+ * Calculates the dynamic probabilistic sampling weight for a perk given an active Chaos Mutator.
+ * Default base weight is 1.0.
+ * Negative curses reduce perk weight (e.g. 0.1 for 90% drop rate reduction).
+ * Buffs / theme curses increase perk weight (e.g. 4.0 - 5.0 for 4x - 5x boosted drop rate).
+ */
+export function getPerkWeight(perk: Perk, mutator?: ChaosMutator | null): number {
+  if (!mutator) return 1.0;
+
+  switch (mutator.id) {
+    case 'blindness':
+      // Curse of Blindness: Aura reading perks drop chance reduced by 85%
+      if (isAuraPerk(perk)) return 0.15;
+      return 1.0;
+
+    case 'no_exhaustion':
+      // No Exhaustion: Exhaustion perks drop chance reduced by 90%
+      if (isExhaustionPerk(perk)) return 0.10;
+      return 1.0;
+
+    case 'no_slowdown':
+      // No Gen Slowdown (Killer): Regression / slowdown perks drop chance reduced by 90%
+      if (isGenRegressionPerk(perk)) return 0.10;
+      return 1.0;
+
+    case 'solo_queue':
+      // Curse of Solitude: Altruism and healing perks reduced by 80%
+      if (isHealingOrAltruismPerk(perk)) return 0.20;
+      return 1.0;
+
+    case 'hex_boon_only':
+    case 'hex_roulette':
+      // Totem madness: Hex and Boon perks boosted 5x
+      if (isHexOrBoonPerk(perk)) return 5.0;
+      return 1.0;
+
+    case 'meme_loadout':
+      // Meme / Off-Meta: Gimmick and meme perks boosted 4x
+      if (isMemePerk(perk)) return 4.0;
+      return 1.0;
+
+    case 'chase_only':
+      // Pure Bloodlust (Killer): Chase and pallet aggression perks boosted 4x
+      if (isChasePerk(perk)) return 4.0;
+      return 1.0;
+
+    case 'negative_only':
+      // Curse of Sacrifice / Entity: Drawback / handicap perks boosted 4x
+      if (isNegativePerk(perk)) return 4.0;
+      return 1.0;
+
+    default:
+      return 1.0;
+  }
+}
+
+/**
+ * Applies the active Chaos Mutator to a perk pool for fallback or exclusive filtering.
  */
 export function filterPerksByMutator(
   perks: Perk[],
@@ -59,26 +152,28 @@ export function filterPerksByMutator(
 ): Perk[] {
   if (!mutator) return perks;
 
-  const notBlocked = perks.filter((p) => !isPerkBlockedByMutator(p, mutator));
-
   let included: Perk[];
-  if (mutator.id === 'hex_boon_only') {
-    included = notBlocked.filter(isHexOrBoonPerk);
+  if (mutator.id === 'hex_boon_only' || mutator.id === 'hex_roulette') {
+    included = perks.filter(isHexOrBoonPerk);
   } else if (mutator.id === 'meme_loadout') {
-    included = notBlocked.filter(isMemePerk);
+    included = perks.filter(isMemePerk);
   } else if (mutator.id === 'negative_only') {
-    included = notBlocked.filter(isNegativePerk);
+    included = perks.filter(isNegativePerk);
+  } else if (mutator.id === 'chase_only') {
+    included = perks.filter(isChasePerk);
+  } else if (mutator.id === 'no_exhaustion') {
+    included = perks.filter((p) => !isExhaustionPerk(p));
+  } else if (mutator.id === 'no_slowdown') {
+    included = perks.filter((p) => !isGenRegressionPerk(p));
   } else {
-    included = notBlocked;
+    included = perks;
   }
 
-  return included.length > 0 ? included : notBlocked;
+  return included.length > 0 ? included : perks;
 }
 
 /**
- * Eligibility is role + ownership only — there is no separate manual
- * character-enable toggle. When logged in, only perks the user actually
- * owns are eligible; when not logged in, every perk for the role is shown.
+ * Eligibility is role + ownership only.
  */
 export function computeEligiblePool(
   allPerks: Perk[],
@@ -104,18 +199,55 @@ export function computePlayablePool(
   return remaining.length > 0 ? remaining : eligiblePool;
 }
 
+/**
+ * Picks `count` distinct perks from `pool` using weighted sampling without replacement.
+ * For theme/buff mutators, narrows to eligible candidates.
+ * For curse mutators (blindness, no_exhaustion, no_slowdown, solo_queue), probabilistically
+ * reduces drop chances (e.g. -85% / -90%) via `getPerkWeight(perk, mutator)`.
+ */
 export function pickRandomLoadout(
   pool: Perk[],
   mutator?: ChaosMutator | null,
   count: number = 4
 ): Perk[] {
-  const candidates = [...filterPerksByMutator(pool, mutator)];
-  const picked: Perk[] = [];
-  const needed = Math.min(count, candidates.length);
+  if (pool.length === 0) return [];
+  let candidates: Perk[];
+  if (
+    mutator?.id === 'hex_boon_only' ||
+    mutator?.id === 'hex_roulette' ||
+    mutator?.id === 'meme_loadout' ||
+    mutator?.id === 'negative_only' ||
+    mutator?.id === 'chase_only'
+  ) {
+    candidates = filterPerksByMutator(pool, mutator);
+  } else {
+    candidates = pool;
+  }
 
-  for (let i = 0; i < needed; i++) {
-    const randomIndex = Math.floor(Math.random() * candidates.length);
-    picked.push(candidates.splice(randomIndex, 1)[0]);
+  const remaining = [...candidates];
+  const picked: Perk[] = [];
+  const needed = Math.min(count, remaining.length);
+
+  for (let step = 0; step < needed; step++) {
+    const weights = remaining.map((p) => getPerkWeight(p, mutator));
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+
+    if (totalWeight <= 0) {
+      const idx = Math.floor(Math.random() * remaining.length);
+      picked.push(remaining.splice(idx, 1)[0]);
+      continue;
+    }
+
+    let r = Math.random() * totalWeight;
+    let selectedIdx = 0;
+    for (let i = 0; i < remaining.length; i++) {
+      r -= weights[i];
+      if (r <= 0) {
+        selectedIdx = i;
+        break;
+      }
+    }
+    picked.push(remaining.splice(selectedIdx, 1)[0]);
   }
 
   return picked;
@@ -170,7 +302,9 @@ function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean
 }
 
 export function isAuraPerk(perk: Perk): boolean {
-  return descriptionMatchesAny(perk, AURA_KEYWORDS);
+  const nameLower = perk.name.toLowerCase().trim();
+  if (AURA_PERK_NAMES.has(nameLower)) return true;
+  return descriptionMatchesAny(perk, AURA_KEYWORDS) || nameLower.includes('aura');
 }
 
 export function isGeneratorPerk(perk: Perk): boolean {
@@ -179,10 +313,6 @@ export function isGeneratorPerk(perk: Perk): boolean {
 
 export function isHealingPerk(perk: Perk): boolean {
   return descriptionMatchesAny(perk, HEALING_KEYWORDS);
-}
-
-export function isChasePerk(perk: Perk): boolean {
-  return descriptionMatchesAny(perk, CHASE_KEYWORDS);
 }
 
 export function isStealthPerk(perk: Perk): boolean {
@@ -197,12 +327,6 @@ function isObsessionPerk(perk: Perk): boolean {
   );
 }
 
-/**
- * Classifies a perk into exactly one Tarot card type, checked in priority
- * order (most specific/exclusive first). Every drawn perk resolves to a
- * type -- 'entity' is the catch-all for anything that matches nothing more
- * specific, which is most perks by design.
- */
 export function getPerkTarotType(perk: Perk): TarotType {
   if (isHexPerk(perk)) return 'hex';
   if (isBoonPerk(perk)) return 'boon';

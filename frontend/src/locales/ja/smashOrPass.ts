@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: アイランドロマンス',
       description: '南国恋愛シミュレーションのキャラクター。',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'レジェンダリースキン＆コラボ',
       description: '特別なコラボスキンとレジェンダリーキャラ。',
     },
@@ -275,5 +275,16 @@ export default {
     playBgm: 'BGMを再生 (B)',
     unmute: '効果音をオン (M)',
     mute: '効果音をミュート (M)',
+  },
+  sharing: {
+    backToBreakdownTitle: '概要に戻る',
+    backAriaLabel: '戻る',
+    shareDirectly: '直接共有',
+    directLink: 'アーキタイプへの直接リンク',
+    copied: 'コピーしました！',
+    copyLink: 'リンクをコピー',
+    copiedQuote: '統計付き引用をコピーしました！',
+    copyQuote: '引用とリンクをコピー（Discord用）',
+    backToBreakdown: 'アーキタイプ分析に戻る',
   },
 } as const;

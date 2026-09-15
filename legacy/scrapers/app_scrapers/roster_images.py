@@ -15,7 +15,7 @@ WIKI_BASE_URL = "https://deadbydaylight.wiki.gg"
 ROSTER_COVER_URLS: dict[str, str] = {
     "canon": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_MidnightGrove_BC.png",
     "hooked_on_you": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_HookedOnYou.png",
-    "legendary_cosplay": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_Chucky.png",
+    "legendary_characters": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_Chucky.png",
     "cyberpunk_2077": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_BioPunk.png",
     "anime_manga": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_TokyoGhoul.png",
     "gothic_eldritch": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_GothicTales.png",
@@ -32,7 +32,7 @@ EDITION_PORTRAIT_DIRECT_MAP: dict[str, dict[str, str]] = {
         "the_trickster_hoy": "https://deadbydaylight.wiki.gg/images/Trickster_Crescendo_Concept_Art.jpeg",
         "the_ocean_hoy": "https://deadbydaylight.wiki.gg/images/T_UI_CollectionBanner_HookedOnYou.png",
     },
-    "legendary_cosplay": {
+    "legendary_characters": {
         "william_birkin": "https://deadbydaylight.wiki.gg/images/CC021_charSelect_portrait.png",
         "hunk": "https://deadbydaylight.wiki.gg/images/CC020_charSelect_portrait.png",
         "james_sunderland": "https://deadbydaylight.wiki.gg/images/CC011_charSelect_portrait.png",
@@ -229,7 +229,7 @@ class RosterImageScraperDriver:
             if ok:
                 total_downloaded += 1
 
-        for edition_id in ["hooked_on_you", "legendary_cosplay", "cyberpunk_2077", "anime_manga", "gothic_eldritch"]:
+        for edition_id in ["hooked_on_you", "legendary_characters", "cyberpunk_2077", "anime_manga", "gothic_eldritch"]:
             portraits = self.scrape_roster_portraits(edition_id)
             for item in portraits:
                 dest = static_dir / item["relative_path"]

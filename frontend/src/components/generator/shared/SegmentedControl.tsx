@@ -56,10 +56,10 @@ export function SegmentedControl<T extends string>({
             className={cn(
               'relative flex items-center justify-center gap-1 sm:gap-1.5 2xl:gap-2.5 text-[10px] xs:text-[11px] sm:text-xs 2xl:text-sm min-[1800px]:text-base font-black tracking-wide sm:tracking-wider uppercase transition-all duration-200 cursor-pointer touch-manipulation min-h-[36px] sm:min-h-[42px] 2xl:min-h-[48px] select-none text-center',
               bare
-                ? cn('pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5', isActive ? 'text-accent-red font-extrabold' : 'text-text-secondary hover:text-text-primary')
+                ? cn('pb-1.5 pt-1 px-0.5 sm:px-2 2xl:px-3.5 2xl:py-2 min-[1800px]:px-4.5 rounded-xl transition-colors', isActive ? 'text-accent-red font-extrabold' : 'text-text-secondary hover:text-text-primary hover:bg-bg-elevated/60')
                 : cn(
-                    'rounded-xl px-2 sm:px-3 2xl:px-4 py-1.5 sm:py-2 2xl:py-2.5',
-                    isActive ? 'bg-accent-red text-text-inverted shadow-xs' : 'text-text-secondary hover:text-text-primary'
+                    'rounded-xl px-2 sm:px-3 2xl:px-4 py-1.5 sm:py-2 2xl:py-2.5 transition-colors',
+                    isActive ? 'bg-accent-red text-text-inverted shadow-xs' : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/80'
                   )
             )}
           >

@@ -87,7 +87,7 @@ erDiagram
 
 1. **`rosters`**:
    - `id` (UUID, PK)
-   - `slug` (VARCHAR(64), UNIQUE, INDEX) e.g., `canon`, `hooked_on_you`, `cyberpunk_2077`, `anime_manga`, `gothic_eldritch`, `legendary_cosplay`
+   - `slug` (VARCHAR(64), UNIQUE, INDEX) e.g., `canon`, `hooked_on_you`, `cyberpunk_2077`, `anime_manga`, `gothic_eldritch`, `legendary_characters`
    - `name_i18n_key` (VARCHAR(128))
    - `description_i18n_key` (VARCHAR(256))
    - `cover_image_url` (TEXT)

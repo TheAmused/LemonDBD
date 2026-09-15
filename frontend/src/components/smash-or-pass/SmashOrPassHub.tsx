@@ -147,7 +147,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed)) return parsed;
         }
-      } catch {}
+      } catch { }
     }
     return [];
   });
@@ -287,7 +287,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed)) currentVotes = parsed;
         }
-      } catch {}
+      } catch { }
     }
 
     // If user is authenticated, migrate any guest session votes to user account
@@ -335,7 +335,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     if (typeof window !== 'undefined' && currentVotes.length > 0) {
       try {
         localStorage.setItem(`dbd_smash_votes_${rosterSlug}`, JSON.stringify(currentVotes));
-      } catch {}
+      } catch { }
     }
     setVoteHistory(currentVotes);
   }, [isAuthenticated, token, user?.id]);
@@ -424,7 +424,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       if (locName) return locName;
       if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';
       if (r.slug === 'hooked_on_you') return locale === 'pl' ? 'Hooked on You: Romans na Wyspie' : 'Hooked on You: Island Romance';
-      if (r.slug === 'legendary_cosplay') return locale === 'pl' ? 'Legendarne Skórki i Kolaboracje' : 'Legendary Skins & Collabs';
+      if (r.slug === 'legendary_characters') return locale === 'pl' ? 'Legendarne Skórki i Kolaboracje' : 'Legendary Skins & Collabs';
       if (r.slug === 'cyberpunk_2077') return locale === 'pl' ? 'Cyberpunk Mgła 2077' : 'Cyberpunk Fog 2077';
       if (r.slug === 'anime_manga') return locale === 'pl' ? 'Estetyka Anime / Mangi' : 'Fog Anime / Manga Aesthetic';
       if (r.slug === 'gothic_eldritch') return locale === 'pl' ? 'Wiktoriańskie i Gotyckie Legendy' : 'Victorian & Gothic Eldritch';
@@ -487,7 +487,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
               `dbd_smash_votes_${selectedRosterSlug}`,
               JSON.stringify(updated)
             );
-          } catch {}
+          } catch { }
         }
         return updated;
       });
@@ -516,13 +516,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   smash_rate: sRate,
                   stat: item.stat
                     ? {
-                        ...item.stat,
-                        smash_count: sCount,
-                        pass_count: pCount,
-                        super_smash_count: ssCount,
-                        total_votes: tVotes,
-                        smash_rate: sRate,
-                      }
+                      ...item.stat,
+                      smash_count: sCount,
+                      pass_count: pCount,
+                      super_smash_count: ssCount,
+                      total_votes: tVotes,
+                      smash_rate: sRate,
+                    }
                     : null,
                 };
               }
@@ -554,7 +554,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
     if (typeof window !== 'undefined') {
       try {
         localStorage.removeItem(`dbd_smash_votes_${selectedRosterSlug}`);
-      } catch {}
+      } catch { }
     }
 
     setVoteHistory([]);
@@ -768,11 +768,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={() => setIsFilterDrawerOpen((prev) => !prev)}
                 aria-label={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
-                className={`relative flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${
-                  isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all'
+                className={`relative flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${isFilterDrawerOpen || roleFilter !== 'all' || genderFilter !== 'all'
                     ? 'bg-accent-red/20 border-accent-red/60 text-accent-red'
                     : 'bg-bg-surface border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
-                }`}
+                  }`}
               >
                 <SlidersHorizontal className="h-4 w-4 sm:h-4 sm:w-4" />
                 {(roleFilter !== 'all' || genderFilter !== 'all') && (
@@ -791,11 +790,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 type="button"
                 onClick={handleToggleMasterSound}
                 aria-label={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || '') : (dict?.smashOrPass?.tooltips?.unmuteAudio || '')}
-                className={`flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${
-                  isSoundActive
+                className={`flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 touch-manipulation ${isSoundActive
                     ? 'bg-accent-red/10 border-accent-red text-accent-red'
                     : 'bg-bg-surface border-border-color text-text-muted hover:text-text-secondary hover:border-border-subtle'
-                }`}
+                  }`}
               >
                 {isSoundActive ? <Volume2 className="h-4 w-4 sm:h-4 sm:w-4 text-accent-red animate-pulse" /> : <VolumeX className="h-4 w-4 sm:h-4 sm:w-4" />}
               </button>
@@ -900,22 +898,20 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
-                      roleFilter === 'all'
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${roleFilter === 'all'
                         ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-text-primary'
-                    }`}
+                      }`}
                   >
                     {allRolesLabel}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'Survivor')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
-                      roleFilter === 'Survivor'
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${roleFilter === 'Survivor'
                         ? 'bg-accent-green text-text-inverted font-black'
                         : 'text-text-muted hover:text-accent-green'
-                    }`}
+                      }`}
                   >
                     <Shield className="h-3.5 w-3.5" />
                     {survivorsLabel}
@@ -923,11 +919,10 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'Killer')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${
-                      roleFilter === 'Killer'
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${roleFilter === 'Killer'
                         ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-accent-red'
-                    }`}
+                      }`}
                   >
                     <Skull className="h-3.5 w-3.5" />
                     {killersLabel}
@@ -939,44 +934,40 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
-                      genderFilter === 'all'
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'all'
                         ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-text-primary'
-                    }`}
+                      }`}
                   >
                     {allGendersLabel}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'female')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
-                      genderFilter === 'female'
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'female'
                         ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-accent-red'
-                    }`}
+                      }`}
                   >
                     {femaleOnlyLabel}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'male')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
-                      genderFilter === 'male'
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'male'
                         ? 'bg-accent-green text-text-inverted'
                         : 'text-text-muted hover:text-accent-green'
-                    }`}
+                      }`}
                   >
                     {maleOnlyLabel}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'monster_other')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${
-                      genderFilter === 'monster_other'
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'monster_other'
                         ? 'bg-border-subtle text-text-primary'
                         : 'text-text-muted hover:text-text-primary'
-                    }`}
+                      }`}
                   >
                     {monstersLabel}
                   </button>

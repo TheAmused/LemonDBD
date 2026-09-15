@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Lock, Ban, Check, Plus, Rows3 } from 'lucide-react';
+import { Lock, Ban, Check, Plus } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -450,9 +450,19 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               {dict?.generator?.slotCursedFlavor ||
                 "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
             </p>
-            <Rows3
-              className={`h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`}
-            />
+            <button
+              type="button"
+              onClick={handlePullLever}
+              disabled={activePlayablePerks.length === 0}
+              className="cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+            >
+              <img
+                src="/images/randomizer/lever.webp"
+                alt=""
+                className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none"
+                draggable={false}
+              />
+            </button>
             <DbdButton
               role={role}
               size="lg"

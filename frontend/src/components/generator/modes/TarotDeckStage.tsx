@@ -3,7 +3,6 @@
 
 import React, { useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Layers } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -228,7 +227,19 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           })}
         </div>
       ) : (
-        <Layers className={`h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />
+        <button
+          type="button"
+          onClick={handleShuffle}
+          disabled={activePlayablePerks.length === 0}
+          className="cursor-pointer disabled:cursor-default transition-transform hover:scale-105 active:scale-95"
+        >
+          <img
+            src="/images/randomizer/tarot.webp"
+            alt=""
+            className="h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 object-contain drop-shadow-2xl select-none pointer-events-none"
+            draggable={false}
+          />
+        </button>
       )}
 
       <DbdButton

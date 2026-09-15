@@ -158,7 +158,6 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless
-      centerTitle
     >
       {/* Search Bar */}
       <div className="p-4 bg-bg-elevated/40 shrink-0">

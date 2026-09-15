@@ -22,7 +22,6 @@ import {
   Send,
   UserCheck,
   Mail,
-  Flame,
 } from 'lucide-react';
 
 export interface BugReportModalProps {
@@ -301,7 +300,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   className="text-lg font-black tracking-wider font-mono text-text-primary flex items-center gap-2"
                 >
                   <span>{t.bugReportModalTitle || ''}</span>
-                  <Flame className="h-4 w-4 text-accent-red" aria-hidden="true" />
                 </h2>
               </div>
             </div>

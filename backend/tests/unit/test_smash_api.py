@@ -54,7 +54,7 @@ class TestSmashOrPassAPI:
         assert slugs == {
             "canon",
             "hooked_on_you",
-            "legendary_cosplay",
+            "legendary_characters",
             "cyberpunk_2077",
             "anime_manga",
             "gothic_eldritch",

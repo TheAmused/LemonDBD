@@ -49,6 +49,9 @@
   --animate-chaos-pop: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-lock-shake: historyLockShake 380ms ease-in-out;
   --animate-lock-break: historyLockBreak 380ms cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+
+  /* Crisp cross-browser monospace font stack (avoids typewriter Courier New fallback in Firefox Windows) */
+  --font-mono: Consolas, "Cascadia Code", "Segoe UI Mono", Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
 }
 
 /* ---------------------------------------------------------------------------

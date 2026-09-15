@@ -107,7 +107,7 @@ export default {
       name: 'Hooked on You: Romans na Wyspie',
       description: 'Bohaterowie tropikalnego symulatora randkowego.',
     },
-    legendary_cosplay: {
+    legendary_characters: {
       name: 'Legendarne Skórki i Kolaboracje',
       description: 'Kultowe postacie z kolaboracji i skórki elitarne.',
     },

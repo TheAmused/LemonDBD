@@ -10,11 +10,11 @@ import { SmashSounds } from './SmashSoundEffects';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
-export const ENABLED_ROSTER_SLUGS = new Set(['canon', 'legendary_cosplay', 'legendary']);
+export const ENABLED_ROSTER_SLUGS = new Set(['canon', 'legendary_characters', 'legendary']);
 
 const ROSTER_HERO_MAP: Record<string, string> = {
   canon: 'All 98 Survivors & Killers',
-  legendary_cosplay: 'Legendary Outfits & Mythic Cosplays',
+  legendary_characters: 'Legendary Outfits & Mythic Cosplays',
   legendary: 'Legendary Outfits & Mythic Cosplays',
   hooked_on_you: 'Island Romance Dating Sim',
   hoy: 'Island Romance Dating Sim',
@@ -458,10 +458,10 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     }
                   }}
                   className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
-                      ? isRosterEnabled
-                        ? 'border-2 sm:border-[3px] border-accent-red'
-                        : 'border-2 border-border-color'
-                      : 'border border-accent-red/20'
+                    ? isRosterEnabled
+                      ? 'border-2 sm:border-[3px] border-accent-red'
+                      : 'border-2 border-border-color'
+                    : 'border border-accent-red/20'
                     }`}
                   style={{
                     transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
@@ -548,9 +548,8 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
                   {isCenter && (
                     <div
-                      className={`absolute inset-0 rounded-[28px] sm:rounded-[36px] border-2 pointer-events-none ${
-                        isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
-                      }`}
+                      className={`absolute inset-0 rounded-[28px] sm:rounded-[36px] border-2 pointer-events-none ${isRosterEnabled ? 'border-accent-red/50' : 'border-border-color'
+                        }`}
                       aria-hidden="true"
                     />
                   )}

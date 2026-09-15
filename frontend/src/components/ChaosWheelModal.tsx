@@ -2,11 +2,12 @@
 // frontend/src/components/ChaosWheelModal.tsx
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Skull, Sparkles, X, Check, Trash2 } from 'lucide-react';
+import { Skull, Sparkles, X, Check, Trash2, RotateCcw } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
-import { CHAOS_MUTATORS } from '@/constants/chaosMutators';
+import { CHAOS_MUTATORS, getChaosMutatorsForRole } from '@/constants/chaosMutators';
 import { DbdButton, DbdButtonRole } from './generator/shared/DbdButton';
+import { getLocalizedMutator } from './generator/lib/chaosMutatorLocalization';
 
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
@@ -21,20 +22,29 @@ interface ChaosWheelModalProps {
   dict?: Dictionary;
 }
 
-export function getMutatorDisplayLines(m: ChaosMutator | string | null | undefined): [string, string] {
+export function getMutatorDisplayLines(
+  m: ChaosMutator | string | null | undefined,
+  dict?: Dictionary
+): [string, string] {
   if (!m) return ['', ''];
   const id = typeof m === 'string' ? m : m.id;
+
+  // Check localized dictionary if available
+  const localized = (dict?.generator as any)?.chaosMutators?.[id];
+  if (localized?.line1) {
+    return [localized.line1, localized.line2 || ''];
+  }
+
   switch (id) {
-    case 'no_exhaustion':
-      return ['No Exhaustion', 'Perks'];
-    case 'blindness':
-      return ['Curse of', 'Blindness'];
-    case 'meme_loadout':
-      return ['Meme / Off-Meta', 'Loadout'];
-    case 'hex_boon_only':
-      return ['Hex & Boon', 'Ritual'];
-    case 'negative_only':
-      return ['Curse of', 'Sacrifice'];
+    case 'no_exhaustion':  return ['No Exhaustion', 'Perks'];
+    case 'no_slowdown':    return ['No Slowdown', 'Perks'];
+    case 'blindness':      return ['Curse of', 'Blindness'];
+    case 'solo_queue':     return ['Curse of', 'Solitude'];
+    case 'chase_only':     return ['Pure', 'Bloodlust'];
+    case 'meme_loadout':   return ['Meme / Off-Meta', 'Loadout'];
+    case 'hex_boon_only':  return ['Hex & Boon', 'Ritual'];
+    case 'hex_roulette':   return ['Hex Totem', 'Madness'];
+    case 'negative_only':  return ['Curse of', 'Sacrifice'];
     default: {
       const rawName = (typeof m === 'string' ? m : m.name || '').trim();
       if (!rawName) return ['', ''];
@@ -62,6 +72,9 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
   const animFrameRef = useRef<number | null>(null);
   const angleRef = useRef<number>(0);
 
+  // Derive the mutator list from the current role
+  const mutators = getChaosMutatorsForRole(role);
+
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [wonMutator, setWonMutator] = useState<ChaosMutator | null>(activeMutator);
 
@@ -83,13 +96,13 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
 
     ctx.clearRect(0, 0, size, size);
 
-    const total = CHAOS_MUTATORS.length;
+    const total = mutators.length;
     const sliceAngle = (2 * Math.PI) / total;
 
     for (let i = 0; i < total; i++) {
       const startAngle = angleRef.current + i * sliceAngle;
       const endAngle = startAngle + sliceAngle;
-      const m = CHAOS_MUTATORS[i];
+      const m = mutators[i];
 
       ctx.beginPath();
       ctx.moveTo(center, center);
@@ -113,7 +126,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
       ctx.stroke();
 
       const midAngle = startAngle + sliceAngle / 2;
-      const [line1, line2] = getMutatorDisplayLines(m);
+      const [line1, line2] = getMutatorDisplayLines(m, dict);
       const iconFontSize = Math.round(22 * scale);
       const textFontSize = Math.round(12.5 * scale);
       const contentRadius = 145 * scale;
@@ -176,7 +189,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     ctx.lineWidth = 2.5 * scale;
     ctx.strokeStyle = '#ffffff';
     ctx.stroke();
-  }, []);
+  }, [mutators, dict]);
 
   useEffect(() => {
     if (isOpen) {
@@ -208,7 +221,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
     setIsSpinning(true);
     setWonMutator(null);
 
-    const total = CHAOS_MUTATORS.length;
+    const total = mutators.length;
     const sliceAngle = (2 * Math.PI) / total;
     const winningIdx = Math.floor(Math.random() * total);
 
@@ -234,8 +247,9 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
         angleRef.current = finalAngle % (2 * Math.PI);
         drawWheel();
         setIsSpinning(false);
-        const won = CHAOS_MUTATORS[winningIdx];
+        const won = mutators[winningIdx];
         setWonMutator(won);
+        // Notify parent of the new mutator selection — modal stays open
         onSelectMutator(won);
       }
     };
@@ -249,6 +263,10 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
   };
 
   if (!isOpen) return null;
+
+  const locWon = wonMutator ? getLocalizedMutator(wonMutator, dict) : null;
+  const locActive = activeMutator && activeMutator !== wonMutator
+    ? getLocalizedMutator(activeMutator, dict) : null;
 
   return (
     <div
@@ -312,23 +330,84 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
           </DbdButton>
         </div>
 
-        {wonMutator && (
+        {/* --- Spin result card --- */}
+        {wonMutator && locWon && (
           <div
             aria-live="polite"
-            className="mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 xl:p-5 backdrop-blur-sm transition-all shadow-xs border-border-color bg-bg-primary"
+            className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 xl:p-5 backdrop-blur-sm transition-all shadow-xs ${wonMutator.borderColor || 'border-border-color'} bg-bg-primary`}
           >
-            <div className="flex items-center justify-between gap-2">
+            {/* Result header row */}
+            <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
                 <span className="text-xl sm:text-2xl xl:text-3xl shrink-0" aria-hidden="true">
                   {wonMutator.icon}
                 </span>
                 <div className="min-w-0">
                   <h3 className={`text-xs sm:text-sm xl:text-base font-extrabold truncate ${wonMutator.textColor}`}>
-                    {wonMutator.name}
+                    {locWon.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-2">
-                    {wonMutator.description}
+                  <p className="text-xs sm:text-sm text-text-secondary mt-0.5 line-clamp-3">
+                    {locWon.description}
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Effect pill */}
+            {locWon.effect && (
+              <div className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full mb-3 ${wonMutator.badgeBg} text-text-primary border ${wonMutator.borderColor}`}>
+                {locWon.effect}
+              </div>
+            )}
+
+            {/* Action row */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {/* Apply & Close */}
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-accent-green/15 text-accent-green border border-accent-green/30 hover:bg-accent-green/25 transition-colors cursor-pointer"
+              >
+                <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                {(dict?.generator as any)?.chaosApplyAndClose || 'Apply & Close'}
+              </button>
+
+              {/* Spin Again */}
+              <button
+                type="button"
+                onClick={spinChaosWheel}
+                disabled={isSpinning}
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-bg-elevated border border-border-color hover:bg-bg-elevated/80 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                {(dict?.generator as any)?.chaosSpinAgain || 'Spin Again'}
+              </button>
+
+              {/* Clear */}
+              <button
+                type="button"
+                onClick={handleClearCurse}
+                title={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
+                className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer ml-auto"
+              >
+                <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Previously active mutator (shown when modal opened without spinning) */}
+        {!wonMutator && activeMutator && locActive && (
+          <div className="mt-3 sm:mt-4 xl:mt-5 rounded-2xl border border-border-color p-3 sm:p-4 bg-bg-primary">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="text-xl sm:text-2xl shrink-0">{activeMutator.icon}</span>
+                <div className="min-w-0">
+                  <h3 className={`text-xs sm:text-sm font-extrabold truncate ${activeMutator.textColor}`}>
+                    {locActive.name}
+                  </h3>
+                  <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{locActive.description}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">

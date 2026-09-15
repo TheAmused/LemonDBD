@@ -603,10 +603,15 @@
 @utility dbd-fog-overlay {
   background-image: radial-gradient(circle at 50% 50%, transparent 20%, rgba(15, 23, 42, 0.05) 100%);
   opacity: 1;
+}
 
-  &:where(.dark, .dark *) {
-    background-image: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.08) 0%, transparent 80%);
-  }
+.dbd-fog-overlay {
+  background-image: radial-gradient(circle at 50% 50%, transparent 20%, rgba(15, 23, 42, 0.05) 100%);
+  opacity: 1;
+}
+
+.dark .dbd-fog-overlay {
+  background-image: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.06) 0%, transparent 80%);
 }
 
 @utility dbd-lemon-glow {

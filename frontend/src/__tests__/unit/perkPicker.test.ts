@@ -20,6 +20,7 @@ import {
   isChasePerk,
   isStealthPerk,
   getPerkTarotType,
+  getPerkWeight,
 } from '@/components/generator/lib/perkPicker';
 import type { Perk } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
@@ -107,11 +108,28 @@ test('filterPerksByMutator: returns all perks unchanged when mutator is null/und
   assert.deepStrictEqual(filterPerksByMutator(perks, undefined), perks);
 });
 
-test('filterPerksByMutator: no_exhaustion excludes exhaustion perks and keeps the rest', () => {
-  const perks = [makePerk({ name: 'Dead Hard' }), makePerk({ name: 'Iron Will' }), makePerk({ name: 'Adrenaline' })];
-  const result = filterPerksByMutator(perks, noExhaustionMutator);
-  assert.strictEqual(result.length, 1);
-  assert.strictEqual(result[0].name, 'Iron Will');
+test('getPerkWeight: assigns lower weight to exhaustion perks under no_exhaustion', () => {
+  const exhaustionPerk = makePerk({ name: 'Dead Hard' });
+  const standardPerk = makePerk({ name: 'Iron Will' });
+  assert.strictEqual(getPerkWeight(exhaustionPerk, noExhaustionMutator), 0.10);
+  assert.strictEqual(getPerkWeight(standardPerk, noExhaustionMutator), 1.0);
+});
+
+test('getPerkWeight: assigns lower weight to aura perks under blindness', () => {
+  const auraPerk = makePerk({ name: 'Bond' });
+  const standardPerk = makePerk({ name: 'Iron Will' });
+  const blindnessMutator: ChaosMutator = {
+    id: 'blindness',
+    name: 'Curse of Blindness',
+    description: '',
+    type: 'curse',
+    icon: '👁️',
+    badgeBg: '',
+    borderColor: '',
+    textColor: '',
+  };
+  assert.strictEqual(getPerkWeight(auraPerk, blindnessMutator), 0.15);
+  assert.strictEqual(getPerkWeight(standardPerk, blindnessMutator), 1.0);
 });
 
 test('filterPerksByMutator: hex_boon_only keeps only hex/boon perks among the pool', () => {

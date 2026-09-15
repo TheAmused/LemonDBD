@@ -276,4 +276,15 @@ export default {
     unmute: 'Soundeffekte einschalten (M)',
     mute: 'Soundeffekte stummstellen (M)',
   },
+  sharing: {
+    backToBreakdownTitle: 'Zurück zur Übersicht',
+    backAriaLabel: 'Zurück',
+    shareDirectly: 'Direkt teilen',
+    directLink: 'Direktlink zum Archetyp',
+    copied: 'Kopiert!',
+    copyLink: 'Link kopieren',
+    copiedQuote: 'Zitat mit Statistiken kopiert!',
+    copyQuote: 'Zitat & Link kopieren (für Discord)',
+    backToBreakdown: 'Zurück zur Archetyp-Analyse',
+  },
 } as const;

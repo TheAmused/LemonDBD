@@ -276,4 +276,15 @@ export default {
     unmute: 'Unmute Sound FX (M)',
     mute: 'Mute Sound FX (M)',
   },
+  sharing: {
+    backToBreakdownTitle: 'Back to breakdown',
+    backAriaLabel: 'Back',
+    shareDirectly: 'Share Directly',
+    directLink: 'Direct Link to Archetype',
+    copied: 'Copied!',
+    copyLink: 'Copy Link',
+    copiedQuote: 'Copied quote with stats!',
+    copyQuote: 'Copy quote & link (for Discord)',
+    backToBreakdown: 'Back to Archetype Breakdown',
+  },
 } as const;

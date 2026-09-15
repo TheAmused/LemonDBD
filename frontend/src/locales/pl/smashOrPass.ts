@@ -276,4 +276,15 @@ export default {
     unmute: 'Włącz dźwięki FX (M)',
     mute: 'Wycisz dźwięki FX (M)',
   },
+  sharing: {
+    backToBreakdownTitle: 'Wróć do opisu',
+    backAriaLabel: 'Wróć',
+    shareDirectly: 'Udostępnij bezpośrednio',
+    directLink: 'Bezpośredni link do archetypu',
+    copied: 'Skopiowano!',
+    copyLink: 'Kopiuj link',
+    copiedQuote: 'Skopiowano treść ze statystykami!',
+    copyQuote: 'Kopiuj treść z linkiem (na Discord)',
+    backToBreakdown: 'Wróć do analizy profilu',
+  },
 } as const;

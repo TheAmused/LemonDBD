@@ -323,6 +323,7 @@ test('ChaosWheelModal: text and icon geometry & display line splitting', async (
     const expectedMappings: Record<string, [string, string]> = {
       no_exhaustion: ['No Exhaustion', 'Perks'],
       blindness: ['Curse of', 'Blindness'],
+      solo_queue: ['Curse of', 'Solitude'],
       meme_loadout: ['Meme / Off-Meta', 'Loadout'],
       hex_boon_only: ['Hex & Boon', 'Ritual'],
       negative_only: ['Curse of', 'Sacrifice'],

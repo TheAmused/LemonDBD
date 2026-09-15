@@ -41,11 +41,12 @@ const memeMutator = CHAOS_MUTATORS.find((m) => m.id === 'meme_loadout')!;
 const hexBoonMutator = CHAOS_MUTATORS.find((m) => m.id === 'hex_boon_only')!;
 const sacrificeMutator = CHAOS_MUTATORS.find((m) => m.id === 'negative_only')!;
 
-test('Mutators exist and contain all 5 required mutator definitions', () => {
-  assert.strictEqual(CHAOS_MUTATORS.length, 5);
+test('Mutators exist and contain all 6 required mutator definitions per role', () => {
+  assert.strictEqual(CHAOS_MUTATORS.length, 6);
   const ids = CHAOS_MUTATORS.map((m) => m.id);
   assert.ok(ids.includes('no_exhaustion'));
   assert.ok(ids.includes('blindness'));
+  assert.ok(ids.includes('solo_queue'));
   assert.ok(ids.includes('meme_loadout'));
   assert.ok(ids.includes('hex_boon_only'));
   assert.ok(ids.includes('negative_only'));
@@ -179,27 +180,76 @@ test('No-Repeat Toggle: turning off no-repeat restores full pool for rolls while
   }
 });
 
-test('Mutator Application: No Exhaustion mutator works across all roll modes', () => {
+test('Mutator Application: No Exhaustion mutator reduces exhaustion perk drop chance', () => {
   const mixedPool: Perk[] = [
     exhaustionPerk,
     standardPerk1,
     standardPerk2,
     standardPerk3,
     standardPerk4,
+    makePerk({ name: 'Perk 5' }),
+    makePerk({ name: 'Perk 6' }),
+    makePerk({ name: 'Perk 7' }),
+    makePerk({ name: 'Perk 8' }),
+    makePerk({ name: 'Perk 9' }),
   ];
 
-  for (let i = 0; i < 20; i++) {
-    const picks = pickRandomLoadout(mixedPool, noExhaustionMutator, 4);
-    assert.ok(
-      picks.every((p) => p.name !== exhaustionPerk.name),
-      'pickRandomLoadout with no_exhaustion must never pick exhaustion perk'
-    );
+  let exhaustionCountWithoutMutator = 0;
+  let exhaustionCountWithMutator = 0;
+  const iterations = 500;
+
+  for (let i = 0; i < iterations; i++) {
+    const picksDefault = pickRandomLoadout(mixedPool, null, 1);
+    if (picksDefault.some((p) => p.name === exhaustionPerk.name)) {
+      exhaustionCountWithoutMutator++;
+    }
+    const picksCursed = pickRandomLoadout(mixedPool, noExhaustionMutator, 1);
+    if (picksCursed.some((p) => p.name === exhaustionPerk.name)) {
+      exhaustionCountWithMutator++;
+    }
   }
 
-  const filtered = filterPerksByMutator(mixedPool, noExhaustionMutator);
-  assert.ok(!filtered.some((p) => p.name === exhaustionPerk.name));
+  assert.ok(
+    exhaustionCountWithMutator < exhaustionCountWithoutMutator / 2,
+    `Exhaustion drop count with mutator (${exhaustionCountWithMutator}) should be significantly lower than without mutator (${exhaustionCountWithoutMutator})`
+  );
   assert.strictEqual(isPerkBlockedByMutator(exhaustionPerk, noExhaustionMutator), true);
   assert.strictEqual(isPerkBlockedByMutator(standardPerk1, noExhaustionMutator), false);
+});
+
+test('Mutator Application: Blindness mutator reduces aura perk drop chance', () => {
+  const auraPool: Perk[] = [
+    standardPerk1, // Bond (Aura)
+    standardPerk3, // Kindred (Aura)
+    standardPerk2, // Iron Will
+    makePerk({ name: 'Perk A' }),
+    makePerk({ name: 'Perk B' }),
+    makePerk({ name: 'Perk C' }),
+    makePerk({ name: 'Perk D' }),
+    makePerk({ name: 'Perk E' }),
+    makePerk({ name: 'Perk F' }),
+    makePerk({ name: 'Perk G' }),
+  ];
+
+  let auraCountWithout = 0;
+  let auraCountWith = 0;
+  const iterations = 500;
+
+  for (let i = 0; i < iterations; i++) {
+    const picksDefault = pickRandomLoadout(auraPool, null, 1);
+    if (picksDefault.some((p) => p.name === standardPerk1.name || p.name === standardPerk3.name)) {
+      auraCountWithout++;
+    }
+    const picksCursed = pickRandomLoadout(auraPool, blindnessMutator, 1);
+    if (picksCursed.some((p) => p.name === standardPerk1.name || p.name === standardPerk3.name)) {
+      auraCountWith++;
+    }
+  }
+
+  assert.ok(
+    auraCountWith < auraCountWithout / 2,
+    `Aura drop count with blindness (${auraCountWith}) should be significantly lower than without mutator (${auraCountWithout})`
+  );
 });
 
 test('Mutator Application: Hex & Boon mutator restricts pool to Hex/Boon', () => {

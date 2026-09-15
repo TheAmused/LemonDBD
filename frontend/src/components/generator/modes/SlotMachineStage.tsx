@@ -17,7 +17,6 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
 import { DbdButton } from '../shared/DbdButton';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface SlotMachineStageProps {
   role: RoleCategory;
@@ -149,7 +148,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const tickIntervalsRef = useRef<Map<number, ReturnType<typeof setInterval>>>(new Map());
   const pendingDoneRef = useRef<{ remaining: Set<number>; onAllDone: () => void } | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -851,8 +850,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         </>
       )}
       </div>
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

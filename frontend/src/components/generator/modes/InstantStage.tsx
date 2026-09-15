@@ -13,7 +13,6 @@ import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { playReelThud } from '@/utils/perkAudio';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface InstantStageProps {
   role: RoleCategory;
@@ -43,7 +42,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -126,8 +125,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
           );
         })}
       </div>
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

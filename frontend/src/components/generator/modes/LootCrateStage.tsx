@@ -226,10 +226,10 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   ).replace('{count}', String(selected.length));
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-4">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
       {(phase === 'closed' || phase === 'shaking') && (
         <>
-          <p className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
+          <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
             {dict?.generator?.cratePrompt ||
               'A sealed Trial Offering awaits. Crack it open and the Entity scatters perks around the block for you to pick from.'}
           </p>
@@ -246,16 +246,26 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             className="cursor-pointer disabled:cursor-default"
           >
             <Gift
-              className={`h-28 w-28 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`}
+              className={`h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`}
             />
           </motion.button>
           {phase === 'closed' && (
-            <p className="text-xs font-black uppercase tracking-wide text-text-muted">
-              {dict?.generator?.crateTapToOpen || 'Tap the Trial Offering'}
-            </p>
+            <>
+              <p className="text-xs sm:text-sm xl:text-base 2xl:text-lg wide:text-xl font-black uppercase tracking-wide text-text-muted">
+                {dict?.generator?.crateTapToOpen || 'Tap the Trial Offering'}
+              </p>
+              <DbdButton
+                role={role}
+                size="lg"
+                onClick={handleOpen}
+                disabled={activePlayablePerks.length === 0}
+              >
+                {dict?.generator?.crateTapToOpen || 'Crack Open Offering'}
+              </DbdButton>
+            </>
           )}
           {phase === 'shaking' && (
-            <p aria-live="polite" className="text-xs font-black uppercase tracking-wide text-accent-amber animate-pulse">
+            <p aria-live="polite" className="text-xs sm:text-sm xl:text-base 2xl:text-lg wide:text-xl font-black uppercase tracking-wide text-accent-amber animate-pulse">
               {dict?.generator?.crateOpening || 'Cracking Open...'}
             </p>
           )}
@@ -264,7 +274,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'scattering' && (
         <>
-          <p aria-live="polite" className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
+          <p aria-live="polite" className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary">
             {scatterPrompt}
           </p>
 

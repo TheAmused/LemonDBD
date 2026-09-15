@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Lock, Ban, Check, Plus } from 'lucide-react';
+import { Lock, Ban, Check, Plus, Rows3 } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -442,24 +442,27 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
         <div ref={reelAreaRef} aria-hidden="true" className="pointer-events-none invisible absolute inset-0" />
 
         {phase === 'idle' && (
-        <>
-          <p className="max-w-lg text-center text-sm font-bold text-text-secondary sm:text-base">
-            {dict?.generator?.slotMachinePrompt ||
-              'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
-            {' '}
-            {dict?.generator?.slotCursedFlavor ||
-              "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
-          </p>
-          <DbdButton
-            role={role}
-            size="lg"
-            onClick={handlePullLever}
-            disabled={activePlayablePerks.length === 0}
-          >
-            {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
-          </DbdButton>
-        </>
-      )}
+          <div className="flex flex-col items-center justify-center gap-3 sm:gap-6 xl:gap-8 2xl:gap-10 py-2 sm:py-6 wide:py-8">
+            <p className="max-w-lg xl:max-w-2xl 2xl:max-w-3xl wide:max-w-4xl text-center text-xs sm:text-base xl:text-lg wide:text-xl font-semibold text-text-secondary leading-relaxed">
+              {dict?.generator?.slotMachinePrompt ||
+                'Pull the lever, then lock in perks over up to 3 cycles until your loadout is full.'}
+              {' '}
+              {dict?.generator?.slotCursedFlavor ||
+                "Eight reels spin at once, but the machine's cursed, so a reel or two may jam broken."}
+            </p>
+            <Rows3
+              className={`h-28 w-28 sm:h-36 sm:w-36 xl:h-48 xl:w-48 2xl:h-60 2xl:w-60 wide:h-72 wide:w-72 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`}
+            />
+            <DbdButton
+              role={role}
+              size="lg"
+              onClick={handlePullLever}
+              disabled={activePlayablePerks.length === 0}
+            >
+              {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
+            </DbdButton>
+          </div>
+        )}
 
       {(phase === 'spinning' || phase === 'awaiting') && (
         <>

@@ -26,7 +26,6 @@ export default {
   newPassword: "Nowe Hasło",
   confirmPassword: "Potwierdź Nowe Hasło",
   passwordPlaceholder: "Pozostaw puste, aby zachować obecne",
-  confirmPasswordPlaceholder: "Powtórz nowe hasło",
   adminBadge: "Odznaka administratora",
   forgotSentNotice: "Jeśli podany e-mail jest zarejestrowany, wysłaliśmy link do zresetowania hasła.",
   usernameOrEmailPlaceholder: "Wpisz nazwę użytkownika lub e-mail",

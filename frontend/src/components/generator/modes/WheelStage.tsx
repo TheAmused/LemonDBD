@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Play } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -722,7 +721,6 @@ export const WheelStage: React.FC<WheelStageProps> = ({
             onClick={handleStartSpin}
             disabled={isSpinning || sortedPerks.length === 0}
             className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            icon={<Play className={`h-5 w-5 fill-current ${isSpinning && !reduceMotion ? 'animate-spin' : ''}`} />}
           >
             {spinButtonText}
           </DbdButton>

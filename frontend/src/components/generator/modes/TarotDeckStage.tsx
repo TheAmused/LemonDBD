@@ -236,7 +236,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
         size="lg"
         onClick={handleShuffle}
         disabled={activePlayablePerks.length === 0}
-        icon={<Layers className="h-6 w-6" />}
       >
         {dict?.generator?.tarotShuffleButton || 'Shuffle & Draw'}
       </DbdButton>

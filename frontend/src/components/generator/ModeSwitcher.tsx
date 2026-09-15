@@ -2,7 +2,6 @@
 'use client';
 
 import React from 'react';
-import { CircleDot, Zap, Rows3, Layers, Gift, Check } from 'lucide-react';
 import { GeneratorMode } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { SegmentedControl } from './shared/SegmentedControl';
@@ -22,35 +21,30 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
       value: 'instant' as GeneratorMode,
       label: dict?.generator?.modeInstant || 'Instant Roll',
       shortLabel: 'Instant',
-      icon: <Zap className="h-5 w-5 shrink-0" />,
       tooltip: { description: dict?.generator?.modeInstantTooltip || 'Draw all four perks at once, no ceremony, just the result.' },
     },
     {
       value: 'wheel' as GeneratorMode,
       label: dict?.generator?.modeWheel || 'Wheel of Fortune',
       shortLabel: 'Wheel',
-      icon: <CircleDot className="h-5 w-5 shrink-0" />,
       tooltip: { description: dict?.generator?.modeWheelTooltip || 'Spin the page wheel, then the perk wheel, once per slot until your loadout is full.' },
     },
     {
       value: 'slot' as GeneratorMode,
       label: dict?.generator?.modeSlot || 'Slot Machine',
       shortLabel: 'Slot',
-      icon: <Rows3 className="h-5 w-5 shrink-0" />,
       tooltip: { description: dict?.generator?.modeSlotTooltip || 'Pull the lever and lock in reels over up to 3 cycles. A reel or two may jam broken, reroll the whole machine to clear it.' },
     },
     {
       value: 'tarot' as GeneratorMode,
       label: dict?.generator?.modeTarot || 'Tarot Deck',
       shortLabel: 'Tarot',
-      icon: <Layers className="h-5 w-5 shrink-0" />,
       tooltip: { description: dict?.generator?.modeTarotTooltip || 'Shuffle the deck and flip cards to reveal your loadout, one omen at a time.' },
     },
     {
       value: 'crate' as GeneratorMode,
       label: dict?.generator?.modeCrate || 'Loot Crate',
       shortLabel: 'Crate',
-      icon: <Gift className="h-5 w-5 shrink-0" />,
       tooltip: { description: dict?.generator?.modeCrateTooltip || 'Crack open a Trial Offering for a random loadout in one go.' },
     },
   ];
@@ -65,7 +59,6 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
           options={options.map((opt) => ({
             value: opt.value,
             label: opt.label,
-            icon: opt.icon,
           }))}
           ariaLabel={dict?.generator?.modeSwitcherAriaLabel || 'Select Draw Mode'}
           className="w-full sm:w-auto"
@@ -81,12 +74,7 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange, dict
           onChange={onChange}
           ariaLabel={dict?.generator?.modeSwitcherAriaLabel || 'Select Draw Mode'}
           bare
-          options={options.map((opt) => ({
-            ...opt,
-            icon: React.cloneElement(opt.icon as React.ReactElement<{ className?: string }>, {
-              className: 'h-4 w-4 2xl:h-5 2xl:w-5 shrink-0',
-            }),
-          }))}
+          options={options}
         />
       </div>
     </>

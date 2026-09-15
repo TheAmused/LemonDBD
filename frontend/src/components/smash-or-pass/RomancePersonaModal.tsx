@@ -284,8 +284,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             type="button"
             onClick={() => setIsSharingView(false)}
             className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-all cursor-pointer"
-            title={locale === 'pl' ? 'Wróć do opisu' : 'Back to breakdown'}
-            aria-label={locale === 'pl' ? 'Wróć' : 'Back'}
+            title={rawSmash?.sharing?.backToBreakdownTitle || 'Back to breakdown'}
+            aria-label={rawSmash?.sharing?.backAriaLabel || 'Back'}
           >
             <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red" />
           </button>
@@ -366,7 +366,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             <div className="space-y-2 pt-1">
               <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted font-bold flex items-center gap-1.5">
                 <Share2 className="h-3 w-3 text-accent-red" />
-                {locale === 'pl' ? 'Udostępnij bezpośrednio' : 'Share Directly'}
+                {rawSmash?.sharing?.shareDirectly || 'Share Directly'}
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-xs">
                 {socialLinks.map((item) => (
@@ -387,7 +387,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Direct Link Copy */}
             <div className="space-y-2 pt-1">
               <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted font-bold">
-                {locale === 'pl' ? 'Bezpośredni link do archetypu' : 'Direct Link to Archetype'}
+                {rawSmash?.sharing?.directLink || 'Direct Link to Archetype'}
               </span>
               <div className="flex items-center gap-2">
                 <input
@@ -403,7 +403,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-mono font-bold transition-all cursor-pointer shrink-0 active:scale-95"
                 >
                   {copiedLink ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : <Copy className="h-3.5 w-3.5" />}
-                  <span>{copiedLink ? (locale === 'pl' ? 'Skopiowano!' : 'Copied!') : (locale === 'pl' ? 'Kopiuj link' : 'Copy Link')}</span>
+                  <span>{copiedLink ? (rawSmash?.sharing?.copied || 'Copied!') : (rawSmash?.sharing?.copyLink || 'Copy Link')}</span>
                 </button>
               </div>
             </div>
@@ -415,7 +415,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
               className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color hover:border-accent-red/40 text-text-secondary hover:text-text-primary text-xs font-mono font-semibold transition-all cursor-pointer"
             >
               {copiedQuote ? <Check className="h-3.5 w-3.5 text-accent-green stroke-[3]" /> : <MessageSquare className="h-3.5 w-3.5 text-accent-red" />}
-              <span>{copiedQuote ? (locale === 'pl' ? 'Skopiowano treść ze statystykami!' : 'Copied quote with stats!') : (locale === 'pl' ? 'Kopiuj treść z linkiem (na Discord)' : 'Copy quote & link (for Discord)')}</span>
+              <span>{copiedQuote ? (rawSmash?.sharing?.copiedQuote || 'Copied quote with stats!') : (rawSmash?.sharing?.copyQuote || 'Copy quote & link (for Discord)')}</span>
             </button>
 
             {/* Return to Breakdown Action */}
@@ -426,7 +426,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-primary font-mono text-xs sm:text-sm font-bold transition-all cursor-pointer active:scale-98"
               >
                 <ArrowLeft className="h-4 w-4 text-accent-red" />
-                <span>{locale === 'pl' ? 'Wróć do analizy profilu' : 'Back to Archetype Breakdown'}</span>
+                <span>{rawSmash?.sharing?.backToBreakdown || 'Back to Archetype Breakdown'}</span>
               </button>
             </div>
           </div>

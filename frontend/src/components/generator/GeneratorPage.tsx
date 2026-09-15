@@ -387,7 +387,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         onClose={() => setIsChaosModalOpen(false)}
         onSelectMutator={(m) => {
           handleSelectMutator(m);
-          setIsChaosModalOpen(false);
         }}
         onClearMutator={() => handleSelectMutator(null)}
         activeMutator={activeMutator}

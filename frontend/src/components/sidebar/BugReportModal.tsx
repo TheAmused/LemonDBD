@@ -19,10 +19,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Trash2,
-  Send,
   UserCheck,
   Mail,
-  Flame,
 } from 'lucide-react';
 
 export interface BugReportModalProps {
@@ -301,7 +299,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                   className="text-lg font-black tracking-wider font-mono text-text-primary flex items-center gap-2"
                 >
                   <span>{t.bugReportModalTitle || ''}</span>
-                  <Flame className="h-4 w-4 text-accent-red" aria-hidden="true" />
                 </h2>
               </div>
             </div>
@@ -465,11 +462,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                 honeypotProps={honeypotProps}
               />
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-accent-red/20">
+              <div className="flex items-center justify-end gap-3 pt-3">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
@@ -477,10 +474,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                       <span>{t.bugSubmitting || ''}</span>
                     </>
                   ) : (
-                    <>
-                      <Send className="h-3.5 w-3.5" aria-hidden="true" />
-                      <span>{t.bugSubmitButton || ''}</span>
-                    </>
+                    <span>{t.bugSubmitButton || ''}</span>
                   )}
                 </button>
               </div>

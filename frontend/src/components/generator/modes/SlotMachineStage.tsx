@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Rows3, Lock, Sparkles, Ban, Check, Plus } from 'lucide-react';
+import { Lock, Ban, Check, Plus } from 'lucide-react';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
@@ -17,7 +17,6 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
 import { DbdButton } from '../shared/DbdButton';
-import { FlavorPill } from '../shared/FlavorPill';
 
 export interface SlotMachineStageProps {
   role: RoleCategory;
@@ -149,7 +148,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const tickIntervalsRef = useRef<Map<number, ReturnType<typeof setInterval>>>(new Map());
   const pendingDoneRef = useRef<{ remaining: Set<number>; onAllDone: () => void } | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { flavorLine, celebrate } = useJackpotCelebration(dict);
+  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -456,7 +455,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             size="lg"
             onClick={handlePullLever}
             disabled={activePlayablePerks.length === 0}
-            icon={<Rows3 className="h-6 w-6" />}
           >
             {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
           </DbdButton>
@@ -801,7 +799,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               size="md"
               onClick={handleConfirm}
               disabled={!canConfirm || phase !== 'awaiting'}
-              icon={<Lock className="h-5 w-5" />}
             >
               {dict?.generator?.slotConfirmSelection || 'Confirm Selection'}
             </DbdButton>
@@ -844,15 +841,12 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             role={role}
             size="md"
             onClick={handleReset}
-            icon={<Sparkles className="h-5 w-5" />}
           >
             {dict?.generator?.slotMachineSpinButton || 'Pull the Lever'}
           </DbdButton>
         </>
       )}
       </div>
-
-      <FlavorPill flavorLine={flavorLine} />
     </div>
   );
 };

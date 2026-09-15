@@ -136,7 +136,6 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless
-      centerTitle
     >
       {/* Search & Actions Bar */}
       <div className="p-4 bg-bg-elevated/40 flex flex-col sm:flex-row items-center gap-3 shrink-0">

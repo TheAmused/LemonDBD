@@ -110,7 +110,7 @@ export default {
   noRepeatTooltipDescOn: "Włączone: wylosowane już perki zostają poza pulą, dopóki ich nie zresetujesz.",
   noRepeatTooltipDescOff: "Wyłączone: każde losowanie korzysta z pełnej puli, łącznie z powtórzeniami.",
   blindModeTooltipTitle: "Tryb Ślepy",
-  blindModeTooltipDesc: "Na stałe ukrywa każdą ikonę perka za znakiem '?'. Sprawdź numer strony i slotu w ekwipunku w grze, aby zobaczyć, co wylosowałeś.",
+  blindModeTooltipDesc: "Na stałe ukrywa każdą ikonę perka za znakiem '?'. Sprawdź w grze, co wylosowałeś.",
   chaosMutatorTooltipDesc: "Zakręć, aby otrzymać losową klątwę lub błogosławieństwo próby, które zmieni ten zestaw perków.",
   coordinateLegendTooltip: "Co oznacza S/S",
   coordinateLegendTooltipTitle: "Strona / Slot",

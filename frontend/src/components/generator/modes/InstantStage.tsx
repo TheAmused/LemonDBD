@@ -3,7 +3,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Zap } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -84,7 +83,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
         size="lg"
         onClick={handleRoll}
         disabled={activePlayablePerks.length === 0}
-        icon={<Zap className="h-6 w-6" />}
       >
         {dict?.generator?.rollCompleteLoadout || `Roll Complete ${role} Loadout`}
       </DbdButton>

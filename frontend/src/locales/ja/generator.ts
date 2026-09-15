@@ -110,7 +110,7 @@ export default {
   noRepeatTooltipDescOn: "オン:一度引いたパークはリセットするまでプールから除外されます。",
   noRepeatTooltipDescOff: "オフ:すべての抽選が完全なプールから行われ、重複もあり得ます。",
   blindModeTooltipTitle: "ブラインドモード",
-  blindModeTooltipDesc: "すべてのパークアイコンを「？」で常に隠します。ゲーム内の所持アイテムでページ番号とスロット番号を確認すると、何を引いたか分かります。",
+  blindModeTooltipDesc: "すべてのパークアイコンを「？」で常に隠します。ゲーム内で確認すると、何を引いたか分かります。",
   chaosMutatorTooltipDesc: "回してランダムなトライアルの呪いや恩恵を引き、この編成を変化させます。",
   coordinateLegendTooltip: "P/Sの意味",
   coordinateLegendTooltipTitle: "ページ / スロット",

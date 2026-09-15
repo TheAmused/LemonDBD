@@ -3,7 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Gift, Sparkles, Lock } from 'lucide-react';
+import { Gift, Lock } from 'lucide-react';
 import { DbdButton } from '../shared/DbdButton';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -406,7 +406,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             role={role}
             size="md"
             onClick={handleReset}
-            icon={<Sparkles className="h-5 w-5" />}
           >
             {dict?.generator?.crateOpenAnother || 'Crack Open Another'}
           </DbdButton>

@@ -110,7 +110,7 @@ export default {
   noRepeatTooltipDescOn: "On: perks you already drew stay out of the pool until you reset them.",
   noRepeatTooltipDescOff: "Off: every draw pulls from the full pool, repeats and all.",
   blindModeTooltipTitle: "Blind Mode",
-  blindModeTooltipDesc: "Hides every perk icon behind a '?'. Check the page and slot number in your in-game inventory to see what you drew.",
+  blindModeTooltipDesc: "Hides every perk icon behind a '?'. Check in-game to see what you drew.",
   chaosMutatorTooltipDesc: "Spin for a random Trial curse or buff to twist this loadout.",
   coordinateLegendTooltip: "What P/S Means",
   coordinateLegendTooltipTitle: "Page / Slot",

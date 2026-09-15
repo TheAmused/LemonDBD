@@ -110,7 +110,7 @@ export default {
   noRepeatTooltipDescOn: "An: bereits gezogene Perks bleiben außerhalb des Pools, bis du sie zurücksetzt.",
   noRepeatTooltipDescOff: "Aus: jede Ziehung greift auf den vollen Pool zu, Wiederholungen inklusive.",
   blindModeTooltipTitle: "Blindmodus",
-  blindModeTooltipDesc: "Verbirgt jedes Perk-Symbol dauerhaft hinter einem '?'. Sieh im Spiel-Inventar die Seiten- und Slot-Nummer nach, um zu erfahren, was du gezogen hast.",
+  blindModeTooltipDesc: "Verbirgt jedes Perk-Symbol dauerhaft hinter einem '?'. Sieh im Spiel nach, was du gezogen hast.",
   chaosMutatorTooltipDesc: "Drehe für einen zufälligen Fluch oder Segen der Prüfung, der dieses Perk-Set verändert.",
   coordinateLegendTooltip: "Was S/S bedeutet",
   coordinateLegendTooltipTitle: "Seite / Slot",

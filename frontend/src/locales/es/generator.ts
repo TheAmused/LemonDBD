@@ -110,7 +110,7 @@ export default {
   noRepeatTooltipDescOn: "Activado: los perks ya sorteados quedan fuera del grupo hasta que los reinicies.",
   noRepeatTooltipDescOff: "Desactivado: cada tirada saca del grupo completo, con repeticiones incluidas.",
   blindModeTooltipTitle: "Modo a Ciegas",
-  blindModeTooltipDesc: "Oculta cada ícono de perk tras un '?' de forma permanente. Consulta el número de página y casilla en tu inventario del juego para ver qué te tocó.",
+  blindModeTooltipDesc: "Oculta cada ícono de perk tras un '?' de forma permanente. Consulta en el juego para ver qué te tocó.",
   chaosMutatorTooltipDesc: "Gira para obtener una maldición o bendición aleatoria que altere este equipo de perks.",
   coordinateLegendTooltip: "Qué significa P/C",
   coordinateLegendTooltipTitle: "Página / Casilla",

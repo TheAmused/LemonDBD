@@ -151,8 +151,12 @@ export function getLayoutTypeLabel(value: string, dict?: MapsDictionary): string
   return translateValue(LAYOUT_LABELS, value, dict);
 }
 
+/** Localized pallet amount on its own ("High" -> "Many"). */
+export function getPalletAmountValue(value: string, dict?: MapsDictionary): string {
+  return translateValue(PALLET_AMOUNT_LABELS, value, dict);
+}
+
 /** Localized pallet count phrase ("High" -> "Pallets: Many"). */
 export function getPalletAmountLabel(value: string, dict?: MapsDictionary): string {
-  const amount = translateValue(PALLET_AMOUNT_LABELS, value, dict);
-  return (dict?.palletsAmount || 'Pallets: {amount}').replace('{amount}', amount);
+  return (dict?.palletsAmount || 'Pallets: {amount}').replace('{amount}', getPalletAmountValue(value, dict));
 }

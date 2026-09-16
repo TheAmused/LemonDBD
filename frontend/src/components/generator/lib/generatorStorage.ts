@@ -2,7 +2,7 @@
 import { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 
-export const GENERATOR_STORAGE_KEY = 'lemon_dbd_generator_v8';
+export const GENERATOR_STORAGE_KEY = 'lemon_dbd_generator_v9';
 
 export interface GeneratorStoredState {
   role: RoleCategory;

@@ -1,5 +1,6 @@
 // frontend/src/utils/mapUtils.ts
 import type { MapRealm } from '@/types/map';
+import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/api';
 
 const DEFAULT_BACKEND_BASE = getBackendBaseUrl();
@@ -65,21 +66,17 @@ export function getMapSizeBucket(sizeSqMeters: number | null | undefined): MapSi
   return 'large';
 }
 
-export type MapStructureFilter = 'shack' | 'no_shack' | 'main_building' | 'no_main_building';
-
 /** `null` on a field means "any value". */
 export interface MapAttributeFilters {
   layoutType: string | null;
   palletDensity: string | null;
   size: MapSizeBucket | null;
-  structure: MapStructureFilter | null;
 }
 
 export const EMPTY_MAP_FILTERS: MapAttributeFilters = {
   layoutType: null,
   palletDensity: null,
   size: null,
-  structure: null,
 };
 
 export function hasActiveMapFilters(filters: MapAttributeFilters): boolean {
@@ -90,18 +87,7 @@ export function mapMatchesFilters(map: MapRealm, filters: MapAttributeFilters): 
   if (filters.layoutType !== null && map.layout_type !== filters.layoutType) return false;
   if (filters.palletDensity !== null && map.pallet_density !== filters.palletDensity) return false;
   if (filters.size !== null && getMapSizeBucket(map.size_sq_meters) !== filters.size) return false;
-  switch (filters.structure) {
-    case 'shack':
-      return map.is_shack;
-    case 'no_shack':
-      return !map.is_shack;
-    case 'main_building':
-      return map.is_main_building;
-    case 'no_main_building':
-      return !map.is_main_building;
-    default:
-      return true;
-  }
+  return true;
 }
 
 /** Distinct layout types present in the data, alphabetically. */
@@ -136,4 +122,37 @@ export function filterAndSortRealmGroups(
     }))
     .filter((g) => g.maps.length > 0)
     .sort((a, b) => dir * a.realm.localeCompare(b.realm));
+}
+
+type MapsDictionary = Dictionary['maps'];
+type LabelEntry = readonly [keyof MapsDictionary, string];
+
+// Raw database values mapped to their dictionary key and English fallback.
+const LAYOUT_LABELS: Record<string, LabelEntry> = {
+  Outdoor: ['layoutOutdoor', 'Outdoor'],
+  Indoor: ['layoutIndoor', 'Indoor'],
+  Hybrid: ['layoutHybrid', 'Hybrid'],
+};
+
+const PALLET_AMOUNT_LABELS: Record<string, LabelEntry> = {
+  Low: ['palletsLow', 'Few'],
+  Medium: ['palletsMedium', 'Average'],
+  High: ['palletsHigh', 'Many'],
+  'Very High': ['palletsVeryHigh', 'Very many'],
+};
+
+function translateValue(labels: Record<string, LabelEntry>, value: string, dict?: MapsDictionary): string {
+  const entry = labels[value];
+  return entry ? dict?.[entry[0]] || entry[1] : value;
+}
+
+/** Localized name of a map's layout type ("Outdoor" -> "Otwarty"). */
+export function getLayoutTypeLabel(value: string, dict?: MapsDictionary): string {
+  return translateValue(LAYOUT_LABELS, value, dict);
+}
+
+/** Localized pallet count phrase ("High" -> "Pallets: Many"). */
+export function getPalletAmountLabel(value: string, dict?: MapsDictionary): string {
+  const amount = translateValue(PALLET_AMOUNT_LABELS, value, dict);
+  return (dict?.palletsAmount || 'Pallets: {amount}').replace('{amount}', amount);
 }

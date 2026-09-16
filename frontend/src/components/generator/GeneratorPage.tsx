@@ -86,8 +86,17 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
       if (saved.genMode) setGenMode(saved.genMode);
       if (typeof saved.noRepeatPerks === 'boolean') setNoRepeatPerks(saved.noRepeatPerks);
       if (typeof saved.spinDurationSec === 'number') setSpinDurationSec(saved.spinDurationSec);
-      if (Array.isArray(saved.loadout)) setLoadout(saved.loadout);
-      if (typeof saved.activeSlotIdx === 'number') setActiveSlotIdx(saved.activeSlotIdx);
+      if (Array.isArray(saved.loadout) && saved.genMode === 'wheel') {
+        const targetRole = saved.role || 'Survivor';
+        const isValidWheelLoadout = saved.loadout.every((s) => {
+          if (!s || !s.perk) return true;
+          return s.perk.category === targetRole;
+        });
+        if (isValidWheelLoadout) {
+          setLoadout(saved.loadout);
+          if (typeof saved.activeSlotIdx === 'number') setActiveSlotIdx(saved.activeSlotIdx);
+        }
+      }
       if (typeof saved.blindMode === 'boolean') setBlindMode(saved.blindMode);
       if (saved.activeMutator) setActiveMutator(saved.activeMutator);
     }
@@ -151,6 +160,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const handleRoleChange = useCallback((newRole: RoleCategory) => {
     setRole(newRole);
     setLoadout([null, null, null, null]);
+    setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
   }, []);
 
@@ -218,8 +228,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   }, [activeSlotIdx, noRepeatPerks, role]);
 
   const handleBatchRollComplete = useCallback((slots: DrawnSlot[]) => {
-    setLoadout([slots[0] || null, slots[1] || null, slots[2] || null, slots[3] || null]);
-    setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!

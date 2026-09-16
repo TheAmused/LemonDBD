@@ -3,13 +3,27 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, MapPin } from 'lucide-react';
+import { Search, ImageOff, Compass, Layers, Maximize2, ArrowDownAZ, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
-import { getMapImageSrc } from '@/utils/mapUtils';
+import {
+  EMPTY_MAP_FILTERS,
+  filterAndSortRealmGroups,
+  getLayoutTypeOptions,
+  getMapImageSrc,
+  getPalletDensityOptions,
+  hasActiveMapFilters,
+  type MapAttributeFilters,
+  type MapSizeBucket,
+  type MapSortOrder,
+} from '@/utils/mapUtils';
+import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { MapCard } from './MapCard';
+
+// Sentinel dropdown value for "no filter"; real attribute values never collide with it.
+const ANY = '__any__';
 
 const FullscreenMapEngine = dynamic(
   () => import('./FullscreenMapEngine').then((m) => m.FullscreenMapEngine),
@@ -70,35 +84,53 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   });
 
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
-  const [realmFilter, setRealmFilter] = useState<string | null>(null);
+  const [filters, setFilters] = useState<MapAttributeFilters>(EMPTY_MAP_FILTERS);
+  const [sortOrder, setSortOrder] = useState<MapSortOrder>('az');
   const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 2);
-
-  // The full realm roster, independent of the current search text -- unlike
-  // groupedMapsByRealm (built from the search-filtered `maps` list), this
-  // doesn't shrink as soon as a query narrows results to fewer realms, so
-  // the filter chips stay put while searching instead of disappearing.
-  const allRealmNames = useMemo(
-    () => Object.keys(realmImages).sort((a, b) => a.localeCompare(b)),
-    [realmImages]
-  );
+  const filtersActive = hasActiveMapFilters(filters);
 
   useEffect(() => {
     if (hideSearch) {
       if (search) setSearch('');
-      if (realmFilter) setRealmFilter(null);
+      setFilters(EMPTY_MAP_FILTERS);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hideSearch]);
 
-  useEffect(() => {
-    if (realmFilter && !groupedMapsByRealm.some((g) => g.realm === realmFilter)) {
-      setRealmFilter(null);
-    }
-  }, [groupedMapsByRealm, realmFilter]);
+  const setFilter = <K extends keyof MapAttributeFilters>(key: K, value: MapAttributeFilters[K]) =>
+    setFilters((prev) => ({ ...prev, [key]: value }));
+
+  const mapsDict = dict?.maps;
+  const layoutOptions: DropdownOption[] = useMemo(
+    () => [
+      { value: ANY, label: mapsDict?.filterAnyLayout || 'Any layout' },
+      ...getLayoutTypeOptions(maps).map((v) => ({ value: v, label: v })),
+    ],
+    [maps, mapsDict]
+  );
+  const palletOptions: DropdownOption[] = useMemo(
+    () => [
+      { value: ANY, label: mapsDict?.filterAnyPallets || 'Any pallets' },
+      ...getPalletDensityOptions(maps).map((v) => ({
+        value: v,
+        label: (mapsDict?.palletsSuffix || '{density} Pallets').replace('{density}', v),
+      })),
+    ],
+    [maps, mapsDict]
+  );
+  const sizeOptions: DropdownOption<MapSizeBucket | typeof ANY>[] = [
+    { value: ANY, label: mapsDict?.filterAnySize || 'Any size' },
+    { value: 'small', label: mapsDict?.sizeSmall || 'Small', sublabel: mapsDict?.sizeSmallHint || 'under 9000 m²' },
+    { value: 'medium', label: mapsDict?.sizeMedium || 'Medium', sublabel: mapsDict?.sizeMediumHint || '9000 to 9999 m²' },
+    { value: 'large', label: mapsDict?.sizeLarge || 'Large', sublabel: mapsDict?.sizeLargeHint || '10000 m² and up' },
+  ];
+  const sortOptions: DropdownOption<MapSortOrder>[] = [
+    { value: 'az', label: mapsDict?.sortAz || 'Name A to Z' },
+    { value: 'za', label: mapsDict?.sortZa || 'Name Z to A' },
+  ];
 
   const isSearching = activeSearch.trim().length > 0;
-  const isRealmExpanded = (realm: string) =>
-    isSearching || expandedRealm === realm || (realmFilter !== null && realmFilter === realm);
+  const isRealmExpanded = (realm: string) => isSearching || expandedRealm === realm;
 
   const pendingOpenRef = useRef<string | null>(null);
   const toggleRealm = (realm: string) => {
@@ -116,7 +148,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     });
   };
 
-  const displayedGroups = realmFilter ? groupedMapsByRealm.filter((g) => g.realm === realmFilter) : groupedMapsByRealm;
+  const displayedGroups = useMemo(
+    () => filterAndSortRealmGroups(groupedMapsByRealm, filters, sortOrder),
+    [groupedMapsByRealm, filters, sortOrder]
+  );
 
   const activeRealms = useMemo(() => {
     const set = new Set<string>();
@@ -125,7 +160,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     });
     return set;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayedGroups, isSearching, expandedRealm, realmFilter]);
+  }, [displayedGroups, isSearching, expandedRealm]);
   const activeRealmsSignature = [...activeRealms].sort().join('|');
   const activeRealmsRef = useRef(activeRealms);
   activeRealmsRef.current = activeRealms;
@@ -237,40 +272,49 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             />
           </div>
 
-          {allRealmNames.length > 1 && (
-            <div className="flex flex-wrap justify-center gap-2">
+          {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
+          <div className="flex flex-wrap items-center justify-center gap-2" data-testid="map-filters" inert={hideSearch}>
+            <CustomDropdown
+              value={filters.layoutType ?? ANY}
+              onChange={(v) => setFilter('layoutType', v === ANY ? null : v)}
+              options={layoutOptions}
+              icon={<Compass className="h-3.5 w-3.5" />}
+              ariaLabel={mapsDict?.layoutLabel || 'Layout'}
+            />
+            <CustomDropdown
+              value={filters.palletDensity ?? ANY}
+              onChange={(v) => setFilter('palletDensity', v === ANY ? null : v)}
+              options={palletOptions}
+              icon={<Layers className="h-3.5 w-3.5" />}
+              ariaLabel={mapsDict?.palletDensityLabel || 'Pallet Density'}
+            />
+            <CustomDropdown
+              value={filters.size ?? ANY}
+              onChange={(v) => setFilter('size', v === ANY ? null : v)}
+              options={sizeOptions}
+              icon={<Maximize2 className="h-3.5 w-3.5" />}
+              ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
+              minWidthClass="min-w-[220px]"
+            />
+            <CustomDropdown
+              value={sortOrder}
+              onChange={setSortOrder}
+              options={sortOptions}
+              icon={<ArrowDownAZ className="h-3.5 w-3.5" />}
+              ariaLabel={mapsDict?.sortAria || 'Sort maps'}
+              align="right"
+            />
+            {filtersActive && (
               <button
                 type="button"
-                tabIndex={hideSearch ? -1 : undefined}
-                onClick={() => setRealmFilter(null)}
-                aria-pressed={realmFilter === null}
-                className={`cursor-pointer rounded-full px-3 py-1 text-xs font-bold transition-colors ${
-                  realmFilter === null
-                    ? 'bg-accent-red text-text-inverted'
-                    : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
-                }`}
+                onClick={() => setFilters(EMPTY_MAP_FILTERS)}
+                className="inline-flex cursor-pointer items-center gap-1 rounded-xl px-3 py-2 text-xs font-mono font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-accent-red"
               >
-                {dict?.maps?.all || 'All'}
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+                {mapsDict?.clearFilters || 'Clear filters'}
               </button>
-              {allRealmNames.map((realm) => (
-                <button
-                  key={realm}
-                  type="button"
-                  tabIndex={hideSearch ? -1 : undefined}
-                  onClick={() => setRealmFilter((prev) => (prev === realm ? null : realm))}
-                  aria-pressed={realmFilter === realm}
-                  className={`cursor-pointer inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition-colors ${
-                    realmFilter === realm
-                      ? 'bg-accent-red text-text-inverted'
-                      : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
-                  }`}
-                >
-                  <MapPin className="h-3 w-3" aria-hidden="true" />
-                  {realm}
-                </button>
-              ))}
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {voiceSlot && (
@@ -286,13 +330,13 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         </div>
       )}
 
-      {!loading && groupedMapsByRealm.length === 0 && (
+      {!loading && displayedGroups.length === 0 && (
         <div className="py-16 text-center text-xs text-text-muted font-mono">
           {dict?.maps?.noMapsFound || 'No Maps Found'}
         </div>
       )}
 
-      {!loading && groupedMapsByRealm.length > 0 && (
+      {!loading && displayedGroups.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {displayedGroups.map(({ realm, maps: realmMaps }, index) => {
             const realmImage = realmImages[realm];

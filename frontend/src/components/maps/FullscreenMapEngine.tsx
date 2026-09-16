@@ -13,7 +13,6 @@ import {
   Flame,
   Home,
   Maximize2,
-  SlidersHorizontal,
 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
@@ -25,7 +24,6 @@ interface FullscreenMapEngineProps {
   availableMaps?: MapRealm[];
   backendBase: string;
   dict?: Dictionary;
-  initialDrawerOpen?: boolean;
 }
 
 export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
@@ -34,10 +32,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   availableMaps = [],
   backendBase,
   dict,
-  initialDrawerOpen = false,
 }) => {
   const [imageFailed, setImageFailed] = useState<boolean>(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(initialDrawerOpen);
 
   useEffect(() => {
     setImageFailed(false);
@@ -215,19 +211,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
-              onClick={() => setIsDrawerOpen((prev) => !prev)}
-              aria-pressed={isDrawerOpen}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${isDrawerOpen
-                  ? 'bg-accent-red/15 border-accent-red/50 text-accent-red'
-                  : 'bg-bg-elevated border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
-                }`}
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-accent-red" />
-              <span className="hidden sm:inline">{dict?.maps?.tacticalDossier || 'Tactical Dossier'}</span>
-            </button>
-
-            <button
-              type="button"
               onClick={onClose}
               aria-label={dict?.modal?.close || 'Close'}
               className="rounded-xl p-2 text-text-muted hover:text-text-primary hover:bg-bg-elevated border border-transparent hover:border-border-subtle transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
@@ -357,135 +340,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           </div>
         )}
       </div>
-
-      {/* Tactical Dossier: a bottom sheet on phones (full width, capped height,
-       * safely clear of the zoom toolbar) so it never overflows a narrow
-       * viewport, and the original right-anchored floating panel from `sm`
-       * up, unchanged. */}
-      {isDrawerOpen && activeMap && (
-        <aside
-          role="complementary"
-          aria-label={dict?.maps?.specsAndIntelAria || 'Map Specifications and Intel'}
-          className="absolute inset-x-3 bottom-20 top-auto max-h-[60dvh] sm:inset-x-auto sm:top-24 sm:right-4 sm:bottom-20 sm:max-h-none z-40 sm:w-80 lg:w-96 rounded-2xl bg-bg-surface border border-border-color backdrop-blur-2xl shadow-2xl flex flex-col p-4 text-xs transition-all overflow-y-auto"
-        >
-          <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-border-color">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-accent-red animate-pulse" />
-              <span className="font-mono text-xs font-bold tracking-wider uppercase text-accent-red">
-                {dict?.maps?.tacticalDossier || 'Tactical Dossier'}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsDrawerOpen(false)}
-              className="text-text-muted hover:text-text-primary p-1 rounded-lg hover:bg-bg-elevated transition-colors cursor-pointer"
-              aria-label={dict?.maps?.closeDossierAria || 'Close Dossier'}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Prominent Surface Area Card */}
-          {activeMap.size_sq_tiles != null && (
-            <div className="mb-3 p-3 rounded-xl bg-bg-elevated border border-accent-red/30 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red">
-                  <Maximize2 className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-text-muted block">
-                    {dict?.maps?.surfaceArea || 'Surface Area'}
-                  </span>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-xl font-mono font-black text-text-primary">
-                      {activeMap.size_sq_tiles} {dict?.maps?.sqTilesUnit || 'sqT'}
-                    </span>
-                    {activeMap.size_sq_meters != null && (
-                      <span className="text-xs font-mono text-text-secondary font-medium">
-                        {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
-                          '{value}',
-                          activeMap.size_sq_meters.toLocaleString()
-                        )}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Metric Specifications Grid */}
-          <div className="grid grid-cols-2 gap-2 text-[11px] mb-3">
-            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
-                {dict?.maps?.layoutLabel || 'Layout'}
-              </span>
-              <strong className="font-semibold text-text-secondary">
-                {activeMap.layout_type || 'Outdoor'}
-              </strong>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
-                {dict?.maps?.palletDensityLabel || 'Pallet Density'}
-              </span>
-              <strong className="font-semibold text-text-secondary">
-                {activeMap.pallet_density || 'Medium'}
-              </strong>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
-                {dict?.maps?.mazeTilesLabel || 'Maze Tiles'}
-              </span>
-              <strong className="font-semibold text-text-secondary">
-                {activeMap.jungle_gyms_count != null
-                  ? activeMap.jungle_gyms_count === 0
-                    ? (dict?.maps?.corridorsLabel || '0 (Corridors)')
-                    : (dict?.maps?.gymsSuffix || '{count} Gyms').replace(
-                        '{count}',
-                        String(activeMap.jungle_gyms_count)
-                      )
-                  : '—'}
-              </strong>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-bg-elevated border border-border-color">
-              <span className="text-[10px] text-text-muted uppercase font-mono block mb-0.5">
-                {dict?.maps?.dullTotemsLabel || 'Dull Totems'}
-              </span>
-              <strong className="font-semibold text-text-secondary">
-                {(dict?.maps?.spawnsSuffix || '{count} Spawns').replace(
-                  '{count}',
-                  String(activeMap.totem_spawns_count ?? 5)
-                )}
-              </strong>
-            </div>
-
-            <div className="col-span-2 p-2.5 rounded-xl bg-bg-elevated border border-border-color flex items-center justify-between">
-              <span className="text-[10px] text-text-muted uppercase font-mono">
-                {dict?.maps?.killerShackLabel || 'Killer Shack'}
-              </span>
-              <span
-                className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${activeMap.shack_has_basement
-                    ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
-                    : 'text-text-muted bg-bg-primary border-border-color'
-                  }`}
-              >
-                {activeMap.shack_has_basement
-                  ? (dict?.maps?.basementPossible || 'Basement Possible')
-                  : (dict?.maps?.noShackBasement || 'No Shack Basement')}
-              </span>
-            </div>
-          </div>
-
-          {activeMap.description && (
-            <p className="mt-auto pt-2.5 border-t border-border-color text-[11px] text-text-muted leading-relaxed">
-              {activeMap.description}
-            </p>
-          )}
-        </aside>
-      )}
 
       {/* Floating Bottom Navigation Bar */}
       <footer className="absolute bottom-4 inset-x-4 sm:inset-x-6 z-40 flex items-center justify-between pointer-events-none">

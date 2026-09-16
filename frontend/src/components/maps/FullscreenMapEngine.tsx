@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
-import { getMapImageSrc } from '@/utils/mapUtils';
+import { getLayoutTypeLabel, getMapImageSrc, getPalletAmountLabel } from '@/utils/mapUtils';
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -302,7 +302,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   )}`}
                 >
                   <Compass className="w-3.5 h-3.5 shrink-0" />
-                  {activeMap.layout_type}
+                  {getLayoutTypeLabel(activeMap.layout_type, dict?.maps)}
                 </span>
               )}
 
@@ -314,7 +314,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                   )}`}
                 >
                   <Layers className="w-3.5 h-3.5 shrink-0" />
-                  {(dict?.maps?.palletsSuffix || '{density} Pallets').replace('{density}', activeMap.pallet_density)}
+                  {getPalletAmountLabel(activeMap.pallet_density, dict?.maps)}
                 </span>
               )}
 

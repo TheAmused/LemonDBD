@@ -265,7 +265,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      <div className="grid">
+      <div className="grid grid-cols-[minmax(0,1fr)]">
         <div className={`[grid-area:1/1] flex flex-col justify-center space-y-6 ${hideSearch ? 'invisible' : 'visible'}`}>
           <div className="relative w-full sm:max-w-lg sm:mx-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />

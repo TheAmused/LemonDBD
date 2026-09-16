@@ -76,7 +76,6 @@ export default {
   searchModeAria: 'Suchmodus',
   expandRealmAria: 'Reich aufklappen',
   collapseRealmAria: 'Reich einklappen',
-  twelveClockCallouts: '12-Uhr-Callouts',
   sqTilesUnit: 'qF',
   sqMetersSuffix: '({value} m²)',
   totemsSuffix: '{count} Totems',

@@ -76,7 +76,6 @@ export default {
   searchModeAria: 'Search mode',
   expandRealmAria: 'Expand realm',
   collapseRealmAria: 'Collapse realm',
-  twelveClockCallouts: '12-Clock Callouts',
   sqTilesUnit: 'sqT',
   sqMetersSuffix: '({value} m²)',
   totemsSuffix: '{count} Totems',

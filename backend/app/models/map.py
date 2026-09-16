@@ -29,7 +29,8 @@ DEFAULT_LAYOUT_TYPE = "Outdoor"
 DEFAULT_PALLET_DENSITY = "Medium"
 DEFAULT_JUNGLE_GYMS = 3
 DEFAULT_TOTEM_SPAWNS = 5
-DEFAULT_SHACK_HAS_BASEMENT = True
+DEFAULT_IS_SHACK = True
+DEFAULT_IS_MAIN_BUILDING = False
 
 
 class Realm(Base):
@@ -113,8 +114,10 @@ class MapRealm(Base):
     totem_spawns_count: Mapped[int] = mapped_column(
         Integer, nullable=False, default=DEFAULT_TOTEM_SPAWNS
     )
-    shack_has_basement: Mapped[bool] = mapped_column(
-        nullable=False, default=DEFAULT_SHACK_HAS_BASEMENT
+    # Which landmark structures the map has.
+    is_shack: Mapped[bool] = mapped_column(nullable=False, default=DEFAULT_IS_SHACK)
+    is_main_building: Mapped[bool] = mapped_column(
+        nullable=False, default=DEFAULT_IS_MAIN_BUILDING
     )
 
     # Size measurements (Wiki.gg: sqT = 8x8m tiles, sq_meters = sqT * 64)
@@ -161,10 +164,11 @@ class MapRealm(Base):
                 else DEFAULT_TOTEM_SPAWNS
             ),
             "pallet_density": self.pallet_density or DEFAULT_PALLET_DENSITY,
-            "shack_has_basement": (
-                self.shack_has_basement
-                if self.shack_has_basement is not None
-                else DEFAULT_SHACK_HAS_BASEMENT
+            "is_shack": self.is_shack if self.is_shack is not None else DEFAULT_IS_SHACK,
+            "is_main_building": (
+                self.is_main_building
+                if self.is_main_building is not None
+                else DEFAULT_IS_MAIN_BUILDING
             ),
             "size_sq_tiles": self.size_sq_tiles,
             "size_sq_meters": self.size_sq_meters,

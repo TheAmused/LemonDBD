@@ -3,7 +3,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, Compass, Layers, Maximize2, ArrowDownAZ, X } from 'lucide-react';
+import { Search, ImageOff, Compass, Layers, Maximize2, Building2, ArrowDownAZ, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
@@ -18,6 +18,7 @@ import {
   type MapAttributeFilters,
   type MapSizeBucket,
   type MapSortOrder,
+  type MapStructureFilter,
 } from '@/utils/mapUtils';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { MapCard } from './MapCard';
@@ -123,6 +124,13 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     { value: 'small', label: mapsDict?.sizeSmall || 'Small', sublabel: mapsDict?.sizeSmallHint || 'under 9000 m²' },
     { value: 'medium', label: mapsDict?.sizeMedium || 'Medium', sublabel: mapsDict?.sizeMediumHint || '9000 to 9999 m²' },
     { value: 'large', label: mapsDict?.sizeLarge || 'Large', sublabel: mapsDict?.sizeLargeHint || '10000 m² and up' },
+  ];
+  const structureOptions: DropdownOption<MapStructureFilter | typeof ANY>[] = [
+    { value: ANY, label: mapsDict?.filterAnyStructure || 'Any buildings' },
+    { value: 'shack', label: mapsDict?.shackYes || 'Shack' },
+    { value: 'no_shack', label: mapsDict?.shackNo || 'No Shack' },
+    { value: 'main_building', label: mapsDict?.mainBuildingYes || 'Main Building' },
+    { value: 'no_main_building', label: mapsDict?.mainBuildingNo || 'No Main Building' },
   ];
   const sortOptions: DropdownOption<MapSortOrder>[] = [
     { value: 'az', label: mapsDict?.sortAz || 'Name A to Z' },
@@ -295,6 +303,14 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               icon={<Maximize2 className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
               minWidthClass="min-w-[220px]"
+            />
+            <CustomDropdown
+              value={filters.structure ?? ANY}
+              onChange={(v) => setFilter('structure', v === ANY ? null : v)}
+              options={structureOptions}
+              icon={<Building2 className="h-3.5 w-3.5" />}
+              ariaLabel={mapsDict?.structureAria || 'Buildings'}
+              minWidthClass="min-w-[200px]"
             />
             <CustomDropdown
               value={sortOrder}

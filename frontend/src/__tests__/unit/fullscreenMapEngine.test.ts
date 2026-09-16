@@ -18,7 +18,8 @@ const sampleOutdoorMap: MapRealm = {
   jungle_gyms_count: 4,
   totem_spawns_count: 5,
   pallet_density: 'Medium',
-  shack_has_basement: true,
+  is_shack: true,
+  is_main_building: true,
   size_sq_tiles: 176.0,
   size_sq_meters: 11264,
   description: 'Dumbbell-shaped tactical Autohaven layout',
@@ -37,7 +38,8 @@ const sampleIndoorMap: MapRealm = {
   jungle_gyms_count: 0,
   totem_spawns_count: 5,
   pallet_density: 'Very High',
-  shack_has_basement: false,
+  is_shack: false,
+  is_main_building: false,
   size_sq_tiles: 142.0,
   size_sq_meters: 9088,
   description: 'Multistory meat processing facility',
@@ -56,7 +58,8 @@ const sampleMidwichMap: MapRealm = {
   jungle_gyms_count: 0,
   totem_spawns_count: 5,
   pallet_density: 'Low',
-  shack_has_basement: false,
+  is_shack: false,
+  is_main_building: false,
   size_sq_tiles: 113.5,
   size_sq_meters: 7264,
   description: 'Silent Hill nightmare school',
@@ -81,7 +84,8 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
   assert.ok(html.includes('Medium'));
   assert.ok(html.includes('4 Gyms'));
   assert.ok(html.includes('5 Totems'));
-  assert.ok(html.includes('Shack Basement'));
+  assert.ok(html.includes('>Shack<'));
+  assert.ok(html.includes('>Main Building<'));
 });
 
 test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 maze tiles', () => {
@@ -102,6 +106,7 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
   assert.ok(html.includes('Very High'));
   assert.ok(html.includes('0 Gyms'));
   assert.ok(html.includes('No Shack'));
+  assert.ok(html.includes('No Main Building'));
 });
 
 test('FullscreenMapEngine renders float tile size accurately', () => {

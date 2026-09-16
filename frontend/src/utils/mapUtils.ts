@@ -65,24 +65,43 @@ export function getMapSizeBucket(sizeSqMeters: number | null | undefined): MapSi
   return 'large';
 }
 
+export type MapStructureFilter = 'shack' | 'no_shack' | 'main_building' | 'no_main_building';
+
 /** `null` on a field means "any value". */
 export interface MapAttributeFilters {
   layoutType: string | null;
   palletDensity: string | null;
   size: MapSizeBucket | null;
+  structure: MapStructureFilter | null;
 }
 
-export const EMPTY_MAP_FILTERS: MapAttributeFilters = { layoutType: null, palletDensity: null, size: null };
+export const EMPTY_MAP_FILTERS: MapAttributeFilters = {
+  layoutType: null,
+  palletDensity: null,
+  size: null,
+  structure: null,
+};
 
 export function hasActiveMapFilters(filters: MapAttributeFilters): boolean {
-  return filters.layoutType !== null || filters.palletDensity !== null || filters.size !== null;
+  return Object.values(filters).some((v) => v !== null);
 }
 
 export function mapMatchesFilters(map: MapRealm, filters: MapAttributeFilters): boolean {
   if (filters.layoutType !== null && map.layout_type !== filters.layoutType) return false;
   if (filters.palletDensity !== null && map.pallet_density !== filters.palletDensity) return false;
   if (filters.size !== null && getMapSizeBucket(map.size_sq_meters) !== filters.size) return false;
-  return true;
+  switch (filters.structure) {
+    case 'shack':
+      return map.is_shack;
+    case 'no_shack':
+      return !map.is_shack;
+    case 'main_building':
+      return map.is_main_building;
+    case 'no_main_building':
+      return !map.is_main_building;
+    default:
+      return true;
+  }
 }
 
 /** Distinct layout types present in the data, alphabetically. */

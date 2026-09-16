@@ -7,10 +7,11 @@ from sqlalchemy import func, or_, select
 from app.core.extensions import db
 from app.models import MapRealm, MapSource, Realm
 from app.models.map import (
+    DEFAULT_IS_MAIN_BUILDING,
+    DEFAULT_IS_SHACK,
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
     DEFAULT_PALLET_DENSITY,
-    DEFAULT_SHACK_HAS_BASEMENT,
     DEFAULT_SOURCE_LABEL,
     DEFAULT_SOURCE_CODE,
     DEFAULT_TOTEM_SPAWNS,
@@ -121,10 +122,15 @@ def fetch_maps(
                 if "pallet_density" in row_keys and r["pallet_density"] is not None
                 else DEFAULT_PALLET_DENSITY
             ),
-            "shack_has_basement": (
-                bool(r["shack_has_basement"])
-                if "shack_has_basement" in row_keys and r["shack_has_basement"] is not None
-                else DEFAULT_SHACK_HAS_BASEMENT
+            "is_shack": (
+                bool(r["is_shack"])
+                if "is_shack" in row_keys and r["is_shack"] is not None
+                else DEFAULT_IS_SHACK
+            ),
+            "is_main_building": (
+                bool(r["is_main_building"])
+                if "is_main_building" in row_keys and r["is_main_building"] is not None
+                else DEFAULT_IS_MAIN_BUILDING
             ),
             "size_sq_tiles": r["size_sq_tiles"] if "size_sq_tiles" in row_keys else None,
             "size_sq_meters": r["size_sq_meters"] if "size_sq_meters" in row_keys else None,

@@ -76,7 +76,6 @@ export default {
   searchModeAria: 'Modo de búsqueda',
   expandRealmAria: 'Expandir reino',
   collapseRealmAria: 'Contraer reino',
-  twelveClockCallouts: 'Llamadas de 12 Horas',
   sqTilesUnit: 'cas²',
   sqMetersSuffix: '({value} m²)',
   totemsSuffix: '{count} Tótems',

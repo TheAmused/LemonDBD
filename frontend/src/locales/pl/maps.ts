@@ -76,7 +76,6 @@ export default {
   searchModeAria: 'Tryb wyszukiwania',
   expandRealmAria: 'Rozwiń realm',
   collapseRealmAria: 'Zwiń realm',
-  twelveClockCallouts: 'Komunikaty 12-Zegarowe',
   sqTilesUnit: 'kw.pł',
   sqMetersSuffix: '({value} m²)',
   totemsSuffix: 'Totemy: {count}',

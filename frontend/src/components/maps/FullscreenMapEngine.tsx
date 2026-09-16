@@ -196,16 +196,14 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       className="fixed inset-0 z-50 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary"
     >
       {/* Top Tactical Command Ribbon */}
-      <header className="absolute top-0 inset-x-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary/90 backdrop-blur-2xl border-b border-border-color/80 shadow-2xl">
-        <div className="flex items-center justify-between gap-3">
+      <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           {activeMap && (
-            <div className="min-w-0">
+            <div className="order-1 min-w-0">
               <div className="flex items-center gap-1.5 leading-none mb-1">
                 <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-text-secondary">
                   {activeMap.realm}
                 </span>
-                <span className="text-text-muted text-[10px]">•</span>
-                <span className="text-[10px] font-mono text-text-muted hidden xs:inline">{dict?.maps?.twelveClockCallouts || '12-Clock Callouts'}</span>
               </div>
               <h1 className="text-sm sm:text-base md:text-lg font-black text-text-primary tracking-wide truncate leading-tight">
                 {activeMap.name}
@@ -213,74 +211,16 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             </div>
           )}
 
-          {/* Right Header Actions */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={dict?.modal?.close || 'Close'}
-              className="rounded-xl p-2 text-text-muted hover:text-text-primary hover:bg-bg-elevated border border-transparent hover:border-border-subtle transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-      </header>
-
-      {/* Main Map Viewport Canvas */}
-      <div
-        ref={containerRef}
-        onWheel={handleWheel}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onClick={handleBackgroundClick}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onTouchCancel={handleTouchEnd}
-        style={{ touchAction: 'none' }}
-        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-16 pb-36 sm:pb-24 px-4"
-      >
-        {imageSrc && !imageFailed ? (
-          <img
-            src={imageSrc}
-            alt={activeMap?.name || ''}
-            draggable={false}
-            style={{
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-              transformOrigin: 'center center',
-              transition: isDragging ? 'none' : 'transform 75ms ease-out',
-            }}
-            className={`max-w-full max-h-full object-contain select-none shadow-2xl ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-              }`}
-            onError={() => setImageFailed(true)}
-          />
-        ) : (
-          <div className="flex flex-col items-center gap-3 text-text-muted">
-            <ImageOff className="w-12 h-12" />
-            <span className="text-xs font-bold uppercase tracking-wider">
-              {dict?.maps?.noMapsFound || 'No Tactical Callout Image Available'}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Floating Bottom Navigation Bar */}
-      <footer className="absolute bottom-4 inset-x-4 sm:inset-x-6 z-40 flex flex-col items-stretch gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-3 pointer-events-none">
-        <div className="min-w-0">
-          {/* Tactical Telemetry Strip -- lives in the footer so the header stays one
-           * row tall; horizontally scrollable on narrow viewports. */}
+          {/* Map stats: share the title row on wide screens, wrap below it on narrow ones. */}
           {activeMap && (
             <div
-              className="pointer-events-auto min-w-0 flex items-center gap-2 overflow-x-auto text-xs bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="order-3 basis-full lg:order-2 lg:basis-auto lg:flex-1 min-w-0 flex flex-wrap items-center gap-1.5 text-xs lg:justify-center"
             >
               {/* Size / sqT Badge */}
               {activeMap.size_sq_tiles != null ? (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
+                  <span className="text-text-muted">{dict?.maps?.surfaceArea || 'Surface Area'}</span>
                   <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
                   <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
                   {activeMap.size_sq_meters != null && (
@@ -347,8 +287,64 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               </span>
             </div>
           )}
+
+          {/* Right Header Actions */}
+          <div className="order-2 lg:order-3 flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={dict?.modal?.close || 'Close'}
+              className="rounded-xl p-2 text-text-muted hover:text-text-primary hover:bg-bg-elevated border border-transparent hover:border-border-subtle transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
+      </header>
+
+      {/* Main Map Viewport Canvas */}
+      <div
+        ref={containerRef}
+        onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onClick={handleBackgroundClick}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        style={{ touchAction: 'none' }}
+        className="relative flex-1 min-h-0 w-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-4 pb-20 px-4"
+      >
+        {imageSrc && !imageFailed ? (
+          <img
+            src={imageSrc}
+            alt={activeMap?.name || ''}
+            draggable={false}
+            style={{
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transformOrigin: 'center center',
+              transition: isDragging ? 'none' : 'transform 75ms ease-out',
+            }}
+            className={`max-w-full max-h-full object-contain select-none shadow-2xl ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
+              }`}
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-3 text-text-muted">
+            <ImageOff className="w-12 h-12" />
+            <span className="text-xs font-bold uppercase tracking-wider">
+              {dict?.maps?.noMapsFound || 'No Tactical Callout Image Available'}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Floating Bottom Navigation Bar */}
+      <footer className="absolute bottom-4 right-4 sm:right-6 z-40 flex pointer-events-none">
         {/* Viewport Zoom & Pan Controls */}
         <div
           role="toolbar"

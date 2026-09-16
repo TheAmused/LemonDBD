@@ -76,7 +76,6 @@ export default {
   searchModeAria: '検索モード',
   expandRealmAria: 'レルムを展開',
   collapseRealmAria: 'レルムを折りたたむ',
-  twelveClockCallouts: '12時コールアウト',
   sqTilesUnit: 'タイル²',
   sqMetersSuffix: '({value} m²)',
   totemsSuffix: 'トーテム{count}個',

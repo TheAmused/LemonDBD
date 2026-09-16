@@ -527,5 +527,9 @@ test('generatorStorage: corrupted data & edge-case resilience', async (t) => {
     // Should safely fallback to true
     assert.strictEqual(getAudioEnabled(), true);
   });
+
+  await t.test('GENERATOR_STORAGE_KEY uses v9 to isolate pristine wheel generator state', () => {
+    assert.strictEqual(GENERATOR_STORAGE_KEY, 'lemon_dbd_generator_v9');
+  });
 });
 

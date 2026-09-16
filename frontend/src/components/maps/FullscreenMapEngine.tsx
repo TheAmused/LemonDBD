@@ -226,84 +226,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           </div>
         </div>
 
-        {/* Tactical Telemetry Strip -- always visible (horizontally scrollable
-         * on narrow viewports) rather than hidden below the `lg` breakpoint,
-         * so the map's size and other stats are actually reachable on every
-         * screen size, not just wide desktops. */}
-        {activeMap && (
-          <div
-            className="flex items-center gap-2 mt-2 pt-2 border-t border-border-color/60 overflow-x-auto text-xs [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {/* Size / sqT Badge */}
-            {activeMap.size_sq_tiles != null ? (
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
-                <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
-                <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
-                <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
-                {activeMap.size_sq_meters != null && (
-                  <span className="text-text-muted text-[10px] pl-0.5">
-                    {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
-                      '{value}',
-                      activeMap.size_sq_meters.toLocaleString()
-                    )}
-                  </span>
-                )}
-              </div>
-            ) : null}
-
-            {/* Layout Type */}
-            {activeMap.layout_type && (
-              <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
-                  activeMap.layout_type
-                )}`}
-              >
-                <Compass className="w-3.5 h-3.5 shrink-0" />
-                {activeMap.layout_type}
-              </span>
-            )}
-
-            {/* Pallet Density */}
-            {activeMap.pallet_density && (
-              <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getPalletBadge(
-                  activeMap.pallet_density
-                )}`}
-              >
-                <Layers className="w-3.5 h-3.5 shrink-0" />
-                {(dict?.maps?.palletsSuffix || '{density} Pallets').replace('{density}', activeMap.pallet_density)}
-              </span>
-            )}
-
-            {/* Maze Tiles */}
-            {activeMap.jungle_gyms_count != null && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
-                <Grid className="w-3.5 h-3.5 text-text-muted shrink-0" />
-                {(dict?.maps?.gymsSuffix || '{count} Gyms').replace('{count}', String(activeMap.jungle_gyms_count))}
-              </span>
-            )}
-
-            {/* Totems */}
-            {activeMap.totem_spawns_count != null && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
-                <Flame className="w-3.5 h-3.5 text-text-muted shrink-0" />
-                {(dict?.maps?.totemsSuffix || '{count} Totems').replace('{count}', String(activeMap.totem_spawns_count))}
-              </span>
-            )}
-
-            {/* Landmark structures */}
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
-              <Home className="w-3.5 h-3.5 shrink-0" />
-              {activeMap.is_shack ? (dict?.maps?.shackYes || 'Shack') : (dict?.maps?.shackNo || 'No Shack')}
-            </span>
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
-              <Building2 className="w-3.5 h-3.5 shrink-0" />
-              {activeMap.is_main_building
-                ? (dict?.maps?.mainBuildingYes || 'Main Building')
-                : (dict?.maps?.mainBuildingNo || 'No Main Building')}
-            </span>
-          </div>
-        )}
       </header>
 
       {/* Main Map Viewport Canvas */}
@@ -320,7 +242,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
         style={{ touchAction: 'none' }}
-        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-24 sm:pt-20 pb-16 px-4"
+        className="relative flex-1 w-full h-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-16 pb-36 sm:pb-24 px-4"
       >
         {imageSrc && !imageFailed ? (
           <img
@@ -347,13 +269,83 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       </div>
 
       {/* Floating Bottom Navigation Bar */}
-      <footer className="absolute bottom-4 inset-x-4 sm:inset-x-6 z-40 flex items-center justify-between pointer-events-none">
-        {/* Subtle Callout Instruction Note at Bottom Center-Left */}
-        <div className="pointer-events-auto hidden md:block">
-          {activeMap?.description && (
-            <span className="text-[11px] font-mono text-text-muted bg-bg-surface border border-border-color px-3 py-1.5 rounded-xl backdrop-blur-md">
-              {activeMap.description}
-            </span>
+      <footer className="absolute bottom-4 inset-x-4 sm:inset-x-6 z-40 flex flex-col items-stretch gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-3 pointer-events-none">
+        <div className="min-w-0">
+          {/* Tactical Telemetry Strip -- lives in the footer so the header stays one
+           * row tall; horizontally scrollable on narrow viewports. */}
+          {activeMap && (
+            <div
+              className="pointer-events-auto min-w-0 flex items-center gap-2 overflow-x-auto text-xs bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {/* Size / sqT Badge */}
+              {activeMap.size_sq_tiles != null ? (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
+                  <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
+                  <span className="font-bold text-text-primary text-xs">{activeMap.size_sq_tiles}</span>
+                  <span className="text-accent-red font-bold">{dict?.maps?.sqTilesUnit || 'sqT'}</span>
+                  {activeMap.size_sq_meters != null && (
+                    <span className="text-text-muted text-[10px] pl-0.5">
+                      {(dict?.maps?.sqMetersSuffix || '({value} m²)').replace(
+                        '{value}',
+                        activeMap.size_sq_meters.toLocaleString()
+                      )}
+                    </span>
+                  )}
+                </div>
+              ) : null}
+
+              {/* Layout Type */}
+              {activeMap.layout_type && (
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
+                    activeMap.layout_type
+                  )}`}
+                >
+                  <Compass className="w-3.5 h-3.5 shrink-0" />
+                  {activeMap.layout_type}
+                </span>
+              )}
+
+              {/* Pallet Density */}
+              {activeMap.pallet_density && (
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getPalletBadge(
+                    activeMap.pallet_density
+                  )}`}
+                >
+                  <Layers className="w-3.5 h-3.5 shrink-0" />
+                  {(dict?.maps?.palletsSuffix || '{density} Pallets').replace('{density}', activeMap.pallet_density)}
+                </span>
+              )}
+
+              {/* Maze Tiles */}
+              {activeMap.jungle_gyms_count != null && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
+                  <Grid className="w-3.5 h-3.5 text-text-muted shrink-0" />
+                  {(dict?.maps?.gymsSuffix || '{count} Gyms').replace('{count}', String(activeMap.jungle_gyms_count))}
+                </span>
+              )}
+
+              {/* Totems */}
+              {activeMap.totem_spawns_count != null && (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
+                  <Flame className="w-3.5 h-3.5 text-text-muted shrink-0" />
+                  {(dict?.maps?.totemsSuffix || '{count} Totems').replace('{count}', String(activeMap.totem_spawns_count))}
+                </span>
+              )}
+
+              {/* Landmark structures */}
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
+                <Home className="w-3.5 h-3.5 shrink-0" />
+                {activeMap.is_shack ? (dict?.maps?.shackYes || 'Shack') : (dict?.maps?.shackNo || 'No Shack')}
+              </span>
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
+                <Building2 className="w-3.5 h-3.5 shrink-0" />
+                {activeMap.is_main_building
+                  ? (dict?.maps?.mainBuildingYes || 'Main Building')
+                  : (dict?.maps?.mainBuildingNo || 'No Main Building')}
+              </span>
+            </div>
           )}
         </div>
 
@@ -361,7 +353,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         <div
           role="toolbar"
           aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}
-          className="pointer-events-auto ml-auto flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
+          className="pointer-events-auto ml-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
           <button
             type="button"

@@ -11,6 +11,7 @@ import {
   hasActiveMapFilters,
   getLayoutTypeLabel,
   getPalletAmountLabel,
+  getPalletAmountValue,
   mapMatchesFilters,
 } from '@/utils/mapUtils';
 import pl from '@/locales/pl';
@@ -84,4 +85,5 @@ test('layout and pallet labels are translated, with English fallbacks', () => {
   assert.strictEqual(getLayoutTypeLabel('Underwater', pl.maps), 'Underwater');
   assert.strictEqual(getPalletAmountLabel('Very High', pl.maps), 'Palety: Bardzo dużo');
   assert.strictEqual(getPalletAmountLabel('High'), 'Pallets: Many');
+  assert.strictEqual(getPalletAmountValue('Low', pl.maps), 'Mało');
 });

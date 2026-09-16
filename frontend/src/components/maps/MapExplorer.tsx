@@ -14,7 +14,7 @@ import {
   getLayoutTypeLabel,
   getLayoutTypeOptions,
   getMapImageSrc,
-  getPalletAmountLabel,
+  getPalletAmountValue,
   getPalletDensityOptions,
   hasActiveMapFilters,
   type MapAttributeFilters,
@@ -113,7 +113,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const palletOptions: DropdownOption[] = useMemo(
     () => [
       { value: ANY, label: mapsDict?.filterAnyPallets || 'Any pallet count' },
-      ...getPalletDensityOptions(maps).map((v) => ({ value: v, label: getPalletAmountLabel(v, mapsDict) })),
+      ...getPalletDensityOptions(maps).map((v) => ({ value: v, label: getPalletAmountValue(v, mapsDict) })),
     ],
     [maps, mapsDict]
   );

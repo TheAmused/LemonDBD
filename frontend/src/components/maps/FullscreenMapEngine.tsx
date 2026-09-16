@@ -12,6 +12,7 @@ import {
   Grid,
   Flame,
   Home,
+  Building2,
   Maximize2,
 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
@@ -170,6 +171,11 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     }
   };
 
+  const structureBadge = (present: boolean) =>
+    present
+      ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
+      : 'text-text-muted bg-bg-elevated border-border-color';
+
   const getLayoutBadge = (layout?: string) => {
     switch (layout) {
       case 'Indoor':
@@ -285,17 +291,16 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
               </span>
             )}
 
-            {/* Killer Shack */}
-            <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${activeMap.shack_has_basement
-                  ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
-                  : 'text-text-muted bg-bg-elevated border-border-color'
-                }`}
-            >
+            {/* Landmark structures */}
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
               <Home className="w-3.5 h-3.5 shrink-0" />
-              {activeMap.shack_has_basement
-                ? (dict?.maps?.shackBasementYes || 'Shack Basement')
-                : (dict?.maps?.shackBasementNo || 'No Shack')}
+              {activeMap.is_shack ? (dict?.maps?.shackYes || 'Shack') : (dict?.maps?.shackNo || 'No Shack')}
+            </span>
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
+              <Building2 className="w-3.5 h-3.5 shrink-0" />
+              {activeMap.is_main_building
+                ? (dict?.maps?.mainBuildingYes || 'Main Building')
+                : (dict?.maps?.mainBuildingNo || 'No Main Building')}
             </span>
           </div>
         )}

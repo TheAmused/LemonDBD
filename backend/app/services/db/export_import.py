@@ -709,7 +709,7 @@ class DatabaseExportImportService:
                         "name", "realm_id", "source_id", "description",
                         "callout_image_url", "callout_image_local_path", "translations",
                         "layout_type", "pallet_density", "jungle_gyms_count",
-                        "totem_spawns_count", "shack_has_basement",
+                        "totem_spawns_count", "is_shack", "is_main_building",
                         "size_sq_tiles", "size_sq_meters",
                     ]:
                         if k in mdata:

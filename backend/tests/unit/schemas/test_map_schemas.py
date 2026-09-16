@@ -7,7 +7,7 @@ from app.schemas.map import (
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
     DEFAULT_PALLET_DENSITY,
-    DEFAULT_SHACK_HAS_BASEMENT,
+    DEFAULT_IS_SHACK,
     DEFAULT_TOTEM_SPAWNS,
     MapRealmBase,
     MapRealmResponse,
@@ -65,7 +65,7 @@ def test_map_realm_base_default_values() -> None:
     assert model.pallet_density == DEFAULT_PALLET_DENSITY
     assert model.jungle_gyms_count == DEFAULT_JUNGLE_GYMS
     assert model.totem_spawns_count == DEFAULT_TOTEM_SPAWNS
-    assert model.shack_has_basement == DEFAULT_SHACK_HAS_BASEMENT
+    assert model.is_shack == DEFAULT_IS_SHACK
     assert model.size_sq_tiles is None
     assert model.size_sq_meters is None
 
@@ -81,14 +81,14 @@ def test_map_realm_base_explicit_values() -> None:
         pallet_density="Very High",
         jungle_gyms_count=0,
         totem_spawns_count=5,
-        shack_has_basement=False,
+        is_shack=False,
         size_sq_tiles=142.0,
         size_sq_meters=9088,
     )
     assert model.layout_type == "Indoor"
     assert model.pallet_density == "Very High"
     assert model.jungle_gyms_count == 0
-    assert model.shack_has_basement is False
+    assert model.is_shack is False
     assert model.size_sq_tiles == 142.0
     assert model.size_sq_meters == 9088
 
@@ -108,7 +108,7 @@ def test_map_realm_response_deserialization() -> None:
         "pallet_density": "Low",
         "jungle_gyms_count": 0,
         "totem_spawns_count": 5,
-        "shack_has_basement": False,
+        "is_shack": False,
         "size_sq_tiles": 113.5,
         "size_sq_meters": 7264,
         "callout_image_url": "https://example.com/midwich.gif",
@@ -120,6 +120,6 @@ def test_map_realm_response_deserialization() -> None:
     assert response.layout_type == "Indoor"
     assert response.pallet_density == "Low"
     assert response.jungle_gyms_count == 0
-    assert response.shack_has_basement is False
+    assert response.is_shack is False
     assert response.size_sq_tiles == 113.5
     assert response.size_sq_meters == 7264

@@ -10,6 +10,7 @@ import {
   getPalletDensityOptions,
   hasActiveMapFilters,
   mapMatchesFilters,
+  type MapAttributeFilters,
 } from '@/utils/mapUtils';
 
 function makeMap(overrides: Partial<MapRealm> & Pick<MapRealm, 'id' | 'name' | 'realm'>): MapRealm {
@@ -18,7 +19,8 @@ function makeMap(overrides: Partial<MapRealm> & Pick<MapRealm, 'id' | 'name' | '
     jungle_gyms_count: 3,
     totem_spawns_count: 5,
     pallet_density: 'Medium',
-    shack_has_basement: true,
+    is_shack: true,
+    is_main_building: true,
     size_sq_meters: 9500,
     ...overrides,
   };
@@ -26,7 +28,7 @@ function makeMap(overrides: Partial<MapRealm> & Pick<MapRealm, 'id' | 'name' | '
 
 const lodge = makeMap({ id: 1, name: 'Blood Lodge', realm: 'Autohaven Wreckers', pallet_density: 'High', size_sq_meters: 8448 });
 const azarov = makeMap({ id: 2, name: "Azarov's Resting Place", realm: 'Autohaven Wreckers', size_sq_meters: 11264 });
-const lab = makeMap({ id: 3, name: 'Hawkins Lab', realm: 'Hawkins', layout_type: 'Indoor', pallet_density: 'Very High', size_sq_meters: null });
+const lab = makeMap({ id: 3, name: 'Hawkins Lab', realm: 'Hawkins', layout_type: 'Indoor', pallet_density: 'Very High', size_sq_meters: null, is_shack: false, is_main_building: false });
 const groups = [
   { realm: 'Autohaven Wreckers', maps: [lodge, azarov] },
   { realm: 'Hawkins', maps: [lab] },
@@ -47,9 +49,19 @@ test('hasActiveMapFilters is false only for the empty filter set', () => {
 
 test('mapMatchesFilters combines every active filter', () => {
   assert.ok(mapMatchesFilters(lodge, EMPTY_MAP_FILTERS));
-  assert.ok(mapMatchesFilters(lodge, { layoutType: 'Outdoor', palletDensity: 'High', size: 'small' }));
-  assert.ok(!mapMatchesFilters(lodge, { layoutType: 'Outdoor', palletDensity: 'High', size: 'large' }));
+  assert.ok(mapMatchesFilters(lodge, { layoutType: 'Outdoor', palletDensity: 'High', size: 'small', structure: null }));
+  assert.ok(!mapMatchesFilters(lodge, { layoutType: 'Outdoor', palletDensity: 'High', size: 'large', structure: null }));
   assert.ok(!mapMatchesFilters(lab, { ...EMPTY_MAP_FILTERS, size: 'small' }), 'maps without a size never match a size filter');
+});
+
+test('mapMatchesFilters checks shack and main building presence', () => {
+  const only = (structure: MapAttributeFilters['structure']) => ({ ...EMPTY_MAP_FILTERS, structure });
+  assert.ok(mapMatchesFilters(lodge, only('shack')));
+  assert.ok(!mapMatchesFilters(lab, only('shack')));
+  assert.ok(mapMatchesFilters(lab, only('no_shack')));
+  assert.ok(mapMatchesFilters(lodge, only('main_building')));
+  assert.ok(mapMatchesFilters(lab, only('no_main_building')));
+  assert.ok(!mapMatchesFilters(lodge, only('no_main_building')));
 });
 
 test('option helpers list distinct values in display order', () => {

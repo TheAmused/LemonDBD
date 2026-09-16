@@ -7,7 +7,8 @@ DEFAULT_LAYOUT_TYPE = "Outdoor"
 DEFAULT_PALLET_DENSITY = "Medium"
 DEFAULT_JUNGLE_GYMS = 3
 DEFAULT_TOTEM_SPAWNS = 5
-DEFAULT_SHACK_HAS_BASEMENT = True
+DEFAULT_IS_SHACK = True
+DEFAULT_IS_MAIN_BUILDING = False
 DEFAULT_SOURCE_CODE = "hens333"
 DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
 
@@ -59,7 +60,8 @@ class MapRealmBase(BaseModel):
     pallet_density: str | None = DEFAULT_PALLET_DENSITY
     jungle_gyms_count: int | None = DEFAULT_JUNGLE_GYMS
     totem_spawns_count: int | None = DEFAULT_TOTEM_SPAWNS
-    shack_has_basement: bool | None = DEFAULT_SHACK_HAS_BASEMENT
+    is_shack: bool | None = DEFAULT_IS_SHACK
+    is_main_building: bool | None = DEFAULT_IS_MAIN_BUILDING
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
     translations: dict[str, Any] | None = None
@@ -82,7 +84,8 @@ class MapRealmResponse(BaseModel):
     pallet_density: str = DEFAULT_PALLET_DENSITY
     jungle_gyms_count: int = DEFAULT_JUNGLE_GYMS
     totem_spawns_count: int = DEFAULT_TOTEM_SPAWNS
-    shack_has_basement: bool = DEFAULT_SHACK_HAS_BASEMENT
+    is_shack: bool = DEFAULT_IS_SHACK
+    is_main_building: bool = DEFAULT_IS_MAIN_BUILDING
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
     description: str | None = None

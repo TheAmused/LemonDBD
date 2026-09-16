@@ -19,7 +19,7 @@ from app.schemas.map import (
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
     DEFAULT_PALLET_DENSITY,
-    DEFAULT_SHACK_HAS_BASEMENT,
+    DEFAULT_IS_SHACK,
     DEFAULT_SOURCE_CODE,
     DEFAULT_SOURCE_LABEL,
     DEFAULT_TOTEM_SPAWNS,
@@ -291,7 +291,7 @@ class TestMapSchemas:
         assert resp.jungle_gyms_count == DEFAULT_JUNGLE_GYMS
         assert resp.totem_spawns_count == DEFAULT_TOTEM_SPAWNS
         assert resp.pallet_density == DEFAULT_PALLET_DENSITY
-        assert resp.shack_has_basement == DEFAULT_SHACK_HAS_BASEMENT
+        assert resp.is_shack == DEFAULT_IS_SHACK
         assert resp.source == DEFAULT_SOURCE_CODE
         assert resp.source_label == DEFAULT_SOURCE_LABEL
 

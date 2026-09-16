@@ -965,7 +965,7 @@ def normalize(content_dir: Path, dry: bool) -> dict[str, Any]:
         row = prune(
             dict(m), "realm", "realm_id", "source", "source_label",
             "layout_type", "pallet_density", "jungle_gyms_count",
-            "totem_spawns_count", "shack_has_basement",
+            "totem_spawns_count", "is_shack", "is_main_building",
             # A byte-identical copy of callout_image_url on all 58 rows.
             "image_url",
             # `objectives` was empty on all 58 maps. `tiles` was 290 rows made

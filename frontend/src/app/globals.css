@@ -151,7 +151,8 @@
     /* 7.5:1 on #0a0a0c (AAA) */
     --text-muted: #888896;
     /* 4.8:1 on #141418 (AA Compliant - fixed from 3.6:1) */
-    --text-inverted: #0a0a0c;
+    /* Text on accent/image fills stays white in every theme */
+    --text-inverted: #ffffff;
   }
 
   html {

@@ -69,7 +69,6 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
       mapId: 1,
       availableMaps: [sampleOutdoorMap],
       backendBase: 'http://localhost:5000',
-      initialDrawerOpen: true,
       onClose: () => {},
     })
   );
@@ -77,12 +76,12 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
   assert.ok(html.includes("Azarov&#x27;s Resting Place") || html.includes("Azarov's Resting Place"));
   assert.ok(html.includes('Autohaven Wreckers'));
   assert.ok(html.includes('Outdoor'));
-  assert.ok(html.includes('176 sqT'));
+  assert.ok(html.includes('>176<'));
   assert.ok(html.includes('11,264 m²'));
   assert.ok(html.includes('Medium'));
   assert.ok(html.includes('4 Gyms'));
-  assert.ok(html.includes('5 Spawns'));
-  assert.ok(html.includes('Basement Possible'));
+  assert.ok(html.includes('5 Totems'));
+  assert.ok(html.includes('Shack Basement'));
 });
 
 test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 maze tiles', () => {
@@ -91,7 +90,6 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
       mapId: 43,
       availableMaps: [sampleIndoorMap],
       backendBase: 'http://localhost:5000',
-      initialDrawerOpen: true,
       onClose: () => {},
     })
   );
@@ -99,10 +97,10 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
   assert.ok(html.includes('The Game'));
   assert.ok(html.includes('Gideon Meat Plant'));
   assert.ok(html.includes('Indoor'));
-  assert.ok(html.includes('142 sqT'));
+  assert.ok(html.includes('>142<'));
   assert.ok(html.includes('9,088 m²'));
   assert.ok(html.includes('Very High'));
-  assert.ok(html.includes('0 (Corridors)'));
+  assert.ok(html.includes('0 Gyms'));
   assert.ok(html.includes('No Shack'));
 });
 
@@ -112,12 +110,11 @@ test('FullscreenMapEngine renders float tile size accurately', () => {
       mapId: 45,
       availableMaps: [sampleMidwichMap],
       backendBase: 'http://localhost:5000',
-      initialDrawerOpen: true,
       onClose: () => {},
     })
   );
 
   assert.ok(html.includes('Midwich Elementary School'));
-  assert.ok(html.includes('113.5 sqT'));
+  assert.ok(html.includes('>113.5<'));
   assert.ok(html.includes('7,264 m²'));
 });

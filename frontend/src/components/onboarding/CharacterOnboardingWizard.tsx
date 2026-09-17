@@ -23,12 +23,29 @@ import { LemonIcon } from '@/components/LemonIcon';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
-/** Skipped to directly after a language-triggered locale redirect, so the
- * wizard resumes on the roster instead of showing the intro/language steps
- * again -- navigating to a different `/[locale]/welcome` remounts this
- * component fresh, since `dict`/`locale` are resolved by the `[locale]`
- * layout server-side. */
-const POST_LANGUAGE_REDIRECT_KEY = 'onboarding_view_after_language_redirect';
+/** Which step to resume on after a language-triggered locale redirect.
+ * Navigating to a different `/[locale]/welcome` remounts this component
+ * fresh, since `dict`/`locale` are resolved by the `[locale]` layout
+ * server-side, so the step it was on has to survive the reload: picking a
+ * flag resumes on the language step (now translated), confirming it resumes
+ * on the roster. */
+const RESUME_VIEW_KEY = 'onboarding_view_after_language_redirect';
+
+type OnboardingView = 'intro' | 'language' | 'roster';
+
+/** The step and pre-selected language a fresh mount starts from.
+ * `stored` is the resume step a locale redirect left behind, if any; after
+ * such a redirect the locale in the URL *is* the language just picked, so it
+ * wins over the browser-language guess. */
+export function resolveOnboardingResume(
+  stored: string | null,
+  locale: string
+): { view: OnboardingView; language: string } {
+  if (stored === 'roster' || stored === 'language') {
+    return { view: stored, language: locale };
+  }
+  return { view: 'intro', language: detectDefaultLanguage(locale) };
+}
 
 /** Ace Visconti, by convention -- matched by id, which is the stable identity
  * of a content row. His display name is translated, so it is not usable as a
@@ -286,24 +303,40 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       setExpandedChapter(next);
     }
   };
-  const [view, setView] = useState<'intro' | 'language' | 'roster'>(() =>
-    typeof window !== 'undefined' && sessionStorage.getItem(POST_LANGUAGE_REDIRECT_KEY) ? 'roster' : 'intro'
-  );
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(() => detectDefaultLanguage(locale));
+  // Both initializers read the same key: it is only cleared in the mount
+  // effect below, which runs after all of them.
+  const readResume = () =>
+    resolveOnboardingResume(
+      typeof window !== 'undefined' ? sessionStorage.getItem(RESUME_VIEW_KEY) : null,
+      locale
+    );
+  const [view, setView] = useState<OnboardingView>(() => readResume().view);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(() => readResume().language);
   const [savingLanguage, setSavingLanguage] = useState(false);
 
   useEffect(() => {
-    sessionStorage.removeItem(POST_LANGUAGE_REDIRECT_KEY);
+    sessionStorage.removeItem(RESUME_VIEW_KEY);
   }, []);
+
+  /** Switches the whole wizard into the picked language right away: the
+   * dictionary comes from the `[locale]` segment, so the only way to
+   * re-translate what is on screen is to navigate there. */
+  const handleLanguageSelect = (language: string) => {
+    setSelectedLanguage(language);
+    if (language !== locale) {
+      sessionStorage.setItem(RESUME_VIEW_KEY, 'language');
+      router.push(`/${language}/welcome`);
+    }
+  };
 
   const handleLanguageContinue = async () => {
     setSavingLanguage(true);
+    // Set before awaiting: a redirect from a flag picked moments ago may still
+    // be in flight, and whichever mount wins has to land on the roster rather
+    // than bounce back to the language step.
+    sessionStorage.setItem(RESUME_VIEW_KEY, 'roster');
     await setPreferredLanguage(selectedLanguage);
     if (selectedLanguage !== locale) {
-      // Covers both possible outcomes of a [locale] segment change: if it
-      // remounts this component, the fresh instance reads this flag on
-      // mount; if it doesn't, the setView call below advances it directly.
-      sessionStorage.setItem(POST_LANGUAGE_REDIRECT_KEY, '1');
       router.push(`/${selectedLanguage}/welcome`);
     }
     setSavingLanguage(false);
@@ -618,7 +651,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               <button
                 key={lang.code}
                 type="button"
-                onClick={() => setSelectedLanguage(lang.code)}
+                onClick={() => handleLanguageSelect(lang.code)}
                 aria-pressed={selectedLanguage === lang.code}
                 className={`flex items-center gap-3 rounded-xl border px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer ${
                   selectedLanguage === lang.code

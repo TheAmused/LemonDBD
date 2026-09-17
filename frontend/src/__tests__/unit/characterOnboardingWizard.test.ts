@@ -6,6 +6,7 @@ import {
   groupCharactersByChapter,
   normalizeChapterKey,
   detectDefaultLanguage,
+  resolveOnboardingResume,
 } from '@/components/onboarding/CharacterOnboardingWizard';
 import type { OnboardingCharacter } from '@/components/onboarding/CharacterOnboardingWizard';
 
@@ -118,4 +119,31 @@ test('detectDefaultLanguage falls back to the current locale when the browser la
   } finally {
     if (original) Object.defineProperty(globalThis, 'navigator', original);
   }
+});
+
+test('resolveOnboardingResume starts a fresh visit on the intro step', () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  Object.defineProperty(globalThis, 'navigator', { value: { language: 'pl-PL' }, configurable: true });
+  try {
+    assert.deepStrictEqual(resolveOnboardingResume(null, 'en'), { view: 'intro', language: 'pl' });
+  } finally {
+    if (original) Object.defineProperty(globalThis, 'navigator', original);
+  }
+});
+
+test('resolveOnboardingResume keeps the picked language selected after a locale redirect', () => {
+  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  Object.defineProperty(globalThis, 'navigator', { value: { language: 'pl-PL' }, configurable: true });
+  try {
+    // The browser language is Polish, but German is what was just picked, so
+    // the locale in the URL has to win over the browser guess.
+    assert.deepStrictEqual(resolveOnboardingResume('language', 'de'), { view: 'language', language: 'de' });
+    assert.deepStrictEqual(resolveOnboardingResume('roster', 'de'), { view: 'roster', language: 'de' });
+  } finally {
+    if (original) Object.defineProperty(globalThis, 'navigator', original);
+  }
+});
+
+test('resolveOnboardingResume ignores an unrecognised stored step', () => {
+  assert.strictEqual(resolveOnboardingResume('nonsense', 'en').view, 'intro');
 });

@@ -5,7 +5,7 @@ import { CharacterOnboardingWizard } from '@/components/onboarding/CharacterOnbo
 import {
   groupCharactersByChapter,
   normalizeChapterKey,
-  detectDefaultLanguage,
+  resolveOnboardingView,
 } from '@/components/onboarding/CharacterOnboardingWizard';
 import type { OnboardingCharacter } from '@/components/onboarding/CharacterOnboardingWizard';
 
@@ -94,28 +94,12 @@ test('normalizeChapterKey matches names that differ only by a leading "The " or 
   assert.notStrictEqual(normalizeChapterKey('Chucky'), normalizeChapterKey('Jason'));
 });
 
-test('detectDefaultLanguage prefers a supported browser language over the current locale', () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', {
-    value: { language: 'pl-PL' },
-    configurable: true,
-  });
-  try {
-    assert.strictEqual(detectDefaultLanguage('en'), 'pl');
-  } finally {
-    if (original) Object.defineProperty(globalThis, 'navigator', original);
-  }
+test('resolveOnboardingView resumes the step a locale redirect left behind', () => {
+  assert.strictEqual(resolveOnboardingView('language'), 'language');
+  assert.strictEqual(resolveOnboardingView('roster'), 'roster');
 });
 
-test('detectDefaultLanguage falls back to the current locale when the browser language is unsupported', () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', {
-    value: { language: 'xx-XX' },
-    configurable: true,
-  });
-  try {
-    assert.strictEqual(detectDefaultLanguage('en'), 'en');
-  } finally {
-    if (original) Object.defineProperty(globalThis, 'navigator', original);
-  }
+test('resolveOnboardingView starts a fresh visit on the intro step', () => {
+  assert.strictEqual(resolveOnboardingView(null), 'intro');
+  assert.strictEqual(resolveOnboardingView('nonsense'), 'intro');
 });

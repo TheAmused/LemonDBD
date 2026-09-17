@@ -18,8 +18,6 @@ class TestBackfillMapRealms:
             callout_image_url="https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
             layout_type="Standard",
             jungle_gyms_count=4,
-            totem_spawns_count=5,
-            pallet_density="Medium",
             shack_has_basement=True,
         )
         db_session.add(row)
@@ -39,8 +37,6 @@ class TestBackfillMapRealms:
             callout_image_url="https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
             layout_type="Standard",
             jungle_gyms_count=4,
-            totem_spawns_count=5,
-            pallet_density="Medium",
             shack_has_basement=True,
         )
         db_session.add(row)
@@ -62,8 +58,6 @@ class TestBackfillMapRealms:
             callout_image_url="https://images.steamusercontent.com/x.jpg",
             layout_type="Standard",
             jungle_gyms_count=4,
-            totem_spawns_count=5,
-            pallet_density="Medium",
             shack_has_basement=True,
         )
         db_session.add(row)

@@ -18,11 +18,9 @@ from app.schemas.character import (
 from app.schemas.map import (
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
-    DEFAULT_PALLET_DENSITY,
     DEFAULT_IS_SHACK,
     DEFAULT_SOURCE_CODE,
     DEFAULT_SOURCE_LABEL,
-    DEFAULT_TOTEM_SPAWNS,
     MapRealmBase,
     MapRealmResponse,
     MapSourceBase,
@@ -289,8 +287,6 @@ class TestMapSchemas:
         )
         assert resp.layout_type == DEFAULT_LAYOUT_TYPE
         assert resp.jungle_gyms_count == DEFAULT_JUNGLE_GYMS
-        assert resp.totem_spawns_count == DEFAULT_TOTEM_SPAWNS
-        assert resp.pallet_density == DEFAULT_PALLET_DENSITY
         assert resp.is_shack == DEFAULT_IS_SHACK
         assert resp.source == DEFAULT_SOURCE_CODE
         assert resp.source_label == DEFAULT_SOURCE_LABEL

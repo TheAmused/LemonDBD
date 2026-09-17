@@ -309,8 +309,6 @@ def sync_maps_to_db(maps: list[MapData]) -> None:
                 image_url=m.callout_image_url or "",
                 layout_type="Standard",
                 jungle_gyms_count=4,
-                totem_spawns_count=5,
-                pallet_density="Medium",
                 shack_has_basement=True,
                 description=desc,
             )

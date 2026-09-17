@@ -6,11 +6,9 @@ from sqlalchemy.orm import Session
 from app.models.map import (
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
-    DEFAULT_PALLET_DENSITY,
-    DEFAULT_SHACK_HAS_BASEMENT,
+    DEFAULT_IS_SHACK,
     DEFAULT_SOURCE_CODE,
     DEFAULT_SOURCE_LABEL,
-    DEFAULT_TOTEM_SPAWNS,
     MapRealm,
     MapSource,
     Realm,
@@ -93,10 +91,9 @@ def test_map_realm_defaults_fallback(db_session: Session) -> None:
     db_session.commit()
 
     assert map_entry.layout_type == DEFAULT_LAYOUT_TYPE
-    assert map_entry.pallet_density == DEFAULT_PALLET_DENSITY
     assert map_entry.jungle_gyms_count == DEFAULT_JUNGLE_GYMS
-    assert map_entry.totem_spawns_count == DEFAULT_TOTEM_SPAWNS
-    assert map_entry.shack_has_basement == DEFAULT_SHACK_HAS_BASEMENT
+    assert map_entry.is_shack == DEFAULT_IS_SHACK
+    assert map_entry.is_main_building is False
     assert map_entry.size_sq_tiles is None
     assert map_entry.size_sq_meters is None
 
@@ -114,10 +111,9 @@ def test_map_realm_outdoor_attributes(db_session: Session) -> None:
         realm_id=realm.id,
         source_id=source.id,
         layout_type="Outdoor",
-        pallet_density="Medium",
         jungle_gyms_count=4,
-        totem_spawns_count=5,
-        shack_has_basement=True,
+        is_shack=True,
+        is_main_building=True,
         size_sq_tiles=176.0,
         size_sq_meters=11264,
         callout_image_url="https://example.com/azarov.webp",
@@ -128,20 +124,18 @@ def test_map_realm_outdoor_attributes(db_session: Session) -> None:
     db_session.commit()
 
     assert azarov.layout_type == "Outdoor"
-    assert azarov.pallet_density == "Medium"
     assert azarov.jungle_gyms_count == 4
-    assert azarov.totem_spawns_count == 5
-    assert azarov.shack_has_basement is True
+    assert azarov.is_shack is True
+    assert azarov.is_main_building is True
     assert azarov.size_sq_tiles == 176.0
     assert azarov.size_sq_meters == 11264
 
     data = azarov.to_dict(lang="de")
     assert data["name"] == "Azarovs Ruhestätte"
     assert data["layout_type"] == "Outdoor"
-    assert data["pallet_density"] == "Medium"
     assert data["jungle_gyms_count"] == 4
-    assert data["totem_spawns_count"] == 5
-    assert data["shack_has_basement"] is True
+    assert data["is_shack"] is True
+    assert data["is_main_building"] is True
     assert data["size_sq_tiles"] == 176.0
     assert data["size_sq_meters"] == 11264
     assert data["image_url"] == "https://example.com/azarov.webp"
@@ -160,10 +154,8 @@ def test_map_realm_indoor_attributes(db_session: Session) -> None:
         realm_id=realm.id,
         source_id=source.id,
         layout_type="Indoor",
-        pallet_density="Low",
         jungle_gyms_count=0,
-        totem_spawns_count=5,
-        shack_has_basement=False,
+        is_shack=False,
         size_sq_tiles=113.5,
         size_sq_meters=7264,
         callout_image_url="https://example.com/midwich.gif",
@@ -174,16 +166,15 @@ def test_map_realm_indoor_attributes(db_session: Session) -> None:
     db_session.commit()
 
     assert midwich.layout_type == "Indoor"
-    assert midwich.pallet_density == "Low"
     assert midwich.jungle_gyms_count == 0
-    assert midwich.shack_has_basement is False
+    assert midwich.is_shack is False
     assert midwich.size_sq_tiles == 113.5
     assert midwich.size_sq_meters == 7264
 
     data = midwich.to_dict(lang="ja")
     assert data["name"] == "ミッドウィッチ小学校"
     assert data["jungle_gyms_count"] == 0
-    assert data["shack_has_basement"] is False
+    assert data["is_shack"] is False
     assert data["size_sq_tiles"] == 113.5
     assert data["size_sq_meters"] == 7264
 
@@ -201,10 +192,8 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         realm_id=realm.id,
         source_id=source.id,
         layout_type="Indoor",
-        pallet_density="Very High",
         jungle_gyms_count=0,
-        totem_spawns_count=5,
-        shack_has_basement=False,
+        is_shack=False,
         size_sq_tiles=142.0,
         size_sq_meters=9088,
         description="Gideon callout map",
@@ -226,9 +215,8 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         "image_url",
         "layout_type",
         "jungle_gyms_count",
-        "totem_spawns_count",
-        "pallet_density",
-        "shack_has_basement",
+        "is_shack",
+        "is_main_building",
         "size_sq_tiles",
         "size_sq_meters",
         "description",

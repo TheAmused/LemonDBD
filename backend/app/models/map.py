@@ -26,10 +26,9 @@ DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
 
 #: Fallback layout figures if a map record has not defined specific values.
 DEFAULT_LAYOUT_TYPE = "Outdoor"
-DEFAULT_PALLET_DENSITY = "Medium"
 DEFAULT_JUNGLE_GYMS = 3
-DEFAULT_TOTEM_SPAWNS = 5
-DEFAULT_SHACK_HAS_BASEMENT = True
+DEFAULT_IS_SHACK = True
+DEFAULT_IS_MAIN_BUILDING = False
 
 
 class Realm(Base):
@@ -104,17 +103,13 @@ class MapRealm(Base):
     layout_type: Mapped[str] = mapped_column(
         String(50), nullable=False, default=DEFAULT_LAYOUT_TYPE
     )
-    pallet_density: Mapped[str] = mapped_column(
-        String(50), nullable=False, default=DEFAULT_PALLET_DENSITY
-    )
     jungle_gyms_count: Mapped[int] = mapped_column(
         Integer, nullable=False, default=DEFAULT_JUNGLE_GYMS
     )
-    totem_spawns_count: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=DEFAULT_TOTEM_SPAWNS
-    )
-    shack_has_basement: Mapped[bool] = mapped_column(
-        nullable=False, default=DEFAULT_SHACK_HAS_BASEMENT
+    # Which landmark structures the map has.
+    is_shack: Mapped[bool] = mapped_column(nullable=False, default=DEFAULT_IS_SHACK)
+    is_main_building: Mapped[bool] = mapped_column(
+        nullable=False, default=DEFAULT_IS_MAIN_BUILDING
     )
 
     # Size measurements (Wiki.gg: sqT = 8x8m tiles, sq_meters = sqT * 64)
@@ -155,16 +150,11 @@ class MapRealm(Base):
                 if self.jungle_gyms_count is not None
                 else DEFAULT_JUNGLE_GYMS
             ),
-            "totem_spawns_count": (
-                self.totem_spawns_count
-                if self.totem_spawns_count is not None
-                else DEFAULT_TOTEM_SPAWNS
-            ),
-            "pallet_density": self.pallet_density or DEFAULT_PALLET_DENSITY,
-            "shack_has_basement": (
-                self.shack_has_basement
-                if self.shack_has_basement is not None
-                else DEFAULT_SHACK_HAS_BASEMENT
+            "is_shack": self.is_shack if self.is_shack is not None else DEFAULT_IS_SHACK,
+            "is_main_building": (
+                self.is_main_building
+                if self.is_main_building is not None
+                else DEFAULT_IS_MAIN_BUILDING
             ),
             "size_sq_tiles": self.size_sq_tiles,
             "size_sq_meters": self.size_sq_meters,

@@ -26,8 +26,6 @@ def test_sync_maps_to_db_prunes_stale_rows_on_id_scheme_change(db_session: Sessi
                 source_label="Hens333 12-Clock Callouts",
                 layout_type="Standard",
                 jungle_gyms_count=4,
-                totem_spawns_count=5,
-                pallet_density="Medium",
                 shack_has_basement=True,
                 description="pre-fix stale row",
             )

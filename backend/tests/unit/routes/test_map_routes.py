@@ -27,10 +27,8 @@ def _seed_route_data(db_session: Session) -> None:
         realm_id=realm_gideon.id,
         source_id=source.id,
         layout_type="Indoor",
-        pallet_density="Very High",
         jungle_gyms_count=0,
-        totem_spawns_count=5,
-        shack_has_basement=False,
+        is_shack=False,
         size_sq_tiles=142.0,
         size_sq_meters=9088,
         callout_image_url="https://example.com/the_game.webp",
@@ -42,10 +40,8 @@ def _seed_route_data(db_session: Session) -> None:
         realm_id=realm_springwood.id,
         source_id=source.id,
         layout_type="Hybrid",
-        pallet_density="Medium",
         jungle_gyms_count=2,
-        totem_spawns_count=5,
-        shack_has_basement=True,
+        is_shack=True,
         size_sq_tiles=144.0,
         size_sq_meters=9216,
         callout_image_url="https://example.com/preschool1.webp",
@@ -84,10 +80,8 @@ def test_get_maps_endpoint_attributes(client: FlaskClient, db_session: Session) 
     the_game = next(m for m in data["maps"] if m["id"] == 43)
     assert the_game["name"] == "The Game"
     assert the_game["layout_type"] == "Indoor"
-    assert the_game["pallet_density"] == "Very High"
     assert the_game["jungle_gyms_count"] == 0
-    assert the_game["totem_spawns_count"] == 5
-    assert the_game["shack_has_basement"] is False
+    assert the_game["is_shack"] is False
     assert the_game["size_sq_tiles"] == 142.0
     assert the_game["size_sq_meters"] == 9088
 
@@ -104,7 +98,7 @@ def test_get_maps_filtering(client: FlaskClient, db_session: Session) -> None:
     assert len(maps_realm) == 1
     assert maps_realm[0]["name"] == "Preschool I"
     assert maps_realm[0]["layout_type"] == "Hybrid"
-    assert maps_realm[0]["shack_has_basement"] is True
+    assert maps_realm[0]["is_shack"] is True
 
     # Filter by search term
     resp_search = client.get("/api/v1/maps?search=Game")

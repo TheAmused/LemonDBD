@@ -23,9 +23,8 @@ export interface MapRealm {
   source_label?: string;
   layout_type: string;
   jungle_gyms_count: number;
-  totem_spawns_count: number;
-  pallet_density: string;
-  shack_has_basement: boolean;
+  is_shack: boolean;
+  is_main_building: boolean;
   size_sq_tiles?: number | null;
   size_sq_meters?: number | null;
   description?: string | null;

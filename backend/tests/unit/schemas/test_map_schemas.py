@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from app.schemas.map import (
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
+    DEFAULT_PALLET_DENSITY,
     DEFAULT_IS_SHACK,
     MapRealmBase,
     MapRealmResponse,
@@ -60,6 +61,7 @@ def test_map_realm_base_default_values() -> None:
     """Validate that MapRealmBase applies defaults when layout metrics are not provided."""
     model = MapRealmBase(name="Standard Test Map", realm_id=1, source_id=1)
     assert model.layout_type == DEFAULT_LAYOUT_TYPE
+    assert model.pallet_density == DEFAULT_PALLET_DENSITY
     assert model.jungle_gyms_count == DEFAULT_JUNGLE_GYMS
     assert model.is_shack == DEFAULT_IS_SHACK
     assert model.size_sq_tiles is None
@@ -74,12 +76,14 @@ def test_map_realm_base_explicit_values() -> None:
         realm_id=10,
         source_id=1,
         layout_type="Indoor",
+        pallet_density="Very High",
         jungle_gyms_count=0,
         is_shack=False,
         size_sq_tiles=142.0,
         size_sq_meters=9088,
     )
     assert model.layout_type == "Indoor"
+    assert model.pallet_density == "Very High"
     assert model.jungle_gyms_count == 0
     assert model.is_shack is False
     assert model.size_sq_tiles == 142.0
@@ -98,6 +102,7 @@ def test_map_realm_response_deserialization() -> None:
         "source": "hens333",
         "source_label": "Hens333 12-Clock Callouts",
         "layout_type": "Indoor",
+        "pallet_density": "Low",
         "jungle_gyms_count": 0,
         "is_shack": False,
         "size_sq_tiles": 113.5,
@@ -109,6 +114,7 @@ def test_map_realm_response_deserialization() -> None:
     assert response.id == 45
     assert response.name == "Midwich Elementary School"
     assert response.layout_type == "Indoor"
+    assert response.pallet_density == "Low"
     assert response.jungle_gyms_count == 0
     assert response.is_shack is False
     assert response.size_sq_tiles == 113.5

@@ -4,6 +4,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 DEFAULT_LAYOUT_TYPE = "Outdoor"
+DEFAULT_PALLET_DENSITY = "Medium"
 DEFAULT_JUNGLE_GYMS = 3
 DEFAULT_IS_SHACK = True
 DEFAULT_IS_MAIN_BUILDING = False
@@ -55,6 +56,7 @@ class MapRealmBase(BaseModel):
     callout_image_url: str | None = Field(None, max_length=500)
     callout_image_local_path: str | None = Field(None, max_length=255)
     layout_type: str | None = DEFAULT_LAYOUT_TYPE
+    pallet_density: str | None = DEFAULT_PALLET_DENSITY
     jungle_gyms_count: int | None = DEFAULT_JUNGLE_GYMS
     is_shack: bool | None = DEFAULT_IS_SHACK
     is_main_building: bool | None = DEFAULT_IS_MAIN_BUILDING
@@ -77,6 +79,7 @@ class MapRealmResponse(BaseModel):
     callout_image_local_path: str = ""
     image_url: str = ""
     layout_type: str = DEFAULT_LAYOUT_TYPE
+    pallet_density: str = DEFAULT_PALLET_DENSITY
     jungle_gyms_count: int = DEFAULT_JUNGLE_GYMS
     is_shack: bool = DEFAULT_IS_SHACK
     is_main_building: bool = DEFAULT_IS_MAIN_BUILDING

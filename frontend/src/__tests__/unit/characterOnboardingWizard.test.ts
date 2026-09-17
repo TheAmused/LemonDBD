@@ -5,7 +5,7 @@ import { CharacterOnboardingWizard } from '@/components/onboarding/CharacterOnbo
 import {
   groupCharactersByChapter,
   normalizeChapterKey,
-  resolveOnboardingResume,
+  resolveOnboardingView,
 } from '@/components/onboarding/CharacterOnboardingWizard';
 import type { OnboardingCharacter } from '@/components/onboarding/CharacterOnboardingWizard';
 
@@ -94,23 +94,12 @@ test('normalizeChapterKey matches names that differ only by a leading "The " or 
   assert.notStrictEqual(normalizeChapterKey('Chucky'), normalizeChapterKey('Jason'));
 });
 
-test('resolveOnboardingResume preselects the locale the site is already in', () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', { value: { language: 'pl-PL' }, configurable: true });
-  try {
-    // Reading the site in English must preselect English, whatever the
-    // browser's own language says.
-    assert.deepStrictEqual(resolveOnboardingResume(null, 'en'), { view: 'intro', language: 'en' });
-  } finally {
-    if (original) Object.defineProperty(globalThis, 'navigator', original);
-  }
+test('resolveOnboardingView resumes the step a locale redirect left behind', () => {
+  assert.strictEqual(resolveOnboardingView('language'), 'language');
+  assert.strictEqual(resolveOnboardingView('roster'), 'roster');
 });
 
-test('resolveOnboardingResume keeps the picked language selected after a locale redirect', () => {
-  assert.deepStrictEqual(resolveOnboardingResume('language', 'de'), { view: 'language', language: 'de' });
-  assert.deepStrictEqual(resolveOnboardingResume('roster', 'de'), { view: 'roster', language: 'de' });
-});
-
-test('resolveOnboardingResume ignores an unrecognised stored step', () => {
-  assert.strictEqual(resolveOnboardingResume('nonsense', 'en').view, 'intro');
+test('resolveOnboardingView starts a fresh visit on the intro step', () => {
+  assert.strictEqual(resolveOnboardingView(null), 'intro');
+  assert.strictEqual(resolveOnboardingView('nonsense'), 'intro');
 });

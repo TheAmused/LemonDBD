@@ -17,8 +17,6 @@ function makeMap(overrides: Partial<MapRealm> & Pick<MapRealm, 'id' | 'name' | '
   return {
     layout_type: 'Outdoor',
     jungle_gyms_count: 3,
-    totem_spawns_count: 5,
-    pallet_density: 'Medium',
     is_shack: true,
     is_main_building: true,
     size_sq_meters: 9500,

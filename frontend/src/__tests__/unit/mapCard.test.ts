@@ -16,8 +16,6 @@ const sampleMap: MapRealm = {
   source_label: 'Hens333 12-Clock Callouts',
   layout_type: 'Outdoor',
   jungle_gyms_count: 4,
-  totem_spawns_count: 5,
-  pallet_density: 'Medium',
   is_shack: true,
   is_main_building: true,
   size_sq_tiles: 176.0,

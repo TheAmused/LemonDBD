@@ -24,27 +24,15 @@ import { LemonIcon } from '@/components/LemonIcon';
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 /** Which step to resume on after a language-triggered locale redirect.
- * Navigating to a different `/[locale]/welcome` remounts this component
- * fresh, since `dict`/`locale` are resolved by the `[locale]` layout
- * server-side, so the step it was on has to survive the reload: picking a
- * flag resumes on the language step (now translated), confirming it resumes
- * on the roster. */
+ * `dict`/`locale` are resolved server-side by the `[locale]` layout, so
+ * navigating to a different `/[locale]/welcome` remounts this component fresh
+ * and the step it was on has to survive the reload. */
 const RESUME_VIEW_KEY = 'onboarding_view_after_language_redirect';
 
 type OnboardingView = 'intro' | 'language' | 'roster';
 
-/** The step and pre-selected language a fresh mount starts from.
- * `stored` is the resume step a locale redirect left behind, if any. The
- * language is the locale in the URL either way: on a first visit that is the
- * language the rest of the site is already being read in, and after a
- * redirect it is the language just picked. Guessing from `navigator.language`
- * instead used to preselect a flag that did not match a word on screen. */
-export function resolveOnboardingResume(
-  stored: string | null,
-  locale: string
-): { view: OnboardingView; language: string } {
-  const view: OnboardingView = stored === 'roster' || stored === 'language' ? stored : 'intro';
-  return { view, language: locale };
+export function resolveOnboardingView(stored: string | null): OnboardingView {
+  return stored === 'roster' || stored === 'language' ? stored : 'intro';
 }
 
 /** Ace Visconti, by convention -- matched by id, which is the stable identity
@@ -295,15 +283,12 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       setExpandedChapter(next);
     }
   };
-  // Both initializers read the same key: it is only cleared in the mount
-  // effect below, which runs after all of them.
-  const readResume = () =>
-    resolveOnboardingResume(
-      typeof window !== 'undefined' ? sessionStorage.getItem(RESUME_VIEW_KEY) : null,
-      locale
-    );
-  const [view, setView] = useState<OnboardingView>(() => readResume().view);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(() => readResume().language);
+  const [view, setView] = useState<OnboardingView>(() =>
+    resolveOnboardingView(typeof window !== 'undefined' ? sessionStorage.getItem(RESUME_VIEW_KEY) : null)
+  );
+  // The locale in the URL is the language the site is already being read in,
+  // and after a flag redirect it is the one just picked -- right in both cases.
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(locale);
   const [savingLanguage, setSavingLanguage] = useState(false);
 
   useEffect(() => {

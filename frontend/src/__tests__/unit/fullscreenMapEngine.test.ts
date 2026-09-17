@@ -76,8 +76,8 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
     })
   );
 
-  assert.ok(html.includes("Azarov&#x27;s Resting Place") || html.includes("Azarov's Resting Place"));
-  assert.ok(html.includes('Autohaven Wreckers'));
+  assert.ok(!html.includes('<h1'), 'the map name is not shown as a heading');
+  assert.ok(!html.includes('Autohaven Wreckers'), 'the realm is not shown');
   assert.ok(html.includes('Outdoor'));
   assert.ok(html.includes('>176<'));
   assert.ok(html.includes('11,264 m²'));
@@ -98,8 +98,7 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
     })
   );
 
-  assert.ok(html.includes('The Game'));
-  assert.ok(html.includes('Gideon Meat Plant'));
+  assert.ok(!html.includes('Gideon Meat Plant'), 'the realm is not shown');
   assert.ok(html.includes('Indoor'));
   assert.ok(html.includes('>142<'));
   assert.ok(html.includes('9,088 m²'));

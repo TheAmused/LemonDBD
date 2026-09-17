@@ -179,28 +179,10 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       aria-label={dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
       className="fixed inset-0 z-50 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary"
     >
-      {/* Top Tactical Command Ribbon */}
       <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           {activeMap && (
-            <div className="order-1 min-w-0">
-              <div className="flex items-center gap-1.5 leading-none mb-1">
-                <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-widest uppercase text-text-secondary">
-                  {activeMap.realm}
-                </span>
-              </div>
-              <h1 className="text-sm sm:text-base md:text-lg font-black text-text-primary tracking-wide truncate leading-tight">
-                {activeMap.name}
-              </h1>
-            </div>
-          )}
-
-          {/* Map stats: share the title row on wide screens, wrap below it on narrow ones. */}
-          {activeMap && (
-            <div
-              className="order-3 basis-full lg:order-2 lg:basis-auto lg:flex-1 min-w-0 flex flex-wrap items-center gap-1.5 text-xs lg:justify-center"
-            >
-              {/* Size / sqT Badge */}
+            <div className="min-w-0 flex-1 flex flex-wrap items-center gap-1.5 text-xs">
               {activeMap.size_sq_tiles != null ? (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
@@ -218,7 +200,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 </div>
               ) : null}
 
-              {/* Layout Type */}
               {activeMap.layout_type && (
                 <span
                   className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getLayoutBadge(
@@ -230,7 +211,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 </span>
               )}
 
-              {/* Landmark structures */}
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
                 <Home className="w-3.5 h-3.5 shrink-0" />
                 {activeMap.is_shack ? (dict?.maps?.shackYes || 'Shack') : (dict?.maps?.shackNo || 'No Shack')}
@@ -244,8 +224,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             </div>
           )}
 
-          {/* Right Header Actions */}
-          <div className="order-2 lg:order-3 flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={onClose}
@@ -256,10 +235,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             </button>
           </div>
         </div>
-
       </header>
 
-      {/* Main Map Viewport Canvas */}
       <div
         ref={containerRef}
         onWheel={handleWheel}
@@ -299,9 +276,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         )}
       </div>
 
-      {/* Floating Bottom Navigation Bar */}
       <footer className="absolute bottom-4 right-4 sm:right-6 z-40 flex pointer-events-none">
-        {/* Viewport Zoom & Pan Controls */}
         <div
           role="toolbar"
           aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}

@@ -11,6 +11,7 @@ from app.models.map import (
     DEFAULT_IS_SHACK,
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
+    DEFAULT_PALLET_DENSITY,
     DEFAULT_SOURCE_LABEL,
     DEFAULT_SOURCE_CODE,
 )
@@ -109,6 +110,11 @@ def fetch_maps(
                 r["jungle_gyms_count"]
                 if "jungle_gyms_count" in row_keys and r["jungle_gyms_count"] is not None
                 else DEFAULT_JUNGLE_GYMS
+            ),
+            "pallet_density": (
+                r["pallet_density"]
+                if "pallet_density" in row_keys and r["pallet_density"] is not None
+                else DEFAULT_PALLET_DENSITY
             ),
             "is_shack": (
                 bool(r["is_shack"])

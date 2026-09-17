@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.models.map import (
     DEFAULT_JUNGLE_GYMS,
     DEFAULT_LAYOUT_TYPE,
+    DEFAULT_PALLET_DENSITY,
     DEFAULT_IS_SHACK,
     DEFAULT_SOURCE_CODE,
     DEFAULT_SOURCE_LABEL,
@@ -91,6 +92,7 @@ def test_map_realm_defaults_fallback(db_session: Session) -> None:
     db_session.commit()
 
     assert map_entry.layout_type == DEFAULT_LAYOUT_TYPE
+    assert map_entry.pallet_density == DEFAULT_PALLET_DENSITY
     assert map_entry.jungle_gyms_count == DEFAULT_JUNGLE_GYMS
     assert map_entry.is_shack == DEFAULT_IS_SHACK
     assert map_entry.is_main_building is False
@@ -111,6 +113,7 @@ def test_map_realm_outdoor_attributes(db_session: Session) -> None:
         realm_id=realm.id,
         source_id=source.id,
         layout_type="Outdoor",
+        pallet_density="Medium",
         jungle_gyms_count=4,
         is_shack=True,
         is_main_building=True,
@@ -124,6 +127,7 @@ def test_map_realm_outdoor_attributes(db_session: Session) -> None:
     db_session.commit()
 
     assert azarov.layout_type == "Outdoor"
+    assert azarov.pallet_density == "Medium"
     assert azarov.jungle_gyms_count == 4
     assert azarov.is_shack is True
     assert azarov.is_main_building is True
@@ -133,6 +137,7 @@ def test_map_realm_outdoor_attributes(db_session: Session) -> None:
     data = azarov.to_dict(lang="de")
     assert data["name"] == "Azarovs Ruhestätte"
     assert data["layout_type"] == "Outdoor"
+    assert data["pallet_density"] == "Medium"
     assert data["jungle_gyms_count"] == 4
     assert data["is_shack"] is True
     assert data["is_main_building"] is True
@@ -154,6 +159,7 @@ def test_map_realm_indoor_attributes(db_session: Session) -> None:
         realm_id=realm.id,
         source_id=source.id,
         layout_type="Indoor",
+        pallet_density="Low",
         jungle_gyms_count=0,
         is_shack=False,
         size_sq_tiles=113.5,
@@ -166,6 +172,7 @@ def test_map_realm_indoor_attributes(db_session: Session) -> None:
     db_session.commit()
 
     assert midwich.layout_type == "Indoor"
+    assert midwich.pallet_density == "Low"
     assert midwich.jungle_gyms_count == 0
     assert midwich.is_shack is False
     assert midwich.size_sq_tiles == 113.5
@@ -192,6 +199,7 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         realm_id=realm.id,
         source_id=source.id,
         layout_type="Indoor",
+        pallet_density="Very High",
         jungle_gyms_count=0,
         is_shack=False,
         size_sq_tiles=142.0,
@@ -215,6 +223,7 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         "image_url",
         "layout_type",
         "jungle_gyms_count",
+        "pallet_density",
         "is_shack",
         "is_main_building",
         "size_sq_tiles",

@@ -27,6 +27,7 @@ def _seed_route_data(db_session: Session) -> None:
         realm_id=realm_gideon.id,
         source_id=source.id,
         layout_type="Indoor",
+        pallet_density="Very High",
         jungle_gyms_count=0,
         is_shack=False,
         size_sq_tiles=142.0,
@@ -40,6 +41,7 @@ def _seed_route_data(db_session: Session) -> None:
         realm_id=realm_springwood.id,
         source_id=source.id,
         layout_type="Hybrid",
+        pallet_density="Medium",
         jungle_gyms_count=2,
         is_shack=True,
         size_sq_tiles=144.0,
@@ -80,6 +82,7 @@ def test_get_maps_endpoint_attributes(client: FlaskClient, db_session: Session) 
     the_game = next(m for m in data["maps"] if m["id"] == 43)
     assert the_game["name"] == "The Game"
     assert the_game["layout_type"] == "Indoor"
+    assert the_game["pallet_density"] == "Very High"
     assert the_game["jungle_gyms_count"] == 0
     assert the_game["is_shack"] is False
     assert the_game["size_sq_tiles"] == 142.0

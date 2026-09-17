@@ -23,6 +23,7 @@ export interface MapRealm {
   source_label?: string;
   layout_type: string;
   jungle_gyms_count: number;
+  pallet_density: string;
   is_shack: boolean;
   is_main_building: boolean;
   size_sq_tiles?: number | null;

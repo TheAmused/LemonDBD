@@ -5,7 +5,6 @@ import { CharacterOnboardingWizard } from '@/components/onboarding/CharacterOnbo
 import {
   groupCharactersByChapter,
   normalizeChapterKey,
-  detectDefaultLanguage,
   resolveOnboardingResume,
 } from '@/components/onboarding/CharacterOnboardingWizard';
 import type { OnboardingCharacter } from '@/components/onboarding/CharacterOnboardingWizard';
@@ -95,53 +94,21 @@ test('normalizeChapterKey matches names that differ only by a leading "The " or 
   assert.notStrictEqual(normalizeChapterKey('Chucky'), normalizeChapterKey('Jason'));
 });
 
-test('detectDefaultLanguage prefers a supported browser language over the current locale', () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', {
-    value: { language: 'pl-PL' },
-    configurable: true,
-  });
-  try {
-    assert.strictEqual(detectDefaultLanguage('en'), 'pl');
-  } finally {
-    if (original) Object.defineProperty(globalThis, 'navigator', original);
-  }
-});
-
-test('detectDefaultLanguage falls back to the current locale when the browser language is unsupported', () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', {
-    value: { language: 'xx-XX' },
-    configurable: true,
-  });
-  try {
-    assert.strictEqual(detectDefaultLanguage('en'), 'en');
-  } finally {
-    if (original) Object.defineProperty(globalThis, 'navigator', original);
-  }
-});
-
-test('resolveOnboardingResume starts a fresh visit on the intro step', () => {
+test('resolveOnboardingResume preselects the locale the site is already in', () => {
   const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
   Object.defineProperty(globalThis, 'navigator', { value: { language: 'pl-PL' }, configurable: true });
   try {
-    assert.deepStrictEqual(resolveOnboardingResume(null, 'en'), { view: 'intro', language: 'pl' });
+    // Reading the site in English must preselect English, whatever the
+    // browser's own language says.
+    assert.deepStrictEqual(resolveOnboardingResume(null, 'en'), { view: 'intro', language: 'en' });
   } finally {
     if (original) Object.defineProperty(globalThis, 'navigator', original);
   }
 });
 
 test('resolveOnboardingResume keeps the picked language selected after a locale redirect', () => {
-  const original = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
-  Object.defineProperty(globalThis, 'navigator', { value: { language: 'pl-PL' }, configurable: true });
-  try {
-    // The browser language is Polish, but German is what was just picked, so
-    // the locale in the URL has to win over the browser guess.
-    assert.deepStrictEqual(resolveOnboardingResume('language', 'de'), { view: 'language', language: 'de' });
-    assert.deepStrictEqual(resolveOnboardingResume('roster', 'de'), { view: 'roster', language: 'de' });
-  } finally {
-    if (original) Object.defineProperty(globalThis, 'navigator', original);
-  }
+  assert.deepStrictEqual(resolveOnboardingResume('language', 'de'), { view: 'language', language: 'de' });
+  assert.deepStrictEqual(resolveOnboardingResume('roster', 'de'), { view: 'roster', language: 'de' });
 });
 
 test('resolveOnboardingResume ignores an unrecognised stored step', () => {

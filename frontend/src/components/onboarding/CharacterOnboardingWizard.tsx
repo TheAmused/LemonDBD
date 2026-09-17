@@ -34,17 +34,17 @@ const RESUME_VIEW_KEY = 'onboarding_view_after_language_redirect';
 type OnboardingView = 'intro' | 'language' | 'roster';
 
 /** The step and pre-selected language a fresh mount starts from.
- * `stored` is the resume step a locale redirect left behind, if any; after
- * such a redirect the locale in the URL *is* the language just picked, so it
- * wins over the browser-language guess. */
+ * `stored` is the resume step a locale redirect left behind, if any. The
+ * language is the locale in the URL either way: on a first visit that is the
+ * language the rest of the site is already being read in, and after a
+ * redirect it is the language just picked. Guessing from `navigator.language`
+ * instead used to preselect a flag that did not match a word on screen. */
 export function resolveOnboardingResume(
   stored: string | null,
   locale: string
 ): { view: OnboardingView; language: string } {
-  if (stored === 'roster' || stored === 'language') {
-    return { view: stored, language: locale };
-  }
-  return { view: 'intro', language: detectDefaultLanguage(locale) };
+  const view: OnboardingView = stored === 'roster' || stored === 'language' ? stored : 'intro';
+  return { view, language: locale };
 }
 
 /** Ace Visconti, by convention -- matched by id, which is the stable identity
@@ -62,14 +62,6 @@ const CHAPTER_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
   { minWidth: 1024, columns: 3 },
   { minWidth: 640, columns: 2 },
 ];
-
-/** Prefers the visitor's browser language if it's one of ours, else falls
- * back to whichever locale the wizard is already being viewed in. */
-export function detectDefaultLanguage(currentLocale: string): string {
-  if (typeof navigator === 'undefined') return currentLocale;
-  const browserLang = navigator.language?.split('-')[0];
-  return LANGUAGES.some((l) => l.code === browserLang) ? browserLang! : currentLocale;
-}
 
 export interface ChapterBanner {
   banner_url: string | null;

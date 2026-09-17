@@ -7,11 +7,8 @@ import {
   filterAndSortRealmGroups,
   getLayoutTypeOptions,
   getMapSizeBucket,
-  getPalletDensityOptions,
   hasActiveMapFilters,
   getLayoutTypeLabel,
-  getPalletAmountLabel,
-  getPalletAmountValue,
   mapMatchesFilters,
 } from '@/utils/mapUtils';
 import pl from '@/locales/pl';
@@ -29,9 +26,9 @@ function makeMap(overrides: Partial<MapRealm> & Pick<MapRealm, 'id' | 'name' | '
   };
 }
 
-const lodge = makeMap({ id: 1, name: 'Blood Lodge', realm: 'Autohaven Wreckers', pallet_density: 'High', size_sq_meters: 8448 });
+const lodge = makeMap({ id: 1, name: 'Blood Lodge', realm: 'Autohaven Wreckers', size_sq_meters: 8448 });
 const azarov = makeMap({ id: 2, name: "Azarov's Resting Place", realm: 'Autohaven Wreckers', size_sq_meters: 11264 });
-const lab = makeMap({ id: 3, name: 'Hawkins Lab', realm: 'Hawkins', layout_type: 'Indoor', pallet_density: 'Very High', size_sq_meters: null, is_shack: false, is_main_building: false });
+const lab = makeMap({ id: 3, name: 'Hawkins Lab', realm: 'Hawkins', layout_type: 'Indoor', size_sq_meters: null, is_shack: false, is_main_building: false });
 const groups = [
   { realm: 'Autohaven Wreckers', maps: [lodge, azarov] },
   { realm: 'Hawkins', maps: [lab] },
@@ -52,15 +49,14 @@ test('hasActiveMapFilters is false only for the empty filter set', () => {
 
 test('mapMatchesFilters combines every active filter', () => {
   assert.ok(mapMatchesFilters(lodge, EMPTY_MAP_FILTERS));
-  assert.ok(mapMatchesFilters(lodge, { layoutType: 'Outdoor', palletDensity: 'High', size: 'small' }));
-  assert.ok(!mapMatchesFilters(lodge, { layoutType: 'Outdoor', palletDensity: 'High', size: 'large' }));
+  assert.ok(mapMatchesFilters(lodge, { layoutType: 'Outdoor', size: 'small' }));
+  assert.ok(!mapMatchesFilters(lodge, { layoutType: 'Outdoor', size: 'large' }));
   assert.ok(!mapMatchesFilters(lab, { ...EMPTY_MAP_FILTERS, size: 'small' }), 'maps without a size never match a size filter');
 });
 
-test('option helpers list distinct values in display order', () => {
+test('getLayoutTypeOptions lists distinct layouts alphabetically', () => {
   const all = [lodge, azarov, lab];
   assert.deepStrictEqual(getLayoutTypeOptions(all), ['Indoor', 'Outdoor']);
-  assert.deepStrictEqual(getPalletDensityOptions(all), ['Medium', 'High', 'Very High']);
 });
 
 test('filterAndSortRealmGroups drops empty realms and keeps only matching maps', () => {
@@ -79,11 +75,8 @@ test('filterAndSortRealmGroups orders realms and maps Z to A', () => {
   );
 });
 
-test('layout and pallet labels are translated, with English fallbacks', () => {
+test('layout labels are translated, with English fallbacks', () => {
   assert.strictEqual(getLayoutTypeLabel('Outdoor', pl.maps), 'Otwarty');
   assert.strictEqual(getLayoutTypeLabel('Outdoor'), 'Outdoor');
   assert.strictEqual(getLayoutTypeLabel('Underwater', pl.maps), 'Underwater');
-  assert.strictEqual(getPalletAmountLabel('Very High', pl.maps), 'Palety: Bardzo dużo');
-  assert.strictEqual(getPalletAmountLabel('High'), 'Pallets: Many');
-  assert.strictEqual(getPalletAmountValue('Low', pl.maps), 'Mało');
 });

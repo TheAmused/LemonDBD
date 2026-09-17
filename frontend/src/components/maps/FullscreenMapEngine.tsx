@@ -8,16 +8,13 @@ import {
   RotateCcw,
   ImageOff,
   Compass,
-  Layers,
-  Grid,
-  Flame,
   Home,
   Building2,
   Maximize2,
 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
-import { getLayoutTypeLabel, getMapImageSrc, getPalletAmountLabel } from '@/utils/mapUtils';
+import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -158,19 +155,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     setPan({ x: 0, y: 0 });
   }, []);
 
-  const getPalletBadge = (density?: string) => {
-    switch (density) {
-      case 'Very High':
-      case 'High':
-        return 'text-accent-green bg-accent-green/10 border-accent-green/40';
-      case 'Low':
-        return 'text-accent-red bg-accent-red/10 border-accent-red/40';
-      case 'Medium':
-      default:
-        return 'text-accent-amber bg-accent-amber/10 border-accent-amber/40';
-    }
-  };
-
   const structureBadge = (present: boolean) =>
     present
       ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
@@ -243,34 +227,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
                 >
                   <Compass className="w-3.5 h-3.5 shrink-0" />
                   {getLayoutTypeLabel(activeMap.layout_type, dict?.maps)}
-                </span>
-              )}
-
-              {/* Pallet Density */}
-              {activeMap.pallet_density && (
-                <span
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl border font-semibold text-xs shrink-0 ${getPalletBadge(
-                    activeMap.pallet_density
-                  )}`}
-                >
-                  <Layers className="w-3.5 h-3.5 shrink-0" />
-                  {getPalletAmountLabel(activeMap.pallet_density, dict?.maps)}
-                </span>
-              )}
-
-              {/* Maze Tiles */}
-              {activeMap.jungle_gyms_count != null && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
-                  <Grid className="w-3.5 h-3.5 text-text-muted shrink-0" />
-                  {(dict?.maps?.gymsSuffix || '{count} Gyms').replace('{count}', String(activeMap.jungle_gyms_count))}
-                </span>
-              )}
-
-              {/* Totems */}
-              {activeMap.totem_spawns_count != null && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-border-color text-text-secondary font-mono text-xs shrink-0">
-                  <Flame className="w-3.5 h-3.5 text-text-muted shrink-0" />
-                  {(dict?.maps?.totemsSuffix || '{count} Totems').replace('{count}', String(activeMap.totem_spawns_count))}
                 </span>
               )}
 

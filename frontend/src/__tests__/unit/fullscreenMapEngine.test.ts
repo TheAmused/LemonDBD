@@ -81,9 +81,9 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
   assert.ok(html.includes('Outdoor'));
   assert.ok(html.includes('>176<'));
   assert.ok(html.includes('11,264 m²'));
-  assert.ok(html.includes('Pallets: Average'));
-  assert.ok(html.includes('4 Gyms'));
-  assert.ok(html.includes('5 Totems'));
+  assert.ok(!html.includes('Pallets'), 'pallet amount is not shown');
+  assert.ok(!html.includes('Gyms'), 'jungle gym count stays in data only');
+  assert.ok(!html.includes('Totems'), 'totem count is not shown');
   assert.ok(html.includes('>Shack<'));
   assert.ok(html.includes('>Main Building<'));
 });
@@ -103,8 +103,6 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
   assert.ok(html.includes('Indoor'));
   assert.ok(html.includes('>142<'));
   assert.ok(html.includes('9,088 m²'));
-  assert.ok(html.includes('Pallets: Very many'));
-  assert.ok(html.includes('0 Gyms'));
   assert.ok(html.includes('No Shack'));
   assert.ok(html.includes('No Main Building'));
 });

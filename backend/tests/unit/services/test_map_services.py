@@ -34,6 +34,7 @@ def _seed_map_catalog(db_session: Session) -> None:
         realm_id=autohaven.id,
         source_id=source.id,
         layout_type="Outdoor",
+        pallet_density="Medium",
         jungle_gyms_count=4,
         is_shack=True,
         size_sq_tiles=176.0,
@@ -46,6 +47,7 @@ def _seed_map_catalog(db_session: Session) -> None:
         realm_id=gideon.id,
         source_id=source.id,
         layout_type="Indoor",
+        pallet_density="Very High",
         jungle_gyms_count=0,
         is_shack=False,
         size_sq_tiles=142.0,
@@ -57,6 +59,7 @@ def _seed_map_catalog(db_session: Session) -> None:
         realm_id=silenthill.id,
         source_id=source.id,
         layout_type="Indoor",
+        pallet_density="Low",
         jungle_gyms_count=0,
         is_shack=False,
         size_sq_tiles=113.5,
@@ -108,6 +111,7 @@ def test_fetch_maps_filter_by_realm(db_session: Session) -> None:
     results = service.get_maps(realm="Gideon Meat Plant")
     assert len(results) == 1
     assert results[0]["name"] == "The Game"
+    assert results[0]["pallet_density"] == "Very High"
 
     all_results = service.get_maps(realm="all")
     assert len(all_results) == 3
@@ -163,6 +167,7 @@ def test_fetch_maps_raw_sqlite_fallback() -> None:
                 "source_code": "hens333",
                 "source_label": "Hens333 12-Clock Callouts",
                 "layout_type": "Indoor",
+                "pallet_density": "Low",
                 "jungle_gyms_count": 0,
                 "is_shack": 0,
                 "is_main_building": 1,
@@ -179,6 +184,7 @@ def test_fetch_maps_raw_sqlite_fallback() -> None:
     row = results[0]
     assert row["id"] == 99
     assert row["layout_type"] == "Indoor"
+    assert row["pallet_density"] == "Low"
     assert row["jungle_gyms_count"] == 0
     assert row["is_shack"] is False
     assert row["is_main_building"] is True

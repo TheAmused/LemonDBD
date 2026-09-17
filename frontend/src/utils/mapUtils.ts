@@ -57,8 +57,6 @@ export type MapSizeBucket = 'small' | 'medium' | 'large';
 export const MAP_SIZE_SMALL_MAX = 9000;
 export const MAP_SIZE_MEDIUM_MAX = 10000;
 
-const PALLET_DENSITY_ORDER = ['Very Low', 'Low', 'Medium', 'High', 'Very High'];
-
 export function getMapSizeBucket(sizeSqMeters: number | null | undefined): MapSizeBucket | null {
   if (sizeSqMeters == null) return null;
   if (sizeSqMeters < MAP_SIZE_SMALL_MAX) return 'small';
@@ -69,13 +67,11 @@ export function getMapSizeBucket(sizeSqMeters: number | null | undefined): MapSi
 /** `null` on a field means "any value". */
 export interface MapAttributeFilters {
   layoutType: string | null;
-  palletDensity: string | null;
   size: MapSizeBucket | null;
 }
 
 export const EMPTY_MAP_FILTERS: MapAttributeFilters = {
   layoutType: null,
-  palletDensity: null,
   size: null,
 };
 
@@ -85,7 +81,6 @@ export function hasActiveMapFilters(filters: MapAttributeFilters): boolean {
 
 export function mapMatchesFilters(map: MapRealm, filters: MapAttributeFilters): boolean {
   if (filters.layoutType !== null && map.layout_type !== filters.layoutType) return false;
-  if (filters.palletDensity !== null && map.pallet_density !== filters.palletDensity) return false;
   if (filters.size !== null && getMapSizeBucket(map.size_sq_meters) !== filters.size) return false;
   return true;
 }
@@ -93,17 +88,6 @@ export function mapMatchesFilters(map: MapRealm, filters: MapAttributeFilters): 
 /** Distinct layout types present in the data, alphabetically. */
 export function getLayoutTypeOptions(maps: MapRealm[]): string[] {
   return [...new Set(maps.map((m) => m.layout_type).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-}
-
-/** Distinct pallet densities present in the data, from lowest to highest. */
-export function getPalletDensityOptions(maps: MapRealm[]): string[] {
-  const rank = (v: string) => {
-    const i = PALLET_DENSITY_ORDER.indexOf(v);
-    return i === -1 ? PALLET_DENSITY_ORDER.length : i;
-  };
-  return [...new Set(maps.map((m) => m.pallet_density).filter(Boolean))].sort(
-    (a, b) => rank(a) - rank(b) || a.localeCompare(b)
-  );
 }
 
 export type MapSortOrder = 'az' | 'za';
@@ -134,13 +118,6 @@ const LAYOUT_LABELS: Record<string, LabelEntry> = {
   Hybrid: ['layoutHybrid', 'Hybrid'],
 };
 
-const PALLET_AMOUNT_LABELS: Record<string, LabelEntry> = {
-  Low: ['palletsLow', 'Few'],
-  Medium: ['palletsMedium', 'Average'],
-  High: ['palletsHigh', 'Many'],
-  'Very High': ['palletsVeryHigh', 'Very many'],
-};
-
 function translateValue(labels: Record<string, LabelEntry>, value: string, dict?: MapsDictionary): string {
   const entry = labels[value];
   return entry ? dict?.[entry[0]] || entry[1] : value;
@@ -149,14 +126,4 @@ function translateValue(labels: Record<string, LabelEntry>, value: string, dict?
 /** Localized name of a map's layout type ("Outdoor" -> "Otwarty"). */
 export function getLayoutTypeLabel(value: string, dict?: MapsDictionary): string {
   return translateValue(LAYOUT_LABELS, value, dict);
-}
-
-/** Localized pallet amount on its own ("High" -> "Many"). */
-export function getPalletAmountValue(value: string, dict?: MapsDictionary): string {
-  return translateValue(PALLET_AMOUNT_LABELS, value, dict);
-}
-
-/** Localized pallet count phrase ("High" -> "Pallets: Many"). */
-export function getPalletAmountLabel(value: string, dict?: MapsDictionary): string {
-  return (dict?.palletsAmount || 'Pallets: {amount}').replace('{amount}', getPalletAmountValue(value, dict));
 }

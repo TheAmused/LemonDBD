@@ -3,7 +3,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, Compass, Layers, Maximize2, ArrowDownAZ, X } from 'lucide-react';
+import { Search, ImageOff, Compass, Maximize2, ArrowDownAZ, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
@@ -14,8 +14,6 @@ import {
   getLayoutTypeLabel,
   getLayoutTypeOptions,
   getMapImageSrc,
-  getPalletAmountValue,
-  getPalletDensityOptions,
   hasActiveMapFilters,
   type MapAttributeFilters,
   type MapSizeBucket,
@@ -107,13 +105,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     () => [
       { value: ANY, label: mapsDict?.filterAnyLayout || 'Any layout' },
       ...getLayoutTypeOptions(maps).map((v) => ({ value: v, label: getLayoutTypeLabel(v, mapsDict) })),
-    ],
-    [maps, mapsDict]
-  );
-  const palletOptions: DropdownOption[] = useMemo(
-    () => [
-      { value: ANY, label: mapsDict?.filterAnyPallets || 'Any pallet count' },
-      ...getPalletDensityOptions(maps).map((v) => ({ value: v, label: getPalletAmountValue(v, mapsDict) })),
     ],
     [maps, mapsDict]
   );
@@ -279,13 +270,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               options={layoutOptions}
               icon={<Compass className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.layoutLabel || 'Layout'}
-            />
-            <CustomDropdown
-              value={filters.palletDensity ?? ANY}
-              onChange={(v) => setFilter('palletDensity', v === ANY ? null : v)}
-              options={palletOptions}
-              icon={<Layers className="h-3.5 w-3.5" />}
-              ariaLabel={mapsDict?.palletDensityLabel || 'Pallet Count'}
             />
             <CustomDropdown
               value={filters.size ?? ANY}

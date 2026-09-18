@@ -21,19 +21,22 @@ function makePerk(overrides: Partial<Perk>): Perk {
     description: '',
     icon_url: '',
     icon_local_path: '',
+    curse_category: 'general',
     ...overrides,
   };
 }
 
-const exhaustionPerk = makePerk({ name: 'Sprint Burst', description: 'Causes Exhaustion for 40 seconds' });
-const hexPerk = makePerk({ name: 'Hex: Ruin', description: 'A Hex that affects generator regression' });
-const boonPerk = makePerk({ name: 'Boon: Circle of Healing', description: 'A Boon totem perk' });
-const memePerk = makePerk({ name: 'Power Struggle', description: 'Drop a pallet while being carried' });
-const negativePerk = makePerk({ name: 'No Mither', description: 'Start injured and broken' });
-const standardPerk1 = makePerk({ name: 'Bond', description: 'See survivor auras within range' });
-const standardPerk2 = makePerk({ name: 'Iron Will', description: 'Lowers grunts of pain' });
-const standardPerk3 = makePerk({ name: 'Kindred', description: 'Aura reading when hooked' });
-const standardPerk4 = makePerk({ name: 'Deja Vu', description: 'Highlights three generators' });
+// curse_category drives the mutator logic under test now, not name/description
+// keyword matching -- these fixtures carry the real backend classification.
+const exhaustionPerk = makePerk({ name: 'Sprint Burst', description: 'Causes Exhaustion for 40 seconds', curse_category: 'exhaustion' });
+const hexPerk = makePerk({ name: 'Hex: Ruin', description: 'A Hex that affects generator regression', curse_category: 'hex' });
+const boonPerk = makePerk({ name: 'Boon: Circle of Healing', description: 'A Boon totem perk', curse_category: 'boon' });
+const memePerk = makePerk({ name: 'Power Struggle', description: 'Drop a pallet while being carried', curse_category: 'meme' });
+const negativePerk = makePerk({ name: 'No Mither', description: 'Start injured and broken', curse_category: 'handicap' });
+const standardPerk1 = makePerk({ name: 'Bond', description: 'See survivor auras within range', curse_category: 'aura_reading' });
+const standardPerk2 = makePerk({ name: 'Iron Will', description: 'Lowers grunts of pain', curse_category: 'chase' });
+const standardPerk3 = makePerk({ name: 'Kindred', description: 'Aura reading when hooked', curse_category: 'aura_reading' });
+const standardPerk4 = makePerk({ name: 'Deja Vu', description: 'Highlights three generators', curse_category: 'aura_reading' });
 
 const noExhaustionMutator = CHAOS_MUTATORS.find((m) => m.id === 'no_exhaustion')!;
 const blindnessMutator = CHAOS_MUTATORS.find((m) => m.id === 'blindness')!;

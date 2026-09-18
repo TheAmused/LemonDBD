@@ -611,6 +611,7 @@ class DatabaseExportImportService:
                     "name", "survivor_id", "killer_id", "alternate_name",
                     "is_generic_counterpart", "is_teachable", "role",
                     "description", "icon_url", "icon_local_path", "translations",
+                    "perk_type",
                 ],
                 defaults=lambda row: {
                     "name": row.get("name") or "",

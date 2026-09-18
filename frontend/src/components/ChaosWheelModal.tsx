@@ -2,7 +2,7 @@
 // frontend/src/components/ChaosWheelModal.tsx
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Skull, Sparkles, X, Check, Trash2, RotateCcw } from 'lucide-react';
+import { Skull, Sparkles, X, Check, Trash2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { ChaosMutator } from '@/types/chaos';
 import { CHAOS_MUTATORS, getChaosMutatorsForRole } from '@/constants/chaosMutators';
@@ -360,27 +360,21 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
               </div>
             )}
 
-            {/* Action row */}
+            {/* Action row -- the curse is already applied to app state the
+                instant the spin lands (see onSelectMutator in the spin
+                animation above), so this is just a "done, close the modal"
+                button, not a separate apply step. The wheel's own "Spin
+                Chaos Wheel!" button above re-spins the exact same way, so
+                there is no separate "Spin Again" action here anymore. */}
             <div className="flex items-center gap-2 flex-wrap">
-              {/* Apply & Close */}
+              {/* Close */}
               <button
                 type="button"
                 onClick={onClose}
                 className="flex items-center gap-1.5 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-accent-green/15 text-accent-green border border-accent-green/30 hover:bg-accent-green/25 transition-colors cursor-pointer"
               >
                 <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                {(dict?.generator as any)?.chaosApplyAndClose || 'Apply & Close'}
-              </button>
-
-              {/* Spin Again */}
-              <button
-                type="button"
-                onClick={spinChaosWheel}
-                disabled={isSpinning}
-                className="flex items-center gap-1.5 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-bg-elevated border border-border-color hover:bg-bg-elevated/80 transition-colors cursor-pointer disabled:opacity-50"
-              >
-                <RotateCcw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                {(dict?.generator as any)?.chaosSpinAgain || 'Spin Again'}
+                {(dict?.generator as any)?.chaosApplyAndClose || 'Close'}
               </button>
 
               {/* Clear */}

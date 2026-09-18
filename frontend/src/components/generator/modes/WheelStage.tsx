@@ -7,7 +7,7 @@ import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { getPerkIconUrl } from '@/utils/perkUtils';
-import { isPerkBlockedByMutator, filterPerksByMutator } from '../lib/perkPicker';
+import { isPerkBlockedByMutator, getPerkWeight } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
@@ -526,15 +526,35 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         if (perk) pagePerksWithSlot.push({ slot: s, perk });
       }
 
-      const allowedPerks = filterPerksByMutator(pagePerksWithSlot.map((e) => e.perk), activeMutator);
-      const allowedSlots = pagePerksWithSlot
-        .filter((e) => allowedPerks.includes(e.perk))
-        .map((e) => e.slot);
-
-      const targetSlot =
-        allowedSlots.length > 0
-          ? allowedSlots[Math.floor(Math.random() * allowedSlots.length)]
-          : Math.floor(Math.random() * maxSlotsOnPage) + 1;
+      // Every mutator here is a soft probability adjustment -- never a hard
+      // filter. Narrowing "allowed slots" down to only matching (or only
+      // non-matching) perks turned an advertised "-90% chance" or "4x/5x
+      // boosted chance" into the wheel landing on nothing else, ever (a
+      // real bug that shipped here before). Instead, weight every slot on
+      // the page via the same `getPerkWeight` used by the other draw modes
+      // and pick among all of them, so the odds shift without anything
+      // ever becoming truly impossible to land on.
+      let targetSlot: number;
+      if (pagePerksWithSlot.length > 0) {
+        const weights = pagePerksWithSlot.map((e) => getPerkWeight(e.perk, activeMutator));
+        const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+        if (totalWeight <= 0) {
+          targetSlot = Math.floor(Math.random() * maxSlotsOnPage) + 1;
+        } else {
+          let r = Math.random() * totalWeight;
+          let chosenSlot = pagePerksWithSlot[0].slot;
+          for (let i = 0; i < pagePerksWithSlot.length; i++) {
+            r -= weights[i];
+            if (r <= 0) {
+              chosenSlot = pagePerksWithSlot[i].slot;
+              break;
+            }
+          }
+          targetSlot = chosenSlot;
+        }
+      } else {
+        targetSlot = Math.floor(Math.random() * maxSlotsOnPage) + 1;
+      }
 
       const targetIndex = (targetPage - 1) * perksPerPage + (targetSlot - 1);
       const targetPerk = sortedPerks[targetIndex] || sortedPerks[0];

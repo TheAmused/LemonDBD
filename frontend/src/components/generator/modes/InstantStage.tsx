@@ -18,6 +18,13 @@ export interface InstantStageProps {
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
+  /** Called synchronously the instant a new roll starts, before any perk
+   * becomes visible -- lets the parent reset `revealedSlots` to all-hidden
+   * right away instead of only at `onRollComplete` (several hundred ms
+   * later), which used to let a freshly-rolled perk flash unobscured under
+   * Curse of Blindness if the same slot had been revealed on the previous
+   * roll. */
+  onRollStart?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -31,6 +38,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   activePlayablePerks,
   activeMutator,
   onRollComplete,
+  onRollStart,
   revealedSlots,
   onRevealSlot,
   onSelectPerk,
@@ -52,6 +60,8 @@ export const InstantStage: React.FC<InstantStageProps> = ({
 
   const handleRoll = () => {
     if (activePlayablePerks.length === 0) return;
+
+    onRollStart?.();
 
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);

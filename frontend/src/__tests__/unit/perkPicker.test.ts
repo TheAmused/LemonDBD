@@ -9,6 +9,7 @@ import {
   filterPerksByMutator,
   computeEligiblePool,
   computePlayablePool,
+  getRepeatWeight,
   pickRandomLoadout,
   buildDrawnSlots,
   isHexPerk,
@@ -212,10 +213,104 @@ test('pickRandomLoadout: returns at most pool.length perks when the pool is smal
   assert.strictEqual(picked.length, 2);
 });
 
-test('pickRandomLoadout: respects the active mutator filter before picking', () => {
-  const pool = [makePerk({ name: 'Hex: Ruin' }), makePerk({ name: 'Boon: Shadow Step' }), makePerk({ name: 'Iron Will' })];
-  const picked = pickRandomLoadout(pool, hexBoonMutator, 4);
-  assert.ok(picked.every((p) => p.name.startsWith('Hex:') || p.name.startsWith('Boon:')));
+test('pickRandomLoadout: no_exhaustion is a soft ~90% reduction, not a hard exclude -- exhaustion perks stay possible', () => {
+  // Regression test for the opposite mistake: no_exhaustion must lower the
+  // odds of drawing an exhaustion perk (via getPerkWeight's 0.10 multiplier),
+  // not remove them from the pool entirely. Across enough draws from a pool
+  // that's mostly exhaustion perks, at least one should still get picked.
+  const pool = [
+    makePerk({ name: 'Dead Hard' }),
+    makePerk({ name: 'Sprint Burst' }),
+    makePerk({ name: 'Balanced Landing' }),
+    makePerk({ name: 'Lithe' }),
+    makePerk({ name: 'Overcome' }),
+    makePerk({ name: 'Iron Will' }),
+  ];
+
+  let sawExhaustionPerk = false;
+  for (let i = 0; i < 500; i++) {
+    const picked = pickRandomLoadout(pool, noExhaustionMutator, 1);
+    if (picked.some((p) => isExhaustionPerk(p))) {
+      sawExhaustionPerk = true;
+      break;
+    }
+  }
+  assert.ok(
+    sawExhaustionPerk,
+    'no_exhaustion must still be able to draw an exhaustion perk occasionally -- it reduces the chance, it does not forbid it'
+  );
+});
+
+test('pickRandomLoadout: soft-boosts hex/boon perks under hex_boon_only WITHOUT excluding every other perk', () => {
+  // Regression test for a real bug: pickRandomLoadout used to pre-filter the
+  // candidate pool down to ONLY hex/boon perks for "boost" mutators like
+  // hex_boon_only, turning an advertised 5x boosted CHANCE into perks of
+  // every other type becoming literally impossible to draw. Non-hex/boon
+  // perks must still be able to come up -- just less often.
+  const pool = [
+    makePerk({ name: 'Hex: Ruin' }),
+    makePerk({ name: 'Boon: Shadow Step' }),
+    makePerk({ name: 'Iron Will' }),
+    makePerk({ name: 'Kindred' }),
+    makePerk({ name: 'Spine Chill' }),
+    makePerk({ name: 'Windows of Opportunity' }),
+  ];
+
+  let sawNonHexBoonPerk = false;
+  for (let i = 0; i < 200; i++) {
+    const picked = pickRandomLoadout(pool, hexBoonMutator, 1);
+    if (picked.some((p) => !p.name.startsWith('Hex:') && !p.name.startsWith('Boon:'))) {
+      sawNonHexBoonPerk = true;
+      break;
+    }
+  }
+  assert.ok(sawNonHexBoonPerk, 'hex_boon_only must still be able to draw non-hex/boon perks -- it boosts odds, it does not exclude');
+});
+
+test('getRepeatWeight: down-weights already-drawn perks instead of excluding them', () => {
+  const perk = makePerk({ name: 'Kindred' });
+  assert.strictEqual(getRepeatWeight(perk, null), 1.0);
+  assert.strictEqual(getRepeatWeight(perk, undefined), 1.0);
+  assert.strictEqual(getRepeatWeight(perk, ['Iron Will']), 1.0);
+  assert.ok(getRepeatWeight(perk, ['Kindred']) < 1.0 && getRepeatWeight(perk, ['Kindred']) > 0);
+  assert.strictEqual(getRepeatWeight(perk, new Set(['Kindred'])), getRepeatWeight(perk, ['Kindred']));
+});
+
+test('pickRandomLoadout: No-Repeat + a boost curse combine as pure probability, never a hard dead end', () => {
+  // Regression test: No-Repeat used to be enforced upstream by hard-removing
+  // drawn perks from the pool before pickRandomLoadout ever saw them. Combined
+  // with a curse that boosts a whole perk category (e.g. Boon Ritual), once
+  // every perk in that category had been drawn once, the category became
+  // permanently unpickable for the rest of the session -- "a hard filter
+  // stacked on a hard filter" instead of two chances multiplying together.
+  // Now the caller is expected to pass the FULL pool plus a drawnPerkNames
+  // list, and pickRandomLoadout must still occasionally produce a drawn perk.
+  const pool = [
+    makePerk({ name: 'Hex: Ruin' }),
+    makePerk({ name: 'Boon: Shadow Step' }),
+    makePerk({ name: 'Iron Will' }),
+    makePerk({ name: 'Kindred' }),
+  ];
+  const drawnNames = ['Hex: Ruin', 'Boon: Shadow Step'];
+
+  let sawDrawnHexOrBoonAgain = false;
+  for (let i = 0; i < 1000; i++) {
+    const picked = pickRandomLoadout(pool, hexBoonMutator, 1, drawnNames);
+    if (picked.some((p) => drawnNames.includes(p.name))) {
+      sawDrawnHexOrBoonAgain = true;
+      break;
+    }
+  }
+  assert.ok(
+    sawDrawnHexOrBoonAgain,
+    'a boosted-category perk that was already drawn must still be reachable (heavily down-weighted), not permanently excluded'
+  );
+});
+
+test('pickRandomLoadout: without a drawnPerkNames list, behaves exactly as before (no regression for callers that omit it)', () => {
+  const pool = Array.from({ length: 6 }, (_, i) => makePerk({ name: `Perk ${i}` }));
+  const picked = pickRandomLoadout(pool, null, 3);
+  assert.strictEqual(picked.length, 3);
 });
 
 test('buildDrawnSlots: computes page/slot coordinates from the perk\'s index in the sorted pool', () => {

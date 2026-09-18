@@ -101,6 +101,7 @@ def serialize_perk(p: Perk) -> dict[str, Any]:
         "icon_local_path": p.icon_local_path,
         "survivor_id": p.survivor_id,
         "killer_id": p.killer_id,
+        "curse_category": p.curse_category,
         "translations": p.translations or {},
     }
 

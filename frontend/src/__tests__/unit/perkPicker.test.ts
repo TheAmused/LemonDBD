@@ -33,6 +33,7 @@ function makePerk(overrides: Partial<Perk>): Perk {
     description: '',
     icon_url: '',
     icon_local_path: '',
+    curse_category: 'general',
     ...overrides,
   };
 }
@@ -70,36 +71,39 @@ const memeMutator: ChaosMutator = {
   textColor: '',
 };
 
-test('isExhaustionPerk: matches known exhaustion perk names case/whitespace-insensitively', () => {
-  assert.ok(isExhaustionPerk(makePerk({ name: '  Dead Hard  ' })));
-  assert.ok(isExhaustionPerk(makePerk({ name: 'SPRINT BURST' })));
-  assert.ok(!isExhaustionPerk(makePerk({ name: 'Iron Will' })));
+test('isExhaustionPerk: driven by curse_category, not perk name', () => {
+  assert.ok(isExhaustionPerk(makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' })));
+  assert.ok(isExhaustionPerk(makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })));
+  assert.ok(!isExhaustionPerk(makePerk({ name: 'Iron Will', curse_category: 'chase' })));
 });
 
-test('isExhaustionPerk: matches perks whose description mentions exhaustion', () => {
-  assert.ok(isExhaustionPerk(makePerk({ name: 'Made-Up Perk', description: 'You become Exhausted for 60 seconds.' })));
-  assert.ok(isExhaustionPerk(makePerk({ name: 'Made-Up Perk', description: 'Suffer from the Exhaustion status effect.' })));
+test('isExhaustionPerk: a perk whose description merely mentions exhaustion (e.g. removing it) is NOT classified exhaustion unless curse_category says so', () => {
+  // Regression test: the old description-keyword matcher false-positived on
+  // any mention of "exhausted"/"exhaustion" in the text, including perks
+  // that REDUCE existing exhaustion rather than inflict it on their own
+  // user. curse_category is the backend's ground truth classification and
+  // must be respected even when the description contains those words.
+  assert.ok(!isExhaustionPerk(makePerk({ name: 'Vigil', description: 'Lose Exhausted faster.', curse_category: 'general' })));
 });
 
-test('isHexOrBoonPerk: matches Hex:/Boon: prefixes in name or description', () => {
-  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Hex: Ruin' })));
-  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Boon: Circle of Healing' })));
-  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Made-Up', description: 'Applies a Hex: effect.' })));
-  assert.ok(!isHexOrBoonPerk(makePerk({ name: 'Sprint Burst' })));
+test('isHexOrBoonPerk: driven by curse_category', () => {
+  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Hex: Ruin', curse_category: 'hex' })));
+  assert.ok(isHexOrBoonPerk(makePerk({ name: 'Boon: Circle of Healing', curse_category: 'boon' })));
+  assert.ok(!isHexOrBoonPerk(makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })));
 });
 
-test('isMemePerk: matches names in the MEME_PERK_NAMES set', () => {
-  assert.ok(isMemePerk(makePerk({ name: 'No Mither' })));
-  assert.ok(isMemePerk(makePerk({ name: '  Plot Twist  ' })));
-  assert.ok(!isMemePerk(makePerk({ name: 'Sprint Burst' })));
+test('isMemePerk: driven by curse_category', () => {
+  assert.ok(isMemePerk(makePerk({ name: 'No Mither', curse_category: 'meme' })));
+  assert.ok(isMemePerk(makePerk({ name: 'Plot Twist', curse_category: 'meme' })));
+  assert.ok(!isMemePerk(makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })));
 });
 
-test('isPerkBlockedByMutator: only no_exhaustion blocks, and only exhaustion perks', () => {
-  assert.ok(isPerkBlockedByMutator(makePerk({ name: 'Dead Hard' }), noExhaustionMutator));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Iron Will' }), noExhaustionMutator));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard' }), hexBoonMutator));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard' }), null));
-  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard' }), undefined));
+test('isPerkBlockedByMutator: only no_exhaustion blocks, and only exhaustion-category perks', () => {
+  assert.ok(isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' }), noExhaustionMutator));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Iron Will', curse_category: 'chase' }), noExhaustionMutator));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' }), hexBoonMutator));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' }), null));
+  assert.ok(!isPerkBlockedByMutator(makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' }), undefined));
 });
 
 test('filterPerksByMutator: returns all perks unchanged when mutator is null/undefined', () => {
@@ -108,16 +112,16 @@ test('filterPerksByMutator: returns all perks unchanged when mutator is null/und
   assert.deepStrictEqual(filterPerksByMutator(perks, undefined), perks);
 });
 
-test('getPerkWeight: assigns lower weight to exhaustion perks under no_exhaustion', () => {
-  const exhaustionPerk = makePerk({ name: 'Dead Hard' });
-  const standardPerk = makePerk({ name: 'Iron Will' });
+test('getPerkWeight: assigns lower weight to exhaustion-category perks under no_exhaustion', () => {
+  const exhaustionPerk = makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' });
+  const standardPerk = makePerk({ name: 'Iron Will', curse_category: 'chase' });
   assert.strictEqual(getPerkWeight(exhaustionPerk, noExhaustionMutator), 0.10);
   assert.strictEqual(getPerkWeight(standardPerk, noExhaustionMutator), 1.0);
 });
 
-test('getPerkWeight: assigns lower weight to aura perks under blindness', () => {
-  const auraPerk = makePerk({ name: 'Bond' });
-  const standardPerk = makePerk({ name: 'Iron Will' });
+test('getPerkWeight: assigns lower weight to aura_reading-category perks under blindness', () => {
+  const auraPerk = makePerk({ name: 'Bond', curse_category: 'aura_reading' });
+  const standardPerk = makePerk({ name: 'Iron Will', curse_category: 'chase' });
   const blindnessMutator: ChaosMutator = {
     id: 'blindness',
     name: 'Curse of Blindness',
@@ -132,26 +136,30 @@ test('getPerkWeight: assigns lower weight to aura perks under blindness', () => 
   assert.strictEqual(getPerkWeight(standardPerk, blindnessMutator), 1.0);
 });
 
-test('filterPerksByMutator: hex_boon_only keeps only hex/boon perks among the pool', () => {
-  const perks = [makePerk({ name: 'Hex: Ruin' }), makePerk({ name: 'Boon: Shadow Step' }), makePerk({ name: 'Iron Will' })];
+test('filterPerksByMutator: hex_boon_only keeps only hex/boon-category perks among the pool', () => {
+  const perks = [
+    makePerk({ name: 'Hex: Ruin', curse_category: 'hex' }),
+    makePerk({ name: 'Boon: Shadow Step', curse_category: 'boon' }),
+    makePerk({ name: 'Iron Will', curse_category: 'chase' }),
+  ];
   const result = filterPerksByMutator(perks, hexBoonMutator);
   assert.strictEqual(result.length, 2);
-  assert.ok(result.every((p) => p.name.startsWith('Hex:') || p.name.startsWith('Boon:')));
+  assert.ok(result.every((p) => p.curse_category === 'hex' || p.curse_category === 'boon'));
 });
 
 test('filterPerksByMutator: hex_boon_only falls back to the full pool when no hex/boon perks exist', () => {
-  const perks = [makePerk({ name: 'Iron Will' }), makePerk({ name: 'Sprint Burst' })];
+  const perks = [makePerk({ name: 'Iron Will', curse_category: 'chase' }), makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })];
   const result = filterPerksByMutator(perks, hexBoonMutator);
   assert.deepStrictEqual(result, perks);
 });
 
-test('filterPerksByMutator: meme_loadout keeps only meme perks, falling back when none exist', () => {
-  const perksWithMeme = [makePerk({ name: 'No Mither' }), makePerk({ name: 'Iron Will' })];
+test('filterPerksByMutator: meme_loadout keeps only meme-category perks, falling back when none exist', () => {
+  const perksWithMeme = [makePerk({ name: 'No Mither', curse_category: 'meme' }), makePerk({ name: 'Iron Will', curse_category: 'chase' })];
   const resultWith = filterPerksByMutator(perksWithMeme, memeMutator);
   assert.strictEqual(resultWith.length, 1);
   assert.strictEqual(resultWith[0].name, 'No Mither');
 
-  const perksWithoutMeme = [makePerk({ name: 'Iron Will' }), makePerk({ name: 'Sprint Burst' })];
+  const perksWithoutMeme = [makePerk({ name: 'Iron Will', curse_category: 'chase' }), makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })];
   const resultWithout = filterPerksByMutator(perksWithoutMeme, memeMutator);
   assert.deepStrictEqual(resultWithout, perksWithoutMeme);
 });
@@ -212,18 +220,18 @@ test('pickRandomLoadout: returns at most pool.length perks when the pool is smal
   assert.strictEqual(picked.length, 2);
 });
 
-test('pickRandomLoadout: no_exhaustion is a soft ~90% reduction, not a hard exclude -- exhaustion perks stay possible', () => {
+test('pickRandomLoadout: no_exhaustion is a soft ~90% reduction, not a hard exclude -- exhaustion-category perks stay possible', () => {
   // Regression test for the opposite mistake: no_exhaustion must lower the
   // odds of drawing an exhaustion perk (via getPerkWeight's 0.10 multiplier),
   // not remove them from the pool entirely. Across enough draws from a pool
   // that's mostly exhaustion perks, at least one should still get picked.
   const pool = [
-    makePerk({ name: 'Dead Hard' }),
-    makePerk({ name: 'Sprint Burst' }),
-    makePerk({ name: 'Balanced Landing' }),
-    makePerk({ name: 'Lithe' }),
-    makePerk({ name: 'Overcome' }),
-    makePerk({ name: 'Iron Will' }),
+    makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' }),
+    makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' }),
+    makePerk({ name: 'Balanced Landing', curse_category: 'exhaustion' }),
+    makePerk({ name: 'Lithe', curse_category: 'exhaustion' }),
+    makePerk({ name: 'Overcome', curse_category: 'exhaustion' }),
+    makePerk({ name: 'Iron Will', curse_category: 'chase' }),
   ];
 
   let sawExhaustionPerk = false;
@@ -247,18 +255,18 @@ test('pickRandomLoadout: soft-boosts hex/boon perks under hex_boon_only WITHOUT 
   // every other type becoming literally impossible to draw. Non-hex/boon
   // perks must still be able to come up -- just less often.
   const pool = [
-    makePerk({ name: 'Hex: Ruin' }),
-    makePerk({ name: 'Boon: Shadow Step' }),
-    makePerk({ name: 'Iron Will' }),
-    makePerk({ name: 'Kindred' }),
-    makePerk({ name: 'Spine Chill' }),
-    makePerk({ name: 'Windows of Opportunity' }),
+    makePerk({ name: 'Hex: Ruin', curse_category: 'hex' }),
+    makePerk({ name: 'Boon: Shadow Step', curse_category: 'boon' }),
+    makePerk({ name: 'Iron Will', curse_category: 'chase' }),
+    makePerk({ name: 'Kindred', curse_category: 'aura_reading' }),
+    makePerk({ name: 'Spine Chill', curse_category: 'general' }),
+    makePerk({ name: 'Windows of Opportunity', curse_category: 'aura_reading' }),
   ];
 
   let sawNonHexBoonPerk = false;
   for (let i = 0; i < 200; i++) {
     const picked = pickRandomLoadout(pool, hexBoonMutator, 1);
-    if (picked.some((p) => !p.name.startsWith('Hex:') && !p.name.startsWith('Boon:'))) {
+    if (picked.some((p) => p.curse_category !== 'hex' && p.curse_category !== 'boon')) {
       sawNonHexBoonPerk = true;
       break;
     }
@@ -274,10 +282,10 @@ test('pickRandomLoadout: No-Repeat + a curse combine as two hard filters, not a 
   // removed from the pool passed in, it must NEVER reappear, no matter how
   // many draws happen or how hard Boon Ritual boosts that category.
   const fullPool = [
-    makePerk({ name: 'Hex: Ruin' }),
-    makePerk({ name: 'Boon: Shadow Step' }),
-    makePerk({ name: 'Iron Will' }),
-    makePerk({ name: 'Kindred' }),
+    makePerk({ name: 'Hex: Ruin', curse_category: 'hex' }),
+    makePerk({ name: 'Boon: Shadow Step', curse_category: 'boon' }),
+    makePerk({ name: 'Iron Will', curse_category: 'chase' }),
+    makePerk({ name: 'Kindred', curse_category: 'aura_reading' }),
   ];
   const drawnNames = new Set(['Hex: Ruin', 'Boon: Shadow Step']);
   const noRepeatPool = fullPool.filter((p) => !drawnNames.has(p.name));
@@ -310,47 +318,49 @@ test('buildDrawnSlots: falls back to page 1 / slot 1 for a perk not found in the
   assert.deepStrictEqual(slots[0], { page: 1, slot: 1, perk: strayPerk });
 });
 
-test('isHexPerk / isBoonPerk: split the combined Hex/Boon check by name or description prefix', () => {
-  assert.ok(isHexPerk(makePerk({ name: 'Hex: Ruin' })));
-  assert.ok(!isBoonPerk(makePerk({ name: 'Hex: Ruin' })));
-  assert.ok(isBoonPerk(makePerk({ name: 'Boon: Circle of Healing' })));
-  assert.ok(!isHexPerk(makePerk({ name: 'Boon: Circle of Healing' })));
-  assert.ok(isHexPerk(makePerk({ name: 'Made-Up', description: 'Applies a Hex: effect.' })));
-  assert.ok(!isHexPerk(makePerk({ name: 'Sprint Burst' })));
+test('isHexPerk / isBoonPerk: split the combined Hex/Boon check by curse_category', () => {
+  assert.ok(isHexPerk(makePerk({ name: 'Hex: Ruin', curse_category: 'hex' })));
+  assert.ok(!isBoonPerk(makePerk({ name: 'Hex: Ruin', curse_category: 'hex' })));
+  assert.ok(isBoonPerk(makePerk({ name: 'Boon: Circle of Healing', curse_category: 'boon' })));
+  assert.ok(!isHexPerk(makePerk({ name: 'Boon: Circle of Healing', curse_category: 'boon' })));
+  assert.ok(!isHexPerk(makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })));
 });
 
-test('isNegativePerk: matches the curated handicap list', () => {
-  assert.ok(isNegativePerk(makePerk({ name: 'No Mither' })));
-  assert.ok(isNegativePerk(makePerk({ name: '  NO MITHER  ' })));
-  assert.ok(!isNegativePerk(makePerk({ name: 'Iron Will' })));
+test('isNegativePerk: driven by the handicap curse_category', () => {
+  assert.ok(isNegativePerk(makePerk({ name: 'No Mither', curse_category: 'handicap' })));
+  assert.ok(!isNegativePerk(makePerk({ name: 'Iron Will', curse_category: 'chase' })));
 });
 
-test('isAuraPerk / isGeneratorPerk / isHealingPerk / isChasePerk / isStealthPerk: match description keywords across locales', () => {
-  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', description: 'Reveals the Aura of injured Survivors.' })));
-  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', description: 'Ujawnia Aury rannych Ocalałych.' })));
-  assert.ok(isGeneratorPerk(makePerk({ name: 'Made-Up', description: 'Repairing Generators is faster.' })));
-  assert.ok(isHealingPerk(makePerk({ name: 'Made-Up', description: 'Increases healing speed with a Med-Kit.' })));
-  assert.ok(isChasePerk(makePerk({ name: 'Made-Up', description: 'Grants the Haste Status Effect.' })));
+test('isAuraPerk / isGeneratorPerk / isHealingPerk / isChasePerk: driven by curse_category', () => {
+  assert.ok(isAuraPerk(makePerk({ name: 'Made-Up', curse_category: 'aura_reading' })));
+  assert.ok(isGeneratorPerk(makePerk({ name: 'Made-Up', curse_category: 'gen_slowdown' })));
+  assert.ok(isHealingPerk(makePerk({ name: 'Made-Up', curse_category: 'altruism_healing' })));
+  assert.ok(isChasePerk(makePerk({ name: 'Made-Up', curse_category: 'chase' })));
+  assert.ok(!isAuraPerk(makePerk({ name: 'Made-Up', curse_category: 'general' })));
+});
+
+test('isStealthPerk: still keyword-driven (no dedicated curse_category bucket), matches across locales', () => {
   assert.ok(isStealthPerk(makePerk({ name: 'Made-Up', description: 'Your Terror Radius is reduced.' })));
-  assert.ok(!isAuraPerk(makePerk({ name: 'Made-Up', description: 'A perk with no matching keyword at all.' })));
+  assert.ok(isStealthPerk(makePerk({ name: 'Made-Up', description: 'Zasięg Terroru jest zmniejszony.' })));
+  assert.ok(!isStealthPerk(makePerk({ name: 'Made-Up', description: 'A perk with no matching keyword at all.' })));
 });
 
 test('getPerkTarotType: resolves in priority order, Hex/Boon/Sacrifice/Exhaustion before the broader categories', () => {
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Hex: Ruin' })), 'hex');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Boon: Shadow Step' })), 'boon');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'No Mither' })), 'sacrifice');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Dead Hard' })), 'exhaustion');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Related to the Obsession.' })), 'obsession');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Reveals Auras.' })), 'aura');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Repair Generators faster.' })), 'generator');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Heal faster with a Med-Kit.' })), 'healing');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Grants Haste after a hit.' })), 'chase');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Reduces your Terror Radius.' })), 'stealth');
-  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up Perk', description: 'Does something else entirely.' })), 'entity');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Hex: Ruin', curse_category: 'hex' })), 'hex');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Boon: Shadow Step', curse_category: 'boon' })), 'boon');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'No Mither', curse_category: 'handicap' })), 'sacrifice');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Dead Hard', curse_category: 'exhaustion' })), 'exhaustion');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Related to the Obsession.', curse_category: 'general' })), 'obsession');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', curse_category: 'aura_reading' })), 'aura');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', curse_category: 'gen_slowdown' })), 'generator');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', curse_category: 'altruism_healing' })), 'healing');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', curse_category: 'chase' })), 'chase');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up', description: 'Reduces your Terror Radius.', curse_category: 'general' })), 'stealth');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made-Up Perk', description: 'Does something else entirely.', curse_category: 'general' })), 'entity');
 });
 
-test('getPerkTarotType: a Hex perk that also mentions Aura in its description still resolves to hex (priority order holds)', () => {
-  const perk = makePerk({ name: 'Hex: The Third Seal', description: 'Blinds the Aura of the obsession.' });
+test('getPerkTarotType: a Hex perk still resolves to hex even if its description happens to mention Aura (priority order holds)', () => {
+  const perk = makePerk({ name: 'Hex: The Third Seal', description: 'Blinds the Aura of the obsession.', curse_category: 'hex' });
   assert.strictEqual(getPerkTarotType(perk), 'hex');
 });
 
@@ -365,13 +375,13 @@ const sacrificeMutator: ChaosMutator = {
   textColor: '',
 };
 
-test('filterPerksByMutator: negative_only keeps only negative/handicap perks, falling back when none exist', () => {
-  const perksWithNegative = [makePerk({ name: 'No Mither' }), makePerk({ name: 'Iron Will' })];
+test('filterPerksByMutator: negative_only keeps only handicap-category perks, falling back when none exist', () => {
+  const perksWithNegative = [makePerk({ name: 'No Mither', curse_category: 'handicap' }), makePerk({ name: 'Iron Will', curse_category: 'chase' })];
   const resultWith = filterPerksByMutator(perksWithNegative, sacrificeMutator);
   assert.strictEqual(resultWith.length, 1);
   assert.strictEqual(resultWith[0].name, 'No Mither');
 
-  const perksWithoutNegative = [makePerk({ name: 'Iron Will' }), makePerk({ name: 'Sprint Burst' })];
+  const perksWithoutNegative = [makePerk({ name: 'Iron Will', curse_category: 'chase' }), makePerk({ name: 'Sprint Burst', curse_category: 'exhaustion' })];
   const resultWithout = filterPerksByMutator(perksWithoutNegative, sacrificeMutator);
   assert.deepStrictEqual(resultWithout, perksWithoutNegative);
 });

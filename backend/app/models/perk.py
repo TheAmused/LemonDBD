@@ -50,6 +50,12 @@ class Perk(Base):
         ),
         Index("ix_perks_survivor_role", "survivor_id", "role"),
         Index("ix_perks_killer_role", "killer_id", "role"),
+        CheckConstraint(
+            "curse_category IS NULL OR curse_category IN ("
+            "'exhaustion', 'gen_slowdown', 'hex', 'boon', 'chase', "
+            "'aura_reading', 'altruism_healing', 'handicap', 'meme', 'general')",
+            name="ck_perks_curse_category",
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -68,6 +74,12 @@ class Perk(Base):
     translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
+    #: Which Chaos Wheel curse bucket this perk mechanically belongs to.
+    #: Exactly one of: exhaustion, gen_slowdown, hex, boon, chase,
+    #: aura_reading, altruism_healing, handicap, meme, general. Nullable so
+    #: perks seeded before this column existed do not break; the frontend
+    #: treats a missing value as "general".
+    curse_category: Mapped[str | None] = mapped_column(String(30), nullable=True)
 
     # One nullable key per table, at most one set, matching `role`. The 27
     # general perks leave both NULL.
@@ -131,6 +143,7 @@ class Perk(Base):
             "description": description,
             "icon_url": self.icon_url or "",
             "icon_local_path": self.icon_local_path or "",
+            "curse_category": self.curse_category or "general",
             "translations": self.translations or {},
             "is_disabled": self.is_disabled,
             "disabled_reason": self.disabled_reason,

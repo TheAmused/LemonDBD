@@ -16,6 +16,11 @@ export interface Perk {
   character_real_name?: string;
   character_avatar_path?: string;
   category: RoleCategory | string;
+  //: Chaos Wheel curse bucket from the backend (exhaustion, gen_slowdown,
+  //: hex, boon, chase, aura_reading, altruism_healing, handicap, meme,
+  //: general). Optional/possibly missing on older cached data; treat a
+  //: missing value the same as 'general'.
+  curse_category?: string;
   description: string;
   icon_url: string;
   icon_local_path: string;

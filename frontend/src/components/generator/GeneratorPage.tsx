@@ -49,6 +49,7 @@ interface GeneratorPageProps {
 const PERKS_PER_PAGE = 15;
 const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
 const FULL_LOADOUT_SIZE = 4;
+const EMPTY_DRAWN_NAMES: readonly string[] = [];
 
 export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelectPerk, dict }) => {
   const { user } = useAuth();
@@ -86,8 +87,17 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
       if (saved.genMode) setGenMode(saved.genMode);
       if (typeof saved.noRepeatPerks === 'boolean') setNoRepeatPerks(saved.noRepeatPerks);
       if (typeof saved.spinDurationSec === 'number') setSpinDurationSec(saved.spinDurationSec);
-      if (Array.isArray(saved.loadout)) setLoadout(saved.loadout);
-      if (typeof saved.activeSlotIdx === 'number') setActiveSlotIdx(saved.activeSlotIdx);
+      if (Array.isArray(saved.loadout) && saved.genMode === 'wheel') {
+        const targetRole = saved.role || 'Survivor';
+        const isValidWheelLoadout = saved.loadout.every((s) => {
+          if (!s || !s.perk) return true;
+          return s.perk.category === targetRole;
+        });
+        if (isValidWheelLoadout) {
+          setLoadout(saved.loadout);
+          if (typeof saved.activeSlotIdx === 'number') setActiveSlotIdx(saved.activeSlotIdx);
+        }
+      }
       if (typeof saved.blindMode === 'boolean') setBlindMode(saved.blindMode);
       if (saved.activeMutator) setActiveMutator(saved.activeMutator);
     }
@@ -131,6 +141,30 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const totalPages = Math.max(1, Math.ceil(totalPlayableCount / PERKS_PER_PAGE));
   const lastPagePerks = totalPlayableCount % PERKS_PER_PAGE || (totalPlayableCount > 0 ? PERKS_PER_PAGE : 0);
 
+  // The actual draw pool for every mode's random pick -- always the FULL
+  // role-eligible pool, never the No-Repeat-narrowed `activePlayablePerks`
+  // above (that one stays reserved for the "Playable: N/Total" badge, the
+  // low-pool warning, and other draw-mode-local counts/disabled-states,
+  // none of which changed). Feeding pickRandomLoadout the narrowed pool
+  // directly used to make No-Repeat a hard exclusion -- which, combined
+  // with a Chaos Mutator that boosts a perk category, could make every perk
+  // in that category permanently undrawable for the rest of the session
+  // the moment they'd all been drawn once. `drawnPerkNamesForWeighting`
+  // instead lets `pickRandomLoadout` (and the Wheel's own weighted target
+  // selection) apply it as a soft down-weight via `getRepeatWeight`, so
+  // No-Repeat and a curse combine as two probabilities instead of a filter
+  // stacked on a filter.
+  const drawnPerkNamesForWeighting = noRepeatPerks ? drawnPerks : EMPTY_DRAWN_NAMES;
+
+  // Same reasoning for the Wheel mode's own page/slot grid: it should be
+  // sized off the full eligible pool too, so a previously-drawn perk still
+  // has a (lower-weighted) slot on the wheel instead of vanishing from the
+  // grid -- and shifting every other perk's page/slot number as a result,
+  // which never matches the player's actual fixed in-game inventory layout.
+  const wheelTotalPages = Math.max(1, Math.ceil(ownedOrAvailableCount / PERKS_PER_PAGE));
+  const wheelLastPagePerks =
+    ownedOrAvailableCount % PERKS_PER_PAGE || (ownedOrAvailableCount > 0 ? PERKS_PER_PAGE : 0);
+
   useEffect(() => {
     // Skip until real perk data has actually loaded -- allPerks/baseEligibleRolePerks
     // start empty before the fetch resolves, which used to read as "the pool just hit
@@ -151,6 +185,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const handleRoleChange = useCallback((newRole: RoleCategory) => {
     setRole(newRole);
     setLoadout([null, null, null, null]);
+    setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
   }, []);
 
@@ -218,8 +253,6 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   }, [activeSlotIdx, noRepeatPerks, role]);
 
   const handleBatchRollComplete = useCallback((slots: DrawnSlot[]) => {
-    setLoadout([slots[0] || null, slots[1] || null, slots[2] || null, slots[3] || null]);
-    setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
@@ -302,12 +335,13 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             >
             {genMode === 'wheel' && (
               <WheelStage
-                totalPages={totalPages}
+                totalPages={wheelTotalPages}
                 perksPerPage={PERKS_PER_PAGE}
-                lastPagePerks={lastPagePerks}
+                lastPagePerks={wheelLastPagePerks}
                 spinDurationSec={spinDurationSec}
                 role={role}
-                sortedPerks={activePlayablePerks}
+                sortedPerks={baseEligibleRolePerks}
+                drawnPerkNames={drawnPerkNamesForWeighting}
                 loadout={loadout}
                 activeSlotIdx={activeSlotIdx}
                 activeMutator={activeMutator}
@@ -324,8 +358,11 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
               <InstantStage
                 role={role}
                 activePlayablePerks={activePlayablePerks}
+                drawPool={baseEligibleRolePerks}
+                drawnPerkNames={drawnPerkNamesForWeighting}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                onRollStart={() => setRevealedSlots([false, false, false, false])}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}
@@ -338,6 +375,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
               <SlotMachineStage
                 role={role}
                 activePlayablePerks={activePlayablePerks}
+                drawPool={baseEligibleRolePerks}
+                drawnPerkNames={drawnPerkNamesForWeighting}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
                 revealedSlots={revealedSlots}
@@ -352,6 +391,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
               <TarotDeckStage
                 role={role}
                 activePlayablePerks={activePlayablePerks}
+                drawPool={baseEligibleRolePerks}
+                drawnPerkNames={drawnPerkNamesForWeighting}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
                 revealedSlots={revealedSlots}
@@ -366,6 +407,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
               <LootCrateStage
                 role={role}
                 activePlayablePerks={activePlayablePerks}
+                drawPool={baseEligibleRolePerks}
+                drawnPerkNames={drawnPerkNamesForWeighting}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
                 revealedSlots={revealedSlots}

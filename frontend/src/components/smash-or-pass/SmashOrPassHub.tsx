@@ -30,6 +30,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip } from '@/components/common/Tooltip';
 import { CharacterCard } from './CharacterCard';
+import { shuffleArray } from '@/utils/shuffleArray';
 import { SmashSounds } from './SmashSoundEffects';
 import {
   EntityItem,
@@ -262,7 +263,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       });
 
       if (feed && feed.entities) {
-        const shuffled = [...feed.entities].sort(() => Math.random() - 0.5);
+        const shuffled = shuffleArray(feed.entities);
         setDeck(shuffled);
         setCurrentIndex(0);
         setTotalRemaining(feed.total_remaining ?? feed.entities.length);
@@ -383,7 +384,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   };
 
   const shuffleDeck = useCallback(() => {
-    setDeck((prev) => [...prev].sort(() => Math.random() - 0.5));
+    setDeck((prev) => shuffleArray(prev));
     setCurrentIndex(0);
     SmashSounds.playFlipSound();
   }, []);

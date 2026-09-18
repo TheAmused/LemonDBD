@@ -260,9 +260,24 @@ class SmashOrPassService:
                 user_sess_conds.append(Vote.session_id == session_id)
 
             if user_sess_conds:
-                existing_vote = db.session.scalar(
-                    select(Vote).where(Vote.entity_id == entity.id, or_(*user_sess_conds))
-                )
+                # `.scalars().order_by(...).first()`, not `.scalar()`: two Vote
+                # rows can legally match here (e.g. an anonymous vote under
+                # `session_id` and a separate authenticated vote under `user_id`
+                # for the same entity, from two different devices), since there
+                # is no DB constraint preventing it. Bare `.scalar()` on a
+                # multi-row result does NOT raise -- it silently returns the
+                # first column of whichever row the database happens to return
+                # first, with no ORDER BY to make that deterministic. That means
+                # which vote gets treated as "the" existing one (and therefore
+                # overwritten in place below) could differ between two identical
+                # requests. Ordering by `created_at desc` makes it deterministic:
+                # the vote being cast right now always updates the most recent
+                # prior vote, not an arbitrary one.
+                existing_vote = db.session.scalars(
+                    select(Vote)
+                    .where(Vote.entity_id == entity.id, or_(*user_sess_conds))
+                    .order_by(Vote.created_at.desc())
+                ).first()
 
             if existing_vote:
                 existing_vote.vote_type = vote_type
@@ -320,9 +335,16 @@ class SmashOrPassService:
             affected_entity_ids = set()
 
             for s_vote in session_votes:
-                existing_user_vote = db.session.scalar(
-                    select(Vote).where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
-                )
+                # Same reasoning as cast_vote: more than one Vote row can already
+                # match (entity_id, user_id) since nothing enforces uniqueness, and
+                # bare `.scalar()` picks an arbitrary one with no ORDER BY. Ordering
+                # by `created_at desc` makes the sync target deterministic instead
+                # of implementation-defined.
+                existing_user_vote = db.session.scalars(
+                    select(Vote)
+                    .where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
+                    .order_by(Vote.created_at.desc())
+                ).first()
 
                 if existing_user_vote:
                     db.session.delete(s_vote)

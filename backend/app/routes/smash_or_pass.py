@@ -78,8 +78,13 @@ def get_rosters():
     # test_get_rosters) or fixing the docstring to say what it really does --
     # not something to decide unilaterally here.
     """Retrieve all rosters (active and inactive) with real-time stats."""
+    # NSFW-flagged rosters are excluded by default, matching the existing
+    # optional-flag convention in this codebase (users.py's include_assets /
+    # download query params: "true"/"1"/"yes" opt in). An explicit
+    # ?include_nsfw=true is required to see them in this listing at all.
+    include_nsfw = request.args.get("include_nsfw", "false").lower() in ("true", "1", "yes")
     try:
-        rosters = smash_service.get_rosters(active_only=False)
+        rosters = smash_service.get_rosters(active_only=False, include_nsfw=include_nsfw)
         return jsonify({"data": rosters, "count": len(rosters)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")

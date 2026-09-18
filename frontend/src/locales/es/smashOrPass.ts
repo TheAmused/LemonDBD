@@ -252,6 +252,12 @@ export default {
       desc: 'Solo los personajes más extraordinarios obtienen tu voto.',
     },
   },
+  nsfw: {
+    title: 'Contiene Contenido NSFW',
+    description: 'Esta lista está marcada como contenido NSFW/para adultos. Confirma que quieres verla.',
+    confirm: 'Clic para Ver',
+    badge: 'NSFW',
+  },
   comingSoon: 'Próximamente',
   tooltips: {
     filter: 'Filtrar candidatos',

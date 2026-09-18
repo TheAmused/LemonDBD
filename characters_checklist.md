@@ -43,8 +43,8 @@
 | Survivor | `rose_marigold` | **Rose Marigold** | Alan Wake | `backend/app/static/avatars/survivors/rose_marigold.webp` |
 | Survivor | `rain_carradine` | **Rain Carradine** | Ellen Ripley (Alien: Romulus) | `backend/app/static/avatars/survivors/rain_carradine.webp` |
 | Survivor | `william_hudson` | **William Hudson** | Ellen Ripley (Aliens) | `backend/app/static/avatars/survivors/william_hudson.webp` |
-| Survivor | `daryl_dixon` | **Daryl Dixon** | Rick Grimes (The Walking Dead) | `backend/app/static/avatars/survivors/daryl_dixon.webp` |
-| Survivor | `glenn_rhee` | **Glenn Rhee** | Rick Grimes (The Walking Dead) | `backend/app/static/avatars/survivors/glenn_rhee.webp` |
+| Survivor | `daryl_dixon` | **Daryl Dixon** | Rick Grimes (The Walking Dead) | `backend/app/static/avatars/survivors/daryl_dixon.webp` | 
+| Survivor | `glenn_rhee` | **Glenn Rhee** | Rick Grimes (The Walking Dead) | `backend/app/static/avatars/survivors/glenn_rhee.webp` | XXX - z jakiegoś powodu tego chujka się nie da.
 | Survivor | `maggie_rhee` | **Maggie Rhee** | Michonne (The Walking Dead) | `backend/app/static/avatars/survivors/maggie_rhee.webp` |
 | Survivor | `jonathan_byers` | **Jonathan Byers** | Steve Harrington (Stranger Things) | `backend/app/static/avatars/survivors/jonathan_byers.webp` |
 | Survivor | `robin_buckley` | **Robin Buckley** | Nancy Wheeler (Stranger Things) | `backend/app/static/avatars/survivors/robin_buckley.webp` |

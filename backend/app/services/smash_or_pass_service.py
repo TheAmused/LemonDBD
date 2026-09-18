@@ -52,11 +52,20 @@ class SmashOrPassService:
         except Exception as e:
             logger.debug(f"Smash-or-pass seed notice: {e}")
 
-    def get_rosters(self, active_only: bool = True) -> list[dict[str, Any]]:
+    def get_rosters(self, active_only: bool = True, include_nsfw: bool = False) -> list[dict[str, Any]]:
+        """List rosters. `include_nsfw=False` (the default) hides any roster with
+        `is_nsfw=True` from this listing entirely -- an explicit opt-in
+        (`?include_nsfw=true` on the route) is required to see it here at all.
+        This is a listing-level gate only: fetching a specific NSFW roster's feed
+        directly by slug (get_feed) still works even without the opt-in, so a
+        direct link still resolves -- `is_nsfw` just isn't hidden from the
+        response in that case, so the frontend can gate display on it there."""
         self.ensure_seeded()
         stmt = select(Roster)
         if active_only:
             stmt = stmt.where(Roster.is_active.is_(True))
+        if not include_nsfw:
+            stmt = stmt.where(Roster.is_nsfw.is_(False))
         stmt = stmt.order_by(Roster.slug)
         rosters = db.session.scalars(stmt).all()
 
@@ -247,7 +256,24 @@ class SmashOrPassService:
                         )
                     )
                 if not entity:
-                    entity = db.session.scalar(select(Entity).where(Entity.slug == character_slug))
+                    # Cross-roster fallback for a caller that only has a character_slug
+                    # and either no roster_slug/edition or one that doesn't resolve to a
+                    # real roster. Entity.slug is only guaranteed unique WITHIN a roster
+                    # (the seeder's upsert lookup scopes by roster_id -- see
+                    # smash_roster_seeder.py), not globally, and nothing in the schema
+                    # enforces global uniqueness. No current roster JSON file actually
+                    # reuses a slug across rosters, but if one ever does, this bare
+                    # `.scalar()` with no ORDER BY would silently record the vote
+                    # against an arbitrary one of the matching entities instead of a
+                    # deterministic one. `.order_by(Entity.id)` at least makes that
+                    # deterministic (same slug always resolves to the same entity here)
+                    # rather than implementation-defined -- it doesn't decide which one
+                    # is "correct" for an ambiguous slug, which is a real product
+                    # question (should this fallback exist at all without a roster
+                    # scope?) left open rather than decided here.
+                    entity = db.session.scalars(
+                        select(Entity).where(Entity.slug == character_slug).order_by(Entity.id)
+                    ).first()
 
             if not entity:
                 raise ValueError(f"Entity not found for entity_id='{entity_id}' or character_slug='{character_slug}'")
@@ -260,9 +286,24 @@ class SmashOrPassService:
                 user_sess_conds.append(Vote.session_id == session_id)
 
             if user_sess_conds:
-                existing_vote = db.session.scalar(
-                    select(Vote).where(Vote.entity_id == entity.id, or_(*user_sess_conds))
-                )
+                # `.scalars().order_by(...).first()`, not `.scalar()`: two Vote
+                # rows can legally match here (e.g. an anonymous vote under
+                # `session_id` and a separate authenticated vote under `user_id`
+                # for the same entity, from two different devices), since there
+                # is no DB constraint preventing it. Bare `.scalar()` on a
+                # multi-row result does NOT raise -- it silently returns the
+                # first column of whichever row the database happens to return
+                # first, with no ORDER BY to make that deterministic. That means
+                # which vote gets treated as "the" existing one (and therefore
+                # overwritten in place below) could differ between two identical
+                # requests. Ordering by `created_at desc` makes it deterministic:
+                # the vote being cast right now always updates the most recent
+                # prior vote, not an arbitrary one.
+                existing_vote = db.session.scalars(
+                    select(Vote)
+                    .where(Vote.entity_id == entity.id, or_(*user_sess_conds))
+                    .order_by(Vote.created_at.desc())
+                ).first()
 
             if existing_vote:
                 existing_vote.vote_type = vote_type
@@ -320,9 +361,16 @@ class SmashOrPassService:
             affected_entity_ids = set()
 
             for s_vote in session_votes:
-                existing_user_vote = db.session.scalar(
-                    select(Vote).where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
-                )
+                # Same reasoning as cast_vote: more than one Vote row can already
+                # match (entity_id, user_id) since nothing enforces uniqueness, and
+                # bare `.scalar()` picks an arbitrary one with no ORDER BY. Ordering
+                # by `created_at desc` makes the sync target deterministic instead
+                # of implementation-defined.
+                existing_user_vote = db.session.scalars(
+                    select(Vote)
+                    .where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
+                    .order_by(Vote.created_at.desc())
+                ).first()
 
                 if existing_user_vote:
                     db.session.delete(s_vote)

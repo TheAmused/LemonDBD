@@ -252,6 +252,12 @@ export default {
       desc: 'Nur die Allerbesten erhalten dein Smash.',
     },
   },
+  nsfw: {
+    title: 'Enthält NSFW-Inhalte',
+    description: 'Diese Liste ist als NSFW/nicht jugendfrei markiert. Bestätige, dass du sie sehen möchtest.',
+    confirm: 'Klicken zum Anzeigen',
+    badge: 'NSFW',
+  },
   comingSoon: 'Demnächst verfügbar',
   tooltips: {
     filter: 'Kandidaten filtern',

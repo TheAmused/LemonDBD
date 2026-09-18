@@ -64,9 +64,27 @@ vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
 
 @smash_or_pass_bp.route("/rosters", methods=["GET"])
 def get_rosters():
-    """Retrieve all active rosters with real-time stats."""
+    # NOTE: despite what the one-line summary below says, this deliberately
+    # returns EVERY roster, active or not (`active_only=False`) -- a real
+    # existing test (test_get_rosters, expecting count == 6 including 4
+    # currently-inactive rosters) locks that in as intended behavior, so it is
+    # not "fixed" to match the docstring here. Gating on `is_active` happens
+    # downstream instead: the frontend roster picker filters
+    # `is_active !== false` client-side (RosterSelectModal.tsx) before a roster
+    # is selectable, and `/editions` (get_editions -> active_only=True) is the
+    # actual "active only" listing endpoint. Left as a flagged judgment call:
+    # if `/rosters` returning inactive rosters to any API consumer is
+    # unintended, the fix is either changing this flag (and updating
+    # test_get_rosters) or fixing the docstring to say what it really does --
+    # not something to decide unilaterally here.
+    """Retrieve all rosters (active and inactive) with real-time stats."""
+    # NSFW-flagged rosters are excluded by default, matching the existing
+    # optional-flag convention in this codebase (users.py's include_assets /
+    # download query params: "true"/"1"/"yes" opt in). An explicit
+    # ?include_nsfw=true is required to see them in this listing at all.
+    include_nsfw = request.args.get("include_nsfw", "false").lower() in ("true", "1", "yes")
     try:
-        rosters = smash_service.get_rosters(active_only=False)
+        rosters = smash_service.get_rosters(active_only=False, include_nsfw=include_nsfw)
         return jsonify({"data": rosters, "count": len(rosters)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")

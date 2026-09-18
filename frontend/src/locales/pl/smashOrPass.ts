@@ -252,6 +252,12 @@ export default {
       desc: 'Trzymasz dystans. Tylko nieliczni kandydaci zasługują na Twoje uznanie.',
     },
   },
+  nsfw: {
+    title: 'Zawiera treści NSFW',
+    description: 'Ta lista jest oznaczona jako treść NSFW/dla dorosłych. Potwierdź, że chcesz ją zobaczyć.',
+    confirm: 'Kliknij, aby wyświetlić',
+    badge: 'NSFW',
+  },
   comingSoon: 'Wkrótce Dostępne',
   tooltips: {
     filter: 'Filtruj kandydatów',

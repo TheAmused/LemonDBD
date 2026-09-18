@@ -16,8 +16,6 @@ import { playCardFlip } from '@/utils/perkAudio';
 export interface TarotDeckStageProps {
   role: RoleCategory;
   activePlayablePerks: Perk[];
-  drawPool: Perk[];
-  drawnPerkNames: readonly string[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
   revealedSlots: boolean[];
@@ -92,8 +90,6 @@ const CardBackImage: React.FC<{ type: TarotType }> = ({ type }) => {
 export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   role,
   activePlayablePerks,
-  drawPool,
-  drawnPerkNames,
   activeMutator,
   onRollComplete,
   revealedSlots,
@@ -113,8 +109,8 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
   const handleShuffle = () => {
     if (activePlayablePerks.length === 0) return;
 
-    const picked = pickRandomLoadout(drawPool, activeMutator, 4, drawnPerkNames);
-    const slots = buildDrawnSlots(picked, drawPool);
+    const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
+    const slots = buildDrawnSlots(picked, activePlayablePerks);
 
     setCards(
       slots.map((slot) => ({

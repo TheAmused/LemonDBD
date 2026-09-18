@@ -21,8 +21,6 @@ import { DbdButton } from '../shared/DbdButton';
 export interface SlotMachineStageProps {
   role: RoleCategory;
   activePlayablePerks: Perk[];
-  drawPool: Perk[];
-  drawnPerkNames: readonly string[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
   revealedSlots: boolean[];
@@ -126,8 +124,6 @@ function buildStrip(pool: Perk[], landedPerk: Perk | null, broken: boolean, mobi
 export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   role,
   activePlayablePerks,
-  drawPool,
-  drawnPerkNames,
   activeMutator,
   onRollComplete,
   revealedSlots,
@@ -321,7 +317,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const beginPull = () => {
     if (activePlayablePerks.length === 0) return;
 
-    const reelCount = Math.max(1, Math.min(REEL_COUNT, drawPool.length));
+    const reelCount = Math.max(1, Math.min(REEL_COUNT, activePlayablePerks.length));
     // A jammed reel or two only makes sense once the machine is at full
     // size -- with a small perk pool every reel is precious.
     const brokenCount = reelCount === REEL_COUNT ? (Math.random() < 0.5 ? 1 : 2) : 0;
@@ -348,7 +344,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     setPhase('spinning');
 
     const nonBrokenIds = initialReels.filter((r) => !r.broken).map((r) => r.id);
-    const picks = pickRandomLoadout(drawPool, activeMutator, nonBrokenIds.length, drawnPerkNames);
+    const picks = pickRandomLoadout(activePlayablePerks, activeMutator, nonBrokenIds.length);
     const finalMap = new Map<number, Perk | null>(nonBrokenIds.map((id, i) => [id, picks[i] ?? null]));
 
     spinReels(initialReels, finalMap, () => setPhase('awaiting'));
@@ -384,7 +380,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     const newlyLocked = reels.filter((r) => staged.has(r.id) && r.landedPerk);
     const newlyLockedSlots = buildDrawnSlots(
       newlyLocked.map((r) => r.landedPerk as Perk),
-      drawPool
+      activePlayablePerks
     );
     const nextSelected = [...selected, ...newlyLockedSlots];
 
@@ -408,12 +404,8 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     const lockedNames = new Set(
       lockedReels.filter((r) => r.locked).map((r) => r.landedPerk?.name).filter((n): n is string => Boolean(n))
     );
-    // Excluding perks already locked into THIS loadout stays a hard rule --
-    // you can't have the same perk twice in one 4-perk build -- but it's
-    // layered on top of the full eligible pool, not the No-Repeat-narrowed
-    // one, so No-Repeat itself still only down-weights via drawnPerkNames.
-    const pool = drawPool.filter((p) => !lockedNames.has(p.name));
-    const picks = pickRandomLoadout(pool, activeMutator, nonBrokenUnlocked.length, drawnPerkNames);
+    const pool = activePlayablePerks.filter((p) => !lockedNames.has(p.name));
+    const picks = pickRandomLoadout(pool, activeMutator, nonBrokenUnlocked.length);
     const finalMap = new Map<number, Perk | null>(nonBrokenUnlocked.map((r, i) => [r.id, picks[i] ?? null]));
 
     setPhase('spinning');

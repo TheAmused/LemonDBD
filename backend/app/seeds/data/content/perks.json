@@ -182,7 +182,7 @@
           "description": "Będąc obok przewróconej palety, użyj przycisk zdolności aktywnej 1 przez 4 s aby ją zresetować.\nWidzisz aury przewróconych palet.\n\n„Zaatakuję cię wszystkim, co mam. Później zrobię to jeszcze raz”. – Yui Kimura"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 7,
@@ -212,7 +212,7 @@
           "description": "Po przeszukaniu lub odblokowaniu określonej liczby skrzyń (2), będąc obok zniszczonej palety, użyj przycisk zdolności aktywnej 1 przez 4 s, aby stworzyć wrażliwą paletę.\nWidzisz aury zniszczonych palet w odległości 24/28/32 m.\n\n„Bez ogrodzenia to miejsce nie ma żadnej wartości”. – Rick Grimes"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 8,
@@ -361,7 +361,7 @@
           "description": "Po naprawieniu 50% generatorów, stojąc obok okna, użyj przycisk zdolności aktywnej 2 aby założyć pułapkę, która trwa 40/50/60 s. Wszyscy ocalali widzę aurę tego okna przez ten czas.\nGdy zabójca przeskoczy przez to okno, pułapka wybucha i cel otrzymuje 50% efektu Skrępowany na 4 s.\n\n„Nigdy nie mów mi, jakie są szanse.” – Dustin Henderson"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 13,
@@ -544,7 +544,7 @@
           "description": "Po naprawieniu 40/50% generatorów, będąc obok generatora, użyj przycisk zdolności aktywnej 2 aby założyć pułapkę, która trwa przez 100/110/120 s. Wszyscy ocalali widzą aurę tego generatora przez ten czas.\nGdy zabójca uszkodzi ten generator, pułapka eksploduje, następnie:\n• Zabójca zostaje ogłuszony przez 4 s.\n• Wszyscy w pobliżu patrzący na detonację zostają oślepieni.\n\n„Chcesz S.T.A.R.S.? Proszę bardzo!” – Jill Valentine"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 19,
@@ -634,7 +634,7 @@
           "description": "Będąc niesionym przez zabójcę:\n• Za każdym razem, gdy zabójca spadnie z przynajmniej 1 m wysokości, otrzymujesz 33% twojego bieżącego postępu szamotania.\n• Twoje szamotanie jest 15/20/25% silniejsze.\n• W promieniu 48/56/64 m zabójca nie może zobaczyć aur haków.\n\n„Szarp się dziecino / całuj usta wolności / Bo nikt nie może więzić w swym sercu miłości.”– Kate Denson, „Do Utraty Tchu”"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 22,
@@ -964,7 +964,7 @@
           "description": "W promieniu 5 m od niesionego ocalałego:\n• Otrzymujesz 5/6/7% efektu Pośpiech.\n• Niesiony ocalały szamota się 25% szybciej.\n\n„Chodź, jakoś się z tego wygrzebiemy”. – Yui Kimura"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "altruism_healing"
     },
     {
       "id": 33,
@@ -1117,7 +1117,7 @@
           "description": "Gdy korzystasz z latarki, otrzymujesz 5% efektu Pośpiech.\nZa każdym razem, gdy oślepisz zabócę, otrzymuje on 20% efektu Skrępowany na 1 s. Czas odnawiania: 60/50/40 s.\n\n„Ściskałem latarkę, jakby od tego zależało moje życie. Chciałem, żeby to się już nie zbliżało”. – Odejście"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 38,
@@ -1177,7 +1177,7 @@
           "description": "Po naprawieniu 40/50% generatorów, stojąc obok przewróconej palety, użyj przycisk zdolności aktywnej 2, aby założyć pułapkę, która trwa 100/110/120 s. Wszyscy ocalali widzą aurę tej palety przez ten czas.\nGdy zabójca zniszczy tę paletę, pułapka wybucha i cel otrzymuje 50% efektu Skrępowany na 4 s.\n\n„Jak to zabić, Ash?” – Ellen Ripley"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 40,
@@ -1417,7 +1417,7 @@
           "description": "Gdy ściga cię zabójca, za każdym razem, gdy wykonasz średni lub szybki przeskok:\n• Przez maksymalnie 6/8/10 s twoje średnie lub szybkie przeskoki są ciche.\n• W tym czasie, za każdym razem, gdy wykonujesz średnie lub szybkie przeskoki, odliczanie resetuje się.\nCzas odnawiania: 60/50/40 s.\n\n„Wiem, jak możemy się stąd wydostać. Szybko, tędy”. – Thalita Lyra"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 48,
@@ -1447,7 +1447,7 @@
           "description": "Za każdym razem, gdy szybko wychodzisz z szafki, wykonujesz średni lub szybki przeskok, nie zostawiasz czerwonych zarysowań przez 5 s. Czas odnawiania: 60/50/40 s.\n\n„Wokół nas tylko burza, zatańcz ze mną, kochanie / Popatrz na me trzewiki, wybijają takt / Zatańcz ze mną tak długo, aż nas słońce zastanie”.– Kate Denson, „Zatańcz ze mną”"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 49,
@@ -1565,7 +1565,7 @@
           "description": "Za każdym razem, gdy próbujesz szybko wejść do szafki:\n• Nie wchodzisz do szafki.\n• Zabójca otrzymuje powiadomienie.\n• Nie zostawiasz śladów krwi przez 10/12/14 s.\n• Nie zostawiasz czerwonych zarysowań przez 10/12/14 s.\nCzas odnawiania: 60/50/40 s."
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 53,
@@ -1596,7 +1596,7 @@
           "description": "Dopóki wszystkie generatory nie zostaną ukończone, za każdym razem, gdy jesteś zdjęty z haka, przez kolejne 4/6/8 s: gdy zabójca cię podniesie, raz na próbę, trafiasz specjalny test umiejętności, aby:\n• Ogłuszyć zabójcę na 10 s.\n• Stać się obsesją.\nTen efekt jest wyłączany przez widoczne działania. Na początku próby masz większą szansę stać się obsesją.\n\n„Nie ma się czego bać”. – Laurie Strode"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 54,
@@ -1778,7 +1778,7 @@
           "description": "Po ukrywaniu się przez 3 s w zasięgu terroru zabójcy, użyj przycisk zdolności aktywnej 1 podczas kucania i bezczynności, aby rzucić kamyk 20 m dalej, który:\n• Powoduje, że zabójca otrzymuje powiadomienie.\n• Pozostawia czerwone zarysowania.\n\n„W życiu jest droga prawości i nieprawości. Jeśli zbłądzisz na tą drugą, to nie sposób przewidzieć, kim się potem staniesz”. – Adam Francis"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 60,
@@ -1988,7 +1988,7 @@
           "description": "Za każdym razem, gdy ogłuszysz zabójcę paletą:\n• Klasa twojego przedmiotu jest podniesiona poziom wyżej, jeśli to możliwe.\n• Jeśli przedmiot został ulepszony, odzyskuje 33% ładunków.\nCzas odnawiania: 40/35/30 s.\n\n„Dziś mnie nie zabierzecie!” – Trevor"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 67,
@@ -2078,7 +2078,7 @@
           "description": "Gdy jesteś zdrowy, wykonujesz szybkie przeskoki 20% szybciej.\nZa każdym razem po wykonaniu szybkiego przeskoku, czas odnawiania: 40/35/30 s.\n\n„Muszę się jeszcze tylko trochę bardziej postarać”. – Lara Croft"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 70,
@@ -2108,7 +2108,7 @@
           "description": "Będąc w zasięgu terroru zabójcy lub uciekając przed zabójcą:\n• Widzisz aury 1/2/3 najbliższych palet i okien.\n• Gdy przewrócisz paletę, zaczynasz się poruszać 20/25/30% wcześniej.\n• Za każdym razem, gdy przewrócisz paletę, czas odnawiania: 60/50/40 s.\n\n„Każdy problem ma rozwiązanie. To tylko kwestia poziomu skomplikowania”. – Kwon Tae-young"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "aura_reading"
     },
     {
       "id": 71,
@@ -2138,7 +2138,7 @@
           "description": "Podczas chodzenia, otrzymujesz 7% efektu Pośpiech.\nWidzisz swoje własne czerwone zarysowania.\n\n„Chcę skończyć, co zaczęłam. Chcę to zabić”. – Nancy Wheeler"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 72,
@@ -2168,7 +2168,7 @@
           "description": "Po naprawieniu 50/45/40% generatorów, ukrywając się w szafce, użyj przycisk zdolności aktywnej 1, aby stworzyć granat błyskowy.\nPo użyciu granatu błyskowego:\n• Wszyscy w pobliżu patrzących na detonację są oślepieni.\n• Zabójca dostaje powiadomienie.\n\n„Zejdź z mojej twarzy!” – Leon S. Kennedy"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 73,
@@ -2197,7 +2197,7 @@
           "description": "Będąc powalonym, za każdym razem, gdy zabójca cię podniesie, 50% twojego postępu leczenia jest dodane do twojego postępu szamotania, maksymalnie do 40/45/50%.\n\n„Spotkamy się na mijance”. – Ash Williams"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 74,
@@ -2646,7 +2646,7 @@
           "description": "Gdy jesteś ranny i nie masz efektu Wyczerpany, twoje jęki bólu są 50/75/100% cichsze."
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 89,
@@ -2705,7 +2705,7 @@
           "description": "Po przebywaniu przez 120/105/90 s w zasięgu terroru zabójcy, gdy wykonasz szybki skok, raz na próbę, ogłuszasz zabójcę na 3 s jeśli jest w promieniu 2.5 m.\n\n„Z niektórymi łobuzami da się żyć. Z innymi trzeba walczyć”. – Michonne Grimes"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 91,
@@ -2828,7 +2828,7 @@
           "description": "Gdy jesteś zdrowy i biegniesz, twoje kroki są ciche dla zabójcy.\nZa każdym razem, gdy wykonasz szybką akcję, czas odnawiania: 20/24/28 s.\n\n„Chodź, kocie”. – Ellen Ripley"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 95,
@@ -2857,7 +2857,7 @@
           "description": "Twoje czerwone zarysowania znikają o 3/4/5 s szybciej i są bardziej widoczne po pojawieniu się.\n\n„Nie spiesz się, on wie, gdzie byłeś… Zawsze mówiłem: żyj wolno i umieraj staro”. – Zaginione taśmy: Dylan"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 96,
@@ -2917,7 +2917,7 @@
           "description": "Gdy wszyscy inni ocalali są powaleni lub powieszeni na haku, przez 4/6/8 s:\n• Nie wydajesz jęków bólu.\n• Nie zostawiasz śladów krwi.\n• Nie zostawiasz czerwonych zarysowań."
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 98,
@@ -2947,7 +2947,7 @@
           "description": "Będąc rannym przez maksymalnie 10/12/14 s:\n• Nie zostawiasz śladów krwi.\n• Nie zostawiasz czerwonych zarysowań.\nZa każdą sekundę spędzoną na leczeniu innego ocalałego, odnów 1 s czasu trwania.\n\n„To zdecydowanie za mało, żeby mnie pokonać” – Yui Kimura"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 99,
@@ -3067,7 +3067,7 @@
           "description": "Po naprawieniu 40/50% generatorów, stojąc obok skrzyni, przełącznika bramy wyjściowej, generatora lub totemu, użyj przycisk zdolności aktywnej 2, aby stworzyć statyczną iluzję na 100/110/120 s.\n\n„Zostań… tutaj… Idealnie!” – Baermar"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 103,
@@ -3370,7 +3370,7 @@
           "description": "Za każdym razem, gdy ogłuszysz zabójcę, przez 30/35/40 s:\n• Nie wydajesz jęków bólu.\n• Nie zostawiasz śladów krwi.\n• Nie zostawiasz czerwonych zarysowań."
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 113,
@@ -3549,7 +3549,7 @@
           "description": "Będąc niesionym przez zabójcę, gdy masz przynajmniej 70/60/50% postępu szamotania i bądąc obok stojącej palety, możesz przewrócić ją i ogłuszyć zabójcę.\nBędąc powalonym, widzisz aury stojących palet.\n\n„Polegałam na ochronie innych i straciłam wszystko. Nigdy więcej”. – Élodie Rakoto"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 119,
@@ -3578,7 +3578,7 @@
           "description": "Gdy zabójca jest w odległości36 m od ciebie i w promieniu 45 stopni, za każdym razem, gdy na niego spojrzysz, słyszysz sygnał dźwiękowy. Czas odnawiania: 60/45/30 s.\n\n„Mam złe przeczucie!”"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 120,
@@ -3638,7 +3638,7 @@
           "description": "Chowasz się do szafek i wykonujesz przeskoki po cichu. Zabójca nie otrzymuje powiadomienia. Czas odnawiania: 60/50/40 s."
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 122,
@@ -3668,7 +3668,7 @@
           "description": "Gdy ściga cię zabójca:\n• Widzisz aury innych ocalałych.\n• Inni ocalali naprawiają 6/8/10% szybciej.\nZa każdym razem, gdy otrzymasz obrażenia, czas odnawiania wynosi: 60/50/40 s.\n\n„Nie musimy uciekać się do przemocy. Udowodnię to” – Vittorio Toscano"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "aura_reading"
     },
     {
       "id": 123,
@@ -3851,7 +3851,7 @@
           "description": "Za każdym razem, gdy oślepisz zabójcę, otrzymuje on efekt Oślepienie na 20/25/30 s.\nMożesz przeszukać skrzynie określoną liczbę razy (1). Po przeszukaniu skrzyni po raz pierwszy, będzie ona zawierać niepospolitą latarkę.\n\n„Nigdy nie zobaczę tego, co widzi Haddie. Ale dopóki jestem z nią, wiem, że jestem bezpieczny”. – Jordan Rois, Spustoszenie z Otchłani, odcinek 5"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 129,
@@ -4896,7 +4896,7 @@
           "description": "Gdy ściga cię zabójca:\n• Widzisz aurę generatora z największym postępem.\n• Za każdym razem, gdy przewrócisz paletę, widzisz aurę zabójcy przez 4/5/6 s.\nEfekt ten kończy się 6/8/10 s po tym, jak zabójca przestanie cię ścigać.\n\n„Jeśli ja czegoś nie zrobię, nikt tego nie zrobi”. – Gabriel Soma"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "aura_reading"
     },
     {
       "id": 164,
@@ -4986,7 +4986,7 @@
           "description": "Podczas kucania otrzymujesz 90/95/100% efektu Pośpiech.\n\n„Farba jest wciąż świeża, ale mnie już tu dawno nie ma”. – Nea"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 167,
@@ -5228,7 +5228,7 @@
           "description": "Za każdym razem, gdy wykonujesz szybki przeskok przez paletę:\n• Zyskujesz 10/12.5/15% efektu Pośpiech przez 3 s.\n• Paleta jest resetowana, zablokowana przez 60 s, a wszyscy ocalali widzą jej aurę przez ten czas.\nCzas odnawiania: 60 s.\n\n„Tylko otwarta droga. Dokładnie tak, jak lubię”. – Shane Wiigwaas"
         }
       },
-      "curse_category": "chase"
+      "curse_category": "general"
     },
     {
       "id": 175,
@@ -5829,7 +5829,7 @@
           "description": "Ocalali w twoim zasięgu terroru:\n• Leczą 30/40/50% wolniej.\n• Podczas leczenia podstawowe testy umiejętności obracają się 30/40/50% szybciej."
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 195,
@@ -6435,7 +6435,7 @@
           "description": "Gdy ocalały przyjmie uderzenie ochronne, otrzymuje efekt Okaleczony na 60/70/80 s."
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 215,
@@ -7790,7 +7790,7 @@
           "description": "Za każdym razem, gdy ocalały zdejmie z haka innego ocalałego lub siebie, leczy 20/25/30% wolniej przez 60 s.\n\n„Dobrze. Teraz możemy robić swoje”. – Adriana Imai"
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 260,
@@ -8062,7 +8062,7 @@
           "description": "Podczas samodzielnego leczenia się, za każdym razem, gdy ocalały osiągnie 75% postępu, otrzymuje specjalne testy umiejętności. Jeśli chybią jeden z tych testów lub przestaną leczyć, otrzymują efekt Okaleczony na 20/25/30 s.\n\n„Oddajcie kolejną salwę! Nie przestawajcie, dopóki morze ich nie pochłonie!” – Portia Maye"
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 269,
@@ -8610,7 +8610,7 @@
           "description": "Na początku próby 4 losowe haki zmieniają się w haki plagi.\nZa każdym razem, gdy ocalały jest zdjęty z haku plagi:\n• Otrzymuje efekt Krwotok na 20/25/30 s.\n• Otrzymuje efekt Zmasakrowany na 20/25/30 s.\n• Gdy są leczeni, do czas otrzymania obrażeń, leczą i naprawiają 10/13/16% wolniej.\n\n„Rozerwę twoją duszę na strzępy.” – Pinhead"
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 287,
@@ -8789,7 +8789,7 @@
           "description": "Gdy ocalały w twoim zasięgu terroru leczy:\n• Otrzymuje efekt Oślepienie.\n• Otrzymuje efekt Wyczerpany.\nTen efekt kończy się 20/25/30 s po tym, jak ocalały przestanie leczyć.\n\n„Nie przyznawajcie się do strachu, bólu czy zwątpienia. To nasiona, z których wyrasta ciemność”. – Otto Stamper"
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 293,
@@ -8903,7 +8903,7 @@
           "description": "Za każdym razem, gdy zadasz ocalałemu obrażenia atakiem podstawowym, ocalały:\n• Otrzymuje efekt Krwotok na 60/75/90 s.\n• Otrzymuje efekt Zmasakrowany na 60/75/90 s.\nOcalali z efektem Krwotok tracą postęp leczenia 25% szybciej.\n\n„To tkwi w jego sadystycznej naturze. Nie zadowala się szybkim zabójstwem, gdyż zachwyca go oglądanie plugawego spektaklu w postaci naszego cierpienia”."
         }
       },
-      "curse_category": "altruism_healing"
+      "curse_category": "general"
     },
     {
       "id": 297,

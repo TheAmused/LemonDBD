@@ -47,7 +47,7 @@ class TestSmashSeederService:
         assert len(hoy_roster.entities) == 8
 
         leg_roster = db_session.scalar(select(Roster).where(Roster.slug == "legendary_characters"))
-        assert len(leg_roster.entities) == 47
+        assert len(leg_roster.entities) == 51
 
         cyber_roster = db_session.scalar(select(Roster).where(Roster.slug == "cyberpunk_2077"))
         assert len(cyber_roster.entities) == 10
@@ -59,7 +59,7 @@ class TestSmashSeederService:
         assert len(gothic_roster.entities) == 10
 
         all_entities = db_session.scalars(select(Entity)).all()
-        assert len(all_entities) == 98 + 8 + 47 + 10 + 10 + 10
+        assert len(all_entities) == 98 + 8 + 51 + 10 + 10 + 10
 
         for entity in all_entities:
             assert entity.stat is not None

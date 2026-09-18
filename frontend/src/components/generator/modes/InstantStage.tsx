@@ -16,12 +16,6 @@ import { playReelThud } from '@/utils/perkAudio';
 export interface InstantStageProps {
   role: RoleCategory;
   activePlayablePerks: Perk[];
-  /** The full role-eligible pool (unaffected by No-Repeat) -- the actual
-   * source pickRandomLoadout draws from; No-Repeat is applied as a soft
-   * weight via `drawnPerkNames`, not by narrowing this pool. */
-  drawPool: Perk[];
-  /** Names to down-weight (not exclude) when No-Repeat Mode is on; empty when it's off. */
-  drawnPerkNames: readonly string[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
   /** Called synchronously the instant a new roll starts, before any perk
@@ -42,8 +36,6 @@ export interface InstantStageProps {
 export const InstantStage: React.FC<InstantStageProps> = ({
   role,
   activePlayablePerks,
-  drawPool,
-  drawnPerkNames,
   activeMutator,
   onRollComplete,
   onRollStart,
@@ -71,8 +63,8 @@ export const InstantStage: React.FC<InstantStageProps> = ({
 
     onRollStart?.();
 
-    const picked = pickRandomLoadout(drawPool, activeMutator, 4, drawnPerkNames);
-    const slots = buildDrawnSlots(picked, drawPool);
+    const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
+    const slots = buildDrawnSlots(picked, activePlayablePerks);
     // Pad to a fixed 4 so the grid always has exactly 4 cells even if
     // fewer than 4 perks were available to draw.
     setRevealSlots([0, 1, 2, 3].map((i) => slots[i] || null));

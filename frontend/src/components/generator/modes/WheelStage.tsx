@@ -7,7 +7,7 @@ import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { Dictionary } from '@/locales/types';
 import { getPerkIconUrl } from '@/utils/perkUtils';
-import { isPerkBlockedByMutator, getPerkWeight, getRepeatWeight } from '../lib/perkPicker';
+import { isPerkBlockedByMutator, getPerkWeight } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
@@ -19,8 +19,6 @@ export interface WheelStageProps {
   spinDurationSec: number;
   role: RoleCategory;
   sortedPerks: Perk[];
-  /** Names to down-weight (soft No-Repeat), not exclude, when landing on a slot. */
-  drawnPerkNames?: readonly string[];
   loadout: (DrawnSlot | null)[];
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
@@ -50,7 +48,6 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   spinDurationSec,
   role,
   sortedPerks,
-  drawnPerkNames,
   loadout,
   activeSlotIdx,
   onWinSlot,
@@ -539,9 +536,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       // ever becoming truly impossible to land on.
       let targetSlot: number;
       if (pagePerksWithSlot.length > 0) {
-        const weights = pagePerksWithSlot.map(
-          (e) => getPerkWeight(e.perk, activeMutator) * getRepeatWeight(e.perk, drawnPerkNames)
-        );
+        const weights = pagePerksWithSlot.map((e) => getPerkWeight(e.perk, activeMutator));
         const totalWeight = weights.reduce((sum, w) => sum + w, 0);
         if (totalWeight <= 0) {
           targetSlot = Math.floor(Math.random() * maxSlotsOnPage) + 1;

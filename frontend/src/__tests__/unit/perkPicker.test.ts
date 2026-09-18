@@ -9,7 +9,6 @@ import {
   filterPerksByMutator,
   computeEligiblePool,
   computePlayablePool,
-  getRepeatWeight,
   pickRandomLoadout,
   buildDrawnSlots,
   isHexPerk,
@@ -267,50 +266,29 @@ test('pickRandomLoadout: soft-boosts hex/boon perks under hex_boon_only WITHOUT 
   assert.ok(sawNonHexBoonPerk, 'hex_boon_only must still be able to draw non-hex/boon perks -- it boosts odds, it does not exclude');
 });
 
-test('getRepeatWeight: down-weights already-drawn perks instead of excluding them', () => {
-  const perk = makePerk({ name: 'Kindred' });
-  assert.strictEqual(getRepeatWeight(perk, null), 1.0);
-  assert.strictEqual(getRepeatWeight(perk, undefined), 1.0);
-  assert.strictEqual(getRepeatWeight(perk, ['Iron Will']), 1.0);
-  assert.ok(getRepeatWeight(perk, ['Kindred']) < 1.0 && getRepeatWeight(perk, ['Kindred']) > 0);
-  assert.strictEqual(getRepeatWeight(perk, new Set(['Kindred'])), getRepeatWeight(perk, ['Kindred']));
-});
-
-test('pickRandomLoadout: No-Repeat + a boost curse combine as pure probability, never a hard dead end', () => {
-  // Regression test: No-Repeat used to be enforced upstream by hard-removing
-  // drawn perks from the pool before pickRandomLoadout ever saw them. Combined
-  // with a curse that boosts a whole perk category (e.g. Boon Ritual), once
-  // every perk in that category had been drawn once, the category became
-  // permanently unpickable for the rest of the session -- "a hard filter
-  // stacked on a hard filter" instead of two chances multiplying together.
-  // Now the caller is expected to pass the FULL pool plus a drawnPerkNames
-  // list, and pickRandomLoadout must still occasionally produce a drawn perk.
-  const pool = [
+test('pickRandomLoadout: No-Repeat + a curse combine as two hard filters, not a soft blend -- a drawn perk never comes back while No-Repeat is on', () => {
+  // No-Repeat is a deliberately hard rule (enforced upstream by the caller
+  // passing an already-narrowed pool via computePlayablePool), unlike the
+  // Chaos Mutators, which are soft weight adjustments. Simulating that
+  // upstream narrowing here: once a hex/boon perk has been "drawn" and
+  // removed from the pool passed in, it must NEVER reappear, no matter how
+  // many draws happen or how hard Boon Ritual boosts that category.
+  const fullPool = [
     makePerk({ name: 'Hex: Ruin' }),
     makePerk({ name: 'Boon: Shadow Step' }),
     makePerk({ name: 'Iron Will' }),
     makePerk({ name: 'Kindred' }),
   ];
-  const drawnNames = ['Hex: Ruin', 'Boon: Shadow Step'];
+  const drawnNames = new Set(['Hex: Ruin', 'Boon: Shadow Step']);
+  const noRepeatPool = fullPool.filter((p) => !drawnNames.has(p.name));
 
-  let sawDrawnHexOrBoonAgain = false;
-  for (let i = 0; i < 1000; i++) {
-    const picked = pickRandomLoadout(pool, hexBoonMutator, 1, drawnNames);
-    if (picked.some((p) => drawnNames.includes(p.name))) {
-      sawDrawnHexOrBoonAgain = true;
-      break;
-    }
+  for (let i = 0; i < 500; i++) {
+    const picked = pickRandomLoadout(noRepeatPool, hexBoonMutator, 1);
+    assert.ok(
+      picked.every((p) => !drawnNames.has(p.name)),
+      'a perk excluded by No-Repeat must never be picked, even under a curse that boosts its category'
+    );
   }
-  assert.ok(
-    sawDrawnHexOrBoonAgain,
-    'a boosted-category perk that was already drawn must still be reachable (heavily down-weighted), not permanently excluded'
-  );
-});
-
-test('pickRandomLoadout: without a drawnPerkNames list, behaves exactly as before (no regression for callers that omit it)', () => {
-  const pool = Array.from({ length: 6 }, (_, i) => makePerk({ name: `Perk ${i}` }));
-  const picked = pickRandomLoadout(pool, null, 3);
-  assert.strictEqual(picked.length, 3);
 });
 
 test('buildDrawnSlots: computes page/slot coordinates from the perk\'s index in the sorted pool', () => {

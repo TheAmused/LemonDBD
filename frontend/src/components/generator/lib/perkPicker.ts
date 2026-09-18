@@ -5,26 +5,26 @@ import { STEALTH_KEYWORDS, OBSESSION_KEYWORDS } from '@/constants/perkTraitKeywo
 
 /**
  * All of the curse-relevant perk classification below is keyed off the
- * backend-owned `perk.curse_category` field (set by DBD-knowledge-grounded
+ * backend-owned `perk.perk_type` field (set by DBD-knowledge-grounded
  * classification in `perks.json`, exposed via `Perk.to_dict()` /
  * `PerkResponse`), not hardcoded name lists or description-keyword
- * matching. A perk with no `curse_category` (e.g. stale cached data) is
+ * matching. A perk with no `perk_type` (e.g. stale cached data) is
  * treated as 'general' -- never as matching a specific curse category.
  */
-function hasCurseCategory(perk: Perk, category: string): boolean {
-  return (perk.curse_category || 'general') === category;
+function hasPerkType(perk: Perk, category: string): boolean {
+  return (perk.perk_type || 'general') === category;
 }
 
 export function isExhaustionPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'exhaustion');
+  return hasPerkType(perk, 'exhaustion');
 }
 
 export function isHexPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'hex');
+  return hasPerkType(perk, 'hex');
 }
 
 export function isBoonPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'boon');
+  return hasPerkType(perk, 'boon');
 }
 
 export function isHexOrBoonPerk(perk: Perk): boolean {
@@ -32,27 +32,27 @@ export function isHexOrBoonPerk(perk: Perk): boolean {
 }
 
 export function isMemePerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'meme');
+  return hasPerkType(perk, 'meme');
 }
 
 export function isGenRegressionPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'gen_slowdown');
+  return hasPerkType(perk, 'gen_slowdown');
 }
 
 export function isHealingOrAltruismPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'altruism_healing');
+  return hasPerkType(perk, 'altruism_healing');
 }
 
 export function isChasePerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'chase');
+  return hasPerkType(perk, 'chase');
 }
 
 export function isAuraPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'aura_reading');
+  return hasPerkType(perk, 'aura_reading');
 }
 
 export function isNegativePerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'handicap');
+  return hasPerkType(perk, 'handicap');
 }
 
 export function isPerkBlockedByMutator(
@@ -265,14 +265,14 @@ function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean
 }
 
 export function isGeneratorPerk(perk: Perk): boolean {
-  return hasCurseCategory(perk, 'gen_slowdown');
+  return hasPerkType(perk, 'gen_slowdown');
 }
 
 export function isHealingPerk(perk: Perk): boolean {
   return isHealingOrAltruismPerk(perk);
 }
 
-// Stealth and Obsession have no dedicated curse_category bucket (they cut
+// Stealth and Obsession have no dedicated perk_type bucket (they cut
 // across several categories), so the Tarot Deck's "type predicts the perk"
 // taxonomy keeps its multilingual description-keyword matching for these two.
 export function isStealthPerk(perk: Perk): boolean {

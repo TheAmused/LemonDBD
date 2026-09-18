@@ -32,6 +32,10 @@ class PerkBase(BaseModel):
     icon_url: str | None = Field(None, max_length=500)
     icon_local_path: str | None = Field(None, max_length=255)
     translations: dict[str, Any] | None = None
+    #: Chaos Wheel curse bucket. One of: exhaustion, gen_slowdown, hex, boon,
+    #: chase, aura_reading, altruism_healing, handicap, meme, general.
+    #: Nullable; a missing value is treated as "general" by consumers.
+    perk_type: str | None = Field(None, max_length=30)
     #: At most one set, and only on the side `role` names. 27 general perks
     #: (no character taught them) leave both NULL.
     survivor_id: int | None = None
@@ -72,6 +76,7 @@ class PerkResponse(BaseModel):
     description: str = ""
     icon_url: str = ""
     icon_local_path: str = ""
+    perk_type: str = "general"
     translations: dict[str, Any] = {}
     is_disabled: bool = False
     disabled_reason: str | None = None

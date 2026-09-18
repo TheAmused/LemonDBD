@@ -334,6 +334,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
+                onRollStart={() => setRevealedSlots([false, false, false, false])}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}

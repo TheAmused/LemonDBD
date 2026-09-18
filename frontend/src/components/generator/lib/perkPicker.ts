@@ -1,80 +1,58 @@
 // frontend/src/components/generator/lib/perkPicker.ts
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
-import {
-  EXHAUSTION_PERK_NAMES,
-  GEN_REGRESSION_PERK_NAMES,
-  AURA_PERK_NAMES,
-  HEALING_ALTRUISM_PERK_NAMES,
-  CHASE_PERK_NAMES,
-  MEME_PERK_NAMES,
-  NEGATIVE_PERK_NAMES,
-} from '@/constants/chaosMutators';
-import {
-  AURA_KEYWORDS,
-  GENERATOR_KEYWORDS,
-  HEALING_KEYWORDS,
-  CHASE_KEYWORDS,
-  STEALTH_KEYWORDS,
-  OBSESSION_KEYWORDS,
-} from '@/constants/perkTraitKeywords';
+import { STEALTH_KEYWORDS, OBSESSION_KEYWORDS } from '@/constants/perkTraitKeywords';
+
+/**
+ * All of the curse-relevant perk classification below is keyed off the
+ * backend-owned `perk.perk_type` field (set by DBD-knowledge-grounded
+ * classification in `perks.json`, exposed via `Perk.to_dict()` /
+ * `PerkResponse`), not hardcoded name lists or description-keyword
+ * matching. A perk with no `perk_type` (e.g. stale cached data) is
+ * treated as 'general' -- never as matching a specific curse category.
+ */
+function hasPerkType(perk: Perk, category: string): boolean {
+  return (perk.perk_type || 'general') === category;
+}
 
 export function isExhaustionPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase().trim();
-  const descLower = (perk.description || '').toLowerCase();
-  return (
-    EXHAUSTION_PERK_NAMES.has(nameLower) ||
-    descLower.includes('exhausted') ||
-    descLower.includes('exhaustion')
-  );
+  return hasPerkType(perk, 'exhaustion');
+}
+
+export function isHexPerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'hex');
+}
+
+export function isBoonPerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'boon');
 }
 
 export function isHexOrBoonPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase();
-  const descLower = (perk.description || '').toLowerCase();
-  return (
-    nameLower.includes('hex:') ||
-    nameLower.includes('boon:') ||
-    descLower.includes('hex:') ||
-    descLower.includes('boon:')
-  );
+  return isHexPerk(perk) || isBoonPerk(perk);
 }
 
 export function isMemePerk(perk: Perk): boolean {
-  return MEME_PERK_NAMES.has(perk.name.toLowerCase().trim());
+  return hasPerkType(perk, 'meme');
 }
 
-const GEN_REGRESSION_KEYWORDS: readonly string[] = [
-  'regression',
-  'regress',
-  'regressing',
-  'damage generator',
-  'damage a generator',
-  'generator loses',
-  'generator explodes',
-  'blocked by the entity',
-  'regresja',
-  'regresji',
-  'kopnięcie generatora',
-  'zablokowany przez byt',
-];
-
 export function isGenRegressionPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase().trim();
-  if (GEN_REGRESSION_PERK_NAMES.has(nameLower)) return true;
-  return descriptionMatchesAny(perk, GEN_REGRESSION_KEYWORDS);
+  return hasPerkType(perk, 'gen_slowdown');
 }
 
 export function isHealingOrAltruismPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase().trim();
-  if (HEALING_ALTRUISM_PERK_NAMES.has(nameLower)) return true;
-  return descriptionMatchesAny(perk, HEALING_KEYWORDS);
+  return hasPerkType(perk, 'altruism_healing');
 }
 
 export function isChasePerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase().trim();
-  if (CHASE_PERK_NAMES.has(nameLower)) return true;
-  return descriptionMatchesAny(perk, CHASE_KEYWORDS);
+  return hasPerkType(perk, 'chase');
+}
+
+export function isAuraPerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'aura_reading');
+}
+
+export function isNegativePerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'handicap');
 }
 
 export function isPerkBlockedByMutator(
@@ -201,9 +179,21 @@ export function computePlayablePool(
 
 /**
  * Picks `count` distinct perks from `pool` using weighted sampling without replacement.
- * For theme/buff mutators, narrows to eligible candidates.
- * For curse mutators (blindness, no_exhaustion, no_slowdown, solo_queue), probabilistically
- * reduces drop chances (e.g. -85% / -90%) via `getPerkWeight(perk, mutator)`.
+ *
+ * Every Chaos Mutator here is a soft probability adjustment, never a hard
+ * filter: every eligible perk in `pool` stays a candidate, and only the
+ * *weighting* changes via `getPerkWeight(perk, mutator)` (a reduced chance
+ * for no_exhaustion/no_slowdown, a boosted chance for the theme curses).
+ * Pre-filtering the pool down to only matching/non-matching perks would turn
+ * an advertised "X% reduced" or "Nx boosted" CHANCE into an accidental hard
+ * include/exclude that either always or never produces a given perk type --
+ * that used to be a real bug here and must not come back.
+ *
+ * No-Repeat Mode is a DIFFERENT, deliberately hard rule: it is enforced
+ * upstream, by the caller passing an already-narrowed `pool` (see
+ * `computePlayablePool`) that has drawn perks removed entirely. "No-Repeat"
+ * means no repeats, full stop -- unlike the mutators above, it is never
+ * softened into a lower chance here.
  */
 export function pickRandomLoadout(
   pool: Perk[],
@@ -211,18 +201,7 @@ export function pickRandomLoadout(
   count: number = 4
 ): Perk[] {
   if (pool.length === 0) return [];
-  let candidates: Perk[];
-  if (
-    mutator?.id === 'hex_boon_only' ||
-    mutator?.id === 'hex_roulette' ||
-    mutator?.id === 'meme_loadout' ||
-    mutator?.id === 'negative_only' ||
-    mutator?.id === 'chase_only'
-  ) {
-    candidates = filterPerksByMutator(pool, mutator);
-  } else {
-    candidates = pool;
-  }
+  const candidates: Perk[] = pool;
 
   const remaining = [...candidates];
   const picked: Perk[] = [];
@@ -280,41 +259,22 @@ export type TarotType =
   | 'stealth'
   | 'entity';
 
-export function isHexPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase();
-  const descLower = (perk.description || '').toLowerCase();
-  return nameLower.includes('hex:') || descLower.includes('hex:');
-}
-
-export function isBoonPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase();
-  const descLower = (perk.description || '').toLowerCase();
-  return nameLower.includes('boon:') || descLower.includes('boon:');
-}
-
-export function isNegativePerk(perk: Perk): boolean {
-  return NEGATIVE_PERK_NAMES.has(perk.name.toLowerCase().trim());
-}
-
 function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean {
   const desc = (perk.description || '').toLowerCase();
   return keywords.some((keyword) => desc.includes(keyword.toLowerCase()));
 }
 
-export function isAuraPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase().trim();
-  if (AURA_PERK_NAMES.has(nameLower)) return true;
-  return descriptionMatchesAny(perk, AURA_KEYWORDS) || nameLower.includes('aura');
-}
-
 export function isGeneratorPerk(perk: Perk): boolean {
-  return descriptionMatchesAny(perk, GENERATOR_KEYWORDS);
+  return hasPerkType(perk, 'gen_slowdown');
 }
 
 export function isHealingPerk(perk: Perk): boolean {
-  return descriptionMatchesAny(perk, HEALING_KEYWORDS);
+  return isHealingOrAltruismPerk(perk);
 }
 
+// Stealth and Obsession have no dedicated perk_type bucket (they cut
+// across several categories), so the Tarot Deck's "type predicts the perk"
+// taxonomy keeps its multilingual description-keyword matching for these two.
 export function isStealthPerk(perk: Perk): boolean {
   return descriptionMatchesAny(perk, STEALTH_KEYWORDS);
 }

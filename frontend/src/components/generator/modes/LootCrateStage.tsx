@@ -17,6 +17,8 @@ import { playReelThud, playCardFlip } from '@/utils/perkAudio';
 export interface LootCrateStageProps {
   role: RoleCategory;
   activePlayablePerks: Perk[];
+  drawPool: Perk[];
+  drawnPerkNames: readonly string[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
   revealedSlots: boolean[];
@@ -97,6 +99,8 @@ function scatterPointStyle(point: { xPct: number; yPct: number }): { left: strin
 export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   role,
   activePlayablePerks,
+  drawPool,
+  drawnPerkNames,
   activeMutator,
   onRollComplete,
   revealedSlots,
@@ -138,9 +142,9 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     const shakeTimeoutId = window.setTimeout(() => {
       if (!isMountedRef.current) return;
 
-      const throwCount = Math.min(activePlayablePerks.length, Math.floor(Math.random() * 5) + 8); // 8-12
-      const picked = pickRandomLoadout(activePlayablePerks, activeMutator, throwCount);
-      const drawn = buildDrawnSlots(picked, activePlayablePerks);
+      const throwCount = Math.min(drawPool.length, Math.floor(Math.random() * 5) + 8); // 8-12
+      const picked = pickRandomLoadout(drawPool, activeMutator, throwCount, drawnPerkNames);
+      const drawn = buildDrawnSlots(picked, drawPool);
       const layout = buildScatterLayout(drawn.length);
       const pool: ScatterItem[] = drawn.map((slot, i) => ({
         ...slot,

@@ -199,37 +199,63 @@ export function computePlayablePool(
   return remaining.length > 0 ? remaining : eligiblePool;
 }
 
+/** A perk that's already been drawn under No-Repeat Mode is ~20x less likely
+ * to come up again, not impossible -- "no-repeat" biases the odds away from
+ * recently-used perks, it doesn't carve them out of the pool. That keeps the
+ * draw genuinely probabilistic even when No-Repeat and a Chaos Mutator are
+ * both active at once: a drawn perk that also matches a boosted curse
+ * category can still occasionally reappear (heavily down-weighted), instead
+ * of the two constraints stacking into perks that can never be drawn again
+ * no matter what. (Duplicate perks *within the same loadout* are a separate,
+ * still-hard rule enforced by the picking loop below removing each pick from
+ * `remaining` as it goes.) */
+export const REPEAT_PENALTY_WEIGHT = 0.05;
+
+export function getRepeatWeight(
+  perk: Perk,
+  drawnPerkNames?: ReadonlySet<string> | readonly string[] | null
+): number {
+  if (!drawnPerkNames) return 1.0;
+  const drawnSet = drawnPerkNames instanceof Set ? drawnPerkNames : new Set(drawnPerkNames);
+  return drawnSet.has(perk.name) ? REPEAT_PENALTY_WEIGHT : 1.0;
+}
+
 /**
  * Picks `count` distinct perks from `pool` using weighted sampling without replacement.
- * For theme/buff mutators, narrows to eligible candidates.
- * For curse mutators (blindness, no_exhaustion, no_slowdown, solo_queue), probabilistically
- * reduces drop chances (e.g. -85% / -90%) via `getPerkWeight(perk, mutator)`.
+ *
+ * Every mutator here is a soft probability adjustment, never a hard filter:
+ * every eligible perk in `pool` stays a candidate, and only the *weighting*
+ * changes via `getPerkWeight(perk, mutator)` (e.g. 0.10 for a ~90% reduced
+ * chance on no_exhaustion/no_slowdown, 4x-5x boosted for the theme curses).
+ * Pre-filtering the pool down to only matching/non-matching perks would turn
+ * an advertised "X% reduced" or "Nx boosted" CHANCE into an accidental hard
+ * include/exclude that either always or never produces a given perk type --
+ * that used to be a real bug here and must not come back.
+ *
+ * `drawnPerkNames`, when passed (No-Repeat Mode), applies the same
+ * philosophy: perks already drawn this session are down-weighted via
+ * `getRepeatWeight`, not removed from `pool`. That keeps a curse's boosted
+ * category able to reappear even after No-Repeat has "used it up", instead
+ * of the two constraints combining into a hard dead end.
  */
 export function pickRandomLoadout(
   pool: Perk[],
   mutator?: ChaosMutator | null,
-  count: number = 4
+  count: number = 4,
+  drawnPerkNames?: ReadonlySet<string> | readonly string[] | null
 ): Perk[] {
   if (pool.length === 0) return [];
-  let candidates: Perk[];
-  if (
-    mutator?.id === 'hex_boon_only' ||
-    mutator?.id === 'hex_roulette' ||
-    mutator?.id === 'meme_loadout' ||
-    mutator?.id === 'negative_only' ||
-    mutator?.id === 'chase_only'
-  ) {
-    candidates = filterPerksByMutator(pool, mutator);
-  } else {
-    candidates = pool;
-  }
+  const candidates: Perk[] = pool;
+  const drawnSet = drawnPerkNames
+    ? (drawnPerkNames instanceof Set ? drawnPerkNames : new Set(drawnPerkNames))
+    : null;
 
   const remaining = [...candidates];
   const picked: Perk[] = [];
   const needed = Math.min(count, remaining.length);
 
   for (let step = 0; step < needed; step++) {
-    const weights = remaining.map((p) => getPerkWeight(p, mutator));
+    const weights = remaining.map((p) => getPerkWeight(p, mutator) * getRepeatWeight(p, drawnSet));
     const totalWeight = weights.reduce((sum, w) => sum + w, 0);
 
     if (totalWeight <= 0) {

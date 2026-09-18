@@ -57,7 +57,7 @@ const mockPerks: Perk[] = [
     description: 'When starting to run, break into a sprint. Causes Exhausted for 40 seconds.',
     icon_url: '/icons/sprint_burst.png',
     icon_local_path: '/icons/sprint_burst.png',
-    curse_category: 'exhaustion',
+    perk_type: 'exhaustion',
     is_owned: true,
   },
   {
@@ -68,7 +68,7 @@ const mockPerks: Perk[] = [
     description: 'Instantly heal one health state and sprint away. Causes Exhausted for 40 seconds.',
     icon_url: '/icons/adrenaline.png',
     icon_local_path: '/icons/adrenaline.png',
-    curse_category: 'exhaustion',
+    perk_type: 'exhaustion',
     is_owned: true,
   },
   {
@@ -79,7 +79,7 @@ const mockPerks: Perk[] = [
     description: 'See the aura of nearby allies.',
     icon_url: '/icons/bond.png',
     icon_local_path: '/icons/bond.png',
-    curse_category: 'aura_reading',
+    perk_type: 'aura_reading',
     is_owned: true,
   },
   {
@@ -90,7 +90,7 @@ const mockPerks: Perk[] = [
     description: 'Bless a dull or hex totem to create a Boon.',
     icon_url: '/icons/boon.png',
     icon_local_path: '/icons/boon.png',
-    curse_category: 'boon',
+    perk_type: 'boon',
     is_owned: true,
   },
   {
@@ -101,7 +101,7 @@ const mockPerks: Perk[] = [
     description: 'All generators automatically regress when not being repaired.',
     icon_url: '/icons/hex_ruin.png',
     icon_local_path: '/icons/hex_ruin.png',
-    curse_category: 'hex',
+    perk_type: 'hex',
     is_owned: true,
   },
   {
@@ -112,7 +112,7 @@ const mockPerks: Perk[] = [
     description: 'After hooking a survivor, see the auras of other survivors.',
     icon_url: '/icons/bbq.png',
     icon_local_path: '/icons/bbq.png',
-    curse_category: 'aura_reading',
+    perk_type: 'aura_reading',
     is_owned: true,
   },
 ];

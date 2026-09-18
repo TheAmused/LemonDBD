@@ -11,8 +11,8 @@ chase, aura_reading, altruism_healing, handicap, meme, general). This
 replaces the frontend's hardcoded perk-name lists / description-keyword
 matching in the Chaos Wheel curse system with a real, server-owned field.
 
-Named `perk_type` rather than `curse_category` (its original name during
-development) to avoid confusion with the pre-existing `category` alias
+Named `perk_type` (not the internal working name this column briefly had
+during development) to avoid confusion with the pre-existing `category` alias
 `Perk.to_dict()` emits for `role` -- two unrelated concepts should not have
 near-identical names.
 

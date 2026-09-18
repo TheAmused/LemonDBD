@@ -252,6 +252,12 @@ export default {
       desc: '容易には心を許さず、真に優れた者だけにSmashを捧げます。',
     },
   },
+  nsfw: {
+    title: 'NSFWコンテンツを含みます',
+    description: 'このロースターは成人向け(NSFW)コンテンツとして設定されています。表示してよいか確認してください。',
+    confirm: 'クリックして表示',
+    badge: 'NSFW',
+  },
   comingSoon: '近日公開',
   tooltips: {
     filter: '候補者を絞り込む',

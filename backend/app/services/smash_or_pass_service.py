@@ -52,11 +52,20 @@ class SmashOrPassService:
         except Exception as e:
             logger.debug(f"Smash-or-pass seed notice: {e}")
 
-    def get_rosters(self, active_only: bool = True) -> list[dict[str, Any]]:
+    def get_rosters(self, active_only: bool = True, include_nsfw: bool = False) -> list[dict[str, Any]]:
+        """List rosters. `include_nsfw=False` (the default) hides any roster with
+        `is_nsfw=True` from this listing entirely -- an explicit opt-in
+        (`?include_nsfw=true` on the route) is required to see it here at all.
+        This is a listing-level gate only: fetching a specific NSFW roster's feed
+        directly by slug (get_feed) still works even without the opt-in, so a
+        direct link still resolves -- `is_nsfw` just isn't hidden from the
+        response in that case, so the frontend can gate display on it there."""
         self.ensure_seeded()
         stmt = select(Roster)
         if active_only:
             stmt = stmt.where(Roster.is_active.is_(True))
+        if not include_nsfw:
+            stmt = stmt.where(Roster.is_nsfw.is_(False))
         stmt = stmt.order_by(Roster.slug)
         rosters = db.session.scalars(stmt).all()
 
@@ -247,7 +256,24 @@ class SmashOrPassService:
                         )
                     )
                 if not entity:
-                    entity = db.session.scalar(select(Entity).where(Entity.slug == character_slug))
+                    # Cross-roster fallback for a caller that only has a character_slug
+                    # and either no roster_slug/edition or one that doesn't resolve to a
+                    # real roster. Entity.slug is only guaranteed unique WITHIN a roster
+                    # (the seeder's upsert lookup scopes by roster_id -- see
+                    # smash_roster_seeder.py), not globally, and nothing in the schema
+                    # enforces global uniqueness. No current roster JSON file actually
+                    # reuses a slug across rosters, but if one ever does, this bare
+                    # `.scalar()` with no ORDER BY would silently record the vote
+                    # against an arbitrary one of the matching entities instead of a
+                    # deterministic one. `.order_by(Entity.id)` at least makes that
+                    # deterministic (same slug always resolves to the same entity here)
+                    # rather than implementation-defined -- it doesn't decide which one
+                    # is "correct" for an ambiguous slug, which is a real product
+                    # question (should this fallback exist at all without a roster
+                    # scope?) left open rather than decided here.
+                    entity = db.session.scalars(
+                        select(Entity).where(Entity.slug == character_slug).order_by(Entity.id)
+                    ).first()
 
             if not entity:
                 raise ValueError(f"Entity not found for entity_id='{entity_id}' or character_slug='{character_slug}'")

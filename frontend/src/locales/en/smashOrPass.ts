@@ -252,6 +252,12 @@ export default {
       desc: 'You keep your distance. Only the absolute pinnacle of trial survivors or killers earn your vote.',
     },
   },
+  nsfw: {
+    title: 'Contains NSFW Content',
+    description: 'This roster is flagged as containing mature/NSFW content. Confirm you want to view it.',
+    confirm: 'Click to View',
+    badge: 'NSFW',
+  },
   comingSoon: 'Coming Soon',
   tooltips: {
     filter: 'Filter Candidates',

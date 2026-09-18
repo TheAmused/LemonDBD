@@ -126,3 +126,29 @@ class TestSmashOrPassDataIntegrity:
         e_slugs = [e.get("slug") for e in entities_by_roster["broken_roster"]]
         dupes = {s for s in e_slugs if e_slugs.count(s) > 1}
         assert dupes == {"same-slug"}, "the duplicate-slug detector itself is broken"
+
+    def test_entity_slugs_are_scoped_per_roster_not_asserted_globally_unique(self) -> None:
+        """Documents the actual assumption baked into the code: Entity.slug is
+        looked up scoped to (roster_id, slug) everywhere in the normal path
+        (smash_roster_seeder.py's upsert, cast_vote's primary lookup), but
+        cast_vote has a cross-roster fallback (`select(Entity).where(Entity.slug
+        == character_slug)`, no roster scope) for when the caller doesn't supply
+        a resolvable roster. That fallback only behaves sanely if slugs are, in
+        practice, globally unique across all rosters -- which nothing in the
+        schema enforces. This test pins today's actual data: no roster currently
+        reuses another roster's entity slug. If it ever does, this test is
+        exactly the one that should catch it before the cross-roster fallback in
+        cast_vote silently resolves to the wrong roster's entity."""
+        _, entities_by_roster = load_rosters_from_json_files()
+        slug_to_rosters: dict[str, set[str]] = {}
+        for roster_slug, entities in entities_by_roster.items():
+            for e in entities:
+                slug_to_rosters.setdefault(e.get("slug"), set()).add(roster_slug)
+
+        collisions = {s: rs for s, rs in slug_to_rosters.items() if len(rs) > 1}
+        assert not collisions, (
+            f"entity slug(s) reused across more than one roster: {collisions} -- "
+            "cast_vote's cross-roster character_slug fallback (smash_or_pass_service.py) "
+            "cannot distinguish these; either make the slugs roster-unique or pass a "
+            "resolvable roster_slug/edition on every vote call for these entities"
+        )

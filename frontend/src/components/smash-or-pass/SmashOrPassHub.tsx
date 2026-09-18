@@ -31,6 +31,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip } from '@/components/common/Tooltip';
 import { CharacterCard } from './CharacterCard';
 import { shuffleArray } from '@/utils/shuffleArray';
+import { hasAcknowledgedNsfwRoster, acknowledgeNsfwRoster } from '@/utils/nsfwAck';
 import { SmashSounds } from './SmashSoundEffects';
 import {
   EntityItem,
@@ -122,6 +123,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const [totalRemaining, setTotalRemaining] = useState<number>(0);
   const [leaderboardItems, setLeaderboardItems] = useState<LeaderboardItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // NSFW Content Gate: a roster flagged is_nsfw is blurred/blocked behind an
+  // explicit confirmation until the viewer clicks through it, once per roster
+  // per browser (persisted via nsfwAck.ts, not re-prompted every card).
+  const [nsfwAcknowledged, setNsfwAcknowledged] = useState<boolean>(false);
 
   // Single-Card Exit Lifecycle (1.6s Full Duration)
   const [isExiting, setIsExiting] = useState<boolean>(false);
@@ -218,6 +224,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       }
     );
   }, [rosters, selectedRosterSlug]);
+
+  // Re-check acknowledgment whenever the active roster changes (including on
+  // first mount for whatever roster was restored from localStorage).
+  useEffect(() => {
+    setNsfwAcknowledged(hasAcknowledgedNsfwRoster(activeRoster.slug));
+  }, [activeRoster.slug]);
+
+  const handleAcknowledgeNsfw = useCallback(() => {
+    acknowledgeNsfwRoster(activeRoster.slug);
+    setNsfwAcknowledged(true);
+  }, [activeRoster.slug]);
 
   const getRosterCover = useCallback((r: RosterItem) => {
     if (r.cover_image_url) {
@@ -981,7 +998,33 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
       {/* MAIN INTERACTIVE ARENA WITH MULTI-CARD STACK QUEUE */}
       <main className="relative flex-1 flex flex-col items-center justify-center my-2 z-20 pointer-events-none">
-        {loading ? (
+        {activeRoster.is_nsfw && !nsfwAcknowledged ? (
+          <div
+            data-testid="nsfw-content-gate"
+            className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none"
+          >
+            <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/60 flex flex-col items-center justify-center p-6 sm:p-8 space-y-4 text-center backdrop-blur-2xl">
+              <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/40 text-accent-red">
+                <AlertTriangle className="h-7 w-7 sm:h-8 sm:w-8" aria-hidden="true" />
+              </div>
+              <h3 className="text-base sm:text-lg font-black font-mono text-text-primary">
+                {dict?.smashOrPass?.nsfw?.title || 'Contains NSFW Content'}
+              </h3>
+              <p className="text-xs sm:text-sm text-text-muted">
+                {dict?.smashOrPass?.nsfw?.description ||
+                  `${activeRoster.name || selectedRosterSlug} is flagged as containing mature/NSFW content. Confirm you want to view it.`}
+              </p>
+              <button
+                type="button"
+                onClick={handleAcknowledgeNsfw}
+                data-testid="nsfw-content-gate-confirm"
+                className="mt-2 px-5 py-2.5 rounded-2xl bg-accent-red text-text-inverted text-sm font-mono font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all"
+              >
+                {dict?.smashOrPass?.nsfw?.confirm || 'Click to View'}
+              </button>
+            </div>
+          </div>
+        ) : loading ? (
           <div className="relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px] pointer-events-auto select-none animate-pulse">
             <div className="w-[88vw] max-w-[340px] sm:max-w-[380px] md:max-w-[420px] aspect-[9/14] sm:aspect-[9/15] rounded-[32px] sm:rounded-[36px] bg-bg-primary border-2 border-accent-red/30 flex flex-col items-center justify-center p-6 space-y-4">
               <Heart className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />

@@ -2,7 +2,7 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Check, Flame, X, Lock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Flame, X, Lock, AlertTriangle } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -432,7 +432,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               const brightness = Math.max(0.3, 1 - absOffset * 0.35);
               const zIndex = Math.round(40 - absOffset * 10);
 
-              const rosterLabel = `${getRosterDisplayName(r)}${count ? `, ${count} ${candidatesWord}` : ''}${!isRosterEnabled ? ' (Coming Soon)' : ''}`;
+              const rosterLabel = `${getRosterDisplayName(r)}${count ? `, ${count} ${candidatesWord}` : ''}${!isRosterEnabled ? ' (Coming Soon)' : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
 
               return (
                 <div
@@ -501,6 +501,16 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                     >
                       <Flame className="h-4 w-4 text-accent-red fill-accent-red" aria-hidden="true" />
                       <span>{count}</span>
+                    </div>
+                  )}
+
+                  {r.is_nsfw && (
+                    <div
+                      data-testid="roster-nsfw-badge"
+                      className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-2xl bg-accent-red text-text-inverted text-[10px] sm:text-xs font-mono font-black uppercase tracking-wide shadow-md pointer-events-none"
+                    >
+                      <AlertTriangle className="h-3 w-3" aria-hidden="true" />
+                      <span>{dict?.smashOrPass?.nsfw?.badge || 'NSFW'}</span>
                     </div>
                   )}
 

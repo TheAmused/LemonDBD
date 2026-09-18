@@ -20,7 +20,7 @@ export interface Perk {
   //: hex, boon, chase, aura_reading, altruism_healing, handicap, meme,
   //: general). Optional/possibly missing on older cached data; treat a
   //: missing value the same as 'general'.
-  curse_category?: string;
+  perk_type?: string;
   description: string;
   icon_url: string;
   icon_local_path: string;

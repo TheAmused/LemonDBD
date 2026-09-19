@@ -4,7 +4,6 @@ from typing import Any
 from sqlalchemy import func, select
 
 from app.core.extensions import db
-from app.core.json_provider import safe_json_loads
 from app.models import Killer, PageStreakRun
 from app.services.challenge_completions import fetch_completed_variants
 from app.services.ownership_service import OwnershipService
@@ -156,7 +155,7 @@ def build_roster_summary(
                 "attempt": r.attempt,
                 "current_page": r.current_page,
                 "best_page": r.best_page,
-                "page_count": len(safe_json_loads(r.pages_json, default=[])),
+                "page_count": len(r.pages),
                 "avatar_local_path": avatar_local_path,
                 "ever_completed": ever_completed,
             })

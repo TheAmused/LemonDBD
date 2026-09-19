@@ -4,7 +4,6 @@ import logging
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import HistoryMatchLog, HistoryRun
 from app.schemas.history import HistoryMatchLogDict, HistoryRunState
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
@@ -31,18 +30,18 @@ class HistoryService:
 
     def _freeze_pool(self, run: HistoryRun) -> list[str]:
         ids = get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
-        run.owned_killers_json = safe_json_dumps(ids)
+        run.owned_killer_ids = ids
         return resolve_killer_names_by_ids(ids)
 
     def _is_unfrozen(self, run: HistoryRun) -> bool:
-        return not safe_json_loads(run.owned_killers_json, default=[])
+        return not run.owned_killer_ids
 
     def _resolve_loss(self, run: HistoryRun):
         if run.mode == "medium":
             run.current_row_index = run.checkpoint_row_index
             run.total_killers_beaten = run.checkpoint_total_killers_beaten
-            completed = safe_json_loads(run.checkpoint_completed_killers_json, default=[])
-            unlocked = safe_json_loads(run.checkpoint_unlocked_perk_names_json, default=[])
+            completed = run.checkpoint_completed_killers
+            unlocked = run.checkpoint_unlocked_perk_names
         else:
             general = get_general_killer_perk_names()
             run.current_row_index = 0
@@ -51,8 +50,8 @@ class HistoryService:
             unlocked = general
             run.checkpoint_row_index = 0
             run.checkpoint_total_killers_beaten = 0
-            run.checkpoint_completed_killers_json = "[]"
-            run.checkpoint_unlocked_perk_names_json = safe_json_dumps(general)
+            run.checkpoint_completed_killers = []
+            run.checkpoint_unlocked_perk_names = general
 
         if run.current_row_index == 0 and run.total_killers_beaten == 0:
             self._freeze_pool(run)
@@ -65,22 +64,22 @@ class HistoryService:
                 get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
             )
         else:
-            owned_ids = safe_json_loads(run.owned_killers_json, default=[])
+            owned_ids = run.owned_killer_ids
             owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
 
         if run.status == "in_progress" and rows and run.current_row_index >= len(rows):
             run.current_row_index = len(rows) - 1
-            run.completed_killers_json = "[]"
+            run.completed_killers = []
             db.session.commit()
 
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
 
         if current_row:
-            completed = safe_json_loads(run.completed_killers_json, default=[])
+            completed = run.completed_killers
             filtered = [k for k in completed if k in current_row]
             if filtered != completed:
-                run.completed_killers_json = safe_json_dumps(filtered)
+                run.completed_killers = filtered
                 db.session.commit()
 
         return {
@@ -111,13 +110,13 @@ class HistoryService:
             current_row_index=0,
             total_killers_beaten=0,
             best_killers_beaten=0,
-            completed_killers_json="[]",
-            owned_killers_json=safe_json_dumps(owned_killer_ids),
-            unlocked_perk_names_json=safe_json_dumps(general),
+            completed_killers=[],
+            owned_killer_ids=owned_killer_ids,
+            unlocked_perk_names=general,
             checkpoint_row_index=0,
             checkpoint_total_killers_beaten=0,
-            checkpoint_completed_killers_json="[]",
-            checkpoint_unlocked_perk_names_json=safe_json_dumps(general),
+            checkpoint_completed_killers=[],
+            checkpoint_unlocked_perk_names=general,
         )
         db.session.add(run)
         db.session.commit()
@@ -151,15 +150,15 @@ class HistoryService:
 
         if self._is_unfrozen(run):
             self._freeze_pool(run)
-        owned_ids = safe_json_loads(run.owned_killers_json, default=[])
+        owned_ids = run.owned_killer_ids
         owned_names = resolve_killer_names_by_ids(owned_ids)
         rows = build_rows(owned_names)
         current_row = rows[run.current_row_index] if run.current_row_index < len(rows) else []
         if killer_id not in current_row:
             raise ValueError(f"{killer_id} is not in the active row")
 
-        completed = safe_json_loads(run.completed_killers_json, default=[])
-        unlocked = safe_json_loads(run.unlocked_perk_names_json, default=[])
+        completed = run.completed_killers
+        unlocked = run.unlocked_perk_names
         streak_before = run.total_killers_beaten
         row_index_for_log = run.current_row_index
         newly_unlocked: list[str] = []
@@ -185,15 +184,15 @@ class HistoryService:
                 if run.mode == "medium":
                     run.checkpoint_row_index = run.current_row_index
                     run.checkpoint_total_killers_beaten = run.total_killers_beaten
-                    run.checkpoint_completed_killers_json = "[]"
-                    run.checkpoint_unlocked_perk_names_json = safe_json_dumps(unlocked)
+                    run.checkpoint_completed_killers = []
+                    run.checkpoint_unlocked_perk_names = unlocked
         else:
             completed, unlocked = self._resolve_loss(run)
             run.attempts += 1
 
         streak_after = run.total_killers_beaten
-        run.completed_killers_json = safe_json_dumps(completed)
-        run.unlocked_perk_names_json = safe_json_dumps(unlocked)
+        run.completed_killers = completed
+        run.unlocked_perk_names = unlocked
 
         db.session.add(HistoryMatchLog(
             run_id=run_id,
@@ -239,8 +238,8 @@ class HistoryService:
         run.attempts += 1
 
         streak_after = run.total_killers_beaten
-        run.completed_killers_json = safe_json_dumps(completed)
-        run.unlocked_perk_names_json = safe_json_dumps(unlocked)
+        run.completed_killers = completed
+        run.unlocked_perk_names = unlocked
 
         db.session.add(HistoryMatchLog(
             run_id=run_id,

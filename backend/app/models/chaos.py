@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
+from app.models.base import JsonField, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict
+    from app.schemas.streak import PerkPayload
 
 
 class ChaosRun(Base):
@@ -34,6 +34,14 @@ class ChaosRun(Base):
     current_addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     unlocked_perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    completed_killers = JsonField[list[str]]("completed_killers_json", list)
+    checkpoint_killers = JsonField[list[str]]("checkpoint_killers_json", list)
+    used_perks = JsonField[list[str]]("used_perks_json", list)
+    checkpoint_used_perks = JsonField[list[str]]("checkpoint_used_perks_json", list)
+    current_perks = JsonField["list[PerkPayload]"]("current_perks_json", list)
+    current_addon_rarities = JsonField[list[str]]("current_addon_rarities_json", list)
+    owned_killer_ids = JsonField[list[int]]("owned_killers_json", list)
+    unlocked_perk_ids = JsonField[list[int]]("unlocked_perks_json", list)
     perks_revealed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
@@ -56,14 +64,14 @@ class ChaosRun(Base):
             "current_streak": self.current_streak,
             "best_streak": self.best_streak,
             "last_checkpoint_streak": self.last_checkpoint_streak,
-            "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
-            "checkpoint_killers": safe_json_loads(self.checkpoint_killers_json, default=[]),
-            "used_perks": safe_json_loads(self.used_perks_json, default=[]),
-            "checkpoint_used_perks": safe_json_loads(self.checkpoint_used_perks_json, default=[]),
-            "current_perks": safe_json_loads(self.current_perks_json, default=[]),
-            "current_addon_rarities": safe_json_loads(self.current_addon_rarities_json, default=[]),
-            "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
-            "unlocked_perk_ids": safe_json_loads(self.unlocked_perks_json, default=[]),
+            "completed_killers": self.completed_killers,
+            "checkpoint_killers": self.checkpoint_killers,
+            "used_perks": self.used_perks,
+            "checkpoint_used_perks": self.checkpoint_used_perks,
+            "current_perks": self.current_perks,
+            "current_addon_rarities": self.current_addon_rarities,
+            "owned_killer_ids": self.owned_killer_ids,
+            "unlocked_perk_ids": self.unlocked_perk_ids,
             "perks_revealed": self.perks_revealed,
             "attempts": self.attempts,
             "created_at": self.created_at.isoformat() if self.created_at else None,
@@ -82,6 +90,8 @@ class ChaosMatchLog(Base):
     result: Mapped[str] = mapped_column(String(20), nullable=False)
     perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     addon_rarities_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    perks = JsonField["list[PerkPayload]"]("perks_json", list)
+    addon_rarities = JsonField[list[str]]("addon_rarities_json", list)
     streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
     streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
     timestamp: Mapped[datetime] = mapped_column(
@@ -97,8 +107,8 @@ class ChaosMatchLog(Base):
             "run_id": self.run_id,
             "killer_id": self.killer_id,
             "result": self.result,
-            "perks": safe_json_loads(self.perks_json, default=[]),
-            "addon_rarities": safe_json_loads(self.addon_rarities_json, default=[]),
+            "perks": self.perks,
+            "addon_rarities": self.addon_rarities,
             "streak_before": self.streak_before,
             "streak_after": self.streak_after,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,

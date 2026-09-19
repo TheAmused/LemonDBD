@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.core.json_provider import safe_json_loads
-from app.models.base import utcnow
+from app.models.base import JsonField, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
@@ -33,6 +32,11 @@ class HistoryRun(Base):
     checkpoint_completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     checkpoint_unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    completed_killers = JsonField[list[str]]("completed_killers_json", list)
+    unlocked_perk_names = JsonField[list[str]]("unlocked_perk_names_json", list)
+    checkpoint_completed_killers = JsonField[list[str]]("checkpoint_completed_killers_json", list)
+    checkpoint_unlocked_perk_names = JsonField[list[str]]("checkpoint_unlocked_perk_names_json", list)
+    owned_killer_ids = JsonField[list[int]]("owned_killers_json", list)
     attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
@@ -54,9 +58,9 @@ class HistoryRun(Base):
             "current_row_index": self.current_row_index,
             "total_killers_beaten": self.total_killers_beaten,
             "best_killers_beaten": self.best_killers_beaten,
-            "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
-            "unlocked_perk_names": safe_json_loads(self.unlocked_perk_names_json, default=[]),
-            "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
+            "completed_killers": self.completed_killers,
+            "unlocked_perk_names": self.unlocked_perk_names,
+            "owned_killer_ids": self.owned_killer_ids,
             "checkpoint_row_index": self.checkpoint_row_index,
             "attempts": self.attempts,
             "created_at": self.created_at.isoformat() if self.created_at else None,

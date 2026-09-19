@@ -16,7 +16,6 @@ const ROWS = [
 test('the draft answers the same lookup the character grid makes', () => {
   const draft = buildCharacterOwnershipDraft(ROWS);
 
-  // The grid looks characters up by their category, which is capitalised.
   assert.strictEqual(draft[ownershipKey(4, 'Survivor')], false);
   assert.strictEqual(draft[ownershipKey(12, 'Survivor')], false);
 });
@@ -44,7 +43,6 @@ test('a character toggled twice is not sent', () => {
 });
 
 test('a character missing from the loaded state counts as owned', () => {
-  // Same default the grid uses for a key it does not know.
   const updates = changedCharacterUpdates({}, { [ownershipKey(7, 'Killer')]: false });
 
   assert.deepStrictEqual(updates, [{ character_id: 7, role: 'killer', is_owned: false }]);

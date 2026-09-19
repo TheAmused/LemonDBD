@@ -79,8 +79,7 @@ export function useCachedData<T>(
     void run(false);
   }, [key, active, ttlMs, run]);
 
-  // invalidate() empties the entry under a mounted consumer, which would leave
-  // `data` undefined -- and the loading state up -- with nothing to refetch it.
+  // invalidate() empties the entry under a mounted consumer; refetch it.
   useEffect(() => {
     if (!active) return;
     return onInvalidated(key, () => void run(true));

@@ -1,10 +1,10 @@
 # backend/app/models/history.py
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JsonField, utcnow
+from app.models.base import JSON_LIST, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
@@ -25,18 +25,13 @@ class HistoryRun(Base):
     current_row_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     best_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
     checkpoint_row_index: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     checkpoint_total_killers_beaten: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    checkpoint_completed_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_unlocked_perk_names_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    owned_killers_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    completed_killers = JsonField[list[str]]("completed_killers_json", list)
-    unlocked_perk_names = JsonField[list[str]]("unlocked_perk_names_json", list)
-    checkpoint_completed_killers = JsonField[list[str]]("checkpoint_completed_killers_json", list)
-    checkpoint_unlocked_perk_names = JsonField[list[str]]("checkpoint_unlocked_perk_names_json", list)
-    owned_killer_ids = JsonField[list[int]]("owned_killers_json", list)
+    completed_killers: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    unlocked_perk_names: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    checkpoint_completed_killers: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    checkpoint_unlocked_perk_names: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    owned_killer_ids: Mapped[list[int]] = mapped_column(JSON_LIST, default=list, nullable=False)
     attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False

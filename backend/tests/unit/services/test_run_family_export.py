@@ -2,7 +2,7 @@
 from datetime import datetime
 import pytest
 from flask import Flask
-from sqlalchemy import Boolean, DateTime, Integer, select
+from sqlalchemy import JSON, Boolean, DateTime, Integer, select
 from app import create_app
 from app.core.extensions import db
 from app.models.user import User
@@ -89,6 +89,7 @@ RUN_FAMILIES = [
     ("page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs", ["killer"]),
 ]
 _KEY_COLUMNS = {"id", "user_id", "run_id"}
+_OBJECT_COLUMNS = {"current_loadout"}
 _FIXED_TIME = datetime(2026, 1, 2, 3, 4, 5)
 
 
@@ -105,8 +106,8 @@ def _sentinel_values(model: type) -> dict[str, object]:
             values[column.name] = 100 + index
         elif isinstance(column.type, DateTime):
             values[column.name] = _FIXED_TIME
-        elif column.name.endswith("_json"):
-            values[column.name] = f'["{column.name}"]'
+        elif isinstance(column.type, JSON):
+            values[column.name] = {"key": column.name} if column.name in _OBJECT_COLUMNS else [column.name]
         else:
             values[column.name] = f"v_{column.name}"
     return values
@@ -158,3 +159,32 @@ def test_export_import_round_trip_preserves_every_run_and_log_column(
         restored_logs = getattr(restored, log_attr)
         assert len(restored_logs) == 1
         assert _column_values(restored_logs[0], list(log_values)) == log_values
+
+
+def test_import_accepts_a_backup_written_before_json_columns(app_with_run: Flask) -> None:
+    # Backups taken while these columns were TEXT carry "<name>_json" keys
+    # holding JSON strings; they must still restore.
+    with app_with_run.app_context():
+        user = db.session.scalars(select(User)).one()
+        legacy_row = {
+            "username": user.username,
+            "difficulty": "hell",
+            "completed_killers_json": '["The Trapper"]',
+            "owned_killers_json": "[3, 7]",
+            "current_perks_json": '[{"name": "Hex: Ruin"}]',
+            "match_logs": [{
+                "killer_id": "The Trapper", "result": "win", "streak_before": 0, "streak_after": 1,
+                "perks_json": '[{"name": "Hex: Ruin"}]', "addon_rarities_json": '["Rare"]',
+            }],
+        }
+        import_run_family(
+            {"chaos_runs": [legacy_row]}, {"chaos_runs"}, {}, "chaos_runs", ChaosRun, ChaosMatchLog, "match_logs",
+            run_natural_keys=["difficulty"], user_map={user.username: user.id},
+        )
+        db.session.commit()
+
+        run = db.session.scalars(select(ChaosRun)).one()
+        assert run.completed_killers == ["The Trapper"]
+        assert run.owned_killer_ids == [3, 7]
+        assert run.current_perks == [{"name": "Hex: Ruin"}]
+        assert run.match_logs[0].addon_rarities == ["Rare"]

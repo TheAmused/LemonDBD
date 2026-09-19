@@ -29,7 +29,7 @@ class TestStreakCleanupService:
             role="killer",
             status=status,
             current_character_id="Trapper",
-            owned_characters_json="[]",
+            owned_character_ids=[],
         )
         db_session.add(run)
         db_session.commit()
@@ -87,7 +87,7 @@ class TestStreakCleanupService:
             attempt=1,
             current_page=1,
             best_page=0,
-            pages_json="[]",
+            pages=[],
         )
         db_session.add(page)
         db_session.commit()

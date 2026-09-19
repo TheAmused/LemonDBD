@@ -1,14 +1,14 @@
 # backend/app/models/gauntlet.py
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JsonField, utcnow
+from app.models.base import JSON_DICT, JSON_LIST, utcnow
+from app.schemas.gauntlet import GauntletLoadout
 
 if TYPE_CHECKING:
-    from app.schemas.gauntlet import GauntletLoadout, GauntletMatchLogDict, GauntletRunDict
-    from app.schemas.streak import PerkPayload
+    from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
 
 
 class GauntletRun(Base):
@@ -29,14 +29,10 @@ class GauntletRun(Base):
     current_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     best_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     last_checkpoint_streak: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    completed_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    checkpoint_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    current_loadout_json: Mapped[str] = mapped_column(Text, default="{}", nullable=False)
-    owned_characters_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    completed_characters = JsonField[list[str]]("completed_characters_json", list)
-    checkpoint_characters = JsonField[list[str]]("checkpoint_characters_json", list)
-    current_loadout = JsonField["GauntletLoadout"]("current_loadout_json", lambda: {})
-    owned_character_ids = JsonField[list[int]]("owned_characters_json", list)
+    completed_characters: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    checkpoint_characters: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
+    current_loadout: Mapped[GauntletLoadout] = mapped_column(JSON_DICT, default=dict, nullable=False)
+    owned_character_ids: Mapped[list[int]] = mapped_column(JSON_LIST, default=list, nullable=False)
     attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
@@ -81,8 +77,7 @@ class GauntletMatchLog(Base):
     role: Mapped[str] = mapped_column(String(20), nullable=False)
     character_id: Mapped[str] = mapped_column(String(100), nullable=False)
     result: Mapped[str] = mapped_column(String(20), nullable=False)
-    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    perks = JsonField["list[PerkPayload]"]("perks_json", list)
+    perks: Mapped[list[dict[str, object]]] = mapped_column(JSON_LIST, default=list, nullable=False)
     streak_before: Mapped[int] = mapped_column(Integer, nullable=False)
     streak_after: Mapped[int] = mapped_column(Integer, nullable=False)
     timestamp: Mapped[datetime] = mapped_column(

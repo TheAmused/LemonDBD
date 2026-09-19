@@ -2,7 +2,7 @@
 """add perk_type to perks
 
 Revision ID: perk_type_001
-Revises: map_drop_pallets_totems_001
+Revises: map_restore_pallet_density_001
 Create Date: 2026-09-18 00:00:00.000000
 
 Adds a nullable `perk_type` column to `perks`, classifying each perk into
@@ -26,7 +26,7 @@ import sqlalchemy as sa
 
 
 revision = "perk_type_001"
-down_revision = "map_drop_pallets_totems_001"
+down_revision = "map_restore_pallet_density_001"
 branch_labels = None
 depends_on = None
 

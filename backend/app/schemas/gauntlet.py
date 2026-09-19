@@ -1,53 +1,60 @@
 # backend/app/schemas/gauntlet.py
-from datetime import datetime
-from typing import Any
-from pydantic import BaseModel, ConfigDict
+from typing import TypedDict
+
+from app.schemas.streak import PerkPayload
 
 
-class GauntletMatchLogBase(BaseModel):
+class TierInfo(TypedDict):
+    name: str
+    tier_level: int
+    perk_limit: int
+    character_perks_only: bool
+    description: str
+    roster_limit: int
+
+
+class GauntletLoadout(TypedDict, total=False):
+    # total=False: a run whose stored loadout JSON is missing or broken reads back as {}.
+    character: str
+    character_perks: list[PerkPayload]
+    tier_info: TierInfo
+
+
+class GauntletMatchLogDict(TypedDict):
+    id: int
+    run_id: int
     role: str
     character_id: str
     result: str
-    perks: list[Any] = []
+    perks: list[PerkPayload]
     streak_before: int
     streak_after: int
-    triggered_by: str = "player"
+    timestamp: str | None
+    triggered_by: str
 
 
-class GauntletMatchLogResponse(GauntletMatchLogBase):
+class GauntletRunDict(TypedDict):
     id: int
-    run_id: int
-    timestamp: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class GauntletRunBase(BaseModel):
+    user_id: int
     role: str
-    status: str = "in_progress"
-    game_mode: str = "original"
-    target_revealed: bool = False
+    status: str
+    game_mode: str
+    target_revealed: bool
     current_character_id: str
-    current_streak: int = 0
-    best_streak: int = 0
-    last_checkpoint_streak: int = 0
+    current_streak: int
+    best_streak: int
+    last_checkpoint_streak: int
+    completed_characters: list[str]
+    checkpoint_characters: list[str]
+    current_loadout: GauntletLoadout
+    owned_character_ids: list[int]
+    attempts: int
+    created_at: str | None
+    updated_at: str | None
 
 
-class GauntletRunCreate(BaseModel):
-    user_id: int
-    role: str
-    starting_character_id: str
-
-
-class GauntletRunResponse(GauntletRunBase):
-    id: int
-    user_id: int
-    completed_characters: list[str] = []
-    checkpoint_characters: list[str] = []
-    current_loadout: dict[str, Any] = {}
-    owned_character_ids: list[str] = []
-    attempts: int = 0
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)
+class GauntletRunState(GauntletRunDict):
+    """What every gauntlet endpoint returns: the stored run plus its resolved pool and tier."""
+    pool_frozen: bool
+    owned_characters: list[str]
+    tier_info: TierInfo

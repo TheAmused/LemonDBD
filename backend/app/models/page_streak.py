@@ -1,11 +1,14 @@
 # backend/app/models/page_streak.py
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads
 from app.models.base import utcnow
+
+if TYPE_CHECKING:
+    from app.schemas.page_streak import PageStreakPageLogDict
 
 
 class PageStreakRun(Base):
@@ -38,22 +41,6 @@ class PageStreakRun(Base):
         back_populates="run", cascade="all, delete-orphan", order_by="PageStreakPageLog.timestamp.asc()"
     )
 
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "killer": self.killer,
-            "status": self.status,
-            "attempt": self.attempt,
-            "current_page": self.current_page,
-            "best_page": self.best_page,
-            "pages_json": self.pages_json,
-            "pages": safe_json_loads(self.pages_json, default=[]),
-            "snapshot_at": self.snapshot_at.isoformat() if self.snapshot_at else None,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
-
 
 class PageStreakPageLog(Base):
     __tablename__ = "page_streak_page_logs"
@@ -73,13 +60,12 @@ class PageStreakPageLog(Base):
 
     run: Mapped["PageStreakRun"] = relationship(back_populates="page_logs")
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "PageStreakPageLogDict":
         return {
             "id": self.id,
             "run_id": self.run_id,
             "attempt": self.attempt,
             "page_number": self.page_number,
-            "perks_json": self.perks_json,
             "perks": safe_json_loads(self.perks_json, default=[]),
             "result": self.result,
             "timestamp": self.timestamp.isoformat() if self.timestamp else None,

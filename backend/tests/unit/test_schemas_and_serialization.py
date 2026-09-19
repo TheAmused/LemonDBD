@@ -13,10 +13,6 @@ from app.schemas.equipment import (
     KillerAddonBase,
     KillerAddonResponse,
 )
-from app.schemas.gauntlet import GauntletRunCreate, GauntletRunResponse
-from app.schemas.chaos import ChaosRunResponse
-from app.schemas.history import HistoryRunResponse
-from app.schemas.page_streak import PageStreakRunCreate, PageStreakRunResponse
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 
@@ -83,15 +79,6 @@ class TestCommunityAndStreakSchemas:
         )
         assert report.reporter_name == "TrapperMain"
         assert report.title == "Trap stuck in rock"
-
-    def test_gauntlet_run_create_validation(self) -> None:
-        run_req = GauntletRunCreate(
-            user_id=14,
-            role="Killer",
-            starting_character_id="trapper",
-        )
-        assert run_req.user_id == 14
-        assert run_req.starting_character_id == "trapper"
 
 
 @pytest.mark.unit

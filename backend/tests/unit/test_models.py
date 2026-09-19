@@ -6,9 +6,17 @@ import pytest
 from app.core.json_provider import safe_json_dumps
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.character import Killer, Survivor
-from app.models.chaos import ChaosRun
+from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.equipment import Item, ItemAddon, ItemCategory, Offering
-from app.models.gauntlet import GauntletRun
+from app.models.gauntlet import GauntletMatchLog, GauntletRun
+from app.models.history import HistoryMatchLog, HistoryRun
+from app.models.page_streak import PageStreakPageLog
+from app.models.challenge_completion import ChallengeCompletionRecord
+from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict
+from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
+from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
+from app.schemas.page_streak import PageStreakPageLogDict
+from app.schemas.streak import ChallengeCompletionDict
 from app.models.perk import Perk
 from app.models.smash_or_pass import Entity, EntityStat
 
@@ -225,3 +233,24 @@ class TestModelToDictTransformations:
         c_d = chaos.to_dict()
         assert c_d["completed_killers"] == ["trapper"]
         assert c_d["used_perks"] == ["Agitation"]
+
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    ("model", "shape"),
+    [
+        (ChaosRun, ChaosRunDict),
+        (ChaosMatchLog, ChaosMatchLogDict),
+        (GauntletRun, GauntletRunDict),
+        (GauntletMatchLog, GauntletMatchLogDict),
+        (HistoryRun, HistoryRunDict),
+        (HistoryMatchLog, HistoryMatchLogDict),
+        (PageStreakPageLog, PageStreakPageLogDict),
+        (ChallengeCompletionRecord, ChallengeCompletionDict),
+    ],
+)
+def test_streak_to_dict_matches_its_typed_shape(model: type, shape: type) -> None:
+    # The TypedDict is the API contract; a key added to to_dict() without the
+    # type (or the reverse) would let the two drift apart again.
+    assert set(model().to_dict()) == set(shape.__annotations__)

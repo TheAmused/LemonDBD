@@ -1,11 +1,14 @@
 # backend/app/models/chaos.py
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads
 from app.models.base import utcnow
+
+if TYPE_CHECKING:
+    from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict
 
 
 class ChaosRun(Base):
@@ -44,7 +47,7 @@ class ChaosRun(Base):
         back_populates="run", cascade="all, delete-orphan", order_by="ChaosMatchLog.timestamp.asc()"
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "ChaosRunDict":
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -53,17 +56,11 @@ class ChaosRun(Base):
             "current_streak": self.current_streak,
             "best_streak": self.best_streak,
             "last_checkpoint_streak": self.last_checkpoint_streak,
-            "completed_killers_json": self.completed_killers_json,
             "completed_killers": safe_json_loads(self.completed_killers_json, default=[]),
-            "checkpoint_killers_json": self.checkpoint_killers_json,
             "checkpoint_killers": safe_json_loads(self.checkpoint_killers_json, default=[]),
-            "used_perks_json": self.used_perks_json,
             "used_perks": safe_json_loads(self.used_perks_json, default=[]),
-            "checkpoint_used_perks_json": self.checkpoint_used_perks_json,
             "checkpoint_used_perks": safe_json_loads(self.checkpoint_used_perks_json, default=[]),
-            "current_perks_json": self.current_perks_json,
             "current_perks": safe_json_loads(self.current_perks_json, default=[]),
-            "current_addon_rarities_json": self.current_addon_rarities_json,
             "current_addon_rarities": safe_json_loads(self.current_addon_rarities_json, default=[]),
             "owned_killer_ids": safe_json_loads(self.owned_killers_json, default=[]),
             "unlocked_perk_ids": safe_json_loads(self.unlocked_perks_json, default=[]),
@@ -94,15 +91,13 @@ class ChaosMatchLog(Base):
 
     run: Mapped["ChaosRun"] = relationship(back_populates="match_logs")
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "ChaosMatchLogDict":
         return {
             "id": self.id,
             "run_id": self.run_id,
             "killer_id": self.killer_id,
             "result": self.result,
-            "perks_json": self.perks_json,
             "perks": safe_json_loads(self.perks_json, default=[]),
-            "addon_rarities_json": self.addon_rarities_json,
             "addon_rarities": safe_json_loads(self.addon_rarities_json, default=[]),
             "streak_before": self.streak_before,
             "streak_after": self.streak_after,

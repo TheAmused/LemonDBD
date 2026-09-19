@@ -17,6 +17,18 @@ def _parse_datetime(val: str | None) -> datetime | None:
         return None
 
 
+def _column_row(obj: Any, skip: set[str]) -> dict[str, Any]:
+    """Every mapped column under its column name, so import can set each one
+    back; the API-facing `to_dict()` renames and drops columns and would lose data."""
+    row: dict[str, Any] = {}
+    for column in obj.__table__.columns:
+        if column.name in skip:
+            continue
+        value = getattr(obj, column.key)
+        row[column.name] = value.isoformat() if isinstance(value, datetime) else value
+    return row
+
+
 def export_run_family(
     export_data: dict[str, Any],
     counts: dict[str, int],
@@ -34,13 +46,11 @@ def export_run_family(
         owner = db.session.get(User, run.user_id)
         if not owner:
             continue
-        row = run.to_dict()
-        row.pop("id", None)
+        row = _column_row(run, {"id", "user_id"})
         row["username"] = owner.username
-        row["match_logs"] = [log.to_dict() for log in getattr(run, log_relation_attr)]
-        for log in row["match_logs"]:
-            log.pop("id", None)
-            log.pop("run_id", None)
+        row["match_logs"] = [
+            _column_row(log, {"id", "run_id"}) for log in getattr(run, log_relation_attr)
+        ]
         serialized.append(row)
     export_data[name] = serialized
     counts[name] = len(serialized)

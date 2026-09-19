@@ -382,7 +382,7 @@ class TestGauntletLazyFreeze:
         seed_killer("Trapper")
         run = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
         r = db_session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
-        r.owned_characters_json = "[]"
+        r.owned_character_ids = []
         db_session.commit()
 
         reloaded = gauntlet_service.get_or_create_run(gauntlet_user, "killer")

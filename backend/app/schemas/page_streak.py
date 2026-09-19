@@ -1,44 +1,46 @@
 # backend/app/schemas/page_streak.py
-from datetime import datetime
-from typing import Any
-from pydantic import BaseModel, ConfigDict
+from typing import TypedDict
 
 
-class PageStreakPageLogBase(BaseModel):
-    attempt: int
-    page_number: int
-    perks: list[Any] = []
-    result: str
-    triggered_by: str = "player"
-
-
-class PageStreakPageLogResponse(PageStreakPageLogBase):
+class PageStreakPageLogDict(TypedDict):
     id: int
     run_id: int
-    timestamp: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class PageStreakRunBase(BaseModel):
-    killer: str
-    status: str = "in_progress"
-    attempt: int = 1
-    current_page: int = 1
-    best_page: int = 0
+    attempt: int
+    page_number: int
+    perks: list[str]
+    result: str
+    timestamp: str | None
+    triggered_by: str
 
 
-class PageStreakRunCreate(BaseModel):
-    user_id: int
-    killer: str
+class PageStreakStatsLog(PageStreakPageLogDict):
+    killer: str | None
 
 
-class PageStreakRunResponse(PageStreakRunBase):
+class PageStreakHistoryEntry(TypedDict):
+    attempt: int
+    page_number: int
+    perks: list[str]
+    result: str
+    timestamp: str | None
+    triggered_by: str
+
+
+class PageStreakRunDict(TypedDict):
     id: int
-    user_id: int
-    pages: list[Any] = []
-    snapshot_at: datetime | None = None
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+    killer: str
+    status: str
+    attempt: int
+    current_page: int
+    best_page: int
+    pages: list[list[str]]
+    page_count: int
+    pool_frozen: bool
+    snapshot_at: str | None
+    history: list[PageStreakHistoryEntry]
 
-    model_config = ConfigDict(from_attributes=True)
+
+class PageStreakRunState(PageStreakRunDict):
+    """What every page streak run endpoint returns: the run plus its artwork."""
+    perk_icons: dict[str, str]
+    killer_avatar: str | None

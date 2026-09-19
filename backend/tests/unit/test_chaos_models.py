@@ -2,7 +2,6 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.core.json_provider import safe_json_dumps
 from app.models import ChaosMatchLog, ChaosRun, User
 
 
@@ -18,12 +17,12 @@ class TestChaosModels:
             current_streak=0,
             best_streak=0,
             last_checkpoint_streak=0,
-            completed_killers_json="[]",
-            checkpoint_killers_json="[]",
-            used_perks_json=safe_json_dumps(["Hex: Ruin"]),
-            checkpoint_used_perks_json="[]",
-            current_perks_json=safe_json_dumps([{"name": "Hex: Ruin"}]),
-            current_addon_rarities_json=safe_json_dumps(["Rare", "Rare"]),
+            completed_killers=[],
+            checkpoint_killers=[],
+            used_perks=["Hex: Ruin"],
+            checkpoint_used_perks=[],
+            current_perks=[{"name": "Hex: Ruin"}],
+            current_addon_rarities=["Rare", "Rare"],
             perks_revealed=False,
         )
         db_session.add(run)
@@ -38,6 +37,19 @@ class TestChaosModels:
         assert d["perks_revealed"] is False
         assert d["completed_killers"] == []
         assert d["checkpoint_killers"] == []
+
+    def test_in_place_list_change_is_persisted(self, db_session: Session, sample_user: User) -> None:
+        run = ChaosRun(user_id=sample_user.id, difficulty="easy")
+        db_session.add(run)
+        db_session.commit()
+
+        completed = run.completed_killers
+        completed.append("The Trapper")
+        run.completed_killers = completed
+        db_session.commit()
+        db_session.expire_all()
+
+        assert db_session.get(ChaosRun, run.id).completed_killers == ["The Trapper"]
 
     def test_chaos_run_default_field_values(self, db_session: Session, sample_user: User) -> None:
         run = ChaosRun(user_id=sample_user.id, difficulty="medium")
@@ -89,8 +101,8 @@ class TestChaosModels:
             run_id=run.id,
             killer_id="The Trapper",
             result="win",
-            perks_json=safe_json_dumps([{"name": "Hex: Ruin"}]),
-            addon_rarities_json=safe_json_dumps(["Common", "Rare"]),
+            perks=[{"name": "Hex: Ruin"}],
+            addon_rarities=["Common", "Rare"],
             streak_before=0,
             streak_after=1,
             triggered_by="match",
@@ -119,8 +131,8 @@ class TestChaosModels:
             run_id=run.id,
             killer_id="Inactivity",
             result="loss",
-            perks_json="[]",
-            addon_rarities_json="[]",
+            perks=[],
+            addon_rarities=[],
             streak_before=3,
             streak_after=0,
             triggered_by="inactivity",

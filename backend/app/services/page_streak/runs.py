@@ -1,23 +1,22 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
-from typing import Any
 from sqlalchemy import delete, select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
-from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
+from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import delete_completions, record_challenge_completion
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
 
 
 def run_to_dict(
     r: PageStreakRun,
-    history: list[dict[str, Any]],
+    history: list[PageStreakHistoryEntry],
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
-) -> dict[str, Any]:
+) -> PageStreakRunDict:
     """Serialize a PageStreakRun entity along with its match history."""
-    pages = safe_json_loads(r.pages_json, default=[])
+    pages = r.pages
     pool_frozen = bool(pages)
     if not pages and build_pages_fn is not None:
         pages = build_pages_fn(r.user_id)
@@ -40,7 +39,7 @@ def fetch_run(
     user_id: int,
     killer: str,
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
-) -> dict[str, Any] | None:
+) -> PageStreakRunDict | None:
     """Retrieve run state and sorted page logs for a given user and killer."""
     r = db.session.scalars(
         select(PageStreakRun)
@@ -51,11 +50,11 @@ def fetch_run(
         return None
 
     sorted_logs = sorted(r.page_logs, key=lambda log: log.id, reverse=True)
-    history = [
+    history: list[PageStreakHistoryEntry] = [
         {
             "attempt": log.attempt,
             "page_number": log.page_number,
-            "perks": safe_json_loads(log.perks_json, default=[]),
+            "perks": log.perks,
             "result": log.result,
             "timestamp": to_utc_iso(log.timestamp),
             "triggered_by": log.triggered_by,
@@ -70,7 +69,7 @@ def create_new_run(
     killer: str,
     get_killers_fn: Callable[[int], list[str]],
     build_pages_fn: Callable[[int], list[list[str]]],
-) -> dict[str, Any] | None:
+) -> PageStreakRunDict | None:
     """Initialize a brand-new page streak challenge run."""
     if killer not in get_killers_fn(user_id):
         raise ValueError(f"Unknown killer: {killer}")
@@ -88,7 +87,7 @@ def create_new_run(
         attempt=1,
         current_page=1,
         best_page=0,
-        pages_json=safe_json_dumps(pages, default_val="[]"),
+        pages=pages,
         snapshot_at=utcnow(),
     )
     db.session.add(run)
@@ -96,7 +95,7 @@ def create_new_run(
     return fetch_run(user_id, killer, build_pages_fn)
 
 
-def validate_match_submission(run: dict[str, Any], page: int, perks: list[str], result: str) -> None:
+def validate_match_submission(run: PageStreakRunDict, page: int, perks: list[str], result: str) -> None:
     """Validate submitted perks and page constraints against active run state."""
     if result not in ("win", "loss"):
         raise ValueError("Result must be 'win' or 'loss'")
@@ -126,7 +125,7 @@ def record_match_result(
     perks: list[str],
     result: str,
     build_pages_fn: Callable[[int], list[list[str]]] | None = None,
-) -> dict[str, Any] | None:
+) -> PageStreakRunDict | None:
     """Record match logs and update page progression or failure resets."""
     run = fetch_run(user_id, killer, build_pages_fn)
     if run is None:
@@ -135,13 +134,13 @@ def record_match_result(
     validate_match_submission(run, page, perks, result)
 
     r = db.session.scalars(select(PageStreakRun).where(PageStreakRun.id == run["id"])).first()
-    if not safe_json_loads(r.pages_json, default=[]):
-        r.pages_json = safe_json_dumps(run["pages"], default_val="[]")
+    if not r.pages:
+        r.pages = run["pages"]
     log = PageStreakPageLog(
         run_id=r.id,
         attempt=r.attempt,
         page_number=page,
-        perks_json=safe_json_dumps(list(perks), default_val="[]"),
+        perks=list(perks),
         result=result,
     )
     db.session.add(log)
@@ -163,7 +162,7 @@ def record_match_result(
     else:
         r.current_page = 1
         r.attempt = r.attempt + 1
-        r.pages_json = "[]"
+        r.pages = []
 
     db.session.commit()
     return fetch_run(user_id, killer, build_pages_fn)
@@ -178,14 +177,14 @@ def apply_inactivity_loss(run_id: int) -> None:
         run_id=r.id,
         attempt=r.attempt,
         page_number=r.current_page,
-        perks_json="[]",
+        perks=[],
         result="loss",
         triggered_by="inactivity",
     ))
 
     r.current_page = 1
     r.attempt = r.attempt + 1
-    r.pages_json = "[]"
+    r.pages = []
 
     db.session.commit()
 
@@ -194,7 +193,7 @@ def reset_active_run(
     user_id: int,
     killer: str,
     build_pages_fn: Callable[[int], list[list[str]]],
-) -> dict[str, Any] | None:
+) -> PageStreakRunDict | None:
     """Reset run progress to Page 1."""
     run = fetch_run(user_id, killer, build_pages_fn)
     if run is None:
@@ -207,7 +206,7 @@ def reset_active_run(
     r.status = "in_progress"
     r.current_page = 1
     r.attempt = r.attempt + 1
-    r.pages_json = "[]"
+    r.pages = []
     r.snapshot_at = utcnow()
     db.session.commit()
 

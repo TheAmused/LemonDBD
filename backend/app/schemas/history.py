@@ -1,42 +1,44 @@
 # backend/app/schemas/history.py
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from typing import NotRequired, TypedDict
 
 
-class HistoryMatchLogBase(BaseModel):
+class HistoryMatchLogDict(TypedDict):
+    id: int
+    run_id: int
     killer_id: str
     result: str
     row_index: int
     streak_before: int
     streak_after: int
-    triggered_by: str = "player"
+    timestamp: str | None
+    triggered_by: str
 
 
-class HistoryMatchLogResponse(HistoryMatchLogBase):
-    id: int
-    run_id: int
-    timestamp: datetime | None = None
-
-    model_config = ConfigDict(from_attributes=True)
-
-
-class HistoryRunBase(BaseModel):
-    mode: str
-    status: str = "in_progress"
-    current_row_index: int = 0
-    total_killers_beaten: int = 0
-    best_killers_beaten: int = 0
-
-
-class HistoryRunResponse(HistoryRunBase):
+class HistoryRunDict(TypedDict):
     id: int
     user_id: int
-    completed_killers: list[str] = []
-    unlocked_perk_names: list[str] = []
-    owned_killer_ids: list[str] = []
-    checkpoint_row_index: int = 0
-    attempts: int = 0
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+    mode: str
+    status: str
+    current_row_index: int
+    total_killers_beaten: int
+    best_killers_beaten: int
+    completed_killers: list[str]
+    unlocked_perk_names: list[str]
+    owned_killer_ids: list[int]
+    checkpoint_row_index: int
+    attempts: int
+    created_at: str | None
+    updated_at: str | None
 
-    model_config = ConfigDict(from_attributes=True)
+
+class HistoryRunState(HistoryRunDict):
+    """What every history endpoint returns: the stored run plus its row layout."""
+    owned_killers: list[str]
+    current_row_killers: list[str]
+    row_size: int
+    total_rows: int
+    total_owned_killers: int
+    pool_frozen: bool
+    # Only on a submitted result.
+    newly_unlocked_perks: NotRequired[list[str]]
+    row_cleared: NotRequired[bool]

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JSON_LIST, utcnow
+from app.models.base import ColumnDictMixin, JSON_LIST, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.page_streak import PageStreakPageLogDict
@@ -41,7 +41,7 @@ class PageStreakRun(Base):
     )
 
 
-class PageStreakPageLog(Base):
+class PageStreakPageLog(Base, ColumnDictMixin["PageStreakPageLogDict"]):
     __tablename__ = "page_streak_page_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -58,15 +58,3 @@ class PageStreakPageLog(Base):
     triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
 
     run: Mapped["PageStreakRun"] = relationship(back_populates="page_logs")
-
-    def to_dict(self) -> "PageStreakPageLogDict":
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "attempt": self.attempt,
-            "page_number": self.page_number,
-            "perks": self.perks,
-            "result": self.result,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }

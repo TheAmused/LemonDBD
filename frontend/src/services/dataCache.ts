@@ -115,10 +115,9 @@ export function writeCache<T>(key: string, data: T): void {
 }
 
 /**
- * Registers `refetch` to run when invalidate() drops `key`. A consumer that is
- * still mounted has nothing else that would make it fetch again -- its effect
- * only runs on mount or when its key changes -- so without this it would sit on
- * its loading state until the page is reloaded. Returns the unsubscribe.
+ * Runs `refetch` when invalidate() drops `key`. A mounted consumer only fetches
+ * on mount or when its key changes, so without this it would stay on its
+ * loading state until a reload. Returns the unsubscribe.
  */
 export function onInvalidated(key: string, refetch: () => void): () => void {
   let set = revalidators.get(key);
@@ -140,7 +139,7 @@ function drop(key: string): void {
     try {
       refetch();
     } catch {
-      // One failing consumer must not stop the others from refetching.
+      // One failing consumer must not stop the others.
     }
   });
 }

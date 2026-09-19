@@ -6,6 +6,7 @@ import {
   DEFAULT_TTL_MS,
   fetchCached,
   isStale,
+  onInvalidated,
   readCache,
   subscribe,
 } from '@/services/dataCache';
@@ -77,6 +78,13 @@ export function useCachedData<T>(
     if (!isStale(key, ttlMs)) return;
     void run(false);
   }, [key, active, ttlMs, run]);
+
+  // invalidate() empties the entry under a mounted consumer, which would leave
+  // `data` undefined -- and the loading state up -- with nothing to refetch it.
+  useEffect(() => {
+    if (!active) return;
+    return onInvalidated(key, () => void run(true));
+  }, [key, active, run]);
 
   const refresh = useCallback(() => run(true), [run]);
 

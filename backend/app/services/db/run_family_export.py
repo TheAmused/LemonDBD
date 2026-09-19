@@ -9,8 +9,7 @@ from app.models.user import User
 
 _DATETIME_FIELDS = {"timestamp", "created_at", "updated_at", "snapshot_at"}
 
-# Backups written while these columns were TEXT carry the old "<name>_json" key
-# holding a JSON string. Same old name maps to the same column in every table.
+# Old "<name>_json" backup keys (JSON strings) and the column each became.
 _LEGACY_JSON_COLUMNS = {
     "completed_killers_json": "completed_killers",
     "checkpoint_killers_json": "checkpoint_killers",
@@ -43,8 +42,7 @@ def _parse_datetime(val: str | None) -> datetime | None:
 
 
 def _upgrade_legacy_keys(row: dict[str, Any]) -> dict[str, Any]:
-    """Rename old "<name>_json" string keys to their JSON column. A row that
-    already has the new key (old exports sent both) keeps that value."""
+    """Map legacy "<name>_json" keys onto their column; an existing new key wins."""
     upgraded: dict[str, Any] = {}
     for key, value in row.items():
         column = _LEGACY_JSON_COLUMNS.get(key)

@@ -1,11 +1,9 @@
 # backend/app/schemas/streak.py
-"""Response shapes shared by every challenge mode (gauntlet, chaos, history,
-page streak). TypedDicts rather than Pydantic models: services build these
-dicts directly and hand them to `jsonify`, so the type costs nothing at
-runtime. Mirrors `frontend/src/types/*Streak.ts` and `challengeCompletion.ts`."""
+"""Response shapes shared by every challenge mode. Mirrors
+`frontend/src/types/*Streak.ts` and `challengeCompletion.ts`."""
 from typing import TypedDict
 
-# One row of `Perk.to_dict()`, carried through run state as stored JSON.
+# One `Perk.to_dict()` row.
 type PerkPayload = dict[str, object]
 
 

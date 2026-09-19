@@ -39,8 +39,6 @@ class TestChaosModels:
         assert d["checkpoint_killers"] == []
 
     def test_in_place_list_change_is_persisted(self, db_session: Session, sample_user: User) -> None:
-        # Services read a list, append to it and assign the same object back;
-        # a plain JSON column would see no change and skip the UPDATE.
         run = ChaosRun(user_id=sample_user.id, difficulty="easy")
         db_session.add(run)
         db_session.commit()

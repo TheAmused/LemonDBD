@@ -4,7 +4,6 @@ import logging
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import GauntletMatchLog, GauntletRun
 from app.schemas.gauntlet import GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
@@ -39,7 +38,7 @@ class GauntletService:
 
     def _freeze_pool(self, r: GauntletRun) -> list[int]:
         ids = get_owned_character_ids(r.user_id, r.role, self.ownership_service)
-        r.owned_characters_json = safe_json_dumps(ids)
+        r.owned_character_ids = ids
         return ids
 
     def _is_unfrozen(self, current_streak: int, owned_character_ids: list[int]) -> bool:
@@ -88,10 +87,10 @@ class GauntletService:
             current_streak=0,
             best_streak=0,
             last_checkpoint_streak=0,
-            completed_characters_json="[]",
-            checkpoint_characters_json="[]",
-            owned_characters_json=safe_json_dumps(live_owned_ids),
-            current_loadout_json=safe_json_dumps(initial_loadout),
+            completed_characters=[],
+            checkpoint_characters=[],
+            owned_character_ids=live_owned_ids,
+            current_loadout=initial_loadout,
         )
         db.session.add(new_run)
         db.session.commit()
@@ -112,7 +111,7 @@ class GauntletService:
 
         r = db.session.scalars(select(GauntletRun).where(GauntletRun.id == run["id"])).first()
         r.current_character_id = target_char
-        r.current_loadout_json = safe_json_dumps(loadout)
+        r.current_loadout = loadout
         db.session.commit()
 
         return self._state(r, tier_info)
@@ -123,7 +122,7 @@ class GauntletService:
         ).first()
         if not r:
             raise ValueError("Run not found")
-        if self._is_unfrozen(r.current_streak, safe_json_loads(r.owned_characters_json, default=[])):
+        if self._is_unfrozen(r.current_streak, r.owned_character_ids):
             self._freeze_pool(r)
         r.target_revealed = True
         db.session.commit()
@@ -158,17 +157,17 @@ class GauntletService:
         if r.status == "completed":
             raise ValueError("This run is already completed. Reset it to play again.")
 
-        if self._is_unfrozen(r.current_streak, safe_json_loads(r.owned_characters_json, default=[])):
+        if self._is_unfrozen(r.current_streak, r.owned_character_ids):
             self._freeze_pool(r)
 
         current_streak = r.current_streak
         best_streak = r.best_streak
         last_checkpoint = r.last_checkpoint_streak
-        completed = safe_json_loads(r.completed_characters_json, default=[])
-        checkpoint_chars = safe_json_loads(r.checkpoint_characters_json, default=[])
+        completed = r.completed_characters
+        checkpoint_chars = r.checkpoint_characters
         char_id = r.current_character_id
-        loadout = safe_json_loads(r.current_loadout_json, default={})
-        perks_json = safe_json_dumps(loadout.get("character_perks", []))
+        loadout = r.current_loadout
+        match_perks = loadout.get("character_perks", [])
 
         if result == "win":
             streak_after = current_streak + 1
@@ -179,7 +178,7 @@ class GauntletService:
                 last_checkpoint = streak_after
                 checkpoint_chars = list(completed)
 
-            owned_ids = safe_json_loads(r.owned_characters_json, default=[])
+            owned_ids = r.owned_character_ids
             owned_names = resolve_character_names_by_ids(owned_ids, role=r.role)
             if owned_names and all(name in completed for name in owned_names):
                 r.status = "completed"
@@ -192,8 +191,8 @@ class GauntletService:
         r.current_streak = streak_after
         r.best_streak = best_after
         r.last_checkpoint_streak = last_checkpoint
-        r.completed_characters_json = safe_json_dumps(completed)
-        r.checkpoint_characters_json = safe_json_dumps(checkpoint_chars)
+        r.completed_characters = completed
+        r.checkpoint_characters = checkpoint_chars
 
         db.session.add(
             GauntletMatchLog(
@@ -202,7 +201,7 @@ class GauntletService:
                 character_id=char_id,
                 result=result,
                 triggered_by=triggered_by,
-                perks_json=perks_json,
+                perks=match_perks,
                 streak_before=current_streak,
                 streak_after=streak_after,
             )

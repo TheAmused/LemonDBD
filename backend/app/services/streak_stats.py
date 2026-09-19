@@ -5,15 +5,28 @@ from typing import Any, Type
 from sqlalchemy import func, select
 
 from app.core.extensions import db
-from app.models import ChaosRun, GauntletRun, HistoryRun, PageStreakRun
+from app.models import (
+    ChaosMatchLog,
+    ChaosRun,
+    GauntletMatchLog,
+    GauntletRun,
+    HistoryMatchLog,
+    HistoryRun,
+    PageStreakPageLog,
+    PageStreakRun,
+)
+from app.schemas.streak import StreakStats
 
 
-def fetch_streak_stats(
+type StreakLog = ChaosMatchLog | GauntletMatchLog | HistoryMatchLog | PageStreakPageLog
+
+
+def fetch_streak_stats[LogModel: StreakLog, LogT](
     run_ids: Sequence[int],
-    match_log_model: Type,
-    post_process: Callable[[dict[str, Any], Any], dict[str, Any]] | None = None,
+    match_log_model: type[LogModel],
+    serialize_log: Callable[[LogModel], LogT],
     limit: int = 10,
-) -> dict[str, Any]:
+) -> StreakStats[LogT]:
     """Shared match-log aggregation for every streak mode's stats endpoint."""
     if not run_ids:
         return {"total_matches": 0, "wins": 0, "losses": 0, "win_rate": 0.0, "recent_logs": []}
@@ -35,19 +48,12 @@ def fetch_streak_stats(
         .order_by(match_log_model.id.desc()).limit(limit)
     ).all()
 
-    recent_logs: list[dict[str, Any]] = []
-    for log in recent:
-        entry = log.to_dict()
-        if post_process:
-            entry = post_process(entry, log)
-        recent_logs.append(entry)
-
     return {
         "total_matches": total,
         "wins": wins,
         "losses": total - wins,
         "win_rate": win_rate,
-        "recent_logs": recent_logs,
+        "recent_logs": [serialize_log(log) for log in recent],
     }
 
 

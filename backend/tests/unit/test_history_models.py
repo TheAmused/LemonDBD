@@ -2,7 +2,6 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app.core.json_provider import safe_json_dumps
 from app.models import HistoryMatchLog, HistoryRun, User
 
 
@@ -18,12 +17,12 @@ class TestHistoryModels:
             current_row_index=1,
             total_killers_beaten=6,
             best_killers_beaten=6,
-            completed_killers_json=safe_json_dumps(["The Wraith"]),
-            unlocked_perk_names_json=safe_json_dumps(["Hex: Ruin", "Save the Best for Last"]),
+            completed_killers=["The Wraith"],
+            unlocked_perk_names=["Hex: Ruin", "Save the Best for Last"],
             checkpoint_row_index=1,
             checkpoint_total_killers_beaten=5,
-            checkpoint_completed_killers_json="[]",
-            checkpoint_unlocked_perk_names_json=safe_json_dumps(["Hex: Ruin"]),
+            checkpoint_completed_killers=[],
+            checkpoint_unlocked_perk_names=["Hex: Ruin"],
         )
         db_session.add(run)
         db_session.commit()

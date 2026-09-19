@@ -1,9 +1,9 @@
 # backend/app/services/challenge_completions.py
-from typing import Any
 from sqlalchemy import delete, select
 
 from app.core.extensions import db
 from app.models import ChallengeCompletionRecord, ChaosRun, GauntletRun, HistoryRun
+from app.schemas.streak import ChallengeCompletionDict
 
 
 def record_challenge_completion(
@@ -35,7 +35,7 @@ def record_challenge_completion(
 
 def fetch_challenge_completions(
     user_id: int, mode: str, variant: str, limit: int = 25
-) -> list[dict[str, Any]]:
+) -> list[ChallengeCompletionDict]:
     """Retrieve past completions for a user/mode/variant, newest first."""
     records = db.session.scalars(
         select(ChallengeCompletionRecord)

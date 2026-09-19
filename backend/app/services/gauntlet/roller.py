@@ -6,6 +6,7 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.models import Killer, Perk, Survivor
+from app.schemas.gauntlet import GauntletLoadout, TierInfo
 from app.services.gauntlet.constants import (
     ORIGINAL_KILLER_ROSTER_LIMIT,
     ORIGINAL_SURVIVOR_ROSTER_LIMIT,
@@ -96,7 +97,7 @@ def roll_gauntlet_target(
     completed_characters: list[str],
     owned_characters: list[str],
     target_character: str | None = None,
-) -> tuple[str, dict[str, Any], dict[str, Any]]:
+) -> tuple[str, GauntletLoadout, TierInfo]:
     tier_info = get_tier_info(current_streak, role)
 
     remaining = [c for c in owned_characters if c not in completed_characters]
@@ -107,7 +108,7 @@ def roll_gauntlet_target(
 
     target_char = target_character if target_character else random.choice(remaining)
 
-    loadout = {
+    loadout: GauntletLoadout = {
         "character": target_char,
         "character_perks": get_character_teachable_perks(target_char),
         "tier_info": tier_info,

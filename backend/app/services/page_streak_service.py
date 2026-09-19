@@ -2,6 +2,8 @@
 import logging
 from typing import Any
 
+from app.schemas.page_streak import PageStreakRunDict, PageStreakRunState, PageStreakStatsLog
+from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, fetch_completed_variants
 from app.services.ownership_service import OwnershipService
@@ -60,29 +62,31 @@ class PageStreakService:
     def get_roster_milestone(self, user_id: int) -> dict[str, Any]:
         return get_live_roster_badge(user_id, self.ownership_service)
 
-    def _with_artwork(self, user_id: int, data: dict[str, Any] | None) -> dict[str, Any] | None:
+    def _with_artwork(self, user_id: int, data: PageStreakRunDict | None) -> PageStreakRunState | None:
         if data is None:
             return None
-        data["perk_icons"] = get_perk_icon_map(user_id, self.perk_service, self.ownership_service)
-        data["killer_avatar"] = get_killer_avatar_map(user_id, self.ownership_service).get(data["killer"])
-        return data
+        return {
+            **data,
+            "perk_icons": get_perk_icon_map(user_id, self.perk_service, self.ownership_service),
+            "killer_avatar": get_killer_avatar_map(user_id, self.ownership_service).get(data["killer"]),
+        }
 
-    def get_run(self, user_id: int, killer: str) -> dict[str, Any] | None:
+    def get_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
         return self._with_artwork(user_id, fetch_run(user_id, killer, self.build_pages))
 
-    def start_run(self, user_id: int, killer: str) -> dict[str, Any] | None:
+    def start_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, create_new_run(user_id, killer, self.get_killers, self.build_pages))
 
     def expected_build_size(self, page_perks: list[str]) -> int:
         return min(BUILD_SIZE, len(page_perks))
 
-    def submit_result(self, user_id: int, killer: str, page: int, perks: list[str], result: str) -> dict[str, Any] | None:
+    def submit_result(self, user_id: int, killer: str, page: int, perks: list[str], result: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak")
         run = record_match_result(user_id, killer, page, perks, result, self.build_pages)
         return self._with_artwork(user_id, run)
 
-    def reset_run(self, user_id: int, killer: str) -> dict[str, Any] | None:
+    def reset_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak")
         return self._with_artwork(user_id, reset_active_run(user_id, killer, self.build_pages))
 
@@ -90,8 +94,8 @@ class PageStreakService:
         assert_challenge_mode_enabled("page_streak")
         reset_all_runs(user_id)
 
-    def get_stats(self, user_id: int) -> dict[str, Any]:
+    def get_stats(self, user_id: int) -> StreakStats[PageStreakStatsLog]:
         return fetch_page_streak_user_stats(user_id)
 
-    def get_completions(self, user_id: int, killer: str) -> list[dict[str, Any]]:
+    def get_completions(self, user_id: int, killer: str) -> list[ChallengeCompletionDict]:
         return fetch_challenge_completions(user_id, "page_streak", killer)

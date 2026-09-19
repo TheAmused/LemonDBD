@@ -4,14 +4,14 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JSON_DICT, JSON_LIST, utcnow
+from app.models.base import ColumnDictMixin, JSON_DICT, JSON_LIST, utcnow
 from app.schemas.gauntlet import GauntletLoadout
 
 if TYPE_CHECKING:
     from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
 
 
-class GauntletRun(Base):
+class GauntletRun(Base, ColumnDictMixin["GauntletRunDict"]):
     __tablename__ = "gauntlet_runs"
     __table_args__ = (
         UniqueConstraint("user_id", "role", "game_mode", name="uq_gauntlet_run_user_role_mode"),
@@ -45,29 +45,8 @@ class GauntletRun(Base):
         back_populates="run", cascade="all, delete-orphan", order_by="GauntletMatchLog.timestamp.asc()"
     )
 
-    def to_dict(self) -> "GauntletRunDict":
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "role": self.role,
-            "status": self.status,
-            "game_mode": self.game_mode,
-            "target_revealed": self.target_revealed,
-            "current_character_id": self.current_character_id,
-            "current_streak": self.current_streak,
-            "best_streak": self.best_streak,
-            "last_checkpoint_streak": self.last_checkpoint_streak,
-            "completed_characters": self.completed_characters,
-            "checkpoint_characters": self.checkpoint_characters,
-            "current_loadout": self.current_loadout,
-            "owned_character_ids": self.owned_character_ids,
-            "attempts": self.attempts,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
 
-
-class GauntletMatchLog(Base):
+class GauntletMatchLog(Base, ColumnDictMixin["GauntletMatchLogDict"]):
     __tablename__ = "gauntlet_match_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -86,17 +65,3 @@ class GauntletMatchLog(Base):
     triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
 
     run: Mapped["GauntletRun"] = relationship(back_populates="match_logs")
-
-    def to_dict(self) -> "GauntletMatchLogDict":
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "role": self.role,
-            "character_id": self.character_id,
-            "result": self.result,
-            "perks": self.perks,
-            "streak_before": self.streak_before,
-            "streak_after": self.streak_after,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }

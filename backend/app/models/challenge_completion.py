@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
-from app.models.base import utcnow
+from app.models.base import ColumnDictMixin, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.streak import ChallengeCompletionDict
 
 
-class ChallengeCompletionRecord(Base):
+class ChallengeCompletionRecord(Base, ColumnDictMixin["ChallengeCompletionDict"]):
     """A permanent snapshot taken each time a gauntlet/chaos/history run is
     fully completed, so a player can look back at past wins after the run
     itself resets and its in-progress state (including match logs) is gone.
@@ -21,6 +21,7 @@ class ChallengeCompletionRecord(Base):
     app.services.page_streak.roster.get_live_roster_badge."""
 
     __tablename__ = "challenge_completion_records"
+    _api_exclude = frozenset({"user_id"})
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(
@@ -38,15 +39,3 @@ class ChallengeCompletionRecord(Base):
     completed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, index=True, nullable=False
     )
-
-    def to_dict(self) -> "ChallengeCompletionDict":
-        return {
-            "id": self.id,
-            "mode": self.mode,
-            "variant": self.variant,
-            "attempts_taken": self.attempts_taken,
-            "matches_played": self.matches_played,
-            "unlocked_characters_count": self.unlocked_characters_count,
-            "full_roster": self.full_roster,
-            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
-        }

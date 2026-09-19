@@ -4,16 +4,20 @@ from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JSON_LIST, utcnow
+from app.models.base import ColumnDictMixin, JSON_LIST, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
 
 
-class HistoryRun(Base):
+class HistoryRun(Base, ColumnDictMixin["HistoryRunDict"]):
     __tablename__ = "history_runs"
     __table_args__ = (
         UniqueConstraint("user_id", "mode", name="uq_history_run_user_mode"),
+    )
+    # Checkpoint state is internal to loss handling; the API never shows it.
+    _api_exclude = frozenset(
+        {"checkpoint_total_killers_beaten", "checkpoint_completed_killers", "checkpoint_unlocked_perk_names"}
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -44,26 +48,8 @@ class HistoryRun(Base):
         back_populates="run", cascade="all, delete-orphan", order_by="HistoryMatchLog.timestamp.asc()"
     )
 
-    def to_dict(self) -> "HistoryRunDict":
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "mode": self.mode,
-            "status": self.status,
-            "current_row_index": self.current_row_index,
-            "total_killers_beaten": self.total_killers_beaten,
-            "best_killers_beaten": self.best_killers_beaten,
-            "completed_killers": self.completed_killers,
-            "unlocked_perk_names": self.unlocked_perk_names,
-            "owned_killer_ids": self.owned_killer_ids,
-            "checkpoint_row_index": self.checkpoint_row_index,
-            "attempts": self.attempts,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
-        }
 
-
-class HistoryMatchLog(Base):
+class HistoryMatchLog(Base, ColumnDictMixin["HistoryMatchLogDict"]):
     __tablename__ = "history_match_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -81,16 +67,3 @@ class HistoryMatchLog(Base):
     triggered_by: Mapped[str] = mapped_column(String(20), default="player", nullable=False)
 
     run: Mapped["HistoryRun"] = relationship(back_populates="match_logs")
-
-    def to_dict(self) -> "HistoryMatchLogDict":
-        return {
-            "id": self.id,
-            "run_id": self.run_id,
-            "killer_id": self.killer_id,
-            "result": self.result,
-            "row_index": self.row_index,
-            "streak_before": self.streak_before,
-            "streak_after": self.streak_after,
-            "timestamp": self.timestamp.isoformat() if self.timestamp else None,
-            "triggered_by": self.triggered_by,
-        }

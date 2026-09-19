@@ -81,7 +81,6 @@ def test_import_run_family_upserts_by_username_and_natural_keys(app_with_run: Fl
         assert logs[0].character_id == "claudette"
 
 
-# (export name, run model, log model, log relationship, natural keys), as wired in export_import.py
 RUN_FAMILIES = [
     ("gauntlet_runs", GauntletRun, GauntletMatchLog, "match_logs", ["role", "game_mode"]),
     ("chaos_runs", ChaosRun, ChaosMatchLog, "match_logs", ["difficulty"]),
@@ -94,8 +93,7 @@ _FIXED_TIME = datetime(2026, 1, 2, 3, 4, 5)
 
 
 def _sentinel_values(model: type) -> dict[str, object]:
-    """A distinct non-default value for every data column, so a column the
-    round trip drops shows up as a mismatch instead of hiding behind its default."""
+    """A non-default value for every data column, so a dropped column shows up."""
     values: dict[str, object] = {}
     for index, column in enumerate(model.__table__.columns, start=1):
         if column.name in _KEY_COLUMNS:
@@ -162,8 +160,6 @@ def test_export_import_round_trip_preserves_every_run_and_log_column(
 
 
 def test_import_accepts_a_backup_written_before_json_columns(app_with_run: Flask) -> None:
-    # Backups taken while these columns were TEXT carry "<name>_json" keys
-    # holding JSON strings; they must still restore.
     with app_with_run.app_context():
         user = db.session.scalars(select(User)).one()
         legacy_row = {

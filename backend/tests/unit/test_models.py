@@ -250,8 +250,6 @@ class TestModelToDictTransformations:
     ],
 )
 def test_streak_to_dict_matches_its_typed_shape(model: type, shape: type) -> None:
-    # The TypedDict is the API contract; a key added to to_dict() without the
-    # type (or the reverse) would let the two drift apart again.
     assert set(model().to_dict()) == set(shape.__annotations__)
 
 
@@ -261,7 +259,5 @@ def test_streak_to_dict_matches_its_typed_shape(model: type, shape: type) -> Non
     [ChaosRun, ChaosMatchLog, GauntletRun, GauntletMatchLog, HistoryRun, HistoryMatchLog, PageStreakRun, PageStreakPageLog],
 )
 def test_streak_tables_store_json_natively(model: type) -> None:
-    # Lists and dicts live in JSON(B) columns; a TEXT "*_json" column means
-    # hand-rolled serialization crept back in.
     text_json_columns = [c.name for c in model.__table__.columns if c.name.endswith("_json")]
     assert text_json_columns == []

@@ -1,10 +1,6 @@
 # backend/app/models/challenge_mixins.py
-"""Columns every challenge run and match log table shares, declared once.
-
-Only columns whose definition is identical in every table that has them live
-here; anything mode-specific (the variant key, per-mode JSON state, the
-`run`/`match_logs` relationships) stays on the model itself. `sort_order`
-keeps `id` and the foreign key at the front of a freshly created table."""
+"""Columns shared by the challenge run and match log tables. `sort_order`
+keeps `id` and the foreign key first in a newly created table."""
 from datetime import datetime
 from typing import ClassVar
 

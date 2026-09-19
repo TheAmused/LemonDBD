@@ -1,10 +1,10 @@
 # backend/app/models/page_streak.py
 from datetime import datetime
 from typing import TYPE_CHECKING
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
-from app.models.base import JsonField, utcnow
+from app.models.base import JSON_LIST, utcnow
 
 if TYPE_CHECKING:
     from app.schemas.page_streak import PageStreakPageLogDict
@@ -25,8 +25,7 @@ class PageStreakRun(Base):
     attempt: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     current_page: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     best_page: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    pages_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    pages = JsonField[list[list[str]]]("pages_json", list)
+    pages: Mapped[list[list[str]]] = mapped_column(JSON_LIST, default=list, nullable=False)
     snapshot_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -51,8 +50,7 @@ class PageStreakPageLog(Base):
     )
     attempt: Mapped[int] = mapped_column(Integer, nullable=False)
     page_number: Mapped[int] = mapped_column(Integer, nullable=False)
-    perks_json: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
-    perks = JsonField[list[str]]("perks_json", list)
+    perks: Mapped[list[str]] = mapped_column(JSON_LIST, default=list, nullable=False)
     result: Mapped[str] = mapped_column(String(20), nullable=False)
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, index=True, nullable=False

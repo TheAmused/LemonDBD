@@ -3,14 +3,13 @@ from datetime import datetime, timezone
 from decimal import Decimal
 
 import pytest
-from app.core.json_provider import safe_json_dumps
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.character import Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.equipment import Item, ItemAddon, ItemCategory, Offering
 from app.models.gauntlet import GauntletMatchLog, GauntletRun
 from app.models.history import HistoryMatchLog, HistoryRun
-from app.models.page_streak import PageStreakPageLog
+from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.challenge_completion import ChallengeCompletionRecord
 from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict
 from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
@@ -215,8 +214,8 @@ class TestModelToDictTransformations:
             current_character_id="dwight",
             current_streak=5,
             best_streak=10,
-            completed_characters_json='["meg", "claudette"]',
-            current_loadout_json='{"perks": ["Sprint Burst", "Self-Care"]}',
+            completed_characters=["meg", "claudette"],
+            current_loadout={"perks": ["Sprint Burst", "Self-Care"]},
         )
         d = gauntlet.to_dict()
         assert d["completed_characters"] == ["meg", "claudette"]
@@ -227,8 +226,8 @@ class TestModelToDictTransformations:
             id=1,
             user_id=3,
             difficulty="hard",
-            completed_killers_json='["trapper"]',
-            used_perks_json=safe_json_dumps(["Agitation"]),
+            completed_killers=["trapper"],
+            used_perks=["Agitation"],
         )
         c_d = chaos.to_dict()
         assert c_d["completed_killers"] == ["trapper"]
@@ -254,3 +253,15 @@ def test_streak_to_dict_matches_its_typed_shape(model: type, shape: type) -> Non
     # The TypedDict is the API contract; a key added to to_dict() without the
     # type (or the reverse) would let the two drift apart again.
     assert set(model().to_dict()) == set(shape.__annotations__)
+
+
+@pytest.mark.unit
+@pytest.mark.parametrize(
+    "model",
+    [ChaosRun, ChaosMatchLog, GauntletRun, GauntletMatchLog, HistoryRun, HistoryMatchLog, PageStreakRun, PageStreakPageLog],
+)
+def test_streak_tables_store_json_natively(model: type) -> None:
+    # Lists and dicts live in JSON(B) columns; a TEXT "*_json" column means
+    # hand-rolled serialization crept back in.
+    text_json_columns = [c.name for c in model.__table__.columns if c.name.endswith("_json")]
+    assert text_json_columns == []

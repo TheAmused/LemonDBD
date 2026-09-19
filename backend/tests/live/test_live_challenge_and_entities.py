@@ -60,13 +60,13 @@ class TestLiveChallengesAndEntities:
                 role="Killer",
                 character_id="the_trapper",
                 result="win",
-                perks_json='["Agitation", "Brutal Strength"]',
+                perks=["Agitation", "Brutal Strength"],
                 streak_before=0,
                 streak_after=1,
             )
             run.current_streak = 1
             run.best_streak = 1
-            run.completed_characters_json = '["the_trapper"]'
+            run.completed_characters = ["the_trapper"]
             db.session.add(log)
             db.session.commit()
 
@@ -107,8 +107,8 @@ class TestLiveChallengesAndEntities:
                 result="win",
                 streak_before=1,
                 streak_after=2,
-                perks_json="[]",
-                addon_rarities_json="[]",
+                perks=[],
+                addon_rarities=[],
             )
             db.session.add(c_log)
 

@@ -3,9 +3,33 @@ from datetime import datetime
 from typing import Any
 from sqlalchemy import select, delete
 from app.core.extensions import db
+from app.core.json_provider import safe_json_loads
 from app.models.user import User
 
 _DATETIME_FIELDS = {"timestamp", "created_at", "updated_at", "snapshot_at"}
+
+# Backups written while these columns were TEXT carry the old "<name>_json" key
+# holding a JSON string. Same old name maps to the same column in every table.
+_LEGACY_JSON_COLUMNS = {
+    "completed_killers_json": "completed_killers",
+    "checkpoint_killers_json": "checkpoint_killers",
+    "used_perks_json": "used_perks",
+    "checkpoint_used_perks_json": "checkpoint_used_perks",
+    "current_perks_json": "current_perks",
+    "current_addon_rarities_json": "current_addon_rarities",
+    "owned_killers_json": "owned_killer_ids",
+    "unlocked_perks_json": "unlocked_perk_ids",
+    "addon_rarities_json": "addon_rarities",
+    "perks_json": "perks",
+    "completed_characters_json": "completed_characters",
+    "checkpoint_characters_json": "checkpoint_characters",
+    "current_loadout_json": "current_loadout",
+    "owned_characters_json": "owned_character_ids",
+    "unlocked_perk_names_json": "unlocked_perk_names",
+    "checkpoint_completed_killers_json": "checkpoint_completed_killers",
+    "checkpoint_unlocked_perk_names_json": "checkpoint_unlocked_perk_names",
+    "pages_json": "pages",
+}
 
 
 def _parse_datetime(val: str | None) -> datetime | None:
@@ -27,6 +51,21 @@ def _column_row(obj: Any, skip: set[str]) -> dict[str, Any]:
         value = getattr(obj, column.key)
         row[column.name] = value.isoformat() if isinstance(value, datetime) else value
     return row
+
+
+def _upgrade_legacy_keys(row: dict[str, Any]) -> dict[str, Any]:
+    """Rename old "<name>_json" string keys to their JSON column. A row that
+    already has the new key (old exports sent both) keeps that value."""
+    upgraded: dict[str, Any] = {}
+    for key, value in row.items():
+        column = _LEGACY_JSON_COLUMNS.get(key)
+        if column is None:
+            upgraded[key] = value
+        elif column not in row:
+            parsed = safe_json_loads(value) if isinstance(value, str) else value
+            if parsed is not None:
+                upgraded[column] = parsed
+    return upgraded
 
 
 def export_run_family(
@@ -79,7 +118,7 @@ def import_run_family(
     )
     run_fk_column = next(iter(log_model.__mapper__.relationships[run_fk_attr].local_columns)).name
 
-    for row in data[name]:
+    for row in map(_upgrade_legacy_keys, data[name]):
         username = row.get("username")
         u_id = user_map.get(username) if username else None
         if not u_id:
@@ -107,7 +146,7 @@ def import_run_family(
             updated += 1
 
         db.session.execute(delete(log_model).where(getattr(log_model, run_fk_column) == run_obj.id))
-        for log_row in row.get("match_logs", []):
+        for log_row in map(_upgrade_legacy_keys, row.get("match_logs", [])):
             log_kwargs: dict[str, Any] = {}
             for k, v in log_row.items():
                 if k == "id" or not hasattr(log_model, k):

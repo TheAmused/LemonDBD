@@ -1,9 +1,9 @@
 # backend/app/models/base.py
-from collections.abc import Callable
 from datetime import datetime, timezone
-from typing import Self, overload
 
-from app.core.json_provider import safe_json_dumps, safe_json_loads
+from sqlalchemy import JSON
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.ext.mutable import MutableDict, MutableList
 
 
 def utcnow() -> datetime:
@@ -11,27 +11,9 @@ def utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
-class JsonField[T]:
-    """Typed read/write view over a Text column that stores JSON.
-
-    `run.completed_killers` parses `run.completed_killers_json` (missing or
-    broken JSON reads as a fresh `default()`), and assigning to it writes the
-    column back. The column stays the stored and exported source of truth."""
-
-    def __init__(self, column: str, default: Callable[[], T]) -> None:
-        self.column = column
-        self.default = default
-        self.empty_json = safe_json_dumps(default())
-
-    @overload
-    def __get__(self, obj: None, owner: type) -> Self: ...
-    @overload
-    def __get__(self, obj: object, owner: type) -> T: ...
-    def __get__(self, obj: object | None, owner: type) -> "T | Self":
-        if obj is None:
-            return self
-        value: T | None = safe_json_loads(getattr(obj, self.column))
-        return self.default() if value is None else value
-
-    def __set__(self, obj: object, value: T) -> None:
-        setattr(obj, self.column, safe_json_dumps(value, default_val=self.empty_json))
+# Mutable wrappers: services read a list, change it in place and assign the
+# same object back, which a plain JSON column would not see as a change.
+# Each wrapper needs its own type instance: as_mutable matches columns by the
+# identity of the type object it was given.
+JSON_LIST = MutableList.as_mutable(JSONB().with_variant(JSON(), "sqlite"))
+JSON_DICT = MutableDict.as_mutable(JSONB().with_variant(JSON(), "sqlite"))

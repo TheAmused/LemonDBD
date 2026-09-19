@@ -1,10 +1,13 @@
 # backend/app/models/challenge_completion.py
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
 from app.models.base import utcnow
+
+if TYPE_CHECKING:
+    from app.schemas.streak import ChallengeCompletionDict
 
 
 class ChallengeCompletionRecord(Base):
@@ -36,7 +39,7 @@ class ChallengeCompletionRecord(Base):
         DateTime(timezone=True), default=utcnow, index=True, nullable=False
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "ChallengeCompletionDict":
         return {
             "id": self.id,
             "mode": self.mode,

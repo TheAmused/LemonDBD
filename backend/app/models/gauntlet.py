@@ -1,11 +1,14 @@
 # backend/app/models/gauntlet.py
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING
 from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads
 from app.models.base import utcnow
+
+if TYPE_CHECKING:
+    from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
 
 
 class GauntletRun(Base):
@@ -42,7 +45,7 @@ class GauntletRun(Base):
         back_populates="run", cascade="all, delete-orphan", order_by="GauntletMatchLog.timestamp.asc()"
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "GauntletRunDict":
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -54,9 +57,6 @@ class GauntletRun(Base):
             "current_streak": self.current_streak,
             "best_streak": self.best_streak,
             "last_checkpoint_streak": self.last_checkpoint_streak,
-            "completed_characters_json": self.completed_characters_json,
-            "checkpoint_characters_json": self.checkpoint_characters_json,
-            "current_loadout_json": self.current_loadout_json,
             "completed_characters": safe_json_loads(self.completed_characters_json, default=[]),
             "checkpoint_characters": safe_json_loads(self.checkpoint_characters_json, default=[]),
             "current_loadout": safe_json_loads(self.current_loadout_json, default={}),
@@ -87,14 +87,13 @@ class GauntletMatchLog(Base):
 
     run: Mapped["GauntletRun"] = relationship(back_populates="match_logs")
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "GauntletMatchLogDict":
         return {
             "id": self.id,
             "run_id": self.run_id,
             "role": self.role,
             "character_id": self.character_id,
             "result": self.result,
-            "perks_json": self.perks_json,
             "perks": safe_json_loads(self.perks_json, default=[]),
             "streak_before": self.streak_before,
             "streak_after": self.streak_after,

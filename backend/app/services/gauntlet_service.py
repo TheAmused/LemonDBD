@@ -1,12 +1,13 @@
 # backend/app/services/gauntlet_service.py
 import logging
-from typing import Any
 
 from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import GauntletMatchLog, GauntletRun
+from app.schemas.gauntlet import GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
+from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.gauntlet import (
@@ -33,7 +34,7 @@ class GauntletService:
         self.perk_service = perk_service or PerkService()
         self.ownership_service = ownership_service or OwnershipService()
 
-    def get_tier_info(self, streak: int, role: str) -> dict[str, Any]:
+    def get_tier_info(self, streak: int, role: str) -> TierInfo:
         return get_tier_info(streak, role)
 
     def _freeze_pool(self, r: GauntletRun) -> list[int]:
@@ -44,15 +45,20 @@ class GauntletService:
     def _is_unfrozen(self, current_streak: int, owned_character_ids: list[int]) -> bool:
         return not owned_character_ids
 
-    def _with_owned_characters(self, data: dict[str, Any]) -> dict[str, Any]:
+    def _state(self, r: GauntletRun, tier_info: TierInfo) -> GauntletRunState:
+        data = r.to_dict()
         ids = data["owned_character_ids"]
-        data["pool_frozen"] = bool(ids)
+        pool_frozen = bool(ids)
         if not ids:
-            ids = get_owned_character_ids(data["user_id"], data["role"], self.ownership_service)
-        data["owned_characters"] = resolve_character_names_by_ids(ids, role=data["role"])
-        return data
+            ids = get_owned_character_ids(r.user_id, r.role, self.ownership_service)
+        return {
+            **data,
+            "pool_frozen": pool_frozen,
+            "owned_characters": resolve_character_names_by_ids(ids, role=r.role),
+            "tier_info": tier_info,
+        }
 
-    def get_or_create_run(self, user_id: int, role: str) -> dict[str, Any]:
+    def get_or_create_run(self, user_id: int, role: str) -> GauntletRunState:
         run = db.session.scalars(
             select(GauntletRun).where(
                 GauntletRun.user_id == user_id,
@@ -61,15 +67,13 @@ class GauntletService:
         ).first()
 
         if run:
-            data = self._with_owned_characters(run.to_dict())
-            data["tier_info"] = self.get_tier_info(data["current_streak"], role)
-            return data
+            return self._state(run, self.get_tier_info(run.current_streak, role))
 
         assert_challenge_mode_enabled("gauntlet")
 
         target_character = pick_initial_target(user_id, role, self.ownership_service)
         tier_info = self.get_tier_info(0, role)
-        initial_loadout = {
+        initial_loadout: GauntletLoadout = {
             "character": target_character,
             "character_perks": get_character_teachable_perks(target_character),
             "tier_info": tier_info,
@@ -92,11 +96,9 @@ class GauntletService:
         db.session.add(new_run)
         db.session.commit()
 
-        data = self._with_owned_characters(new_run.to_dict())
-        data["tier_info"] = tier_info
-        return data
+        return self._state(new_run, tier_info)
 
-    def roll(self, user_id: int, role: str, target_character: str | None = None) -> dict[str, Any]:
+    def roll(self, user_id: int, role: str, target_character: str | None = None) -> GauntletRunState:
         run = self.get_or_create_run(user_id, role)
         completed = run.get("completed_characters", [])
 
@@ -113,11 +115,9 @@ class GauntletService:
         r.current_loadout_json = safe_json_dumps(loadout)
         db.session.commit()
 
-        data = self._with_owned_characters(r.to_dict())
-        data["tier_info"] = tier_info
-        return data
+        return self._state(r, tier_info)
 
-    def reveal_target(self, user_id: int, run_id: int) -> dict[str, Any]:
+    def reveal_target(self, user_id: int, run_id: int) -> GauntletRunState:
         r = db.session.scalars(
             select(GauntletRun).where(GauntletRun.id == run_id, GauntletRun.user_id == user_id)
         ).first()
@@ -127,11 +127,9 @@ class GauntletService:
             self._freeze_pool(r)
         r.target_revealed = True
         db.session.commit()
-        data = self._with_owned_characters(r.to_dict())
-        data["tier_info"] = self.get_tier_info(data["current_streak"], r.role)
-        return data
+        return self._state(r, self.get_tier_info(r.current_streak, r.role))
 
-    def reset_run(self, user_id: int, role: str) -> dict[str, Any]:
+    def reset_run(self, user_id: int, role: str) -> GauntletRunState:
         assert_challenge_mode_enabled("gauntlet")
         r = db.session.scalars(
             select(GauntletRun).where(GauntletRun.user_id == user_id, GauntletRun.role == role)
@@ -143,7 +141,7 @@ class GauntletService:
         db.session.commit()
         return self.get_or_create_run(user_id, role)
 
-    def submit_result(self, user_id: int, run_id: int, result: str, triggered_by: str = "player") -> dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, triggered_by: str = "player") -> GauntletRunState:
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
         if triggered_by != "inactivity":
@@ -234,14 +232,12 @@ class GauntletService:
 
         db.session.commit()
 
-        data = self._with_owned_characters(r.to_dict())
-        data["tier_info"] = self.get_tier_info(streak_after, r.role)
-        return data
+        return self._state(r, self.get_tier_info(streak_after, r.role))
 
-    def get_stats(self, user_id: int, role: str) -> dict[str, Any]:
+    def get_stats(self, user_id: int, role: str) -> StreakStats[GauntletMatchLogDict]:
         return fetch_gauntlet_user_stats(user_id, role)
 
-    def get_completions(self, user_id: int, role: str) -> list[dict[str, Any]]:
+    def get_completions(self, user_id: int, role: str) -> list[ChallengeCompletionDict]:
         # game_mode isn't yet a user-facing choice at this layer (every run is
         # created with the model's "original" default), so completions are
         # only ever recorded/queried under that variant today. The stored

@@ -1,12 +1,13 @@
 # backend/app/services/history_service.py
 import logging
-from typing import Any
 
 from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import HistoryMatchLog, HistoryRun
+from app.schemas.history import HistoryMatchLogDict, HistoryRunState
+from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.history import fetch_history_user_stats
@@ -58,7 +59,7 @@ class HistoryService:
 
         return completed, unlocked
 
-    def _augment(self, run: HistoryRun) -> dict[str, Any]:
+    def _augment(self, run: HistoryRun) -> HistoryRunState:
         if self._is_unfrozen(run):
             owned_names = resolve_killer_names_by_ids(
                 get_owned_killer_ids_by_release(run.user_id, self.ownership_service)
@@ -82,16 +83,17 @@ class HistoryService:
                 run.completed_killers_json = safe_json_dumps(filtered)
                 db.session.commit()
 
-        data = run.to_dict()
-        data["owned_killers"] = owned_names
-        data["current_row_killers"] = current_row
-        data["row_size"] = ROW_SIZE
-        data["total_rows"] = len(rows)
-        data["total_owned_killers"] = len(owned_names)
-        data["pool_frozen"] = not self._is_unfrozen(run)
-        return data
+        return {
+            **run.to_dict(),
+            "owned_killers": owned_names,
+            "current_row_killers": current_row,
+            "row_size": ROW_SIZE,
+            "total_rows": len(rows),
+            "total_owned_killers": len(owned_names),
+            "pool_frozen": not self._is_unfrozen(run),
+        }
 
-    def get_or_create_run(self, user_id: int, mode: str) -> dict[str, Any]:
+    def get_or_create_run(self, user_id: int, mode: str) -> HistoryRunState:
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
         ).first()
@@ -121,7 +123,7 @@ class HistoryService:
         db.session.commit()
         return self._augment(run)
 
-    def reset_run(self, user_id: int, mode: str) -> dict[str, Any]:
+    def reset_run(self, user_id: int, mode: str) -> HistoryRunState:
         assert_challenge_mode_enabled("history")
         run = db.session.scalars(
             select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
@@ -132,7 +134,7 @@ class HistoryService:
         db.session.commit()
         return self.get_or_create_run(user_id, mode)
 
-    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> HistoryRunState:
         assert_challenge_mode_enabled("history")
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
@@ -251,8 +253,8 @@ class HistoryService:
         ))
         db.session.commit()
 
-    def get_stats(self, user_id: int, mode: str) -> dict[str, Any]:
+    def get_stats(self, user_id: int, mode: str) -> StreakStats[HistoryMatchLogDict]:
         return fetch_history_user_stats(user_id, mode)
 
-    def get_completions(self, user_id: int, mode: str) -> list[dict[str, Any]]:
+    def get_completions(self, user_id: int, mode: str) -> list[ChallengeCompletionDict]:
         return fetch_challenge_completions(user_id, "history", mode)

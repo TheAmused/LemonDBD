@@ -1,11 +1,14 @@
 # backend/app/models/history.py
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads
 from app.models.base import utcnow
+
+if TYPE_CHECKING:
+    from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
 
 
 class HistoryRun(Base):
@@ -42,7 +45,7 @@ class HistoryRun(Base):
         back_populates="run", cascade="all, delete-orphan", order_by="HistoryMatchLog.timestamp.asc()"
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "HistoryRunDict":
         return {
             "id": self.id,
             "user_id": self.user_id,
@@ -80,7 +83,7 @@ class HistoryMatchLog(Base):
 
     run: Mapped["HistoryRun"] = relationship(back_populates="match_logs")
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> "HistoryMatchLogDict":
         return {
             "id": self.id,
             "run_id": self.run_id,

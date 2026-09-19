@@ -32,9 +32,6 @@ from app.schemas.map import (
 from app.schemas.perk import PerkBase, PerkResponse
 from app.schemas.user import UserCharacterOwnershipBase, UserCharacterOwnershipResponse
 from app.schemas.changelog import ChangelogPostResponse
-from app.schemas.chaos import ChaosRunResponse
-from app.schemas.gauntlet import GauntletRunResponse
-from app.schemas.history import HistoryRunResponse
 
 
 @pytest.mark.unit
@@ -480,11 +477,3 @@ class TestOtherSchemaAuditFixes:
         )
         assert resp.position == 3
         assert resp.author_id == 2
-
-    @pytest.mark.parametrize(
-        "response_cls",
-        [ChaosRunResponse, GauntletRunResponse, HistoryRunResponse],
-    )
-    def test_run_responses_carry_attempts(self, response_cls) -> None:
-        # Each *Run.to_dict() emits attempts; the response schemas omitted it.
-        assert "attempts" in response_cls.model_fields

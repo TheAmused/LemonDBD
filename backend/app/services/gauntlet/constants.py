@@ -1,6 +1,8 @@
 # backend/app/services/gauntlet/constants.py
 from typing import Any
 
+from app.schemas.gauntlet import TierInfo
+
 CHECKPOINT_INTERVAL: int = 10
 BUILD_SIZE: int = 4
 GENERAL_CHARACTER: str = "General"
@@ -24,13 +26,17 @@ KILLER_TIERS: list[dict[str, Any]] = [
 ]
 
 
-def get_tier_info(streak: int, role: str) -> dict[str, Any]:
+def get_tier_info(streak: int, role: str) -> TierInfo:
     tiers = KILLER_TIERS if role == "killer" else SURVIVOR_TIERS
     tier = tiers[0]
     for candidate in tiers:
         if streak >= candidate["min_streak"]:
             tier = candidate
-    info = dict(tier)
-    info.pop("min_streak")
-    info["roster_limit"] = ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT
-    return info
+    return {
+        "name": tier["name"],
+        "tier_level": tier["tier_level"],
+        "perk_limit": tier["perk_limit"],
+        "character_perks_only": tier["character_perks_only"],
+        "description": tier["description"],
+        "roster_limit": ORIGINAL_KILLER_ROSTER_LIMIT if role == "killer" else ORIGINAL_SURVIVOR_ROSTER_LIMIT,
+    }

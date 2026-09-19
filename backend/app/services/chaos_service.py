@@ -1,12 +1,13 @@
 # backend/app/services/chaos_service.py
 import logging
-from typing import Any
 
 from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.models import ChaosMatchLog, ChaosRun
+from app.schemas.chaos import ChaosMatchLogDict, ChaosRunState
+from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.chaos import (
@@ -40,17 +41,22 @@ class ChaosService:
         if not safe_json_loads(r.unlocked_perks_json, default=[]):
             r.unlocked_perks_json = safe_json_dumps(get_unlocked_killer_perk_ids(r.user_id, self.ownership_service))
 
-    def _with_resolved_pool(self, data: dict[str, Any]) -> dict[str, Any]:
+    def _state(self, r: ChaosRun) -> ChaosRunState:
+        data = r.to_dict()
         killer_ids = data["owned_killer_ids"]
         perk_ids = data["unlocked_perk_ids"]
-        data["pool_frozen"] = bool(killer_ids) and bool(perk_ids)
+        pool_frozen = bool(killer_ids) and bool(perk_ids)
         if not killer_ids:
-            killer_ids = get_owned_killer_ids(data["user_id"], self.ownership_service)
+            killer_ids = get_owned_killer_ids(r.user_id, self.ownership_service)
         if not perk_ids:
-            perk_ids = get_unlocked_killer_perk_ids(data["user_id"], self.ownership_service)
-        data["owned_killers"] = resolve_killer_names_by_ids(killer_ids)
-        data["unlocked_perks"] = resolve_perk_names_by_ids(perk_ids)
-        return data
+            perk_ids = get_unlocked_killer_perk_ids(r.user_id, self.ownership_service)
+        return {
+            **data,
+            "pool_frozen": pool_frozen,
+            "owned_killers": resolve_killer_names_by_ids(killer_ids),
+            "unlocked_perks": resolve_perk_names_by_ids(perk_ids),
+            "checkpoint_interval": checkpoint_interval(r.difficulty),
+        }
 
     def _draw_build(self, unlocked_perks, used_perk_names):
         perks, updated_used = draw_chaos_perks(unlocked_perks, used_perk_names)
@@ -87,14 +93,12 @@ class ChaosService:
 
         return streak_after, completed, used_perks, last_checkpoint, checkpoint_killers, checkpoint_used_perks
 
-    def get_or_create_run(self, user_id: int, difficulty: str) -> dict[str, Any]:
+    def get_or_create_run(self, user_id: int, difficulty: str) -> ChaosRunState:
         run = db.session.scalars(
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
         ).first()
         if run:
-            data = self._with_resolved_pool(run.to_dict())
-            data["checkpoint_interval"] = checkpoint_interval(difficulty)
-            return data
+            return self._state(run)
 
         assert_challenge_mode_enabled("chaos")
 
@@ -123,11 +127,9 @@ class ChaosService:
         db.session.add(new_run)
         db.session.commit()
 
-        data = self._with_resolved_pool(new_run.to_dict())
-        data["checkpoint_interval"] = checkpoint_interval(difficulty)
-        return data
+        return self._state(new_run)
 
-    def reveal(self, user_id: int, run_id: int) -> dict[str, Any]:
+    def reveal(self, user_id: int, run_id: int) -> ChaosRunState:
         r = db.session.scalars(
             select(ChaosRun).where(ChaosRun.id == run_id, ChaosRun.user_id == user_id)
         ).first()
@@ -136,11 +138,9 @@ class ChaosService:
         self._freeze_pools_if_needed(r)
         r.perks_revealed = True
         db.session.commit()
-        data = self._with_resolved_pool(r.to_dict())
-        data["checkpoint_interval"] = checkpoint_interval(r.difficulty)
-        return data
+        return self._state(r)
 
-    def reset_run(self, user_id: int, difficulty: str) -> dict[str, Any]:
+    def reset_run(self, user_id: int, difficulty: str) -> ChaosRunState:
         assert_challenge_mode_enabled("chaos")
         r = db.session.scalars(
             select(ChaosRun).where(ChaosRun.user_id == user_id, ChaosRun.difficulty == difficulty)
@@ -151,7 +151,7 @@ class ChaosService:
         db.session.commit()
         return self.get_or_create_run(user_id, difficulty)
 
-    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> dict[str, Any]:
+    def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> ChaosRunState:
         assert_challenge_mode_enabled("chaos")
         if result not in ("win", "loss"):
             raise ValueError("Result must be 'win' or 'loss'")
@@ -241,9 +241,7 @@ class ChaosService:
             self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
 
-        data = self._with_resolved_pool(r.to_dict())
-        data["checkpoint_interval"] = interval
-        return data
+        return self._state(r)
 
     def apply_inactivity_loss(self, run_id: int) -> None:
         r = db.session.scalars(select(ChaosRun).where(ChaosRun.id == run_id)).first()
@@ -283,8 +281,8 @@ class ChaosService:
         self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
 
-    def get_stats(self, user_id: int, difficulty: str) -> dict[str, Any]:
+    def get_stats(self, user_id: int, difficulty: str) -> StreakStats[ChaosMatchLogDict]:
         return fetch_chaos_user_stats(user_id, difficulty)
 
-    def get_completions(self, user_id: int, difficulty: str) -> list[dict[str, Any]]:
+    def get_completions(self, user_id: int, difficulty: str) -> list[ChallengeCompletionDict]:
         return fetch_challenge_completions(user_id, "chaos", difficulty)

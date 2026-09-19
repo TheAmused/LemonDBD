@@ -29,6 +29,7 @@ interface CacheEntry<T> {
 const store = new Map<string, CacheEntry<unknown>>();
 const inflight = new Map<string, Promise<unknown>>();
 const listeners = new Map<string, Set<() => void>>();
+const revalidators = new Map<string, Set<() => void>>();
 
 /** Default freshness window. Game data changes on patch days, not per minute. */
 export const DEFAULT_TTL_MS = 5 * 60 * 1000;
@@ -114,22 +115,44 @@ export function writeCache<T>(key: string, data: T): void {
 }
 
 /**
- * Drops entries whose key starts with `prefix` (or everything, if omitted), so
- * the next read refetches. Use after a mutation that changes what the server
- * would return -- ownership toggles, for instance, change `is_owned` on perks.
+ * Runs `refetch` when invalidate() drops `key`. A mounted consumer only fetches
+ * on mount or when its key changes, so without this it would stay on its
+ * loading state until a reload. Returns the unsubscribe.
+ */
+export function onInvalidated(key: string, refetch: () => void): () => void {
+  let set = revalidators.get(key);
+  if (!set) {
+    set = new Set();
+    revalidators.set(key, set);
+  }
+  set.add(refetch);
+  return () => {
+    set!.delete(refetch);
+    if (set!.size === 0) revalidators.delete(key);
+  };
+}
+
+function drop(key: string): void {
+  store.delete(key);
+  notify(key);
+  revalidators.get(key)?.forEach((refetch) => {
+    try {
+      refetch();
+    } catch {
+      // One failing consumer must not stop the others.
+    }
+  });
+}
+
+/**
+ * Drops entries whose key starts with `prefix` (or everything, if omitted) and
+ * refetches the ones a mounted consumer is showing. Use after a mutation that
+ * changes what the server would return -- ownership toggles, for instance,
+ * change `is_owned` on perks.
  */
 export function invalidate(prefix?: string): void {
-  if (prefix === undefined) {
-    const keys = [...store.keys()];
-    store.clear();
-    keys.forEach(notify);
-    return;
-  }
   for (const key of [...store.keys()]) {
-    if (key.startsWith(prefix)) {
-      store.delete(key);
-      notify(key);
-    }
+    if (prefix === undefined || key.startsWith(prefix)) drop(key);
   }
 }
 

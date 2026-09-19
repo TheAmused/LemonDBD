@@ -16,6 +16,40 @@ export function ownershipKey(characterId: number, role?: string | null): string 
   return `${normalizeRole(role)}:${characterId}`;
 }
 
+export interface OwnedCharacterState {
+  id: number;
+  role: string;
+  is_owned: boolean;
+}
+
+export interface CharacterOwnershipUpdate {
+  character_id: number;
+  role: string;
+  is_owned: boolean;
+}
+
+/** Ownership as the character grid reads it: keyed by role and id, never id alone. */
+export function buildCharacterOwnershipDraft(rows: OwnedCharacterState[]): Record<string, boolean> {
+  const draft: Record<string, boolean> = {};
+  rows.forEach((row) => {
+    draft[ownershipKey(row.id, row.role)] = row.is_owned;
+  });
+  return draft;
+}
+
+/** The characters whose draft state differs from `loaded`; a key `loaded` lacks counts as owned. */
+export function changedCharacterUpdates(
+  loaded: Record<string, boolean>,
+  draft: Record<string, boolean>,
+): CharacterOwnershipUpdate[] {
+  return Object.entries(draft)
+    .filter(([key, isOwned]) => isOwned !== (loaded[key] ?? true))
+    .map(([key, isOwned]) => {
+      const [role, id] = key.split(':');
+      return { character_id: Number(id), role, is_owned: isOwned };
+    });
+}
+
 /** `"Killer"`, `"killers"`, `"KILLER"` all become `"killer"`. */
 export function normalizeRole(role?: string | null): string {
   return (role ?? '').trim().toLowerCase().replace(/s$/, '') === 'killer' ? 'killer' : 'survivor';

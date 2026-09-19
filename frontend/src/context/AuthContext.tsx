@@ -50,7 +50,7 @@ interface AuthContextType {
   resetPassword: (token: string, newPassword: string, extra?: Record<string, any>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
   updateCharacterOwnership: (characterId: number, isOwned: boolean) => Promise<boolean>;
-  bulkUpdateCharacterOwnership: (updates: Array<{ character_id: number; is_owned: boolean }>) => Promise<boolean>;
+  bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) => Promise<boolean>;
   updatePerkOwnership: (perkId: number, isUnlocked: boolean) => Promise<boolean>;
   bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) => Promise<boolean>;
   markOnboardingComplete: () => Promise<boolean>;
@@ -58,6 +58,7 @@ interface AuthContextType {
 }
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -263,7 +264,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const bulkUpdateCharacterOwnership = async (
-    updates: Array<{ character_id: number; is_owned: boolean }>
+    updates: CharacterOwnershipUpdate[]
   ): Promise<boolean> => {
     if (!token || !user) return false;
     try {
@@ -425,9 +426,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       refreshUser: () => handlersRef.current.refreshUser(),
       updateCharacterOwnership: (characterId: number, isOwned: boolean) =>
         handlersRef.current.updateCharacterOwnership(characterId, isOwned),
-      bulkUpdateCharacterOwnership: (
-        updates: Array<{ character_id: number; is_owned: boolean }>
-      ) => handlersRef.current.bulkUpdateCharacterOwnership(updates),
+      bulkUpdateCharacterOwnership: (updates: CharacterOwnershipUpdate[]) =>
+        handlersRef.current.bulkUpdateCharacterOwnership(updates),
       updatePerkOwnership: (perkId: number, isUnlocked: boolean) =>
         handlersRef.current.updatePerkOwnership(perkId, isUnlocked),
       bulkUpdatePerkOwnership: (updates: Array<{ perk_id: number; is_unlocked: boolean }>) =>

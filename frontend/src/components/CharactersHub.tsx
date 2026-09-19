@@ -1,8 +1,13 @@
 'use client';
 // frontend/src/components/CharactersHub.tsx
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  buildCharacterOwnershipDraft,
+  changedCharacterUpdates,
+  ownershipKey,
+  ownsPerk,
+} from '@/utils/characterUtils';
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import {
@@ -119,6 +124,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
+  const loadedCharacterOwnership = useRef<Record<string, boolean>>({});
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
@@ -160,12 +166,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         }),
       ]);
 
-      const charDraft: Record<number, boolean> = {};
+      let charDraft: Record<string, boolean> = {};
       if (charsRes.ok) {
         const data = await charsRes.json();
-        (data.data as OwnedCharacter[]).forEach((c) => {
-          charDraft[c.id] = c.is_owned;
-        });
+        charDraft = buildCharacterOwnershipDraft(data.data as OwnedCharacter[]);
       }
 
       const perkDraft: Record<number, boolean> = {};
@@ -178,6 +182,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         });
       }
 
+      loadedCharacterOwnership.current = charDraft;
       setCharacterOwnershipDraft(charDraft);
       setPerkUnlockDraft(perkDraft);
       setAllPerks(perksList);
@@ -228,10 +233,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     setOwnershipSaving(true);
     setOwnershipSaveError(null);
     try {
-      const characterUpdates = Object.entries(characterOwnershipDraft).map(([key, isOwned]) => {
-        const [role, id] = key.split(':');
-        return { character_id: Number(id), role, is_owned: isOwned };
-      });
+      const characterUpdates = changedCharacterUpdates(
+        loadedCharacterOwnership.current,
+        characterOwnershipDraft,
+      );
       const perkUpdates = Object.entries(perkUnlockDraft).map(([perkId, isUnlocked]) => ({
         perk_id: Number(perkId),
         is_unlocked: isUnlocked,

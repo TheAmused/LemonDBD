@@ -8,7 +8,7 @@ import type { LucideIcon } from 'lucide-react';
 export interface SidebarNavLinkProps {
   id: string;
   label: string;
-  icon: LucideIcon;
+  icon: React.ElementType;
   color: string;
   activeBg: string;
   href?: string;

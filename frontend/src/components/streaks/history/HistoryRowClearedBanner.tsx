@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { Trophy } from 'lucide-react';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface HistoryRowClearedBannerProps {
   rowNumber: number | null;
@@ -27,7 +27,7 @@ export const HistoryRowClearedBanner: React.FC<HistoryRowClearedBannerProps> = (
   return (
     <div className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
       <div className="chaos-badge-pop flex items-center gap-2.5 rounded-xl border-2 border-accent-green bg-bg-surface px-5 py-3 shadow-xl">
-        <Trophy className="h-5 w-5 text-accent-green" />
+        <AdeptBadgeIcon className="h-5 w-5 text-accent-green" />
         <span className="text-sm font-extrabold text-text-primary">
           {dict?.streaks?.rowClearedPrefix || 'Row cleared! Row'} {rowNumber + 1}{' '}
           {dict?.streaks?.rowUnlockedSuffix || 'unlocked.'}

@@ -6,12 +6,9 @@ import React, { useState, useEffect, useCallback, useMemo, useRef, Suspense } fr
 import dynamic from 'next/dynamic';
 import {
   Heart,
-  Skull,
-  Shield,
   Volume2,
   VolumeX,
   Music,
-  Trophy,
   RotateCcw,
   Sparkles,
   Shuffle,
@@ -53,6 +50,8 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { decodeArchetypeShare, type SharedArchetypePayload } from '@/utils/smashPersona';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { IridescentShardIcon } from '@/components/icons/DbdIcons';
 
 // Dynamic client-side imports for heavy visual layers and interactive modals
 const SmashAnimations = dynamic(
@@ -845,7 +844,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 aria-label={dict?.smashOrPass?.tooltips?.leaderboard || dict?.smashOrPass?.modals?.leaderboardTitle || ''}
                 className="flex min-h-[44px] min-w-[44px] sm:min-h-[38px] sm:min-w-[38px] h-11 w-11 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-accent-amber/10 border border-accent-amber/30 hover:border-accent-amber/60 text-accent-amber transition-all shadow-md cursor-pointer hover:scale-105 active:scale-95 touch-manipulation"
               >
-                <Trophy className="h-4 w-4 sm:h-4 sm:w-4 text-accent-amber" />
+                <IridescentShardIcon className="h-4 w-4 sm:h-4 sm:w-4 text-accent-amber" />
               </button>
             </Tooltip>
 
@@ -931,7 +930,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                         : 'text-text-muted hover:text-accent-green'
                       }`}
                   >
-                    <Shield className="h-3.5 w-3.5" />
+                    <SurvivorIcon className="h-3.5 w-3.5" />
                     {survivorsLabel}
                   </button>
                   <button
@@ -942,7 +941,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                         : 'text-text-muted hover:text-accent-red'
                       }`}
                   >
-                    <Skull className="h-3.5 w-3.5" />
+                    <KillerIcon className="h-3.5 w-3.5" />
                     {killersLabel}
                   </button>
                 </div>

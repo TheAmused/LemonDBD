@@ -4,13 +4,15 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, BookOpen, Trophy, type LucideIcon } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface ChallengeIntroTile {
   value: string;
   label: string;
   description: string;
-  icon: LucideIcon;
+  /** Any icon component (lucide or a custom DbdIcons SVG). */
+  icon: React.ElementType;
   image?: string;
   accentClassName: string;
   disabled?: boolean;
@@ -28,7 +30,8 @@ export interface ChallengeIntroTile {
 export interface ChallengeIntroModalShellProps {
   isOpen: boolean;
   onClose: () => void;
-  icon: LucideIcon;
+  /** Any icon component (lucide or a custom DbdIcons SVG). */
+  icon: React.ElementType;
   iconClassName: string;
   title: string;
   /** Omit to skip the explanatory intro box entirely, e.g. when a player is
@@ -171,14 +174,14 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               >
                 {tile.completed && tile.completedFull ? (
                   <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-1.5 py-0.5 text-accent-red shadow-sm">
-                    <Trophy className="h-3 w-3" />
+                    <AdeptBadgeIcon className="h-3 w-3" />
                     {tile.completedFullCount != null && (
                       <span className="text-[10px] font-black leading-none">{tile.completedFullCount}</span>
                     )}
                   </span>
                 ) : tile.completed ? (
                   <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-1.5 py-0.5 text-accent-amber shadow-sm">
-                    <Trophy className="h-3 w-3" />
+                    <AdeptBadgeIcon className="h-3 w-3" />
                     {tile.completedCount != null && (
                       <span className="text-[10px] font-black leading-none">{tile.completedCount}</span>
                     )}

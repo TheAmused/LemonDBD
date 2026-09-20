@@ -4,8 +4,10 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { Flame, Trophy, Shield, User, Skull, BarChart2, BookOpen, RotateCcw, History } from 'lucide-react';
+import { Flame, User, BarChart2, BookOpen, RotateCcw, History, Flag } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
+import { KillerIcon } from '@/components/icons/DbdIcons';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface GauntletHeaderProps {
   role: Role;
@@ -45,7 +47,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             {role === 'survivor' ? (
               <User className="w-6 h-6 text-accent-green" />
             ) : (
-              <Skull className="w-6 h-6 text-accent-red" />
+              <KillerIcon className="w-6 h-6 text-accent-red" />
             )}
             <span className="capitalize">{dict?.streaks?.[role] || role}</span> {dict?.streaks?.gauntlet || 'Gauntlet'}
           </h1>
@@ -65,7 +67,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Trophy className="w-5 h-5" />
+            <AdeptBadgeIcon className="w-5 h-5" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.best || 'Best'}
@@ -77,7 +79,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Shield className="w-5 h-5" />
+            <Flag className="w-5 h-5" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.checkpointHeader || 'Checkpoint'}

@@ -3,7 +3,8 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, BarChart2, CheckCircle2, XCircle, Trophy, Percent, Activity, Clock, RotateCcw } from 'lucide-react';
+import { X, BarChart2, CheckCircle2, XCircle, Percent, Activity, Clock, RotateCcw } from 'lucide-react';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -161,7 +162,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
           <div>
             <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Trophy className={`w-4 h-4 ${accentClasses.trophy}`} />
+              <AdeptBadgeIcon className={`w-4 h-4 ${accentClasses.trophy}`} />
               {dict?.streaks?.recentMatchHistory || 'Recent Match History'}
             </h3>
 

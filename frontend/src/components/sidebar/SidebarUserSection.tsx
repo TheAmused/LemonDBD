@@ -4,8 +4,9 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import Link from 'next/link';
-import { LogIn, LogOut, Crown, MailWarning } from 'lucide-react';
+import { LogIn, LogOut, MailWarning } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
@@ -81,7 +82,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                   onClick={onNavigateMobile}
                   className="p-1 rounded-lg text-accent-red hover:bg-accent-red/10 transition-colors"
                 >
-                  <Crown className="h-4 w-4" />
+                  <OverseerEyeIcon className="h-4 w-4" />
                 </Link>
               )}
               <button

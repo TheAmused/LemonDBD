@@ -4,7 +4,7 @@ import { ChaosMutator } from '@/types/chaos';
 export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   {
     id: 'no_exhaustion',
-    name: 'No Exhaustion Perks',
+    name: 'Curse of Exhaustion',
     description:
       'Exhaustion perks have their drop chance reduced by 90% this trial.',
     type: 'curse',
@@ -41,7 +41,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   },
   {
     id: 'meme_loadout',
-    name: 'Meme / Off-Meta Loadout',
+    name: 'Curse of the Clown',
     description:
       'Off-meta and gimmick perks show up far more often for maximum trial chaos!',
     type: 'curse',
@@ -128,7 +128,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   },
   {
     id: 'meme_loadout',
-    name: 'Meme / Off-Meta Loadout',
+    name: 'Curse of the Clown',
     description:
       'Off-meta and gimmick perks show up far more often for maximum trial chaos!',
     type: 'curse',

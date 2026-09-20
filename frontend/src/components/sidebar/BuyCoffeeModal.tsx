@@ -7,13 +7,13 @@ import { useParams, usePathname } from 'next/navigation';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { i18n, type Locale } from '@/i18n/config';
 import {
-  Coffee,
   Heart,
   X,
   ExternalLink,
   Sparkles,
-  Crown,
 } from 'lucide-react';
+import { CampfireMugIcon } from '@/components/icons/DbdIcons';
+import { AuricCellIcon } from '@/components/icons/DbdIcons';
 
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
@@ -89,7 +89,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
-      icon: Coffee,
+      icon: CampfireMugIcon,
     },
     {
       name: 'Ko-fi',
@@ -107,7 +107,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-white',
-      icon: Crown,
+      icon: AuricCellIcon,
     },
   ];
 
@@ -148,7 +148,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({
 
           <div className="flex items-center gap-3.5 border-b border-border-color pb-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/30 text-accent-red shadow-md">
-              <Coffee className="h-6 w-6" />
+              <CampfireMugIcon className="h-6 w-6" />
             </div>
             <div>
               <h2

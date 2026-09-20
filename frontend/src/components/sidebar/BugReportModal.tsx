@@ -12,7 +12,6 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { i18n, type Locale } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import {
-  Bug,
   X,
   Upload,
   Image as ImageIcon,
@@ -22,6 +21,7 @@ import {
   UserCheck,
   Mail,
 } from 'lucide-react';
+import { FogReportIcon } from '@/components/icons/DbdIcons';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -291,7 +291,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           <>
             <div className="flex items-center gap-3.5 border-b border-accent-red/20 pb-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/40 text-accent-red shadow-md" aria-hidden="true">
-                <Bug className="h-6 w-6" />
+                <FogReportIcon className="h-6 w-6" />
               </div>
               <div>
                 <h2

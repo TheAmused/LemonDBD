@@ -5,13 +5,11 @@ import type { Dictionary } from '@/locales/types';
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  Bug,
   Plus,
   Clock,
   CheckCircle,
   XCircle,
   HelpCircle,
-  Crown,
   Image as ImageIcon,
   ChevronDown,
   X,
@@ -21,6 +19,8 @@ import { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
 import { Pagination } from '@/components/Pagination';
 import { staticUrl } from '@/utils/api';
+import { FogReportIcon } from '@/components/icons/DbdIcons';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -172,7 +172,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
         {!hideHeading ? (
           <div>
             <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary font-mono flex items-center gap-2">
-              <Bug className="h-4 w-4 text-accent-red" />
+              <FogReportIcon className="h-4 w-4 text-accent-red" />
               <span>{t.bugReportsTitle || 'Your Submitted Bug Reports'}</span>
             </h2>
           </div>
@@ -199,7 +199,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       ) : reports.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-border-color bg-bg-surface p-6 sm:p-8 text-center space-y-2.5 shadow-sm">
           <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/10 text-accent-red">
-            <Bug className="h-5 w-5" />
+            <FogReportIcon className="h-5 w-5" />
           </div>
           <h3 className="text-sm sm:text-base font-black text-text-primary font-mono">
             {t.noReportsTitle || 'No Bug Reports Submitted'}
@@ -320,7 +320,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       {report.admin_notes && (
                         <div className="mt-2 rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
                           <div className="flex items-center gap-2 text-accent-amber text-xs font-bold font-mono">
-                            <Crown className="h-3.5 w-3.5" />
+                            <OverseerEyeIcon className="h-3.5 w-3.5" />
                             <span>{t.devResponse || 'Developer Response'}</span>
                           </div>
                           <p className="text-xs text-text-secondary italic">

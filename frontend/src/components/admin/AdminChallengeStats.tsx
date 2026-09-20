@@ -3,12 +3,13 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
-import { Trophy, Skull, Rows3, BookOpen } from 'lucide-react';
+import { Rows3, BookOpen } from 'lucide-react';
 import { AdminStats, ChallengeCompletionBreakdown } from '@/types/admin';
+import { GauntletGloveIcon, ChaosSwirlIcon } from '@/components/icons/DbdIcons';
 
 const MODE_CARD_CONFIG = [
-  { key: 'gauntlet', icon: Trophy, color: 'text-text-secondary', border: 'border-border-color' },
-  { key: 'chaos', icon: Skull, color: 'text-text-secondary', border: 'border-border-color' },
+  { key: 'gauntlet', icon: GauntletGloveIcon, color: 'text-text-secondary', border: 'border-border-color' },
+  { key: 'chaos', icon: ChaosSwirlIcon, color: 'text-text-secondary', border: 'border-border-color' },
   { key: 'history', icon: Rows3, color: 'text-text-secondary', border: 'border-border-color' },
   { key: 'page_streak', icon: BookOpen, color: 'text-text-secondary', border: 'border-border-color' },
 ] as const;

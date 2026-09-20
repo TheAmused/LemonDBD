@@ -20,9 +20,10 @@ import type {
   BugReportStats,
   ActionMessage,
 } from '@/types/admin';
-import { Users, Bug, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
+import { Users, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { FogReportIcon } from '@/components/icons/DbdIcons';
 
 const AdminBugReportsWorkbench = dynamic(
   () => import('@/components/admin/AdminBugReportsWorkbench').then((m) => m.AdminBugReportsWorkbench),
@@ -487,7 +488,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
               }`}
             >
-              <Bug className="h-4 w-4" />
+              <FogReportIcon className="h-4 w-4" />
               <span>
                 {dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})
               </span>

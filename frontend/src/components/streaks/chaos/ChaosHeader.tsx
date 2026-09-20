@@ -4,13 +4,14 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Difficulty } from '@/types/chaosStreak';
-import { Coins, Flame, Trophy, Shield, Skull, BarChart2, BookOpen, Layers, RotateCcw, Gauge, History } from 'lucide-react';
+import { Flame, BarChart2, BookOpen, Layers, RotateCcw, Gauge, History, Flag } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
+import { TierEasyIcon, TierMediumIcon, TierHellIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const DIFFICULTY_ICON: Record<Difficulty, React.ElementType> = {
-  easy: Coins,
-  medium: Flame,
-  hell: Skull,
+  easy: TierEasyIcon,
+  medium: TierMediumIcon,
+  hell: TierHellIcon,
 };
 
 export interface ChaosHeaderProps {
@@ -42,7 +43,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
   onChangeDifficulty,
   dict,
 }) => {
-  const DifficultyIcon = DIFFICULTY_ICON[difficulty] ?? Skull;
+  const DifficultyIcon = DIFFICULTY_ICON[difficulty] ?? TierHellIcon;
   const difficultyLabel = {
     easy: dict?.streaks?.chaosEasyLabel || 'Easy',
     medium: dict?.streaks?.chaosMediumLabel || 'Medium',
@@ -78,7 +79,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Trophy className="w-5 h-5" />
+            <AdeptBadgeIcon className="w-5 h-5" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.best || 'Best'}
@@ -90,7 +91,7 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Shield className="w-5 h-5" />
+            <Flag className="w-5 h-5" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.checkpointHeader || 'Checkpoint'}

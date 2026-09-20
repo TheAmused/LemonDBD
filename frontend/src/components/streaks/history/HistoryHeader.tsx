@@ -4,12 +4,13 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';
-import { Flame, Trophy, Shield, Skull, BookOpen, BarChart2, RotateCcw, Gauge, History } from 'lucide-react';
+import { Flame, BookOpen, BarChart2, RotateCcw, Gauge, History, Flag } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
+import { TierMediumIcon, TierHellIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const MODE_ICON: Record<HistoryMode, React.ElementType> = {
-  medium: Shield,
-  hell: Skull,
+  medium: TierMediumIcon,
+  hell: TierHellIcon,
 };
 
 export interface HistoryHeaderProps {
@@ -39,7 +40,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
   onChangeMode,
   dict,
 }) => {
-  const ModeIcon = MODE_ICON[mode] ?? Shield;
+  const ModeIcon = MODE_ICON[mode] ?? TierMediumIcon;
   const modeLabel = {
     medium: dict?.streaks?.historyMediumLabel || 'Medium',
     hell: dict?.streaks?.historyHellLabel || 'Hell',
@@ -80,7 +81,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shadow-sm">
-            <Trophy className="w-5 h-5 text-accent-amber" />
+            <AdeptBadgeIcon className="w-5 h-5 text-accent-amber" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.best || 'Best'}
@@ -92,7 +93,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Shield className="w-5 h-5 text-text-muted" />
+            <Flag className="w-5 h-5 text-text-muted" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.streaks?.checkpointRow || 'Checkpoint row'}

@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
 import type { Difficulty } from '@/types/chaosStreak';
 import type { Perk } from '@/types/gauntletStreak';
 import { CONFETTI_LIFETIME_MS } from '../Confetti';
@@ -19,6 +19,7 @@ import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -211,7 +212,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         {isCompleted ? (
           <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-gradient-to-b from-accent-green/10 to-accent-green/[0.03] px-6 py-10 text-center shadow-lg">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green" aria-hidden="true">
-              <Trophy className="h-8 w-8" />
+              <AdeptBadgeIcon className="h-8 w-8" />
             </div>
             <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}
@@ -311,7 +312,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               title={dict?.streaks?.devSkipWinTitle || ''}
               className="inline-flex items-center gap-2 text-xs font-bold text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
-              <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
+              <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{dict?.streaks?.devSkipWinLabel || ''}</span>
             </button>
           </div>

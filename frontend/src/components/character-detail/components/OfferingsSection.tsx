@@ -2,15 +2,12 @@
 import React, { useState, useMemo } from 'react';
 import {
   Gift,
-  Skull,
   Coins,
   Map as MapIcon,
   EyeOff,
-  Shield,
   Sparkles,
   Layers,
   Box,
-  type LucideIcon,
 } from 'lucide-react';
 import {
   OfferingItem,
@@ -19,6 +16,7 @@ import {
   getRarityRank,
 } from '../types';
 import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
+import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';
 
 interface OfferingsSectionProps {
   offerings?: OfferingItem[];
@@ -31,7 +29,8 @@ interface OfferingsSectionProps {
 interface OfferingCategoryConfig {
   key: string;
   label: string;
-  icon: LucideIcon;
+  /** Any icon component (lucide or a custom DbdIcons SVG). */
+  icon: React.ElementType;
   desc: string;
 }
 
@@ -56,7 +55,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         {
           key: 'mori',
           label: t.categoryMori || 'Memento Mori',
-          icon: Skull,
+          icon: MoriCharmIcon,
           desc: t.categoryMoriDesc || 'Execution rites',
         },
         {
@@ -80,7 +79,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         {
           key: 'ward',
           label: t.categoryWard || 'Wards',
-          icon: Shield,
+          icon: WardCharmIcon,
           desc: t.categoryWardDesc || 'Protection against loss',
         },
       ];
@@ -131,7 +130,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       {
         key: 'ward',
         label: t.categoryWard || 'Wards',
-        icon: Shield,
+        icon: WardCharmIcon,
         desc: t.categoryWardDesc || 'Item & offering preservation',
       },
     ];

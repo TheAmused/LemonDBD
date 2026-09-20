@@ -327,10 +327,10 @@ test('perkPicker: mutator pool filtering across modes', async (t) => {
 test('ChaosWheelModal: text and icon geometry & display line splitting', async (t) => {
   await t.test('getMutatorDisplayLines splits standard mutators into balanced 2-line pairs', () => {
     const expectedMappings: Record<string, [string, string]> = {
-      no_exhaustion: ['No Exhaustion', 'Perks'],
+      no_exhaustion: ['Curse of', 'Exhaustion'],
       blindness: ['Curse of', 'Blindness'],
       solo_queue: ['Curse of', 'Solitude'],
-      meme_loadout: ['Meme / Off-Meta', 'Loadout'],
+      meme_loadout: ['Curse of the', 'Clown'],
       hex_boon_only: ['Hex & Boon', 'Ritual'],
       negative_only: ['Curse of', 'Sacrifice'],
     };

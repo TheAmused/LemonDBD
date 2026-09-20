@@ -3,8 +3,9 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen, Trophy, AlertTriangle, Snowflake, Clock } from 'lucide-react';
+import { BookOpen, AlertTriangle, Snowflake, Clock } from 'lucide-react';
 import { RulesModalShell, RulesModalNotices, RulesModalListSection } from '../RulesModalShell';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface PageStreakRulesModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
   >
     <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-accent-red uppercase tracking-wider mb-2 flex items-center gap-2">
-        <Trophy className="w-4 h-4" aria-hidden="true" />
+        <AdeptBadgeIcon className="w-4 h-4" aria-hidden="true" />
         <span>{dict?.streaks?.pageStreakConceptLabel || 'Page Streak Concept'}</span>
       </h3>
       <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">

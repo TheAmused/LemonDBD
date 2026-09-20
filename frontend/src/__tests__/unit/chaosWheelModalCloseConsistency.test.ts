@@ -1,9 +1,11 @@
 // frontend/src/__tests__/unit/chaosWheelModalCloseConsistency.test.ts
 //
-// Regression guard for the actual finding this session made on
-// ChaosWheelModal.tsx: the backdrop click, the X button, and the in-panel
-// "Close" button must all behave IDENTICALLY (call the same onClose prop),
-// and there must be exactly one spin action ("Spin Chaos Wheel!"), not a
+// Regression guard for ChaosWheelModal.tsx: the backdrop click and the X
+// button must both close the modal identically (call the same onClose
+// prop), the in-panel "Close" button and effect-pill explanation text were
+// intentionally removed from the spin-result card (clearing a curse is the
+// only action left there -- the X/backdrop already close the modal), and
+// there must be exactly one spin action ("Spin Chaos Wheel!"), not a
 // separate "Spin Again" that re-spins a different way. No DOM/component
 // render harness exists in this repo's test setup, so this is verified at
 // the source level -- directly checking the wiring, which is the actual
@@ -29,14 +31,25 @@ test('the X button closes the modal via onClose', () => {
   assert.ok(xButtonBlock, 'the X (close) button is no longer wired to call onClose directly');
 });
 
-test('the in-panel "Close" button (chaosApplyAndClose) also closes the modal via the same onClose -- not a separate handler', () => {
-  const closeButtonBlock = src.match(/onClick=\{onClose\}[\s\S]{0,450}chaosApplyAndClose/);
-  assert.ok(closeButtonBlock, 'the result-panel Close button no longer calls the same onClose as the backdrop/X');
+test('the in-panel "Close" button (chaosApplyAndClose) was removed from the spin-result card', () => {
+  assert.doesNotMatch(
+    src,
+    /chaosApplyAndClose/,
+    'a "Close" button referencing chaosApplyAndClose reappeared in the result card -- it was intentionally removed since the X/backdrop already close the modal'
+  );
 });
 
-test('onClose is called by exactly three distinct UI affordances (backdrop, X, in-panel Close) -- not more, not fewer, and none of them call a different function', () => {
+test('the effect-pill explanation text (locWon.effect) was removed from the spin-result card', () => {
+  assert.doesNotMatch(
+    src,
+    /locWon\.effect/,
+    'the effect pill reappeared in the result card -- it was intentionally removed'
+  );
+});
+
+test('onClose is called by exactly two distinct UI affordances (backdrop, X) -- not more, not fewer, and none of them call a different function', () => {
   const onCloseCallSites = (src.match(/onClick=\{onClose\}/g) || []).length;
-  assert.strictEqual(onCloseCallSites, 3, `expected exactly 3 onClick={onClose} call sites (backdrop, X button, in-panel Close button), found ${onCloseCallSites}`);
+  assert.strictEqual(onCloseCallSites, 2, `expected exactly 2 onClick={onClose} call sites (backdrop, X button), found ${onCloseCallSites}`);
 });
 
 test('there is exactly ONE spin action ("Spin Chaos Wheel!" / spinChaosWheel) -- no separate "Spin Again" that re-spins through a different code path', () => {
@@ -52,11 +65,11 @@ test('there is exactly ONE spin action ("Spin Chaos Wheel!" / spinChaosWheel) --
   );
 });
 
-test('SANITY: the call-site-count assertion would catch the Close button being wired to a different handler (proves it is not vacuous)', () => {
+test('SANITY: the call-site-count assertion would catch a close affordance being wired to a different handler (proves it is not vacuous)', () => {
   const lastIdx = src.lastIndexOf('onClick={onClose}');
   assert.ok(lastIdx !== -1);
   const corrupted = src.slice(0, lastIdx) + 'onClick={() => {}}' + src.slice(lastIdx + 'onClick={onClose}'.length);
   const corruptedCallSites = (corrupted.match(/onClick=\{onClose\}/g) || []).length;
-  assert.strictEqual(corruptedCallSites, 2);
-  assert.notStrictEqual(corruptedCallSites, 3, 'the exactly-3 assertion would NOT have caught a Close button wired to a different handler -- test is vacuous');
+  assert.strictEqual(corruptedCallSites, 1);
+  assert.notStrictEqual(corruptedCallSites, 2, 'the exactly-2 assertion would NOT have caught a close affordance wired to a different handler -- test is vacuous');
 });

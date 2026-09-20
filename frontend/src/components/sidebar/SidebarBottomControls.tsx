@@ -6,8 +6,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Laptop, Bug, Coffee, Citrus } from 'lucide-react';
+import { Sun, Moon, Laptop, Citrus } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
+import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
 // backend/app/services/translations/translation_service.py. No shared
@@ -223,7 +224,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           aria-label={dict?.sidebar?.reportBug || 'Report Bug'}
           className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
-          <Bug className="h-3.5 w-3.5 shrink-0 text-accent-red" />
+          <FogReportIcon className="h-3.5 w-3.5 shrink-0 text-accent-red" />
           <span className="text-center">{dict?.sidebar?.reportBug || 'Report Bug'}</span>
         </button>
 
@@ -233,7 +234,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           aria-label={dict?.sidebar?.buyCoffee || 'Buy Coffee'}
           className={`flex min-h-8 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 py-1.5 text-[11px] font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
         >
-          <Coffee className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
+          <CampfireMugIcon className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
           <span className="text-center">{dict?.sidebar?.buyCoffee || 'Buy Coffee'}</span>
         </button>
       </div>

@@ -3,8 +3,9 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserMetricsGrid.tsx
 
 import React from 'react';
-import { Shield, Skull, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { DbdSpinner } from '@/components/DbdSpinner';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface MetricItem {
   owned: number;
@@ -65,7 +66,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dic
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-green/10 border border-accent-green/20 text-accent-green">
-              <Shield className="h-5 w-5" />
+              <SurvivorIcon className="h-5 w-5" />
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-text-muted">
@@ -93,7 +94,7 @@ export const UserMetricsGrid: React.FC<UserMetricsGridProps> = ({ ownership, dic
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red">
-              <Skull className="h-5 w-5" />
+              <KillerIcon className="h-5 w-5" />
             </div>
             <div>
               <h3 className="text-xs font-extrabold uppercase tracking-wider text-text-muted">

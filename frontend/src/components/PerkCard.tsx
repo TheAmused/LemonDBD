@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ImageOff, Lock, HelpCircle } from 'lucide-react';
-import { Perk, PerkDictionary, ViewDisplayMode } from '@/types/perks';
+import { Perk, PerkDictionary } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { UnifiedHoverModal, ActiveHoverState } from '@/components/common/UnifiedHoverModal';
@@ -27,7 +27,6 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
 
 interface PerkCardProps {
   perk: Perk;
-  viewMode?: ViewDisplayMode;
   onSelect: (perk: Perk) => void;
   dict?: PerkDictionary;
   coordinate?: { page: number; slot: number };
@@ -37,7 +36,6 @@ interface PerkCardProps {
 
 export const PerkCard: React.FC<PerkCardProps> = ({
   perk,
-  viewMode = 'grid',
   onSelect,
   dict,
   coordinate,
@@ -98,98 +96,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({
     );
   }
 
-  if (viewMode === 'list') {
-    return (
-      <div key={viewMode} className="relative group flex w-full items-center">
-        <button
-          type="button"
-          onClick={() => onSelect(perk)}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          aria-label={ariaLabel}
-          className="relative flex w-full items-center gap-3 sm:gap-4 rounded-2xl border border-border-color bg-bg-surface px-3 py-2 sm:px-4 sm:py-3 min-h-[48px] touch-manipulation text-left cursor-pointer transition-colors hover:bg-bg-elevated hover:border-accent-red/40 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-        >
-          <div
-            className={`relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl bg-bg-elevated border border-border-color p-1 ${
-              perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
-            }`}
-          >
-            {!imgError && iconSrc ? (
-              <img
-                src={iconSrc}
-                alt={perk.name}
-                onError={() => setImgError(true)}
-                className="h-full w-full object-contain filter drop-shadow-lg pointer-events-none"
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <div className="flex h-3/4 w-3/4 rotate-45 items-center justify-center rounded-xl bg-bg-elevated border border-border-color">
-                <ImageOff className="-rotate-45 h-5 w-5 text-text-muted" />
-              </div>
-            )}
-
-            {avatarSrc && !avatarError && !isGeneral && (
-              <div className="absolute bottom-0 right-0 h-5 w-5 sm:h-6 sm:w-6 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color">
-                <img
-                  src={avatarSrc}
-                  alt={perk.character}
-                  onError={() => setAvatarError(true)}
-                  className="h-full w-full object-cover object-top"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            )}
-          </div>
-
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              {coordinateLabel && (
-                <span className="shrink-0 font-mono text-[10px] font-black text-accent-amber">
-                  {coordinateLabel}
-                </span>
-              )}
-              <p className="truncate text-sm sm:text-base font-bold text-text-primary">{perk.name}</p>
-            </div>
-            <p className="truncate text-xs text-text-secondary">
-              {isGeneral ? generalLabel : perk.character}
-              {roleLabel && ` · ${roleLabel}`}
-            </p>
-          </div>
-
-          {!perk.is_disabled && !isOwned && (
-            <Lock
-              className="h-4 w-4 shrink-0 text-text-muted"
-              aria-label={dict?.modal?.unownedPerk}
-            />
-          )}
-        </button>
-
-        {perk.is_disabled && (
-          <DisabledBadge label={perk.name} onClick={() => setShowDisabledModal(true)} />
-        )}
-
-        <DisabledReasonModal
-          isOpen={showDisabledModal}
-          onClose={() => setShowDisabledModal(false)}
-          label={perk.name}
-          reason={perk.disabled_reason}
-        />
-
-        <UnifiedHoverModal
-          activeHover={activeHover}
-          placement="auto"
-          t={dict?.modal as unknown as Record<string, string>}
-          isPerk={true}
-        />
-      </div>
-    );
-  }
-
   return (
     <div
-      key={viewMode}
       className={
         size === 'fill'
           ? 'relative group flex h-full w-full items-center justify-center p-1 [container-type:size]'
@@ -251,7 +159,18 @@ export const PerkCard: React.FC<PerkCardProps> = ({
                   ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7'
                   : size === 'tarot'
                     ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10 2xl:h-12 2xl:w-12 wide:h-14 wide:w-14'
-                    : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
+                    : size === 'fill'
+                      /* The perk icon itself scales with the grid cell via
+                         container query units (h-[min(88cqh,88cqw)] on the
+                         button above). A fixed-pixel avatar badge doesn't
+                         shrink with it, so on a small cell (many perks per
+                         page, a narrow column) the badge ends up as big as
+                         or bigger than the diamond and hides it entirely.
+                         Sizing the badge off the same cq units keeps it a
+                         constant, small fraction of the perk icon -- which
+                         always stays the dominant, legible element. */
+                      ? 'h-[min(30cqh,30cqw)] w-[min(30cqh,30cqw)] max-h-14 max-w-14'
+                      : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
               }`}
             >
               <img

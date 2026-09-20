@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Shield, Skull, Repeat } from 'lucide-react';
+import { Repeat } from 'lucide-react';
 import {
   PerkItem,
   AddonItem,
@@ -15,6 +15,7 @@ import {
   renderFormattedDbdText,
 } from '@/components/character-detail/types';
 import { Perk } from '@/types/perks';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 export type HoverPlacement = 'above' | 'below' | 'auto';
 
@@ -204,9 +205,9 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
           >
             {isPerkItem &&
               (isSurvivor ? (
-                <Shield className="h-2.5 w-2.5" />
+                <SurvivorIcon className="h-2.5 w-2.5" />
               ) : (
-                <Skull className="h-2.5 w-2.5" />
+                <KillerIcon className="h-2.5 w-2.5" />
               ))}
             {badgeText}
           </span>

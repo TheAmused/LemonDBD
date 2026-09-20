@@ -36,12 +36,12 @@ export function getMutatorDisplayLines(
   }
 
   switch (id) {
-    case 'no_exhaustion':  return ['No Exhaustion', 'Perks'];
+    case 'no_exhaustion':  return ['Curse of', 'Exhaustion'];
     case 'no_slowdown':    return ['No Slowdown', 'Perks'];
     case 'blindness':      return ['Curse of', 'Blindness'];
     case 'solo_queue':     return ['Curse of', 'Solitude'];
     case 'chase_only':     return ['Pure', 'Bloodlust'];
-    case 'meme_loadout':   return ['Meme / Off-Meta', 'Loadout'];
+    case 'meme_loadout':   return ['Curse of the', 'Clown'];
     case 'hex_boon_only':  return ['Hex & Boon', 'Ritual'];
     case 'hex_roulette':   return ['Hex Totem', 'Madness'];
     case 'negative_only':  return ['Curse of', 'Sacrifice'];
@@ -336,8 +336,12 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
             aria-live="polite"
             className={`mt-3 sm:mt-4 xl:mt-5 rounded-2xl border p-3 sm:p-4 xl:p-5 backdrop-blur-sm transition-all shadow-xs ${wonMutator.borderColor || 'border-border-color'} bg-bg-primary`}
           >
-            {/* Result header row */}
-            <div className="flex items-center justify-between gap-2 mb-2">
+            {/* Result header row -- the Clear button sits at the top-right,
+                next to the curse's icon/title, instead of a separate action
+                row at the bottom of the card. The X/backdrop already close
+                the modal, so clearing the curse is the only action needed
+                here. */}
+            <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
                 <span className="text-xl sm:text-2xl xl:text-3xl shrink-0" aria-hidden="true">
                   {wonMutator.icon}
@@ -351,38 +355,13 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
                   </p>
                 </div>
               </div>
-            </div>
-
-            {/* Effect pill */}
-            {locWon.effect && (
-              <div className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full mb-3 ${wonMutator.badgeBg} text-text-primary border ${wonMutator.borderColor}`}>
-                {locWon.effect}
-              </div>
-            )}
-
-            {/* Action row -- the curse is already applied to app state the
-                instant the spin lands (see onSelectMutator in the spin
-                animation above), so this is just a "done, close the modal"
-                button, not a separate apply step. The wheel's own "Spin
-                Chaos Wheel!" button above re-spins the exact same way, so
-                there is no separate "Spin Again" action here anymore. */}
-            <div className="flex items-center gap-2 flex-wrap">
-              {/* Close */}
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex items-center gap-1.5 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-accent-green/15 text-accent-green border border-accent-green/30 hover:bg-accent-green/25 transition-colors cursor-pointer"
-              >
-                <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                {(dict?.generator as any)?.chaosApplyAndClose || 'Close'}
-              </button>
 
               {/* Clear */}
               <button
                 type="button"
                 onClick={handleClearCurse}
                 title={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
-                className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer ml-auto"
+                className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
               >
                 <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden xs:inline">{dict?.generator?.clearMutator || 'Clear'}</span>

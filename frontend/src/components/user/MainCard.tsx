@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Shield, Skull, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory, Perk } from '@/types/perks';

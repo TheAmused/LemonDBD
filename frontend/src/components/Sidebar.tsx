@@ -6,14 +6,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useParams } from 'next/navigation';
 import {
-  Sparkles,
-  Dices,
   Menu,
   X,
-  Users,
-  Trophy,
-  Compass,
-  Swords,
   ChevronLeft,
   ChevronRight,
   Heart,
@@ -27,6 +21,7 @@ import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n, type Locale } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
+import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
@@ -139,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'perks',
       label: dict?.filters?.perks || dict?.sidebar?.perks || 'Perks',
-      icon: Sparkles,
+      icon: PerkHexIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/perks`,
@@ -147,7 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'generator',
       label: dict?.filters?.generatorTab || dict?.generator?.title || 'Randomizer',
-      icon: Dices,
+      icon: BloodwebIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/randomizer`,
@@ -155,7 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'streaks',
       label: dict?.sidebar?.challenges || 'Challenges',
-      icon: Swords,
+      icon: RiftPortalIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/streaks`,
@@ -163,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'maps',
       label: dict?.sidebar?.mapExplorer || 'Maps',
-      icon: Compass,
+      icon: RealmMapIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/maps`,
@@ -171,7 +166,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'characters',
       label: dict?.sidebar?.characters || 'Characters',
-      icon: Users,
+      icon: MaskIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/characters`,
@@ -187,7 +182,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'trophies',
       label: dict?.sidebar?.trophies || 'Trophies',
-      icon: Trophy,
+      icon: AdeptBadgeIcon,
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/achievements`,

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
-import { Crown } from 'lucide-react';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 interface UserAvatarProps {
   user?: {
@@ -145,7 +145,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
           title={adminTitle}
           aria-label={adminAriaLabel}
         >
-          <Crown className={sizeConfig.badgeIcon} />
+          <OverseerEyeIcon className={sizeConfig.badgeIcon} />
         </span>
       )}
     </div>

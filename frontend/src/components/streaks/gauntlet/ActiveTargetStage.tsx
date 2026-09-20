@@ -8,7 +8,6 @@ import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
   RefreshCw,
   User,
-  Skull,
   Sparkles,
   Lock,
   HelpCircle,
@@ -16,6 +15,7 @@ import {
 import type { Dictionary } from '@/locales/types';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { KillerIcon } from '@/components/icons/DbdIcons';
 
 export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -57,7 +57,7 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; ch
       <div
         className={`w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-accent-red ${motion}`}
       >
-        {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <Skull className="w-10 h-10" aria-hidden="true" />}
+        {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <KillerIcon className="w-10 h-10" aria-hidden="true" />}
       </div>
     );
   }
@@ -246,7 +246,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
                 />
               ) : (
                 <div className="w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-accent-red">
-                  {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <Skull className="w-10 h-10" aria-hidden="true" />}
+                  {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <KillerIcon className="w-10 h-10" aria-hidden="true" />}
                 </div>
               )}
             </div>

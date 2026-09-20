@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, Trophy } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
@@ -94,7 +95,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           aria-label={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
           title={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
         >
-          <Trophy className="h-3.5 w-3.5" />
+          <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedFullCount != null && (
             <span className="text-xs font-black leading-none">{completedFullCount}</span>
           )}
@@ -105,7 +106,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           aria-label={dict?.streaks?.completed || 'Completed'}
           title={dict?.streaks?.completed || 'Completed'}
         >
-          <Trophy className="h-3.5 w-3.5" />
+          <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedCount != null && (
             <span className="text-xs font-black leading-none">{completedCount}</span>
           )}

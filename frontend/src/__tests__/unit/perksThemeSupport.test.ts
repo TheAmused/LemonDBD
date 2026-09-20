@@ -35,7 +35,7 @@ describe('Perks Vault Theme Support', () => {
     );
   });
 
-  it('Pagination with totalPages > 7 renders jump input and limit select with theme classes', () => {
+  it('Pagination renders the current-page input and limit select with theme classes', () => {
     const html = renderToStaticMarkup(
       React.createElement(Pagination, {
         page: 1,
@@ -72,15 +72,17 @@ describe('Perks Vault Theme Support', () => {
       'Limit select must support dark text'
     );
 
-    // Jump input
-    assert.ok(html.includes('id="jump-to-page"'), 'Must render jump to page input when safeTotalPages > 7');
+    // Current-page input -- the page number between the arrows is itself
+    // an editable "go to page" field now, always rendered (no separate
+    // jump form duplicating the same job).
+    assert.ok(html.includes('id="current-page-input"'), 'Must render the editable current-page input');
     assert.ok(
       html.includes('text-text-primary') || html.includes('dark:text-slate-100'),
-      'Jump input must have dark:text-slate-100 or text-text-primary'
+      'Current-page input must have dark:text-slate-100 or text-text-primary'
     );
   });
 
-  it('PerkCard in list view mode supports light and dark theme classes and coordinate contrast', () => {
+  it('PerkCard (grid view, the only view now that list view is removed) supports light and dark theme classes and coordinate contrast', () => {
     const samplePerk: Perk = {
       name: 'Sprint Burst',
       character: 'Meg Thomas',
@@ -93,21 +95,12 @@ describe('Perks Vault Theme Support', () => {
     const html = renderToStaticMarkup(
       React.createElement(PerkCard, {
         perk: samplePerk,
-        viewMode: 'list',
         coordinate: { page: 1, slot: 1 },
         onSelect: () => {},
       })
     );
     assert.ok(
-      html.includes('bg-bg-surface') || html.includes('bg-white dark:bg-slate-900/40'),
-      'Must have list container themed backgrounds'
-    );
-    assert.ok(
-      html.includes('text-text-primary') || html.includes('text-slate-900 dark:text-slate-100'),
-      'Must have perk title themed text colors'
-    );
-    assert.ok(
-      html.includes('text-accent-amber') || html.includes('text-amber-700 dark:text-amber-400/90'),
+      html.includes('text-accent-amber'),
       'Coordinate label must have amber contrast'
     );
   });

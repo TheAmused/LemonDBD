@@ -7,7 +7,6 @@ import {
   Users,
   Search,
   UserPlus,
-  Crown,
   Lock,
   Trash2,
   CheckCircle,
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { UserRow } from '@/types/admin';
 import { UserAvatar } from '@/components/UserAvatar';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 interface AdminUserTableProps {
   users: UserRow[];
@@ -127,7 +127,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       : 'bg-bg-elevated text-text-secondary border-border-color'
                   }`}
                 >
-                  {u.role === 'admin' && <Crown className="h-2.5 w-2.5" />}
+                  {u.role === 'admin' && <OverseerEyeIcon className="h-2.5 w-2.5" />}
                   {u.role}
                 </span>
               </div>
@@ -159,7 +159,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
                     className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
                   >
-                    <Crown className="h-4 w-4" />
+                    <OverseerEyeIcon className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
@@ -232,7 +232,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                           : 'bg-bg-elevated text-text-secondary border-border-color'
                       }`}
                     >
-                      {u.role === 'admin' && <Crown className="h-2.5 w-2.5" />}
+                      {u.role === 'admin' && <OverseerEyeIcon className="h-2.5 w-2.5" />}
                       {u.role}
                     </span>
                   </td>
@@ -264,7 +264,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
                         className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
-                        <Crown className="h-3.5 w-3.5" />
+                        <OverseerEyeIcon className="h-3.5 w-3.5" />
                       </button>
 
                       <button

@@ -47,7 +47,7 @@ export default {
   resetAllTooltip: "Reset wheels, loadout slots, and memory",
   clearSlotTooltip: "Clear slot",
   chaosWheelTitle: "Chaos Wheel of Curses",
-  chaosWheelDesc: "Spin to apply a single trial Curse -- an extra challenge -- to your 4 perk loadout.",
+  chaosWheelDesc: "Spin to apply a single trial Curse (an extra challenge) to your 4 perk loadout.",
   done: 'Done',
   slotLabel: "Slot #",
   coordOpenPage: "[P",
@@ -64,11 +64,11 @@ export default {
   chaosEffectLabel: 'Curse Effect',
   chaosMutators: {
     no_exhaustion: {
-      name: 'No Exhaustion Perks',
+      name: 'Curse of Exhaustion',
       description: 'Exhaustion perks have their drop chance reduced by 90% this trial.',
       effect: '-90% Exhaustion Drop Rate',
-      line1: 'No Exhaustion',
-      line2: 'Perks',
+      line1: 'Curse of',
+      line2: 'Exhaustion',
     },
     no_slowdown: {
       name: 'No Gen Slowdown',
@@ -99,11 +99,11 @@ export default {
       line2: 'Bloodlust',
     },
     meme_loadout: {
-      name: 'Meme / Off-Meta',
+      name: 'Curse of the Clown',
       description: 'Off-meta and gimmick perks show up far more often for maximum trial chaos!',
       effect: '4x Gimmick Perks Drop Rate',
-      line1: 'Meme / Off-Meta',
-      line2: 'Loadout',
+      line1: 'Curse of the',
+      line2: 'Clown',
     },
     hex_boon_only: {
       name: 'Boon Ritual',

@@ -2,8 +2,9 @@
 // frontend/src/components/sidebar/SidebarStatsCard.tsx
 
 import React from 'react';
-import { Database, Layers, Users, Shield, Skull } from 'lucide-react';
+import { Database, Layers, Users } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 export interface SidebarStatsCardProps {
   dict?: Dictionary;
@@ -63,13 +64,13 @@ const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
       <div className="space-y-1 pt-0.5">
         <div className="flex justify-between text-[10px] font-extrabold">
           <span className="text-accent-green flex items-center gap-1">
-            <Shield className="h-2.5 w-2.5" aria-hidden="true" /> {survivorCount}
+            <SurvivorIcon className="h-2.5 w-2.5" aria-hidden="true" /> {survivorCount}
           </span>
           <span className="text-text-muted text-[9px] font-normal">
             {dict?.stats?.ratio || 'Ratio'}
           </span>
           <span className="text-accent-red flex items-center gap-1">
-            {killerCount} <Skull className="h-2.5 w-2.5" aria-hidden="true" />
+            {killerCount} <KillerIcon className="h-2.5 w-2.5" aria-hidden="true" />
           </span>
         </div>
 

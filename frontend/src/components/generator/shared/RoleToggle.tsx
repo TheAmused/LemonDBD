@@ -6,10 +6,11 @@
 // directly over the stage, with no banner/background around it.
 
 import React from 'react';
-import { Shield, Skull } from 'lucide-react';
+
 import { RoleCategory } from '@/types/perks';
 import { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 export interface RoleToggleProps {
   role: RoleCategory;
@@ -41,7 +42,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
             : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
         )}
       >
-        <Shield className="h-4 w-4 sm:h-5 w-5 shrink-0" />
+        <SurvivorIcon className="h-4 w-4 sm:h-5 w-5 shrink-0" />
         <span>{dict?.generator?.survivor || 'Survivor'}</span>
       </button>
       <button
@@ -55,7 +56,7 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
             : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/70 active:scale-95'
         )}
       >
-        <Skull className="h-4 w-4 sm:h-5 w-5 shrink-0" />
+        <KillerIcon className="h-4 w-4 sm:h-5 w-5 shrink-0" />
         <span>{dict?.generator?.killer || 'Killer'}</span>
       </button>
     </div>

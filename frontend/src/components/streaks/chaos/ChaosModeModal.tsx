@@ -3,11 +3,12 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { Coins, Flame, Skull } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChaosRulesModal } from './ChaosRulesModal';
 import { cascadeCompletedTiers, tierCompletionCount, CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
+import { TierEasyIcon, TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
 
 export interface ChaosModeModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       value: 'easy',
       label: dict?.streaks?.chaosEasyLabel || 'Easy',
       description: dict?.streaks?.chaosEasyDesc || 'A checkpoint banks every 5 wins.',
-      icon: Coins,
+      icon: TierEasyIcon,
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('easy'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'easy'),
@@ -57,7 +58,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       value: 'medium',
       label: dict?.streaks?.chaosMediumLabel || 'Medium',
       description: dict?.streaks?.chaosMediumDesc || 'A checkpoint banks every 10 wins.',
-      icon: Flame,
+      icon: TierMediumIcon,
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'medium'),
@@ -68,7 +69,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       value: 'hell',
       label: dict?.streaks?.chaosHellLabel || 'Hell',
       description: dict?.streaks?.chaosHellDesc || 'No checkpoints. One loss resets everything.',
-      icon: Skull,
+      icon: TierHellIcon,
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'hell'),

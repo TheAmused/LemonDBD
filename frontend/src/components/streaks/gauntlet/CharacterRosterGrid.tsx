@@ -5,9 +5,10 @@ import type { Dictionary } from '@/locales/types';
 import React, { useState } from 'react';
 import { Role } from '@/types/gauntletStreak';
 import { OwnedCharacterItem } from './useOwnedCharacters';
-import { Check, User, Skull, ShieldCheck } from 'lucide-react';
+import { Check, User, ShieldCheck } from 'lucide-react';
 import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { KillerIcon } from '@/components/icons/DbdIcons';
 
 export interface CharacterRosterGridProps {
   role: Role;
@@ -64,7 +65,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             {role === 'survivor' ? (
               <User className="w-5 h-5 text-accent-green" />
             ) : (
-              <Skull className="w-5 h-5 text-accent-red" />
+              <KillerIcon className="w-5 h-5 text-accent-red" />
             )}
             <span>{roleLabel}</span> {dict?.streaks?.rosterProgress || 'Roster Progress'}
           </h3>
@@ -132,7 +133,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-muted">
-                      {role === 'survivor' ? <User className="w-8 h-8" /> : <Skull className="w-8 h-8" />}
+                      {role === 'survivor' ? <User className="w-8 h-8" /> : <KillerIcon className="w-8 h-8" />}
                     </div>
                   )}
                 </div>

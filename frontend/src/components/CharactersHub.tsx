@@ -11,8 +11,6 @@ import {
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import {
-  Shield,
-  Skull,
   Search,
   X,
   User,
@@ -45,6 +43,7 @@ import {
 import { RoleCategory, PerkDictionary } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface OwnedCharacter {
   id: number;
@@ -317,7 +316,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 : 'text-text-secondary hover:text-accent-green'
             }`}
           >
-            <Shield className="h-3.5 w-3.5" />
+            <SurvivorIcon className="h-3.5 w-3.5" />
             <span>{dict?.filters?.survivor}</span> ({survivorCount})
           </button>
           <button
@@ -330,7 +329,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 : 'text-text-secondary hover:text-accent-red'
             }`}
           >
-            <Skull className="h-3.5 w-3.5" />
+            <KillerIcon className="h-3.5 w-3.5" />
             <span>{dict?.filters?.killer}</span> ({killerCount})
           </button>
         </div>
@@ -451,7 +450,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         : 'bg-accent-red/10 text-accent-red border-accent-red/30'
                     }`}
                   >
-                    {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
+                    {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
                     <span>
                       {isSurvivor
                         ? dict?.characterDetail?.roleSurvivor

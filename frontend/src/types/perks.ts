@@ -5,7 +5,6 @@ export type ScopeFilter = 'all' | 'general';
 export type OwnershipFilter = 'all' | 'owned';
 export type SortField = 'name' | 'character';
 export type SortOrder = 'asc' | 'desc';
-export type ViewDisplayMode = 'grid' | 'list';
 
 export interface Perk {
   id?: number;
@@ -183,8 +182,6 @@ export interface PerkDictionary {
     ownershipFilter?: string;
     clearSearch?: string;
     viewMode?: string;
-    gridView?: string;
-    listView?: string;
     resetAllFilters?: string;
     sortFields?: string;
     sortOrderLabel?: string;

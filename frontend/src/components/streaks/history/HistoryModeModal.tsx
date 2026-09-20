@@ -3,11 +3,12 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { Shield, Skull } from 'lucide-react';
+import { Rows3 } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { HistoryRulesModal } from './HistoryRulesModal';
 import { cascadeCompletedTiers, tierCompletionCount, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
+import { TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
@@ -46,7 +47,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       value: 'medium',
       label: dict?.streaks?.historyMediumLabel || 'Medium',
       description: dict?.streaks?.historyMediumDesc || 'A checkpoint banks every row you clear.',
-      icon: Shield,
+      icon: TierMediumIcon,
       accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'medium'),
@@ -57,7 +58,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       value: 'hell',
       label: dict?.streaks?.historyHellLabel || 'Hell',
       description: dict?.streaks?.historyHellDesc || 'No checkpoints. One loss resets everything.',
-      icon: Skull,
+      icon: TierHellIcon,
       accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'hell'),
@@ -71,7 +72,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        icon={Shield}
+        icon={Rows3}
         iconClassName="bg-bg-elevated border-border-color text-text-secondary"
         title={dict?.streaks?.chooseMode || 'Choose a mode'}
         intro={

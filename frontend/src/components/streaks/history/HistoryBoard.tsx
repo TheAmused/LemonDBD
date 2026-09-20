@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, Trophy, RotateCcw } from 'lucide-react';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
 import { HistoryMode } from '@/types/historyStreak';
 import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useHistoryRun } from './useHistoryRun';
@@ -20,6 +20,7 @@ import { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -156,7 +157,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         {isCompleted ? (
           <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-accent-green/10 px-6 py-10 text-center shadow-lg">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-              <Trophy className="h-8 w-8" />
+              <AdeptBadgeIcon className="h-8 w-8" />
             </div>
             <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
               {dict?.streaks?.victoryCongrats || 'Congratulations'}

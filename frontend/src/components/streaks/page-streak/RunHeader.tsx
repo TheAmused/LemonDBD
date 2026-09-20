@@ -2,11 +2,13 @@
 // frontend/src/components/streaks/page-streak/RunHeader.tsx
 
 import React, { useState } from 'react';
-import { RotateCcw, Skull, Flame, Trophy, BookOpen, BarChart2, History } from 'lucide-react';
+import { RotateCcw, Flame, BookOpen, BarChart2, History } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { PageStreakRun } from '@/types/pageStreak';
 import { FreezeBadge } from '../FreezeBadge';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { KillerIcon } from '@/components/icons/DbdIcons';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 interface RunHeaderProps {
   run: PageStreakRun;
@@ -44,7 +46,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
               className="h-full w-full object-cover"
             />
           ) : (
-            <Skull className="h-7 w-7 text-text-muted" aria-hidden="true" />
+            <KillerIcon className="h-7 w-7 text-text-muted" aria-hidden="true" />
           )}
         </div>
         <div className="min-w-0 flex-1">
@@ -68,7 +70,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm">
-            <Trophy className="w-5 h-5 text-accent-amber" aria-hidden="true" />
+            <AdeptBadgeIcon className="w-5 h-5 text-accent-amber" aria-hidden="true" />
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
                 {dict?.stats?.best || 'Best'}

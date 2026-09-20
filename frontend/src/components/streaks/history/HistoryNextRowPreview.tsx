@@ -3,8 +3,9 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { ChevronDown, Skull } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
+import { KillerIcon } from '@/components/icons/DbdIcons';
 
 export interface HistoryNextRowPreviewProps {
   killers: string[];
@@ -25,7 +26,7 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
         {!failed ? (
           <img src={src} alt={name} className="w-full h-full object-cover" onError={() => setFailed(true)} />
         ) : (
-          <Skull className="w-6 h-6 text-text-muted" />
+          <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-text-muted truncate w-full">

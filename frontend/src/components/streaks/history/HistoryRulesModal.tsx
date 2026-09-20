@@ -3,8 +3,9 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
-import { BookOpen, Trophy, Flame, AlertTriangle, Snowflake, Clock } from 'lucide-react';
+import { BookOpen, Flame, AlertTriangle, Snowflake, Clock } from 'lucide-react';
 import { RulesModalShell, RulesModalNotices, RulesModalListSection } from '../RulesModalShell';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface HistoryRulesModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
   >
     <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-2 flex items-center gap-2">
-        <Trophy className="w-4 h-4" />
+        <AdeptBadgeIcon className="w-4 h-4" />
         {dict?.streaks?.historyConceptLabel || 'History Concept'}
       </h3>
       <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">

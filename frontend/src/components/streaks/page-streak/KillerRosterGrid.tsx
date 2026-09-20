@@ -3,11 +3,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Check, Skull } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { RosterEntry } from '@/types/pageStreak';
 import type { Dictionary } from '@/locales/types';
 import { staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { KillerIcon } from '@/components/icons/DbdIcons';
 
 interface KillerRosterGridProps {
   locale: string;
@@ -32,7 +33,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
           className="h-full w-full object-cover"
         />
       ) : (
-        <Skull
+        <KillerIcon
           className={`h-7 w-7 ${done ? 'text-accent-green/80' : 'text-text-muted'}`}
           aria-hidden="true"
         />

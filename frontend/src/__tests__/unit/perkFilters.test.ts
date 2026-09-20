@@ -79,8 +79,12 @@ test('the old "Every Perk" ownership button is no longer rendered by PerkFilters
 
 test('PerkFilters renders the role/ownership/sort controls as ToggleSwitch instances, not raw button pairs', () => {
   const toggleSwitchUsageCount = (PERK_FILTERS_SRC.match(/<ToggleSwitch/g) || []).length;
-  // Role, Ownership, Sort field, Sort order = 4 real switches.
-  assert.strictEqual(toggleSwitchUsageCount, 4);
+  // Role, Ownership, Sort field, Sort order = 4 real switches, rendered
+  // twice: once inside the mobile "Filters" dropdown panel (stacked
+  // vertically, below sm) and once in the desktop inline row (hidden
+  // below sm, shown at sm+) -- same 4 controls, two physical instances so
+  // each layout can be shown/hidden independently with plain CSS.
+  assert.strictEqual(toggleSwitchUsageCount, 8);
 });
 
 test('General Only is a checkbox, not a second two-way toggle', () => {
@@ -116,13 +120,17 @@ test('en/filters.ts uses the new short labels', () => {
 // --- Regression coverage for the "one inline row, no truncation, fixed
 // 5x3 grid" follow-up redesign ---------------------------------------------
 
-test('PerkFilters renders every toggle/checkbox/reset in one inline row (no second wrapped row)', () => {
+test('PerkFilters no longer hides controls behind a horizontal scrollbar', () => {
   // The old layout split into two stacked rows separated by a top border
-  // divider. That divider is gone now that everything lives in one row.
+  // divider -- that's still gone.
   assert.ok(!PERK_FILTERS_SRC.includes('border-t border-slate-100'));
-  // Exactly one scrollable cluster holds all of role/ownership/general/sort
-  // field/sort order/reset -- not spread across multiple flex-wrap groups.
-  assert.ok(PERK_FILTERS_SRC.includes('overflow-x-auto'));
+  // A prior redesign crammed every control into one non-wrapping row with
+  // overflow-x-auto. That measured as still hiding controls off-screen at
+  // mobile widths AND at very common desktop/laptop widths (1024, 1366px),
+  // not just tiny phones -- a scrollbar with no visible affordance read as
+  // "the filters are missing". The container now wraps instead of hiding.
+  assert.ok(!PERK_FILTERS_SRC.includes('overflow-x-auto'));
+  assert.ok(PERK_FILTERS_SRC.includes('flex-wrap'));
 });
 
 test('PerkFilters no longer forces a fixed/min width on any ToggleSwitch (labels size to their own content)', () => {
@@ -143,12 +151,27 @@ test('ToggleSwitch never truncates its label text', () => {
 
 const PERK_CARD_SRC = fs.readFileSync(path.join(__dirname, '../../components/PerkCard.tsx'), 'utf-8');
 
-test('the Perks Vault grid is a fixed 5-column x 3-row grid, not a breakpoint-driven column count', () => {
-  assert.ok(PERKS_PAGE_SRC.includes('grid-cols-5'));
-  assert.ok(PERKS_PAGE_SRC.includes('grid-rows-3'));
-  // None of the old responsive column-count classes should still be driving
-  // the vault grid's layout.
-  assert.ok(!PERKS_PAGE_SRC.includes('lg:grid-cols-5 xl:grid-cols-6'));
+test('the Perks Vault grid uses a breakpoint-driven column count (fewer, wider columns on mobile) instead of a fixed 5 columns', () => {
+  // Regression: a hardcoded 5-column grid on a narrow/tall phone viewport
+  // produced ~60px-wide columns with a JS-computed row height still sized
+  // for a wide desktop layout (available height / 3), leaving the perk
+  // icons tiny and surrounded by huge empty space. Fewer columns on
+  // narrow screens keeps each cell close to the intended square/diamond
+  // aspect ratio at any width.
+  assert.ok(PERKS_PAGE_SRC.includes('grid-cols-3'));
+  assert.ok(PERKS_PAGE_SRC.includes('sm:grid-cols-5'));
+  // No more hardcoded 3-row template -- row count is now derived from the
+  // actual (responsive) column count and item count at runtime.
+  assert.ok(!PERKS_PAGE_SRC.includes('grid-rows-3'));
+});
+
+test('the Perks Vault grid derives its row count/height from the live column count instead of assuming 5 columns', () => {
+  assert.ok(PERKS_PAGE_SRC.includes('gridTemplateColumns'));
+  assert.ok(PERKS_PAGE_SRC.includes('Math.ceil(count / colCount)'));
+  // The computed row height is capped relative to the column width so a
+  // narrow, tall viewport can't stretch rows far beyond a roughly
+  // square/diamond aspect ratio.
+  assert.ok(PERKS_PAGE_SRC.includes('maxRowFromWidth'));
 });
 
 test('PerkCard exposes a "fill" size variant that scales via container query units instead of fixed breakpoints', () => {
@@ -157,6 +180,9 @@ test('PerkCard exposes a "fill" size variant that scales via container query uni
   assert.ok(PERK_CARD_SRC.includes('[container-type:size]'));
 });
 
-test('the perks page passes size="fill" to PerkCard in grid view', () => {
-  assert.ok(PERKS_PAGE_SRC.includes("size={viewMode === 'grid' ? 'fill' : undefined}"));
+test('the perks page always renders perks with size="fill" now that the list view has been removed', () => {
+  assert.ok(PERKS_PAGE_SRC.includes('size="fill"'));
+  assert.ok(!PERKS_PAGE_SRC.includes('setViewMode'));
+  assert.ok(!PERKS_PAGE_SRC.includes('ViewDisplayMode'));
+  assert.ok(!PERKS_PAGE_SRC.includes("'list'"));
 });

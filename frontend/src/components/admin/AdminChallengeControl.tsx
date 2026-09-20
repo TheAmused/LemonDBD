@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import type { Dictionary } from '@/locales/types';
-import { CheckCircle2, Power, Search, Shield, Skull, Sparkles, XCircle } from 'lucide-react';
+import { CheckCircle2, Power, Search, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
   AdminPerkRow,
@@ -13,6 +13,7 @@ import {
 } from '@/types/admin';
 import { backendBase, staticUrl } from '@/utils/staticUrl';
 import { AdminReasonModal } from './AdminReasonModal';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
@@ -260,7 +261,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" />
+              <KillerIcon className="h-3.5 w-3.5" />
               <span>{dict?.admin?.characters || 'Characters'}</span>
             </button>
             <button
@@ -286,7 +287,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Shield className="h-3.5 w-3.5" />
+              <SurvivorIcon className="h-3.5 w-3.5" />
               <span>{dict?.admin?.roleSurvivor || 'Survivor'}</span>
             </button>
             <button
@@ -298,7 +299,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                   : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface'
               }`}
             >
-              <Skull className="h-3.5 w-3.5" />
+              <KillerIcon className="h-3.5 w-3.5" />
               <span>{dict?.admin?.roleKiller || 'Killer'}</span>
             </button>
           </div>
@@ -339,7 +340,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                           className={`h-full w-full object-cover ${c.is_disabled ? 'grayscale opacity-60' : ''}`}
                         />
                       ) : (
-                        <Skull className="h-8 w-8 text-text-muted" />
+                        <KillerIcon className="h-8 w-8 text-text-muted" />
                       )}
                     </div>
                     <span

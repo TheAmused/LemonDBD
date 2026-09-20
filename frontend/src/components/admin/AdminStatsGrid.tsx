@@ -3,8 +3,9 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
-import { Users, Crown, Layers, Sparkles, Database } from 'lucide-react';
+import { Users, Layers, Sparkles, Database } from 'lucide-react';
 import { AdminStats } from '@/types/admin';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 interface AdminStatsGridProps {
   stats: AdminStats | null;
@@ -26,7 +27,7 @@ export const AdminStatsGrid: React.FC<AdminStatsGridProps> = ({ stats, dict }) =
 
       <div className="rounded-2xl border border-border-color bg-bg-surface p-4 shadow-sm backdrop-blur-sm transition-colors duration-200">
         <div className="flex items-center gap-2 text-text-secondary text-xs font-bold uppercase mb-1">
-          <Crown className="h-4 w-4 text-text-secondary" />
+          <OverseerEyeIcon className="h-4 w-4 text-text-secondary" />
           <span>{dict?.admin?.admins || 'Admins'}</span>
         </div>
         <p className="text-xl sm:text-2xl font-black text-text-primary font-mono">

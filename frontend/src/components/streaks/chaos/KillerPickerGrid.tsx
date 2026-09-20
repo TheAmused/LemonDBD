@@ -3,9 +3,10 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { Check, Skull } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { KillerIcon } from '@/components/icons/DbdIcons';
 
 export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
@@ -50,7 +51,7 @@ const KillerTile: React.FC<{
             onError={() => setFailed(true)}
           />
         ) : (
-          <Skull className="w-6 h-6 text-text-muted" />
+          <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
       <span className="text-[11px] font-medium text-center text-text-secondary truncate w-full">

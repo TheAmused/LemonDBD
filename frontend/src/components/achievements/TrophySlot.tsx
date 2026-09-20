@@ -1,6 +1,7 @@
 // frontend/src/components/achievements/TrophySlot.tsx
 import React from 'react';
-import { Trophy, Crown, type LucideIcon } from 'lucide-react';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { FullRosterLaurelIcon } from '@/components/icons/DbdIcons';
 
 export type TrophyVariant = 'owned' | 'all';
 
@@ -11,9 +12,9 @@ interface TrophySlotProps {
   unlocked?: boolean;
 }
 
-const VARIANT_ICON: Record<TrophyVariant, LucideIcon> = {
-  owned: Trophy,
-  all: Crown,
+const VARIANT_ICON: Record<TrophyVariant, React.ElementType> = {
+  owned: AdeptBadgeIcon,
+  all: FullRosterLaurelIcon,
 };
 
 export const TrophySlot: React.FC<TrophySlotProps> = ({ variant, badgeLabel, hoverText, unlocked = false }) => {

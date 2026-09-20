@@ -3,15 +3,11 @@
 
 import React, { useMemo, useState } from 'react';
 import {
-  Skull,
-  Shield,
   Sparkles,
   Share2,
   Check,
   RotateCcw,
   Heart,
-  Flame,
-  Zap,
   Compass,
   ArrowRight,
   ArrowLeft,
@@ -33,6 +29,8 @@ import {
   type SharedArchetypePayload,
   type RomancePersonaResult,
 } from '@/utils/smashPersona';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { VeiledCompassIcon, EntityMarkIcon, RedStainIcon, CampfireIcon, EntityHeartIcon, SkillCheckGaugeIcon, FogDriftIcon } from '@/components/icons/DbdIcons';
 
 interface PersonaArchetypeEntry {
   title?: string;
@@ -226,20 +224,20 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const renderIcon = (name: RomancePersonaResult['iconName']) => {
     switch (name) {
       case 'compass':
-        return <Compass className="h-6 w-6 text-text-inverted animate-spin-slow" />;
+        return <VeiledCompassIcon className="h-6 w-6 text-text-inverted animate-spin-slow" />;
       case 'skull':
-        return <Skull className="h-6 w-6 text-text-inverted" />;
+        return <EntityMarkIcon className="h-6 w-6 text-text-inverted" />;
       case 'flame':
-        return <Flame className="h-6 w-6 text-text-inverted" />;
+        return <RedStainIcon className="h-6 w-6 text-text-inverted" />;
       case 'shield':
-        return <Shield className="h-6 w-6 text-text-inverted" />;
+        return <CampfireIcon className="h-6 w-6 text-text-inverted" />;
       case 'heart':
-        return <Heart className="h-6 w-6 text-text-inverted fill-text-inverted" />;
+        return <EntityHeartIcon className="h-6 w-6 text-text-inverted fill-text-inverted" />;
       case 'zap':
-        return <Zap className="h-6 w-6 text-text-inverted" />;
+        return <SkillCheckGaugeIcon className="h-6 w-6 text-text-inverted" />;
       case 'sparkles':
       default:
-        return <Sparkles className="h-6 w-6 text-text-inverted" />;
+        return <FogDriftIcon className="h-6 w-6 text-text-inverted" />;
     }
   };
 
@@ -352,11 +350,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
               </div>
               <div className="mt-3 flex items-center gap-4 text-[11px] font-mono text-text-inverted/85">
                 <span className="flex items-center gap-1.5">
-                  <Shield className="h-3.5 w-3.5 text-accent-green" />
+                  <SurvivorIcon className="h-3.5 w-3.5 text-accent-green" />
                   <span>{survivorsLabel} {persona.survivorAffinity}%</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Skull className="h-3.5 w-3.5 text-accent-red" />
+                  <KillerIcon className="h-3.5 w-3.5 text-accent-red" />
                   <span>{killersLabel} {persona.killerAffinity}%</span>
                 </span>
               </div>
@@ -513,11 +511,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             <div className="p-4 sm:p-5 rounded-2xl bg-bg-elevated border border-border-color space-y-2.5">
               <div className="flex justify-between items-center text-xs font-bold font-mono">
                 <span className="flex items-center gap-1.5 text-accent-green">
-                  <Shield className="h-4 w-4" aria-hidden="true" />
+                  <SurvivorIcon className="h-4 w-4" aria-hidden="true" />
                   <span>{survivorsLabel} ({persona.survivorAffinity}{percentSign})</span>
                 </span>
                 <span className="flex items-center gap-1.5 text-accent-red">
-                  <Skull className="h-4 w-4" aria-hidden="true" />
+                  <KillerIcon className="h-4 w-4" aria-hidden="true" />
                   <span>{killersLabel} ({persona.killerAffinity}{percentSign})</span>
                 </span>
               </div>

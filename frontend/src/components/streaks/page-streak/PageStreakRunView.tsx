@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight, Trophy, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -16,6 +16,7 @@ import { ChallengeCompletionHistoryDrawer } from '../ChallengeCompletionHistoryD
 import { staticUrl } from '@/utils/staticUrl';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
+import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 interface PageStreakRunViewProps {
   locale: string;
@@ -125,7 +126,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           {run.status === 'completed' ? (
             <div className="mb-8 mt-6 rounded-2xl border-2 border-accent-green/40 bg-accent-green/[0.07] px-6 py-10 text-center shadow-lg">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-                <Trophy className="h-8 w-8" />
+                <AdeptBadgeIcon className="h-8 w-8" />
               </div>
               <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
                 {dict?.streaks?.victoryCongrats || 'Congratulations'}

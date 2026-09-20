@@ -5,8 +5,6 @@ import React, { useMemo } from 'react';
 import {
   Heart,
   Flame,
-  Shield,
-  Skull,
   Sparkles,
   Quote,
   CheckCircle2,
@@ -19,6 +17,7 @@ import { EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
+import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
 
 interface CharacterStatsModalProps {
   isOpen: boolean;
@@ -106,7 +105,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         color: 'text-text-secondary',
         bg: 'bg-bg-elevated border-border-color',
         glow: '',
-        icon: <Shield className="h-4 w-4 text-text-secondary" />,
+        icon: <FriendzoneIcon className="h-4 w-4 text-text-secondary" />,
       };
     }
     return {
@@ -114,7 +113,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
       color: 'text-text-muted',
       bg: 'bg-bg-elevated border-border-color',
       glow: '',
-      icon: <Skull className="h-4 w-4 text-text-muted" />,
+      icon: <EldritchVoidIcon className="h-4 w-4 text-text-muted" />,
     };
   }, [smashRate, rawSmashDict]);
 

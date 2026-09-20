@@ -3,8 +3,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Trophy, Flame, Zap, ChevronRight, Repeat, Skull, Shield } from 'lucide-react';
+import { ChevronRight, BookOpen } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
+import { AdeptBadgeIcon, GauntletGloveIcon, ChaosSwirlIcon } from '@/components/icons/DbdIcons';
 
 interface StreakTrophyCardProps {
   currentLocale: string;
@@ -21,7 +22,7 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-xl bg-accent-amber/15 text-accent-amber">
-            <Trophy className="h-4 w-4" />
+            <AdeptBadgeIcon className="h-4 w-4" />
           </div>
           <h3 className="text-xs font-black uppercase tracking-wider text-text-primary font-mono">
             {dict?.user?.streakRecords || 'Trial Trophies & Records'}
@@ -46,7 +47,7 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
         >
           <div className="flex items-center justify-between pb-2.5">
             <div className="flex items-center gap-2">
-              <Skull className="h-4 w-4 text-text-secondary" />
+              <GauntletGloveIcon className="h-4 w-4 text-text-secondary" />
               <span className="text-xs font-black font-mono uppercase text-text-primary group-hover:text-accent-red transition-colors">
                 {dict?.user?.gauntletTitle || 'Gauntlet'}
               </span>
@@ -65,7 +66,7 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
         >
           <div className="flex items-center justify-between pb-2.5">
             <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-text-secondary" />
+              <ChaosSwirlIcon className="h-4 w-4 text-text-secondary" />
               <span className="text-xs font-black font-mono uppercase text-text-primary group-hover:text-accent-red transition-colors">
                 {dict?.user?.chaosTitle || 'Chaos Shuffle'}
               </span>
@@ -84,7 +85,7 @@ export const StreakTrophyCard: React.FC<StreakTrophyCardProps> = ({
         >
           <div className="flex items-center justify-between pb-2.5">
             <div className="flex items-center gap-2">
-              <Repeat className="h-4 w-4 text-text-secondary" />
+              <BookOpen className="h-4 w-4 text-text-secondary" />
               <span className="text-xs font-black font-mono uppercase text-text-primary group-hover:text-accent-red transition-colors">
                 {dict?.user?.pageStreakTitle || 'Page Streak'}
               </span>

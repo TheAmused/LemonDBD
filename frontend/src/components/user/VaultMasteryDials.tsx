@@ -2,8 +2,9 @@
 'use client';
 
 import React from 'react';
-import { Shield, Skull, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface MetricItem {
   owned: number;
@@ -181,7 +182,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
           percentage={survPercent}
           colorHex="#16a34a"
           accentClass="bg-accent-green/15 text-accent-green"
-          icon={<Shield className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
+          icon={<SurvivorIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
         />
 
@@ -193,7 +194,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({
           percentage={killerPercent}
           colorHex="#b91c1c"
           accentClass="bg-accent-red/15 text-accent-red"
-          icon={<Skull className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
+          icon={<KillerIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
         />
 

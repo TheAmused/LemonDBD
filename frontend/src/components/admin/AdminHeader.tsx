@@ -3,7 +3,8 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
-import { Crown, Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
+import { Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 interface AdminHeaderProps {
   isLoading: boolean;
@@ -40,7 +41,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-color pb-6 w-full">
       <div className="flex items-center gap-3.5">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-xs">
-          <Crown className="h-6 w-6" />
+          <OverseerEyeIcon className="h-6 w-6" />
         </div>
         <div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-wider text-text-primary font-mono">

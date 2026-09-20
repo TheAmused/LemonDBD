@@ -13,7 +13,7 @@ import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/EmptyState';
 import { Pagination } from '@/components/Pagination';
 import { Locale } from '@/i18n/config';
-import { Shield } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import {
   Perk,
@@ -23,7 +23,6 @@ import {
   OwnershipFilter,
   SortField,
   SortOrder,
-  ViewDisplayMode,
   PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -33,6 +32,10 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
+const CampfireParticles = dynamic(
+  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
+  { ssr: false }
+);
 
 interface PerksResponse {
   data?: Perk[];
@@ -73,28 +76,72 @@ function PerksContent() {
   const [characterCount, setCharacterCount] = useState<number>(0);
   const [ownedPerksCount, setOwnedPerksCount] = useState<number>(0);
 
-  const [viewMode, setViewMode] = useState<ViewDisplayMode>('grid');
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
+  const gridNodeRef = useRef<HTMLDivElement | null>(null);
+  const perksCountRef = useRef<number>(0);
   const GRID_ROW_GAP_PX = 12;
+  // Perk icons must stay legible no matter how many rows the current
+  // per-page count creates: row height never drops below
+  // MIN_ROW_HEIGHT_PX. Once there are too many rows to fit that floor in
+  // the available area, the grid overflows and the page scrolls (the
+  // container already supports that) instead of squeezing every row down
+  // to fit -- which is what made 30/45/60-per-page views on a phone show
+  // nothing but tiny, illegible icons. Row height also never grows past
+  // MAX_ROW_ASPECT times the column width, so a narrow-but-tall viewport
+  // with few items can't stretch cells into skinny columns either (the
+  // original fixed-5-column bug).
+  const MIN_ROW_HEIGHT_PX = 90;
+  const MAX_ROW_ASPECT = 2.2;
+
+  const computeGridMetrics = useCallback((node: HTMLDivElement) => {
+    const cs = getComputedStyle(node);
+    const colCount = Math.max(1, cs.gridTemplateColumns.split(' ').filter(Boolean).length);
+    const count = Math.max(1, perksCountRef.current);
+    const rows = Math.max(1, Math.ceil(count / colCount));
+
+    const colWidthPx = (node.clientWidth - GRID_ROW_GAP_PX * (colCount - 1)) / colCount;
+    const maxRowFromWidth = colWidthPx > 0 ? colWidthPx * MAX_ROW_ASPECT : null;
+
+    const h = node.clientHeight;
+    const heightBasedRow = h > 0 ? Math.max(0, (h - GRID_ROW_GAP_PX * (rows - 1)) / rows) : null;
+
+    // Prefer the height-based row size (fills the available area, no dead
+    // space) but clamp it into [MIN_ROW_HEIGHT_PX, maxRowFromWidth] so it
+    // can never shrink perks into illegibility or stretch them into
+    // skinny columns. If there's no usable height measurement yet, fall
+    // back to the width-derived cap so the grid still renders sensibly.
+    const upperBound = maxRowFromWidth ?? Infinity;
+    const base = heightBasedRow ?? upperBound;
+    const clamped = Math.min(Math.max(base, MIN_ROW_HEIGHT_PX), upperBound);
+    setRowHeightPx(Number.isFinite(clamped) && clamped > 0 ? clamped : null);
+  }, []);
 
   const measureGridArea = useCallback((node: HTMLDivElement | null) => {
     if (gridResizeObserverRef.current) {
       gridResizeObserverRef.current.disconnect();
       gridResizeObserverRef.current = null;
     }
+    gridNodeRef.current = node;
     if (!node) return;
-    const compute = () => {
-      const h = node.clientHeight;
-      setRowHeightPx(h > 0 ? Math.max(0, (h - GRID_ROW_GAP_PX * 2) / 3) : null);
-    };
-    compute();
-    const ro = new ResizeObserver(compute);
+    computeGridMetrics(node);
+    const ro = new ResizeObserver(() => computeGridMetrics(node));
     ro.observe(node);
     gridResizeObserverRef.current = ro;
-  }, []);
+  }, [computeGridMetrics]);
+
+  // Re-measure whenever the item count changes (page navigation, per-page
+  // limit change, filtering) without waiting for an actual element resize --
+  // a different number of perks can mean a different row count at the same
+  // container size.
+  useEffect(() => {
+    perksCountRef.current = perks.length;
+    if (gridNodeRef.current) {
+      computeGridMetrics(gridNodeRef.current);
+    }
+  }, [perks.length, computeGridMetrics]);
 
   useEffect(() => {
     return () => {
@@ -125,7 +172,17 @@ function PerksContent() {
 
   const { prefetchPerkIcons } = useImagePrefetch();
 
+  // Guards against out-of-order responses: if the user changes the
+  // per-page limit (or role/search/sort/page) again before an earlier
+  // request for the old params has resolved, that earlier response must
+  // not be allowed to land and overwrite the newer one -- which is what
+  // made the "Per page" dropdown occasionally flip back to a stale value
+  // a moment after picking a new one. Only the most recently *started*
+  // request's result is ever applied to state.
+  const fetchSeqRef = useRef(0);
+
   const fetchPerks = useCallback(async () => {
+    const requestId = ++fetchSeqRef.current;
     setLoading(true);
     try {
       const queryParams = new URLSearchParams({
@@ -152,6 +209,7 @@ function PerksContent() {
 
       const url = `${backendBase}/api/v1/perks?${queryParams.toString()}`;
       const result = await fetchCached<PerksResponse>(url, () => fetchJson(url));
+      if (requestId !== fetchSeqRef.current) return; // a newer request has since started
       const perkList = result.data || [];
       setPerks(perkList);
       prefetchPerkIcons(perkList);
@@ -162,7 +220,9 @@ function PerksContent() {
     } catch (err) {
       console.error('Failed fetching perks:', err);
     } finally {
-      setLoading(false);
+      if (requestId === fetchSeqRef.current) {
+        setLoading(false);
+      }
     }
   }, [
     backendBase,
@@ -244,8 +304,10 @@ function PerksContent() {
       characterCount={characterCount}
       padding="tight"
       outerClassName="h-dvh overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
-      mainClassName="flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
+      mainClassName="relative flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
     >
+        <CampfireParticles />
+        <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
         <div className="shrink-0">
           <PerkFilters
             search={search}
@@ -269,8 +331,6 @@ function PerksContent() {
             setSortBy={(s) => setSortBy(s)}
             order={order}
             setOrder={(o) => setOrder(o)}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
             dict={dict}
             onReset={handleResetFilters}
             locale={locale}
@@ -287,7 +347,7 @@ function PerksContent() {
           ) : perks.length === 0 ? (
             <EmptyState
               variant="solid"
-              icon={Shield}
+              icon={SearchX}
               iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
               title={dict?.empty?.title || 'No Perks Found'}
               subtitle={
@@ -302,20 +362,15 @@ function PerksContent() {
           ) : (
             <section aria-label={dict?.filters?.viewMode || 'Perks Grid'} className="flex min-h-0 flex-1 flex-col">
               <div
-                ref={viewMode === 'grid' ? measureGridArea : undefined}
-                className={
-                  viewMode === 'list'
-                    ? 'flex flex-col gap-2 w-full'
-                    : 'grid min-h-0 w-full flex-1 grid-cols-5 grid-rows-3 gap-3'
-                }
-                style={viewMode === 'grid' && rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
+                ref={measureGridArea}
+                className="grid min-h-0 w-full flex-1 grid-cols-3 min-[480px]:grid-cols-4 sm:grid-cols-5 gap-3"
+                style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
               >
                 {perks.map((perk, idx) => (
                   <PerkCard
                     key={`${perk.name}-${idx}`}
                     perk={perk}
-                    viewMode={viewMode}
-                    size={viewMode === 'grid' ? 'fill' : undefined}
+                    size="fill"
                     onSelect={setSelectedPerk}
                     dict={dict}
                   />
@@ -349,6 +404,7 @@ function PerksContent() {
             dict={dict}
           />
         )}
+        </div>
     </PageShell>
   );
 }

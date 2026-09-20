@@ -4,8 +4,6 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import {
-  Skull,
-  Shield,
   CheckCircle2,
   Sparkles,
   Quote,
@@ -17,6 +15,7 @@ import {
 import { SmashSounds } from './SmashSoundEffects';
 import { EntityItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
@@ -196,9 +195,9 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                   }`}
                 >
                   {isSurvivor ? (
-                    <Shield className="h-5 w-5 text-accent-green" />
+                    <SurvivorIcon className="h-5 w-5 text-accent-green" />
                   ) : (
-                    <Skull className="h-5 w-5 text-accent-red" />
+                    <KillerIcon className="h-5 w-5 text-accent-red" />
                   )}
                 </span>
                 <div>

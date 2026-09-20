@@ -3,18 +3,14 @@
 
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import {
-  Trophy,
   Heart,
   Skull,
-  Shield,
   Search,
   ArrowUpDown,
   X,
   Flame,
   Sparkles,
   Layers,
-  Crown,
-  Medal,
   ThumbsDown,
   User,
   Users,
@@ -28,6 +24,10 @@ import { Tooltip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
+import { IridescentShardIcon } from '@/components/icons/DbdIcons';
+import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -175,9 +175,9 @@ const CandidateRow = React.memo<CandidateRowProps>(({
         >
           {isTop3 ? (
             index === 0 ? (
-              <Crown className="h-5 w-5 fill-current stroke-current" />
+              <RankFirstIcon className="h-5 w-5 fill-current stroke-current" />
             ) : (
-              <Medal className="h-5 w-5" />
+              <RankPlacedIcon className="h-5 w-5" />
             )
           ) : (
             `#${index + 1}`
@@ -228,7 +228,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
                   : 'bg-accent-red/15 border-accent-red/40 text-accent-red'
               }`}
             >
-              {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
+              {isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : <KillerIcon className="h-3.5 w-3.5" />}
             </span>
 
             {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
@@ -422,13 +422,13 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       friendzone: {
         name: rawSmashDict?.tiers?.friendzone || rawSmashDict?.friendzone || 'Friendzone',
         style: 'border-border-color bg-bg-elevated text-text-secondary',
-        icon: <Shield className="h-3.5 w-3.5 text-text-secondary" aria-hidden="true" />,
+        icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" aria-hidden="true" />,
         range: '40% - 64%',
       },
       eldritchVoid: {
         name: rawSmashDict?.tiers?.eldritchVoid || rawSmashDict?.eldritchVoid || 'Eldritch Void',
         style: 'border-border-color bg-bg-elevated text-text-muted',
-        icon: <Skull className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />,
+        icon: <EldritchVoidIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />,
         range: '< 40%',
       },
     }),
@@ -533,8 +533,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   // Dropdown Options with Full Icon Coverage
   const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
     { value: 'all', label: allRolesLabel, icon: <Users className="h-3.5 w-3.5 text-text-muted" /> },
-    { value: 'Survivor', label: survivorsLabel, icon: <Shield className="h-3.5 w-3.5 text-accent-green" /> },
-    { value: 'Killer', label: killersLabel, icon: <Skull className="h-3.5 w-3.5 text-accent-red" /> },
+    { value: 'Survivor', label: survivorsLabel, icon: <SurvivorIcon className="h-3.5 w-3.5 text-accent-green" /> },
+    { value: 'Killer', label: killersLabel, icon: <KillerIcon className="h-3.5 w-3.5 text-accent-red" /> },
   ];
 
   const genderOptions: DropdownOption<'all' | 'female' | 'male' | 'monster_other'>[] = [
@@ -570,13 +570,13 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       value: 'friendzone',
       label: tierMetadata.friendzone.name,
       sublabel: tierMetadata.friendzone.range,
-      icon: <Shield className="h-3.5 w-3.5 text-text-secondary" />,
+      icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" />,
     },
     {
       value: 'eldritchVoid',
       label: tierMetadata.eldritchVoid.name,
       sublabel: tierMetadata.eldritchVoid.range,
-      icon: <Skull className="h-3.5 w-3.5 text-text-muted" />,
+      icon: <EldritchVoidIcon className="h-3.5 w-3.5 text-text-muted" />,
     },
   ];
 
@@ -598,7 +598,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       onClose={onClose}
       size="5xl"
       title={title}
-      icon={<Trophy className="h-6 w-6 text-accent-amber" />}
+      icon={<IridescentShardIcon className="h-6 w-6 text-accent-amber" />}
       badge={headerBadge}
       centerTitle={true}
       className="h-[88vh] max-h-[850px] min-h-[480px]"
@@ -634,7 +634,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             value={roleFilter}
             onChange={setRoleFilter}
             options={roleOptions}
-            icon={<Shield className="h-3.5 w-3.5" />}
+            icon={<Users className="h-3.5 w-3.5" />}
             ariaLabel={allRolesLabel}
             minWidthClass="min-w-[150px]"
           />

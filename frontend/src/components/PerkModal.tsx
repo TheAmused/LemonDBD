@@ -2,13 +2,14 @@
 // frontend/src/components/PerkModal.tsx
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { X, User, Shield, Skull, ImageOff, Repeat } from 'lucide-react';
+import { X, User, ImageOff, Repeat } from 'lucide-react';
 import { Perk, PerkDictionary } from '@/types/perks';
 import {
   getPerkIconUrl,
   getCharacterAvatarUrl,
 } from '@/utils/perkUtils';
 import { PerkDescription } from '@/components/PerkDescription';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface PerkModalProps {
   perk: Perk | null;
@@ -105,7 +106,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
                     : 'bg-accent-red/10 text-accent-red border border-accent-red/30'
                 }`}
               >
-                {isSurvivor ? <Shield className="h-3 w-3" /> : <Skull className="h-3 w-3" />}
+                {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
                 <span>
                   {isSurvivor ? dict?.modal?.survivorPerk : dict?.modal?.killerPerk}
                 </span>

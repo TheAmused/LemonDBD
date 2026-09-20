@@ -6,7 +6,6 @@ import {
   HelpCircle,
   Clock,
   CheckCircle,
-  Bug,
   Search,
   Filter,
   ChevronLeft,
@@ -20,6 +19,7 @@ import {
 } from 'lucide-react';
 import type { AdminBugReport, BugReportStats } from '@/types/admin';
 import type { Dictionary } from '@/locales/types';
+import { FogReportIcon } from '@/components/icons/DbdIcons';
 
 interface StatusConfigItem {
   label: string;
@@ -171,7 +171,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
           }`}
         >
           <span className="text-xs font-bold uppercase flex items-center gap-1.5">
-            <Bug className="h-4 w-4" /> {dict?.admin?.totalTickets || ''}
+            <FogReportIcon className="h-4 w-4" /> {dict?.admin?.totalTickets || ''}
           </span>
           <p className="text-xl sm:text-2xl font-black text-text-primary font-mono mt-1">
             {bugStats?.total ?? 0}

@@ -2,9 +2,10 @@
 // frontend/src/components/character-detail/components/CharacterHeroAvatar.tsx
 
 import React, { useState } from 'react';
-import { Eye, Shield, Skull, User } from 'lucide-react';
+import { Eye, User } from 'lucide-react';
 import type { CharacterItem } from '../types';
 import { getAvatarUrl } from '../types';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 export interface CharacterHeroAvatarTranslations {
   view3DModel?: string;
@@ -90,7 +91,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
                 : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-sm'
               }`}
           >
-            {isSurvivor ? <Shield className="h-3.5 w-3.5" /> : <Skull className="h-3.5 w-3.5" />}
+            {isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : <KillerIcon className="h-3.5 w-3.5" />}
             {roleLabel}
           </span>
 

@@ -4,7 +4,6 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  Crown,
   ChevronRight,
   Sparkles,
   Camera,
@@ -16,6 +15,7 @@ import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
 import type { Dictionary } from '@/locales/types';
+import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 interface CampfireHeaderProps {
   user: {
@@ -148,7 +148,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   href={`/${currentLocale}/admin`}
                   className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border border-accent-red/30 bg-accent-red/10 text-[11px] font-bold text-accent-red hover:bg-accent-red/20 transition-colors font-mono"
                 >
-                  <Crown className="h-3 w-3" />
+                  <OverseerEyeIcon className="h-3 w-3" />
                   <span>{dict?.sidebar?.adminPanel || 'Admin Panel'}</span>
                   <ChevronRight className="h-2.5 w-2.5" />
                 </Link>

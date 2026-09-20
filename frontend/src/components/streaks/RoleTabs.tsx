@@ -4,8 +4,9 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { Shield, Skull, Puzzle } from 'lucide-react';
+import { Puzzle } from 'lucide-react';
 import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface RoleTabsProps {
   locale: string;
@@ -31,14 +32,14 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
     {
       value: 'survivor',
       href: `/${locale}/streaks/survivor`,
-      icon: <Shield className="h-3.5 w-3.5" />,
+      icon: <SurvivorIcon className="h-3.5 w-3.5" />,
       label: survivorLabel,
       activeClassName: 'bg-accent-green text-text-inverted',
     },
     {
       value: 'killer',
       href: `/${locale}/streaks/killer`,
-      icon: <Skull className="h-3.5 w-3.5" />,
+      icon: <KillerIcon className="h-3.5 w-3.5" />,
       label: killerLabel,
       activeClassName: 'bg-accent-red text-text-inverted',
     },

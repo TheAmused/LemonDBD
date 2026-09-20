@@ -49,8 +49,27 @@ export function ToggleSwitch<T extends string>({
   className,
 }: ToggleSwitchProps<T>) {
   const activeIndex = resolveActiveIndex(value, options);
-  const padY = size === 'sm' ? 'py-1.5' : 'py-2';
-  const textSize = size === 'sm' ? 'text-[11px]' : 'text-xs';
+  // Below sm (640px) these run noticeably smaller than the desktop size --
+  // a phone screen has no room to render every control at full desktop
+  // scale even after wrapping onto its own line, so the controls
+  // themselves shrink too, not just the layout around them.
+  //
+  // Above sm, padY only grows earlier (lg/xl) because vertical padding
+  // doesn't cost row width -- it makes the pill visibly taller/bigger on a
+  // 1440px screen for free. textSize and horizontal padding (below) DO cost
+  // row width, and PerkFilters' whole row (5 of these + a search box) is
+  // already tight enough at ~1440px-1536px that growing those earlier
+  // pushes the search box onto its own line again -- so real horizontal
+  // growth waits until `wide` (1800px), where there's plainly enough spare
+  // width for everything, search included, to grow together.
+  const padY =
+    size === 'sm'
+      ? 'py-1 sm:py-1.5 lg:py-2 xl:py-2.5 wide:py-3'
+      : 'py-1.5 sm:py-2 lg:py-2.5 xl:py-3 wide:py-3.5';
+  const textSize =
+    size === 'sm'
+      ? 'text-[10px] sm:text-[11px] wide:text-xs wide-2k:text-sm'
+      : 'text-[11px] sm:text-xs wide:text-sm wide-2k:text-base';
 
   // A fixed 50%-width thumb only lines up when both options render to the
   // same width -- as soon as one side is visibly longer, it undershoots and
@@ -95,7 +114,7 @@ export function ToggleSwitch<T extends string>({
         const isActive = value === opt.value;
         const activeTextClass = opt.activeTextColor || 'text-text-inverted';
         const optionClassName = cn(
-          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 font-black transition-colors duration-200',
+          'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-full px-2 sm:px-3 wide:px-4 wide-2k:px-5 font-black transition-colors duration-200',
           padY,
           textSize,
           isActive ? activeTextClass : 'text-text-secondary hover:text-text-primary'

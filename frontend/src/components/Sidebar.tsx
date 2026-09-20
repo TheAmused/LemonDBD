@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
+  Info,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
@@ -186,6 +187,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/achievements`,
+    },
+    // TEMPORARY: remove once About us is linked permanently.
+    {
+      id: 'about',
+      label: 'About us',
+      icon: Info,
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
+      href: `/${currentLocale}/about`,
     },
   ], [dict, currentLocale]);
 

@@ -26,6 +26,7 @@ import customPerks from './customPerks';
 import changelog from './changelog';
 import onboarding from './onboarding';
 import achievements from './achievements';
+import about from './about';
 
 const de = {
   app,
@@ -55,6 +56,7 @@ const de = {
   changelog,
   onboarding,
   achievements,
+  about,
 };
 
 export default de;

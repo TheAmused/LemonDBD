@@ -78,14 +78,8 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
         />
 
         <div className="lg:col-span-8 space-y-5">
-          <header className="flex flex-wrap items-center justify-between gap-4">
+          <header className="flex flex-col items-center text-center gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:text-left">
             <div>
-              <span className="text-xs font-mono font-bold tracking-wider text-accent-green uppercase">
-                {t.roleSurvivor || ''}{' '}
-                {character.is_licensed
-                  ? `• ${t.dlcLicensed || ''}`
-                  : `• ${t.dlcOriginal || ''}`}
-              </span>
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-text-primary font-mono tracking-tight">
                 {character.name}
               </h1>
@@ -97,7 +91,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
               <button
                 type="button"
                 onClick={() => setIsLoreModalOpen(true)}

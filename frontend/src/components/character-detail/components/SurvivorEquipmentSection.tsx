@@ -20,7 +20,11 @@ import {
   getRarityRank,
 } from '../types';
 import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
+import { CategoryPicker } from './CategoryPicker';
+import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
+import { usePersistentString } from '@/hooks/usePersistentString';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
@@ -39,6 +43,19 @@ type SurvivorCategoryKey =
   | 'fog_vial'
   | 'event'
   | 'trial_exclusive';
+
+const SURVIVOR_CATEGORY_KEYS: readonly SurvivorCategoryKey[] = [
+  'medkit',
+  'toolbox',
+  'flashlight',
+  'key',
+  'map',
+  'fog_vial',
+  'event',
+  'trial_exclusive',
+];
+const isSurvivorCategoryKey = (value: string): value is SurvivorCategoryKey =>
+  (SURVIVOR_CATEGORY_KEYS as readonly string[]).includes(value);
 
 function getSurvivorItemCategory(it: EquipmentItem): SurvivorCategoryKey {
   const cat = (it.category || '').toLowerCase();
@@ -102,8 +119,13 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   onSelectEquipment,
   t,
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<SurvivorCategoryKey>('medkit');
+  const [selectedCategory, setSelectedCategory] = usePersistentString<SurvivorCategoryKey>(
+    'lemondbd_survivor_item_category',
+    'medkit',
+    isSurvivorCategoryKey
+  );
   const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
+  const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_survivor_items', true);
 
   const categories = useMemo(
     () => [
@@ -118,10 +140,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     ],
     [t]
   );
-
-  const activeCategoryConfig = useMemo(() => {
-    return categories.find((c) => c.key === selectedCategory) || categories[0];
-  }, [categories, selectedCategory]);
 
   const categorizedData = useMemo(() => {
     const safeItems = Array.isArray(items) ? items : [];
@@ -150,24 +168,29 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
   return (
     <section className="space-y-4 w-full" aria-labelledby="survivor-equipment-heading">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border-color pb-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green border border-accent-green/30" aria-hidden="true">
-            <Package className="h-4 w-4" />
-          </span>
-          <div>
-            <h2 id="survivor-equipment-heading" className="text-lg sm:text-xl font-black text-text-primary font-mono tracking-tight">
-              {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
-            </h2>
+      <CollapsibleDrawer
+        open={isDrawerOpen}
+        onOpenChange={setDrawerOpen}
+        headerClassName="border-b border-border-color pb-3"
+        header={
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green border border-accent-green/30" aria-hidden="true">
+              <Package className="h-4 w-4" />
+            </span>
+            <div>
+              <h2 id="survivor-equipment-heading" className="text-lg sm:text-xl font-black text-text-primary font-mono tracking-tight">
+                {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
+              </h2>
+            </div>
           </div>
-        </div>
-      </div>
-
+        }
+      >
+      <div className="space-y-4 pt-4">
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
         <div
           role="tablist"
           aria-label={t.equipmentCategories || 'Survivor item categories'}
-          className="flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0 overflow-x-auto md:overflow-x-visible"
+          className="hidden sm:flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0 md:overflow-x-visible"
         >
           {categories.map((cat) => {
             const Icon = cat.icon;
@@ -199,12 +222,22 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           })}
         </div>
 
-        <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="flex flex-col p-4 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg">
-            <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
+        <div className="flex-1 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
+          <div className="flex flex-col p-4">
+            <div className="sm:hidden mb-3">
+              <CategoryPicker
+                categories={categories}
+                selectedKey={selectedCategory}
+                onSelect={(key) => setSelectedCategory(key as SurvivorCategoryKey)}
+                ariaLabel={t.equipmentCategories || 'Survivor item categories'}
+                accent="green"
+                countLabel={`(${categorizedData.displayedItems.length})`}
+              />
+            </div>
+            <div className="hidden sm:flex items-center justify-center border-b border-border-color pb-2.5 mb-3">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-accent-green flex items-center gap-1.5">
                 <Package className="h-4 w-4" aria-hidden="true" />
-                {activeCategoryConfig.label} {t.bulletSeparator || '•'} {t.items || 'Items'} ({categorizedData.displayedItems.length})
+                {t.items || 'Items'} ({categorizedData.displayedItems.length})
               </h3>
             </div>
 
@@ -253,7 +286,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             )}
           </div>
 
-          <div className="flex flex-col p-4 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg">
+          <div className="flex flex-col p-4">
             <div className="flex items-center justify-between border-b border-border-color pb-2.5 mb-3">
               <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-text-secondary flex items-center gap-1.5">
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
@@ -328,6 +361,8 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
           </div>
         </div>
       </div>
+      </div>
+      </CollapsibleDrawer>
 
       {/* Unified Hover Modal */}
       <UnifiedHoverModal

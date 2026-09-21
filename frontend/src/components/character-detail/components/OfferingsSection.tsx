@@ -341,7 +341,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         <div
           role="tablist"
           aria-label={t.offeringCategories || 'Offering categories'}
-          className="hidden sm:flex flex-wrap items-center gap-1.5 mb-6"
+          className="hidden sm:flex flex-wrap items-center justify-center gap-1.5 mb-6"
         >
           {categories.map((cat) => {
             const Icon = cat.icon;
@@ -399,7 +399,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     setActiveHover({ item: offering, rect, category: activeCategoryConfig.label });
                   }}
                   onMouseLeave={() => setActiveHover(null)}
-                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-colors duration-150 hover:brightness-110 active:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
                   <img

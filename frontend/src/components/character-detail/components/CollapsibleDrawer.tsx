@@ -64,7 +64,7 @@ export const CollapsibleDrawer: React.FC<CollapsibleDrawerProps> = ({
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className={`w-full flex items-center justify-between gap-3 text-left cursor-pointer group ${headerClassName}`}
+        className={`w-full flex items-center justify-center gap-3 text-left cursor-pointer group ${headerClassName}`}
       >
         {header}
         <ChevronDown

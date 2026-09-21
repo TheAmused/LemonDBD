@@ -167,25 +167,33 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
   }, [items, addons, selectedCategory]);
 
   return (
-    <section className="space-y-4 w-full" aria-labelledby="survivor-equipment-heading">
+    <section
+      className="mt-8 rounded-3xl border border-border-color bg-bg-surface p-6 sm:p-8 shadow-sm dark:shadow-none backdrop-blur-md"
+      aria-labelledby="survivor-equipment-heading"
+    >
+      {/* Same flat single-card shape as KillerEquipmentSection/OfferingsSection:
+          one bordered card, header+count+chevron on top. */}
       <CollapsibleDrawer
         open={isDrawerOpen}
         onOpenChange={setDrawerOpen}
-        headerClassName="border-b border-border-color pb-3"
+        headerClassName="pb-4 mb-6 border-b border-border-color"
         header={
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green border border-accent-green/30" aria-hidden="true">
-              <Package className="h-4 w-4" />
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green border border-accent-green/20">
+              <Package className="h-5 w-5" />
+            </div>
             <div>
-              <h2 id="survivor-equipment-heading" className="text-lg sm:text-xl font-black text-text-primary font-mono tracking-tight">
+              <h2 id="survivor-equipment-heading" className="text-lg font-black tracking-tight text-text-primary font-mono flex items-center gap-2">
                 {t.equipmentTitleSurvivor || 'Survival Items & Equipment'}
+                <span className="text-xs px-2 py-0.5 rounded-full bg-accent-green/10 text-accent-green border border-accent-green/30">
+                  {items.length + addons.length}
+                </span>
               </h2>
             </div>
           </div>
         }
       >
-      <div className="space-y-4 pt-4">
+      <div className="space-y-4">
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
         <div
           role="tablist"

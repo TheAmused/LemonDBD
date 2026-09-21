@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   ZoomIn,
@@ -172,7 +173,17 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     }
   };
 
-  return (
+  // Portaled straight to document.body: this dialog is meant to cover the
+  // true viewport including the sidebar, but it's mounted deep inside the
+  // page's content tree. If any ancestor along the way ever establishes its
+  // own stacking context (e.g. a `relative z-10` wrapper — which is exactly
+  // what layers the page content above the CampfireParticles background on
+  // this and several other pages), `position: fixed` still escapes that
+  // ancestor's layout, but NOT its stacking context, so the whole dialog
+  // would paint behind anything outside that wrapper with a higher z-index,
+  // such as the sidebar. Portaling to body sidesteps that entirely, the same
+  // way the codebase's own Modal.tsx already does for other dialogs.
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -319,6 +330,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           </button>
         </div>
       </footer>
-    </div>
+    </div>,
+    document.body
   );
 };

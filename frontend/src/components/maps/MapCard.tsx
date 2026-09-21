@@ -30,7 +30,7 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
             alt={map.name}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
             onError={() => setImageFailed(true)}
           />
         ) : (

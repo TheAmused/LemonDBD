@@ -270,6 +270,14 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               options={layoutOptions}
               icon={<Compass className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.layoutLabel || 'Layout'}
+              label={
+                filters.layoutType == null ? (
+                  <>
+                    <span className="hidden sm:inline">{mapsDict?.filterAnyLayout || 'Any layout'}</span>
+                    <span className="sm:hidden">{mapsDict?.layoutLabel || 'Layout'}</span>
+                  </>
+                ) : undefined
+              }
             />
             <CustomDropdown
               value={filters.size ?? ANY}
@@ -278,6 +286,14 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               icon={<Maximize2 className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
               minWidthClass="min-w-[220px]"
+              label={
+                filters.size == null ? (
+                  <>
+                    <span className="hidden sm:inline">{mapsDict?.filterAnySize || 'Any size'}</span>
+                    <span className="sm:hidden">{mapsDict?.sizeLabel || 'Size'}</span>
+                  </>
+                ) : undefined
+              }
             />
             <CustomDropdown
               value={sortOrder}
@@ -286,6 +302,16 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               icon={<ArrowDownAZ className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.sortAria || 'Sort maps'}
               align="right"
+              label={
+                <>
+                  <span className="hidden sm:inline">
+                    {sortOrder === 'az' ? mapsDict?.sortAz || 'Name A to Z' : mapsDict?.sortZa || 'Name Z to A'}
+                  </span>
+                  <span className="sm:hidden">
+                    {sortOrder === 'az' ? mapsDict?.sortAzShort || 'A-Z' : mapsDict?.sortZaShort || 'Z-A'}
+                  </span>
+                </>
+              }
             />
             {filtersActive && (
               <button
@@ -378,7 +404,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                                 {group.realm}
                               </h3>
                             )}
-                            <div className="flex flex-wrap gap-3">
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 justify-items-center">
                               {group.maps.map((m) => (
                                 <MapCard key={m.id} map={m} backendBase={backendBase} onSelect={(map) => setOpenMapId(map.id)} />
                               ))}

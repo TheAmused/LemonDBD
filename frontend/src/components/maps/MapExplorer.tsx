@@ -8,8 +8,8 @@ import type { Dictionary } from '@/locales/types';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
+import { usePersistentString } from '@/hooks/usePersistentString';
 import {
-  EMPTY_MAP_FILTERS,
   filterAndSortRealmGroups,
   getLayoutTypeLabel,
   getLayoutTypeOptions,
@@ -23,7 +23,15 @@ import { CustomDropdown, type DropdownOption } from '@/components/common/CustomD
 import { MapCard } from './MapCard';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
+// Also what "no filter" persists as in localStorage, since the filter fields
+// themselves are `string | null` and usePersistentString only stores strings.
 const ANY = '__any__';
+
+const isValidLayoutFilter = (v: string): v is string =>
+  v === ANY || v === 'Indoor' || v === 'Outdoor' || v === 'Hybrid';
+const isValidSizeFilter = (v: string): v is MapSizeBucket | typeof ANY =>
+  v === ANY || v === 'small' || v === 'medium' || v === 'large';
+const isValidSortOrder = (v: string): v is MapSortOrder => v === 'az' || v === 'za';
 
 const FullscreenMapEngine = dynamic(
   () => import('./FullscreenMapEngine').then((m) => m.FullscreenMapEngine),
@@ -84,21 +92,47 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   });
 
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
-  const [filters, setFilters] = useState<MapAttributeFilters>(EMPTY_MAP_FILTERS);
-  const [sortOrder, setSortOrder] = useState<MapSortOrder>('az');
+  // Persisted: these are genuine preferences (which layout/size you're
+  // usually looking for, how you like the list sorted), not per-visit
+  // state, so they survive a refresh. Stored as plain strings (ANY sentinel
+  // for "no filter") since that's all usePersistentString handles; `filters`
+  // below is the `MapAttributeFilters` shape the rest of this file expects.
+  const [layoutTypeRaw, setLayoutTypeRaw] = usePersistentString(
+    'lemondbd_maps_filter_layout',
+    ANY,
+    isValidLayoutFilter
+  );
+  const [sizeRaw, setSizeRaw] = usePersistentString(
+    'lemondbd_maps_filter_size',
+    ANY as MapSizeBucket | typeof ANY,
+    isValidSizeFilter
+  );
+  const [sortOrder, setSortOrder] = usePersistentString(
+    'lemondbd_maps_sort_order',
+    'az' as MapSortOrder,
+    isValidSortOrder
+  );
+  const filters: MapAttributeFilters = useMemo(
+    () => ({
+      layoutType: layoutTypeRaw === ANY ? null : layoutTypeRaw,
+      size: sizeRaw === ANY ? null : sizeRaw,
+    }),
+    [layoutTypeRaw, sizeRaw]
+  );
+  const clearFilters = () => {
+    setLayoutTypeRaw(ANY);
+    setSizeRaw(ANY);
+  };
   const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 3);
   const filtersActive = hasActiveMapFilters(filters);
 
   useEffect(() => {
     if (hideSearch) {
       if (search) setSearch('');
-      setFilters(EMPTY_MAP_FILTERS);
+      clearFilters();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hideSearch]);
-
-  const setFilter = <K extends keyof MapAttributeFilters>(key: K, value: MapAttributeFilters[K]) =>
-    setFilters((prev) => ({ ...prev, [key]: value }));
 
   const mapsDict = dict?.maps;
   const layoutOptions: DropdownOption[] = useMemo(
@@ -265,8 +299,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
           {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
           <div className="flex flex-wrap items-center justify-center gap-2" data-testid="map-filters" inert={hideSearch}>
             <CustomDropdown
-              value={filters.layoutType ?? ANY}
-              onChange={(v) => setFilter('layoutType', v === ANY ? null : v)}
+              value={layoutTypeRaw}
+              onChange={setLayoutTypeRaw}
               options={layoutOptions}
               icon={<Compass className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.layoutLabel || 'Layout'}
@@ -280,8 +314,8 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               }
             />
             <CustomDropdown
-              value={filters.size ?? ANY}
-              onChange={(v) => setFilter('size', v === ANY ? null : v)}
+              value={sizeRaw}
+              onChange={setSizeRaw}
               options={sizeOptions}
               icon={<Maximize2 className="h-3.5 w-3.5" />}
               ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
@@ -316,7 +350,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             {filtersActive && (
               <button
                 type="button"
-                onClick={() => setFilters(EMPTY_MAP_FILTERS)}
+                onClick={clearFilters}
                 className="inline-flex cursor-pointer items-center gap-1 rounded-xl px-3 py-2 text-xs font-mono font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-accent-red"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
@@ -365,7 +399,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   aria-expanded={expanded}
                   aria-controls={`realm-panel-${realm}`}
                   aria-label={`${expanded ? dict?.maps?.collapseRealmAria || 'Collapse realm' : dict?.maps?.expandRealmAria || 'Expand realm'}: ${realm}`}
-                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color'}`}
+                  className={`group relative aspect-square w-full min-h-[48px] touch-manipulation overflow-hidden rounded-2xl border-2 text-left cursor-pointer transition-transform duration-200 hover:scale-[1.03] active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
                   {bannerSrc ? (
                     <img
@@ -404,7 +438,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                                 {group.realm}
                               </h3>
                             )}
-                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 justify-items-center">
+                            <div className="grid grid-cols-3 gap-2 justify-items-center sm:flex sm:flex-wrap sm:justify-start sm:gap-3">
                               {group.maps.map((m) => (
                                 <MapCard key={m.id} map={m} backendBase={backendBase} onSelect={(map) => setOpenMapId(map.id)} />
                               ))}

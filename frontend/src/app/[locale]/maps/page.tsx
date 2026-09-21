@@ -22,6 +22,10 @@ const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
   { ssr: false }
 );
+const CampfireParticles = dynamic(
+  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
+  { ssr: false }
+);
 
 function MapsPageInner() {
   const params = useParams();
@@ -101,8 +105,10 @@ function MapsPageInner() {
       activeCategory="maps"
       onSelectCategory={handleSelectCategory}
       customPadding="p-4 sm:p-6 lg:p-7"
-      mainClassName="min-h-screen flex flex-col gap-4"
+      mainClassName="relative min-h-screen flex flex-col gap-4"
     >
+      <CampfireParticles />
+      <div className="relative z-10 flex flex-col gap-4">
         <div className="flex justify-center">
           <ToggleSwitch
             value={searchMode}
@@ -124,6 +130,7 @@ function MapsPageInner() {
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}
         />
+      </div>
     </PageShell>
   );
 }

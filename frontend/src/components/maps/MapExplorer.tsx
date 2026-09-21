@@ -30,11 +30,11 @@ const FullscreenMapEngine = dynamic(
   { ssr: false }
 );
 
-// Must mirror the grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 classes below.
+// Must mirror the grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 classes below.
 const REALM_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
   { minWidth: 1024, columns: 6 },
-  { minWidth: 768, columns: 4 },
-  { minWidth: 640, columns: 3 },
+  { minWidth: 768, columns: 5 },
+  { minWidth: 640, columns: 4 },
 ];
 
 // Must match the panel wrapper's transition-duration below.
@@ -86,7 +86,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
   const [filters, setFilters] = useState<MapAttributeFilters>(EMPTY_MAP_FILTERS);
   const [sortOrder, setSortOrder] = useState<MapSortOrder>('az');
-  const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 2);
+  const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 3);
   const filtersActive = hasActiveMapFilters(filters);
 
   useEffect(() => {
@@ -320,7 +320,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       )}
 
       {!loading && displayedGroups.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
           {displayedGroups.map(({ realm, maps: realmMaps }, index) => {
             const realmImage = realmImages[realm];
             const bannerSrc = realmImage
@@ -354,11 +354,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                       <ImageOff className="h-8 w-8 text-text-muted" />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 via-bg-primary/20 to-transparent" />
-                  <h2 className="absolute bottom-2 left-2 right-2 text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
+                  <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/90 via-bg-primary/20 to-transparent" />
+                  <h2 className="absolute top-2 left-2 right-2 text-center text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
                     {realm}
                   </h2>
-                  <span className="absolute top-2 left-2 rounded-full bg-bg-primary/70 px-2 py-0.5 text-xs font-mono text-text-inverted">
+                  <span className="absolute bottom-2 right-2 rounded-full bg-bg-primary/70 px-2 py-0.5 text-xs font-mono text-text-inverted">
                     {realmMaps.length}
                   </span>
                 </button>

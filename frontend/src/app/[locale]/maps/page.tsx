@@ -17,6 +17,9 @@ import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { usePersistentString } from '@/hooks/usePersistentString';
+
+const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';
 
 const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
@@ -35,7 +38,7 @@ function MapsPageInner() {
   const dict = useDictionary();
   const initialMapName = searchParams?.get('mapName') || '';
 
-  const [searchMode, setSearchMode] = useState<'text' | 'voice'>('text');
+  const [searchMode, setSearchMode] = usePersistentString('lemondbd_maps_search_mode', 'text', isValidSearchMode);
 
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
   const [selectedMap, setSelectedMap] = useState<{

@@ -296,7 +296,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         <div
           role="group"
           aria-label={dict?.filters?.category}
-          className="relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-2xl shadow-inner select-none transition-colors"
+          className="order-2 sm:order-1 relative flex items-center w-full sm:w-72 h-11 p-1 bg-bg-primary border border-border-color rounded-2xl shadow-inner select-none transition-colors"
         >
           <span
             aria-hidden="true"
@@ -334,7 +334,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </button>
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="order-1 sm:order-2 flex items-center justify-center sm:justify-start gap-3 w-full sm:w-auto">
           <button
             type="button"
             onClick={handleToggleOwnershipMode}
@@ -356,7 +356,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
           </button>
         </div>
 
-        <div className="relative w-full sm:w-72">
+        <div className="order-3 relative w-full sm:w-72">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
           <input
             type="text"
@@ -409,7 +409,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       ) : (
         <section
           aria-label={dict?.characterDetail?.characterOverview}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 sm:gap-6"
+          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4 md:gap-6"
         >
           {filteredCharacters.map((char, idx) => {
             const isSurvivor = char.category?.toLowerCase() === 'survivor';
@@ -442,9 +442,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                 }}
                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation"
               >
-                <div className="absolute top-2 right-2 z-10">
+                <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10">
                   <span
-                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border backdrop-blur-md ${
+                    className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-[9px] sm:text-[10px] font-bold border backdrop-blur-md ${
                       isSurvivor
                         ? 'bg-accent-green/10 text-accent-green border-accent-green/30'
                         : 'bg-accent-red/10 text-accent-red border-accent-red/30'
@@ -499,8 +499,8 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/70 via-transparent to-transparent" />
                 </div>
 
-                <div className="p-3.5 space-y-1">
-                  <h3 className="font-extrabold text-sm text-text-primary group-hover:text-accent-red transition-colors line-clamp-1">
+                <div className="p-2 sm:p-3.5 space-y-1">
+                  <h3 className="font-extrabold text-xs sm:text-sm text-text-primary group-hover:text-accent-red transition-colors line-clamp-1">
                     {char.name}
                   </h3>
                   {ownershipMode && !isOwned && (

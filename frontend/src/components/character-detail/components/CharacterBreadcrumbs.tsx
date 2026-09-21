@@ -46,22 +46,15 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
   const roleParam = isSurvivor ? 'Survivor' : 'Killer';
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-color pb-4 w-full">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:border-b sm:border-border-color pb-0 sm:pb-4 w-full">
       <nav aria-label={t.breadcrumbs || 'Breadcrumb Navigation'} className="flex items-center gap-2 text-xs sm:text-sm font-semibold">
         <Link
           href={`/${currentLocale}/characters?role=${roleParam}`}
-          className="flex items-center gap-1.5 text-text-secondary hover:text-text-primary transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          <span>{t.allCharacters || 'Characters Hub'}</span>
-        </Link>
-        <span className="text-text-muted">/</span>
-        <Link
-          href={`/${currentLocale}/characters?role=${roleParam}`}
-          className={`font-bold hover:underline transition-colors ${
+          className={`flex items-center gap-1 font-bold hover:underline transition-colors ${
             isSurvivor ? 'text-accent-green hover:text-accent-green-hover' : 'text-accent-red hover:text-accent-red-hover'
           }`}
         >
+          <ChevronLeft className="h-4 w-4" />
           {roleLabel}
         </Link>
         <span className="text-text-muted">/</span>
@@ -70,7 +63,7 @@ export const CharacterBreadcrumbs: React.FC<CharacterBreadcrumbsProps> = ({
         </span>
       </nav>
 
-      <div className="flex items-center gap-2 self-end sm:self-auto">
+      <div className="hidden sm:flex items-center gap-2 self-end sm:self-auto">
         {prevChar && (
           <Link
             href={`/${currentLocale}/characters/${getCharacterSlug(prevChar.name)}`}

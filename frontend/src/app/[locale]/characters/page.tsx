@@ -14,6 +14,11 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { getBackendBaseUrl } from '@/utils/api';
 
+const CampfireParticles = dynamic(
+  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
+  { ssr: false }
+);
+
 export default function CharactersPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
@@ -29,11 +34,14 @@ export default function CharactersPage() {
       locale={locale}
       dict={dict}
       activeCategory="characters"
-      mainClassName="overflow-y-auto"
+      mainClassName="relative overflow-y-auto"
     >
-      <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
-        <CharactersHub dict={dict} />
-      </Suspense>
+      <CampfireParticles />
+      <div className="relative z-10">
+        <Suspense fallback={<CharactersGridSkeleton dict={dict} />}>
+          <CharactersHub dict={dict} />
+        </Suspense>
+      </div>
     </PageShell>
   );
 }

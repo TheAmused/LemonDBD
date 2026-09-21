@@ -22,6 +22,11 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson } from '@/services/dataCache';
 import { getBackendBaseUrl } from '@/utils/api';
 
+const CampfireParticles = dynamic(
+  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
+  { ssr: false }
+);
+
 export default function CharacterDetailPage() {
   const params = useParams();
   const rawLocale = params?.locale;
@@ -83,8 +88,10 @@ export default function CharacterDetailPage() {
       locale={locale}
       dict={dict}
       activeCategory="characters"
-      mainClassName="overflow-y-auto"
+      mainClassName="relative overflow-y-auto"
     >
+      <CampfireParticles />
+      <div className="relative z-10">
         {loading ? (
           <CharacterDetailSkeleton dict={dict} />
         ) : notFound || !detailData ? (
@@ -119,6 +126,7 @@ export default function CharacterDetailPage() {
             />
           </Suspense>
         )}
+      </div>
     </PageShell>
   );
 }

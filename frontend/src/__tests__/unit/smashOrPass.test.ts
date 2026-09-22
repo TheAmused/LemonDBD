@@ -4,7 +4,44 @@ import test from 'node:test';
 import assert from 'node:assert';
 import { SmashSounds } from '@/utils/../components/smash-or-pass/SmashSoundEffects';
 import { localizedProfile } from '../../utils/entityProfile';
-import type { EntityMetadata } from '../../types/smashOrPass';
+import type { EntityMetadata, EntityItem, RosterItem } from '../../types/smashOrPass';
+
+test('SmashOrPass: Types & Roster/Entity Contracts', async (t) => {
+  await t.test('RosterItem uses direct name and description without name_i18n_key', () => {
+    const roster: RosterItem = {
+      id: 'canon',
+      slug: 'canon',
+      name: 'Dead by Daylight: Fog Canon',
+      description: 'Official 98 Characters',
+      theme_color: '#ff0055',
+      category: 'DBD Canon',
+      is_nsfw: false,
+      is_active: true,
+      entity_count: 98,
+    };
+    assert.strictEqual(roster.name, 'Dead by Daylight: Fog Canon');
+    assert.strictEqual(roster.description, 'Official 98 Characters');
+    assert.strictEqual('name_i18n_key' in roster, false);
+    assert.strictEqual('description_i18n_key' in roster, false);
+  });
+
+  await t.test('EntityItem supports dual-identity watermarks and real_name', () => {
+    const entity: EntityItem = {
+      id: 'e-onryo',
+      roster_id: 'canon',
+      slug: 'the_onryo',
+      name: 'The Onry?',
+      real_name: 'Sadako Yamamura',
+      watermark_left: 'THE ONRY?',
+      watermark_right: 'SADAKO',
+      role: 'Killer',
+      gender: 'female',
+    };
+    assert.strictEqual(entity.real_name, 'Sadako Yamamura');
+    assert.strictEqual(entity.watermark_left, 'THE ONRY?');
+    assert.strictEqual(entity.watermark_right, 'SADAKO');
+  });
+});
 
 test('SmashOrPass: Tier Classification & Calculations', async (t) => {
   await t.test('calculates correct tier bands for smash rates', () => {
@@ -104,8 +141,8 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
       {
         id: 'r-1',
         slug: 'canon',
-        name_i18n_key: 'smashOrPass.rosters.canon.name',
-        description_i18n_key: 'smashOrPass.rosters.canon.desc',
+        name: 'Dead by Daylight: Fog Canon',
+        description: 'Official 98 Characters',
         theme_color: '#ff0055',
         category: 'DBD Canon',
         is_nsfw: false,
@@ -824,3 +861,150 @@ test('SmashOrPass: Voting, Stats, Reset, and Revote Complete Lifecycle', async (
   });
 });
 
+
+test('SmashOrPass: Dynamic Flag Sampling Logic', async (t) => {
+  const sampleFlags = (flags: string[]): string[] => {
+    if (!flags || flags.length <= 3) return flags || [];
+    const sampleCount = Math.random() < 0.5 ? 2 : 3;
+    const copy = [...flags];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy.slice(0, sampleCount);
+  };
+
+  await t.test('keeps all flags when pool length <= 3', () => {
+    const emptyPool: string[] = [];
+    assert.deepStrictEqual(sampleFlags(emptyPool), []);
+
+    const singlePool = ['Flag 1'];
+    assert.deepStrictEqual(sampleFlags(singlePool), ['Flag 1']);
+
+    const twoPool = ['Flag 1', 'Flag 2'];
+    assert.deepStrictEqual(sampleFlags(twoPool), ['Flag 1', 'Flag 2']);
+
+    const threePool = ['Flag 1', 'Flag 2', 'Flag 3'];
+    assert.deepStrictEqual(sampleFlags(threePool), ['Flag 1', 'Flag 2', 'Flag 3']);
+  });
+
+  await t.test('samples 2 to 3 items when pool length > 3', () => {
+    const fivePool = ['Flag 1', 'Flag 2', 'Flag 3', 'Flag 4', 'Flag 5'];
+    for (let i = 0; i < 20; i++) {
+      const sampled = sampleFlags(fivePool);
+      assert.ok(sampled.length === 2 || sampled.length === 3, `Sampled length ${sampled.length} should be 2 or 3`);
+      for (const flag of sampled) {
+        assert.ok(fivePool.includes(flag), `Sampled flag ${flag} must be from original pool`);
+      }
+      // Ensure all items in sample are unique
+      const uniqueSet = new Set(sampled);
+      assert.strictEqual(uniqueSet.size, sampled.length, 'Sampled items must be unique');
+    }
+  });
+});
+
+test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
+  const cleanWatermark = (str: string): string => {
+    return str.replace(/[()[\]"']/g, '').trim();
+  };
+
+  const getWatermarkFontSize = (str: string): string => {
+    return str.length > 10
+      ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'
+      : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl';
+  };
+
+  const resolveWatermarks = (character: EntityItem) => {
+    const isSurvivor = character.role === 'Survivor';
+    const isKiller = character.role === 'Killer';
+
+    let leftWatermark = cleanWatermark(
+      character.watermark_left || (isSurvivor ? (character.name || '').split(' ')[0] : character.name || '')
+    );
+    let rightWatermark = cleanWatermark(
+      character.watermark_right ||
+        (isSurvivor
+          ? (character.name || '').split(' ').slice(1).join(' ')
+          : character.real_name || (isKiller ? 'KILLER' : 'SURVIVOR'))
+    );
+
+    if (!leftWatermark) {
+      leftWatermark = cleanWatermark(character.name || (isSurvivor ? 'SURVIVOR' : 'KILLER'));
+    }
+    if (!rightWatermark) {
+      rightWatermark = isKiller ? 'KILLER' : 'SURVIVOR';
+    }
+
+    return { leftWatermark, rightWatermark };
+  };
+
+  await t.test('cleans parentheses and quotes from watermarks', () => {
+    assert.strictEqual(cleanWatermark('The Shape ("Michael Myers")'), 'The Shape Michael Myers');
+    assert.strictEqual(cleanWatermark('Sadako (Yamamura)'), 'Sadako Yamamura');
+  });
+
+  await t.test('clamps font size for long watermarks (> 10 characters)', () => {
+    assert.strictEqual(getWatermarkFontSize('SHORT'), 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl');
+    assert.strictEqual(getWatermarkFontSize('1234567890'), 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl');
+    assert.strictEqual(getWatermarkFontSize('THE EXECUTIONER'), 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl');
+    assert.strictEqual(getWatermarkFontSize('SADAKO YAMAMURA'), 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl');
+  });
+
+  await t.test('uses explicit watermark_left and watermark_right when provided', () => {
+    const entity: EntityItem = {
+      id: 'e-1',
+      roster_id: 'r-1',
+      slug: 'the_onryo',
+      name: 'The Onry?',
+      real_name: 'Sadako Yamamura',
+      watermark_left: 'THE ONRY?',
+      watermark_right: 'SADAKO',
+      role: 'Killer',
+      gender: 'female',
+    };
+    const { leftWatermark, rightWatermark } = resolveWatermarks(entity);
+    assert.strictEqual(leftWatermark, 'THE ONRY?');
+    assert.strictEqual(rightWatermark, 'SADAKO');
+  });
+
+  await t.test('falls back gracefully for survivor and killer without explicit watermarks', () => {
+    const survivor: EntityItem = {
+      id: 'e-2',
+      roster_id: 'r-1',
+      slug: 'dwight_fairfield',
+      name: 'Dwight Fairfield',
+      role: 'Survivor',
+      gender: 'male',
+    };
+    const resSurv = resolveWatermarks(survivor);
+    assert.strictEqual(resSurv.leftWatermark, 'Dwight');
+    assert.strictEqual(resSurv.rightWatermark, 'Fairfield');
+
+    const killer: EntityItem = {
+      id: 'e-3',
+      roster_id: 'r-1',
+      slug: 'the_trapper',
+      name: 'The Trapper',
+      real_name: 'Evan MacMillan',
+      role: 'Killer',
+      gender: 'male',
+    };
+    const resKiller = resolveWatermarks(killer);
+    assert.strictEqual(resKiller.leftWatermark, 'The Trapper');
+    assert.strictEqual(resKiller.rightWatermark, 'Evan MacMillan');
+  });
+
+  await t.test('ensures neither side is ever empty', () => {
+    const fallbackKiller: EntityItem = {
+      id: 'e-4',
+      roster_id: 'r-1',
+      slug: 'unknown_killer',
+      name: '',
+      role: 'Killer',
+      gender: 'all',
+    };
+    const resEmpty = resolveWatermarks(fallbackKiller);
+    assert.strictEqual(resEmpty.leftWatermark, 'KILLER');
+    assert.strictEqual(resEmpty.rightWatermark, 'KILLER');
+  });
+});

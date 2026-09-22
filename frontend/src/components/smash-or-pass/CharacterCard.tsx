@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/CharacterCard.tsx
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import {
   Heart,
   RotateCw,
@@ -74,6 +74,27 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
+
+  // Dynamic 2?3 flag sampling helper: if pool <= 3 keep all; if > 3 randomly pick 2 or 3 items
+  const sampleFlags = (flags: string[]): string[] => {
+    if (!flags || flags.length <= 3) return flags || [];
+    const sampleCount = Math.random() < 0.5 ? 2 : 3;
+    const copy = [...flags];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy.slice(0, sampleCount);
+  };
+
+  // Sample flags stably per character view (stable across card flips)
+  const sampledGreenFlags = useMemo(() => {
+    return sampleFlags(profile.green_flags);
+  }, [character.slug || character.id, profile.green_flags]);
+
+  const sampledRedFlags = useMemo(() => {
+    return sampleFlags(profile.red_flags);
+  }, [character.slug || character.id, profile.red_flags]);
 
   useEffect(() => {
     setIsFlipped(false);
@@ -520,30 +541,30 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 </div>
               )}
 
-              {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
+              {(sampledGreenFlags.length > 0 || sampledRedFlags.length > 0) && (
                 <div className="grid grid-cols-1 gap-1.5">
-                  {profile.green_flags.length > 0 && (
+                  {sampledGreenFlags.length > 0 && (
                     <div className="bg-accent-green/10 border border-accent-green/30 p-2.5 rounded-2xl space-y-0.5">
                       <span className="flex items-center gap-1 text-xs font-black text-accent-green">
                         <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                         {rawSmashDict?.greenFlags || ''}
                       </span>
                       <ul className="text-xs text-accent-green/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {profile.green_flags.map((flag: string, idx: number) => (
+                        {sampledGreenFlags.map((flag: string, idx: number) => (
                           <li key={idx}>{flag}</li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {profile.red_flags.length > 0 && (
+                  {sampledRedFlags.length > 0 && (
                     <div className="bg-accent-red/10 border border-accent-red/30 p-2.5 rounded-2xl space-y-0.5">
                       <span className="flex items-center gap-1 text-xs font-black text-accent-red">
                         <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
                         {rawSmashDict?.redFlags || ''}
                       </span>
                       <ul className="text-xs text-accent-red/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {profile.red_flags.map((flag: string, idx: number) => (
+                        {sampledRedFlags.map((flag: string, idx: number) => (
                           <li key={idx}>{flag}</li>
                         ))}
                       </ul>

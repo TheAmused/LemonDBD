@@ -50,6 +50,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   if (!character) return null;
 
   const isSurvivor = character.role === 'Survivor';
+  const isKiller = character.role === 'Killer';
   const isMonster = character.gender === 'monster_other';
   const isFemale = character.gender === 'female';
 
@@ -126,40 +127,63 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     SmashSounds.playHoverTick();
   };
 
-  // Name splitting for flanking background typography
-  const rawName = (character.name || '').trim();
-  const nameParts = rawName.split(/\s+/);
-  const firstName = nameParts[0] || rawName;
-  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    // Clean watermark helper: remove unwanted characters like parentheses and quotes
+  const cleanWatermark = (str: string): string => {
+    return str.replace(/[()[\]"']/g, '').trim();
+  };
+
+  // Responsive font size clamping helper (strings > 10 chars use clamped smaller scale to prevent clipping or line wraps)
+  const getWatermarkFontSize = (str: string): string => {
+    return str.length > 10
+      ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'
+      : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl';
+  };
+
+  // Dual-identity watermarks with explicit fields and sensible fallbacks
+  let leftWatermark = cleanWatermark(
+    character.watermark_left || (isSurvivor ? (character.name || '').split(' ')[0] : character.name || '')
+  );
+  let rightWatermark = cleanWatermark(
+    character.watermark_right ||
+      (isSurvivor
+        ? (character.name || '').split(' ').slice(1).join(' ')
+        : character.real_name || (isKiller ? 'KILLER' : 'SURVIVOR'))
+  );
+
+  // Ensure neither side is ever empty
+  if (!leftWatermark) {
+    leftWatermark = cleanWatermark(character.name || (isSurvivor ? 'SURVIVOR' : 'KILLER'));
+  }
+  if (!rightWatermark) {
+    rightWatermark = isKiller ? 'KILLER' : 'SURVIVOR';
+  }
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden select-none">
-      {/* 1. FLANKING WATERMARK TYPOGRAPHY (FIRST NAME ON LEFT, SURNAME ON RIGHT AROUND CARD) */}
+      {/* 1. FLANKING WATERMARK TYPOGRAPHY (DUAL-IDENTITY: LEFT & RIGHT AROUND CARD) */}
       <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
-        {/* Left Side: First Name */}
+        {/* Left Side: Watermark Left */}
         <div
-          key={`watermark-first-${character.slug}`}
+          key={`watermark-left-${character.slug}`}
           className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 right-[50%] mr-32 sm:mr-40 md:mr-52 lg:mr-64 text-right opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           onMouseEnter={handleCardHover}
         >
-          <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 inline-block group-hover:scale-105 transform">
-            {firstName}
+          <span className={`${getWatermarkFontSize(leftWatermark)} font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 inline-block group-hover:scale-105 transform whitespace-nowrap`}>
+            {leftWatermark}
           </span>
         </div>
 
-        {/* Right Side: Surname / Second Name Part */}
-        {lastName && (
-          <div
-            key={`watermark-last-${character.slug}`}
-            className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 text-left opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
-            style={{ animationDelay: '100ms' }}
-            onMouseEnter={handleCardHover}
-          >
-            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 inline-block group-hover:scale-105 transform">
-              {lastName}
-            </span>
-          </div>
-        )}
+        {/* Right Side: Watermark Right */}
+        <div
+          key={`watermark-right-${character.slug}`}
+          className="pointer-events-auto anim-watermark-dissolve absolute top-[44%] -translate-y-1/2 left-[50%] ml-32 sm:ml-40 md:ml-52 lg:ml-64 text-left opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          style={{ animationDelay: '100ms' }}
+          onMouseEnter={handleCardHover}
+        >
+          <span className={`${getWatermarkFontSize(rightWatermark)} font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red group-hover:drop-shadow-[0_0_60px_var(--accent-red)] transition-all duration-500 inline-block group-hover:scale-105 transform whitespace-nowrap`}>
+            {rightWatermark}
+          </span>
+        </div>
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}

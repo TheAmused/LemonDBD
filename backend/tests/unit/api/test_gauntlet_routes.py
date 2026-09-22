@@ -2,7 +2,7 @@
 import pytest
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
-from app.models import Killer, Perk
+from app.models import Killer, Perk, Survivor
 from app.services.user_service import UserService
 from tests.unit.conftest import make_chapter
 
@@ -54,6 +54,66 @@ class TestGauntletRoutes:
         _, _, headers = gauntlet_auth_setup
         res = client.get("/api/v1/gauntlet-streak/run?role=bogus", headers=headers)
         assert res.status_code == 400
+
+    def test_run_rejects_unknown_game_mode(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = gauntlet_auth_setup
+        res = client.get("/api/v1/gauntlet-streak/run?role=killer&game_mode=bogus", headers=headers)
+        assert res.status_code == 400
+
+    def test_run_is_created_per_game_mode(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = gauntlet_auth_setup
+        original = client.get("/api/v1/gauntlet-streak/run?role=killer", headers=headers).get_json()["run"]
+        duo = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_duo", headers=headers
+        ).get_json()["run"]
+        assert original["game_mode"] == "original"
+        assert duo["game_mode"] == "lemon_duo"
+        assert original["id"] != duo["id"]
+
+    def test_result_keeps_the_runs_game_mode(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = gauntlet_auth_setup
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=killer&game_mode=lemon_squad", headers=headers
+        ).get_json()["run"]
+        res = client.post(
+            "/api/v1/gauntlet-streak/result",
+            json={"role": "killer", "run_id": run["id"], "result": "win"},
+            headers=headers,
+        )
+        assert res.status_code == 200
+        assert res.get_json()["run"]["id"] == run["id"]
+        assert res.get_json()["run"]["game_mode"] == "lemon_squad"
+
+    def test_solo_run_lets_the_player_pick_the_character(
+        self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        from app.core.extensions import db
+
+        _, _, headers = gauntlet_auth_setup
+        for name in ("Meg Thomas", "Dwight Fairfield"):
+            db.session.add(Survivor(name=name, chapter_id=make_chapter(db.session).id))
+        db.session.commit()
+
+        run = client.get(
+            "/api/v1/gauntlet-streak/run?role=survivor&game_mode=lemon_solo", headers=headers
+        ).get_json()["run"]
+        picked = client.post(
+            "/api/v1/gauntlet-streak/target",
+            json={"run_id": run["id"], "character": "Dwight Fairfield"},
+            headers=headers,
+        )
+        assert picked.status_code == 200
+        assert picked.get_json()["run"]["current_character_id"] == "Dwight Fairfield"
+        assert picked.get_json()["run"]["target_revealed"] is True
+
+        missing = client.post("/api/v1/gauntlet-streak/target", json={"run_id": run["id"]}, headers=headers)
+        assert missing.status_code == 400
 
     def test_get_run_auto_creates(
         self, client: FlaskClient, gauntlet_auth_setup: tuple[int, str, dict[str, str]]

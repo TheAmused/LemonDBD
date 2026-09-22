@@ -4,7 +4,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, BookOpen } from 'lucide-react';
+import { X, BookOpen, ChevronLeft } from 'lucide-react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface ChallengeIntroTile {
@@ -45,6 +45,9 @@ export interface ChallengeIntroModalShellProps {
   escapeDisabled?: boolean;
   selectedValue?: string;
   currentLabel: string;
+  /** Set on a second-level screen to show a back arrow next to the title. */
+  onBack?: () => void;
+  backLabel?: string;
   dict?: Dictionary;
 }
 
@@ -63,6 +66,8 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   escapeDisabled,
   selectedValue,
   currentLabel,
+  onBack,
+  backLabel,
   dict,
 }) => {
   useEffect(() => {
@@ -87,6 +92,16 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       >
         <div className="flex items-center justify-between p-6 pb-4">
           <div className="flex items-center gap-3">
+            {onBack && (
+              <button
+                type="button"
+                onClick={onBack}
+                aria-label={backLabel || 'Back'}
+                className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            )}
             <div className={`p-2.5 border rounded-xl ${iconClassName}`}>
               <Icon className="w-6 h-6" />
             </div>

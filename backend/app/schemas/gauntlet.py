@@ -11,12 +11,25 @@ class TierInfo(TypedDict):
     character_perks_only: bool
     description: str
     roster_limit: int
+    # Unique (teachable) perks of the target dealt on a tier that otherwise allows none.
+    random_perk_count: int
+
+
+class GauntletPlayerLoadout(TypedDict, total=False):
+    character: str
+    character_perks: list[PerkPayload]
+    random_perks: list[PerkPayload]
 
 
 class GauntletLoadout(TypedDict, total=False):
     # total=False: a run whose stored loadout JSON is missing or broken reads back as {}.
     character: str
     character_perks: list[PerkPayload]
+    random_perks: list[PerkPayload]
+    # One entry per character in play when a match has several; the fields above mirror the first.
+    players: list[GauntletPlayerLoadout]
+    # Set when several people share each character (squad): 2 means two players per entry in `players`.
+    players_per_character: int
     tier_info: TierInfo
 
 

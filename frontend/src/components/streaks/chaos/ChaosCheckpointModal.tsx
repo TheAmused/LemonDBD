@@ -37,20 +37,14 @@ export const ChaosCheckpointModal: React.FC<ChaosCheckpointModalProps> = ({ chec
         </div>
         <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-accent-green">
           <PartyPopper className="h-3.5 w-3.5" />
-          {dict?.streaks?.checkpointBanked || 'Checkpoint banked'}
+          {dict?.streaks?.checkpointBanked || 'Checkpoint reached'}
         </div>
         <h2 className="mt-2 text-3xl font-black tracking-tight text-text-primary">
           {checkpoint} {dict?.streaks?.winsSuffix || 'wins'}
         </h2>
         <p className="mt-2 text-sm text-text-secondary">
-          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-accent-green">{checkpoint}</strong>{dict?.streaks?.notToZero || ', not to zero.'}
+          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-accent-green">{checkpoint}</strong>.
         </p>
-        <button
-          onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-all hover:bg-accent-green-hover cursor-pointer"
-        >
-          {dict?.streaks?.keepGoing || 'Keep going'}
-        </button>
       </div>
     </div>
   );

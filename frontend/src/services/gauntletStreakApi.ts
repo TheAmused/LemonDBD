@@ -1,12 +1,24 @@
 // frontend/src/services/gauntletStreakApi.ts
-import { Role, RunResponse, SubmitResultResponse, StatsResponse, GauntletRun } from '../types/gauntletStreak';
+import {
+  DEFAULT_GAUNTLET_GAME_MODE,
+  GauntletGameMode,
+  Role,
+  RunResponse,
+  SubmitResultResponse,
+  StatsResponse,
+  GauntletRun,
+} from '../types/gauntletStreak';
 import { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('gauntlet-streak');
 
-export async function fetchRun(token: string, role: Role): Promise<RunResponse> {
-  return getJson<RunResponse>(token, `/run?role=${role}`);
+export async function fetchRun(
+  token: string,
+  role: Role,
+  gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE
+): Promise<RunResponse> {
+  return getJson<RunResponse>(token, `/run?role=${role}&game_mode=${gameMode}`);
 }
 
 export async function submitMatchResult(
@@ -23,15 +35,32 @@ export async function revealTarget(token: string, runId: number): Promise<Gauntl
   return data.run;
 }
 
-export async function resetRun(token: string, role: Role): Promise<GauntletRun> {
-  const data = await postJson<RunResponse>(token, '/run/reset', { role });
+export async function selectTarget(token: string, runId: number, character: string): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/target', { run_id: runId, character });
   return data.run;
 }
 
-export async function fetchStats(token: string, role: Role): Promise<StatsResponse> {
-  return getJson<StatsResponse>(token, `/stats?role=${role}`);
+export async function resetRun(
+  token: string,
+  role: Role,
+  gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE
+): Promise<GauntletRun> {
+  const data = await postJson<RunResponse>(token, '/run/reset', { role, game_mode: gameMode });
+  return data.run;
 }
 
-export async function fetchCompletions(token: string, role: Role): Promise<CompletionsResponse> {
-  return getJson<CompletionsResponse>(token, `/completions?role=${role}`);
+export async function fetchStats(
+  token: string,
+  role: Role,
+  gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE
+): Promise<StatsResponse> {
+  return getJson<StatsResponse>(token, `/stats?role=${role}&game_mode=${gameMode}`);
+}
+
+export async function fetchCompletions(
+  token: string,
+  role: Role,
+  gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE
+): Promise<CompletionsResponse> {
+  return getJson<CompletionsResponse>(token, `/completions?role=${role}&game_mode=${gameMode}`);
 }

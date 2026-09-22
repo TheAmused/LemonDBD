@@ -289,19 +289,19 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     <div className="w-full space-y-6" data-testid="map-explorer-root">
       <section
         aria-label={dict?.maps?.pageTitle || 'Tactical Map Command'}
-        className="relative flex w-full flex-col justify-center overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-4 sm:p-6 md:min-h-[14.5rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300"
+        className="relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300"
       >
         <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
         <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
 
-        <div className="relative z-10 grid grid-cols-[minmax(0,1fr)] items-center">
+        <div className="relative z-10 grid grid-cols-[minmax(0,1fr)] flex-1">
           <div
-            className={`[grid-area:1/1] flex flex-col justify-center space-y-4 transition-opacity duration-200 ${
+            className={`[grid-area:1/1] flex flex-1 flex-col transition-opacity duration-200 ${
               hideSearch ? 'invisible pointer-events-none opacity-0' : 'visible opacity-100'
             }`}
           >
             {modeSwitcherSlot && (
-              <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-2">
+              <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-3">
                 <div className="hidden md:flex md:flex-1" />
                 <div className="flex items-center justify-center shrink-0">
                   {modeSwitcherSlot}
@@ -310,25 +310,26 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               </div>
             )}
 
-            <div className="relative w-full sm:max-w-lg sm:mx-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
-                aria-label={dict?.maps?.searchAria || 'Search map or realm'}
-                tabIndex={hideSearch ? -1 : undefined}
-                className="w-full rounded-2xl border border-border-color bg-bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red"
-              />
-            </div>
+            <div className="flex-1 flex flex-col items-center justify-center space-y-4 py-1">
+              <div className="relative w-full sm:max-w-lg sm:mx-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
+                  aria-label={dict?.maps?.searchAria || 'Search map or realm'}
+                  tabIndex={hideSearch ? -1 : undefined}
+                  className="w-full rounded-2xl border border-border-color bg-bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red"
+                />
+              </div>
 
-            {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
-            <div
-              className="flex flex-wrap items-center justify-center gap-2"
-              data-testid="map-filters"
-              inert={hideSearch}
-            >
+              {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
+              <div
+                className="flex flex-wrap items-center justify-center gap-2"
+                data-testid="map-filters"
+                inert={hideSearch}
+              >
               <CustomDropdown
                 value={layoutTypeRaw}
                 onChange={setLayoutTypeRaw}
@@ -390,10 +391,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               )}
             </div>
           </div>
+        </div>
 
           {voiceSlot && (
             <div
-              className={`[grid-area:1/1] flex flex-col justify-center transition-opacity duration-200 ${
+              className={`[grid-area:1/1] flex flex-1 flex-col transition-opacity duration-200 ${
                 hideSearch ? 'visible opacity-100' : 'invisible pointer-events-none opacity-0'
               }`}
             >

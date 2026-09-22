@@ -27,6 +27,7 @@ export default {
   privacyNotice: "Uwaga dotycząca prywatności: Lokalny model przetwarza wszystkie komendy głosowe całkowicie offline w Twojej przeglądarce.",
   holdOrPress: "Przytrzymaj [V] lub kliknij mikrofon",
   holdVToTalkHint: "Przytrzymaj {key}, aby mówić, lub stuknij mikrofon i powiedz nazwę mapy",
+  tapToTalkMobileHint: "Stuknij mikrofon i powiedz nazwę mapy",
   micBlocked: "Mikrofon zablokowany. Udziel uprawnień do mikrofonu.",
   idleReady: "BEZCZYNNOŚĆ • GOTOWY",
   listeningSpeakNow: "SŁUCHANIE • MÓW TERAZ",

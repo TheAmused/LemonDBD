@@ -78,7 +78,7 @@ export const Modal: React.FC<ModalProps> = ({
   ariaDescribedBy,
   closeButtonAriaLabel,
   borderless = false,
-  zIndexClassName = 'z-50',
+  zIndexClassName = 'z-[60]',
   containerClassName = '',
 }) => {
   const handleKeyDown = useCallback(

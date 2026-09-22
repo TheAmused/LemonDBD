@@ -27,6 +27,7 @@ export default {
   privacyNotice: "Privacy Note: Local client-side model processes all voice commands entirely offline inside your browser.",
   holdOrPress: "Hold [V] or Click Mic",
   holdVToTalkHint: "Hold {key} to talk, or tap the mic and say a map name",
+  tapToTalkMobileHint: "Tap the mic and say a map name",
   micBlocked: "Microphone blocked. Please grant mic permissions.",
   idleReady: "IDLE • READY",
   listeningSpeakNow: "LISTENING • SPEAK NOW",

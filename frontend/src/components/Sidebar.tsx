@@ -221,7 +221,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </Link>
 
-          <WhatsNewLauncher dict={dict} />
+          <div className="hidden lg:block">
+            <WhatsNewLauncher dict={dict} />
+          </div>
         </div>
 
         <nav aria-label={dict?.sidebar?.navAria || 'Navigation'} className="mt-5 space-y-1">
@@ -282,13 +284,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <>
       <aside
         aria-label={dict?.sidebar?.navAria || 'Sidebar'}
-        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-border-color bg-bg-surface backdrop-blur-xl transition-transform duration-300"
+        className="lemon-shell-aside hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen lg:shrink-0 border-r border-border-color bg-bg-surface backdrop-blur-xl z-50"
       >
-        {renderSidebarContent()}
+        <div className="w-full h-full overflow-hidden flex flex-col">
+          <div className="w-64 h-full flex flex-col shrink-0">
+            {renderSidebarContent()}
+          </div>
+        </div>
 
         <button
           type="button"
           onClick={toggleSidebar}
+          data-testid="sidebar-toggle-button"
           title={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
           aria-label={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
           aria-expanded={!isCollapsed}
@@ -324,6 +331,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
+            data-testid="mobile-drawer-toggle"
             aria-expanded={mobileOpen}
             aria-label={dict?.sidebar?.openDrawer || 'Open Drawer'}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-color text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
@@ -335,7 +343,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-50 lg:hidden"
+          className="fixed inset-0 z-[60] lg:hidden"
           role="dialog"
           aria-modal="true"
         >
@@ -347,8 +355,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
+              data-testid="mobile-drawer-close"
               aria-label={dict?.sidebar?.closeDrawer || 'Close Drawer'}
-              className="absolute right-3 top-3 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer"
+              className="absolute right-3 top-3 z-20 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>

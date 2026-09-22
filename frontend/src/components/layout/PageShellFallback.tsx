@@ -50,8 +50,10 @@ export function PageShellFallback({
     <div className={outerClassName ?? DEFAULT_OUTER_CLASSNAME}>
       <aside
         aria-hidden="true"
-        className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-64 lg:flex-col border-r border-border-color bg-bg-surface/80 p-4 select-none animate-pulse"
-      />
+        className="lemon-shell-aside hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-screen lg:shrink-0 border-r border-border-color bg-bg-surface/80 select-none animate-pulse"
+      >
+        <div className="w-full h-full overflow-hidden p-4" />
+      </aside>
       {/* Reserves the space Sidebar's own sticky mobile header takes once it mounts, so it doesn't shift layout. */}
       <div aria-hidden="true" className="h-16 shrink-0 border-b border-border-color bg-bg-surface lg:hidden" />
       <main className={mainClasses}>{skeleton}</main>

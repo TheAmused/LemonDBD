@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { Flame, User, BarChart2, BookOpen, RotateCcw, History, Flag } from 'lucide-react';
+import { Flame, User, BarChart2, BookOpen, RotateCcw, History, Flag, Gauge } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
@@ -19,6 +19,8 @@ export interface GauntletHeaderProps {
   onOpenHistory: () => void;
   onOpenRules: () => void;
   onOpenReset: () => void;
+  /** Omit to hide the button, e.g. for a role with only one playable mode. */
+  onChangeMode?: () => void;
   dict?: Dictionary;
 }
 
@@ -32,6 +34,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   onOpenHistory,
   onOpenRules,
   onOpenReset,
+  onChangeMode,
   dict,
 }) => {
   return (
@@ -98,6 +101,17 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             <BookOpen className="w-4 h-4" />
             <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
           </button>
+
+          {onChangeMode && (
+            <button
+              onClick={onChangeMode}
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
+              title={dict?.streaks?.changeMode || 'Change Mode'}
+            >
+              <Gauge className="w-4 h-4" />
+              <span className="hidden sm:inline">{dict?.streaks?.changeMode || 'Change Mode'}</span>
+            </button>
+          )}
 
           <button
             onClick={onOpenStats}

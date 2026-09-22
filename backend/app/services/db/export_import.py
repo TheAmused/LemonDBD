@@ -82,10 +82,13 @@ SUPPORTED_EXPORT_TARGETS = [
 #: `slug` is the natural key and is never reassigned here.
 SMASH_ENTITY_FIELDS = [
     "name",
+    "real_name",
     "role",
     "gender",
     "media_url",
     "media_type",
+    "watermark_left",
+    "watermark_right",
     "archetype",
     "bio",
     "tagline",
@@ -975,15 +978,16 @@ class DatabaseExportImportService:
                     if not roster_obj:
                         roster_obj = Roster(
                             slug=r_row.get("slug"),
-                            name_i18n_key=r_row.get("name_i18n_key", ""),
-                            description_i18n_key=r_row.get("description_i18n_key", ""),
+                            name=r_row.get("name", ""),
+                            description=r_row.get("description", ""),
+                            translations=r_row.get("translations", {}),
                         )
                         db.session.add(roster_obj)
                         db.session.flush()
                         r_created += 1
                     else:
                         r_updated += 1
-                    for field in ["name_i18n_key", "description_i18n_key", "cover_image_url", "theme_color", "category", "is_nsfw", "is_active"]:
+                    for field in ["name", "description", "translations", "cover_image_url", "theme_color", "category", "is_nsfw", "is_active"]:
                         if field in r_row:
                             setattr(roster_obj, field, r_row[field])
 

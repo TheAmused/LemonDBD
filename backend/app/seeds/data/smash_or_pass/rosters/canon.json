@@ -5,8 +5,14 @@
   "rosters": [
     {
       "slug": "canon",
-      "name_i18n_key": "smashOrPass.rosters.canon.name",
-      "description_i18n_key": "smashOrPass.rosters.canon.desc",
+      "name": "Dead by Daylight: Fog Canon",
+      "description": "Original trial survivors and killers from the canon realm.",
+      "translations": {
+        "pl": {
+          "name": "Dead by Daylight: Kanon Mgły",
+          "description": "Oficjalne 98 postaci z mgły próby."
+        }
+      },
       "cover_image_url": "/static/avatars/rosters/canon.webp",
       "theme_color": "#ff0055",
       "category": "DBD",

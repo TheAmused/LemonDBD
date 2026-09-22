@@ -177,6 +177,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(changelog_bp)
     flask_app.register_blueprint(history_streak_bp)
     flask_app.register_blueprint(smash_or_pass_bp)
+    flask_app.register_blueprint(smash_or_pass_bp, url_prefix="/api/v1/smash", name="smash_alias")
     flask_app.register_blueprint(bug_reports_bp)
     flask_app.register_blueprint(admin_control_bp)
 

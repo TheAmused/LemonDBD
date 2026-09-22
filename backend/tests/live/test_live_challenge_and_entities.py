@@ -146,8 +146,9 @@ class TestLiveChallengesAndEntities:
             roster_slug = f"test_roster_{uuid.uuid4().hex[:8]}"
             roster = Roster(
                 slug=roster_slug,
-                name_i18n_key="roster.test.name",
-                description_i18n_key="roster.test.desc",
+                name="Test Live Roster",
+                description="Test Live Description",
+                translations={"pl": {"name": "Test Live Roster PL"}},
                 category="DBD",
                 is_active=True,
             )
@@ -184,12 +185,11 @@ class TestLiveChallengesAndEntities:
             stat.smash_count += 1
             stat.super_smash_count += 1
             stat.pass_count += 1
-            stat.calculate_rate()
             db.session.commit()
 
             reloaded_stat = db.session.scalars(
                 select(EntityStat).where(EntityStat.entity_id == entity.id)
             ).one()
             assert reloaded_stat.total_votes == 3
-            assert reloaded_stat.smash_rate == 66.7
+            assert round(reloaded_stat.smash_rate, 1) == 66.7
             assert len(entity.votes) == 3

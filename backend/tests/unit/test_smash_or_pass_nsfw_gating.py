@@ -33,8 +33,8 @@ def _insert_nsfw_fixture_roster(db_session: Session) -> Roster:
     roster = Roster(
         id=str(uuid.uuid4()),
         slug="test_nsfw_fixture_roster",
-        name_i18n_key="smashOrPass.rosters.testNsfw.name",
-        description_i18n_key="smashOrPass.rosters.testNsfw.desc",
+        name="Test NSFW Roster",
+        description="Test NSFW Description",
         theme_color="#ff0055",
         category="Test",
         is_nsfw=True,

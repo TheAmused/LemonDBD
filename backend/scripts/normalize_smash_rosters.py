@@ -59,10 +59,13 @@ def normalize_entity(entity: dict[str, Any], stats: dict[str, Any]) -> dict[str,
     row: dict[str, Any] = {
         "slug": entity["slug"],
         "name": entity["name"],
+        "real_name": _clean(entity.get("real_name")),
         "role": entity.get("role") or "Survivor",
         "gender": entity.get("gender") or "female",
         "media_url": entity.get("media_url"),
         "media_type": entity.get("media_type") or "image",
+        "watermark_left": _clean(entity.get("watermark_left")),
+        "watermark_right": _clean(entity.get("watermark_right")),
         # `title` and `archetype` were the same string stored twice.
         "archetype": _clean(meta.get("archetype") or meta.get("title") or english.get("title")),
     }
@@ -149,8 +152,9 @@ def normalize(directory: Path, dry_run: bool = False) -> dict[str, Any]:
             stats["rosters"] += 1
             rosters.append({
                 "slug": roster["slug"],
-                "name_i18n_key": roster["name_i18n_key"],
-                "description_i18n_key": roster["description_i18n_key"],
+                "name": roster["name"],
+                "description": roster.get("description", ""),
+                "translations": roster.get("translations") or {},
                 "cover_image_url": roster.get("cover_image_url"),
                 "theme_color": roster.get("theme_color") or "#ff0055",
                 "category": roster.get("category") or "DBD",

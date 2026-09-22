@@ -184,8 +184,9 @@ def main():
         for r in rosters_db:
             roster_dict = {
                 "slug": r.slug,
-                "name_i18n_key": r.name_i18n_key,
-                "description_i18n_key": r.description_i18n_key,
+                "name": r.name,
+                "description": r.description,
+                "translations": r.translations or {},
                 "cover_image_url": r.cover_image_url,
                 "theme_color": r.theme_color,
                 "category": r.category,
@@ -195,10 +196,13 @@ def main():
                     {
                         "slug": e.slug,
                         "name": e.name,
+                        "real_name": e.real_name,
                         "role": e.role,
                         "gender": e.gender,
                         "media_url": e.media_url,
                         "media_type": e.media_type,
+                        "watermark_left": e.watermark_left,
+                        "watermark_right": e.watermark_right,
                         # The profile is columns now; `metadata_json` was one
                         # blob restating them, so it exports as columns too.
                         "archetype": e.archetype,

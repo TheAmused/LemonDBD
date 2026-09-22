@@ -101,7 +101,15 @@ class TestSmashSeederService:
         assert canon["entity_count"] == 98
         assert canon["total_votes"] == 0
         assert canon["theme_color"] == "#ff0055"
-        assert canon["name_i18n_key"] == "smashOrPass.rosters.canon.name"
+        assert canon["name"] == "Dead by Daylight: Fog Canon"
+        assert canon["description"] == "Original trial survivors and killers from the canon realm."
+        assert "name_i18n_key" not in canon
+        assert "description_i18n_key" not in canon
+
+        # Test localized get_rosters
+        canon_pl = service.get_rosters(active_only=True, lang="pl")[0]
+        assert canon_pl["name"] == "Dead by Daylight: Kanon Mgły"
+        assert canon_pl["description"] == "Oficjalne 98 postaci z mgły próby."
 
     def test_service_get_feed_and_unvoted_filtering(self, db_session: Session) -> None:
         seed_smash_rosters()

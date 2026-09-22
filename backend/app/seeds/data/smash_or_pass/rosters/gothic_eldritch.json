@@ -5,8 +5,14 @@
   "rosters": [
     {
       "slug": "gothic_eldritch",
-      "name_i18n_key": "smashOrPass.rosters.gothic_eldritch.name",
-      "description_i18n_key": "smashOrPass.rosters.gothic_eldritch.desc",
+      "name": "Victorian & Gothic Eldritch",
+      "description": "Dark Victorian horrors and ancient eldritch beings.",
+      "translations": {
+        "pl": {
+          "name": "Wiktoriański i Gotycki Horror",
+          "description": "Mroczne wiktoriańskie koszmary i przedwieczne byty."
+        }
+      },
       "cover_image_url": "/static/avatars/rosters/gothic_eldritch.webp",
       "theme_color": "#a855f7",
       "category": "Eldritch",

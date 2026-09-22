@@ -5,8 +5,14 @@
   "rosters": [
     {
       "slug": "legendary_characters",
-      "name_i18n_key": "smashOrPass.rosters.legendary_characters.name",
-      "description_i18n_key": "smashOrPass.rosters.legendary_characters.desc",
+      "name": "Legendary Skins & Collabs",
+      "description": "Iconic crossover legends and special cosmetics.",
+      "translations": {
+        "pl": {
+          "name": "Legendarne Stroje i Mityczne Postacie",
+          "description": "Kultowe crossovery i specjalne skórki."
+        }
+      },
       "cover_image_url": "/static/avatars/rosters/legendary_characters.webp",
       "theme_color": "#ffd166",
       "category": "Collabs",

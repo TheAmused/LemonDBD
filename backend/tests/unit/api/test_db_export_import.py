@@ -589,7 +589,12 @@ class TestDatabaseExportImportSmashOrPass:
             from sqlalchemy import delete as sa_delete
             from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote
 
-            roster = Roster(slug="canon", name_i18n_key="roster.canon.name", description_i18n_key="roster.canon.desc")
+            roster = Roster(
+                slug="canon",
+                name="Dead by Daylight: Fog Canon",
+                description="Original trial survivors and killers.",
+                translations={"pl": {"name": "Dead by Daylight: Kanon Mgły", "description": "Oficjalne postacie."}},
+            )
             db.session.add(roster)
             db.session.flush()
             entity = Entity(roster_id=roster.id, slug="ada_wong", name="Ada Wong", role="Survivor")

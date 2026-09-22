@@ -29,8 +29,10 @@ class TestSmashOrPassDataIntegrity:
         rosters, _ = load_rosters_from_json_files()
         for r in rosters:
             assert r.get("slug"), f"roster missing slug: {r}"
-            assert r.get("name_i18n_key"), f"{r['slug']}: missing name_i18n_key"
-            assert r.get("description_i18n_key"), f"{r['slug']}: missing description_i18n_key"
+            assert r.get("name"), f"{r['slug']}: missing name"
+            assert r.get("description"), f"{r['slug']}: missing description"
+            assert "name_i18n_key" not in r, f"{r['slug']}: obsolete name_i18n_key present"
+            assert "description_i18n_key" not in r, f"{r['slug']}: obsolete description_i18n_key present"
             assert isinstance(r.get("is_nsfw", False), bool), f"{r['slug']}: is_nsfw not a bool"
             assert isinstance(r.get("is_active", True), bool), f"{r['slug']}: is_active not a bool"
 

@@ -26,10 +26,13 @@ class EntityResponse(BaseModel):
     roster_id: str
     slug: str
     name: str
+    real_name: str | None = None
     role: str
     gender: str
     media_url: str | None = None
     media_type: str = "image"
+    watermark_left: str | None = None
+    watermark_right: str | None = None
 
     # ---- the profile, in English. Was the `metadata_json` blob. ----
     archetype: str | None = None
@@ -62,8 +65,9 @@ class EntityResponse(BaseModel):
 class RosterResponse(BaseModel):
     id: str
     slug: str
-    name_i18n_key: str
-    description_i18n_key: str
+    name: str
+    description: str = ""
+    translations: dict[str, Any] | None = None
     cover_image_url: str | None = None
     theme_color: str
     category: str
@@ -72,6 +76,15 @@ class RosterResponse(BaseModel):
     created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Aliases for interface compliance and versatility
+RosterOut = RosterResponse
+EntityOut = EntityResponse
+RosterBase = RosterResponse
+RosterCreate = RosterResponse
+RosterUpdate = RosterResponse
+EntityBase = EntityResponse
 
 
 class VoteCreate(BaseModel):

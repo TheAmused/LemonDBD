@@ -5,8 +5,14 @@
   "rosters": [
     {
       "slug": "anime_manga",
-      "name_i18n_key": "smashOrPass.rosters.anime_manga.name",
-      "description_i18n_key": "smashOrPass.rosters.anime_manga.desc",
+      "name": "Fog Anime / Manga Aesthetic",
+      "description": "Stylized visual interpretations from the anime multiverse.",
+      "translations": {
+        "pl": {
+          "name": "Estetyka Anime i Mangi we Mgle",
+          "description": "Stylizowane wizualne interpretacje ze świata anime."
+        }
+      },
       "cover_image_url": "/static/avatars/rosters/anime_manga.webp",
       "theme_color": "#ec4899",
       "category": "Anime",

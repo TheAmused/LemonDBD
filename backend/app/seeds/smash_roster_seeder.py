@@ -39,6 +39,9 @@ def _entity_profile(e_data: Dict[str, Any]) -> Dict[str, Any]:
     field here has to survive being absent.
     """
     profile: Dict[str, Any] = {
+        "real_name": e_data.get("real_name"),
+        "watermark_left": e_data.get("watermark_left"),
+        "watermark_right": e_data.get("watermark_right"),
         "archetype": e_data.get("archetype"),
         "red_flags": list(e_data.get("red_flags") or []),
         "green_flags": list(e_data.get("green_flags") or []),
@@ -146,8 +149,9 @@ def _seed_smash_rosters_impl():
                 roster = Roster(
                     id=str(uuid.uuid4()),
                     slug=r_data["slug"],
-                    name_i18n_key=r_data["name_i18n_key"],
-                    description_i18n_key=r_data["description_i18n_key"],
+                    name=r_data["name"],
+                    description=r_data.get("description", ""),
+                    translations=r_data.get("translations") or {},
                     cover_image_url=r_data.get("cover_image_url"),
                     theme_color=r_data.get("theme_color", "#ff0055"),
                     category=r_data.get("category", "DBD"),
@@ -157,8 +161,9 @@ def _seed_smash_rosters_impl():
                 db.session.add(roster)
                 db.session.flush()
             else:
-                roster.name_i18n_key = r_data["name_i18n_key"]
-                roster.description_i18n_key = r_data["description_i18n_key"]
+                roster.name = r_data["name"]
+                roster.description = r_data.get("description", "")
+                roster.translations = r_data.get("translations") or {}
                 roster.cover_image_url = r_data.get("cover_image_url")
                 roster.theme_color = r_data.get("theme_color", "#ff0055")
                 roster.category = r_data.get("category", "DBD")

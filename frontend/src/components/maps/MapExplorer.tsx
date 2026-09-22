@@ -26,6 +26,8 @@ import { MapCard } from './MapCard';
 // Also what "no filter" persists as in localStorage, since the filter fields
 // themselves are `string | null` and usePersistentString only stores strings.
 const ANY = '__any__';
+// Sentinel for "no realm expanded" in persisted storage; a real realm name never collides with it.
+const NONE = '__none__';
 
 const isValidLayoutFilter = (v: string): v is string =>
   v === ANY || v === 'Indoor' || v === 'Outdoor' || v === 'Hybrid';
@@ -91,7 +93,12 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     locale,
   });
 
-  const [expandedRealm, setExpandedRealm] = useState<string | null>(null);
+  // Persisted so a refresh reopens whichever realm you had expanded. Stored
+  // as a plain string (NONE sentinel for "nothing open") since a realm name
+  // isn't a fixed enum to validate against -- a stale name just harmlessly
+  // matches nothing in isRealmExpanded below.
+  const [expandedRealmRaw, setExpandedRealmRaw] = usePersistentString<string>('lemondbd_maps_expanded_realm', NONE);
+  const expandedRealm = expandedRealmRaw === NONE ? null : expandedRealmRaw;
   // Persisted: these are genuine preferences (which layout/size you're
   // usually looking for, how you like the list sorted), not per-visit
   // state, so they survive a refresh. Stored as plain strings (ANY sentinel
@@ -158,14 +165,14 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   const pendingOpenRef = useRef<string | null>(null);
   const toggleRealm = (realm: string) => {
-    setExpandedRealm((prev) => {
+    setExpandedRealmRaw((prev) => {
       if (prev === realm) {
         pendingOpenRef.current = null;
-        return null;
+        return NONE;
       }
-      if (prev !== null) {
+      if (prev !== NONE) {
         pendingOpenRef.current = realm;
-        return null;
+        return NONE;
       }
       pendingOpenRef.current = null;
       return realm;
@@ -245,7 +252,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
           if (pendingOpenRef.current) {
             const next = pendingOpenRef.current;
             pendingOpenRef.current = null;
-            setExpandedRealm(next);
+            setExpandedRealmRaw(next);
           }
         }, PANEL_EXIT_MS);
         exitTimers.current.set(r, timer);

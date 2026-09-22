@@ -193,7 +193,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           {activeMap && (
-            <div className="min-w-0 flex-1 flex flex-wrap items-center gap-1.5 text-xs">
+            <div className="min-w-0 flex-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-xs">
               {activeMap.size_sq_tiles != null ? (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-bg-elevated border border-accent-red/40 text-text-secondary font-mono shadow-sm shrink-0">
                   <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
@@ -287,11 +287,11 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
         )}
       </div>
 
-      <footer className="absolute bottom-4 right-4 sm:right-6 z-40 flex pointer-events-none">
+      <footer className="absolute inset-x-0 bottom-4 sm:inset-x-auto sm:right-6 z-40 flex justify-center sm:justify-end pointer-events-none">
         <div
           role="toolbar"
           aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}
-          className="pointer-events-auto ml-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
+          className="pointer-events-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
           <button
             type="button"

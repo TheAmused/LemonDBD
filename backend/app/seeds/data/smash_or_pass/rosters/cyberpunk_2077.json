@@ -5,8 +5,14 @@
   "rosters": [
     {
       "slug": "cyberpunk_2077",
-      "name_i18n_key": "smashOrPass.rosters.cyberpunk_2077.name",
-      "description_i18n_key": "smashOrPass.rosters.cyberpunk_2077.desc",
+      "name": "Cyberpunk Fog 2077",
+      "description": "High-tech neon augments and synth-infused killers.",
+      "translations": {
+        "pl": {
+          "name": "Cyberpunkowa Mgła 2077",
+          "description": "Neonowe ulepszenia i syntetyczni zabójcy."
+        }
+      },
       "cover_image_url": "/static/avatars/rosters/cyberpunk_2077.webp",
       "theme_color": "#00f5d4",
       "category": "Cyberpunk",

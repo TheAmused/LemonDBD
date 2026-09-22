@@ -52,7 +52,7 @@ class SmashOrPassService:
         except Exception as e:
             logger.debug(f"Smash-or-pass seed notice: {e}")
 
-    def get_rosters(self, active_only: bool = True, include_nsfw: bool = False) -> list[dict[str, Any]]:
+    def get_rosters(self, active_only: bool = True, include_nsfw: bool = False, lang: str | None = None) -> list[dict[str, Any]]:
         """List rosters. `include_nsfw=False` (the default) hides any roster with
         `is_nsfw=True` from this listing entirely -- an explicit opt-in
         (`?include_nsfw=true` on the route) is required to see it here at all.
@@ -88,7 +88,7 @@ class SmashOrPassService:
         result = []
         for r in rosters:
             entity_count, total_votes = counts_by_roster.get(r.id, (0, 0))
-            r_dict = r.to_dict()
+            r_dict = r.to_dict(lang=lang)
             r_dict["entity_count"] = entity_count
             r_dict["character_count"] = entity_count
             r_dict["total_votes"] = total_votes
@@ -122,7 +122,7 @@ class SmashOrPassService:
             .outerjoin(EntityStat, Entity.id == EntityStat.entity_id)
             .where(Entity.roster_id == roster.id, Entity.is_active.is_(True))
         ).one()
-        roster_info = roster.to_dict()
+        roster_info = roster.to_dict(lang=lang)
         roster_info["entity_count"] = int(entity_count or 0)
         roster_info["character_count"] = int(entity_count or 0)
         roster_info["total_votes"] = int(roster_total_votes or 0)

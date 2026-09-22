@@ -179,6 +179,7 @@ function playMatchSuccessSound() {
 }
 
 const HOLD_KEY_HINT_FALLBACK = 'Hold {key} to talk, or tap the mic and say a map name';
+const TAP_HINT_FALLBACK = 'Tap the mic and say a map name';
 
 /** Splits a "...{key}..." hint string around the `{key}` placeholder and
  * renders the key as a styled <kbd> chip inline, so it reads as part of
@@ -187,15 +188,15 @@ function renderHoldKeyHint(template: string | undefined, key: string): React.Rea
   const text = template || HOLD_KEY_HINT_FALLBACK;
   const [before, after] = text.split('{key}');
   if (after === undefined) {
-    return <span className="truncate">{text}</span>;
+    return <span>{text}</span>;
   }
   return (
     <>
-      {before}
-      <kbd className="rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 text-[11px] font-mono text-accent-amber shadow-xs">
+      <span>{before}</span>
+      <kbd className="inline-flex items-center justify-center rounded border border-border-color bg-bg-elevated px-1.5 py-0.5 text-[11px] font-mono text-accent-amber shadow-xs align-middle">
         {key}
       </kbd>
-      <span className="truncate">{after}</span>
+      <span>{after}</span>
     </>
   );
 }
@@ -857,8 +858,9 @@ export function VoiceCommandBanner({
         </>
       )}
 
-      <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-3">
-        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 order-2 md:order-1 md:flex-1">
+      <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full mb-3">
+        {/* Desktop Left: Engine info & Sound controls */}
+        <div className="hidden md:flex flex-wrap items-center justify-start gap-2 order-1 flex-1">
           <button
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
@@ -880,15 +882,8 @@ export function VoiceCommandBanner({
                 ? rawVoiceDict.engineNativeBadge || ''
                 : rawVoiceDict.engineClientBadge || ''}
             </span>
-            <span className={`h-2.5 w-2.5 rounded-full ${currentCfg.dotClass}`} aria-hidden="true" />
+            <span className={`h-2.5 w-2.5 rounded-full ${modelProgress.status === 'downloading' ? 'bg-accent-amber animate-pulse' : currentCfg.dotClass}`} aria-hidden="true" />
           </button>
-
-          {modelProgress.status === 'downloading' && (
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-accent-amber/30 bg-accent-amber/10 px-2 py-0.5 text-[10px] font-bold text-accent-amber animate-pulse font-mono">
-              <RefreshCw className="h-2.5 w-2.5 animate-spin" aria-hidden="true" />
-              <span>{modelProgress.progress}{dict?.maps?.percentSign || '%'}</span>
-            </div>
-          )}
 
           <button
             type="button"
@@ -905,13 +900,67 @@ export function VoiceCommandBanner({
           </button>
         </div>
 
+        {/* Center slot: Search/Voice mode switcher */}
         {centerHeaderSlot && (
           <div className="flex items-center justify-center shrink-0 order-1 md:order-2">
             {centerHeaderSlot}
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 order-3 md:flex-1">
+        {/* Mobile secondary bar: combines Engine, Sound and Source into ONE clean, compact line */}
+        <div className="flex md:hidden items-center justify-center flex-wrap gap-2 order-2 w-full pt-0.5">
+          <button
+            type="button"
+            onClick={() => setIsInfoModalOpen(true)}
+            title={
+              activeEngine === 'web-speech'
+                ? dict?.voice?.webSpeechTooltip || ''
+                : dict?.voice?.clientModelTooltip || ''
+            }
+            aria-label={dict?.voice?.viewEngineInfo || ''}
+            className="inline-flex items-center gap-1.5 rounded-full border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-xs font-bold font-mono text-accent-red transition-all cursor-pointer hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red shadow-xs"
+          >
+            {activeEngine === 'web-speech' ? (
+              <Globe className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
+            ) : (
+              <Brain className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
+            )}
+            <span>
+              {activeEngine === 'web-speech'
+                ? rawVoiceDict.engineNativeBadge || 'Web Speech'
+                : rawVoiceDict.engineClientBadge || 'Lokalny Model AI'}
+            </span>
+            <span className={`h-2 w-2 rounded-full ${modelProgress.status === 'downloading' ? 'bg-accent-amber animate-pulse' : currentCfg.dotClass}`} aria-hidden="true" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setSoundEnabled((prev) => !prev)}
+            title={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red shadow-xs"
+          >
+            {soundEnabled ? (
+              <Volume2 className="h-3.5 w-3.5" aria-hidden="true" />
+            ) : (
+              <VolumeX className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+            )}
+          </button>
+
+          <div
+            className="inline-flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-xs font-mono text-text-secondary shadow-xs"
+          >
+            <span className="text-[10px] text-text-muted font-bold uppercase">
+              {dict?.maps?.sourceLabel || 'Źródło:'}
+            </span>
+            <span className="font-extrabold text-accent-red">
+              {dict?.maps?.sourceHens || 'Hens333'}
+            </span>
+          </div>
+        </div>
+
+        {/* Desktop Right: Source switcher */}
+        <div className="hidden md:flex flex-wrap items-center justify-end gap-2 order-3 flex-1">
           <div
             role="group"
             aria-label={dict?.maps?.providerAria || ''}
@@ -986,6 +1035,24 @@ export function VoiceCommandBanner({
             <button
               id="voice-command-mic-btn"
               type="button"
+              onTouchStart={() => {
+                mouseDownListeningStateRef.current =
+                  isListeningRef.current || voiceStatus === 'listening';
+                isHoldingRef.current = true;
+                holdStartTimeRef.current = Date.now();
+                if (!isListeningRef.current) {
+                  startListening(true);
+                }
+              }}
+              onTouchEnd={(e) => {
+                const duration =
+                  holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
+                isHoldingRef.current = false;
+                if (duration > 250 && isListeningRef.current) {
+                  e.preventDefault();
+                  stopListeningAndProcess();
+                }
+              }}
               onMouseDown={() => {
                 mouseDownListeningStateRef.current =
                   isListeningRef.current || voiceStatus === 'listening';
@@ -1068,12 +1135,12 @@ export function VoiceCommandBanner({
           </div>
         </div>
 
-        <div className="flex flex-col items-center max-w-[420px]" aria-live="polite">
+        <div className="flex flex-col items-center w-full max-w-[420px] px-2" aria-live="polite">
             {voiceStatus === 'listening' && (
-              <div className="flex flex-col text-center items-center">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+                <div className="flex items-center justify-center gap-2 max-w-full">
                   <span className="h-2 w-2 rounded-full bg-accent-red animate-ping shrink-0" aria-hidden="true" />
-                  <span className="text-xs font-black text-text-primary font-mono truncate">
+                  <span className="text-xs sm:text-sm font-black text-text-primary font-mono truncate max-w-[280px] sm:max-w-md">
                     {liveTranscript
                       ? `“${liveTranscript}”`
                       : audioLevel > 8
@@ -1081,7 +1148,7 @@ export function VoiceCommandBanner({
                         : rawVoiceDict.speakMapPrompt || ''}
                   </span>
                 </div>
-                <span className="text-[10px] text-text-muted font-mono truncate">
+                <span className="text-[10px] text-text-muted font-mono truncate max-w-[280px] sm:max-w-md">
                   {activeEngine === 'client-model'
                     ? rawVoiceDict.localModelListeningDesc || ''
                     : rawVoiceDict.webSpeechListeningDesc || ''}
@@ -1090,26 +1157,26 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'processing' && (
-              <div className="flex flex-col text-center items-center">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+                <div className="flex items-center justify-center gap-2 max-w-full">
                   <RefreshCw className="h-3.5 w-3.5 text-accent-amber animate-spin shrink-0" aria-hidden="true" />
-                  <span className="text-xs font-bold text-accent-amber font-mono">
+                  <span className="text-xs sm:text-sm font-bold text-accent-amber font-mono truncate max-w-[280px] sm:max-w-md">
                     {liveTranscript
                       ? `${rawVoiceDict.transcribingPrefix || ''} “${liveTranscript}”`
                       : rawVoiceDict.transcribingVoice || ''}
                   </span>
                 </div>
-                <span className="text-[10px] text-accent-amber/80 font-mono">
+                <span className="text-[10px] text-accent-amber/80 font-mono truncate max-w-[280px] sm:max-w-md">
                   {rawVoiceDict.localWasmInference || ''}
                 </span>
               </div>
             )}
 
             {voiceStatus === 'matched' && matchedResult && (
-              <div className="flex flex-col text-center items-center">
-                <div className="flex items-center gap-1.5">
+              <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+                <div className="flex items-center justify-center gap-1.5 max-w-full">
                   <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" aria-hidden="true" />
-                  <span className="text-xs font-black text-accent-green font-mono truncate">
+                  <span className="text-xs sm:text-sm font-black text-accent-green font-mono truncate max-w-[280px] sm:max-w-md">
                     {matchedResult.matchedMapName
                       ? `${rawVoiceDict.matchedPrefix || ''} ${matchedResult.matchedMapName}`
                       : matchedResult.action === 'switch_source'
@@ -1118,7 +1185,7 @@ export function VoiceCommandBanner({
                   </span>
                 </div>
                 {liveTranscript && (
-                  <span className="text-[10px] text-accent-green/90 font-mono truncate">
+                  <span className="text-[10px] text-accent-green/90 font-mono truncate max-w-[280px] sm:max-w-md">
                     {dict?.maps?.heardLabel || ''} {dict?.maps?.openQuote || '“'}{liveTranscript}{dict?.maps?.closeQuote || '”'} {matchPercentText}
                   </span>
                 )}
@@ -1126,37 +1193,44 @@ export function VoiceCommandBanner({
             )}
 
             {voiceStatus === 'nomatch' && (
-              <div className="flex flex-col text-center items-center">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-accent-amber font-mono">
+              <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+                <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-accent-amber font-mono max-w-full">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span className="truncate">
+                  <span className="truncate max-w-[280px] sm:max-w-md">
                     {liveTranscript
                       ? `${dict?.maps?.heardLabel || ''} “${liveTranscript}” (${rawVoiceDict.noDbdMatch || ''})`
                       : rawVoiceDict.noSpeechDetected || ''}
                   </span>
                 </div>
-                <span className="text-[10px] text-text-muted font-mono truncate">
+                <span className="text-[10px] text-text-muted font-mono truncate max-w-[280px] sm:max-w-md">
                   {rawVoiceDict.trySayingPrompt || ''}
                 </span>
               </div>
             )}
 
             {voiceStatus === 'error' && (
-              <div className="flex flex-col text-center items-center">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-accent-red font-mono">
+              <div className="flex flex-col text-center items-center w-full max-w-full px-2">
+                <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-accent-red font-mono max-w-full">
                   <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span className="truncate">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
+                  <span className="truncate max-w-[280px] sm:max-w-md">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
                 </div>
-                <span className="text-[10px] text-accent-red/80 font-mono">
+                <span className="text-[10px] text-accent-red/80 font-mono truncate max-w-[280px] sm:max-w-md">
                   {rawVoiceDict.checkPermissionsHint || ''}
                 </span>
               </div>
             )}
 
             {voiceStatus === 'idle' && (
-              <p className="flex items-center gap-1 text-[13px] text-text-muted font-mono">
-                {renderHoldKeyHint(rawVoiceDict.holdVToTalkHint, dict?.maps?.keyV || 'V')}
-              </p>
+              <div className="w-full text-center px-2 max-w-full">
+                <p className="text-xs sm:text-[13px] text-text-muted font-mono leading-relaxed text-center break-words max-w-full">
+                  <span className="md:hidden">
+                    {rawVoiceDict.tapToTalkMobileHint || dict?.voice?.tapToTalkMobileHint || TAP_HINT_FALLBACK}
+                  </span>
+                  <span className="hidden md:inline-flex md:items-center md:justify-center md:flex-wrap md:gap-1">
+                    {renderHoldKeyHint(rawVoiceDict.holdVToTalkHint, dict?.maps?.keyV || 'V')}
+                  </span>
+                </p>
+              </div>
             )}
         </div>
       </div>

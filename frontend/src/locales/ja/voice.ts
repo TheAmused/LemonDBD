@@ -27,6 +27,7 @@ export default {
   privacyNotice: "プライバシーに関する注記: ローカルクライアントモデルはすべての音声コマンドをブラウザ内・完全オフラインで処理します。",
   holdOrPress: "[V]キー長押し または マイクをクリック",
   holdVToTalkHint: "{key} キーを押しながら話す、またはマイクをタップしてマップ名を話す",
+  tapToTalkMobileHint: "マイクをタップしてマップ名を話す",
   micBlocked: "マイクへのアクセスがブロックされています。マイクの使用を許可してください。",
   idleReady: "待機中 • 準備完了",
   listeningSpeakNow: "聞き取り中 • お話しください",

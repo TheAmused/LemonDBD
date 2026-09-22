@@ -267,7 +267,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             {/* Same fixed sidebar-aware bottom bar as the character ownership
                 editor (CharactersHub), so this is always reachable without
                 scrolling through the (potentially long) killer roster above. */}
-            <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md lemon-shell-main">
+            <div className="fixed left-[var(--sidebar-width,0rem)] right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[left] duration-300">
               <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
                 {!acceptedKillerId ? (
                   <button

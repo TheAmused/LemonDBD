@@ -230,36 +230,33 @@
 }
 
 /* ---------------------------------------------------------------------------
- * App Shell Geometry
+ * App Shell Geometry & Sidebar Variables
  * --------------------------------------------------------------------------- */
-@media (min-width: 1024px) {
+:root {
+  --sidebar-width: 0rem;
+}
 
-  .lemon-shell-main,
-  .lemon-shell-main--flush {
-    margin-left: 16rem;
+@media (min-width: 1024px) {
+  :root {
+    --sidebar-width: 16rem;
   }
 
-  :root[data-sidebar="collapsed"] .lemon-shell-main,
-  :root[data-sidebar="collapsed"] .lemon-shell-main--flush {
-    margin-left: 0;
+  :root[data-sidebar="collapsed"] {
+    --sidebar-width: 0rem;
   }
 
   .lemon-shell-aside {
-    transform: translateX(0);
+    width: var(--sidebar-width);
+    transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   :root[data-sidebar="collapsed"] .lemon-shell-aside {
-    transform: translateX(-100%);
     border-right-width: 0;
   }
 
   .lemon-modal-overlay-sidebar-aware {
-    padding-left: 16rem;
+    padding-left: var(--sidebar-width);
     transition: padding-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  :root[data-sidebar="collapsed"] .lemon-modal-overlay-sidebar-aware {
-    padding-left: 0;
   }
 }
 

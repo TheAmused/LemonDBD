@@ -2,6 +2,8 @@
 
 import type { EntityLocale, EntityMetadata, EntityProfile } from '@/types/smashOrPass';
 
+const EMPTY_FLAGS: string[] = [];
+
 /**
  * Resolves an entity's dating profile for a locale.
  *
@@ -29,8 +31,8 @@ export function localizedProfile(meta: EntityMetadata | undefined, locale: strin
     turn_on: meta?.turn_on || '',
     dealbreaker: meta?.dealbreaker || '',
     dating_vibe: meta?.dating_vibe || '',
-    red_flags: meta?.red_flags || [],
-    green_flags: meta?.green_flags || [],
+    red_flags: meta?.red_flags || EMPTY_FLAGS,
+    green_flags: meta?.green_flags || EMPTY_FLAGS,
   };
 
   // 'en' never has an entry — English IS the top-level field.

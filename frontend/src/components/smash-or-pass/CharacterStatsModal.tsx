@@ -249,7 +249,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           </div>
         )}
 
-        {/* 5. Complete Green & Red Flags Dossier (renders full 4?6 flag pool without sampling) */}
+        {/* 5. Complete Green & Red Flags Dossier (renders full 4-6 flag pool without sampling) */}
         {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {profile.green_flags.length > 0 && (

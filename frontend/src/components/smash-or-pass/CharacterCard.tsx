@@ -20,6 +20,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
+import { sampleFlags } from '@/utils/smashWatermarks';
 
 // The local CharacterMetadataLocale / CharacterMetadataContainer shapes are gone: they
 // only existed to describe the duplicated payload (camelCase twins, `i18n` next to
@@ -75,17 +76,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
 
-  // Dynamic 2?3 flag sampling helper: if pool <= 3 keep all; if > 3 randomly pick 2 or 3 items
-  const sampleFlags = (flags: string[]): string[] => {
-    if (!flags || flags.length <= 3) return flags || [];
-    const sampleCount = Math.random() < 0.5 ? 2 : 3;
-    const copy = [...flags];
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy.slice(0, sampleCount);
-  };
 
   // Sample flags stably per character view (stable across card flips)
   const sampledGreenFlags = useMemo(() => {

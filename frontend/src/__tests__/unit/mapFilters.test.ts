@@ -10,6 +10,7 @@ import {
   hasActiveMapFilters,
   getLayoutTypeLabel,
   mapMatchesFilters,
+  type MapAttributeFilters,
 } from '@/utils/mapUtils';
 import pl from '@/locales/pl';
 

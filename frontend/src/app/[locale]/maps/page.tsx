@@ -83,6 +83,15 @@ function MapsPageInner() {
   }, []);
   const handleAction = useCallback(() => {}, []);
 
+  const toggleSwitchElement = (
+    <ToggleSwitch
+      value={searchMode}
+      onChange={setSearchMode}
+      ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
+      options={searchModeOptions}
+    />
+  );
+
   const voiceBanner = useMemo(
     () => (
       <VoiceCommandBanner
@@ -94,9 +103,11 @@ function MapsPageInner() {
         onAction={handleAction}
         availableMaps={availableMaps}
         active={searchMode === 'voice'}
+        centerHeaderSlot={toggleSwitchElement}
+        embedded={true}
       />
     ),
-    [locale, dict, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode]
+    [locale, dict, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
   const handleSelectCategory = () => {
@@ -116,15 +127,6 @@ function MapsPageInner() {
     >
       <CampfireParticles />
       <div className="relative z-10 flex flex-col gap-4">
-        <div className="flex justify-center">
-          <ToggleSwitch
-            value={searchMode}
-            onChange={setSearchMode}
-            ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
-            options={searchModeOptions}
-          />
-        </div>
-
         <MapExplorer
           initialMapName={selectedMap.mapName}
           selectedMap={selectedMap}
@@ -136,6 +138,7 @@ function MapsPageInner() {
           locale={locale}
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}
+          modeSwitcherSlot={toggleSwitchElement}
         />
       </div>
     </PageShell>

@@ -52,8 +52,10 @@ from app.schemas.equipment import (
     OfferingResponse,
 )
 from app.schemas.smash_or_pass import (
+    EntityOut,
     EntityResponse,
     EntityStatResponse,
+    RosterOut,
     RosterResponse,
     VoteCreate,
     VoteResponse,
@@ -94,8 +96,10 @@ __all__ = [
     "ChallengeModeSettingBase",
     "ChallengeModeSettingResponse",
     "AdminAuditLogResponse",
+    "EntityOut",
     "EntityResponse",
     "EntityStatResponse",
+    "RosterOut",
     "RosterResponse",
     "VoteCreate",
     "VoteResponse",

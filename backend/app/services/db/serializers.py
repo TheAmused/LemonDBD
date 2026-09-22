@@ -176,10 +176,13 @@ def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> di
     return {
         "slug": e.slug,
         "name": e.name,
+        "real_name": e.real_name,
         "role": e.role,
         "gender": e.gender,
         "media_url": e.media_url,
         "media_type": e.media_type,
+        "watermark_left": e.watermark_left,
+        "watermark_right": e.watermark_right,
         "archetype": e.archetype,
         "bio": e.bio,
         "tagline": e.tagline,
@@ -212,8 +215,9 @@ def serialize_smash_entity(e: Entity, username_by_user_id: dict[int, str]) -> di
 def serialize_roster(r: Roster, username_by_user_id: dict[int, str]) -> dict[str, Any]:
     return {
         "slug": r.slug,
-        "name_i18n_key": r.name_i18n_key,
-        "description_i18n_key": r.description_i18n_key,
+        "name": r.name,
+        "description": r.description,
+        "translations": r.translations or {},
         "cover_image_url": r.cover_image_url,
         "theme_color": r.theme_color,
         "category": r.category,

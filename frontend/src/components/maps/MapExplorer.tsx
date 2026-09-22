@@ -133,13 +133,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 3);
   const filtersActive = hasActiveMapFilters(filters);
 
-  useEffect(() => {
-    if (hideSearch) {
-      if (search) setSearch('');
-      clearFilters();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hideSearch]);
+  // Deliberately do not clear search or filters when toggling modes;
+  // doing so causes synchronous localStorage writes, realm re-filtering,
+  // and animation timer cascades that freeze the UI on rapid switching.
 
   const mapsDict = dict?.maps;
   const layoutOptions: DropdownOption[] = useMemo(

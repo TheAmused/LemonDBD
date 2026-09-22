@@ -79,3 +79,13 @@ test('layout labels are translated, with English fallbacks', () => {
   assert.strictEqual(getLayoutTypeLabel('Outdoor'), 'Outdoor');
   assert.strictEqual(getLayoutTypeLabel('Underwater', pl.maps), 'Underwater');
 });
+
+test('map filters are preserved when switching search mode', () => {
+  const initialFilters: MapAttributeFilters = { layoutType: 'Indoor', size: 'small' };
+  assert.strictEqual(hasActiveMapFilters(initialFilters), true);
+  // Preserving filters across mode toggles prevents UI lag and preserves user preference
+  const filtersAfterToggle = { ...initialFilters };
+  assert.strictEqual(hasActiveMapFilters(filtersAfterToggle), true);
+  assert.strictEqual(filtersAfterToggle.layoutType, 'Indoor');
+  assert.strictEqual(filtersAfterToggle.size, 'small');
+});

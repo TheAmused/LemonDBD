@@ -57,6 +57,10 @@ export interface VoiceCommandBannerProps {
    * in-progress mic session -- both would otherwise keep responding while
    * the banner isn't visible. Defaults to true. */
   active?: boolean;
+  /** Optional slot rendered at the center of the header row (e.g. the mode toggle switch) */
+  centerHeaderSlot?: React.ReactNode;
+  /** When true, omits outer card frame (border, rounded corners, blur glows) for embedding inside a parent container */
+  embedded?: boolean;
 }
 
 export type VoiceStatusState =
@@ -206,6 +210,8 @@ export function VoiceCommandBanner({
   className = '',
   dict,
   active = true,
+  centerHeaderSlot,
+  embedded = false,
 }: VoiceCommandBannerProps) {
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatusState>('idle');
   const [liveTranscript, setLiveTranscript] = useState<string>('');
@@ -838,13 +844,21 @@ export function VoiceCommandBanner({
     // stay in the flow there.
     <section
       aria-label={dict?.maps?.voiceEngineAria || ''}
-      className={`relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-3 sm:px-4 py-3 sm:py-4 md:min-h-[14.5rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300 ${className}`}
+      className={
+        embedded
+          ? `relative flex w-full flex-col ${className}`
+          : `relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-3 sm:px-4 py-3 sm:py-4 md:min-h-[14.5rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300 ${className}`
+      }
     >
-      <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
-      <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
+      {!embedded && (
+        <>
+          <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
+        </>
+      )}
 
-      <div className="relative z-20 flex flex-col sm:flex-row items-center justify-between gap-2 md:absolute md:inset-x-4 md:top-4">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-2">
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 order-2 md:order-1 md:flex-1">
           <button
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
@@ -891,7 +905,13 @@ export function VoiceCommandBanner({
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        {centerHeaderSlot && (
+          <div className="flex items-center justify-center shrink-0 order-1 md:order-2">
+            {centerHeaderSlot}
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 order-3 md:flex-1">
           <div
             role="group"
             aria-label={dict?.maps?.providerAria || ''}

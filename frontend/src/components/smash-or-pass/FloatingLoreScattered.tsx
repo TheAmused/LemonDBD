@@ -15,6 +15,7 @@ import {
 import { SmashSounds } from './SmashSoundEffects';
 import { EntityItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
+import { resolveWatermarks, getWatermarkFontSize } from '@/utils/smashWatermarks';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface FloatingLoreScatteredProps {
@@ -127,36 +128,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     SmashSounds.playHoverTick();
   };
 
-    // Clean watermark helper: remove unwanted characters like parentheses and quotes
-  const cleanWatermark = (str: string): string => {
-    return str.replace(/[()[\]"']/g, '').trim();
-  };
-
-  // Responsive font size clamping helper (strings > 10 chars use clamped smaller scale to prevent clipping or line wraps)
-  const getWatermarkFontSize = (str: string): string => {
-    return str.length > 10
-      ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'
-      : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl';
-  };
-
-  // Dual-identity watermarks with explicit fields and sensible fallbacks
-  let leftWatermark = cleanWatermark(
-    character.watermark_left || (isSurvivor ? (character.name || '').split(' ')[0] : character.name || '')
-  );
-  let rightWatermark = cleanWatermark(
-    character.watermark_right ||
-      (isSurvivor
-        ? (character.name || '').split(' ').slice(1).join(' ')
-        : character.real_name || (isKiller ? 'KILLER' : 'SURVIVOR'))
-  );
-
-  // Ensure neither side is ever empty
-  if (!leftWatermark) {
-    leftWatermark = cleanWatermark(character.name || (isSurvivor ? 'SURVIVOR' : 'KILLER'));
-  }
-  if (!rightWatermark) {
-    rightWatermark = isKiller ? 'KILLER' : 'SURVIVOR';
-  }
+    const { leftWatermark, rightWatermark } = resolveWatermarks(character);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden select-none">

@@ -5,6 +5,12 @@ import assert from 'node:assert';
 import { SmashSounds } from '@/utils/../components/smash-or-pass/SmashSoundEffects';
 import { localizedProfile } from '../../utils/entityProfile';
 import type { EntityMetadata, EntityItem, RosterItem } from '../../types/smashOrPass';
+import {
+  cleanWatermark,
+  getWatermarkFontSize,
+  sampleFlags,
+  resolveWatermarks,
+} from '../../utils/smashWatermarks';
 
 test('SmashOrPass: Types & Roster/Entity Contracts', async (t) => {
   await t.test('RosterItem uses direct name and description without name_i18n_key', () => {
@@ -30,15 +36,15 @@ test('SmashOrPass: Types & Roster/Entity Contracts', async (t) => {
       id: 'e-onryo',
       roster_id: 'canon',
       slug: 'the_onryo',
-      name: 'The Onry?',
+      name: 'The Onryō',
       real_name: 'Sadako Yamamura',
-      watermark_left: 'THE ONRY?',
+      watermark_left: 'THE ONRYŌ',
       watermark_right: 'SADAKO',
       role: 'Killer',
       gender: 'female',
     };
     assert.strictEqual(entity.real_name, 'Sadako Yamamura');
-    assert.strictEqual(entity.watermark_left, 'THE ONRY?');
+    assert.strictEqual(entity.watermark_left, 'THE ONRYŌ');
     assert.strictEqual(entity.watermark_right, 'SADAKO');
   });
 });
@@ -863,17 +869,6 @@ test('SmashOrPass: Voting, Stats, Reset, and Revote Complete Lifecycle', async (
 
 
 test('SmashOrPass: Dynamic Flag Sampling Logic', async (t) => {
-  const sampleFlags = (flags: string[]): string[] => {
-    if (!flags || flags.length <= 3) return flags || [];
-    const sampleCount = Math.random() < 0.5 ? 2 : 3;
-    const copy = [...flags];
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy.slice(0, sampleCount);
-  };
-
   await t.test('keeps all flags when pool length <= 3', () => {
     const emptyPool: string[] = [];
     assert.deepStrictEqual(sampleFlags(emptyPool), []);
@@ -904,40 +899,6 @@ test('SmashOrPass: Dynamic Flag Sampling Logic', async (t) => {
 });
 
 test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
-  const cleanWatermark = (str: string): string => {
-    return str.replace(/[()[\]"']/g, '').trim();
-  };
-
-  const getWatermarkFontSize = (str: string): string => {
-    return str.length > 10
-      ? 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl'
-      : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl';
-  };
-
-  const resolveWatermarks = (character: EntityItem) => {
-    const isSurvivor = character.role === 'Survivor';
-    const isKiller = character.role === 'Killer';
-
-    let leftWatermark = cleanWatermark(
-      character.watermark_left || (isSurvivor ? (character.name || '').split(' ')[0] : character.name || '')
-    );
-    let rightWatermark = cleanWatermark(
-      character.watermark_right ||
-        (isSurvivor
-          ? (character.name || '').split(' ').slice(1).join(' ')
-          : character.real_name || (isKiller ? 'KILLER' : 'SURVIVOR'))
-    );
-
-    if (!leftWatermark) {
-      leftWatermark = cleanWatermark(character.name || (isSurvivor ? 'SURVIVOR' : 'KILLER'));
-    }
-    if (!rightWatermark) {
-      rightWatermark = isKiller ? 'KILLER' : 'SURVIVOR';
-    }
-
-    return { leftWatermark, rightWatermark };
-  };
-
   await t.test('cleans parentheses and quotes from watermarks', () => {
     assert.strictEqual(cleanWatermark('The Shape ("Michael Myers")'), 'The Shape Michael Myers');
     assert.strictEqual(cleanWatermark('Sadako (Yamamura)'), 'Sadako Yamamura');
@@ -955,15 +916,15 @@ test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
       id: 'e-1',
       roster_id: 'r-1',
       slug: 'the_onryo',
-      name: 'The Onry?',
+      name: 'The Onryō',
       real_name: 'Sadako Yamamura',
-      watermark_left: 'THE ONRY?',
+      watermark_left: 'THE ONRYŌ',
       watermark_right: 'SADAKO',
       role: 'Killer',
       gender: 'female',
     };
     const { leftWatermark, rightWatermark } = resolveWatermarks(entity);
-    assert.strictEqual(leftWatermark, 'THE ONRY?');
+    assert.strictEqual(leftWatermark, 'THE ONRYŌ');
     assert.strictEqual(rightWatermark, 'SADAKO');
   });
 

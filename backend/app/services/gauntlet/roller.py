@@ -6,10 +6,12 @@ from sqlalchemy import select
 
 from app.core.extensions import db
 from app.models import Killer, Perk, Survivor
-from app.schemas.gauntlet import GauntletLoadout, TierInfo
+from app.schemas.gauntlet import GauntletLoadout, GauntletPlayerLoadout, TierInfo
 from app.services.gauntlet.constants import (
     ORIGINAL_KILLER_ROSTER_LIMIT,
     ORIGINAL_SURVIVOR_ROSTER_LIMIT,
+    DEFAULT_GAME_MODE,
+    get_players_per_character,
     get_tier_info,
 )
 from app.services.ownership_service import OwnershipService
@@ -91,14 +93,37 @@ def pick_initial_target(user_id: int, role: str, ownership_service: OwnershipSer
     return "Meg Thomas" if role == "survivor" else "The Trapper"
 
 
+def pick_initial_targets(user_id: int, role: str, ownership_service: OwnershipService, count: int) -> list[str]:
+    """`count` different owned characters; fewer only when the roster has fewer."""
+    names = get_owned_character_names(user_id, role, ownership_service)
+    if len(names) >= count:
+        return random.sample(names, count)
+    return names or ["Meg Thomas" if role == "survivor" else "The Trapper"]
+
+
+def build_loadout(target_char: str, tier_info: TierInfo) -> GauntletLoadout:
+    character_perks = get_character_teachable_perks(target_char)
+    loadout: GauntletLoadout = {
+        "character": target_char,
+        "character_perks": character_perks,
+        "tier_info": tier_info,
+    }
+    if tier_info["random_perk_count"]:
+        loadout["random_perks"] = random.sample(
+            character_perks, min(tier_info["random_perk_count"], len(character_perks))
+        )
+    return loadout
+
+
 def roll_gauntlet_target(
     role: str,
     current_streak: int,
     completed_characters: list[str],
     owned_characters: list[str],
     target_character: str | None = None,
+    game_mode: str = DEFAULT_GAME_MODE,
 ) -> tuple[str, GauntletLoadout, TierInfo]:
-    tier_info = get_tier_info(current_streak, role)
+    tier_info = get_tier_info(current_streak, role, game_mode)
 
     remaining = [c for c in owned_characters if c not in completed_characters]
     if not remaining:
@@ -108,10 +133,41 @@ def roll_gauntlet_target(
 
     target_char = target_character if target_character else random.choice(remaining)
 
-    loadout: GauntletLoadout = {
-        "character": target_char,
-        "character_perks": get_character_teachable_perks(target_char),
-        "tier_info": tier_info,
-    }
+    return target_char, build_loadout(target_char, tier_info), tier_info
 
-    return target_char, loadout, tier_info
+
+def build_team_loadout(names: list[str], tier_info: TierInfo, players_per_character: int = 1) -> GauntletLoadout:
+    built = [build_loadout(name, tier_info) for name in names]
+    players: list[GauntletPlayerLoadout] = [
+        {key: value for key, value in loadout.items() if key != "tier_info"} for loadout in built
+    ]
+    team: GauntletLoadout = {**built[0], "players": players}
+    if players_per_character > 1:
+        team["players_per_character"] = players_per_character
+    return team
+
+
+def roll_gauntlet_team(
+    role: str,
+    current_streak: int,
+    completed_characters: list[str],
+    owned_characters: list[str],
+    game_mode: str,
+    count: int,
+) -> tuple[list[str], GauntletLoadout, TierInfo]:
+    """`count` characters for one match, drawn only from unbeaten ones while any remain.
+
+    An odd-sized roster means the last one left can't be paired with another
+    unbeaten character, so it fills the rest of the slots itself rather than
+    reaching into the beaten pool early.
+    """
+    tier_info = get_tier_info(current_streak, role, game_mode)
+
+    remaining = [c for c in owned_characters if c not in completed_characters]
+    pool = remaining or owned_characters or ["Meg Thomas" if role == "survivor" else "The Trapper"]
+
+    names = random.sample(pool, min(count, len(pool)))
+    if len(names) < count:
+        names += random.choices(pool, k=count - len(names))
+
+    return names, build_team_loadout(names, tier_info, get_players_per_character(game_mode)), tier_info

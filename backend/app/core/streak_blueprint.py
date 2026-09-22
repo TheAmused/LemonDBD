@@ -26,6 +26,7 @@ def make_streak_blueprint(
     invalid_value_hint: str,
     has_reveal: bool = True,
     reveal_method: str = "reveal",
+    game_modes: Sequence[str] | None = None,
 ) -> Blueprint:
     """Build the run/reveal/reset/stats endpoints shared by every "pick a
     mode, play a streak run" challenge (gauntlet, chaos, history). Each mode's
@@ -34,9 +35,20 @@ def make_streak_blueprint(
     gauntlet's auto-roll-next-run behavior) rather than just varying by
     parameter name, so forcing it through a shared shape would trade real
     clarity for a false abstraction.
+
+    `game_modes` opts a mode into per-variant runs: the first entry is the
+    default, and the chosen `game_mode` is handed to the service as a keyword.
     """
     bp = Blueprint(name, __name__, url_prefix=url_prefix)
     clean_value = make_value_cleaner(valid_values)
+
+    def read_mode_kwargs(source: Any) -> tuple[dict[str, str], tuple[Any, int] | None]:
+        if not game_modes:
+            return {}, None
+        game_mode = source.get("game_mode") or game_modes[0]
+        if game_mode not in game_modes:
+            return {}, (jsonify({"error": f"'game_mode' must be one of: {', '.join(game_modes)}"}), 400)
+        return {"game_mode": game_mode}, None
 
     @bp.route("/run", methods=["GET"])
     @login_required
@@ -44,9 +56,12 @@ def make_streak_blueprint(
         value = clean_value(request.args.get(param_name))
         if not value:
             return jsonify({"error": f"Query parameter '{param_name}' must be {invalid_value_hint}"}), 400
+        mode_kwargs, mode_error = read_mode_kwargs(request.args)
+        if mode_error:
+            return mode_error
         service = get_service()
         try:
-            run = service.get_or_create_run(g.current_user.id, value)
+            run = service.get_or_create_run(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
             return jsonify({"error": str(e)}), 400
         return jsonify({"run": run}), 200
@@ -74,9 +89,12 @@ def make_streak_blueprint(
         value = clean_value(data.get(param_name))
         if not value:
             return jsonify({"error": f"Field '{param_name}' must be {invalid_value_hint}"}), 400
+        mode_kwargs, mode_error = read_mode_kwargs(data)
+        if mode_error:
+            return mode_error
         service = get_service()
         try:
-            run = service.reset_run(g.current_user.id, value)
+            run = service.reset_run(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
             return jsonify({"error": str(e)}), 404
         return jsonify({"run": run}), 200
@@ -87,8 +105,11 @@ def make_streak_blueprint(
         value = clean_value(request.args.get(param_name))
         if not value:
             return jsonify({"error": f"Query parameter '{param_name}' must be {invalid_value_hint}"}), 400
+        mode_kwargs, mode_error = read_mode_kwargs(request.args)
+        if mode_error:
+            return mode_error
         service = get_service()
-        stats = service.get_stats(g.current_user.id, value)
+        stats = service.get_stats(g.current_user.id, value, **mode_kwargs)
         return jsonify({"stats": stats}), 200
 
     @bp.route("/completions", methods=["GET"])
@@ -97,8 +118,11 @@ def make_streak_blueprint(
         value = clean_value(request.args.get(param_name))
         if not value:
             return jsonify({"error": f"Query parameter '{param_name}' must be {invalid_value_hint}"}), 400
+        mode_kwargs, mode_error = read_mode_kwargs(request.args)
+        if mode_error:
+            return mode_error
         service = get_service()
-        completions = service.get_completions(g.current_user.id, value)
+        completions = service.get_completions(g.current_user.id, value, **mode_kwargs)
         return jsonify({"completions": completions}), 200
 
     return bp

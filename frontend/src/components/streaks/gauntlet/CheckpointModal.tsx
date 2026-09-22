@@ -3,13 +3,12 @@
 
 import React, { useEffect } from 'react';
 import { ShieldCheck, PartyPopper } from 'lucide-react';
-import type { Role, TierInfo } from '@/types/gauntletStreak';
+import type { Role } from '@/types/gauntletStreak';
 import type { Dictionary } from '@/locales/types';
 
 export interface CheckpointModalProps {
   checkpoint: number | null;
   role: Role;
-  nextTier: TierInfo | null;
   onClose: () => void;
   dict?: Dictionary;
 }
@@ -17,7 +16,6 @@ export interface CheckpointModalProps {
 export const CheckpointModal: React.FC<CheckpointModalProps> = ({
   checkpoint,
   role: _role,
-  nextTier,
   onClose,
   dict,
 }) => {
@@ -49,34 +47,15 @@ export const CheckpointModal: React.FC<CheckpointModalProps> = ({
         </div>
         <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-accent-green">
           <PartyPopper className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>{dict?.streaks?.checkpointBanked || 'Checkpoint banked'}</span>
+          <span>{dict?.streaks?.checkpointBanked || 'Checkpoint reached'}</span>
         </div>
         <h2 id="checkpoint-modal-title" className="mt-2 text-3xl font-black tracking-tight text-text-primary font-mono">
           {checkpoint} {dict?.streaks?.winsSuffix || 'wins'}
         </h2>
         <p className="mt-2 text-sm text-text-secondary">
           {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'}{' '}
-          <strong className="text-accent-green font-mono">{checkpoint}</strong>
-          {dict?.streaks?.notToZero || ', not to zero.'}
+          <strong className="text-accent-green font-mono">{checkpoint}</strong>.
         </p>
-        {nextTier && (
-          <p className="mt-4 text-xs text-text-muted">
-            {dict?.streaks?.nextUpLabel || 'Next up:'}{' '}
-            <strong className="text-text-primary">{nextTier.name}</strong>
-            {nextTier.perk_limit > 0
-              ? `, ${nextTier.perk_limit} ${nextTier.perk_limit > 1 ? (dict?.streaks?.perksAllowedPlural || 'perks allowed') : (dict?.streaks?.perksAllowedSingular || 'perk allowed')}`
-              : (dict?.streaks?.noPerksAllowed || ', no perks allowed')}
-            .
-          </p>
-        )}
-
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
-        >
-          {dict?.streaks?.keepGoing || 'Keep going'}
-        </button>
       </div>
     </div>
   );

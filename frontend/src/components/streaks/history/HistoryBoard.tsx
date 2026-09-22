@@ -21,6 +21,7 @@ import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -122,7 +123,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   };
 
   return (
-    <div>
+    <div className="pb-24">
       <Confetti active={celebrating} />
 
       <Link
@@ -199,35 +200,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               dict={dict}
             />
 
-            <div className="mt-5 flex items-center justify-center gap-4">
-              {!acceptedKillerId ? (
-                <button
-                  onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
-                  disabled={busy || !selectedKillerId}
-                  className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-                >
-                  {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleResult('win')}
-                    disabled={busy}
-                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-                  >
-                    {dict?.streaks?.winMatch || 'WIN MATCH'}
-                  </button>
-                  <button
-                    onClick={() => handleResult('loss')}
-                    disabled={busy}
-                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer"
-                  >
-                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
-                  </button>
-                </>
-              )}
-            </div>
-
             {run && (
               <HistoryNextRowPreview
                 killers={run.owned_killers}
@@ -236,6 +208,27 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 dict={dict}
               />
             )}
+
+            <StreakActionBar>
+              {!acceptedKillerId ? (
+                <StreakActionButton
+                  variant="red"
+                  onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
+                  disabled={busy || !selectedKillerId}
+                >
+                  {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
+                </StreakActionButton>
+              ) : (
+                <>
+                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                    {dict?.streaks?.winMatch || 'WIN MATCH'}
+                  </StreakActionButton>
+                  <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
+                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                  </StreakActionButton>
+                </>
+              )}
+            </StreakActionBar>
           </div>
         )}
 

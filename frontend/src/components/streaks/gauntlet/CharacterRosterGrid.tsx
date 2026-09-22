@@ -15,7 +15,12 @@ export interface CharacterRosterGridProps {
   characters: OwnedCharacterItem[];
   completedCharacters: string[];
   checkpointCharacters?: string[];
-  activeCharacterId?: string;
+  /** Every character currently in play (several in a duo match). */
+  activeCharacterIds?: string[];
+  /** When set, characters that are not completed become clickable picks. */
+  onSelectCharacter?: (name: string) => void;
+  /** The pick waiting to be accepted. */
+  selectedCharacterId?: string | null;
   loading?: boolean;
   dict?: Dictionary;
 }
@@ -25,7 +30,9 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   characters = [],
   completedCharacters = [],
   checkpointCharacters = [],
-  activeCharacterId,
+  activeCharacterIds = [],
+  onSelectCharacter,
+  selectedCharacterId = null,
   loading = false,
   dict,
 }) => {
@@ -43,7 +50,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     checkpointCharacters.some((c) => c.toLowerCase().trim() === charName.toLowerCase().trim());
 
   const isActiveTarget = (charName: string) =>
-    !!activeCharacterId && activeCharacterId.toLowerCase().trim() === charName.toLowerCase().trim();
+    activeCharacterIds.some((c) => c.toLowerCase().trim() === charName.toLowerCase().trim());
 
   const getAvatarUrl = (char: OwnedCharacterItem) =>
     staticUrl(char.avatar_local_path) ||
@@ -97,6 +104,8 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             let cardBorder = 'border-border-color hover:border-border-subtle bg-bg-surface shadow-sm';
             if (completed) {
               cardBorder = 'border-accent-green bg-accent-green/10 border-2';
+            } else if (selectedCharacterId && selectedCharacterId.toLowerCase().trim() === char.name.toLowerCase().trim()) {
+              cardBorder = 'border-accent-green border-2 bg-accent-green/10 ring-2 ring-accent-green';
             } else if (active) {
               cardBorder = 'border-accent-red animate-pulse shadow-lg border-2 bg-accent-red/10';
             } else if (checkpoint) {
@@ -104,12 +113,28 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             }
 
             const statusSuffix = completed ? ` (${completedText})` : active ? ` (${activeTargetText})` : '';
+            const selectable = Boolean(onSelectCharacter) && !completed;
 
             return (
               <div
                 key={char.name}
-                className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder}`}
+                className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
+                  selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
+                }`}
                 title={`${displayName(char.name)}${statusSuffix}`}
+                {...(selectable
+                  ? {
+                      role: 'button',
+                      tabIndex: 0,
+                      onClick: () => onSelectCharacter?.(char.name),
+                      onKeyDown: (e: React.KeyboardEvent) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelectCharacter?.(char.name);
+                        }
+                      },
+                    }
+                  : {})}
               >
                 {completed && (
                   <div className="absolute -top-2 -right-2 bg-accent-green text-text-inverted p-1 rounded-full shadow-md z-10">

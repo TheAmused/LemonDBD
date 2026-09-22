@@ -154,3 +154,106 @@ class TestSmashOrPassDataIntegrity:
             "cannot distinguish these; either make the slugs roster-unique or pass a "
             "resolvable roster_slug/edition on every vote call for these entities"
         )
+
+
+@pytest.mark.unit
+class TestCanonRosterIntegrity:
+    @pytest.fixture
+    def canon_entities(self) -> list[dict]:
+        _, entities_by_roster = load_rosters_from_json_files()
+        assert "canon" in entities_by_roster, "canon roster missing from loaded rosters"
+        return entities_by_roster["canon"]
+
+    def test_canon_has_exactly_98_entities(self, canon_entities: list[dict]) -> None:
+        assert len(canon_entities) == 98, f"expected 98 entities in canon roster, found {len(canon_entities)}"
+
+    def test_every_entity_has_required_identity_and_watermarks(self, canon_entities: list[dict]) -> None:
+        for e in canon_entities:
+            slug = e.get("slug")
+            assert e.get("name"), f"canon entity {slug} missing name"
+            assert e.get("role") in ("Survivor", "Killer"), f"canon entity {slug} missing or invalid role"
+            assert e.get("real_name"), f"canon entity {slug} missing real_name"
+            assert e.get("watermark_left"), f"canon entity {slug} missing watermark_left"
+            assert e.get("watermark_right"), f"canon entity {slug} missing watermark_right"
+
+    def test_every_entity_has_at_least_four_red_and_green_flags(self, canon_entities: list[dict]) -> None:
+        for e in canon_entities:
+            slug = e.get("slug")
+            red_flags = e.get("red_flags") or []
+            green_flags = e.get("green_flags") or []
+            assert len(red_flags) >= 4, f"canon entity {slug} has {len(red_flags)} red_flags (expected >= 4)"
+            assert len(green_flags) >= 4, f"canon entity {slug} has {len(green_flags)} green_flags (expected >= 4)"
+
+    def test_every_entity_has_polish_translations_with_flags(self, canon_entities: list[dict]) -> None:
+        for e in canon_entities:
+            slug = e.get("slug")
+            translations = e.get("translations") or {}
+            assert "pl" in translations, f"canon entity {slug} missing 'pl' translations"
+            pl = translations["pl"]
+            pl_red = pl.get("red_flags") or []
+            pl_green = pl.get("green_flags") or []
+            assert len(pl_red) >= 4, f"canon entity {slug} translations.pl has {len(pl_red)} red_flags (expected >= 4)"
+            assert len(pl_green) >= 4, f"canon entity {slug} translations.pl has {len(pl_green)} green_flags (expected >= 4)"
+
+    def test_no_templated_meme_strings(self, canon_entities: list[dict]) -> None:
+        forbidden = "always bringing chaos and unhinged energy"
+        for e in canon_entities:
+            slug = e.get("slug")
+            meme = e.get("meme") or ""
+            assert forbidden not in meme, f"canon entity {slug} contains generic meme template: {meme!r}"
+
+    def test_specific_exact_watermarks_and_names(self, canon_entities: list[dict]) -> None:
+        by_slug = {e["slug"]: e for e in canon_entities}
+
+        # leon_scott_kennedy: watermark_left == "LEON S.", watermark_right == "KENNEDY"
+        leon = by_slug.get("leon_scott_kennedy")
+        assert leon is not None, "leon_scott_kennedy not found"
+        assert leon.get("watermark_left") == "LEON S."
+        assert leon.get("watermark_right") == "KENNEDY"
+
+        # the_onryō: watermark_left == "THE ONRYŌ", watermark_right == "SADAKO", name == "The Onryō"
+        onryo = by_slug.get("the_onryō")
+        assert onryo is not None, "the_onryō not found"
+        assert onryo.get("name") == "The Onryō"
+        assert onryo.get("watermark_left") == "THE ONRYŌ"
+        assert onryo.get("watermark_right") == "SADAKO"
+
+        # the_shape: watermark_left == "THE SHAPE", watermark_right == "MICHAEL MYERS", name == "The Shape"
+        shape = by_slug.get("the_shape")
+        assert shape is not None, "the_shape not found"
+        assert shape.get("name") == "The Shape"
+        assert shape.get("watermark_left") == "THE SHAPE"
+        assert shape.get("watermark_right") == "MICHAEL MYERS"
+
+        # the_executioner: watermark_left == "THE EXECUTIONER", watermark_right == "PYRAMID HEAD", name == "The Executioner"
+        pyramid = by_slug.get("the_executioner")
+        assert pyramid is not None, "the_executioner not found"
+        assert pyramid.get("name") == "The Executioner"
+        assert pyramid.get("watermark_left") == "THE EXECUTIONER"
+        assert pyramid.get("watermark_right") == "PYRAMID HEAD"
+
+        # the_mastermind: watermark_left == "THE MASTERMIND", watermark_right == "ALBERT WESKER", name == "The Mastermind"
+        wesker = by_slug.get("the_mastermind")
+        assert wesker is not None, "the_mastermind not found"
+        assert wesker.get("name") == "The Mastermind"
+        assert wesker.get("watermark_left") == "THE MASTERMIND"
+        assert wesker.get("watermark_right") == "ALBERT WESKER"
+
+        # the_good_guy: watermark_left == "THE GOOD GUY", watermark_right == "CHUCKY", name == "The Good Guy"
+        chucky = by_slug.get("the_good_guy")
+        assert chucky is not None, "the_good_guy not found"
+        assert chucky.get("name") == "The Good Guy"
+        assert chucky.get("watermark_left") == "THE GOOD GUY"
+        assert chucky.get("watermark_right") == "CHUCKY"
+
+        # bill_overbeck: watermark_left == "BILL", watermark_right == "OVERBECK"
+        bill = by_slug.get("bill_overbeck")
+        assert bill is not None, "bill_overbeck not found"
+        assert bill.get("watermark_left") == "BILL"
+        assert bill.get("watermark_right") == "OVERBECK"
+
+        # eleven: watermark_left == "SURVIVOR", watermark_right == "ELEVEN"
+        eleven = by_slug.get("eleven")
+        assert eleven is not None, "eleven not found"
+        assert eleven.get("watermark_left") == "SURVIVOR"
+        assert eleven.get("watermark_right") == "ELEVEN"

@@ -8,6 +8,8 @@ import {
   encodeArchetypeShare,
   decodeArchetypeShare,
   buildArchetypeShareUrl,
+  buildTelegramShareUrl,
+  buildFacebookShareUrl,
   copyTextWithFallback,
   type VoteRecord,
 } from '../../utils/smashPersona';
@@ -249,6 +251,63 @@ test('SmashPersona: Deep-Link Encoding, Decoding, and URL Construction', async (
     assert.strictEqual(persona.totalVotes, 30);
     assert.strictEqual(persona.favoriteChar?.name, 'Feng Min');
     assert.strictEqual(persona.iconName, 'heart');
+  });
+
+  await t.test('buildTelegramShareUrl uses t.me on mobile and web.telegram.org on desktop', () => {
+    const url = 'https://lemondbd.com/pl/smash-or-pass?sop_k=mist_romantic';
+    const text = 'Romantyk z Mgły (33% Smash Rate)';
+
+    const mobileUrl = buildTelegramShareUrl(url, text, true);
+    assert.ok(mobileUrl.startsWith('https://t.me/share/url?'));
+    assert.ok(mobileUrl.includes(encodeURIComponent(url)));
+    assert.ok(mobileUrl.includes(encodeURIComponent(text)));
+
+    const desktopUrl = buildTelegramShareUrl(url, text, false);
+    assert.ok(desktopUrl.startsWith('https://web.telegram.org/a/#?tgaddr='));
+    // Ensures desktop does not route through dead tg:// handler on t.me
+    assert.ok(desktopUrl.includes(encodeURIComponent('tg://msg_url')));
+    assert.ok(decodeURIComponent(decodeURIComponent(desktopUrl)).includes(url));
+    assert.ok(decodeURIComponent(decodeURIComponent(desktopUrl)).includes(text));
+  });
+
+  await t.test('buildFacebookShareUrl formats u and quote parameters properly', () => {
+    const url = 'https://lemondbd.com/pl/smash-or-pass?sop_k=mist_romantic';
+    const text = 'Check out my archetype!';
+
+    const fbUrl = buildFacebookShareUrl(url, text);
+    assert.ok(fbUrl.startsWith('https://www.facebook.com/sharer/sharer.php?'));
+    assert.ok(fbUrl.includes(`u=${encodeURIComponent(url)}`));
+    assert.ok(fbUrl.includes(`quote=${encodeURIComponent(text)}`));
+
+    const fbUrlNoQuote = buildFacebookShareUrl(url);
+    assert.strictEqual(fbUrlNoQuote, `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`);
+  });
+
+  await t.test('decodeArchetypeShare enables dynamic OpenGraph tags from query param', () => {
+    const payload = {
+      k: 'redStainAddict',
+      r: 80,
+      s: 10,
+      ka: 90,
+      v: 25,
+      fn: 'Trapper',
+    };
+    const encoded = encodeArchetypeShare(payload);
+    const decoded = decodeArchetypeShare(encoded);
+    assert.ok(decoded);
+
+    const mockArchetypes = {
+      redStainAddict: {
+        title: 'Red Stain Addict',
+        desc: 'Attracted to raw danger and lethal power.',
+      },
+    };
+    const arch = mockArchetypes[decoded.k as keyof typeof mockArchetypes];
+    const ogTitle = `${arch.title} (${decoded.r}% Smash) | Smash or Pass - LemonDBD`;
+    const ogDesc = arch.desc;
+
+    assert.strictEqual(ogTitle, 'Red Stain Addict (80% Smash) | Smash or Pass - LemonDBD');
+    assert.strictEqual(ogDesc, 'Attracted to raw danger and lethal power.');
   });
 });
 

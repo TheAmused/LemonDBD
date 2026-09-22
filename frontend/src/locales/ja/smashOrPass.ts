@@ -292,5 +292,8 @@ export default {
     copiedQuote: '統計付き引用をコピーしました！',
     copyQuote: '引用とリンクをコピー（Discord用）',
     backToBreakdown: 'アーキタイプ分析に戻る',
+    copiedForDiscord: 'Discord用の引用とリンクをコピーしました！',
+    facebookNotice: 'Facebookを開きました！投稿テキストがクリップボードにコピーされました（Ctrl+Vで貼り付け）。',
+    telegramNotice: 'Telegramを開きました！メッセージテキストがクリップボードにコピーされました。',
   },
 } as const;

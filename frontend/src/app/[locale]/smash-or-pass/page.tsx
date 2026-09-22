@@ -2,13 +2,11 @@
 // frontend/src/app/[locale]/smash-or-pass/page.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { SmashOrPassHub } from '@/components/smash-or-pass/SmashOrPassHub';
 import { Locale } from '@/i18n/config';
-import { PerkItem, CharacterItem } from '@/components/character-detail/types';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { SmashHubSkeleton } from '@/components/smash-or-pass/SmashOrPassSkeleton';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -19,8 +17,6 @@ export default function SmashOrPassPage() {
   const locale = (params?.locale as Locale) || 'en';
 
   const dict = useDictionary();
-
-  const backendBase = getBackendBaseUrl();
 
   useDocumentTitle(dict?.app?.smashOrPassPageTitle || 'LemonDBD - Smash or Pass | Dead by Daylight Romance');
 

@@ -846,8 +846,8 @@ export function VoiceCommandBanner({
       aria-label={dict?.maps?.voiceEngineAria || ''}
       className={
         embedded
-          ? `relative flex w-full flex-col ${className}`
-          : `relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-3 sm:px-4 py-3 sm:py-4 md:min-h-[14.5rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300 ${className}`
+          ? `relative flex flex-1 h-full w-full flex-col ${className}`
+          : `relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300 ${className}`
       }
     >
       {!embedded && (
@@ -857,7 +857,7 @@ export function VoiceCommandBanner({
         </>
       )}
 
-      <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-2">
+      <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-3">
         <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 order-2 md:order-1 md:flex-1">
           <button
             type="button"
@@ -946,7 +946,7 @@ export function VoiceCommandBanner({
         </div>
       </div>
 
-      <div className="relative z-10 mt-3 flex flex-1 flex-col items-center justify-center gap-2 md:mt-0">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-2 py-1">
         <div className="flex w-full items-center justify-center gap-3 sm:gap-5">
           <div className="hidden sm:flex items-center gap-1.5 h-16 px-1" aria-hidden="true">
             {[7, 14, 24, 36, 46, 34, 20, 12].map((h, i) => {

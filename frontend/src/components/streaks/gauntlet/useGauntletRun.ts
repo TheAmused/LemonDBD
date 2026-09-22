@@ -2,12 +2,18 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { GauntletRun, GauntletStats, Role } from '@/types/gauntletStreak';
+import {
+  DEFAULT_GAUNTLET_GAME_MODE,
+  GauntletGameMode,
+  GauntletRun,
+  GauntletStats,
+  Role,
+} from '@/types/gauntletStreak';
 import { ChallengeCompletion } from '@/types/challengeCompletion';
 import * as api from '@/services/gauntletStreakApi';
 import { useAuth } from '@/context/AuthContext';
 
-export function useGauntletRun(role: Role) {
+export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_GAUNTLET_GAME_MODE) {
   const { token } = useAuth();
   const [run, setRun] = useState<GauntletRun | null>(null);
   const [stats, setStats] = useState<GauntletStats | null>(null);
@@ -22,36 +28,36 @@ export function useGauntletRun(role: Role) {
   const loadStats = useCallback(async () => {
     if (!token) return;
     try {
-      const resp = await api.fetchStats(token, role);
+      const resp = await api.fetchStats(token, role, gameMode);
       setStats(resp.stats);
     } catch (err) {
       console.error('Failed to load gauntlet stats:', err);
     }
-  }, [token, role]);
+  }, [token, role, gameMode]);
 
   const loadCompletions = useCallback(async () => {
     if (!token) return;
     try {
-      const resp = await api.fetchCompletions(token, role);
+      const resp = await api.fetchCompletions(token, role, gameMode);
       setCompletions(resp.completions);
     } catch (err) {
       console.error('Failed to load gauntlet completion history:', err);
     }
-  }, [token, role]);
+  }, [token, role, gameMode]);
 
   const load = useCallback(async () => {
     if (!token) return;
     setLoading(true);
     setError(null);
     try {
-      const resp = await api.fetchRun(token, role);
+      const resp = await api.fetchRun(token, role, gameMode);
       setRun(resp.run);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load this gauntlet');
     } finally {
       setLoading(false);
     }
-  }, [token, role]);
+  }, [token, role, gameMode]);
 
   useEffect(() => {
     load();
@@ -116,11 +122,19 @@ export function useGauntletRun(role: Role) {
     return mutate(() => api.revealTarget(token, run.id));
   }, [token, run, mutate]);
 
+  const chooseTarget = useCallback(
+    (character: string) => {
+      if (!token || !run) return;
+      return mutate(() => api.selectTarget(token, run.id, character));
+    },
+    [token, run, mutate]
+  );
+
   const reset = useCallback(() => {
     if (!token) return;
     setJustBankedCheckpoint(null);
-    return mutate(() => api.resetRun(token, role));
-  }, [token, role, mutate]);
+    return mutate(() => api.resetRun(token, role, gameMode));
+  }, [token, role, gameMode, mutate]);
 
   return {
     run,
@@ -132,6 +146,7 @@ export function useGauntletRun(role: Role) {
     reload: load,
     submitResult,
     reveal,
+    chooseTarget,
     reset,
     justBankedCheckpoint,
     dismissCheckpointCelebration,

@@ -1,6 +1,7 @@
 // frontend/src/utils/streakDifficultyPrefs.ts
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
+import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
 
 const CHAOS_DIFFICULTY_KEY = 'lemon_dbd_chaos_streak_difficulty_v1';
 const HISTORY_MODE_KEY = 'lemon_dbd_history_streak_mode_v1';
@@ -39,12 +40,12 @@ export function saveHistoryMode(mode: HistoryMode) {
   safeSet(HISTORY_MODE_KEY, mode);
 }
 
-export type GauntletMode = 'original' | 'lemon';
+export type GauntletMode = GauntletGameMode;
 export type GauntletRole = 'killer' | 'survivor';
 
 export function getSavedGauntletMode(role: GauntletRole): GauntletMode | null {
   const value = safeGet(`${GAUNTLET_MODE_KEY_PREFIX}_${role}`);
-  return value === 'original' || value === 'lemon' ? value : null;
+  return GAUNTLET_GAME_MODES.find((mode) => mode === value) ?? null;
 }
 
 export function saveGauntletMode(role: GauntletRole, mode: GauntletMode) {

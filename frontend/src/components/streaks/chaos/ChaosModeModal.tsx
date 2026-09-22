@@ -46,7 +46,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
     {
       value: 'easy',
       label: dict?.streaks?.chaosEasyLabel || 'Easy',
-      description: dict?.streaks?.chaosEasyDesc || 'A checkpoint banks every 5 wins.',
+      description: dict?.streaks?.chaosEasyDesc || 'A checkpoint every 5 wins.',
       icon: TierEasyIcon,
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('easy'),
@@ -57,7 +57,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
     {
       value: 'medium',
       label: dict?.streaks?.chaosMediumLabel || 'Medium',
-      description: dict?.streaks?.chaosMediumDesc || 'A checkpoint banks every 10 wins.',
+      description: dict?.streaks?.chaosMediumDesc || 'A checkpoint every 10 wins.',
       icon: TierMediumIcon,
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('medium'),

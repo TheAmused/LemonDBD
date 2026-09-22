@@ -1,6 +1,18 @@
 // frontend/src/types/gauntletStreak.ts
 export type Role = 'survivor' | 'killer';
 
+/** Mirrors the backend's GAME_MODES; each one keeps its own run per role. */
+export const GAUNTLET_GAME_MODES = ['original', 'lemon_solo', 'lemon_duo', 'lemon_squad'] as const;
+export type GauntletGameMode = (typeof GAUNTLET_GAME_MODES)[number];
+
+/** Modes where the player picks the character instead of the server rolling one. */
+export const PICK_CHARACTER_MODES: readonly GauntletGameMode[] = ['lemon_solo'];
+export const DEFAULT_GAUNTLET_GAME_MODE: GauntletGameMode = 'original';
+
+export function parseGauntletGameMode(value: string | null | undefined): GauntletGameMode {
+  return GAUNTLET_GAME_MODES.find((mode) => mode === value) ?? DEFAULT_GAUNTLET_GAME_MODE;
+}
+
 export interface Perk {
   id?: number;
   name: string;
@@ -10,10 +22,22 @@ export interface Perk {
   icon_local_path?: string;
 }
 
+export interface GauntletPlayerLoadout {
+  character: string;
+  character_perks: Perk[];
+  random_perks?: Perk[];
+}
+
 export interface GauntletLoadout {
   character: string;
   /** The target's own teachable perks, shown as the suggested first-slot picks. */
   character_perks: Perk[];
+  /** Dealt instead of an empty loadout on a tier that otherwise allows no perks. */
+  random_perks?: Perk[];
+  /** One entry per character when a match deals several (duo); the fields above mirror the first. */
+  players?: GauntletPlayerLoadout[];
+  /** Set in squad matches: how many people share each entry in `players`. */
+  players_per_character?: number;
 }
 
 export interface TierInfo {
@@ -25,6 +49,8 @@ export interface TierInfo {
   description: string;
   /** The original challenge's roster cutoff for this role (43 killers, 52 survivors). */
   roster_limit: number;
+  /** How many of the target's own perks are dealt at random; 0 outside the solo last tier. */
+  random_perk_count: number;
 }
 
 export interface GauntletRun {

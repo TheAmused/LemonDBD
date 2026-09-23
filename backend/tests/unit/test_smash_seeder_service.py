@@ -94,7 +94,7 @@ class TestSmashSeederService:
         active_rosters = service.get_rosters(active_only=True)
         all_rosters = service.get_rosters(active_only=False)
 
-        assert len(active_rosters) == 2
+        assert len(active_rosters) == 3
         assert len(all_rosters) == 6
         canon = next((r for r in active_rosters if r["slug"] == "canon"), None)
         assert canon is not None

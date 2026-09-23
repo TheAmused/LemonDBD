@@ -20,6 +20,7 @@ import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
@@ -264,42 +265,26 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               </div>
             </div>
 
-            {/* Same fixed sidebar-aware bottom bar as the character ownership
-                editor (CharactersHub), so this is always reachable without
-                scrolling through the (potentially long) killer roster above. */}
-            <div className="fixed left-[var(--sidebar-width,0rem)] right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[left] duration-300">
-              <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
-                {!acceptedKillerId ? (
-                  <button
-                    type="button"
-                    onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
-                    disabled={busy || !run?.perks_revealed || !selectedKillerId}
-                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer"
-                  >
-                    {dict?.streaks?.acceptPick || ''}
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => handleResult('win')}
-                      disabled={busy}
-                      className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer"
-                    >
-                      {dict?.streaks?.winMatch || ''}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleResult('loss')}
-                      disabled={busy}
-                      className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer"
-                    >
-                      {dict?.streaks?.loseMatch || ''}
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
+            <StreakActionBar>
+              {!acceptedKillerId ? (
+                <StreakActionButton
+                  variant="red"
+                  onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
+                  disabled={busy || !run?.perks_revealed || !selectedKillerId}
+                >
+                  {dict?.streaks?.acceptPick || ''}
+                </StreakActionButton>
+              ) : (
+                <>
+                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                    {dict?.streaks?.winMatch || ''}
+                  </StreakActionButton>
+                  <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
+                    {dict?.streaks?.loseMatch || ''}
+                  </StreakActionButton>
+                </>
+              )}
+            </StreakActionBar>
           </>
         )}
 

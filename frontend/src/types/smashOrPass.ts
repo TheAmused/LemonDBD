@@ -77,6 +77,9 @@ export interface EntityItem {
   roster_id: string;
   slug: string;
   name: string;
+  real_name?: string;
+  watermark_left?: string;
+  watermark_right?: string;
   role: CharacterRole | string;
   gender: CharacterGender | string;
   media_url?: string | null;
@@ -92,8 +95,8 @@ export interface EntityItem {
 export interface RosterItem {
   id: string;
   slug: string;
-  name_i18n_key: string;
-  description_i18n_key: string;
+  name: string;
+  description: string;
   cover_image_url?: string | null;
   theme_color: string;
   category: string;
@@ -102,8 +105,6 @@ export interface RosterItem {
   entity_count?: number;
   character_count?: number;
   total_votes?: number;
-  name?: string;
-  description?: string;
   created_at?: string | null;
 }
 

@@ -9,7 +9,7 @@ import React from 'react';
  * positioning. The board itself should keep bottom padding so nothing hides
  * behind the bar. */
 export const StreakActionBar: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md lemon-shell-main">
+  <div className="fixed left-[var(--sidebar-width,0rem)] right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[left] duration-300">
     <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">{children}</div>
   </div>
 );

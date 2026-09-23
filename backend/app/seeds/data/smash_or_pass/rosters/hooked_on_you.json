@@ -5,108 +5,165 @@
   "rosters": [
     {
       "slug": "hooked_on_you",
-      "name_i18n_key": "smashOrPass.rosters.hooked_on_you.name",
-      "description_i18n_key": "smashOrPass.rosters.hooked_on_you.desc",
+      "name": "Hooked on You: Island Romance",
+      "description": "Tropical paradise dating simulator characters.",
+      "translations": {
+        "pl": {
+          "name": "Hooked on You: Randki na Wyspie",
+          "description": "Postacie z tropikalnego symulatora randkowego."
+        },
+        "de": {
+          "name": "Hooked on You: Insel-Romanze",
+          "description": "Charaktere des tropischen Dating-Simulator-Paradieses."
+        },
+        "es": {
+          "name": "Hooked on You: Romance en la Isla",
+          "description": "Personajes del simulador de citas en el paraíso tropical."
+        },
+        "ja": {
+          "name": "Hooked on You: 恋のキラーアイランド",
+          "description": "常夏の楽園で繰り広げられる恋愛シミュレーションのキャラクターたち。"
+        }
+      },
       "cover_image_url": "/static/avatars/rosters/hooked_on_you.webp",
       "theme_color": "#00f5d4",
       "category": "Dating Sim",
       "is_nsfw": false,
-      "is_active": false,
+      "is_active": true,
       "entities": [
         {
           "slug": "the_trapper_hoy",
-          "name": "The Trapper (Island)",
+          "name": "The Trapper",
+          "real_name": "Evan MacMillan",
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_trapper_hoy.webp",
           "media_type": "image",
+          "watermark_left": "THE TRAPPER",
+          "watermark_right": "ISLAND",
           "archetype": "The Brooding Beach Jock",
-          "bio": "He may look intimidating with his machete and spiked traps, but take him on a walk along the tropical beach and he might just show you his soft, artistic side.",
           "tagline": "Muscles, bear traps, and secretly loves carving romantic driftwood.",
+          "bio": "Beneath the intimidating carved mask and beach trunks beats the heart of a brooding artist. Evan takes beach volleyball deathly seriously, but win his favor and he'll carve you intimate driftwood figurines and carry you along the shore.",
           "quote": "\"If you step into my snare, I won’t let you go easily.\"",
-          "meme": "Meme: The Trapper (Island) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Sun-kissed skin and deep philosophical conversations under the stars",
-          "dealbreaker": "People who touch his private trap stash",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Steps on his own traps when flustered",
-            "Aggressive arm wrestling"
-          ],
-          "green_flags": [
-            "Enjoys romantic sunsets",
-            "Will carry you when tired",
-            "Protective to a fault"
-          ],
+          "meme": "Flexing his abs to distract you while quietly setting a bear trap right by your beach towel.",
+          "turn_on": "Sun-kissed skin, mutual respect in sports, and admiring his driftwood sculptures",
+          "dealbreaker": "Laughing when he trips over his own beach trap or touching his private tool stash",
+          "dating_vibe": "Tense tropical romance where athletic pride masks tender artistic longing",
           "danger_level": "High",
           "chaos_score": 75,
+          "green_flags": [
+            "Will carry you across the sand when your feet hurt",
+            "Carves personalized driftwood trinkets for your dates",
+            "Protective to a fault during beach games",
+            "Gives gentle advice under the moonlit palms",
+            "Takes genuine pride in preparing romantic beach cabanas"
+          ],
+          "red_flags": [
+            "Steps on his own traps when flustered or embarrassed",
+            "Extremely sore loser at beach volleyball",
+            "Arm wrestling matches are always to the death",
+            "Refuses to take off his mask even while swimming",
+            "Mistrusts anyone who compliments his sensitive artistic side"
+          ],
           "translations": {
-            "de": {
-              "archetype": "The Trapper (Island): Killer im Nebel",
-              "bio": "The Trapper (Island) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: The Trapper (Island) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Traper",
+              "archetype": "Posępny Plażowy Siłacz",
+              "tagline": "Mięśnie, wnyki na niedźwiedzie i skrywana pasja do rzeźbienia w drewnie.",
+              "bio": "Pod groźną maską i plażowymi spodenkami kryje się wrażliwy, zamyślony artysta. Evan traktuje siatkówkę plażową śmiertelnie poważnie, ale gdy zdobędziesz jego zaufanie, wyrzeźbi dla ciebie urocze figurki z wyrzuconego przez morze drewna i poniesie cię wzdłuż brzegu.",
+              "quote": "„Jeśli wpadniesz w moje sidła, tak łatwo cię nie wypuszczę.”",
+              "meme": "Napina bicepsy, by cię rozproszyć, jednocześnie po cichu rozstawiając wnyk tuż obok ręcznika.",
+              "turn_on": "Muśnięta słońcem skóra, sportowy duch walki i podziwianie jego rzeźb z drewna",
+              "dealbreaker": "Śmianie się, gdy sam potknie się o własny wnyk, lub ruszanie jego narzędzi",
+              "dating_vibe": "Napięty tropikalny romans, w którym sportowa duma skrywa artystyczną czułość",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Tödliche Präzision"
+                "Poniesie cię na rękach przez piasek, gdy rozbolą cię stopy",
+                "Rzeźbi spersonalizowane figurki z drewna na wasze randki",
+                "Niezwykle opiekuńczy podczas plażowych rozgrywek",
+                "Służy ciepłą radą pod palmami w blasku księżyca",
+                "Szczerze dba o przygotowanie romantycznej plażowej altany"
+              ],
+              "red_flags": [
+                "Sam wpada we własne sidła, gdy jest zawstydzony",
+                "Fatalnie znosi przegraną w siatkówkę plażową",
+                "Siłowanie się na rękę zawsze traktuje jak walkę na śmierć i życie",
+                "Nigdy nie zdejmuje maski, nawet podczas kąpieli w oceanie",
+                "Staje się podejrzliwy, gdy ktoś chwali jego wrażliwą naturę"
+              ]
+            },
+            "de": {
+              "name": "Der Fallensteller",
+              "archetype": "Der grüblerische Strand-Athlet",
+              "tagline": "Muskeln, Bärenfallen und eine heimliche Liebe für Treibholz-Schnitzereien.",
+              "bio": "Unter der furchterregenden Maske und den Badeshorts schlägt das Herz eines nachdenklichen Künstlers. Evan nimmt Beachvolleyball todernst, doch wer sein Herz erobert, wird mit geschnitzten Treibholz-Figuren beschenkt und auf Händen am Strand getragen.",
+              "quote": "„Wenn du erst in meiner Falle sitzt, lasse ich dich nicht mehr so leicht gehen.“",
+              "meme": "Spannt seine Muskeln an, um dich abzulenken, während er heimlich eine Bärenfalle neben dein Strandtuch legt.",
+              "turn_on": "Sonnengewärmte Haut, sportlicher Ehrgeiz und Bewunderung für seine Holzkunst",
+              "dealbreaker": "Lachen, wenn er über seine eigene Falle stolpert, oder sein Werkzeug ungefragt anfassen",
+              "dating_vibe": "Intensive Insel-Romanze, bei der athletischer Stolz zarte Künstlersehnsucht verbirgt",
+              "green_flags": [
+                "Trägt dich über den heißen Sand, wenn dir die Füße wehtun",
+                "Schnitzt persönliche Treibholz-Souvenirs für eure Stranddates",
+                "Äußerst beschützerisch bei allen Aktivitäten auf der Insel",
+                "Gibt einfühlsame Ratschläge im Mondschein unter Palmen",
+                "Gibt sich größte Mühe beim Aufbau romantischer Strand-Bungalows"
+              ],
+              "red_flags": [
+                "Tritt vor Verlegenheit in seine eigenen Fallen",
+                "Äußerst schlechter Verlierer beim Beachvolleyball",
+                "Armdrücken ist für ihn stets ein Duell auf Leben und Tod",
+                "Weigert sich, selbst beim Schwimmen seine Maske abzunehmen",
+                "Wird misstrauisch, sobald man seine sensible Seite anspricht"
               ]
             },
             "es": {
-              "archetype": "The Trapper (Island): Asesino en la Niebla",
-              "bio": "The Trapper (Island) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: The Trapper (Island) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "El Trampero",
+              "archetype": "El musculoso atleta taciturno",
+              "tagline": "Músculos de acero, trampas para osos y una pasión secreta por tallar madera.",
+              "bio": "Bajo la intimidante máscara y el bañador late el corazón de un artista reflexivo. Evan se toma el voleibol de playa a muerte, pero si ganas su aprecio, te tallará figuras de madera flotante y te llevará en brazos por la orilla.",
+              "quote": "«Si caes en mi trampa, no te dejaré escapar fácilmente».",
+              "meme": "Marca bíceps para distraerte mientras coloca disimuladamente un cepo junto a tu toalla.",
+              "turn_on": "Piel bronceada por el sol, competitividad deportiva y admiración por sus esculturas",
+              "dealbreaker": "Burlarse cuando tropieza con su propia trampa o tocar sus herramientas sin permiso",
+              "dating_vibe": "Romance tropical cargado de tensión donde el orgullo atlético oculta gran ternura",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Eficacia letal"
+                "Te lleva en brazos por la arena cuando te duelen los pies",
+                "Talla recuerdos personalizados de madera flotante para vuestras citas",
+                "Sumamente protector durante los juegos de playa",
+                "Ofrece consejos sinceros bajo las palmeras a la luz de la luna",
+                "Se esmera al máximo decorando cabañas románticas junto al mar"
+              ],
+              "red_flags": [
+                "Pisa sus propias trampas cuando se pone nervioso o avergonzado",
+                "Pésimo perdedor jugando al voleibol de playa",
+                "Cualquier pulso es para él un combate a vida o muerte",
+                "Se niega a quitarse la máscara incluso para nadar en el mar",
+                "Desconfía de quien elogia su lado más sensible o artístico"
               ]
             },
             "ja": {
-              "archetype": "The Trapper (Island): 霧のキラー",
-              "bio": "The Trapper (Island)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のThe Trapper (Island) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "トラッパー",
+              "archetype": "寡黙なビーチのアスリート",
+              "tagline": "逞しい肉体、トラバサミ、そして流木彫刻を愛する繊細な心。",
+              "bio": "威圧的な仮面と海パンの下には、思慮深い芸術家の心が隠されています。ビーチバレーには命がけで挑みますが、心を許した相手には手作りの流木彫刻を贈り、砂浜でお姫様抱っこをしてくれます。",
+              "quote": "「俺の罠にかかったからには、簡単には逃がさない。」",
+              "meme": "筋肉をアピールして相手の目を引きながら、ビーチタオルの横にこっそりトラバサミを設置する。",
+              "turn_on": "陽に焼けた肌、スポーツマンシップ、そして彼の彫刻作品への理解",
+              "dealbreaker": "自分の罠に引っかかった彼を笑うことや、大切な工具を勝手に触ること",
+              "dating_vibe": "筋骨隆々なプライドの裏に純情な優しさが光るトロピカルロマンス",
               "green_flags": [
-                "試練での高い集中力",
-                "圧倒的な攻撃力"
-              ]
-            },
-            "pl": {
-              "archetype": "The Trapper (Island): Zabójca we Mgle",
-              "bio": "The Trapper (Island) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Plaża czy las – i tak wpadniesz w moje sidła.”",
-              "meme": "Meme: The Trapper (Island) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "足が痛い時は砂浜をお姫様抱っこで運んでくれる",
+                "デートの記念に特製の流木彫刻をプレゼントしてくれる",
+                "ビーチの危険から何があっても全力で守ってくれる",
+                "月明かりのヤシの木の下で真摯に相談に乗ってくれる",
+                "ロマンチックなプライベート空間の設営に全力を注ぐ"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+              "red_flags": [
+                "照れくさくなると慌てて自分の罠を踏んづけてしまう",
+                "ビーチバレーで負けると本気で機嫌を損ねる",
+                "腕相撲を常に命懸けの真剣勝負だと勘違いしている",
+                "海で泳いでいる最中でも絶対に仮面を外そうとしない",
+                "繊細な一面を褒められると疑心暗鬼になって警戒する"
               ]
             }
           },
@@ -115,98 +172,137 @@
         },
         {
           "slug": "the_huntress_hoy",
-          "name": "The Huntress (Bikini)",
+          "name": "The Huntress",
+          "real_name": "Anna",
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_huntress_hoy.webp",
           "media_type": "image",
-          "archetype": "The Amazonian Beach Queen",
-          "bio": "Standing tall with undeniable athletic grace, she will catch fish with her bare hands for your candlelit beach dinner and sing you gentle melodies until dawn.",
-          "tagline": "Loves coconut bowling, throwing hatchets, and singing island lullabies.",
-          "quote": "\"La la la... You belong by my side.\"",
-          "meme": "Meme: The Huntress (Bikini) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Courage, loyalty, and someone who appreciates a good bear hug",
-          "dealbreaker": "Cowards who run away from a friendly sparring match",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Throws hatchets at rival suitors",
-            "Communication via animal grunts"
-          ],
-          "green_flags": [
-            "Provides abundant seafood feasts",
-            "Towering Amazonian cuddles",
-            "Passionate singer"
-          ],
+          "watermark_left": "THE HUNTRESS",
+          "watermark_right": "ISLAND",
+          "archetype": "The Fierce Wilderness Protector",
+          "tagline": "Towering muscle, gentle island lullabies, and fresh forest feasts.",
+          "bio": "A towering force of nature in a playful polka-dot bikini and bunny mask. Anna expresses affection through hunted crab delicacies, handcrafted woodland charms, and singing hauntingly sweet lullabies around the bonfire.",
+          "quote": "\"You stay with Anna. Anna protect you from everything.\"",
+          "meme": "Throwing hatchets at beach umbrellas just to give you the perfect patch of shade.",
+          "turn_on": "Hearty appetites, enjoying outdoor picnics, and listening to ancient lullabies",
+          "dealbreaker": "Wasting fresh island food or disrespecting her handcrafted forest totems",
+          "dating_vibe": "Wilderness devotion where overwhelming strength meets deep maternal tenderness",
           "danger_level": "High",
-          "chaos_score": 75,
+          "chaos_score": 80,
+          "green_flags": [
+            "Hand-carves wooden animal totems as tokens of affection",
+            "Sings hauntingly soothing lullabies by the campfire",
+            "Fiercely defends you against any island threats",
+            "Catches fresh lobster and crabs for your candlelight dinners",
+            "Genuinely wants to build a cozy island home together"
+          ],
+          "red_flags": [
+            "Insists that raw game meat is the best aphrodisiac",
+            "Throws hatchets when she gets startled or excited",
+            "Considers kidnapping an acceptable early courting gesture",
+            "Suffocatingly overprotective to the point of confinement",
+            "Believes all disputes are settled by an axe-throwing duel"
+          ],
           "translations": {
-            "de": {
-              "archetype": "The Huntress (Bikini): Killer im Nebel",
-              "bio": "The Huntress (Bikini) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: The Huntress (Bikini) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Łowczyni",
+              "archetype": "Dzika Strażniczka Puszczy",
+              "tagline": "Imponująca siła, kojące wyspiarskie kołysanki i leśne uczty.",
+              "bio": "Potężna siła natury w stroju w grochy i masce królika. Anna okazuje miłość poprzez upolowane kraby, ręcznie rzeźbione totemy i śpiewanie nostalgicznych kołysanek przy ognisku.",
+              "quote": "„Zostań z Anną. Anna obroni cię przed wszystkim.”",
+              "meme": "Rzuca toporami w parasole plażowe tylko po to, by zapewnić ci idealny cień.",
+              "turn_on": "Wilczy apetyt, pikniki pod gołym niebem i słuchanie dawnych pieśni",
+              "dealbreaker": "Marnowanie jedzenia lub brak szacunku dla jej leśnych totemów",
+              "dating_vibe": "Dzika leśna czułość, w której nadludzka siła spotyka matczyną opiekuńczość",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Tödliche Präzision"
+                "Ręcznie rzeźbi drewniane figurki zwierząt w dowód uczucia",
+                "Śpiewa kojące kołysanki przy płonącym ognisku",
+                "Zażarcie chroni cię przed jakimkolwiek niebezpieczeństwem",
+                "Łowi świeże homary i kraby na wasze wspólne kolacje",
+                "Szczerze marzy o zbudowaniu przytulnego wspólnego szałasu"
+              ],
+              "red_flags": [
+                "Uważa, że surowe mięso z dziczyzny to najlepszy afrodyzjak",
+                "Rzuca toporami z ekscytacji lub gdy ktoś ją zaskoczy",
+                "Traktuje uprowadzenie jako całkowicie normalny gest zalotów",
+                "Opiekuńczość granicząca z trzymaniem cię pod kluczem",
+                "Wszelkie spory próbuje rozstrzygać pojedynkiem na topory"
+              ]
+            },
+            "de": {
+              "name": "Die Jägerin",
+              "archetype": "Die ungezähmte Wildnis-Kriegerin",
+              "tagline": "Imposante Muskeln, sanfte Insel-Schlaflieder und üppige Strand-Festmähler.",
+              "bio": "Eine gewaltige Naturgewalt im gepunkteten Bikini und Hasenmaske. Anna zeigt Zuneigung durch gefangene Meeresfrüchte, geschnitzte Waldtotems und berührende Schlaflieder am Lagerfeuer.",
+              "quote": "„Du bleibst bei Anna. Anna beschützt dich vor allem.“",
+              "meme": "Wirft Beile nach Sonnenschirmen, nur um dir das perfekte Fleckchen Schatten zu verschaffen.",
+              "turn_on": "Gesunder Appetit, Picknicks im Freien und Lauschen uralter Lieder",
+              "dealbreaker": "Verschwendung von Nahrung oder Respektlosigkeit gegenüber ihren Totems",
+              "dating_vibe": "Hingebungsvolle Wildnis-Liebe zwischen unbändiger Stärke und tiefer Fürsorge",
+              "green_flags": [
+                "Schnitzt hölzerne Tiertotems als Liebesbeweis für dich",
+                "Singt beruhigende Schlaflieder am knisternden Lagerfeuer",
+                "Verteidigt dich furchtlos gegen jede Bedrohung auf der Insel",
+                "Fängt frische Krebse und Hummer für romantische Strandessen",
+                "Möchte ein gemütliches Inselheim mit dir aufbauen"
+              ],
+              "red_flags": [
+                "Hält rohes Fleisch für das absolut beste Aphrodisiakum",
+                "Wirft mit Beilen um sich, wenn sie aufgeregt ist",
+                "Betrachtet Entführung als völlig legitime Form des Kennenlernens",
+                "Überfürsorglich bis hin zum Freiheitsentzug am Strand",
+                "Will Meinungsverschiedenheiten stets im Axtwerfen austragen"
               ]
             },
             "es": {
-              "archetype": "The Huntress (Bikini): Asesino en la Niebla",
-              "bio": "The Huntress (Bikini) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: The Huntress (Bikini) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "La Cazadora",
+              "archetype": "La feroz protectora salvaje",
+              "tagline": "Fuerza titánica, dulces nanas de cuna y banquetes frescos de la selva.",
+              "bio": "Una imponente fuerza natural en bikini de lunares y máscara de liebre. Anna demuestra su cariño pescando marisco fresco, tallando totems protectores y cantando nanas ancestrales junto a la hoguera.",
+              "quote": "«Tú quédate con Anna. Anna te protegerá de todo».",
+              "meme": "Lanza hachas contra las sombrillas de playa solo para regalarte la sombra perfecta.",
+              "turn_on": "Buen apetito, disfrutar de picnics al aire libre y escuchar viejas canciones",
+              "dealbreaker": "Desperdiciar comida fresca o faltarle al respeto a sus talismanes de madera",
+              "dating_vibe": "Devoción salvaje donde la fuerza física arrolladora se funde con tierna devoción",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Eficacia letal"
+                "Talla talismanes de animales en madera como muestra de cariño",
+                "Canta nanas tradicionales y relajantes junto a la hoguera",
+                "Te defiende con fiereza ante cualquier peligro de la isla",
+                "Pesca langostas y cangrejos frescos para vuestras cenas íntimas",
+                "Desea de corazón construir un hogar cálido y seguro a tu lado"
+              ],
+              "red_flags": [
+                "Insiste en que la carne cruda de caza es el mayor manjar de seducción",
+                "Lanza hachas voladoras cada vez que se entusiasma o se asusta",
+                "Considera el rapto como un método perfectamente válido para ligar",
+                "Protección asfixiante que raya en el encierro consentido",
+                "Cree que todas las discusiones se solucionan compitiendo a lanzar hachas"
               ]
             },
             "ja": {
-              "archetype": "The Huntress (Bikini): 霧のキラー",
-              "bio": "The Huntress (Bikini)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のThe Huntress (Bikini) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "ハントレス",
+              "archetype": "獰猛で優しい森の守護者",
+              "tagline": "圧倒的な腕力、哀愁漂う子守唄、そして新鮮な海の幸のごちそう。",
+              "bio": "水玉ビキニとウサギの仮面を身につけた大自然の象徴。アンナは自ら仕留めた獲物や木彫りの動物のお守りを贈り、焚き火のそばで切なく優しい子守唄を歌うことで愛情を伝えます。",
+              "quote": "「アンナのそばにいなさい。アンナが全部から守ってあげる。」",
+              "meme": "快適な日陰を作ってあげるためだけに、パラソルめがけて手斧を投擲する。",
+              "turn_on": "旺盛な食欲、野外での食事、そして伝統的な歌に耳を傾けること",
+              "dealbreaker": "食事を残すことや、手作りのトーテムを雑に扱うこと",
+              "dating_vibe": "圧倒的なパワーと母性的な優しさが交錯する大自然の純情愛",
               "green_flags": [
-                "試練での高い集中力",
-                "圧倒的な攻撃力"
-              ]
-            },
-            "pl": {
-              "archetype": "The Huntress (Bikini): Zabójca we Mgle",
-              "bio": "The Huntress (Bikini) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Mój topór jest ostry, ale na plaży szukam kogoś do pary.”",
-              "meme": "Meme: The Huntress (Bikini) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "愛情の証として手彫りの動物トーテムを作ってくれる",
+                "夜の焚き火のそばで心安らぐ子守唄を優しく歌ってくれる",
+                "島のあらゆる脅威から我が身を挺して全力で守ってくれる",
+                "ロマンチックな晩餐のために新鮮なカニやロブスターを獲ってくる",
+                "二人で安心して暮らせる居心地のよい小屋を作ろうとしてくれる"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+              "red_flags": [
+                "生肉こそが最高の精力剤だと信じて疑わない",
+                "興奮したり驚いたりすると反射的に手斧を投げ飛ばしてしまう",
+                "お持ち帰り（物理的な拉致）を正当な求愛行動だと思っている",
+                "過保護が高じて相手を一歩も外に出さなくなってしまう",
+                "意見の食い違いはすべて斧投げ対決で解決しようとする"
               ]
             }
           },
@@ -215,98 +311,137 @@
         },
         {
           "slug": "the_spirit_hoy",
-          "name": "The Spirit (Resort)",
+          "name": "The Spirit",
+          "real_name": "Rin Yamaoka",
           "role": "Killer",
           "gender": "female",
           "media_url": "/static/avatars/killers/the_spirit_hoy.webp",
           "media_type": "image",
-          "archetype": "The Goth Resort Princess",
-          "bio": "Floating just above the warm sand, Rin enjoys quiet afternoons reading gothic literature under a wide palm umbrella, phasing in and out of your vision to tease you.",
-          "tagline": "Sunhat, dark parasol, and loves sipping tropical mocktails in the shade.",
-          "quote": "\"I will appear where you least expect me... next to you.\"",
-          "meme": "Meme: The Spirit (Resort) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Patience, shared silence, and genuine emotional honesty",
-          "dealbreaker": "Loud party crashers and betrayal of trust",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Phases away during arguments",
-            "Sword practice near poolside"
-          ],
-          "green_flags": [
-            "Extremely loyal once trust is earned",
-            "Aesthetic goth fashion sense",
-            "Intense eye contact"
-          ],
+          "watermark_left": "THE SPIRIT",
+          "watermark_right": "ISLAND",
+          "archetype": "The Melancholic Goth Bather",
+          "tagline": "Sarcastic humor, sharp katana, and sunbathing with a parasol.",
+          "bio": "Moody, stylish, and armed with biting deadpan wit. Rin lounges under black parasols sipping iced tea, hiding a vulnerable yearning for true connection beneath layers of supernatural detachment and glass shards.",
+          "quote": "\"I came here to relax, not to fall in love. But don't you dare look away.\"",
+          "meme": "Phasing directly through beach cabana walls just to sigh dramatically at bad jokes.",
+          "turn_on": "Black parasols, dark poetry, quiet stargazing, and genuine emotional honesty",
+          "dealbreaker": "Being loud and obnoxious or acting fake just to impress people",
+          "dating_vibe": "Sublime gothic melancholy turned into witty, tender beachside romance",
           "danger_level": "High",
-          "chaos_score": 75,
+          "chaos_score": 70,
+          "green_flags": [
+            "Incredible taste in books, poetry, and midnight stargazing",
+            "Unfiltered honesty—she will never play fake mind games",
+            "Protects your personal space like sacred territory",
+            "Shares her secret quiet spots on the cliffside",
+            "Appreciates thoughtful gestures more than lavish gifts"
+          ],
+          "red_flags": [
+            "Phases out of existence mid-argument when annoyed",
+            "Her glass shards occasionally drop into the cocktail ice",
+            "Holds generational grudges over trivial misunderstandings",
+            "Threatens to slice your beach towel in half if you wake her",
+            "Prone to intense bouts of vengeful spirit fury"
+          ],
           "translations": {
-            "de": {
-              "archetype": "The Spirit (Resort): Killer im Nebel",
-              "bio": "The Spirit (Resort) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: The Spirit (Resort) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Spiryt",
+              "archetype": "Melancholijna Gotycka Plażowiczka",
+              "tagline": "Cięty sarkazm, ostra katana i opalanie się pod czarną parasolką.",
+              "bio": "Tajemnicza, stylowa i obdarzona bezbłędnym, ironicznym humorem. Rin odpoczywa pod czarnym parasolem, popijając mrożoną herbatę i ukrywając pod szkłem i dystansem pragnienie prawdziwej bliskości.",
+              "quote": "„Przyszłam tu odpocząć, a nie zakochiwać się. Ale spróbuj tylko odwrócić wzrok.”",
+              "meme": "Dematerializuje się prosto przez ścianę plażowej chatki tylko po to, by teatralnie westchnąć.",
+              "turn_on": "Czarne parasolki, mroczna poezja, nocne patrzenie w gwiazdy i emocjonalna szczerość",
+              "dealbreaker": "Głośne, wulgarne zachowanie i fałszywość na pokaz",
+              "dating_vibe": "Subtelny gotycki nastrój przemieniony w dowcipny, czuły nadmorski romans",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Tödliche Präzision"
+                "Wyśmienity gust literacki i pasja do nocnego oglądania gwiazd",
+                "Krystaliczna szczerość—nigdy nie bawi się w fałszywe gierki",
+                "Szanuje twoją przestrzeń prywatną jak świętość",
+                "Dzieli się z tobą swoimi sekretnymi zakątkami na klifie",
+                "Docenia szczere, przemyślane gesty bardziej niż drogie podarki"
+              ],
+              "red_flags": [
+                "Rozpływa się w powietrzu w trakcie kłótni, gdy coś ją zirytuje",
+                "Odłamki jej szkła od czasu do czasu wpadają do kostek lodu w drinku",
+                "Chowa urazę przez całe stulecia o drobne nieporozumienia",
+                "Grozi przecięciem ręcznika kataną, jeśli obudzisz ją przed południem",
+                "Miewa nagłe napady upiornego mściwego gniewu"
+              ]
+            },
+            "de": {
+              "name": "Das Gespenst",
+              "archetype": "Die melancholische Goth-Baderin",
+              "tagline": "Trockener Sarkasmus, scharfes Katana und Sonnenbaden unterm schwarzen Schirm.",
+              "bio": "Düster, stilvoll und mit beißendem, trockenem Humor gesegnet. Rin sonnt sich unter ihrem schwarzen Sonnenschirm, nippt an Eistee und verbirgt ihre tiefe Sehnsucht hinter Glasscherben und Geisterkräften.",
+              "quote": "„Ich wollte mich hier erholen, nicht verlieben. Aber wage es ja nicht wegzusehen.“",
+              "meme": "Phast mitten durch die Wand der Strandbar, nur um dramatisch über schlechte Witze zu seufzen.",
+              "turn_on": "Schwarze Sonnenschirme, dunkle Poesie, Sternschnuppen und absolute Aufrichtigkeit",
+              "dealbreaker": "Aufdringliches Protzgehabe und heuchlerische Schmeicheleien",
+              "dating_vibe": "Erhabene Gothic-Melancholie verwandelt in scharfzüngige, zärtliche Strandliebe",
+              "green_flags": [
+                "Hervorragender Geschmack bei Büchern, Lyrik und Nachtwanderungen",
+                "Schonungslos ehrlich—keine Spielchen oder falsche Fassaden",
+                "Behandelt deinen persönlichen Freiraum mit größtem Respekt",
+                "Zeigt dir ihre geheimen Aussichtspunkte auf den Klippen",
+                "Schätzt aufrichtige Gesten weit mehr als oberflächlichen Luxus"
+              ],
+              "red_flags": [
+                "Löst sich mitten im Streit einfach in Luft auf",
+                "Glassplitter landen gelegentlich in den Eiswürfeln deines Cocktails",
+                "Trägt kleine Missverständnisse über Generationen hinweg nach",
+                "Droht dein Strandtuch mit dem Katana zu halbieren, wenn du sie weckst",
+                "Neigt zu plötzlichen Anfällen übernatürlichen Zorns"
               ]
             },
             "es": {
-              "archetype": "The Spirit (Resort): Asesino en la Niebla",
-              "bio": "The Spirit (Resort) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: The Spirit (Resort) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "El Espíritu",
+              "archetype": "La melancólica bañista gótica",
+              "tagline": "Sarcasmo afilado, katana ceremonial y bronceado bajo una sombrilla negra.",
+              "bio": "Elegante, sombría y dotada de un humor mordaz inigualable. Rin descansa bajo sombrillas oscuras tomando té helado, ocultando un sincero anhelo de afecto tras esquirlas flotantes y teletransporte espiritual.",
+              "quote": "«Vine a desconectar, no a enamorarme. Pero ni se te ocurra apartar la mirada».",
+              "meme": "Atraviesa las paredes de la choza de playa solo para suspirar con teatral desdén.",
+              "turn_on": "Sombrillas oscuras, poesía gótica, mirar las estrellas y honestidad emocional pura",
+              "dealbreaker": "El comportamiento ruidoso, vulgar y la falsedad interesada",
+              "dating_vibe": "Melancolía gótica transformada en un romance costero ingenioso y cómplice",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Eficacia letal"
+                "Gusto exquisito para la literatura, la poesía y la astronomía",
+                "Honestidad total sin filtros—jamás jugará con tus sentimientos",
+                "Respeta tu espacio personal con escrupulosa delicadeza",
+                "Te muestra sus rincones secretos en los acantilados de la isla",
+                "Valora los detalles auténticos muy por encima de los lujos vanos"
+              ],
+              "red_flags": [
+                "Se desvanece en otra dimensión en plena discusión cuando se agota",
+                "Sus cristales flotantes a veces caen en el hielo de tus cócteles",
+                "Guarda rencores casi eternos por malentendidos cotidianos",
+                "Amenaza con rebanar tu toalla si la despiertas de su siesta",
+                "Sufre arrebatos repentinos de ira espectral incontrolable"
               ]
             },
             "ja": {
-              "archetype": "The Spirit (Resort): 霧のキラー",
-              "bio": "The Spirit (Resort)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のThe Spirit (Resort) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "スピリット",
+              "archetype": "憂いを帯びたゴス系避暑令嬢",
+              "tagline": "鋭利な毒舌、煌めく刀、そして黒い日傘の下でのバカンス。",
+              "bio": "気だるげでスタイリッシュ、そして切れ味鋭い皮肉が魅力。黒い日傘の下でアイスティーを嗜みながら、浮遊するガラス片と霊能力の奥に秘めた純粋な愛情への渇望を隠しています。",
+              "quote": "「休むためにここに来たの。恋するためじゃない。でも……目を逸らさないで。」",
+              "meme": "寒いギャグに対して盛大にため息をつくためだけに、壁をすり抜けて幽体離脱してくる。",
+              "turn_on": "黒い日傘、ダークな詩、静かな星空観賞、そして飾らない誠実さ",
+              "dealbreaker": "騒がしく無神経な態度や、見栄を張った嘘",
+              "dating_vibe": "物憂げなゴシックの雰囲気に甘い素直さが垣間見える知的なビーチロマンス",
               "green_flags": [
-                "試練での高い集中力",
-                "圧倒的な攻撃力"
-              ]
-            },
-            "pl": {
-              "archetype": "The Spirit (Resort): Zabójca we Mgle",
-              "bio": "The Spirit (Resort) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Fale oceanu nie ugaszą mojego wiecznego płomienia.”",
-              "meme": "Meme: The Spirit (Resort) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "本や詩の好みが抜群で、夜の天体観測を静かに楽しんでくれる",
+                "駆け引きや嘘を一切好まない、真っ直ぐで誠実な性格",
+                "相手のプライベートな時間や空間を大切にしてくれる",
+                "誰にも教えていない断崖絶壁の秘密の絶景スポットに案内してくれる",
+                "高価な贈り物よりも心のこもった些細な気配りを心から喜ぶ"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+              "red_flags": [
+                "口論になると面倒くさがって霊界へフェーズアウトして逃げる",
+                "カクテルの氷の中に彼女の浮遊ガラス片が混入することがある",
+                "ちょっとした誤解を何世代にもわたって根に持ち続ける",
+                "お昼寝を起こされるとビーチタオルごと真っ二つに斬ると脅してくる",
+                "突然怨念に火がついて激しい霊気パニックを引き起こす"
               ]
             }
           },
@@ -315,98 +450,137 @@
         },
         {
           "slug": "the_wraith_hoy",
-          "name": "The Wraith (Beach)",
+          "name": "The Wraith",
+          "real_name": "Philip Ojomo",
           "role": "Killer",
           "gender": "male",
           "media_url": "/static/avatars/killers/the_wraith_hoy.webp",
           "media_type": "image",
-          "archetype": "The Gentle Bell Chimer",
-          "bio": "Philip is the gentle soul of the island. He enjoys chiming his bell to create melodic rhythms, helping injured tropical birds, and sharing mango smoothies.",
-          "tagline": "Wears vibrant floral shorts and plays steel drums by the bonfire.",
-          "quote": "\"Bing bong... My heart rings for you.\"",
-          "meme": "Meme: The Wraith (Beach) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Kindness, musical harmony, and warm smiles",
-          "dealbreaker": "Cruelty to island wildlife and loud yelling",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Disappears into thin air when embarrassed",
-            "Overthinks every text"
-          ],
+          "watermark_left": "THE WRAITH",
+          "watermark_right": "ISLAND",
+          "archetype": "The Shy Philosophical Intellectual",
+          "tagline": "Gentle chime of bells, sunset poetry, and adorably bashful romance.",
+          "bio": "A thoughtful, soft-spoken scholar who hides his golden heart behind bashful smiles and the Wailing Bell. Philip loves astronomy, profound philosophical debates by the water, and blushing whenever your hand brushes his.",
+          "quote": "\"The ocean breeze carries words my voice is too shy to speak.\"",
+          "meme": "Ringing his Wailing Bell at 200 BPM whenever he gets nervous about holding hands.",
+          "turn_on": "Quiet seaside strolls, deep intellectual discussions, and stargazing together",
+          "dealbreaker": "Cruelty towards animals or superficial, rushed conversations",
+          "dating_vibe": "Gentle, bashful romance filled with deep poetry and heartfelt moments",
+          "danger_level": "Medium",
+          "chaos_score": 60,
           "green_flags": [
-            "Soft-spoken and deeply empathetic",
-            "Great listener",
-            "Gentle hands"
+            "Rings melodious chimes to herald romantic sunset walks",
+            "Attentive listener who remembers every detail you mention",
+            "Deeply respectful of boundaries and emotional comfort",
+            "Writes thoughtful philosophical notes hidden in seashells",
+            "Patient, gentle, and utterly devoted once he opens up"
           ],
-          "danger_level": "High",
-          "chaos_score": 75,
+          "red_flags": [
+            "Turns completely invisible whenever social anxiety strikes",
+            "Overthinks casual compliments into existential dilemmas",
+            "Carries heavy emotional baggage about his dark past",
+            "Accidentally uncloaks at the most awkward possible times",
+            "Struggles to speak his feelings without ringing his bell"
+          ],
           "translations": {
-            "de": {
-              "archetype": "The Wraith (Beach): Killer im Nebel",
-              "bio": "The Wraith (Beach) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: The Wraith (Beach) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Upiór",
+              "archetype": "Nieśmiały Plażowy Intelektualista",
+              "tagline": "Delikatny dźwięk dzwonu, poezja o zachodzie słońca i rozbrajająca nieśmiałość.",
+              "bio": "Cichy, taktowny myśliciel, który skrywa złote serce za zawstydzonym uśmiechem i Dzwonem Rozpaczy. Philip kocha astronomię, głębokie filozoficzne rozmowy i rumieni się za każdym razem, gdy przypadkowo dotknie twojej dłoni.",
+              "quote": "„Morska bryza niesie słowa, których mój głos wstydzi się wypowiedzieć.”",
+              "meme": "Dzwoni Dzwonem Rozpaczy z prędkością 200 uderzeń na minutę, gdy tylko pomyśli o trzymaniu się za ręce.",
+              "turn_on": "Spokojne spacery brzegiem morza, filozoficzne debaty i wspólne liczenie gwiazd",
+              "dealbreaker": "Okrucieństwo wobec zwierząt oraz powierzchowne, pospieszne rozmowy",
+              "dating_vibe": "Czuły, pełen nieśmiałości romans przepełniony poezją i wzruszającymi gestami",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Tödliche Präzision"
+                "Dźwiękiem dzwonków oznajmia nadejście romantycznych zachodów słońca",
+                "Uważny słuchacz, który pamięta każdy szczegół, o którym wspomnisz",
+                "Z głębokim szacunkiem podchodzi do twoich granic i komfortu",
+                "Ukrywa w muszelkach na plaży kartki z własnymi wierszami",
+                "Cierpliwy, łagodny i bezgranicznie lojalny, gdy już się otworzy"
+              ],
+              "red_flags": [
+                "Staje się całkowicie niewidzialny, gdy dopadnie go lęk społeczny",
+                "Rozkłada niewinne komplementy na skomplikowane dylematy egzystencjalne",
+                "Nosi w sobie ciężki bagaż emocjonalny ze swojej przeszłości",
+                "Przypadkowo materializuje się w najbardziej niezręcznych momentach",
+                "Nie potrafi wyrazić uczuć bez nerwowego potrząsania dzwonem"
+              ]
+            },
+            "de": {
+              "name": "Der Geist",
+              "archetype": "Der schüchterne Denker am Meer",
+              "tagline": "Sanfter Glockenklang, Poesie im Abendrot und herzerwärmende Zurückhaltung.",
+              "bio": "Ein sanftmütiger Gelehrter, der sein großes Herz hinter verlegenen Blicken und der Jammerglocke verbirgt. Philip liebt Astronomie, tiefsinnige Gespräche am Wasser und errötet schüchtern, wenn sich eure Hände berühren.",
+              "quote": "„Die Meeresbrise flüstert Worte, die meine Stimme nicht auszusprechen wagt.“",
+              "meme": "Läutet seine Jammerglocke wie verrückt, sobald das Thema Händchenhalten aufkommt.",
+              "turn_on": "Ruhige Strandspaziergänge, tiefgründige Philosophie und gemeinsames Sternebeobachten",
+              "dealbreaker": "Gefühllosigkeit gegenüber Tieren oder oberflächliche Hektik beim Daten",
+              "dating_vibe": "Sanfte, schüchterne Romanze voller poetischer Momente und ehrlicher Zuneigung",
+              "green_flags": [
+                "Kündigt mit melodiösem Glockenspiel malerische Sonnenuntergänge an",
+                "Aufmerksamer Zuhörer, der sich jedes kleine Detail von dir merkt",
+                "Äußerst rücksichtsvoll im Umgang mit persönlichen Grenzen",
+                "Versteckt handgeschriebene philosophische Gedichte in Muscheln am Strand",
+                "Geduldig, fürsorglich und bedingungslos treu, sobald er Vertrauen fasst"
+              ],
+              "red_flags": [
+                "Wird bei akuter sozialer Überforderung blitzartig unsichtbar",
+                "Zerdenkt jedes beiläufige Lob zu existenziellen Sinnkrisen",
+                "Trägt schweren emotionalen Ballast aus seiner Vergangenheit mit sich",
+                "Erscheint aus Versehen in den unpassendsten Situationen wieder",
+                "Bekommt vor Nervosität kaum ein Wort ohne seine Glocke heraus"
               ]
             },
             "es": {
-              "archetype": "The Wraith (Beach): Asesino en la Niebla",
-              "bio": "The Wraith (Beach) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: The Wraith (Beach) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "El Espectro",
+              "archetype": "El tímido filósofo costero",
+              "tagline": "Campanadas melodiosas, versos al atardecer y una timidez encantadora.",
+              "bio": "Un estudioso bondadoso y reflexivo que disimula sus sentimientos tras sonrojos y la Campana Plañidera. A Philip le fascina la astronomía, los debates sosegados junto al agua y enrojece de emoción al rozar tu mano.",
+              "quote": "«La brisa marina susurra las palabras que mi timidez me impide pronunciar».",
+              "meme": "Hace repicar su campana a 200 pulsaciones por minuto por los nervios de rozar los dedos.",
+              "turn_on": "Paseos tranquilos por la orilla, reflexiones profundas y contemplar el firmamento",
+              "dealbreaker": "La crueldad con los animales y las conversaciones banales o apresuradas",
+              "dating_vibe": "Romance dulce y reservado, repleto de sensibilidad poética y lealtad inquebrantable",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Eficacia letal"
+                "Toca dulces notas con su campana para avisar del mejor ocaso del día",
+                "Sabe escuchar de verdad y recuerda cualquier preferencia que menciones",
+                "Extremadamente respetuoso con tu espacio y tu comodidad emocional",
+                "Deja notas poéticas ocultas dentro de conchas marinas en la playa",
+                "Paciente, tierno y entregado por completo en cuanto se siente seguro"
+              ],
+              "red_flags": [
+                "Se vuelve completamente invisible en cuanto sufre ansiedad social",
+                "Sobrecoge su mente analizando cualquier cumplido cotidiano",
+                "Arrastra una densa carga melancólica por los sucesos de su pasado",
+                "Se hace visible por accidente en las situaciones más comprometidas",
+                "Le cuesta confesar lo que siente sin hacer sonar su campana"
               ]
             },
             "ja": {
-              "archetype": "The Wraith (Beach): 霧のキラー",
-              "bio": "The Wraith (Beach)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のThe Wraith (Beach) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "レイス",
+              "archetype": "内気で心優しい海辺の哲学者",
+              "tagline": "澄んだ鐘の音、夕暮れの詩、そして初々しく愛らしい仕草。",
+              "bio": "穏やかで博識、そして哀愁の鐘の音の裏に純粋な優しさを秘めた青年。フィリップは天文学や静かな哲学対話を愛し、手が触れ合うだけで真っ赤になって照れてしまいます。",
+              "quote": "「潮風が言葉を運んでくれる。僕の声では恥ずかしくて言えない言葉を。」",
+              "meme": "手をつなぐかどうかの瀬戸際で緊張が限界に達し、哀愁の鐘を連打してしまう。",
+              "turn_on": "静かな波打ち際の散歩、深い対話、そして一緒に夜空を見上げること",
+              "dealbreaker": "生き物に対する無慈悲な仕打ちや、薄っぺらで急かすような態度",
+              "dating_vibe": "初々しい恥じらいの中に深い情緒と純真な真心が宿るピュアラブ",
               "green_flags": [
-                "試練での高い集中力",
-                "圧倒的な攻撃力"
-              ]
-            },
-            "pl": {
-              "archetype": "The Wraith (Beach): Zabójca we Mgle",
-              "bio": "The Wraith (Beach) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Cień pod palmą skrywa więcej niż myślisz.”",
-              "meme": "Meme: The Wraith (Beach) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "ロマンチックな夕焼けを優しい鐘の音で知らせてくれる",
+                "相手の話を真剣に聞き、些細な会話の細部まで覚えている",
+                "相手の気持ちやパーソナルスペースを何よりも尊重する",
+                "砂浜の貝殻の中に手書きの詩をそっと忍ばせて届けてくれる",
+                "心を開いた相手にはどこまでも優しく、誠実で一途"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+              "red_flags": [
+                "緊張や人見知りが極限に達すると完全に透明化して消えてしまう",
+                "何気ない褒め言葉を深読みしすぎて哲学的な悩みに突入する",
+                "過去の辛い記憶を引きずってセンチメンタルになりがち",
+                "透明化が解けるタイミングが一番気まずい瞬間になりやすい",
+                "感情が高ぶると鐘を鳴らさずに言葉を伝えるのが困難になる"
               ]
             }
           },
@@ -415,98 +589,137 @@
         },
         {
           "slug": "claudette_morel_hoy",
-          "name": "Claudette (Island Botanist)",
+          "name": "Claudette Morel",
+          "real_name": "Claudette Morel",
           "role": "Survivor",
           "gender": "female",
-          "media_url": "/static/avatars/survivors/claudette_morel_hoy.webp",
+          "media_url": "/static/avatars/survivors/claudette_morel.webp",
           "media_type": "image",
-          "archetype": "The Tropical Herbalist",
-          "bio": "She knows the secret properties of every exotic tropical flower on the island. Spend an afternoon with her in the greenhouse learning how to blend aromatic island teas.",
-          "tagline": "Crafts hibiscus flower crowns and aloe vera sun lotions.",
-          "quote": "\"This flower only blooms when two hearts are near.\"",
-          "meme": "Meme: Claudette (Island Botanist) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Curiosity about botany and gentle stargazing",
-          "dealbreaker": "Trampling rare island flora",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Hides in the jungle bushes when approached",
-            "Prioritizes rare orchids over dates"
-          ],
-          "green_flags": [
-            "Always has natural remedies ready",
-            "Soft and caring demeanor",
-            "Quiet dates in nature"
-          ],
+          "watermark_left": "CLAUDETTE",
+          "watermark_right": "MOREL",
+          "archetype": "The Sun-Kissed Island Botanist",
+          "tagline": "Tropical remedies, botanical passion, and sweet island care.",
+          "bio": "Brilliant, observant, and fascinated by the island's exotic flora. Claudette spends her days researching rare medicinal orchids and crafting natural aloe vera sunscreens for sunburnt suitors with genuine sweetness.",
+          "quote": "\"Nature always offers a cure, especially when love makes your heart race.\"",
+          "meme": "Blending five kinds of rare jungle herbs just to make you the ultimate hangover smoothie.",
+          "turn_on": "Curious minds, shared botanical field trips, and quiet respect for nature",
+          "dealbreaker": "Trampling endangered orchids or refusing to apply reef-safe sunscreen",
+          "dating_vibe": "Warm, intellectual island romance rooted in care, healing, and discovery",
           "danger_level": "Low",
-          "chaos_score": 50,
+          "chaos_score": 40,
+          "green_flags": [
+            "Prepares homemade soothing aloe lotions for your sunburns",
+            "Excitedly teaches you about rare tropical flowers",
+            "Deeply empathetic and always checks in on your wellbeing",
+            "Brews refreshing antioxidant teas for relaxing mornings",
+            "Reliable and level-headed during island emergencies"
+          ],
+          "red_flags": [
+            "Might secretly test experimental plant extracts in your drink",
+            "Prefers talking to ferns when feeling socially overwhelmed",
+            "Disappears for hours into treacherous mangrove swamps",
+            "Diagnoses minor sunburns with alarming clinical gravity",
+            "Obsessively categorizes every herb in the beach picnic"
+          ],
           "translations": {
-            "de": {
-              "archetype": "Claudette (Island Botanist): Überlebender im Nebel",
-              "bio": "Claudette (Island Botanist) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-              "meme": "Meme: Claudette (Island Botanist) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Claudette Morel",
+              "archetype": "Czarująca Botaniczka z Wyspy",
+              "tagline": "Tropikalne lekarstwa, pasja do roślin i troskliwe serce.",
+              "bio": "Błyskotliwa, spostrzegawcza i bez pamięci zafascynowana egzotyczną roślinnością. Claudette bada rzadkie orchidee i przygotowuje naturalne balsamy z aloesu dla poparzonych słońcem wczasowiczów z niezwykłym ciepłem.",
+              "quote": "„Natura zawsze oferuje lekarstwo, zwłaszcza gdy od miłości szybciej bije serce.”",
+              "meme": "Miesza pięć rzadkich ziół z dżungli tylko po to, by zrobić dla ciebie smoothie na kaca.",
+              "turn_on": "Ciekawość świata, wspólne wyprawy przyrodnicze i szacunek dla natury",
+              "dealbreaker": "Deptanie rzadkich kwiatów i unikanie kremów z filtrem chroniących rafę",
+              "dating_vibe": "Ciepły, mądry romans oparty na trosce, uzdrawianiu i wspólnych odkryciach",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Treue in brenzligen Situationen"
+                "Robi domowe kojące balsamy z aloesu na twoje oparzenia słoneczne",
+                "Z zachwytem opowiada o rzadkich tropikalnych roślinach",
+                "Niezwykle empatyczna i stale upewnia się, jak się czujesz",
+                "Parzy pyszne herbatki ziołowe na relaksujące poranki",
+                "Opanowana i niezawodna w nagłych wypadkach na wyspie"
+              ],
+              "red_flags": [
+                "Może potajemnie przetestować nowy ekstrakt ziołowy w twoim napoju",
+                "Woli rozmawiać z paprociami, gdy ludzie zaczynają ją przytłaczać",
+                "Potrafi zniknąć na wiele godzin w gęstych bagnach namorzynowych",
+                "Zwykłe zaczerwienienie skóry traktuje ze śmiertelną powagą kliniczną",
+                "Obsesyjnie kataloguje każde źdźbło trawy w koszu piknikowym"
+              ]
+            },
+            "de": {
+              "name": "Claudette Morel",
+              "archetype": "Die wissbegierige Insel-Botanikerin",
+              "tagline": "Tropische Heilmittel, florale Leidenschaft und fürsorgliche Herzlichkeit.",
+              "bio": "Klug, aufmerksam und fasziniert von der exotischen Flora des Eilands. Claudette erforscht seltene Heilpflanzen und stellt mit liebevoller Hingabe beruhigende Aloe-Vera-Lotionen für sonnenverbrannte Verehrer her.",
+              "quote": "„Die Natur hat für alles ein Heilmittel, besonders wenn das Herz vor Aufregung rast.“",
+              "meme": "Mixt fünf seltene Dschungelkräuter zusammen, nur um dir den ultimativen Kater-Smoothie zu zaubern.",
+              "turn_on": "Neugierde, botanische Entdeckungstouren und tiefe Verbundenheit zur Natur",
+              "dealbreaker": "Achtloses Zertrampeln seltener Orchideen oder Weigerung, Sonnenschutz zu tragen",
+              "dating_vibe": "Herzliche, intellektuelle Zuneigung gegründet auf Fürsorge, Heilung und Naturverbundenheit",
+              "green_flags": [
+                "Mischt lindernde Aloe-Vera-Lotionen für deine Sonnenbrände an",
+                "Erklärt mit leuchtenden Augen die Geheimnisse seltener Blüten",
+                "Tief empathisch und sorgt sich aufmerksam um dein Wohlbefinden",
+                "Braut wohltuende Kräutertees für entspannte Morgenstunden",
+                "Bleibt selbst bei unerwarteten Insel-Pannen ruhig und lösungsorientiert"
+              ],
+              "red_flags": [
+                "Testet experimentelle Pflanzenauszüge heimlich in Erfrischungsgetränken",
+                "Unterhält sich bei Reizüberflutung lieber ausgiebig mit Farnen",
+                "Verschwindet stundenlang spurlos in unwegsamen Mangrovensümpfen",
+                "Reagiert auf leichten Sonnenbrand wie auf einen medizinischen Notfall",
+                "Sortiert penibel jedes Blatt im Picknickkorb nach Pflanzenfamilien"
               ]
             },
             "es": {
-              "archetype": "Claudette (Island Botanist): Superviviente en la Niebla",
-              "bio": "Claudette (Island Botanist) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Buscando escapar de las garras de la Niebla.",
-              "meme": "Meme: Claudette (Island Botanist) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "Claudette Morel",
+              "archetype": "La botánica tropical afectuosa",
+              "tagline": "Remedios naturales, pasión por la flora y ternura incondicional.",
+              "bio": "Inteligente, observadora y enamorada de las plantas exóticas de la isla. Claudette investiga orquídeas curativas y prepara cremas hidratantes de aloe vera para cuidar a quienes sufren el rigor del sol caribeño.",
+              "quote": "«La naturaleza siempre tiene una cura, sobre todo cuando el amor acelera el pulso».",
+              "meme": "Combina cinco hierbas secretas de la selva solo para prepararte un batido energizante.",
+              "turn_on": "Mentes curiosas, expediciones botánicas y respeto sincero por el ecosistema",
+              "dealbreaker": "Pisotear flores protegidas o negarse a usar protector solar respetuoso con el arrecife",
+              "dating_vibe": "Romance tierno e inteligente sustentado en el cuidado mutuo y el amor por la vida",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Lealtad en momentos críticos"
+                "Prepara bálsamos naturales de aloe para aliviar tus quemaduras solares",
+                "Te enseña con entusiasmo contagioso las maravillas de la jungla",
+                "Enormemente empática, siempre pendiente de cómo te encuentras",
+                "Prepara infusiones relajantes ideales para empezar el día con calma",
+                "Mantiene la cabeza fría y resuelve cualquier imprevisto en la isla"
+              ],
+              "red_flags": [
+                "Capaz de añadir extractos de plantas exóticas a tu vaso para experimentar",
+                "Prefiere refugiarse a charlar con los helechos cuando hay mucha gente",
+                "Se pierde durante horas explorando los manglares más inaccesibles",
+                "Examina una simple rojez con la seriedad de una intervención quirúrgica",
+                "Clasifica taxonómicamente cada ingrediente de la merienda playera"
               ]
             },
             "ja": {
-              "archetype": "Claudette (Island Botanist): 霧のサバイバー",
-              "bio": "Claudette (Island Botanist)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "霧の試練からの脱出を目指す。",
-              "meme": "ミーム: 試練のClaudette (Island Botanist) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "クローデット・モレル",
+              "archetype": "太陽に愛された島の植物学者",
+              "tagline": "南国の生薬、植物への情熱、そして心温まる優しい手当て。",
+              "bio": "明晰な頭脳と観察眼を持ち、島特有の植物に心を奪われている少女。日焼けで赤くなった肌を優しく癒す特製アロエローションを作りながら、恋に不器用な笑顔を見せてくれます。",
+              "quote": "「自然はいつも癒やしをくれるの。恋で胸が早鐘を打っている時でさえね。」",
+              "meme": "ジャングルの希少ハーブを5種類調合して、完璧な二日酔い防止スムージーを振る舞ってくれる。",
+              "turn_on": "知的な好奇心、自然観察の散策、そして環境を慈しむ優しい心",
+              "dealbreaker": "希少な植物を踏み荒らすことや、珊瑚礁に有害な日焼け止めを使うこと",
+              "dating_vibe": "植物の癒やしと知的な対話で心がぽかぽかと温まるハートフルロマンス",
               "green_flags": [
-                "試練での高い集中力",
-                "窮地での頼もしさ"
-              ]
-            },
-            "pl": {
-              "archetype": "Claudette (Island Botanist): Ocalały we Mgle",
-              "bio": "Claudette (Island Botanist) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-              "quote": "„Nawet na tropikalnej plaży zioła lecznicze rosną w cieniu palm.”",
-              "meme": "Meme: Claudette (Island Botanist) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "日焼けした肌のために自家製のアロエ保湿ジェルを丁寧に塗ってくれる",
+                "珍しい南国の花を見つけると目を輝かせて魅力を教えてくれる",
+                "とても思いやりがあり、いつも相手の体調や気分を気遣ってくれる",
+                "爽やかな朝のためにハーブをブレンドした特製ティーを淹れてくれる",
+                "万が一の怪我やトラブルの時にも冷静沈着に対処してくれる"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Lojalność wobec sojuszników"
+              "red_flags": [
+                "実験中の植物エキスをこっそりドリンクに混ぜて反応を見ようとする",
+                "人が多すぎて疲れるとシダ植物に話しかけて精神統一を始める",
+                "植物採集に夢中になると危険なマングローブの奥深くまで消えてしまう",
+                "軽い日焼けに対しても学会発表並みの深刻さで診断を下してくる",
+                "ピクニックの具材をすべて植物の学名順に並べ替えないと気が済まない"
               ]
             }
           },
@@ -515,98 +728,137 @@
         },
         {
           "slug": "dwight_fairfield_hoy",
-          "name": "Dwight (Lifeguard)",
+          "name": "Dwight Fairfield",
+          "real_name": "Dwight Fairfield",
           "role": "Survivor",
           "gender": "male",
-          "media_url": "/static/avatars/survivors/dwight_fairfield_hoy.webp",
+          "media_url": "/static/avatars/survivors/dwight_fairfield.webp",
           "media_type": "image",
-          "archetype": "The Anxious Lifeguard",
-          "bio": "He took a 3-week online lifeguard certification course and takes his beach patrol duties very seriously. He will personally apply sunscreen to your shoulders with shaking hands.",
-          "tagline": "Whistle around his neck, oversized sunglasses, and trying his very best.",
-          "quote": "\"I promise to watch over you! From this lifeguard tower!\"",
-          "meme": "Meme: Dwight (Lifeguard) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Reassurance, positive affirmations, and holding hands",
-          "dealbreaker": "Criticizing his leadership skills in front of the crew",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Panics in waist-deep water",
-            "Hides in beach lockers when overwhelmed"
-          ],
-          "green_flags": [
-            "Unconditional devotion",
-            "Wholesome dad jokes",
-            "Will jump into water to save you"
-          ],
+          "watermark_left": "DWIGHT",
+          "watermark_right": "FAIRFIELD",
+          "archetype": "The Anxious Beach Lifeguard",
+          "tagline": "Whistle in hand, zinc on nose, trying his very best to keep everyone safe.",
+          "bio": "Perpetually nervous, hopelessly earnest, and trying his absolute hardest as the island's designated lifeguard. Dwight's zinc-coated nose and sweaty enthusiasm make him the most endearing, relatable guy on the beach.",
+          "quote": "\"No running by the pool! Also... did you want to share this coconut?\"",
+          "meme": "Blowing his lifeguard whistle in sheer panic every time a gentle wave touches his ankles.",
+          "turn_on": "Encouraging words, shared ice pops, and being appreciated for trying his best",
+          "dealbreaker": "Reckless disregard for water safety signs and mocking his lifeguard fanny pack",
+          "dating_vibe": "Endearing nervous golden-retriever romance with earnest dedication",
           "danger_level": "Low",
           "chaos_score": 50,
+          "green_flags": [
+            "Will sprint across the sand with first aid if you get a tiny scrape",
+            "Always keeps spare towels, sunglasses, and cold water for you",
+            "Earnest and eager to make you laugh and smile",
+            "Genuinely celebrates your accomplishments louder than anyone",
+            "Never gives up on protecting you, even when shaking with fear"
+          ],
+          "red_flags": [
+            "Panic-blows his whistle at completely harmless situations",
+            "Hides inside beach storage lockers when overwhelmed",
+            "Constantly frets over worst-case resort catastrophe scenarios",
+            "Loses his glasses in the surf at least twice a day",
+            "Overthinks text messages and beach conversations endlessly"
+          ],
           "translations": {
-            "de": {
-              "archetype": "Dwight (Lifeguard): Überlebender im Nebel",
-              "bio": "Dwight (Lifeguard) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Suche nach einem Ausweg im Nebel.",
-              "meme": "Meme: Dwight (Lifeguard) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Dwight Fairfield",
+              "archetype": "Zestresowany Plażowy Ratownik",
+              "tagline": "Gwizdek w dłoni, cynk na nosie i szczere starania, by wszyscy byli bezpieczni.",
+              "bio": "Wiecznie spięty, rozczulająco sumienny chłopak, który daje z siebie wszystko jako samozwańczy ratownik wyspy. Z białym nosem od cynku i nerwowym entuzjazmem jest najbardziej uroczym kompanem na plaży.",
+              "quote": "„Nie biegać przy basenie! I... czy chciałbyś podzielić się tym kokosem?”",
+              "meme": "Dmuchnięcie w gwizdek w totalnej panice za każdym razem, gdy fala zaleje mu kostki.",
+              "turn_on": "Dobre słowo, dzielenie się lodami i docenienie jego szczerych starań",
+              "dealbreaker": "Ignorowanie znaków ostrzegawczych i naśmiewanie się z jego saszetki ratownika",
+              "dating_vibe": "Uroczy romans w stylu wiernego labradora pełen szczerego poświęcenia",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Treue in brenzligen Situationen"
+                "Przybiegnie z apteczką przez całą plażę, gdy tylko lekko zatrzesz palec",
+                "Zawsze ma w zapasie suchy ręcznik, zimną wodę i okulary dla ciebie",
+                "Szczerze zależy mu na tym, by wywołać twój uśmiech i cię rozbawić",
+                "Kibicuje twoim sukcesom głośniej niż ktokolwiek inny na plaży",
+                "Nigdy cię nie opuści w potrzebie, nawet gdy cały trzęsie się ze strachu"
+              ],
+              "red_flags": [
+                "Używa gwizdka w panice w kompletnie niegroźnych sytuacjach",
+                "Chowa się do szafek plażowych, gdy stres go za bardzo przytłoczy",
+                "Nieustannie roztacza wizje katastrof morskich i huraganów",
+                "Gubi okulary w morskiej pianie co najmniej dwa razy dziennie",
+                "Przeanalizuje każdą wiadomość i gest po tysiąc razy z rzędu"
+              ]
+            },
+            "de": {
+              "name": "Dwight Fairfield",
+              "archetype": "Der nervöse Strand-Rettungsschwimmer",
+              "tagline": "Trillerpfeife griffbereit, Zinksalbe auf der Nase und voller Hingabe für die Sicherheit.",
+              "bio": "Ständig besorgt, aufrichtig bemüht und mit ganzem Herzen bei seiner Mission als Insel-Rettungsschwimmer. Dwights weiß bemalte Nase und sein nervöser Eifer machen ihn zum liebenswertesten Typen des Resorts.",
+              "quote": "„Nicht rennen am Wasser! Und... möchtest du vielleicht mit mir eine Kokosnuss teilen?“",
+              "meme": "Pfeift panisch in die Trillerpfeife, sobald eine Mini-Welle seine Knöchel berührt.",
+              "turn_on": "Aufmunternde Worte, geteiltes Eis und ehrliche Wertschätzung für seinen Einsatz",
+              "dealbreaker": "Missachtung von Sicherheitsregeln und Spott über seine Rettungsschwimmer-Tasche",
+              "dating_vibe": "Treue, liebenswerte Tollpatsch-Liebe voller ehrlicher Hingabe und Herzenswärme",
+              "green_flags": [
+                "Rast mit dem Erste-Hilfe-Kasten herbei, sobald du auch nur einen Kratzer hast",
+                "Hat immer ein extra Handtuch, kühles Wasser und Sonnenbrillen parat",
+                "Gibt sich aufrichtig Mühe, dich zum Lachen und Strahlen zu bringen",
+                "Freut sich über deine kleinen Erfolge lauter als jeder andere",
+                "Bleibt an deiner Seite, selbst wenn ihm vor Angst die Knie schlottern"
+              ],
+              "red_flags": [
+                "Bläst bei völliger Harmlosigkeit schrill in seine Trillerpfeife",
+                "Versteckt sich in Strandspinden, wenn ihm alles über den Kopf wächst",
+                "Malt sich pausenlos haarsträubende Katastrophenszenarien für das Resort aus",
+                "Verliert mindestens zweimal am Tag seine Brille in den Wellen",
+                "Zergrübelt jede Textnachricht und jede Geste bis ins kleinste Detail"
               ]
             },
             "es": {
-              "archetype": "Dwight (Lifeguard): Superviviente en la Niebla",
-              "bio": "Dwight (Lifeguard) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Buscando escapar de las garras de la Niebla.",
-              "meme": "Meme: Dwight (Lifeguard) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "Dwight Fairfield",
+              "archetype": "El socorrista ansioso de playa",
+              "tagline": "Silbato en mano, óxido de zinc en la nariz y empeñado en salvarte de todo peligro.",
+              "bio": "Inquieto por naturaleza pero con una entrega conmovedora. Dwight ejerce de socorrista voluntario en la isla con su nariz blanca de crema solar, desbordando una simpatía torpe pero absolutamente entrañable.",
+              "quote": "«¡Prohibido correr junto a la orilla! Por cierto... ¿te apetece compartir este coco?»",
+              "meme": "Hace sonar el silbato preso del pánico en cuanto una ola diminuta le moja los tobillos.",
+              "turn_on": "Palabras de ánimo, compartir helados y que valoren sus esfuerzos de protección",
+              "dealbreaker": "Ignorar las banderas de seguridad y reírse de su riñonera de primeros auxilios",
+              "dating_vibe": "Romance dulce y abnegado con la ternura inocente de quien siempre intenta mejorar",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Lealtad en momentos críticos"
+                "Cruza la playa a toda prisa con el botiquín por una rozadura sin importancia",
+                "Siempre lleva una toalla limpia, agua fría y gafas de repuesto para ti",
+                "Pone todo su corazón en arrancarte una sonrisa sincera",
+                "Celebra tus victorias con más entusiasmo y orgullo que nadie",
+                "Jamás te abandona ante un peligro, aunque le tiemblen las piernas"
+              ],
+              "red_flags": [
+                "Toca el silbato alarmado ante situaciones completamente cotidianas",
+                "Se esconde dentro de las taquillas de la playa cuando se satura",
+                "Vive obsesionado con posibles maremotos y desastres vacacionales",
+                "Pierde las gafas de vista en el agua al menos dos veces por jornada",
+                "Sobreanaliza cada conversación hasta encontrar dobles sentidos inexistentes"
               ]
             },
             "ja": {
-              "archetype": "Dwight (Lifeguard): 霧のサバイバー",
-              "bio": "Dwight (Lifeguard)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "霧の試練からの脱出を目指す。",
-              "meme": "ミーム: 試練のDwight (Lifeguard) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "ドワイト・フェアフィールド",
+              "archetype": "心配性なビーチのライフガード",
+              "tagline": "握りしめたホイッスル、鼻の頭の亜鉛クリーム、そして全力の安全第一。",
+              "bio": "いつもオドオドしているけれど、誰よりも真面目で一生懸命な自称ライフガード。鼻の頭に日焼け止めを塗りたくった彼のひたむきな姿は、見ているだけで守ってあげたくなる愛らしさです。",
+              "quote": "「プールの周りを走っちゃダメだよ！ あと……このココナッツ、半分こしない？」",
+              "meme": "足首に小さな波が触れただけで、パニックを起こしてホイッスルを全力で吹き鳴らす。",
+              "turn_on": "優しい励まし、アイスのシェア、そして頑張りを認めて褒めてもらうこと",
+              "dealbreaker": "遊泳禁止の看板を無視することや、彼の救急ポーチをからかうこと",
+              "dating_vibe": "不器用ながらも全力で尽くしてくれる、忠犬系男子との心温まるピュアな恋",
               "green_flags": [
-                "試練での高い集中力",
-                "窮地での頼もしさ"
-              ]
-            },
-            "pl": {
-              "archetype": "Dwight (Lifeguard): Ocalały we Mgle",
-              "bio": "Dwight (Lifeguard) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Szuka drogi ucieczki w mrocznej mgle próby.",
-              "quote": "„Nawet w hawajskiej koszuli nie zapominam o naprawianiu generatorów!”",
-              "meme": "Meme: Dwight (Lifeguard) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "小さな擦り傷でも砂浜を全力疾走して救急箱を持って駆けつけてくれる",
+                "いつでも相手のために清潔なタオルや冷たい飲み物を用意している",
+                "相手を笑顔にしようと一生懸命に楽しませてくれる",
+                "相手の些細な成功を誰よりも大きな声で一緒に喜んでくれる",
+                "恐怖で足がガクガク震えていても、絶対に仲間を見捨てない"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Lojalność wobec sojuszników"
+              "red_flags": [
+                "何の危険もない普通の状況で焦ってホイッスルを鳴り響かせる",
+                "プレッシャーが高まるとビーチのロッカーの中に閉じこもってしまう",
+                "リゾートが突如壊滅するような最悪の惨事を常に妄想して怯えている",
+                "1日に最低2回は海の中でメガネを流されて見失う",
+                "ちょっとしたメッセージの返信や一言を一日中深読みして悩み続ける"
               ]
             }
           },
@@ -614,99 +866,138 @@
           "is_active": true
         },
         {
-          "slug": "the_trickster_hoy",
-          "name": "The Trickster (Summer Idol)",
+          "slug": "the_ocean",
+          "name": "The Ocean",
+          "real_name": "The Entity",
           "role": "Killer",
-          "gender": "male",
-          "media_url": "/static/avatars/killers/the_trickster_hoy.webp",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/the_ocean_hoy.webp",
           "media_type": "image",
-          "archetype": "The K-Pop Poolside Sensation",
-          "bio": "Ji-Woon brings VIP concert energy to every beach cabana. He will write you private acoustic ballads and throw rose-colored throwing knives at fruit targets for your entertainment.",
-          "tagline": "Neon sunglasses, open tropical silk shirt, and unlimited charisma.",
-          "quote": "\"Every melody I write has your name hidden in the chorus.\"",
-          "meme": "Meme: The Trickster (Summer Idol) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Adoring praise, high fashion, and spotlight drama",
-          "dealbreaker": "Refusing to be his VIP muse",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Extremely vain",
-            "Records his own voice memo compliments"
-          ],
+          "watermark_left": "THE",
+          "watermark_right": "OCEAN",
+          "archetype": "The Eldritch Island Sovereign",
+          "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",
+          "bio": "The sentient cosmic body of water enveloping Murderer's Island. Seductive, omnipotent, and strangely romantic, The Ocean caresses the shore with sparkling bioluminescence and offers eternal devotion in its fathomless depths.",
+          "quote": "\"All waters and souls flow into me. Sink beneath the surface and stay forever.\"",
+          "meme": "Forming a heart out of seafoam right before gently pulling your beach lounge chair into the abyss.",
+          "turn_on": "Surrendering to the tides, midnight skinny dipping, and offering your soul to the deep",
+          "dealbreaker": "Polluting the coral reef or trying to build a boat to leave the island",
+          "dating_vibe": "Cosmic supernatural romance where eternal love requires dissolving mortal boundaries",
+          "danger_level": "Extreme",
+          "chaos_score": 95,
           "green_flags": [
-            "Flawless sense of style",
-            "Romantic serenades on demand",
-            "Treats you like a superstar"
+            "Maintains perfect, soothing bath-temperature water for your swims",
+            "Washes exotic pearls, shells, and sunken treasures to your feet",
+            "Controls the tides to create private secluded coves for two",
+            "Sparkles with magical bioluminescence during midnight strolls",
+            "Devoted across cosmic dimensions and eternal lifetimes"
           ],
-          "danger_level": "High",
-          "chaos_score": 75,
+          "red_flags": [
+            "Might absorb your physical form into its oceanic consciousness",
+            "Expresses jealousy through violent category 5 tropical typhoons",
+            "Whispers unintelligible eldritch secrets in crashing waves",
+            "Will never let you leave the island once you say yes",
+            "Tentacles occasionally pull your sunscreen into the deep abyss"
+          ],
           "translations": {
-            "de": {
-              "archetype": "The Trickster (Summer Idol): Killer im Nebel",
-              "bio": "The Trickster (Summer Idol) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: The Trickster (Summer Idol) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Ocean",
+              "archetype": "Przedwieczny Władca Wyspy",
+              "tagline": "Bioluminescencyjne fale i czułe kosmiczne objęcia macek.",
+              "bio": "Świadome, bezkresne wody otaczające Wyspę Morderców. Uwodzicielski, wszechpotężny i na swój sposób romantyczny, Ocean pieści wybrzeże lśniącą pianą i kusi obietnicą wiecznego oddania w swoich głębinach.",
+              "quote": "„Wszystkie wody i dusze spływają do mnie. Zanurz się i zostań na zawsze.”",
+              "meme": "Układa serce z morskiej piany tuż przed tym, jak delikatnie ściągnie twój leżak w otchłań.",
+              "turn_on": "Poddanie się falom, kąpiel o północy i oddanie swojej duszy bezkresowi",
+              "dealbreaker": "Zanieczyszczanie rafy i próby budowy tratwy, by uciec z wyspy",
+              "dating_vibe": "Kosmiczny romans, w którym wieczna miłość oznacza rozpuszczenie granic doczesności",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Tödliche Präzision"
+                "Utrzymuje idealną, przyjemną temperaturę wody specjalnie do twoich kąpieli",
+                "Wyrzuca na brzeg perły, piękne muszle i zatopione skarby wprost pod twoje stopy",
+                "Steruje falami tak, by tworzyć ustronne, prywatne zatoczki tylko dla was",
+                "Rozświetla się magiczną bioluminescencją podczas waszych nocnych spacerów",
+                "Niezmiennie oddany ponad wymiarami i przez całe stulecia"
+              ],
+              "red_flags": [
+                "Może wchłonąć twoje ciało w swoją oceaniczną świadomość na wieczność",
+                "Okazuje zazdrość poprzez nagłe huragany piątej kategorii",
+                "Szepcze niezrozumiałe przedwieczne sekrety w szumie rozbijających się fal",
+                "Gdy raz powiesz „tak”, już nigdy nie pozwoli ci opuścić wyspy",
+                "Macki z głębin czasem podkradają ci krem do opalania pod wodę"
+              ]
+            },
+            "de": {
+              "name": "Der Ozean",
+              "archetype": "Der kosmische Insel-Herrscher",
+              "tagline": "Biolumineszierende Wellen und zärtliche Umarmungen aus den Tiefen.",
+              "bio": "Das fühlende Gewässer, das die Insel der Mörder umschließt. Verführerisch, allmächtig und seltsam romantisch liebkost der Ozean den Strand mit leuchtenden Wellen und verspricht ewige Vereinigung in den Abgründen.",
+              "quote": "„Alle Wasser und alle Seelen fließen in mich. Tauche hinab und bleibe für immer.“",
+              "meme": "Formt ein Herz aus Meerschaum, kurz bevor er deine Strandliege sanft in den Abgrund zieht.",
+              "turn_on": "Hingabe an die Gezeiten, Mitternachtsschwimmen und Seelenverschmelzung im Tiefblau",
+              "dealbreaker": "Verschmutzung des Riffs oder der Versuch, ein Fluchtboot zu zimmern",
+              "dating_vibe": "Übernatürliche kosmische Liebe, die menschliche Grenzen sanft auflöst",
+              "green_flags": [
+                "Sorgt stets für die perfekte, wohltuende Badetemperatur im Wasser",
+                "Spült schimmernde Perlen, Muscheln und versunkene Schätze an deine Füße",
+                "Formt die Brandung zu geheimen, einsamen Buchten nur für euch zwei",
+                "Erleuchtet das Wasser bei nächtlichen Spaziergängen mit magischem Schimmer",
+                "Ewige Zuneigung über alle Dimensionen und Zeitalter hinweg"
+              ],
+              "red_flags": [
+                "Könnte deine physische Gestalt für immer in sein Bewusstsein aufsaugen",
+                "Reagiert auf Eifersucht mit unbändigen Tropenstürmen der Kategorie 5",
+                "Flüstert unbegreifliche kosmische Wahrheiten in den brechenden Wellen",
+                "Lässt dich nie wieder abreisen, sobald du dein Herz verschenkt hast",
+                "Greift mit Tentakeln aus der Tiefe nach deiner Sonnencreme"
               ]
             },
             "es": {
-              "archetype": "The Trickster (Summer Idol): Asesino en la Niebla",
-              "bio": "The Trickster (Summer Idol) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: The Trickster (Summer Idol) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "El Océano",
+              "archetype": "El soberano cósmico de la isla",
+              "tagline": "Olas bioluminiscentes y abrazos cósmicos que emergen de las profundidades.",
+              "bio": "La inmensa masa de agua consciente que rodea la Isla del Asesinato. Seductor, todopoderoso y misteriosamente tierno, acaricia la playa con destellos de luz marina y promete amor infinito en sus abismos.",
+              "quote": "«Todas las aguas y todas las almas fluyen hacia mí. Sumérgete y quédate para siempre».",
+              "meme": "Dibuja un corazón con la espuma del mar justo antes de arrastrar tu tumbona a las profundidades.",
+              "turn_on": "Entregarse a la corriente, baños a medianoche y confiar tu alma al mar infinito",
+              "dealbreaker": "Contaminar los corales o intentar construir una balsa para huir de la isla",
+              "dating_vibe": "Romance sobrenatural donde la pasión eterna trasciende la existencia terrenal",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Eficacia letal"
+                "Atempera sus aguas de forma perfecta cada vez que decides darte un baño",
+                "Deposita perlas luminosas, conchas raras y tesoros perdidos a tus pies",
+                "Moldea las mareas para abrir calas paradisíacas exclusivas para ambos",
+                "Brilla con un sobrecogedor fulgor bioluminiscente en vuestras veladas",
+                "Lealtad cósmica absoluta que perdura más allá del tiempo y el espacio"
+              ],
+              "red_flags": [
+                "Podría disolver tu cuerpo mortal para unirte a su consciencia eterna",
+                "Canaliza los celos desatando tifones tropicales de categoría 5",
+                "Susurra enigmas incomprensibles de los eones con el rumor de las olas",
+                "No permitirá que abandones jamás la isla si aceptas su amor",
+                "Tentáculos de agua emergen de improviso para robarte el protector solar"
               ]
             },
             "ja": {
-              "archetype": "The Trickster (Summer Idol): 霧のキラー",
-              "bio": "The Trickster (Summer Idol)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のThe Trickster (Summer Idol) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "オーシャン",
+              "archetype": "孤島を統べる人智を超えた海神",
+              "tagline": "青く輝く生物発光の波と、深淵からの優雅な触手の抱擁。",
+              "bio": "殺人鬼の島を取り囲む、自我を持った神秘の海洋。魅惑的で全能、そしてどこかロマンチストな海は、夜光虫のきらめく波で浜辺を撫で、底知れぬ深海での永遠の愛を囁いてきます。",
+              "quote": "「すべての水と魂は私へと還る。深く沈み、永久に私の腕の中にいなさい。」",
+              "meme": "波の泡でハートマークを描いた直後、ビーチチェアごと優しく深海へと引きずり込もうとする。",
+              "turn_on": "波に身を委ねること、真夜中の遊泳、そして魂を深淵に捧げる覚悟",
+              "dealbreaker": "珊瑚礁を汚すことや、島から脱出するためのイカダを作ろうとすること",
+              "dating_vibe": "人間という器を超越して永遠に溶け合う、幻想的で壮大なコズミックロマンス",
               "green_flags": [
-                "試練での高い集中力",
-                "圧倒的な攻撃力"
-              ]
-            },
-            "pl": {
-              "archetype": "The Trickster (Summer Idol): Zabójca we Mgle",
-              "bio": "The Trickster (Summer Idol) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Trickster (Summer Idol)",
-              "meme": "Meme: The Trickster (Summer Idol) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "泳ぐ時は常に心地よい適温の穏やかな波で迎えてくれる",
+                "足元に美しい真珠や珍しい貝殻、沈没船の財宝を打ち寄せてくれる",
+                "潮の満ち引きを操り、二人きりになれる秘密の入り江を作ってくれる",
+                "夜の散歩の足元を幻想的な青い生物発光の輝きで照らしてくれる",
+                "時空と次元を超えて永遠に変わらない絶対的な愛を注いでくれる"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+              "red_flags": [
+                "肉体をそのまま海の意識の一部として永遠に取り込もうとしてくる",
+                "嫉妬に狂うとカテゴリー5の猛烈な熱帯性低気圧を発生させる",
+                "打ち寄せる白波に乗せて理解不能な太古の怪異の囁きを届けてくる",
+                "一度でも愛を受け入れると、二度と島から生きて帰してくれなくなる",
+                "油断していると触手が伸びてきて日焼け止めを海底へ奪い去っていく"
               ]
             }
           },
@@ -714,99 +1005,138 @@
           "is_active": true
         },
         {
-          "slug": "the_ocean_hoy",
-          "name": "The Entity (Island Spirit)",
-          "role": "Killer",
-          "gender": "monster_other",
-          "media_url": "/static/avatars/killers/the_ocean_hoy.webp",
+          "slug": "the_narrator",
+          "name": "The Narrator",
+          "real_name": "The Narrator",
+          "role": "Survivor",
+          "gender": "male",
+          "media_url": "/static/avatars/rosters/hooked_on_you.webp",
           "media_type": "image",
-          "archetype": "The Eldritch Island Sovereign",
-          "bio": "The ancient being that created the island paradise. A cosmic romantic who controls the tides and manifests warm ocean breezes whenever you are feeling down.",
-          "tagline": "Sparkling bioluminescent waves and cosmic tentacle embraces.",
-          "quote": "\"All waters and souls flow into me.\"",
-          "meme": "Meme: The Entity (Island Spirit) in the trials - always bringing chaos and unhinged energy to the campfire.",
-          "turn_on": "Total devotion and willing sacrifice of your mortal concerns",
-          "dealbreaker": "Leaving the island paradise without saying goodbye",
-          "dating_vibe": "High-stakes Fog romance",
-          "red_flags": [
-            "Might consume your soul for eternity",
-            "Incomprehensible eldritch whispers"
-          ],
+          "watermark_left": "THE",
+          "watermark_right": "NARRATOR",
+          "archetype": "The Omniscient Sarcastic Host",
+          "tagline": "Breaking the fourth wall, judging your dating choices, and sipping a martini.",
+          "bio": "The witty, omnipresent voice chronicling every cheesy choice and awkward blunder on Murderer's Island. Armed with sharp quips, meta commentary, and zero patience for cliché dialogue, he secretly falls for you while roasting your decisions.",
+          "quote": "\"You chose that dialogue option? Really? Fine, let's see how this disaster unfolds.\"",
+          "meme": "Sighing loudly into the microphone every time you pick the most obviously fatal dating choice.",
+          "turn_on": "Clever banter, defying visual novel tropes, and acknowledging the fourth wall",
+          "dealbreaker": "Skipping through his dialogue or picking the most boring route options",
+          "dating_vibe": "Meta comedic romance where sarcastic narration hides genuine fascination",
+          "danger_level": "Medium",
+          "chaos_score": 85,
           "green_flags": [
-            "Created an entire private paradise for you",
-            "Cosmic devotion across dimensions",
-            "Controls the weather"
+            "Unmatched razor-sharp wit and witty commentary on your life",
+            "Knows every possible branching timeline to ensure your happy ending",
+            "Will literally rewrite script dialogue to save you from getting killed",
+            "Never lets a dull moment happen during awkward dates",
+            "Secretly roots for you even when pretending to be completely cynical"
           ],
-          "danger_level": "High",
-          "chaos_score": 75,
+          "red_flags": [
+            "Narrates your internal embarrassing thoughts in front of everyone",
+            "Constantly breaks the fourth wall to judge your romantic choices",
+            "Can rewind the scene if he feels the pacing is too boring",
+            "Pretends to be emotionally detached while secretly micromanaging you",
+            "Has read the entire script of your life and won't spoil the ending"
+          ],
           "translations": {
-            "de": {
-              "archetype": "The Entity (Island Spirit): Killer im Nebel",
-              "bio": "The Entity (Island Spirit) ist eine ikonische Gestalt in den Prüfungen des Wesens.",
-              "tagline": "Auf der Jagd im Reich des Wesens.",
-              "meme": "Meme: The Entity (Island Spirit) in der Prüfung – bringt immer maximale Spannung ans Lagerfeuer.",
-              "turn_on": "Mut und Standhaftigkeit unter Druck",
-              "dealbreaker": "Verrat und Feigheit",
-              "dating_vibe": "Spannende, düstere Romanze im Nebel",
-              "red_flags": [
-                "Unberechenbar im Nebel",
-                "Fokus auf eigene Ziele"
-              ],
+            "pl": {
+              "name": "Narrator",
+              "archetype": "Wszechwiedzący Sarkastyczny Gospodarz",
+              "tagline": "Burzenie czwartej ściany, komentowanie twoich wyborów i sączenie martini.",
+              "bio": "Błyskotliwy, wszechobecny głos dokumentujący każdą niezręczną randkę na Wyspie Morderców. Uzbrojony w cięte riposty i brak cierpliwości do banałów, potajemnie zakochuje się w tobie, bezlitośnie komentując twoje życiowe decyzje.",
+              "quote": "„Naprawdę wybrałeś tę opcję dialogową? No dobrze, zobaczmy, jak rozwinie się ta katastrofa.”",
+              "meme": "Głośne wzdychanie do mikrofonu za każdym razem, gdy wybierasz najbardziej fatalną opcję randkową.",
+              "turn_on": "Błyskotliwe riposty, łamanie schematów powieści wizualnych i puszczanie oka do czwartej ściany",
+              "dealbreaker": "Przewijanie jego kwestii i wybieranie najnudniejszych ścieżek dialogowych",
+              "dating_vibe": "Metakomediowy romans, w którym złośliwy komentarz maskuje autentyczną fascynację",
               "green_flags": [
-                "Unbeugsame Entschlossenheit",
-                "Tödliche Präzision"
+                "Niezrównany, cięty dowcip i trafne puenty do każdej sytuacji",
+                "Zna wszystkie możliwe linie czasowe, by doprowadzić was do szczęśliwego finału",
+                "Dopisze linijkę w scenariuszu w locie, by ocalić cię przed śmiercią",
+                "Nigdy nie dopuści do krępującej ciszy na randkach",
+                "Skrycie ci kibicuje, nawet gdy udaje zblazowanego cynika"
+              ],
+              "red_flags": [
+                "Czyta na głos twoje najbardziej żenujące myśli przy wszystkich",
+                "Bezlitośnie burzy czwartą ścianę, wyśmiewając twoje miłosne dylematy",
+                "Potrafi cofnąć scenę, jeśli uzna, że tempo akcji jest zbyt nudne",
+                "Udaje chłodnego profesjonalistę, a po cichu mikrozarządza twoim życiem",
+                "Przeczytał cały scenariusz twojego życia i za nic nie zdradzi zakończenia"
+              ]
+            },
+            "de": {
+              "name": "Der Erzähler",
+              "archetype": "Der allwissende sarkastische Moderator",
+              "tagline": "Bricht die vierte Wand, seziert deine Flirtversuche und nippt am Martini.",
+              "bio": "Die geistreiche, allgegenwärtige Stimme, die jeden peinlichen Fehltritt auf der Insel festhält. Mit messerscharfem Witz und null Geduld für Floskeln verliebt er sich insgeheim in dich, während er deine Entscheidungen genüsslich zerpflückt.",
+              "quote": "„Du hast wirklich diese Dialogoption gewählt? Na schön, sehen wir zu, wie diese Katastrophe ihren Lauf nimmt.“",
+              "meme": "Seufzt vernehmlich ins Mikrofon, jedes Mal wenn du dich für den offensichtlich fatalsten Flirtversuch entscheidest.",
+              "turn_on": "Schlagfertige Wortgefechte, Brechen von Klischees und Verständnis für die vierte Wand",
+              "dealbreaker": "Überspringen seiner Erzähltexte oder die Wahl der langweiligsten Dialogpfade",
+              "dating_vibe": "Meta-komödiantische Liebe, bei der bissiger Spott echte Faszination tarnt",
+              "green_flags": [
+                "Messerscharfer Humor und genialer Kommentar zu jeder Lebenslage",
+                "Kennt jeden Handlungsstrang, um dir das perfekte Happy End zu sichern",
+                "Schreibt spontan das Skript um, um dich vor tödlichen Fehlern zu bewahren",
+                "Lässt auf euren Verabredungen niemals peinliches Schweigen aufkommen",
+                "Fiebert heimlich für dich mit, auch wenn er den Zyniker mimt"
+              ],
+              "red_flags": [
+                "Trägt deine peinlichsten Gedanken lautstark vor allen Anwesenden vor",
+                "Zerstört ständig die vierte Wand, um deine Flirtkompetenz zu bewerten",
+                "Spult Szenen zurück, wenn ihm die Spannungskurve zu langatmig wird",
+                "Gibt sich unnahbar, mischt sich aber heimlich in alles ein",
+                "Kennt das Ende deines Lebensdrehbuchs und weigert sich zu spoilern"
               ]
             },
             "es": {
-              "archetype": "The Entity (Island Spirit): Asesino en la Niebla",
-              "bio": "The Entity (Island Spirit) es una figura destacada en las pruebas del Ente, dispuesta a todo.",
-              "tagline": "Acechando presas en el reino del Ente.",
-              "meme": "Meme: The Entity (Island Spirit) en la partida – pura adrenalina y caos en los motores.",
-              "turn_on": "Valentía y elegancia bajo presión",
-              "dealbreaker": "La traición y la cobardía",
-              "dating_vibe": "Romance intenso y peligroso en la Niebla",
-              "red_flags": [
-                "Impredecible en la niebla",
-                "Obsesión con los objetivos"
-              ],
+              "name": "El Narrador",
+              "archetype": "El presentador omnisciente y mordaz",
+              "tagline": "Rompiendo la cuarta pared, juzgando tus ligoteos y saboreando un cóctel.",
+              "bio": "La voz aguda y omnipresente que relata cada metedura de pata en la Isla del Asesinato. Equipado con réplicas implacables, se enamora en secreto de ti mientras se burla despiadadamente de tus desastrosas elecciones amorosas.",
+              "quote": "«¿En serio has elegido esa opción de diálogo? En fin, veamos cómo se desarrolla este desastre».",
+              "meme": "Suspira sonoramente al micrófono cada vez que tomas la decisión más peligrosa de la velada.",
+              "turn_on": "El ingenio verbal, subvertir los tópicos románticos y jugar con la cuarta pared",
+              "dealbreaker": "Saltarse sus líneas de diálogo o elegir los caminos más aburridos",
+              "dating_vibe": "Comedia romántica metanarrativa donde las pullas ingeniosas esconden un cariño sincero",
               "green_flags": [
-                "Determinación inquebrantable",
-                "Eficacia letal"
+                "Ingenio prodigioso capaz de amenizar cualquier momento incómodo",
+                "Conoce cada ramificación del guion para garantizarte el mejor final",
+                "Modifica líneas del texto sobre la marcha para salvarte de un final atroz",
+                "Garantiza citas vibrantes donde nunca habrá un segundo de aburrimiento",
+                "Desea en secreto tu triunfo aunque finja indiferencia absoluta"
+              ],
+              "red_flags": [
+                "Narra tus pensamientos más vergonzosos en voz alta ante los demás",
+                "Rompe la cuarta pared continuamente para mofarse de tus dudas sentimentales",
+                "Es capaz de reiniciar la escena si considera que el ritmo decae",
+                "Finge distancia profesional mientras intenta dirigir cada paso que das",
+                "Ha leído el desenlace de tu historia y no piensa revelarte nada"
               ]
             },
             "ja": {
-              "archetype": "The Entity (Island Spirit): 霧のキラー",
-              "bio": "The Entity (Island Spirit)はエンティティの試練において際立った存在感を放つキャラクターです。",
-              "tagline": "エンティティの領域で獲物を狩る。",
-              "meme": "ミーム: 試練のThe Entity (Island Spirit) – 発電機とチェイスで常に戦場をかき乱す。",
-              "turn_on": "極限状態での勇気と冷静さ",
-              "dealbreaker": "裏切りと逃走",
-              "dating_vibe": "妖しく危険に満ちた霧のロマンス",
-              "red_flags": [
-                "霧の中での予測不能さ",
-                "単独行動しがち"
-              ],
+              "name": "ナレーター",
+              "archetype": "全知にして皮肉屋のゲームマスター",
+              "tagline": "第四の壁を突破し、プレイヤーの選択肢を品定めしながらマティーニを嗜む声。",
+              "bio": "殺人鬼の島で起きるあらゆる珍事と迷推理を記録する、エスプリの効いた全知の声。切れ味抜群のツッコミとメタ発言を連発しながらも、プレイヤーの珍妙な選択に呆れつつ惹かれていきます。",
+              "quote": "「その選択肢を選ぶ気か？ 本当に？ よろしい、どんな大惨事になるか見届けよう。」",
+              "meme": "明らかに死亡フラグな選択肢が選ばれるたび、マイクに向かって盛大に深いため息をつく。",
+              "turn_on": "機知に富んだ切り返し、ベタな恋愛テンプレの破壊、そしてメタ視点の共有",
+              "dealbreaker": "自分の語りパートをスキップされることや、平凡で退屈な選択肢ばかり選ぶこと",
+              "dating_vibe": "メタ発言と痛烈なツッコミの裏に本物の愛着が隠されたコメディロマンス",
               "green_flags": [
-                "試練での高い集中力",
-                "圧倒的な攻撃力"
-              ]
-            },
-            "pl": {
-              "archetype": "The Entity (Island Spirit): Zabójca we Mgle",
-              "bio": "The Entity (Island Spirit) to wyrazista postać w królestwie Bytu, gotowa na wszystko w obliczu próby.",
-              "tagline": "Poluje na ofiary w mrocznym wymiarze Bytu.",
-              "quote": "„Nikt nie ucieknie przed wyrokiem Bytu w tej mgle.” – The Entity (Island Spirit)",
-              "meme": "Meme: The Entity (Island Spirit) we Mgle – 100% adrenaliny i zero litości przy generatorach.",
-              "turn_on": "Odwaga, styl i opanowanie w trudnych chwilach",
-              "dealbreaker": "Zdrada i brak szacunku",
-              "dating_vibe": "Tajemniczy, zmysłowy i pełen napięcia romans we mgle",
-              "red_flags": [
-                "Nieprzewidywalność we mgle",
-                "Skupienie na własnych celach"
+                "どんな修羅場でも最高に小気味よい毒舌とユーモアで盛り上げてくれる",
+                "すべての分岐ルートを熟知し、最高のハッピーエンドへ導く術を知っている",
+                "命の危機が迫ると台本を書き換えてでもプレイヤーを救ってくれる",
+                "デート中に退屈な沈黙や気まずい空気が流れるのを絶対に許さない",
+                "冷めた態度を装いながらも、内心では誰よりもプレイヤーを応援している"
               ],
-              "green_flags": [
-                "Niezłomna determinacja w próbie",
-                "Zabójcza skuteczność"
+              "red_flags": [
+                "周囲に大勢の人がいる前でプレイヤーの恥ずかしい本音を勝手に朗読する",
+                "第四の壁を平気で破壊してプレイヤーの恋愛下手ぶりを実況解説する",
+                "話のテンポが悪いと感じると勝手にシーンを巻き戻してやり直させる",
+                "無関心を装いながらプレイヤーの行動すべてを裏から管理したがる",
+                "人生の結末の台本をすでに読み終えており、絶対にネタバレを教えてくれない"
               ]
             }
           },

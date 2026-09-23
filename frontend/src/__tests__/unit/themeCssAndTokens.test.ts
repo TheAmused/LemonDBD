@@ -61,22 +61,34 @@ describe('Theme CSS & Fog Overlay Rules', () => {
   });
 });
 
-describe('App shell sidebar gutter', () => {
+describe('App shell sidebar geometry', () => {
   const cssPath = path.resolve(__dirname, '../../app/globals.css');
   const cssContent = fs.readFileSync(cssPath, 'utf-8');
 
-  it('reserves sidebar space on .lemon-shell-main with margin-left, not padding-left', () => {
-    // padding-left here would replace (not add to) the left component of a
-    // page's own p-N utility on the same element, leaving content flush
-    // against the sidebar with no gutter while the other three sides keep
-    // theirs -- margin and padding are independent properties, so only
-    // margin-left stacks correctly with a page's own padding.
-    const shellMainBlock = cssContent.match(/\.lemon-shell-main[^{]*\{[^}]*\}/g)?.join('\n') ?? '';
-    assert.match(shellMainBlock, /margin-left:\s*16rem/, '.lemon-shell-main must set margin-left: 16rem');
-    assert.doesNotMatch(
-      shellMainBlock,
-      /padding-left/,
-      '.lemon-shell-main must not use padding-left for sidebar clearance'
+  it('defines --sidebar-width CSS variable for responsive in-flow layout', () => {
+    // Mobile root default: 0rem
+    assert.match(cssContent, /--sidebar-width:\s*0rem/, ':root must set --sidebar-width: 0rem');
+    // Desktop >= 1024px: 16rem
+    assert.match(cssContent, /--sidebar-width:\s*16rem/, 'desktop must set --sidebar-width: 16rem');
+    // Collapsed desktop: 0rem
+    assert.match(
+      cssContent,
+      /:root\[data-sidebar="collapsed"\]\s*\{\s*--sidebar-width:\s*0rem;/,
+      ':root[data-sidebar="collapsed"] must collapse --sidebar-width to 0rem'
+    );
+  });
+
+  it('drives .lemon-shell-aside width via var(--sidebar-width) with smooth transition', () => {
+    const asideBlock = cssContent.match(/\.lemon-shell-aside[^{]*\{[^}]*\}/g)?.join('\n') ?? '';
+    assert.match(
+      asideBlock,
+      /width:\s*var\(--sidebar-width\)/,
+      '.lemon-shell-aside must use width: var(--sidebar-width)'
+    );
+    assert.match(
+      asideBlock,
+      /transition:\s*width\s+300ms/,
+      '.lemon-shell-aside must transition width over 300ms'
     );
   });
 });

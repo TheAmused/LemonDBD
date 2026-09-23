@@ -292,5 +292,8 @@ export default {
     copiedQuote: '¡Cita con estadísticas copiada!',
     copyQuote: 'Copiar cita y enlace (para Discord)',
     backToBreakdown: 'Volver al análisis del Arquetipo',
+    copiedForDiscord: '¡Cita y enlace copiados para Discord!',
+    facebookNotice: '¡Facebook abierto! Texto de la publicación copiado al portapapeles (pegar con Ctrl+V).',
+    telegramNotice: '¡Telegram abierto! Texto del mensaje copiado al portapapeles.',
   },
 } as const;

@@ -292,5 +292,8 @@ export default {
     copiedQuote: 'Skopiowano treść ze statystykami!',
     copyQuote: 'Kopiuj treść z linkiem (na Discord)',
     backToBreakdown: 'Wróć do analizy profilu',
+    copiedForDiscord: 'Skopiowano treść z linkiem dla Discorda!',
+    facebookNotice: 'Otwarto Facebooka! Treść posta skopiowano do schowka (wklej za pomocą Ctrl+V).',
+    telegramNotice: 'Otwarto Telegram! Treść wiadomości skopiowano do schowka.',
   },
 } as const;

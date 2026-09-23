@@ -2,7 +2,7 @@
 import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/maps/page.tsx
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
@@ -77,22 +77,37 @@ function MapsPageInner() {
 
   useDocumentTitle(dict?.maps?.pageTitle || 'LemonDBD - Tactical Map Command Explorer');
 
-  const voiceBanner = (
-    <VoiceCommandBanner
-      locale={locale}
-      dict={dict}
-      currentSource="hens333"
-      onSourceChange={() => {}}
-      onSelectMap={(name) => {
-        setSelectedMap({ mapName: name, timestamp: Date.now() });
-      }}
-      onAction={() => {
-        // Voice zoom/fullscreen/close actions have no target in the
-        // realm-grid layout -- there's no single "active" map to apply them to.
-      }}
-      availableMaps={availableMaps}
-      active={searchMode === 'voice'}
+  const handleSourceChange = useCallback(() => {}, []);
+  const handleSelectMap = useCallback((name: string) => {
+    setSelectedMap({ mapName: name, timestamp: Date.now() });
+  }, []);
+  const handleAction = useCallback(() => {}, []);
+
+  const toggleSwitchElement = (
+    <ToggleSwitch
+      value={searchMode}
+      onChange={setSearchMode}
+      ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
+      options={searchModeOptions}
     />
+  );
+
+  const voiceBanner = useMemo(
+    () => (
+      <VoiceCommandBanner
+        locale={locale}
+        dict={dict}
+        currentSource="hens333"
+        onSourceChange={handleSourceChange}
+        onSelectMap={handleSelectMap}
+        onAction={handleAction}
+        availableMaps={availableMaps}
+        active={searchMode === 'voice'}
+        centerHeaderSlot={toggleSwitchElement}
+        embedded={true}
+      />
+    ),
+    [locale, dict, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
   const handleSelectCategory = () => {
@@ -112,15 +127,6 @@ function MapsPageInner() {
     >
       <CampfireParticles />
       <div className="relative z-10 flex flex-col gap-4">
-        <div className="flex justify-center">
-          <ToggleSwitch
-            value={searchMode}
-            onChange={setSearchMode}
-            ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}
-            options={searchModeOptions}
-          />
-        </div>
-
         <MapExplorer
           initialMapName={selectedMap.mapName}
           selectedMap={selectedMap}
@@ -132,6 +138,7 @@ function MapsPageInner() {
           locale={locale}
           hideSearch={searchMode === 'voice'}
           voiceSlot={voiceBanner}
+          modeSwitcherSlot={toggleSwitchElement}
         />
       </div>
     </PageShell>

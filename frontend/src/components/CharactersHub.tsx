@@ -536,7 +536,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
       {ownershipMode && (
         <div
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[padding] duration-300 lemon-shell-main"
+          className="fixed left-[var(--sidebar-width,0rem)] right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md transition-[left] duration-300"
         >
           {ownershipSaveError && (
             <p

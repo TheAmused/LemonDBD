@@ -2,9 +2,8 @@
 """Tests for smash-or-pass roster seeder integrity across rosters and translations."""
 
 import json
-from pathlib import Path
 import pytest
-from app.seeds.smash_roster_seeder import ROSTERS_DIR, load_rosters_from_json_files
+from app.seeds.smash_roster_seeder import ROSTERS_DIR
 
 REQUIRED_TRANSLATION_FIELDS = (
     "name",
@@ -50,6 +49,13 @@ class TestHookedOnYouRosterIntegrity:
 
     def test_roster_is_active(self, hoy_roster: dict) -> None:
         assert hoy_roster.get("is_active") is True, "hooked_on_you roster must have is_active: True"
+
+    def test_roster_metadata_translations(self, hoy_roster: dict) -> None:
+        translations = hoy_roster.get("translations") or {}
+        for locale in SUPPORTED_LOCALES:
+            assert locale in translations, f"hooked_on_you missing roster translation for '{locale}'"
+            assert translations[locale].get("name"), f"hooked_on_you missing translated name for '{locale}'"
+            assert translations[locale].get("description"), f"hooked_on_you missing translated description for '{locale}'"
 
     def test_exactly_eight_characters(self, hoy_entities: list[dict]) -> None:
         assert len(hoy_entities) == 8, f"expected exactly 8 characters, got {len(hoy_entities)}"

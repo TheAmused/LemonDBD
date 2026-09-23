@@ -224,12 +224,9 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
   const getRosterDisplayName = useCallback(
     (r: RosterItem) => {
-      const rawRosters = (dict?.smashOrPass?.rosters || {}) as Record<string, { name?: string } | undefined>;
-      const locName = rawRosters[r.slug]?.name;
-      if (locName) return locName;
       return r.name || r.slug;
     },
-    [dict]
+    []
   );
 
   const getRosterHeroName = (slug: string) => {
@@ -549,9 +546,9 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       {getRosterDisplayName(r)}
                     </h3>
 
-                    {heroName && (
+                    {(r.description || heroName) && (
                       <p className="text-xs sm:text-sm md:text-base font-mono font-bold text-accent-red/90 tracking-wider drop-shadow-md">
-                        {heroName}
+                        {r.description || heroName}
                       </p>
                     )}
                   </div>

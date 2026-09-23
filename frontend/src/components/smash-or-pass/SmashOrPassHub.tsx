@@ -212,8 +212,6 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       rosters.find((r) => r.slug === selectedRosterSlug) || {
         id: 'canon',
         slug: 'canon',
-        name_i18n_key: 'smashOrPass.rosters.canon.name',
-        description_i18n_key: 'smashOrPass.rosters.canon.desc',
         name: 'Dead by Daylight: Fog Canon',
         description: 'Official 98 Characters',
         theme_color: '#dc2626',
@@ -437,6 +435,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   const getRosterDisplayName = useCallback(
     (r: { slug: string; name?: string }) => {
+      if (r.name) return r.name;
       const locName = (dict?.smashOrPass?.rosters as any)?.[r.slug]?.name;
       if (locName) return locName;
       if (r.slug === 'canon') return locale === 'pl' ? 'Dead by Daylight: Kanon Mgły' : 'Dead by Daylight: Fog Canon';

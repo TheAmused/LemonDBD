@@ -16,12 +16,12 @@ export interface ChaosRulesModalProps {
 const DIFFICULTY_ROWS = [
   {
     labelKey: 'chaosEasyLabel', defaultLabel: 'Easy',
-    textKey: 'chaosEasyDesc', defaultText: 'A checkpoint banks every 5 wins.',
+    textKey: 'chaosEasyDesc', defaultText: 'A checkpoint every 5 wins.',
     badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
   },
   {
     labelKey: 'chaosMediumLabel', defaultLabel: 'Medium',
-    textKey: 'chaosMediumDesc', defaultText: 'A checkpoint banks every 10 wins.',
+    textKey: 'chaosMediumDesc', defaultText: 'A checkpoint every 10 wins.',
     badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
   },
   {

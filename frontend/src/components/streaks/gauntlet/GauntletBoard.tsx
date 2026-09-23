@@ -1,10 +1,12 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
+import type { Dictionary } from '@/locales/types';
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
-import { Role } from '@/types/gauntletStreak';
+import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
 import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters, OwnedCharacterItem } from './useOwnedCharacters';
@@ -13,6 +15,8 @@ import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { useStreaksDict } from '@/context/StreaksDictContext';
+import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
+import { saveGauntletMode } from '@/utils/streakDifficultyPrefs';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
@@ -32,6 +36,10 @@ const GauntletRulesModal = dynamic(
   () => import('./GauntletRulesModal').then((m) => m.GauntletRulesModal),
   { ssr: false }
 );
+const GauntletModeModal = dynamic(
+  () => import('./GauntletModeModal').then((m) => m.GauntletModeModal),
+  { ssr: false }
+);
 const CheckpointModal = dynamic(
   () => import('./CheckpointModal').then((m) => m.CheckpointModal),
   { ssr: false }
@@ -44,13 +52,34 @@ const GauntletFireBackground = dynamic(
   { ssr: false }
 );
 
+function gameModeLabel(mode: GauntletGameMode, dict?: Dictionary['streaks']): string {
+  switch (mode) {
+    case 'lemon_solo':
+      return dict?.lemonSolo || 'Solo';
+    case 'lemon_duo':
+      return dict?.lemonDuo || 'Duo';
+    case 'lemon_squad':
+      return dict?.lemonSquad || 'Squad';
+    default:
+      return dict?.original || 'Original';
+  }
+}
+
 interface GauntletBoardProps {
   locale: string;
   role: Role;
+  gameMode?: GauntletGameMode;
 }
 
-export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) => {
+export const GauntletBoard: React.FC<GauntletBoardProps> = ({
+  locale,
+  role,
+  gameMode = DEFAULT_GAUNTLET_GAME_MODE,
+}) => {
   const dict = useStreaksDict();
+  const router = useRouter();
+  const pathname = usePathname();
+  const completionStatus = useChallengeCompletionStatus();
   const {
     run,
     stats,
@@ -60,10 +89,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
     error,
     submitResult,
     reveal,
+    chooseTarget,
     reset,
     justBankedCheckpoint,
     dismissCheckpointCelebration,
-  } = useGauntletRun(role);
+  } = useGauntletRun(role, gameMode);
   const { characters, loading: loadingRoster, releaseOrder } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
   const frozenCharacters: OwnedCharacterItem[] = React.useMemo(() => {
     const owned = run?.owned_characters ?? [];
@@ -75,6 +105,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+  const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
+  // Solo picks in two steps: click a character in the roster, then accept.
+  const [pendingPick, setPendingPick] = useState<string | null>(null);
   const [celebrating, setCelebrating] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
   // The target the reel has actually finished landing on, kept separate from
@@ -107,21 +140,38 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
   }, [justBankedCheckpoint]);
 
   const isCompleted = run?.status === 'completed';
+  const pickCharacter = PICK_CHARACTER_MODES.includes(gameMode);
+  const activeCharacterIds =
+    isCompleted || !shownTarget
+      ? []
+      : run?.current_loadout?.players?.map((player) => player.character) ?? [shownTarget];
+  const awaitingPick = pickCharacter && Boolean(run) && !run?.target_revealed && !isCompleted;
+
+  useEffect(() => {
+    if (!awaitingPick) setPendingPick(null);
+  }, [awaitingPick]);
 
   return (
-    <div>
+    <div className="pb-24">
       <GauntletFireBackground tierLevel={isCompleted ? 0 : run?.tier_info?.tier_level ?? 0} />
       <Confetti active={celebrating} />
 
-      <Link
-        href={`/${locale}/streaks/${role}`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span className="capitalize">
-          {dict?.streaks?.backToLabel || 'Back to'} {role} {dict?.streaks?.streaksSuffix || 'streaks'}
-        </span>
-      </Link>
+      <div className="flex flex-wrap items-center gap-3">
+        <Link
+          href={`/${locale}/streaks/${role}`}
+          className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span className="capitalize">
+            {dict?.streaks?.backToLabel || 'Back to'} {role} {dict?.streaks?.streaksSuffix || 'streaks'}
+          </span>
+        </Link>
+        {gameMode !== 'original' && (
+          <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-accent-amber">
+            {gameModeLabel(gameMode, dict?.streaks)}
+          </span>
+        )}
+      </div>
 
       <div className="mt-4">
         {error && (
@@ -140,6 +190,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
           onOpenReset={() => setConfirmingReset(true)}
+          onChangeMode={role === 'survivor' ? () => setIsChangeModeOpen(true) : undefined}
           dict={dict}
         />
 
@@ -172,6 +223,11 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
             onWin={() => submitResult('win')}
             onLoss={() => submitResult('loss')}
             onReveal={reveal}
+            pickCharacter={pickCharacter}
+            pendingPick={pendingPick}
+            onAcceptPick={() => {
+              if (pendingPick) chooseTarget(pendingPick);
+            }}
             holdReel={justBankedCheckpoint != null}
             shownTarget={shownTarget}
             onShownTargetChange={setShownTarget}
@@ -184,7 +240,9 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           characters={rosterCharacters}
           completedCharacters={run?.completed_characters || []}
           checkpointCharacters={run?.checkpoint_characters || []}
-          activeCharacterId={isCompleted ? undefined : shownTarget ?? undefined}
+          activeCharacterIds={activeCharacterIds}
+          onSelectCharacter={awaitingPick && !busy ? setPendingPick : undefined}
+          selectedCharacterId={pendingPick}
           loading={loadingRoster}
           dict={dict}
         />
@@ -221,11 +279,33 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({ locale, role }) =>
           }
           dict={dict}
         />
-        <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />
+        <GauntletModeModal
+          isOpen={isChangeModeOpen}
+          onClose={() => setIsChangeModeOpen(false)}
+          role={role}
+          currentMode={gameMode}
+          showIntro={false}
+          originalCompleted={(completionStatus.completions.gauntlet ?? []).includes(`${role}_original`)}
+          originalCompletedCount={completionStatus.completion_counts.gauntlet?.[`${role}_original`] ?? null}
+          originalCompletedFull={completionStatus.full_roster.gauntlet?.[`${role}_original`] != null}
+          originalCompletedFullCount={completionStatus.full_roster.gauntlet?.[`${role}_original`] ?? null}
+          onSelectMode={(mode) => {
+            saveGauntletMode(role, mode);
+            setIsChangeModeOpen(false);
+            router.push(mode === 'original' ? pathname : `${pathname}?mode=${mode}`);
+          }}
+          dict={dict}
+        />
+        <GauntletRulesModal
+          isOpen={isRulesOpen}
+          onClose={() => setIsRulesOpen(false)}
+          role={role}
+          gameMode={gameMode}
+          dict={dict}
+        />
         <CheckpointModal
           checkpoint={justBankedCheckpoint}
           role={role}
-          nextTier={run?.tier_info || null}
           onClose={dismissCheckpointCelebration}
           dict={dict}
         />

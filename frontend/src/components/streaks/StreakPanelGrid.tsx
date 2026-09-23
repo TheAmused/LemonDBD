@@ -12,6 +12,7 @@ import {
 } from './panels';
 import { Difficulty } from '@/types/chaosStreak';
 import { HistoryMode } from '@/types/historyStreak';
+import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useChallengeCompletionStatus } from './useChallengeCompletionStatus';
@@ -88,6 +89,8 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const historyFullRoster = completionStatus.full_roster.history ?? {};
   const pageStreakFullRoster = completionStatus.full_roster.page_streak ?? {};
   const gauntletVariant = `${role}_original`;
+  const gauntletHref = (mode: GauntletGameMode) =>
+    `/${locale}/streaks/${role}/gauntlet-streak${mode === 'original' ? '' : `?mode=${mode}`}`;
   const chaosHardestVariant = CHAOS_DIFFICULTY_ORDER[CHAOS_DIFFICULTY_ORDER.length - 1];
   const historyHardestVariant = HISTORY_MODE_ORDER[HISTORY_MODE_ORDER.length - 1];
   const gauntletCardCompleted = gauntletCompletedVariants.includes(gauntletVariant);
@@ -155,10 +158,12 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
               onClick={() => {
                 const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
-                const variant = `${role}_original`;
+                const variant = `${role}_${saved}`;
                 const hasActiveRun = gauntletActiveRuns.includes(variant);
-                if (saved === 'original' && (hasActiveRun || !gauntletCardCompleted)) {
-                  router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
+                const savedCompleted = gauntletCompletedVariants.includes(variant);
+                // Survivors have several modes, so they always get the picker.
+                if (role !== 'survivor' && saved && (hasActiveRun || !savedCompleted)) {
+                  router.push(gauntletHref(saved));
                 } else {
                   setIsModeModalOpen(true);
                 }
@@ -254,11 +259,12 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
       <GauntletModeModal
         isOpen={isModeModalOpen}
         onClose={() => setIsModeModalOpen(false)}
-        onSelectOriginal={() => {
-          saveGauntletMode(role as 'killer' | 'survivor', 'original');
-          router.push(`/${locale}/streaks/${role}/gauntlet-streak`);
+        onSelectMode={(mode) => {
+          saveGauntletMode(role as 'killer' | 'survivor', mode);
+          router.push(gauntletHref(mode));
         }}
         role={role as 'killer' | 'survivor'}
+        currentMode={getSavedGauntletMode(role as 'killer' | 'survivor') ?? undefined}
         originalCompleted={gauntletCardCompleted}
         originalCompletedCount={gauntletCardCount}
         originalCompletedFull={gauntletCardFullCount != null}

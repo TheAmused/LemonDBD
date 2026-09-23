@@ -22,7 +22,7 @@ export const AchievementsHub: React.FC<AchievementsHubProps> = ({ dict }) => {
         ))}
       </div>
 
-      <div className="lemon-shell-main fixed inset-0 z-40 flex items-center justify-center pointer-events-none">
+      <div className="fixed left-[var(--sidebar-width,0rem)] inset-y-0 right-0 z-40 flex items-center justify-center pointer-events-none transition-[left] duration-300">
         <span className="pointer-events-auto rounded-2xl border border-accent-amber/40 bg-accent-amber/10 px-6 py-3 text-2xl font-black tracking-wide text-accent-amber shadow-lg">
           {t?.comingSoon || 'Coming Soon'}
         </span>

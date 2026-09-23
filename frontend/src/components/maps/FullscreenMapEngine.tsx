@@ -57,11 +57,16 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   const draggedRef = useRef<boolean>(false);
 
   useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [onClose]);
 
   const handleWheel = (e: React.WheelEvent) => {
@@ -173,22 +178,17 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     }
   };
 
-  // Portaled straight to document.body: this dialog is meant to cover the
-  // true viewport including the sidebar, but it's mounted deep inside the
-  // page's content tree. If any ancestor along the way ever establishes its
-  // own stacking context (e.g. a `relative z-10` wrapper — which is exactly
-  // what layers the page content above the CampfireParticles background on
-  // this and several other pages), `position: fixed` still escapes that
-  // ancestor's layout, but NOT its stacking context, so the whole dialog
-  // would paint behind anything outside that wrapper with a higher z-index,
-  // such as the sidebar. Portaling to body sidesteps that entirely, the same
-  // way the codebase's own Modal.tsx already does for other dialogs.
-  return createPortal(
+  // Portaled to document.body to avoid stacking context collisions with
+  // page background particle layers. Positioned beside the desktop sidebar
+  // via `left-[var(--sidebar-width)]` (expanding to 100% when collapsed),
+  // and covering 100% fullscreen on mobile screens (< 1024px).
+  const engineContent = (
     <div
       role="dialog"
       aria-modal="true"
+      data-testid="fullscreen-map-engine"
       aria-label={dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
-      className="fixed inset-0 z-50 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary"
+      className="fixed inset-y-0 right-0 left-[var(--sidebar-width,0rem)] z-40 lg:z-30 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary transition-[left] duration-300 ease-in-out"
     >
       <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
@@ -330,7 +330,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           </button>
         </div>
       </footer>
-    </div>,
-    document.body
+    </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(engineContent, document.body) : engineContent;
 };

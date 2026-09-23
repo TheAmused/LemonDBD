@@ -15,11 +15,78 @@ from app.services.db.raw_schema import init_raw_sqlite_schema
 class TestSmashModels:
     """Tests for Smash or Pass models, UUID primary keys, calculations, and relational cascade deletes."""
 
+    def test_roster_direct_localization_and_entity_watermarks(self, db_session: Session) -> None:
+        # Verify Roster has no name_i18n_key or description_i18n_key columns
+        assert not hasattr(Roster, "name_i18n_key")
+        assert not hasattr(Roster, "description_i18n_key")
+
+        # Roster instantiates with name, description, translations
+        roster = Roster(
+            slug="test_canon",
+            name="Dead by Daylight: Fog Canon",
+            description="Original trial survivors and killers.",
+            translations={
+                "pl": {
+                    "name": "Dead by Daylight: Kanon Mgły",
+                    "description": "Oficjalne postacie z mgły.",
+                }
+            },
+        )
+        db_session.add(roster)
+        db_session.commit()
+
+        assert roster.name == "Dead by Daylight: Fog Canon"
+        assert roster.description == "Original trial survivors and killers."
+        assert roster.translations["pl"]["name"] == "Dead by Daylight: Kanon Mgły"
+
+        # Localized helper
+        loc_default = roster.localized()
+        assert loc_default["name"] == "Dead by Daylight: Fog Canon"
+        assert loc_default["description"] == "Original trial survivors and killers."
+
+        loc_pl = roster.localized("pl")
+        assert loc_pl["name"] == "Dead by Daylight: Kanon Mgły"
+        assert loc_pl["description"] == "Oficjalne postacie z mgły."
+
+        loc_fallback = roster.localized("de")
+        assert loc_fallback["name"] == "Dead by Daylight: Fog Canon"
+
+        roster_dict = roster.to_dict()
+        assert roster_dict["name"] == "Dead by Daylight: Fog Canon"
+        assert "name_i18n_key" not in roster_dict
+        assert "description_i18n_key" not in roster_dict
+
+        # Entity supports real_name, watermark_left, watermark_right
+        entity = Entity(
+            roster_id=roster.id,
+            slug="the_trapper",
+            name="The Trapper",
+            real_name="Evan MacMillan",
+            watermark_left="BEHAVIOUR",
+            watermark_right="CHAPTER 1",
+        )
+        db_session.add(entity)
+        db_session.commit()
+
+        assert entity.real_name == "Evan MacMillan"
+        assert entity.watermark_left == "BEHAVIOUR"
+        assert entity.watermark_right == "CHAPTER 1"
+
+        ent_dict = entity.to_dict()
+        assert ent_dict["real_name"] == "Evan MacMillan"
+        assert ent_dict["watermark_left"] == "BEHAVIOUR"
+        assert ent_dict["watermark_right"] == "CHAPTER 1"
+
+        ent_meta = entity.metadata_dict()
+        assert ent_meta["real_name"] == "Evan MacMillan"
+        assert ent_meta["watermark_left"] == "BEHAVIOUR"
+        assert ent_meta["watermark_right"] == "CHAPTER 1"
+
     def test_create_roster_and_entity(self, db_session: Session) -> None:
         roster = Roster(
             slug="test_cyberpunk",
-            name_i18n_key="smashOrPass.rosters.cyberpunk.name",
-            description_i18n_key="smashOrPass.rosters.cyberpunk.desc",
+            name="Cyberpunk 2077",
+            description="Night City votables",
             cover_image_url="https://example.com/cover.png",
             theme_color="#00f5d4",
             category="Cyberpunk",
@@ -60,7 +127,8 @@ class TestSmashModels:
 
         roster_dict = roster.to_dict()
         assert roster_dict["slug"] == "test_cyberpunk"
-        assert roster_dict["name_i18n_key"] == "smashOrPass.rosters.cyberpunk.name"
+        assert roster_dict["name"] == "Cyberpunk 2077"
+        assert roster_dict["description"] == "Night City votables"
         assert roster_dict["theme_color"] == "#00f5d4"
 
         entity_dict = entity.to_dict()
@@ -71,8 +139,8 @@ class TestSmashModels:
     def test_entity_stat_calculations_and_relationships(self, db_session: Session) -> None:
         roster = Roster(
             slug="test_canon",
-            name_i18n_key="smashOrPass.rosters.canon.name",
-            description_i18n_key="smashOrPass.rosters.canon.desc",
+            name="Canon Fog",
+            description="Fog entities",
         )
         db_session.add(roster)
         db_session.commit()
@@ -131,8 +199,8 @@ class TestSmashModels:
     def test_vote_model_and_relationship(self, db_session: Session) -> None:
         roster = Roster(
             slug="test_hooked",
-            name_i18n_key="smashOrPass.rosters.hoy.name",
-            description_i18n_key="smashOrPass.rosters.hoy.desc",
+            name="Hooked on You",
+            description="Hooked desc",
         )
         db_session.add(roster)
         db_session.commit()
@@ -170,8 +238,8 @@ class TestSmashModels:
     def test_cascade_delete(self, db_session: Session) -> None:
         roster = Roster(
             slug="test_cascade",
-            name_i18n_key="smashOrPass.rosters.cascade.name",
-            description_i18n_key="smashOrPass.rosters.cascade.desc",
+            name="Cascade Test",
+            description="Cascade desc",
         )
         db_session.add(roster)
         db_session.commit()
@@ -216,5 +284,18 @@ class TestSmashModels:
         assert "votes" in tables
         assert "translations" not in tables
         assert "perk_rules" not in tables
+
+        cursor.execute("PRAGMA table_info(rosters);")
+        roster_cols = [row[1] for row in cursor.fetchall()]
+        assert "name" in roster_cols
+        assert "description" in roster_cols
+        assert "translations" in roster_cols
+        assert "name_i18n_key" not in roster_cols
+
+        cursor.execute("PRAGMA table_info(entities);")
+        entity_cols = [row[1] for row in cursor.fetchall()]
+        assert "real_name" in entity_cols
+        assert "watermark_left" in entity_cols
+        assert "watermark_right" in entity_cols
 
         conn.close()

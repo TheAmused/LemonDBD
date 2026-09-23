@@ -292,5 +292,8 @@ export default {
     copiedQuote: 'Copied quote with stats!',
     copyQuote: 'Copy quote & link (for Discord)',
     backToBreakdown: 'Back to Archetype Breakdown',
+    copiedForDiscord: 'Copied quote & link for Discord!',
+    facebookNotice: 'Facebook opened! Post text copied to clipboard (paste with Ctrl+V).',
+    telegramNotice: 'Telegram opened! Message text copied to clipboard.',
   },
 } as const;

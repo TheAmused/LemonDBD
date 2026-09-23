@@ -20,8 +20,8 @@ def _make_roster(db_session: Session, slug: str, n_entities: int) -> Roster:
     roster = Roster(
         id=str(uuid.uuid4()),
         slug=slug,
-        name_i18n_key=f"smashOrPass.rosters.{slug}.name",
-        description_i18n_key=f"smashOrPass.rosters.{slug}.desc",
+        name=f"Roster {slug}",
+        description=f"Desc {slug}",
         theme_color="#ff0055",
         category="Test",
         is_nsfw=False,

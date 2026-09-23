@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/CharacterCard.tsx
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import {
   Heart,
   RotateCw,
@@ -20,6 +20,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
+import { sampleFlags } from '@/utils/smashWatermarks';
 
 // The local CharacterMetadataLocale / CharacterMetadataContainer shapes are gone: they
 // only existed to describe the duplicated payload (camelCase twins, `i18n` next to
@@ -74,6 +75,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
+
+
+  // Sample flags stably per character view (stable across card flips)
+  const sampledGreenFlags = useMemo(() => {
+    return sampleFlags(profile.green_flags);
+  }, [character.slug || character.id, profile.green_flags]);
+
+  const sampledRedFlags = useMemo(() => {
+    return sampleFlags(profile.red_flags);
+  }, [character.slug || character.id, profile.red_flags]);
 
   useEffect(() => {
     setIsFlipped(false);
@@ -520,30 +531,30 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 </div>
               )}
 
-              {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
+              {(sampledGreenFlags.length > 0 || sampledRedFlags.length > 0) && (
                 <div className="grid grid-cols-1 gap-1.5">
-                  {profile.green_flags.length > 0 && (
+                  {sampledGreenFlags.length > 0 && (
                     <div className="bg-accent-green/10 border border-accent-green/30 p-2.5 rounded-2xl space-y-0.5">
                       <span className="flex items-center gap-1 text-xs font-black text-accent-green">
                         <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                         {rawSmashDict?.greenFlags || ''}
                       </span>
                       <ul className="text-xs text-accent-green/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {profile.green_flags.map((flag: string, idx: number) => (
+                        {sampledGreenFlags.map((flag: string, idx: number) => (
                           <li key={idx}>{flag}</li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {profile.red_flags.length > 0 && (
+                  {sampledRedFlags.length > 0 && (
                     <div className="bg-accent-red/10 border border-accent-red/30 p-2.5 rounded-2xl space-y-0.5">
                       <span className="flex items-center gap-1 text-xs font-black text-accent-red">
                         <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
                         {rawSmashDict?.redFlags || ''}
                       </span>
                       <ul className="text-xs text-accent-red/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {profile.red_flags.map((flag: string, idx: number) => (
+                        {sampledRedFlags.map((flag: string, idx: number) => (
                           <li key={idx}>{flag}</li>
                         ))}
                       </ul>

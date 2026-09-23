@@ -306,6 +306,32 @@ export function buildArchetypeShareUrl(baseHref: string, payload: SharedArchetyp
 }
 
 /**
+ * Builds Telegram share URL, directing desktop browsers to Telegram Web (avoiding dead tg:// protocol handlers on t.me)
+ * and mobile browsers to the native t.me deep link.
+ */
+export function buildTelegramShareUrl(shareUrl: string, shareText: string, isMobile: boolean): string {
+  const encodedUrl = encodeURIComponent(shareUrl);
+  const encodedText = encodeURIComponent(shareText);
+  if (isMobile) {
+    return `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+  }
+  // Desktop: open Telegram Web directly with embedded tgaddr to avoid dead tg:// buttons on t.me
+  const tgaddr = `tg://msg_url?url=${encodedUrl}&text=${encodedText}`;
+  return `https://web.telegram.org/a/#?tgaddr=${encodeURIComponent(tgaddr)}`;
+}
+
+/**
+ * Builds Facebook share URL with encoded URL and optional quote parameter.
+ */
+export function buildFacebookShareUrl(shareUrl: string, shareText?: string): string {
+  const base = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  if (shareText) {
+    return `${base}&quote=${encodeURIComponent(shareText)}`;
+  }
+  return base;
+}
+
+/**
  * Robust clipboard copy with fallback to document.execCommand('copy').
  */
 export async function copyTextWithFallback(text: string): Promise<boolean> {

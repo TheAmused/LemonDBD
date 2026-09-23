@@ -77,8 +77,9 @@ class Roster(Base):
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
     )
     slug: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
-    name_i18n_key: Mapped[str] = mapped_column(String(128), nullable=False)
-    description_i18n_key: Mapped[str] = mapped_column(String(256), nullable=False)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    translations: Mapped[dict[str, Any] | None] = _json_column(default=dict, nullable=True)
     cover_image_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     theme_color: Mapped[str] = mapped_column(String(32), default="#ff0055", nullable=False)
     category: Mapped[str] = mapped_column(String(64), default="DBD", nullable=False)
@@ -100,12 +101,29 @@ class Roster(Base):
         order_by="Entity.order_index",
     )
 
-    def to_dict(self) -> dict[str, Any]:
+    def localized(self, lang: str | None = None) -> dict[str, Any]:
+        """The roster in `lang`, falling back per field to the English columns."""
+        base = {
+            "name": self.name,
+            "description": self.description,
+        }
+        if lang and lang != "en" and isinstance(self.translations, dict):
+            override = self.translations.get(lang)
+            if isinstance(override, dict):
+                for key in ("name", "description"):
+                    val = override.get(key)
+                    if val:
+                        base[key] = val
+        return base
+
+    def to_dict(self, lang: str | None = None) -> dict[str, Any]:
+        loc = self.localized(lang)
         return {
             "id": self.id,
             "slug": self.slug,
-            "name_i18n_key": self.name_i18n_key,
-            "description_i18n_key": self.description_i18n_key,
+            "name": loc["name"],
+            "description": loc["description"],
+            "translations": self.translations or {},
             "cover_image_url": self.cover_image_url,
             "theme_color": self.theme_color,
             "category": self.category,
@@ -135,10 +153,13 @@ class Entity(Base):
     )
     slug: Mapped[str] = mapped_column(String(128), index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(128), nullable=False)
+    real_name: Mapped[str | None] = mapped_column(String(128), nullable=True)
     role: Mapped[str] = mapped_column(String(32), default="Survivor", nullable=False)
     gender: Mapped[str] = mapped_column(String(32), default="female", nullable=False)
     media_url: Mapped[str | None] = mapped_column(String(512), nullable=True)
     media_type: Mapped[str] = mapped_column(String(16), default="image", nullable=False)
+    watermark_left: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    watermark_right: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
     # ---- the profile, in English. Was `metadata_json`, three times over. ----
     #: Was stored twice, as `title` and `archetype`, identical on all 148 rows.
@@ -208,6 +229,9 @@ class Entity(Base):
         """The former `metadata_json`, rebuilt -- one spelling, no twins."""
         return {
             **self.localized(lang),
+            "real_name": self.real_name,
+            "watermark_left": self.watermark_left,
+            "watermark_right": self.watermark_right,
             "chapter": self.chapter,
             "danger_level": self.danger_level,
             "chaos_score": self.chaos_score,
@@ -221,10 +245,13 @@ class Entity(Base):
             "roster_id": self.roster_id,
             "slug": self.slug,
             "name": self.name,
+            "real_name": self.real_name,
             "role": self.role,
             "gender": self.gender,
             "media_url": self.media_url,
             "media_type": self.media_type,
+            "watermark_left": self.watermark_left,
+            "watermark_right": self.watermark_right,
             # One key, not two. `metadata` and `metadata_json` were the same
             # dict emitted twice in every response.
             "metadata": self.metadata_dict(lang),

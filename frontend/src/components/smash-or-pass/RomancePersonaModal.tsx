@@ -12,7 +12,6 @@ import {
   ArrowRight,
   ArrowLeft,
   Copy,
-  MessageSquare,
   Gamepad2,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
@@ -24,6 +23,8 @@ import {
   calculateRomancePersona,
   reconstructSharedPersona,
   buildArchetypeShareUrl,
+  buildTelegramShareUrl,
+  buildFacebookShareUrl,
   copyTextWithFallback,
   type VoteRecord,
   type SharedArchetypePayload,
@@ -60,18 +61,25 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const [copied, setCopied] = useState<boolean>(false);
   const [isSharingView, setIsSharingView] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
-  const [copiedQuote, setCopiedQuote] = useState<boolean>(false);
+  const [feedbackNotice, setFeedbackNotice] = useState<string | null>(null);
   const backendBase = getBackendBaseUrl();
   const rawSmash = dict?.smashOrPass;
 
-  // Reset sharing view when modal closes
+  // Reset sharing view and notices when modal closes
   React.useEffect(() => {
     if (!isOpen) {
       setIsSharingView(false);
       setCopiedLink(false);
-      setCopiedQuote(false);
+      setFeedbackNotice(null);
     }
   }, [isOpen]);
+
+  const showFeedbackNotice = (msg: string) => {
+    setFeedbackNotice(msg);
+    setTimeout(() => {
+      setFeedbackNotice((curr) => (curr === msg ? null : curr));
+    }, 4500);
+  };
 
   const persona: RomancePersonaResult = useMemo(() => {
     const rawArchetypes = (rawSmash?.personaArchetypes || {}) as Record<string, PersonaArchetypeEntry>;
@@ -107,19 +115,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
     }
   };
 
-  const handleCopyQuote = async () => {
-    const fullMessage = `${shareText} - ${shareUrl}`;
-    const success = await copyTextWithFallback(fullMessage);
-    if (success) {
-      setCopiedQuote(true);
-      setTimeout(() => setCopiedQuote(false), 2500);
-    }
-  };
-
   const socialLinks = useMemo(() => {
     const encodedUrl = encodeURIComponent(shareUrl);
     const encodedText = encodeURIComponent(shareText);
     const encodedTitle = encodeURIComponent(shareTitle);
+    const isMobile = typeof navigator !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     return [
       {
@@ -155,7 +155,16 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       {
         name: 'Telegram',
         color: 'hover:border-[#229ED9] hover:bg-[#229ED9]/10 text-[#229ED9]',
-        url: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+        url: buildTelegramShareUrl(shareUrl, shareText, isMobile),
+        onClick: async () => {
+          await copyTextWithFallback(`${shareText} - ${shareUrl}`);
+          showFeedbackNotice(
+            rawSmash?.sharing?.telegramNotice ||
+              (locale === 'pl'
+                ? 'Otwarto Telegram! Treść wiadomości skopiowano do schowka.'
+                : 'Telegram opened! Message text copied to clipboard.')
+          );
+        },
         icon: (
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.729-1.748 7.375-2.541 10.725-.335 1.419-.949 1.666-1.545 1.121-.926-.848-2.617-2.025-3.568-2.736-.37-.277-.887-.783.056-1.298 1.082-.591 2.379-2.228 3.528-3.329.418-.4 1.157-1.488-.139-1.233-1.603.315-4.475 2.249-5.184 2.72-.647.43-1.232.55-1.758.388-.58-.179-1.579-.504-2.352-.756-.949-.31-.837-.887.202-1.291 4.062-1.583 6.772-2.627 8.131-3.131 3.864-1.432 4.667-1.681 5.19-1.689.115-.002.373.027.54.164.14.116.179.273.197.384.019.114.016.364.011.459z" />
@@ -165,15 +174,44 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       {
         name: 'Facebook',
         color: 'hover:border-[#1877F2] hover:bg-[#1877F2]/10 text-[#1877F2]',
-        url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        url: buildFacebookShareUrl(shareUrl, shareText),
+        onClick: async () => {
+          await copyTextWithFallback(`${shareText} ${shareUrl}`);
+          showFeedbackNotice(
+            rawSmash?.sharing?.facebookNotice ||
+              (locale === 'pl'
+                ? 'Otwarto Facebooka! Treść posta skopiowano do schowka (wklej za pomocą Ctrl+V).'
+                : 'Facebook opened! Post text copied to clipboard (paste with Ctrl+V).')
+          );
+        },
         icon: (
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
           </svg>
         ),
       },
+      {
+        name: 'Discord',
+        color: 'hover:border-[#5865F2] hover:bg-[#5865F2]/10 text-[#5865F2]',
+        url: '#',
+        onClick: async (e: React.MouseEvent) => {
+          e.preventDefault();
+          await copyTextWithFallback(`${shareText} - ${shareUrl}`);
+          showFeedbackNotice(
+            rawSmash?.sharing?.copiedForDiscord ||
+              (locale === 'pl'
+                ? 'Skopiowano treść z linkiem dla Discorda!'
+                : 'Copied quote & link for Discord!')
+          );
+        },
+        icon: (
+          <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+          </svg>
+        ),
+      },
     ];
-  }, [shareUrl, shareText, shareTitle]);
+  }, [shareUrl, shareText, shareTitle, rawSmash, locale]);
 
   const handleShare = async () => {
     if (typeof window === 'undefined') return;
@@ -371,8 +409,9 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   <a
                     key={item.name}
                     href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    onClick={item.onClick}
+                    target={item.url.startsWith('http') ? '_blank' : undefined}
+                    rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-bg-elevated border border-border-color transition-all duration-150 cursor-pointer font-bold ${item.color}`}
                   >
                     {item.icon}
@@ -380,9 +419,17 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   </a>
                 ))}
               </div>
+
+              {/* Status / Feedback Banner (for Facebook, Telegram, Discord, etc.) */}
+              {feedbackNotice && (
+                <div className="flex items-center gap-2 p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono animate-fadeIn">
+                  <Check className="h-4 w-4 shrink-0 stroke-[3]" />
+                  <span className="leading-snug">{feedbackNotice}</span>
+                </div>
+              )}
             </div>
 
-            {/* Direct Link Copy */}
+            {/* Direct Link Copy (Single Canonical Copy Button) */}
             <div className="space-y-2 pt-1">
               <span className="text-[10px] font-mono uppercase tracking-wider text-text-muted font-bold">
                 {rawSmash?.sharing?.directLink || 'Direct Link to Archetype'}
@@ -405,16 +452,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 </button>
               </div>
             </div>
-
-            {/* Copy Quote Button (Discord) */}
-            <button
-              type="button"
-              onClick={handleCopyQuote}
-              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color hover:border-accent-red/40 text-text-secondary hover:text-text-primary text-xs font-mono font-semibold transition-all cursor-pointer"
-            >
-              {copiedQuote ? <Check className="h-3.5 w-3.5 text-accent-green stroke-[3]" /> : <MessageSquare className="h-3.5 w-3.5 text-accent-red" />}
-              <span>{copiedQuote ? (rawSmash?.sharing?.copiedQuote || 'Copied quote with stats!') : (rawSmash?.sharing?.copyQuote || 'Copy quote & link (for Discord)')}</span>
-            </button>
 
             {/* Return to Breakdown Action */}
             <div className="pt-2 border-t border-border-color">

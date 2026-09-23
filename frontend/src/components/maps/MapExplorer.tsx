@@ -64,6 +64,8 @@ export interface MapExplorerProps {
    * sets the slot's height instead of the shorter one collapsing to its
    * own height and shifting the map grid below on every swap. */
   voiceSlot?: React.ReactNode;
+  /** Optional mode switcher (e.g. Search / Voice ToggleSwitch) rendered centered at the top of the command deck */
+  modeSwitcherSlot?: React.ReactNode;
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
@@ -75,6 +77,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   locale,
   hideSearch = false,
   voiceSlot,
+  modeSwitcherSlot,
 }) => {
   const {
     maps,
@@ -133,13 +136,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const columns = useResponsiveGridColumns(REALM_GRID_BREAKPOINTS, 3);
   const filtersActive = hasActiveMapFilters(filters);
 
-  useEffect(() => {
-    if (hideSearch) {
-      if (search) setSearch('');
-      clearFilters();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hideSearch]);
+  // Deliberately do not clear search or filters when toggling modes;
+  // doing so causes synchronous localStorage writes, realm re-filtering,
+  // and animation timer cascades that freeze the UI on rapid switching.
 
   const mapsDict = dict?.maps;
   const layoutOptions: DropdownOption[] = useMemo(
@@ -288,91 +287,123 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
 
   return (
     <div className="w-full space-y-6" data-testid="map-explorer-root">
-      <div className="grid grid-cols-[minmax(0,1fr)]">
-        <div className={`[grid-area:1/1] flex flex-col justify-center space-y-6 ${hideSearch ? 'invisible' : 'visible'}`}>
-          <div className="relative w-full sm:max-w-lg sm:mx-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
-              aria-label={dict?.maps?.searchAria || 'Search map or realm'}
-              tabIndex={hideSearch ? -1 : undefined}
-              className="w-full rounded-2xl border border-border-color bg-bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red"
-            />
-          </div>
+      <section
+        aria-label={dict?.maps?.pageTitle || 'Tactical Map Command'}
+        className="relative flex w-full flex-col overflow-hidden rounded-3xl border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-[14rem] backdrop-blur-xl shadow-xl dark:shadow-2xl transition-all duration-300"
+      >
+        <div className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -bottom-16 h-48 w-48 rounded-full bg-accent-red/5 blur-3xl" />
 
-          {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
-          <div className="flex flex-wrap items-center justify-center gap-2" data-testid="map-filters" inert={hideSearch}>
-            <CustomDropdown
-              value={layoutTypeRaw}
-              onChange={setLayoutTypeRaw}
-              options={layoutOptions}
-              icon={<Compass className="h-3.5 w-3.5" />}
-              ariaLabel={mapsDict?.layoutLabel || 'Layout'}
-              label={
-                filters.layoutType == null ? (
-                  <>
-                    <span className="hidden sm:inline">{mapsDict?.filterAnyLayout || 'Any layout'}</span>
-                    <span className="sm:hidden">{mapsDict?.layoutLabel || 'Layout'}</span>
-                  </>
-                ) : undefined
-              }
-            />
-            <CustomDropdown
-              value={sizeRaw}
-              onChange={setSizeRaw}
-              options={sizeOptions}
-              icon={<Maximize2 className="h-3.5 w-3.5" />}
-              ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
-              minWidthClass="min-w-[220px]"
-              label={
-                filters.size == null ? (
-                  <>
-                    <span className="hidden sm:inline">{mapsDict?.filterAnySize || 'Any size'}</span>
-                    <span className="sm:hidden">{mapsDict?.sizeLabel || 'Size'}</span>
-                  </>
-                ) : undefined
-              }
-            />
-            <CustomDropdown
-              value={sortOrder}
-              onChange={setSortOrder}
-              options={sortOptions}
-              icon={<ArrowDownAZ className="h-3.5 w-3.5" />}
-              ariaLabel={mapsDict?.sortAria || 'Sort maps'}
-              align="right"
-              label={
-                <>
-                  <span className="hidden sm:inline">
-                    {sortOrder === 'az' ? mapsDict?.sortAz || 'Name A to Z' : mapsDict?.sortZa || 'Name Z to A'}
-                  </span>
-                  <span className="sm:hidden">
-                    {sortOrder === 'az' ? mapsDict?.sortAzShort || 'A-Z' : mapsDict?.sortZaShort || 'Z-A'}
-                  </span>
-                </>
-              }
-            />
-            {filtersActive && (
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="inline-flex cursor-pointer items-center gap-1 rounded-xl px-3 py-2 text-xs font-mono font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-accent-red"
-              >
-                <X className="h-3.5 w-3.5" aria-hidden="true" />
-                {mapsDict?.clearFilters || 'Clear filters'}
-              </button>
+        <div className="relative z-10 grid grid-cols-[minmax(0,1fr)] flex-1">
+          <div
+            className={`[grid-area:1/1] flex flex-1 flex-col transition-opacity duration-200 ${
+              hideSearch ? 'invisible pointer-events-none opacity-0' : 'visible opacity-100'
+            }`}
+          >
+            {modeSwitcherSlot && (
+              <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-3">
+                <div className="hidden md:flex md:flex-1" />
+                <div className="flex items-center justify-center shrink-0">
+                  {modeSwitcherSlot}
+                </div>
+                <div className="hidden md:flex md:flex-1" />
+              </div>
             )}
+
+            <div className="flex-1 flex flex-col items-center justify-center space-y-4 py-1">
+              <div className="relative w-full sm:max-w-lg sm:mx-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
+                  aria-label={dict?.maps?.searchAria || 'Search map or realm'}
+                  tabIndex={hideSearch ? -1 : undefined}
+                  className="w-full rounded-2xl border border-border-color bg-bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red"
+                />
+              </div>
+
+              {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
+              <div
+                className="flex flex-wrap items-center justify-center gap-2"
+                data-testid="map-filters"
+                inert={hideSearch}
+              >
+              <CustomDropdown
+                value={layoutTypeRaw}
+                onChange={setLayoutTypeRaw}
+                options={layoutOptions}
+                icon={<Compass className="h-3.5 w-3.5" />}
+                ariaLabel={mapsDict?.layoutLabel || 'Layout'}
+                label={
+                  filters.layoutType == null ? (
+                    <>
+                      <span className="hidden sm:inline">{mapsDict?.filterAnyLayout || 'Any layout'}</span>
+                      <span className="sm:hidden">{mapsDict?.layoutLabel || 'Layout'}</span>
+                    </>
+                  ) : undefined
+                }
+              />
+              <CustomDropdown
+                value={sizeRaw}
+                onChange={setSizeRaw}
+                options={sizeOptions}
+                icon={<Maximize2 className="h-3.5 w-3.5" />}
+                ariaLabel={mapsDict?.surfaceArea || 'Surface Area'}
+                minWidthClass="min-w-[220px]"
+                label={
+                  filters.size == null ? (
+                    <>
+                      <span className="hidden sm:inline">{mapsDict?.filterAnySize || 'Any size'}</span>
+                      <span className="sm:hidden">{mapsDict?.sizeLabel || 'Size'}</span>
+                    </>
+                  ) : undefined
+                }
+              />
+              <CustomDropdown
+                value={sortOrder}
+                onChange={setSortOrder}
+                options={sortOptions}
+                icon={<ArrowDownAZ className="h-3.5 w-3.5" />}
+                ariaLabel={mapsDict?.sortAria || 'Sort maps'}
+                align="right"
+                label={
+                  <>
+                    <span className="hidden sm:inline">
+                      {sortOrder === 'az' ? mapsDict?.sortAz || 'Name A to Z' : mapsDict?.sortZa || 'Name Z to A'}
+                    </span>
+                    <span className="sm:hidden">
+                      {sortOrder === 'az' ? mapsDict?.sortAzShort || 'A-Z' : mapsDict?.sortZaShort || 'Z-A'}
+                    </span>
+                  </>
+                }
+              />
+              {filtersActive && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-xl px-3 py-2 text-xs font-mono font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-accent-red"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  {mapsDict?.clearFilters || 'Clear filters'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {voiceSlot && (
-          <div className={`[grid-area:1/1] flex ${hideSearch ? 'visible' : 'invisible'}`}>
-            {voiceSlot}
-          </div>
-        )}
-      </div>
+          {voiceSlot && (
+            <div
+              className={`[grid-area:1/1] flex flex-1 flex-col transition-opacity duration-200 ${
+                hideSearch ? 'visible opacity-100' : 'invisible pointer-events-none opacity-0'
+              }`}
+            >
+              {voiceSlot}
+            </div>
+          )}
+        </div>
+      </section>
 
       {loading && (
         <div className="py-16 text-center text-xs text-text-muted font-mono">

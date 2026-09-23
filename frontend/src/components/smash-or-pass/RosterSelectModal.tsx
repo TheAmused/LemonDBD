@@ -10,7 +10,7 @@ import { SmashSounds } from './SmashSoundEffects';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
-export const ENABLED_ROSTER_SLUGS = new Set(['canon', 'legendary_characters', 'legendary']);
+export const ENABLED_ROSTER_SLUGS = new Set(['canon', 'legendary_characters', 'legendary', 'hooked_on_you']);
 
 const ROSTER_HERO_MAP: Record<string, string> = {
   canon: 'All 98 Survivors & Killers',

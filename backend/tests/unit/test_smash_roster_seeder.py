@@ -126,6 +126,7 @@ class TestHookedOnYouRosterIntegrity:
                 assert len(r_flags) == en_r_count, f"{slug}: locale '{locale}' red_flags count ({len(r_flags)}) != EN count ({en_r_count})"
 
 
+
 EXPECTED_LEGENDARY_WATERMARKS = {
     "william_birkin": ("WILLIAM", "BIRKIN"),
     "hunk": ("AGENT", "HUNK"),
@@ -274,3 +275,26 @@ class TestLegendaryRosterIntegrity:
                 assert len(set(r_flags)) == len(r_flags), f"{slug}: locale '{locale}' duplicate red_flags: {r_flags}"
                 assert len(g_flags) == en_g_count, f"{slug}: locale '{locale}' green_flags count ({len(g_flags)}) != EN count ({en_g_count})"
                 assert len(r_flags) == en_r_count, f"{slug}: locale '{locale}' red_flags count ({len(r_flags)}) != EN count ({en_r_count})"
+
+    def test_no_boilerplate_templates(self, legendary_entities: list[dict]) -> None:
+        forbidden_phrases = (
+            "always bringing chaos and unhinged energy",
+            "ist eine ikonische Gestalt",
+            "es una figura destacada",
+            "はエンティティの試練において際立った存在感を放つ",
+        )
+        for char in legendary_entities:
+            slug = char.get("slug")
+            # Check English bio and meme
+            en_texts = [char.get("bio", ""), char.get("meme", "")]
+            for text in en_texts:
+                for phrase in forbidden_phrases:
+                    assert phrase not in text, f"{slug}: EN text contains boilerplate phrase {phrase!r}"
+
+            # Check translated bio and meme
+            translations = char.get("translations") or {}
+            for locale, t_data in translations.items():
+                loc_texts = [t_data.get("bio", ""), t_data.get("meme", "")]
+                for text in loc_texts:
+                    for phrase in forbidden_phrases:
+                        assert phrase not in text, f"{slug}: locale '{locale}' text contains boilerplate phrase {phrase!r}"

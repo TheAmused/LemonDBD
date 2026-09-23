@@ -75,7 +75,7 @@ class TestHookedOnYouRosterIntegrity:
             slug = char.get("slug")
             name = char.get("name", "")
             assert name, f"{slug}: missing name"
-            assert "(" not in name and ")" not in name, f"{slug}: name {name!r} contains parentheses"
+            assert not any(c in name for c in "()[]"), f"{slug}: name {name!r} contains parentheses or brackets"
 
     def test_watermarks_non_empty_no_parentheses(self, hoy_entities: list[dict]) -> None:
         for char in hoy_entities:
@@ -84,8 +84,7 @@ class TestHookedOnYouRosterIntegrity:
             wr = char.get("watermark_right", "")
             assert wl, f"{slug}: missing watermark_left"
             assert wr, f"{slug}: missing watermark_right"
-            assert "(" not in wl and ")" not in wl, f"{slug}: watermark_left {wl!r} contains parentheses"
-            assert "(" not in wr and ")" not in wr, f"{slug}: watermark_right {wr!r} contains parentheses"
+            assert not any(c in wl or c in wr for c in "()[]"), f"{slug}: watermarks ({wl!r}, {wr!r}) contain parentheses or brackets"
 
     def test_english_flags_range_and_uniqueness(self, hoy_entities: list[dict]) -> None:
         for char in hoy_entities:
@@ -124,7 +123,6 @@ class TestHookedOnYouRosterIntegrity:
                 assert len(set(r_flags)) == len(r_flags), f"{slug}: locale '{locale}' duplicate red_flags: {r_flags}"
                 assert len(g_flags) == en_g_count, f"{slug}: locale '{locale}' green_flags count ({len(g_flags)}) != EN count ({en_g_count})"
                 assert len(r_flags) == en_r_count, f"{slug}: locale '{locale}' red_flags count ({len(r_flags)}) != EN count ({en_r_count})"
-
 
 
 EXPECTED_LEGENDARY_WATERMARKS = {
@@ -226,7 +224,7 @@ class TestLegendaryRosterIntegrity:
             slug = char.get("slug")
             name = char.get("name", "")
             assert name, f"{slug}: missing name"
-            assert "(" not in name and ")" not in name, f"{slug}: name {name!r} contains parentheses"
+            assert not any(c in name for c in "()[]"), f"{slug}: name {name!r} contains parentheses or brackets"
 
     def test_watermarks_non_empty_no_parentheses(self, legendary_entities: list[dict]) -> None:
         for char in legendary_entities:
@@ -235,8 +233,7 @@ class TestLegendaryRosterIntegrity:
             wr = char.get("watermark_right", "")
             assert wl, f"{slug}: missing watermark_left"
             assert wr, f"{slug}: missing watermark_right"
-            assert "(" not in wl and ")" not in wl, f"{slug}: watermark_left {wl!r} contains parentheses"
-            assert "(" not in wr and ")" not in wr, f"{slug}: watermark_right {wr!r} contains parentheses"
+            assert not any(c in wl or c in wr for c in "()[]"), f"{slug}: watermarks ({wl!r}, {wr!r}) contain parentheses or brackets"
 
     def test_english_flags_range_and_uniqueness(self, legendary_entities: list[dict]) -> None:
         for char in legendary_entities:

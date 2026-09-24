@@ -156,18 +156,30 @@ To protect user progress against accidental page reloads, tab navigation, or tem
 
 ### 2.3 Responsiveness & Multi-Device Support
 - **Mobile (< 640px):**
-  - Card padding reduced to `p-4 sm:p-6`.
+  - **Minimum 2 columns** (`grid-cols-2 gap-2.5 sm:gap-4`) — never 1 single column, cutting vertical scroll in half for 35+ DLC chapters.
+  - Compact chapter card footers (`text-xs font-bold truncate`, compact switch).
+  - Card padding adjusted to `p-4 sm:p-6`.
   - Header title wraps cleanly (`text-xl font-black font-mono`).
   - "Pomiń" button moves to a centered action under the subtitle.
-  - "Jak to działa" legend wraps into 1 or 2 items per row with vertical card/label orientation.
-  - DLC chapter grid: 1 column (`grid-cols-1`), touch targets $\ge$ 44px.
-- **Tablet / Small Laptop (640px - 1024px):**
-  - 2 columns (`sm:grid-cols-2`), spacious padding.
+  - "Jak to działa" legend wraps into 2-3 items with vertical card/label orientation.
+  - Touch targets maintain $\ge$ 44px for toggles and taps.
+- **Tablet (640px - 1024px):**
+  - 3 columns (`sm:grid-cols-3`), spacious padding.
   - Legend items displayed in 3-column row centered.
 - **Desktop (1024px - 1280px):**
-  - 3 columns (`lg:grid-cols-3`).
+  - 4 columns (`lg:grid-cols-4`).
 - **Large Desktop / Ultra-wide ($\ge$ 1280px):**
-  - 5 columns (`xl:grid-cols-5`).
+  - 5 to 6 columns (`xl:grid-cols-5 2xl:grid-cols-6`).
+  - `CHAPTER_GRID_BREAKPOINTS` updated:
+    ```typescript
+    const CHAPTER_GRID_BREAKPOINTS = [
+      { minWidth: 1536, columns: 6 },
+      { minWidth: 1280, columns: 5 },
+      { minWidth: 1024, columns: 4 },
+      { minWidth: 640, columns: 3 },
+    ];
+    // Fallback on mobile (< 640px) is 2 columns (never 1)
+    ```
   - Max width restricted to `max-w-5xl 2xl:max-w-[90rem] mx-auto` to prevent excessive horizontal stretching while maintaining optical balance.
 
 ---

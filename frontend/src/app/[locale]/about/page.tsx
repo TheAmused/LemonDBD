@@ -79,10 +79,10 @@ export default function AboutPage() {
       locale={locale}
       dict={dict || ({} as Dictionary)}
       padding="spacious"
-      mainClassName="overflow-y-auto relative"
+      mainClassName="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] lg:min-h-screen overflow-y-auto relative"
     >
       <CampfireParticles />
-      <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 pb-10">
+      <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 py-6 sm:py-10">
         {/* Header */}
         <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-mono tracking-tight text-text-primary">

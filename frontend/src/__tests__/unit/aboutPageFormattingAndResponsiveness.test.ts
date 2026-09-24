@@ -139,4 +139,11 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
       'Must strip LemonDBD - prefix from page heading'
     );
   });
+
+  it('centers the entire page layout vertically and horizontally within PageShell', () => {
+    assert.ok(
+      source.includes('flex flex-col items-center justify-center') && source.includes('lg:min-h-screen'),
+      'Must configure PageShell main to center entire page layout vertically and horizontally'
+    );
+  });
 });

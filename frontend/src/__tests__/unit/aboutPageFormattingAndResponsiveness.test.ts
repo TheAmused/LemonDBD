@@ -103,22 +103,22 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
     );
   });
 
-  it('provides responsive multi-column layout for wider screens (1440px+) instead of narrow max-w-2xl', () => {
+  it('maintains original single-column stacked layout without additional header or grid elements', () => {
     assert.ok(
-      !source.includes('mx-auto flex max-w-2xl flex-col'),
-      'Must not constrain the entire page to narrow max-w-2xl'
+      !source.includes('<header'),
+      'Must not include additional header elements'
     );
     assert.ok(
-      source.includes('max-w-5xl') || source.includes('max-w-6xl'),
-      'Container must expand to max-w-5xl / max-w-6xl on desktop'
+      !source.includes('grid-cols-2'),
+      'Must not alter layout to a multi-column grid'
     );
     assert.ok(
-      source.includes('grid-cols-1 lg:grid-cols-2'),
-      'Must use responsive 2-column grid on desktop (lg+)'
+      source.includes('flex-col gap-4'),
+      'Must maintain original vertical card stack'
     );
     assert.ok(
-      source.includes('lg:col-span-2'),
-      'Credits card must span both columns on desktop'
+      source.includes('w-full') && source.includes('max-w-2xl'),
+      'Container must be responsive for mobile and desktop'
     );
   });
 

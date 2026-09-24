@@ -568,40 +568,44 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       )}
 
       {showSavedToast && (
-        <div
-          role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
-        >
-          <Check className="h-5 w-5" />
-          <span>{dict?.characterDetail?.changesSaved}</span>
+        <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300">
+          <div
+            role="status"
+            className="pointer-events-auto flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
+          >
+            <Check className="h-5 w-5" />
+            <span>{dict?.characterDetail?.changesSaved}</span>
+          </div>
         </div>
       )}
 
       {verificationNoticeOpen && user && (
-        <div
-          role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 text-xs font-bold text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
-        >
-          <MailWarning className="h-4 w-4 shrink-0" />
-          <span>{dict?.user?.verifyEmailRequired}</span>
-          <button
-            type="button"
-            onClick={() => {
-              setVerificationNoticeOpen(false);
-              setAuthModalIntent('verify');
-              setIsAuthModalOpen(true);
-            }}
-            className="rounded-lg bg-text-inverted/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-text-inverted/30 transition-colors cursor-pointer"
+        <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">
+          <div
+            role="status"
+            className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 text-xs font-bold text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
           >
-            {dict?.streaks?.verifyEmail}
-          </button>
-          <button
-            type="button"
-            onClick={() => setVerificationNoticeOpen(false)}
-            className="text-[11px] font-black underline cursor-pointer"
-          >
-            {dict?.characterDetail?.dismiss || dict?.modal?.close}
-          </button>
+            <MailWarning className="h-4 w-4 shrink-0" />
+            <span>{dict?.user?.verifyEmailRequired}</span>
+            <button
+              type="button"
+              onClick={() => {
+                setVerificationNoticeOpen(false);
+                setAuthModalIntent('verify');
+                setIsAuthModalOpen(true);
+              }}
+              className="rounded-lg bg-text-inverted/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-text-inverted/30 transition-colors cursor-pointer"
+            >
+              {dict?.streaks?.verifyEmail}
+            </button>
+            <button
+              type="button"
+              onClick={() => setVerificationNoticeOpen(false)}
+              className="text-[11px] font-black underline cursor-pointer"
+            >
+              {dict?.characterDetail?.dismiss || dict?.modal?.close}
+            </button>
+          </div>
         </div>
       )}
 

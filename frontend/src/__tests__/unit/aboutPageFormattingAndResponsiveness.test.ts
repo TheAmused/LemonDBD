@@ -132,4 +132,11 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
       'Must use scoped lemondbd_drawer_about_ storage key prefix'
     );
   });
+
+  it('strips "LemonDBD -" prefix from the visual h1 heading to keep header clean', () => {
+    assert.ok(
+      source.includes("replace(/^LemonDBD\\s*[-–—]\\s*/i, '')"),
+      'Must strip LemonDBD - prefix from page heading'
+    );
+  });
 });

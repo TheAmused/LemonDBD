@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { CampfireParticles } from '@/components/common/CampfireParticles';
 import { RichText } from '@/components/common/RichText';
@@ -70,6 +70,10 @@ export default function AboutPage() {
 
   useDocumentTitle(about?.pageTitle || 'LemonDBD - About us');
 
+  const pageHeading = about?.pageTitle
+    ? about.pageTitle.replace(/^LemonDBD\s*[-–—]\s*/i, '').trim()
+    : 'About us';
+
   return (
     <PageShell
       locale={locale}
@@ -81,12 +85,8 @@ export default function AboutPage() {
       <div className="relative z-10 mx-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 pb-10">
         {/* Header */}
         <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border-color bg-bg-surface/80 backdrop-blur-md text-[11px] font-mono font-bold uppercase tracking-wider text-text-secondary shadow-xs">
-            <Sparkles className="h-3 w-3 text-accent-red" />
-            <span className="text-accent-red font-black">{dict?.app?.title || 'LemonDBD'}</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-mono tracking-tight text-text-primary">
-            {about?.pageTitle || 'LemonDBD - About us'}
+            {pageHeading}
           </h1>
           {about?.features?.paragraphs?.[0] ? (
             <p className="max-w-2xl text-xs sm:text-sm text-text-muted leading-relaxed text-center px-4">
@@ -136,7 +136,7 @@ export default function AboutPage() {
             <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
               <RichText text={about?.credits.text} />
             </p>
-            <ul className="list-disc pl-5 space-y-1.5 text-text-primary marker:text-accent-red pt-1">
+            <ul className="flex flex-wrap gap-x-4 gap-y-1 text-text-primary pt-1">
               {CREDITS.map((name) => (
                 <li key={name} className="font-semibold">{name}</li>
               ))}

@@ -103,22 +103,22 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
     );
   });
 
-  it('maintains original single-column stacked layout without additional header or grid elements', () => {
+  it('implements responsive 2:2:1 grid layout with aligned row heights and spanning credits', () => {
     assert.ok(
-      !source.includes('<header'),
-      'Must not include additional header elements'
+      source.includes('grid-cols-1 lg:grid-cols-2'),
+      'Must use responsive 2-column grid on desktop'
     );
     assert.ok(
-      !source.includes('grid-cols-2'),
-      'Must not alter layout to a multi-column grid'
+      source.includes('items-stretch'),
+      'Must use items-stretch so cards in the same row match heights and stay aligned'
     );
     assert.ok(
-      source.includes('flex-col gap-4'),
-      'Must maintain original vertical card stack'
+      source.includes('lg:col-span-2'),
+      'Credits card must span both columns in the 2:2:1 layout'
     );
     assert.ok(
-      source.includes('w-full') && source.includes('max-w-2xl'),
-      'Container must be responsive for mobile and desktop'
+      source.includes('max-w-5xl') || source.includes('max-w-6xl'),
+      'Container must expand to max-w-5xl / max-w-6xl for 1440px+ viewports'
     );
   });
 

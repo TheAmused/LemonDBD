@@ -116,7 +116,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           altcha: altchaPayload,
         });
         if (res.success) {
-          setNotice({ type: 'register-success', email: res.user?.email || email });
+          if (res.user && !res.user.is_verified) {
+            setNotice({ type: 'register-success', email: res.user?.email || email });
+          } else {
+            onClose();
+            if (res.user && !res.user.onboarding_completed_at) {
+              const locale = pathname?.split('/')[1] || 'en';
+              router.push(`/${locale}/welcome`);
+            }
+          }
         } else {
           setError(res.error || dict?.user?.registrationFailed || null);
         }

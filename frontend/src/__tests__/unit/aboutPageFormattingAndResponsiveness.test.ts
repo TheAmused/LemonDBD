@@ -25,7 +25,7 @@ describe('RichText: Semantic Formatting & i18n Markup', () => {
 
   it('renders <i> and * italic tags for characters, roles, and game titles', () => {
     const html = renderToStaticMarkup(React.createElement(RichText, { text: 'Plays <i>killer</i> as a *Meghead* in <i>Dead by Daylight</i>.' }));
-    assert.ok(html.includes('italic font-medium text-text-primary'), 'Italic tags must render with italic styling');
+    assert.ok(html.includes('class="italic"') && !html.includes('font-medium'), 'Italic tags must render purely as cursive without overriding color or weight');
     assert.ok(html.includes('killer') && html.includes('Meghead') && html.includes('Dead by Daylight'));
   });
 

@@ -110,7 +110,7 @@ export default function AboutPage() {
           <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
             <RichText text={about?.credits.text} />
           </p>
-          <ul className="flex flex-wrap gap-x-4 gap-y-1 text-text-primary">
+          <ul className="list-disc pl-5 space-y-1.5 text-text-primary marker:text-accent-red pt-1">
             {CREDITS.map((name) => (
               <li key={name} className="font-semibold">{name}</li>
             ))}

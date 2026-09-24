@@ -4,10 +4,8 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Role } from '@/types/gauntletStreak';
-import { Flame, User, BarChart2, BookOpen, RotateCcw, History, Flag, Gauge } from 'lucide-react';
+import { BarChart2, BookOpen, RotateCcw, History, Gauge } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
-import { KillerIcon } from '@/components/icons/DbdIcons';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 export interface GauntletHeaderProps {
   role: Role;
@@ -15,6 +13,8 @@ export interface GauntletHeaderProps {
   bestStreak: number;
   lastCheckpointStreak: number;
   poolFrozen?: boolean;
+  /** The lemon variant's label (e.g. "Duo"), shown next to the title. Omit for Original. */
+  modeLabel?: string;
   onOpenStats: () => void;
   onOpenHistory: () => void;
   onOpenRules: () => void;
@@ -30,6 +30,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   bestStreak,
   lastCheckpointStreak,
   poolFrozen = false,
+  modeLabel,
   onOpenStats,
   onOpenHistory,
   onOpenRules,
@@ -38,59 +39,44 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
   dict,
 }) => {
   return (
-    <div className="w-full bg-bg-surface/90 border border-border-color rounded-2xl p-4 sm:p-6 backdrop-blur-md shadow-sm mb-6">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+    <div className="w-full bg-bg-surface/90 border border-border-color rounded-2xl p-3 sm:p-4 backdrop-blur-md shadow-sm mb-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 justify-center sm:justify-start shrink-0">
           <img
             src="/images/streaks/gauntlet-streak.jpg"
             alt=""
-            className="hidden sm:block h-11 w-11 rounded-xl border border-border-color object-cover shadow-sm"
+            className="hidden sm:block h-8 w-8 shrink-0 rounded-lg border border-border-color object-cover shadow-sm"
           />
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight flex items-center gap-2 justify-center sm:justify-start">
-            {role === 'survivor' ? (
-              <User className="w-6 h-6 text-accent-green" />
-            ) : (
-              <KillerIcon className="w-6 h-6 text-accent-red" />
-            )}
+          <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight whitespace-nowrap">
             <span className="capitalize">{dict?.streaks?.[role] || role}</span> {dict?.streaks?.gauntlet || 'Gauntlet'}
           </h1>
+          {modeLabel && (
+            <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-accent-amber">
+              {modeLabel}
+            </span>
+          )}
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
-          <FreezeBadge frozen={poolFrozen} dict={dict} />
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Flame className="w-5 h-5 animate-pulse" />
-            <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
-                {dict?.streaks?.current || 'Current'}
-              </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
-                {currentStreak}
-              </span>
-            </div>
+        <div className="flex flex-wrap items-center justify-center gap-2.5 w-full md:w-auto">
+          <FreezeBadge frozen={poolFrozen} compact dict={dict} />
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
+            <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">
+              {dict?.streaks?.current || 'Current'}
+            </span>
+            <span className="text-sm font-black text-text-primary font-mono">{currentStreak}</span>
           </div>
 
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <AdeptBadgeIcon className="w-5 h-5" />
-            <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
-                {dict?.streaks?.best || 'Best'}
-              </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
-                {bestStreak}
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
+            <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">
+              {dict?.streaks?.best || 'Best'}
+            </span>
+            <span className="text-sm font-black text-text-primary font-mono">{bestStreak}</span>
           </div>
 
-          <div className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
-            <Flag className="w-5 h-5" />
-            <div className="flex flex-col">
-              <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold leading-none">
-                {dict?.streaks?.checkpointHeader || 'Checkpoint'}
-              </span>
-              <span className="text-lg font-black text-text-primary leading-none mt-0.5 font-mono">
-                {lastCheckpointStreak}
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary shadow-sm">
+            <span className="text-[10px] uppercase tracking-wider text-text-muted font-bold">
+              {dict?.streaks?.checkpointHeader || 'Checkpoint'}
+            </span>
+            <span className="text-sm font-black text-text-primary font-mono">{lastCheckpointStreak}</span>
           </div>
 
           <button

@@ -9,6 +9,7 @@ import {
   RefreshCw,
   User,
   Sparkles,
+  Star,
   Lock,
   HelpCircle,
 } from 'lucide-react';
@@ -61,9 +62,9 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; ch
   if (!src || failed) {
     return (
       <div
-        className={`w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-accent-red ${motion}`}
+        className={`w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-text-muted ${motion}`}
       >
-        {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <KillerIcon className="w-10 h-10" aria-hidden="true" />}
+        {role === 'survivor' ? <User className="w-8 h-8" aria-hidden="true" /> : <KillerIcon className="w-8 h-8" aria-hidden="true" />}
       </div>
     );
   }
@@ -73,156 +74,207 @@ const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; ch
       src={src}
       alt=""
       aria-hidden="true"
-      className={`w-full h-full object-cover rounded-xl ${motion}`}
+      className={`w-full h-full max-w-none object-cover rounded-xl ${motion}`}
       onError={() => setFailed(true)}
     />
   );
 };
 
-const PerkIcon: React.FC<{ perk: Perk; size?: string }> = ({ perk, size = 'w-12 h-12' }) => {
+const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
   const [failed, setFailed] = useState<boolean>(false);
   const displayName = usePerkDisplayName()(perk.name);
   const src = perkIconFor(perk);
 
-  return (
-    <div
-      title={displayName}
-      className={`relative ${size} shrink-0 bg-bg-elevated border border-border-color rounded-lg flex items-center justify-center p-1 overflow-hidden`}
-    >
-      {src && !failed ? (
-        <img
-          src={src}
-          alt={displayName}
-          className="w-full h-full object-contain"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        <Sparkles className="w-5 h-5 text-text-muted" aria-hidden="true" />
-      )}
-    </div>
-  );
-};
-
-const RandomPerkSlot: React.FC<{ perk: Perk }> = ({ perk }) => {
-  const displayName = usePerkDisplayName()(perk.name);
-  return (
-    <div className="col-span-2 xl:col-span-1 bg-accent-amber/10 border border-accent-amber/40 rounded-xl p-3 flex items-center gap-3">
-      <PerkIcon perk={perk} size="w-11 h-11" />
-      <div className="overflow-hidden">
-        <p className="text-[11px] text-text-primary mt-0.5 truncate">{displayName}</p>
+  if (!src || failed) {
+    return (
+      <div className={`${size} flex items-center justify-center text-text-muted`}>
+        <Sparkles className="w-1/2 h-1/2" aria-hidden="true" />
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={displayName}
+      className={`${size} max-w-none object-contain`}
+      onError={() => setFailed(true)}
+    />
   );
 };
 
-interface PerkSlotsGridProps {
+type SlotSize = 'large' | 'small' | 'compact';
+
+const SLOT_ICON_BASE: Record<SlotSize, string> = {
+  large: 'w-20 h-20',
+  small: 'w-16 h-16',
+  compact: 'w-12 h-12',
+};
+
+const slotIconBase = (size: SlotSize) =>
+  `${SLOT_ICON_BASE[size]} shrink-0 rounded-md rotate-45 flex items-center justify-center border relative`;
+
+const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
+  large: 'text-[9.5px]',
+  small: 'text-[9.5px]',
+  compact: 'text-[7px]',
+};
+
+const BADGE_BG: Record<'amber' | 'red', string> = {
+  amber: 'bg-accent-amber',
+  red: 'bg-accent-red',
+};
+
+const SlotChip: React.FC<{
+  iconClassName: string;
+  caption: string;
+  title?: string;
+  size: SlotSize;
+  badge?: string;
+  badgeColor?: 'amber' | 'red';
+  children: React.ReactNode;
+}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
+  <div className="relative inline-flex shrink-0" title={title || caption}>
+    {badge && (
+      <div
+        className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
+      >
+        {badge}
+      </div>
+    )}
+    <div className={`${slotIconBase(size)} ${iconClassName}`}>
+      <div className="-rotate-45 flex items-center justify-center">{children}</div>
+    </div>
+  </div>
+);
+
+const SLOT_ICON_SIZE: Record<SlotSize, string> = {
+  large: 'w-8 h-8',
+  small: 'w-6 h-6',
+  compact: 'w-4 h-4',
+};
+
+const TEACHABLE_ACCENT = {
+  amber: 'bg-accent-amber/10 border-accent-amber/40 text-accent-amber',
+  red: 'bg-accent-red/10 border-accent-red/40 text-accent-red',
+};
+
+/** The "own unique perk goes here" slot, always paired with its badge.
+ * `accent` lets squad color each player's slot differently. */
+const TeachableSlot: React.FC<{ size: SlotSize; title: string; accent?: 'amber' | 'red'; dict?: Dictionary }> = ({
+  size,
+  title,
+  accent = 'amber',
+  dict,
+}) => (
+  <SlotChip
+    size={size}
+    iconClassName={TEACHABLE_ACCENT[accent]}
+    caption={(dict?.streaks?.ownPerkOf || 'Own perk').replace(/:$/, '')}
+    title={title}
+    badge={dict?.streaks?.teachableBadge || 'Teachable'}
+    badgeColor={accent}
+  >
+    <Star className={SLOT_ICON_SIZE[size]} />
+  </SlotChip>
+);
+
+interface PerkSlotsRowProps {
   tierInfo: TierInfo;
   charPerks: Perk[];
   randomPerks: Perk[];
   displayName: string;
+  size?: SlotSize;
+  teachableAccent?: 'amber' | 'red';
   dict?: Dictionary;
 }
 
-const SLOT_ICON_BOX =
-  'w-11 h-11 shrink-0 bg-bg-elevated border border-border-color rounded-lg flex items-center justify-center text-text-muted';
-
-const PerkSlotsGrid: React.FC<PerkSlotsGridProps> = ({ tierInfo, charPerks, randomPerks, displayName, dict }) => {
+/** A single horizontal row of labelled slot chips. */
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, randomPerks, displayName, size = 'small', teachableAccent, dict }) => {
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
   const slots = [0, 1, 2, 3];
-  // Only a survivor's slot 1 holds icons, so only then does it earn a wider column.
-  const wideFirstSlot = !charactersPerksOnly && (perkLimit > 0 || randomPerks.length > 0);
+  const slotLabel = dict?.streaks?.slotLabel || 'Slot';
+  const perkDisplayName = usePerkDisplayName();
+  const large = size === 'large';
+  const iconSize = SLOT_ICON_SIZE[size];
+  const perkArtSize = large ? 'w-32 h-32' : size === 'compact' ? 'w-14 h-14' : 'w-20 h-20';
 
   return (
     <div>
       {charactersPerksOnly && perkLimit === 0 && (
-        <p className="mb-2 text-xs text-text-secondary">
+        <p className="mb-1.5 text-[11px] text-text-secondary">
           {dict?.streaks?.noPerksThisTrial || 'No perks this trial.'} {displayName}{' '}
           {dict?.streaks?.goesInBare || 'goes in bare.'}
         </p>
       )}
-      <div
-        className={`grid grid-cols-2 gap-3 ${wideFirstSlot ? 'xl:grid-cols-[1.5fr_1fr_1fr_1fr]' : 'xl:grid-cols-4'}`}
-        role="list"
-      >
+      <div className={large ? 'flex items-center gap-16' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
-            return <RandomPerkSlot key="random-perk" perk={randomPerks[0]} />;
+            const perk = randomPerks[0];
+            return (
+              <SlotChip
+                key="random-perk"
+                size={size}
+                iconClassName="border-transparent"
+                caption={perkDisplayName(perk.name)}
+                title={perkDisplayName(perk.name)}
+              >
+                <PerkArt perk={perk} size={perkArtSize} />
+              </SlotChip>
+            );
           }
 
           if (idx >= perkLimit) {
             return (
-              <div
+              <SlotChip
                 key={`locked-${idx}`}
-                className="bg-bg-elevated/60 border border-border-color border-dashed rounded-xl p-3 flex items-center gap-3 opacity-60 select-none"
+                size={size}
+                iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
+                caption={dict?.streaks?.lockedSuffix ? dict.streaks.lockedSuffix[0].toUpperCase() + dict.streaks.lockedSuffix.slice(1) : 'Locked'}
+                title={`${slotLabel} ${idx + 1} ${dict?.streaks?.lockedSuffix || 'locked'} — ${dict?.streaks?.tierLabel || 'Tier'} ${tierInfo.tier_level} ${dict?.streaks?.ruleSuffix || 'rule'}`}
               >
-                <div className={SLOT_ICON_BOX} aria-hidden="true">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-text-muted uppercase tracking-wider">
-                    {dict?.streaks?.slotLabel || 'Slot'} {idx + 1} {dict?.streaks?.lockedSuffix || 'locked'}
-                  </h4>
-                  <p className="text-xs text-text-muted mt-0.5">
-                    {dict?.streaks?.tierLabel || 'Tier'} {tierInfo.tier_level} {dict?.streaks?.ruleSuffix || 'rule'}
-                  </p>
-                </div>
-              </div>
+                <Lock className={iconSize} />
+              </SlotChip>
             );
           }
 
           if (charactersPerksOnly) {
+            // Every filled slot is one of the killer's own teachables, not a free pick.
+            const ownPerk = charPerks[idx];
             return (
-              <div
+              <SlotChip
                 key={`char-slot-${idx}`}
-                className="bg-accent-red/10 border border-accent-red/40 rounded-xl p-3 flex items-center gap-3"
+                size={size}
+                iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
+                caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict?.streaks?.ownPerkOf || 'Own perk').replace(/:$/, '')}
               >
-                <div className={`${SLOT_ICON_BOX} bg-accent-red/10 border-accent-red/30 text-accent-red`} aria-hidden="true">
-                  <HelpCircle className="w-6 h-6" />
-                </div>
-                <h4 className="text-xs font-black text-accent-red uppercase tracking-wider">
-                  {dict?.streaks?.slotLabel || 'Slot'} {idx + 1}
-                </h4>
-              </div>
+                {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
+              </SlotChip>
             );
           }
 
           if (idx === 0) {
-            return (
-              <div
-                key="character-slot"
-                className="col-span-2 xl:col-span-1 bg-accent-red/10 border border-accent-red/40 rounded-xl p-3 flex flex-col gap-2"
-              >
-                <h4 className="text-xs font-black text-accent-red uppercase tracking-wider">
-                  {dict?.streaks?.slotOneOfThese || 'Slot 1: one of these'}
-                </h4>
-                {charPerks.length > 0 ? (
-                  <div className="flex items-center gap-2">
-                    {charPerks.map((perk, i) => (
-                      <PerkIcon key={perk.id ?? i} perk={perk} size="w-11 h-11" />
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs text-text-muted italic">
-                    {dict?.streaks?.noTeachablePerks || 'No teachable perks on record for this character.'}
-                  </p>
-                )}
-              </div>
-            );
+            // One of several choices, not a specific assigned perk -- a symbol
+            // for "your character's own unique perk goes here", not a preview.
+            const title =
+              charPerks.length > 0
+                ? `${dict?.streaks?.slotOneOfThese || 'One of these'}: ${charPerks
+                    .map((p) => perkDisplayName(p.name))
+                    .join(', ')}`
+                : dict?.streaks?.noTeachablePerks || 'No teachable perks on record for this character.';
+            return <TeachableSlot key="character-slot" size={size} title={title} accent={teachableAccent} dict={dict} />;
           }
 
           return (
-            <div
+            <SlotChip
               key={`free-${idx}`}
-              className="bg-bg-surface border border-border-color rounded-xl p-3 flex items-center gap-3"
+              size={size}
+              iconClassName="bg-bg-elevated border-border-color text-text-muted"
+              caption={dict?.streaks?.freePickCaption || 'Free pick'}
             >
-              <div className={SLOT_ICON_BOX} aria-hidden="true">
-                <HelpCircle className="w-6 h-6" />
-              </div>
-              <h4 className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                {dict?.swf?.slot || 'Slot'} {idx + 1}
-              </h4>
-            </div>
+              <HelpCircle className={iconSize} />
+            </SlotChip>
           );
         })}
       </div>
@@ -230,28 +282,25 @@ const PerkSlotsGrid: React.FC<PerkSlotsGridProps> = ({ tierInfo, charPerks, rand
   );
 };
 
-interface PlayerBuildProps {
+interface CompactPlayerBuildProps {
   index: number;
   player: GauntletPlayerLoadout;
   role: Role;
   characters: OwnedCharacterItem[];
   tierInfo: TierInfo;
-  /** More than one when several people play the same character (squad). */
   playersPerCharacter: number;
-  /** Tag the row with its player number; only worth it when there are several. */
-  showLabel: boolean;
+  isTeam: boolean;
   dict?: Dictionary;
 }
 
-/** The character on top, its perk slots underneath. */
-const PlayerBuild: React.FC<PlayerBuildProps> = ({
+const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
   index,
   player,
   role,
   characters,
   tierInfo,
   playersPerCharacter,
-  showLabel,
+  isTeam,
   dict,
 }) => {
   const displayName = useCharacterDisplayName()(player.character);
@@ -260,62 +309,72 @@ const PlayerBuild: React.FC<PlayerBuildProps> = ({
   const shared = playersPerCharacter > 1;
   const playerLabel = dict?.streaks?.playerLabel || 'Player';
 
-  return (
-    <div>
-      <div className="flex items-center gap-4 border-b border-border-color pb-5 mb-5">
-        <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-2xl p-1 bg-accent-red border-2 border-accent-red flex items-center justify-center overflow-hidden">
-          {avatarSrc && !avatarError ? (
-            <img
-              src={avatarSrc}
-              alt={displayName}
-              className="w-full h-full object-cover rounded-xl"
-              onError={() => setAvatarError(true)}
-            />
-          ) : (
-            <div className="w-full h-full bg-bg-elevated rounded-xl flex items-center justify-center text-accent-red">
-              {role === 'survivor' ? <User className="w-10 h-10" aria-hidden="true" /> : <KillerIcon className="w-10 h-10" aria-hidden="true" />}
-            </div>
-          )}
+  const avatarBox = (sizeClass: string, iconClass: string) => (
+    <div
+      title={displayName}
+      className={`${sizeClass} shrink-0 rounded-xl bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
+    >
+      {avatarSrc && !avatarError ? (
+        <img
+          src={avatarSrc}
+          alt={displayName}
+          className="w-full h-full max-w-none object-cover"
+          onError={() => setAvatarError(true)}
+        />
+      ) : (
+        <div className="w-full h-full bg-bg-elevated flex items-center justify-center text-text-muted">
+          {role === 'survivor' ? <User className={iconClass} aria-hidden="true" /> : <KillerIcon className={iconClass} aria-hidden="true" />}
         </div>
-        <div className="min-w-0">
-          {showLabel && !shared && (
-            <span className="block text-[10px] uppercase font-black text-accent-red tracking-wider">
-              {playerLabel} {index + 1}
-            </span>
-          )}
-          <h2 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight break-words">{displayName}</h2>
+      )}
+    </div>
+  );
+
+  if (!isTeam) {
+    return (
+      <div className="flex w-full items-center gap-8">
+        <div className="w-1/3 shrink-0 flex flex-col items-center gap-3 border-r border-border-color pr-8">
+          {avatarBox('w-28 h-28 sm:w-36 sm:h-36', 'w-14 h-14')}
+          <span className="text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
+        </div>
+        <div className="flex-1 min-w-0 flex items-center justify-center">
+          <PerkSlotsRow
+            tierInfo={tierInfo}
+            charPerks={player.character_perks ?? []}
+            randomPerks={player.random_perks ?? []}
+            displayName={displayName}
+            size="large"
+            dict={dict}
+          />
         </div>
       </div>
+    );
+  }
 
-      {!showLabel && (
-        <h3 className="mb-4 text-sm font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-accent-red" aria-hidden="true" />
-          {dict?.streaks?.yourBuildForMatch || 'Your build for this match'}
-        </h3>
-      )}
-
-      <div className="flex flex-col gap-4">
+  return (
+    <div className="flex w-full items-center gap-4 px-3 sm:px-4 min-h-[178px]">
+      <div className="w-1/3 shrink-0 flex flex-col items-center gap-2 border-r border-border-color pr-4">
+        {avatarBox('w-20 h-20 sm:w-24 sm:h-24', 'w-10 h-10')}
+        <span className="text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
+      </div>
+      <div className="flex-1 min-w-0 flex flex-col items-center justify-center gap-9">
         {Array.from({ length: playersPerCharacter }, (_, n) => (
-          <div key={n}>
+          <div key={n} className="flex items-center gap-4">
             {shared && (
-              <span className="block mb-2 text-[10px] uppercase font-black text-accent-red tracking-wider">
+              <span className="w-14 shrink-0 text-[9px] uppercase font-black text-accent-red tracking-wider">
                 {playerLabel} {index * playersPerCharacter + n + 1}
               </span>
             )}
-            <PerkSlotsGrid
+            <PerkSlotsRow
               tierInfo={tierInfo}
               charPerks={player.character_perks ?? []}
               randomPerks={player.random_perks ?? []}
               displayName={displayName}
+              size={shared ? 'compact' : 'small'}
+              teachableAccent={shared ? (n === 0 ? 'amber' : 'red') : undefined}
               dict={dict}
             />
           </div>
         ))}
-        {shared && (
-          <p className="text-[11px] text-text-muted">
-            {dict?.streaks?.squadUniquePerkHint || "The two players on this character can't use the same unique perk."}
-          </p>
-        )}
       </div>
     </div>
   );
@@ -417,9 +476,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run || !run.current_loadout) {
     return (
-      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-8 text-center backdrop-blur-md mb-8">
-        <div className="animate-spin text-accent-red mx-auto w-8 h-8 mb-3 flex items-center justify-center">
-          <RefreshCw className="w-8 h-8" />
+      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 text-center backdrop-blur-md mb-4">
+        <div className="animate-spin text-accent-red mx-auto w-6 h-6 mb-2 flex items-center justify-center">
+          <RefreshCw className="w-6 h-6" />
         </div>
         <p className="text-text-muted text-sm">
           {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
@@ -431,16 +490,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (pickCharacter && !run.target_revealed) {
     return (
       <>
-        <div className="w-full min-h-[240px] flex flex-col items-center justify-center bg-bg-surface border border-border-color rounded-2xl px-8 py-10 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
-          <div className="w-16 h-16 mb-4 rounded-2xl border border-accent-green/30 bg-accent-green/10 text-accent-green flex items-center justify-center">
-            <User className="w-8 h-8" aria-hidden="true" />
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-text-primary">
+        <div className="w-full flex items-center justify-center bg-bg-surface border border-border-color rounded-xl px-4 py-[92px] shadow-sm backdrop-blur-md mb-4">
+          <h2 className="text-sm sm:text-base font-black text-text-primary">
             {dict?.streaks?.soloPickTitle || 'Choose your survivor'}
           </h2>
         </div>
         <StreakActionBar>
-          <StreakActionButton variant="red" onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
+          <StreakActionButton variant="red" compact onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
             {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
           </StreakActionButton>
         </StreakActionBar>
@@ -450,87 +506,105 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run.target_revealed || isDrawingAny || awaitingDraw || revealing) {
     const drawing = isDrawingAny || awaitingDraw || revealing;
-    return (
-      <div className="w-full min-h-[420px] flex flex-col items-center justify-center bg-bg-surface border border-border-color rounded-2xl px-8 py-4 text-center shadow-sm dark:shadow-2xl backdrop-blur-md mb-8">
-        {isTeam ? (
-          <div className="flex flex-row items-start justify-center gap-6 sm:gap-10 mb-6">
-            {[
-              { name: reelName, displayName: reelDisplayName, phase },
-              { name: reelName2, displayName: reelDisplayName2, phase: phase2 },
-            ].map((reel, idx) => {
-              // A reel that finished before its partner reverts to 'idle' on its own;
-              // while the pair is still drawing overall, treat that as still landed.
-              const displayPhase = drawing && reel.phase === 'idle' ? 'landed' : reel.phase;
-              return (
-                <div key={idx} className="flex flex-col items-center">
-                  <div
-                    className={`w-28 h-28 sm:w-32 sm:h-32 rounded-2xl p-1.5 bg-accent-red border-2 border-accent-red flex items-center justify-center overflow-hidden mb-3 ${
-                      displayPhase === 'landed' ? 'gn-land-glow' : ''
-                    }`}
-                  >
-                    <RevealPortrait
-                      key={drawing ? reel.name ?? 'idle' : 'idle'}
-                      name={drawing ? reel.name ?? undefined : undefined}
-                      role={role}
-                      phase={drawing ? displayPhase : 'idle'}
-                      characters={characters}
-                    />
-                  </div>
-                  {drawing && (
-                    <h3 className="text-base sm:text-lg font-black text-text-primary">{reel.displayName ?? ' '}</h3>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div
-            className={`w-36 h-36 sm:w-40 sm:h-40 mx-auto rounded-2xl p-1.5 bg-accent-red border-2 border-accent-red flex items-center justify-center overflow-hidden mb-6 ${
-              phase === 'landed' ? 'gn-land-glow' : ''
-            }`}
-          >
-            <RevealPortrait
-              key={drawing ? reelName ?? 'idle' : 'idle'}
-              name={drawing ? reelName ?? undefined : undefined}
-              role={role}
-              phase={drawing ? phase : 'idle'}
-              characters={characters}
-            />
-          </div>
-        )}
+    const reels = isTeam
+      ? [
+          { name: reelName, displayName: reelDisplayName, phase },
+          { name: reelName2, displayName: reelDisplayName2, phase: phase2 },
+        ]
+      : [{ name: reelName, displayName: reelDisplayName, phase }];
 
-        {drawing ? (
-          !isTeam && (
-            <h2 className="text-2xl sm:text-3xl font-black text-text-primary mb-3">
-              {reelDisplayName ?? ' '}
-            </h2>
-          )
-        ) : (
-          <>
-            <h2 className="text-2xl sm:text-3xl font-black text-text-primary mb-8">
-              {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
-            </h2>
-            <button
-              type="button"
-              onClick={() => {
-                if (skipDraw) {
-                  onShownTargetChange(targetName);
-                  onReveal();
-                  return;
-                }
-                setRevealing(true);
-                beginDraw(() => {
-                  onShownTargetChange(targetName);
-                  onReveal();
-                });
-              }}
-              disabled={loading}
-              className="bg-accent-red hover:bg-accent-red-hover disabled:opacity-60 text-text-inverted font-extrabold text-lg py-4 px-10 rounded-xl shadow-lg transition-all cursor-pointer"
+    const startButton = (
+      <button
+        type="button"
+        onClick={() => {
+          if (skipDraw) {
+            onShownTargetChange(targetName);
+            onReveal();
+            return;
+          }
+          setRevealing(true);
+          beginDraw(() => {
+            onShownTargetChange(targetName);
+            onReveal();
+          });
+        }}
+        disabled={loading}
+        className="bg-accent-red hover:bg-accent-red-hover disabled:opacity-60 text-text-inverted font-extrabold text-sm py-2.5 px-6 rounded-xl shadow-sm transition-all cursor-pointer"
+      >
+        {dict?.streaks?.startGame || 'START GAME'}
+      </button>
+    );
+
+    if (!isTeam && !drawing) {
+      return (
+        <div className="w-full flex items-center justify-center bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-6 shadow-sm backdrop-blur-md mb-4">
+          {startButton}
+        </div>
+      );
+    }
+
+    if (!isTeam && drawing) {
+      const reel = reels[0];
+      const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
+      return (
+        <div className="w-full flex items-center justify-center gap-3 bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-4 shadow-sm backdrop-blur-md mb-4">
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className={`w-28 h-28 sm:w-36 sm:h-36 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+                displayPhase === 'landed' ? 'gn-land-glow' : ''
+              }`}
             >
-              {dict?.streaks?.startGame || 'START GAME'}
-            </button>
-          </>
+              <RevealPortrait
+                key={reel.name ?? 'idle'}
+                name={reel.name ?? undefined}
+                role={role}
+                phase={displayPhase}
+                characters={characters}
+              />
+            </div>
+            <span className="text-base font-bold text-text-primary text-center leading-tight max-w-[160px] truncate">
+              {reel.displayName ?? ' '}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full flex flex-wrap items-center gap-4 bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-6 shadow-sm backdrop-blur-md mb-4 min-h-[210px]">
+        <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
+        <div className="flex items-center gap-24">
+          {reels.map((reel, idx) => {
+            // A reel that finished before its partner reverts to 'idle' on its own;
+            // while the pair is still drawing overall, treat that as still landed.
+            const displayPhase = drawing && reel.phase === 'idle' ? 'landed' : reel.phase;
+            return (
+              <div
+                key={idx}
+                className={`w-28 h-28 sm:w-32 sm:h-32 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+                  displayPhase === 'landed' ? 'gn-land-glow' : ''
+                }`}
+              >
+                <RevealPortrait
+                  key={drawing ? reel.name ?? 'idle' : 'idle'}
+                  name={drawing ? reel.name ?? undefined : undefined}
+                  role={role}
+                  phase={drawing ? displayPhase : 'idle'}
+                  characters={characters}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        {!drawing && (
+          <div className="text-sm sm:text-base font-black text-text-primary">
+            {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
+          </div>
         )}
+        </div>
+
+        {!drawing && startButton}
       </div>
     );
   }
@@ -545,10 +619,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const actionButtons = (
     <StreakActionBar>
-      <StreakActionButton variant="green" onClick={onWin} disabled={loading}>
+      <StreakActionButton variant="green" compact onClick={onWin} disabled={loading}>
         {dict?.streaks?.winMatch || 'WON'}
       </StreakActionButton>
-      <StreakActionButton variant="red" onClick={onLoss} disabled={loading}>
+      <StreakActionButton variant="red" compact onClick={onLoss} disabled={loading}>
         {dict?.streaks?.loseMatch || 'LOST'}
       </StreakActionButton>
     </StreakActionBar>
@@ -560,21 +634,22 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   return (
     <>
-      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 shadow-sm dark:shadow-2xl backdrop-blur-md mb-6 space-y-5">
-        {players.map((player, index) => (
-          <div key={`${player.character}-${index}`} className={index > 0 ? 'border-t border-border-color pt-5' : ''}>
-            <PlayerBuild
+      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-4 shadow-sm dark:shadow-2xl backdrop-blur-md mb-4">
+        <div className={isTeam ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 divide-y sm:divide-y-0 sm:divide-x divide-border-color' : ''}>
+          {players.map((player, index) => (
+            <CompactPlayerBuild
+              key={`${player.character}-${index}`}
               index={index}
               player={player}
               role={role}
               characters={characters}
               tierInfo={tierInfo}
               playersPerCharacter={loadout.players_per_character ?? 1}
-              showLabel={isTeam}
+              isTeam={isTeam}
               dict={dict}
             />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       {actionButtons}
     </>

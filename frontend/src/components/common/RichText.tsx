@@ -73,7 +73,7 @@ export const RichText: React.FC<RichTextProps> = ({ text, className }) => {
     ) {
       const content = part.startsWith('<i>') ? part.slice(3, -4) : part.slice(1, -1);
       return (
-        <em key={index} className="italic font-medium text-text-primary not-italic:font-normal">
+        <em key={index} className="italic">
           {content}
         </em>
       );

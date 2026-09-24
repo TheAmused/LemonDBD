@@ -843,7 +843,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           <section className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-black uppercase tracking-wider text-text-secondary font-mono">
-                {dict?.admin?.chapters || 'DLC & Chapters'}
+                {t?.chaptersTitle || 'DLC & Chapters'}
               </span>
               <button
                 type="button"

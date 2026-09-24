@@ -134,6 +134,42 @@ Currently, `/welcome` (in `roster` view) renders:
 </div>
 ```
 
+### 2.2 LocalStorage Draft Persistence (Offline / Refresh Resilience)
+To protect user progress against accidental page reloads, tab navigation, or temporary network drops:
+1. **Storage Key:** Scoped by user ID: `lemondbd_onboarding_draft_${user?.id || 'guest'}`.
+2. **Persistence Payload:**
+   ```typescript
+   interface OnboardingStoredDraft {
+     ownershipDraft: Record<string, boolean>;
+     perkUnlockDraft: Record<number, boolean>;
+     updatedAt: number;
+   }
+   ```
+3. **Save Trigger:** Every state update (`setOwnershipDraft`, `setPerkUnlockDraft`, `handleSelectAllChapters`, `toggleChapter`, `togglePerkUnlocked`) immediately persists the updated drafts to `localStorage`.
+4. **Restore Strategy:**
+   - On initial catalog fetch, after fetching backend ownership state, the component checks `localStorage`.
+   - If a saved draft exists for this user, it merges the saved draft over the initial server state:
+     `ownershipDraft = { ...serverDraft, ...savedDraft.ownershipDraft }`
+     `perkUnlockDraft = { ...serverPerkDraft, ...savedDraft.perkUnlockDraft }`
+5. **Cleanup:** When the user completes onboarding (`handleContinue`) or confirms skip (`handleSkipConfirm`), the key is removed from `localStorage`.
+6. **Network Failure & Offline Resilience:** If the save network call (`handleContinue`) encounters an error or network drop, the drafts remain intact in `localStorage`, `setSaving(false)` is called, and an error alert is displayed without losing any selections.
+
+### 2.3 Responsiveness & Multi-Device Support
+- **Mobile (< 640px):**
+  - Card padding reduced to `p-4 sm:p-6`.
+  - Header title wraps cleanly (`text-xl font-black font-mono`).
+  - "Pomiń" button moves to a centered action under the subtitle.
+  - "Jak to działa" legend wraps into 1 or 2 items per row with vertical card/label orientation.
+  - DLC chapter grid: 1 column (`grid-cols-1`), touch targets $\ge$ 44px.
+- **Tablet / Small Laptop (640px - 1024px):**
+  - 2 columns (`sm:grid-cols-2`), spacious padding.
+  - Legend items displayed in 3-column row centered.
+- **Desktop (1024px - 1280px):**
+  - 3 columns (`lg:grid-cols-3`).
+- **Large Desktop / Ultra-wide ($\ge$ 1280px):**
+  - 5 columns (`xl:grid-cols-5`).
+  - Max width restricted to `max-w-5xl 2xl:max-w-[90rem] mx-auto` to prevent excessive horizontal stretching while maintaining optical balance.
+
 ---
 
 ## 3. Configurable Email Verification

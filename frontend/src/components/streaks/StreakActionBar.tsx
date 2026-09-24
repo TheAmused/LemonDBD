@@ -23,15 +23,25 @@ interface StreakActionButtonProps {
   variant: keyof typeof VARIANT_CLASSES;
   onClick: () => void;
   disabled?: boolean;
+  /** Smaller padding/text for boards that are already tight on vertical space. */
+  compact?: boolean;
   children: React.ReactNode;
 }
 
-export const StreakActionButton: React.FC<StreakActionButtonProps> = ({ variant, onClick, disabled, children }) => (
+export const StreakActionButton: React.FC<StreakActionButtonProps> = ({
+  variant,
+  onClick,
+  disabled,
+  compact = false,
+  children,
+}) => (
   <button
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className={`flex-1 max-w-xs ${VARIANT_CLASSES[variant]} disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-xs transition-all cursor-pointer`}
+    className={`flex-1 ${VARIANT_CLASSES[variant]} disabled:opacity-50 text-text-inverted font-extrabold rounded-xl shadow-xs transition-all cursor-pointer ${
+      compact ? 'max-w-[180px] text-sm py-2.5 px-5' : 'max-w-xs text-base py-3.5 px-6'
+    }`}
   >
     {children}
   </button>

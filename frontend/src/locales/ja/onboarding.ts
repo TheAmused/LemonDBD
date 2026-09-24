@@ -17,6 +17,7 @@ export default {
   ownChapterButton: "このチャプターを所持している",
   lockChapterButton: "このチャプターを所持していない",
   selectAllButton: "すべて所持している",
+  chaptersTitle: "DLC・チャプター",
   perksButton: "パーク",
   continueButton: "次へ",
   skipButton: "スキップ",

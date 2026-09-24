@@ -17,6 +17,7 @@ export default {
   ownChapterButton: "Poseo este capítulo",
   lockChapterButton: "No poseo este capítulo",
   selectAllButton: "Lo poseo todo",
+  chaptersTitle: "DLCs y Capítulos",
   perksButton: "Habilidades",
   continueButton: "Continuar",
   skipButton: "Omitir",

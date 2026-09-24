@@ -68,12 +68,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 border-b border-border-color pb-4">
         <div>
-          <h3 className="text-xl font-bold text-text-primary flex items-center gap-2">
-            {role === 'survivor' ? (
-              <User className="w-5 h-5 text-accent-green" />
-            ) : (
-              <KillerIcon className="w-5 h-5 text-accent-red" />
-            )}
+          <h3 className="text-xl font-bold text-text-primary">
             <span>{roleLabel}</span> {dict?.streaks?.rosterProgress || 'Roster Progress'}
           </h3>
         </div>
@@ -83,7 +78,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 animate-pulse">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-4 animate-pulse">
           {Array.from({ length: 16 }).map((_, i) => (
             <div key={i} className="aspect-square rounded-2xl bg-bg-elevated" />
           ))}
@@ -93,7 +88,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
           {dict?.streaks?.noOwnedCharacters || `You don't own any ${role} characters yet. Head to the Characters tab to mark what you own.`}
         </div>
       ) : (
-        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3 sm:gap-4">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-3 sm:gap-4">
           {characters.map((char) => {
             const completed = isCompleted(char.name);
             const active = isActiveTarget(char.name);
@@ -163,7 +158,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   )}
                 </div>
 
-                <span className="text-[11px] font-semibold text-center text-text-secondary line-clamp-1 w-full group-hover:text-accent-red transition-colors">
+                <span className="text-[11px] leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full group-hover:text-accent-red transition-colors">
                   {displayName(char.name)}
                 </span>
               </div>

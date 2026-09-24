@@ -8,10 +8,12 @@ import { Snowflake } from 'lucide-react';
 
 export interface FreezeBadgeProps {
   frozen: boolean;
+  /** Matches the slim single-line stat chips instead of the default square icon button. */
+  compact?: boolean;
   dict?: Dictionary;
 }
 
-export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
+export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = false, dict }) => {
   const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -24,9 +26,11 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, dict }) => {
       ref={ref}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="freeze-badge-in flex items-center justify-center px-3.5 py-3 rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm"
+      className={`freeze-badge-in flex items-center justify-center rounded-xl bg-bg-elevated border border-accent-amber/30 text-accent-amber shadow-sm ${
+        compact ? 'px-3 py-2' : 'px-3.5 py-3'
+      }`}
     >
-      <Snowflake className="w-6 h-6 text-accent-amber" />
+      <Snowflake className={compact ? 'w-5 h-5 text-accent-amber' : 'w-6 h-6 text-accent-amber'} />
 
       {hovered &&
         rect &&

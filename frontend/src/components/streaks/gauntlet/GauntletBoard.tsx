@@ -2,10 +2,9 @@
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 import type { Dictionary } from '@/locales/types';
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
 import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useGauntletRun } from './useGauntletRun';
@@ -141,8 +140,12 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
 
   const isCompleted = run?.status === 'completed';
   const pickCharacter = PICK_CHARACTER_MODES.includes(gameMode);
+  // Must equal the current target, not just be non-null -- otherwise a
+  // stale shownTarget from the previous reveal lets the roster jump ahead
+  // of the animation as soon as the next target arrives from the server.
+  const currentTargetName = run?.current_character_id || run?.current_loadout?.character || '';
   const activeCharacterIds =
-    isCompleted || !shownTarget
+    isCompleted || !shownTarget || shownTarget !== currentTargetName
       ? []
       : run?.current_loadout?.players?.map((player) => player.character) ?? [shownTarget];
   const awaitingPick = pickCharacter && Boolean(run) && !run?.target_revealed && !isCompleted;
@@ -156,24 +159,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
       <GauntletFireBackground tierLevel={isCompleted ? 0 : run?.tier_info?.tier_level ?? 0} />
       <Confetti active={celebrating} />
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Link
-          href={`/${locale}/streaks/${role}`}
-          className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          <span className="capitalize">
-            {dict?.streaks?.backToLabel || 'Back to'} {role} {dict?.streaks?.streaksSuffix || 'streaks'}
-          </span>
-        </Link>
-        {gameMode !== 'original' && (
-          <span className="rounded-full border border-accent-amber/30 bg-accent-amber/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-accent-amber">
-            {gameModeLabel(gameMode, dict?.streaks)}
-          </span>
-        )}
-      </div>
-
-      <div className="mt-4">
+      <div>
         {error && (
           <div className="mb-6 p-4 rounded-xl bg-accent-red/15 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-xs">
             <span>{error}</span>
@@ -186,6 +172,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           bestStreak={run?.best_streak || 0}
           lastCheckpointStreak={run?.last_checkpoint_streak || 0}
           poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
+          modeLabel={gameMode !== 'original' ? gameModeLabel(gameMode, dict?.streaks) : undefined}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}

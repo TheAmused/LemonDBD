@@ -84,6 +84,9 @@ class Config:
     MAIL_USERNAME: str = os.getenv("MAIL_USERNAME", "")
     MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD", "")
     MAIL_DEFAULT_SENDER: str = os.getenv("MAIL_DEFAULT_SENDER") or MAIL_USERNAME
+    REQUIRE_EMAIL_VERIFICATION: bool = os.getenv(
+        "REQUIRE_EMAIL_VERIFICATION", "true"
+    ).lower() in ("true", "1", "yes")
 
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://localhost")
 

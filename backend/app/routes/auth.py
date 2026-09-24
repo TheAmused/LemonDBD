@@ -159,6 +159,15 @@ def get_current_user_profile():
         resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         return resp, 200
 
+    require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
+    if not require_verification and not user.is_verified:
+        from app.core.extensions import db
+        user.is_verified = True
+        user.verification_code = None
+        user.verification_code_expires_at = None
+        user.verification_attempts = 0
+        db.session.commit()
+
     summary = ownership_service.get_user_ownership_summary(user.id)
     resp = make_response(jsonify({
         "authenticated": True,

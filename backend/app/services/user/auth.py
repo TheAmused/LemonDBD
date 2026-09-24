@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from flask import current_app
 from sqlalchemy import or_, select
 
+from app.core.config import Config
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.core.security import (
@@ -77,7 +78,7 @@ def create_user_account(
         if current_app:
             require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
     except RuntimeError:
-        require_verification = True
+        require_verification = Config.REQUIRE_EMAIL_VERIFICATION
 
     if require_verification:
         is_verified = False
@@ -264,6 +265,23 @@ def authenticate_user_credentials(
         return None, None
 
     if verify_password(password, user.password_hash):
+        require_verification = True
+        try:
+            if current_app:
+                require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
+        except RuntimeError:
+            require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+
+        if not require_verification and not user.is_verified:
+            user.is_verified = True
+            user.verification_code = None
+            user.verification_code_expires_at = None
+            user.verification_attempts = 0
+            db.session.commit()
+            logger.info(
+                f"User '{user.username}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
+            )
+
         token = generate_token(user.id, user.role)
         return user, token
 

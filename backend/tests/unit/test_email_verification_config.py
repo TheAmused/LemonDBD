@@ -44,3 +44,32 @@ def test_create_user_account_with_verification_disabled(app: Flask):
         assert user.verification_code is None
         assert user.verification_code_expires_at is None
         mock_send_email.assert_not_called()
+
+
+@pytest.mark.unit
+def test_authenticate_auto_verifies_unverified_user_when_disabled(app: Flask):
+    """When REQUIRE_EMAIL_VERIFICATION is toggled to False, existing unverified users auto-verify on login."""
+    app.config["REQUIRE_EMAIL_VERIFICATION"] = True
+    user_service = UserService()
+
+    with patch("app.services.user.auth.send_verification_email"):
+        user, err = user_service.register_user(
+            username="unverified_legacy_user",
+            email="legacy_unverified@example.com",
+            password="password123",
+        )
+        assert err is None
+        assert user.is_verified is False
+
+    # Now verification is turned off in config
+    app.config["REQUIRE_EMAIL_VERIFICATION"] = False
+
+    authenticated_user, token = user_service.authenticate(
+        username_or_email="unverified_legacy_user",
+        password="password123",
+    )
+    assert authenticated_user is not None
+    assert token is not None
+    assert authenticated_user.is_verified is True
+    assert authenticated_user.verification_code is None
+

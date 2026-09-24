@@ -82,7 +82,7 @@ export default function AboutPage() {
       mainClassName="overflow-y-auto relative"
     >
       <CampfireParticles />
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 pb-10">
+      <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 pb-10">
         {/* Header */}
         <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black font-mono tracking-tight text-text-primary">
@@ -131,12 +131,12 @@ export default function AboutPage() {
             ))}
           </AboutSection>
 
-          {/* Row 3: Credits (full width spanning both columns) */}
+          {/* Row 3: Credits (full width spanning both columns, centered content) */}
           <AboutSection id="credits" heading={about?.credits.heading} className="lg:col-span-2">
-            <p className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+            <p className="text-text-muted text-center leading-relaxed">
               <RichText text={about?.credits.text} />
             </p>
-            <ul className="flex flex-wrap gap-x-4 gap-y-1 text-text-primary pt-1">
+            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-text-primary pt-1">
               {CREDITS.map((name) => (
                 <li key={name} className="font-semibold">{name}</li>
               ))}

@@ -17,6 +17,8 @@ export default {
   ownChapterButton: "Ich besitze dieses Kapitel",
   lockChapterButton: "Ich besitze dieses Kapitel nicht",
   selectAllButton: "Ich besitze alles",
+  deselectAllButton: "Alle abwählen",
+  searchPlaceholder: "Kapitel oder Charaktere suchen...",
   chaptersTitle: "DLCs & Kapitel",
   perksButton: "Perks",
   continueButton: "Weiter",

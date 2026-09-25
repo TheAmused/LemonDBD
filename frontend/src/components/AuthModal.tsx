@@ -204,17 +204,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
         {notice && (notice.type === 'verify-reminder' || notice.type === 'register-success') && (
           <div className="mb-4 flex flex-col items-center gap-4 text-center animate-in fade-in duration-150">
-            <p className="text-xs text-text-secondary">
-              {notice.type === 'verify-reminder' ? (
-                <>
-                  {dict?.user?.signedInButPrefix} <strong>{notice.email}</strong>{' '}
-                  {dict?.user?.notVerifiedYetNotice}
-                </>
-              ) : (
-                dict?.user?.accountCreatedVerificationSent?.replace('{email}', notice.email)
-              )}
-            </p>
-
             <EmailVerificationForm
               email={notice.email}
               onVerified={(verifiedUser) => {

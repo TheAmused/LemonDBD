@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ChevronDown, Loader2, Search, User as UserIcon, X } from 'lucide-react';
+import { Check, ChevronDown, Info, Loader2, Search, User as UserIcon, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -20,6 +20,7 @@ import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 import { LemonIcon } from '@/components/LemonIcon';
+import { AmbientEmbers } from '@/components/layout/AmbientEmbers';
 import {
   clearOnboardingDraft,
   loadOnboardingDraft,
@@ -707,6 +708,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (!authLoading && !isAuthenticated) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+        <AmbientEmbers />
         <div className="w-full max-w-md space-y-4 rounded-3xl border border-border-color bg-bg-surface p-8 shadow-xl">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15">
             <LemonIcon className="h-10 w-10 text-accent-red" />
@@ -751,6 +753,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (view === 'intro') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
+        <AmbientEmbers />
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t?.introTitle || 'Welcome to LemonDBD'}</h1>
           <p className="text-sm text-text-secondary">
@@ -772,6 +775,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (view === 'language') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg-primary p-4">
+        <AmbientEmbers />
         <div className="w-full max-w-md rounded-2xl border border-border-color bg-bg-surface p-8 text-center space-y-4 shadow-2xl">
           <h1 className="text-xl font-black">{t?.languageStepTitle || 'Choose your language'}</h1>
           <p className="text-sm text-text-secondary">
@@ -811,7 +815,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary p-2.5 sm:p-5 lg:p-6 pb-28">
+    <div className="min-h-screen bg-bg-primary p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
+      <AmbientEmbers />
       <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
         {/* Unified Card Container */}
         <div className="rounded-2xl border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
@@ -844,40 +849,17 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             </div>
           </header>
 
-          <hr className="border-t border-border-color/60 my-0.5" />
+          <hr className="border-t border-border-color/60 mt-0.5 mb-3 sm:mb-5 lg:mb-6" />
 
           {/* Legend Section ("Jak to działa") */}
-          <section className="flex flex-col items-center text-center space-y-2 sm:space-y-2.5">
-            <h2 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-accent-red font-mono">
+          <section className="flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
+            <h2 className="text-sm sm:text-base md:text-lg font-black uppercase tracking-wider text-text-primary font-mono">
               {t?.legendTitle || 'How this works'}
             </h2>
             <div className="grid grid-cols-3 items-start justify-items-center gap-2 sm:gap-6 w-full max-w-xl mx-auto">
-              {/* Owned */}
-              <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
-                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-accent-green/60 bg-accent-green/20 shadow-sm">
-                  {legendCharacter && (
-                    <img
-                      src={resolveOnboardingAvatar(backendBase, legendCharacter)}
-                      alt=""
-                      aria-hidden="true"
-                      className="absolute inset-0 h-full w-full object-cover object-top"
-                    />
-                  )}
-                  <CharacterOwnershipOverlay
-                    isOwned
-                    hasPartialPerks={false}
-                    avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
-                    badgeSize="sm"
-                  />
-                </span>
-                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
-                  {t?.legendOwned || 'Owned - fully available'}
-                </span>
-              </div>
-
               {/* Locked */}
               <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
-                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-accent-red bg-bg-elevated shadow-sm">
+                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-sm">
                   {legendCharacter && (
                     <img
                       src={resolveOnboardingAvatar(backendBase, legendCharacter)}
@@ -900,7 +882,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
               {/* Partial */}
               <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
-                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-accent-amber bg-bg-elevated shadow-sm">
+                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-sm">
                   {legendCharacter && (
                     <img
                       src={resolveOnboardingAvatar(backendBase, legendCharacter)}
@@ -920,14 +902,33 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
                 </span>
               </div>
+
+              {/* Owned */}
+              <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
+                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border-color bg-bg-surface shadow-sm">
+                  {legendCharacter && (
+                    <img
+                      src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                  )}
+                  <CharacterOwnershipOverlay
+                    isOwned
+                    hasPartialPerks={false}
+                    avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+                    badgeSize="sm"
+                  />
+                </span>
+                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t?.legendOwned || 'Owned - fully available'}
+                </span>
+              </div>
             </div>
-            <p className="text-[10px] sm:text-[11px] text-text-secondary max-w-lg mx-auto leading-normal">
-              {t?.legendCustomizeHint ||
-                "Tap a locked character's Perks button to unlock individual perks without owning the whole character."}
-            </p>
           </section>
 
-          <hr className="border-t border-border-color/60 my-0.5" />
+          <hr className="border-t border-border-color/60 mt-0.5 mb-2.5 sm:mb-3.5" />
 
           {/* DLC / Chapters Section */}
           <section className="space-y-3">
@@ -970,7 +971,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     onClick={handleToggleAllChapters}
                     className={`group relative flex items-center gap-2 rounded-lg border px-2.5 sm:px-3 py-1.5 transition-all select-none cursor-pointer ${
                       isAllOwned
-                        ? 'border-accent-red/80 bg-accent-red/15 text-accent-red shadow-md shadow-accent-red/30'
+                        ? 'border-accent-red/80 bg-accent-red/15 text-accent-red'
                         : 'border-border-color bg-bg-surface text-text-secondary hover:border-accent-red/60 hover:text-text-primary'
                     }`}
                   >
@@ -978,11 +979,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                       aria-hidden="true"
                       className={`relative flex h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 items-center justify-center rounded-[3px] border transition-all duration-150 ${
                         isAllOwned
-                          ? 'border-accent-red bg-accent-red text-text-inverted shadow-xs shadow-accent-red/50'
+                          ? 'border-accent-red bg-accent-red text-text-inverted'
                           : 'border-border-color/80 bg-bg-elevated/80 group-hover:border-accent-red/80'
                       }`}
                     >
-                      {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3] drop-shadow-xs" />}
+                      {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3]" />}
                     </span>
                     <span className="text-xs font-bold font-mono tracking-tight">
                       {t?.selectAllButton || 'I own everything'}
@@ -1004,6 +1005,14 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                 </div>
               </div>
             </div>
+
+            <p className="flex items-start gap-1.5 text-[10px] sm:text-[11px] text-text-secondary">
+              <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 mt-0.5" />
+              <span>
+                {t?.legendCustomizeHint ||
+                  "Tip: for a chapter you don't own, expand it and use a character's Perks button to unlock individual perks without owning the whole character."}
+              </span>
+            </p>
 
             <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 md:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
           {filteredChapterGroups.map((group, index) => {
@@ -1175,7 +1184,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         </div>
       </section>
 
-      <div className="h-2" />
+      <div className="h-4" />
     </div>
   </div>
 
@@ -1186,7 +1195,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             type="button"
             disabled={saving}
             onClick={handleContinue}
-            className="w-full max-w-md sm:max-w-lg rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-3.5 text-sm sm:text-base font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer shadow-lg transition-colors"
+            className="w-full max-w-sm sm:max-w-md rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-sm sm:text-base font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer shadow-lg transition-colors"
           >
             {saving ? t?.savingLabel || 'Saving...' : t?.continueButton || 'Continue'}
           </button>

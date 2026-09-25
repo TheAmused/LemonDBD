@@ -13,7 +13,7 @@ export default {
   legendOwned: "Charakter freigeschaltet",
   legendLocked: "Charakter gesperrt",
   legendPartial: "Charakter teilweise freigeschaltet (nur Perks freigeschaltet)",
-  legendCustomizeHint: "Tippe bei einem gesperrten Charakter auf die Schaltfläche Perks, um einzelne Perks freizuschalten, ohne den ganzen Charakter zu besitzen.",
+  legendCustomizeHint: "Tipp: Klappe ein Kapitel, das du nicht besitzt, auf und nutze die Perks-Schaltfläche eines Charakters, um einzelne Perks freizuschalten, ohne den ganzen Charakter zu besitzen.",
   ownChapterButton: "Ich besitze dieses Kapitel",
   lockChapterButton: "Ich besitze dieses Kapitel nicht",
   selectAllButton: "Ich besitze alles",

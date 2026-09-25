@@ -13,7 +13,6 @@ export interface PerksTogglePopupPerk {
   killer_id?: number | null;
   icon_url?: string;
   icon_local_path?: string;
-  is_always_unlocked?: boolean;
   is_generic_counterpart?: boolean;
   is_general?: boolean;
 }
@@ -104,7 +103,6 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
             {characterPerks.map((perk) => {
               const isPermanentlyUnlocked = Boolean(
                 isPerkLockedAlways?.(perk) ||
-                perk.is_always_unlocked ||
                 perk.is_generic_counterpart ||
                 perk.is_general
               );

@@ -168,9 +168,9 @@ test('isDefaultUnlockedPerk protects free characters, generic counterparts, and 
     killer_id: 25,
     is_teachable: true,
     is_unlocked: true,
-    is_always_unlocked: true,
+    is_generic_counterpart: true,
   };
-  assert.strictEqual(isDefaultUnlockedPerk(deadlock, characters), true, 'Deadlock (The Cenobite / Hellraiser is_always_unlocked) must be default-unlocked');
+  assert.strictEqual(isDefaultUnlockedPerk(deadlock, characters), true, 'Deadlock (The Cenobite / Hellraiser is_generic_counterpart) must be default-unlocked');
 
   // 5. Standard non-free DLC character perk (Ghost Face)
   const iAmAllEars: OnboardingPerk = {

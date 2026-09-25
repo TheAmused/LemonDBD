@@ -30,7 +30,6 @@ def fetch_user_perks(
                 p.survivor_id is None and p.killer_id is None or p.is_generic_counterpart
             )
             d["is_generic_counterpart"] = bool(p.is_generic_counterpart)
-            d["is_always_unlocked"] = bool(d["is_general"])
             result.append(d)
         return result
 
@@ -70,7 +69,6 @@ def fetch_user_perks(
         d["is_unlocked"] = bool(is_unlocked)
         d["is_general"] = bool(is_general)
         d["is_generic_counterpart"] = bool(p.is_generic_counterpart)
-        d["is_always_unlocked"] = bool(is_general)
         result.append(d)
     return result
 

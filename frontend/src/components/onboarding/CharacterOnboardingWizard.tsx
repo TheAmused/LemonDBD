@@ -87,16 +87,14 @@ export interface OnboardingPerk {
   is_unlocked: boolean;
   is_general?: boolean;
   is_generic_counterpart?: boolean;
-  is_always_unlocked?: boolean;
   icon_url?: string;
   icon_local_path?: string;
 }
 
 /**
  * Determines whether a perk is unlocked by default based on model/API data attributes:
- * - Generic counterpart perks (perk.is_generic_counterpart, e.g. licensed perks with general variants)
+ * - Generic counterpart perks (perk.is_generic_counterpart)
  * - General baseline perks (perk.is_general)
- * - Backend always-unlocked flag (perk.is_always_unlocked)
  * - Free base game character perks (char.is_free)
  *
  * Driven strictly by data attributes rather than hardcoded character/chapter names.
@@ -105,7 +103,7 @@ export function isDefaultUnlockedPerk(
   perk: OnboardingPerk,
   characters: OnboardingCharacter[]
 ): boolean {
-  if (perk.is_always_unlocked || perk.is_generic_counterpart || perk.is_general) {
+  if (perk.is_generic_counterpart || perk.is_general) {
     return true;
   }
   const char = characters.find((c) => ownsPerk(perk, c.id, c.category));

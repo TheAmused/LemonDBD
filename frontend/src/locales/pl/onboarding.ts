@@ -13,7 +13,7 @@ export default {
   legendOwned: "Postać odblokowana",
   legendLocked: "Postać zablokowana",
   legendPartial: "Postać częściowo odblokowana (odblokowane tylko perki)",
-  legendCustomizeHint: "Kliknij przycisk Perki przy zablokowanej postaci, aby odblokować pojedyncze perki bez posiadania całej postaci.",
+  legendCustomizeHint: "Wskazówka: rozwiń nieposiadany rozdział i użyj przycisku Perki przy postaci, aby odblokować pojedyncze perki bez posiadania całej postaci.",
   ownChapterButton: "Posiadam ten rozdział",
   lockChapterButton: "Nie posiadam tego rozdziału",
   selectAllButton: "Posiadam wszystko",

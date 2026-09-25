@@ -19,7 +19,7 @@ export default {
   selectAllButton: "すべて所持している",
   deselectAllButton: "すべて解除",
   searchPlaceholder: "チャプターやキャラクターを検索...",
-  chaptersTitle: "DLC・チャプター",
+  chaptersTitle: "チャプター",
   perksButton: "パーク",
   continueButton: "次へ",
   skipButton: "スキップ",

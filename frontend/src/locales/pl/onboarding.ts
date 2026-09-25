@@ -19,7 +19,7 @@ export default {
   selectAllButton: "Posiadam wszystko",
   deselectAllButton: "Wyczyść",
   searchPlaceholder: "Szukaj rozdziału lub postaci...",
-  chaptersTitle: "Rozdziały i DLC",
+  chaptersTitle: "Rozdziały",
   perksButton: "Perki",
   continueButton: "Kontynuuj",
   skipButton: "Pomiń",

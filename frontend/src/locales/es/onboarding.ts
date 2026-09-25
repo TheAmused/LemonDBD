@@ -19,7 +19,7 @@ export default {
   selectAllButton: "Lo poseo todo",
   deselectAllButton: "Deseleccionar todo",
   searchPlaceholder: "Buscar capítulos o personajes...",
-  chaptersTitle: "DLCs y Capítulos",
+  chaptersTitle: "Capítulos",
   perksButton: "Habilidades",
   continueButton: "Continuar",
   skipButton: "Omitir",

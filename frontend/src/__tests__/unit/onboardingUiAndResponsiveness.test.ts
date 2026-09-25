@@ -10,14 +10,16 @@ describe('CharacterOnboardingWizard UI & Responsiveness', () => {
     'utf-8'
   );
 
-  it('enforces a minimum of 2 columns on mobile (never 1 single column)', () => {
+  it('enforces a minimum of 3 columns on mobile (never 1 or 2 single columns)', () => {
     assert.ok(
-      source.includes('grid-cols-2') && !source.includes('grid-cols-1 sm:grid-cols-2'),
-      'Chapter grid must use grid-cols-2 on mobile rather than grid-cols-1'
+      source.includes('grid-cols-3 gap-1.5 sm:gap-2.5 md:gap-3') &&
+        !source.includes('grid-cols-2 gap-2 sm:gap-3') &&
+        !source.includes('grid-cols-1 sm:grid-cols-2'),
+      'Chapter grid must use grid-cols-3 on mobile rather than 1 or 2'
     );
     assert.ok(
-      source.includes('useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 2)'),
-      'useResponsiveGridColumns fallback for mobile must be 2 columns'
+      source.includes('useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 3)'),
+      'useResponsiveGridColumns fallback for mobile must be 3 columns'
     );
   });
 

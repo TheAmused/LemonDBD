@@ -13,7 +13,7 @@ export default {
   legendOwned: "キャラクター解放済み",
   legendLocked: "キャラクターロック中",
   legendPartial: "キャラクター一部解放（パークのみ解放）",
-  legendCustomizeHint: "ロックされたキャラクターのパークボタンをタップすると、キャラクター全体を所持していなくても個別のパークを解放できます。",
+  legendCustomizeHint: "ヒント：所持していないチャプターを展開し、キャラクターのパークボタンを使うと、キャラクター全体を所持していなくても個別のパークを解放できます。",
   ownChapterButton: "このチャプターを所持している",
   lockChapterButton: "このチャプターを所持していない",
   selectAllButton: "すべて所持している",

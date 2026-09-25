@@ -6,8 +6,9 @@ import {
   groupCharactersByChapter,
   normalizeChapterKey,
   resolveOnboardingView,
+  isDefaultUnlockedPerk,
 } from '@/components/onboarding/CharacterOnboardingWizard';
-import type { OnboardingCharacter } from '@/components/onboarding/CharacterOnboardingWizard';
+import type { OnboardingCharacter, OnboardingPerk } from '@/components/onboarding/CharacterOnboardingWizard';
 
 test('CharacterOnboardingWizard is exported as a function component', () => {
   assert.strictEqual(typeof CharacterOnboardingWizard, 'function');
@@ -102,4 +103,84 @@ test('resolveOnboardingView resumes the step a locale redirect left behind', () 
 test('resolveOnboardingView starts a fresh visit on the intro step', () => {
   assert.strictEqual(resolveOnboardingView(null), 'intro');
   assert.strictEqual(resolveOnboardingView('nonsense'), 'intro');
+});
+
+test('isDefaultUnlockedPerk protects free characters, generic counterparts, and Halloween/Hellraiser perks', () => {
+  const characters: OnboardingCharacter[] = [
+    { id: 1, name: 'Dwight Fairfield', chapter_name: 'Base Game', release_number: 1, release_date: '14 June 2016', is_owned: true, is_free: true, role: 'Survivor', category: 'Survivor' },
+    { id: 6, name: 'Laurie Strode', chapter_name: 'The HALLOWEEN® Chapter', release_number: 6, release_date: '25 October 2016', is_owned: false, is_free: false, role: 'Survivor', category: 'Survivor' },
+    { id: 5, name: 'The Shape', chapter_name: 'The HALLOWEEN® Chapter', release_number: 5, release_date: '25 October 2016', is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
+    { id: 25, name: 'The Cenobite', chapter_name: 'Hellraiser™', release_number: 25, release_date: '7 September 2021', is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
+    { id: 10, name: 'The Ghost Face', chapter_name: 'Ghost Face®', release_number: 10, release_date: '18 June 2019', is_owned: false, is_free: false, role: 'Killer', category: 'Killer' },
+  ];
+
+  // 1. Free base game character perk (Dwight)
+  const dwightPerk: OnboardingPerk = {
+    perk_id: 10,
+    name: 'Bond',
+    character_id: 1,
+    survivor_id: 1,
+    is_teachable: true,
+    is_unlocked: true,
+  };
+  assert.strictEqual(isDefaultUnlockedPerk(dwightPerk, characters), true, 'Free character perks must be default-unlocked');
+
+  // 2. Generic counterpart perk
+  const genericPerk: OnboardingPerk = {
+    perk_id: 99,
+    name: 'Some Generic',
+    character_id: 10,
+    killer_id: 10,
+    is_generic_counterpart: true,
+    is_teachable: true,
+    is_unlocked: true,
+  };
+  assert.strictEqual(isDefaultUnlockedPerk(genericPerk, characters), true, 'Generic counterpart perks must be default-unlocked');
+
+  // 3. Halloween perks (Laurie Strode & The Shape)
+  const decisiveStrike: OnboardingPerk = {
+    perk_id: 53,
+    name: 'Decisive Strike',
+    character_id: 6,
+    survivor_id: 6,
+    is_teachable: true,
+    is_unlocked: true,
+    is_generic_counterpart: true,
+  };
+  assert.strictEqual(isDefaultUnlockedPerk(decisiveStrike, characters), true, 'Decisive Strike (Halloween) must be default-unlocked');
+
+  const saveTheBestForLast: OnboardingPerk = {
+    perk_id: 284,
+    name: 'Save the Best for Last',
+    character_id: 5,
+    killer_id: 5,
+    is_teachable: true,
+    is_unlocked: true,
+    is_generic_counterpart: true,
+  };
+  assert.strictEqual(isDefaultUnlockedPerk(saveTheBestForLast, characters), true, 'Save the Best for Last (The Shape / Halloween generic counterpart) must be default-unlocked');
+
+  // 4. Hellraiser perk (The Cenobite)
+  const deadlock: OnboardingPerk = {
+    perk_id: 201,
+    name: 'Deadlock',
+    character_id: 25,
+    killer_id: 25,
+    is_teachable: true,
+    is_unlocked: true,
+    is_generic_counterpart: true,
+  };
+  assert.strictEqual(isDefaultUnlockedPerk(deadlock, characters), true, 'Deadlock (The Cenobite / Hellraiser is_generic_counterpart) must be default-unlocked');
+
+  // 5. Standard non-free DLC character perk (Ghost Face)
+  const iAmAllEars: OnboardingPerk = {
+    perk_id: 300,
+    name: "I'm All Ears",
+    character_id: 10,
+    killer_id: 10,
+    is_teachable: true,
+    is_unlocked: false,
+    is_generic_counterpart: false,
+  };
+  assert.strictEqual(isDefaultUnlockedPerk(iAmAllEars, characters), false, 'Normal paid DLC perk must NOT be default-unlocked');
 });

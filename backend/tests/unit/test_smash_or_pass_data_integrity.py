@@ -252,8 +252,8 @@ class TestCanonRosterIntegrity:
         assert bill.get("watermark_left") == "BILL"
         assert bill.get("watermark_right") == "OVERBECK"
 
-        # eleven: watermark_left == "SURVIVOR", watermark_right == "ELEVEN"
+        # eleven: watermark_left == "ELEVEN", watermark_right == "011"
         eleven = by_slug.get("eleven")
         assert eleven is not None, "eleven not found"
-        assert eleven.get("watermark_left") == "SURVIVOR"
-        assert eleven.get("watermark_right") == "ELEVEN"
+        assert eleven.get("watermark_left") == "ELEVEN"
+        assert eleven.get("watermark_right") == "011"

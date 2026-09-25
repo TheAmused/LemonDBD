@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Loader2, User as UserIcon } from 'lucide-react';
+import { Check, ChevronDown, Loader2, Search, User as UserIcon, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -20,6 +20,11 @@ import { LANGUAGES } from '@/components/sidebar/SidebarBottomControls';
 import { FlagIcon } from '@/components/sidebar/FlagIcon';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 import { LemonIcon } from '@/components/LemonIcon';
+import {
+  clearOnboardingDraft,
+  loadOnboardingDraft,
+  saveOnboardingDraft,
+} from '@/utils/onboardingStorage';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -43,12 +48,13 @@ export function resolveOnboardingView(stored: string | null): OnboardingView {
  *  translated. Survivor 7 -- killer 7 is The Doctor. */
 const LEGEND_SURVIVOR_ID = 7;
 
-// Must mirror the grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5
-// classes on the chapter grid below.
+// Minimum 3 columns on mobile small screens as requested.
 const CHAPTER_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
-  { minWidth: 1280, columns: 5 },
-  { minWidth: 1024, columns: 3 },
-  { minWidth: 640, columns: 2 },
+  { minWidth: 1720, columns: 7 },
+  { minWidth: 1440, columns: 6 },
+  { minWidth: 1180, columns: 5 },
+  { minWidth: 880, columns: 4 },
+  { minWidth: 0, columns: 3 },
 ];
 
 export interface ChapterBanner {
@@ -79,8 +85,29 @@ export interface OnboardingPerk {
   killer_id?: number | null;
   is_teachable: boolean;
   is_unlocked: boolean;
+  is_general?: boolean;
+  is_generic_counterpart?: boolean;
   icon_url?: string;
   icon_local_path?: string;
+}
+
+/**
+ * Determines whether a perk is unlocked by default based on model/API data attributes:
+ * - Generic counterpart perks (perk.is_generic_counterpart)
+ * - General baseline perks (perk.is_general)
+ * - Free base game character perks (char.is_free)
+ *
+ * Driven strictly by data attributes rather than hardcoded character/chapter names.
+ */
+export function isDefaultUnlockedPerk(
+  perk: OnboardingPerk,
+  characters: OnboardingCharacter[]
+): boolean {
+  if (perk.is_generic_counterpart || perk.is_general) {
+    return true;
+  }
+  const char = characters.find((c) => ownsPerk(perk, c.id, c.category));
+  return Boolean(char?.is_free);
 }
 
 export interface ChapterGroup {
@@ -234,6 +261,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<OnboardingCharacter | null>(null);
   const [chapterBanners, setChapterBanners] = useState<Record<string, ChapterBanner>>({});
   const [translatedChapterNames, setTranslatedChapterNames] = useState<Record<string, string>>({});
+  const [searchQuery, setSearchQuery] = useState('');
   const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
   // A chapter's expand panel only ever occupies a grid row while it's
   // mounted -- see chapterRowEndIndex below -- so it can't just track
@@ -405,17 +433,39 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           setAllPerks(perks);
           setTranslatedChapterNames(chapterNameTranslations);
 
-          const charDraft: Record<number, boolean> = {};
+          const charDraft: Record<string, boolean> = {};
           chars.forEach((c) => {
-            charDraft[c.id] = c.is_owned;
+            charDraft[ownershipKey(c.id, c.category)] = c.is_free ? true : c.is_owned;
           });
-          setOwnershipDraft(charDraft);
 
           const perkDraft: Record<number, boolean> = {};
           perks.forEach((p) => {
-            perkDraft[p.perk_id] = p.is_unlocked;
+            perkDraft[p.perk_id] = isDefaultUnlockedPerk(p, chars) ? true : p.is_unlocked;
           });
-          setPerkUnlockDraft(perkDraft);
+
+          const storedDraft = loadOnboardingDraft(user.id);
+          const finalCharDraft = storedDraft?.ownershipDraft
+            ? { ...charDraft, ...storedDraft.ownershipDraft }
+            : charDraft;
+          // Free base-game characters are always unlocked by default:
+          chars.forEach((c) => {
+            if (c.is_free) {
+              finalCharDraft[ownershipKey(c.id, c.category)] = true;
+            }
+          });
+
+          const finalPerkDraft = storedDraft?.perkUnlockDraft
+            ? { ...perkDraft, ...storedDraft.perkUnlockDraft }
+            : perkDraft;
+          // Free characters and default unlocked perks (Halloween, Hellraiser, generic counterparts) always stay unlocked:
+          perks.forEach((p) => {
+            if (isDefaultUnlockedPerk(p, chars)) {
+              finalPerkDraft[p.perk_id] = true;
+            }
+          });
+
+          setOwnershipDraft(finalCharDraft);
+          setPerkUnlockDraft(finalPerkDraft);
 
           setLoading(false);
         }
@@ -435,6 +485,24 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     [characters]
   );
 
+  const isCharacterOwned = (c: OnboardingCharacter) =>
+    ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned;
+
+  const ownedChaptersCount = useMemo(() => {
+    return chapterGroups.filter((g) => g.characters.every(isCharacterOwned)).length;
+  }, [chapterGroups, ownershipDraft]);
+
+  const filteredChapterGroups = useMemo(() => {
+    if (!searchQuery.trim()) return chapterGroups;
+    const q = searchQuery.toLowerCase().trim();
+    return chapterGroups.filter((g) => {
+      const localized = (translatedChapterNames[g.chapterName] || g.chapterName).toLowerCase();
+      const canonical = g.chapterName.toLowerCase();
+      const hasChar = g.characters.some((c) => c.name.toLowerCase().includes(q));
+      return localized.includes(q) || canonical.includes(q) || hasChar;
+    });
+  }, [chapterGroups, searchQuery, translatedChapterNames]);
+
   // Chapters can legitimately disappear between renders (e.g. a refetch of
   // /users/{id}/characters returning a different roster) -- without this,
   // `renderedChapter`/`expandedChapter` referencing a now-gone chapter would
@@ -444,30 +512,30 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   // queued in pendingChapterOpenRef instead of opening.
   useEffect(() => {
     const stillExists = (name: string | null) =>
-      name === null || chapterGroups.some((g) => g.chapterName === name);
+      name === null || filteredChapterGroups.some((g) => g.chapterName === name);
     if (!stillExists(expandedChapter) || !stillExists(renderedChapter)) {
       setExpandedChapter(null);
       setRenderedChapter(null);
       pendingChapterOpenRef.current = null;
     }
-  }, [chapterGroups, expandedChapter, renderedChapter]);
+  }, [filteredChapterGroups, expandedChapter, renderedChapter]);
 
   // Needed so the expand panel below can be placed after the last card of
   // its row instead of right after whichever card was clicked -- otherwise
   // the other cards sharing that row get shoved onto a new row too (there's
   // no room left for a full-width item mid-row), which reads as unrelated
   // cards randomly jumping instead of the row smoothly growing.
-  const chapterColumns = useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 1);
+  const chapterColumns = useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 3);
   const renderedGroup = renderedChapter
-    ? chapterGroups.find((g) => g.chapterName === renderedChapter)
+    ? filteredChapterGroups.find((g) => g.chapterName === renderedChapter)
     : undefined;
-  const renderedChapterIndex = renderedGroup ? chapterGroups.indexOf(renderedGroup) : -1;
+  const renderedChapterIndex = renderedGroup ? filteredChapterGroups.indexOf(renderedGroup) : -1;
   const chapterRowEndIndex =
     renderedChapterIndex === -1
       ? -1
       : Math.min(
           chapterColumns * (Math.floor(renderedChapterIndex / chapterColumns) + 1) - 1,
-          chapterGroups.length - 1
+          filteredChapterGroups.length - 1
         );
 
   /** The legend's example swatches show a real portrait -- Ace Visconti by
@@ -488,30 +556,105 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
    * unlocks its perks immediately instead of leaving them stuck locked
    * until the next save round-trip. */
   const setCharacterOwned = (characterId: number, role: string, owned: boolean) => {
-    setOwnershipDraft((prev) => ({ ...prev, [ownershipKey(characterId, role)]: owned }));
-    setPerkUnlockDraft((prev) => {
-      const next = { ...prev };
-      allPerks
-        .filter((p) => ownsPerk(p, characterId, role))
-        .forEach((p) => {
-          next[p.perk_id] = owned;
-        });
-      return next;
+    const key = ownershipKey(characterId, role);
+    setOwnershipDraft((prev) => {
+      const nextChar = { ...prev, [key]: owned };
+      setPerkUnlockDraft((perkPrev) => {
+        const nextPerk = { ...perkPrev };
+        allPerks
+          .filter((p) => ownsPerk(p, characterId, role))
+          .forEach((p) => {
+            nextPerk[p.perk_id] = owned ? true : isDefaultUnlockedPerk(p, characters);
+          });
+        saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
+        return nextPerk;
+      });
+      return nextChar;
     });
   };
 
   const toggleChapter = (group: ChapterGroup, own: boolean) => {
-    group.characters.forEach((c) => setCharacterOwned(c.id, c.category, own));
+    setOwnershipDraft((prevChar) => {
+      const nextChar = { ...prevChar };
+      setPerkUnlockDraft((prevPerk) => {
+        const nextPerk = { ...prevPerk };
+        group.characters.forEach((c) => {
+          nextChar[ownershipKey(c.id, c.category)] = own;
+          allPerks
+            .filter((p) => ownsPerk(p, c.id, c.category))
+            .forEach((p) => {
+              nextPerk[p.perk_id] = own ? true : isDefaultUnlockedPerk(p, characters);
+            });
+        });
+        saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
+        return nextPerk;
+      });
+      return nextChar;
+    });
   };
 
   /** Marks every loaded chapter owned in one shot, for players who own most
    * or all of them and don't want to click through each row. */
   const handleSelectAllChapters = () => {
-    chapterGroups.forEach((group) => toggleChapter(group, true));
+    setOwnershipDraft((prevChar) => {
+      const nextChar = { ...prevChar };
+      setPerkUnlockDraft((prevPerk) => {
+        const nextPerk = { ...prevPerk };
+        characters.forEach((c) => {
+          nextChar[ownershipKey(c.id, c.category)] = true;
+        });
+        allPerks.forEach((p) => {
+          nextPerk[p.perk_id] = true;
+        });
+        saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
+        return nextPerk;
+      });
+      return nextChar;
+    });
+  };
+
+  const handleDeselectAllChapters = () => {
+    setOwnershipDraft((prevChar) => {
+      const nextChar = { ...prevChar };
+      setPerkUnlockDraft((prevPerk) => {
+        const nextPerk = { ...prevPerk };
+        characters.forEach((c) => {
+          nextChar[ownershipKey(c.id, c.category)] = Boolean(c.is_free);
+        });
+        allPerks.forEach((p) => {
+          nextPerk[p.perk_id] = isDefaultUnlockedPerk(p, characters);
+        });
+        saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
+        return nextPerk;
+      });
+      return nextChar;
+    });
+  };
+
+  const isAllOwned = chapterGroups.length > 0 && ownedChaptersCount === chapterGroups.length;
+  const hasAnySelection =
+    ownedChaptersCount > 0 ||
+    characters.some((c) => !c.is_free && (ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned)) ||
+    allPerks.some((p) => !isDefaultUnlockedPerk(p, characters) && (perkUnlockDraft[p.perk_id] ?? false));
+
+  const handleToggleAllChapters = () => {
+    if (isAllOwned) {
+      handleDeselectAllChapters();
+    } else {
+      handleSelectAllChapters();
+    }
   };
 
   const togglePerkUnlocked = (perkId: number) => {
-    setPerkUnlockDraft((prev) => ({ ...prev, [perkId]: !(prev[perkId] ?? true) }));
+    const perk = allPerks.find((p) => p.perk_id === perkId);
+    if (perk && isDefaultUnlockedPerk(perk, characters)) {
+      return;
+    }
+    setPerkUnlockDraft((prev) => {
+      const nextPerk = { ...prev, [perkId]: !(prev[perkId] ?? true) };
+      saveOnboardingDraft(user?.id, { ownershipDraft, perkUnlockDraft: nextPerk });
+      return nextPerk;
+    });
   };
 
   const getCharacterPerkStats = (characterId: number, role: string) => {
@@ -522,29 +665,40 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   const handleContinue = async () => {
     setSaving(true);
-    const characterUpdates = characters.map((c) => ({
-      character_id: c.id,
-      role: c.category,
-      is_owned: ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
-    }));
-    const perkUpdates = allPerks.map((p) => ({
-      perk_id: p.perk_id,
-      is_unlocked: perkUnlockDraft[p.perk_id] ?? p.is_unlocked,
-    }));
-    await bulkUpdateCharacterOwnership(characterUpdates);
-    await bulkUpdatePerkOwnership(perkUpdates);
-    invalidate(`${backendBase}/api/v1/perks`);
-    invalidate(`${backendBase}/api/v1/characters`);
-    await markOnboardingComplete();
-    setSaving(false);
-    onFinished();
+    try {
+      const characterUpdates = characters.map((c) => ({
+        character_id: c.id,
+        role: c.category,
+        is_owned: c.is_free ? true : (ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned),
+      }));
+      const perkUpdates = allPerks.map((p) => ({
+        perk_id: p.perk_id,
+        is_unlocked: isDefaultUnlockedPerk(p, characters)
+          ? true
+          : (perkUnlockDraft[p.perk_id] ?? p.is_unlocked),
+      }));
+      await bulkUpdateCharacterOwnership(characterUpdates);
+      await bulkUpdatePerkOwnership(perkUpdates);
+      invalidate(`${backendBase}/api/v1/perks`);
+      invalidate(`${backendBase}/api/v1/characters`);
+      await markOnboardingComplete();
+      clearOnboardingDraft(user?.id);
+      setSaving(false);
+      onFinished();
+    } catch {
+      setSaving(false);
+    }
   };
 
   const handleSkipConfirm = async () => {
     setSaving(true);
-    await markOnboardingComplete();
-    setSaving(false);
-    onFinished();
+    try {
+      await markOnboardingComplete();
+      clearOnboardingDraft(user?.id);
+    } finally {
+      setSaving(false);
+      onFinished();
+    }
   };
 
   // Auth finished resolving and there's no session -- the fetch below never
@@ -657,104 +811,202 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   }
 
   return (
-    <div className="min-h-screen bg-bg-primary p-4 sm:p-8">
-      <div className="mx-auto max-w-5xl 2xl:max-w-[90rem] space-y-6">
-        <header className="text-center space-y-2">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex-1" aria-hidden="true" />
-            <h1 className="text-2xl font-black">{t?.heading || 'Which characters do you already own?'}</h1>
-            <div className="flex flex-1 justify-end">
+    <div className="min-h-screen bg-bg-primary p-2.5 sm:p-5 lg:p-6 pb-28">
+      <div className="mx-auto w-full max-w-[96rem] 2xl:max-w-[110rem] 3xl:max-w-[124rem]">
+        {/* Unified Card Container */}
+        <div className="rounded-2xl border border-border-color bg-bg-surface p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
+          {/* Header Section */}
+          <header className="relative flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
+            <div className="sm:absolute sm:right-0 sm:top-0 hidden sm:block">
               <button
                 type="button"
                 onClick={() => setIsSkipModalOpen(true)}
-                className="shrink-0 rounded-xl border-2 border-accent-amber/60 bg-accent-amber/10 px-5 py-2.5 text-sm font-bold text-accent-amber cursor-pointer"
+                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 text-xs sm:text-sm lg:text-base font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-all cursor-pointer shadow-xs"
               >
                 {t?.skipButton || 'Skip'}
               </button>
             </div>
-          </div>
-          <p className="text-sm text-text-secondary max-w-2xl mx-auto">
-            {t?.subheading ||
-              'Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.'}
-          </p>
-        </header>
+            <h1 className="text-lg sm:text-xl md:text-2xl font-black font-mono tracking-tight text-text-primary px-2">
+              {t?.heading || 'Which characters do you already own?'}
+            </h1>
+            <p className="text-xs sm:text-sm text-text-secondary max-w-xl mx-auto px-2">
+              {t?.subheading ||
+                'Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page.'}
+            </p>
+            <div className="sm:hidden pt-0.5">
+              <button
+                type="button"
+                onClick={() => setIsSkipModalOpen(true)}
+                className="shrink-0 rounded-xl border border-accent-amber/50 bg-accent-amber/10 px-3 py-1 text-xs font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+              >
+                {t?.skipButton || 'Skip'}
+              </button>
+            </div>
+          </header>
 
-        <section className="rounded-2xl border border-border-color bg-bg-surface p-4 flex flex-wrap items-center gap-6">
-          <h2 className="w-full text-xs font-black uppercase tracking-wider text-text-secondary">
-            {t?.legendTitle || 'How this works'}
-          </h2>
-          <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-accent-green/40 bg-accent-green/20">
-              {legendCharacter && (
-                <img
-                  src={resolveOnboardingAvatar(backendBase, legendCharacter)}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full object-cover object-top"
-                />
-              )}
-              <CharacterOwnershipOverlay
-                isOwned
-                hasPartialPerks={false}
-                avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
-              />
-            </span>
-            {t?.legendOwned || 'Owned - fully available'}
-          </div>
-          <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-accent-red bg-bg-elevated">
-              {legendCharacter && (
-                <img
-                  src={resolveOnboardingAvatar(backendBase, legendCharacter)}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full object-cover object-top"
-                />
-              )}
-              <CharacterOwnershipOverlay
-                isOwned={false}
-                hasPartialPerks={false}
-                avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
-              />
-            </span>
-            {t?.legendLocked || 'Locked - not available yet'}
-          </div>
-          <div className="flex items-center gap-2 text-xs">
-            <span className="relative flex aspect-[3/4] w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-accent-amber bg-bg-elevated">
-              {legendCharacter && (
-                <img
-                  src={resolveOnboardingAvatar(backendBase, legendCharacter)}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full object-cover object-top"
-                />
-              )}
-              <CharacterOwnershipOverlay
-                isOwned={false}
-                hasPartialPerks
-                avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
-              />
-            </span>
-            {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
-          </div>
-          <p className="w-full text-[11px] text-text-secondary">
-            {t?.legendCustomizeHint ||
-              "Tap a locked character's Perks button to unlock individual perks without owning the whole character."}
-          </p>
-        </section>
+          <hr className="border-t border-border-color/60 my-0.5" />
 
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={handleSelectAllChapters}
-            className="rounded-lg border border-border-color px-3.5 py-1.5 text-xs font-bold text-text-secondary hover:border-accent-amber hover:text-accent-amber transition-colors cursor-pointer"
-          >
-            {t?.selectAllButton || 'I own everything'}
-          </button>
-        </div>
+          {/* Legend Section ("Jak to działa") */}
+          <section className="flex flex-col items-center text-center space-y-2 sm:space-y-2.5">
+            <h2 className="text-[11px] sm:text-xs font-black uppercase tracking-wider text-accent-red font-mono">
+              {t?.legendTitle || 'How this works'}
+            </h2>
+            <div className="grid grid-cols-3 items-start justify-items-center gap-2 sm:gap-6 w-full max-w-xl mx-auto">
+              {/* Owned */}
+              <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
+                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-accent-green/60 bg-accent-green/20 shadow-sm">
+                  {legendCharacter && (
+                    <img
+                      src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                  )}
+                  <CharacterOwnershipOverlay
+                    isOwned
+                    hasPartialPerks={false}
+                    avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+                    badgeSize="sm"
+                  />
+                </span>
+                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t?.legendOwned || 'Owned - fully available'}
+                </span>
+              </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {chapterGroups.map((group, index) => {
+              {/* Locked */}
+              <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
+                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-accent-red bg-bg-elevated shadow-sm">
+                  {legendCharacter && (
+                    <img
+                      src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                  )}
+                  <CharacterOwnershipOverlay
+                    isOwned={false}
+                    hasPartialPerks={false}
+                    avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+                    badgeSize="sm"
+                  />
+                </span>
+                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t?.legendLocked || 'Locked - not available yet'}
+                </span>
+              </div>
+
+              {/* Partial */}
+              <div className="flex flex-col items-center text-center gap-2 w-full max-w-[150px]">
+                <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-accent-amber bg-bg-elevated shadow-sm">
+                  {legendCharacter && (
+                    <img
+                      src={resolveOnboardingAvatar(backendBase, legendCharacter)}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover object-top"
+                    />
+                  )}
+                  <CharacterOwnershipOverlay
+                    isOwned={false}
+                    hasPartialPerks
+                    avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
+                    badgeSize="sm"
+                  />
+                </span>
+                <span className="text-[10px] sm:text-xs font-semibold text-text-primary leading-tight">
+                  {t?.legendPartial || 'Partially unlocked - some perks unlocked by hand'}
+                </span>
+              </div>
+            </div>
+            <p className="text-[10px] sm:text-[11px] text-text-secondary max-w-lg mx-auto leading-normal">
+              {t?.legendCustomizeHint ||
+                "Tap a locked character's Perks button to unlock individual perks without owning the whole character."}
+            </p>
+          </section>
+
+          <hr className="border-t border-border-color/60 my-0.5" />
+
+          {/* DLC / Chapters Section */}
+          <section className="space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xs font-black uppercase tracking-wider text-text-secondary font-mono">
+                  {t?.chaptersTitle || 'Chapters'}
+                </span>
+                <span className="rounded-full border border-border-color bg-bg-elevated px-2 py-0.5 text-[11px] font-bold text-text-secondary">
+                  {ownedChaptersCount} / {chapterGroups.length}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="relative flex-1 sm:w-56">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={t?.searchPlaceholder || 'Search chapters or characters...'}
+                    className="w-full rounded-lg border border-border-color bg-bg-elevated pl-8 pr-7 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={isAllOwned}
+                    onClick={handleToggleAllChapters}
+                    className={`group relative flex items-center gap-2 rounded-lg border px-2.5 sm:px-3 py-1.5 transition-all select-none cursor-pointer ${
+                      isAllOwned
+                        ? 'border-accent-red/80 bg-accent-red/15 text-accent-red shadow-md shadow-accent-red/30'
+                        : 'border-border-color bg-bg-surface text-text-secondary hover:border-accent-red/60 hover:text-text-primary'
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`relative flex h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 items-center justify-center rounded-[3px] border transition-all duration-150 ${
+                        isAllOwned
+                          ? 'border-accent-red bg-accent-red text-text-inverted shadow-xs shadow-accent-red/50'
+                          : 'border-border-color/80 bg-bg-elevated/80 group-hover:border-accent-red/80'
+                      }`}
+                    >
+                      {isAllOwned && <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5 stroke-[3] drop-shadow-xs" />}
+                    </span>
+                    <span className="text-xs font-bold font-mono tracking-tight">
+                      {t?.selectAllButton || 'I own everything'}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!hasAnySelection}
+                    onClick={handleDeselectAllChapters}
+                    className={`rounded-lg border px-2.5 sm:px-3 py-1.5 text-xs font-bold transition-all ${
+                      !hasAnySelection
+                        ? 'border-border-color/40 bg-bg-surface/40 text-text-muted/40 cursor-not-allowed'
+                        : 'border-border-color bg-bg-surface text-text-muted hover:border-accent-red hover:text-accent-red cursor-pointer'
+                    }`}
+                  >
+                    {t?.deselectAllButton || 'Clear all'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 md:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+          {filteredChapterGroups.map((group, index) => {
             const isExpanded = expandedChapter === group.chapterName;
             const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
             const bannerSrc = getChapterBannerSrc(banner, backendBase);
@@ -776,7 +1028,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
             return (
               <React.Fragment key={group.chapterName}>
-                <div className={`flex flex-col overflow-hidden rounded-2xl border-2 bg-bg-surface ${isExpanded ? 'border-accent-red' : 'border-border-color'}`}>
+                <div className={`flex flex-col overflow-hidden rounded-xl sm:rounded-2xl border sm:border-2 bg-bg-surface ${isExpanded ? 'border-accent-red' : 'border-border-color'}`}>
                   <button
                     type="button"
                     onClick={() => toggleChapterExpanded(group.chapterName)}
@@ -797,7 +1049,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="px-2 text-center text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
+                      <span className="px-1 sm:px-2 text-center text-[10px] sm:text-sm font-extrabold text-text-secondary line-clamp-2">{chapterDisplayName}</span>
                     )}
                     <OwnershipClipOverlay
                       isOwned={chapterOwned}
@@ -805,7 +1057,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                       imageSrc={bannerSrc}
                     />
                     <ChevronDown
-                      className={`absolute top-2 right-2 h-5 w-5 text-text-inverted drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                      className={`absolute top-1 right-1 sm:top-2 sm:right-2 h-3.5 w-3.5 sm:h-5 sm:w-5 text-text-inverted drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
                     />
                   </button>
                   {/* The whole footer toggles ownership, not just the small
@@ -818,18 +1070,20 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     role="switch"
                     aria-checked={chapterOwned}
                     aria-label={chapterSwitchLabel}
-                    className="flex w-full items-center justify-between gap-2 border-t border-border-color px-3 py-2.5 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+                    className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
                   >
-                    <h3 className="flex-1 truncate text-sm font-extrabold">{chapterDisplayName}</h3>
+                    <h3 className="flex-1 text-[9px] sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
+                      {chapterDisplayName}
+                    </h3>
                     <span
                       aria-hidden="true"
-                      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+                      className={`relative inline-flex h-3.5 w-6 sm:h-5 sm:w-9 shrink-0 items-center rounded-full transition-colors ${
                         chapterOwned ? 'bg-accent-green' : 'bg-bg-elevated border border-border-color'
                       }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-text-inverted shadow transition-transform ${
-                          chapterOwned ? 'translate-x-6' : 'translate-x-1'
+                        className={`inline-block h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 transform rounded-full bg-text-inverted shadow transition-transform ${
+                          chapterOwned ? 'translate-x-2.5 sm:translate-x-4' : 'translate-x-0.5'
                         }`}
                       />
                     </span>
@@ -919,19 +1173,20 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             );
           })}
         </div>
+      </section>
 
-        <div className="h-4" />
-      </div>
+      <div className="h-2" />
+    </div>
+  </div>
 
-      {/* Sticky so Continue stays reachable while scrolling a long chapter
-          list, instead of requiring a scroll to the very bottom. */}
-      <div className="sticky bottom-0 z-20 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl justify-center px-4 py-3 sm:px-8">
+      {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}
+      <div className="fixed bottom-0 inset-x-0 z-30 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md shadow-2xl">
+        <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-3 sm:py-4">
           <button
             type="button"
             disabled={saving}
             onClick={handleContinue}
-            className="w-full max-w-sm rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-3.5 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
+            className="w-full max-w-md sm:max-w-lg rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-3.5 text-sm sm:text-base font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer shadow-lg transition-colors"
           >
             {saving ? t?.savingLabel || 'Saving...' : t?.continueButton || 'Continue'}
           </button>
@@ -942,6 +1197,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         character={perksPopupCharacter}
         perks={allPerks}
         isPerkUnlocked={(perkId) => perkUnlockDraft[perkId] ?? true}
+        isPerkLockedAlways={(p) => isDefaultUnlockedPerk(p as OnboardingPerk, characters)}
         onTogglePerk={togglePerkUnlocked}
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}

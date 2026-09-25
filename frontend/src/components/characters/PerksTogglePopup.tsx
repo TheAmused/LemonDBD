@@ -13,6 +13,8 @@ export interface PerksTogglePopupPerk {
   killer_id?: number | null;
   icon_url?: string;
   icon_local_path?: string;
+  is_generic_counterpart?: boolean;
+  is_general?: boolean;
 }
 
 /** The subset of the site dictionary this popup reads -- kept narrow (rather
@@ -32,6 +34,7 @@ export interface PerksTogglePopupProps {
   character: { id?: number; name: string; category?: string } | null;
   perks: PerksTogglePopupPerk[];
   isPerkUnlocked: (perkId: number) => boolean;
+  isPerkLockedAlways?: (perk: PerksTogglePopupPerk) => boolean;
   onTogglePerk: (perkId: number) => void;
   onClose: () => void;
   backendBase: string;
@@ -49,6 +52,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
   character,
   perks,
   isPerkUnlocked,
+  isPerkLockedAlways,
   onTogglePerk,
   onClose,
   backendBase,
@@ -97,13 +101,28 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
         <div className="p-5">
           <div className="grid grid-cols-3 gap-4">
             {characterPerks.map((perk) => {
-              const isUnlocked = isPerkUnlocked(perk.perk_id);
+              const isPermanentlyUnlocked = Boolean(
+                isPerkLockedAlways?.(perk) ||
+                perk.is_generic_counterpart ||
+                perk.is_general
+              );
+              const isUnlocked = isPermanentlyUnlocked || isPerkUnlocked(perk.perk_id);
               return (
                 <button
                   key={perk.perk_id}
                   type="button"
-                  onClick={() => onTogglePerk(perk.perk_id)}
-                  className="flex cursor-pointer flex-col items-center gap-1.5 rounded-xl p-1 text-center transition-transform hover:scale-105 active:scale-95"
+                  disabled={isPermanentlyUnlocked}
+                  aria-disabled={isPermanentlyUnlocked}
+                  onClick={() => {
+                    if (!isPermanentlyUnlocked) {
+                      onTogglePerk(perk.perk_id);
+                    }
+                  }}
+                  className={`flex flex-col items-center gap-1.5 rounded-xl p-1 text-center transition-transform ${
+                    isPermanentlyUnlocked
+                      ? 'cursor-default opacity-90'
+                      : 'cursor-pointer hover:scale-105 active:scale-95'
+                  }`}
                 >
                   <div className="relative h-20 w-20 sm:h-24 sm:w-24">
                     <img

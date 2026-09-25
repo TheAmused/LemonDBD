@@ -2,8 +2,10 @@
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
+from flask import current_app
 from sqlalchemy import or_, select
 
+from app.core.config import Config
 from app.core.db_retry import retry_on_transient_db_error
 from app.core.extensions import db
 from app.core.security import (
@@ -71,6 +73,22 @@ def create_user_account(
     role_clean = role.lower() if role in ["admin", "user"] else "user"
     pw_hash = hash_password(password)
 
+    require_verification = True
+    try:
+        if current_app:
+            require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
+    except RuntimeError:
+        require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+
+    if require_verification:
+        is_verified = False
+        verif_code = _generate_verification_code()
+        verif_expires = datetime.now(timezone.utc) + VERIFICATION_CODE_LIFETIME
+    else:
+        is_verified = True
+        verif_code = None
+        verif_expires = None
+
     new_user = User(
         username=clean_username,
         email=clean_email,
@@ -78,16 +96,21 @@ def create_user_account(
         role=role_clean,
         avatar_url=avatar_url or "default_avatar",
         is_active=True,
-        is_verified=False,
-        verification_code=_generate_verification_code(),
-        verification_code_expires_at=datetime.now(timezone.utc) + VERIFICATION_CODE_LIFETIME,
+        is_verified=is_verified,
+        verification_code=verif_code,
+        verification_code_expires_at=verif_expires,
         verification_attempts=0,
     )
     db.session.add(new_user)
     db.session.commit()
 
-    logger.info(f"User '{new_user.username}' registered with role '{new_user.role}'.")
-    send_verification_email(new_user)
+    if require_verification:
+        logger.info(f"User '{new_user.username}' registered with role '{new_user.role}'.")
+        send_verification_email(new_user)
+    else:
+        logger.info(
+            f"User '{new_user.username}' registered and auto-verified (REQUIRE_EMAIL_VERIFICATION is disabled)."
+        )
     return new_user, None
 
 
@@ -242,6 +265,23 @@ def authenticate_user_credentials(
         return None, None
 
     if verify_password(password, user.password_hash):
+        require_verification = True
+        try:
+            if current_app:
+                require_verification = current_app.config.get("REQUIRE_EMAIL_VERIFICATION", True)
+        except RuntimeError:
+            require_verification = Config.REQUIRE_EMAIL_VERIFICATION
+
+        if not require_verification and not user.is_verified:
+            user.is_verified = True
+            user.verification_code = None
+            user.verification_code_expires_at = None
+            user.verification_attempts = 0
+            db.session.commit()
+            logger.info(
+                f"User '{user.username}' auto-verified upon login (REQUIRE_EMAIL_VERIFICATION is disabled)."
+            )
+
         token = generate_token(user.id, user.role)
         return user, token
 

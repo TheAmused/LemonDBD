@@ -29,6 +29,7 @@ def fetch_user_perks(
             d["is_general"] = bool(
                 p.survivor_id is None and p.killer_id is None or p.is_generic_counterpart
             )
+            d["is_generic_counterpart"] = bool(p.is_generic_counterpart)
             result.append(d)
         return result
 
@@ -67,6 +68,7 @@ def fetch_user_perks(
 
         d["is_unlocked"] = bool(is_unlocked)
         d["is_general"] = bool(is_general)
+        d["is_generic_counterpart"] = bool(p.is_generic_counterpart)
         result.append(d)
     return result
 
@@ -76,6 +78,9 @@ def mutate_perk_ownership(user_id: int, perk_id: int, is_unlocked: bool) -> dict
     perk = db.session.get(Perk, perk_id)
     if not perk:
         raise ValueError(f"Perk with ID {perk_id} not found.")
+
+    if not is_unlocked and (perk.is_generic_counterpart or (perk.survivor_id is None and perk.killer_id is None)):
+        is_unlocked = True
 
     record = db.session.scalars(
         select(UserPerkOwnership).where(
@@ -110,6 +115,10 @@ def bulk_mutate_perk_ownership(
         if not pid:
             continue
         is_unlocked = bool(item.get("is_unlocked", True))
+        perk = db.session.get(Perk, int(pid))
+        if not is_unlocked and perk and (perk.is_generic_counterpart or (perk.survivor_id is None and perk.killer_id is None)):
+            is_unlocked = True
+
         record = db.session.scalars(
             select(UserPerkOwnership).where(
                 UserPerkOwnership.user_id == user_id,

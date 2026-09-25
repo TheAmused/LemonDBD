@@ -125,7 +125,10 @@ def _teachable_perks(role: str, character_id: int) -> list[Perk]:
 
 def _apply_perk_cascade(user_id: int, perks: list[Perk], is_owned: bool) -> int:
     """Unlock or lock every perk the character teaches, following ownership."""
+    applied_count = 0
     for perk in perks:
+        if not is_owned and perk.is_generic_counterpart:
+            continue
         record = db.session.scalars(
             select(UserPerkOwnership).where(
                 UserPerkOwnership.user_id == user_id,
@@ -138,7 +141,8 @@ def _apply_perk_cascade(user_id: int, perks: list[Perk], is_owned: bool) -> int:
             )
         else:
             record.is_unlocked = is_owned
-    return len(perks)
+        applied_count += 1
+    return applied_count
 
 
 def _get_or_create(user_id: int, role: str, character_id: int, is_owned: bool):
@@ -240,7 +244,7 @@ def bulk_mutate_character_ownership(
 
 @retry_on_transient_db_error()
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every character except the free ones for a new account.
+    """Lock every character except the free ones for a new account, and unlock free ones.
 
     Retried on a transient connection drop or pool timeout: safe because this
     is a get-or-create per character followed by one commit, so re-running it
@@ -260,6 +264,12 @@ def seed_default_character_ownership(user_id: int) -> int:
         ).all()
         updates.extend(
             {"character_id": cid, "role": role_key, "is_owned": False} for cid in locked
+        )
+        free_ids = db.session.scalars(
+            select(model.id).where(model.id.in_(free))
+        ).all()
+        updates.extend(
+            {"character_id": cid, "role": role_key, "is_owned": True} for cid in free_ids
         )
 
     if not updates:

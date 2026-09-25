@@ -2,6 +2,7 @@
 // frontend/src/components/CharactersHub.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
@@ -120,6 +121,26 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
   const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
   const [showSavedToast, setShowSavedToast] = useState<boolean>(false);
+  const savedToastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (savedToastTimerRef.current) {
+        clearTimeout(savedToastTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showSavedToast) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowSavedToast(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showSavedToast]);
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
@@ -254,8 +275,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
       invalidate(`${backendBase}/api/v1/characters`);
 
       handleCancelOwnershipMode();
+      if (savedToastTimerRef.current) {
+        clearTimeout(savedToastTimerRef.current);
+      }
       setShowSavedToast(true);
-      window.setTimeout(() => setShowSavedToast(false), 2500);
+      savedToastTimerRef.current = setTimeout(() => {
+        setShowSavedToast(false);
+        savedToastTimerRef.current = null;
+      }, 2000);
     } catch (err: unknown) {
       console.error('Failed to save ownership changes:', err);
       setOwnershipSaveError(dict?.characterDetail?.saveOwnershipError || null);
@@ -567,17 +594,52 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </div>
       )}
 
-      {showSavedToast && (
-        <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300">
-          <div
-            role="status"
-            className="pointer-events-auto flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
-          >
-            <Check className="h-5 w-5" />
-            <span>{dict?.characterDetail?.changesSaved}</span>
+      <AnimatePresence>
+        {showSavedToast && (
+          <div className="fixed inset-y-0 left-[var(--sidebar-width,0rem)] right-0 z-50 flex items-center justify-center p-4 pointer-events-none transition-[left] duration-300">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setShowSavedToast(false)}
+              className="fixed inset-y-0 left-[var(--sidebar-width,0rem)] right-0 bg-bg-primary/60 backdrop-blur-xs pointer-events-auto cursor-pointer"
+              aria-hidden="true"
+            />
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={dict?.characterDetail?.changesSaved}
+              initial={{ opacity: 0, scale: 0.85, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -20 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative pointer-events-auto flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm rounded-3xl border-2 border-accent-green bg-bg-surface p-7 sm:p-9 text-center shadow-2xl z-10"
+            >
+              <button
+                type="button"
+                onClick={() => setShowSavedToast(false)}
+                className="absolute top-3.5 right-3.5 p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
+                aria-label={dict?.characterDetail?.dismiss || dict?.modal?.close}
+              >
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
+              </button>
+
+              <div
+                className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green mb-4 ring-4 ring-accent-green/20 gn-land-glow"
+                aria-hidden="true"
+              >
+                <Check className="h-8 w-8 sm:h-10 sm:w-10 stroke-[2.5]" />
+              </div>
+
+              <h2 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary font-mono">
+                {dict?.characterDetail?.changesSaved}
+              </h2>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
 
       {verificationNoticeOpen && user && (
         <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">

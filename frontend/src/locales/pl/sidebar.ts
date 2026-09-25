@@ -19,7 +19,7 @@ export default {
   adminControlCenter: "Panel Administracyjny",
   signIn: "Zaloguj się / Zarejestruj",
   signOut: "Wyloguj się",
-  emailNotVerified: "E-mail niezweryfikowany. Zweryfikuj teraz",
+  emailNotVerified: "Zweryfikuj swoje konto",
   reportBug: "Zgłoś błąd",
   buyCoffee: "Postaw kawę",
   switchLanguage: "Zmień język",

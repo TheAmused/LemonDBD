@@ -85,8 +85,45 @@ export interface OnboardingPerk {
   killer_id?: number | null;
   is_teachable: boolean;
   is_unlocked: boolean;
+  is_general?: boolean;
+  is_generic_counterpart?: boolean;
   icon_url?: string;
   icon_local_path?: string;
+}
+
+/**
+ * Determines whether a perk is unlocked by default:
+ * - Free base game character perks (Dwight, Meg, Trapper, etc.)
+ * - Generic perks / general counterpart perks (e.g. Halloween and Hellraiser perks)
+ */
+export function isDefaultUnlockedPerk(
+  perk: OnboardingPerk,
+  characters: OnboardingCharacter[]
+): boolean {
+  if (perk.is_general || perk.is_generic_counterpart) {
+    return true;
+  }
+  const char = characters.find((c) => ownsPerk(perk, c.id, c.category));
+  if (char?.is_free) {
+    return true;
+  }
+  if (char) {
+    const normChapter = (char.chapter_name || '').toLowerCase();
+    if (normChapter.includes('halloween') || normChapter.includes('hellraiser')) {
+      return true;
+    }
+    const normCharName = (char.name || '').toLowerCase();
+    if (
+      normCharName.includes('shape') ||
+      normCharName.includes('myers') ||
+      normCharName.includes('laurie') ||
+      normCharName.includes('cenobite') ||
+      normCharName.includes('pinhead')
+    ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export interface ChapterGroup {
@@ -414,21 +451,34 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
           const charDraft: Record<string, boolean> = {};
           chars.forEach((c) => {
-            charDraft[ownershipKey(c.id, c.category)] = c.is_owned;
+            charDraft[ownershipKey(c.id, c.category)] = c.is_free ? true : c.is_owned;
           });
 
           const perkDraft: Record<number, boolean> = {};
           perks.forEach((p) => {
-            perkDraft[p.perk_id] = p.is_unlocked;
+            perkDraft[p.perk_id] = isDefaultUnlockedPerk(p, chars) ? true : p.is_unlocked;
           });
 
           const storedDraft = loadOnboardingDraft(user.id);
           const finalCharDraft = storedDraft?.ownershipDraft
             ? { ...charDraft, ...storedDraft.ownershipDraft }
             : charDraft;
+          // Free base-game characters are always unlocked by default:
+          chars.forEach((c) => {
+            if (c.is_free) {
+              finalCharDraft[ownershipKey(c.id, c.category)] = true;
+            }
+          });
+
           const finalPerkDraft = storedDraft?.perkUnlockDraft
             ? { ...perkDraft, ...storedDraft.perkUnlockDraft }
             : perkDraft;
+          // Free characters and default unlocked perks (Halloween, Hellraiser, generic counterparts) always stay unlocked:
+          perks.forEach((p) => {
+            if (isDefaultUnlockedPerk(p, chars)) {
+              finalPerkDraft[p.perk_id] = true;
+            }
+          });
 
           setOwnershipDraft(finalCharDraft);
           setPerkUnlockDraft(finalPerkDraft);
@@ -530,7 +580,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         allPerks
           .filter((p) => ownsPerk(p, characterId, role))
           .forEach((p) => {
-            nextPerk[p.perk_id] = owned;
+            nextPerk[p.perk_id] = owned ? true : isDefaultUnlockedPerk(p, characters);
           });
         saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
         return nextPerk;
@@ -549,7 +599,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           allPerks
             .filter((p) => ownsPerk(p, c.id, c.category))
             .forEach((p) => {
-              nextPerk[p.perk_id] = own;
+              nextPerk[p.perk_id] = own ? true : isDefaultUnlockedPerk(p, characters);
             });
         });
         saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
@@ -566,15 +616,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       const nextChar = { ...prevChar };
       setPerkUnlockDraft((prevPerk) => {
         const nextPerk = { ...prevPerk };
-        chapterGroups.forEach((group) => {
-          group.characters.forEach((c) => {
-            nextChar[ownershipKey(c.id, c.category)] = true;
-            allPerks
-              .filter((p) => ownsPerk(p, c.id, c.category))
-              .forEach((p) => {
-                nextPerk[p.perk_id] = true;
-              });
-          });
+        characters.forEach((c) => {
+          nextChar[ownershipKey(c.id, c.category)] = true;
+        });
+        allPerks.forEach((p) => {
+          nextPerk[p.perk_id] = true;
         });
         saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
         return nextPerk;
@@ -589,10 +635,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       setPerkUnlockDraft((prevPerk) => {
         const nextPerk = { ...prevPerk };
         characters.forEach((c) => {
-          nextChar[ownershipKey(c.id, c.category)] = false;
+          nextChar[ownershipKey(c.id, c.category)] = Boolean(c.is_free);
         });
         allPerks.forEach((p) => {
-          nextPerk[p.perk_id] = false;
+          nextPerk[p.perk_id] = isDefaultUnlockedPerk(p, characters);
         });
         saveOnboardingDraft(user?.id, { ownershipDraft: nextChar, perkUnlockDraft: nextPerk });
         return nextPerk;
@@ -604,7 +650,8 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const isAllOwned = chapterGroups.length > 0 && ownedChaptersCount === chapterGroups.length;
   const hasAnySelection =
     ownedChaptersCount > 0 ||
-    characters.some((c) => (ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned));
+    characters.some((c) => !c.is_free && (ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned)) ||
+    allPerks.some((p) => !isDefaultUnlockedPerk(p, characters) && (perkUnlockDraft[p.perk_id] ?? false));
 
   const handleToggleAllChapters = () => {
     if (isAllOwned) {
@@ -634,11 +681,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       const characterUpdates = characters.map((c) => ({
         character_id: c.id,
         role: c.category,
-        is_owned: ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
+        is_owned: c.is_free ? true : (ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned),
       }));
       const perkUpdates = allPerks.map((p) => ({
         perk_id: p.perk_id,
-        is_unlocked: perkUnlockDraft[p.perk_id] ?? p.is_unlocked,
+        is_unlocked: isDefaultUnlockedPerk(p, characters)
+          ? true
+          : (perkUnlockDraft[p.perk_id] ?? p.is_unlocked),
       }));
       await bulkUpdateCharacterOwnership(characterUpdates);
       await bulkUpdatePerkOwnership(perkUpdates);

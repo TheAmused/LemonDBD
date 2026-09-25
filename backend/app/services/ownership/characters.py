@@ -240,7 +240,7 @@ def bulk_mutate_character_ownership(
 
 @retry_on_transient_db_error()
 def seed_default_character_ownership(user_id: int) -> int:
-    """Lock every character except the free ones for a new account.
+    """Lock every character except the free ones for a new account, and unlock free ones.
 
     Retried on a transient connection drop or pool timeout: safe because this
     is a get-or-create per character followed by one commit, so re-running it
@@ -260,6 +260,12 @@ def seed_default_character_ownership(user_id: int) -> int:
         ).all()
         updates.extend(
             {"character_id": cid, "role": role_key, "is_owned": False} for cid in locked
+        )
+        free_ids = db.session.scalars(
+            select(model.id).where(model.id.in_(free))
+        ).all()
+        updates.extend(
+            {"character_id": cid, "role": role_key, "is_owned": True} for cid in free_ids
         )
 
     if not updates:

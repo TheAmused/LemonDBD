@@ -204,6 +204,15 @@ describe('User Profile Theme Support', () => {
     );
   });
 
+  it('CharactersHub toast container respects --sidebar-width and centers relative to content area', () => {
+    const hubPath = path.resolve(__dirname, '../../components/CharactersHub.tsx');
+    const source = fs.readFileSync(hubPath, 'utf-8');
+    assert.ok(
+      source.includes('left-[var(--sidebar-width,0rem)] right-0'),
+      'CharactersHub toast container must span left-[var(--sidebar-width,0rem)] right-0 to center relative to content area'
+    );
+  });
+
   it('user/page.tsx unauthenticated prompt and sign-in controls support light and dark theme classes', () => {
     const userPagePath = path.resolve(__dirname, '../../app/[locale]/user/page.tsx');
     const source = fs.readFileSync(userPagePath, 'utf-8');

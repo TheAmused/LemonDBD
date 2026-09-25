@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/CharactersHub.tsx
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
@@ -119,7 +119,48 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [ownershipLoading, setOwnershipLoading] = useState<boolean>(false);
   const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
   const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
-  const [showSavedToast, setShowSavedToast] = useState<boolean>(false);
+  const [savedModalOpen, setSavedModalOpen] = useState<boolean>(false);
+  const [savedModalExiting, setSavedModalExiting] = useState<boolean>(false);
+  const savedModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const closeSavedModal = useCallback(() => {
+    if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    setSavedModalExiting(true);
+    exitTimerRef.current = setTimeout(() => {
+      setSavedModalOpen(false);
+      setSavedModalExiting(false);
+    }, 300);
+  }, []);
+
+  const triggerSavedModal = useCallback(() => {
+    if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    setSavedModalExiting(false);
+    setSavedModalOpen(true);
+    savedModalTimerRef.current = setTimeout(() => {
+      closeSavedModal();
+    }, 1800);
+  }, [closeSavedModal]);
+
+  useEffect(() => {
+    return () => {
+      if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!savedModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeSavedModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [savedModalOpen, closeSavedModal]);
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
@@ -250,12 +291,14 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         return;
       }
 
-      invalidate(`${backendBase}/api/v1/perks`);
-      invalidate(`${backendBase}/api/v1/characters`);
-
       handleCancelOwnershipMode();
-      setShowSavedToast(true);
-      window.setTimeout(() => setShowSavedToast(false), 2500);
+      triggerSavedModal();
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          invalidate(`${backendBase}/api/v1/perks`);
+          invalidate(`${backendBase}/api/v1/characters`);
+        }, 150);
+      });
     } catch (err: unknown) {
       console.error('Failed to save ownership changes:', err);
       setOwnershipSaveError(dict?.characterDetail?.saveOwnershipError || null);
@@ -440,9 +483,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     router.push(detailHref);
                   }
                 }}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-border-color bg-bg-surface hover:bg-bg-elevated hover:border-accent-red/50 shadow-xs hover:shadow-lg transition-all duration-300 cursor-pointer touch-manipulation aspect-[3/4] w-full"
               >
-                <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10">
+                <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 sm:px-2 text-[9px] sm:text-[10px] font-bold border backdrop-blur-md ${
                       isSurvivor
@@ -467,7 +510,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                   />
                 )}
 
-                <div className="relative aspect-[3/4] w-full overflow-hidden bg-bg-elevated">
+                <div className="relative h-full w-full overflow-hidden bg-bg-elevated">
                   <img
                     src={avatarSrc}
                     alt={char.name}
@@ -496,13 +539,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                       ownedTitle={dict?.filters?.ownedOnly}
                     />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/70 via-transparent to-transparent" />
                 </div>
 
-                <div className="p-2 sm:p-3.5 space-y-1">
-                  <h3 className="font-extrabold text-xs sm:text-sm text-text-primary group-hover:text-accent-red transition-colors line-clamp-1">
-                    {char.name}
-                  </h3>
+                {/* Sticky bottom overlay with centered name and perks button above */}
+                <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-end px-2 pt-10 pb-2 sm:pb-2.5 bg-gradient-to-t from-bg-surface via-bg-surface/85 to-transparent pointer-events-none">
                   {ownershipMode && !isOwned && (
                     <button
                       type="button"
@@ -510,12 +550,15 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                         e.stopPropagation();
                         setPerksPopupCharacter(char);
                       }}
-                      className="mt-1 w-full rounded-lg border border-accent-amber/40 bg-accent-amber/10 px-2 py-1 text-[10px] font-bold text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer"
+                      className="mb-1 sm:mb-1.5 inline-flex items-center justify-center gap-1 rounded-full border border-accent-amber/50 bg-bg-surface/90 px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber transition-colors shadow-xs cursor-pointer pointer-events-auto select-none"
                     >
                       <span>{dict?.filters?.perks}</span>
                       {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
                     </button>
                   )}
+                  <h3 className="w-full text-center font-extrabold text-[11px] sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-auto leading-tight">
+                    {char.name}
+                  </h3>
                 </div>
               </div>
             );
@@ -567,41 +610,81 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </div>
       )}
 
-      {showSavedToast && (
+      {savedModalOpen && (
         <div
-          role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2.5 rounded-2xl bg-accent-green px-5 py-3 text-sm font-extrabold text-text-inverted shadow-2xl ring-2 ring-accent-green/50 animate-in fade-in slide-in-from-top-4 duration-300"
+          role="dialog"
+          aria-modal="true"
+          aria-label={dict?.characterDetail?.changesSaved}
+          className="fixed inset-y-0 left-[var(--sidebar-width,0rem)] right-0 z-50 flex items-center justify-center p-4 transition-[left] duration-300"
         >
-          <Check className="h-5 w-5" />
-          <span>{dict?.characterDetail?.changesSaved}</span>
+          {/* Subtle dark backdrop with smooth 300ms fade */}
+          <div
+            onClick={closeSavedModal}
+            aria-hidden="true"
+            className={`fixed inset-y-0 left-[var(--sidebar-width,0rem)] right-0 bg-bg-primary/70 backdrop-blur-xs transition-opacity duration-300 cursor-pointer ${
+              savedModalExiting ? 'opacity-0' : 'opacity-100 animate-in fade-in duration-300'
+            }`}
+          />
+
+          {/* Modal card: sleek, DBD dark theme, centered, walk-in 300ms, walk-out 300ms */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={`relative z-10 flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm rounded-3xl border border-border-color bg-bg-surface p-7 sm:p-8 text-center shadow-2xl transition-all duration-300 ${
+              savedModalExiting
+                ? 'opacity-0 scale-90 translate-y-3 duration-300 ease-in'
+                : 'opacity-100 scale-100 translate-y-0 animate-in zoom-in-95 fade-in slide-in-from-bottom-3 duration-300 ease-out'
+            }`}
+          >
+            <button
+              type="button"
+              onClick={closeSavedModal}
+              className="absolute top-3.5 right-3.5 p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
+              aria-label={dict?.characterDetail?.dismiss || dict?.modal?.close}
+            >
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
+            </button>
+
+            <div
+              className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl border border-accent-green/40 bg-accent-green/15 text-accent-green mb-4 ring-4 ring-accent-green/15 shadow-inner"
+              aria-hidden="true"
+            >
+              <Check className="h-8 w-8 sm:h-10 sm:w-10 stroke-[2.5]" />
+            </div>
+
+            <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
+              {dict?.characterDetail?.changesSaved}
+            </h2>
+          </div>
         </div>
       )}
 
       {verificationNoticeOpen && user && (
-        <div
-          role="status"
-          className="fixed top-6 left-1/2 z-50 -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 text-xs font-bold text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
-        >
-          <MailWarning className="h-4 w-4 shrink-0" />
-          <span>{dict?.user?.verifyEmailRequired}</span>
-          <button
-            type="button"
-            onClick={() => {
-              setVerificationNoticeOpen(false);
-              setAuthModalIntent('verify');
-              setIsAuthModalOpen(true);
-            }}
-            className="rounded-lg bg-text-inverted/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-text-inverted/30 transition-colors cursor-pointer"
+        <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">
+          <div
+            role="status"
+            className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-accent-amber px-5 py-3 text-xs font-bold text-text-inverted shadow-2xl ring-2 ring-accent-amber/50 animate-in fade-in slide-in-from-top-4 duration-300"
           >
-            {dict?.streaks?.verifyEmail}
-          </button>
-          <button
-            type="button"
-            onClick={() => setVerificationNoticeOpen(false)}
-            className="text-[11px] font-black underline cursor-pointer"
-          >
-            {dict?.characterDetail?.dismiss || dict?.modal?.close}
-          </button>
+            <MailWarning className="h-4 w-4 shrink-0" />
+            <span>{dict?.user?.verifyEmailRequired}</span>
+            <button
+              type="button"
+              onClick={() => {
+                setVerificationNoticeOpen(false);
+                setAuthModalIntent('verify');
+                setIsAuthModalOpen(true);
+              }}
+              className="rounded-lg bg-text-inverted/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider hover:bg-text-inverted/30 transition-colors cursor-pointer"
+            >
+              {dict?.streaks?.verifyEmail}
+            </button>
+            <button
+              type="button"
+              onClick={() => setVerificationNoticeOpen(false)}
+              className="text-[11px] font-black underline cursor-pointer"
+            >
+              {dict?.characterDetail?.dismiss || dict?.modal?.close}
+            </button>
+          </div>
         </div>
       )}
 

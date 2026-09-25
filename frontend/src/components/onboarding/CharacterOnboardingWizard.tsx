@@ -87,43 +87,29 @@ export interface OnboardingPerk {
   is_unlocked: boolean;
   is_general?: boolean;
   is_generic_counterpart?: boolean;
+  is_always_unlocked?: boolean;
   icon_url?: string;
   icon_local_path?: string;
 }
 
 /**
- * Determines whether a perk is unlocked by default:
- * - Free base game character perks (Dwight, Meg, Trapper, etc.)
- * - Generic perks / general counterpart perks (e.g. Halloween and Hellraiser perks)
+ * Determines whether a perk is unlocked by default based on model/API data attributes:
+ * - Generic counterpart perks (perk.is_generic_counterpart, e.g. licensed perks with general variants)
+ * - General baseline perks (perk.is_general)
+ * - Backend always-unlocked flag (perk.is_always_unlocked)
+ * - Free base game character perks (char.is_free)
+ *
+ * Driven strictly by data attributes rather than hardcoded character/chapter names.
  */
 export function isDefaultUnlockedPerk(
   perk: OnboardingPerk,
   characters: OnboardingCharacter[]
 ): boolean {
-  if (perk.is_general || perk.is_generic_counterpart) {
+  if (perk.is_always_unlocked || perk.is_generic_counterpart || perk.is_general) {
     return true;
   }
   const char = characters.find((c) => ownsPerk(perk, c.id, c.category));
-  if (char?.is_free) {
-    return true;
-  }
-  if (char) {
-    const normChapter = (char.chapter_name || '').toLowerCase();
-    if (normChapter.includes('halloween') || normChapter.includes('hellraiser')) {
-      return true;
-    }
-    const normCharName = (char.name || '').toLowerCase();
-    if (
-      normCharName.includes('shape') ||
-      normCharName.includes('myers') ||
-      normCharName.includes('laurie') ||
-      normCharName.includes('cenobite') ||
-      normCharName.includes('pinhead')
-    ) {
-      return true;
-    }
-  }
-  return false;
+  return Boolean(char?.is_free);
 }
 
 export interface ChapterGroup {
@@ -662,6 +648,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   };
 
   const togglePerkUnlocked = (perkId: number) => {
+    const perk = allPerks.find((p) => p.perk_id === perkId);
+    if (perk && isDefaultUnlockedPerk(perk, characters)) {
+      return;
+    }
     setPerkUnlockDraft((prev) => {
       const nextPerk = { ...prev, [perkId]: !(prev[perkId] ?? true) };
       saveOnboardingDraft(user?.id, { ownershipDraft, perkUnlockDraft: nextPerk });
@@ -1209,6 +1199,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         character={perksPopupCharacter}
         perks={allPerks}
         isPerkUnlocked={(perkId) => perkUnlockDraft[perkId] ?? true}
+        isPerkLockedAlways={(p) => isDefaultUnlockedPerk(p as OnboardingPerk, characters)}
         onTogglePerk={togglePerkUnlocked}
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}

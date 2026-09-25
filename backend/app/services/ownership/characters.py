@@ -125,7 +125,10 @@ def _teachable_perks(role: str, character_id: int) -> list[Perk]:
 
 def _apply_perk_cascade(user_id: int, perks: list[Perk], is_owned: bool) -> int:
     """Unlock or lock every perk the character teaches, following ownership."""
+    applied_count = 0
     for perk in perks:
+        if not is_owned and perk.is_generic_counterpart:
+            continue
         record = db.session.scalars(
             select(UserPerkOwnership).where(
                 UserPerkOwnership.user_id == user_id,
@@ -138,7 +141,8 @@ def _apply_perk_cascade(user_id: int, perks: list[Perk], is_owned: bool) -> int:
             )
         else:
             record.is_unlocked = is_owned
-    return len(perks)
+        applied_count += 1
+    return applied_count
 
 
 def _get_or_create(user_id: int, role: str, character_id: int, is_owned: bool):

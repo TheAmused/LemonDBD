@@ -62,6 +62,114 @@ function AboutSection({ id, heading, className = '', children }: AboutSectionPro
   );
 }
 
+interface AboutSectionConfig {
+  id: string;
+  heading?: string;
+  children: React.ReactNode;
+}
+
+function SyncedAboutCard({
+  section,
+  isExpanded,
+  toggleExpanded,
+  isAnyExpandedInRow,
+}: {
+  section: AboutSectionConfig;
+  isExpanded: boolean;
+  toggleExpanded: () => void;
+  isAnyExpandedInRow: boolean;
+}) {
+  return (
+    <div className="grid grid-cols-1 grid-rows-1">
+      <section
+        className={`col-start-1 row-start-1 z-10 rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col ${
+          isExpanded ? 'self-stretch h-full' : 'self-start h-fit'
+        }`}
+      >
+        <button
+          type="button"
+          onClick={toggleExpanded}
+          className="relative w-full flex items-center justify-center py-4 px-12 sm:px-14 cursor-pointer group select-none text-center shrink-0"
+          aria-expanded={isExpanded}
+        >
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red font-mono text-center">
+            {section.heading}
+          </h2>
+          <ChevronDown
+            className={`absolute right-5 sm:right-7 h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
+              isExpanded ? 'rotate-180' : 'rotate-0'
+            }`}
+          />
+        </button>
+        <div
+          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out flex-1 ${
+            isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="overflow-hidden h-full">
+            <div className="flex flex-col gap-2 border-t border-border-color p-4 sm:p-6 text-sm leading-relaxed h-full">
+              {section.children}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Ghost sizer (active on lg screens when any card in row is open) */}
+      <div
+        aria-hidden="true"
+        className="col-start-1 row-start-1 invisible pointer-events-none select-none hidden lg:flex flex-col rounded-3xl border border-transparent"
+      >
+        <div className="py-4 px-12 sm:px-14 shrink-0">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest font-mono text-center opacity-0">
+            {section.heading}
+          </h2>
+        </div>
+        <div
+          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out flex-1 ${
+            isAnyExpandedInRow ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          }`}
+        >
+          <div className="overflow-hidden h-full">
+            <div className="flex flex-col gap-2 border-t border-transparent p-4 sm:p-6 text-sm leading-relaxed h-full">
+              {section.children}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SyncedAboutPair({
+  sectionA,
+  sectionB,
+}: {
+  sectionA: AboutSectionConfig;
+  sectionB: AboutSectionConfig;
+}) {
+  const [isExpandedA, toggleExpandedA] = usePersistentDrawer(`lemondbd_drawer_about_${sectionA.id}`, true);
+  const [isExpandedB, toggleExpandedB] = usePersistentDrawer(`lemondbd_drawer_about_${sectionB.id}`, true);
+
+  const isAnyExpandedInRow = isExpandedA || isExpandedB;
+
+  return (
+    <>
+      <SyncedAboutCard
+        section={sectionA}
+        isExpanded={isExpandedA}
+        toggleExpanded={toggleExpandedA}
+        isAnyExpandedInRow={isAnyExpandedInRow}
+      />
+      <SyncedAboutCard
+        section={sectionB}
+        isExpanded={isExpandedB}
+        toggleExpanded={toggleExpandedB}
+        isAnyExpandedInRow={isAnyExpandedInRow}
+      />
+    </>
+  );
+}
+
 export default function AboutPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || 'en';
@@ -98,38 +206,48 @@ export default function AboutPage() {
         {/* 2:2:1 Grid layout: Row 1 (2 cards equal height), Row 2 (2 cards equal height), Row 3 (1 card full width) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-stretch">
           {/* Row 1: Who are we? & Why did we build this? */}
-          <AboutSection id="who" heading={about?.who.heading}>
-            {about?.who.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
-                <RichText text={text} />
-              </p>
-            ))}
-          </AboutSection>
-
-          <AboutSection id="why" heading={about?.why.heading}>
-            {about?.why.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
-                <RichText text={text} />
-              </p>
-            ))}
-          </AboutSection>
+          <SyncedAboutPair
+            sectionA={{
+              id: 'who',
+              heading: about?.who.heading,
+              children: about?.who.paragraphs.map((text, i) => (
+                <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+                  <RichText text={text} />
+                </p>
+              )),
+            }}
+            sectionB={{
+              id: 'why',
+              heading: about?.why.heading,
+              children: about?.why.paragraphs.map((text, i) => (
+                <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+                  <RichText text={text} />
+                </p>
+              )),
+            }}
+          />
 
           {/* Row 2: For streamers and players & What will you find here? */}
-          <AboutSection id="community" heading={about?.community.heading}>
-            {about?.community.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
-                <RichText text={text} />
-              </p>
-            ))}
-          </AboutSection>
-
-          <AboutSection id="features" heading={about?.features.heading}>
-            {about?.features.paragraphs.map((text, i) => (
-              <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
-                <RichText text={text} />
-              </p>
-            ))}
-          </AboutSection>
+          <SyncedAboutPair
+            sectionA={{
+              id: 'community',
+              heading: about?.community.heading,
+              children: about?.community.paragraphs.map((text, i) => (
+                <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+                  <RichText text={text} />
+                </p>
+              )),
+            }}
+            sectionB={{
+              id: 'features',
+              heading: about?.features.heading,
+              children: about?.features.paragraphs.map((text, i) => (
+                <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+                  <RichText text={text} />
+                </p>
+              )),
+            }}
+          />
 
           {/* Row 3: Credits (full width spanning both columns, centered content) */}
           <AboutSection id="credits" heading={about?.credits.heading} className="lg:col-span-2">

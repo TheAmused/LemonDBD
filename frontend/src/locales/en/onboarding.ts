@@ -13,7 +13,7 @@ export default {
   legendOwned: "Character unlocked",
   legendLocked: "Character locked",
   legendPartial: "Character partially unlocked (only perks unlocked)",
-  legendCustomizeHint: "Tap a locked character's Perks button to unlock individual perks without owning the whole character.",
+  legendCustomizeHint: "Tip: for a chapter you don't own, expand it and use a character's Perks button to unlock individual perks without owning the whole character.",
   ownChapterButton: "I own this chapter",
   lockChapterButton: "I don't own this chapter",
   selectAllButton: "I own everything",

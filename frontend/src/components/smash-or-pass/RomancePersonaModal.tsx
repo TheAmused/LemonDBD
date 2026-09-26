@@ -24,7 +24,6 @@ import {
   reconstructSharedPersona,
   buildArchetypeShareUrl,
   buildTelegramShareUrl,
-  buildFacebookShareUrl,
   copyTextWithFallback,
   type VoteRecord,
   type SharedArchetypePayload,
@@ -168,25 +167,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
         icon: (
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.729-1.748 7.375-2.541 10.725-.335 1.419-.949 1.666-1.545 1.121-.926-.848-2.617-2.025-3.568-2.736-.37-.277-.887-.783.056-1.298 1.082-.591 2.379-2.228 3.528-3.329.418-.4 1.157-1.488-.139-1.233-1.603.315-4.475 2.249-5.184 2.72-.647.43-1.232.55-1.758.388-.58-.179-1.579-.504-2.352-.756-.949-.31-.837-.887.202-1.291 4.062-1.583 6.772-2.627 8.131-3.131 3.864-1.432 4.667-1.681 5.19-1.689.115-.002.373.027.54.164.14.116.179.273.197.384.019.114.016.364.011.459z" />
-          </svg>
-        ),
-      },
-      {
-        name: 'Facebook',
-        color: 'hover:border-[#1877F2] hover:bg-[#1877F2]/10 text-[#1877F2]',
-        url: buildFacebookShareUrl(shareUrl, shareText),
-        onClick: async () => {
-          await copyTextWithFallback(`${shareText} ${shareUrl}`);
-          showFeedbackNotice(
-            rawSmash?.sharing?.facebookNotice ||
-              (locale === 'pl'
-                ? 'Otwarto Facebooka! Treść posta skopiowano do schowka (wklej za pomocą Ctrl+V).'
-                : 'Facebook opened! Post text copied to clipboard (paste with Ctrl+V).')
-          );
-        },
-        icon: (
-          <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
           </svg>
         ),
       },
@@ -420,7 +400,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 ))}
               </div>
 
-              {/* Status / Feedback Banner (for Facebook, Telegram, Discord, etc.) */}
+              {/* Status / Feedback Banner (for Telegram, Discord, etc.) */}
               {feedbackNotice && (
                 <div className="flex items-center gap-2 p-2.5 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono animate-fadeIn">
                   <Check className="h-4 w-4 shrink-0 stroke-[3]" />

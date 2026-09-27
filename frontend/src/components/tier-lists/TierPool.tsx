@@ -21,6 +21,7 @@ interface TierPoolProps {
   showNames: boolean;
   selectedKey: string | null;
   onSelect: (key: string) => void;
+  onPreview: (key: string) => void;
   onMoveSelectedHere: (containerId: string) => void;
   emptyLabel: string;
   dict: Dictionary;
@@ -39,6 +40,7 @@ export function TierPool({
   showNames,
   selectedKey,
   onSelect,
+  onPreview,
   onMoveSelectedHere,
   emptyLabel,
   dict,
@@ -177,6 +179,7 @@ export function TierPool({
                     showName={showNames}
                     selected={selectedKey === key}
                     onSelect={onSelect}
+                    onPreview={onPreview}
                   />
                 ) : null;
               })}

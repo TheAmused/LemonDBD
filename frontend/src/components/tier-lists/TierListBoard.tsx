@@ -24,6 +24,7 @@ import type { TierDefinition, TierItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { type BoardContainers, findContainer, moveItem } from '@/utils/tierLists/board';
 import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
+import { TierItemPreviewModal } from './TierItemPreviewModal';
 import { TierItemTile, type TierTileShape } from './TierItemTile';
 import { TierPool } from './TierPool';
 import { TierRow } from './TierRow';
@@ -90,6 +91,7 @@ export function TierListBoard({
   // every pointer move without writing to localStorage 60 times a second.
   const [dragBoard, setDragBoardState] = useState<BoardContainers | null>(null);
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [previewKey, setPreviewKey] = useState<string | null>(null);
   const startBoard = useRef<BoardContainers | null>(null);
   // Mirrors `dragBoard` synchronously: dnd-kit can fire dragEnd right after a
   // dragOver, before React has re-rendered with the board that dragOver set.
@@ -211,6 +213,9 @@ export function TierListBoard({
     [selectedKey, onSelectedKeyChange]
   );
 
+  const handlePreview = useCallback((key: string) => setPreviewKey(key), []);
+  const closePreview = useCallback(() => setPreviewKey(null), []);
+
   const handleMoveSelectedHere = useCallback(
     (containerId: string) => {
       if (!selectedKey) return;
@@ -246,6 +251,7 @@ export function TierListBoard({
               showNames={showNames}
               selectedKey={selectedKey}
               onSelect={handleSelect}
+              onPreview={handlePreview}
               onMoveSelectedHere={handleMoveSelectedHere}
               onEdit={onEditTier}
               dict={dict}
@@ -260,6 +266,7 @@ export function TierListBoard({
           showNames={showNames}
           selectedKey={selectedKey}
           onSelect={handleSelect}
+          onPreview={handlePreview}
           onMoveSelectedHere={handleMoveSelectedHere}
           emptyLabel={poolEmptyLabel}
           dict={dict}
@@ -269,6 +276,8 @@ export function TierListBoard({
       <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.2, 0, 0, 1)' }}>
         {activeItem ? <TierItemTile item={activeItem} shape={shape} showName={showNames} overlay /> : null}
       </DragOverlay>
+
+      <TierItemPreviewModal item={previewKey ? itemsByKey.get(previewKey) ?? null : null} onClose={closePreview} />
     </DndContext>
   );
 }

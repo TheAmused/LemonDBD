@@ -21,6 +21,7 @@ interface TierRowProps {
   showNames: boolean;
   selectedKey: string | null;
   onSelect: (key: string) => void;
+  onPreview: (key: string) => void;
   onMoveSelectedHere: (containerId: string) => void;
   onEdit: (tierId: string) => void;
   dict: Dictionary;
@@ -34,6 +35,7 @@ export const TierRow = React.memo(function TierRow({
   showNames,
   selectedKey,
   onSelect,
+  onPreview,
   onMoveSelectedHere,
   onEdit,
   dict,
@@ -87,6 +89,7 @@ export const TierRow = React.memo(function TierRow({
                 showName={showNames}
                 selected={selectedKey === key}
                 onSelect={onSelect}
+                onPreview={onPreview}
               />
             ) : null;
           })}

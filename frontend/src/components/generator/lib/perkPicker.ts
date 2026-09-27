@@ -1,39 +1,25 @@
 // frontend/src/components/generator/lib/perkPicker.ts
+//
+// perk.perk_type IS the Tarot archetype. One source of truth.
+// No keyword scanning needed — the backend seed data classifies every perk
+// into exactly one of: hex | boon | sacrifice | exhaustion | obsession |
+// aura | generator | healing | chase | stealth | entity
+//
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
-import {
-  STEALTH_KEYWORDS,
-  OBSESSION_KEYWORDS,
-  GENERATOR_KEYWORDS,
-  CHASE_KEYWORDS,
-  HEALING_KEYWORDS,
-  AURA_KEYWORDS,
-} from '@/constants/perkTraitKeywords';
 
 /**
- * All of the curse-relevant perk classification below is keyed off the
- * backend-owned `perk.perk_type` field (set by DBD-knowledge-grounded
- * classification in `perks.json`, exposed via `Perk.to_dict()` /
- * `PerkResponse`), not hardcoded name lists or description-keyword
- * matching. A perk with no `perk_type` (e.g. stale cached data) is
- * treated as 'general' -- never as matching a specific curse category.
+ * All classification below reads directly from `perk.perk_type` (set by the
+ * backend seed, now using Tarot archetype values). No description-keyword
+ * matching, no hardcoded name lists -- the backend is the single source of
+ * truth. A perk with no perk_type (stale cached data) is treated as 'entity'.
  */
-function hasPerkType(perk: Perk, category: string): boolean {
-  return (perk.perk_type || 'general') === category;
-}
-
-/**
- * Checks if a perk's description text matches any of the supplied keywords
- * (case-insensitive substring search). Used for tarot typing of perks whose
- * perk_type is 'general' but which thematically belong to a specific archetype.
- */
-function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean {
-  const desc = (perk.description || '').toLowerCase();
-  return keywords.some((keyword) => desc.includes(keyword.toLowerCase()));
+function hasPerkType(perk: Perk, type: string): boolean {
+  return (perk.perk_type || 'entity') === type;
 }
 
 // ---------------------------------------------------------------------------
-// Basic perk_type classifiers (used by Chaos Mutator weighting & filtering)
+// Perk type predicates (used by Chaos Mutator weighting & filtering)
 // ---------------------------------------------------------------------------
 
 export function isExhaustionPerk(perk: Perk): boolean {
@@ -53,55 +39,41 @@ export function isHexOrBoonPerk(perk: Perk): boolean {
 }
 
 export function isMemePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'meme');
+  // 'meme' bucket merged into 'entity' — kept for backward-compatibility with
+  // any call site that hasn't been updated yet. Entity is the new wildcard.
+  return hasPerkType(perk, 'entity');
 }
 
 export function isGenRegressionPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'gen_slowdown');
+  return hasPerkType(perk, 'generator');
 }
 
 export function isHealingOrAltruismPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'altruism_healing');
+  return hasPerkType(perk, 'healing');
 }
 
 export function isNegativePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'handicap');
+  return hasPerkType(perk, 'sacrifice');
 }
 
-// ---------------------------------------------------------------------------
-// Tarot-enhanced classifiers: perk_type takes priority, keywords are fallback
-// so that Survivor gen/chase/aura/healing perks (typed 'general' in the DB
-// because no Chaos Mutator targets them) still get a thematic card.
-// ---------------------------------------------------------------------------
-
 export function isAuraPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'aura_reading') || descriptionMatchesAny(perk, AURA_KEYWORDS);
+  return hasPerkType(perk, 'aura');
 }
 
 export function isChasePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'chase') || descriptionMatchesAny(perk, CHASE_KEYWORDS);
+  return hasPerkType(perk, 'chase');
 }
 
 export function isGeneratorPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'gen_slowdown') || descriptionMatchesAny(perk, GENERATOR_KEYWORDS);
+  return hasPerkType(perk, 'generator');
 }
 
 export function isHealingPerk(perk: Perk): boolean {
-  return isHealingOrAltruismPerk(perk) || descriptionMatchesAny(perk, HEALING_KEYWORDS);
+  return hasPerkType(perk, 'healing');
 }
 
-// Stealth and Obsession have no dedicated perk_type bucket (they cut
-// across several categories), so only description-keyword matching is used.
 export function isStealthPerk(perk: Perk): boolean {
-  return descriptionMatchesAny(perk, STEALTH_KEYWORDS);
-}
-
-function isObsessionPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase();
-  return (
-    nameLower.includes('obsession') ||
-    descriptionMatchesAny(perk, OBSESSION_KEYWORDS)
-  );
+  return hasPerkType(perk, 'stealth');
 }
 
 // ---------------------------------------------------------------------------
@@ -114,12 +86,12 @@ export function isPerkBlockedByMutator(
 ): boolean {
   if (!mutator) return false;
   if (mutator.id === 'no_exhaustion') return isExhaustionPerk(perk);
-  if (mutator.id === 'no_slowdown') return isGenRegressionPerk(perk);
+  if (mutator.id === 'no_slowdown') return isGeneratorPerk(perk);
   return false;
 }
 
 /**
- * Calculates the dynamic probabilistic sampling weight for a perk given an active Chaos Mutator.
+ * Probabilistic sampling weight for a perk given an active Chaos Mutator.
  * Default base weight is 1.0.
  * Decreased probability reduces weight by 50% (0.50).
  * Increased probability boosts weight by 50% (1.50).
@@ -129,43 +101,43 @@ export function getPerkWeight(perk: Perk, mutator?: ChaosMutator | null): number
 
   switch (mutator.id) {
     case 'blindness':
-      // Curse of Blindness: Aura reading perks drop chance reduced by 50%
+      // Curse of Blindness: aura perks drop chance reduced by 50%
       if (isAuraPerk(perk)) return 0.50;
       return 1.0;
 
     case 'no_exhaustion':
-      // No Exhaustion: Exhaustion perks drop chance reduced by 50%
+      // No Exhaustion: exhaustion perks drop chance reduced by 50%
       if (isExhaustionPerk(perk)) return 0.50;
       return 1.0;
 
     case 'no_slowdown':
-      // No Gen Slowdown (Killer): Regression / slowdown perks drop chance reduced by 50%
-      if (isGenRegressionPerk(perk)) return 0.50;
+      // No Gen Slowdown: generator perks drop chance reduced by 50%
+      if (isGeneratorPerk(perk)) return 0.50;
       return 1.0;
 
     case 'solo_queue':
-      // Curse of Solitude: Altruism and healing perks reduced by 50%
-      if (isHealingOrAltruismPerk(perk)) return 0.50;
+      // Curse of Solitude: healing perks drop chance reduced by 50%
+      if (isHealingPerk(perk)) return 0.50;
       return 1.0;
 
     case 'hex_boon_only':
     case 'hex_roulette':
-      // Totem madness: Hex and Boon perks boosted by 50%
+      // Totem madness: hex and boon perks boosted by 50%
       if (isHexOrBoonPerk(perk)) return 1.50;
       return 1.0;
 
     case 'meme_loadout':
-      // Meme / Off-Meta: Gimmick and meme perks boosted by 50%
+      // Curse of the Clown: entity (chaotic wildcard) perks boosted by 50%
       if (isMemePerk(perk)) return 1.50;
       return 1.0;
 
     case 'chase_only':
-      // Pure Bloodlust (Killer): Chase and pallet aggression perks boosted by 50%
-      if (isGenRegressionPerk(perk)) return 1.50;
+      // Pure Bloodlust: chase perks boosted by 50%
+      if (isChasePerk(perk)) return 1.50;
       return 1.0;
 
     case 'negative_only':
-      // Curse of Sacrifice / Entity: Drawback / handicap perks boosted by 50%
+      // Curse of Sacrifice / Entity: sacrifice perks boosted by 50%
       if (isNegativePerk(perk)) return 1.50;
       return 1.0;
 
@@ -191,11 +163,11 @@ export function filterPerksByMutator(
   } else if (mutator.id === 'negative_only') {
     included = perks.filter(isNegativePerk);
   } else if (mutator.id === 'chase_only') {
-    included = perks.filter(isGenRegressionPerk);
+    included = perks.filter(isChasePerk);
   } else if (mutator.id === 'no_exhaustion') {
     included = perks.filter((p) => !isExhaustionPerk(p));
   } else if (mutator.id === 'no_slowdown') {
-    included = perks.filter((p) => !isGenRegressionPerk(p));
+    included = perks.filter((p) => !isGeneratorPerk(p));
   } else {
     included = perks;
   }
@@ -233,20 +205,13 @@ export function computePlayablePool(
 /**
  * Picks `count` distinct perks from `pool` using weighted sampling without replacement.
  *
- * Every Chaos Mutator here is a soft probability adjustment, never a hard
- * filter: every eligible perk in `pool` stays a candidate, and only the
- * *weighting* changes via `getPerkWeight(perk, mutator)` (a reduced chance
- * for no_exhaustion/no_slowdown, a boosted chance for the theme curses).
- * Pre-filtering the pool down to only matching/non-matching perks would turn
- * an advertised "X% reduced" or "Nx boosted" CHANCE into an accidental hard
- * include/exclude that either always or never produces a given perk type --
- * that used to be a real bug here and must not come back.
+ * Every Chaos Mutator is a soft probability adjustment, never a hard filter:
+ * every eligible perk stays a candidate, only the weighting changes via
+ * `getPerkWeight`. Pre-filtering to only matching perks would turn an
+ * advertised "X% reduced" chance into an accidental hard exclude.
  *
- * No-Repeat Mode is a DIFFERENT, deliberately hard rule: it is enforced
- * upstream, by the caller passing an already-narrowed `pool` (see
- * `computePlayablePool`) that has drawn perks removed entirely. "No-Repeat"
- * means no repeats, full stop -- unlike the mutators above, it is never
- * softened into a lower chance here.
+ * No-Repeat Mode is a deliberately hard rule enforced upstream by the caller
+ * passing an already-narrowed pool (see `computePlayablePool`).
  */
 export function pickRandomLoadout(
   pool: Perk[],
@@ -254,9 +219,8 @@ export function pickRandomLoadout(
   count: number = 4
 ): Perk[] {
   if (pool.length === 0) return [];
-  const candidates: Perk[] = pool;
 
-  const remaining = [...candidates];
+  const remaining = [...pool];
   const picked: Perk[] = [];
   const needed = Math.min(count, remaining.length);
 
@@ -300,7 +264,7 @@ export function buildDrawnSlots(
 }
 
 // ---------------------------------------------------------------------------
-// Tarot Deck archetype resolution
+// Tarot Deck archetype resolution — now a trivial perk_type passthrough
 // ---------------------------------------------------------------------------
 
 export type TarotType =
@@ -317,31 +281,17 @@ export type TarotType =
   | 'entity';
 
 /**
- * Maps a perk to its thematic Tarot card archetype.
+ * Returns the perk's Tarot card archetype.
  *
- * Priority order is intentional:
- *  1. Hard perk_type buckets first (hex/boon/sacrifice/exhaustion/obsession)
- *  2. aura_reading perk_type (DB-authoritative, no false-positive risk)
- *  3. Generator (perk_type gen_slowdown OR keyword match) -- before chase/healing
- *     to catch Survivor gen perks (Prove Thyself, Blast Mine, Hyperfocus…)
- *  4. Chase (perk_type chase OR keyword) -- Vault/Pallet/Haste/Hindered perks
- *  5. Healing (perk_type altruism_healing OR keyword)
- *  6. Stealth (keyword only: Undetectable, Oblivious, specific Terror Radius reduction)
- *  7. Aura fallback via keyword for perks typed 'general' that mention auras
- *     (Lightborn, Blood Warden, etc.)
- *  8. The Entity -- true wildcard catch-all
+ * perk.perk_type IS the TarotType — no secondary classification needed.
+ * The backend seed is the single source of truth. Unknown/missing types
+ * fall back to 'entity' (the wildcard).
  */
 export function getPerkTarotType(perk: Perk): TarotType {
-  if (isHexPerk(perk)) return 'hex';
-  if (isBoonPerk(perk)) return 'boon';
-  if (isNegativePerk(perk)) return 'sacrifice';
-  if (isExhaustionPerk(perk)) return 'exhaustion';
-  if (isObsessionPerk(perk)) return 'obsession';
-  if (hasPerkType(perk, 'aura_reading')) return 'aura';
-  if (isGeneratorPerk(perk)) return 'generator';
-  if (isChasePerk(perk)) return 'chase';
-  if (isHealingPerk(perk)) return 'healing';
-  if (isStealthPerk(perk)) return 'stealth';
-  if (isAuraPerk(perk)) return 'aura';   // keyword fallback for 'general' aura perks
-  return 'entity';
+  const VALID: readonly string[] = [
+    'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession',
+    'aura', 'generator', 'healing', 'chase', 'stealth', 'entity',
+  ];
+  const t = perk.perk_type || 'entity';
+  return (VALID.includes(t) ? t : 'entity') as TarotType;
 }

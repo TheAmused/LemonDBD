@@ -61,6 +61,10 @@
   --breakpoint-wide: 1800px;
   --breakpoint-wide-2k: 2400px;
   --breakpoint-wide-4k: 3400px;
+
+  /* sm shifted from Tailwind's default 40rem to 38rem so sm: layouts (e.g.
+   * the mode-select tile grids) switch over before content clips. */
+  --breakpoint-sm: 38rem;
 }
 
 /* ---------------------------------------------------------------------------

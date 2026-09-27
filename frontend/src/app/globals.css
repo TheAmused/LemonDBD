@@ -131,11 +131,19 @@
    * near-white (#eef1f4) instead of dark: the reported "white flash". This
    * media query makes the *unclassed* default itself follow the OS color
    * scheme (matching next-themes' own `defaultTheme="system"`), so that gap
-   * frame is dark for dark-system users instead of always-light. It sits
-   * above the explicit theme classes below, so a class the user actually
-   * picked (e.g. `.light` while the OS is dark) still wins once applied. */
+   * frame is dark for dark-system users instead of always-light.
+   *
+   * `:not(.light, .light-lemon, .dark)` is load-bearing here, not decorative:
+   * `:root` matches `<html>` unconditionally, regardless of what other class
+   * is also on it, so without this exclusion the plain `:root` selector
+   * below and this one have equal specificity and this one -- being later
+   * in the file -- would win the cascade and silently override an
+   * explicitly-picked `.light` theme back to dark on any OS set to dark
+   * (exactly the "light mode is broken, it's just dark mode now" bug this
+   * caused once already). This rule may now only ever match the genuinely
+   * unclassed gap frame it was written for. */
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not(.light, .light-lemon, .dark) {
       color-scheme: dark;
       --bg-primary: #0a0a0c;
       --bg-surface: #141418;

@@ -1,7 +1,14 @@
 // frontend/src/components/generator/lib/perkPicker.ts
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
-import { STEALTH_KEYWORDS, OBSESSION_KEYWORDS } from '@/constants/perkTraitKeywords';
+import {
+  STEALTH_KEYWORDS,
+  OBSESSION_KEYWORDS,
+  GENERATOR_KEYWORDS,
+  CHASE_KEYWORDS,
+  HEALING_KEYWORDS,
+  AURA_KEYWORDS,
+} from '@/constants/perkTraitKeywords';
 
 /**
  * All of the curse-relevant perk classification below is keyed off the
@@ -14,6 +21,20 @@ import { STEALTH_KEYWORDS, OBSESSION_KEYWORDS } from '@/constants/perkTraitKeywo
 function hasPerkType(perk: Perk, category: string): boolean {
   return (perk.perk_type || 'general') === category;
 }
+
+/**
+ * Checks if a perk's description text matches any of the supplied keywords
+ * (case-insensitive substring search). Used for tarot typing of perks whose
+ * perk_type is 'general' but which thematically belong to a specific archetype.
+ */
+function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean {
+  const desc = (perk.description || '').toLowerCase();
+  return keywords.some((keyword) => desc.includes(keyword.toLowerCase()));
+}
+
+// ---------------------------------------------------------------------------
+// Basic perk_type classifiers (used by Chaos Mutator weighting & filtering)
+// ---------------------------------------------------------------------------
 
 export function isExhaustionPerk(perk: Perk): boolean {
   return hasPerkType(perk, 'exhaustion');
@@ -43,17 +64,49 @@ export function isHealingOrAltruismPerk(perk: Perk): boolean {
   return hasPerkType(perk, 'altruism_healing');
 }
 
-export function isChasePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'chase');
-}
-
-export function isAuraPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'aura_reading');
-}
-
 export function isNegativePerk(perk: Perk): boolean {
   return hasPerkType(perk, 'handicap');
 }
+
+// ---------------------------------------------------------------------------
+// Tarot-enhanced classifiers: perk_type takes priority, keywords are fallback
+// so that Survivor gen/chase/aura/healing perks (typed 'general' in the DB
+// because no Chaos Mutator targets them) still get a thematic card.
+// ---------------------------------------------------------------------------
+
+export function isAuraPerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'aura_reading') || descriptionMatchesAny(perk, AURA_KEYWORDS);
+}
+
+export function isChasePerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'chase') || descriptionMatchesAny(perk, CHASE_KEYWORDS);
+}
+
+export function isGeneratorPerk(perk: Perk): boolean {
+  return hasPerkType(perk, 'gen_slowdown') || descriptionMatchesAny(perk, GENERATOR_KEYWORDS);
+}
+
+export function isHealingPerk(perk: Perk): boolean {
+  return isHealingOrAltruismPerk(perk) || descriptionMatchesAny(perk, HEALING_KEYWORDS);
+}
+
+// Stealth and Obsession have no dedicated perk_type bucket (they cut
+// across several categories), so only description-keyword matching is used.
+export function isStealthPerk(perk: Perk): boolean {
+  return descriptionMatchesAny(perk, STEALTH_KEYWORDS);
+}
+
+function isObsessionPerk(perk: Perk): boolean {
+  const nameLower = perk.name.toLowerCase();
+  return (
+    nameLower.includes('obsession') ||
+    descriptionMatchesAny(perk, OBSESSION_KEYWORDS)
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Mutator helpers
+// ---------------------------------------------------------------------------
 
 export function isPerkBlockedByMutator(
   perk: Perk,
@@ -108,7 +161,7 @@ export function getPerkWeight(perk: Perk, mutator?: ChaosMutator | null): number
 
     case 'chase_only':
       // Pure Bloodlust (Killer): Chase and pallet aggression perks boosted by 50%
-      if (isChasePerk(perk)) return 1.50;
+      if (isGenRegressionPerk(perk)) return 1.50;
       return 1.0;
 
     case 'negative_only':
@@ -138,7 +191,7 @@ export function filterPerksByMutator(
   } else if (mutator.id === 'negative_only') {
     included = perks.filter(isNegativePerk);
   } else if (mutator.id === 'chase_only') {
-    included = perks.filter(isChasePerk);
+    included = perks.filter(isGenRegressionPerk);
   } else if (mutator.id === 'no_exhaustion') {
     included = perks.filter((p) => !isExhaustionPerk(p));
   } else if (mutator.id === 'no_slowdown') {
@@ -246,6 +299,10 @@ export function buildDrawnSlots(
   });
 }
 
+// ---------------------------------------------------------------------------
+// Tarot Deck archetype resolution
+// ---------------------------------------------------------------------------
+
 export type TarotType =
   | 'hex'
   | 'boon'
@@ -259,44 +316,32 @@ export type TarotType =
   | 'stealth'
   | 'entity';
 
-function descriptionMatchesAny(perk: Perk, keywords: readonly string[]): boolean {
-  const desc = (perk.description || '').toLowerCase();
-  return keywords.some((keyword) => desc.includes(keyword.toLowerCase()));
-}
-
-export function isGeneratorPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'gen_slowdown');
-}
-
-export function isHealingPerk(perk: Perk): boolean {
-  return isHealingOrAltruismPerk(perk);
-}
-
-// Stealth and Obsession have no dedicated perk_type bucket (they cut
-// across several categories), so the Tarot Deck's "type predicts the perk"
-// taxonomy keeps its multilingual description-keyword matching for these two.
-export function isStealthPerk(perk: Perk): boolean {
-  return descriptionMatchesAny(perk, STEALTH_KEYWORDS);
-}
-
-function isObsessionPerk(perk: Perk): boolean {
-  const nameLower = perk.name.toLowerCase();
-  return (
-    nameLower.includes('obsession') ||
-    descriptionMatchesAny(perk, OBSESSION_KEYWORDS)
-  );
-}
-
+/**
+ * Maps a perk to its thematic Tarot card archetype.
+ *
+ * Priority order is intentional:
+ *  1. Hard perk_type buckets first (hex/boon/sacrifice/exhaustion/obsession)
+ *  2. aura_reading perk_type (DB-authoritative, no false-positive risk)
+ *  3. Generator (perk_type gen_slowdown OR keyword match) -- before chase/healing
+ *     to catch Survivor gen perks (Prove Thyself, Blast Mine, Hyperfocus…)
+ *  4. Chase (perk_type chase OR keyword) -- Vault/Pallet/Haste/Hindered perks
+ *  5. Healing (perk_type altruism_healing OR keyword)
+ *  6. Stealth (keyword only: Undetectable, Oblivious, specific Terror Radius reduction)
+ *  7. Aura fallback via keyword for perks typed 'general' that mention auras
+ *     (Lightborn, Blood Warden, etc.)
+ *  8. The Entity -- true wildcard catch-all
+ */
 export function getPerkTarotType(perk: Perk): TarotType {
   if (isHexPerk(perk)) return 'hex';
   if (isBoonPerk(perk)) return 'boon';
   if (isNegativePerk(perk)) return 'sacrifice';
   if (isExhaustionPerk(perk)) return 'exhaustion';
   if (isObsessionPerk(perk)) return 'obsession';
-  if (isAuraPerk(perk)) return 'aura';
+  if (hasPerkType(perk, 'aura_reading')) return 'aura';
   if (isGeneratorPerk(perk)) return 'generator';
-  if (isHealingPerk(perk)) return 'healing';
   if (isChasePerk(perk)) return 'chase';
+  if (isHealingPerk(perk)) return 'healing';
   if (isStealthPerk(perk)) return 'stealth';
+  if (isAuraPerk(perk)) return 'aura';   // keyword fallback for 'general' aura perks
   return 'entity';
 }

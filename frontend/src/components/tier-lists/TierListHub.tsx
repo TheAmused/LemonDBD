@@ -95,12 +95,8 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
 
   return (
     <div className="relative z-10 flex flex-col gap-8">
-      <header className="flex flex-col gap-4 border-b border-border-color pb-6 items-center text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
-        <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-text-primary">{t.hubTitle}</h1>
-          <p className="mt-1 max-w-2xl text-sm text-text-secondary">{t.hubSubtitle}</p>
-        </div>
-        <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+      <header className="flex flex-col gap-4 border-b border-border-color pb-6 items-center lg:flex-row lg:items-end lg:justify-end">
+        <div className="flex flex-wrap justify-center gap-2">
           <button type="button" onClick={() => setImportOpen(true)} className={BTN_SECONDARY}>
             <FileJson className="h-4 w-4" aria-hidden="true" />
             {t.importJson}

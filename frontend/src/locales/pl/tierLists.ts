@@ -2,8 +2,6 @@
 export default {
   pageTitle: "LemonDBD - Tier listy",
   metaDescription: "Twórz tier listy Dead by Daylight z perkami, ocalałymi, zabójcami i mapami albo zaimportuj własną listę.",
-  hubTitle: "Tier listy",
-  hubSubtitle: "Oceniaj perki, ocalałych, zabójców i mapy albo zbuduj własną listę z dowolnych obrazków.",
   officialSection: "Oficjalne listy",
   curatedTemplatesCount: "{count} przygotowane szablony",
   curatedTemplatesSingular: "1 przygotowany szablon",

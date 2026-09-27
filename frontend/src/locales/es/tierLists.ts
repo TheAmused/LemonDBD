@@ -2,8 +2,6 @@
 export default {
   pageTitle: "LemonDBD - Tier lists",
   metaDescription: "Crea tier lists de Dead by Daylight de habilidades, supervivientes, asesinos y mapas, o importa tu propia lista.",
-  hubTitle: "Tier lists",
-  hubSubtitle: "Clasifica habilidades, supervivientes, asesinos y mapas, o crea tu propia lista con cualquier imagen.",
   officialSection: "Listas oficiales",
   curatedTemplatesCount: "{count} plantillas seleccionadas",
   curatedTemplatesSingular: "1 plantilla seleccionada",

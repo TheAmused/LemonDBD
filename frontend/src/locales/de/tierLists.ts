@@ -2,8 +2,6 @@
 export default {
   pageTitle: "LemonDBD - Tierlisten",
   metaDescription: "Erstelle Dead-by-Daylight-Tierlisten für Fähigkeiten, Überlebende, Killer und Karten oder importiere deine eigene Liste.",
-  hubTitle: "Tierlisten",
-  hubSubtitle: "Bewerte Fähigkeiten, Überlebende, Killer und Karten oder baue deine eigene Liste aus beliebigen Bildern.",
   officialSection: "Offizielle Listen",
   curatedTemplatesCount: "{count} kuratierte Vorlagen",
   curatedTemplatesSingular: "1 kuratierte Vorlage",

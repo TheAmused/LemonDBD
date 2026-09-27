@@ -2,8 +2,6 @@
 export default {
   pageTitle: "LemonDBD - Tier Lists",
   metaDescription: "Build Dead by Daylight tier lists for perks, survivors, killers and maps, or import your own custom list.",
-  hubTitle: "Tier Lists",
-  hubSubtitle: "Rank perks, survivors, killers and maps, or build your own list from any images.",
   officialSection: "Official lists",
   curatedTemplatesCount: "{count} curated templates",
   curatedTemplatesSingular: "1 curated list",

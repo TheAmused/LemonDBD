@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import {
   Heart,
   Volume2,
@@ -48,8 +49,16 @@ import {
   syncSessionVotes as apiSyncSessionVotes,
 } from '@/services/smashApi';
 import { useAuth } from '@/context/AuthContext';
+import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { decodeArchetypeShare, type SharedArchetypePayload } from '@/utils/smashPersona';
+import {
+  customEntityToEntityItem,
+  customRosterToRosterItem,
+  isLocalRosterSlug,
+  localRosterIdFromSlug,
+} from '@/utils/smashOrPass/localRoster';
+import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { IridescentShardIcon } from '@/components/icons/DbdIcons';
 
@@ -94,6 +103,16 @@ const RosterSelectModal = dynamic(
   { ssr: false }
 );
 
+const SmashRosterImportModal = dynamic(
+  () => import('./SmashRosterImportModal').then((m) => m.SmashRosterImportModal),
+  { ssr: false }
+);
+
+const SmashRosterExportModal = dynamic(
+  () => import('./SmashRosterExportModal').then((m) => m.SmashRosterExportModal),
+  { ssr: false }
+);
+
 interface SmashOrPassHubProps {
   dict?: Dictionary;
   locale?: string;
@@ -101,12 +120,33 @@ interface SmashOrPassHubProps {
 
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = 'en' }) => {
   const backendBase = getBackendBaseUrl();
+  const router = useRouter();
   const { user, token, isAuthenticated } = useAuth();
+  const { state: customRosterStore } = useSmashRosterStore();
 
   // Rosters State (Database-Driven)
   const [rosters, setRosters] = useState<RosterItem[]>([]);
+  const [rosterPendingDelete, setRosterPendingDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
+  const [exportingRosterId, setExportingRosterId] = useState<string | null>(null);
+
+  // Every pickable roster: the official ones the database serves, plus the
+  // viewer's own saved in this browser. The picker (and `activeRoster` below)
+  // never distinguish the two beyond `is_local` -- see utils/smashOrPass/localRoster.ts.
+  const allRosters = useMemo<RosterItem[]>(() => {
+    const local = Object.values(customRosterStore.custom).map(customRosterToRosterItem);
+    return [...rosters, ...local];
+  }, [rosters, customRosterStore]);
   const [selectedRosterSlug, setSelectedRosterSlug] = useState<string>(() => {
     if (typeof window !== 'undefined') {
+      // `?roster=<slug>` wins over the remembered choice -- the roster
+      // creator lands here with it set right after creating/publishing a
+      // roster, so the thing the viewer just built is what they see.
+      const fromQuery = new URLSearchParams(window.location.search).get('roster');
+      if (fromQuery) {
+        localStorage.setItem('dbd_smash_selected_roster', fromQuery);
+        return fromQuery;
+      }
       return localStorage.getItem('dbd_smash_selected_roster') || 'canon';
     }
     return 'canon';
@@ -209,7 +249,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   // Active Roster Metadata
   const activeRoster: RosterItem = useMemo(() => {
     return (
-      rosters.find((r) => r.slug === selectedRosterSlug) || {
+      allRosters.find((r) => r.slug === selectedRosterSlug) || {
         id: 'canon',
         slug: 'canon',
         name: 'Dead by Daylight: Fog Canon',
@@ -220,7 +260,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         is_active: true,
       }
     );
-  }, [rosters, selectedRosterSlug]);
+  }, [allRosters, selectedRosterSlug]);
 
   // Re-check acknowledgment whenever the active roster changes (including on
   // first mount for whatever roster was restored from localStorage).
@@ -235,10 +275,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   const getRosterCover = useCallback((r: RosterItem) => {
     if (r.cover_image_url) {
-      return r.cover_image_url.startsWith('http')
+      return r.cover_image_url.startsWith('http') || r.cover_image_url.startsWith('data:')
         ? r.cover_image_url
         : `${getBackendBaseUrl()}${r.cover_image_url}`;
     }
+    // A local roster has no backend static asset to fall back to.
+    if (r.is_local) return `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.webp`;
     return `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
   }, []);
 
@@ -256,6 +298,13 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
   // 2. Fetch Leaderboard from PostgreSQL database
   const loadLeaderboard = useCallback(async () => {
+    // No leaderboards for custom rosters (see the smash-or-pass roster
+    // creator plan's explicit non-goals) -- there is no shared vote table row
+    // for a roster the backend has never heard of.
+    if (isLocalRosterSlug(selectedRosterSlug)) {
+      setLeaderboardItems([]);
+      return;
+    }
     try {
       const items = await fetchLeaderboard(selectedRosterSlug);
       if (items) {
@@ -270,6 +319,24 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const loadFeed = useCallback(async () => {
     setLoading(true);
     try {
+      // A local roster has no server-side feed (no session, no vote table row
+      // to filter "already voted" candidates against) -- it is simply its own
+      // entity list, played in full every time, shuffled the same way an API
+      // feed's entities are.
+      if (isLocalRosterSlug(selectedRosterSlug)) {
+        const id = localRosterIdFromSlug(selectedRosterSlug);
+        const stored = customRosterStore.custom[id];
+        const entities = (stored?.entities ?? [])
+          .filter((e) => roleFilter === 'all' || e.role === roleFilter)
+          .filter((e) => genderFilter === 'all' || e.gender === genderFilter)
+          .map((e, i) => customEntityToEntityItem(selectedRosterSlug, e, i));
+        const shuffled = shuffleArray(entities);
+        setDeck(shuffled);
+        setCurrentIndex(0);
+        setTotalRemaining(shuffled.length);
+        return;
+      }
+
       const feed = await fetchRosterFeed(selectedRosterSlug, {
         role: roleFilter !== 'all' ? roleFilter : undefined,
         gender: genderFilter !== 'all' ? genderFilter : undefined,
@@ -290,7 +357,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       setExitVote(null);
       setExitOffset(undefined);
     }
-  }, [selectedRosterSlug, roleFilter, genderFilter]);
+  }, [selectedRosterSlug, roleFilter, genderFilter, customRosterStore]);
 
   // Synchronize vote history from LocalStorage & Backend
   const syncVotes = useCallback(async (rosterSlug: string) => {
@@ -305,46 +372,51 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       } catch { }
     }
 
-    // If user is authenticated, migrate any guest session votes to user account
-    if (isAuthenticated || token || user?.id) {
+    // A local roster has no backend session/account to sync against -- there
+    // is no server that has ever heard of it, so its vote history is exactly
+    // and only what is already in localStorage, read above.
+    if (!isLocalRosterSlug(rosterSlug)) {
+      // If user is authenticated, migrate any guest session votes to user account
+      if (isAuthenticated || token || user?.id) {
+        try {
+          await apiSyncSessionVotes(rosterSlug);
+        } catch (err) {
+          console.debug('Error syncing guest session votes:', err);
+        }
+      }
+
       try {
-        await apiSyncSessionVotes(rosterSlug);
+        const backendVotes = await fetchUserVotes(rosterSlug);
+        if (backendVotes && backendVotes.length > 0) {
+          const existingSlugs = new Set(currentVotes.map((v) => v.character?.slug || (v as any).slug));
+          const merged = [...currentVotes];
+
+          backendVotes.forEach((bv) => {
+            if (!existingSlugs.has(bv.character_slug)) {
+              const voteType: 'smash' | 'pass' = bv.vote_type === 'pass' ? 'pass' : 'smash';
+              merged.push({
+                character: (bv.entity || {
+                  id: bv.character_slug,
+                  slug: bv.character_slug,
+                  name: (bv as any).character_name || bv.character_slug,
+                  role: (bv as any).role || 'Survivor',
+                  gender: (bv as any).gender || 'female',
+                  order_index: 0,
+                  is_active: true,
+                  roster_id: rosterSlug,
+                }) as EntityItem,
+                vote: voteType,
+                timestamp: bv.created_at ? new Date(bv.created_at).getTime() : Date.now(),
+              });
+              existingSlugs.add(bv.character_slug);
+            }
+          });
+
+          currentVotes = merged;
+        }
       } catch (err) {
-        console.debug('Error syncing guest session votes:', err);
+        console.debug('Error syncing backend user votes:', err);
       }
-    }
-
-    try {
-      const backendVotes = await fetchUserVotes(rosterSlug);
-      if (backendVotes && backendVotes.length > 0) {
-        const existingSlugs = new Set(currentVotes.map((v) => v.character?.slug || (v as any).slug));
-        const merged = [...currentVotes];
-
-        backendVotes.forEach((bv) => {
-          if (!existingSlugs.has(bv.character_slug)) {
-            const voteType: 'smash' | 'pass' = bv.vote_type === 'pass' ? 'pass' : 'smash';
-            merged.push({
-              character: (bv.entity || {
-                id: bv.character_slug,
-                slug: bv.character_slug,
-                name: (bv as any).character_name || bv.character_slug,
-                role: (bv as any).role || 'Survivor',
-                gender: (bv as any).gender || 'female',
-                order_index: 0,
-                is_active: true,
-                roster_id: rosterSlug,
-              }) as EntityItem,
-              vote: voteType,
-              timestamp: bv.created_at ? new Date(bv.created_at).getTime() : Date.now(),
-            });
-            existingSlugs.add(bv.character_slug);
-          }
-        });
-
-        currentVotes = merged;
-      }
-    } catch (err) {
-      console.debug('Error syncing backend user votes:', err);
     }
 
     if (typeof window !== 'undefined' && currentVotes.length > 0) {
@@ -508,6 +580,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         return updated;
       });
 
+      // A local roster's entities were never sent to the backend -- there is
+      // no `entity_id` there to vote for, and (per the plan) no leaderboard
+      // to update anyway. The vote is already recorded above, purely locally.
+      if (isLocalRosterSlug(selectedRosterSlug)) return;
+
       // Call database API to cast vote
       try {
         const voteResponse = await apiCastVote(currentCharacter.id, vote, currentCharacter.slug);
@@ -558,13 +635,15 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const handleResetAllVotes = useCallback(async () => {
     setIsResetConfirmOpen(false);
 
-    try {
-      if (isAuthenticated || token || user?.id) {
-        await apiResetUserVotes(selectedRosterSlug);
+    if (!isLocalRosterSlug(selectedRosterSlug)) {
+      try {
+        if (isAuthenticated || token || user?.id) {
+          await apiResetUserVotes(selectedRosterSlug);
+        }
+        await apiResetSessionVotes(selectedRosterSlug);
+      } catch (err) {
+        console.error('Failed to reset votes on backend database:', err);
       }
-      await apiResetSessionVotes(selectedRosterSlug);
-    } catch (err) {
-      console.error('Failed to reset votes on backend database:', err);
     }
 
     if (typeof window !== 'undefined') {
@@ -1285,7 +1364,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       <RosterSelectModal
         isOpen={isRosterModalOpen}
         onClose={() => setIsRosterModalOpen(false)}
-        rosters={rosters}
+        rosters={allRosters}
         selectedRosterSlug={selectedRosterSlug}
         onSelectRoster={(slug) => {
           setSelectedRosterSlug(slug);
@@ -1295,9 +1374,115 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           setRosterSwitchEffect(slug);
           setTimeout(() => setRosterSwitchEffect(null), 1200);
         }}
+        onCreateRoster={() => {
+          setIsRosterModalOpen(false);
+          router.push(`/${locale}/smash-or-pass/create`);
+        }}
+        onImportRoster={() => {
+          setIsRosterModalOpen(false);
+          setIsImportModalOpen(true);
+        }}
+        onEditRoster={(id) => {
+          setIsRosterModalOpen(false);
+          router.push(`/${locale}/smash-or-pass/create?edit=${id}`);
+        }}
+        onDeleteRoster={(id) => {
+          const roster = customRosterStore.custom[id];
+          setRosterPendingDelete({ id, name: roster?.name || 'Untitled Roster' });
+        }}
+        onExportRoster={(id) => {
+          // Unlike Edit/Create (which navigate away), Export is just an
+          // overlay -- leave the picker open underneath it, same as the
+          // delete-confirmation dialog, so closing it returns to the picker.
+          setExportingRosterId(id);
+        }}
         locale={locale}
         dict={dict}
       />
+
+      {/* DELETE CUSTOM ROSTER CONFIRMATION */}
+      {rosterPendingDelete && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setRosterPendingDelete(null)}
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-sm rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-4 shadow-2xl text-center font-mono"
+          >
+            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
+              <Trash2 className="h-6 w-6" />
+            </div>
+            <div className="space-y-1 font-sans">
+              <h3 className="text-base font-black font-mono text-text-primary">
+                {dict?.smashOrPass?.picker?.deleteConfirmTitle || 'Delete this roster?'}
+              </h3>
+              <p className="text-xs text-text-muted leading-relaxed">
+                {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
+                  '{name}',
+                  rosterPendingDelete.name
+                )}
+              </p>
+            </div>
+            <div className="flex gap-2.5 pt-2 font-mono">
+              <button
+                type="button"
+                onClick={() => setRosterPendingDelete(null)}
+                className="flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
+              >
+                {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const id = rosterPendingDelete.id;
+                  const slug = `local:${id}`;
+                  deleteCustomRoster(id);
+                  if (selectedRosterSlug === slug) {
+                    setSelectedRosterSlug('canon');
+                    if (typeof window !== 'undefined') {
+                      localStorage.setItem('dbd_smash_selected_roster', 'canon');
+                    }
+                  }
+                  setRosterPendingDelete(null);
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
+              >
+                {dict?.smashOrPass?.picker?.deleteConfirmAction || 'Yes, Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <SmashRosterImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImported={(slug) => {
+          setIsImportModalOpen(false);
+          setSelectedRosterSlug(slug);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('dbd_smash_selected_roster', slug);
+          }
+        }}
+        dict={dict}
+      />
+
+      {exportingRosterId && (
+        <SmashRosterExportModal
+          doc={(() => {
+            const roster = customRosterStore.custom[exportingRosterId];
+            if (!roster) return null;
+            const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...doc } = roster;
+            return doc;
+          })()}
+          onClose={() => setExportingRosterId(null)}
+          locale={locale}
+          dict={dict}
+        />
+      )}
 
       {/* ROSTER SWITCH STARTING ANIMATION EFFECT */}
       {rosterSwitchEffect && (

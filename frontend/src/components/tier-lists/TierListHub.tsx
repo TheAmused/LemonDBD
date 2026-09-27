@@ -95,19 +95,6 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
 
   return (
     <div className="relative z-10 flex flex-col gap-8">
-      <header className="flex flex-col gap-4 border-b border-border-color pb-6 items-center lg:flex-row lg:items-end lg:justify-end">
-        <div className="flex flex-wrap justify-center gap-2">
-          <button type="button" onClick={() => setImportOpen(true)} className={BTN_SECONDARY}>
-            <FileJson className="h-4 w-4" aria-hidden="true" />
-            {t.importJson}
-          </button>
-          <button type="button" onClick={createBlank} className={BTN_PRIMARY}>
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            {t.newCustomList}
-          </button>
-        </div>
-      </header>
-
       {saveError && !saveError.ok && (
         <p role="alert" className="flex items-start gap-2 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
@@ -203,47 +190,94 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
         </div>
       </section>
 
-      {/* My Custom Lists Collapsible Drawer */}
+      {/* My Custom Lists Collapsible Drawer. No `overflow-hidden` here (unlike
+          the Official section) -- an `overflow` other than `visible` on an
+          ancestor makes IT the reference scroll container for a `position:
+          sticky` descendant, and since this section itself never scrolls,
+          that would silently stop the header below from sticking at all.
+          The header clips its own banner to the card's rounded top corners
+          instead (see its own `overflow-hidden`). */}
       <section
         aria-labelledby="tier-lists-custom"
-        className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col"
+        className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md transition-colors flex flex-col"
       >
-        <button
-          type="button"
-          onClick={toggleCustom}
-          aria-expanded={isCustomOpen}
-          className="relative w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[64px] sm:min-h-[72px] cursor-pointer group select-none overflow-hidden transition-colors text-left"
+        {/* `sticky` (not the plain `relative` the Official section's header
+            uses): Import/New-list are the two actions someone actually
+            needs while scrolled down through their own lists, so this bar
+            stays reachable instead of scrolling away with the rest of the
+            card. `top-16` clears the mobile top bar (`Sidebar.tsx`'s own
+            `sticky top-0 h-16`); there's nothing to clear on desktop. */}
+        {/* Rounds all 4 corners when collapsed (the header is then the
+            whole visible card) and just the top 2 when expanded (the body
+            below rounds the bottom) -- what the removed section-level
+            `overflow-hidden` used to do automatically for whichever part
+            happened to be the visual bottom. */}
+        <div
+          className={`sticky top-16 z-20 lg:top-0 w-full min-h-[64px] sm:min-h-[72px] overflow-hidden ${
+            isCustomOpen ? 'rounded-t-3xl' : 'rounded-3xl'
+          }`}
         >
-          {/* Atmospheric DBD Banner Backdrop */}
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
-            style={{ backgroundImage: "url('/images/banners/banner_account.jpg')" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
-
-          <div className="relative z-10 w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
-          <div className="relative z-10 flex-1 text-center min-w-0 px-2">
-            <div className="inline-flex items-center gap-2">
-              <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
-                {t.mySection}
-              </h2>
-              <span className="inline-flex items-center rounded-full bg-accent-amber/10 px-2 py-0.5 text-[11px] font-bold text-accent-amber border border-accent-amber/25 font-mono">
-                {hydrated ? customLists.length : 0}
-              </span>
-            </div>
-            <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
-              {t.localOnlyNote}
-            </p>
-          </div>
-          <div className="relative z-10 w-8 flex justify-end">
-            <ChevronDown
-              className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
-                isCustomOpen ? 'rotate-180' : 'rotate-0'
-              }`}
+          {/* The toggle is a real <button> for a11y, but only covers the
+              banner background now -- the visible title/actions row below
+              is a sibling, not its child, so the two "New custom list" /
+              "Import JSON" buttons in that row can be real, independently
+              clickable <button>s without nesting inside this one (which
+              HTML forbids and which would otherwise also fire the toggle
+              whenever either was clicked). */}
+          <button
+            type="button"
+            onClick={toggleCustom}
+            aria-expanded={isCustomOpen}
+            aria-label={t.mySection}
+            className="absolute inset-0 cursor-pointer group select-none"
+          >
+            {/* Atmospheric DBD Banner Backdrop */}
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter group-hover:scale-105 transition-transform duration-700 ease-out"
+              style={{ backgroundImage: "url('/images/banners/banner_account.jpg')" }}
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface" />
+            <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60" />
+          </button>
+
+          {/* `pointer-events-none` on the row so a click anywhere on the
+              title/badge/subtitle (or the empty space around them) falls
+              through to the toggle button underneath, exactly like before
+              this was split in two -- `pointer-events-auto` opts the
+              actions group back in so it alone stays independently
+              clickable. */}
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 py-4 px-5 sm:py-4.5 sm:px-7 2xl:py-5.5 2xl:px-9 min-h-[64px] sm:min-h-[72px] pointer-events-none">
+            <div className="min-w-0">
+              <div className="inline-flex items-center gap-2">
+                <h2 id="tier-lists-custom" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono">
+                  {t.mySection}
+                </h2>
+                <span className="inline-flex items-center rounded-full bg-accent-amber/10 px-2 py-0.5 text-[11px] font-bold text-accent-amber border border-accent-amber/25 font-mono">
+                  {hydrated ? customLists.length : 0}
+                </span>
+              </div>
+              <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
+                {t.localOnlyNote}
+              </p>
+            </div>
+
+            <div className="pointer-events-auto flex shrink-0 items-center gap-2">
+              <button type="button" onClick={() => setImportOpen(true)} className={BTN_SECONDARY}>
+                <FileJson className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">{t.importJson}</span>
+              </button>
+              <button type="button" onClick={createBlank} className={BTN_PRIMARY}>
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">{t.newCustomList}</span>
+              </button>
+              <ChevronDown
+                className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out shrink-0 ${
+                  isCustomOpen ? 'rotate-180' : 'rotate-0'
+                }`}
+              />
+            </div>
           </div>
-        </button>
+        </div>
 
         <div
           className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${

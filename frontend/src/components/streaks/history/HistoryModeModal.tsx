@@ -47,7 +47,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       label: dict?.streaks?.historyMediumLabel || 'Medium',
       description: dict?.streaks?.historyMediumDesc || 'A checkpoint for every row you clear.',
       icon: TierMediumIcon,
-      image: '/images/streaks/history-streak.jpg',
+      image: '/images/streaks/history-streak-watermark.png',
       accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'medium'),

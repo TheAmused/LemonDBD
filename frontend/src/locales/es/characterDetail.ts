@@ -87,7 +87,7 @@ export default {
   survivorComparison: "Comparación con Velocidad del Superviviente",
   survivorComparisonDesc: "La velocidad de carrera estándar del superviviente es de 4.0 m/s (100%).",
   viewLore: "Leer Historia y Biografía",
-  view3DModel: "Clic para Ver Modelo 3D Completo",
+  view3DModel: "Clic para expandir",
   loreModalTitle: "Archivos del Ente — Códice de Lore",
   equipmentDetails: "Detalles del Equipamiento",
   equipment: "Equipo",

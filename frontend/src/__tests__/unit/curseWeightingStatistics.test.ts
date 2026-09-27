@@ -87,15 +87,15 @@ interface CurseCase {
 }
 
 const CURSE_CASES: CurseCase[] = [
-  { mutatorId: 'no_exhaustion', targetType: 'exhaustion', weight: 0.10 },
-  { mutatorId: 'no_slowdown', targetType: 'gen_slowdown', weight: 0.10 },
-  { mutatorId: 'blindness', targetType: 'aura_reading', weight: 0.15 },
-  { mutatorId: 'solo_queue', targetType: 'altruism_healing', weight: 0.20 },
-  { mutatorId: 'meme_loadout', targetType: 'meme', weight: 4.0 },
-  { mutatorId: 'chase_only', targetType: 'chase', weight: 4.0 },
-  { mutatorId: 'negative_only', targetType: 'handicap', weight: 4.0 },
-  { mutatorId: 'hex_boon_only', targetType: 'hex', weight: 5.0 }, // hex_boon_only boosts BOTH hex and boon
-  { mutatorId: 'hex_roulette', targetType: 'hex', weight: 5.0 },
+  { mutatorId: 'no_exhaustion', targetType: 'exhaustion', weight: 0.50 },
+  { mutatorId: 'no_slowdown', targetType: 'gen_slowdown', weight: 0.50 },
+  { mutatorId: 'blindness', targetType: 'aura_reading', weight: 0.50 },
+  { mutatorId: 'solo_queue', targetType: 'altruism_healing', weight: 0.50 },
+  { mutatorId: 'meme_loadout', targetType: 'meme', weight: 1.50 },
+  { mutatorId: 'chase_only', targetType: 'chase', weight: 1.50 },
+  { mutatorId: 'negative_only', targetType: 'handicap', weight: 1.50 },
+  { mutatorId: 'hex_boon_only', targetType: 'hex', weight: 1.50 }, // hex_boon_only boosts BOTH hex and boon
+  { mutatorId: 'hex_roulette', targetType: 'hex', weight: 1.50 },
 ];
 
 for (const { mutatorId, targetType, weight } of CURSE_CASES) {
@@ -124,7 +124,7 @@ for (const { mutatorId, targetType, weight } of CURSE_CASES) {
 test('hex_boon_only also boosts boon-category perks (both halves of the combined bucket), independently of hex', () => {
   const pool = buildPool('boon', 20, 80);
   const mutator = makeMutator('hex_boon_only');
-  const expected = expectedTargetRate(20, 80, 5.0);
+  const expected = expectedTargetRate(20, 80, 1.50);
   const observed = observedTargetRate(pool, mutator, (p) => p.perk_type === 'boon');
   assert.ok(Math.abs(observed - expected) <= TOLERANCE_PP, `expected ~${expected.toFixed(1)}%, observed ${observed.toFixed(1)}%`);
 });
@@ -132,7 +132,7 @@ test('hex_boon_only also boosts boon-category perks (both halves of the combined
 test('getPerkWeight treats hex_roulette identically to hex_boon_only for weighting purposes (both share the isHexOrBoonPerk branch, including boosting a boon-typed perk) -- documented explicitly so a future narrowing of hex_roulette to hex-only is a deliberate change, not a silent one', () => {
   const pool = buildPool('boon', 20, 80, 'general', 'Killer');
   const mutator = makeMutator('hex_roulette');
-  const expected = expectedTargetRate(20, 80, 5.0);
+  const expected = expectedTargetRate(20, 80, 1.50);
   const observed = observedTargetRate(pool, mutator, (p) => p.perk_type === 'boon');
   assert.ok(Math.abs(observed - expected) <= TOLERANCE_PP, `expected ~${expected.toFixed(1)}%, observed ${observed.toFixed(1)}%`);
 });

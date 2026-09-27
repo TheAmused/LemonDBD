@@ -462,9 +462,14 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               pointerEvents: isFlipped ? 'auto' : 'none',
               visibility: isFlipped ? 'visible' : 'hidden',
             }}
-            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between overflow-y-auto font-mono text-text-primary"
+            onClick={() => {
+              SmashSounds.playFlipSound();
+              startFlip();
+            }}
+            className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-text-primary cursor-pointer select-none"
           >
-            <div className="flex items-center justify-between border-b border-border-color pb-2.5 shrink-0">
+            {/* Top Bar with accessible Flip Back button */}
+            <div className="relative z-30 flex items-center justify-between pb-2.5 shrink-0 pointer-events-auto">
               <button
                 type="button"
                 onMouseDown={(e) => e.stopPropagation()}
@@ -480,145 +485,77 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>
-
-              <div className="flex items-center gap-1.5 px-2">
-                <Sparkles className="h-4 w-4 text-accent-red shrink-0" aria-hidden="true" />
-                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[170px] sm:max-w-[200px]">
-                  {character.name}
-                </h3>
-              </div>
-
-              <span
-                className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border ${isSurvivor
-                    ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
-                    : 'bg-accent-red/15 text-accent-red border-accent-red/30'
-                  }`}
-              >
-                {isSurvivor
-                  ? rawSmashDict?.filters?.survivors || character.role
-                  : rawSmashDict?.filters?.killers || character.role}
-              </span>
             </div>
 
-            <div className="space-y-2.5 my-2 flex-1 overflow-y-auto pr-1">
-              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
-                <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
-                  <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
-                  {charTitle}
+            {/* Blurred background content */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between filter blur-md opacity-25 select-none pointer-events-none overflow-hidden"
+            >
+              <div className="flex items-center justify-between border-b border-border-color pb-2.5 shrink-0">
+                <div className="w-12 h-12" />
+                <div className="flex items-center gap-1.5 px-2">
+                  <Sparkles className="h-4 w-4 text-accent-red shrink-0" aria-hidden="true" />
+                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[170px] sm:max-w-[200px]">
+                    {character.name}
+                  </h3>
+                </div>
+                <span
+                  className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border ${
+                    isSurvivor
+                      ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
+                      : 'bg-accent-red/15 text-accent-red border-accent-red/30'
+                  }`}
+                >
+                  {isSurvivor
+                    ? rawSmashDict?.filters?.survivors || character.role
+                    : rawSmashDict?.filters?.killers || character.role}
                 </span>
-                {charTagline && <p className="text-[11px] text-text-secondary italic leading-snug">{charTagline}</p>}
               </div>
 
-              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                  {rawSmashDict?.loreAndPersonality || ''}
-                </span>
-                {charBio && <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>}
-                {charQuote && (
-                  <p className="text-[11px] text-accent-red/80 italic pt-1 border-t border-border-color">{charQuote}</p>
+              <div className="space-y-2.5 my-2 flex-1 overflow-hidden pr-1">
+                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
+                    <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
+                    {charTitle}
+                  </span>
+                  {charTagline && <p className="text-[11px] text-text-secondary italic leading-snug">{charTagline}</p>}
+                </div>
+
+                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
+                    {rawSmashDict?.loreAndPersonality || ''}
+                  </span>
+                  {charBio && <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>}
+                  {charQuote && (
+                    <p className="text-[11px] text-accent-red/80 italic pt-1 border-t border-border-color">{charQuote}</p>
+                  )}
+                </div>
+
+                {charMeme && (
+                  <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-0.5">
+                    <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
+                      <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
+                      {rawSmashDict?.trialRumor || ''}
+                    </span>
+                    <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
+                  </div>
                 )}
               </div>
 
-              {charMeme && (
-                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-0.5">
-                  <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
-                    <Sparkles className="h-3 w-3 text-text-muted animate-spin" style={{ animationDuration: '6s' }} aria-hidden="true" />
-                    {rawSmashDict?.trialRumor || ''}
-                  </span>
-                  <p className="text-[11px] text-text-secondary italic leading-snug">
-                    {charMeme}
-                  </p>
-                </div>
-              )}
-
-              {(sampledGreenFlags.length > 0 || sampledRedFlags.length > 0) && (
-                <div className="grid grid-cols-1 gap-1.5">
-                  {sampledGreenFlags.length > 0 && (
-                    <div className="bg-accent-green/10 border border-accent-green/30 p-2.5 rounded-2xl space-y-0.5">
-                      <span className="flex items-center gap-1 text-xs font-black text-accent-green">
-                        <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        {rawSmashDict?.greenFlags || ''}
-                      </span>
-                      <ul className="text-xs text-accent-green/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {sampledGreenFlags.map((flag: string, idx: number) => (
-                          <li key={idx}>{flag}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {sampledRedFlags.length > 0 && (
-                    <div className="bg-accent-red/10 border border-accent-red/30 p-2.5 rounded-2xl space-y-0.5">
-                      <span className="flex items-center gap-1 text-xs font-black text-accent-red">
-                        <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
-                        {rawSmashDict?.redFlags || ''}
-                      </span>
-                      <ul className="text-xs text-accent-red/90 space-y-0.5 pl-4 list-disc font-sans">
-                        {sampledRedFlags.map((flag: string, idx: number) => (
-                          <li key={idx}>{flag}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {(profile.turn_on || dealbreaker) && (
-                <div className="grid grid-cols-2 gap-1.5 text-xs">
-                  {profile.turn_on && (
-                    <div className="bg-bg-elevated border border-border-color p-2 rounded-2xl space-y-0.5">
-                      <span className="font-bold text-accent-red uppercase text-[10px]">
-                        {rawSmashDict?.turnOn || ''}
-                      </span>
-                      <p className="text-text-secondary font-medium text-[11px] leading-tight font-sans">{profile.turn_on}</p>
-                    </div>
-                  )}
-                  {dealbreaker && (
-                    <div className="bg-bg-elevated border border-border-color p-2 rounded-2xl space-y-0.5">
-                      <span className="font-bold text-accent-amber uppercase text-[10px]">
-                        {rawSmashDict?.dealbreaker || ''}
-                      </span>
-                      <p className="text-text-secondary font-medium text-[11px] leading-tight font-sans">{dealbreaker}</p>
-                    </div>
-                  )}
-                </div>
-              )}
+              <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0">
+                <div className="h-9 w-24 rounded-2xl bg-bg-elevated" />
+                <div className="h-9 w-24 rounded-2xl bg-accent-red" />
+              </div>
             </div>
 
-            <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0">
-              <button
-                type="button"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
-                }}
-                title={rawSmashDict?.pass || ''}
-                aria-label={rawSmashDict?.pass || ''}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-bg-elevated border-2 border-border-color text-text-secondary hover:text-text-primary hover:border-border-subtle text-xs font-bold transition-all cursor-pointer"
-              >
-                <ThumbsDown className="h-4 w-4" aria-hidden="true" />
-                <span>{rawSmashDict?.pass || ''}</span>
-              </button>
-
-              <button
-                type="button"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
-                }}
-                title={rawSmashDict?.smash || ''}
-                aria-label={rawSmashDict?.smash || ''}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-black hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              >
-                <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
-                <span>{rawSmashDict?.smash || ''}</span>
-              </button>
+            {/* Centered Soon... Overlay */}
+            <div className="relative z-20 flex-1 flex flex-col items-center justify-center pointer-events-none">
+              <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl flex flex-col items-center gap-1">
+                <span className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-text-primary uppercase drop-shadow-md">
+                  {rawSmashDict?.soon || 'Soon...'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

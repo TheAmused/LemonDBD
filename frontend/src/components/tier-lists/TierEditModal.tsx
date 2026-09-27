@@ -7,8 +7,10 @@ import { Modal } from '@/components/common/Modal';
 import type { TierDefinition } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
+import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { HEX_COLOR_PATTERN, TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { BTN_DANGER_GHOST, BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './styles';
+import { TierBadge } from './TierBadge';
 import { tierColorProps } from './tierColor';
 
 interface TierEditModalProps {
@@ -16,7 +18,7 @@ interface TierEditModalProps {
   index: number;
   tierCount: number;
   onClose: () => void;
-  onSave: (id: string, patch: { label: string; color: string }) => void;
+  onSave: (id: string, patch: { label: string; color: string; backgroundImage?: string }) => void;
   onMove: (id: string, direction: -1 | 1) => void;
   onClear: (id: string) => void;
   onDelete: (id: string) => void;
@@ -40,11 +42,13 @@ export function TierEditModal({
   const t = dict.tierLists;
   const [label, setLabel] = useState<string>('');
   const [color, setColor] = useState<string>('s');
+  const [backgroundImage, setBackgroundImage] = useState<string>('');
 
   useEffect(() => {
     if (tier) {
       setLabel(tier.label);
       setColor(tier.color);
+      setBackgroundImage(tier.backgroundImage ?? '');
     }
   }, [tier]);
 
@@ -52,7 +56,9 @@ export function TierEditModal({
 
   const trimmed = label.trim();
   const customHex = HEX_COLOR_PATTERN.test(color) ? color : '#888888';
-  const preview = tierColorProps(color);
+  const trimmedBg = backgroundImage.trim();
+  const safeBg = trimmedBg ? sanitizeImageUrl(trimmedBg) : null;
+  const bgInvalid = Boolean(trimmedBg) && !safeBg;
   const run = (fn: () => void) => () => {
     fn();
     onClose();
@@ -73,8 +79,8 @@ export function TierEditModal({
           </button>
           <button
             type="button"
-            disabled={!trimmed}
-            onClick={run(() => onSave(tier.id, { label: trimmed, color }))}
+            disabled={!trimmed || bgInvalid}
+            onClick={run(() => onSave(tier.id, { label: trimmed, color, backgroundImage: safeBg ?? undefined }))}
             className={BTN_PRIMARY}
           >
             <Check className="h-4 w-4" aria-hidden="true" />
@@ -86,18 +92,18 @@ export function TierEditModal({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (trimmed) run(() => onSave(tier.id, { label: trimmed, color }))();
+          if (trimmed && !bgInvalid) run(() => onSave(tier.id, { label: trimmed, color, backgroundImage: safeBg ?? undefined }))();
         }}
         className="flex flex-col gap-5"
       >
         <div className="flex items-end gap-3">
-          <div
-            className={cn('flex h-16 w-20 shrink-0 items-center justify-center rounded-xl text-2xl font-black', preview.className)}
-            style={preview.style}
-            aria-hidden="true"
-          >
-            <span className="line-clamp-2 break-words px-1 text-center text-lg leading-tight">{trimmed || tier.label}</span>
-          </div>
+          <TierBadge
+            label={trimmed || tier.label}
+            color={color}
+            backgroundImage={safeBg ?? undefined}
+            className="flex h-16 w-20 shrink-0 items-center justify-center rounded-xl text-2xl font-black"
+            labelClassName="line-clamp-2 break-words px-1 text-center text-lg leading-tight"
+          />
           <label className="min-w-0 flex-1">
             <span className={LABEL}>{t.tierLabel}</span>
             <input
@@ -109,6 +115,21 @@ export function TierEditModal({
             />
           </label>
         </div>
+
+        <label>
+          <span className={LABEL}>{t.tierBackgroundImage}</span>
+          <input
+            value={backgroundImage}
+            onChange={(e) => setBackgroundImage(e.target.value)}
+            placeholder={t.tierBackgroundImagePlaceholder}
+            inputMode="url"
+            aria-invalid={bgInvalid}
+            className={cn(FIELD, bgInvalid && 'border-accent-red')}
+          />
+          <span className={cn('mt-1 block text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
+            {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}
+          </span>
+        </label>
 
         <fieldset>
           <legend className={LABEL}>{t.tierColor}</legend>

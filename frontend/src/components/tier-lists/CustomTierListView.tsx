@@ -87,8 +87,9 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
         tiers: doc.tiers,
         items: doc.items ?? [],
         placements: doc.placements,
+        backgroundImage: doc.backgroundImage ?? list?.backgroundImage,
       }),
-    [list?.title, list?.description, update]
+    [list?.title, list?.description, list?.backgroundImage, update]
   );
 
   const buildExportDoc = useCallback(
@@ -101,8 +102,9 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
       tiers,
       items: list?.items ?? [],
       placements,
+      ...(list?.backgroundImage ? { backgroundImage: list.backgroundImage } : {}),
     }),
-    [list?.title, list?.description, list?.items]
+    [list?.title, list?.description, list?.items, list?.backgroundImage]
   );
 
   const onDelete = useCallback(() => {
@@ -148,7 +150,7 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
       onImport={onImport}
       onAddItem={onAddItem}
       onRemoveItem={onRemoveItem}
-      onEditDetails={(details) => update(details)}
+      editHref={`/${locale}/tier-lists/new?edit=${id}`}
       onDelete={onDelete}
       locale={locale}
       dict={dict}

@@ -35,7 +35,7 @@ import {
 } from '@/utils/tierLists/board';
 import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import type { SaveResult } from '@/utils/tierLists/storage';
-import { AddItemModal, ListDetailsModal } from './CustomListModals';
+import { AddItemModal } from './CustomListModals';
 import { TierEditModal } from './TierEditModal';
 import { TierListBoard } from './TierListBoard';
 import { TierListExportModal } from './TierListExportModal';
@@ -66,13 +66,14 @@ export interface TierListEditorProps {
   onImport: (doc: TierListDocument) => SaveResult;
   onAddItem?: (item: { name: string; image?: string }) => SaveResult;
   onRemoveItem?: (key: string) => SaveResult;
-  onEditDetails?: (details: { title: string; description: string }) => SaveResult;
+  /** Custom lists only: where "Edit details" sends them -- the creator, prefilled. */
+  editHref?: string;
   onDelete?: () => void;
   locale: string;
   dict: Dictionary;
 }
 
-type Dialog = 'reset' | 'export' | 'import' | 'addItem' | 'details' | 'delete' | null;
+type Dialog = 'reset' | 'export' | 'import' | 'addItem' | 'delete' | null;
 
 const isOnOff = (v: string): v is 'on' | 'off' => v === 'on' || v === 'off';
 
@@ -103,7 +104,7 @@ export function TierListEditor(props: TierListEditorProps) {
     onImport,
     onAddItem,
     onRemoveItem,
-    onEditDetails,
+    editHref,
     onDelete,
     locale,
     dict,
@@ -243,11 +244,11 @@ export function TierListEditor(props: TierListEditorProps) {
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t.reset}</span>
             </button>
-            {mode === 'custom' && onEditDetails && (
-              <button type="button" onClick={() => setDialog('details')} aria-label={t.editDetails} className={BTN_SECONDARY}>
+            {mode === 'custom' && editHref && (
+              <Link href={editHref} aria-label={t.editDetails} className={BTN_SECONDARY}>
                 <Pencil className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.editDetails}</span>
-              </button>
+              </Link>
             )}
             {mode === 'custom' && onDelete && (
               <button type="button" onClick={() => setDialog('delete')} aria-label={t.deleteList} className={BTN_DANGER_GHOST}>
@@ -389,16 +390,6 @@ export function TierListEditor(props: TierListEditorProps) {
         />
       )}
 
-      {onEditDetails && (
-        <ListDetailsModal
-          open={dialog === 'details'}
-          title={title}
-          description={description ?? ''}
-          onClose={() => setDialog(null)}
-          onSave={(details) => report(onEditDetails(details))}
-          dict={dict}
-        />
-      )}
     </div>
   );
 }

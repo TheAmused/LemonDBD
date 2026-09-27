@@ -20,6 +20,8 @@ export interface TierDefinition {
   id: string;
   label: string;
   color: TierColor;
+  /** An https:/data: image shown as the tier's own tag instead of its color + letter. */
+  backgroundImage?: string;
 }
 
 /** Ordered item keys per tier id. Anything not listed sits in the unranked pool. */
@@ -107,6 +109,8 @@ export interface TierListDocument {
   /** Custom lists only: the items being ranked. */
   items?: TierListDocumentItem[];
   placements: TierPlacements;
+  /** Custom lists only: an https:/data: image shown behind the list's card and page. */
+  backgroundImage?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -129,6 +133,8 @@ export interface StoredCustomList {
   placements: TierPlacements;
   createdAt: number;
   updatedAt: number;
+  /** An https:/data: image shown behind this list's card and its own page. Unset means none. */
+  backgroundImage?: string;
 }
 
 export interface TierListStoreState {

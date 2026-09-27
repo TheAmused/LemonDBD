@@ -173,7 +173,13 @@ export function sanitizeTiers(
     }
     seen.add(id);
     const fallbackColor = TIER_COLOR_TOKENS[Math.min(index, TIER_COLOR_TOKENS.length - 1)];
-    tiers.push({ id, label, color: isTierColor(entry.color) ? entry.color : fallbackColor });
+    const backgroundImage = sanitizeImageUrl(entry.backgroundImage);
+    tiers.push({
+      id,
+      label,
+      color: isTierColor(entry.color) ? entry.color : fallbackColor,
+      ...(backgroundImage ? { backgroundImage } : {}),
+    });
   }
 
   if (dropped) warnings.set('droppedTiers', dropped);
@@ -320,6 +326,10 @@ export function validateTierListDocument(input: unknown): TierListParseResult {
   const description = cleanText(input.description, TIER_LIST_LIMITS.maxDescription, counter);
   if (counter.truncated) warnings.set('truncated', counter.truncated);
 
+  // Official-list rankings (`template` set) never carry a background of
+  // their own -- only a self-contained custom list can.
+  const backgroundImage = template ? null : sanitizeImageUrl(input.backgroundImage);
+
   const doc: TierListDocument = {
     format: TIER_LIST_FORMAT,
     version: TIER_LIST_FORMAT_VERSION,
@@ -329,6 +339,7 @@ export function validateTierListDocument(input: unknown): TierListParseResult {
     tiers,
     ...(template ? {} : { items }),
     placements,
+    ...(backgroundImage ? { backgroundImage } : {}),
   };
 
   return {

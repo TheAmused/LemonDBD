@@ -88,9 +88,15 @@ interface CustomCardProps {
   locale: string;
   dict: Dictionary;
   onDelete?: (id: string, title: string) => void;
+  /**
+   * Renders the same card but as an inert `<div>` instead of a `Link` --
+   * for the creator's live "how it'll look" preview, which has no real
+   * list id to navigate to yet.
+   */
+  disabled?: boolean;
 }
 
-export function CustomTierListCard({ list, locale, dict, onDelete }: CustomCardProps) {
+export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: CustomCardProps) {
   const t = dict.tierLists;
   const ranked = Object.values(list.placements).reduce((n, keys) => n + keys.length, 0);
   const preview = list.items.filter((i) => i.image).slice(0, 5);
@@ -99,64 +105,98 @@ export function CustomTierListCard({ list, locale, dict, onDelete }: CustomCardP
   const isDuplicateCustomKind = Boolean(
     t.kinds.custom && customTitle && t.kinds.custom.trim().toLowerCase() === customTitle.trim().toLowerCase()
   );
+  const background = list.backgroundImage ? coverSrc(list.backgroundImage) : null;
+
+  const inner = (
+    <>
+      {background && (
+        // Same subtle full-bleed treatment as the "My Custom Lists" header
+        // banner (`TierListHub.tsx`) -- low-opacity, luminosity-blended, and
+        // faded back to the surface color so title/meta text stays readable
+        // over any image.
+        <>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-30 mix-blend-luminosity"
+            style={{ backgroundImage: `url('${background}')` }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-b from-bg-surface/25 via-bg-surface/85 to-bg-surface"
+          />
+        </>
+      )}
+      <div className="relative z-10 flex flex-1 flex-col gap-3">
+        <div className="flex items-center sm:items-start justify-center sm:justify-start gap-3">
+          <div className="min-w-0 flex-1 text-center sm:text-left">
+            {!isDuplicateCustomKind && (
+              <span className="text-[11px] font-black uppercase tracking-wider text-text-muted">{t.kinds.custom}</span>
+            )}
+            <h3 className="mt-0.5 text-lg font-black leading-tight text-text-primary group-hover:text-accent-red break-words">
+              {customTitle}
+            </h3>
+          </div>
+        </div>
+        {preview.length > 0 && (
+          <div className="flex justify-center sm:justify-start -space-x-2" aria-hidden="true">
+            {preview.map((item) => (
+              // eslint-disable-next-line @next/next/no-img-element -- user-supplied images
+              <img
+                key={item.id}
+                src={item.image?.startsWith('/static/') ? staticUrl(item.image) : item.image}
+                alt=""
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className="h-9 w-9 rounded-xl border-2 border-bg-surface bg-bg-elevated object-cover"
+              />
+            ))}
+          </div>
+        )}
+        <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs font-bold">
+          <span className="text-text-muted">{t.itemsCount.replace('{count}', String(list.items.length))}</span>
+          {ranked > 0 && (
+            <span className="rounded-md bg-accent-green/15 px-1.5 py-0.5 text-accent-green">
+              {t.rankedCount.replace('{count}', String(ranked))}
+            </span>
+          )}
+          {date && <span className="text-text-muted">{t.updatedOn.replace('{date}', date)}</span>}
+          <div className="sm:ml-auto flex items-center gap-2">
+            {onDelete && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onDelete(list.id, customTitle);
+                }}
+                title={t.deleteTier}
+                aria-label={`${t.deleteTier} ${customTitle}`}
+                className="p-1.5 rounded-xl border border-border-color bg-bg-surface text-text-muted hover:text-accent-red hover:border-accent-red/40 hover:bg-accent-red/10 transition-colors cursor-pointer"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
+              </button>
+            )}
+            <span className="inline-flex items-center gap-0.5 text-accent-red">
+              {t.openList}
+              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
+  if (disabled) {
+    return (
+      <div className={CARD} aria-disabled="true">
+        {inner}
+      </div>
+    );
+  }
 
   return (
     <Link href={`/${locale}/tier-lists/custom/${list.id}`} className={CARD}>
-      <div className="flex items-center sm:items-start justify-center sm:justify-start gap-3">
-        <div className="min-w-0 flex-1 text-center sm:text-left">
-          {!isDuplicateCustomKind && (
-            <span className="text-[11px] font-black uppercase tracking-wider text-text-muted">{t.kinds.custom}</span>
-          )}
-          <h3 className="mt-0.5 text-lg font-black leading-tight text-text-primary group-hover:text-accent-red break-words">
-            {customTitle}
-          </h3>
-        </div>
-      </div>
-      {preview.length > 0 && (
-        <div className="flex justify-center sm:justify-start -space-x-2" aria-hidden="true">
-          {preview.map((item) => (
-            // eslint-disable-next-line @next/next/no-img-element -- user-supplied images
-            <img
-              key={item.id}
-              src={item.image?.startsWith('/static/') ? staticUrl(item.image) : item.image}
-              alt=""
-              loading="lazy"
-              referrerPolicy="no-referrer"
-              className="h-9 w-9 rounded-xl border-2 border-bg-surface bg-bg-elevated object-cover"
-            />
-          ))}
-        </div>
-      )}
-      <div className="mt-auto flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 text-xs font-bold">
-        <span className="text-text-muted">{t.itemsCount.replace('{count}', String(list.items.length))}</span>
-        {ranked > 0 && (
-          <span className="rounded-md bg-accent-green/15 px-1.5 py-0.5 text-accent-green">
-            {t.rankedCount.replace('{count}', String(ranked))}
-          </span>
-        )}
-        {date && <span className="text-text-muted">{t.updatedOn.replace('{date}', date)}</span>}
-        <div className="sm:ml-auto flex items-center gap-2">
-          {onDelete && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onDelete(list.id, customTitle);
-              }}
-              title={t.deleteTier}
-              aria-label={`${t.deleteTier} ${customTitle}`}
-              className="p-1.5 rounded-xl border border-border-color bg-bg-surface text-text-muted hover:text-accent-red hover:border-accent-red/40 hover:bg-accent-red/10 transition-colors cursor-pointer"
-            >
-              <Trash2 className="h-4 w-4" aria-hidden="true" />
-            </button>
-          )}
-          <span className="inline-flex items-center gap-0.5 text-accent-red">
-            {t.openList}
-            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-          </span>
-        </div>
-      </div>
+      {inner}
     </Link>
   );
 }

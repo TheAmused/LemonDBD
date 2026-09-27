@@ -223,6 +223,11 @@ export default {
     itemsRequired: "Dodaj co najmniej jeden element.",
     draftRestored: "Przywrócono Twój niedokończony szkic.",
     startOver: "Zacznij od nowa",
+    official: "Opublikuj jako listę oficjalną",
+    officialHint: "Widoczna od razu dla każdego odwiedzającego, zamiast zapisana tylko w tej przeglądarce.",
+    publish: "Opublikuj",
+    publishing: "Publikowanie...",
+    publishFailed: "Nie udało się opublikować tej listy. Spróbuj ponownie.",
   },
 
   dnd: {

@@ -223,6 +223,11 @@ export default {
     itemsRequired: "Add at least one item.",
     draftRestored: "Your unfinished draft was restored.",
     startOver: "Start over",
+    official: "Publish as an official list",
+    officialHint: "Visible to every visitor immediately, instead of saved only in this browser.",
+    publish: "Publish",
+    publishing: "Publishing...",
+    publishFailed: "Couldn't publish this list. Try again.",
   },
 
   dnd: {

@@ -223,6 +223,11 @@ export default {
     itemsRequired: "項目を1つ以上追加してください。",
     draftRestored: "作成途中の下書きを復元しました。",
     startOver: "最初からやり直す",
+    official: "公式リストとして公開する",
+    officialHint: "このブラウザだけに保存するのではなく、すぐに全員に公開されます。",
+    publish: "公開",
+    publishing: "公開中...",
+    publishFailed: "このリストを公開できませんでした。もう一度お試しください。",
   },
 
   dnd: {

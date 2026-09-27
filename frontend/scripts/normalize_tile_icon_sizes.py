@@ -34,8 +34,8 @@ from pathlib import Path
 from PIL import Image
 
 CANVAS = 800
-TARGET_COVERAGE = 0.28
-MAX_BBOX_FILL = 0.82
+TARGET_COVERAGE = 0.36
+MAX_BBOX_FILL = 0.92
 
 MODES = Path(__file__).resolve().parents[1] / "public" / "images" / "streaks" / "modes"
 

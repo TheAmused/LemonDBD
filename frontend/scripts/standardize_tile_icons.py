@@ -33,6 +33,11 @@ Three problems this solves, in pipeline order:
    new ring with solid black behind the art, so every icon reads as a
    clean black-outlined badge, matching the reference perk-icon style.
 
+4. Flat gray fill where it should be white (currently just the 1/2/4-player
+   silhouettes -- see WHITEN_FLAT_GRAY_FILES). Snapped to pure black/white
+   by a luminance midpoint; not applied file-wide since some art (the lemon
+   emblem's stippled shading) uses grayscale on purpose.
+
 Idempotent: safe to run again on already-processed files (re-cropping to
 the alpha bbox before measuring means it converges, doesn't compound).
 Drop any new background-removed WebP into public/images/streaks/modes/ and
@@ -49,6 +54,14 @@ MODES = Path(__file__).resolve().parents[1] / "public" / "images" / "streaks" / 
 HOLE_ALPHA_THRESH = 40
 SMALL_HOLE_MAX_AREA = 10000
 
+# The 1/2/4-player silhouettes' stroke color came out of background removal
+# as flat mid-gray (~200/255) instead of white, unlike every other icon's
+# pure white fill. These are flat two-tone line art (no deliberate grayscale
+# shading to preserve, unlike e.g. the lemon emblem's stippled texture), so
+# it's safe to snap them to pure black/white by a luminance midpoint.
+WHITEN_FLAT_GRAY_FILES = {"gauntlet-1-player.webp", "gauntlet-2-players.webp", "gauntlet-4-players.webp"}
+WHITEN_LUMA_MIDPOINT = 128
+
 CANVAS = 800
 TARGET_COVERAGE = 0.36
 MAX_BBOX_FILL = 0.92
@@ -56,6 +69,17 @@ MAX_BBOX_FILL = 0.92
 BORDER_PX = 4
 
 FILES = sorted(MODES.glob("*.webp"))
+
+
+def whiten_flat_gray(img: Image.Image) -> None:
+    r, g, b, a = img.split()
+    gray = Image.merge("RGB", (r, g, b)).convert("L")
+    bw = gray.point(lambda v: 255 if v >= WHITEN_LUMA_MIDPOINT else 0)
+    white = Image.new("RGBA", img.size, (255, 255, 255, 255))
+    black = Image.new("RGBA", img.size, (0, 0, 0, 255))
+    quantized = Image.composite(white, black, bw)
+    quantized.putalpha(a)
+    img.paste(quantized, (0, 0))
 
 
 def fill_small_enclosed_holes(img: Image.Image) -> None:
@@ -130,6 +154,8 @@ def add_border(img: Image.Image) -> Image.Image:
 
 def process(path: Path) -> None:
     img = Image.open(path).convert("RGBA")
+    if path.name in WHITEN_FLAT_GRAY_FILES:
+        whiten_flat_gray(img)
     fill_small_enclosed_holes(img)
     img = rescale_to_canvas(img)
     img = add_border(img)

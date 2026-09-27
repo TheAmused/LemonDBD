@@ -3,13 +3,16 @@ import logging
 import threading
 import time
 from collections import defaultdict
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, g, jsonify, request
+from pydantic import ValidationError
 from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.limiter import get_client_ip
-from app.core.security import get_current_user
+from app.core.security import admin_required, get_current_user
 from app.models.smash_or_pass import Roster
+from app.schemas.smash_or_pass import SmashRosterAdminCreate
+from app.services.admin_control_service import log_admin_action
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
 
@@ -90,6 +93,62 @@ def get_rosters():
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/rosters", methods=["POST"])
+@admin_required
+def create_roster():
+    """Admin-authored official roster: the "Official?" checkbox in the roster
+    creator posts here instead of saving to this browser's localStorage. The
+    roster (and every entity in it) is live for every visitor the moment this
+    returns -- picked up by the data-driven roster picker on its next fetch.
+    """
+    body = request.get_json(silent=True) or {}
+    try:
+        payload = SmashRosterAdminCreate(**body)
+    except ValidationError as err:
+        return jsonify({"error": "Invalid roster", "details": err.errors()}), 400
+
+    try:
+        row = smash_service.create_roster(
+            name=payload.name,
+            description=payload.description,
+            cover_image_url=payload.cover_image_url,
+            theme_color=payload.theme_color,
+            category=payload.category,
+            is_nsfw=payload.is_nsfw,
+            translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
+            entities=[
+                {
+                    **e.model_dump(exclude={"translations"}, exclude_none=True),
+                    "translations": {
+                        loc: t.model_dump(exclude_none=True) for loc, t in e.translations.items()
+                    },
+                }
+                for e in payload.entities
+            ],
+        )
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    log_admin_action(
+        g.current_user.id,
+        "smash_roster.create",
+        target_type="roster",
+        target_id=row.id,
+        details={"slug": row.slug, "name": row.name, "entity_count": len(payload.entities)},
+    )
+    # `Roster.to_dict()` never carries its entities -- every other read path
+    # fetches them through a separate Entity/EntityStat select (get_feed,
+    # get_characters_with_stats) instead of eager-loading the relationship on
+    # every roster row. The creator UI wants confirmation of what it just
+    # built, so this one response assembles both by hand rather than adding
+    # entities to the model's own general-purpose `to_dict()`.
+    data = row.to_dict()
+    data["entity_count"] = len(row.entities)
+    data["character_count"] = len(row.entities)
+    data["entities"] = [e.to_dict() for e in row.entities]
+    return jsonify({"status": "success", "data": data}), 201
 
 
 @smash_or_pass_bp.route("/rosters/<slug>/feed", methods=["GET"])

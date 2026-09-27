@@ -1,9 +1,14 @@
 # backend/app/services/others/smash_or_pass_service.py
+import json
 import logging
+import re
+import uuid
+from datetime import datetime, timezone
 from typing import Any
 from sqlalchemy import case, delete, func, or_, select
 from sqlalchemy.orm import joinedload
 from app.core.extensions import db
+from app.core.redis_cache import bump_catalog_version
 from app.models.base import utcnow
 from app.models.smash_or_pass import (
     Entity,
@@ -11,9 +16,28 @@ from app.models.smash_or_pass import (
     Roster,
     Vote,
 )
-from app.seeds.smash_roster_seeder import seed_smash_rosters
+from app.seeds.smash_roster_seeder import ROSTERS_DIR, seed_smash_rosters
 
 logger = logging.getLogger(__name__)
+
+_SLUG_INVALID = re.compile(r"[^a-z0-9]+")
+
+#: Not enforced by the model (unlike `TierList.slug`'s own reserved set --
+#: there is no per-roster frontend route to collide with, since smash-or-pass
+#: is a single page with a modal roster picker), but reserved anyway as cheap
+#: insurance against a future route reusing one of these words.
+RESERVED_ROSTER_SLUGS = frozenset({"new", "create", "custom", "import", "shared"})
+
+#: `ENTITY_TEXT_FIELDS` from the seeder, in the order a seed file spells them.
+_ENTITY_PROFILE_TEXT_FIELDS = (
+    "bio",
+    "tagline",
+    "quote",
+    "meme",
+    "turn_on",
+    "dealbreaker",
+    "dating_vibe",
+)
 
 
 def _enrich_with_stat(
@@ -640,3 +664,210 @@ class SmashOrPassService:
         except Exception as e:
             db.session.rollback()
             raise e
+
+    def create_roster(
+        self,
+        *,
+        name: str,
+        description: str,
+        cover_image_url: str | None,
+        theme_color: str,
+        category: str,
+        is_nsfw: bool,
+        translations: dict[str, Any],
+        entities: list[dict[str, Any]],
+    ) -> Roster:
+        """An admin-authored official roster: the "Official?" checkbox in the
+        roster creator posts here instead of saving to this browser's
+        localStorage. Live for every visitor the moment this returns --
+        `is_active=True` from the start, picked up by the data-driven roster
+        picker on its next fetch (catalog version just bumped below).
+
+        Every entity gets a zeroed `EntityStat` row here, the same guarantee
+        `seed_smash_rosters()` makes for every seeded entity: `cast_vote` and
+        the leaderboard both assume that row exists rather than creating it
+        lazily.
+
+        Raises `ValueError` for anything the route should turn into a 400;
+        there is currently nothing at this layer that raises one (Pydantic
+        already rejected a malformed payload before this is called), but the
+        signature mirrors `create_tier_list` in case a future cross-field rule
+        needs one.
+        """
+        self.ensure_seeded()
+
+        roster_id = str(uuid.uuid4())
+        slug = self._unique_roster_slug(self._slugify(name, max_len=64, fallback="roster"))
+
+        roster = Roster(
+            id=roster_id,
+            slug=slug,
+            name=name.strip(),
+            description=description.strip(),
+            translations=translations or {},
+            cover_image_url=cover_image_url,
+            theme_color=theme_color,
+            category=category,
+            is_nsfw=is_nsfw,
+            is_active=True,
+        )
+
+        entity_rows: list[Entity] = []
+        taken_slugs: set[str] = set()
+        for idx, e in enumerate(entities):
+            # Entity.slug is unique only WITHIN a roster (see
+            # smash_roster_seeder.py's upsert lookup), never globally, and
+            # this roster has no rows yet -- so de-duplication only needs to
+            # look at the entities in THIS submission, not the database.
+            base_slug = self._slugify(e["name"], max_len=100, fallback=f"entity-{idx + 1}")
+            entity_slug = base_slug
+            n = 2
+            while entity_slug in taken_slugs:
+                entity_slug = f"{base_slug}-{n}"
+                n += 1
+            taken_slugs.add(entity_slug)
+
+            entity_rows.append(
+                Entity(
+                    id=str(uuid.uuid4()),
+                    roster_id=roster_id,
+                    slug=entity_slug,
+                    name=e["name"].strip(),
+                    real_name=e.get("real_name"),
+                    role=(e.get("role") or "Survivor").strip() or "Survivor",
+                    gender=(e.get("gender") or "female").strip() or "female",
+                    media_url=e.get("media_url"),
+                    media_type=e.get("media_type") or "image",
+                    watermark_left=e.get("watermark_left"),
+                    watermark_right=e.get("watermark_right"),
+                    archetype=e.get("archetype"),
+                    bio=e.get("bio") or "",
+                    tagline=e.get("tagline") or "",
+                    quote=e.get("quote") or "",
+                    meme=e.get("meme") or "",
+                    turn_on=e.get("turn_on") or "",
+                    dealbreaker=e.get("dealbreaker") or "",
+                    dating_vibe=e.get("dating_vibe") or "",
+                    red_flags=list(e.get("red_flags") or []),
+                    green_flags=list(e.get("green_flags") or []),
+                    chapter=e.get("chapter"),
+                    danger_level=e.get("danger_level"),
+                    chaos_score=e.get("chaos_score"),
+                    translations=e.get("translations") or {},
+                    order_index=idx,
+                    is_active=True,
+                )
+            )
+
+        try:
+            db.session.add(roster)
+            for entity in entity_rows:
+                db.session.add(entity)
+            db.session.flush()
+
+            for entity in entity_rows:
+                db.session.add(
+                    EntityStat(
+                        entity_id=entity.id,
+                        smash_count=0,
+                        pass_count=0,
+                        super_smash_count=0,
+                        chaos_rating=50.0,
+                    )
+                )
+
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            logger.error(f"Error creating admin roster '{name}': {e}")
+            raise
+
+        # Everything below is best-effort follow-up to a write that already
+        # succeeded: the roster is live and served either way, so neither
+        # step rolls it back or fails the request if it stumbles.
+        bump_catalog_version()
+        self._write_roster_seed_file(roster, entity_rows)
+        return roster
+
+    @staticmethod
+    def _slugify(text: str, *, max_len: int, fallback: str) -> str:
+        """`"Hooked on You"` -> `"hooked-on-you"` (a run of anything else
+        collapses to one hyphen), truncated to `max_len` and re-stripped so a
+        cut mid-word never leaves a trailing hyphen."""
+        slug = _SLUG_INVALID.sub("-", (text or "").strip().lower()).strip("-")
+        slug = slug[:max_len].strip("-")
+        return slug or fallback
+
+    @staticmethod
+    def _unique_roster_slug(base: str) -> str:
+        """The first `base`, `base-2`, `base-3`... that is neither reserved
+        nor already taken. A roster's slug is its stable public identity (the
+        picker, the seed filename, any future deep link), so a collision here
+        must never silently overwrite one."""
+        candidate = base
+        n = 2
+        while candidate in RESERVED_ROSTER_SLUGS or db.session.scalar(
+            select(Roster.id).where(Roster.slug == candidate)
+        ):
+            candidate = f"{base}-{n}"
+            n += 1
+        return candidate
+
+    @staticmethod
+    def _write_roster_seed_file(roster: Roster, entities: list[Entity]) -> None:
+        """Writes exactly one new `seeds/data/smash_or_pass/rosters/<slug>.json`
+        file, in the same `{"rosters": [{...}]}` shape `load_rosters_from_json_files`
+        reads back -- unlike tier lists' single shared file, this format is
+        already one-file-per-roster, so creating a roster never touches any
+        other file. A write failure (read-only filesystem, full disk) is
+        logged, not raised -- the DB rows this follows are already committed
+        and are what the running app serves.
+        """
+        roster_dict: dict[str, Any] = {
+            "slug": roster.slug,
+            "name": roster.name,
+            "description": roster.description,
+            "translations": roster.translations or {},
+            "cover_image_url": roster.cover_image_url,
+            "theme_color": roster.theme_color,
+            "category": roster.category,
+            "is_nsfw": roster.is_nsfw,
+            "is_active": roster.is_active,
+            "entities": [],
+        }
+        for e in entities:
+            entity_dict: dict[str, Any] = {
+                "slug": e.slug,
+                "name": e.name,
+                "role": e.role,
+                "gender": e.gender,
+                "media_url": e.media_url,
+                "media_type": e.media_type,
+                "archetype": e.archetype,
+            }
+            for field in _ENTITY_PROFILE_TEXT_FIELDS:
+                entity_dict[field] = getattr(e, field) or ""
+            entity_dict["red_flags"] = list(e.red_flags or [])
+            entity_dict["green_flags"] = list(e.green_flags or [])
+            entity_dict["chapter"] = e.chapter
+            entity_dict["danger_level"] = e.danger_level
+            entity_dict["chaos_score"] = e.chaos_score
+            entity_dict["translations"] = e.translations or {}
+            entity_dict["order_index"] = e.order_index
+            entity_dict["is_active"] = e.is_active
+            entity_dict["real_name"] = e.real_name
+            entity_dict["watermark_left"] = e.watermark_left
+            entity_dict["watermark_right"] = e.watermark_right
+            roster_dict["entities"].append(entity_dict)
+
+        payload = {
+            "version": "1.0",
+            "exported_at": datetime.now(timezone.utc).isoformat(),
+            "source": "LemonDBD admin roster creator",
+            "rosters": [roster_dict],
+        }
+        path = ROSTERS_DIR / f"{roster.slug}.json"
+        try:
+            path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        except OSError as err:
+            logger.error("[smash_or_pass_service] Failed to write roster seed file %s: %s", path, err)

@@ -275,8 +275,17 @@ export function TierListEditor(props: TierListEditorProps) {
       )}
 
       {selectedItem && (
-        <div aria-live="polite">
-          <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-accent-amber/40 bg-accent-amber/10 px-3 py-1.5 text-sm font-semibold text-accent-amber">
+        // `fixed` (not part of normal flow) on purpose: this used to sit
+        // inline above the board and shove every tier row down the instant
+        // an item was selected -- and back up on deselect -- a layout jump
+        // on every tap. Floating it over the page instead keeps the tap-to-
+        // select flow (and its cancel/remove actions) working exactly as
+        // before with zero effect on anything else's position.
+        <div
+          aria-live="polite"
+          className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
+        >
+          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 text-sm font-semibold text-accent-amber">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0 flex-1">{t.selectedHint.replace('{name}', selectedItem.name)}</span>
             {mode === 'custom' && onRemoveItem && (

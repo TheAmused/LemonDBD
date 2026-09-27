@@ -129,8 +129,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        icon={isLemonStage ? Sparkles : undefined}
-        iconClassName={isLemonStage ? 'bg-accent-amber/10 border-accent-amber/20 text-accent-amber' : undefined}
         title={
           isLemonStage
             ? dict?.streaks?.chooseLemonPlayers || 'How many players?'

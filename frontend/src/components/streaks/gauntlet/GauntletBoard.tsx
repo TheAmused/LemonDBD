@@ -105,13 +105,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
-
-  // TEMP: auto-open the mode modal on every visit, for reviewing the new
-  // tile artwork without clicking "Change Mode" each time. Remove once the
-  // icon review is done.
-  useEffect(() => {
-    setIsChangeModeOpen(true);
-  }, []);
   // Solo picks in two steps: click a character in the roster, then accept.
   const [pendingPick, setPendingPick] = useState<string | null>(null);
   const [celebrating, setCelebrating] = useState(false);

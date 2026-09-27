@@ -29,9 +29,10 @@ Three problems this solves, in pipeline order:
            (CANVAS * MAX_BBOX_FILL) / max(content_w, content_h),
        )
 
-3. No defining edge. Dilate the final silhouette by a few px and fill the
-   new ring with solid black behind the art, so every icon reads as a
-   clean black-outlined badge, matching the reference perk-icon style.
+3. (Disabled -- see ADD_BORDER) An optional dilated black ring behind the
+   art, for source art with no outline of its own. Off by default: every
+   current icon already has its own hand-drawn outline, and repeatedly
+   running this step compounded into a visibly thicker border each time.
 
 4. Flat gray fill where it should be white (currently just the 1/2/4-player
    silhouettes -- see WHITEN_FLAT_GRAY_FILES). Snapped to pure black/white
@@ -117,12 +118,14 @@ MATCH_HEIGHT_WIDTH_CAP = 0.95
 # geometric one like the bbox-vs-coverage sizing rule above.
 PLAYER_COUNT_SCALE_BOOST = {"gauntlet-4-players.webp": 1.15}
 
-# The crossed-swords art already has its own hand-drawn black ink outline
-# and is scaled close to the bbox cap (thin shape, tips near the canvas
-# edge), so the usual dilated border ring reads as an oversized extra
-# outline right at the blade tips instead of a thin defining edge. Skip it
-# for this file and rely on the art's own outline.
-SKIP_BORDER_FILES = {"gauntlet-original.webp"}
+# Off by request -- every icon already carries its own hand-drawn black
+# outline, and the dilated ring this used to add on top proved impossible
+# to re-run safely (see git history: repeated pipeline runs kept fattening
+# it further, since each pass dilated whatever ring the previous pass had
+# already drawn). Rely on the art's own outline instead. Kept as a toggle
+# rather than deleting add_border() in case a specific file ever needs it.
+ADD_BORDER = False
+SKIP_BORDER_FILES: set[str] = set()
 
 # Stray background specks (leftover grain from the source scan) that never
 # connect to the main artwork -- keep only the single largest opaque
@@ -338,7 +341,7 @@ def compute_match_height_fill(prepared: dict[str, Image.Image]) -> float:
 
 def process(path: Path, img: Image.Image, match_height_fill: float) -> None:
     img = rescale_to_canvas(img, path.name, match_height_fill)
-    if path.name not in SKIP_BORDER_FILES:
+    if ADD_BORDER and path.name not in SKIP_BORDER_FILES:
         img = add_border(img)
     img.save(path, format="WEBP", quality=92, method=6)
     print(f"processed {path.name}")

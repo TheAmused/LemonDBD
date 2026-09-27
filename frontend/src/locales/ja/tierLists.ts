@@ -2,8 +2,6 @@
 export default {
   pageTitle: "LemonDBD - ティアリスト",
   metaDescription: "パーク、サバイバー、キラー、マップのDead by Daylightティアリストを作成、または独自のリストをインポートしよう。",
-  hubTitle: "ティアリスト",
-  hubSubtitle: "パーク、サバイバー、キラー、マップをランク付け。好きな画像で自分だけのリストも作れます。",
   officialSection: "公式リスト",
   curatedTemplatesCount: "{count} 個の厳選テンプレート",
   curatedTemplatesSingular: "1 個の厳選テンプレート",

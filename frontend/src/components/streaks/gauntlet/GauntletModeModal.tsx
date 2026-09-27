@@ -49,6 +49,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict?: Dictionary): Challeng
     label,
     description: dict?.streaks?.gauntletLemonPlayersDesc || 'Our own version of the Gauntlet.',
     icon: Sparkles,
+    image: '/images/streaks/modes/gauntlet-lemon.webp',
     accentClassName: LEMON_ACCENT,
   };
 }
@@ -60,6 +61,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       label: dict?.streaks?.lemonSolo || 'Solo',
       description: dict?.streaks?.lemonSoloDesc || '1 player',
       icon: User,
+      image: '/images/streaks/modes/gauntlet-1-player.webp',
       accentClassName: LEMON_ACCENT,
     },
     {
@@ -67,6 +69,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       label: dict?.streaks?.lemonDuo || 'Duo',
       description: dict?.streaks?.lemonDuoDesc || '2 players',
       icon: Users,
+      image: '/images/streaks/modes/gauntlet-2-players.webp',
       accentClassName: LEMON_ACCENT,
     },
     {
@@ -74,6 +77,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       label: dict?.streaks?.lemonSquad || 'Squad',
       description: dict?.streaks?.lemonSquadDesc || '4 players',
       icon: UsersRound,
+      image: '/images/streaks/modes/gauntlet-4-players.webp',
       accentClassName: LEMON_ACCENT,
     },
   ];
@@ -108,6 +112,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       description:
         dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint every 10 wins.',
       icon: Swords,
+      image: '/images/streaks/modes/gauntlet-original.webp',
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: originalCompleted,
       completedCount: originalCompletedCount,
@@ -124,16 +129,10 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        icon={isLemonStage ? Sparkles : Swords}
-        iconClassName={
-          isLemonStage
-            ? 'bg-accent-amber/10 border-accent-amber/20 text-accent-amber'
-            : 'bg-accent-red/10 border-accent-red/20 text-accent-red'
-        }
         title={
           isLemonStage
             ? dict?.streaks?.chooseLemonPlayers || 'How many players?'
-            : dict?.streaks?.chooseGauntletMode || 'Choose a Gauntlet Mode'
+            : dict?.streaks?.chooseMode || 'Choose a mode'
         }
         intro={
           isLemonStage || !showIntro

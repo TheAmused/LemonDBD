@@ -42,6 +42,14 @@ Three problems this solves, in pipeline order:
    actual artwork) -- dropped unless a connected blob is large enough to
    plausibly be real content (see DESPECKLE_MIN_KEEP_AREA).
 
+6. The mirror of problem 1: a small enclosed pocket of leftover white
+   background (e.g. the gap between the squad icon's 4 overlapping
+   figures), too enclosed for the corner-seeded background flood fill to
+   ever reach. Cleared to transparent -- but only for the flat two-tone
+   silhouettes (WHITE_LEAK_FILES); detailed line art's dark hatching
+   naturally divides its white fill into many small enclosed slivers that
+   this would wrongly treat as leaks too.
+
 Idempotent: safe to run again on already-processed files (re-cropping to
 the alpha bbox before measuring means it converges, doesn't compound).
 Drop any new background-removed WebP into public/images/streaks/modes/ and
@@ -57,6 +65,24 @@ MODES = Path(__file__).resolve().parents[1] / "public" / "images" / "streaks" / 
 
 HOLE_ALPHA_THRESH = 40
 SMALL_HOLE_MAX_AREA = 10000
+
+# The mirror image of the above: a small enclosed pocket of near-white,
+# fully opaque pixels not touching the canvas border. Where art started
+# from a white-background source (the v3 redraws), a gap between
+# overlapping shapes (e.g. the squad icon's 4 overlapping figures) can be
+# too enclosed for the corner-seeded background flood fill to ever reach,
+# leaving a leftover white patch instead of transparency. Large enclosed
+# white regions (a dice face, a clock face) are real content and must
+# survive -- only small ones get cleared.
+WHITE_LEAK_RGB_THRESH = 180
+WHITE_LEAK_ALPHA_THRESH = 150
+SMALL_WHITE_LEAK_MAX_AREA = 10000
+# Scoped to the flat two-tone silhouettes, where a gap between overlapping
+# shapes is the only way a small enclosed white pocket can occur. Detailed
+# line art (the dice, the swords) uses fine dark hatching that naturally
+# divides its white fill into many small enclosed slivers -- running this
+# there would carve chunks out of legitimate fill, not just clear leaks.
+WHITE_LEAK_FILES = {"gauntlet-1-player.webp", "gauntlet-2-players.webp", "gauntlet-4-players.webp"}
 
 # The 1/2/4-player silhouettes' stroke color came out of background removal
 # as flat mid-gray (~200/255) instead of white, unlike every other icon's
@@ -202,6 +228,42 @@ def fill_small_enclosed_holes(img: Image.Image) -> None:
                     px[cx, cy] = (0, 0, 0, 255)
 
 
+def clear_small_enclosed_white_leaks(img: Image.Image) -> None:
+    w, h = img.size
+    px = img.load()
+    visited = bytearray(w * h)
+
+    def is_white(x: int, y: int) -> bool:
+        r, g, b, a = px[x, y]
+        return a > WHITE_LEAK_ALPHA_THRESH and r > WHITE_LEAK_RGB_THRESH and g > WHITE_LEAK_RGB_THRESH and b > WHITE_LEAK_RGB_THRESH
+
+    for y in range(h):
+        for x in range(w):
+            idx = y * w + x
+            if visited[idx] or not is_white(x, y):
+                visited[idx] = 1
+                continue
+            stack = [(x, y)]
+            visited[idx] = 1
+            component: list[tuple[int, int]] = []
+            touches_border = False
+            while stack:
+                cx, cy = stack.pop()
+                component.append((cx, cy))
+                if cx == 0 or cy == 0 or cx == w - 1 or cy == h - 1:
+                    touches_border = True
+                for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                    if 0 <= nx < w and 0 <= ny < h:
+                        nidx = ny * w + nx
+                        if not visited[nidx]:
+                            visited[nidx] = 1
+                            if is_white(nx, ny):
+                                stack.append((nx, ny))
+            if not touches_border and len(component) <= SMALL_WHITE_LEAK_MAX_AREA:
+                for cx, cy in component:
+                    px[cx, cy] = (0, 0, 0, 0)
+
+
 def opaque_count(alpha: Image.Image) -> int:
     return sum(1 for v in alpha.getdata() if v > 10)
 
@@ -243,6 +305,8 @@ def prepare(path: Path) -> Image.Image:
     img = Image.open(path).convert("RGBA")
     if path.name in WHITEN_FLAT_GRAY_FILES:
         whiten_flat_gray(img)
+    if path.name in WHITE_LEAK_FILES:
+        clear_small_enclosed_white_leaks(img)
     despeckle_keep_largest(img)
     fill_small_enclosed_holes(img)
     return img

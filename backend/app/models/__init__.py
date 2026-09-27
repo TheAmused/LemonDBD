@@ -22,6 +22,7 @@ from app.models.gauntlet import (
 from app.models.map import MapRealm, MapSource, Realm
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.perk import Perk
+from app.models.tier_list import TierList
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
@@ -71,4 +72,5 @@ __all__ = [
     "AdminAuditLog",
     "SeedUpdateLog",
     "ChangelogPost",
+    "TierList",
 ]

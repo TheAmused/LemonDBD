@@ -68,52 +68,52 @@ export function isPerkBlockedByMutator(
 /**
  * Calculates the dynamic probabilistic sampling weight for a perk given an active Chaos Mutator.
  * Default base weight is 1.0.
- * Negative curses reduce perk weight (e.g. 0.1 for 90% drop rate reduction).
- * Buffs / theme curses increase perk weight (e.g. 4.0 - 5.0 for 4x - 5x boosted drop rate).
+ * Decreased probability reduces weight by 50% (0.50).
+ * Increased probability boosts weight by 50% (1.50).
  */
 export function getPerkWeight(perk: Perk, mutator?: ChaosMutator | null): number {
   if (!mutator) return 1.0;
 
   switch (mutator.id) {
     case 'blindness':
-      // Curse of Blindness: Aura reading perks drop chance reduced by 85%
-      if (isAuraPerk(perk)) return 0.15;
+      // Curse of Blindness: Aura reading perks drop chance reduced by 50%
+      if (isAuraPerk(perk)) return 0.50;
       return 1.0;
 
     case 'no_exhaustion':
-      // No Exhaustion: Exhaustion perks drop chance reduced by 90%
-      if (isExhaustionPerk(perk)) return 0.10;
+      // No Exhaustion: Exhaustion perks drop chance reduced by 50%
+      if (isExhaustionPerk(perk)) return 0.50;
       return 1.0;
 
     case 'no_slowdown':
-      // No Gen Slowdown (Killer): Regression / slowdown perks drop chance reduced by 90%
-      if (isGenRegressionPerk(perk)) return 0.10;
+      // No Gen Slowdown (Killer): Regression / slowdown perks drop chance reduced by 50%
+      if (isGenRegressionPerk(perk)) return 0.50;
       return 1.0;
 
     case 'solo_queue':
-      // Curse of Solitude: Altruism and healing perks reduced by 80%
-      if (isHealingOrAltruismPerk(perk)) return 0.20;
+      // Curse of Solitude: Altruism and healing perks reduced by 50%
+      if (isHealingOrAltruismPerk(perk)) return 0.50;
       return 1.0;
 
     case 'hex_boon_only':
     case 'hex_roulette':
-      // Totem madness: Hex and Boon perks boosted 5x
-      if (isHexOrBoonPerk(perk)) return 5.0;
+      // Totem madness: Hex and Boon perks boosted by 50%
+      if (isHexOrBoonPerk(perk)) return 1.50;
       return 1.0;
 
     case 'meme_loadout':
-      // Meme / Off-Meta: Gimmick and meme perks boosted 4x
-      if (isMemePerk(perk)) return 4.0;
+      // Meme / Off-Meta: Gimmick and meme perks boosted by 50%
+      if (isMemePerk(perk)) return 1.50;
       return 1.0;
 
     case 'chase_only':
-      // Pure Bloodlust (Killer): Chase and pallet aggression perks boosted 4x
-      if (isChasePerk(perk)) return 4.0;
+      // Pure Bloodlust (Killer): Chase and pallet aggression perks boosted by 50%
+      if (isChasePerk(perk)) return 1.50;
       return 1.0;
 
     case 'negative_only':
-      // Curse of Sacrifice / Entity: Drawback / handicap perks boosted 4x
-      if (isNegativePerk(perk)) return 4.0;
+      // Curse of Sacrifice / Entity: Drawback / handicap perks boosted by 50%
+      if (isNegativePerk(perk)) return 1.50;
       return 1.0;
 
     default:

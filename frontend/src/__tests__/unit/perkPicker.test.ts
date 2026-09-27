@@ -115,7 +115,7 @@ test('filterPerksByMutator: returns all perks unchanged when mutator is null/und
 test('getPerkWeight: assigns lower weight to exhaustion-category perks under no_exhaustion', () => {
   const exhaustionPerk = makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' });
   const standardPerk = makePerk({ name: 'Iron Will', perk_type: 'chase' });
-  assert.strictEqual(getPerkWeight(exhaustionPerk, noExhaustionMutator), 0.10);
+  assert.strictEqual(getPerkWeight(exhaustionPerk, noExhaustionMutator), 0.50);
   assert.strictEqual(getPerkWeight(standardPerk, noExhaustionMutator), 1.0);
 });
 
@@ -132,7 +132,7 @@ test('getPerkWeight: assigns lower weight to aura_reading-category perks under b
     borderColor: '',
     textColor: '',
   };
-  assert.strictEqual(getPerkWeight(auraPerk, blindnessMutator), 0.15);
+  assert.strictEqual(getPerkWeight(auraPerk, blindnessMutator), 0.50);
   assert.strictEqual(getPerkWeight(standardPerk, blindnessMutator), 1.0);
 });
 

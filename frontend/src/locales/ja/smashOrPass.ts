@@ -48,6 +48,7 @@ export default {
   candidateRankLabel: '{name} - 順位 #{rank}, Smash率: {rate}%',
   youSmashedThis: 'この候補者にSmashしました',
   flipToDatingProfile: '裏返して詳細とステータスを表示',
+  soon: '近日公開...',
   zoomFullPortrait: '全身ポートレートを拡大',
   flipBack: 'カード表面に戻る',
   loreAndPersonality: '背景と性格',

@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Heart,
   Info,
+  LayoutList,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
@@ -171,6 +172,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/characters`,
+    },
+    {
+      id: 'tier-lists',
+      label: dict?.sidebar?.tierLists || 'Tier Lists',
+      icon: LayoutList,
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
+      href: `/${currentLocale}/tier-lists`,
     },
     {
       id: 'smash-or-pass',

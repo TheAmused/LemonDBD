@@ -163,6 +163,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     from app.routes.page_streak import page_streak_bp
     from app.routes.perks import perk_service, perks_bp
     from app.routes.synergy import synergy_bp
+    from app.routes.tier_lists import tier_lists_bp
     from app.routes.users import users_bp
 
     flask_app.register_blueprint(auth_bp)
@@ -180,6 +181,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     flask_app.register_blueprint(smash_or_pass_bp, url_prefix="/api/v1/smash", name="smash_alias")
     flask_app.register_blueprint(bug_reports_bp)
     flask_app.register_blueprint(admin_control_bp)
+    flask_app.register_blueprint(tier_lists_bp)
 
 
     with flask_app.app_context():

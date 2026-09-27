@@ -48,6 +48,7 @@ export default {
   candidateRankLabel: '{name} - Pozycja #{rank}, Wskaźnik Smash: {rate}%',
   youSmashedThis: 'Zagłosowano na Smash dla tego kandydata',
   flipToDatingProfile: 'Obróć, by zobaczyć profil i statystyki',
+  soon: 'Wkrótce...',
   zoomFullPortrait: 'Powiększ portret',
   flipBack: 'Obróć z powrotem',
   loreAndPersonality: 'Profil i Osobowość',

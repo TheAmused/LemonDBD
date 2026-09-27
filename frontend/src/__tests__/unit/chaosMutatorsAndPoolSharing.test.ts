@@ -213,7 +213,7 @@ test('Mutator Application: No Exhaustion mutator reduces exhaustion perk drop ch
   }
 
   assert.ok(
-    exhaustionCountWithMutator < exhaustionCountWithoutMutator / 2,
+    exhaustionCountWithMutator < exhaustionCountWithoutMutator * 0.8,
     `Exhaustion drop count with mutator (${exhaustionCountWithMutator}) should be significantly lower than without mutator (${exhaustionCountWithoutMutator})`
   );
   assert.strictEqual(isPerkBlockedByMutator(exhaustionPerk, noExhaustionMutator), true);
@@ -250,7 +250,7 @@ test('Mutator Application: Blindness mutator reduces aura perk drop chance', () 
   }
 
   assert.ok(
-    auraCountWith < auraCountWithout / 2,
+    auraCountWith < auraCountWithout * 0.8,
     `Aura drop count with blindness (${auraCountWith}) should be significantly lower than without mutator (${auraCountWithout})`
   );
 });

@@ -179,7 +179,13 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             aria-expanded={isThemeMenuOpen}
             className={`flex h-8 w-full min-w-0 items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 px-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
           >
-            <span className="shrink-0">{currentThemeOption.icon}</span>
+            {/* The stored theme is only known after mount; the server always
+                renders the "system" icon, so the client must too until then
+                (a Moon vs Laptop swap here was React hydration error #418 on
+                every fully prerendered page for dark / lemon users). */}
+            <span className="shrink-0">
+              {isMounted ? currentThemeOption.icon : THEME_OPTIONS[THEME_OPTIONS.length - 1].icon}
+            </span>
             <span className="min-w-0 truncate">{isMounted ? currentThemeOption.label : ''}</span>
           </button>
 

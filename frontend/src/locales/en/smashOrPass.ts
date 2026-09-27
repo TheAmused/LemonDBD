@@ -48,6 +48,7 @@ export default {
   candidateRankLabel: '{name} - Rank #{rank}, Smash Rate: {rate}%',
   youSmashedThis: 'You smashed this candidate',
   flipToDatingProfile: 'Flip for Character Lore & Stats',
+  soon: 'Soon...',
   zoomFullPortrait: 'Zoom Full Portrait',
   flipBack: 'Flip Back to Artwork',
   loreAndPersonality: 'Lore & Personality',

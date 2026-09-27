@@ -62,6 +62,16 @@ SMALL_HOLE_MAX_AREA = 10000
 WHITEN_FLAT_GRAY_FILES = {"gauntlet-1-player.webp", "gauntlet-2-players.webp", "gauntlet-4-players.webp"}
 WHITEN_LUMA_MIDPOINT = 128
 
+# The 1/2/4-player icons are meant to read as "a person" at a consistent
+# height, with width simply growing as more figures line up side by side.
+# Scaling them by their longest side (the general bbox-cap rule) instead
+# matches the 1-player portrait's height to the group, but the 2/4-player
+# icons are wider than tall, so their longest side is width -- leaving their
+# actual figure height noticeably shorter. Pin this trio to a shared target
+# content height instead.
+MATCH_HEIGHT_FILES = {"gauntlet-1-player.webp", "gauntlet-2-players.webp", "gauntlet-4-players.webp"}
+MATCH_HEIGHT_FILL = 0.85
+
 CANVAS = 800
 TARGET_COVERAGE = 0.36
 MAX_BBOX_FILL = 0.92
@@ -123,15 +133,18 @@ def opaque_count(alpha: Image.Image) -> int:
     return sum(1 for v in alpha.getdata() if v > 10)
 
 
-def rescale_to_canvas(img: Image.Image) -> Image.Image:
+def rescale_to_canvas(img: Image.Image, name: str) -> Image.Image:
     alpha = img.split()[-1]
     bbox = alpha.getbbox()
     content = img.crop(bbox) if bbox else img
-    area = opaque_count(alpha)
 
-    scale_by_coverage = ((TARGET_COVERAGE * CANVAS * CANVAS) / area) ** 0.5
-    scale_by_bbox_cap = (CANVAS * MAX_BBOX_FILL) / max(content.width, content.height)
-    scale = min(scale_by_coverage, scale_by_bbox_cap)
+    if name in MATCH_HEIGHT_FILES:
+        scale = (CANVAS * MATCH_HEIGHT_FILL) / content.height
+    else:
+        area = opaque_count(alpha)
+        scale_by_coverage = ((TARGET_COVERAGE * CANVAS * CANVAS) / area) ** 0.5
+        scale_by_bbox_cap = (CANVAS * MAX_BBOX_FILL) / max(content.width, content.height)
+        scale = min(scale_by_coverage, scale_by_bbox_cap)
 
     new_size = (max(1, round(content.width * scale)), max(1, round(content.height * scale)))
     resized = content.resize(new_size, Image.Resampling.LANCZOS)
@@ -157,7 +170,7 @@ def process(path: Path) -> None:
     if path.name in WHITEN_FLAT_GRAY_FILES:
         whiten_flat_gray(img)
     fill_small_enclosed_holes(img)
-    img = rescale_to_canvas(img)
+    img = rescale_to_canvas(img, path.name)
     img = add_border(img)
     img.save(path, format="WEBP", quality=92, method=6)
     print(f"processed {path.name}")

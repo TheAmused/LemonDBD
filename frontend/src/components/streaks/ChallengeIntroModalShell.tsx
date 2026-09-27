@@ -158,7 +158,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                   <img
                     src={tile.image}
                     alt=""
-                    className="h-32 w-32 sm:h-40 sm:w-40 rounded-xl object-cover shadow-sm"
+                    className="w-full max-w-[10rem] aspect-square rounded-xl object-cover shadow-sm"
                   />
                 ) : (
                   <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />

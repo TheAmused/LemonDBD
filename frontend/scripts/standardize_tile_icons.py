@@ -91,6 +91,13 @@ MATCH_HEIGHT_WIDTH_CAP = 0.90
 # geometric one like the bbox-vs-coverage sizing rule above.
 PLAYER_COUNT_SCALE_BOOST = {"gauntlet-4-players.webp": 1.15}
 
+# The crossed-swords art already has its own hand-drawn black ink outline
+# and is scaled close to the bbox cap (thin shape, tips near the canvas
+# edge), so the usual dilated border ring reads as an oversized extra
+# outline right at the blade tips instead of a thin defining edge. Skip it
+# for this file and rely on the art's own outline.
+SKIP_BORDER_FILES = {"gauntlet-original.webp"}
+
 # Stray background specks (leftover grain from the source scan) that never
 # connect to the main artwork -- keep only the single largest opaque
 # connected component per file and drop the rest.
@@ -255,7 +262,8 @@ def compute_match_height_fill(prepared: dict[str, Image.Image]) -> float:
 
 def process(path: Path, img: Image.Image, match_height_fill: float) -> None:
     img = rescale_to_canvas(img, path.name, match_height_fill)
-    img = add_border(img)
+    if path.name not in SKIP_BORDER_FILES:
+        img = add_border(img)
     img.save(path, format="WEBP", quality=92, method=6)
     print(f"processed {path.name}")
 

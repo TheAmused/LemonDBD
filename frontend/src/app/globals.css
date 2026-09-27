@@ -121,6 +121,52 @@
     --tier-ink: #141414;
   }
 
+  /* `--bg-primary` etc. are otherwise only ever set inside an explicit
+   * `.light` / `.light-lemon` / `.dark` class block, all applied client-side
+   * by next-themes. Any frame where `<html>` carries none of those classes
+   * yet -- before that script has run, or a `<html>` attribute momentarily
+   * dropped and re-applied during a same-tree client navigation -- falls
+   * through to the bare `:root` rule above, which is hardcoded to the LIGHT
+   * palette. For a user whose system/chosen theme is dark, that frame paints
+   * near-white (#eef1f4) instead of dark: the reported "white flash". This
+   * media query makes the *unclassed* default itself follow the OS color
+   * scheme (matching next-themes' own `defaultTheme="system"`), so that gap
+   * frame is dark for dark-system users instead of always-light. It sits
+   * above the explicit theme classes below, so a class the user actually
+   * picked (e.g. `.light` while the OS is dark) still wins once applied. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg-primary: #0a0a0c;
+      --bg-surface: #141418;
+      --bg-elevated: #1d1d22;
+      --border-color: #2e2e38;
+      --border-subtle: #1e1e26;
+
+      --accent-red: #ef4444;
+      --accent-red-hover: #f87171;
+      --accent-amber: #f59e0b;
+      --accent-amber-hover: #fbbf24;
+      --accent-green: #22c55e;
+      --accent-green-hover: #4ade80;
+
+      --text-primary: #f4f4f6;
+      --text-secondary: #a3a3af;
+      --text-muted: #888896;
+      --text-inverted: #ffffff;
+
+      --tier-s: #f05252;
+      --tier-a: #f7893b;
+      --tier-b: #f5b82e;
+      --tier-c: #e3d23a;
+      --tier-d: #98cf3f;
+      --tier-e: #3fc27a;
+      --tier-f: #5b9cf5;
+      --tier-neutral: #a1a1aa;
+      --tier-ink: #141414;
+    }
+  }
+
   /* A warmer, citrus-tinted alternative to the default light theme */
   .light-lemon {
     color-scheme: light;

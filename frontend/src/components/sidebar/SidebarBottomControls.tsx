@@ -80,6 +80,15 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   const [clientMounted, setClientMounted] = useState(false);
   const isMounted = propMounted ?? (propTheme !== undefined ? true : clientMounted);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  // Guards against a second locale switch landing while the first is still
+  // in flight. `[locale]/layout.tsx` sits inside the dynamic locale segment
+  // itself, so every switch re-runs the root layout on the server; stacking
+  // several of those (a user mashing through pl -> de -> es before any one
+  // lands) is the one window where the applied theme class can momentarily
+  // drop out from under a still-resolving navigation. Blocking overlap here
+  // is cheaper and more certain than trying to make every intermediate
+  // frame themed. Cleared once `pathname` reflects the new locale.
+  const [isSwitchingLang, setIsSwitchingLang] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const themeMenuRef = useRef<HTMLDivElement>(null);
@@ -124,6 +133,12 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
     setClientMounted(true);
   }, []);
 
+  // The in-flight navigation has landed once the URL reflects it; release
+  // the guard so the next switch is allowed.
+  useEffect(() => {
+    setIsSwitchingLang(false);
+  }, [pathname]);
+
   return (
     <div className="space-y-2 pt-3 mt-3 border-t border-border-color">
       {/* Language & Theme Controls */}
@@ -131,11 +146,12 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
         <div ref={langMenuRef} className="relative">
           <button
             type="button"
-            onClick={() => setIsLangMenuOpen((v) => !v)}
+            onClick={() => !isSwitchingLang && setIsLangMenuOpen((v) => !v)}
             aria-label={dict?.sidebar?.switchLanguage || 'Switch Language'}
             aria-haspopup="listbox"
             aria-expanded={isLangMenuOpen}
-            className={`flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING}`}
+            aria-disabled={isSwitchingLang}
+            className={`flex h-8 w-full items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-elevated/50 text-xs font-semibold text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer ${FOCUS_RING} ${isSwitchingLang ? 'pointer-events-none opacity-60' : ''}`}
           >
             <FlagIcon code={currentLanguage.code} />
             <span className="uppercase">{currentLanguage.code}</span>
@@ -152,7 +168,14 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                   href={redirectedPathName(lang.code)}
                   role="option"
                   aria-selected={lang.code === currentLocale}
-                  onClick={() => setIsLangMenuOpen(false)}
+                  onClick={(e) => {
+                    if (isSwitchingLang) {
+                      e.preventDefault();
+                      return;
+                    }
+                    setIsSwitchingLang(true);
+                    setIsLangMenuOpen(false);
+                  }}
                   className={
                     `flex items-center gap-2.5 px-3 py-2 text-xs font-semibold transition-colors ${FOCUS_RING} ` +
                     (lang.code === currentLocale

@@ -3,6 +3,16 @@
 
 import { TIER_LIST_LIMITS } from './constants';
 
+/** Reads a file's raw bytes back out as a `data:...;base64,...` URL, unmodified. */
+function fileToDataUrl(file: File): Promise<string | null> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null);
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
 /**
  * Turns an uploaded image into a small inline `data:` URL.
  *
@@ -12,9 +22,19 @@ import { TIER_LIST_LIMITS } from './constants';
  * PNG otherwise (keeps transparency, e.g. perk-style icons). A result still
  * over the per-image cap is retried smaller. Returns null for anything that
  * is not a decodable raster image.
+ *
+ * GIFs are the one exception: `drawImage` (below) only ever captures a
+ * canvas's first frame, so running an animated GIF through this pipeline
+ * would silently flatten it to a still. Its original bytes are kept as-is
+ * instead -- still subject to the same size cap, just not re-encoded.
  */
 export async function fileToTileImage(file: File, sizes: readonly number[] = [160, 128, 96]): Promise<string | null> {
   if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') return null;
+
+  if (file.type === 'image/gif') {
+    const url = await fileToDataUrl(file);
+    return url && url.length <= TIER_LIST_LIMITS.maxDataImageChars ? url : null;
+  }
 
   let bitmap: ImageBitmap;
   try {

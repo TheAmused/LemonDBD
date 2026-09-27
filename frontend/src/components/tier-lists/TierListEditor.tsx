@@ -7,10 +7,8 @@ import {
   ChevronLeft,
   Eye,
   EyeOff,
-  ImagePlus,
   MousePointerClick,
   Pencil,
-  Plus,
   RotateCcw,
   Share2,
   Trash2,
@@ -33,9 +31,8 @@ import {
   removeTier,
   updateTier,
 } from '@/utils/tierLists/board';
-import { TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { TIER_COLOR_TOKENS } from '@/utils/tierLists/constants';
 import type { SaveResult } from '@/utils/tierLists/storage';
-import { AddItemModal } from './CustomListModals';
 import { TierEditModal } from './TierEditModal';
 import { TierListBoard } from './TierListBoard';
 import { TierListExportModal } from './TierListExportModal';
@@ -64,7 +61,6 @@ export interface TierListEditorProps {
   buildExportDoc: (tiers: TierDefinition[], placements: TierPlacements) => TierListDocument;
   importTarget: ImportTarget;
   onImport: (doc: TierListDocument) => SaveResult;
-  onAddItem?: (item: { name: string; image?: string }) => SaveResult;
   onRemoveItem?: (key: string) => SaveResult;
   /** Custom lists only: where "Edit details" sends them -- the creator, prefilled. */
   editHref?: string;
@@ -73,7 +69,7 @@ export interface TierListEditorProps {
   dict: Dictionary;
 }
 
-type Dialog = 'reset' | 'export' | 'import' | 'addItem' | 'delete' | null;
+type Dialog = 'reset' | 'export' | 'import' | 'delete' | null;
 
 const isOnOff = (v: string): v is 'on' | 'off' => v === 'on' || v === 'off';
 
@@ -102,7 +98,6 @@ export function TierListEditor(props: TierListEditorProps) {
     buildExportDoc,
     importTarget,
     onImport,
-    onAddItem,
     onRemoveItem,
     editHref,
     onDelete,
@@ -216,22 +211,6 @@ export function TierListEditor(props: TierListEditorProps) {
               {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
               <span className="hidden sm:inline">{showNames ? t.hideNames : t.showNames}</span>
             </button>
-            <button
-              type="button"
-              disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
-              onClick={() => applyLadder((s) => addTier(s, t.newTierLabel, nextColor))}
-              aria-label={t.addTier}
-              className={BTN_SECONDARY}
-            >
-              <Plus className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{t.addTier}</span>
-            </button>
-            {mode === 'custom' && onAddItem && (
-              <button type="button" onClick={() => setDialog('addItem')} aria-label={t.addItem} className={BTN_SECONDARY}>
-                <ImagePlus className="h-4 w-4" aria-hidden="true" />
-                <span className="hidden sm:inline">{t.addItem}</span>
-              </button>
-            )}
             <button type="button" onClick={() => setDialog('import')} aria-label={t.import} className={BTN_SECONDARY}>
               <Upload className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t.import}</span>
@@ -380,15 +359,6 @@ export function TierListEditor(props: TierListEditorProps) {
         }}
         dict={dict}
       />
-
-      {onAddItem && (
-        <AddItemModal
-          open={dialog === 'addItem'}
-          onClose={() => setDialog(null)}
-          onAdd={(item) => report(onAddItem(item))}
-          dict={dict}
-        />
-      )}
 
     </div>
   );

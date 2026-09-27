@@ -74,7 +74,7 @@ WHITEN_LUMA_MIDPOINT = 128
 # actual figure height noticeably shorter. Pin this trio to a shared target
 # content height instead.
 MATCH_HEIGHT_FILES = {"gauntlet-1-player.webp", "gauntlet-2-players.webp", "gauntlet-4-players.webp"}
-MATCH_HEIGHT_FILL = 0.85
+MATCH_HEIGHT_FILL = 0.94
 # The 2-player composition is proportionally wider than the other two (two
 # figures spread side by side vs. one, or four stacked closer together), so
 # pinning every icon in the group to MATCH_HEIGHT_FILL can push its width
@@ -82,7 +82,7 @@ MATCH_HEIGHT_FILL = 0.85
 # widest file in the group always stays within this fraction of the canvas
 # width -- computed dynamically in main() from the actual art, not
 # hardcoded, so it stays correct if the source art changes.
-MATCH_HEIGHT_WIDTH_CAP = 0.90
+MATCH_HEIGHT_WIDTH_CAP = 0.95
 # The 4-player cluster's bounding box matches the other two exactly, but
 # four thinner, overlapping figures read as visually smaller than one bold
 # portrait at the same height (less "ink" per unit area). Nudge it up a bit
@@ -104,8 +104,8 @@ SKIP_BORDER_FILES = {"gauntlet-original.webp"}
 DESPECKLE_MIN_KEEP_AREA = 800
 
 CANVAS = 800
-TARGET_COVERAGE = 0.36
-MAX_BBOX_FILL = 0.92
+TARGET_COVERAGE = 0.55
+MAX_BBOX_FILL = 0.96
 
 BORDER_PX = 4
 

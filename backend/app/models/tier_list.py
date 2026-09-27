@@ -78,8 +78,11 @@ class TierList(Base):
     description: Mapped[str] = mapped_column(Text, default="", nullable=False)
     cover_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
-    #: `[{"id": "s", "label": "S", "color": "s" | "#ff7f7f"}, ...]`, top tier
-    #: first. NULL means the frontend's default S/A/B/C/D/F ladder.
+    #: `[{"id": "s", "label": "S", "color": "s" | "#ff7f7f", "backgroundImage"?}, ...]`,
+    #: top tier first. NULL means the frontend's default S/A/B/C/D/F ladder.
+    #: `backgroundImage` (an https:/data: image) is optional and, when set,
+    #: replaces the color + letter with a picture -- see `TierBadge` and
+    #: `_localized_tiers()` below.
     tiers: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON_LIST, nullable=True)
     #: Integer ids into the table `kind` names -- restricts the pool to a
     #: subset of the catalog. NULL means the whole catalog.
@@ -165,14 +168,21 @@ class TierList(Base):
         if self.tiers is None:
             return None
         labels = _localized(self.translations, lang).get("tiers") or {}
-        return [
-            {
+        result = []
+        for t in self.tiers:
+            entry: dict[str, Any] = {
                 "id": str(t.get("id")),
                 "label": str(labels.get(str(t.get("id"))) or t.get("label") or t.get("id")),
                 "color": t.get("color"),
             }
-            for t in self.tiers
-        ]
+            # An admin-authored tier can carry its own picture instead of a
+            # color + letter (see `TierBadge` on the frontend). Optional, so a
+            # tier without one keeps the plain shape every other row has.
+            background_image = t.get("backgroundImage")
+            if background_image:
+                entry["backgroundImage"] = background_image
+            result.append(entry)
+        return result
 
     def _localized_items(self, lang: str | None) -> list[dict[str, Any]] | None:
         if self.custom_items is None:

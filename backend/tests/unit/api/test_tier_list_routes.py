@@ -3,11 +3,13 @@ import json
 from pathlib import Path
 
 import pytest
+from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import TierList
+from app.core.security import generate_token
+from app.models import TierList, User
 from app.services.db.export_import import DatabaseExportImportService
 
 SEED_FILE = Path(__file__).resolve().parents[3] / "app" / "seeds" / "data" / "content" / "tier_lists.json"
@@ -205,3 +207,151 @@ class TestTierListSeedAndImport:
         row = db_session.get(TierList, 1)
         assert row.title == "All Maps"
         assert not row.default_placements
+
+
+@pytest.mark.unit
+class TestTierListAdminCreate:
+    """POST /api/v1/tier-lists -- the "Official?" checkbox in the creator."""
+
+    @pytest.fixture
+    def admin_user(self, db_session: Session) -> User:
+        user = User(username="tl_admin", email="tl_admin@example.com", password_hash="hashed", role="admin")
+        db_session.add(user)
+        db_session.commit()
+        return user
+
+    @pytest.fixture
+    def plain_user(self, db_session: Session) -> User:
+        user = User(username="tl_user", email="tl_user@example.com", password_hash="hashed", role="user")
+        db_session.add(user)
+        db_session.commit()
+        return user
+
+    @pytest.fixture
+    def admin_headers(self, app: Flask, admin_user: User) -> dict[str, str]:
+        with app.app_context():
+            token = generate_token(admin_user.id, role="admin")
+        return {"Authorization": f"Bearer {token}"}
+
+    @pytest.fixture
+    def user_headers(self, app: Flask, plain_user: User) -> dict[str, str]:
+        with app.app_context():
+            token = generate_token(plain_user.id, role="user")
+        return {"Authorization": f"Bearer {token}"}
+
+    @pytest.fixture(autouse=True)
+    def _seed_file_sandbox(self, tmp_path, monkeypatch):
+        """`create_tier_list` rewrites the real seed file on disk (see
+        `_rewrite_seed_file`) -- point it at a throwaway directory for every
+        test in this class so a run can never touch the repo's actual
+        content, no matter how the test ends."""
+        (tmp_path / "content").mkdir()
+        monkeypatch.setattr("app.seeds.static_db_seeder.SEEDS_DATA_DIR", tmp_path)
+        self.seed_path = tmp_path / "content" / "tier_lists.json"
+
+    @staticmethod
+    def _payload(**overrides) -> dict:
+        payload = {
+            "title": "Best Chase Music",
+            "description": "Rank the chase themes",
+            "tiers": [
+                {"id": "s", "label": "S", "color": "s"},
+                {"id": "a", "label": "A", "color": "a"},
+            ],
+            "items": [
+                {"id": "item-1", "name": "Hex: Ruin theme", "image_url": "https://example.com/a.png"},
+                {"id": "item-2", "name": "Doctor chase"},
+            ],
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_requires_auth(self, client: FlaskClient) -> None:
+        res = client.post("/api/v1/tier-lists", json=self._payload())
+        assert res.status_code == 401
+
+    def test_requires_admin(self, client: FlaskClient, user_headers: dict[str, str]) -> None:
+        res = client.post("/api/v1/tier-lists", json=self._payload(), headers=user_headers)
+        assert res.status_code == 403
+
+    def test_creates_a_published_custom_list_visible_on_the_public_hub(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        res = client.post("/api/v1/tier-lists", json=self._payload(), headers=admin_headers)
+
+        assert res.status_code == 201
+        data = res.get_json()["data"]
+        assert data["kind"] == "custom"
+        assert data["slug"] == "best-chase-music"
+        assert data["is_featured"] is False
+        assert data["item_count"] == 2
+
+        row = db_session.scalar(select(TierList).where(TierList.slug == "best-chase-music"))
+        assert row is not None
+        assert row.is_active is True
+
+        hub = client.get("/api/v1/tier-lists")
+        assert "best-chase-music" in [r["slug"] for r in hub.get_json()["data"]]
+
+    def test_deduplicates_slug_collisions_rather_than_overwriting(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        _make(
+            db_session, id=1, slug="best-chase-music", kind="custom", title="Existing",
+            custom_items=[{"id": "x", "name": "X"}],
+        )
+
+        res = client.post("/api/v1/tier-lists", json=self._payload(), headers=admin_headers)
+
+        assert res.status_code == 201
+        assert res.get_json()["data"]["slug"] == "best-chase-music-2"
+
+    def test_rewrites_the_seed_file_with_every_row_not_just_the_new_one(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        _make(db_session, id=1, slug="maps", kind="maps", title="Maps")
+
+        client.post("/api/v1/tier-lists", json=self._payload(), headers=admin_headers)
+
+        assert self.seed_path.exists()
+        written = json.loads(self.seed_path.read_text(encoding="utf-8"))
+        assert written["target"] == "tier_lists"
+        assert {row["slug"] for row in written["tier_lists"]} == {"maps", "best-chase-music"}
+
+    def test_rejects_no_items(self, client: FlaskClient, admin_headers: dict[str, str]) -> None:
+        res = client.post("/api/v1/tier-lists", json=self._payload(items=[]), headers=admin_headers)
+        assert res.status_code == 400
+
+    def test_rejects_invalid_tier_color(self, client: FlaskClient, admin_headers: dict[str, str]) -> None:
+        res = client.post(
+            "/api/v1/tier-lists",
+            json=self._payload(tiers=[{"id": "s", "label": "S", "color": "not-a-color"}]),
+            headers=admin_headers,
+        )
+        assert res.status_code == 400
+
+    def test_drops_an_unsafe_image_url_instead_of_failing_the_whole_request(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        res = client.post(
+            "/api/v1/tier-lists",
+            json=self._payload(items=[{"id": "item-1", "name": "X", "image_url": "javascript:alert(1)"}]),
+            headers=admin_headers,
+        )
+
+        assert res.status_code == 201
+        assert res.get_json()["data"]["custom_items"][0]["image_url"] == ""
+
+    def test_tier_background_image_round_trips_through_the_api(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        res = client.post(
+            "/api/v1/tier-lists",
+            json=self._payload(
+                tiers=[{"id": "s", "label": "S", "color": "s", "backgroundImage": "https://example.com/s.png"}]
+            ),
+            headers=admin_headers,
+        )
+
+        assert res.status_code == 201
+        assert res.get_json()["data"]["tiers"][0]["backgroundImage"] == "https://example.com/s.png"

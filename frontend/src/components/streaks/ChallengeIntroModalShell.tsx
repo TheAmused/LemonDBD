@@ -30,9 +30,9 @@ export interface ChallengeIntroTile {
 export interface ChallengeIntroModalShellProps {
   isOpen: boolean;
   onClose: () => void;
-  /** Any icon component (lucide or a custom DbdIcons SVG). */
-  icon: React.ElementType;
-  iconClassName: string;
+  /** Any icon component (lucide or a custom DbdIcons SVG). Omit to show a plain text title with no icon box. */
+  icon?: React.ElementType;
+  iconClassName?: string;
   title: string;
   /** Omit to skip the explanatory intro box entirely, e.g. when a player is
    *  just switching difficulty mid-run and already knows how the mode works. */
@@ -102,9 +102,11 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                 <ChevronLeft className="w-5 h-5" />
               </button>
             )}
-            <div className={`p-2.5 border rounded-xl ${iconClassName}`}>
-              <Icon className="w-6 h-6" />
-            </div>
+            {Icon && (
+              <div className={`p-2.5 border rounded-xl ${iconClassName || ''}`}>
+                <Icon className="w-6 h-6" />
+              </div>
+            )}
             <h2 className="text-xl font-black text-text-primary tracking-tight">
               {title}
             </h2>
@@ -156,7 +158,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                   <img
                     src={tile.image}
                     alt=""
-                    className="h-10 w-10 rounded-xl object-cover shadow-sm"
+                    className="w-full max-w-[10rem] aspect-square rounded-xl object-cover shadow-sm"
                   />
                 ) : (
                   <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
@@ -172,7 +174,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               return (
                 <div
                   key={tile.value}
-                  className="flex flex-col items-center gap-2 rounded-2xl border border-border-color bg-bg-elevated/50 p-5 text-center opacity-70"
+                  className="flex flex-col items-center gap-2 rounded-2xl border border-border-color bg-bg-elevated/50 p-6 text-center opacity-70"
                 >
                   {content}
                 </div>
@@ -183,7 +185,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               <button
                 key={tile.value}
                 onClick={() => onSelectTile(tile.value)}
-                className={`group relative flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
+                className={`group relative flex flex-col items-center gap-3 rounded-2xl border p-6 sm:p-7 text-center transition-colors cursor-pointer ${tile.accentClassName} ${
                   isCurrent ? 'ring-2 ring-current ring-offset-2 ring-offset-bg-surface' : ''
                 }`}
               >

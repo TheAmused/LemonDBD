@@ -112,6 +112,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       description:
         dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint every 10 wins.',
       icon: Swords,
+      image: '/images/streaks/gauntlet-streak.jpg',
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: originalCompleted,
       completedCount: originalCompletedCount,
@@ -128,16 +129,12 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        icon={isLemonStage ? Sparkles : Swords}
-        iconClassName={
-          isLemonStage
-            ? 'bg-accent-amber/10 border-accent-amber/20 text-accent-amber'
-            : 'bg-accent-red/10 border-accent-red/20 text-accent-red'
-        }
+        icon={isLemonStage ? Sparkles : undefined}
+        iconClassName={isLemonStage ? 'bg-accent-amber/10 border-accent-amber/20 text-accent-amber' : undefined}
         title={
           isLemonStage
             ? dict?.streaks?.chooseLemonPlayers || 'How many players?'
-            : dict?.streaks?.chooseGauntletMode || 'Choose a Gauntlet Mode'
+            : dict?.streaks?.chooseMode || 'Choose a mode'
         }
         intro={
           isLemonStage || !showIntro

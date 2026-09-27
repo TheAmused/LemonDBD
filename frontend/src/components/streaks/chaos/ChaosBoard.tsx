@@ -123,13 +123,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const [isPerkPoolOpen, setIsPerkPoolOpen] = useState<boolean>(false);
   const [isChangeDifficultyOpen, setIsChangeDifficultyOpen] = useState<boolean>(false);
 
-  // TEMP: auto-open the difficulty modal on every visit, for reviewing the
-  // new tile artwork without clicking "Change Difficulty" each time. Remove
-  // once the icon review is done.
-  useEffect(() => {
-    setIsChangeDifficultyOpen(true);
-  }, []);
-
   const celebrationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const celebrate = () => {
     if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);

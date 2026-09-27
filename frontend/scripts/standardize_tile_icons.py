@@ -128,6 +128,10 @@ SKIP_BORDER_FILES = {"gauntlet-original.webp"}
 # connect to the main artwork -- keep only the single largest opaque
 # connected component per file and drop the rest.
 DESPECKLE_MIN_KEEP_AREA = 800
+# The swords' crossguards and pommels are thin, genuinely disconnected
+# pieces of real content (not dust) that can be well under the despeckle
+# threshold -- despeckling this file silently deletes chunks of the sword.
+SKIP_DESPECKLE_FILES = {"gauntlet-original.webp"}
 
 CANVAS = 800
 TARGET_COVERAGE = 0.55
@@ -307,7 +311,8 @@ def prepare(path: Path) -> Image.Image:
         whiten_flat_gray(img)
     if path.name in WHITE_LEAK_FILES:
         clear_small_enclosed_white_leaks(img)
-    despeckle_keep_largest(img)
+    if path.name not in SKIP_DESPECKLE_FILES:
+        despeckle_keep_largest(img)
     fill_small_enclosed_holes(img)
     return img
 

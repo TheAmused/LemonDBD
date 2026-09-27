@@ -38,6 +38,10 @@ Three problems this solves, in pipeline order:
    by a luminance midpoint; not applied file-wide since some art (the lemon
    emblem's stippled shading) uses grayscale on purpose.
 
+5. Stray background specks (leftover scan grain, disconnected from the
+   actual artwork) -- dropped unless a connected blob is large enough to
+   plausibly be real content (see DESPECKLE_MIN_KEEP_AREA).
+
 Idempotent: safe to run again on already-processed files (re-cropping to
 the alpha bbox before measuring means it converges, doesn't compound).
 Drop any new background-removed WebP into public/images/streaks/modes/ and
@@ -79,6 +83,18 @@ MATCH_HEIGHT_FILL = 0.85
 # width -- computed dynamically in main() from the actual art, not
 # hardcoded, so it stays correct if the source art changes.
 MATCH_HEIGHT_WIDTH_CAP = 0.90
+# The 4-player cluster's bounding box matches the other two exactly, but
+# four thinner, overlapping figures read as visually smaller than one bold
+# portrait at the same height (less "ink" per unit area). Nudge it up a bit
+# to compensate -- confirmed by eye against the other two, not derived from
+# a formula, since this is a perceptual (Gestalt) effect, not a measurable
+# geometric one like the bbox-vs-coverage sizing rule above.
+PLAYER_COUNT_SCALE_BOOST = {"gauntlet-4-players.webp": 1.15}
+
+# Stray background specks (leftover grain from the source scan) that never
+# connect to the main artwork -- keep only the single largest opaque
+# connected component per file and drop the rest.
+DESPECKLE_MIN_KEEP_AREA = 800
 
 CANVAS = 800
 TARGET_COVERAGE = 0.36
@@ -98,6 +114,48 @@ def whiten_flat_gray(img: Image.Image) -> None:
     quantized = Image.composite(white, black, bw)
     quantized.putalpha(a)
     img.paste(quantized, (0, 0))
+
+
+def despeckle_keep_largest(img: Image.Image) -> None:
+    w, h = img.size
+    alpha = img.split()[-1]
+    alpha_px = alpha.load()
+    px = img.load()
+    visited = bytearray(w * h)
+    components: list[list[tuple[int, int]]] = []
+
+    def is_opaque(x: int, y: int) -> bool:
+        return alpha_px[x, y] > 10
+
+    for y in range(h):
+        for x in range(w):
+            idx = y * w + x
+            if visited[idx] or not is_opaque(x, y):
+                visited[idx] = 1
+                continue
+            stack = [(x, y)]
+            visited[idx] = 1
+            component: list[tuple[int, int]] = []
+            while stack:
+                cx, cy = stack.pop()
+                component.append((cx, cy))
+                for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                    if 0 <= nx < w and 0 <= ny < h:
+                        nidx = ny * w + nx
+                        if not visited[nidx]:
+                            visited[nidx] = 1
+                            if is_opaque(nx, ny):
+                                stack.append((nx, ny))
+            components.append(component)
+
+    if not components:
+        return
+    largest = max(components, key=len)
+    for component in components:
+        if component is largest or len(component) >= DESPECKLE_MIN_KEEP_AREA:
+            continue
+        for cx, cy in component:
+            px[cx, cy] = (0, 0, 0, 0)
 
 
 def fill_small_enclosed_holes(img: Image.Image) -> None:
@@ -147,7 +205,8 @@ def rescale_to_canvas(img: Image.Image, name: str, match_height_fill: float) -> 
     content = img.crop(bbox) if bbox else img
 
     if name in MATCH_HEIGHT_FILES:
-        scale = (CANVAS * match_height_fill) / content.height
+        boost = PLAYER_COUNT_SCALE_BOOST.get(name, 1.0)
+        scale = (CANVAS * match_height_fill * boost) / content.height
     else:
         area = opaque_count(alpha)
         scale_by_coverage = ((TARGET_COVERAGE * CANVAS * CANVAS) / area) ** 0.5
@@ -177,6 +236,7 @@ def prepare(path: Path) -> Image.Image:
     img = Image.open(path).convert("RGBA")
     if path.name in WHITEN_FLAT_GRAY_FILES:
         whiten_flat_gray(img)
+    despeckle_keep_largest(img)
     fill_small_enclosed_holes(img)
     return img
 
@@ -187,7 +247,8 @@ def compute_match_height_fill(prepared: dict[str, Image.Image]) -> float:
         img = prepared[name]
         bbox = img.split()[-1].getbbox()
         w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-        max_fill_for_width = MATCH_HEIGHT_WIDTH_CAP * h / w
+        boost = PLAYER_COUNT_SCALE_BOOST.get(name, 1.0)
+        max_fill_for_width = (MATCH_HEIGHT_WIDTH_CAP * h / w) / boost
         fill = min(fill, max_fill_for_width)
     return fill
 

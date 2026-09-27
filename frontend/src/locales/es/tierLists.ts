@@ -223,6 +223,11 @@ export default {
     itemsRequired: "Añade al menos un elemento.",
     draftRestored: "Se ha recuperado tu borrador sin terminar.",
     startOver: "Empezar de nuevo",
+    official: "Publicar como lista oficial",
+    officialHint: "Visible para todo el mundo de inmediato, en vez de guardarse solo en este navegador.",
+    publish: "Publicar",
+    publishing: "Publicando...",
+    publishFailed: "No se pudo publicar esta lista. Inténtalo de nuevo.",
   },
 
   dnd: {

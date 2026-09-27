@@ -223,6 +223,11 @@ export default {
     itemsRequired: "Füge mindestens einen Eintrag hinzu.",
     draftRestored: "Dein unfertiger Entwurf wurde wiederhergestellt.",
     startOver: "Neu beginnen",
+    official: "Als offizielle Liste veröffentlichen",
+    officialHint: "Sofort für alle Besucher sichtbar, statt nur in diesem Browser gespeichert.",
+    publish: "Veröffentlichen",
+    publishing: "Wird veröffentlicht...",
+    publishFailed: "Diese Liste konnte nicht veröffentlicht werden. Versuch es erneut.",
   },
 
   dnd: {

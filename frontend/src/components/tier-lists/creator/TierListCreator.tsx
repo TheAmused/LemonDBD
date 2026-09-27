@@ -8,8 +8,10 @@ import { ChevronDown, ChevronLeft, History, SearchX, TriangleAlert } from 'lucid
 import { EmptyState } from '@/components/EmptyState';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
+import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
+import { apiUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
@@ -85,6 +87,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
+  const { isAdmin, token } = useAuth();
   const { state: storeState, hydrated: storeHydrated } = useTierListStore();
   const editingList = editId ? storeState.custom[editId] : undefined;
 
@@ -107,6 +110,9 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
   const [skipped, setSkipped] = useState<number>(0);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
+  const [official, setOfficial] = useState<boolean>(false);
+  const [publishing, setPublishing] = useState<boolean>(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
   const loaded = useRef<boolean>(false);
 
   useDocumentTitle(editId ? `LemonDBD - ${editingList?.title || t.untitled}` : c.pageTitle);
@@ -201,7 +207,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
     );
   }
 
-  const submit = () => {
+  const submit = async () => {
     setAttempted(true);
     if (titleMissing || itemsMissing || backgroundInvalid) return;
     const payload = {
@@ -229,6 +235,53 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       return;
     }
 
+    if (official && isAdmin) {
+      setPublishError(null);
+      setPublishing(true);
+      try {
+        const res = await fetch(apiUrl('/api/v1/tier-lists'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            title: payload.title,
+            description: payload.description,
+            tiers: payload.tiers.map((tier) => ({
+              id: tier.id,
+              label: tier.label,
+              color: tier.color,
+              ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
+            })),
+            items: payload.items.map((i) => ({
+              id: i.id,
+              name: i.name,
+              ...(i.image ? { image_url: i.image } : {}),
+            })),
+            ...(safeBackground ? { cover_image_url: safeBackground } : {}),
+          }),
+        });
+        if (!res.ok) {
+          const errorData: { error?: string } = await res.json().catch(() => ({}));
+          setPublishError(errorData.error || c.publishFailed);
+          setPublishing(false);
+          return;
+        }
+        const body: { data: { slug: string } } = await res.json();
+        try {
+          localStorage.removeItem(DRAFT_KEY);
+        } catch {
+          // ignore
+        }
+        router.push(`/${locale}/tier-lists/${body.data.slug}`);
+      } catch {
+        setPublishError(c.publishFailed);
+        setPublishing(false);
+      }
+      return;
+    }
+
     const id = createCustomListId();
     const result = saveCustomList({ id, ...payload, placements: {}, createdAt: Date.now() });
     if (!result.ok) {
@@ -249,9 +302,16 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
     setAttempted(false);
   };
 
-  const submitLabel = editId ? t.save : c.create;
+  const publishingNow = publishing && official && isAdmin && !editId;
+  const submitLabel = editId ? t.save : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
   const submitButton = (extra?: string) => (
-    <button type="button" data-tier-create="" onClick={submit} className={cn(BTN_PRIMARY, 'min-h-[48px] 2xl:min-h-[54px] text-base 2xl:text-lg', extra)}>
+    <button
+      type="button"
+      data-tier-create=""
+      onClick={submit}
+      disabled={publishingNow}
+      className={cn(BTN_PRIMARY, 'min-h-[48px] 2xl:min-h-[54px] text-base 2xl:text-lg', publishingNow && 'opacity-60 cursor-not-allowed', extra)}
+    >
       {submitLabel}
     </button>
   );
@@ -338,6 +398,20 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
                 </div>
               )}
             </label>
+            {isAdmin && !editId && (
+              <label className="md:col-span-2 flex items-start gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={official}
+                  onChange={(e) => setOfficial(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-accent-red"
+                />
+                <span>
+                  <span className={cn(LABEL, 'block')}>{c.official}</span>
+                  <span className="mt-0.5 block text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
+                </span>
+              </label>
+            )}
           </div>
         </Section>
 
@@ -377,7 +451,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
           </div>
         </Section>
 
-        <Feedback errors={errors as string[]} saveError={saveError} dict={dict} />
+        <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} dict={dict} />
 
         <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
           <button
@@ -450,14 +524,20 @@ function Section({ title, defaultOpen = true, children }: { title: string; defau
 function Feedback({
   errors,
   saveError,
+  publishError,
   dict,
 }: {
   errors: string[];
   saveError: 'quota' | 'unavailable' | null;
+  publishError?: string | null;
   dict: Dictionary;
 }) {
   const t = dict.tierLists;
-  const messages = [...errors, ...(saveError ? [saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable] : [])];
+  const messages = [
+    ...errors,
+    ...(saveError ? [saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable] : []),
+    ...(publishError ? [publishError] : []),
+  ];
   if (messages.length === 0) return null;
   return (
     <div role="alert" className="flex flex-col gap-1 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">

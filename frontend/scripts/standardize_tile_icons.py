@@ -71,6 +71,14 @@ WHITEN_LUMA_MIDPOINT = 128
 # content height instead.
 MATCH_HEIGHT_FILES = {"gauntlet-1-player.webp", "gauntlet-2-players.webp", "gauntlet-4-players.webp"}
 MATCH_HEIGHT_FILL = 0.85
+# The 2-player composition is proportionally wider than the other two (two
+# figures spread side by side vs. one, or four stacked closer together), so
+# pinning every icon in the group to MATCH_HEIGHT_FILL can push its width
+# past the canvas edge and clip it. Cap the shared height fill so the
+# widest file in the group always stays within this fraction of the canvas
+# width -- computed dynamically in main() from the actual art, not
+# hardcoded, so it stays correct if the source art changes.
+MATCH_HEIGHT_WIDTH_CAP = 0.90
 
 CANVAS = 800
 TARGET_COVERAGE = 0.36
@@ -133,13 +141,13 @@ def opaque_count(alpha: Image.Image) -> int:
     return sum(1 for v in alpha.getdata() if v > 10)
 
 
-def rescale_to_canvas(img: Image.Image, name: str) -> Image.Image:
+def rescale_to_canvas(img: Image.Image, name: str, match_height_fill: float) -> Image.Image:
     alpha = img.split()[-1]
     bbox = alpha.getbbox()
     content = img.crop(bbox) if bbox else img
 
     if name in MATCH_HEIGHT_FILES:
-        scale = (CANVAS * MATCH_HEIGHT_FILL) / content.height
+        scale = (CANVAS * match_height_fill) / content.height
     else:
         area = opaque_count(alpha)
         scale_by_coverage = ((TARGET_COVERAGE * CANVAS * CANVAS) / area) ** 0.5
@@ -165,20 +173,39 @@ def add_border(img: Image.Image) -> Image.Image:
     return out
 
 
-def process(path: Path) -> None:
+def prepare(path: Path) -> Image.Image:
     img = Image.open(path).convert("RGBA")
     if path.name in WHITEN_FLAT_GRAY_FILES:
         whiten_flat_gray(img)
     fill_small_enclosed_holes(img)
-    img = rescale_to_canvas(img, path.name)
+    return img
+
+
+def compute_match_height_fill(prepared: dict[str, Image.Image]) -> float:
+    fill = MATCH_HEIGHT_FILL
+    for name in MATCH_HEIGHT_FILES:
+        img = prepared[name]
+        bbox = img.split()[-1].getbbox()
+        w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        max_fill_for_width = MATCH_HEIGHT_WIDTH_CAP * h / w
+        fill = min(fill, max_fill_for_width)
+    return fill
+
+
+def process(path: Path, img: Image.Image, match_height_fill: float) -> None:
+    img = rescale_to_canvas(img, path.name, match_height_fill)
     img = add_border(img)
     img.save(path, format="WEBP", quality=92, method=6)
     print(f"processed {path.name}")
 
 
 def main() -> None:
-    for f in FILES:
-        process(f)
+    prepared = {f.name: prepare(f) for f in FILES}
+    match_height_fill = compute_match_height_fill(prepared)
+    print(f"match_height_fill={match_height_fill:.3f}")
+    by_name = {f.name: f for f in FILES}
+    for name, img in prepared.items():
+        process(by_name[name], img, match_height_fill)
 
 
 if __name__ == "__main__":

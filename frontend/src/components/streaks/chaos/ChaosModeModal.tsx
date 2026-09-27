@@ -3,7 +3,6 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { Flame } from 'lucide-react';
 import { Difficulty } from '@/types/chaosStreak';
 import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChaosRulesModal } from './ChaosRulesModal';
@@ -60,6 +59,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       label: dict?.streaks?.chaosMediumLabel || 'Medium',
       description: dict?.streaks?.chaosMediumDesc || 'A checkpoint every 10 wins.',
       icon: TierMediumIcon,
+      image: '/images/streaks/chaos-streak.jpg',
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'medium'),
@@ -85,9 +85,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        icon={Flame}
-        iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
-        title={dict?.streaks?.chooseDifficulty || 'Choose a difficulty'}
+        title={dict?.streaks?.chooseMode || 'Choose a mode'}
         intro={
           showIntro
             ? dict?.streaks?.chaosIntro ||

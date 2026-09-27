@@ -14,12 +14,16 @@ interface SortableTierItemProps {
   showName: boolean;
   selected: boolean;
   onSelect: (key: string) => void;
+  /** Double-click / double-tap: opens the bigger picture + name (+ description for perks) preview. */
+  onPreview: (key: string) => void;
 }
 
 /**
  * A tile wired into dnd-kit. A short tap never starts a drag (the sensors
  * need movement or a hold), so the same tile doubles as the tap-to-select
- * target for the no-drag flow.
+ * target for the no-drag flow, and a double-click/double-tap -- two taps
+ * quick enough that neither one crosses the touch sensor's hold threshold --
+ * opens the bigger-picture preview instead of starting a drag.
  */
 export const SortableTierItem = React.memo(function SortableTierItem({
   item,
@@ -27,6 +31,7 @@ export const SortableTierItem = React.memo(function SortableTierItem({
   showName,
   selected,
   onSelect,
+  onPreview,
 }: SortableTierItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: itemDndId(item.key),
@@ -44,6 +49,10 @@ export const SortableTierItem = React.memo(function SortableTierItem({
       onClick={(e) => {
         e.stopPropagation();
         onSelect(item.key);
+      }}
+      onDoubleClick={(e) => {
+        e.stopPropagation();
+        onPreview(item.key);
       }}
       {...attributes}
       {...listeners}

@@ -60,6 +60,7 @@ backend/*$py.class
 # Virtual Environments
 backend/venv/
 backend/.venv/
+backend/.venv*/
 backend/env/
 
 # Test & Coverage Reports

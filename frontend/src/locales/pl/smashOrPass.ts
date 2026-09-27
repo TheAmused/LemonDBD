@@ -58,6 +58,8 @@ export default {
   turnOn: 'Na Plus:',
   dealbreaker: 'Na Minus:',
   datingPsychology: 'Analiza Psychologiczna Randki',
+  roleAffinity: 'Balans Preferencji Ról',
+  noSmashesRecorded: 'Brak zarejestrowanych polubień',
   totalEvaluated: 'Oceniono łącznie:',
   copiedToClipboard: 'Skopiowano do schowka!',
   shareArchetype: 'Udostępnij Archetyp',

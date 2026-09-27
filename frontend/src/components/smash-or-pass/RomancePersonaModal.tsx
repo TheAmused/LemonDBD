@@ -224,6 +224,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
 
   const survivorsLabel = rawSmash?.filters?.survivors || 'Survivors';
   const killersLabel = rawSmash?.filters?.killers || 'Killers';
+  const roleAffinityLabel = rawSmash?.roleAffinity || 'Faction Affinity Balance';
+  const noSmashesRecordedLabel = rawSmash?.noSmashesRecorded || 'No smashes recorded yet';
   const datingPsychologyLabel = rawSmash?.datingPsychology || 'Dating Psychology Breakdown';
   const totalEvaluatedLabel = rawSmash?.totalEvaluated || 'Total Evaluated:';
   const candidatesLabel = rawSmash?.candidates || rawSmash?.candidatesWord || 'candidates';
@@ -525,33 +527,59 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             {/* Role Affinity Scale (Survivor vs Killer) */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-elevated border border-border-color space-y-2.5">
+            <div className="p-4 sm:p-5 rounded-2xl bg-bg-elevated border border-border-color space-y-3">
+              <div className="flex items-center justify-between pb-0.5 border-b border-border-color/40">
+                <span className="font-bold text-text-secondary uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
+                  <Compass className="h-3.5 w-3.5 text-accent-red" />
+                  {roleAffinityLabel}
+                </span>
+                {persona.totalSmashes !== undefined && (
+                  <span className="text-[10px] font-mono text-text-muted">
+                    {persona.totalSmashes > 0
+                      ? `${persona.totalSmashes} ${rawSmash?.statsDetail?.smashCount || 'smashes'}`
+                      : noSmashesRecordedLabel}
+                  </span>
+                )}
+              </div>
+
               <div className="flex justify-between items-center text-xs font-bold font-mono">
                 <span className="flex items-center gap-1.5 text-accent-green">
                   <SurvivorIcon className="h-4 w-4" aria-hidden="true" />
-                  <span>{survivorsLabel} ({persona.survivorAffinity}{percentSign})</span>
+                  <span>
+                    {survivorsLabel}
+                    {persona.smashedSurvivors !== undefined ? ` (${persona.smashedSurvivors})` : ''} ({persona.survivorAffinity}{percentSign})
+                  </span>
                 </span>
                 <span className="flex items-center gap-1.5 text-accent-red">
                   <KillerIcon className="h-4 w-4" aria-hidden="true" />
-                  <span>{killersLabel} ({persona.killerAffinity}{percentSign})</span>
+                  <span>
+                    {killersLabel}
+                    {persona.smashedKillers !== undefined ? ` (${persona.smashedKillers})` : ''} ({persona.killerAffinity}{percentSign})
+                  </span>
                 </span>
               </div>
 
               <div
-                className="h-3 w-full bg-bg-elevated rounded-full overflow-hidden flex border border-border-color shadow-inner"
+                className="h-3 w-full bg-bg-surface rounded-full overflow-hidden flex border border-border-color shadow-inner"
                 role="progressbar"
                 aria-valuenow={persona.survivorAffinity}
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <div
-                  style={{ width: `${persona.survivorAffinity}%` }}
-                  className="h-full bg-accent-green transition-all duration-700"
-                />
-                <div
-                  style={{ width: `${persona.killerAffinity}%` }}
-                  className="h-full bg-accent-red transition-all duration-700"
-                />
+                {persona.survivorAffinity === 0 && persona.killerAffinity === 0 ? (
+                  <div className="h-full w-full bg-bg-surface" />
+                ) : (
+                  <>
+                    <div
+                      style={{ width: `${persona.survivorAffinity}%` }}
+                      className="h-full bg-accent-green transition-all duration-700"
+                    />
+                    <div
+                      style={{ width: `${persona.killerAffinity}%` }}
+                      className="h-full bg-accent-red transition-all duration-700"
+                    />
+                  </>
+                )}
               </div>
             </div>
 

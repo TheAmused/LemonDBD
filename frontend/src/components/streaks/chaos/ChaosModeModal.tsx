@@ -59,7 +59,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       label: dict?.streaks?.chaosMediumLabel || 'Medium',
       description: dict?.streaks?.chaosMediumDesc || 'A checkpoint every 10 wins.',
       icon: TierMediumIcon,
-      image: '/images/streaks/chaos-streak-watermark.png',
+      image: '/images/streaks/modes/chaos-medium.webp',
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'medium'),

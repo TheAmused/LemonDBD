@@ -112,7 +112,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       description:
         dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint every 10 wins.',
       icon: Swords,
-      image: '/images/streaks/gauntlet-streak-watermark.png',
+      image: '/images/streaks/modes/gauntlet-original.webp',
       accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
       completed: originalCompleted,
       completedCount: originalCompletedCount,

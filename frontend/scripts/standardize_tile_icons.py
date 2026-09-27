@@ -297,7 +297,14 @@ def rescale_to_canvas(img: Image.Image, name: str, match_height_fill: float) -> 
 def add_border(img: Image.Image) -> Image.Image:
     alpha = img.split()[-1]
     solid_mask = alpha.point(lambda v: 255 if v > 10 else 0)
-    dilated = solid_mask.filter(ImageFilter.MaxFilter(BORDER_PX * 2 + 1))
+    # Erode by BORDER_PX first to strip off a ring this same function may
+    # already have added on a previous run, then dilate back out by the
+    # same amount. This "opening" is idempotent -- re-running it on an
+    # already-bordered file reconstructs the same ring instead of stacking
+    # another one on top (which is what plain dilation did, and why
+    # repeated pipeline runs kept fattening every icon's border).
+    core_mask = solid_mask.filter(ImageFilter.MinFilter(BORDER_PX * 2 + 1))
+    dilated = core_mask.filter(ImageFilter.MaxFilter(BORDER_PX * 2 + 1))
     black_ring = Image.new("RGBA", img.size, (0, 0, 0, 255))
     out = Image.new("RGBA", img.size, (0, 0, 0, 0))
     out.paste(black_ring, (0, 0), dilated)

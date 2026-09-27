@@ -58,6 +58,8 @@ export default {
   turnOn: 'Turn On:',
   dealbreaker: 'Dealbreaker:',
   datingPsychology: 'Dating Psychology Breakdown',
+  roleAffinity: 'Faction Affinity Balance',
+  noSmashesRecorded: 'No smashes recorded yet',
   totalEvaluated: 'Total Evaluated:',
   copiedToClipboard: 'Copied to Clipboard!',
   shareArchetype: 'Share Archetype',

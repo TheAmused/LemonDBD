@@ -58,6 +58,8 @@ export default {
   turnOn: 'Pluspunkte:',
   dealbreaker: 'Ausschlusskriterium:',
   datingPsychology: 'Dating-Psychologie-Analyse',
+  roleAffinity: 'Rollen-Affinitätsbalance',
+  noSmashesRecorded: 'Noch keine Smashes aufgezeichnet',
   totalEvaluated: 'Insgesamt bewertet:',
   copiedToClipboard: 'In die Zwischenablage kopiert!',
   shareArchetype: 'Archetyp teilen',

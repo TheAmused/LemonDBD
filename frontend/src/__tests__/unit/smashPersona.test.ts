@@ -161,9 +161,48 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     ];
     const result = calculateRomancePersona(votes, mockArchetypes);
     assert.strictEqual(result.smashRate, 0);
-    assert.strictEqual(result.killerAffinity, 50); // Default balanced fallback
-    assert.strictEqual(result.survivorAffinity, 50);
+    assert.strictEqual(result.killerAffinity, 0); // 0% affinity when 0 smashes recorded
+    assert.strictEqual(result.survivorAffinity, 0);
     assert.strictEqual(result.favoriteChar, null);
+    assert.strictEqual(result.archKey, 'fogRomantic'); // Only 2 votes, not enough to establish coldHeartedPragmatist
+  });
+
+  await t.test('properly classifies as campfireSoulmate when user smashes survivors despite low overall smash rate', () => {
+    // Exact user screenshot scenario: 17 votes, 15 passes, 2 survivor smashes (12% smash rate)
+    const votes: VoteRecord[] = [
+      ...Array(15).fill(null).map((_, i) => ({
+        character: mockEntity({ role: i % 2 === 0 ? 'Killer' : 'Survivor', slug: `pass_${i}` }),
+        vote: 'pass' as const,
+        timestamp: i,
+      })),
+      { character: mockEntity({ role: 'Survivor', name: 'Vee', slug: 'vee' }), vote: 'smash' as const, timestamp: 16 },
+      { character: mockEntity({ role: 'Survivor', name: 'Kate', slug: 'kate' }), vote: 'smash' as const, timestamp: 17 },
+    ];
+    const result = calculateRomancePersona(votes, mockArchetypes);
+    assert.strictEqual(result.archKey, 'campfireSoulmate');
+    assert.strictEqual(result.survivorAffinity, 100);
+    assert.strictEqual(result.killerAffinity, 0);
+    assert.strictEqual(result.smashRate, 12);
+  });
+
+  await t.test('normalizes role affinity based on evaluated counts per role', () => {
+    // 20 Killers evaluated (2 smashed = 10%), 2 Survivors evaluated (2 smashed = 100%)
+    const votes: VoteRecord[] = [
+      ...Array(18).fill(null).map((_, i) => ({
+        character: mockEntity({ role: 'Killer', slug: `k_pass_${i}` }),
+        vote: 'pass' as const,
+        timestamp: i,
+      })),
+      { character: mockEntity({ role: 'Killer', slug: 'k_smash_1' }), vote: 'smash' as const, timestamp: 19 },
+      { character: mockEntity({ role: 'Killer', slug: 'k_smash_2' }), vote: 'smash' as const, timestamp: 20 },
+      { character: mockEntity({ role: 'Survivor', slug: 's_smash_1' }), vote: 'smash' as const, timestamp: 21 },
+      { character: mockEntity({ role: 'Survivor', slug: 's_smash_2' }), vote: 'smash' as const, timestamp: 22 },
+    ];
+    const result = calculateRomancePersona(votes, mockArchetypes);
+    // 100% survivor rate vs 10% killer rate -> 1.0 / 1.1 = 90.9% -> 91% survivor affinity
+    assert.strictEqual(result.survivorAffinity, 91);
+    assert.strictEqual(result.killerAffinity, 9);
+    assert.strictEqual(result.archKey, 'campfireSoulmate');
   });
 });
 

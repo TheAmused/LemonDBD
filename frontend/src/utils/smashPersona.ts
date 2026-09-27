@@ -54,6 +54,11 @@ export interface RomancePersonaResult {
     media_url?: string | null;
   } | null;
   isShared?: boolean;
+  totalSmashes?: number;
+  smashedSurvivors?: number;
+  smashedKillers?: number;
+  evaluatedSurvivors?: number;
+  evaluatedKillers?: number;
 }
 
 export const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
@@ -142,28 +147,56 @@ export function calculateRomancePersona(
   const total = votes.length;
   const smashRate = Math.round((smashes.length / total) * 100);
 
+  const evaluatedKillers = votes.filter((v) => v.character?.role === 'Killer').length;
+  const evaluatedSurvivors = votes.filter((v) => v.character?.role === 'Survivor').length;
+
   const smashedKillers = smashes.filter((v) => v.character?.role === 'Killer').length;
   const smashedSurvivors = smashes.filter((v) => v.character?.role === 'Survivor').length;
   const smashedMonsters = smashes.filter((v) => v.character?.gender === 'monster_other').length;
 
-  const totalSmashedRoles = smashedKillers + smashedSurvivors;
-  const killerAffinity =
-    totalSmashedRoles > 0 ? Math.round((smashedKillers / totalSmashedRoles) * 100) : 50;
-  const survivorAffinity = 100 - killerAffinity;
+  let survivorAffinity = 0;
+  let killerAffinity = 0;
+
+  if (smashes.length > 0) {
+    if (evaluatedSurvivors > 0 && evaluatedKillers > 0) {
+      const survSmashRate = smashedSurvivors / evaluatedSurvivors;
+      const killSmashRate = smashedKillers / evaluatedKillers;
+      const sumRates = survSmashRate + killSmashRate;
+      if (sumRates > 0) {
+        survivorAffinity = Math.round((survSmashRate / sumRates) * 100);
+        killerAffinity = 100 - survivorAffinity;
+      }
+    } else if (evaluatedSurvivors > 0 && evaluatedKillers === 0) {
+      survivorAffinity = 100;
+      killerAffinity = 0;
+    } else if (evaluatedKillers > 0 && evaluatedSurvivors === 0) {
+      survivorAffinity = 0;
+      killerAffinity = 100;
+    } else {
+      const totalSmashedRoles = smashedKillers + smashedSurvivors;
+      if (totalSmashedRoles > 0) {
+        survivorAffinity = Math.round((smashedSurvivors / totalSmashedRoles) * 100);
+        killerAffinity = 100 - survivorAffinity;
+      }
+    }
+  }
 
   let archKey = 'fogRomantic';
-  if (smashedMonsters >= 2) {
+  const hasStrongMonsterAffinity =
+    smashedMonsters >= 2 && (smashes.length <= 4 || (smashedMonsters / smashes.length) >= 0.25);
+
+  if (hasStrongMonsterAffinity) {
     archKey = 'eldritchDevotee';
-  } else if (total >= 4 && smashRate <= 20) {
-    archKey = 'coldHeartedPragmatist';
-  } else if (totalSmashedRoles >= 2 && killerAffinity >= 75) {
-    archKey = 'redStainAddict';
-  } else if (totalSmashedRoles >= 2 && survivorAffinity >= 75) {
+  } else if (smashedSurvivors >= 2 && survivorAffinity >= 68) {
     archKey = 'campfireSoulmate';
-  } else if (smashRate >= 85) {
+  } else if (smashedKillers >= 2 && killerAffinity >= 68) {
+    archKey = 'redStainAddict';
+  } else if (total >= 5 && smashRate >= 80) {
     archKey = 'entitysParamour';
-  } else if (smashRate <= 20) {
+  } else if ((total >= 3 && smashes.length === 0) || (total >= 4 && smashRate <= 20)) {
     archKey = 'coldHeartedPragmatist';
+  } else {
+    archKey = 'fogRomantic';
   }
 
   const visual = ARCHETYPE_VISUALS[archKey] || ARCHETYPE_VISUALS.fogRomantic;
@@ -196,6 +229,11 @@ export function calculateRomancePersona(
     totalVotes: total,
     favoriteChar,
     isShared: false,
+    totalSmashes: smashes.length,
+    smashedSurvivors,
+    smashedKillers,
+    evaluatedSurvivors,
+    evaluatedKillers,
   };
 }
 

@@ -58,6 +58,8 @@ export default {
   turnOn: 'Puntos a favor:',
   dealbreaker: 'Puntos en contra:',
   datingPsychology: 'Análisis Psicológico de Citas',
+  roleAffinity: 'Balance de Afinidad de Roles',
+  noSmashesRecorded: 'Aún no hay smashes registrados',
   totalEvaluated: 'Evaluados en total:',
   copiedToClipboard: '¡Copiado al portapapeles!',
   shareArchetype: 'Compartir Arquetipo',

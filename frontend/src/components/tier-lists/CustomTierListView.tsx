@@ -17,8 +17,6 @@ import {
 } from '@/types/tierList';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
-import { slugifyItemId, uniqueId } from '@/utils/tierLists/codec';
-import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { documentItemsToItems } from '@/utils/tierLists/items';
 import { deleteCustomList, saveCustomList, type SaveResult } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
@@ -57,15 +55,6 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
   );
 
   const onReset = useCallback(() => update({ placements: {} }), [update]);
-
-  const onAddItem = useCallback(
-    (item: { name: string; image?: string }) => {
-      if (!list || list.items.length >= TIER_LIST_LIMITS.maxItems) return { ok: true } as SaveResult;
-      const itemId = uniqueId(slugifyItemId(item.name), new Set(list.items.map((i) => i.id)));
-      return update({ items: [...list.items, { id: itemId, ...item }] });
-    },
-    [list, update]
-  );
 
   const onRemoveItem = useCallback(
     (key: string) => {
@@ -148,7 +137,6 @@ export function CustomTierListView({ id, locale, dict }: CustomTierListViewProps
       buildExportDoc={buildExportDoc}
       importTarget={{ kind: 'custom' }}
       onImport={onImport}
-      onAddItem={onAddItem}
       onRemoveItem={onRemoveItem}
       editHref={`/${locale}/tier-lists/new?edit=${id}`}
       onDelete={onDelete}

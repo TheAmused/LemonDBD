@@ -1,9 +1,10 @@
 'use client';
 // frontend/src/components/tier-lists/creator/ItemSources.tsx
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, ClipboardPaste, Gamepad2, ImagePlus, Loader2, Plus, Search, Upload } from 'lucide-react';
 import { ToggleSwitch, type ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
@@ -36,20 +37,32 @@ interface ItemSourcesProps {
 /** The three ways into a custom list: upload pictures, paste links, or pick from the game's catalog. */
 export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesProps) {
   const c = dict.tierLists.creator;
+  const { isAdmin } = useAuth();
   const [tab, setTab] = useState<SourceTab>('links');
 
+  // Direct file upload is admin-only (guests and regular users don't get the
+  // tab at all, not just a disabled one) -- everyone else adds items by
+  // pasting a link or picking from the game's own catalog.
   const options: readonly ToggleSwitchOption<SourceTab>[] = [
-    { value: 'upload', label: c.tabUpload, icon: <Upload className="h-3.5 w-3.5" aria-hidden="true" /> },
+    ...(isAdmin
+      ? [{ value: 'upload' as const, label: c.tabUpload, icon: <Upload className="h-3.5 w-3.5" aria-hidden="true" /> }]
+      : []),
     { value: 'links', label: c.tabLinks, icon: <ClipboardPaste className="h-3.5 w-3.5" aria-hidden="true" /> },
     { value: 'catalog', label: c.tabCatalog, icon: <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" /> },
   ];
+
+  // Guards against a stale 'upload' selection if admin status changes (or
+  // isn't known yet on first render) out from under an open tab.
+  useEffect(() => {
+    if (tab === 'upload' && !isAdmin) setTab('links');
+  }, [tab, isAdmin]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="overflow-x-auto">
         <ToggleSwitch value={tab} onChange={setTab} options={options} ariaLabel={c.itemSourceAria} className="w-full min-w-max" />
       </div>
-      {tab === 'upload' && <UploadSource onAdd={onAdd} dict={dict} />}
+      {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} dict={dict} />}
       {tab === 'links' && <LinksSource onAdd={onAdd} dict={dict} />}
       {tab === 'catalog' && <CatalogSource onAdd={onAdd} existingIds={existingIds} locale={locale} dict={dict} />}
     </div>
@@ -58,15 +71,48 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
 
 // ---------------------------------------------------------------------------
 
-function UploadSource({ onAdd: _onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; dict: Dictionary }) {
+function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; dict: Dictionary }) {
   const c = dict.tierLists.creator;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState<boolean>(false);
+  const [processing, setProcessing] = useState<boolean>(false);
+  const [skipped, setSkipped] = useState<number>(0);
+
+  const handleFiles = async (fileList: FileList | null) => {
+    const files = fileList ? Array.from(fileList) : [];
+    if (files.length === 0) return;
+    setProcessing(true);
+    try {
+      const tiles = await Promise.all(files.map((file) => fileToTileImage(file)));
+      const items: IncomingItem[] = [];
+      let failed = 0;
+      tiles.forEach((image, i) => {
+        if (image) items.push({ name: nameFromFileName(files[i].name), image });
+        else failed += 1;
+      });
+      setSkipped(failed);
+      if (items.length) onAdd(items);
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-2">
       <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragging(false);
+          void handleFiles(e.dataTransfer.files);
+        }}
         className={cn(
           'flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
-          'border-border-color bg-bg-primary/20 opacity-60 cursor-not-allowed select-none'
+          dragging ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20'
         )}
       >
         <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border-color bg-bg-surface text-text-muted">
@@ -76,14 +122,37 @@ function UploadSource({ onAdd: _onAdd, dict }: { onAdd: (items: IncomingItem[]) 
           <p className="text-base font-black text-text-primary">{c.dropTitle}</p>
           <p className="mt-1 max-w-md text-xs text-text-muted">{c.dropSubtitle}</p>
         </div>
-        <button type="button" disabled className={cn(BTN_PRIMARY, 'opacity-50 cursor-not-allowed pointer-events-none')}>
-          <Upload className="h-4 w-4" aria-hidden="true" />
+        <button
+          type="button"
+          disabled={processing}
+          onClick={() => inputRef.current?.click()}
+          className={cn(BTN_PRIMARY, processing && 'cursor-wait opacity-70')}
+        >
+          {processing ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Upload className="h-4 w-4" aria-hidden="true" />}
           {c.chooseFiles}
         </button>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            void handleFiles(e.target.files);
+            e.target.value = '';
+          }}
+        />
       </div>
-      <p role="status" className="text-xs font-semibold text-accent-amber text-center">
-        {dict.modal.temporarilyDisabled}
-      </p>
+      {processing && (
+        <p role="status" className="text-xs font-semibold text-text-muted text-center">
+          {c.processing}
+        </p>
+      )}
+      {!processing && skipped > 0 && (
+        <p role="alert" className="text-xs font-semibold text-accent-red text-center">
+          {c.uploadSkipped.replace('{count}', String(skipped))}
+        </p>
+      )}
     </div>
   );
 }

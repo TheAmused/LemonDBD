@@ -75,6 +75,13 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const [rowClearedNumber, setRowClearedNumber] = useState<number | null>(null);
   const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
 
+  // TEMP: auto-open the mode modal on every visit, for reviewing the new
+  // tile artwork without clicking "Change Mode" each time. Remove once the
+  // icon review is done.
+  useEffect(() => {
+    setIsChangeModeOpen(true);
+  }, []);
+
   const isCompleted = run?.status === 'completed';
 
   const clearPick = () => {

@@ -68,11 +68,41 @@ describe('Tier lists: tiles and colors', () => {
 
   it('every token color has a literal Tailwind class backed by a --color-tier-* theme token in all 3 themes', () => {
     const css = read('app/globals.css');
+
+    // `@media (prefers-color-scheme: dark) { :root:not(.light, .light-lemon,
+    // .dark) {...} }` is a deliberate, byte-for-byte mirror of `.dark` (see
+    // the comment above it in globals.css): it only closes the FOUC gap
+    // before next-themes' script picks a real class, so it is not a fourth
+    // theme. It's stripped out before counting the three real ones, and
+    // checked separately below for staying in sync with `.dark`.
+    const mediaStart = css.indexOf('@media (prefers-color-scheme: dark)');
+    assert.ok(mediaStart >= 0, 'expected the documented OS-dark gap-frame fallback block');
+    const braceStart = css.indexOf('{', mediaStart);
+    let depth = 0;
+    let mediaEnd = braceStart;
+    for (let i = braceStart; i < css.length; i++) {
+      if (css[i] === '{') depth++;
+      else if (css[i] === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          mediaEnd = i + 1;
+          break;
+        }
+      }
+    }
+    const fallbackBlock = css.slice(mediaStart, mediaEnd);
+    const withoutFallback = css.slice(0, mediaStart) + css.slice(mediaEnd);
+
     for (const token of TIER_COLOR_TOKENS) {
       assert.equal(TIER_TOKEN_BG_CLASSES[token], `bg-tier-${token}`);
-      assert.ok(css.includes(`--color-tier-${token}: var(--tier-${token});`), `missing @theme mapping for ${token}`);
-      const definitions = css.match(new RegExp(`--tier-${token}: #[0-9a-f]{6};`, 'g')) ?? [];
+      assert.ok(withoutFallback.includes(`--color-tier-${token}: var(--tier-${token});`), `missing @theme mapping for ${token}`);
+      const definitions = withoutFallback.match(new RegExp(`--tier-${token}: #[0-9a-f]{6};`, 'g')) ?? [];
       assert.equal(definitions.length, 3, `--tier-${token} must be defined for light, light-lemon and dark`);
+
+      const darkMatch = withoutFallback.match(new RegExp(`\\.dark \\{[\\s\\S]*?--tier-${token}: (#[0-9a-f]{6});`));
+      const fallbackMatch = fallbackBlock.match(new RegExp(`--tier-${token}: (#[0-9a-f]{6});`));
+      assert.ok(darkMatch && fallbackMatch, `expected --tier-${token} in both .dark and the OS-dark fallback`);
+      assert.equal(fallbackMatch[1], darkMatch[1], `OS-dark fallback --tier-${token} has drifted from .dark`);
     }
   });
 

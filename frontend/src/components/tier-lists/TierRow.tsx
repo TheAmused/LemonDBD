@@ -9,9 +9,9 @@ import type { TierDefinition, TierItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { SortableTierItem } from './SortableTierItem';
+import { TierBadge } from './TierBadge';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
-import { tierColorProps } from './tierColor';
 
 interface TierRowProps {
   tier: TierDefinition;
@@ -42,7 +42,6 @@ export const TierRow = React.memo(function TierRow({
 }: TierRowProps) {
   const t = dict.tierLists;
   const { setNodeRef, isOver } = useDroppable({ id: containerDndId(tier.id) });
-  const color = tierColorProps(tier.color);
   const canReceiveSelection = selectedKey !== null && !keys.includes(selectedKey);
 
   return (
@@ -54,17 +53,17 @@ export const TierRow = React.memo(function TierRow({
         type="button"
         onClick={() => onEdit(tier.id)}
         aria-label={t.editTierAria.replace('{label}', tier.label)}
-        className={cn(
-          'group relative flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] items-center justify-center p-2 text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber',
-          color.className
-        )}
-        style={color.style}
+        className="group relative min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] overflow-hidden text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
       >
-        <span className="font-black leading-tight break-words text-lg sm:max-wide-2k:text-2xl wide-2k:text-4xl line-clamp-3 [overflow-wrap:anywhere]">
-          {tier.label}
-        </span>
+        <TierBadge
+          label={tier.label}
+          color={tier.color}
+          backgroundImage={tier.backgroundImage}
+          className="absolute inset-0 flex items-center justify-center p-2"
+          labelClassName="font-black leading-tight break-words text-lg sm:max-wide-2k:text-2xl wide-2k:text-4xl line-clamp-3 [overflow-wrap:anywhere]"
+        />
         <Pencil
-          className="absolute right-1.5 top-1.5 h-3.5 w-3.5 opacity-40 transition-opacity group-hover:opacity-90"
+          className="absolute right-1.5 top-1.5 z-10 h-3.5 w-3.5 opacity-40 transition-opacity group-hover:opacity-90 drop-shadow"
           aria-hidden="true"
         />
       </button>

@@ -7,10 +7,11 @@ import type { TierDefinition } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { HEX_COLOR_PATTERN, TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { slugifyItemId, uniqueId } from '@/utils/tierLists/codec';
+import { sanitizeImageUrl, slugifyItemId, uniqueId } from '@/utils/tierLists/codec';
 import { LADDER_PRESETS, type LadderPresetId } from '@/utils/tierLists/creator';
+import { TierBadge } from '../TierBadge';
 import { tierColorProps } from '../tierColor';
-import { BTN_SECONDARY } from '../styles';
+import { BTN_SECONDARY, FIELD } from '../styles';
 
 interface LadderEditorProps {
   tiers: TierDefinition[];
@@ -25,9 +26,26 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
   const t = dict.tierLists;
   const c = t.creator;
   const [paletteFor, setPaletteFor] = useState<string | null>(null);
+  // Free-typed background-image text per tier row, so a URL mid-typing isn't
+  // clobbered by the sanitized value the moment it fails to parse yet. Keyed
+  // by tier id; a row not in here just shows its saved `backgroundImage`.
+  const [bgDrafts, setBgDrafts] = useState<Record<string, string>>({});
 
   const update = (id: string, patch: Partial<TierDefinition>) =>
     onChange(tiers.map((tier) => (tier.id === id ? { ...tier, ...patch } : tier)));
+
+  const setBackgroundImage = (tier: TierDefinition, raw: string) => {
+    setBgDrafts((d) => ({ ...d, [tier.id]: raw }));
+    const trimmed = raw.trim();
+    if (!trimmed) {
+      update(tier.id, { backgroundImage: undefined });
+      return;
+    }
+    const safe = sanitizeImageUrl(trimmed);
+    if (safe) update(tier.id, { backgroundImage: safe });
+    // Invalid but non-empty: leave the saved value alone (nothing to apply
+    // yet) while the draft text keeps the input responsive to typing.
+  };
 
   const move = (index: number, dir: -1 | 1) => {
     const target = index + dir;
@@ -75,8 +93,9 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
 
       <ol className="flex flex-col gap-2">
         {tiers.map((tier, index) => {
-          const color = tierColorProps(tier.color);
           const open = paletteFor === tier.id;
+          const bgDraft = bgDrafts[tier.id] ?? tier.backgroundImage ?? '';
+          const bgInvalid = Boolean(bgDraft.trim()) && !sanitizeImageUrl(bgDraft.trim());
           return (
             <li key={tier.id} className="rounded-2xl border border-border-color bg-bg-surface p-2">
               <div className="flex items-center gap-2">
@@ -85,13 +104,15 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                   onClick={() => setPaletteFor(open ? null : tier.id)}
                   aria-expanded={open}
                   aria-label={c.tierColorAria.replace('{label}', tier.label)}
-                  className={cn(
-                    'flex h-11 w-14 shrink-0 items-center justify-center rounded-xl text-base font-black cursor-pointer',
-                    color.className
-                  )}
-                  style={color.style}
+                  className="relative h-11 w-14 shrink-0 overflow-hidden rounded-xl cursor-pointer"
                 >
-                  <span className="max-w-full truncate px-1">{tier.label || '?'}</span>
+                  <TierBadge
+                    label={tier.label || '?'}
+                    color={tier.color}
+                    backgroundImage={tier.backgroundImage}
+                    className="flex h-full w-full items-center justify-center text-base font-black"
+                    labelClassName="max-w-full truncate px-1"
+                  />
                 </button>
                 <input
                   value={tier.label}
@@ -166,6 +187,20 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                       className="h-6 w-6 cursor-pointer rounded border-0 bg-transparent p-0"
                     />
                     {t.customColor}
+                  </label>
+                  <label className="flex min-w-0 basis-full flex-col gap-1">
+                    <span className="text-xs font-bold text-text-secondary">{t.tierBackgroundImage}</span>
+                    <input
+                      value={bgDraft}
+                      onChange={(e) => setBackgroundImage(tier, e.target.value)}
+                      placeholder={t.tierBackgroundImagePlaceholder}
+                      inputMode="url"
+                      aria-invalid={bgInvalid}
+                      className={cn(FIELD, bgInvalid && 'border-accent-red')}
+                    />
+                    <span className={cn('text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
+                      {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}
+                    </span>
                   </label>
                 </div>
               )}

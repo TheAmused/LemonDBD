@@ -67,7 +67,13 @@ function readTiers(raw: unknown): TierDefinition[] | null {
   for (const t of raw.slice(0, TIER_LIST_LIMITS.maxTiers)) {
     if (!isRecord(t) || typeof t.id !== 'string' || typeof t.label !== 'string' || seen.has(t.id)) continue;
     seen.add(t.id);
-    tiers.push({ id: t.id, label: t.label.slice(0, TIER_LIST_LIMITS.maxTierLabel), color: isTierColor(t.color) ? t.color : 'neutral' });
+    const backgroundImage = sanitizeImageUrl(t.backgroundImage);
+    tiers.push({
+      id: t.id,
+      label: t.label.slice(0, TIER_LIST_LIMITS.maxTierLabel),
+      color: isTierColor(t.color) ? t.color : 'neutral',
+      ...(backgroundImage ? { backgroundImage } : {}),
+    });
   }
   return tiers.length ? tiers : null;
 }
@@ -125,6 +131,7 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
       if (!tiers) continue;
       const items = readItems(value.items);
       const itemIds = new Set(items.map((i) => i.id));
+      const backgroundImage = sanitizeImageUrl(value.backgroundImage);
       custom[id] = {
         id,
         title: typeof value.title === 'string' ? value.title : '',
@@ -134,6 +141,7 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
         placements: normalizePlacements(value.placements, tiers.map((t) => t.id), (k) => itemIds.has(k)).placements,
         createdAt: readNumber(value.createdAt, 0),
         updatedAt: readNumber(value.updatedAt, 0),
+        ...(backgroundImage ? { backgroundImage } : {}),
       };
     }
   }

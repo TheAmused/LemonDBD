@@ -4,9 +4,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronLeft, History, TriangleAlert } from 'lucide-react';
+import { ChevronDown, ChevronLeft, History, SearchX, TriangleAlert } from 'lucide-react';
+import { EmptyState } from '@/components/EmptyState';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { useTierListStore } from '@/hooks/useTierListStore';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
@@ -24,7 +27,9 @@ import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 
-/** Unfinished work survives a reload or an accidental back-navigation. */
+/** Unfinished work survives a reload or an accidental back-navigation. Only
+ * used for a brand-new list -- editing an existing one (see `editId` below)
+ * loads straight from the saved list instead, so it can't collide with this. */
 const DRAFT_KEY = 'lemondbd_tier_list_draft';
 /** Past this, a list is close to crowding out everything else in localStorage (~5 MB). */
 const STORAGE_WARN_BYTES = 2.5 * 1024 * 1024;
@@ -35,6 +40,8 @@ interface Draft {
   tiers: TierDefinition[];
   items: TierListDocumentItem[];
   preset: LadderPresetId | null;
+  /** An https:/data: image shown behind the list's card and page. Empty means none. */
+  backgroundImage: string;
 }
 
 function readDraft(): Draft | null {
@@ -53,6 +60,7 @@ function readDraft(): Draft | null {
       tiers: checked.tiers,
       items: checked.items,
       preset: (parsed.preset as LadderPresetId | null) ?? null,
+      backgroundImage: typeof parsed.backgroundImage === 'string' ? parsed.backgroundImage : '',
     };
   } catch {
     return null;
@@ -69,16 +77,27 @@ function formatBytes(bytes: number, locale: string): string {
 interface TierListCreatorProps {
   locale: string;
   dict: Dictionary;
+  /** A custom list id to edit in place, instead of building a new one. */
+  editId?: string;
 }
 
-export function TierListCreator({ locale, dict }: TierListCreatorProps) {
+export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) {
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
+  const { state: storeState, hydrated: storeHydrated } = useTierListStore();
+  const editingList = editId ? storeState.custom[editId] : undefined;
 
   const translateFeeling = useCallback((key: FeelingLabelKey) => c.feelings[key], [c.feelings]);
   const freshDraft = useCallback(
-    (): Draft => ({ title: '', description: '', tiers: buildLadder('classic', translateFeeling), items: [], preset: 'classic' }),
+    (): Draft => ({
+      title: '',
+      description: '',
+      tiers: buildLadder('classic', translateFeeling),
+      items: [],
+      preset: 'classic',
+      backgroundImage: '',
+    }),
     [translateFeeling]
   );
 
@@ -90,18 +109,26 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const loaded = useRef<boolean>(false);
 
-  // Restore after mount (localStorage is client-only), then autosave.
+  useDocumentTitle(editId ? `LemonDBD - ${editingList?.title || t.untitled}` : c.pageTitle);
+
+  // Restore after mount (localStorage is client-only), then autosave -- new
+  // lists only. Editing an existing one is seeded from the store instead
+  // (below), never through this scratch-draft key.
   useEffect(() => {
+    if (editId) {
+      loaded.current = true;
+      return;
+    }
     const saved = readDraft();
     if (saved && (saved.title || saved.items.length)) {
       setDraft(saved);
       setRestored(true);
     }
     loaded.current = true;
-  }, []);
+  }, [editId]);
 
   useEffect(() => {
-    if (!loaded.current) return;
+    if (!loaded.current || editId) return;
     const timer = window.setTimeout(() => {
       try {
         if (draft.title || draft.description || draft.items.length) localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -111,7 +138,26 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
       }
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [draft]);
+  }, [draft, editId]);
+
+  // Edit mode: once the store has hydrated, seed the draft from the saved
+  // list -- once per `editId`, so it doesn't clobber in-progress edits on
+  // every unrelated re-render (e.g. the autosave-like effects above don't
+  // apply here, but the store itself can re-emit for other reasons).
+  const editSeeded = useRef<string | null>(null);
+  useEffect(() => {
+    if (!editId || !storeHydrated || editSeeded.current === editId) return;
+    editSeeded.current = editId;
+    if (!editingList) return; // not found -- the fallback view below takes over
+    setDraft({
+      title: editingList.title,
+      description: editingList.description,
+      tiers: editingList.tiers,
+      items: editingList.items,
+      preset: null,
+      backgroundImage: editingList.backgroundImage ?? '',
+    });
+  }, [editId, storeHydrated, editingList]);
 
   const patch = (next: Partial<Draft>) => setDraft((d) => ({ ...d, ...next }));
 
@@ -133,20 +179,58 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
 
   const titleMissing = !draft.title.trim();
   const itemsMissing = draft.items.length === 0;
+  const trimmedBackground = draft.backgroundImage.trim();
+  const safeBackground = trimmedBackground ? sanitizeImageUrl(trimmedBackground) : null;
+  const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
 
-  const create = () => {
+  // Editing a list the store doesn't have (deleted, or a stale/bad link):
+  // nothing to prefill, so send them back rather than silently falling
+  // through to "create a new list" under someone else's edit link.
+  if (editId && storeHydrated && !editingList) {
+    return (
+      <div className="relative z-10 flex flex-col gap-2">
+        <Link
+          href={`/${locale}/tier-lists`}
+          className="inline-flex min-h-[44px] w-fit items-center gap-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          {t.backToHub}
+        </Link>
+        <EmptyState icon={SearchX} title={t.customNotFoundTitle} subtitle={t.customNotFoundSubtitle} />
+      </div>
+    );
+  }
+
+  const submit = () => {
     setAttempted(true);
-    if (titleMissing || itemsMissing) return;
-    const id = createCustomListId();
-    const result = saveCustomList({
-      id,
+    if (titleMissing || itemsMissing || backgroundInvalid) return;
+    const payload = {
       title: draft.title.trim().slice(0, TIER_LIST_LIMITS.maxTitle),
       description: draft.description.trim().slice(0, TIER_LIST_LIMITS.maxDescription),
       tiers: draft.tiers.map((tier) => ({ ...tier, label: tier.label.trim() || tier.id })),
       items: draft.items.map((i) => ({ ...i, name: i.name.trim() || i.id })),
-      placements: {},
-      createdAt: Date.now(),
-    });
+      ...(safeBackground ? { backgroundImage: safeBackground } : {}),
+    };
+
+    if (editId && editingList) {
+      // Editing in place: keep the id, its rankings and its creation date --
+      // only the fields the creator actually edits are replaced.
+      const result = saveCustomList({
+        id: editId,
+        ...payload,
+        placements: editingList.placements,
+        createdAt: editingList.createdAt,
+      });
+      if (!result.ok) {
+        setSaveError(result.reason);
+        return;
+      }
+      router.push(`/${locale}/tier-lists/custom/${editId}`);
+      return;
+    }
+
+    const id = createCustomListId();
+    const result = saveCustomList({ id, ...payload, placements: {}, createdAt: Date.now() });
     if (!result.ok) {
       setSaveError(result.reason);
       return;
@@ -165,13 +249,16 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
     setAttempted(false);
   };
 
-  const createButton = (extra?: string) => (
-    <button type="button" data-tier-create="" onClick={create} className={cn(BTN_PRIMARY, 'min-h-[48px] 2xl:min-h-[54px] text-base 2xl:text-lg', extra)}>
-      {c.create}
+  const submitLabel = editId ? t.save : c.create;
+  const submitButton = (extra?: string) => (
+    <button type="button" data-tier-create="" onClick={submit} className={cn(BTN_PRIMARY, 'min-h-[48px] 2xl:min-h-[54px] text-base 2xl:text-lg', extra)}>
+      {submitLabel}
     </button>
   );
 
-  const errors = attempted ? [titleMissing && c.titleRequired, itemsMissing && c.itemsRequired].filter(Boolean) : [];
+  const errors = attempted
+    ? [titleMissing && c.titleRequired, itemsMissing && c.itemsRequired, backgroundInvalid && t.invalidImage].filter(Boolean)
+    : [];
 
   return (
     <div className="relative z-10 flex flex-col gap-6">
@@ -226,6 +313,31 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
                 className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base')}
               />
             </label>
+            <label className="md:col-span-2">
+              <span className={LABEL}>{c.backgroundImageLabel}</span>
+              <input
+                value={draft.backgroundImage}
+                onChange={(e) => patch({ backgroundImage: e.target.value })}
+                placeholder={c.backgroundImagePlaceholder}
+                inputMode="url"
+                aria-invalid={attempted && backgroundInvalid}
+                className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && backgroundInvalid && 'border-accent-red')}
+              />
+              <span
+                className={cn(
+                  'mt-1 block text-xs 2xl:text-sm',
+                  attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
+                )}
+              >
+                {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
+              </span>
+              {safeBackground && (
+                <div className="mt-2 h-24 w-full max-w-sm overflow-hidden rounded-xl border border-border-color bg-bg-elevated">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
+                  <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+                </div>
+              )}
+            </label>
           </div>
         </Section>
 
@@ -275,7 +387,7 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
           >
             {c.previewHeading}
           </button>
-          {createButton('w-full sm:w-auto min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
+          {submitButton('w-full sm:w-auto min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
         </div>
       </div>
 
@@ -286,6 +398,8 @@ export function TierListCreator({ locale, dict }: TierListCreatorProps) {
         description={draft.description}
         tiers={draft.tiers}
         items={draft.items}
+        backgroundImage={safeBackground}
+        locale={locale}
         dict={dict}
       />
     </div>

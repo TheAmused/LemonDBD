@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/CustomListModals.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Check, ImagePlus, Pencil } from 'lucide-react';
+import { Check, ImagePlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
@@ -113,83 +113,7 @@ export function AddItemModal({ open, onClose, onAdd, dict }: AddItemModalProps) 
   );
 }
 
-interface ListDetailsModalProps {
-  open: boolean;
-  title: string;
-  description: string;
-  onClose: () => void;
-  onSave: (details: { title: string; description: string }) => void;
-  dict: Dictionary;
-}
-
-/** Renames a custom list and edits its description. */
-export function ListDetailsModal({ open, title, description, onClose, onSave, dict }: ListDetailsModalProps) {
-  const t = dict.tierLists;
-  const [draftTitle, setDraftTitle] = useState<string>(title);
-  const [draftDescription, setDraftDescription] = useState<string>(description);
-
-  useEffect(() => {
-    if (open) {
-      setDraftTitle(title);
-      setDraftDescription(description);
-    }
-  }, [open, title, description]);
-
-  const save = () => {
-    onSave({ title: draftTitle.trim(), description: draftDescription.trim() });
-    onClose();
-  };
-
-  return (
-    <Modal
-      isOpen={open}
-      onClose={onClose}
-      size="md"
-      title={t.detailsTitle}
-      icon={<Pencil className="h-5 w-5" aria-hidden="true" />}
-      bodyClassName="p-4 sm:p-6 font-sans"
-      footer={
-        <div className="flex w-full justify-end gap-2">
-          <button type="button" onClick={onClose} className={BTN_SECONDARY}>
-            {t.cancel}
-          </button>
-          <button type="button" onClick={save} className={BTN_PRIMARY}>
-            <Check className="h-4 w-4" aria-hidden="true" />
-            {t.save}
-          </button>
-        </div>
-      }
-    >
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          save();
-        }}
-        className="flex flex-col gap-4"
-      >
-        <label>
-          <span className={LABEL}>{t.listTitle}</span>
-          <input
-            value={draftTitle}
-            maxLength={TIER_LIST_LIMITS.maxTitle}
-            onChange={(e) => setDraftTitle(e.target.value)}
-            placeholder={t.untitled}
-            className={FIELD}
-            autoFocus
-          />
-        </label>
-        <label>
-          <span className={LABEL}>{t.listDescription}</span>
-          <textarea
-            value={draftDescription}
-            maxLength={TIER_LIST_LIMITS.maxDescription}
-            onChange={(e) => setDraftDescription(e.target.value)}
-            rows={3}
-            className={`${FIELD} py-2`}
-          />
-        </label>
-        <button type="submit" className="hidden" aria-hidden="true" tabIndex={-1} />
-      </form>
-    </Modal>
-  );
-}
+// The title/description-only editor that used to live here (`ListDetailsModal`)
+// is gone: "Edit details" on a custom list now routes to the creator instead
+// (prefilled, editing tiers/items/background too, not just these two fields)
+// -- see `editHref` on `TierListEditor` and `?edit=<id>` on the creator page.

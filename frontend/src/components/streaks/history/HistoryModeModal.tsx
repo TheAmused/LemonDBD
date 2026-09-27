@@ -59,6 +59,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       label: dict?.streaks?.historyHellLabel || 'Hell',
       description: dict?.streaks?.historyHellDesc || 'No checkpoints. One loss resets everything.',
       icon: TierHellIcon,
+      image: '/images/streaks/modes/history-hell.webp',
       accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'hell'),

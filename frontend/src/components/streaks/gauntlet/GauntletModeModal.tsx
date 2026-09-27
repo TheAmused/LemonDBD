@@ -49,6 +49,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict?: Dictionary): Challeng
     label,
     description: dict?.streaks?.gauntletLemonPlayersDesc || 'Our own version of the Gauntlet.',
     icon: Sparkles,
+    image: '/images/streaks/modes/gauntlet-lemon.webp',
     accentClassName: LEMON_ACCENT,
   };
 }
@@ -60,6 +61,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       label: dict?.streaks?.lemonSolo || 'Solo',
       description: dict?.streaks?.lemonSoloDesc || '1 player',
       icon: User,
+      image: '/images/streaks/modes/gauntlet-1-player.webp',
       accentClassName: LEMON_ACCENT,
     },
     {
@@ -67,6 +69,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       label: dict?.streaks?.lemonDuo || 'Duo',
       description: dict?.streaks?.lemonDuoDesc || '2 players',
       icon: Users,
+      image: '/images/streaks/modes/gauntlet-2-players.webp',
       accentClassName: LEMON_ACCENT,
     },
     {
@@ -74,6 +77,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       label: dict?.streaks?.lemonSquad || 'Squad',
       description: dict?.streaks?.lemonSquadDesc || '4 players',
       icon: UsersRound,
+      image: '/images/streaks/modes/gauntlet-4-players.webp',
       accentClassName: LEMON_ACCENT,
     },
   ];

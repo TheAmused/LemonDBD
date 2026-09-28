@@ -161,6 +161,7 @@ export default {
     chase: "追跡",
     stealth: "影",
     entity: "エンティティ",
+    hooks: "吊るされた男",
   },
   blindModeTooltip: "パークアイコンを非表示（ブラインドモード）",
   hiddenPerkLabel: "非表示、ゲーム内で確認",

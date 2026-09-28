@@ -161,6 +161,7 @@ export default {
     chase: "The Chase",
     stealth: "The Shadow",
     entity: "The Entity",
+    hooks: "The Hanged Man",
   },
   blindModeTooltip: "Hide Perk Icons (Blind Mode)",
   hiddenPerkLabel: "Hidden, check in-game",

@@ -161,6 +161,7 @@ export default {
     chase: "La Persecución",
     stealth: "La Sombra",
     entity: "La Entidad",
+    hooks: "El Colgado",
   },
   blindModeTooltip: "Ocultar Iconos de Habilidades (Modo Ciego)",
   hiddenPerkLabel: "Oculto, consulta en el juego",

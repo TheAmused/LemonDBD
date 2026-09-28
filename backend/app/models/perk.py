@@ -53,7 +53,7 @@ class Perk(Base):
         CheckConstraint(
             "perk_type IS NULL OR perk_type IN ("
             "'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession', "
-            "'aura', 'generator', 'healing', 'chase', 'stealth', 'entity')",
+            "'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks')",
             name="ck_perks_perk_type",
         ),
     )
@@ -77,7 +77,7 @@ class Perk(Base):
     #: Tarot archetype this perk belongs to -- the single source of truth for
     #: both Chaos Mutator weighting and the Tarot Deck randomizer card assignment.
     #: One of: hex, boon, sacrifice, exhaustion, obsession, aura, generator,
-    #: healing, chase, stealth, entity. Nullable for backward-compatibility;
+    #: healing, chase, stealth, entity, hooks. Nullable for backward-compatibility;
     #: treat a missing value as 'entity' (the wildcard bucket).
     perk_type: Mapped[str | None] = mapped_column(String(30), nullable=True)
 

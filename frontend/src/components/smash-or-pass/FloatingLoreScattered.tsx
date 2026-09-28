@@ -13,7 +13,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
-import { EntityItem } from '@/types/smashOrPass';
+import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks, getWatermarkFontSize } from '@/utils/smashWatermarks';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
@@ -22,6 +22,7 @@ interface FloatingLoreScatteredProps {
   character: EntityItem | null;
   locale?: string;
   dict?: Dictionary;
+  customLabels?: RosterCustomLabels;
 }
 
 // Known DBD signature quote translations
@@ -47,6 +48,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   character,
   locale = 'en',
   dict,
+  customLabels,
 }) => {
   if (!character) return null;
 
@@ -108,11 +110,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   // Localized Labels
   const loreLabels: any = dict?.smashOrPass?.loreLabels || {};
   const trialClassificationLabel = loreLabels.trialClassification || (currentLoc === 'pl' ? 'Klasyfikacja Próby' : 'Trial Classification');
-  const datingArchetypeLabel = loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
+  const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
   const greenFlagLabel = loreLabels.greenFlag || (currentLoc === 'pl' ? 'Zielona Flaga' : 'Trial Green Flag');
   const redFlagLabel = loreLabels.redFlag || (currentLoc === 'pl' ? 'Ostrzeżenie Próby' : 'Trial Warning');
   const identityProfileLabel = loreLabels.identityProfile || (currentLoc === 'pl' ? 'Profil Tożsamości' : 'Identity Profile');
-  const signatureQuoteLabel = loreLabels.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Signature Quote');
+  const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Signature Quote');
+  const turnOnLabel = customLabels?.turn_on || (currentLoc === 'pl' ? 'Co Kręci' : 'Turn On');
+  const dealbreakerLabel = customLabels?.dealbreaker || (currentLoc === 'pl' ? 'Dyskwalifikacja' : 'Dealbreaker');
 
   const genderLabel = isMonster
     ? loreLabels.monster || (currentLoc === 'pl' ? 'Potwór / Przedwieczny' : 'Eldritch / Monster')
@@ -159,55 +163,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none">
-        {/* Left Item 1: Trial Classification & Radar Beacon (Tilt Left -2deg & Emerald Aura) */}
-        <div
-          key={`role-${character.slug}`}
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:-rotate-2 cursor-pointer group"
-          style={{ animationDelay: '0ms' }}
-          onMouseEnter={handleCardHover}
-        >
-          <div
-            className={`relative overflow-hidden p-4 rounded-3xl border-2 bg-bg-surface/95 backdrop-blur-2xl shadow-2xl transition-all duration-300 ${
-              isSurvivor
-                ? 'border-accent-green/50 group-hover:border-accent-green'
-                : isMonster
-                ? 'border-border-color group-hover:border-border-subtle'
-                : 'border-accent-red/50 group-hover:border-accent-red'
-            }`}
-          >
-            {/* Holographic scanlines */}
-            <div className="absolute inset-0 crt-scanlines pointer-events-none opacity-10 dark:opacity-40 group-hover:opacity-20 dark:group-hover:opacity-70 transition-opacity" />
-
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span
-                  className={`flex h-11 w-11 items-center justify-center rounded-2xl border shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-inner ${
-                    isSurvivor
-                      ? 'bg-accent-green/10 border-accent-green/30 group-hover:border-accent-green/60'
-                      : isMonster
-                      ? 'bg-bg-elevated border-border-color group-hover:border-border-subtle'
-                      : 'bg-accent-red/10 border-accent-red/30 group-hover:border-accent-red/60'
-                  }`}
-                >
-                  {isSurvivor ? (
-                    <SurvivorIcon className="h-5 w-5 text-accent-green" />
-                  ) : (
-                    <KillerIcon className="h-5 w-5 text-accent-red" />
-                  )}
-                </span>
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted block group-hover:text-text-secondary transition-colors">
-                    {trialClassificationLabel}
-                  </span>
-                  <span className="text-sm font-black font-mono tracking-tight text-text-primary block group-hover:text-accent-red  transition-colors">
-                    {roleLabel}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+        {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
         <div
@@ -223,7 +180,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 {datingArchetypeLabel}
               </span>
             </div>
-            <p className="text-sm font-black font-mono tracking-tight text-text-primary group-hover:text-accent-red  transition-colors">
+            <p className="text-sm font-black font-mono tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
               {charTitle}
             </p>
             <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors font-sans">
@@ -232,23 +189,23 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Left Item 3: Trial Green Flag (Scale +10% & Emerald Strobe) */}
-        {displayGreenFlags.length > 0 && (
+        {/* Left Item 3: Turn On (Tilt Left -1deg & Emerald Glow) */}
+        {profile.turn_on && (
           <div
-            key={`green-${character.slug}`}
-            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-110 hover:-rotate-1 cursor-pointer group"
-            style={{ animationDelay: '160ms' }}
+            key={`turn-on-${character.slug}`}
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:-rotate-1 cursor-pointer group"
+            style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_45px_var(--accent-green)]">
-              <div className="flex items-center gap-1.5 text-accent-green">
-                <CheckCircle2 className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:rotate-12 transition-transform" />
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-emerald-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.4)]">
+              <div className="flex items-center gap-1.5 text-emerald-400">
+                <Flame className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
-                  {greenFlagLabel}
+                  {turnOnLabel}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-text-secondary leading-snug group-hover:text-text-primary transition-colors font-sans">
-                {displayGreenFlags[0]}
+              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-emerald-300 transition-colors font-sans">
+                {profile.turn_on}
               </p>
             </div>
           </div>
@@ -256,31 +213,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none">
-        {/* Right Item 1: Identity Profile & Cyber Tag (Tilt Right +1deg & Cyan Glitch) */}
-        <div
-          key={`gender-${character.slug}`}
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:rotate-1 cursor-pointer group"
-          style={{ animationDelay: '40ms' }}
-          onMouseEnter={handleCardHover}
-        >
-          <div className="relative overflow-hidden flex items-center justify-between p-4 rounded-3xl bg-bg-surface/95 border-2 border-border-color backdrop-blur-2xl shadow-2xl transition-all duration-300 group-hover:border-border-subtle">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-border-color shrink-0 text-text-secondary group-hover:scale-115 group-hover:-rotate-6 transition-transform shadow-inner">
-                <User className="h-5 w-5" />
-              </span>
-              <div>
-                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted block group-hover:text-text-secondary transition-colors">
-                  {identityProfileLabel}
-                </span>
-                <span className="text-sm font-black font-mono tracking-tight text-text-primary capitalize block group-hover:text-text-primary  transition-colors">
-                  {genderLabel}
-                </span>
-              </div>
-            </div>
-            <Zap className="h-4 w-4 text-text-muted group-hover:text-text-secondary group-hover:scale-125 animate-pulse transition-transform" />
-          </div>
-        </div>
+      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+        {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
         <div
@@ -302,23 +236,23 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Right Item 3: Trial Warning / Red Flag (Tilt Right +2deg & Warning Flare) */}
-        {displayRedFlags.length > 0 && (
+        {/* Right Item 3: Dealbreaker (Tilt Right +1deg & Rose Glow) */}
+        {profile.dealbreaker && (
           <div
-            key={`red-${character.slug}`}
-            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-110 hover:rotate-2 cursor-pointer group"
-            style={{ animationDelay: '200ms' }}
+            key={`dealbreaker-${character.slug}`}
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:rotate-1 cursor-pointer group"
+            style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_45px_var(--accent-red)]">
-              <div className="flex items-center gap-1.5 text-accent-red">
-                <AlertTriangle className="h-4 w-4 shrink-0 group-hover:scale-125 group-hover:-rotate-12 transition-transform" />
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-rose-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-500 group-hover:shadow-[0_0_50px_rgba(244,63,94,0.4)]">
+              <div className="flex items-center gap-1.5 text-rose-400">
+                <AlertTriangle className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
-                  {redFlagLabel}
+                  {dealbreakerLabel}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-text-secondary leading-snug group-hover:text-text-primary transition-colors font-sans">
-                {displayRedFlags[0]}
+              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-rose-300 transition-colors font-sans">
+                {profile.dealbreaker}
               </p>
             </div>
           </div>

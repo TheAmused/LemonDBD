@@ -26,6 +26,8 @@ from app.models.history import HistoryRun, HistoryMatchLog
 from app.models.page_streak import PageStreakRun, PageStreakPageLog
 from app.services.db.run_family_export import export_run_family, import_run_family
 from app.models.smash_or_pass import Roster, Entity, EntityStat, Vote
+from app.models.tier_list import TierList
+from app.services.tier_list_service import validate_tier_list
 from app.services.db.asset_bundling import get_static_dir, read_asset_base64, write_asset_base64
 from app.services.db.serializers import (
     serialize_survivor, serialize_killer, serialize_perk, serialize_item,
@@ -34,6 +36,7 @@ from app.services.db.serializers import (
     serialize_chapter, serialize_user,
     serialize_user_showcase, serialize_admin_audit_log, serialize_changelog_post,
     serialize_smash_entity, serialize_roster,
+    serialize_tier_list, TIER_LIST_FIELDS,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,6 +55,7 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "item_addons",
         "offerings",
         "maps",
+        "tier_lists",
     ],
     "users": [
         "users",
@@ -179,6 +183,7 @@ _SIMPLE_EXPORT_TARGETS: list[tuple[str, type, Callable[[Any], dict[str, Any]], l
     ("challenge_mode_settings", ChallengeModeSetting, lambda cms: cms.to_dict(), []),
     ("admin_audit_logs", AdminAuditLog, serialize_admin_audit_log, []),
     ("changelog_posts", ChangelogPost, serialize_changelog_post, []),
+    ("tier_lists", TierList, serialize_tier_list, []),
 ]
 
 # Entities whose deletion in "replace" mode is a single unconditional DELETE, gated
@@ -203,6 +208,7 @@ _SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("chaos_runs", ChaosRun),
     ("history_runs", HistoryRun),
     ("page_streak_runs", PageStreakRun),
+    ("tier_lists", TierList),
 ]
 
 
@@ -321,6 +327,64 @@ def _upsert_by_id(
             "payload with backend/scripts/normalize_static_export.py",
             skipped, name,
         )
+
+
+def _import_tier_lists(
+    data: dict[str, Any],
+    target_keys: set[str],
+    summary: dict[str, dict[str, int]],
+) -> None:
+    """Upsert official tier lists by id, one savepoint per row.
+
+    Unlike the scraped catalog, these rows are written by hand, so a typo is
+    the expected failure -- a bad slug, an unknown tier color, a custom list
+    with no items. Such a row is rejected by the model's validators and
+    skipped with a warning; it must not roll back the rest of the seed
+    (at first boot every seed file is imported as one payload).
+    """
+    if "tier_lists" not in target_keys or "tier_lists" not in data:
+        return
+
+    created = updated = rejected = 0
+    for row in data["tier_lists"]:
+        row_id = row.get("id")
+        if not isinstance(row_id, int):
+            rejected += 1
+            logger.warning("[import] tier_lists row without an integer id skipped: %r", row.get("slug"))
+            continue
+
+        savepoint = db.session.begin_nested()
+        try:
+            obj = db.session.get(TierList, row_id)
+            is_new = obj is None
+            if is_new:
+                obj = TierList(id=row_id)
+                db.session.add(obj)
+            for field in TIER_LIST_FIELDS:
+                # Absent optional keys mean NULL, exactly as in the other seed
+                # files -- so removing `default_placements` from a row clears it.
+                setattr(obj, field, row.get(field, _TIER_LIST_DEFAULTS.get(field)))
+            validate_tier_list(obj)
+            db.session.flush()
+            savepoint.commit()
+            created += int(is_new)
+            updated += int(not is_new)
+        except Exception as row_err:
+            savepoint.rollback()
+            rejected += 1
+            logger.warning("[import] tier_lists row %s (%r) rejected: %s", row_id, row.get("slug"), row_err)
+
+    summary["tier_lists"] = {"created": created, "updated": updated}
+    if rejected:
+        summary["tier_lists"]["rejected"] = rejected
+
+
+_TIER_LIST_DEFAULTS: dict[str, Any] = {
+    "description": "",
+    "is_featured": False,
+    "is_active": True,
+    "sort_order": 0,
+}
 
 
 class DatabaseExportImportService:
@@ -733,6 +797,8 @@ class DatabaseExportImportService:
                     )
                 db.session.flush()
                 summary["maps"] = {"created": created, "updated": updated}
+
+            _import_tier_lists(data, target_keys, summary)
 
             if "users" in target_keys and "users" in data:
                 u_created, u_updated = 0, 0

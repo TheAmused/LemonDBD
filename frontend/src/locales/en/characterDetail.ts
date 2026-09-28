@@ -87,7 +87,7 @@ export default {
   survivorComparison: "Survivor Speed Comparison",
   survivorComparisonDesc: "Survivor standard sprint speed is 4.0 m/s (100%).",
   viewLore: "Read Lore & Bio",
-  view3DModel: "Click to View Full 3D Model",
+  view3DModel: "Click to Expand",
   loreModalTitle: "The Entity's Archives — Codex Lore",
   equipmentDetails: "Equipment Details",
   equipment: "Equipment",

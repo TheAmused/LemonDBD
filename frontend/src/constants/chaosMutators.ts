@@ -6,7 +6,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'no_exhaustion',
     name: 'Curse of Exhaustion',
     description:
-      'Exhaustion perks have their drop chance reduced by 90% this trial.',
+      'Exhaustion perks have their drop chance reduced by 50% this trial.',
     type: 'curse',
     icon: '🚫',
     badgeBg: 'bg-rose-950/90',
@@ -19,7 +19,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'blindness',
     name: 'Curse of Blindness',
     description:
-      'Perk icons are obscured and aura-reading drop chances are reduced by 85%!',
+      'Perk icons are obscured and aura-reading drop chances are reduced by 50%!',
     type: 'curse',
     icon: '👁️',
     badgeBg: 'bg-purple-950/90',
@@ -31,7 +31,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'solo_queue',
     name: 'Curse of Solitude',
     description:
-      'Altruism and healing perks are drastically reduced (-80%). You walk the trial alone.',
+      'Altruism and healing perks are reduced by 50%. You walk the trial alone.',
     type: 'curse',
     icon: '🐺',
     badgeBg: 'bg-slate-950/90',
@@ -43,7 +43,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'meme_loadout',
     name: 'Curse of the Clown',
     description:
-      'Off-meta and gimmick perks show up far more often for maximum trial chaos!',
+      'Off-meta and gimmick perks have their drop chance increased by 50% for maximum trial chaos!',
     type: 'curse',
     icon: '🤡',
     badgeBg: 'bg-amber-950/90',
@@ -55,7 +55,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'hex_boon_only',
     name: 'Boon Ritual',
     description:
-      'Trial bound by ancient totems! Boon and totem-cleansing perks take priority.',
+      'Boon and totem-cleansing perks have their drop chance increased by 50%!',
     type: 'curse',
     icon: '🔮',
     badgeBg: 'bg-indigo-950/90',
@@ -67,7 +67,7 @@ export const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'negative_only',
     name: 'Curse of Sacrifice',
     description:
-      'The Entity demands a price. High-drawback handicap perks take priority.',
+      'Severe handicap and high-drawback perks have their drop chance increased by 50%.',
     type: 'curse',
     icon: '💀',
     badgeBg: 'bg-rose-950/90',
@@ -82,7 +82,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'no_slowdown',
     name: 'No Gen Slowdown',
     description:
-      'Generator regression and slowdown perks have their drop chance reduced by 90% this trial!',
+      'Generator regression and slowdown perks have their drop chance reduced by 50% this trial!',
     type: 'curse',
     icon: '🛑',
     badgeBg: 'bg-rose-950/90',
@@ -94,7 +94,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'blindness',
     name: 'Curse of Blindness',
     description:
-      'Perk icons are obscured and aura-reading drop chances are reduced by 85%!',
+      'Perk icons are obscured and aura-reading drop chances are reduced by 50%!',
     type: 'curse',
     icon: '👁️',
     badgeBg: 'bg-purple-950/90',
@@ -106,7 +106,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'chase_only',
     name: 'Pure Bloodlust',
     description:
-      'Chase, pallet-breaking, and aggression perks show up far more often.',
+      'Chase, pallet-breaking, and aggression perks have their drop chance increased by 50%.',
     type: 'curse',
     icon: '🩸',
     badgeBg: 'bg-red-950/90',
@@ -118,7 +118,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'hex_roulette',
     name: 'Hex Totem Madness',
     description:
-      'Hex Totem perks take priority. Risk it all on lit totems!',
+      'Hex Totem perks have their drop chance increased by 50%. Risk it all on lit totems!',
     type: 'curse',
     icon: '🔮',
     badgeBg: 'bg-indigo-950/90',
@@ -130,7 +130,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'meme_loadout',
     name: 'Curse of the Clown',
     description:
-      'Off-meta and gimmick perks show up far more often for maximum trial chaos!',
+      'Off-meta and gimmick perks have their drop chance increased by 50% for maximum trial chaos!',
     type: 'curse',
     icon: '🎪',
     badgeBg: 'bg-amber-950/90',
@@ -142,7 +142,7 @@ export const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'negative_only',
     name: 'Curse of the Entity',
     description:
-      'The Entity tests your power. High-drawback obsession perks take priority.',
+      'High-drawback obsession and handicap perks have their drop chance increased by 50%.',
     type: 'curse',
     icon: '💀',
     badgeBg: 'bg-rose-950/90',

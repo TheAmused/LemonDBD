@@ -35,6 +35,18 @@
   --color-elevated: var(--bg-elevated);
   --color-border: var(--border-color);
 
+  /* Tier list ladder colors (see utils/tierLists/constants.ts). Calibrated
+   * per theme so dark ink (--tier-ink) keeps >= 4.5:1 on every one of them. */
+  --color-tier-s: var(--tier-s);
+  --color-tier-a: var(--tier-a);
+  --color-tier-b: var(--tier-b);
+  --color-tier-c: var(--tier-c);
+  --color-tier-d: var(--tier-d);
+  --color-tier-e: var(--tier-e);
+  --color-tier-f: var(--tier-f);
+  --color-tier-neutral: var(--tier-neutral);
+  --color-tier-ink: var(--tier-ink);
+
   /* First-class animation tokens */
   --animate-dbd-spin: dbdSpinnerSpin var(--dbd-needle-speed, 1.3s) linear infinite;
   --animate-dbd-spin-reverse: dbdSpinnerSpinReverse 14s linear infinite;
@@ -96,6 +108,71 @@
     --text-muted: #596370;
     /* 4.95:1 on bg-primary (AA Compliant) */
     --text-inverted: #ffffff;
+
+    /* Tier list ladder (dark ink on top of each) */
+    --tier-s: #ff8080;
+    --tier-a: #ffb870;
+    --tier-b: #ffd966;
+    --tier-c: #f2f26d;
+    --tier-d: #b7eb74;
+    --tier-e: #7fdca0;
+    --tier-f: #8cc4ff;
+    --tier-neutral: #cfd5dd;
+    --tier-ink: #141414;
+  }
+
+  /* `--bg-primary` etc. are otherwise only ever set inside an explicit
+   * `.light` / `.light-lemon` / `.dark` class block, all applied client-side
+   * by next-themes. Any frame where `<html>` carries none of those classes
+   * yet -- before that script has run, or a `<html>` attribute momentarily
+   * dropped and re-applied during a same-tree client navigation -- falls
+   * through to the bare `:root` rule above, which is hardcoded to the LIGHT
+   * palette. For a user whose system/chosen theme is dark, that frame paints
+   * near-white (#eef1f4) instead of dark: the reported "white flash". This
+   * media query makes the *unclassed* default itself follow the OS color
+   * scheme (matching next-themes' own `defaultTheme="system"`), so that gap
+   * frame is dark for dark-system users instead of always-light.
+   *
+   * `:not(.light, .light-lemon, .dark)` is load-bearing here, not decorative:
+   * `:root` matches `<html>` unconditionally, regardless of what other class
+   * is also on it, so without this exclusion the plain `:root` selector
+   * below and this one have equal specificity and this one -- being later
+   * in the file -- would win the cascade and silently override an
+   * explicitly-picked `.light` theme back to dark on any OS set to dark
+   * (exactly the "light mode is broken, it's just dark mode now" bug this
+   * caused once already). This rule may now only ever match the genuinely
+   * unclassed gap frame it was written for. */
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light, .light-lemon, .dark) {
+      color-scheme: dark;
+      --bg-primary: #0a0a0c;
+      --bg-surface: #141418;
+      --bg-elevated: #1d1d22;
+      --border-color: #2e2e38;
+      --border-subtle: #1e1e26;
+
+      --accent-red: #ef4444;
+      --accent-red-hover: #f87171;
+      --accent-amber: #f59e0b;
+      --accent-amber-hover: #fbbf24;
+      --accent-green: #22c55e;
+      --accent-green-hover: #4ade80;
+
+      --text-primary: #f4f4f6;
+      --text-secondary: #a3a3af;
+      --text-muted: #888896;
+      --text-inverted: #ffffff;
+
+      --tier-s: #f05252;
+      --tier-a: #f7893b;
+      --tier-b: #f5b82e;
+      --tier-c: #e3d23a;
+      --tier-d: #98cf3f;
+      --tier-e: #3fc27a;
+      --tier-f: #5b9cf5;
+      --tier-neutral: #a1a1aa;
+      --tier-ink: #141414;
+    }
   }
 
   /* A warmer, citrus-tinted alternative to the default light theme */
@@ -124,6 +201,17 @@
     --text-muted: #695e3f;
     /* 4.8:1 on #fbf6ea (AA Compliant) */
     --text-inverted: #ffffff;
+
+    /* Tier list ladder -- warmer to sit on the citrus background */
+    --tier-s: #f98173;
+    --tier-a: #fbb36b;
+    --tier-b: #f9d55e;
+    --tier-c: #ecea6a;
+    --tier-d: #b5e27a;
+    --tier-e: #86d6a0;
+    --tier-f: #93c1f0;
+    --tier-neutral: #e3d9b8;
+    --tier-ink: #1e1704;
   }
 
   .dark {
@@ -153,6 +241,17 @@
     /* 4.8:1 on #141418 (AA Compliant - fixed from 3.6:1) */
     /* Text on accent/image fills stays white in every theme */
     --text-inverted: #ffffff;
+
+    /* Tier list ladder: saturated on the near-black stage, dark ink >= 4.8:1 */
+    --tier-s: #f05252;
+    --tier-a: #f7893b;
+    --tier-b: #f5b82e;
+    --tier-c: #e3d23a;
+    --tier-d: #98cf3f;
+    --tier-e: #3fc27a;
+    --tier-f: #5b9cf5;
+    --tier-neutral: #a1a1aa;
+    --tier-ink: #141414;
   }
 
   html {

@@ -27,6 +27,7 @@ import changelog from './changelog';
 import onboarding from './onboarding';
 import achievements from './achievements';
 import about from './about';
+import tierLists from './tierLists';
 
 const es = {
   app,
@@ -57,6 +58,7 @@ const es = {
   onboarding,
   achievements,
   about,
+  tierLists,
 };
 
 export default es;

@@ -10,6 +10,7 @@ from app.models.equipment import ItemCategory
 from app.models.map import Realm
 from app.models.perk import Perk
 from app.models.smash_or_pass import Entity, Roster
+from app.models.tier_list import TierList
 from app.models.user import User, UserShowcase
 
 
@@ -315,3 +316,39 @@ def serialize_user(u: User) -> dict[str, Any]:
         "created_at": u.created_at.isoformat() if u.created_at else None,
         "updated_at": u.updated_at.isoformat() if u.updated_at else None,
     }
+
+
+#: Every column a tier-list seed row may carry, in seed-file order. Shared by
+#: the exporter (`serialize_tier_list`) and the importer, so a round trip
+#: cannot drop a field one side forgot.
+TIER_LIST_FIELDS = (
+    "slug",
+    "kind",
+    "title",
+    "description",
+    "cover_image_url",
+    "tiers",
+    "item_ids",
+    "custom_items",
+    "default_placements",
+    "translations",
+    "is_featured",
+    "is_active",
+    "sort_order",
+)
+
+#: Optional JSON columns: omitted from a seed row when they do not apply, the
+#: same "absent key means NULL" rule every other seed file follows.
+_TIER_LIST_OPTIONAL = {"cover_image_url", "tiers", "item_ids", "custom_items", "default_placements", "translations"}
+
+
+def serialize_tier_list(t: TierList) -> dict[str, Any]:
+    """One official tier list, exported exactly as `tier_lists.json` holds it."""
+    row: dict[str, Any] = {"id": t.id}
+    for field in TIER_LIST_FIELDS:
+        value = getattr(t, field)
+        if field in _TIER_LIST_OPTIONAL and not value:
+            continue
+        row[field] = value
+    return row
+

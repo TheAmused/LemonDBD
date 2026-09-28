@@ -1,0 +1,149 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-09-26T00:00:00+00:00",
+  "source": "LemonDBD",
+  "target": "tier_lists",
+  "count": 5,
+  "tier_lists": [
+    {
+      "id": 1,
+      "slug": "survivor-perks",
+      "kind": "survivor_perks",
+      "title": "Survivor Perks",
+      "description": "Rank every survivor perk, from meta staples to hidden gems.",
+      "translations": {
+        "de": {
+          "title": "Überlebenden-Fähigkeiten",
+          "description": "Bewerte jede Überlebenden-Fähigkeit – von Meta-Klassikern bis zu versteckten Perlen."
+        },
+        "es": {
+          "title": "Habilidades de superviviente",
+          "description": "Clasifica todas las habilidades de superviviente, desde las imprescindibles del meta hasta las joyas ocultas."
+        },
+        "ja": {
+          "title": "サバイバーのパーク",
+          "description": "定番のメタから隠れた名作まで、サバイバーのパークをすべてランク付けしよう。"
+        },
+        "pl": {
+          "title": "Perki ocalałych",
+          "description": "Oceń każdy perk ocalałego – od metowych klasyków po ukryte perełki."
+        }
+      },
+      "is_featured": true,
+      "is_active": true,
+      "sort_order": 10
+    },
+    {
+      "id": 2,
+      "slug": "killer-perks",
+      "kind": "killer_perks",
+      "title": "Killer Perks",
+      "description": "Rank every killer perk, from game-winning slowdown to pure memes.",
+      "translations": {
+        "de": {
+          "title": "Killer-Fähigkeiten",
+          "description": "Bewerte jede Killer-Fähigkeit – vom spielentscheidenden Slowdown bis zum reinen Meme."
+        },
+        "es": {
+          "title": "Habilidades de asesino",
+          "description": "Clasifica todas las habilidades de asesino, desde la ralentización decisiva hasta los memes."
+        },
+        "ja": {
+          "title": "キラーのパーク",
+          "description": "勝敗を分ける遅延パークからネタパークまで、キラーのパークをすべてランク付けしよう。"
+        },
+        "pl": {
+          "title": "Perki zabójców",
+          "description": "Oceń każdy perk zabójcy – od decydującego spowolnienia po czyste memy."
+        }
+      },
+      "is_featured": true,
+      "is_active": true,
+      "sort_order": 20
+    },
+    {
+      "id": 3,
+      "slug": "survivors",
+      "kind": "survivors",
+      "title": "Survivors",
+      "description": "Who is the best survivor in the Fog? Rank the whole roster.",
+      "translations": {
+        "de": {
+          "title": "Überlebende",
+          "description": "Wer ist der beste Überlebende im Nebel? Bewerte die gesamte Riege."
+        },
+        "es": {
+          "title": "Supervivientes",
+          "description": "¿Quién es el mejor superviviente de la Niebla? Clasifica a todo el elenco."
+        },
+        "ja": {
+          "title": "サバイバー",
+          "description": "霧の森で最高のサバイバーは誰？全員をランク付けしよう。"
+        },
+        "pl": {
+          "title": "Ocaleni",
+          "description": "Kto jest najlepszym ocalałym we Mgle? Oceń całą obsadę."
+        }
+      },
+      "is_featured": true,
+      "is_active": true,
+      "sort_order": 30
+    },
+    {
+      "id": 4,
+      "slug": "killers",
+      "kind": "killers",
+      "title": "Killers",
+      "description": "From M1 killers to anti-loop monsters: rank every killer.",
+      "translations": {
+        "de": {
+          "title": "Killer",
+          "description": "Von M1-Killern bis zu Anti-Loop-Monstern: Bewerte jeden Killer."
+        },
+        "es": {
+          "title": "Asesinos",
+          "description": "De asesinos M1 a monstruos anti-loop: clasifica a todos los asesinos."
+        },
+        "ja": {
+          "title": "キラー",
+          "description": "M1キラーから対チェイス特化まで、すべてのキラーをランク付けしよう。"
+        },
+        "pl": {
+          "title": "Zabójcy",
+          "description": "Od zabójców M1 po potwory anty-loopowe: oceń każdego zabójcę."
+        }
+      },
+      "is_featured": true,
+      "is_active": true,
+      "sort_order": 40
+    },
+    {
+      "id": 5,
+      "slug": "maps",
+      "kind": "maps",
+      "title": "Maps",
+      "description": "Survivor-sided, killer-sided or perfectly balanced? Rank every realm's maps.",
+      "translations": {
+        "de": {
+          "title": "Karten",
+          "description": "Überlebenden-freundlich, Killer-freundlich oder ausgeglichen? Bewerte jede Karte."
+        },
+        "es": {
+          "title": "Mapas",
+          "description": "¿A favor de los supervivientes, del asesino o equilibrado? Clasifica todos los mapas."
+        },
+        "ja": {
+          "title": "マップ",
+          "description": "サバイバー有利？キラー有利？それとも互角？すべてのマップをランク付けしよう。"
+        },
+        "pl": {
+          "title": "Mapy",
+          "description": "Po stronie ocalałych, zabójcy czy idealnie wyważone? Oceń każdą mapę."
+        }
+      },
+      "is_featured": true,
+      "is_active": true,
+      "sort_order": 50
+    }
+  ]
+}

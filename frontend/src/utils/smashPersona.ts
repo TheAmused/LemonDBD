@@ -1,6 +1,6 @@
 // frontend/src/utils/smashPersona.ts
 
-import type { EntityItem } from '@/types/smashOrPass';
+import type { EntityItem, CustomRomanceArchetype, ArchetypeRule } from '@/types/smashOrPass';
 
 export interface VoteRecord {
   character: EntityItem;
@@ -42,7 +42,9 @@ export interface RomancePersonaResult {
   badgeColor: string;
   borderColor: string;
   glowColor: string;
-  iconName: ArchetypeVisualConfig['iconName'];
+  iconName: ArchetypeVisualConfig['iconName'] | string;
+  iconUrl?: string;
+  badgeImageUrl?: string;
   killerAffinity: number;
   survivorAffinity: number;
   smashRate: number;
@@ -54,6 +56,11 @@ export interface RomancePersonaResult {
     media_url?: string | null;
   } | null;
   isShared?: boolean;
+  totalSmashes?: number;
+  smashedSurvivors?: number;
+  smashedKillers?: number;
+  evaluatedSurvivors?: number;
+  evaluatedKillers?: number;
 }
 
 export const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
@@ -113,8 +120,147 @@ export const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
  */
 export function calculateRomancePersona(
   votes: VoteRecord[],
-  rawArchetypes: Record<string, PersonaArchetypeEntry> = {}
+  rawArchetypes: Record<string, PersonaArchetypeEntry> = {},
+  customArchetypes?: CustomRomanceArchetype[]
 ): RomancePersonaResult {
+  // If custom archetypes are supplied by a custom roster, evaluate dynamically
+  if (customArchetypes && customArchetypes.length > 0) {
+    const smashes = (votes || []).filter((v) => v.vote === 'smash' || v.vote === 'super_smash');
+    const total = (votes || []).length;
+    const smashRate = total > 0 ? Math.round((smashes.length / total) * 100) : 0;
+
+    const fallbackArch = customArchetypes.find((a) => a.is_fallback) || customArchetypes[customArchetypes.length - 1];
+
+    if (!votes || votes.length === 0) {
+      return {
+        archKey: fallbackArch.id,
+        title: fallbackArch.title,
+        subtitle: fallbackArch.subtitle,
+        description: fallbackArch.description,
+        badgeColor: fallbackArch.badge_color || 'from-bg-elevated via-bg-surface to-bg-primary',
+        borderColor: 'border-border-color',
+        glowColor: 'rgba(0, 0, 0, 0)',
+        iconName: (fallbackArch.icon_name as any) || 'compass',
+        iconUrl: fallbackArch.icon_url,
+        badgeImageUrl: fallbackArch.badge_image_url,
+        killerAffinity: 0,
+        survivorAffinity: 0,
+        smashRate: 0,
+        totalVotes: 0,
+        favoriteChar: null,
+        isShared: false,
+        totalSmashes: 0,
+      };
+    }
+
+    // Maps for case-insensitive counting of custom roles and genders
+    const roleCountMap = new Map<string, number>();
+    const genderCountMap = new Map<string, number>();
+
+    for (const s of smashes) {
+      const r = (s.character?.role || '').trim().toLowerCase();
+      if (r) roleCountMap.set(r, (roleCountMap.get(r) || 0) + 1);
+
+      const g = (s.character?.gender || '').trim().toLowerCase();
+      if (g) genderCountMap.set(g, (genderCountMap.get(g) || 0) + 1);
+    }
+
+    const getRoleCount = (targetRole: string) => {
+      return roleCountMap.get(targetRole.trim().toLowerCase()) || 0;
+    };
+
+    const getGenderCount = (targetGender: string) => {
+      return genderCountMap.get(targetGender.trim().toLowerCase()) || 0;
+    };
+
+    const getRoleAffinity = (targetRole: string) => {
+      if (smashes.length === 0) return 0;
+      return Math.round((getRoleCount(targetRole) / smashes.length) * 100);
+    };
+
+    const getGenderAffinity = (targetGender: string) => {
+      if (smashes.length === 0) return 0;
+      return Math.round((getGenderCount(targetGender) / smashes.length) * 100);
+    };
+
+    const evaluateRule = (rule: ArchetypeRule): boolean => {
+      let actualValue = 0;
+      const targetVal = rule.target_value || '';
+      switch (rule.target) {
+        case 'smash_rate':
+          actualValue = smashRate;
+          break;
+        case 'total_votes':
+          actualValue = total;
+          break;
+        case 'role_affinity':
+          actualValue = getRoleAffinity(targetVal);
+          break;
+        case 'gender_affinity':
+          actualValue = getGenderAffinity(targetVal);
+          break;
+        case 'role_count':
+          actualValue = getRoleCount(targetVal);
+          break;
+        case 'gender_count':
+          actualValue = getGenderCount(targetVal);
+          break;
+        default:
+          return false;
+      }
+
+      switch (rule.operator) {
+        case '>=':
+          return actualValue >= rule.value;
+        case '<=':
+          return actualValue <= rule.value;
+        case '==':
+          return actualValue === rule.value;
+        case '>':
+          return actualValue > rule.value;
+        default:
+          return actualValue >= rule.value;
+      }
+    };
+
+    // First matching archetype with rules
+    const matched = customArchetypes.find((arch) => {
+      if (!arch.rules || arch.rules.length === 0) return false;
+      return arch.rules.every(evaluateRule);
+    });
+
+    const chosenArch = matched || fallbackArch;
+    const fav = smashes[0]?.character;
+    const favoriteChar = fav
+      ? {
+          name: fav.name,
+          slug: fav.slug,
+          role: fav.role,
+          media_url: fav.media_url,
+        }
+      : null;
+
+    return {
+      archKey: chosenArch.id,
+      title: chosenArch.title,
+      subtitle: chosenArch.subtitle,
+      description: chosenArch.description,
+      badgeColor: chosenArch.badge_color || 'from-purple-600 to-indigo-950',
+      borderColor: 'border-accent-red/60',
+      glowColor: 'rgba(220, 38, 38, 0.35)',
+      iconName: (chosenArch.icon_name as any) || 'sparkles',
+      iconUrl: chosenArch.icon_url,
+      badgeImageUrl: chosenArch.badge_image_url,
+      killerAffinity: getRoleAffinity('Killer'),
+      survivorAffinity: getRoleAffinity('Survivor'),
+      smashRate,
+      totalVotes: total,
+      favoriteChar,
+      isShared: false,
+      totalSmashes: smashes.length,
+    };
+  }
+
   if (!votes || votes.length === 0) {
     const untapped = rawArchetypes.untappedSoul || {};
     const visual = ARCHETYPE_VISUALS.untappedSoul;
@@ -142,28 +288,56 @@ export function calculateRomancePersona(
   const total = votes.length;
   const smashRate = Math.round((smashes.length / total) * 100);
 
+  const evaluatedKillers = votes.filter((v) => v.character?.role === 'Killer').length;
+  const evaluatedSurvivors = votes.filter((v) => v.character?.role === 'Survivor').length;
+
   const smashedKillers = smashes.filter((v) => v.character?.role === 'Killer').length;
   const smashedSurvivors = smashes.filter((v) => v.character?.role === 'Survivor').length;
   const smashedMonsters = smashes.filter((v) => v.character?.gender === 'monster_other').length;
 
-  const totalSmashedRoles = smashedKillers + smashedSurvivors;
-  const killerAffinity =
-    totalSmashedRoles > 0 ? Math.round((smashedKillers / totalSmashedRoles) * 100) : 50;
-  const survivorAffinity = 100 - killerAffinity;
+  let survivorAffinity = 0;
+  let killerAffinity = 0;
+
+  if (smashes.length > 0) {
+    if (evaluatedSurvivors > 0 && evaluatedKillers > 0) {
+      const survSmashRate = smashedSurvivors / evaluatedSurvivors;
+      const killSmashRate = smashedKillers / evaluatedKillers;
+      const sumRates = survSmashRate + killSmashRate;
+      if (sumRates > 0) {
+        survivorAffinity = Math.round((survSmashRate / sumRates) * 100);
+        killerAffinity = 100 - survivorAffinity;
+      }
+    } else if (evaluatedSurvivors > 0 && evaluatedKillers === 0) {
+      survivorAffinity = 100;
+      killerAffinity = 0;
+    } else if (evaluatedKillers > 0 && evaluatedSurvivors === 0) {
+      survivorAffinity = 0;
+      killerAffinity = 100;
+    } else {
+      const totalSmashedRoles = smashedKillers + smashedSurvivors;
+      if (totalSmashedRoles > 0) {
+        survivorAffinity = Math.round((smashedSurvivors / totalSmashedRoles) * 100);
+        killerAffinity = 100 - survivorAffinity;
+      }
+    }
+  }
 
   let archKey = 'fogRomantic';
-  if (smashedMonsters >= 2) {
+  const hasStrongMonsterAffinity =
+    smashedMonsters >= 2 && (smashes.length <= 4 || (smashedMonsters / smashes.length) >= 0.25);
+
+  if (hasStrongMonsterAffinity) {
     archKey = 'eldritchDevotee';
-  } else if (total >= 4 && smashRate <= 20) {
-    archKey = 'coldHeartedPragmatist';
-  } else if (totalSmashedRoles >= 2 && killerAffinity >= 75) {
-    archKey = 'redStainAddict';
-  } else if (totalSmashedRoles >= 2 && survivorAffinity >= 75) {
+  } else if (smashedSurvivors >= 2 && survivorAffinity >= 68) {
     archKey = 'campfireSoulmate';
-  } else if (smashRate >= 85) {
+  } else if (smashedKillers >= 2 && killerAffinity >= 68) {
+    archKey = 'redStainAddict';
+  } else if (total >= 5 && smashRate >= 80) {
     archKey = 'entitysParamour';
-  } else if (smashRate <= 20) {
+  } else if ((total >= 3 && smashes.length === 0) || (total >= 4 && smashRate <= 20)) {
     archKey = 'coldHeartedPragmatist';
+  } else {
+    archKey = 'fogRomantic';
   }
 
   const visual = ARCHETYPE_VISUALS[archKey] || ARCHETYPE_VISUALS.fogRomantic;
@@ -196,6 +370,11 @@ export function calculateRomancePersona(
     totalVotes: total,
     favoriteChar,
     isShared: false,
+    totalSmashes: smashes.length,
+    smashedSurvivors,
+    smashedKillers,
+    evaluatedSurvivors,
+    evaluatedKillers,
   };
 }
 

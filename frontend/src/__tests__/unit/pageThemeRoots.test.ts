@@ -21,6 +21,9 @@ describe('Page Root Theme Wrapper Consistency', () => {
     'smash-or-pass/page.tsx',
     'user/page.tsx',
     'maps/page.tsx',
+    'tier-lists/page.tsx',
+    'tier-lists/[slug]/page.tsx',
+    'tier-lists/custom/[id]/page.tsx',
   ];
 
   for (const relPath of shellPageRoutes) {

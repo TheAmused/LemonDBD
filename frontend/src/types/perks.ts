@@ -15,10 +15,10 @@ export interface Perk {
   character_real_name?: string;
   character_avatar_path?: string;
   category: RoleCategory | string;
-  //: Chaos Wheel curse bucket from the backend (exhaustion, gen_slowdown,
-  //: hex, boon, chase, aura_reading, altruism_healing, handicap, meme,
-  //: general). Optional/possibly missing on older cached data; treat a
-  //: missing value the same as 'general'.
+  //: Tarot archetype — the single source of truth for both Chaos Mutator
+  //: weighting and Tarot Deck card assignment. One of: hex, boon, sacrifice,
+  //: exhaustion, obsession, aura, generator, healing, chase, stealth, entity.
+  //: Optional/possibly missing on stale cached data; treat as 'entity'.
   perk_type?: string;
   description: string;
   icon_url: string;

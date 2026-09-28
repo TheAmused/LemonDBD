@@ -87,7 +87,7 @@ export default {
   survivorComparison: "サバイバー速度比較",
   survivorComparisonDesc: "サバイバーの通常疾走速度は 4.0 m/s (100%) です。",
   viewLore: "背景ストーリーを読む",
-  view3DModel: "クリックで3Dモデルを表示",
+  view3DModel: "クリックして拡大",
   loreModalTitle: "エンティティの記録簿 — アーカイブ",
   equipmentDetails: "装備詳細",
   equipment: "装備",

@@ -13,7 +13,7 @@ import {
   copyTextWithFallback,
   type VoteRecord,
 } from '../../utils/smashPersona';
-import type { EntityItem } from '../../types/smashOrPass';
+import type { EntityItem, CustomRomanceArchetype } from '../../types/smashOrPass';
 
 const mockEntity = (overrides: Partial<EntityItem> = {}): EntityItem => ({
   id: 'test-id',
@@ -433,3 +433,91 @@ test('SmashPersona: Clipboard Copy With Fallback', async (t) => {
     }
   });
 });
+
+test('SmashPersona: Custom Romance Archetype Rule Engine', async (t) => {
+  const customArchetypes: CustomRomanceArchetype[] = [
+    {
+      id: 'hero_devotee',
+      title: 'Hero Devotee',
+      subtitle: 'Drawn to virtuous champions',
+      description: 'You fall hardest for heroes standing tall.',
+      badge_color: 'from-amber-500 to-yellow-900',
+      icon_url: 'https://example.com/icons/hero.png',
+      badge_image_url: 'https://example.com/badges/hero.jpg',
+      rules: [
+        {
+          target: 'role_affinity',
+          target_value: 'Hero',
+          operator: '>=',
+          value: 60,
+        },
+      ],
+    },
+    {
+      id: 'abc_affinity',
+      title: 'ABC Enthusiast',
+      subtitle: 'Enigmatic spectrum admirer',
+      description: 'Attracted to arbitrary custom genders.',
+      badge_color: 'from-purple-600 to-indigo-950',
+      rules: [
+        {
+          target: 'gender_count',
+          target_value: 'ABC',
+          operator: '>=',
+          value: 2,
+        },
+      ],
+    },
+    {
+      id: 'custom_fallback',
+      title: 'Free Spirit',
+      subtitle: 'Unbound by simple archetypes',
+      description: 'You chart your own path.',
+      badge_color: 'from-blue-600 to-cyan-950',
+      is_fallback: true,
+      rules: [],
+    },
+  ];
+
+  await t.test('returns custom fallback when votes array is empty', () => {
+    const res = calculateRomancePersona([], {}, customArchetypes);
+    assert.strictEqual(res.archKey, 'custom_fallback');
+    assert.strictEqual(res.title, 'Free Spirit');
+    assert.strictEqual(res.totalVotes, 0);
+  });
+
+  await t.test('evaluates custom role affinity (e.g. Hero role >= 60%)', () => {
+    const votes: VoteRecord[] = [
+      { character: { id: '1', slug: 'h1', name: 'All Might', role: 'Hero', gender: 'male' } as any, vote: 'smash', timestamp: 1 },
+      { character: { id: '2', slug: 'h2', name: 'Deku', role: 'Hero', gender: 'male' } as any, vote: 'smash', timestamp: 2 },
+      { character: { id: '3', slug: 'v1', name: 'Shigaraki', role: 'Villain', gender: 'male' } as any, vote: 'pass', timestamp: 3 },
+    ];
+    const res = calculateRomancePersona(votes, {}, customArchetypes);
+    assert.strictEqual(res.archKey, 'hero_devotee');
+    assert.strictEqual(res.title, 'Hero Devotee');
+    assert.strictEqual(res.iconUrl, 'https://example.com/icons/hero.png');
+    assert.strictEqual(res.badgeImageUrl, 'https://example.com/badges/hero.jpg');
+  });
+
+  await t.test('evaluates custom gender count (e.g. ABC gender >= 2)', () => {
+    const votes: VoteRecord[] = [
+      { character: { id: '1', slug: 'c1', name: 'Custom One', role: 'Villain', gender: 'ABC' } as any, vote: 'smash', timestamp: 1 },
+      { character: { id: '2', slug: 'c2', name: 'Custom Two', role: 'Villain', gender: 'ABC' } as any, vote: 'smash', timestamp: 2 },
+      { character: { id: '3', slug: 'v1', name: 'Villain', role: 'Villain', gender: 'male' } as any, vote: 'pass', timestamp: 3 },
+    ];
+    const res = calculateRomancePersona(votes, {}, customArchetypes);
+    assert.strictEqual(res.archKey, 'abc_affinity');
+    assert.strictEqual(res.title, 'ABC Enthusiast');
+  });
+
+  await t.test('falls back to custom fallback archetype if no rules match', () => {
+    const votes: VoteRecord[] = [
+      { character: { id: '1', slug: 'v1', name: 'Villain', role: 'Villain', gender: 'male' } as any, vote: 'smash', timestamp: 1 },
+      { character: { id: '2', slug: 'v2', name: 'Villain 2', role: 'Villain', gender: 'male' } as any, vote: 'pass', timestamp: 2 },
+    ];
+    const res = calculateRomancePersona(votes, {}, customArchetypes);
+    assert.strictEqual(res.archKey, 'custom_fallback');
+    assert.strictEqual(res.title, 'Free Spirit');
+  });
+});
+

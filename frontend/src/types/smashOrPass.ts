@@ -112,6 +112,11 @@ export interface RosterItem {
    * apart (no leaderboard fetch, no server vote, an "Edit"/"Delete" action
    * instead of nothing). */
   is_local?: boolean;
+  roster_mode?: 'simple' | 'full';
+  custom_roles?: string[];
+  custom_genders?: string[];
+  custom_labels?: RosterCustomLabels;
+  romance_archetypes?: CustomRomanceArchetype[];
 }
 
 export interface FeedResponse {
@@ -236,6 +241,36 @@ export interface SmashRosterDocumentEntity {
   chaos_score?: number;
 }
 
+export interface RosterCustomLabels {
+  turn_on?: string;
+  dealbreaker?: string;
+  dating_vibe?: string;
+  meme?: string;
+  archetype?: string;
+  quote?: string;
+  [key: string]: string | undefined;
+}
+
+export interface ArchetypeRule {
+  target: 'smash_rate' | 'total_votes' | 'role_affinity' | 'gender_affinity' | 'role_count' | 'gender_count';
+  target_value?: string;
+  operator: '>=' | '<=' | '==' | '>';
+  value: number;
+}
+
+export interface CustomRomanceArchetype {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  badge_color: string;
+  icon_name?: 'flame' | 'skull' | 'heart' | 'zap' | 'sparkles' | 'shield' | 'compass' | string;
+  icon_url?: string;
+  badge_image_url?: string;
+  is_fallback?: boolean;
+  rules: ArchetypeRule[];
+}
+
 export interface SmashRosterDocument {
   format: typeof SMASH_ROSTER_FORMAT;
   version: typeof SMASH_ROSTER_FORMAT_VERSION;
@@ -246,6 +281,11 @@ export interface SmashRosterDocument {
   theme_color?: string;
   category?: string;
   is_nsfw?: boolean;
+  roster_mode?: 'simple' | 'full';
+  custom_roles?: string[];
+  custom_genders?: string[];
+  custom_labels?: RosterCustomLabels;
+  romance_archetypes?: CustomRomanceArchetype[];
   entities: SmashRosterDocumentEntity[];
 }
 

@@ -12,13 +12,14 @@ import {
   AlertTriangle,
   ThumbsDown,
   Flame,
+  Quote,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import type { EntityItem } from '@/types/smashOrPass';
+import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { sampleFlags } from '@/utils/smashWatermarks';
 
@@ -39,6 +40,8 @@ interface CharacterCardProps {
   onExitComplete?: () => void;
   locale?: string;
   dict?: Dictionary | any;
+  customLabels?: RosterCustomLabels;
+  rosterMode?: 'simple' | 'full';
 }
 
 export const CharacterCard: React.FC<CharacterCardProps> = ({
@@ -52,6 +55,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   onExitComplete,
   locale = 'en',
   dict,
+  customLabels,
+  rosterMode = 'full',
 }) => {
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [turn, setTurn] = useState<'settled' | 'out' | 'far'>('settled');
@@ -468,8 +473,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             }}
             className="absolute inset-0 h-full w-full rounded-[32px] sm:rounded-[36px] overflow-hidden border-2 border-accent-red/50 bg-bg-primary/95 backdrop-blur-2xl p-4 sm:p-5 flex flex-col justify-between font-mono text-text-primary cursor-pointer select-none"
           >
-            {/* Top Bar with accessible Flip Back button */}
-            <div className="relative z-30 flex items-center justify-between pb-2.5 shrink-0 pointer-events-auto">
+            {/* Top Bar with accessible Flip Back button and Title */}
+            <div className="relative z-30 flex items-center justify-between pb-2 border-b border-border-color shrink-0 pointer-events-auto">
               <button
                 type="button"
                 onMouseDown={(e) => e.stopPropagation()}
@@ -481,81 +486,129 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 }}
                 title={rawSmashDict?.flipBack || ''}
                 aria-label={rawSmashDict?.flipBack || ''}
-                className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
+                className="flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
               >
                 <RotateCw className="h-5 w-5" aria-hidden="true" />
               </button>
-            </div>
 
-            {/* Blurred background content */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between filter blur-md opacity-25 select-none pointer-events-none overflow-hidden"
-            >
-              <div className="flex items-center justify-between border-b border-border-color pb-2.5 shrink-0">
-                <div className="w-12 h-12" />
-                <div className="flex items-center gap-1.5 px-2">
-                  <Sparkles className="h-4 w-4 text-accent-red shrink-0" aria-hidden="true" />
-                  <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[170px] sm:max-w-[200px]">
-                    {character.name}
-                  </h3>
-                </div>
-                <span
-                  className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border ${
-                    isSurvivor
-                      ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
-                      : 'bg-accent-red/15 text-accent-red border-accent-red/30'
-                  }`}
-                >
-                  {isSurvivor
-                    ? rawSmashDict?.filters?.survivors || character.role
-                    : rawSmashDict?.filters?.killers || character.role}
-                </span>
+              <div className="flex items-center gap-1.5 px-2 min-w-0">
+                <Sparkles className="h-4 w-4 text-accent-red shrink-0" aria-hidden="true" />
+                <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary truncate max-w-[150px] sm:max-w-[180px]">
+                  {character.name}
+                </h3>
               </div>
 
-              <div className="space-y-2.5 my-2 flex-1 overflow-hidden pr-1">
-                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
-                    <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
-                    {charTitle}
-                  </span>
-                  {charTagline && <p className="text-[11px] text-text-secondary italic leading-snug">{charTagline}</p>}
-                </div>
+              <span
+                className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-lg border shrink-0 ${
+                  isSurvivor
+                    ? 'bg-accent-green/15 text-accent-green border-accent-green/30'
+                    : 'bg-accent-red/15 text-accent-red border-accent-red/30'
+                }`}
+              >
+                {isSurvivor
+                  ? rawSmashDict?.filters?.survivors || character.role
+                  : rawSmashDict?.filters?.killers || character.role}
+              </span>
+            </div>
 
+            {/* Scrollable Back Content */}
+            <div
+              className="space-y-2.5 my-2 flex-1 overflow-y-auto pr-1 select-text scrollbar-thin scrollbar-thumb-border-color pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Archetype / Dating Vibe */}
+              <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-red/30 space-y-0.5">
+                <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
+                  <Flame className="h-3 w-3 text-accent-red" aria-hidden="true" />
+                  {customLabels?.dating_vibe || 'Dating Vibe'}: {charTitle}
+                </span>
+                {charTagline && <p className="text-[11px] text-text-secondary italic leading-snug">{charTagline}</p>}
+              </div>
+
+              {/* Turn On (Visible & Optional) */}
+              {profile.turn_on && (
+                <div className="p-2.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/40 space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase text-emerald-400 flex items-center gap-1">
+                    <Flame className="h-3 w-3 text-emerald-400" aria-hidden="true" />
+                    {customLabels?.turn_on || 'Turn On'}
+                  </span>
+                  <p className="text-[11px] text-emerald-200 leading-snug">{profile.turn_on}</p>
+                </div>
+              )}
+
+              {/* Dealbreaker (Visible & Optional) */}
+              {profile.dealbreaker && (
+                <div className="p-2.5 rounded-2xl bg-rose-950/20 border border-rose-500/40 space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase text-rose-400 flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3 text-rose-400" aria-hidden="true" />
+                    {customLabels?.dealbreaker || 'Dealbreaker'}
+                  </span>
+                  <p className="text-[11px] text-rose-200 leading-snug">{profile.dealbreaker}</p>
+                </div>
+              )}
+
+              {/* Signature Quote */}
+              {charQuote && (
+                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-accent-amber/30 space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase text-accent-amber flex items-center gap-1">
+                    <Quote className="h-3 w-3 text-accent-amber" aria-hidden="true" />
+                    {customLabels?.quote || 'Quote'}
+                  </span>
+                  <p className="text-[11px] text-text-secondary italic leading-relaxed">{charQuote}</p>
+                </div>
+              )}
+
+              {/* Full Mode Extras */}
+              {rosterMode !== 'simple' && charBio && (
                 <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                    {rawSmashDict?.loreAndPersonality || ''}
+                    {rawSmashDict?.loreAndPersonality || 'Lore'}
                   </span>
-                  {charBio && <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>}
-                  {charQuote && (
-                    <p className="text-[11px] text-accent-red/80 italic pt-1 border-t border-border-color">{charQuote}</p>
-                  )}
+                  <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>
                 </div>
+              )}
 
-                {charMeme && (
-                  <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-0.5">
-                    <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
-                      <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
-                      {rawSmashDict?.trialRumor || ''}
-                    </span>
-                    <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0">
-                <div className="h-9 w-24 rounded-2xl bg-bg-elevated" />
-                <div className="h-9 w-24 rounded-2xl bg-accent-red" />
-              </div>
+              {rosterMode !== 'simple' && charMeme && (
+                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-0.5">
+                  <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
+                    <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
+                    {customLabels?.meme || rawSmashDict?.trialRumor || 'Meme'}
+                  </span>
+                  <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
+                </div>
+              )}
             </div>
 
-            {/* Centered Soon... Overlay */}
-            <div className="relative z-20 flex-1 flex flex-col items-center justify-center pointer-events-none">
-              <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl flex flex-col items-center gap-1">
-                <span className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-text-primary uppercase drop-shadow-md">
-                  {rawSmashDict?.soon || 'Soon...'}
-                </span>
-              </div>
+            {/* Bottom Actions Bar */}
+            <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0 gap-2 pointer-events-auto">
+              <button
+                type="button"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
+                }}
+                className="flex-1 py-2 px-3 rounded-xl bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:border-border-subtle active:scale-95"
+              >
+                <ThumbsDown className="h-4 w-4" aria-hidden="true" />
+                <span>{rawSmashDict?.pass || 'Pass'}</span>
+              </button>
+              <button
+                type="button"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
+                }}
+                className="flex-1 py-2 px-3 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:bg-accent-red-hover active:scale-95"
+              >
+                <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
+                <span>{rawSmashDict?.smash || 'Smash'}</span>
+              </button>
             </div>
           </div>
         </div>

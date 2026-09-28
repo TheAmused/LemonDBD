@@ -25,6 +25,9 @@
 import {
   SMASH_ROSTER_FORMAT,
   SMASH_ROSTER_FORMAT_VERSION,
+  type ArchetypeRule,
+  type CustomRomanceArchetype,
+  type RosterCustomLabels,
   type SmashRosterDocument,
   type SmashRosterDocumentEntity,
 } from '@/types/smashOrPass';
@@ -251,6 +254,79 @@ function sanitizeEntities(
   return entities;
 }
 
+function sanitizeStringList(raw: unknown, maxLen = 64, maxItems = 30): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const list = raw
+    .map((s) => cleanText(s, maxLen))
+    .filter(Boolean);
+  const deduped = Array.from(new Set(list)).slice(0, maxItems);
+  return deduped.length ? deduped : undefined;
+}
+
+function sanitizeCustomLabels(raw: unknown): RosterCustomLabels | undefined {
+  if (!isRecord(raw)) return undefined;
+  const labels: RosterCustomLabels = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (typeof v === 'string' && v.trim()) {
+      labels[k] = cleanText(v, 64);
+    }
+  }
+  return Object.keys(labels).length ? labels : undefined;
+}
+
+function sanitizeRomanceArchetypes(raw: unknown): CustomRomanceArchetype[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const out: CustomRomanceArchetype[] = [];
+  for (const item of raw.slice(0, 20)) {
+    if (!isRecord(item)) continue;
+    const title = cleanText(item.title, 128);
+    if (!title) continue;
+    const id = cleanText(item.id, 64) || slugifyEntityId(title);
+    const subtitle = cleanText(item.subtitle, 200);
+    const description = cleanText(item.description, 2000);
+    const badge_color = cleanText(item.badge_color, 64) || 'from-accent-red to-bg-primary';
+    const icon_name = cleanText(item.icon_name, 32);
+    const icon_url = sanitizeImageUrl(item.icon_url) || undefined;
+    const badge_image_url = sanitizeImageUrl(item.badge_image_url) || undefined;
+    const is_fallback = item.is_fallback === true;
+
+    const rules: ArchetypeRule[] = [];
+    if (Array.isArray(item.rules)) {
+      for (const r of item.rules.slice(0, 10)) {
+        if (!isRecord(r)) continue;
+        const target = r.target;
+        if (
+          target === 'smash_rate' ||
+          target === 'total_votes' ||
+          target === 'role_affinity' ||
+          target === 'gender_affinity' ||
+          target === 'role_count' ||
+          target === 'gender_count'
+        ) {
+          const operator = r.operator === '<=' || r.operator === '==' || r.operator === '>' ? r.operator : '>=';
+          const value = typeof r.value === 'number' && Number.isFinite(r.value) ? r.value : 0;
+          const target_value = cleanText(r.target_value, 64) || undefined;
+          rules.push({ target, operator, value, target_value });
+        }
+      }
+    }
+
+    out.push({
+      id,
+      title,
+      subtitle,
+      description,
+      badge_color,
+      ...(icon_name ? { icon_name } : {}),
+      ...(icon_url ? { icon_url } : {}),
+      ...(badge_image_url ? { badge_image_url } : {}),
+      ...(is_fallback ? { is_fallback: true } : {}),
+      rules,
+    });
+  }
+  return out.length ? out : undefined;
+}
+
 // ---------------------------------------------------------------------------
 // Documents
 // ---------------------------------------------------------------------------
@@ -281,6 +357,12 @@ export function validateSmashRosterDocument(input: unknown): SmashRosterParseRes
   const theme_color = cleanText(input.theme_color, 32);
   const cover_image_url = sanitizeImageUrl(input.cover_image_url);
   const is_nsfw = input.is_nsfw === true;
+  const roster_mode = input.roster_mode === 'simple' ? 'simple' : 'full';
+  const custom_roles = sanitizeStringList(input.custom_roles);
+  const custom_genders = sanitizeStringList(input.custom_genders);
+  const custom_labels = sanitizeCustomLabels(input.custom_labels);
+  const romance_archetypes = sanitizeRomanceArchetypes(input.romance_archetypes);
+
   if (counter.truncated) warnings.set('truncated', counter.truncated);
 
   const doc: SmashRosterDocument = {
@@ -292,6 +374,11 @@ export function validateSmashRosterDocument(input: unknown): SmashRosterParseRes
     ...(theme_color ? { theme_color } : {}),
     ...(category ? { category } : {}),
     ...(is_nsfw ? { is_nsfw } : {}),
+    roster_mode,
+    ...(custom_roles?.length ? { custom_roles } : {}),
+    ...(custom_genders?.length ? { custom_genders } : {}),
+    ...(custom_labels ? { custom_labels } : {}),
+    ...(romance_archetypes?.length ? { romance_archetypes } : {}),
     entities,
   };
 

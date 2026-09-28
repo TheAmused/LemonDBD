@@ -15,7 +15,7 @@ import {
   Gamepad2,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import type { EntityItem } from '@/types/smashOrPass';
+import type { EntityItem, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { Modal } from '@/components/common/Modal';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -46,6 +46,7 @@ interface RomancePersonaModalProps {
   onResetAll?: () => void;
   locale?: string;
   dict?: Dictionary | any;
+  customArchetypes?: CustomRomanceArchetype[];
 }
 
 export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
@@ -56,6 +57,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   onResetAll,
   locale = 'en',
   dict,
+  customArchetypes,
 }) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [isSharingView, setIsSharingView] = useState<boolean>(false);
@@ -85,8 +87,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
     if (sharedPayload) {
       return reconstructSharedPersona(sharedPayload, rawArchetypes);
     }
-    return calculateRomancePersona(votes, rawArchetypes);
-  }, [votes, sharedPayload, rawSmash]);
+    return calculateRomancePersona(votes, rawArchetypes, customArchetypes);
+  }, [votes, sharedPayload, rawSmash, customArchetypes]);
 
   const shareUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
@@ -242,6 +244,9 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
   const hasVotes = persona.totalVotes > 0 || isSharedView;
 
   const renderIcon = (name: RomancePersonaResult['iconName']) => {
+    if (persona.iconUrl) {
+      return <img src={persona.iconUrl} alt={persona.title} className="h-6 w-6 object-contain rounded" />;
+    }
     switch (name) {
       case 'compass':
         return <VeiledCompassIcon className="h-6 w-6 text-text-inverted animate-spin-slow" />;
@@ -346,6 +351,11 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             {/* Identity Preview Card */}
             <div
               className={`relative overflow-hidden rounded-2xl p-4 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-lg`}
+              style={{
+                backgroundImage: persona.badgeImageUrl ? `url(${persona.badgeImageUrl})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
@@ -452,7 +462,12 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
           <>
             <div
               className={`relative overflow-hidden rounded-3xl p-5 sm:p-6 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-2xl transition-all`}
-              style={{ boxShadow: `0 0 40px ${persona.glowColor}` }}
+              style={{
+                boxShadow: `0 0 40px ${persona.glowColor}`,
+                backgroundImage: persona.badgeImageUrl ? `url(${persona.badgeImageUrl})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
             >
               {isSharedView && (
                 <div className="mb-2">

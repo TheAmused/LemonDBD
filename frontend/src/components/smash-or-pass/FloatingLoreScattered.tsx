@@ -13,7 +13,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { SmashSounds } from './SmashSoundEffects';
-import { EntityItem } from '@/types/smashOrPass';
+import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks, getWatermarkFontSize } from '@/utils/smashWatermarks';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
@@ -22,6 +22,7 @@ interface FloatingLoreScatteredProps {
   character: EntityItem | null;
   locale?: string;
   dict?: Dictionary;
+  customLabels?: RosterCustomLabels;
 }
 
 // Known DBD signature quote translations
@@ -47,6 +48,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   character,
   locale = 'en',
   dict,
+  customLabels,
 }) => {
   if (!character) return null;
 
@@ -108,11 +110,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   // Localized Labels
   const loreLabels: any = dict?.smashOrPass?.loreLabels || {};
   const trialClassificationLabel = loreLabels.trialClassification || (currentLoc === 'pl' ? 'Klasyfikacja Próby' : 'Trial Classification');
-  const datingArchetypeLabel = loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
+  const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype || (currentLoc === 'pl' ? 'Archetyp Randkowy' : 'Dating Archetype');
   const greenFlagLabel = loreLabels.greenFlag || (currentLoc === 'pl' ? 'Zielona Flaga' : 'Trial Green Flag');
   const redFlagLabel = loreLabels.redFlag || (currentLoc === 'pl' ? 'Ostrzeżenie Próby' : 'Trial Warning');
   const identityProfileLabel = loreLabels.identityProfile || (currentLoc === 'pl' ? 'Profil Tożsamości' : 'Identity Profile');
-  const signatureQuoteLabel = loreLabels.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Signature Quote');
+  const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote || (currentLoc === 'pl' ? 'Charakterystyczny Cytat' : 'Signature Quote');
+  const turnOnLabel = customLabels?.turn_on || (currentLoc === 'pl' ? 'Co Kręci' : 'Turn On');
+  const dealbreakerLabel = customLabels?.dealbreaker || (currentLoc === 'pl' ? 'Dyskwalifikacja' : 'Dealbreaker');
 
   const genderLabel = isMonster
     ? loreLabels.monster || (currentLoc === 'pl' ? 'Potwór / Przedwieczny' : 'Eldritch / Monster')
@@ -159,7 +163,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none">
+      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
@@ -176,7 +180,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 {datingArchetypeLabel}
               </span>
             </div>
-            <p className="text-sm font-black font-mono tracking-tight text-text-primary group-hover:text-accent-red  transition-colors">
+            <p className="text-sm font-black font-mono tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
               {charTitle}
             </p>
             <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors font-sans">
@@ -185,11 +189,31 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Left Item 3: Trial Green Flag - Hidden for now */}
+        {/* Left Item 3: Turn On (Tilt Left -1deg & Emerald Glow) */}
+        {profile.turn_on && (
+          <div
+            key={`turn-on-${character.slug}`}
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:-rotate-1 cursor-pointer group"
+            style={{ animationDelay: '140ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-emerald-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.4)]">
+              <div className="flex items-center gap-1.5 text-emerald-400">
+                <Flame className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                  {turnOnLabel}
+                </span>
+              </div>
+              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-emerald-300 transition-colors font-sans">
+                {profile.turn_on}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none">
+      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-16 hidden lg:flex flex-col justify-center max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
@@ -212,7 +236,27 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           </div>
         </div>
 
-        {/* Right Item 3: Trial Warning / Red Flag - Hidden for now */}
+        {/* Right Item 3: Dealbreaker (Tilt Right +1deg & Rose Glow) */}
+        {profile.dealbreaker && (
+          <div
+            key={`dealbreaker-${character.slug}`}
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-105 hover:rotate-1 cursor-pointer group"
+            style={{ animationDelay: '160ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-rose-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-500 group-hover:shadow-[0_0_50px_rgba(244,63,94,0.4)]">
+              <div className="flex items-center gap-1.5 text-rose-400">
+                <AlertTriangle className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
+                <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
+                  {dealbreakerLabel}
+                </span>
+              </div>
+              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-rose-300 transition-colors font-sans">
+                {profile.dealbreaker}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

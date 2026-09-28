@@ -42,6 +42,11 @@ export function customRosterToRosterItem(roster: StoredCustomRoster): RosterItem
     character_count: roster.entities.length,
     total_votes: 0,
     is_local: true,
+    roster_mode: roster.roster_mode || 'full',
+    custom_roles: roster.custom_roles,
+    custom_genders: roster.custom_genders,
+    custom_labels: roster.custom_labels,
+    romance_archetypes: roster.romance_archetypes,
   };
 }
 

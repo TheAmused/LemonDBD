@@ -8,12 +8,14 @@ from typing import Any
 from sqlalchemy import case, delete, func, or_, select
 from sqlalchemy.orm import joinedload
 from app.core.extensions import db
+from app.core import redis_cache
 from app.core.redis_cache import bump_catalog_version
 from app.models.base import utcnow
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
+    SmashTaxonomy,
     Vote,
 )
 from app.seeds.smash_roster_seeder import ROSTERS_DIR, seed_smash_rosters
@@ -871,3 +873,84 @@ class SmashOrPassService:
             path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         except OSError as err:
             logger.error("[smash_or_pass_service] Failed to write roster seed file %s: %s", path, err)
+
+    def get_taxonomies(self) -> dict[str, list[str]]:
+        """Returns cached or database-derived lists of known roles and genders."""
+        cache_key = "smash_or_pass:taxonomies"
+        cached = redis_cache.get(cache_key)
+        if cached and isinstance(cached, dict) and "roles" in cached and "genders" in cached:
+            return cached
+
+        terms = db.session.scalars(
+            select(SmashTaxonomy).order_by(SmashTaxonomy.is_predefined.desc(), SmashTaxonomy.name.asc())
+        ).all()
+
+        if not terms:
+            defaults = [
+                ("role", "Survivor", "survivor"),
+                ("role", "Killer", "killer"),
+                ("gender", "female", "female"),
+                ("gender", "male", "male"),
+                ("gender", "monster_other", "monster_other"),
+            ]
+            for t_type, t_name, t_slug in defaults:
+                term = SmashTaxonomy(type=t_type, name=t_name, slug=t_slug, is_predefined=True)
+                db.session.add(term)
+            try:
+                db.session.commit()
+                terms = db.session.scalars(
+                    select(SmashTaxonomy).order_by(SmashTaxonomy.is_predefined.desc(), SmashTaxonomy.name.asc())
+                ).all()
+            except Exception as e:
+                db.session.rollback()
+                logger.error("[smash_or_pass_service] Failed to seed default taxonomies: %s", e)
+
+        roles = [t.name for t in terms if t.type == "role"]
+        genders = [t.name for t in terms if t.type == "gender"]
+
+        for default_role in ("Survivor", "Killer"):
+            if default_role not in roles:
+                roles.insert(0, default_role)
+        for default_gender in ("female", "male", "monster_other"):
+            if default_gender not in genders:
+                genders.append(default_gender)
+
+        result = {"roles": roles, "genders": genders}
+        redis_cache.set(cache_key, result, ttl=86400)
+        return result
+
+    def register_taxonomy(self, term_type: str, name: str) -> dict[str, Any]:
+        """Registers a custom role or gender in the database, busting the cache."""
+        clean_name = name.strip()[:64]
+        if not clean_name:
+            raise ValueError("Taxonomy name cannot be empty")
+        if term_type not in ("role", "gender"):
+            raise ValueError(f"Invalid taxonomy type: {term_type}")
+
+        slug = re.sub(r"[^a-z0-9_-]+", "-", clean_name.lower()).strip("-") or "custom"
+        existing = db.session.scalar(
+            select(SmashTaxonomy).where(
+                SmashTaxonomy.type == term_type,
+                SmashTaxonomy.slug == slug,
+            )
+        )
+        if existing:
+            return existing.to_dict()
+
+        new_term = SmashTaxonomy(
+            type=term_type,
+            name=clean_name,
+            slug=slug,
+            is_predefined=False,
+        )
+        db.session.add(new_term)
+        try:
+            db.session.commit()
+            bump_catalog_version()
+            redis_cache.set("smash_or_pass:taxonomies", None, ttl=1)
+        except Exception as e:
+            db.session.rollback()
+            logger.error("[smash_or_pass_service] Error registering taxonomy: %s", e)
+            raise
+
+        return new_term.to_dict()

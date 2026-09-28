@@ -29,23 +29,18 @@ from app.seeds.static_db_seeder import seed_from_static_json
 
 
 ALLOWED_PERK_TYPES = {
-    "exhaustion", "gen_slowdown", "hex", "boon", "chase",
-    "aura_reading", "altruism_healing", "handicap", "meme", "general",
+    "hex", "boon", "sacrifice", "exhaustion", "obsession",
+    "aura", "generator", "healing", "chase", "stealth", "entity", "hooks",
 }
 
-# Ground truth, mirrored from frontend/src/constants/chaosMutators.ts's
-# SURVIVOR_CHAOS_MUTATORS / KILLER_CHAOS_MUTATORS: which perk_type each
-# curse consumes, and which role(s) that curse belongs to. A perk_type that
-# is consumed by curses on only one side must never appear on a perk of the
-# other role -- 'hex', 'aura_reading', 'handicap', 'meme' and 'general' are
-# deliberately excluded here because they're consumed by curses present on
-# BOTH sides (or by no curse at all), so no role restriction applies to them.
+# Perk types that only exist on one role: exhaustion perks and boons are
+# Survivor-only, and Scourge Hook perks are Killer-only. A perk of the other
+# role carrying one of these types is a classification mistake (the Sloppy
+# Butcher bug class). Every other type is shared by both roles.
 ROLE_ONLY_PERK_TYPES = {
-    "exhaustion": "Survivor",        # no_exhaustion is Survivor-only
-    "altruism_healing": "Survivor",  # solo_queue is Survivor-only
-    "boon": "Survivor",              # hex_boon_only (the only boon-consuming curse) is Survivor-only
-    "gen_slowdown": "Killer",        # no_slowdown is Killer-only
-    "chase": "Killer",               # chase_only is Killer-only
+    "exhaustion": "Survivor",
+    "boon": "Survivor",
+    "hooks": "Killer",
 }
 
 

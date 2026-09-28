@@ -161,6 +161,7 @@ export default {
     chase: "Pościg",
     stealth: "Cień",
     entity: "Byt",
+    hooks: "Wisielec",
   },
   blindModeTooltip: "Ukryj ikony umiejętności (Tryb Ślepy)",
   hiddenPerkLabel: "Ukryte, sprawdź w grze",

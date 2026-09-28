@@ -37,6 +37,7 @@ CARDS: list[tuple[str, str, tuple[int, int, int], tuple[int, int, int], tuple[in
     ("the-chase", "The Chase", (82, 40, 6), (32, 14, 2), (251, 146, 60)),
     ("the-shadow", "The Shadow", (18, 20, 26), (6, 7, 10), (100, 110, 130)),
     ("the-entity", "The Entity", (40, 4, 10), (6, 2, 4), (190, 30, 40)),
+    ("the-hanged-man", "The Hanged Man", (52, 30, 14), (18, 10, 4), (214, 158, 96)),
 ]
 
 SUBTITLE = "LEMONDBD TAROT"

@@ -33,7 +33,7 @@ class PerkBase(BaseModel):
     icon_local_path: str | None = Field(None, max_length=255)
     translations: dict[str, Any] | None = None
     #: Tarot archetype — one of: hex, boon, sacrifice, exhaustion, obsession,
-    #: aura, generator, healing, chase, stealth, entity.
+    #: aura, generator, healing, chase, stealth, entity, hooks.
     #: Nullable; treat a missing value as 'entity' (catch-all).
     perk_type: str | None = Field(None, max_length=30)
     #: At most one set, and only on the side `role` names. 27 general perks

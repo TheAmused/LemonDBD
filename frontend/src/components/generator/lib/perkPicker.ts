@@ -3,7 +3,7 @@
 // perk.perk_type IS the Tarot archetype. One source of truth.
 // No keyword scanning needed — the backend seed data classifies every perk
 // into exactly one of: hex | boon | sacrifice | exhaustion | obsession |
-// aura | generator | healing | chase | stealth | entity
+// aura | generator | healing | chase | stealth | entity | hooks
 //
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
@@ -278,7 +278,8 @@ export type TarotType =
   | 'healing'
   | 'chase'
   | 'stealth'
-  | 'entity';
+  | 'entity'
+  | 'hooks';
 
 /**
  * Returns the perk's Tarot card archetype.
@@ -290,7 +291,7 @@ export type TarotType =
 export function getPerkTarotType(perk: Perk): TarotType {
   const VALID: readonly string[] = [
     'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession',
-    'aura', 'generator', 'healing', 'chase', 'stealth', 'entity',
+    'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks',
   ];
   const t = perk.perk_type || 'entity';
   return (VALID.includes(t) ? t : 'entity') as TarotType;

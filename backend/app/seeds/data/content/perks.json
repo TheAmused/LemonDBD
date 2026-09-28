@@ -421,7 +421,7 @@
           "description": "Podczas nieaktywności, użyj przycisk zdolności aktywnej 1, aby występować, wzmacniając wszystkich ocalałych w odległości 16 m przez maksymalnie 15 s. Gdy występujesz, inni ocalali widzą twoją aurę. Rzuć kością k20:\n• 1 | Krzyczysz, ale nic się nie dzieje.\n• 2-10 | Podstawowe testy umiejętności dają 1% więcej postępu.\n• 11-19 | Podstawowe testy umiejętności dają 2% więcej postępu.\n• 20 | Podstawowe testy umiejętności dają 3% więcej postępu.\nTen efekt kończy się 15 s po tym, jak zakończysz występ. Czas odnawiania: 110/100/90 s.\n\n„Słuchajcie uważnie! Zaraz uratuję wam życie!” – Aestri"
         }
       },
-      "perk_type": "entity"
+      "perk_type": "generator"
     },
     {
       "id": 15,
@@ -604,7 +604,7 @@
           "description": "Dopóki wszystkie generatory nie zostaną ukończone, za każdym razem, gdy jesteś zdjęty z haka, przez następne 20/25/30 s, gdy masz efekt Wyczerpany, użyj przycisk zdolności aktywnej 1, aby natychmiast stracić efekt Wyczerpany.\nTen efekt jest wyłączany przez widoczne działania.\n\n„Muszę… dać radę”. – Renato Lyra"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "chase"
     },
     {
       "id": 21,
@@ -634,7 +634,7 @@
           "description": "Będąc niesionym przez zabójcę:\n• Za każdym razem, gdy zabójca spadnie z przynajmniej 1 m wysokości, otrzymujesz 33% twojego bieżącego postępu szamotania.\n• Twoje szamotanie jest 15/20/25% silniejsze.\n• W promieniu 48/56/64 m zabójca nie może zobaczyć aur haków.\n\n„Szarp się dziecino / całuj usta wolności / Bo nikt nie może więzić w swym sercu miłości.”– Kate Denson, „Do Utraty Tchu”"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 22,
@@ -934,7 +934,7 @@
           "description": "Za każdym razem, gdy jesteś zdjęty z haka:\n• Hak jest uszkodzony, następnie jest naprawiony po upływie 60/50/40 s.\n• Widzisz aurę zabójcy przez 4/5/6 s.\n\n„Nazwany brzuchem bestii, ten kawałek drewna miał historię do opowiedzenia; nie stracił swojej drugiej szansy”. – Jeff (atrament i farba olejna na drewnie)"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 32,
@@ -1087,7 +1087,7 @@
           "description": "Gdy wisisz na haku i gdy inny ocalały znajdzie się odległości 16 m, odliczanie zatrzymuje się na 26/30/34 s.\n\n„Jak już się tam dostaniesz, pamiętaj — udawaj, że masz to gdzieś. Właśnie tak, uczysz się, przyjacielu. Uczysz się”. – Steve Harrington"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 37,
@@ -1267,7 +1267,7 @@
           "description": "Za każdym razem, gdy zdejmiesz ocalałego z haka, podczas kucania lub bezczynności, użyj przycisk zdolności aktywnej 1, aby ranni i umierający ocalali w odległości 24 m:\n• Nie wydawali jęków bólu przez 10/12.5/15 s.\n• Nie zostawiali czerwonych zarysowań przez 10/12.5/15 s.\n• Nie zostawiali śladów krwi przez 10/12.5/15 s.\nKrzyczysz, następnie zabójca widzi twoją aurę przez 5 s.\n\n„Jesteśmy tymi, którzy przeżyli”. – Rick Grimes"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "sacrifice"
     },
     {
       "id": 43,
@@ -1297,7 +1297,7 @@
           "description": "Po ukończeniu leczenia innego ocalałego ze stanem zdrowia 1, będąc powaloną z przynajmniej 25% postępu dojścia do siebie, użyj przycisk zdolności aktywnej 1 aby natychmiast dojść do siebie.\nOtrzymujesz efekt Okaleczony, następnie po 20/25/30 s, jesteś natychmiast ponownie powaloną.\n\n„To wystarczy, aby iść dalej. Dalej próbować. Dalej walczyć. Dalej marzyć”. – Michonne Grimes"
         }
       },
-      "perk_type": "sacrifice"
+      "perk_type": "entity"
     },
     {
       "id": 44,
@@ -1327,7 +1327,7 @@
           "description": "Na początku próby, otrzymujesz określoną liczbę żetonów (0), maksymalnie 5.\nZa każdym razem, gdy trafisz świetny podstawowy test umiejętności, otrzymujesz określoną liczbę żetonów (1).\nZa każdym razem, gdy inny ocalały chybia podstawowy test umiejętności, wydajesz żeton (1), następnie:\n• Chybiony test umiejętności zamienia się w dobry test umiejętności.\n• Widzisz aurę tego ocalałego przez 6/8/10 s.\n\n„Co dwie głowy, to nie jedna”. – Jonah Vasquez"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "generator"
     },
     {
       "id": 45,
@@ -1387,7 +1387,7 @@
           "description": "Gdy przebywasz w zasięgu terroru zabójcy i gdy ten cię nie ściga, zabójca pozostawia znaczniki światła, które trwają przez 10 s i które widzisz. Gdy przebywasz na znacznikach światła zabójcy, zyskujesz efekt Nieuchwytność. Ten efekt kończy się po upływie 3/4/5 s.\n\n„Świadek dość powiedział, Wysoki Sądzie. Nie mam więcej pytań”. – Shane Wiigwaas"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 47,
@@ -1628,7 +1628,7 @@
           "description": "Widzisz aury określonej liczby (3) generatorów najbliższych względem siebie i naprawiasz je 4/5/6% szybciej."
         }
       },
-      "perk_type": "aura"
+      "perk_type": "generator"
     },
     {
       "id": 55,
@@ -1658,7 +1658,7 @@
           "description": "Raz na próbę, gdy bezpiecznie zdejmiesz z haka innego ocalałego, możesz samodzielnie zejść z haka. Gdy samodzielnie zejdziesz z haka w ten sposób, otrzymujesz efekt Okaleczony na 80/70/60 s.\n\n„Zostałem wychowany przez prostego człowieka, który nauczył mnie, jak poradzić sobie w każdych, nawet najgorszych okolicznościach”. – Adam Francis"
         }
       },
-      "perk_type": "sacrifice"
+      "perk_type": "entity"
     },
     {
       "id": 56,
@@ -1748,7 +1748,7 @@
           "description": "Na początku próby, i po pościgu przez zabójcę przez 30/25/20 s, otrzymujesz określoną liczbę żetonów (1), maksymalnie 3.\nNie będąc powalonym, za każdym razem, gdy zabójca próbuje zobaczyć twoją aurę, wydajesz żeton (3). Przez następne 6/8/10 s:\n• Zabójca nie może zobaczyć twojej aury.\n• Nie zostawiasz czerwonych zarysowań.\n\n„Zgłębianie mitologii nordyckiej: odwaga może ukryć nasze wady, nawet gdy jesteśmy najbardziej bezbronni”. — Jeff, ołówek na barwionym papierze"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 59,
@@ -2138,7 +2138,7 @@
           "description": "Podczas chodzenia, otrzymujesz 7% efektu Pośpiech.\nWidzisz swoje własne czerwone zarysowania.\n\n„Chcę skończyć, co zaczęłam. Chcę to zabić”. – Nancy Wheeler"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 72,
@@ -2287,7 +2287,7 @@
           "description": "Będąc zdrowym i lecząc innego ocalałego bez apteczki: użyj przycisk zdolności aktywnej 1, aby natychmiast go uleczyć, następnie:\n• Otrzymujesz obrażenia:\n• Otrzymujesz efekt Okaleczony na 60/70/80 s.\n• Stajesz się obsesją.\nNa początku próby, masz mniejszą szansę stać się obsesją.\n\n„Możemy napisać własną historię i zdecydować, jak ma się skończyć”. – Zarina Kassir"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "sacrifice"
     },
     {
       "id": 77,
@@ -2466,7 +2466,7 @@
           "description": "Gdy wszystkie generatory zostaną naprawione, otrzymujesz 5/6/7% efektu Pośpiech.\n\n„Zapinać pasy, ćwoki! Ruszamy!” – Zaginione taśmy: Nikki"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "chase"
     },
     {
       "id": 83,
@@ -2586,7 +2586,7 @@
           "description": "Gdy jesteś w piwnicy w pobliżu kręgu, użyj przycisk zdolności aktywnej 2, aby przeprowadzić inwokację. Podczas inwokacji, inni ocalali widzą twoją aurę i mogą dołączyć do twojej inwokacji.\nGdy inwokacja jest zakończona:\n• Za każdym razem, gdy zabójca wystraszy wronę, gdy ocalały jest w zasięgu terroru, wszyscy ocalali widzą aurę zabójcy przez 4/5/6 s.\n• Stajesz się ranny.\n• Otrzymujesz efekt Okaleczony.\nKażda inwokacja może być zakończona raz na próbę.\n\n„Pamiętaj o swoim szkoleniu. Uczyli cię wszystkiego o krukach”. – Taurie Cain"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "sacrifice"
     },
     {
       "id": 87,
@@ -2735,7 +2735,7 @@
           "description": "Inni ocalali w odległości 4 m od ciebie:\n• Oczyszczają totemy 15/20/25% szybciej.\n• Leczą 15/20/25% szybciej.\n• Otwierają bramy wyjściowe 15/20/25% szybciej.\n• Sabotują haki 15/20/25% szybciej.\n• Zdejmują ocalałych z haka 15/20/25% szybciej.\n• Odblokowują skrzynie 15/20/25% szybciej.\nTen efekt kończy się 0 s po tym, jak oddalą się poza twój zasięg."
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 92,
@@ -2828,7 +2828,7 @@
           "description": "Gdy jesteś zdrowy i biegniesz, twoje kroki są ciche dla zabójcy.\nZa każdym razem, gdy wykonasz szybką akcję, czas odnawiania: 20/24/28 s.\n\n„Chodź, kocie”. – Ellen Ripley"
         }
       },
-      "perk_type": "entity"
+      "perk_type": "stealth"
     },
     {
       "id": 95,
@@ -3217,7 +3217,7 @@
           "description": "Dopóki wszystkie generatory nie zostaną ukończone, za każdym razem, gdy jesteś zdjęty z haka, przez następne 6/8/10 s:\n• Otrzymujesz efekt Wytrzymałość.\n• Twoje jęki bólu są 100% cichsze.\n• Zabójca nie może zobaczyć twojej aury.\n\n„Zaufaj mi, badam sprawy dokładnie i dyskretnie”. – Zarina Kassir"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 108,
@@ -3549,7 +3549,7 @@
           "description": "Będąc niesionym przez zabójcę, gdy masz przynajmniej 70/60/50% postępu szamotania i bądąc obok stojącej palety, możesz przewrócić ją i ogłuszyć zabójcę.\nBędąc powalonym, widzisz aury stojących palet.\n\n„Polegałam na ochronie innych i straciłam wszystko. Nigdy więcej”. – Élodie Rakoto"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 119,
@@ -3668,7 +3668,7 @@
           "description": "Gdy ściga cię zabójca:\n• Widzisz aury innych ocalałych.\n• Inni ocalali naprawiają 6/8/10% szybciej.\nZa każdym razem, gdy otrzymasz obrażenia, czas odnawiania wynosi: 60/50/40 s.\n\n„Nie musimy uciekać się do przemocy. Udowodnię to” – Vittorio Toscano"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "chase"
     },
     {
       "id": 123,
@@ -3788,7 +3788,7 @@
           "description": "Po naprawianiu generatora przez przynajmniej 3 s, widzisz jego aurę.\nGdy chowasz się w szafce, zabójca jest alarmowany przez generator. Czas odnawiania: 60/50/40 s.\n\n„Wiadomości pomijają to, co jest trudne i skomplikowane — czyli prawdę”. – Zarina Kassir"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 127,
@@ -3880,7 +3880,7 @@
           "description": "Gdy jesteś ranny:\n• Błogosławisz i oczyszczasz totemy 3/6/9% szybciej.\n• Leczysz 3/6/9% szybciej.\n• Otwierasz bramy wyjściowe 3/6/9% szybciej.\n• Naprawiasz 3/6/9% szybciej.\n• Sabotujesz haki 3/6/9% szybciej.\n• Zdejmujesz ocalałych z haka 3/6/9% szybciej.\n• Odblokowujesz skrzynie 3/6/9% szybciej.\n• Wykonujesz przeskoki 3/6/9% szybciej.\n\n„Skup się, nawet w tych desperackich czasach”."
         }
       },
-      "perk_type": "generator"
+      "perk_type": "entity"
     },
     {
       "id": 130,
@@ -4089,7 +4089,7 @@
           "description": "Gdy jesteś w zasięgu terroru zabójcy, za każdym razem, gdy spojrzysz na niego:\n• Krzyczysz, następnie widzisz aurę zabójcy przez 3/4/5 s.\n• Jest 50% szansy, że krzykniesz ponownie. Gdy to zrobisz, widzisz aurę zabójcy jeszcze przez 6/7/8 s.\nCzas odnawiania: 60 s.\n\n„Tego nie ma w scenariuszu!” – Nicolas Cage"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "sacrifice"
     },
     {
       "id": 137,
@@ -4179,7 +4179,7 @@
           "description": "Za każdym razem, gdy inny ocalały jest powieszony na haku, otrzymujesz efekt Nieuchwytność na 10/12/14 s.\n\n„Nauczyłam się czegoś w branży: gdy machają siekierą, trzymaj głowę nisko”. – Yun-jin"
         }
       },
-      "perk_type": "entity"
+      "perk_type": "stealth"
     },
     {
       "id": 140,
@@ -4209,7 +4209,7 @@
           "description": "Raz na próbę, gdy nie przeszedłeś określonej liczby stanów powieszenia na haku (2) i jesteś obok ocalałego powieszonego na haku, użyj przycisk zdolności aktywnej 2, aby zdjąć go z haka, następnie:\n• Ten ocalały traci 1 fazę zawieszenia na haku.\n• Otrzymujesz 1 stan zawieszenia na haku.\n• Krzyczysz.\n• Otrzymujesz efekt Narażony na 30/25/20 s.\n\n„To jeszcze nie twój czas. Ruszaj!” – Taurie Cain"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "sacrifice"
     },
     {
       "id": 141,
@@ -4238,7 +4238,7 @@
           "description": "Możesz podjąć określoną liczbę prób (3) samodzielnego zejścia z haka i masz 2/3/4% większą szansę na powodzenie."
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 142,
@@ -4267,7 +4267,7 @@
           "description": "W odległości 8/10/12 m od ciebie i w promieniu 45 stopni, słyszysz sygnał dźwiękowy. Czas odnawiania: 14/12/10 s.\nZa każdym razem, gdy ocalały oczyści totem, otrzymujesz żeton (1), maksymalnie 5.\nZa każdy żeton, promień zmniejsza się o 5 stopni.\n\n„Nie”. – Lost Tapes: Andy"
         }
       },
-      "perk_type": "entity"
+      "perk_type": "aura"
     },
     {
       "id": 143,
@@ -4447,7 +4447,7 @@
           "description": "W odległości 36 m, za każdym razem, gdy zabójca spojrzy na ciebie, słyszysz sygnał dźwiękowy.\nW odległości 36 m, gdy zabójca patrzy na ciebie:\n• Błogosławisz i oczyszczasz 2/4/6% szybciej.\n• Leczysz 2/4/6% szybciej.\n• Otwierasz bramy wyjściowe 2/4/6% szybciej.\n• Naprawiasz generatory 2/4/6% szybciej.\n• Sabotujesz haki 2/4/6% szybciej.\n• Zdejmujesz ocalałych z haka 2/4/6% szybciej.\n• Odblokowujesz skrzynie 2/4/6% szybciej."
         }
       },
-      "perk_type": "generator"
+      "perk_type": "chase"
     },
     {
       "id": 149,
@@ -4507,7 +4507,7 @@
           "description": "Po ukrywaniu się przez 15 s w zasięgu terroru, otrzymujesz określoną liczbę żetonów (1), maksymalnie 3.\nZa każdym razem, gdy trafisz dobry podstawowy test umiejętności, wydajesz żeton (1).\n• Dobry test umiejętności zmienia się w świetny test umiejętności.\n• Otrzymujesz 1/1.5/2% więcej postępu.\n\n„Miałem cię. Miałem cię, gdy uklęknąłeś na kolanach. Byłeś przerażony, bo cię mieliśmy. Zamkniemy tę sprawę!” – Detektyw David Tapp"
         }
       },
-      "perk_type": "entity"
+      "perk_type": "generator"
     },
     {
       "id": 151,
@@ -4567,7 +4567,7 @@
           "description": "Po pierwszym razie, gdy wyczerpiesz ładunki przedmiotu, widzisz aurę zabójcy przez 6/8/10 s.\nZa każdym razem, gdy zabierzesz przedmiot ze skrzyni, ma on 20/25/30% więcej ładunków.\n\n„Źle to robisz! Pokażę ci, jak się to robi” – Nea"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 153,
@@ -4627,7 +4627,7 @@
           "description": "Za każdym razem, gdy inny ocalały kończy leczenie ciebie, gdy pozostajecie w odległości 12 m od siebie, nie zostawiacie czerwonych zarysowań. Ten efekt kończy się 4 s po tym, jak ktokolwiek z was oddali się poza wymagany zasięg.\n\n„Jest dobrze, jest dobrze… Ale bądź cicho”. – Renato Lyra"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "stealth"
     },
     {
       "id": 155,
@@ -4777,7 +4777,7 @@
           "description": "Będąc rannym, za każdym razem, gdy inny ocalały w odłegłości 24 m od ciebie oślepia lub ogłusza paletą zabójcę, przez 100 s:\n• Nie wydajesz jęków bólu.\n• Nie zostawiasz śladów krwi.\n• Nie zostawiasz czerwonych zarysowań.\n\n„Zadarli z niewłaściwymi ludźmi”. – Rick Grimes"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 160,
@@ -4866,7 +4866,7 @@
           "description": "Gdy jesteś ranny, świetny obszar podstawowych testów umiejętności jest 10/20/30% większy."
         }
       },
-      "perk_type": "entity"
+      "perk_type": "generator"
     },
     {
       "id": 163,
@@ -4956,7 +4956,7 @@
           "description": "Za każdego ocalałego ciągle przy życiu, wszyscy ocalali mają 1/2/3% więcej szczęścia.\nWszyscy ocalali mogą próbować samodzielnie zejść z haka.\n\n„Cóż mogę powiedzieć? Po prostu jestem szczęściarzem… Możliwe, że moje szczęście przejdzie na ciebie”. – Ace"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 166,
@@ -4986,7 +4986,7 @@
           "description": "Podczas kucania otrzymujesz 90/95/100% efektu Pośpiech.\n\n„Farba jest wciąż świeża, ale mnie już tu dawno nie ma”. – Nea"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 167,
@@ -5076,7 +5076,7 @@
           "description": "Gdy wszystkie generatory są ukończone:\n• Widzisz aury przełączników bramy wyjściowej.\n• Podczas otwierania bramy wyjściowej, inni ocalali widzą twoją aurę.\n• Za każdego ocalałego ciągle przy życiu, otwierasz bramy wyjściowe 15/20/25% szybciej."
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 170,
@@ -5198,7 +5198,7 @@
           "description": "Przebywając w piwnicy, możesz samodzielnie zejść z haka.\nZa każdym razem, gdy jesteś zdjęty z haka, widzisz aurę zabójcy przez 6/8/10 s.\n\n„Do tej pory nie pozwoliłam nikomu stanąć mi na drodze. Czemu miałabym zrobić to teraz?” – Sable"
         }
       },
-      "perk_type": "healing"
+      "perk_type": "entity"
     },
     {
       "id": 174,
@@ -5287,7 +5287,7 @@
           "description": "Po naprawieniu 40/50% generatorów, stojąc obok generatora, użyj przycisk zdolności aktywnej 2, aby założyć pułapkę, która trwa przez 100/110/120 s lub do czasu, aż zabójca uszkodzi ten generator. Wszyscy ocalali widzą aurę tego generatora przez ten czas.\nGdy zabójca znajduje się w odległości 14 m od tego generatora, wszyscy ocalali widzą aurę zabójcy."
         }
       },
-      "perk_type": "aura"
+      "perk_type": "generator"
     },
     {
       "id": 177,
@@ -5347,7 +5347,7 @@
           "description": "Gdy niesiesz ocalałego:\n• Otrzymujesz 6/12/18% efektu Pośpiech.\n• Twój zasięg terroru jest o 6/8/12 m większy.\n\n„W pewnym momencie ekscytacja związana z powieszeniem jednego z nas staje się ważniejsza niż pragnienie pozbawienia nas życia”."
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 179,
@@ -5530,7 +5530,7 @@
           "description": "Gdy jesteś w odległości 16 m od ukończonego generatora, otrzymujesz 5% efektu Pośpiech. Ten efekt kończy się1/3/5 s po tym, jak oddalisz się poza wymagany zasięg.\n\n„Niespodzianka! Tęskniłeś, Andy?” – Chucky"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "chase"
     },
     {
       "id": 185,
@@ -5619,7 +5619,7 @@
           "description": "Za każdym razem, gdy powiesisz ocalałego na haku, przez 20/25/30 s wszyscy ranni ocalali:\n• Otrzymują efekt Wyczerpany.\n• Otrzymują efekt Krwotok.\n\n„Precyzyjnie zaatakuj wroga, a odczują to jego sojusznicy”. – Doktryna Renjira 6:3"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 188,
@@ -5649,7 +5649,7 @@
           "description": "Gdy brama wyjściowa jest otwarta, raz na próbę, powieszenie na haku ocalałego blokuje oba wyjścia na 40/50/60 s.\nWidzisz aury ocalałych znajdujących się w obrębie wyjść.\n\n„To mój świat. Nigdy go nie opuścisz”. – Freddy Krueger"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 189,
@@ -5709,7 +5709,7 @@
           "description": "Niszczysz palety i dające się zniszczyć ściany oraz uszkadzasz generatory 10/15/20% szybciej.\n\n„To nie tylko mięśnie. Mroczna siła motywuje bestię”."
         }
       },
-      "perk_type": "generator"
+      "perk_type": "chase"
     },
     {
       "id": 191,
@@ -5889,7 +5889,7 @@
           "description": "Za każdym razem, gdy generator jest ukończony:\n• Widzisz aury wszystkich okien przez 20/25/30 s.\n• Wszystkie okna zostają zablokowane dla ocalałych na 20/25/30 s.\n\n„Osobnik wykazuje zdolność wykonania pewnego rodzaju telekinezy, która wpływa na stan znajdujących się wokół obiektów, zupełnie jakby istniały one w innej formie w alternatywnym wymiarze”. – Hawkins National Laboratory"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 197,
@@ -6073,7 +6073,7 @@
           "description": "Za każdym razem, gdy ocalały kończy leczenie innego ocalałego, krzyczy. Następnie, do czasu, aż otrzyma obrażenia i gdy jest w odległości przynajmniej 12/8/4 m od tego ocalałego\n• Otrzymuje efekt Nieświadomy.\n• Widzi aurę tego ocalałego."
         }
       },
-      "perk_type": "aura"
+      "perk_type": "healing"
     },
     {
       "id": 203,
@@ -6375,7 +6375,7 @@
           "description": "Za każdym razem, gdy generator jest ukończony, otrzymujesz żeton (4/5/6), maksymalnie 4/5/6.\nZa każdy żeton:\n• Niszczysz w podstawowy sposób palety i dające się zniszczyć ściany 4/5/6% szybciej.\n• Uszkadzasz generatory 4/5/6% szybciej.\n• Podnosisz i upuszczasz ocalałych 4/5/6% szybciej.\n• Przeskakujesz przez okna 4/5/6% szybciej.\n\n„Dlaczego po prostu nie zdechniesz?” – Freddy Krueger"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "entity"
     },
     {
       "id": 213,
@@ -6495,7 +6495,7 @@
           "description": "Za każdym razem, gdy zadasz obrażenia ocalałemu atakiem podstawowym, upuszcza on swój przedmiot.\nW promieniu 32 m, widzisz aury przedmiotów upuszczonych na ziemię.\n\n„Sally, słyszę coś. Zatrzymaj się!” – Franklin"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 217,
@@ -7493,7 +7493,7 @@
           "description": "Za każdym razem, gdy zdrowy ocalały staje się ranny, wszyscy ranni ocalali otrzymują efekt Nieświadomy na 30/35/40 s. Czas odnawiania: 20 s.\n\n„Wybaczcie, trochę mnie poniosło. Nie wiedziałem, czego się spodziewać”. – Robert Kendo"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 250,
@@ -7582,7 +7582,7 @@
           "description": "Po pozostawaniu w bezczynności przez 4/3/2 s, otrzymujesz efekt Niewykrywalny do czasu, aż wykonasz akcję."
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 253,
@@ -7611,7 +7611,7 @@
           "description": "Gdy niesiesz ocalałego:\n• Ocalały szamota się 4/8/12% wolniej.\n• Szamotanie jest 75% słabsze."
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 254,
@@ -7640,7 +7640,7 @@
           "description": "Za każdym razem, gdy ocalały wychodzi z szafki:\n• Otrzymuje efekt Narażony na 30/40/50 s.\n• Krzyczy, następnie otrzymujesz powiadomienie o jego pozycji przez 4 s.\nOtwierasz szafki 30% szybciej.\n\n„To nie miejsce dla tchórzy”. – Legion"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 255,
@@ -7820,7 +7820,7 @@
           "description": "Za każdym razem, gdy ocalały próbuje cię oślepić, widzisz jego aurę przez 6/8/10 s.\nNie możesz zostać oślepiony.\n\n„Te potwory… one się przystosowują! Zdobywają dziwne, nowe zdolności”. – Dziennik Viga"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "entity"
     },
     {
       "id": 261,
@@ -7880,7 +7880,7 @@
           "description": "Gdy niesiesz ocalałego:\n• Za każdym razem, gdy nie trafisz atakiem podstawowym, twój czas odnawiania jest o 2/3/4% krótszy.\n• Za każdym razem, gdy zadasz obrażenia ocalałemu atakiem podstawowym, niesiony ocalały nie zwiększy postępu szamotania przez 2/3/4 s.\n\n„Teraz już nie uciekniesz. Jesteśmy w tym zbyt dobrzy”. – Legion"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 263,
@@ -7913,7 +7913,7 @@
           "description": "Za każdym razem, gdy ocalały zdejmie z haka innego ocalałego lub samego siebie, gdy jesteś przynajmniej 32 m dalej:\n• Ocalały krzyczy.\n• Ocalały otrzymuje efekt Narażony na 40/50/60 s.\nCzas odnawiania: 40/50/60 s.\n\n„Zdziwiłbyś się, jakie narzędzia mogą uratować życie”. – Amanda Young"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 264,
@@ -8003,7 +8003,7 @@
           "description": "Gdy ścigasz ocalałego, twój zasięg terroru jest o 5/10/15% większy.\nGdy nie ścigasz ocalałego, twój zasięg terroru jest o 15/20/25% mniejszy.\n\n„Najwyższy czas na terapię!” – Doktor"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 267,
@@ -8092,7 +8092,7 @@
           "description": "Gdy po raz pierwszy zawiesisz danego ocalałego na haku, otrzymujesz 12 żeton.\nGdy wszystkie generatory zostaną naprawione i gdy ocalały zaczyna otwierać bramę wyjściową:\n• Brama wyjściowa zostaje zablokowana na 6/9/12 s i na dodatkowe 6/8/10 s za każdy żeton.\n• Otrzymasz powiadomienie.\n\n„Ten odgłos, gdy krwawisz... pozwól mi go usłyszeć ponownie”. – Hak Ji-woon"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "entity"
     },
     {
       "id": 270,
@@ -8122,7 +8122,7 @@
           "description": "Gdy po raz pierwszy zawiesisz danego ocalałego na haku, otrzymujesz 12/14/16 żeton.\nGdy wszystkie generatory zostaną ukończone, za każdy żeton:\n• Stojące palety zostają zablokowane na 12/14/16 s.\n• Przeskoki przez okna zostają zablokowane na 12/14/16 s.\n\n„Nie mylę się. To ten świat jest zepsuty!” – Ken Kaneki"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 271,
@@ -8579,7 +8579,7 @@
           "description": "Na początku próby 4 losowe haki zmieniają się w haki plagi. Widzisz ich białe aury.\nKiedy ocalały zostanie zdjęty z haka plagi, aury wszystkich innych ocalałych są ujawniane na 4 s."
         }
       },
-      "perk_type": "aura"
+      "perk_type": "hooks"
     },
     {
       "id": 286,
@@ -8610,7 +8610,7 @@
           "description": "Na początku próby 4 losowe haki zmieniają się w haki plagi.\nZa każdym razem, gdy ocalały jest zdjęty z haku plagi:\n• Otrzymuje efekt Krwotok na 20/25/30 s.\n• Otrzymuje efekt Zmasakrowany na 20/25/30 s.\n• Gdy są leczeni, do czas otrzymania obrażeń, leczą i naprawiają 10/13/16% wolniej.\n\n„Rozerwę twoją duszę na strzępy.” – Pinhead"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "hooks"
     },
     {
       "id": 287,
@@ -8640,7 +8640,7 @@
           "description": "Na początku próby 4 losowe haki zostają zmienione w haki plagi.\nNiosąc ocalałego, widzisz aury innych ocalałych w odległości 36/40/44 m od haka plagi.\nGdy ocalały rozpoczyna sabotaż haka, otrzymasz powiadomienie.\n\n„Żadnych wymówek, żadnego matactwa... Żadnego płaczu”. – Amanda Young"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "hooks"
     },
     {
       "id": 288,
@@ -8670,7 +8670,7 @@
           "description": "Na początku próby maksymalnie 4 losowe haki zmieniają się w haki plagi.\nKiedy ocalały zostanie zdjęty z haka, hak ten staje się hakiem plagi.\nKiedy zawiesisz ocalałego na haku plagi, przez 6/8/10 s widzisz aurę generatora z największym postępem.\n\n„Rzucić kotwicę! Wyznaczę nowy kurs”. – Portia Maye"
         }
       },
-      "perk_type": "aura"
+      "perk_type": "hooks"
     },
     {
       "id": 289,
@@ -8699,7 +8699,7 @@
           "description": "Na początku próby:\n• 4 losowe haki zmieniają się w haki plagi.\n• Haki znajdujące się w piwnicy zmieniają się w haki plagi.\nGdy jesteś oddalony przynajmniej 24 m od ocalałego na haku plagi, jego poświęcenie odbywa się 10/15/20% szybciej.\n\n„Wtedy będziesz wiedzieć, że nie ma ucieczki. Wisząc w otchłaniach, stawiasz czoło mrocznemu”."
         }
       },
-      "perk_type": "entity"
+      "perk_type": "hooks"
     },
     {
       "id": 290,
@@ -8729,7 +8729,7 @@
           "description": "Na początku próby:\n• Maksymalnie 4 losowe haki zmieniają się w haki plagi.\n• Otrzymujesz żetony (4).\nGdy dany ocalały jest powieszony na haku plagi po raz pierwszy, wydajesz żeton (10/15/20), a generator z największym postępem naprawy:\n• Eksploduje, traci 9/12/15% postępu naprawy i zaczyna się psuć.\n• Ocalali naprawiający generator krzyczą.\n\n„Ból rozlewa się poza ciało / Mrok plami horyzont” – „Dziewczyna w cieniu”, Carmina Mora"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "hooks"
     },
     {
       "id": 291,
@@ -8759,7 +8759,7 @@
           "description": "Za każdym razem, gdy totem jest błogosławiony lub oczyszczony, losowy niezablokowany generator zostaje zablokowany na 20/25/30 s.\nZa każdym razem, gdy 1 lub więcej generatorów jest zablokowanych, otrzymujesz efekt Niewykrywalny na 30 s.\n\n„Jesteś tutaj więźniem zupełnie, jak ja.” – Henry Creel"
         }
       },
-      "perk_type": "generator"
+      "perk_type": "stealth"
     },
     {
       "id": 292,
@@ -8874,7 +8874,7 @@
           "description": "Za każdym razem, gdy powiesisz ocalałego na haku, zyskujesz efektNiewykrywalny na 30 s.\nGdy wszystkie generatory są ukończone, zyskujesz efekt Niewykrywalny.\n\n„Widziałeś go, czy nie? Nie mogę wystawić listu gończego na podstawie złego przeczucia”. – Sierżant Reyes, policja Greenville"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 296,
@@ -8932,7 +8932,7 @@
           "description": "Za każdym razem, gdy ocalały wystraszy wronę w odległości 20/28/36 m od ciebie, otrzymujesz powiadomienie. Czas odnawiania: 5 s.\n\n„Dręczą nas w cieniu, naznaczając nasze umysły z każdym krzykiem”."
         }
       },
-      "perk_type": "entity"
+      "perk_type": "aura"
     },
     {
       "id": 298,
@@ -9021,7 +9021,7 @@
           "description": "Odgłosy oddechu ocalałych są 30/40/50% głośniejsze i ich jęki bólu są 15/20/25% głośniejsze.\n\n„Jeśli się nie zatrzymasz i nie złapiesz oddechu… ona to zrobi”."
         }
       },
-      "perk_type": "chase"
+      "perk_type": "entity"
     },
     {
       "id": 301,
@@ -9171,7 +9171,7 @@
           "description": "Gdy wszystkie generatory zostaną naprawione, wszyscy ranni, powaleni i powieszeni na haku ocalali otrzymują efekt Okaleczony. Ten efekt kończy się 35/40/45 s po tym, jak brama wyjściowa zostanie otwarta."
         }
       },
-      "perk_type": "generator"
+      "perk_type": "healing"
     },
     {
       "id": 306,
@@ -9291,7 +9291,7 @@
           "description": "Gdy po raz pierwszy każdy generator osiągnie 70% postępu:\n• Otrzymujesz efekt Niewykrywalny na 0 s.\n• Otrzymujesz powiadomienie.\n\n„Wieśniak tworzy imponujące narzędzia ze śmieci. Może nas nimi okaleczać w wyjątkowo twórcze sposoby…” – Notatnik"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "aura"
     },
     {
       "id": 310,
@@ -9321,7 +9321,7 @@
           "description": "Za każdym razem, gdy zadasz uszkodzenia generatorowi, dopóki generator nie przestanie się psuć:\n• Otrzymujesz efekt Niewykrywalny.\n• Ocalali widzą aurę tego generatora.\nCzas odnawiania: 16 s."
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 311,
@@ -9384,7 +9384,7 @@
           "description": "Za każdym razem, gdy przeszukasz szafkę, ocalali w odległości 40 m:\n• Otrzymują efekt Oślepienie na 30 s.\n• Krzyczą.\nCzas odnawiania: 55/50/45 s.\n\n„Nie będę kłamał na temat twoich szans, ale… współczuję ci”. – Ash"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "aura"
     },
     {
       "id": 313,
@@ -9474,7 +9474,7 @@
           "description": "Za każdym razem, gdy uszkodzisz generator:\n• Twój zasięg terroru jest przestawiony na ten generator na 22/26/30 s i jego promień wynosi 32 m.\n• Otrzymujesz efekt Niewykrywalny przez ten czas.\nCzas odnawiania: 30 s.\n\n„Może być wszędzie, mamo. Jeśli to znajdziesz, przepraszam…” – Ostatni wpis w dzienniku, 12.07.1991"
         }
       },
-      "perk_type": "chase"
+      "perk_type": "stealth"
     },
     {
       "id": 316,

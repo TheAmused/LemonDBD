@@ -5,7 +5,7 @@ export/import round-trip because `DatabaseExportImportService`'s perk
 `update_fields` list is a separate, hand-maintained list from the model's
 columns -- adding a column to the model and forgetting to add it there is a
 silent, no-error data-loss bug that only shows up as "why did every perk
-come back as general" days later. This must never regress unnoticed again.
+come back as entity" days later. This must never regress unnoticed again.
 
 Follows the same pattern as
 `tests/unit/api/test_full_db_migration_workflow.py`: SQLite in-memory,
@@ -46,7 +46,7 @@ def perk_seeded_app(app):
 
         db.session.add_all([
             Perk(name="Roundtrip Exhaustion Perk", role="Survivor", perk_type="exhaustion", survivor_id=surv.id),
-            Perk(name="Roundtrip General Perk", role="Survivor", perk_type="general", survivor_id=surv.id),
+            Perk(name="Roundtrip Entity Perk", role="Survivor", perk_type="entity", survivor_id=surv.id),
             Perk(name="Roundtrip Null Perk", role="Survivor", perk_type=None, survivor_id=surv.id),
         ])
         db.session.commit()
@@ -62,7 +62,7 @@ def test_export_then_import_preserves_perk_type_for_every_perk(perk_seeded_app) 
         for p in db.session.scalars(select(Perk)).all()
     }
     assert with_perk_type_before["Roundtrip Exhaustion Perk"] == "exhaustion"
-    assert with_perk_type_before["Roundtrip General Perk"] == "general"
+    assert with_perk_type_before["Roundtrip Entity Perk"] == "entity"
     assert with_perk_type_before["Roundtrip Null Perk"] is None
 
     exported = DatabaseExportImportService.export_database(targets=["perks"], include_assets=False)
@@ -106,4 +106,4 @@ def test_import_of_a_legacy_export_missing_perk_type_key_entirely_does_not_crash
     perks = db.session.scalars(select(Perk)).all()
     assert len(perks) == 3
     for p in perks:
-        assert p.perk_type is None or p.perk_type == "general"
+        assert p.perk_type is None or p.perk_type == "entity"

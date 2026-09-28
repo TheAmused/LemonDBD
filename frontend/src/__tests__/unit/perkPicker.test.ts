@@ -352,6 +352,7 @@ test('getPerkTarotType: is a direct passthrough of perk_type — perk_type IS th
   assert.strictEqual(getPerkTarotType(makePerk({ name: 'Dead Hard', perk_type: 'exhaustion' })), 'exhaustion');
   assert.strictEqual(getPerkTarotType(makePerk({ name: 'Blood Warden', perk_type: 'obsession' })), 'obsession');
   assert.strictEqual(getPerkTarotType(makePerk({ name: 'Bond', perk_type: 'aura' })), 'aura');
+  assert.strictEqual(getPerkTarotType(makePerk({ name: 'Scourge Hook: Pain Resonance', perk_type: 'hooks' })), 'hooks');
   assert.strictEqual(getPerkTarotType(makePerk({ name: 'Prove Thyself', perk_type: 'generator' })), 'generator');
   assert.strictEqual(getPerkTarotType(makePerk({ name: 'Circle of Healing', perk_type: 'healing' })), 'healing');
   assert.strictEqual(getPerkTarotType(makePerk({ name: 'Made for This', perk_type: 'chase' })), 'chase');

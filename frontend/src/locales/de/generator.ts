@@ -161,6 +161,7 @@ export default {
     chase: "Die Jagd",
     stealth: "Der Schatten",
     entity: "Die Entität",
+    hooks: "Der Gehängte",
   },
   blindModeTooltip: "Perk-Symbole verbergen (Blind-Modus)",
   hiddenPerkLabel: "Verborgen, im Spiel nachsehen",

@@ -415,8 +415,8 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6">
-      <header className="flex items-center justify-between border-b border-border-color pb-4 min-h-[44px]">
+    <div className="relative z-10 flex flex-col gap-6 w-full max-w-7xl 2xl:max-w-[1800px] mx-auto">
+      <header className="flex items-center justify-between min-h-[44px]">
         <Link
           href={`/${locale}/smash-or-pass`}
           className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
@@ -426,7 +426,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         </Link>
       </header>
 
-      <div className="flex flex-col gap-6 max-w-5xl mx-auto w-full">
+      <div className="flex flex-col gap-6 w-full">
         <h1 className="text-xl sm:text-2xl font-black font-mono uppercase tracking-wide text-text-primary">
           {editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}
         </h1>
@@ -604,22 +604,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               />
               <span className={cn(LABEL, 'mb-0')}>{c.nsfwLabel || 'Contains NSFW content'}</span>
             </label>
-            {isUserAdmin && (
-              <label className="md:col-span-2 flex items-start gap-2.5 p-3 rounded-2xl border border-accent-red/25 bg-accent-red/5">
-                <input
-                  type="checkbox"
-                  checked={official}
-                  onChange={(e) => setOfficial(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-accent-red cursor-pointer"
-                />
-                <span>
-                  <span className={cn(LABEL, 'block mb-0.5 text-accent-red font-bold')}>{c.officialLabel || 'Publish as an official roster'}</span>
-                  <span className="block text-xs text-text-muted">
-                    {c.officialHint || 'Visible to everyone publicly on the hub instead of only in this browser.'}
-                  </span>
-                </span>
-              </label>
-            )}
+
           </div>
 
           {showTranslations && (

@@ -95,6 +95,36 @@ def get_rosters():
         return jsonify({"error": str(e)}), 500
 
 
+@smash_or_pass_bp.route("/taxonomies", methods=["GET"])
+def get_taxonomies():
+    """Retrieve all available roles and genders (cached)."""
+    try:
+        data = smash_service.get_taxonomies()
+        return jsonify({"data": data}), 200
+    except Exception as e:
+        logger.error(f"Error fetching smash taxonomies: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/taxonomies", methods=["POST"])
+def register_taxonomy():
+    """Register a custom role or gender in the database."""
+    body = request.get_json(silent=True) or {}
+    term_type = (body.get("type") or "").strip().lower()
+    name = (body.get("name") or "").strip()
+    if term_type not in ("role", "gender"):
+        return jsonify({"error": "Type must be 'role' or 'gender'"}), 400
+    if not name or len(name) > 64:
+        return jsonify({"error": "Name must be between 1 and 64 characters"}), 400
+
+    try:
+        term = smash_service.register_taxonomy(term_type, name)
+        return jsonify({"data": term}), 201
+    except Exception as e:
+        logger.error(f"Error registering taxonomy: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 @smash_or_pass_bp.route("/rosters", methods=["POST"])
 @admin_required
 def create_roster():
@@ -484,4 +514,72 @@ def get_user_votes():
     except Exception as e:
         logger.error(f"Error fetching user/session smash-or-pass votes: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+def _is_private_host(hostname: str) -> bool:
+    import ipaddress
+    try:
+        ip = ipaddress.ip_address(hostname)
+        return ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_unspecified
+    except ValueError:
+        lower = hostname.lower()
+        if lower in ("localhost", "backend", "frontend", "db", "redis", "nginx", "umami"):
+            return True
+        if lower.endswith(".local") or lower.endswith(".internal"):
+            return True
+        return False
+
+
+@smash_or_pass_bp.route("/proxy-image", methods=["GET"])
+def proxy_image():
+    """Proxies third-party images with CORS headers so canvas can safely crop them."""
+    import requests
+    from urllib.parse import urlparse
+    from flask import Response
+
+    target_url = request.args.get("url")
+    if not target_url:
+        return jsonify({"error": "Missing url parameter"}), 400
+
+    try:
+        parsed = urlparse(target_url)
+    except Exception:
+        return jsonify({"error": "Invalid URL"}), 400
+
+    if parsed.scheme not in ("http", "https"):
+        return jsonify({"error": "Only http and https protocols supported"}), 400
+
+    if not parsed.hostname or _is_private_host(parsed.hostname):
+        return jsonify({"error": "Host not allowed"}), 403
+
+    try:
+        resp = requests.get(
+            target_url,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/124.0.0.0 Safari/537.36"
+                ),
+                "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                "Referer": f"{parsed.scheme}://{parsed.netloc}/",
+            },
+            timeout=12,
+        )
+        if not resp.ok:
+            return jsonify({"error": f"Upstream returned status {resp.status_code}"}), resp.status_code
+
+        content_type = resp.headers.get("content-type", "image/jpeg")
+        if not content_type.startswith("image/"):
+            content_type = "image/jpeg"
+
+        response = Response(resp.content, status=200, mimetype=content_type)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Cache-Control"] = "public, max-age=86400"
+        return response
+    except Exception as e:
+        logger.error(f"Image proxy error: {e}")
+        return jsonify({"error": str(e)}), 502
+
 

@@ -27,6 +27,7 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
+    SmashTaxonomy,
     Vote,
 )
 from app.models.user import (
@@ -62,6 +63,7 @@ __all__ = [
     "Roster",
     "Entity",
     "EntityStat",
+    "SmashTaxonomy",
     "Vote",
     "BugReport",
     "User",

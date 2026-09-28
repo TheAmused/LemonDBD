@@ -2,11 +2,17 @@
 // frontend/src/app/[locale]/smash-or-pass/create/page.tsx
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { useParams, useSearchParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { SmashRosterCreator } from '@/components/smash-or-pass/creator/SmashRosterCreator';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Locale } from '@/i18n/config';
+
+const CampfireParticles = dynamic(
+  () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
+  { ssr: false }
+);
 
 export default function SmashRosterCreatePage() {
   const params = useParams();
@@ -22,7 +28,14 @@ export default function SmashRosterCreatePage() {
   if (!dict) return null;
 
   return (
-    <PageShell locale={locale} dict={dict} activeCategory="smash-or-pass" padding="tight" mainClassName="relative flex flex-col">
+    <PageShell
+      locale={locale}
+      dict={dict}
+      activeCategory="smash-or-pass"
+      padding="tight"
+      decoration={<CampfireParticles />}
+      mainClassName="relative flex flex-col"
+    >
       <SmashRosterCreator locale={locale} dict={dict} editId={editId} />
     </PageShell>
   );

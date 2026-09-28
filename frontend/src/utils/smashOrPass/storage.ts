@@ -136,6 +136,11 @@ export function migrateSmashRosterState(raw: unknown): SmashRosterStoreState {
         ...(typeof value.theme_color === 'string' && value.theme_color ? { theme_color: value.theme_color } : {}),
         ...(typeof value.category === 'string' && value.category ? { category: value.category } : {}),
         ...(value.is_nsfw === true ? { is_nsfw: true } : {}),
+        ...(value.roster_mode === 'simple' ? { roster_mode: 'simple' as const } : { roster_mode: 'full' as const }),
+        ...(Array.isArray(value.custom_roles) ? { custom_roles: value.custom_roles as string[] } : {}),
+        ...(Array.isArray(value.custom_genders) ? { custom_genders: value.custom_genders as string[] } : {}),
+        ...(isRecord(value.custom_labels) ? { custom_labels: value.custom_labels as any } : {}),
+        ...(Array.isArray(value.romance_archetypes) ? { romance_archetypes: value.romance_archetypes as any } : {}),
       };
     }
   }

@@ -153,8 +153,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   });
 
   // Filters State
-  const [roleFilter, setRoleFilter] = useState<'all' | CharacterRole>('all');
-  const [genderFilter, setGenderFilter] = useState<'all' | CharacterGender>('all');
+  const [roleFilter, setRoleFilter] = useState<'all' | string>('all');
+  const [genderFilter, setGenderFilter] = useState<'all' | string>('all');
 
   // Deck & Card State (Database-Driven Entities)
   const [deck, setDeck] = useState<EntityItem[]>([]);
@@ -261,6 +261,32 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       }
     );
   }, [allRosters, selectedRosterSlug]);
+
+  const availableRoles = useMemo(() => {
+    if (isLocalRosterSlug(selectedRosterSlug)) {
+      const id = localRosterIdFromSlug(selectedRosterSlug);
+      const stored = customRosterStore.custom[id];
+      const set = new Set<string>();
+      (stored?.entities || []).forEach((e) => {
+        if (e.role) set.add(e.role);
+      });
+      if (set.size > 0) return Array.from(set);
+    }
+    return ['Survivor', 'Killer'];
+  }, [selectedRosterSlug, customRosterStore]);
+
+  const availableGenders = useMemo(() => {
+    if (isLocalRosterSlug(selectedRosterSlug)) {
+      const id = localRosterIdFromSlug(selectedRosterSlug);
+      const stored = customRosterStore.custom[id];
+      const set = new Set<string>();
+      (stored?.entities || []).forEach((e) => {
+        if (e.gender) set.add(e.gender);
+      });
+      if (set.size > 0) return Array.from(set);
+    }
+    return ['female', 'male', 'monster_other'];
+  }, [selectedRosterSlug, customRosterStore]);
 
   // Re-check acknowledgment whenever the active roster changes (including on
   // first mount for whatever roster was restored from localStorage).
@@ -773,7 +799,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
       {/* Scattered Ambient Lore Wings Flanking the Candidate Card */}
       <Suspense fallback={null}>
-        <FloatingLoreScattered character={currentCharacter} locale={locale} dict={dict} />
+        <FloatingLoreScattered
+          character={currentCharacter}
+          locale={locale}
+          dict={dict}
+          customLabels={activeRoster?.custom_labels}
+        />
       </Suspense>
 
       {/* Particle & Visual Overlay Animation Engine */}
@@ -989,39 +1020,37 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             >
               <div className="flex flex-col md:flex-row items-center justify-between gap-3">
                 {/* Role Segmented Switch */}
-                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold">
+                <div className="flex items-center gap-1 p-1 bg-bg-elevated border border-border-color rounded-2xl w-full md:w-auto shadow-inner text-xs font-mono font-bold overflow-x-auto">
                   <button
                     type="button"
                     onClick={() => handleFilterChange('role', 'all')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${roleFilter === 'all'
+                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${roleFilter === 'all'
                         ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-text-primary'
                       }`}
                   >
                     {allRolesLabel}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('role', 'Survivor')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${roleFilter === 'Survivor'
-                        ? 'bg-accent-green text-text-inverted font-black'
-                        : 'text-text-muted hover:text-accent-green'
-                      }`}
-                  >
-                    <SurvivorIcon className="h-3.5 w-3.5" />
-                    {survivorsLabel}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('role', 'Killer')}
-                    className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation ${roleFilter === 'Killer'
-                        ? 'bg-accent-red text-text-inverted'
-                        : 'text-text-muted hover:text-accent-red'
-                      }`}
-                  >
-                    <KillerIcon className="h-3.5 w-3.5" />
-                    {killersLabel}
-                  </button>
+                  {availableRoles.map((role) => {
+                    const isSurvivor = role === 'Survivor';
+                    const isKiller = role === 'Killer';
+                    const label = isSurvivor ? survivorsLabel : isKiller ? killersLabel : role;
+                    return (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => handleFilterChange('role', role)}
+                        className={`flex-1 md:flex-none min-h-[44px] sm:min-h-[36px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl transition-all cursor-pointer touch-manipulation whitespace-nowrap ${roleFilter === role
+                            ? isSurvivor ? 'bg-accent-green text-text-inverted font-black' : 'bg-accent-red text-text-inverted'
+                            : isSurvivor ? 'text-text-muted hover:text-accent-green' : 'text-text-muted hover:text-accent-red'
+                          }`}
+                      >
+                        {isSurvivor && <SurvivorIcon className="h-3.5 w-3.5" />}
+                        {isKiller && <KillerIcon className="h-3.5 w-3.5" />}
+                        {label}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Gender Segmented Switch */}
@@ -1029,43 +1058,46 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   <button
                     type="button"
                     onClick={() => handleFilterChange('gender', 'all')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'all'
+                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${genderFilter === 'all'
                         ? 'bg-accent-red text-text-inverted'
                         : 'text-text-muted hover:text-text-primary'
                       }`}
                   >
                     {allGendersLabel}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('gender', 'female')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'female'
-                        ? 'bg-accent-red text-text-inverted'
-                        : 'text-text-muted hover:text-accent-red'
-                      }`}
-                  >
-                    {femaleOnlyLabel}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('gender', 'male')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'male'
-                        ? 'bg-accent-green text-text-inverted'
-                        : 'text-text-muted hover:text-accent-green'
-                      }`}
-                  >
-                    {maleOnlyLabel}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleFilterChange('gender', 'monster_other')}
-                    className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation ${genderFilter === 'monster_other'
-                        ? 'bg-border-subtle text-text-primary'
-                        : 'text-text-muted hover:text-text-primary'
-                      }`}
-                  >
-                    {monstersLabel}
-                  </button>
+                  {availableGenders.map((gender) => {
+                    const isFemale = gender === 'female';
+                    const isMale = gender === 'male';
+                    const isMonster = gender === 'monster_other';
+                    const label = isFemale
+                      ? femaleOnlyLabel
+                      : isMale
+                      ? maleOnlyLabel
+                      : isMonster
+                      ? monstersLabel
+                      : gender;
+                    return (
+                      <button
+                        key={gender}
+                        type="button"
+                        onClick={() => handleFilterChange('gender', gender)}
+                        className={`min-h-[44px] sm:min-h-[36px] flex items-center justify-center px-3 py-1.5 rounded-xl transition-all shrink-0 cursor-pointer touch-manipulation whitespace-nowrap ${genderFilter === gender
+                            ? isFemale
+                              ? 'bg-accent-red text-text-inverted'
+                              : isMale
+                              ? 'bg-accent-green text-text-inverted'
+                              : 'bg-border-subtle text-text-primary'
+                            : isFemale
+                            ? 'text-text-muted hover:text-accent-red'
+                            : isMale
+                            ? 'text-text-muted hover:text-accent-green'
+                            : 'text-text-muted hover:text-text-primary'
+                          }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>
@@ -1148,6 +1180,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   isTopCard={false}
                   locale={locale}
                   dict={dict}
+                  customLabels={activeRoster?.custom_labels}
+                  rosterMode={activeRoster?.roster_mode}
                 />
               </div>
             )}
@@ -1185,6 +1219,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   isTopCard={false}
                   locale={locale}
                   dict={dict}
+                  customLabels={activeRoster?.custom_labels}
+                  rosterMode={activeRoster?.roster_mode}
                 />
               </div>
             )}
@@ -1203,6 +1239,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                 onExitComplete={handleExitComplete}
                 locale={locale}
                 dict={dict}
+                customLabels={activeRoster?.custom_labels}
+                rosterMode={activeRoster?.roster_mode}
               />
             </div>
           </div>
@@ -1529,6 +1567,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
         onResetAll={() => setIsResetConfirmOpen(true)}
         locale={locale}
         dict={dict}
+        customArchetypes={activeRoster?.romance_archetypes}
       />
 
       {/* RESET CONFIRMATION MODAL */}

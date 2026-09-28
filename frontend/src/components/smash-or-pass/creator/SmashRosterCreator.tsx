@@ -17,20 +17,37 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Plus, SearchX, TriangleAlert } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  Crop,
+  HeartHandshake,
+  Plus,
+  SearchX,
+  ShieldCheck,
+  Sparkles,
+  Tag,
+  TriangleAlert,
+  Users,
+  Zap,
+} from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
+import { useSmashTaxonomies } from '@/hooks/useSmashTaxonomies';
 import { apiUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl, validateSmashRosterDocument, type SmashRosterErrorCode } from '@/utils/smashOrPass/codec';
-import { SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
+import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
-import type { SmashRosterDocumentEntity } from '@/types/smashOrPass';
+import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEntity } from '@/types/smashOrPass';
 import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL, TEXTAREA_FIELD } from './styles';
 import { DraftEntity, EntityEditor, emptyDraftEntity, type EntityTranslationDraft } from './EntityEditor';
+import { CoverImageCropModal } from './CoverImageCropModal';
+import { RosterTaxonomyBlock } from './RosterTaxonomyBlock';
+import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
 
 function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -44,6 +61,11 @@ interface Draft {
   theme_color: string;
   category: string;
   is_nsfw: boolean;
+  roster_mode: 'simple' | 'full';
+  custom_labels: RosterCustomLabels;
+  custom_roles?: string[];
+  custom_genders?: string[];
+  romance_archetypes: CustomRomanceArchetype[];
   entities: DraftEntity[];
 }
 
@@ -55,6 +77,11 @@ function freshDraft(): Draft {
     theme_color: '#ff0055',
     category: '',
     is_nsfw: false,
+    roster_mode: 'simple',
+    custom_labels: {},
+    custom_roles: [],
+    custom_genders: [],
+    romance_archetypes: [],
     // A fixed, non-random key -- this runs as the `useState` initializer, so
     // it executes during SSR too. `newKey()` (crypto.randomUUID/Math.random)
     // would render a different id server- vs. client-side and trigger a
@@ -171,11 +198,18 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   const t = dict?.smashOrPass as any;
   const c = t?.creator || {};
   const router = useRouter();
-  const { isAdmin, token } = useAuth();
+  const { isAdmin, token, user } = useAuth();
+  const isUserAdmin = Boolean(isAdmin || user?.role === 'admin');
   const { state: storeState, hydrated: storeHydrated } = useSmashRosterStore();
+  const { roles: taxonomyRoles, genders: taxonomyGenders, registerTerm } = useSmashTaxonomies();
   const editingRoster = editId ? storeState.custom[editId] : undefined;
 
   const [draft, setDraft] = useState<Draft>(freshDraft);
+  const [basicsOpen, setBasicsOpen] = useState(true);
+  const [taxonomiesOpen, setTaxonomiesOpen] = useState(false);
+  const [candidatesOpen, setCandidatesOpen] = useState(true);
+  const [archetypesOpen, setArchetypesOpen] = useState(false);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -200,6 +234,11 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       theme_color: editingRoster.theme_color || '#ff0055',
       category: editingRoster.category || '',
       is_nsfw: editingRoster.is_nsfw || false,
+      roster_mode: editingRoster.roster_mode || 'full',
+      custom_labels: editingRoster.custom_labels || {},
+      custom_roles: editingRoster.custom_roles || [],
+      custom_genders: editingRoster.custom_genders || [],
+      romance_archetypes: editingRoster.romance_archetypes || [],
       entities: editingRoster.entities.length ? editingRoster.entities.map(entityFromDocument) : [emptyDraftEntity(newKey())],
     });
   }, [editId, storeHydrated, editingRoster]);
@@ -220,6 +259,18 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
     }));
   };
 
+  const effectiveRoles = useMemo(() => {
+    if (draft.custom_roles && draft.custom_roles.length > 0) return draft.custom_roles;
+    if (taxonomyRoles && taxonomyRoles.length > 0) return taxonomyRoles;
+    return [...ROLE_QUICK_PICKS];
+  }, [draft.custom_roles, taxonomyRoles]);
+
+  const effectiveGenders = useMemo(() => {
+    if (draft.custom_genders && draft.custom_genders.length > 0) return draft.custom_genders;
+    if (taxonomyGenders && taxonomyGenders.length > 0) return taxonomyGenders;
+    return [...GENDER_QUICK_PICKS];
+  }, [draft.custom_genders, taxonomyGenders]);
+
   const nameMissing = !draft.name.trim();
   const trimmedCover = draft.cover_image_url.trim();
   const safeCover = trimmedCover ? sanitizeImageUrl(trimmedCover) : null;
@@ -227,7 +278,8 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   const validEntityCount = draft.entities.filter((e) => e.name.trim()).length;
   const entitiesMissing = validEntityCount === 0;
 
-  const showTranslations = !editId && isAdmin && official;
+  const isSimpleMode = !isUserAdmin || draft.roster_mode === 'simple';
+  const showTranslations = isUserAdmin && official;
 
   // Editing a roster the store doesn't have (deleted, or a stale link): send
   // back rather than silently falling through to "create a new roster".
@@ -259,6 +311,11 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       theme_color: draft.theme_color,
       category: draft.category,
       is_nsfw: draft.is_nsfw,
+      roster_mode: isSimpleMode ? ('simple' as const) : ('full' as const),
+      custom_labels: draft.custom_labels,
+      custom_roles: draft.custom_roles,
+      custom_genders: draft.custom_genders,
+      romance_archetypes: draft.romance_archetypes,
       entities: trimmedEntities.map(toRawEntity),
     };
     const result = validateSmashRosterDocument(rawDoc);
@@ -267,17 +324,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       return;
     }
 
-    if (editId && editingRoster) {
-      const saveResult = saveCustomRoster({ id: editId, ...result.doc, createdAt: editingRoster.createdAt });
-      if (!saveResult.ok) {
-        setSaveError(saveResult.reason);
-        return;
-      }
-      router.push(`/${locale}/smash-or-pass`);
-      return;
-    }
-
-    if (official && isAdmin) {
+    if (official && isUserAdmin) {
       setPublishing(true);
       setPublishError(null);
       try {
@@ -333,6 +380,16 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       return;
     }
 
+    if (editId && editingRoster) {
+      const saveResult = saveCustomRoster({ id: editId, ...result.doc, createdAt: editingRoster.createdAt });
+      if (!saveResult.ok) {
+        setSaveError(saveResult.reason);
+        return;
+      }
+      router.push(`/${locale}/smash-or-pass`);
+      return;
+    }
+
     const id = createCustomRosterId();
     const saveResult = saveCustomRoster({ id, ...result.doc, createdAt: Date.now() });
     if (!saveResult.ok) {
@@ -342,8 +399,12 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
     router.push(`/${locale}/smash-or-pass?roster=local:${id}`);
   };
 
-  const publishingNow = publishing && official && isAdmin && !editId;
-  const submitLabel = editId ? (c.save || 'Save Roster') : official && isAdmin ? (publishingNow ? c.saving || 'Saving...' : c.save || 'Save Roster') : c.save || 'Save Roster';
+  const publishingNow = publishing && official && isUserAdmin;
+  const submitLabel = publishingNow
+    ? (c.saving || 'Publishing...')
+    : official && isUserAdmin
+      ? (c.publishOfficial || 'Publish Official Roster')
+      : (c.save || 'Save Roster');
 
   const errors = attempted
     ? [
@@ -371,7 +432,76 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         </h1>
         <p className="text-sm text-text-muted -mt-4">{c.subtitle || "Name it, add candidates, and it's saved in this browser."}</p>
 
-        <Section title={c.stepBasics || 'The basics'}>
+        {/* Admin Controls (Only visible to admins - normal users/guests do not see mode switcher or hints) */}
+        {isUserAdmin && (
+          <div className="flex flex-col gap-3 p-4 rounded-3xl border border-accent-red/30 bg-accent-red/5 backdrop-blur-md shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-accent-red/20 pb-3">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-accent-red shrink-0" />
+                <span className="font-mono text-xs font-black uppercase tracking-wider text-accent-red">
+                  Admin Configuration
+                </span>
+              </div>
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={official}
+                  onChange={(e) => setOfficial(e.target.checked)}
+                  className="h-4 w-4 rounded accent-accent-red cursor-pointer"
+                />
+                <span className="text-xs font-mono font-bold text-text-primary hover:text-accent-red transition-colors">
+                  Publish as Official Roster (Public on Hub)
+                </span>
+              </label>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+              <div className="flex items-center gap-1.5 p-1 bg-bg-primary rounded-2xl border border-border-color">
+                <button
+                  type="button"
+                  onClick={() => patch({ roster_mode: 'simple' })}
+                  className={cn(
+                    'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider font-mono transition-all cursor-pointer touch-manipulation',
+                    draft.roster_mode === 'simple'
+                      ? 'bg-accent-red text-text-inverted shadow-md shadow-accent-red/20'
+                      : 'text-text-muted hover:text-text-primary'
+                  )}
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  <span>Simple Version</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => patch({ roster_mode: 'full' })}
+                  className={cn(
+                    'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider font-mono transition-all cursor-pointer touch-manipulation',
+                    draft.roster_mode === 'full'
+                      ? 'bg-accent-red text-text-inverted shadow-md shadow-accent-red/20'
+                      : 'text-text-muted hover:text-text-primary'
+                  )}
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Full Version</span>
+                </button>
+              </div>
+
+              <div className="text-xs text-text-muted font-mono px-2">
+                {draft.roster_mode === 'simple'
+                  ? 'Simple: Fast cards + optional turn-on & dealbreaker'
+                  : 'Full: Complete lore dossier, rumors, vibe & custom archetype stats'}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* BLOCK 1: THE BASICS (Collapsible Accordion) */}
+        <CollapsibleSection
+          title={c.stepBasics || 'The Basics'}
+          subtitle="Roster name, category, description, cover image & theme"
+          isOpen={basicsOpen}
+          onToggle={() => setBasicsOpen((v) => !v)}
+          icon={Sparkles}
+        >
           <div className="grid gap-4 md:grid-cols-2">
             <label>
               <span className={LABEL}>{c.nameLabel || 'Roster name'}</span>
@@ -405,23 +535,57 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 className={TEXTAREA_FIELD}
               />
             </label>
-            <label>
+            <div>
               <span className={LABEL}>{c.coverImageLabel || 'Cover image URL (optional)'}</span>
-              <input
-                value={draft.cover_image_url}
-                onChange={(e) => patch({ cover_image_url: e.target.value })}
-                placeholder={c.coverImagePlaceholder || 'https://...'}
-                inputMode="url"
-                aria-invalid={attempted && coverInvalid}
-                className={cn(FIELD, attempted && coverInvalid && 'border-accent-red')}
-              />
-              {safeCover && (
-                <div className="mt-2 h-24 w-full max-w-sm overflow-hidden rounded-xl border border-border-color bg-bg-elevated">
+              <div className="flex gap-2">
+                <input
+                  value={draft.cover_image_url}
+                  onChange={(e) => patch({ cover_image_url: e.target.value })}
+                  placeholder={c.coverImagePlaceholder || 'https://...'}
+                  inputMode="url"
+                  aria-invalid={attempted && coverInvalid}
+                  className={cn(FIELD, attempted && coverInvalid && 'border-accent-red')}
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsCropModalOpen(true)}
+                  title="Crop / Reframe cover image"
+                  className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
+                >
+                  <Crop className="h-4 w-4 text-accent-red" />
+                  <span className="hidden sm:inline">Crop 16:9</span>
+                </button>
+              </div>
+
+              {safeCover ? (
+                <div
+                  onClick={() => setIsCropModalOpen(true)}
+                  className="mt-3 relative group overflow-hidden rounded-2xl border border-border-color bg-bg-elevated aspect-video max-w-md shadow-md cursor-pointer"
+                  title="Click to crop or reframe cover image"
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
-                  <img src={safeCover} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+                  <img
+                    src={safeCover}
+                    alt=""
+                    referrerPolicy="no-referrer"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-white font-mono text-xs font-bold">
+                    <Crop className="h-5 w-5 text-accent-red" />
+                    <span>Click to Crop / Reframe (16:9)</span>
+                  </div>
                 </div>
-              )}
-            </label>
+              ) : isUserAdmin ? (
+                <button
+                  type="button"
+                  onClick={() => setIsCropModalOpen(true)}
+                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed border-border-color text-xs font-mono text-text-secondary hover:text-accent-red hover:border-accent-red/50 transition-colors cursor-pointer"
+                >
+                  <Crop className="h-3.5 w-3.5" />
+                  <span>Select &amp; Crop Local Cover Image</span>
+                </button>
+              ) : null}
+            </div>
             <label>
               <span className={LABEL}>{c.themeColorLabel || 'Theme color'}</span>
               <input
@@ -440,18 +604,18 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               />
               <span className={cn(LABEL, 'mb-0')}>{c.nsfwLabel || 'Contains NSFW content'}</span>
             </label>
-            {isAdmin && !editId && (
-              <label className="md:col-span-2 flex items-start gap-2.5">
+            {isUserAdmin && (
+              <label className="md:col-span-2 flex items-start gap-2.5 p-3 rounded-2xl border border-accent-red/25 bg-accent-red/5">
                 <input
                   type="checkbox"
                   checked={official}
                   onChange={(e) => setOfficial(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-accent-red"
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-accent-red cursor-pointer"
                 />
                 <span>
-                  <span className={cn(LABEL, 'block')}>{c.officialLabel || 'Publish as an official roster'}</span>
-                  <span className="mt-0.5 block text-xs text-text-muted">
-                    {c.officialHint || 'Visible to everyone on the hub instead of only in this browser.'}
+                  <span className={cn(LABEL, 'block mb-0.5 text-accent-red font-bold')}>{c.officialLabel || 'Publish as an official roster'}</span>
+                  <span className="block text-xs text-text-muted">
+                    {c.officialHint || 'Visible to everyone publicly on the hub instead of only in this browser.'}
                   </span>
                 </span>
               </label>
@@ -515,9 +679,50 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               </div>
             </div>
           )}
-        </Section>
+        </CollapsibleSection>
 
-        <Section title={c.stepEntities || 'Candidates'}>
+        {/* BLOCK 2: ROLES & GENDERS (Collapsible Accordion) */}
+        <CollapsibleSection
+          title="Roles & Genders"
+          subtitle="Define custom roles and genders for candidates or use DBD presets"
+          badge={`${effectiveRoles.length} roles • ${effectiveGenders.length} genders`}
+          isOpen={taxonomiesOpen}
+          onToggle={() => setTaxonomiesOpen((v) => !v)}
+          icon={Tag}
+        >
+          <RosterTaxonomyBlock
+            roles={draft.custom_roles || []}
+            genders={draft.custom_genders || []}
+            onChangeRoles={(roles) => patch({ custom_roles: roles })}
+            onChangeGenders={(genders) => patch({ custom_genders: genders })}
+            onRegisterTerm={registerTerm}
+          />
+        </CollapsibleSection>
+
+        {/* BLOCK 3: CANDIDATES (Collapsible Accordion) */}
+        <CollapsibleSection
+          title={c.stepEntities || 'Candidates'}
+          subtitle="Characters participating in this smash or pass trial"
+          badge={draft.entities.length}
+          isOpen={candidatesOpen}
+          onToggle={() => setCandidatesOpen((v) => !v)}
+          icon={Users}
+          headerRight={
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                addEntity();
+                setCandidatesOpen(true);
+              }}
+              disabled={draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities}
+              className={cn(BTN_SECONDARY, 'h-8 px-2.5 text-xs font-mono')}
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span>Add</span>
+            </button>
+          }
+        >
           <div className="flex flex-col gap-3">
             {draft.entities.length === 0 && (
               <p className="text-sm text-text-muted">{c.noEntitiesYet || 'No candidates yet. Add your first one above.'}</p>
@@ -534,6 +739,11 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 onTranslationChange={(loc, field, value) => setEntityTranslation(entity.key, loc, field, value)}
                 locale={locale}
                 dict={dict}
+                isSimpleMode={isSimpleMode}
+                customLabels={draft.custom_labels}
+                availableRoles={effectiveRoles}
+                availableGenders={effectiveGenders}
+                onRegisterTaxonomy={registerTerm}
               />
             ))}
             <button
@@ -546,7 +756,25 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               {c.addEntity || 'Add Candidate'}
             </button>
           </div>
-        </Section>
+        </CollapsibleSection>
+
+        {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES (Collapsible Accordion) */}
+        <CollapsibleSection
+          title="Custom Romance Archetypes & Personality Rules"
+          subtitle="Personality personas, rule triggers, and custom diagnoses"
+          badge={draft.romance_archetypes.length}
+          isOpen={archetypesOpen}
+          onToggle={() => setArchetypesOpen((v) => !v)}
+          icon={HeartHandshake}
+        >
+          <RomanceArchetypeBuilder
+            archetypes={draft.romance_archetypes}
+            onChange={(archetypes) => patch({ romance_archetypes: archetypes })}
+            availableRoles={effectiveRoles}
+            availableGenders={effectiveGenders}
+            embedded={true}
+          />
+        </CollapsibleSection>
 
         <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} dict={dict} />
 
@@ -561,17 +789,98 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           </button>
         </div>
       </div>
+
+      {/* Cover Image 16:9 Viewport Crop Modal */}
+      <CoverImageCropModal
+        isOpen={isCropModalOpen}
+        onClose={() => setIsCropModalOpen(false)}
+        imageUrl={draft.cover_image_url}
+        themeColor={draft.theme_color}
+        isAdmin={isUserAdmin}
+        onApplyCrop={(croppedUrl) => {
+          patch({ cover_image_url: croppedUrl });
+          setIsCropModalOpen(false);
+        }}
+      />
     </div>
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+interface CollapsibleSectionProps {
+  title: string;
+  subtitle?: string;
+  badge?: string | number;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+  icon?: React.ComponentType<{ className?: string }>;
+  headerRight?: React.ReactNode;
+}
+
+function CollapsibleSection({
+  title,
+  subtitle,
+  badge,
+  isOpen,
+  onToggle,
+  children,
+  icon: Icon,
+  headerRight,
+}: CollapsibleSectionProps) {
   return (
-    <section className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden flex flex-col">
-      <div className="py-4 px-5 sm:py-5 sm:px-7 border-b border-border-color">
-        <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary font-mono text-center">{title}</h2>
+    <section className="rounded-3xl border border-border-color bg-bg-surface/90 backdrop-blur-xl shadow-md overflow-hidden flex flex-col transition-all">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 cursor-pointer group select-none transition-colors text-left border-b border-border-color/60 hover:bg-bg-elevated/40"
+      >
+        <div className="flex items-center gap-3 min-w-0">
+          {Icon && (
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red">
+              <Icon className="h-4.5 w-4.5" />
+            </div>
+          )}
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red transition-colors">
+                {title}
+              </h2>
+              {badge !== undefined && (
+                <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded-full bg-bg-elevated border border-border-color text-text-secondary">
+                  {badge}
+                </span>
+              )}
+            </div>
+            {subtitle && (
+              <p className="text-xs text-text-muted mt-0.5 font-mono truncate">{subtitle}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0 ml-3">
+          {headerRight}
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary group-hover:text-accent-red transition-colors">
+            <ChevronDown
+              className={cn(
+                'h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 ease-in-out',
+                isOpen ? 'rotate-180' : 'rotate-0'
+              )}
+            />
+          </div>
+        </div>
+      </button>
+
+      <div
+        className={cn(
+          'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out',
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="p-4 sm:p-6">{children}</div>
+        </div>
       </div>
-      <div className="p-4 sm:p-6">{children}</div>
     </section>
   );
 }

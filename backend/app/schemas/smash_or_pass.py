@@ -217,3 +217,13 @@ class SmashRosterAdminCreate(BaseModel):
     @classmethod
     def _filter_translations(cls, value: Any) -> dict[str, Any]:
         return _filter_known_locales(value)
+
+
+class SmashTaxonomyRegister(BaseModel):
+    type: str = Field(..., pattern=r"^(role|gender)$")
+    name: str = Field(..., min_length=1, max_length=64)
+
+
+class SmashTaxonomiesResponse(BaseModel):
+    roles: list[str]
+    genders: list[str]

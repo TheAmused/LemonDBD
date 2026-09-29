@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { HistoryMode } from '@/types/historyStreak';
-import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import { ChallengeIntroModalShell, ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
 import { HistoryRulesModal } from './HistoryRulesModal';
 import { cascadeCompletedTiers, tierCompletionCount, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 import { TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
@@ -48,7 +48,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       description: dict?.streaks?.historyMediumDesc || 'A checkpoint for every row you clear.',
       icon: TierMediumIcon,
       image: '/images/streaks/modes/history-default.webp',
-      accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
+      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'medium'),
       completedFull: completedFullTiers.has('medium'),
@@ -60,7 +60,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
       description: dict?.streaks?.historyHellDesc || 'No checkpoints. One loss resets everything.',
       icon: TierHellIcon,
       image: '/images/streaks/modes/history-hell.webp',
-      accentClassName: 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary',
+      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(HISTORY_MODE_ORDER, completedCounts, 'hell'),
       completedFull: completedFullTiers.has('hell'),
@@ -80,7 +80,7 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
               'Your owned killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next one and add its teachable perks to your pool.'
             : undefined
         }
-        rulesLabel={showIntro ? dict?.streaks?.rules || 'Rules' : undefined}
+        rulesLabel={showIntro ? dict?.streaks?.readFullRules || 'Read full rules' : undefined}
         onOpenRules={showIntro ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={(value) => onSelectMode(value as HistoryMode)}

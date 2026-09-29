@@ -60,7 +60,6 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
 }) => {
   const router = useRouter();
   const [showDisabledModal, setShowDisabledModal] = useState(false);
-  const watermark = image?.replace(/\.jpg$/, '-watermark.png');
   const body = (
     <>
       {image && (
@@ -70,7 +69,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
             className="dark:hidden pointer-events-none absolute -right-6 -bottom-6 h-44 w-44 rounded-full bg-bg-primary/90 blur-xl"
           />
           <img
-            src={watermark}
+            src={image}
             alt=""
             aria-hidden="true"
             loading="lazy"

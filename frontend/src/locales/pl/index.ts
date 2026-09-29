@@ -28,6 +28,7 @@ import onboarding from './onboarding';
 import achievements from './achievements';
 import about from './about';
 import tierLists from './tierLists';
+import minigames from './minigames';
 
 const pl = {
   app,
@@ -59,6 +60,7 @@ const pl = {
   achievements,
   about,
   tierLists,
+  minigames,
 };
 
 export default pl;

@@ -1,6 +1,7 @@
 // frontend/src/locales/ja/sidebar.ts
 export default {
   perks: "パーク",
+  minigames: "ミニゲーム",
   challenges: "チャレンジ",
   mapExplorer: "マップエクスプローラー",
   characters: "キャラクター",

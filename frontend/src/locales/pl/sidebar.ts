@@ -1,6 +1,7 @@
 // frontend/src/locales/pl/sidebar.ts
 export default {
   perks: "Umiejętności",
+  minigames: "Minigry",
   challenges: "Wyzwania",
   mapExplorer: "Eksplorator Map",
   characters: "Postacie",

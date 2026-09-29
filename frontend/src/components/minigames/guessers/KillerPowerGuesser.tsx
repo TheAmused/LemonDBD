@@ -12,6 +12,7 @@ interface KillerPowerGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({
@@ -20,6 +21,7 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const targetKiller = useMemo(
     () => killers.find((k) => k.id === roundConfig.target_id),
@@ -87,6 +89,9 @@ export const KillerPowerGuesser: React.FC<KillerPowerGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Input & Action Controls Slot */}
+      {children && <div className="w-full max-w-lg my-3">{children}</div>}
 
       {/* Prior Guesses */}
       {guesses.length > 0 && (

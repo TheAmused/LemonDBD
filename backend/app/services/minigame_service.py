@@ -215,6 +215,38 @@ class MinigameService:
 
         return rep.to_dict()
 
+    def _redact_identifiers(self, text: str, targets: list[str | None], placeholder: str = "[REDACTED]") -> str:
+        """Thoroughly redacts character, power, or perk names and component words from text."""
+        import re
+        if not text:
+            return ""
+        stop_words = {
+            "the", "a", "an", "of", "and", "in", "on", "at", "to", "for", "with",
+            "from", "by", "is", "it", "her", "his", "she", "he", "or", "as", "be",
+            "was", "were", "are", "been", "that", "this", "they", "them", "their",
+            "into", "over", "after", "before", "each", "all", "both", "any", "some"
+        }
+        clean_targets = []
+        for t in targets:
+            if not t:
+                continue
+            t_clean = t.strip()
+            if len(t_clean) >= 2 and t_clean.lower() not in stop_words:
+                clean_targets.append(t_clean)
+            tokens = re.split(r'[\s\-]+', t_clean)
+            for part in tokens:
+                part_clean = part.strip("()[],.'\"")
+                if len(part_clean) >= 2 and part_clean.lower() not in stop_words:
+                    clean_targets.append(part_clean)
+
+        clean_targets = sorted(list(set(clean_targets)), key=len, reverse=True)
+
+        result = text
+        for target in clean_targets:
+            pattern = r'\b' + re.escape(target) + r"(?:['’]s)?\b"
+            result = re.sub(pattern, placeholder, result, flags=re.IGNORECASE)
+        return result
+
     def _generate_rounds_for_mode(self, game_mode: str, rng: random.Random) -> list[dict[str, Any]]:
         """Generates round definitions for single or multi-round game modes."""
         survivors = db.session.query(Survivor).all()
@@ -278,6 +310,13 @@ class MinigameService:
 
         elif game_mode in ("power", "killer_power"):
             chosen_killer = rng.choice(killers) if killers else None
+            killer_desc = chosen_killer.power_description if chosen_killer else ""
+            if chosen_killer:
+                killer_desc = self._redact_identifiers(
+                    killer_desc,
+                    [chosen_killer.name, chosen_killer.real_name, chosen_killer.power_name],
+                    placeholder="[REDACTED]"
+                )
             return [{
                 "round_number": 1,
                 "mode": "killer_power",
@@ -285,7 +324,7 @@ class MinigameService:
                 "target_id": chosen_killer.id if chosen_killer else 1,
                 "max_attempts": 5,
                 "custom_data": {
-                    "power_description": chosen_killer.power_description if chosen_killer else "",
+                    "power_description": killer_desc,
                 },
             }]
 
@@ -307,8 +346,14 @@ class MinigameService:
             # Multi-round interchangeable trial: Realm -> Power -> Audio -> Classic
             realm = rng.choice(realms) if realms else None
             killer = rng.choice(killers) if killers else None
-            perk = rng.choice(perks) if perks else None
             killer_id = killer.id if killer else 1
+            killer_desc = killer.power_description if killer else ""
+            if killer:
+                killer_desc = self._redact_identifiers(
+                    killer_desc,
+                    [killer.name, killer.real_name, killer.power_name],
+                    placeholder="[REDACTED]"
+                )
             return [
                 {
                     "round_number": 1,
@@ -325,7 +370,7 @@ class MinigameService:
                     "target_id": killer_id,
                     "max_attempts": 5,
                     "custom_data": {
-                        "power_description": killer.power_description if killer else "",
+                        "power_description": killer_desc,
                     },
                 },
                 {
@@ -376,12 +421,10 @@ class MinigameService:
                     chapter_name = "General Perks"
                     release_year = 2016
 
-                # Clean speaker from quote if it gives away the name
+                # Thoroughly clean target names from quote
                 if target_name:
-                    quote_text = _re.sub(r'-\s*' + _re.escape(target_name), '- [REDACTED]', quote_text, flags=_re.IGNORECASE)
-                    first_n = target_name.split()[0]
-                    if len(first_n) > 3:
-                        quote_text = _re.sub(r'-\s*' + _re.escape(first_n), '- [REDACTED]', quote_text, flags=_re.IGNORECASE)
+                    quote_text = self._redact_identifiers(quote_text, [target_name, getattr(target_char, "real_name", None)], placeholder="[REDACTED]")
+                    quote_text = _re.sub(r'-\s*\[REDACTED\](?:\s*\[REDACTED\])*', '- [REDACTED]', quote_text)
 
                 return [{
                     "round_number": 1,
@@ -410,20 +453,17 @@ class MinigameService:
                 chosen_char, chosen_type = None, "killer"
 
             full_lore = (chosen_char.lore if chosen_char else None) or "The Entity hungers for more souls in the unending fog..."
-            # Take a readable excerpt (first 1-2 paragraphs, up to 600 chars)
             paragraphs = [p.strip() for p in full_lore.split("\n") if p.strip()]
             lore_excerpt = "\n\n".join(paragraphs[:2]) if len(paragraphs) >= 2 else full_lore
             if len(lore_excerpt) > 650:
                 lore_excerpt = lore_excerpt[:600] + "..."
 
             if chosen_char:
-                char_name = chosen_char.name
-                lore_excerpt = _re.sub(_re.escape(char_name), "[REDACTED]", lore_excerpt, flags=_re.IGNORECASE)
-                if hasattr(chosen_char, "real_name") and chosen_char.real_name:
-                    lore_excerpt = _re.sub(_re.escape(chosen_char.real_name), "[REDACTED]", lore_excerpt, flags=_re.IGNORECASE)
-                first_name = char_name.split()[0] if " " in char_name else None
-                if first_name and len(first_name) > 3:
-                    lore_excerpt = _re.sub(r'\b' + _re.escape(first_name) + r'\b', "[REDACTED]", lore_excerpt, flags=_re.IGNORECASE)
+                lore_excerpt = self._redact_identifiers(
+                    lore_excerpt,
+                    [chosen_char.name, getattr(chosen_char, "real_name", None)],
+                    placeholder="[REDACTED]"
+                )
 
             chapter_name = chosen_char.chapter.name if (chosen_char and chosen_char.chapter) else "Base Game"
             release_year = chosen_char.chapter.release_year if (chosen_char and chosen_char.chapter) else 2016
@@ -440,6 +480,87 @@ class MinigameService:
                     "role": chosen_type.title(),
                     "chapter_name": chapter_name,
                     "release_year": release_year,
+                },
+            }]
+
+        elif game_mode in ("addon", "addon_guesser"):
+            from app.models.equipment import KillerAddon
+            addons = db.session.query(KillerAddon).join(Killer).all()
+            if addons:
+                chosen_addon = rng.choice(addons)
+                killer = chosen_addon.killer
+                addon_desc = chosen_addon.description or "Modifiers to killer power abilities."
+                addon_desc = self._redact_identifiers(
+                    addon_desc,
+                    [killer.name, killer.real_name, killer.power_name, chosen_addon.name],
+                    placeholder="[REDACTED]"
+                )
+                return [{
+                    "round_number": 1,
+                    "mode": "addon_guesser",
+                    "target_type": "killer",
+                    "target_id": killer.id,
+                    "max_attempts": 5,
+                    "custom_data": {
+                        "addon_id": chosen_addon.id,
+                        "description": addon_desc,
+                        "rarity": chosen_addon.rarity,
+                        "icon_url": chosen_addon.icon_url,
+                    },
+                }]
+
+        elif game_mode == "emoji_riddle":
+            emoji_map = {
+                "The Trapper": "🐻 ⚙️ 🩸",
+                "The Wraith": "🔔 👻 🌲",
+                "The Hillbilly": "🪚 🏃 ⚡",
+                "The Nurse": "👁️ 💨 🏥",
+                "The Huntress": "🪓 🎶 🐰",
+                "The Shape": "🔪 🎃 👥",
+                "The Hag": "✋ 🌾 🪞",
+                "The Doctor": "⚡ 🧠 💉",
+                "The Cannibal": "🍖 🪚 👨",
+                "The Nightmare": "😴 🧤 🕒",
+                "The Pig": "🐷 ⏱️ 🗝️",
+                "The Clown": "🎪 🍾 💨",
+                "The Spirit": "🗡️ 👘 👻",
+                "The Legion": "🔪 🏃 🎭",
+                "The Plague": "🤢 🤮 🏛️",
+                "The Ghost Face": "📸 🔪 👻",
+                "The Demogorgon": "🌺 🌀 🐕",
+                "The Oni": "👹 🩸 🔨",
+                "The Deathslinger": "🤠 🔫 ⛓️",
+                "The Blight": "🧪 💥 🏃",
+                "The Twins": "👶 🧰 💔",
+                "The Trickster": "🔪 🎤 🦇",
+                "The Nemesis": "🧟 💉 👊",
+                "The Cenobite": "📦 ⛓️ 🪡",
+                "The Artist": "🐦 🎨 ✒️",
+                "The Onryō": "📺 📼 👁️",
+                "The Dredge": "🚪 ☁️ 🦃",
+                "The Mastermind": "🕶️ 🦠 💥",
+                "The Knight": "🛡️ ⚔️ 🏰",
+                "The Skull Merchant": "🚁 💻 👁️",
+                "The Singularity": "🤖 📹 🧬",
+                "The Xenomorph": "👽 🛸 🐾",
+                "The Good Guy": "🔪 🧸 👟",
+                "The Unknown": "🪓 🗣️ 🕳️",
+                "The Lich": "💀 🪄 🎲",
+                "The Dark Lord": "🧛 🦇 🐺",
+                "The Houndmaster": "🐕 🍖 🏹",
+            }
+            chosen_killer = rng.choice(killers) if killers else None
+            killer_id = chosen_killer.id if chosen_killer else 1
+            killer_name = chosen_killer.name if chosen_killer else "The Trapper"
+            emojis = emoji_map.get(killer_name, "🔪 💀 🩸")
+            return [{
+                "round_number": 1,
+                "mode": "emoji_riddle",
+                "target_type": "killer",
+                "target_id": killer_id,
+                "max_attempts": 5,
+                "custom_data": {
+                    "emojis": emojis,
                 },
             }]
 
@@ -473,6 +594,9 @@ class MinigameService:
             "pixel_avatar": "Daily Pixel Avatar Guesser",
             "quote": "Daily Lore & Quote Guesser",
             "quote_lore": "Daily Lore & Quote Guesser",
+            "addon": "Daily Killer Add-on Guesser",
+            "addon_guesser": "Daily Killer Add-on Guesser",
+            "emoji_riddle": "Daily Emoji Riddle",
         }
         return f"{names.get(game_mode, 'Daily Minigame')} #{target_date.strftime('%Y%m%d')}"
 

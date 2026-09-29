@@ -218,7 +218,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
             setIsOpen(true);
             setHighlightedIndex(0);
           }}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => {
+            if (query.trim().length > 0) {
+              setIsOpen(true);
+            }
+          }}
           onKeyDown={handleKeyDown}
           disabled={disabled}
           placeholder={placeholder}

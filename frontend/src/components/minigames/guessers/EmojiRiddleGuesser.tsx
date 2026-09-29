@@ -13,6 +13,7 @@ interface EmojiRiddleGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
@@ -22,6 +23,7 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const emojis = roundConfig.custom_data?.emojis || '🔔👻🌲';
   const attempts = guesses.length;
@@ -50,6 +52,9 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Interactive Input Slot */}
+      {children && <div className="w-full max-w-xl my-4">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

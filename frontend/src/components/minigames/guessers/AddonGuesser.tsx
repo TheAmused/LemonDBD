@@ -12,6 +12,7 @@ interface AddonGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const AddonGuesser: React.FC<AddonGuesserProps> = ({
@@ -20,6 +21,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const attempts = guesses.length;
   const description =
@@ -55,6 +57,9 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Interactive Input Slot */}
+      {children && <div className="w-full max-w-xl my-4">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

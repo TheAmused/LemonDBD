@@ -15,6 +15,7 @@ interface AudioGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const AudioGuesser: React.FC<AudioGuesserProps> = ({
@@ -23,6 +24,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
@@ -50,9 +52,12 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
 
   // Real audio stream endpoint from LemonDBD API
   const audioSrc = useMemo(() => {
+    if (roundConfig.custom_data?.audio_endpoint) {
+      return roundConfig.custom_data.audio_endpoint as string;
+    }
     if (!targetChar) return null;
     return `/api/v1/minigames/audio/terror_radius/${targetChar.id}`;
-  }, [targetChar]);
+  }, [roundConfig.custom_data, targetChar]);
 
   // Progressive clues unlocked per wrong attempt
   const attempts = guesses.length;
@@ -266,6 +271,9 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Input & Action Controls Slot */}
+      {children && <div className="w-full max-w-lg my-3">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

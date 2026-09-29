@@ -14,6 +14,7 @@ export type MinigameMode =
   | 'hook_scream'
   | 'terror_radius'
   | 'quote_lore'
+  | 'quote'
   | 'emoji_riddle'
   | 'addon_guesser';
 
@@ -29,6 +30,7 @@ export interface RoundCustomData {
   distortion_type?: string;
   perk_type?: string;
   power_name?: string;
+  power_description?: string;
   hints?: string[];
   [key: string]: unknown;
 }
@@ -99,9 +101,13 @@ export interface CatalogCharacter {
   release_year: number;
   is_licensed: boolean;
   height?: string;
-  terror_radius?: number;
+  terror_radius?: number | string;
+  terror_radius_meters?: number;
   speed?: number;
+  movement_speed?: string;
   power_name?: string;
+  power_description?: string;
+  power_icon_url?: string;
   avatar_url?: string;
 }
 

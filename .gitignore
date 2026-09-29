@@ -109,5 +109,7 @@ response.md
 frontend/AGENTS.md
 frontend/CLAUDE.md
 
-# Output of frontend/scripts/verify-tier-lists.mjs
-frontend/playwright-tier-lists-check/
+# Playwright test screenshots & reports
+playwright/
+
+legacy

@@ -4,11 +4,9 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Swords, Lock, Sparkles, User, Users, UsersRound } from 'lucide-react';
-import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import { ChallengeIntroModalShell, ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
-
-const LEMON_ACCENT = 'border-accent-amber/30 bg-accent-amber/5 hover:bg-accent-amber/10 text-accent-amber';
 
 export interface GauntletModeModalProps {
   isOpen: boolean;
@@ -50,7 +48,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict?: Dictionary): Challeng
     description: dict?.streaks?.gauntletLemonPlayersDesc || 'Our own version of the Gauntlet.',
     icon: Sparkles,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
-    accentClassName: LEMON_ACCENT,
+    accentClassName: NEUTRAL_TILE_ACCENT,
   };
 }
 
@@ -62,7 +60,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       description: dict?.streaks?.lemonSoloDesc || '1 player',
       icon: User,
       image: '/images/streaks/modes/gauntlet-1-player.webp',
-      accentClassName: LEMON_ACCENT,
+      accentClassName: NEUTRAL_TILE_ACCENT,
     },
     {
       value: 'lemon_duo',
@@ -70,7 +68,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       description: dict?.streaks?.lemonDuoDesc || '2 players',
       icon: Users,
       image: '/images/streaks/modes/gauntlet-2-players.webp',
-      accentClassName: LEMON_ACCENT,
+      accentClassName: NEUTRAL_TILE_ACCENT,
     },
     {
       value: 'lemon_squad',
@@ -78,7 +76,7 @@ function lemonPlayerTiles(dict?: Dictionary): ChallengeIntroTile[] {
       description: dict?.streaks?.lemonSquadDesc || '4 players',
       icon: UsersRound,
       image: '/images/streaks/modes/gauntlet-4-players.webp',
-      accentClassName: LEMON_ACCENT,
+      accentClassName: NEUTRAL_TILE_ACCENT,
     },
   ];
 }
@@ -113,7 +111,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
         dict?.streaks?.gauntletOriginalDesc || 'Classic, original Gauntlet rules. A checkpoint every 10 wins.',
       icon: Swords,
       image: '/images/streaks/modes/gauntlet-original.webp',
-      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
+      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: originalCompleted,
       completedCount: originalCompletedCount,
       completedFull: originalCompletedFull,
@@ -143,7 +141,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
               : dict?.streaks?.gauntletIntroSurvivor ||
                 'Face a random owned survivor with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
         }
-        rulesLabel={dict?.streaks?.rules || 'Rules'}
+        rulesLabel={dict?.streaks?.readFullRules || 'Read full rules'}
         onOpenRules={isLemonStage || !showIntro ? undefined : () => setIsRulesOpen(true)}
         tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
         onSelectTile={(value) => {

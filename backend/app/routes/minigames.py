@@ -304,36 +304,18 @@ def stream_killer_terror_radius(killer_id: int):
     if not killer:
         return jsonify({"error": "Killer not found"}), 404
 
-    # Load audio metadata mappings
+    mp3_url = killer.chase_music_url
+    if not mp3_url:
+        return jsonify({"error": "Audio track not available for this killer"}), 404
+
     static_folder = current_app.static_folder or os.path.join(current_app.root_path, "static")
     cache_dir = os.path.join(static_folder, "audio", "cache")
     os.makedirs(cache_dir, exist_ok=True)
-
-    json_path = os.path.join(static_folder, "audio", "killer_terror_radius_audio.json")
-    if not os.path.exists(json_path):
-        # Fallback to seeds dir if not in static
-        json_path = os.path.join(current_app.root_path, "seeds", "data", "killer_terror_radius_audio.json")
-
-    audio_map = {}
-    if os.path.exists(json_path):
-        try:
-            with open(json_path, "r", encoding="utf-8") as f:
-                audio_map = json.load(f)
-        except Exception as e:
-            logger.warning(f"Could not load killer audio mapping JSON: {e}")
-
-    audio_info = audio_map.get(killer.name) or audio_map.get("The Trapper")
-    if not audio_info:
-        return jsonify({"error": "Audio track not available for this killer"}), 404
 
     mp3_filename = f"killer_{killer.id}_{killer.name.lower().replace(' ', '_')}.mp3"
     local_path = os.path.join(cache_dir, mp3_filename)
 
     if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
-        mp3_url = audio_info.get("mp3_url") or audio_info.get("ogg_url")
-        if not mp3_url:
-            return jsonify({"error": "Audio URL not configured"}), 404
-
         try:
             req = urllib.request.Request(
                 mp3_url,
@@ -347,12 +329,11 @@ def stream_killer_terror_radius(killer_id: int):
                 if data:
                     with open(local_path, "wb") as f:
                         f.write(data)
+            # Save local path directly to Killer model
+            killer.chase_music_local_path = f"audio/cache/{mp3_filename}"
+            db.session.commit()
         except Exception as e:
             logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
-            # If download fails, check if another cached file exists as fallback
-            cached_files = [f for f in os.listdir(cache_dir) if f.endswith(".mp3") and os.path.getsize(os.path.join(cache_dir, f)) > 0]
-            if cached_files:
-                return send_from_directory(cache_dir, cached_files[0], mimetype="audio/mpeg", conditional=True)
             return jsonify({"error": f"Failed to retrieve audio: {str(e)}"}), 502
 
     return send_from_directory(cache_dir, mp3_filename, mimetype="audio/mpeg", conditional=True)

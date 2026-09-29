@@ -91,6 +91,8 @@ class _CharacterMixin:
     is_disabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     disabled_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
     lore: Mapped[str | None] = mapped_column(Text, nullable=True)
+    gender: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    emoji_riddle: Mapped[str | None] = mapped_column(String(64), nullable=True)
     # When this row was first created, not the in-game release date -- lets
     # "how many killers/survivors existed in the game at time X" be answered
     # honestly for players whose owned roster was fixed before X.
@@ -158,6 +160,9 @@ class _CharacterMixin:
             "name": self.localized(lang, "name", self.name),
             "role": self.role,
             "category": self.role,
+            "gender": self.gender,
+            "height": getattr(self, "height", "Average") or "Average",
+            "emoji_riddle": self.emoji_riddle,
             "code_prefix": self.code_prefix,
             "portrait_url": self.portrait_url,
             "real_name": self.real_name or self.name,
@@ -184,6 +189,8 @@ class Survivor(Base, _CharacterMixin):
     __tablename__ = "survivors"
 
     role = SURVIVOR_ROLE
+
+    height: Mapped[str | None] = mapped_column(String(20), default="Average", nullable=True)
 
     chapter: Mapped["Chapter"] = relationship(back_populates="survivors", lazy="joined")
 
@@ -245,6 +252,8 @@ class Killer(Base, _CharacterMixin):
     terror_radius: Mapped[str | None] = mapped_column(String(150), nullable=True)
     terror_radius_meters: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
     height: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    chase_music_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    chase_music_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     chapter: Mapped["Chapter"] = relationship(back_populates="killers", lazy="joined")
 
@@ -292,9 +301,12 @@ class Killer(Base, _CharacterMixin):
             "terror_radius": self.terror_radius or "32 m",
             "terror_radius_meters": self.terror_radius_meters or 32,
             "height": self.height or "Tall",
+            "chase_music_url": self.chase_music_url,
         }
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         data = self._base_dict(lang)
         data["power"] = self.power_dict(lang)
+        data["chase_music_url"] = self.chase_music_url
+        data["chase_music_local_path"] = self.chase_music_local_path
         return data

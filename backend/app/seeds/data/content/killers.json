@@ -37,7 +37,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default01.ogg/TerrorRadius_Default01.ogg.mp3",
+      "emoji_riddle": "🐻 ⚙️ 🩸"
     },
     {
       "id": 2,
@@ -72,7 +75,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default02.ogg/TerrorRadius_Default02.ogg.mp3",
+      "emoji_riddle": "🔔 👻 🌲"
     },
     {
       "id": 3,
@@ -107,7 +113,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "40 metres",
       "terror_radius_meters": 40,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Hillbilly.ogg/TerrorRadius_Hillbilly.ogg.mp3",
+      "emoji_riddle": "🪚 🏃 ⚡"
     },
     {
       "id": 4,
@@ -142,7 +151,10 @@
       "movement_speed_ms": "3.85",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Nurse.ogg/TerrorRadius_Nurse.ogg.mp3",
+      "emoji_riddle": "👁️ 💨 🏥"
     },
     {
       "id": 5,
@@ -177,7 +189,10 @@
       "movement_speed_ms": "4.2",
       "terror_radius": "32m (Stalker Mode) 16m (Pursuer Mode) 32m (Evil Incarnate)",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Shape.ogg/TerrorRadius_Shape.ogg.mp3",
+      "emoji_riddle": "🔪 🎃 👥"
     },
     {
       "id": 6,
@@ -212,7 +227,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Hag.ogg/TerrorRadius_Hag.ogg.mp3",
+      "emoji_riddle": "✋ 🌾 🪞"
     },
     {
       "id": 7,
@@ -247,7 +265,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Doctor.ogg/TerrorRadius_Doctor.ogg.mp3",
+      "emoji_riddle": "⚡ 🧠 💉"
     },
     {
       "id": 8,
@@ -282,7 +303,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "20 metres",
       "terror_radius_meters": 20,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/Huntress_Lullaby.ogg/Huntress_Lullaby.ogg.mp3",
+      "emoji_riddle": "🪓 🎶 🐰"
     },
     {
       "id": 9,
@@ -317,7 +341,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default03.ogg/TerrorRadius_Default03.ogg.mp3",
+      "emoji_riddle": "🍖 🪚 👨"
     },
     {
       "id": 10,
@@ -352,7 +379,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/Nightmare_Lullaby.ogg/Nightmare_Lullaby.ogg.mp3",
+      "emoji_riddle": "😴 🧤 🕒"
     },
     {
       "id": 11,
@@ -387,7 +417,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default04.ogg/TerrorRadius_Default04.ogg.mp3",
+      "emoji_riddle": "🐷 ⏱️ 🗝️"
     },
     {
       "id": 12,
@@ -422,7 +455,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Clown.ogg/TerrorRadius_Clown.ogg.mp3",
+      "emoji_riddle": "🎪 🍾 💨"
     },
     {
       "id": 13,
@@ -457,7 +493,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Spirit.ogg/TerrorRadius_Spirit.ogg.mp3",
+      "emoji_riddle": "🗡️ 👘 👻"
     },
     {
       "id": 14,
@@ -492,7 +531,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "40 metres (Feral Frenzy)",
       "terror_radius_meters": 40,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Legion.ogg/TerrorRadius_Legion.ogg.mp3",
+      "emoji_riddle": "🔪 🏃 🎭"
     },
     {
       "id": 15,
@@ -527,7 +569,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default05.ogg/TerrorRadius_Default05.ogg.mp3",
+      "emoji_riddle": "🤢 🤮 🏛️"
     },
     {
       "id": 16,
@@ -562,7 +607,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_GhostFace.ogg/TerrorRadius_GhostFace.ogg.mp3",
+      "emoji_riddle": "📸 🔪 👻"
     },
     {
       "id": 17,
@@ -597,7 +645,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Demogorgon.ogg/TerrorRadius_Demogorgon.ogg.mp3",
+      "emoji_riddle": "🌺 🌀 🐕"
     },
     {
       "id": 18,
@@ -632,7 +683,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Oni.ogg/TerrorRadius_Oni.ogg.mp3",
+      "emoji_riddle": "👹 🩸 🔨"
     },
     {
       "id": 19,
@@ -667,7 +721,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Deathslinger.ogg/TerrorRadius_Deathslinger.ogg.mp3",
+      "emoji_riddle": "🤠 🔫 ⛓️"
     },
     {
       "id": 20,
@@ -702,7 +759,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Executioner.ogg/TerrorRadius_Executioner.ogg.mp3",
+      "emoji_riddle": "🗡️ 📐 ⛓️"
     },
     {
       "id": 21,
@@ -737,7 +797,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "40 metres",
       "terror_radius_meters": 40,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Blight.ogg/TerrorRadius_Blight.ogg.mp3",
+      "emoji_riddle": "🧪 💥 🏃"
     },
     {
       "id": 22,
@@ -772,7 +835,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/Twins_Lullaby.ogg/Twins_Lullaby.ogg.mp3",
+      "emoji_riddle": "👶 🧰 💔"
     },
     {
       "id": 23,
@@ -807,7 +873,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "24m (Default) 44m (S-Rank)",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/Trickster_Lullaby.ogg/Trickster_Lullaby.ogg.mp3",
+      "emoji_riddle": "🔪 🎤 🦇"
     },
     {
       "id": 24,
@@ -842,7 +911,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Nemesis.ogg/TerrorRadius_Nemesis.ogg.mp3",
+      "emoji_riddle": "🧟 💉 👊"
     },
     {
       "id": 25,
@@ -877,7 +949,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Cenobite.ogg/TerrorRadius_Cenobite.ogg.mp3",
+      "emoji_riddle": "📦 ⛓️ 🪡"
     },
     {
       "id": 26,
@@ -912,7 +987,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Artist.ogg/TerrorRadius_Artist.ogg.mp3",
+      "emoji_riddle": "🐦 🎨 ✒️"
     },
     {
       "id": 27,
@@ -947,7 +1025,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Short"
+      "height": "Short",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/Onry%C5%8D_Lullaby.ogg/Onry%C5%8D_Lullaby.ogg.mp3",
+      "emoji_riddle": "📺 📼 👁️"
     },
     {
       "id": 28,
@@ -982,7 +1063,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Dredge.ogg/TerrorRadius_Dredge.ogg.mp3",
+      "emoji_riddle": "🚪 ☁️ 🦃"
     },
     {
       "id": 29,
@@ -1017,7 +1101,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "40 metres",
       "terror_radius_meters": 40,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Mastermind.ogg/TerrorRadius_Mastermind.ogg.mp3",
+      "emoji_riddle": "🕶️ 🦠 💥"
     },
     {
       "id": 30,
@@ -1052,7 +1139,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Knight.ogg/TerrorRadius_Knight.ogg.mp3",
+      "emoji_riddle": "🛡️ ⚔️ 🏰"
     },
     {
       "id": 31,
@@ -1087,7 +1177,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_SkullMerchant.ogg/TerrorRadius_SkullMerchant.ogg.mp3",
+      "emoji_riddle": "🚁 💻 👁️"
     },
     {
       "id": 32,
@@ -1122,7 +1215,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Singularity.ogg/TerrorRadius_Singularity.ogg.mp3",
+      "emoji_riddle": "🤖 📹 🧬"
     },
     {
       "id": 33,
@@ -1157,7 +1253,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "24 metres (Crawler Mode)",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Xenomorph.ogg/TerrorRadius_Xenomorph.ogg.mp3",
+      "emoji_riddle": "👽 🛸 🐾"
     },
     {
       "id": 34,
@@ -1192,7 +1291,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Short"
+      "height": "Short",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_GoodGuy.ogg/TerrorRadius_GoodGuy.ogg.mp3",
+      "emoji_riddle": "🔪 🧸 👟"
     },
     {
       "id": 35,
@@ -1227,7 +1329,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Unknown.ogg/TerrorRadius_Unknown.ogg.mp3",
+      "emoji_riddle": "🪓 🗣️ 🕳️"
     },
     {
       "id": 36,
@@ -1262,7 +1367,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Lich.ogg/TerrorRadius_Lich.ogg.mp3",
+      "emoji_riddle": "💀 🪄 🎲"
     },
     {
       "id": 37,
@@ -1297,7 +1405,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/Dark_Lord_Lullaby.ogg/Dark_Lord_Lullaby.ogg.mp3",
+      "emoji_riddle": "🧛 🦇 🐺"
     },
     {
       "id": 38,
@@ -1332,7 +1443,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Houndmaster.ogg/TerrorRadius_Houndmaster.ogg.mp3",
+      "emoji_riddle": "🐕 🍖 🏹"
     },
     {
       "id": 39,
@@ -1367,7 +1481,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "40 metres",
       "terror_radius_meters": 40,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default01.ogg/TerrorRadius_Default01.ogg.mp3",
+      "emoji_riddle": "👁️ 🩸 💀"
     },
     {
       "id": 40,
@@ -1402,7 +1519,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "24 metres",
       "terror_radius_meters": 24,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default02.ogg/TerrorRadius_Default02.ogg.mp3",
+      "emoji_riddle": "🤖 🍕 🔪"
     },
     {
       "id": 41,
@@ -1437,7 +1557,10 @@
       "movement_speed_ms": "4.6",
       "terror_radius": "32m (Body Form) 40m (Head Form)",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "female",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default03.ogg/TerrorRadius_Default03.ogg.mp3",
+      "emoji_riddle": "👻 🩸 🌾"
     },
     {
       "id": 42,
@@ -1472,7 +1595,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default04.ogg/TerrorRadius_Default04.ogg.mp3",
+      "emoji_riddle": "👁️ 🌌 🌑"
     },
     {
       "id": 43,
@@ -1507,7 +1633,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Average"
+      "height": "Average",
+      "gender": "male",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default05.ogg/TerrorRadius_Default05.ogg.mp3",
+      "emoji_riddle": "🔪 🩸 🏕️"
     },
     {
       "id": 44,
@@ -1542,7 +1671,10 @@
       "movement_speed_ms": "4.4",
       "terror_radius": "32 metres",
       "terror_radius_meters": 32,
-      "height": "Tall"
+      "height": "Tall",
+      "gender": "monster_other",
+      "chase_music_url": "https://deadbydaylight.wiki.gg/images/transcoded/TerrorRadius_Default06.ogg/TerrorRadius_Default06.ogg.mp3",
+      "emoji_riddle": "⚖️ ⚡ 💀"
     }
   ]
 }

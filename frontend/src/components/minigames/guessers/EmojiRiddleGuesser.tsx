@@ -25,7 +25,7 @@ export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({
   dict,
   children,
 }) => {
-  const emojis = roundConfig.custom_data?.emojis || '🔔👻🌲';
+  const emojis = roundConfig.custom_data?.emojis || '';
   const attempts = guesses.length;
 
   return (

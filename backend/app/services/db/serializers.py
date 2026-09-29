@@ -28,13 +28,7 @@ def power_icon_local_path(power_name: str | None) -> str | None:
 
 
 def serialize_survivor(s: Survivor) -> dict[str, Any]:
-    """One survivor row, exported exactly as `survivors.json` holds it.
-
-    `release_number` is not exported: it is the primary key. The source
-    numbered survivors and killers separately, so the column equalled the row's
-    position within its role for all 98 characters -- which is what the id in
-    each of the two tables now is.
-    """
+    """One survivor row, exported exactly as `survivors.json` holds it."""
     return {
         "id": s.id,
         "name": s.name,
@@ -42,6 +36,9 @@ def serialize_survivor(s: Survivor) -> dict[str, Any]:
         "real_name": s.real_name,
         "avatar_local_path": s.avatar_local_path,
         "chapter_id": s.chapter_id,
+        "gender": s.gender,
+        "height": s.height or "Average",
+        "emoji_riddle": s.emoji_riddle,
         "is_disabled": s.is_disabled,
         "disabled_reason": s.disabled_reason,
         "lore": s.lore,
@@ -51,12 +48,7 @@ def serialize_survivor(s: Survivor) -> dict[str, Any]:
 
 
 def serialize_killer(k: Killer) -> dict[str, Any]:
-    """One killer row, power statistics included.
-
-    These seven fields were a separate `killer_profiles` row, which existed
-    only to keep them off the 54 survivors that never had them. With a table
-    per role they are plain columns and the nesting is gone.
-    """
+    """One killer row, power statistics and chase music included."""
     return {
         "id": k.id,
         "name": k.name,
@@ -64,6 +56,8 @@ def serialize_killer(k: Killer) -> dict[str, Any]:
         "real_name": k.real_name,
         "avatar_local_path": k.avatar_local_path,
         "chapter_id": k.chapter_id,
+        "gender": k.gender,
+        "emoji_riddle": k.emoji_riddle,
         "is_disabled": k.is_disabled,
         "disabled_reason": k.disabled_reason,
         "lore": k.lore,
@@ -73,14 +67,14 @@ def serialize_killer(k: Killer) -> dict[str, Any]:
         "power_icon_local_path": (
             k.power_icon_local_path or power_icon_local_path(k.power_name)
         ),
-        # `movement_speed_percent` is not exported: it is ms / 4.0 * 100, the
-        # survivor baseline, exactly, for every one of the 44 killers.
         "movement_speed_ms": (
             format(k.movement_speed_ms, "f") if k.movement_speed_ms is not None else None
         ),
         "terror_radius": k.terror_radius,
         "terror_radius_meters": k.terror_radius_meters,
         "height": k.height,
+        "chase_music_url": k.chase_music_url,
+        "chase_music_local_path": k.chase_music_local_path,
         "translations": k.translations or {},
         "created_at": k.created_at.isoformat() if k.created_at else None,
     }

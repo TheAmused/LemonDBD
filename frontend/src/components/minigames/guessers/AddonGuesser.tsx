@@ -24,9 +24,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
   children,
 }) => {
   const attempts = guesses.length;
-  const description =
-    (roundConfig.custom_data?.description as string) ||
-    'Tremendously increases the active range of the Killer power while reducing charge recovery speed.';
+  const description = (roundConfig.custom_data?.description as string) || '';
 
   return (
     <div className="w-full flex flex-col items-center my-6">

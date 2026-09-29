@@ -598,7 +598,8 @@ class DatabaseExportImportService:
 
             _SHARED_CHARACTER_FIELDS = [
                 "name", "chapter_id", "portrait_url", "real_name",
-                "avatar_local_path", "is_disabled", "disabled_reason",
+                "avatar_local_path", "gender", "emoji_riddle",
+                "is_disabled", "disabled_reason",
                 "lore", "translations",
             ]
 
@@ -616,7 +617,7 @@ class DatabaseExportImportService:
 
             _upsert_by_id(
                 data, target_keys, summary, "survivors", Survivor,
-                update_fields=_SHARED_CHARACTER_FIELDS,
+                update_fields=_SHARED_CHARACTER_FIELDS + ["height"],
                 defaults=_character_defaults,
                 post_process=_set_created_at,
                 asset_fields=["avatar_local_path"], static_dir=static_dir,
@@ -649,6 +650,7 @@ class DatabaseExportImportService:
                     "power_name", "power_description", "power_icon_url",
                     "power_icon_local_path", "terror_radius",
                     "terror_radius_meters", "height",
+                    "chase_music_url", "chase_music_local_path",
                 ],
                 defaults=lambda row: {
                     **_character_defaults(row),

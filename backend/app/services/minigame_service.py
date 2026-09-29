@@ -27,41 +27,6 @@ logger = logging.getLogger(__name__)
 _CATALOG_CACHE: dict[str, tuple[float, dict[str, Any]]] = {}
 _CATALOG_TTL_SECONDS = 300
 
-# Fallback gender mappings for canon characters (98 characters)
-KNOWN_GENDERS: dict[str, str] = {
-    # Survivors (Female)
-    "Meg Thomas": "female", "Claudette Morel": "female", "Nea Karlsson": "female",
-    "Laurie Strode": "female", "Feng Min": "female", "Kate Denson": "female",
-    "Jane Romero": "female", "Nancy Wheeler": "female", "Yui Kimura": "female",
-    "Zarina Kassir": "female", "Cheryl Mason": "female", "Elodie Rakoto": "female",
-    "Élodie Rakoto": "female", "Yun-Jin Lee": "female", "Lee Yun-jin": "female",
-    "Jill Valentine": "female", "Mikaela Reid": "female", "Haddie Kaur": "female",
-    "Ada Wong": "female", "Rebecca Chambers": "female", "Thalita Lyra": "female",
-    "Ellen Ripley": "female", "Sable Ward": "female", "Lara Croft": "female",
-    "Orela Rose": "female", "Vee Boonyasak": "female", "Taurie Cain": "female",
-    "Eleven": "female", "Michonne Grimes": "female",
-    # Survivors (Male)
-    "Dwight Fairfield": "male", "Jake Park": "male", "Ace Visconti": "male",
-    "William 'Bill' Overbeck": "male", "David King": "male", "Quentin Smith": "male",
-    "David Tapp": "male", "Detective Tapp": "male", "Adam Francis": "male",
-    "Jeff Johansen": "male", "Ashley J. Williams": "male", "Steve Harrington": "male",
-    "Felix Richter": "male", "Jonah Vasquez": "male", "Yoichi Asakawa": "male",
-    "Vittorio Toscano": "male", "Renato Lyra": "male", "Gabriel Soma": "male",
-    "Nicolas Cage": "male", "Alan Wake": "male", "Trevor Belmont": "male",
-    "Shane Wiigwaas": "male", "Shane": "male", "Dustin Henderson": "male",
-    "Rick Grimes": "male", "Kwon Tae-young": "male", "Tae-Young": "male",
-    "Leon Scott Kennedy": "male", "Leon S. Kennedy": "male",
-    # Killers (Female)
-    "The Nurse": "female", "The Hag": "female", "The Huntress": "female",
-    "The Pig": "female", "The Spirit": "female", "The Plague": "female",
-    "The Onryō": "female", "The Skull Merchant": "female", "The Krasue": "female",
-    # Killers (Monster/Other)
-    "The Demogorgon": "monster_other", "The Dredge": "monster_other",
-    "The Xenomorph": "monster_other", "The Unknown": "monster_other",
-    "The Singularity": "monster_other",
-}
-
-
 class MinigameService:
     """Core domain logic for Dead by Daylight minigames and guesser challenges."""
 
@@ -89,13 +54,14 @@ class MinigameService:
                 "raw_name": s.name,
                 "real_name": s.real_name or s.name,
                 "role": "Survivor",
-                "gender": self._resolve_gender(s.name, "Survivor"),
+                "gender": (s.gender or "female").capitalize(),
                 "avatar_url": s.portrait_url or f"/static/{s.avatar_local_path}" if s.avatar_local_path else "",
                 "chapter_id": s.chapter_id,
                 "chapter_name": chap.localized_name(lang) if chap else "Base Game",
                 "release_year": (chap.release_year if chap else None) or 2016,
                 "is_licensed": bool(chap.is_licensed) if chap else False,
-                "height": "Average",
+                "height": s.height or "Average",
+                "emoji_riddle": s.emoji_riddle or "",
             })
 
         for k in killers:
@@ -107,18 +73,20 @@ class MinigameService:
                 "raw_name": k.name,
                 "real_name": k.real_name or k.name,
                 "role": "Killer",
-                "gender": self._resolve_gender(k.name, "Killer"),
+                "gender": (k.gender or "male").capitalize(),
                 "avatar_url": k.portrait_url or f"/static/{k.avatar_local_path}" if k.avatar_local_path else "",
                 "chapter_id": k.chapter_id,
                 "chapter_name": chap.localized_name(lang) if chap else "Base Game",
                 "release_year": (chap.release_year if chap else None) or 2016,
                 "is_licensed": bool(chap.is_licensed) if chap else False,
                 "height": k.height or "Tall",
+                "emoji_riddle": k.emoji_riddle or "",
                 "power_name": k.power_name,
                 "power_icon_url": k.power_icon_url or f"/static/{k.power_icon_local_path}" if k.power_icon_local_path else "",
                 "movement_speed": k.movement_speed or "4.6 m/s",
                 "terror_radius": k.terror_radius or "32 metres",
                 "terror_radius_meters": k.terror_radius_meters or 32,
+                "chase_music_url": k.chase_music_url or "",
             })
 
         perks_list = []
@@ -155,18 +123,6 @@ class MinigameService:
         }
         _CATALOG_CACHE[cache_key] = (now, result)
         return result
-
-
-    def _resolve_gender(self, name: str, role: str) -> str:
-        """Determines gender using canon entities or fallback registry."""
-        if name in KNOWN_GENDERS:
-            return KNOWN_GENDERS[name]
-
-        entity = db.session.query(Entity).filter_by(name=name).first()
-        if entity and entity.gender:
-            return entity.gender
-
-        return "male" if role == "Killer" else "female"
 
     def get_or_create_daily(self, game_mode: str, target_date: date, lang: str | None = None) -> dict[str, Any]:
         """Fetches cached daily challenge from PostgreSQL, or deterministically generates it."""
@@ -485,11 +441,14 @@ class MinigameService:
 
         elif game_mode in ("addon", "addon_guesser"):
             from app.models.equipment import KillerAddon
-            addons = db.session.query(KillerAddon).join(Killer).all()
+            addons = db.session.query(KillerAddon).join(Killer).filter(
+                KillerAddon.description != None,
+                KillerAddon.description != ""
+            ).all()
             if addons:
                 chosen_addon = rng.choice(addons)
                 killer = chosen_addon.killer
-                addon_desc = chosen_addon.description or "Modifiers to killer power abilities."
+                addon_desc = chosen_addon.description
                 addon_desc = self._redact_identifiers(
                     addon_desc,
                     [killer.name, killer.real_name, killer.power_name, chosen_addon.name],
@@ -510,49 +469,10 @@ class MinigameService:
                 }]
 
         elif game_mode == "emoji_riddle":
-            emoji_map = {
-                "The Trapper": "🐻 ⚙️ 🩸",
-                "The Wraith": "🔔 👻 🌲",
-                "The Hillbilly": "🪚 🏃 ⚡",
-                "The Nurse": "👁️ 💨 🏥",
-                "The Huntress": "🪓 🎶 🐰",
-                "The Shape": "🔪 🎃 👥",
-                "The Hag": "✋ 🌾 🪞",
-                "The Doctor": "⚡ 🧠 💉",
-                "The Cannibal": "🍖 🪚 👨",
-                "The Nightmare": "😴 🧤 🕒",
-                "The Pig": "🐷 ⏱️ 🗝️",
-                "The Clown": "🎪 🍾 💨",
-                "The Spirit": "🗡️ 👘 👻",
-                "The Legion": "🔪 🏃 🎭",
-                "The Plague": "🤢 🤮 🏛️",
-                "The Ghost Face": "📸 🔪 👻",
-                "The Demogorgon": "🌺 🌀 🐕",
-                "The Oni": "👹 🩸 🔨",
-                "The Deathslinger": "🤠 🔫 ⛓️",
-                "The Blight": "🧪 💥 🏃",
-                "The Twins": "👶 🧰 💔",
-                "The Trickster": "🔪 🎤 🦇",
-                "The Nemesis": "🧟 💉 👊",
-                "The Cenobite": "📦 ⛓️ 🪡",
-                "The Artist": "🐦 🎨 ✒️",
-                "The Onryō": "📺 📼 👁️",
-                "The Dredge": "🚪 ☁️ 🦃",
-                "The Mastermind": "🕶️ 🦠 💥",
-                "The Knight": "🛡️ ⚔️ 🏰",
-                "The Skull Merchant": "🚁 💻 👁️",
-                "The Singularity": "🤖 📹 🧬",
-                "The Xenomorph": "👽 🛸 🐾",
-                "The Good Guy": "🔪 🧸 👟",
-                "The Unknown": "🪓 🗣️ 🕳️",
-                "The Lich": "💀 🪄 🎲",
-                "The Dark Lord": "🧛 🦇 🐺",
-                "The Houndmaster": "🐕 🍖 🏹",
-            }
-            chosen_killer = rng.choice(killers) if killers else None
+            killers_with_emojis = [k for k in killers if k.emoji_riddle]
+            chosen_killer = rng.choice(killers_with_emojis or killers) if killers else None
             killer_id = chosen_killer.id if chosen_killer else 1
-            killer_name = chosen_killer.name if chosen_killer else "The Trapper"
-            emojis = emoji_map.get(killer_name, "🔪 💀 🩸")
+            emojis = chosen_killer.emoji_riddle if (chosen_killer and chosen_killer.emoji_riddle) else "🔪 💀 🩸"
             return [{
                 "round_number": 1,
                 "mode": "emoji_riddle",
@@ -741,8 +661,8 @@ class MinigameService:
         role_match = "correct" if target_role == guess_role else "incorrect"
 
         # 2. Gender
-        target_gender = self._resolve_gender(target.name, target_role)
-        guess_gender = self._resolve_gender(guess.name, guess_role)
+        target_gender = (target.gender or "unknown").lower()
+        guess_gender = (guess.gender or "unknown").lower()
         gender_match = "correct" if target_gender == guess_gender else "incorrect"
 
         # 3. Chapter

@@ -26,7 +26,8 @@
 //   * no uncaught page errors (React hydration errors included).
 // It also reports -- without failing -- interactive controls smaller than
 // 40px on touch viewports. Screenshots + report.json land in
-// playwright-tier-lists-check/.
+// playwright-tier-lists-check/ (root of repo).
+
 
 import { chromium, firefox, webkit } from 'playwright';
 import fs from 'node:fs';
@@ -36,7 +37,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE_URL = (process.env.TIER_LISTS_BASE_URL || 'https://localhost').replace(/\/+$/, '');
 const LOCALE = process.env.TIER_LISTS_LOCALE || 'en';
-const OUT_DIR = path.join(__dirname, '..', 'playwright-tier-lists-check');
+const OUT_DIR = path.join(__dirname, '..', '..', 'playwright', 'tier-lists-check');
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 export const VIEWPORTS = [

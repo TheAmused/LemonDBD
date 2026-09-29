@@ -103,7 +103,6 @@ backend/app/static/uploads/
 backend/app/static/audio/cache/
 backend/app/static/audio/*.mp3
 backend/app/static/audio/*.ogg
-!backend/app/static/audio/killer_terror_radius_audio.json
 translations/*
 !translations/create_translations.py
 

@@ -99,14 +99,23 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
     <div className="w-full flex flex-col items-center my-6">
       {/* Audio Stage Card */}
       <div className="w-full max-w-lg p-6 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
-        {/* Distance Clue (for Terror Radius) */}
-        {mode === 'terror_radius' && (
+
+        {/* Distance clue — only shown AFTER first wrong guess */}
+        {mode === 'terror_radius' && guesses.length > 0 && (
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold uppercase tracking-wider">
             <Activity className="w-3.5 h-3.5 animate-pulse" />
             <span>
-              {currentDistance > 0 ? `${currentDistance}m Distance` : 'Direct Chase (0m)'}
+              {currentDistance > 0 ? `Heartbeat at ${currentDistance}m` : 'Chase Speed (0m)'}
             </span>
           </div>
+        )}
+
+        {/* First-time instruction */}
+        {guesses.length === 0 && (
+          <p className="text-xs text-zinc-500 text-center max-w-xs">
+            Listen to the synthesized heartbeat — each wrong guess brings the Killer closer.
+            Identify which Killer it belongs to.
+          </p>
         )}
 
         {/* Waveform Visualization Bars */}

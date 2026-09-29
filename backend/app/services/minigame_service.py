@@ -284,6 +284,9 @@ class MinigameService:
                 "target_type": "killer",
                 "target_id": chosen_killer.id if chosen_killer else 1,
                 "max_attempts": 5,
+                "custom_data": {
+                    "power_description": chosen_killer.power_description if chosen_killer else "",
+                },
             }]
 
         elif game_mode in ("audio", "terror_radius"):
@@ -316,6 +319,9 @@ class MinigameService:
                     "target_type": "killer",
                     "target_id": killer.id if killer else 1,
                     "max_attempts": 5,
+                    "custom_data": {
+                        "power_description": killer.power_description if killer else "",
+                    },
                 },
                 {
                     "round_number": 3,
@@ -332,6 +338,40 @@ class MinigameService:
                     "max_attempts": 6,
                 }
             ]
+
+        elif game_mode in ("quote", "quote_lore"):
+            import re as _re
+            # Pick a character that has lore text
+            chars_with_lore = [(s, "survivor") for s in survivors if s.lore] + \
+                              [(k, "killer") for k in killers if k.lore]
+            if chars_with_lore:
+                chosen_char, chosen_type = rng.choice(chars_with_lore)
+            elif killers:
+                chosen_char, chosen_type = killers[0], "killer"
+            else:
+                chosen_char, chosen_type = None, "killer"
+
+            # Redact the character name from the lore text so it can't be trivially read
+            lore_text = (chosen_char.lore if chosen_char else None) or "The Entity hungers..."
+            if chosen_char:
+                char_name = chosen_char.name
+                lore_text = _re.sub(_re.escape(char_name), "[REDACTED]", lore_text, flags=_re.IGNORECASE)
+                # Redact first name only too if it's multi-word and long enough
+                first_name = char_name.split()[0] if " " in char_name else None
+                if first_name and len(first_name) > 3:
+                    lore_text = _re.sub(r'\b' + _re.escape(first_name) + r'\b', "[REDACTED]", lore_text, flags=_re.IGNORECASE)
+
+            return [{
+                "round_number": 1,
+                "mode": "quote_lore",
+                "target_type": chosen_type,
+                "target_id": chosen_char.id if chosen_char else 1,
+                "max_attempts": 6,
+                "custom_data": {
+                    "quote": lore_text,
+                    "speaker": None,  # revealed after 2 wrong guesses on frontend
+                },
+            }]
 
         # Default fallback: classic character
         chosen_killer = rng.choice(killers) if killers else None
@@ -361,6 +401,8 @@ class MinigameService:
             "voice_line": "Daily Voice Line Riddle",
             "pixel": "Daily Pixel Avatar Guesser",
             "pixel_avatar": "Daily Pixel Avatar Guesser",
+            "quote": "Daily Lore & Quote Guesser",
+            "quote_lore": "Daily Lore & Quote Guesser",
         }
         return f"{names.get(game_mode, 'Daily Minigame')} #{target_date.strftime('%Y%m%d')}"
 
@@ -378,6 +420,15 @@ class MinigameService:
             return self._evaluate_realm(target_id, guess_id, attempt_number)
         elif mode in ("terror_radius", "voice_line", "hook_scream", "audio"):
             return self._evaluate_audio(target_type, target_id, guess_type, guess_id, attempt_number)
+        elif mode in ("quote_lore", "quote", "killer_power", "perk_distortion",
+                      "pixel_avatar", "addon_guesser", "emoji_riddle"):
+            # Simple match: guess must match target type + id
+            is_match = (target_type == guess_type and target_id == guess_id)
+            return {
+                "is_correct": is_match,
+                "attempt_number": attempt_number,
+                "details": {"match": is_match}
+            }
         else:
             is_match = (target_type == guess_type and target_id == guess_id)
             return {

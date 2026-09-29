@@ -343,6 +343,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
           />
         );
       case 'quote_lore':
+      case 'quote':
         return (
           <QuoteLoreGuesser
             roundConfig={currentRound}

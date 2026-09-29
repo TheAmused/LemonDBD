@@ -1,14 +1,17 @@
-# backend/app/routes/minigames.py
+import json
 import logging
+import os
 import secrets
 import string
+import urllib.request
 from datetime import date, datetime, timezone
 from typing import Any
 
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, current_app, g, jsonify, request, send_from_directory
 from app.core.extensions import db
 from app.core.limiter import limiter
 from app.core.security import admin_required, get_current_user
+from app.models.character import Killer
 from app.models.minigame import (
     MinigameDailyChallenge,
     MinigameRepeatableChallenge,
@@ -291,3 +294,66 @@ def update_user_stats():
     stat.last_played_date = today
     db.session.commit()
     return jsonify(stat.to_dict()), 200
+
+
+@minigames_bp.route("/audio/terror_radius/<int:killer_id>", methods=["GET"])
+@limiter.limit("120 per minute")
+def stream_killer_terror_radius(killer_id: int):
+    """Streams official Dead by Daylight Terror Radius / Chase music for a given killer, caching locally."""
+    killer = db.session.get(Killer, killer_id)
+    if not killer:
+        return jsonify({"error": "Killer not found"}), 404
+
+    # Load audio metadata mappings
+    static_folder = current_app.static_folder or os.path.join(current_app.root_path, "static")
+    cache_dir = os.path.join(static_folder, "audio", "cache")
+    os.makedirs(cache_dir, exist_ok=True)
+
+    json_path = os.path.join(static_folder, "audio", "killer_terror_radius_audio.json")
+    if not os.path.exists(json_path):
+        # Fallback to seeds dir if not in static
+        json_path = os.path.join(current_app.root_path, "seeds", "data", "killer_terror_radius_audio.json")
+
+    audio_map = {}
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                audio_map = json.load(f)
+        except Exception as e:
+            logger.warning(f"Could not load killer audio mapping JSON: {e}")
+
+    audio_info = audio_map.get(killer.name) or audio_map.get("The Trapper")
+    if not audio_info:
+        return jsonify({"error": "Audio track not available for this killer"}), 404
+
+    mp3_filename = f"killer_{killer.id}_{killer.name.lower().replace(' ', '_')}.mp3"
+    local_path = os.path.join(cache_dir, mp3_filename)
+
+    if not os.path.exists(local_path) or os.path.getsize(local_path) == 0:
+        mp3_url = audio_info.get("mp3_url") or audio_info.get("ogg_url")
+        if not mp3_url:
+            return jsonify({"error": "Audio URL not configured"}), 404
+
+        try:
+            req = urllib.request.Request(
+                mp3_url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "Referer": "https://deadbydaylight.wiki.gg/wiki/Terror_Radius",
+                },
+            )
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                data = resp.read()
+                if data:
+                    with open(local_path, "wb") as f:
+                        f.write(data)
+        except Exception as e:
+            logger.error(f"Failed to fetch audio for {killer.name} from wiki: {e}")
+            # If download fails, check if another cached file exists as fallback
+            cached_files = [f for f in os.listdir(cache_dir) if f.endswith(".mp3") and os.path.getsize(os.path.join(cache_dir, f)) > 0]
+            if cached_files:
+                return send_from_directory(cache_dir, cached_files[0], mimetype="audio/mpeg", conditional=True)
+            return jsonify({"error": f"Failed to retrieve audio: {str(e)}"}), 502
+
+    return send_from_directory(cache_dir, mp3_filename, mimetype="audio/mpeg", conditional=True)
+

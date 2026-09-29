@@ -89,18 +89,32 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
   // Target type determination for autocomplete
   const activeTargetType = useMemo<TargetType>(() => {
     const mode = currentRound.mode;
-    if (mode === 'realm_guesser') return 'realm';
-    if (mode === 'classic_perk' || mode === 'perk_icon' || mode === 'perk_distortion')
+    if (mode === 'realm_guesser' || (mode as string) === 'realm') return 'realm';
+    if (
+      mode === 'classic_perk' ||
+      mode === 'perk_icon' ||
+      mode === 'perk_distortion' ||
+      (mode as string) === 'perk'
+    )
       return 'perk';
-    if (mode === 'classic_killer' || mode === 'killer_power' || mode === 'terror_radius')
+    if (
+      mode === 'classic_killer' ||
+      mode === 'killer_power' ||
+      (mode as string) === 'power' ||
+      mode === 'terror_radius' ||
+      (mode as string) === 'audio'
+    )
       return 'killer';
+    if (mode === 'quote_lore' || (mode as string) === 'quote') {
+      return (currentRound.target_type as TargetType) || 'character';
+    }
     if (
       mode === 'classic_character' ||
       mode === 'classic' ||
       mode === 'pixel_avatar' ||
+      (mode as string) === 'pixel' ||
       mode === 'voice_line' ||
       mode === 'hook_scream' ||
-      mode === 'quote_lore' ||
       mode === 'emoji_riddle'
     ) {
       return 'character';
@@ -288,8 +302,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
   const renderActiveGuesser = () => {
     const mode = currentRound.mode;
 
-    switch (mode) {
+    switch (mode as string) {
       case 'realm_guesser':
+      case 'realm':
         return (
           <RealmGuesser
             roundConfig={currentRound}
@@ -300,6 +315,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
           />
         );
       case 'pixel_avatar':
+      case 'pixel':
         return (
           <PixelAvatarGuesser
             roundConfig={currentRound}
@@ -311,6 +327,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
         );
       case 'perk_icon':
       case 'perk_distortion':
+      case 'perk':
         return (
           <PerkIconGuesser
             roundConfig={currentRound}
@@ -321,6 +338,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
           />
         );
       case 'killer_power':
+      case 'power':
         return (
           <KillerPowerGuesser
             roundConfig={currentRound}
@@ -333,6 +351,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
       case 'voice_line':
       case 'hook_scream':
       case 'terror_radius':
+      case 'audio':
         return (
           <AudioGuesser
             roundConfig={currentRound}

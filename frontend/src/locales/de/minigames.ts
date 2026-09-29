@@ -86,6 +86,7 @@ export default {
     classic_perk: "Talent-Raten",
     realm_guesser: "Reich- & Karten-Raten",
     pixel_avatar: "Verpixeltes Porträt",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "Verzerrtes Talent-Symbol",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "Killer-Fähigkeit",
@@ -96,6 +97,11 @@ export default {
     quote: "Lore & Quote Guesser",
     emoji_riddle: "Emoji-Rätsel",
     addon_guesser: "Zusatz-Raten",
+      realm: "Realm & Map Guesser",
+    audio: "Terror Radius Guesser",
+
+    perk: "Perk Icon Distortion",
+    power: "Killer Power Guesser",
   },
   modeDescriptions: {
     classic_character: "Errate den Charakter durch Vergleich der Eigenschaften nach jedem Versuch.",
@@ -103,6 +109,7 @@ export default {
     classic_perk: "Errate das Talent nach Rolle, Charakter-Herkunft und Archetyp.",
     realm_guesser: "Identifiziere das Reich anhand zugeschnittener Wahrzeichen und Kartenmerkmale.",
     pixel_avatar: "Errate den Charakter aus einem verpixelten Bild, das mit jedem Versuch schärfer wird.",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "Erkenne das Talent anhand eines verzerrten oder vergrößerten Symbols.",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "Identifiziere den Killer anhand seiner Fähigkeit und geschwärzter Spielmechanik.",

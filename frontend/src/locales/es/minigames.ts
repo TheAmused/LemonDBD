@@ -86,6 +86,7 @@ export default {
     classic_perk: "Adivinanza de Habilidades",
     realm_guesser: "Adivinanza de Reinos y Mapas",
     pixel_avatar: "Avatar Pixelado",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "Distorsión de Icono de Habilidad",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "Poder de Asesino",
@@ -96,6 +97,11 @@ export default {
     quote: "Lore & Quote Guesser",
     emoji_riddle: "Acertijo de Emojis",
     addon_guesser: "Adivinanza de Accesorios",
+      realm: "Realm & Map Guesser",
+    audio: "Terror Radius Guesser",
+
+    perk: "Perk Icon Distortion",
+    power: "Killer Power Guesser",
   },
   modeDescriptions: {
     classic_character: "Adivina el personaje comparando atributos tras cada intento.",
@@ -103,6 +109,7 @@ export default {
     classic_perk: "Adivina la habilidad según rol, origen de personaje y arquetipo.",
     realm_guesser: "Identifica el Reino a través de imágenes recortadas y detalles del mapa.",
     pixel_avatar: "Adivina el personaje a través de una imagen pixelada que se aclara con cada intento.",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "Identifica la habilidad a partir de un icono distorsionado o con zoom.",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "Identifica al Asesino por su icono de poder y mecánicas censuradas.",

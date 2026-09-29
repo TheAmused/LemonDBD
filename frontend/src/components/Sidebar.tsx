@@ -13,6 +13,7 @@ import {
   Heart,
   Info,
   LayoutList,
+  Gamepad2,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
@@ -123,6 +124,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       );
     }
 
+    if (itemId === 'minigames') {
+      return (
+        activeCategory === 'minigames' ||
+        pathname.startsWith(`/${currentLocale}/minigames`)
+      );
+    }
+
     if (activeCategory === itemId) return true;
 
     if (itemHref) {
@@ -156,6 +164,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/streaks`,
+    },
+    {
+      id: 'minigames',
+      label: dict?.sidebar?.minigames || 'Minigames',
+      icon: Gamepad2,
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
+      href: `/${currentLocale}/minigames`,
     },
     {
       id: 'maps',

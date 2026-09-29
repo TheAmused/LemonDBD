@@ -30,6 +30,12 @@ from app.models.smash_or_pass import (
     SmashTaxonomy,
     Vote,
 )
+from app.models.minigame import (
+    MinigameDailyChallenge,
+    MinigameRepeatableChallenge,
+    MinigameSharedLink,
+    MinigameUserStat,
+)
 from app.models.user import (
     User,
     UserCharacterOwnership,
@@ -75,4 +81,8 @@ __all__ = [
     "SeedUpdateLog",
     "ChangelogPost",
     "TierList",
+    "MinigameDailyChallenge",
+    "MinigameRepeatableChallenge",
+    "MinigameSharedLink",
+    "MinigameUserStat",
 ]

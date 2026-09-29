@@ -291,12 +291,16 @@ class MinigameService:
 
         elif game_mode in ("audio", "terror_radius"):
             chosen_killer = rng.choice(killers) if killers else None
+            killer_id = chosen_killer.id if chosen_killer else 1
             return [{
                 "round_number": 1,
                 "mode": "terror_radius",
                 "target_type": "killer",
-                "target_id": chosen_killer.id if chosen_killer else 1,
+                "target_id": killer_id,
                 "max_attempts": 5,
+                "custom_data": {
+                    "audio_endpoint": f"/api/v1/minigames/audio/terror_radius/{killer_id}",
+                },
             }]
 
         elif game_mode == "fog_trial":
@@ -304,6 +308,7 @@ class MinigameService:
             realm = rng.choice(realms) if realms else None
             killer = rng.choice(killers) if killers else None
             perk = rng.choice(perks) if perks else None
+            killer_id = killer.id if killer else 1
             return [
                 {
                     "round_number": 1,
@@ -317,7 +322,7 @@ class MinigameService:
                     "round_number": 2,
                     "mode": "killer_power",
                     "target_type": "killer",
-                    "target_id": killer.id if killer else 1,
+                    "target_id": killer_id,
                     "max_attempts": 5,
                     "custom_data": {
                         "power_description": killer.power_description if killer else "",
@@ -327,21 +332,74 @@ class MinigameService:
                     "round_number": 3,
                     "mode": "terror_radius",
                     "target_type": "killer",
-                    "target_id": killer.id if killer else 1,
+                    "target_id": killer_id,
                     "max_attempts": 5,
+                    "custom_data": {
+                        "audio_endpoint": f"/api/v1/minigames/audio/terror_radius/{killer_id}",
+                    },
                 },
                 {
                     "round_number": 4,
                     "mode": "classic_character",
                     "target_type": "killer",
-                    "target_id": killer.id if killer else 1,
+                    "target_id": killer_id,
                     "max_attempts": 6,
                 }
             ]
 
         elif game_mode in ("quote", "quote_lore"):
             import re as _re
-            # Pick a character that has lore text
+
+            # 50% chance to pick an iconic perk quote, 50% chance to pick a character lore excerpt
+            perks_with_quotes = [p for p in perks if p.description and ('“' in p.description or '"' in p.description)]
+            pick_perk_quote = bool(perks_with_quotes) and (rng.random() < 0.5)
+
+            if pick_perk_quote:
+                chosen_perk = rng.choice(perks_with_quotes)
+                desc = chosen_perk.description
+                # Extract quote (text between quotes or ending quote)
+                quote_match = _re.search(r'[“"][^”"]+[”"](?:\s*-[^\n\r]+)?', desc)
+                quote_text = quote_match.group(0).strip() if quote_match else desc[-200:].strip()
+                
+                # If perk has an associated character, target that character; otherwise target the perk
+                target_char = chosen_perk.killer or chosen_perk.survivor
+                if target_char:
+                    target_type = "killer" if chosen_perk.killer else "survivor"
+                    target_id = target_char.id
+                    target_name = target_char.name
+                    chapter_name = target_char.chapter.name if target_char.chapter else "Base Game"
+                    release_year = target_char.chapter.release_year if target_char.chapter else 2016
+                else:
+                    target_type = "perk"
+                    target_id = chosen_perk.id
+                    target_name = chosen_perk.name
+                    chapter_name = "General Perks"
+                    release_year = 2016
+
+                # Clean speaker from quote if it gives away the name
+                if target_name:
+                    quote_text = _re.sub(r'-\s*' + _re.escape(target_name), '- [REDACTED]', quote_text, flags=_re.IGNORECASE)
+                    first_n = target_name.split()[0]
+                    if len(first_n) > 3:
+                        quote_text = _re.sub(r'-\s*' + _re.escape(first_n), '- [REDACTED]', quote_text, flags=_re.IGNORECASE)
+
+                return [{
+                    "round_number": 1,
+                    "mode": "quote_lore",
+                    "target_type": target_type,
+                    "target_id": target_id,
+                    "max_attempts": 6,
+                    "custom_data": {
+                        "quote": quote_text,
+                        "quote_type": "perk_quote",
+                        "perk_name": chosen_perk.name,
+                        "role": target_type.title(),
+                        "chapter_name": chapter_name,
+                        "release_year": release_year,
+                    },
+                }]
+
+            # Character lore mode
             chars_with_lore = [(s, "survivor") for s in survivors if s.lore] + \
                               [(k, "killer") for k in killers if k.lore]
             if chars_with_lore:
@@ -351,15 +409,24 @@ class MinigameService:
             else:
                 chosen_char, chosen_type = None, "killer"
 
-            # Redact the character name from the lore text so it can't be trivially read
-            lore_text = (chosen_char.lore if chosen_char else None) or "The Entity hungers..."
+            full_lore = (chosen_char.lore if chosen_char else None) or "The Entity hungers for more souls in the unending fog..."
+            # Take a readable excerpt (first 1-2 paragraphs, up to 600 chars)
+            paragraphs = [p.strip() for p in full_lore.split("\n") if p.strip()]
+            lore_excerpt = "\n\n".join(paragraphs[:2]) if len(paragraphs) >= 2 else full_lore
+            if len(lore_excerpt) > 650:
+                lore_excerpt = lore_excerpt[:600] + "..."
+
             if chosen_char:
                 char_name = chosen_char.name
-                lore_text = _re.sub(_re.escape(char_name), "[REDACTED]", lore_text, flags=_re.IGNORECASE)
-                # Redact first name only too if it's multi-word and long enough
+                lore_excerpt = _re.sub(_re.escape(char_name), "[REDACTED]", lore_excerpt, flags=_re.IGNORECASE)
+                if hasattr(chosen_char, "real_name") and chosen_char.real_name:
+                    lore_excerpt = _re.sub(_re.escape(chosen_char.real_name), "[REDACTED]", lore_excerpt, flags=_re.IGNORECASE)
                 first_name = char_name.split()[0] if " " in char_name else None
                 if first_name and len(first_name) > 3:
-                    lore_text = _re.sub(r'\b' + _re.escape(first_name) + r'\b', "[REDACTED]", lore_text, flags=_re.IGNORECASE)
+                    lore_excerpt = _re.sub(r'\b' + _re.escape(first_name) + r'\b', "[REDACTED]", lore_excerpt, flags=_re.IGNORECASE)
+
+            chapter_name = chosen_char.chapter.name if (chosen_char and chosen_char.chapter) else "Base Game"
+            release_year = chosen_char.chapter.release_year if (chosen_char and chosen_char.chapter) else 2016
 
             return [{
                 "round_number": 1,
@@ -368,8 +435,11 @@ class MinigameService:
                 "target_id": chosen_char.id if chosen_char else 1,
                 "max_attempts": 6,
                 "custom_data": {
-                    "quote": lore_text,
-                    "speaker": None,  # revealed after 2 wrong guesses on frontend
+                    "quote": lore_excerpt,
+                    "quote_type": "character_lore",
+                    "role": chosen_type.title(),
+                    "chapter_name": chapter_name,
+                    "release_year": release_year,
                 },
             }]
 
@@ -420,14 +490,59 @@ class MinigameService:
             return self._evaluate_realm(target_id, guess_id, attempt_number)
         elif mode in ("terror_radius", "voice_line", "hook_scream", "audio"):
             return self._evaluate_audio(target_type, target_id, guess_type, guess_id, attempt_number)
-        elif mode in ("quote_lore", "quote", "killer_power", "perk_distortion",
-                      "pixel_avatar", "addon_guesser", "emoji_riddle"):
-            # Simple match: guess must match target type + id
+        elif mode in ("quote_lore", "quote"):
             is_match = (target_type == guess_type and target_id == guess_id)
+            target_obj = (
+                db.session.get(Killer, target_id) if target_type == "killer"
+                else db.session.get(Survivor, target_id) if target_type == "survivor"
+                else db.session.get(Perk, target_id)
+            )
+            guess_obj = (
+                db.session.get(Killer, guess_id) if guess_type == "killer"
+                else db.session.get(Survivor, guess_id) if guess_type == "survivor"
+                else db.session.get(Perk, guess_id)
+            )
+            clues = {}
+            if target_obj:
+                if attempt_number >= 1:
+                    clues["role"] = target_type.title()
+                if attempt_number >= 2 and hasattr(target_obj, "chapter") and target_obj.chapter:
+                    clues["chapter"] = target_obj.chapter.name
+                if attempt_number >= 3:
+                    clues["first_letter"] = target_obj.name[0]
+
             return {
                 "is_correct": is_match,
                 "attempt_number": attempt_number,
-                "details": {"match": is_match}
+                "details": {"match": is_match},
+                "unlocked_clues": clues,
+                "guess": {
+                    "id": guess_obj.id if guess_obj else guess_id,
+                    "name": guess_obj.name if guess_obj else "Unknown",
+                    "role": guess_type.title(),
+                    "avatar_url": getattr(guess_obj, "portrait_url", "") or (f"/static/{guess_obj.avatar_local_path}" if getattr(guess_obj, "avatar_local_path", None) else ""),
+                    "icon_url": getattr(guess_obj, "icon_url", "") or (f"/static/{guess_obj.icon_local_path}" if getattr(guess_obj, "icon_local_path", None) else ""),
+                } if guess_obj else None,
+            }
+        elif mode in ("killer_power", "perk_distortion", "pixel_avatar", "addon_guesser", "emoji_riddle"):
+            is_match = (target_type == guess_type and target_id == guess_id)
+            guess_obj = (
+                db.session.get(Killer, guess_id) if guess_type == "killer"
+                else db.session.get(Survivor, guess_id) if guess_type == "survivor"
+                else db.session.get(Perk, guess_id) if guess_type == "perk"
+                else db.session.get(Realm, guess_id)
+            )
+            return {
+                "is_correct": is_match,
+                "attempt_number": attempt_number,
+                "details": {"match": is_match},
+                "guess": {
+                    "id": guess_obj.id if guess_obj else guess_id,
+                    "name": guess_obj.name if guess_obj else "Unknown",
+                    "role": guess_type.title(),
+                    "avatar_url": getattr(guess_obj, "portrait_url", "") or (f"/static/{guess_obj.avatar_local_path}" if getattr(guess_obj, "avatar_local_path", None) else ""),
+                    "icon_url": getattr(guess_obj, "icon_url", "") or (f"/static/{guess_obj.icon_local_path}" if getattr(guess_obj, "icon_local_path", None) else ""),
+                } if guess_obj else None,
             }
         else:
             is_match = (target_type == guess_type and target_id == guess_id)
@@ -584,8 +699,20 @@ class MinigameService:
         }
 
     def _evaluate_audio(self, target_type: str, target_id: int, guess_type: str, guess_id: int, attempt_number: int) -> dict[str, Any]:
-        """Evaluates audio guess (Terror radius / Voice line / Hook scream) and unlocks audio layers."""
+        """Evaluates audio guess (Terror radius / Chase music) and unlocks killer attribute clues."""
         is_match = (target_type == guess_type and target_id == guess_id)
+        target_killer = db.session.get(Killer, target_id) if target_type == "killer" else None
+        guess_obj = db.session.get(Killer, guess_id) if guess_type == "killer" else db.session.get(Survivor, guess_id)
+
+        clues = {}
+        if target_killer:
+            if attempt_number >= 1:
+                clues["movement_speed"] = target_killer.movement_speed or "4.6 m/s"
+            if attempt_number >= 2:
+                clues["terror_radius"] = target_killer.terror_radius or "32 metres"
+            if attempt_number >= 3:
+                clues["height"] = target_killer.height or "Average"
+
         layers = ["32m", "16m", "8m", "chase"]
         unlocked_layer = layers[min(attempt_number - 1, len(layers) - 1)]
 
@@ -593,4 +720,12 @@ class MinigameService:
             "is_correct": is_match,
             "attempt_number": attempt_number,
             "unlocked_audio_layer": unlocked_layer,
+            "unlocked_clues": clues,
+            "guess": {
+                "id": guess_obj.id if guess_obj else guess_id,
+                "name": guess_obj.name if guess_obj else "Unknown",
+                "role": "Killer" if guess_type == "killer" else "Survivor",
+                "avatar_url": (guess_obj.portrait_url or f"/static/{guess_obj.avatar_local_path}") if (guess_obj and hasattr(guess_obj, "avatar_local_path") and guess_obj.avatar_local_path) else "",
+            } if guess_obj else None,
         }
+

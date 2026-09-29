@@ -86,6 +86,7 @@ export default {
     classic_perk: "Zgadywacz Umiejętności",
     realm_guesser: "Zgadywacz Krain i Map",
     pixel_avatar: "Pikselowy Awatar",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "Zniekształcona Ikona Umiejętności",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "Moc Zabójcy",
@@ -96,6 +97,11 @@ export default {
     quote: "Lore & Quote Guesser",
     emoji_riddle: "Zagadka Emoji",
     addon_guesser: "Zgadywacz Dodatków",
+      realm: "Realm & Map Guesser",
+    audio: "Terror Radius Guesser",
+
+    perk: "Perk Icon Distortion",
+    power: "Killer Power Guesser",
   },
   modeDescriptions: {
     classic_character: "Zgadnij postać z Mgły porównując cechy po każdej próbie.",
@@ -103,6 +109,7 @@ export default {
     classic_perk: "Zgadnij umiejętność po roli, pochodzeniu i archetypie.",
     realm_guesser: "Rozpoznaj Krainę na podstawie wycinków obiektów i kafelków mapy.",
     pixel_avatar: "Rozpoznaj postać po spikselowanym awatarze, który wyostrza się z każdym strzałem.",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "Zidentyfikuj umiejętność na podstawie zniekształconej ikony.",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "Rozpoznaj Zabójcę po unikalnej ikonie mocy i zamazanej mechanice.",

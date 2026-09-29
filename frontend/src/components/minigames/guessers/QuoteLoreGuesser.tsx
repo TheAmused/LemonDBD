@@ -1,10 +1,12 @@
 // frontend/src/components/minigames/guessers/QuoteLoreGuesser.tsx
 'use client';
 
-import React from 'react';
-import { Quote, Check, X } from 'lucide-react';
+import React, { useMemo } from 'react';
+import Image from 'next/image';
+import { Quote, BookOpen, Check, X, Sparkles } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
+import { staticUrl } from '@/utils/api';
 
 interface QuoteLoreGuesserProps {
   roundConfig: RoundConfig;
@@ -23,32 +25,83 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
   isSolved,
   dict,
 }) => {
+  const customData = roundConfig.custom_data || {};
   const quoteText =
-    roundConfig.custom_data?.quote ||
+    (customData.quote as string) ||
     '“Death is not an escape. There is only an endless cycle of trial and torment.”';
 
-  const speaker = roundConfig.custom_data?.speaker;
+  const isPerkQuote = customData.quote_type === 'perk_quote';
+  const roleHint = customData.role as string | undefined;
+  const chapterHint = customData.chapter_name as string | undefined;
+  const releaseYear = customData.release_year as number | undefined;
+
+  const targetChar = useMemo(() => {
+    if (roundConfig.target_type === 'perk') return null;
+    return characters.find((c) => c.id === roundConfig.target_id);
+  }, [characters, roundConfig.target_id, roundConfig.target_type]);
+
+  const targetPerk = useMemo(() => {
+    if (roundConfig.target_type !== 'perk') return null;
+    return perks.find((p) => p.id === roundConfig.target_id);
+  }, [perks, roundConfig.target_id, roundConfig.target_type]);
+
   const attempts = guesses.length;
+
+  // Progressive hints unlocked per wrong attempt
+  const clue1 = attempts >= 1 && roleHint ? `Entity Role: ${roleHint}` : null;
+  const clue2 = attempts >= 2 && chapterHint ? `Chapter: ${chapterHint}${releaseYear ? ` (${releaseYear})` : ''}` : null;
+  const targetName = targetChar?.name || targetPerk?.name || '';
+  const clue3 = attempts >= 3 && targetName ? `Name starts with: ${targetName[0]}...` : null;
+
+  const solvedImgRaw = targetChar?.avatar_url || targetPerk?.icon_url || '';
+  const solvedImg = staticUrl(solvedImgRaw) || solvedImgRaw;
 
   return (
     <div className="w-full flex flex-col items-center my-6">
-      {/* Quote Display Card */}
+      {/* Quote / Lore Clue Card */}
       <div className="w-full max-w-xl p-8 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
-        <Quote className="w-10 h-10 text-accent-red/40 mb-4" />
-        <blockquote className="text-lg sm:text-xl font-medium text-zinc-100 italic leading-relaxed">
+        {/* Atmospheric Quote Icon Header */}
+        <div className="flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold uppercase tracking-wider">
+          {isPerkQuote ? <Quote className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
+          <span>{isPerkQuote ? 'Iconic In-Game Perk Quote' : 'Character Backstory Lore'}</span>
+        </div>
+
+        {/* The Quote / Lore Body */}
+        <blockquote className="text-base sm:text-lg font-medium text-zinc-100 italic leading-relaxed whitespace-pre-line max-h-72 overflow-y-auto px-2">
           {quoteText}
         </blockquote>
 
-        {speaker && attempts >= 2 && (
-          <div className="mt-4 text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-            — {speaker}
+        {/* Unlocked Progressive Clues */}
+        {(clue1 || clue2 || clue3) && (
+          <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-4 mt-4 border-t border-zinc-800">
+            {clue1 && (
+              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+                {clue1}
+              </span>
+            )}
+            {clue2 && (
+              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+                {clue2}
+              </span>
+            )}
+            {clue3 && (
+              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+                {clue3}
+              </span>
+            )}
           </div>
         )}
 
-        {isSolved && (
-          <div className="mt-6 px-4 py-1.5 rounded-lg bg-emerald-600/90 text-white font-bold text-sm flex items-center gap-2 shadow-md">
+        {/* Solved Victory State */}
+        {isSolved && (targetChar || targetPerk) && (
+          <div className="mt-6 px-4 py-2 rounded-xl bg-emerald-600/90 text-white font-bold text-sm flex items-center gap-3 shadow-lg">
+            {solvedImg && (
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/40">
+                <Image src={solvedImg} alt={targetName} fill className="object-cover" />
+              </div>
+            )}
             <Check className="w-4 h-4" />
-            <span>Solved!</span>
+            <span>Solved: {targetName}</span>
           </div>
         )}
       </div>
@@ -70,6 +123,11 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
                 <div className="flex items-center gap-2.5">
                   <span className="text-xs text-zinc-400">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
+                  {g.guess.role && (
+                    <span className="text-2xs text-zinc-400 uppercase tracking-wider">
+                      ({g.guess.role})
+                    </span>
+                  )}
                 </div>
                 {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}
               </div>

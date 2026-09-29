@@ -395,6 +395,51 @@ async function run() {
     console.log('✓ Standalone Realm Guesser Passed');
   }
 
+  // --------------------------------------------------------------------------
+  // TEST 10: Repeatable Quote & Lore Guesser (/en/minigames/play?type=repeatable&mode=quote)
+  // --------------------------------------------------------------------------
+  console.log('\n--- 10. Testing Repeatable Quote & Lore Guesser ---');
+  await page.goto(url('/minigames/play?type=repeatable&mode=quote'), { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1000);
+  const quoteLoaded = (await page.$('blockquote')) !== null;
+  const quotePill = await page.innerText('button:has-text("Lore & Quote Guesser")').catch(() => null);
+  console.log(`- Quote blockquote found: ${quoteLoaded}, Pill text: ${quotePill}`);
+  await page.screenshot({ path: path.join(OUT_DIR, '12_quote_guesser.png') });
+  if (quoteLoaded && quotePill) {
+    results.quote_guesser_play = true;
+    console.log('✓ Quote Guesser Passed');
+  }
+
+  // --------------------------------------------------------------------------
+  // TEST 11: Repeatable Audio / Terror Radius Guesser (/en/minigames/play?type=repeatable&mode=audio)
+  // --------------------------------------------------------------------------
+  console.log('\n--- 11. Testing Repeatable Audio Guesser ---');
+  await page.goto(url('/minigames/play?type=repeatable&mode=audio'), { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1000);
+  const audioBtnFound = (await page.$('button:has-text("Killer Theme")')) !== null;
+  const audioPill = await page.innerText('button:has-text("Terror Radius Guesser")').catch(() => null);
+  console.log(`- Audio button found: ${audioBtnFound}, Pill text: ${audioPill}`);
+  await page.screenshot({ path: path.join(OUT_DIR, '13_audio_guesser.png') });
+  if (audioBtnFound && audioPill) {
+    results.audio_guesser_play = true;
+    console.log('✓ Audio Guesser Passed');
+  }
+
+  // --------------------------------------------------------------------------
+  // TEST 12: Repeatable Killer Power Guesser (/en/minigames/play?type=repeatable&mode=power)
+  // --------------------------------------------------------------------------
+  console.log('\n--- 12. Testing Repeatable Killer Power Guesser ---');
+  await page.goto(url('/minigames/play?type=repeatable&mode=power'), { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1000);
+  const powerClue = (await page.$('text=Killer Special Power')) !== null;
+  const powerPill = await page.innerText('button:has-text("Killer Power Guesser")').catch(() => null);
+  console.log(`- Killer power clue found: ${powerClue}, Pill text: ${powerPill}`);
+  await page.screenshot({ path: path.join(OUT_DIR, '14_power_guesser.png') });
+  if (powerClue && powerPill) {
+    results.power_guesser_play = true;
+    console.log('✓ Killer Power Guesser Passed');
+  }
+
   // Filter non-fatal SSL or analytics console logs
   const fatalErrors = consoleErrors.filter(
     (e) => !e.includes('SSL') && !e.includes('umami') && !e.includes('favicon')

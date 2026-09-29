@@ -2,10 +2,12 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { Volume2, VolumeX, Play, Square, Activity, Check, X, ShieldAlert } from 'lucide-react';
+import Image from 'next/image';
+import { Volume2, VolumeX, Play, Pause, Activity, Check, X, Disc3 } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
+import { staticUrl } from '@/utils/api';
 
 interface AudioGuesserProps {
   roundConfig: RoundConfig;
@@ -23,7 +25,14 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
   dict,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const synthTimerRef = useRef<NodeJS.Timeout | null>(null);
   const t = dict.minigames;
   const mode = roundConfig.mode;
 
@@ -39,128 +48,219 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
     return characters.find((c) => c.id === roundConfig.target_id);
   }, [characters, roundConfig.target_id, roundConfig.target_type]);
 
-  // Current distance for terror radius
-  const currentDistance = useMemo(() => {
-    const attempts = guesses.length;
-    if (attempts === 0) return 32;
-    if (attempts === 1) return 16;
-    if (attempts === 2) return 8;
-    return 0; // Chase
-  }, [guesses.length]);
+  // Real audio stream endpoint from LemonDBD API
+  const audioSrc = useMemo(() => {
+    if (!targetChar) return null;
+    return `/api/v1/minigames/audio/terror_radius/${targetChar.id}`;
+  }, [targetChar]);
 
-  const clearTimer = useCallback(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-  }, []);
+  // Progressive clues unlocked per wrong attempt
+  const attempts = guesses.length;
+  const speedClue = attempts >= 1 && targetChar ? `Movement Speed: ${targetChar.movement_speed || (targetChar.speed ? `${targetChar.speed} m/s` : '4.6 m/s')}` : null;
+  const terrorClue = attempts >= 2 && targetChar ? `Terror Radius: ${targetChar.terror_radius || (targetChar.terror_radius_meters ? `${targetChar.terror_radius_meters}m` : '32 metres')}` : null;
+  const heightClue = attempts >= 3 && targetChar ? `Height: ${targetChar.height || 'Average'}` : null;
 
-  // Clean up sounds and timers when unmounting or switching rounds
+  // Cleanup on unmount or round switch
   useEffect(() => {
     return () => {
-      clearTimer();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      if (synthTimerRef.current) {
+        clearTimeout(synthTimerRef.current);
+      }
       soundEngine.stopAll();
       setIsPlaying(false);
     };
-  }, [roundConfig.round_number, clearTimer]);
+  }, [roundConfig.round_number]);
 
-  const handlePlayAudio = useCallback(() => {
+  const togglePlay = useCallback(() => {
     if (isPlaying) {
-      clearTimer();
+      if (audioRef.current && !useFallback) {
+        audioRef.current.pause();
+      }
+      if (synthTimerRef.current) {
+        clearTimeout(synthTimerRef.current);
+      }
       soundEngine.stopAll();
       setIsPlaying(false);
       return;
     }
 
-    clearTimer();
     setIsPlaying(true);
 
-    if (mode === 'terror_radius') {
-      soundEngine.playHeartbeat(currentDistance, 6);
-      timeoutRef.current = setTimeout(() => setIsPlaying(false), 6000);
-    } else if (mode === 'hook_scream') {
-      const charName = (targetChar?.name || '').toLowerCase();
-      let screamType: 'steve' | 'elodie' | 'doctor' | 'general' = 'general';
-      if (charName.includes('steve')) screamType = 'steve';
-      else if (charName.includes('élodie') || charName.includes('elodie')) screamType = 'elodie';
-      else if (charName.includes('doctor') || charName.includes('herman')) screamType = 'doctor';
-
-      soundEngine.playScreamSound(screamType);
-      timeoutRef.current = setTimeout(() => setIsPlaying(false), 2000);
-    } else {
-      // General voice line or alert chime
-      soundEngine.playHeartbeat(16, 4);
-      timeoutRef.current = setTimeout(() => setIsPlaying(false), 4000);
+    if (useFallback || !audioSrc) {
+      // Play synthetic heartbeat fallback
+      const dist = attempts === 0 ? 32 : attempts === 1 ? 16 : attempts === 2 ? 8 : 0;
+      soundEngine.playHeartbeat(dist, 6);
+      synthTimerRef.current = setTimeout(() => {
+        setIsPlaying(false);
+      }, 6000);
+      return;
     }
-  }, [isPlaying, mode, currentDistance, targetChar, clearTimer]);
 
+    if (audioRef.current) {
+      audioRef.current
+        .play()
+        .catch((err) => {
+          console.warn('[AudioGuesser] HTML5 audio play failed, falling back to Web Audio synth:', err);
+          setUseFallback(true);
+          soundEngine.playHeartbeat(32, 6);
+          synthTimerRef.current = setTimeout(() => setIsPlaying(false), 6000);
+        });
+    }
+  }, [isPlaying, useFallback, audioSrc, attempts]);
+
+  const toggleMute = () => {
+    const next = !isMuted;
+    setIsMuted(next);
+    if (audioRef.current) {
+      audioRef.current.muted = next;
+    }
+    soundEngine.setMuted(next);
+  };
+
+  const handleTimeUpdate = () => {
+    if (!audioRef.current) return;
+    const cur = audioRef.current.currentTime;
+    const dur = audioRef.current.duration || 0;
+    setCurrentTime(cur);
+    setDuration(dur);
+    setAudioProgress(dur > 0 ? (cur / dur) * 100 : 0);
+  };
+
+  const formatSeconds = (sec: number) => {
+    if (isNaN(sec) || sec <= 0) return '0:00';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  const rawAvatarUrl = targetChar?.avatar_url || '';
+  const avatarUrl = staticUrl(rawAvatarUrl) || rawAvatarUrl;
 
   return (
     <div className="w-full flex flex-col items-center my-6">
-      {/* Audio Stage Card */}
+      {/* Hidden real HTML5 audio player */}
+      {audioSrc && !useFallback && (
+        <audio
+          ref={audioRef}
+          src={audioSrc}
+          preload="metadata"
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={() => setIsPlaying(false)}
+          onError={() => {
+            console.warn('[AudioGuesser] Audio source error, switching to synthetic fallback.');
+            setUseFallback(true);
+          }}
+        />
+      )}
+
+      {/* Audio Player Clue Card */}
       <div className="w-full max-w-lg p-6 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
+        {/* Header Badge */}
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold uppercase tracking-wider">
+          <Disc3 className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
+          <span>Dead by Daylight Killer Chase & Terror Theme</span>
+        </div>
 
-        {/* Distance clue — only shown AFTER first wrong guess */}
-        {mode === 'terror_radius' && guesses.length > 0 && (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold uppercase tracking-wider">
-            <Activity className="w-3.5 h-3.5 animate-pulse" />
-            <span>
-              {currentDistance > 0 ? `Heartbeat at ${currentDistance}m` : 'Chase Speed (0m)'}
-            </span>
-          </div>
-        )}
-
-        {/* First-time instruction */}
-        {guesses.length === 0 && (
-          <p className="text-xs text-zinc-500 text-center max-w-xs">
-            Listen to the synthesized heartbeat — each wrong guess brings the Killer closer.
-            Identify which Killer it belongs to.
-          </p>
-        )}
-
-        {/* Waveform Visualization Bars */}
+        {/* Ambient Waveform Visualization */}
         <div className="flex items-end justify-center gap-1.5 h-16 w-full max-w-xs py-2">
-          {[40, 75, 55, 90, 60, 100, 70, 85, 45, 95, 65, 80, 50, 70].map((h, i) => (
+          {[35, 70, 50, 85, 55, 95, 65, 80, 45, 90, 60, 75, 40, 65].map((h, i) => (
             <div
               key={`bar-${i}`}
-              className={`w-2 rounded-full transition-all duration-200 ${
+              className={`w-2 rounded-full transition-all duration-150 ${
                 isPlaying
                   ? 'bg-accent-red animate-pulse'
-                  : 'bg-zinc-700/60'
+                  : 'bg-zinc-750/70'
               }`}
               style={{
-                height: isPlaying ? `${Math.max(15, (h * (i % 2 === 0 ? 0.9 : 1.1)) % 100)}%` : '20%',
-                animationDelay: `${i * 70}ms`,
+                height: isPlaying ? `${Math.max(18, (h * (i % 2 === 0 ? 0.9 : 1.15)) % 100)}%` : '18%',
+                animationDelay: `${i * 60}ms`,
               }}
             />
           ))}
         </div>
 
-        {/* Play / Stop Button */}
-        <button
-          type="button"
-          onClick={handlePlayAudio}
-          className={`flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-all transform active:scale-95 ${
-            isPlaying
-              ? 'bg-zinc-800 text-zinc-200 border border-zinc-600 hover:bg-zinc-700'
-              : 'bg-accent-red text-white hover:bg-accent-red/90 shadow-accent-red/30'
-          }`}
-        >
-          {isPlaying ? (
-            <>
-              <Square className="w-4 h-4 fill-current" />
-              <span>Stop Audio</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-4 h-4 fill-current" />
-              <span>{t.audio.playSample}</span>
-            </>
+        {/* Playback Controls & Timeline */}
+        <div className="w-full max-w-sm flex flex-col gap-2">
+          {duration > 0 && !useFallback && (
+            <div className="flex items-center justify-between text-2xs font-mono text-zinc-400 px-1">
+              <span>{formatSeconds(currentTime)}</span>
+              <div className="flex-1 mx-3 h-1 bg-zinc-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-accent-red transition-all duration-150"
+                  style={{ width: `${audioProgress}%` }}
+                />
+              </div>
+              <span>{formatSeconds(duration)}</span>
+            </div>
           )}
-        </button>
 
+          <div className="flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={togglePlay}
+              className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-all transform active:scale-95 ${
+                isPlaying
+                  ? 'bg-zinc-800 text-zinc-200 border border-zinc-600 hover:bg-zinc-700'
+                  : 'bg-accent-red text-white hover:bg-accent-red/90 shadow-accent-red/30'
+              }`}
+            >
+              {isPlaying ? (
+                <>
+                  <Pause className="w-4 h-4 fill-current" />
+                  <span>Pause Music</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-current" />
+                  <span>Listen to Killer Theme</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleMute}
+              title={isMuted ? 'Unmute' : 'Mute'}
+              className="p-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
+            >
+              {isMuted ? <VolumeX className="w-4 h-4 text-red-400" /> : <Volume2 className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Progressive Clues Section */}
+        {(speedClue || terrorClue || heightClue) && (
+          <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-3 border-t border-zinc-800">
+            {speedClue && (
+              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+                {speedClue}
+              </span>
+            )}
+            {terrorClue && (
+              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+                {terrorClue}
+              </span>
+            )}
+            {heightClue && (
+              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+                {heightClue}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Solved Victory Reveal */}
         {isSolved && targetChar && (
-          <div className="mt-2 px-4 py-1.5 rounded-lg bg-emerald-600/90 text-white font-bold text-sm flex items-center gap-2 shadow-md">
+          <div className="mt-2 px-4 py-2 rounded-xl bg-emerald-600/90 text-white font-bold text-sm flex items-center gap-3 shadow-lg">
+            {avatarUrl && (
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/40">
+                <Image src={avatarUrl} alt={targetChar.name} fill className="object-cover" />
+              </div>
+            )}
             <Check className="w-4 h-4" />
             <span>{targetChar.name}</span>
           </div>

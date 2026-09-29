@@ -86,6 +86,7 @@ export default {
     classic_perk: "パーク当て",
     realm_guesser: "領域＆マップ当て",
     pixel_avatar: "モザイクアバター当て",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "歪んだパークアイコン当て",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "キラー能力当て",
@@ -96,6 +97,11 @@ export default {
     quote: "Lore & Quote Guesser",
     emoji_riddle: "絵文字ナゾナゾ当て",
     addon_guesser: "アドオン当て",
+      realm: "Realm & Map Guesser",
+    audio: "Terror Radius Guesser",
+
+    perk: "Perk Icon Distortion",
+    power: "Killer Power Guesser",
   },
   modeDescriptions: {
     classic_character: "推測ごとに属性を比較して正解のキャラクターを特定します。",
@@ -103,6 +109,7 @@ export default {
     classic_perk: "役割・所属キャラクター・タイプから固有パークを特定します。",
     realm_guesser: "切り抜き画像やマップの特徴から領域を特定します。",
     pixel_avatar: "推測するごとに鮮明になるモザイク画像からキャラクターを特定します。",
+    pixel: "Pixel Avatar Guesser",
     perk_icon: "歪みやズーム加工されたアイコンからパークを特定します。",
     perk_distortion: "Perk Icon Distortion",
     killer_power: "固有能力アイコンと黒塗りされた説明からキラーを特定します。",

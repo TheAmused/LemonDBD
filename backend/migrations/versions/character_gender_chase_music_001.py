@@ -62,6 +62,8 @@ SURVIVOR_DATA = {
     "Ash Williams": ("male", "Average", "🪚 🦾 📖"),
     "Steve Harrington": ("male", "Average", "🍦 🏏 🧒"),
     "Felix Richter": ("male", "Average", "📐 🏛️ 👔"),
+    "Leon Scott Kennedy": ("male", "Average", "👮‍♂️ 🔫 🧟"),
+    "Leon S. Kennedy": ("male", "Average", "👮‍♂️ 🔫 🧟"),
     "Jonah Vasquez": ("male", "Average", "💻 📡 🧮"),
     "Yoichi Asakawa": ("male", "Average", "🌊 📼 🧭"),
     "Vittorio Toscano": ("male", "Average", "📜 🔮 🗝️"),

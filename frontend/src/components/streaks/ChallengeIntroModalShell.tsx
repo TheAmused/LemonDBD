@@ -7,10 +7,12 @@ import React, { useEffect } from 'react';
 import { X, BookOpen, ChevronLeft } from 'lucide-react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
+export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
+
 export interface ChallengeIntroTile {
   value: string;
   label: string;
-  description: string;
+  description?: string;
   /** Any icon component (lucide or a custom DbdIcons SVG). */
   icon: React.ElementType;
   image?: string;
@@ -164,7 +166,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
                   <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
                 )}
                 <span className={labelClassName}>{tile.label}</span>
-                <span className={descriptionClassName}>{tile.description}</span>
+                {tile.description && <span className={descriptionClassName}>{tile.description}</span>}
                 {isCurrent && <span className={`${badgeClassName} text-current`}>{currentLabel}</span>}
                 {tile.disabledBadge && <span className={badgeClassName}>{tile.disabledBadge}</span>}
               </>

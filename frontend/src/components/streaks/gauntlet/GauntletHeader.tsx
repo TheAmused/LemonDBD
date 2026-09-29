@@ -43,9 +43,9 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
       <div className="flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 justify-center sm:justify-start shrink-0">
           <img
-            src="/images/streaks/gauntlet-streak.jpg"
+            src="/images/streaks/gauntlet-streak.webp"
             alt=""
-            className="hidden sm:block h-8 w-8 shrink-0 rounded-lg border border-border-color object-cover shadow-sm"
+            className="hidden sm:block h-8 w-8 shrink-0 object-contain"
           />
           <h1 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight whitespace-nowrap">
             <span className="capitalize">{dict?.streaks?.[role] || role}</span> {dict?.streaks?.gauntlet || 'Gauntlet'}

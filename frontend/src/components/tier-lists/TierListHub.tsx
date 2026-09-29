@@ -116,7 +116,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           {/* Atmospheric DBD Banner Backdrop */}
           <div
             className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
-            style={{ backgroundImage: "url('/images/banners/banner_loadouts.jpg')" }}
+            style={{ backgroundImage: "url('/images/banners/banner_loadouts.webp')" }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface pointer-events-none" />
           <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
@@ -234,7 +234,7 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             {/* Atmospheric DBD Banner Backdrop */}
             <div
               className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter group-hover:scale-105 transition-transform duration-700 ease-out"
-              style={{ backgroundImage: "url('/images/banners/banner_account.jpg')" }}
+              style={{ backgroundImage: "url('/images/banners/banner_account.webp')" }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface" />
             <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60" />

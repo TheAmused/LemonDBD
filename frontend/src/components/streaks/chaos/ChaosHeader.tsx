@@ -55,9 +55,9 @@ export const ChaosHeader: React.FC<ChaosHeaderProps> = ({
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <img
-            src="/images/streaks/chaos-streak.jpg"
+            src="/images/streaks/chaos-streak.webp"
             alt=""
-            className="hidden sm:block h-11 w-11 rounded-xl border border-border-color object-cover shadow-sm"
+            className="hidden sm:block h-11 w-11 object-contain"
           />
           <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight flex items-center gap-2 justify-center sm:justify-start">
             <DifficultyIcon className="w-6 h-6 text-accent-red" />

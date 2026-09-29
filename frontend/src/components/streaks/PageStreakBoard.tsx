@@ -68,9 +68,9 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
       <div className="mt-4 mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <img
-            src="/images/streaks/page-streak.jpg"
+            src="/images/streaks/page-streak.webp"
             alt=""
-            className="h-11 w-11 rounded-xl border border-border-color object-cover shadow-sm"
+            className="h-11 w-11 object-contain"
           />
           <h2 className="text-lg font-extrabold tracking-wide text-text-primary">
             {dict?.streaks?.pageStreak || 'Page streak'}

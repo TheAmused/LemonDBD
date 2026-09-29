@@ -114,6 +114,8 @@ export interface CatalogCharacter {
   power_description?: string;
   power_icon_url?: string;
   avatar_url?: string;
+  chase_music_url?: string;
+  emoji_riddle?: string;
 }
 
 export interface CatalogPerk {

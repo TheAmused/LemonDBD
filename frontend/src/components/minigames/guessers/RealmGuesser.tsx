@@ -14,6 +14,7 @@ interface RealmGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const RealmGuesser: React.FC<RealmGuesserProps> = ({
@@ -22,6 +23,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const targetRealm = useMemo(() => {
     return realms.find((r) => r.id === roundConfig.target_id);
@@ -71,6 +73,9 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Input & Action Controls Slot */}
+      {children && <div className="w-full max-w-xl my-3">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

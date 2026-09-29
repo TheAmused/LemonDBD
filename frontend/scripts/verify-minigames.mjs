@@ -440,6 +440,34 @@ async function run() {
     console.log('✓ Killer Power Guesser Passed');
   }
 
+  // --------------------------------------------------------------------------
+  // TEST 13: Repeatable Addon Guesser (/en/minigames/play?type=repeatable&mode=addon)
+  // --------------------------------------------------------------------------
+  console.log('\n--- 13. Testing Repeatable Add-on Guesser ---');
+  await page.goto(url('/minigames/play?type=repeatable&mode=addon'), { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1000);
+  const addonClue = (await page.$('text=Killer Add-on Modifier')) !== null;
+  console.log(`- Add-on clue found: ${addonClue}`);
+  await page.screenshot({ path: path.join(OUT_DIR, '15_addon_guesser.png') });
+  if (addonClue) {
+    results.addon_guesser_play = true;
+    console.log('✓ Add-on Guesser Passed');
+  }
+
+  // --------------------------------------------------------------------------
+  // TEST 14: Repeatable Emoji Riddle (/en/minigames/play?type=repeatable&mode=emoji_riddle)
+  // --------------------------------------------------------------------------
+  console.log('\n--- 14. Testing Repeatable Emoji Riddle ---');
+  await page.goto(url('/minigames/play?type=repeatable&mode=emoji_riddle'), { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1000);
+  const emojiClue = (await page.$('text=Emoji Riddle')) !== null;
+  console.log(`- Emoji clue found: ${emojiClue}`);
+  await page.screenshot({ path: path.join(OUT_DIR, '16_emoji_riddle.png') });
+  if (emojiClue) {
+    results.emoji_riddle_play = true;
+    console.log('✓ Emoji Riddle Passed');
+  }
+
   // Filter non-fatal SSL or analytics console logs
   const fatalErrors = consoleErrors.filter(
     (e) => !e.includes('SSL') && !e.includes('umami') && !e.includes('favicon')

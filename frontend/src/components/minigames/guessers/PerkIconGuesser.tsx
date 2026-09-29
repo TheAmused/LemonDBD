@@ -14,6 +14,7 @@ interface PerkIconGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({
@@ -22,6 +23,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const targetPerk = useMemo(() => {
     return perks.find((p) => p.id === roundConfig.target_id);
@@ -74,6 +76,9 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Input & Action Controls Slot */}
+      {children && <div className="w-full max-w-md my-3">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

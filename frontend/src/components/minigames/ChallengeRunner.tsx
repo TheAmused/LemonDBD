@@ -299,7 +299,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
     }
   };
 
-  const renderActiveGuesser = () => {
+  const renderActiveGuesser = (inputSlot: React.ReactNode) => {
     const mode = currentRound.mode;
 
     switch (mode as string) {
@@ -312,7 +312,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </RealmGuesser>
         );
       case 'pixel_avatar':
       case 'pixel':
@@ -323,7 +325,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </PixelAvatarGuesser>
         );
       case 'perk_icon':
       case 'perk_distortion':
@@ -335,7 +339,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </PerkIconGuesser>
         );
       case 'killer_power':
       case 'power':
@@ -346,7 +352,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </KillerPowerGuesser>
         );
       case 'voice_line':
       case 'hook_scream':
@@ -359,7 +367,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </AudioGuesser>
         );
       case 'quote_lore':
       case 'quote':
@@ -371,7 +381,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </QuoteLoreGuesser>
         );
       case 'emoji_riddle':
         return (
@@ -382,7 +394,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </EmojiRiddleGuesser>
         );
       case 'addon_guesser':
         return (
@@ -392,15 +406,27 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             guesses={currentGuesses}
             isSolved={isRoundSolved}
             dict={dict}
-          />
+          >
+            {inputSlot}
+          </AddonGuesser>
         );
       case 'classic_perk':
-        return <ClassicPerkGuesser guesses={currentGuesses} dict={dict} />;
-      case 'classic':
-      case 'classic_character':
+        return (
+          <div className="w-full flex flex-col items-center">
+            <div className="w-full max-w-xl my-3">{inputSlot}</div>
+            <ClassicPerkGuesser guesses={currentGuesses} dict={dict} />
+          </div>
+        );
       case 'classic_killer':
+      case 'classic_character':
+      case 'classic':
       default:
-        return <ClassicCharacterGuesser guesses={currentGuesses} dict={dict} />;
+        return (
+          <div className="w-full flex flex-col items-center">
+            <div className="w-full max-w-xl my-3">{inputSlot}</div>
+            <ClassicCharacterGuesser guesses={currentGuesses} dict={dict} />
+          </div>
+        );
     }
   };
 
@@ -486,75 +512,75 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
         </span>
       </div>
 
-      {/* Search & Autocomplete Input (Disabled if round is solved or lost) */}
-      {!isRoundOver ? (
-        <div className="w-full max-w-xl mb-4">
-          <CharacterAutocomplete
-            catalog={catalog}
-            targetType={activeTargetType}
-            onSelect={handleSelectGuess}
-            disabled={isSubmitting}
-            placeholder={t.guessPlaceholder}
-            excludeKeys={excludeKeys}
-            autoFocus
-          />
-        </div>
-      ) : (
-        <div className="w-full max-w-xl flex flex-col items-center gap-3 my-4">
-          <div
-            className={`w-full py-3 px-4 rounded-xl text-center font-bold text-sm border shadow-lg ${
-              isRoundSolved
-                ? 'bg-emerald-950/80 text-emerald-200 border-emerald-700/80'
-                : 'bg-red-950/80 text-red-200 border-red-800/80'
-            }`}
-          >
-            <div>{isRoundSolved ? t.victoryTitle : t.defeatTitle}</div>
-            {!isRoundSolved && (
-              <div className="text-xs text-red-300 font-semibold mt-1">
-                {t.revealAnswerNotice.replace(
-                  '{answer}',
-                  revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound)
+      {/* Interactive Mode Guesser with embedded Input & Actions */}
+      {renderActiveGuesser(
+        <div className="w-full flex flex-col items-center">
+          {!isRoundOver ? (
+            <div className="w-full max-w-xl mb-2">
+              <CharacterAutocomplete
+                catalog={catalog}
+                targetType={activeTargetType}
+                onSelect={handleSelectGuess}
+                disabled={isSubmitting}
+                placeholder={t.guessPlaceholder}
+                excludeKeys={excludeKeys}
+                autoFocus={false}
+              />
+            </div>
+          ) : (
+            <div className="w-full max-w-xl flex flex-col items-center gap-3 my-2">
+              <div
+                className={`w-full py-3 px-4 rounded-xl text-center font-bold text-sm border shadow-lg ${
+                  isRoundSolved
+                    ? 'bg-emerald-950/80 text-emerald-200 border-emerald-700/80'
+                    : 'bg-red-950/80 text-red-200 border-red-800/80'
+                }`}
+              >
+                <div>{isRoundSolved ? t.victoryTitle : t.defeatTitle}</div>
+                {!isRoundSolved && (
+                  <div className="text-xs text-red-300 font-semibold mt-1">
+                    {t.revealAnswerNotice.replace(
+                      '{answer}',
+                      revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound)
+                    )}
+                  </div>
                 )}
               </div>
-            )}
-          </div>
 
+              {currentRoundIndex < rounds.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={handleNextRound}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-red hover:bg-accent-red/90 text-white font-bold text-sm shadow-lg shadow-accent-red/25 transition-all"
+                >
+                  <span>{t.nextRound}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsFinished(true)}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/25 transition-all"
+                >
+                  <Trophy className="w-4 h-4" />
+                  <span>{t.finishTrial}</span>
+                </button>
+              )}
+            </div>
+          )}
 
-          {currentRoundIndex < rounds.length - 1 ? (
+          {/* Give up button (when in progress) */}
+          {!isRoundOver && (
             <button
               type="button"
-              onClick={handleNextRound}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-red hover:bg-accent-red/90 text-white font-bold text-sm shadow-lg shadow-accent-red/25 transition-all"
+              onClick={handleGiveUp}
+              className="text-xs text-zinc-500 hover:text-zinc-300 underline py-1 transition-colors"
             >
-              <span>{t.nextRound}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsFinished(true)}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/25 transition-all"
-            >
-              <Trophy className="w-4 h-4" />
-              <span>{t.finishTrial}</span>
+              {t.skipOrReveal}
             </button>
           )}
         </div>
       )}
-
-      {/* Give up button (when in progress) */}
-      {!isRoundOver && (
-        <button
-          type="button"
-          onClick={handleGiveUp}
-          className="text-xs text-zinc-500 hover:text-zinc-300 underline py-1 transition-colors"
-        >
-          {t.skipOrReveal}
-        </button>
-      )}
-
-      {/* Interactive Mode Guesser Canvas / Table */}
-      {renderActiveGuesser()}
 
       {/* Victory Celebration Modal */}
       {isFinished && (

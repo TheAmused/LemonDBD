@@ -14,6 +14,7 @@ interface PixelAvatarGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
@@ -22,6 +23,7 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const targetChar = useMemo(() => {
     if (roundConfig.target_type) {
@@ -83,6 +85,9 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Input & Action Controls Slot */}
+      {children && <div className="w-full max-w-md my-3">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

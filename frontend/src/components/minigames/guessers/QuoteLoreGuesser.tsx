@@ -15,6 +15,7 @@ interface QuoteLoreGuesserProps {
   guesses: GuessRecord[];
   isSolved: boolean;
   dict: Dictionary;
+  children?: React.ReactNode;
 }
 
 export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
@@ -24,6 +25,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
   guesses,
   isSolved,
   dict,
+  children,
 }) => {
   const customData = roundConfig.custom_data || {};
   const quoteText =
@@ -105,6 +107,9 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
           </div>
         )}
       </div>
+
+      {/* Input & Action Controls Slot */}
+      {children && <div className="w-full max-w-xl my-3">{children}</div>}
 
       {/* Prior Guesses List */}
       {guesses.length > 0 && (

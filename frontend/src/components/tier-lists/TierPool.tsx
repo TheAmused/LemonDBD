@@ -69,8 +69,8 @@ export function TierPool({
       aria-label={t.unranked}
       className={cn(
         'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-3xl transition-all',
-        'sticky bottom-0 z-20 -mx-3 w-[calc(100%+1.5rem)] sm:static sm:z-auto sm:mx-0 sm:w-full',
-        'backdrop-blur-md bg-bg-surface/95 sm:bg-bg-surface sm:backdrop-blur-none sm:shadow-sm'
+        'sticky bottom-0 z-20 -mx-3 w-[calc(100%+1.5rem)] sm:static sm:z-auto sm:mx-0 sm:w-full [@media(max-height:500px)]:sticky [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:z-20',
+        'backdrop-blur-md bg-bg-surface/95 sm:backdrop-blur-none sm:shadow-sm'
       )}
     >
       {/* Full-width Collapsible Drawer Banner Button */}
@@ -123,7 +123,7 @@ export function TierPool({
       >
         <div className="overflow-hidden flex flex-col">
           {/* Unranked Pool Toolbar (Search + Selection Move) */}
-          <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
+          <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
             <div className="relative flex-1 sm:max-w-xs">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
               <input
@@ -162,12 +162,12 @@ export function TierPool({
             ref={setNodeRef}
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
-              'min-h-[100px] max-h-[45dvh] sm:max-h-[500px] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
+              'min-h-[100px] max-h-[45dvh] sm:max-h-[min(500px,45dvh)] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div className="flex flex-wrap content-start gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap content-start justify-center gap-1.5 sm:gap-2">
             <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);

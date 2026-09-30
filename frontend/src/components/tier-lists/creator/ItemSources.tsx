@@ -3,7 +3,6 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, ClipboardPaste, Gamepad2, ImagePlus, Loader2, Plus, Search, Upload } from 'lucide-react';
-import { ToggleSwitch, type ToggleSwitchOption } from '@/components/common/ToggleSwitch';
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
@@ -27,6 +26,12 @@ type SourceTab = 'upload' | 'links' | 'catalog';
 type CatalogKind = Exclude<TierListKind, 'custom'>;
 const CATALOG_KINDS: CatalogKind[] = ['survivors', 'killers', 'survivor_perks', 'killer_perks', 'maps'];
 
+interface TabOption {
+  value: SourceTab;
+  label: string;
+  icon: React.ReactNode;
+}
+
 interface ItemSourcesProps {
   onAdd: (items: IncomingItem[]) => void;
   existingIds: ReadonlySet<string>;
@@ -43,7 +48,7 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
   // Direct file upload is admin-only (guests and regular users don't get the
   // tab at all, not just a disabled one) -- everyone else adds items by
   // pasting a link or picking from the game's own catalog.
-  const options: readonly ToggleSwitchOption<SourceTab>[] = [
+  const options: readonly TabOption[] = [
     ...(isAdmin
       ? [{ value: 'upload' as const, label: c.tabUpload, icon: <Upload className="h-3.5 w-3.5" aria-hidden="true" /> }]
       : []),
@@ -59,8 +64,30 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="overflow-x-auto">
-        <ToggleSwitch value={tab} onChange={setTab} options={options} ariaLabel={c.itemSourceAria} className="w-full min-w-max" />
+      <div className="flex justify-center w-full">
+        <div className="flex items-center gap-1.5 p-1 rounded-lg border border-border-color bg-bg-primary/50 w-fit max-w-full overflow-x-auto" role="tablist" aria-label={c.itemSourceAria}>
+        {options.map((opt) => {
+          const isActive = tab === opt.value;
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setTab(opt.value)}
+              className={cn(
+                'inline-flex min-h-[38px] items-center gap-2 rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap',
+                isActive
+                  ? 'bg-accent-red text-text-inverted shadow-xs'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/80'
+              )}
+            >
+              {opt.icon}
+              {opt.label}
+            </button>
+          );
+        })}
+        </div>
       </div>
       {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} dict={dict} />}
       {tab === 'links' && <LinksSource onAdd={onAdd} dict={dict} />}
@@ -111,12 +138,12 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
           void handleFiles(e.dataTransfer.files);
         }}
         className={cn(
-          'flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
+          'flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-6 sm:p-8 text-center transition-colors',
           dragging ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20'
         )}
       >
-        <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border-color bg-bg-surface text-text-muted">
-          <ImagePlus className="h-7 w-7" aria-hidden="true" />
+        <span className="flex h-12 w-12 items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-muted">
+          <ImagePlus className="h-6 w-6" aria-hidden="true" />
         </span>
         <div>
           <p className="text-base font-black text-text-primary">{c.dropTitle}</p>
@@ -223,21 +250,23 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
           />
         </label>
       </div>
-      <p className="text-xs text-text-muted">{t.itemImageHint}</p>
+      <p className="text-xs text-text-muted text-center">{t.itemImageHint}</p>
       {error && (
-        <p role="alert" className="text-xs font-semibold text-accent-red">
+        <p role="alert" className="text-xs font-semibold text-accent-red text-center">
           {error}
         </p>
       )}
-      <button
-        type="button"
-        disabled={!itemName.trim() && !imageUrl.trim()}
-        onClick={handleAdd}
-        className={cn(BTN_PRIMARY, 'self-start min-h-[42px] px-4')}
-      >
-        <Plus className="h-4 w-4" aria-hidden="true" />
-        {t.addItemTitle}
-      </button>
+      <div className="flex justify-center w-full pt-1">
+        <button
+          type="button"
+          disabled={!itemName.trim() && !imageUrl.trim()}
+          onClick={handleAdd}
+          className={cn(BTN_PRIMARY, 'min-h-[40px] px-6 text-xs sm:text-sm font-bold')}
+        >
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          {t.addItemTitle}
+        </button>
+      </div>
     </div>
   );
 }
@@ -286,7 +315,7 @@ function CatalogSource({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-2" role="group" aria-label={c.catalogSource}>
+      <div className="flex flex-wrap justify-center gap-2" role="group" aria-label={c.catalogSource}>
         {CATALOG_KINDS.map((k) => (
           <button
             key={k}
@@ -297,7 +326,7 @@ function CatalogSource({
             }}
             aria-pressed={kind === k}
             className={cn(
-              'min-h-[44px] rounded-xl border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
+              'min-h-[38px] rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
               kind === k
                 ? 'border-accent-red bg-accent-red/10 text-accent-red'
                 : 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
@@ -320,30 +349,30 @@ function CatalogSource({
             className={`${FIELD} pl-9`}
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex justify-center gap-2">
           <button
             type="button"
             onClick={() =>
               setSelected((prev) => new Set([...prev, ...visible.filter((i) => !existingIds.has(i.key)).map((i) => i.key)]))
             }
-            className={BTN_SECONDARY}
+            className={cn(BTN_SECONDARY, 'min-h-[38px] text-xs font-bold')}
           >
             {c.selectAll}
           </button>
-          <button type="button" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className={BTN_SECONDARY}>
+          <button type="button" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className={cn(BTN_SECONDARY, 'min-h-[38px] text-xs font-bold')}>
             {c.clearSelection}
           </button>
         </div>
       </div>
 
-      <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-2xl border border-border-color bg-bg-primary/40 p-2">
+      <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 text-sm font-semibold text-text-muted">
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
             {c.catalogLoading}
           </p>
         ) : (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {visible.map((item) => {
               const added = existingIds.has(item.key);
               const isSelected = selected.has(item.key);
@@ -355,7 +384,7 @@ function CatalogSource({
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative rounded-xl cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                  className="relative rounded-lg cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <TierItemTile
                     item={item}
@@ -378,10 +407,12 @@ function CatalogSource({
         )}
       </div>
 
-      <button type="button" disabled={selected.size === 0} onClick={add} className={cn(BTN_PRIMARY, 'self-start')}>
-        <Plus className="h-4 w-4" aria-hidden="true" />
-        {c.addSelected.replace('{count}', String(selected.size))}
-      </button>
+      <div className="flex justify-center w-full">
+        <button type="button" disabled={selected.size === 0} onClick={add} className={cn(BTN_PRIMARY, 'min-h-[40px] px-6 text-xs sm:text-sm font-bold')}>
+          <Plus className="h-4 w-4" aria-hidden="true" />
+          {c.addSelected.replace('{count}', String(selected.size))}
+        </button>
+      </div>
     </div>
   );
 }

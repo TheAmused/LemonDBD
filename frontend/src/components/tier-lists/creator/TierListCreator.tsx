@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronLeft, History, SearchX, TriangleAlert } from 'lucide-react';
+import { ChevronDown, ChevronLeft, History, SearchX, TriangleAlert, X } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
@@ -132,6 +132,14 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
     }
     loaded.current = true;
   }, [editId]);
+
+  useEffect(() => {
+    if (!restored) return;
+    const timer = window.setTimeout(() => {
+      setRestored(false);
+    }, 4500);
+    return () => window.clearTimeout(timer);
+  }, [restored]);
 
   useEffect(() => {
     if (!loaded.current || editId) return;
@@ -310,7 +318,12 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       data-tier-create=""
       onClick={submit}
       disabled={publishingNow}
-      className={cn(BTN_PRIMARY, 'min-h-[48px] 2xl:min-h-[54px] text-base 2xl:text-lg', publishingNow && 'opacity-60 cursor-not-allowed', extra)}
+      className={cn(
+        BTN_PRIMARY,
+        'transition-colors',
+        publishingNow && 'opacity-60 cursor-not-allowed',
+        extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg'
+      )}
     >
       {submitLabel}
     </button>
@@ -321,100 +334,156 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6">
-      <header className="flex items-center justify-between border-b border-border-color pb-4 min-h-[44px]">
-        <Link
-          href={`/${locale}/tier-lists`}
-          className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
-          {t.backToHub}
-        </Link>
-        <button
-          type="button"
-          onClick={() => setPreviewOpen(true)}
-          className={cn(BTN_SECONDARY, 'min-h-[40px] 2xl:min-h-[46px] px-3.5 2xl:px-5 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider')}
-        >
-          {c.previewHeading}
-        </button>
-      </header>
-
+    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-w-[1700px] mx-auto w-full px-4 sm:px-6">
+      <h1 className="sr-only">{editId ? t.editDetails : c.pageTitle}</h1>
       {restored && (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-accent-amber/40 bg-accent-amber/10 p-3 2xl:p-4 text-sm 2xl:text-base font-semibold text-accent-amber">
-          <History className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0" aria-hidden="true" />
-          <span className="flex-1">{c.draftRestored}</span>
-          <button type="button" onClick={startOver} className={BTN_SECONDARY}>
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-xl border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
+        >
+          <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
+          <span className="flex-1 text-accent-amber">{c.draftRestored}</span>
+          <button
+            type="button"
+            onClick={startOver}
+            className={cn(BTN_SECONDARY, 'text-xs min-h-[32px] px-2.5 py-1 whitespace-nowrap')}
+          >
             {c.startOver}
+          </button>
+          <button
+            type="button"
+            onClick={() => setRestored(false)}
+            aria-label={c.closeToast}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
       )}
 
-      <div className="flex flex-col gap-6 2xl:gap-8 max-w-5xl 2xl:max-w-6xl wide:max-w-7xl mx-auto w-full">
-        <Section title={c.stepBasics}>
-          <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
-            <label className="md:col-span-1">
-              <span className={LABEL}>{c.titleLabel}</span>
-              <input
-                value={draft.title}
-                maxLength={TIER_LIST_LIMITS.maxTitle}
-                onChange={(e) => patch({ title: e.target.value })}
-                placeholder={c.titlePlaceholder}
-                aria-invalid={attempted && titleMissing}
-                className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && titleMissing && 'border-accent-red')}
-              />
-            </label>
-            <label className="md:col-span-1">
-              <span className={LABEL}>{c.descriptionLabel}</span>
-              <input
-                value={draft.description}
-                maxLength={TIER_LIST_LIMITS.maxDescription}
-                onChange={(e) => patch({ description: e.target.value })}
-                placeholder={c.descriptionPlaceholder}
-                className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base')}
-              />
-            </label>
-            <label className="md:col-span-2">
-              <span className={LABEL}>{c.backgroundImageLabel}</span>
-              <input
-                value={draft.backgroundImage}
-                onChange={(e) => patch({ backgroundImage: e.target.value })}
-                placeholder={c.backgroundImagePlaceholder}
-                inputMode="url"
-                aria-invalid={attempted && backgroundInvalid}
-                className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && backgroundInvalid && 'border-accent-red')}
-              />
-              <span
-                className={cn(
-                  'mt-1 block text-xs 2xl:text-sm',
-                  attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
-                )}
-              >
-                {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
-              </span>
-              {safeBackground && (
-                <div className="mt-2 h-24 w-full max-w-sm overflow-hidden rounded-xl border border-border-color bg-bg-elevated">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
-                  <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
-                </div>
-              )}
-            </label>
-            {isAdmin && !editId && (
-              <label className="md:col-span-2 flex items-start gap-2.5">
-                <input
-                  type="checkbox"
-                  checked={official}
-                  onChange={(e) => setOfficial(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 shrink-0 accent-accent-red"
-                />
-                <span>
-                  <span className={cn(LABEL, 'block')}>{c.official}</span>
-                  <span className="mt-0.5 block text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
-                </span>
-              </label>
-            )}
+      {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), PREVIEW & CREATE (RIGHT) */}
+      <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
+        {/* Mobile top bar (< lg) */}
+        <div className="flex lg:hidden items-center justify-between gap-2 w-full">
+          <Link
+            href={`/${locale}/tier-lists`}
+            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            {t.backToHub}
+          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPreviewOpen(true)}
+              className={cn(BTN_SECONDARY, 'min-h-[40px] px-3 py-1.5 text-xs font-bold uppercase tracking-wider')}
+            >
+              {c.previewHeading}
+            </button>
+            {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
           </div>
-        </Section>
+        </div>
 
+        {/* Desktop top left navigation (>= lg) */}
+        <div className="hidden lg:flex shrink-0 lg:w-48 pt-2.5">
+          <Link
+            href={`/${locale}/tier-lists`}
+            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
+            {t.backToHub}
+          </Link>
+        </div>
+
+        {/* MIDDLE: THE BASICS BLOCK */}
+        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-w-5xl mx-auto">
+          <Section title={c.stepBasics}>
+            <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+              <label className="md:col-span-1">
+                <span className={LABEL}>{c.titleLabel}</span>
+                <input
+                  value={draft.title}
+                  maxLength={TIER_LIST_LIMITS.maxTitle}
+                  onChange={(e) => patch({ title: e.target.value })}
+                  placeholder={c.titlePlaceholder}
+                  aria-invalid={attempted && titleMissing}
+                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && titleMissing && 'border-accent-red')}
+                />
+              </label>
+              <label className="md:col-span-1">
+                <span className={LABEL}>{c.descriptionLabel}</span>
+                <input
+                  value={draft.description}
+                  maxLength={TIER_LIST_LIMITS.maxDescription}
+                  onChange={(e) => patch({ description: e.target.value })}
+                  placeholder={c.descriptionPlaceholder}
+                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                />
+              </label>
+              <label className="md:col-span-2">
+                <span className={LABEL}>{c.backgroundImageLabel}</span>
+                <input
+                  value={draft.backgroundImage}
+                  onChange={(e) => patch({ backgroundImage: e.target.value })}
+                  placeholder={c.backgroundImagePlaceholder}
+                  inputMode="url"
+                  aria-invalid={attempted && backgroundInvalid}
+                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && backgroundInvalid && 'border-accent-red')}
+                />
+                <span
+                  className={cn(
+                    'mt-1 block text-xs 2xl:text-sm',
+                    attempted && backgroundInvalid ? 'font-semibold text-accent-red' : 'text-text-muted'
+                  )}
+                >
+                  {attempted && backgroundInvalid ? t.invalidImage : c.backgroundImageHint}
+                </span>
+                {safeBackground && (
+                  <div className="mt-2 h-24 w-full max-w-sm mx-auto overflow-hidden rounded-lg border border-border-color bg-bg-elevated">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
+                    <img src={safeBackground} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+                  </div>
+                )}
+              </label>
+              {isAdmin && !editId && (
+                <label className="md:col-span-2 flex items-center justify-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={official}
+                    onChange={(e) => setOfficial(e.target.checked)}
+                    className="h-4 w-4 shrink-0 accent-accent-red"
+                  />
+                  <span className="text-center">
+                    <span className={cn(LABEL, 'inline')}>{c.official}</span>
+                    <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
+                  </span>
+                </label>
+              )}
+            </div>
+          </Section>
+        </div>
+
+        {/* Desktop top right buttons (>= lg) */}
+        <div className="hidden lg:flex shrink-0 lg:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
+          <button
+            type="button"
+            onClick={() => setPreviewOpen(true)}
+            className={cn(
+              BTN_SECONDARY,
+              'min-h-[40px] 2xl:min-h-[46px] px-3.5 2xl:px-5 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
+            )}
+          >
+            {c.previewHeading}
+          </button>
+          {submitButton(
+            'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
+          )}
+        </div>
+      </header>
+
+      {/* TIERS BLOCK */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
         <Section title={c.stepTiers}>
           <LadderEditor
             tiers={draft.tiers}
@@ -424,7 +493,10 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             dict={dict}
           />
         </Section>
+      </div>
 
+      {/* ITEMS BLOCK */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
         <Section title={c.stepItems}>
           <div className="flex flex-col gap-6 2xl:gap-8">
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} dict={dict} />
@@ -438,6 +510,12 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
               onRename={(id, name) =>
                 setDraft((d) => ({ ...d, items: d.items.map((i) => (i.id === id ? { ...i, name } : i)) }))
               }
+              onUpdateItem={(id, patch) =>
+                setDraft((d) => ({
+                  ...d,
+                  items: d.items.map((i) => (i.id === id ? { ...i, ...patch } : i)),
+                }))
+              }
               onRemove={(id) => setDraft((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }))}
               onClear={() => patch({ items: [] })}
               dict={dict}
@@ -450,19 +528,11 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             )}
           </div>
         </Section>
+      </div>
 
+      {/* Feedback Alerts */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col gap-4">
         <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} dict={dict} />
-
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={() => setPreviewOpen(true)}
-            className={cn(BTN_SECONDARY, 'w-full sm:w-auto min-h-[48px] 2xl:min-h-[54px] px-6 2xl:px-8 text-sm 2xl:text-base font-bold')}
-          >
-            {c.previewHeading}
-          </button>
-          {submitButton('w-full sm:w-auto min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg')}
-        </div>
       </div>
 
       <CreatorPreviewModal
@@ -484,24 +554,25 @@ function Section({ title, defaultOpen = true, children }: { title: string; defau
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <section className="rounded-3xl border border-border-color bg-bg-surface backdrop-blur-xl shadow-md overflow-hidden transition-colors flex flex-col">
+    <section className="rounded-xl border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
-        className="relative w-full flex items-center justify-between py-4 px-5 sm:py-5 sm:px-7 2xl:py-6 2xl:px-9 min-h-[56px] sm:min-h-[64px] 2xl:min-h-[74px] cursor-pointer group select-none overflow-hidden transition-colors text-left"
+        className="relative w-full flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 bg-bg-surface hover:bg-bg-elevated/40 transition-colors cursor-pointer select-none text-left"
       >
-        <div className="w-8 hidden sm:block pointer-events-none" aria-hidden="true" />
+        <div className="w-8 shrink-0 pointer-events-none" aria-hidden="true" />
         <div className="flex-1 text-center min-w-0 px-2">
-          <h2 className="text-sm sm:text-base 2xl:text-lg font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red transition-colors font-mono">
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary group-hover:text-accent-red transition-colors font-mono">
             {title}
           </h2>
         </div>
         <div className="w-8 flex justify-end">
           <ChevronDown
-            className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out ${
+            className={cn(
+              'h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out',
               isOpen ? 'rotate-180' : 'rotate-0'
-            }`}
+            )}
           />
         </div>
       </button>
@@ -512,7 +583,7 @@ function Section({ title, defaultOpen = true, children }: { title: string; defau
         }`}
       >
         <div className="overflow-hidden">
-          <div className="p-4 sm:p-6 2xl:p-8 border-t border-border-color">
+          <div className="p-4 sm:p-6 2xl:p-7 border-t border-border-color">
             {children}
           </div>
         </div>
@@ -540,10 +611,10 @@ function Feedback({
   ];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col gap-1 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">
+    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red text-center">
       {messages.map((m) => (
-        <p key={m} className="flex items-start gap-2">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+        <p key={m} className="flex items-center justify-center gap-2">
+          <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
           {m}
         </p>
       ))}

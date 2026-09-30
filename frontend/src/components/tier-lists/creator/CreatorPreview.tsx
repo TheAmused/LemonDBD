@@ -47,9 +47,9 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
 
   return (
     <div className="flex flex-col gap-6 w-full">
-      <div className="flex flex-col gap-2">
-        <span className="text-xs font-black uppercase tracking-wider text-text-muted px-1">{c.cardPreviewHeading}</span>
-        <div className="max-w-sm">
+      <div className="flex flex-col items-center gap-2 w-full">
+        <span className="text-xs font-black uppercase tracking-wider text-text-muted px-1 text-center">{c.cardPreviewHeading}</span>
+        <div className="w-full max-w-sm">
           <CustomTierListCard list={cardPreviewList} locale={locale} dict={dict} disabled />
         </div>
       </div>
@@ -81,14 +81,14 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         ))}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 px-1">
+      <div className="flex flex-col items-center gap-2 w-full">
+        <div className="flex items-center justify-center gap-2 px-1">
           <span className="text-xs font-black uppercase tracking-wider text-text-muted">{t.unranked}</span>
           <span className="rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25 font-mono">
             {tiles.length}
           </span>
         </div>
-        <div className="rounded-2xl border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center">
+        <div className="w-full rounded-2xl border border-border-color bg-bg-primary/20 p-3 sm:p-4 min-h-[96px] flex flex-wrap gap-2 items-center justify-center">
           {tiles.length === 0 ? (
             <p className="text-xs text-text-muted italic px-2">{c.noItems}</p>
           ) : (

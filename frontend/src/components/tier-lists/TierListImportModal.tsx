@@ -14,6 +14,7 @@ import {
   serializeTierListDocument,
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { cn } from '@/utils/cn';
 import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './styles';
 
 /**
@@ -125,8 +126,8 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
       icon={<FileJson className="h-5 w-5" aria-hidden="true" />}
       bodyClassName="p-4 sm:p-6 font-sans"
       footer={
-        <div className="flex w-full flex-wrap items-center justify-end gap-2">
-          <button type="button" onClick={onClose} className={BTN_SECONDARY}>
+        <div className="flex w-full flex-wrap items-center justify-center gap-3">
+          <button type="button" onClick={onClose} className={cn(BTN_SECONDARY, 'min-h-[42px] px-5')}>
             {t.cancel}
           </button>
           <button
@@ -135,7 +136,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
             onClick={() => {
               if (result?.ok && canImport) onImport(result.doc);
             }}
-            className={BTN_PRIMARY}
+            className={cn(BTN_PRIMARY, 'min-h-[42px] px-6')}
           >
             <Upload className="h-4 w-4" aria-hidden="true" />
             {t.importAction}

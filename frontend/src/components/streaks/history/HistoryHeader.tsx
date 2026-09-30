@@ -51,9 +51,9 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3">
           <img
-            src="/images/streaks/history-streak.jpg"
+            src="/images/streaks/history-streak.webp"
             alt=""
-            className="hidden sm:block h-11 w-11 rounded-xl border border-border-color object-cover shadow-sm"
+            className="hidden sm:block h-11 w-11 object-contain"
           />
           <div className="flex flex-col items-center sm:items-start">
             <span className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-text-muted capitalize">

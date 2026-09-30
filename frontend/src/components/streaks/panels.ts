@@ -18,34 +18,34 @@ export function getKillerStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t?.gauntletStreakTitle || 'Gauntlet streak',
-      image: '/images/streaks/gauntlet-streak.jpg',
+      image: '/images/streaks/gauntlet-streak.webp',
     },
     {
       id: 'page-streak',
       title: t?.pageStreakPanelTitle || 'Page streak',
-      image: '/images/streaks/page-streak.jpg',
+      image: '/images/streaks/page-streak.webp',
     },
     {
       id: 'history-streak',
       title: t?.historyStreakPanelTitle || 'History streak',
-      image: '/images/streaks/history-streak.jpg',
+      image: '/images/streaks/history-streak.webp',
     },
     {
       id: 'chaos-streak',
       title: t?.chaosStreakPanelTitle || 'Chaos streak',
-      image: '/images/streaks/chaos-streak.jpg',
+      image: '/images/streaks/chaos-streak.webp',
     },
     {
       id: 'nice-guy-streak',
       title: t?.niceGuyStreakTitle || 'Nice Guy streak',
       comingSoon: true,
-      image: '/images/streaks/nice-guy-streak.jpg',
+      image: '/images/streaks/nice-guy-streak.webp',
     },
     {
       id: 'blood-money-streak',
       title: t?.bloodMoneyStreakTitle || 'Blood Money streak',
       comingSoon: true,
-      image: '/images/streaks/blood-money-streak.jpg',
+      image: '/images/streaks/blood-money-streak.webp',
     },
   ];
 }
@@ -59,13 +59,13 @@ export function getSurvivorStreakPanels(dict?: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t?.gauntletStreakTitle || 'Gauntlet streak',
-      image: '/images/streaks/gauntlet-streak.jpg',
+      image: '/images/streaks/gauntlet-streak.webp',
     },
     {
       id: 'copycat-streak',
       title: t?.copycatStreakTitle || 'Copycat streak',
       comingSoon: true,
-      image: '/images/streaks/copycat-streak.jpg',
+      image: '/images/streaks/copycat-streak.webp',
     },
   ];
 }
@@ -80,7 +80,7 @@ export function getChallengeStreakPanels(dict?: Dictionary): StreakPanelDef[] {
       id: 'copycat-streak',
       title: t?.copycatStreakTitle || 'Copycat streak',
       comingSoon: true,
-      image: '/images/streaks/copycat-streak.jpg',
+      image: '/images/streaks/copycat-streak.webp',
     },
   ];
 }

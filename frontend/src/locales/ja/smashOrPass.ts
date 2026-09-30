@@ -441,6 +441,9 @@ export default {
     quotePlaceholder: '例: 「みんなビンゴにでも行くのか？」',
     turnOnPlaceholder: '何が彼らを引きつける魅力か？',
     dealbreakerPlaceholder: '何が一瞬で幻滅させるか？',
+    draftRestored: '作成途中の下書きを復元しました。',
+    startOver: '最初からやり直す',
+    closeToast: '閉じる',
   },
   cropModal: {
     title: 'カバー画像のトリミングと調整',

@@ -441,6 +441,9 @@ export default {
     quotePlaceholder: 'ej. "¿A dónde van todos? ¿Al bingo?"',
     turnOnPlaceholder: '¿Qué los hace irresistibles?',
     dealbreakerPlaceholder: '¿Qué arruina la chispa de inmediato?',
+    draftRestored: 'Se ha recuperado tu borrador sin terminar.',
+    startOver: 'Empezar de nuevo',
+    closeToast: 'Cerrar',
   },
   cropModal: {
     title: 'Recortar y encuadrar imagen de portada',

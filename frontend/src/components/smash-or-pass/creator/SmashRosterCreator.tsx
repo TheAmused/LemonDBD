@@ -21,9 +21,11 @@ import {
   ChevronDown,
   ChevronLeft,
   Crop,
+  History,
   Plus,
   SearchX,
   TriangleAlert,
+  X,
 } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
 import { Switch } from '@/components/common/Switch';
@@ -178,6 +180,67 @@ function buildAdminEntityTranslations(t: Record<string, EntityTranslationDraft> 
   return out;
 }
 
+const DRAFT_KEY = 'lemondbd_smash_roster_draft';
+
+interface StoredDraft extends Draft {
+  rosterTranslations?: RosterTranslations;
+  entityTranslations?: EntityTranslations;
+  selectedEntityKey?: string;
+}
+
+function readDraft(): StoredDraft | null {
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<StoredDraft>;
+    if (!parsed || typeof parsed !== 'object') return null;
+
+    const entities: DraftEntity[] = Array.isArray(parsed.entities) && parsed.entities.length > 0
+      ? parsed.entities.map((e: any, idx: number) => ({
+          key: typeof e?.key === 'string' && e.key ? e.key : (idx === 0 ? 'seed-0' : newKey()),
+          name: typeof e?.name === 'string' ? e.name : '',
+          media_url: typeof e?.media_url === 'string' ? e.media_url : '',
+          role: typeof e?.role === 'string' ? e.role : '',
+          gender: typeof e?.gender === 'string' ? e.gender : '',
+          real_name: typeof e?.real_name === 'string' ? e.real_name : '',
+          archetype: typeof e?.archetype === 'string' ? e.archetype : '',
+          tagline: typeof e?.tagline === 'string' ? e.tagline : '',
+          bio: typeof e?.bio === 'string' ? e.bio : '',
+          quote: typeof e?.quote === 'string' ? e.quote : '',
+          meme: typeof e?.meme === 'string' ? e.meme : '',
+          turn_on: typeof e?.turn_on === 'string' ? e.turn_on : '',
+          dealbreaker: typeof e?.dealbreaker === 'string' ? e.dealbreaker : '',
+          dating_vibe: typeof e?.dating_vibe === 'string' ? e.dating_vibe : '',
+          red_flags: typeof e?.red_flags === 'string' ? e.red_flags : '',
+          green_flags: typeof e?.green_flags === 'string' ? e.green_flags : '',
+          watermark_left: typeof e?.watermark_left === 'string' ? e.watermark_left : '',
+          watermark_right: typeof e?.watermark_right === 'string' ? e.watermark_right : '',
+        }))
+      : [emptyDraftEntity('seed-0')];
+
+    return {
+      name: typeof parsed.name === 'string' ? parsed.name : '',
+      description: typeof parsed.description === 'string' ? parsed.description : '',
+      cover_image_url: typeof parsed.cover_image_url === 'string' ? parsed.cover_image_url : '',
+      theme_color: typeof parsed.theme_color === 'string' && parsed.theme_color ? parsed.theme_color : '#ff0055',
+      category: typeof parsed.category === 'string' ? parsed.category : '',
+      is_nsfw: Boolean(parsed.is_nsfw),
+      roster_mode: parsed.roster_mode === 'full' ? 'full' : 'simple',
+      custom_labels: (parsed.custom_labels && typeof parsed.custom_labels === 'object') ? parsed.custom_labels : {},
+      custom_roles: Array.isArray(parsed.custom_roles) ? parsed.custom_roles.filter((r) => typeof r === 'string') : [],
+      custom_genders: Array.isArray(parsed.custom_genders) ? parsed.custom_genders.filter((g) => typeof g === 'string') : [],
+      romance_archetypes: Array.isArray(parsed.romance_archetypes) ? parsed.romance_archetypes : [],
+      entities,
+      rosterTranslations: (parsed.rosterTranslations && typeof parsed.rosterTranslations === 'object') ? parsed.rosterTranslations : {},
+      entityTranslations: (parsed.entityTranslations && typeof parsed.entityTranslations === 'object') ? parsed.entityTranslations : {},
+      selectedEntityKey: typeof parsed.selectedEntityKey === 'string' ? parsed.selectedEntityKey : undefined,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function errorMessage(t: any, code: SmashRosterErrorCode): string {
   return t.importModal?.errors?.[code] || code;
 }
@@ -203,6 +266,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
 
   const [draft, setDraft] = useState<Draft>(freshDraft);
   const [selectedEntityKey, setSelectedEntityKey] = useState<string>('seed-0');
+  const [restored, setRestored] = useState<boolean>(false);
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
@@ -213,8 +277,110 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   const [rosterTranslations, setRosterTranslations] = useState<RosterTranslations>({});
   const [entityTranslations, setEntityTranslations] = useState<EntityTranslations>({});
   const [activeTranslationLocale, setActiveTranslationLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
+  const loaded = useRef<boolean>(false);
 
   useDocumentTitle(editId ? `${c.pageTitleEdit || 'LemonDBD - Edit Smash or Pass roster'}` : (c.pageTitleCreate || 'LemonDBD - Create a Smash or Pass roster'));
+
+  // Restore after mount (localStorage is client-only), then autosave -- new
+  // rosters only. Editing an existing one is seeded from the store instead
+  // (below), never through this scratch-draft key.
+  useEffect(() => {
+    if (editId) {
+      loaded.current = true;
+      return;
+    }
+    const saved = readDraft();
+    const hasMeaningfulContent = Boolean(
+      saved && (
+        saved.name.trim() ||
+        saved.description.trim() ||
+        saved.cover_image_url.trim() ||
+        saved.category.trim() ||
+        saved.entities.length > 1 ||
+        saved.entities.some(
+          (e) =>
+            e.name.trim() ||
+            e.media_url.trim() ||
+            e.bio.trim() ||
+            e.quote.trim() ||
+            e.turn_on.trim() ||
+            e.dealbreaker.trim() ||
+            e.role.trim() ||
+            e.gender.trim()
+        ) ||
+        saved.romance_archetypes.length > 0 ||
+        (saved.custom_roles && saved.custom_roles.length > 0) ||
+        (saved.custom_genders && saved.custom_genders.length > 0)
+      )
+    );
+    if (saved && hasMeaningfulContent) {
+      setDraft(saved);
+      if (saved.selectedEntityKey && saved.entities.some((e) => e.key === saved.selectedEntityKey)) {
+        setSelectedEntityKey(saved.selectedEntityKey);
+      } else if (saved.entities.length > 0) {
+        setSelectedEntityKey(saved.entities[0].key);
+      }
+      if (saved.rosterTranslations) {
+        setRosterTranslations(saved.rosterTranslations);
+      }
+      if (saved.entityTranslations) {
+        setEntityTranslations(saved.entityTranslations);
+      }
+      setRestored(true);
+    }
+    loaded.current = true;
+  }, [editId]);
+
+  useEffect(() => {
+    if (!restored) return;
+    const timer = window.setTimeout(() => {
+      setRestored(false);
+    }, 4500);
+    return () => window.clearTimeout(timer);
+  }, [restored]);
+
+  useEffect(() => {
+    if (!loaded.current || editId || typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+    const timer = window.setTimeout(() => {
+      try {
+        const hasContent = Boolean(
+          draft.name.trim() ||
+          draft.description.trim() ||
+          draft.cover_image_url.trim() ||
+          draft.category.trim() ||
+          draft.entities.length > 1 ||
+          draft.entities.some(
+            (e) =>
+              e.name.trim() ||
+              e.media_url.trim() ||
+              e.bio.trim() ||
+              e.quote.trim() ||
+              e.turn_on.trim() ||
+              e.dealbreaker.trim() ||
+              e.role.trim() ||
+              e.gender.trim()
+          ) ||
+          draft.romance_archetypes.length > 0 ||
+          (draft.custom_roles && draft.custom_roles.length > 0) ||
+          (draft.custom_genders && draft.custom_genders.length > 0)
+        );
+        if (hasContent) {
+          const payload: StoredDraft = {
+            ...draft,
+            rosterTranslations,
+            entityTranslations,
+            selectedEntityKey,
+          };
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
+        } else {
+          localStorage.removeItem(DRAFT_KEY);
+        }
+      } catch {
+        // Storage full or unavailable
+      }
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [draft, editId, rosterTranslations, entityTranslations, selectedEntityKey]);
 
   const editSeeded = useRef<string | null>(null);
   useEffect(() => {
@@ -397,6 +563,11 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           return;
         }
         const body: { data: { slug: string } } = await res.json();
+        try {
+          localStorage.removeItem(DRAFT_KEY);
+        } catch {
+          // ignore
+        }
         router.push(`/${locale}/smash-or-pass?roster=${body.data.slug}`);
       } catch {
         setPublishError(c.saveError || 'Something went wrong saving this roster.');
@@ -421,7 +592,29 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       setSaveError(saveResult.reason);
       return;
     }
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      // ignore
+    }
     router.push(`/${locale}/smash-or-pass?roster=local:${id}`);
+  };
+
+  const startOver = () => {
+    try {
+      localStorage.removeItem(DRAFT_KEY);
+    } catch {
+      // ignore
+    }
+    const fresh = freshDraft();
+    setDraft(fresh);
+    setSelectedEntityKey(fresh.entities[0]?.key || 'seed-0');
+    setRosterTranslations({});
+    setEntityTranslations({});
+    setRestored(false);
+    setAttempted(false);
+    setSubmitError(null);
+    setPublishError(null);
   };
 
   const publishingNow = publishing && official && isUserAdmin;
@@ -461,6 +654,31 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   return (
     <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
+      {restored && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-5 right-5 z-50 flex max-w-md w-[calc(100vw-2.5rem)] sm:w-auto items-center gap-3 rounded-xl border border-accent-amber/40 bg-bg-surface/95 backdrop-blur-xl p-3 2xl:p-4 shadow-2xl text-xs sm:text-sm 2xl:text-base font-semibold text-text-primary animate-in fade-in slide-in-from-top-4 duration-300"
+        >
+          <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
+          <span className="flex-1 text-accent-amber">{c.draftRestored || 'Your unfinished draft was restored.'}</span>
+          <button
+            type="button"
+            onClick={startOver}
+            className={cn(BTN_SECONDARY, 'text-xs min-h-[32px] px-2.5 py-1 whitespace-nowrap')}
+          >
+            {c.startOver || 'Start over'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setRestored(false)}
+            aria-label={c.closeToast || 'Dismiss'}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      )}
 
       {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), CREATE (RIGHT) */}
       <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">

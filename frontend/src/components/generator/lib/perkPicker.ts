@@ -39,25 +39,23 @@ export function isHexOrBoonPerk(perk: Perk): boolean {
 }
 
 export function isMemePerk(perk: Perk): boolean {
-  // 'meme' bucket merged into 'entity' — kept for backward-compatibility with
-  // any call site that hasn't been updated yet. Entity is the new wildcard.
-  return hasPerkType(perk, 'entity');
+  return hasPerkType(perk, 'entity') || hasPerkType(perk, 'meme');
 }
 
 export function isGenRegressionPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'generator');
+  return hasPerkType(perk, 'generator') || hasPerkType(perk, 'gen_slowdown');
 }
 
 export function isHealingOrAltruismPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'healing');
+  return hasPerkType(perk, 'healing') || hasPerkType(perk, 'altruism_healing');
 }
 
 export function isNegativePerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'sacrifice');
+  return hasPerkType(perk, 'sacrifice') || hasPerkType(perk, 'handicap');
 }
 
 export function isAuraPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'aura');
+  return hasPerkType(perk, 'aura') || hasPerkType(perk, 'aura_reading');
 }
 
 export function isChasePerk(perk: Perk): boolean {
@@ -65,11 +63,11 @@ export function isChasePerk(perk: Perk): boolean {
 }
 
 export function isGeneratorPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'generator');
+  return isGenRegressionPerk(perk);
 }
 
 export function isHealingPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'healing');
+  return isHealingOrAltruismPerk(perk);
 }
 
 export function isStealthPerk(perk: Perk): boolean {

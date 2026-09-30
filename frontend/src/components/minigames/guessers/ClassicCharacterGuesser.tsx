@@ -27,7 +27,7 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
     <div className="w-full overflow-x-auto pb-4 my-6">
       <table className="w-full min-w-[700px] border-separate border-spacing-2 text-center select-none">
         <thead>
-          <tr className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">
+          <tr className="text-xs uppercase tracking-wider text-text-muted font-semibold">
             <th className="p-2 w-28 text-left">{(t.attributes as any).character || 'Character'}</th>
             <th className="p-2 w-20">{t.attributes.role}</th>
             <th className="p-2 w-20">{t.attributes.gender}</th>
@@ -54,9 +54,9 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
                 className="animate-in fade-in slide-in-from-top-3 duration-300 font-medium text-sm"
               >
                 {/* Character Name & Avatar */}
-                <td className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-left">
+                <td className="p-2 rounded-xl bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700/60 flex-shrink-0">
+                    <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0">
                       {imgSrc ? (
                         <Image
                           src={imgSrc}
@@ -67,12 +67,12 @@ export const ClassicCharacterGuesser: React.FC<ClassicCharacterGuesserProps> = (
                           className="object-cover w-full h-full"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xs text-zinc-500">
+                        <div className="w-full h-full flex items-center justify-center text-xs text-text-muted">
                           ?
                         </div>
                       )}
                     </div>
-                    <span className="truncate text-zinc-100 font-semibold text-xs leading-snug">
+                    <span className="truncate text-text-primary font-semibold text-xs leading-snug">
                       {guess.name}
                     </span>
                   </div>
@@ -140,10 +140,10 @@ const AttributeCell: React.FC<AttributeCellProps> = ({ evaluation, value }) => {
   const isPartial = status === 'partial';
 
   const bgStyle = isCorrect
-    ? 'bg-emerald-600/90 text-white border-emerald-400/80 shadow-emerald-950/40'
+    ? 'bg-accent-green text-text-inverted border-accent-green shadow-accent-green/20'
     : isPartial
-    ? 'bg-amber-600/90 text-white border-amber-400/80 shadow-amber-950/40'
-    : 'bg-red-950/80 text-red-200 border-red-800/60 shadow-red-950/40';
+    ? 'bg-accent-amber text-text-inverted border-accent-amber shadow-accent-amber/20'
+    : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-accent-red/10';
 
   return (
     <td
@@ -152,13 +152,13 @@ const AttributeCell: React.FC<AttributeCellProps> = ({ evaluation, value }) => {
       <div className="flex items-center justify-center gap-1">
         <span className="truncate max-w-[120px]">{value ?? '-'}</span>
         {direction === 'higher' && (
-          <ArrowUp className="w-3.5 h-3.5 text-white flex-shrink-0 animate-bounce" />
+          <ArrowUp className="w-3.5 h-3.5 text-text-inverted flex-shrink-0 animate-bounce" />
         )}
         {direction === 'lower' && (
-          <ArrowDown className="w-3.5 h-3.5 text-white flex-shrink-0 animate-bounce" />
+          <ArrowDown className="w-3.5 h-3.5 text-text-inverted flex-shrink-0 animate-bounce" />
         )}
         {isCorrect && !direction && (
-          <Check className="w-3.5 h-3.5 text-white/80 flex-shrink-0" />
+          <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />
         )}
       </div>
     </td>

@@ -206,7 +206,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
   return (
     <div ref={containerRef} className="relative w-full max-w-xl mx-auto z-40">
       <div className="relative flex items-center">
-        <div className="absolute left-3.5 text-zinc-400 pointer-events-none">
+        <div className="absolute left-3.5 text-text-muted pointer-events-none">
           <Search className="w-5 h-5" />
         </div>
         <input
@@ -234,7 +234,8 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           tabIndex={-1}
           onClick={() => setIsOpen((prev) => !prev)}
           className="absolute right-3 text-text-muted hover:text-text-primary"
-          aria-label={isOpen ? 'Close search dropdown' : 'Open search dropdown'}
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
         >
           <ChevronDown
             className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
@@ -294,9 +295,9 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                   <span
                     className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
                       item.role === 'Killer'
-                        ? 'bg-red-950/60 text-red-400 border border-red-800/50'
+                        ? 'bg-accent-red/20 text-accent-red border border-accent-red/40'
                         : item.role === 'Survivor'
-                        ? 'bg-blue-950/60 text-blue-400 border border-blue-800/50'
+                        ? 'bg-accent-green/20 text-accent-green border border-accent-green/40'
                         : 'bg-bg-elevated text-text-secondary border border-border-color'
                     }`}
                   >

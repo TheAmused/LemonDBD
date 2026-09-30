@@ -29,18 +29,19 @@ class TestLiveUserOwnershipAPI:
 
         first_char = chars[0]
         target_id = first_char["id"]
+        target_role = first_char["role"]
         new_state = not first_char["is_owned"]
 
         res_toggle = client.post(
             f"/api/v1/users/{user_id}/characters",
-            json={"character_id": target_id, "is_owned": new_state},
+            json={"character_id": target_id, "role": target_role, "is_owned": new_state},
             headers=headers,
         )
         assert res_toggle.status_code == 200
 
         res_chars2 = client.get(f"/api/v1/users/{user_id}/characters", headers=headers)
         chars2 = res_chars2.get_json()["data"]
-        updated_char = next(c for c in chars2 if c["id"] == target_id)
+        updated_char = next(c for c in chars2 if c["id"] == target_id and c["role"] == target_role)
         assert updated_char["is_owned"] == new_state
 
     def test_live_perk_ownership_toggle(

@@ -81,12 +81,11 @@ def set_character_disabled(character_id: int):
     data = request.get_json(silent=True) or {}
     role = (request.args.get("role") or data.get("role") or "").strip().rstrip("s").lower()
     model = {"survivor": Survivor, "killer": Killer}.get(role)
-    if model is None:
-        return jsonify({
-            "error": "Query or body field 'role' must be 'survivor' or 'killer'.",
-        }), 400
+    if model is not None:
+        character = db.session.get(model, character_id)
+    else:
+        character = db.session.get(Killer, character_id) or db.session.get(Survivor, character_id)
 
-    character = db.session.get(model, character_id)
     if not character:
         return jsonify({"error": "Character not found."}), 404
 

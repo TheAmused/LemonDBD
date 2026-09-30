@@ -5,6 +5,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Crop, ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 
+import type { Dictionary } from '@/locales/types';
+
 interface CoverImageCropModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -12,6 +14,7 @@ interface CoverImageCropModalProps {
   onApplyCrop: (croppedDataUrl: string) => void;
   themeColor?: string;
   isAdmin?: boolean;
+  dict?: Dictionary;
 }
 
 export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
@@ -21,7 +24,30 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
   onApplyCrop,
   themeColor = '#ff0055',
   isAdmin = false,
+  dict,
 }) => {
+  const cm = dict?.smashOrPass?.cropModal || {
+    title: 'Crop & Frame Cover Image',
+    subtitle: 'Drag to reposition, use mouse wheel or zoom slider to scale up any specific part (up to 500%).',
+    previewAlt: 'Cover Preview',
+    unableToDisplay: 'Unable to display image from external URL',
+    noImageUrl: 'No image URL specified',
+    uploadPrompt: 'Upload an image file directly from your device for guaranteed instant preview & cropping.',
+    uploadLocalFile: 'Upload Local File',
+    zoomOut: 'Zoom out',
+    zoomIn: 'Zoom in',
+    reset: 'Reset',
+    resetTitle: 'Reset Zoom and Position',
+    uploadFile: 'Upload File',
+    corsTitle: 'Third-party image host blocked canvas export',
+    corsAdminDesc: 'The image server does not allow browsers to read its pixels. You can upload the image file directly to crop without any restriction, or use the original image URL directly.',
+    corsUserDesc: 'The image server does not allow browsers to export cropped pixels. You can use the uncropped image URL directly.',
+    useUncropped: 'Use Uncropped URL',
+    cancel: 'Cancel',
+    applyCrop: 'Apply Crop',
+    dragHint: 'Drag to pan • Wheel to zoom ({zoom}%) • 16:9 banner',
+  };
+
   const [currentUrl, setCurrentUrl] = useState<string>(imageUrl);
   const [zoom, setZoom] = useState<number>(1);
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -258,13 +284,13 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       size="3xl"
-      title="Crop & Frame Cover Image"
-      subtitle="Drag to reposition, use mouse wheel or zoom slider to scale up any specific part (up to 500%)."
+      title={cm.title}
+      subtitle={cm.subtitle}
       icon={<Crop className="h-5 w-5 text-accent-red" />}
     >
       <div className="space-y-4 p-4 sm:p-6 font-mono select-none">
         {/* Interactive Crop Viewport (16:9 Aspect Ratio) */}
-        <div className="relative rounded-3xl border-2 border-accent-red/40 bg-black overflow-hidden shadow-2xl">
+        <div className="relative rounded-3xl border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div
             ref={containerRef}
             onMouseDown={handleMouseDown}
@@ -272,7 +298,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
-            className="relative w-full aspect-[16/9] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing bg-neutral-950"
+            className="relative w-full aspect-[16/9] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing bg-bg-surface"
             style={{ touchAction: 'none' }}
           >
             {currentUrl && !imageError ? (
@@ -280,7 +306,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               <img
                 ref={imgRef}
                 src={currentUrl}
-                alt="Cover Preview"
+                alt={cm.previewAlt}
                 referrerPolicy="no-referrer"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
@@ -299,10 +325,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                 <ImageIcon className="h-10 w-10 text-accent-red/60 animate-bounce" />
                 <div className="space-y-1">
                   <p className="text-xs font-bold text-text-primary">
-                    {imageError ? 'Unable to display image from external URL' : 'No image URL specified'}
+                    {imageError ? cm.unableToDisplay : cm.noImageUrl}
                   </p>
                   <p className="text-[11px] text-text-muted max-w-sm">
-                    Upload an image file directly from your device for guaranteed instant preview & cropping.
+                    {cm.uploadPrompt}
                   </p>
                 </div>
                 <button
@@ -311,27 +337,27 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-red text-text-inverted text-xs font-bold uppercase tracking-wider hover:bg-accent-red-hover transition-colors cursor-pointer shadow-md"
                 >
                   <Upload className="h-3.5 w-3.5" />
-                  <span>Upload Local File</span>
+                  <span>{cm.uploadLocalFile}</span>
                 </button>
               </div>
             )}
 
             {/* Grid Overlay / Rule of Thirds Guide */}
-            <div className="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3 border border-white/20">
-              <div className="border-r border-b border-white/10" />
-              <div className="border-r border-b border-white/10" />
-              <div className="border-b border-white/10" />
-              <div className="border-r border-b border-white/10" />
-              <div className="border-r border-b border-white/10" />
-              <div className="border-b border-white/10" />
-              <div className="border-r border-b border-white/10" />
-              <div className="border-r border-b border-white/10" />
+            <div className="absolute inset-0 pointer-events-none grid grid-cols-3 grid-rows-3 border border-border-color">
+              <div className="border-r border-b border-border-subtle" />
+              <div className="border-r border-b border-border-subtle" />
+              <div className="border-b border-border-subtle" />
+              <div className="border-r border-b border-border-subtle" />
+              <div className="border-r border-b border-border-subtle" />
+              <div className="border-b border-border-subtle" />
+              <div className="border-r border-b border-border-subtle" />
+              <div className="border-r border-b border-border-subtle" />
               <div />
             </div>
 
             {/* Hint overlay */}
-            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md border border-white/10 text-[10px] text-text-secondary pointer-events-none">
-              Drag to pan • Wheel to zoom ({Math.round(zoom * 100)}%) • 16:9 banner
+            <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-bg-primary/80 backdrop-blur-md border border-border-subtle text-[10px] text-text-secondary pointer-events-none">
+              {cm.dragHint ? cm.dragHint.replace('{zoom}', String(Math.round(zoom * 100))) : ''}
             </div>
           </div>
         </div>
@@ -343,7 +369,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               type="button"
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z - 0.25).toFixed(2)))))}
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-surface border border-border-color hover:border-accent-red text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-              title="Zoom out"
+              title={cm.zoomOut}
             >
               <ZoomOut className="h-4 w-4" />
             </button>
@@ -367,7 +393,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               type="button"
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z + 0.25).toFixed(2)))))}
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-surface border border-border-color hover:border-accent-red text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-              title="Zoom in"
+              title={cm.zoomIn}
             >
               <ZoomIn className="h-4 w-4" />
             </button>
@@ -378,10 +404,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               type="button"
               onClick={handleReset}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-              title="Reset Zoom and Position"
+              title={cm.resetTitle}
             >
               <RotateCcw className="h-3.5 w-3.5" />
-              <span>Reset</span>
+              <span>{cm.reset}</span>
             </button>
 
             {isAdmin && (
@@ -390,10 +416,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary hover:text-accent-red transition-colors cursor-pointer"
-                  title="Upload Local File"
+                  title={cm.uploadPrompt}
                 >
                   <Upload className="h-3.5 w-3.5 text-accent-red" />
-                  <span>Upload File</span>
+                  <span>{cm.uploadFile}</span>
                 </button>
                 <input
                   ref={fileInputRef}
@@ -409,23 +435,21 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
 
         {/* CORS Notice if canvas export fails on external domains */}
         {corsError && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
+          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-accent-amber text-xs">
             <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-accent-amber" />
             <div className="space-y-1.5">
-              <p className="font-bold">Third-party image host blocked canvas export</p>
-              <p className="text-[11px] text-amber-200/80 leading-relaxed">
-                {isAdmin
-                  ? 'The image server does not allow browsers to read its pixels. You can upload the image file directly to crop without any restriction, or use the original image URL directly.'
-                  : 'The image server does not allow browsers to export cropped pixels. You can use the uncropped image URL directly.'}
+              <p className="font-bold">{cm.corsTitle}</p>
+              <p className="text-[11px] text-text-muted leading-relaxed">
+                {isAdmin ? cm.corsAdminDesc : cm.corsUserDesc}
               </p>
               <div className="flex items-center gap-2 pt-1">
                 {isAdmin && (
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1 rounded-lg bg-accent-amber text-black text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer"
+                    className="px-3 py-1 rounded-lg bg-accent-amber text-text-inverted text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity cursor-pointer"
                   >
-                    Upload File
+                    {cm.uploadFile}
                   </button>
                 )}
                 <button
@@ -436,7 +460,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                   }}
                   className="px-3 py-1 rounded-lg bg-bg-surface border border-border-color text-text-primary text-xs font-bold hover:bg-bg-elevated transition-colors cursor-pointer"
                 >
-                  Use Uncropped URL
+                  {cm.useUncropped}
                 </button>
               </div>
             </div>
@@ -450,7 +474,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-text-muted hover:text-text-primary transition-colors cursor-pointer"
           >
-            Cancel
+            {cm.cancel}
           </button>
           <button
             type="button"
@@ -459,7 +483,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent-red text-text-inverted text-xs font-extrabold uppercase tracking-wider shadow-md hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
           >
             <Check className="h-4 w-4" />
-            <span>Apply Crop</span>
+            <span>{cm.applyCrop}</span>
           </button>
         </div>
       </div>

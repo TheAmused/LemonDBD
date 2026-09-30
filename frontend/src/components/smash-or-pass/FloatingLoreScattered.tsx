@@ -197,14 +197,14 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-emerald-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-emerald-500 group-hover:shadow-[0_0_50px_rgba(16,185,129,0.4)]">
-              <div className="flex items-center gap-1.5 text-emerald-400">
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-green/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-green group-hover:shadow-[0_0_50px_var(--accent-green)]">
+              <div className="flex items-center gap-1.5 text-accent-green">
                 <Flame className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                   {turnOnLabel}
                 </span>
               </div>
-              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-emerald-300 transition-colors font-sans">
+              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-accent-green transition-colors font-sans">
                 {profile.turn_on}
               </p>
             </div>
@@ -244,14 +244,14 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-rose-500/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-rose-500 group-hover:shadow-[0_0_50px_rgba(244,63,94,0.4)]">
-              <div className="flex items-center gap-1.5 text-rose-400">
+            <div className="relative overflow-hidden p-3.5 xl:p-4 rounded-3xl bg-bg-surface/95 border-2 border-accent-red/40 backdrop-blur-2xl shadow-2xl space-y-1 transition-all duration-300 group-hover:border-accent-red group-hover:shadow-[0_0_50px_var(--accent-red)]">
+              <div className="flex items-center gap-1.5 text-accent-red">
                 <AlertTriangle className="h-3.5 w-3.5 group-hover:scale-125 transition-transform" />
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest">
                   {dealbreakerLabel}
                 </span>
               </div>
-              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-rose-300 transition-colors font-sans">
+              <p className="text-xs font-medium text-text-primary line-clamp-3 leading-snug group-hover:text-accent-red transition-colors font-sans">
                 {profile.dealbreaker}
               </p>
             </div>

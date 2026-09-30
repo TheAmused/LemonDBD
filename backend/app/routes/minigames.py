@@ -201,7 +201,7 @@ def create_official_challenge():
         except ValueError:
             return jsonify({"error": "Invalid date format, expected YYYY-MM-DD"}), 400
     else:
-        target_date = datetime.now().date()
+        target_date = datetime.now(timezone.utc).date()
 
     # Upsert daily challenge for date and mode
     existing = db.session.query(MinigameDailyChallenge).filter_by(
@@ -261,7 +261,7 @@ def update_user_stats():
     game_mode = data.get("game_mode", "classic")
     won = bool(data.get("won", False))
     attempts_taken = data.get("attempts_taken")
-    today = datetime.now().date()
+    today = datetime.now(timezone.utc).date()
 
     stat = db.session.query(MinigameUserStat).filter_by(user_id=user.id, game_mode=game_mode).first()
     if not stat:

@@ -527,23 +527,23 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
               {/* Turn On (Visible & Optional) */}
               {profile.turn_on && (
-                <div className="p-2.5 rounded-2xl bg-emerald-950/20 border border-emerald-500/40 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-emerald-400 flex items-center gap-1">
-                    <Flame className="h-3 w-3 text-emerald-400" aria-hidden="true" />
-                    {customLabels?.turn_on || 'Turn On'}
+                <div className="p-2.5 rounded-2xl bg-accent-green/10 border border-accent-green/40 space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase text-accent-green flex items-center gap-1">
+                    <Flame className="h-3 w-3 text-accent-green" aria-hidden="true" />
+                    {customLabels?.turn_on || ''}
                   </span>
-                  <p className="text-[11px] text-emerald-200 leading-snug">{profile.turn_on}</p>
+                  <p className="text-[11px] text-text-primary leading-snug">{profile.turn_on}</p>
                 </div>
               )}
 
               {/* Dealbreaker (Visible & Optional) */}
               {profile.dealbreaker && (
-                <div className="p-2.5 rounded-2xl bg-rose-950/20 border border-rose-500/40 space-y-0.5">
-                  <span className="text-[10px] font-bold uppercase text-rose-400 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3 text-rose-400" aria-hidden="true" />
-                    {customLabels?.dealbreaker || 'Dealbreaker'}
+                <div className="p-2.5 rounded-2xl bg-accent-red/10 border border-accent-red/40 space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase text-accent-red flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3 text-accent-red" aria-hidden="true" />
+                    {customLabels?.dealbreaker || ''}
                   </span>
-                  <p className="text-[11px] text-rose-200 leading-snug">{profile.dealbreaker}</p>
+                  <p className="text-[11px] text-text-primary leading-snug">{profile.dealbreaker}</p>
                 </div>
               )}
 

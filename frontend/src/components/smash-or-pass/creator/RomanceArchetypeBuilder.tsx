@@ -17,6 +17,7 @@ import {
   Palette,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import type { Dictionary } from '@/locales/types';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL, TEXTAREA_FIELD } from './styles';
 
@@ -45,6 +46,7 @@ interface RomanceArchetypeBuilderProps {
   availableRoles: string[];
   availableGenders: string[];
   embedded?: boolean;
+  dict: Dictionary;
 }
 
 export function RomanceArchetypeBuilder({
@@ -53,16 +55,18 @@ export function RomanceArchetypeBuilder({
   availableRoles,
   availableGenders,
   embedded = false,
+  dict,
 }: RomanceArchetypeBuilderProps) {
+  const ab = dict.smashOrPass.archetypeBuilder;
+
   const [expandedId, setExpandedId] = useState<string | null>(archetypes[0]?.id || null);
 
   const addArchetype = () => {
-    const nextNum = archetypes.length + 1;
     const newArch: CustomRomanceArchetype = {
       id: `archetype_${Date.now().toString(36)}`,
-      title: `Custom Archetype ${nextNum}`,
-      subtitle: 'Personality diagnosis and trial desire summary',
-      description: 'Explain what loving this combination of candidates says about the player.',
+      title: '',
+      subtitle: '',
+      description: '',
       badge_color: 'from-accent-red to-bg-primary',
       icon_name: 'heart',
       rules: [
@@ -117,12 +121,12 @@ export function RomanceArchetypeBuilder({
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-accent-red" />
               <h3 className="text-sm sm:text-base font-black uppercase tracking-wider font-mono text-text-primary">
-                Custom Romance Archetypes & Personality Rules
+                {ab.sectionTitle}
               </h3>
             </div>
           )}
           <p className="text-xs text-text-muted mt-0.5 leading-relaxed font-mono">
-            Define custom romance personas and conditional rules evaluated dynamically during the match.
+            {ab.sectionDesc}
           </p>
         </div>
         <button
@@ -131,13 +135,13 @@ export function RomanceArchetypeBuilder({
           className={cn(BTN_SECONDARY, 'self-start sm:self-auto')}
         >
           <Plus className="h-4 w-4" />
-          <span>Add Archetype</span>
+          <span>{ab.addArchetype}</span>
         </button>
       </div>
 
       {archetypes.length === 0 ? (
         <div className="p-4 rounded-2xl border border-dashed border-border-color text-center text-xs text-text-muted font-mono">
-          No custom romance archetypes defined. The roster will use standard default Fog archetypes.
+          {ab.noArchetypes}
         </div>
       ) : (
         <div className="space-y-3">
@@ -166,11 +170,11 @@ export function RomanceArchetypeBuilder({
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="text-xs sm:text-sm font-black text-text-primary font-mono truncate">
-                          {arch.title || `Archetype ${idx + 1}`}
+                          {arch.title || `${ab.titleLabel} #${idx + 1}`}
                         </span>
                         {arch.is_fallback && (
                           <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-accent-amber/20 text-accent-amber border border-accent-amber/30">
-                            Fallback
+                            {ab.fallbackBadge}
                           </span>
                         )}
                       </div>
@@ -203,31 +207,31 @@ export function RomanceArchetypeBuilder({
                   <div className="p-4 sm:p-5 border-t border-border-color/60 space-y-4 bg-bg-surface/50">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <label className={LABEL}>Archetype Title</label>
+                        <label className={LABEL}>{ab.titleLabel}</label>
                         <input
                           value={arch.title}
                           onChange={(e) => updateArchetype(arch.id, { title: e.target.value })}
-                          placeholder="e.g. The Eldritch Devotee"
+                          placeholder={ab.titlePlaceholder}
                           className={FIELD}
                         />
                       </div>
                       <div>
-                        <label className={LABEL}>Subtitle / Tagline</label>
+                        <label className={LABEL}>{ab.subtitleLabel}</label>
                         <input
                           value={arch.subtitle}
                           onChange={(e) => updateArchetype(arch.id, { subtitle: e.target.value })}
-                          placeholder="e.g. Drawn to dangerous, unearthly power"
+                          placeholder={ab.subtitlePlaceholder}
                           className={FIELD}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className={LABEL}>Persona Description & Dating Analysis</label>
+                      <label className={LABEL}>{ab.descriptionLabel}</label>
                       <textarea
                         value={arch.description}
                         onChange={(e) => updateArchetype(arch.id, { description: e.target.value })}
-                        placeholder="Detailed narrative summary displayed when a player unlocks this archetype..."
+                        placeholder={ab.descriptionPlaceholder}
                         rows={3}
                         className={TEXTAREA_FIELD}
                       />
@@ -235,12 +239,12 @@ export function RomanceArchetypeBuilder({
 
                     {/* Icon & Custom URL Configuration */}
                     <div className="rounded-2xl border border-border-color bg-bg-primary/40 p-3.5 space-y-3">
-                      <span className={LABEL}>Visual Badge & Icon</span>
+                      <span className={LABEL}>{ab.visualBadgeLabel}</span>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {/* Preset Icon Choice */}
                         <div>
                           <label className="text-[11px] font-bold text-text-secondary block mb-1">
-                            Choose an Icon Preset
+                            {ab.chooseIconPreset}
                           </label>
                           <div className="flex flex-wrap gap-1.5">
                             {ICON_PRESETS.map((p) => {
@@ -268,7 +272,7 @@ export function RomanceArchetypeBuilder({
                         {/* Custom Icon Image URL */}
                         <div>
                           <label className="text-[11px] font-bold text-text-secondary block mb-1">
-                            Or Custom Icon / Image URL
+                            {ab.customIconUrl}
                           </label>
                           <div className="relative">
                             <input
@@ -285,7 +289,7 @@ export function RomanceArchetypeBuilder({
                       {/* Badge Color Presets */}
                       <div className="pt-2">
                         <label className="text-[11px] font-bold text-text-secondary block mb-1">
-                          Badge Gradient / Color
+                          {ab.badgeGradientColor}
                         </label>
                         <div className="flex flex-wrap gap-2">
                           {COLOR_PRESETS.map((color) => (
@@ -318,7 +322,7 @@ export function RomanceArchetypeBuilder({
                           htmlFor={`fallback-${arch.id}`}
                           className="text-xs font-bold text-text-secondary cursor-pointer select-none"
                         >
-                          Mark as Fallback Default Archetype (used when no specific rule conditions are met)
+                          {ab.markAsFallback}
                         </label>
                       </div>
                     </div>
@@ -326,14 +330,14 @@ export function RomanceArchetypeBuilder({
                     {/* Rule Engine Conditions */}
                     <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className={LABEL}>Evaluation Rules & Triggers</span>
+                        <span className={LABEL}>{ab.rulesTitle}</span>
                         <button
                           type="button"
                           onClick={() => addRule(arch.id)}
                           className="text-xs font-bold text-accent-red hover:underline flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="h-3 w-3" />
-                          Add Condition
+                          <span>{ab.addCondition}</span>
                         </button>
                       </div>
 
@@ -351,18 +355,18 @@ export function RomanceArchetypeBuilder({
                             }
                             className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary font-bold"
                           >
-                            <option value="smash_rate">Smash Rate (%)</option>
-                            <option value="total_votes">Total Votes Count</option>
-                            <option value="role_affinity">Role Affinity (%)</option>
-                            <option value="gender_affinity">Gender Affinity (%)</option>
-                            <option value="role_count">Smashed Role Count</option>
-                            <option value="gender_count">Smashed Gender Count</option>
+                            <option value="smash_rate">{ab.smashRate}</option>
+                            <option value="total_votes">{ab.totalVotes}</option>
+                            <option value="role_affinity">{ab.roleAffinity}</option>
+                            <option value="gender_affinity">{ab.genderAffinity}</option>
+                            <option value="role_count">{ab.roleCount}</option>
+                            <option value="gender_count">{ab.genderCount}</option>
                           </select>
 
                           {(rule.target === 'role_affinity' || rule.target === 'role_count') && (
                             <input
                               value={rule.target_value || ''}
-                              placeholder="Role (e.g. Villain, Survivor)"
+                              placeholder={ab.rolePlaceholder}
                               list={`roles-list-${arch.id}`}
                               onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
                               className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary max-w-[130px]"
@@ -372,7 +376,7 @@ export function RomanceArchetypeBuilder({
                           {(rule.target === 'gender_affinity' || rule.target === 'gender_count') && (
                             <input
                               value={rule.target_value || ''}
-                              placeholder="Gender (e.g. ABC, female)"
+                              placeholder={ab.genderPlaceholder}
                               list={`genders-list-${arch.id}`}
                               onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
                               className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary max-w-[130px]"
@@ -399,9 +403,9 @@ export function RomanceArchetypeBuilder({
                             }
                             className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary font-bold"
                           >
-                            <option value=">=">&gt;= (at least)</option>
-                            <option value="<=">&lt;= (at most)</option>
-                            <option value="==">== (exact)</option>
+                            <option value=">=">{ab.opGte}</option>
+                            <option value="<=">{ab.opLte}</option>
+                            <option value="==">{ab.opEq}</option>
                           </select>
 
                           <input

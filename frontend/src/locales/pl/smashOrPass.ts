@@ -441,6 +441,9 @@ export default {
     quotePlaceholder: 'np. „Gdzie wszyscy idą? Na bingo?”',
     turnOnPlaceholder: 'Co sprawia, że są nie do odparcia?',
     dealbreakerPlaceholder: 'Co natychmiast psuje atmosferę?',
+    draftRestored: 'Przywrócono Twój niedokończony szkic.',
+    startOver: 'Zacznij od nowa',
+    closeToast: 'Zamknij',
   },
   cropModal: {
     title: 'Przytnij i wykadruj obraz okładki',

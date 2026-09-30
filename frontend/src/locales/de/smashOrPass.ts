@@ -441,6 +441,9 @@ export default {
     quotePlaceholder: 'z. B. „Wo gehen alle hin? Zum Bingo?“',
     turnOnPlaceholder: 'Was macht sie unwiderstehlich?',
     dealbreakerPlaceholder: 'Was zerstört den Funken sofort?',
+    draftRestored: 'Dein unfertiger Entwurf wurde wiederhergestellt.',
+    startOver: 'Neu beginnen',
+    closeToast: 'Schließen',
   },
   cropModal: {
     title: 'Titelbild zuschneiden & anpassen',

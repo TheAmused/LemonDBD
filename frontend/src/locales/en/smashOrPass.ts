@@ -441,6 +441,9 @@ export default {
     quotePlaceholder: 'e.g. "Where is everyone going? Bingo?"',
     turnOnPlaceholder: 'What makes them irresistible?',
     dealbreakerPlaceholder: 'What ruins the spark immediately?',
+    draftRestored: 'Your unfinished draft was restored.',
+    startOver: 'Start over',
+    closeToast: 'Dismiss',
   },
   cropModal: {
     title: 'Crop & Frame Cover Image',

@@ -73,6 +73,7 @@ export const TierRow = React.memo(function TierRow({
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
           'relative flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] flex-wrap content-start items-start gap-1.5 sm:gap-2 p-2 transition-colors',
+          keys.length === 0 && 'items-center justify-center',
           isOver && 'bg-accent-red/10',
           canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/10'
         )}

@@ -130,7 +130,7 @@ export function TierListExportModal({ doc, onClose, locale, dict }: TierListExpo
             onFocus={(e) => e.currentTarget.select()}
             className={`${FIELD} py-2 font-mono text-xs leading-relaxed`}
           />
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <button type="button" onClick={download} className={BTN_SECONDARY}>
               <Download className="h-4 w-4" aria-hidden="true" />
               {t.downloadJson}

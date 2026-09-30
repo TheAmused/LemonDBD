@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test": "tsx --test src/__tests__/unit/*.test.ts src/__tests__/live/*.test.ts",
     "test:unit": "tsx --test src/__tests__/unit/*.test.ts",
-    "test:live": "tsx --test src/__tests__/live/*.test.ts",
+    "test:live": "tsx --test --test-concurrency=1 src/__tests__/live/*.test.ts",
     "test:workflows": "tsx --test src/__tests__/live/*.test.ts",
     "test:minigames:live": "tsx --test src/__tests__/live/minigamesWorkflowLive.test.ts",
     "test:minigames:e2e": "node scripts/verify-minigames.mjs",

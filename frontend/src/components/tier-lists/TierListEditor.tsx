@@ -175,8 +175,8 @@ export function TierListEditor(props: TierListEditorProps) {
   return (
     <div className="relative z-10 flex flex-col gap-4">
       <header className="flex flex-col gap-3">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex items-center gap-3 shrink-0 md:min-w-[160px]">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+          <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:min-w-[160px]">
             <Link
               href={`/${locale}/tier-lists`}
               className="inline-flex min-h-[44px] w-fit items-center gap-1 rounded-xl pr-3 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
@@ -198,9 +198,14 @@ export function TierListEditor(props: TierListEditorProps) {
                 {pageTitle}
               </h1>
             </div>
+            {description && (
+              <p className="mt-1 text-xs sm:text-sm text-text-secondary max-w-2xl mx-auto text-center line-clamp-2">
+                {description}
+              </p>
+            )}
           </div>
 
-          <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-wrap items-center gap-2 shrink-0 md:min-w-[160px] justify-start md:justify-end">
+          <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-wrap items-center gap-2 shrink-0 xl:min-w-[160px] justify-center xl:justify-end">
             <button
               type="button"
               onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}
@@ -265,9 +270,9 @@ export function TierListEditor(props: TierListEditorProps) {
           aria-live="polite"
           className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
         >
-          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 text-sm font-semibold text-accent-amber">
+          <div className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-accent-amber/40 bg-bg-surface shadow-lg px-3 py-1.5 text-sm font-semibold text-accent-amber text-center">
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
-            <span className="min-w-0 flex-1">{t.selectedHint.replace('{name}', selectedItem.name)}</span>
+            <span className="min-w-0">{t.selectedHint.replace('{name}', selectedItem.name)}</span>
             {mode === 'custom' && onRemoveItem && (
               <button
                 type="button"

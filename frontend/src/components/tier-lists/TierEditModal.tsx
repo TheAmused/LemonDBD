@@ -73,15 +73,15 @@ export function TierEditModal({
       icon={<Palette className="h-5 w-5" aria-hidden="true" />}
       bodyClassName="p-4 sm:p-6 font-sans"
       footer={
-        <div className="flex w-full flex-wrap items-center justify-end gap-2">
-          <button type="button" onClick={onClose} className={BTN_SECONDARY}>
+        <div className="flex w-full flex-wrap items-center justify-center gap-3">
+          <button type="button" onClick={onClose} className={cn(BTN_SECONDARY, 'min-h-[42px] px-5')}>
             {t.cancel}
           </button>
           <button
             type="button"
             disabled={!trimmed || bgInvalid}
             onClick={run(() => onSave(tier.id, { label: trimmed, color, backgroundImage: safeBg ?? undefined }))}
-            className={BTN_PRIMARY}
+            className={cn(BTN_PRIMARY, 'min-h-[42px] px-6')}
           >
             <Check className="h-4 w-4" aria-hidden="true" />
             {t.save}
@@ -132,8 +132,8 @@ export function TierEditModal({
         </label>
 
         <fieldset>
-          <legend className={LABEL}>{t.tierColor}</legend>
-          <div className="flex flex-wrap items-center gap-2">
+          <legend className={cn(LABEL, 'text-center block w-full')}>{t.tierColor}</legend>
+          <div className="flex flex-wrap items-center justify-center gap-2">
             {TIER_COLOR_TOKENS.map((token) => {
               const swatch = tierColorProps(token);
               return (

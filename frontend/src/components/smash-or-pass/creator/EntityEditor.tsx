@@ -109,169 +109,190 @@ export function CandidateFormInputs({
   return (
     <div className="flex flex-col gap-4">
       {/* Active candidate header with identity & remove button */}
-      <div className="flex items-center justify-between pb-3 border-b border-border-color/60">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="font-mono text-xs font-bold text-accent-red">#{displayIndex}</span>
+      <div className="relative flex items-center justify-between pb-3 border-b border-border-color/60">
+        <div className="w-24 hidden sm:block pointer-events-none" aria-hidden="true" />
+        <div className="flex-1 flex flex-wrap items-center justify-center gap-2 min-w-0 text-center">
+          <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-accent-red/10 border border-accent-red/30 text-accent-red">
+            #{displayIndex}
+          </span>
           <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
             {c.editingCandidate || 'Editing Candidate'}:{' '}
             <span className="text-accent-red font-mono">{entity.name.trim() || c.unnamedCandidate || 'Unnamed Candidate'}</span>
           </h3>
         </div>
-
-        <button
-          type="button"
-          onClick={onRemove}
-          aria-label={c.removeEntity || 'Remove'}
-          className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold text-text-muted hover:text-accent-red hover:bg-accent-red/10 rounded-lg transition-colors cursor-pointer shrink-0"
-          title={c.removeCandidate || 'Remove candidate'}
-        >
-          <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-          <span className="hidden sm:inline">{c.removeCandidate || 'Remove'}</span>
-        </button>
+        <div className="w-24 flex justify-end">
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label={(c.removeCandidateAria || 'Remove {name}').replace('{name}', entity.name || displayIndex)}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold text-text-muted hover:text-accent-red hover:bg-accent-red/10 rounded-lg transition-colors cursor-pointer shrink-0"
+            title={c.removeCandidate || 'Remove candidate'}
+          >
+            <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="hidden sm:inline">{c.removeCandidate || 'Remove'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Inputs grid */}
       <div className="space-y-4">
-        {/* Top Row: Avatar preview & Primary identifiers */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          {/* Visual Portrait Box */}
-          <div className="flex flex-col items-center gap-1.5 shrink-0">
-            <div className="relative h-28 w-24 sm:h-32 sm:w-28 rounded-2xl border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-inner">
+        {/* Top Row: Avatar preview (prominent) & Primary identifiers (compact) */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 2xl:gap-8 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
+          {/* Visual Portrait Box - prominent and large */}
+          <div className="flex flex-col items-center gap-2 shrink-0">
+            <div className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-2xl border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md">
               {safeMedia ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={safeMedia}
                   alt={entity.name}
                   referrerPolicy="no-referrer"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               ) : (
-                <div className="flex flex-col items-center gap-1 p-2 text-center text-text-muted">
-                  <ImageIcon className="h-6 w-6 opacity-40" />
-                  <span className="text-[10px] font-mono uppercase tracking-wider">{c.preview || 'Preview'}</span>
+                <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">
+                  <ImageIcon className="h-10 w-10 opacity-30 text-accent-red" />
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider">{c.preview || 'Preview'}</span>
+                  <span className="text-[10px] font-mono text-text-muted/60">#{displayIndex}</span>
                 </div>
               )}
+              <span className="absolute top-2 left-2 font-mono text-[10px] font-black px-2 py-0.5 rounded-md bg-bg-surface/90 text-accent-red border border-border-color/60 backdrop-blur-xs select-none">
+                #{displayIndex}
+              </span>
             </div>
           </div>
 
-          {/* Inputs grid for Name, Image URL, Role, Gender */}
-          <div className="flex-1 grid gap-3 sm:grid-cols-2">
-            <label className="sm:col-span-2">
-              <span className={LABEL}>{c.entityNameLabel || 'Candidate Name'}</span>
+          {/* Inputs column: compact inputs taking focused space */}
+          <div className="flex-1 max-w-md sm:max-w-lg 2xl:max-wide-2k:max-w-xl wide-2k:max-w-3xl w-full flex flex-col gap-2.5">
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
+                {c.entityNameLabel || 'Candidate Name'}
+              </span>
               <input
                 value={entity.name}
                 maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
                 onChange={(e) => onChange({ name: e.target.value })}
                 placeholder={c.entityNamePlaceholder || 'e.g. Leon S. Kennedy'}
-                className={cn(FIELD, 'font-semibold')}
+                className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm font-semibold text-text-primary focus:border-accent-red focus:outline-none"
               />
             </label>
 
-            <label className="sm:col-span-2">
-              <span className={LABEL}>{c.entityMediaLabel || 'Portrait Image URL'}</span>
+            <label className="block">
+              <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
+                {c.entityMediaLabel || 'Portrait Image URL'}
+              </span>
               <input
                 value={entity.media_url}
                 onChange={(e) => onChange({ media_url: e.target.value })}
                 placeholder="https://images.example.com/character.png"
                 inputMode="url"
                 aria-invalid={mediaInvalid}
-                className={cn(FIELD, mediaInvalid && 'border-accent-red')}
+                className={cn(
+                  'w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none',
+                  mediaInvalid && 'border-accent-red'
+                )}
               />
             </label>
 
-            {/* Dynamic Role Input + Quick Chips */}
-            <div className="space-y-1.5">
-              <label className="block">
-                <span className={LABEL}>{c.entityRoleLabel || 'Role'}</span>
-                <input
-                  value={entity.role}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    onChange({ role: val });
-                    if (val.trim()) onRegisterTaxonomy?.('role', val);
-                  }}
-                  placeholder={c.rolePlaceholder || 'e.g. Survivor, Hero, Killer'}
-                  list={`role-picks-${entity.key}`}
-                  className={FIELD}
-                />
-                <datalist id={`role-picks-${entity.key}`}>
-                  {availableRoles.map((r) => (
-                    <option key={r} value={r} />
-                  ))}
-                </datalist>
-              </label>
-              {/* Quick-Pick Role Chips */}
-              {availableRoles.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                  <span className="text-[10px] text-text-muted font-mono mr-1">{c.quick || 'Quick:'}</span>
-                  {availableRoles.slice(0, 5).map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => onChange({ role: r })}
-                      className={cn(
-                        'px-2 py-0.5 rounded text-[10px] font-mono transition-colors cursor-pointer',
-                        entity.role.toLowerCase() === r.toLowerCase()
-                          ? 'bg-accent-red text-text-inverted font-bold'
-                          : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
-                      )}
-                    >
-                      {r}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {/* Dynamic Role Input + Quick Chips */}
+              <div className="space-y-1">
+                <label className="block">
+                  <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
+                    {c.entityRoleLabel || 'Role'}
+                  </span>
+                  <input
+                    value={entity.role}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      onChange({ role: val });
+                      if (val.trim()) onRegisterTaxonomy?.('role', val);
+                    }}
+                    placeholder={c.rolePlaceholder || 'e.g. Survivor, Hero, Killer'}
+                    list={`role-picks-${entity.key}`}
+                    className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
+                  />
+                  <datalist id={`role-picks-${entity.key}`}>
+                    {availableRoles.map((r) => (
+                      <option key={r} value={r} />
+                    ))}
+                  </datalist>
+                </label>
+                {/* Quick-Pick Role Chips */}
+                {availableRoles.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                    <span className="text-[9px] text-text-muted font-mono mr-0.5">{c.quick || 'Quick:'}</span>
+                    {availableRoles.slice(0, 4).map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => onChange({ role: r })}
+                        className={cn(
+                          'px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors cursor-pointer',
+                          entity.role.toLowerCase() === r.toLowerCase()
+                            ? 'bg-accent-red text-text-inverted font-bold'
+                            : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
+                        )}
+                      >
+                        {r}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            {/* Dynamic Gender Input + Quick Chips */}
-            <div className="space-y-1.5">
-              <label className="block">
-                <span className={LABEL}>{c.entityGenderLabel || 'Gender'}</span>
-                <input
-                  value={entity.gender}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    onChange({ gender: val });
-                    if (val.trim()) onRegisterTaxonomy?.('gender', val);
-                  }}
-                  placeholder={c.genderPlaceholder || 'e.g. female, male, other'}
-                  list={`gender-picks-${entity.key}`}
-                  className={FIELD}
-                />
-                <datalist id={`gender-picks-${entity.key}`}>
-                  {availableGenders.map((g) => (
-                    <option key={g} value={g} />
-                  ))}
-                </datalist>
-              </label>
-              {/* Quick-Pick Gender Chips */}
-              {availableGenders.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                  <span className="text-[10px] text-text-muted font-mono mr-1">{c.quick || 'Quick:'}</span>
-                  {availableGenders.slice(0, 5).map((g) => (
-                    <button
-                      key={g}
-                      type="button"
-                      onClick={() => onChange({ gender: g })}
-                      className={cn(
-                        'px-2 py-0.5 rounded text-[10px] font-mono transition-colors cursor-pointer',
-                        entity.gender.toLowerCase() === g.toLowerCase()
-                          ? 'bg-accent-amber text-text-inverted font-bold'
-                          : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
-                      )}
-                    >
-                      {g}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* Dynamic Gender Input + Quick Chips */}
+              <div className="space-y-1">
+                <label className="block">
+                  <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
+                    {c.entityGenderLabel || 'Gender'}
+                  </span>
+                  <input
+                    value={entity.gender}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      onChange({ gender: val });
+                      if (val.trim()) onRegisterTaxonomy?.('gender', val);
+                    }}
+                    placeholder={c.genderPlaceholder || 'e.g. female, male, other'}
+                    list={`gender-picks-${entity.key}`}
+                    className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
+                  />
+                  <datalist id={`gender-picks-${entity.key}`}>
+                    {availableGenders.map((g) => (
+                      <option key={g} value={g} />
+                    ))}
+                  </datalist>
+                </label>
+                {/* Quick-Pick Gender Chips */}
+                {availableGenders.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1 pt-0.5">
+                    <span className="text-[9px] text-text-muted font-mono mr-0.5">{c.quick || 'Quick:'}</span>
+                    {availableGenders.slice(0, 4).map((g) => (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => onChange({ gender: g })}
+                        className={cn(
+                          'px-1.5 py-0.5 rounded text-[9px] font-mono transition-colors cursor-pointer',
+                          entity.gender.toLowerCase() === g.toLowerCase()
+                            ? 'bg-accent-amber text-text-inverted font-bold'
+                            : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
+                        )}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Simple Mode: Show 5 core elements + visible optional turn_on & dealbreaker */}
         {isSimpleMode && (
-          <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/60">
+          <div className="grid gap-3 sm:grid-cols-2 pt-3 border-t border-border-color/60 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
             <TextField
               label={c.entityWatermarkLeftLabel || 'Character left text (watermark)'}
               value={entity.watermark_left}
@@ -319,7 +340,7 @@ export function CandidateFormInputs({
 
         {/* Full Mode: Collapsible Profile Details Toggle */}
         {!isSimpleMode && (
-          <div className="pt-2 border-t border-border-color/60">
+          <div className="pt-2 border-t border-border-color/60 flex justify-center">
             <button
               type="button"
               onClick={() => setProfileOpen((v) => !v)}
@@ -333,7 +354,7 @@ export function CandidateFormInputs({
         )}
 
         {!isSimpleMode && profileOpen && (
-          <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/40">
+          <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/40 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
             <TextField label={c.entityRealNameLabel || 'Real Name'} value={entity.real_name} max={SMASH_ROSTER_LIMITS.maxRealName} onChange={(v) => onChange({ real_name: v })} />
             <TextField label={customLabels.archetype || c.entityArchetypeLabel || 'Archetype'} value={entity.archetype} max={SMASH_ROSTER_LIMITS.maxArchetype} onChange={(v) => onChange({ archetype: v })} />
             <TextField label={c.entityTaglineLabel || 'Tagline'} value={entity.tagline} max={SMASH_ROSTER_LIMITS.maxTagline} onChange={(v) => onChange({ tagline: v })} />
@@ -445,7 +466,7 @@ export function CandidateTiles({
         <div className="w-20 hidden sm:block pointer-events-none" aria-hidden="true" />
       </div>
 
-      <ul className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] gap-2 sm:gap-2.5 justify-center">
+      <ul className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] wide:grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] wide-2k:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))] gap-2 sm:gap-2.5 justify-center">
         {entities.map((entity, i) => {
           const isSelected = entity.key === selectedKey;
           const displayIndex = String(i + 1).padStart(2, '0');
@@ -578,13 +599,13 @@ function TextField({
 }) {
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
-      <span className={LABEL}>{label}</span>
+      <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">{label}</span>
       <input
         value={value}
         maxLength={max}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className={FIELD}
+        className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
       />
     </label>
   );
@@ -607,14 +628,14 @@ function TextAreaField({
 }) {
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
-      <span className={LABEL}>{label}</span>
+      <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">{label}</span>
       <textarea
         value={value}
         maxLength={max}
         rows={3}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className={TEXTAREA_FIELD}
+        className="w-full rounded-lg border border-border-color bg-bg-primary px-3 py-2 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
       />
     </label>
   );

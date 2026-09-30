@@ -78,8 +78,8 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border-color font-mono">
       {/* 1. ROLES SECTION */}
       <div className="flex flex-col gap-3 pb-6 md:pb-0 md:pr-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center justify-center text-center gap-1">
+          <div className="flex items-center justify-center gap-2">
             <Shield className="h-4 w-4 text-accent-red" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
               {tx.rolesTitle}
@@ -90,12 +90,12 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
           </span>
         </div>
 
-        <p className="text-xs text-text-secondary font-sans leading-relaxed">
+        <p className="text-xs text-text-secondary font-sans leading-relaxed text-center">
           {tx.rolesDesc}
         </p>
 
         {/* Input to add custom role */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2 max-w-sm xl:max-w-md wide:max-w-lg mx-auto w-full">
           <input
             type="text"
             value={newRoleInput}
@@ -120,7 +120,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         </div>
 
         {/* Quick Suggestion Chips */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
           <span className="text-[10px] text-text-muted uppercase">{tx.quickPresets}</span>
           {['Survivor', 'Killer', 'Hero', 'Villain', 'Neutral'].map((preset) => {
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
@@ -139,9 +139,9 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         </div>
 
         {/* Active Roles Badge List */}
-        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px] items-center">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
           {roles.length === 0 ? (
-            <span className="text-xs text-text-muted italic font-sans">
+            <span className="text-xs text-text-muted italic font-sans text-center w-full">
               {tx.noCustomRoles}
             </span>
           ) : (
@@ -167,8 +167,8 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
 
       {/* 2. GENDERS SECTION */}
       <div className="flex flex-col gap-3 pt-6 md:pt-0 md:pl-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center justify-center text-center gap-1">
+          <div className="flex items-center justify-center gap-2">
             <User className="h-4 w-4 text-accent-green" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
               {tx.gendersTitle}
@@ -179,12 +179,12 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
           </span>
         </div>
 
-        <p className="text-xs text-text-secondary font-sans leading-relaxed">
+        <p className="text-xs text-text-secondary font-sans leading-relaxed text-center">
           {tx.gendersDesc}
         </p>
 
         {/* Input to add custom gender */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2 max-w-sm xl:max-w-md wide:max-w-lg mx-auto w-full">
           <input
             type="text"
             value={newGenderInput}
@@ -209,7 +209,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         </div>
 
         {/* Quick Suggestion Chips */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
           <span className="text-[10px] text-text-muted uppercase">{tx.quickPresets}</span>
           {['Female', 'Male', 'Non-Binary', 'Monster / Other', 'ABC'].map((preset) => {
             const isAdded = genders.some((g) => g.toLowerCase() === preset.toLowerCase());
@@ -228,9 +228,9 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         </div>
 
         {/* Active Genders Badge List */}
-        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px] items-center">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px]">
           {genders.length === 0 ? (
-            <span className="text-xs text-text-muted italic font-sans">
+            <span className="text-xs text-text-muted italic font-sans text-center w-full">
               {tx.noCustomGenders}
             </span>
           ) : (

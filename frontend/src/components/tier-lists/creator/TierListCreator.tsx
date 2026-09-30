@@ -334,7 +334,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-w-[1700px] mx-auto w-full px-4 sm:px-6">
+    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{editId ? t.editDetails : c.pageTitle}</h1>
       {restored && (
         <div
@@ -386,7 +386,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
         </div>
 
         {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:w-48 pt-2.5">
+        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 pt-2.5">
           <Link
             href={`/${locale}/tier-lists`}
             className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
@@ -397,7 +397,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
         </div>
 
         {/* MIDDLE: THE BASICS BLOCK */}
-        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-w-5xl mx-auto">
+        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
           <Section title={c.stepBasics}>
             <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
               <label className="md:col-span-1">
@@ -465,7 +465,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
         </div>
 
         {/* Desktop top right buttons (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
+        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
           <button
             type="button"
             onClick={() => setPreviewOpen(true)}
@@ -483,7 +483,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       </header>
 
       {/* TIERS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
         <Section title={c.stepTiers}>
           <LadderEditor
             tiers={draft.tiers}
@@ -496,7 +496,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       </div>
 
       {/* ITEMS BLOCK */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
         <Section title={c.stepItems}>
           <div className="flex flex-col gap-6 2xl:gap-8">
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} dict={dict} />
@@ -531,7 +531,7 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
       </div>
 
       {/* Feedback Alerts */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col gap-4">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto flex flex-col gap-4">
         <Feedback errors={errors as string[]} saveError={saveError} publishError={publishError} dict={dict} />
       </div>
 

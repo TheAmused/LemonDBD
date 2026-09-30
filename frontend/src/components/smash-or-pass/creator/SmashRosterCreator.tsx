@@ -459,7 +459,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-w-[1700px] mx-auto w-full px-4 sm:px-6">
+    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-wide-2k:max-w-[1800px] wide-2k:max-w-[2400px] mx-auto w-full px-4 sm:px-6">
       <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
 
       {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), CREATE (RIGHT) */}
@@ -479,7 +479,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         </div>
 
         {/* Desktop top left navigation (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:w-48 pt-2.5">
+        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 pt-2.5">
           <Link
             href={`/${locale}/smash-or-pass`}
             className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
@@ -490,9 +490,9 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         </div>
 
         {/* MIDDLE: THE BASICS BLOCK */}
-        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-w-5xl mx-auto">
+        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
           <Section title={c.stepBasics || 'The Basics'}>
-            <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+            <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
               <label>
                 <span className={LABEL}>{c.nameLabel || 'Roster name'}</span>
                 <input
@@ -547,10 +547,10 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   </button>
                 </div>
 
-                {safeCover ? (
+                {safeCover && (
                   <div
                     onClick={() => setIsCropModalOpen(true)}
-                    className="mt-3 relative group overflow-hidden rounded-xl border border-border-color bg-bg-elevated aspect-video max-w-md mx-auto shadow-xs cursor-pointer"
+                    className="mt-3 relative group overflow-hidden rounded-xl border border-border-color bg-bg-elevated aspect-video max-w-md 2xl:max-w-lg wide:max-w-xl mx-auto shadow-xs cursor-pointer"
                     title={c.cropCoverTitle}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
@@ -565,32 +565,21 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                       <span>{c.cropClickPrompt}</span>
                     </div>
                   </div>
-                ) : isUserAdmin ? (
-                  <div className="flex justify-center mt-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsCropModalOpen(true)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed border-border-color text-xs font-mono text-text-secondary hover:text-accent-red hover:border-accent-red/50 transition-colors cursor-pointer"
-                    >
-                      <Crop className="h-3.5 w-3.5" />
-                      <span>{c.selectCropLocal}</span>
-                    </button>
-                  </div>
-                ) : null}
+                )}
               </div>
 
-              <label className="md:col-span-2">
+              <div className="md:col-span-2 flex flex-col items-center justify-center text-center">
                 <span className={LABEL}>{c.themeColorLabel || 'Theme color'}</span>
                 <input
                   type="color"
                   value={draft.theme_color || '#ff0055'}
                   onChange={(e) => patch({ theme_color: e.target.value })}
-                  className="h-11 w-full max-w-xs cursor-pointer rounded-xl border border-border-color bg-bg-primary"
+                  className="h-10 w-full max-w-xs cursor-pointer rounded-xl border border-border-color bg-bg-primary shadow-xs"
                 />
-              </label>
+              </div>
 
               {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}
-              <div className="md:col-span-2 pt-3 border-t border-border-color/60 flex flex-wrap items-center gap-5 sm:gap-6">
+              <div className="md:col-span-2 pt-4 border-t border-border-color/60 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
                 {/* Simple Version Switch */}
                 <Tooltip
                   title={c.simpleVersion || 'Simple Version'}
@@ -716,7 +705,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         </div>
 
         {/* Desktop top right buttons (>= lg) */}
-        <div className="hidden lg:flex shrink-0 lg:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
+        <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
           {submitButton(
             'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
           )}
@@ -724,7 +713,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       </header>
 
       {/* BLOCK 2: ROLES & GENDERS */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
         <Section
           title={c.rolesGendersTitle}
           badge={`${effectiveRoles.length} roles • ${effectiveGenders.length} genders`}
@@ -742,7 +731,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       </div>
 
       {/* BLOCK 3: CANDIDATES */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
         <Section
           title={c.stepEntities || 'Candidates'}
           badge={draft.entities.length}
@@ -822,7 +811,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       </div>
 
       {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto">
         <Section
           title={c.customArchetypesTitle}
           badge={draft.romance_archetypes.length}
@@ -840,7 +829,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       </div>
 
       {/* Feedback Alerts */}
-      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col gap-4">
+      <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-6xl wide-2k:max-w-[1800px] mx-auto flex flex-col gap-4">
         <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} dict={dict} />
       </div>
 

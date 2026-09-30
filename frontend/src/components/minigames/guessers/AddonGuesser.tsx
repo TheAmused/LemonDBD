@@ -25,33 +25,34 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
 }) => {
   const attempts = guesses.length;
   const description = (roundConfig.custom_data?.description as string) || '';
+  const t = dict.minigames;
 
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Add-on Display Card */}
-      <div className="w-full max-w-lg p-6 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
-        <div className="w-14 h-14 rounded-2xl bg-purple-950/40 border border-purple-800/50 flex items-center justify-center text-purple-400 mb-3">
+      <div className="w-full max-w-lg p-6 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+        <div className="w-14 h-14 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center text-accent-amber mb-3">
           <Package className="w-7 h-7" />
         </div>
 
-        <div className="text-xs uppercase tracking-widest text-zinc-400 font-semibold mb-2">
-          Killer Add-on Modifier
+        <div className="text-xs uppercase tracking-widest text-text-muted font-semibold mb-2">
+          {t.addonModifier}
         </div>
 
-        <p className="text-sm text-zinc-200 leading-relaxed font-medium bg-zinc-950/60 p-4 rounded-xl border border-zinc-800">
+        <p className="text-sm text-text-primary leading-relaxed font-medium bg-bg-elevated p-4 rounded-xl border border-border-subtle">
           {description}
         </p>
 
         {attempts >= 2 && (
-          <div className="mt-4 px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-xs font-semibold text-zinc-300">
-            Hint: High Rarity Add-on
+          <div className="mt-4 px-3 py-1 rounded-full bg-bg-elevated border border-border-subtle text-xs font-semibold text-text-secondary">
+            {t.highRarityHint}
           </div>
         )}
 
         {isSolved && (
-          <div className="mt-6 px-4 py-1.5 rounded-lg bg-emerald-600/90 text-white font-bold text-sm flex items-center gap-2 shadow-md">
+          <div className="mt-6 px-4 py-1.5 rounded-lg bg-accent-green text-text-inverted font-bold text-sm flex items-center gap-2 shadow-md">
             <Check className="w-4 h-4" />
-            <span>Solved!</span>
+            <span>{t.solved}</span>
           </div>
         )}
       </div>
@@ -69,12 +70,12 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({
                 key={`addon-g-${idx}`}
                 className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
                   isCorrect
-                    ? 'bg-emerald-600/90 text-white border-emerald-400 shadow-md'
-                    : 'bg-red-950/70 text-red-200 border-red-800/60'
+                    ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
+                    : 'bg-accent-red/20 text-accent-red border-accent-red/40'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs text-zinc-400">#{idx + 1}</span>
+                  <span className="text-xs text-text-muted">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
                 </div>
                 {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}

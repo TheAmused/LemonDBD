@@ -466,16 +466,16 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
                 isCurrent
                   ? 'bg-accent-red text-text-inverted border-accent-red shadow-lg shadow-accent-red/20 scale-105'
                   : isWon
-                  ? 'bg-emerald-950/60 text-emerald-300 border-emerald-800/80 hover:bg-emerald-900/60'
+                  ? 'bg-accent-green/20 text-accent-green border-accent-green/40 hover:bg-accent-green/30'
                   : isLost
-                  ? 'bg-red-950/60 text-red-300 border-red-800/80 hover:bg-red-900/60'
+                  ? 'bg-accent-red/20 text-accent-red border-accent-red/40 hover:bg-accent-red/30'
                   : 'bg-bg-surface text-text-secondary border-border-color hover:text-text-primary'
               }`}
             >
               {isWon ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-accent-green" />
               ) : isLost ? (
-                <XCircle className="w-3.5 h-3.5 text-red-400" />
+                <XCircle className="w-3.5 h-3.5 text-accent-red" />
               ) : (
                 <span>R{idx + 1}</span>
               )}
@@ -532,13 +532,13 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
               <div
                 className={`w-full py-3 px-4 rounded-xl text-center font-bold text-sm border shadow-lg ${
                   isRoundSolved
-                    ? 'bg-emerald-950/80 text-emerald-200 border-emerald-700/80'
-                    : 'bg-red-950/80 text-red-200 border-red-800/80'
+                    ? 'bg-accent-green/20 text-accent-green border-accent-green/40'
+                    : 'bg-accent-red/20 text-accent-red border-accent-red/40'
                 }`}
               >
                 <div>{isRoundSolved ? t.victoryTitle : t.defeatTitle}</div>
                 {!isRoundSolved && (
-                  <div className="text-xs text-red-300 font-semibold mt-1">
+                  <div className="text-xs text-accent-red font-semibold mt-1">
                     {t.revealAnswerNotice.replace(
                       '{answer}',
                       revealedAnswers[currentRoundIndex] || getTargetAnswerName(currentRound)
@@ -551,7 +551,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
                 <button
                   type="button"
                   onClick={handleNextRound}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-red hover:bg-accent-red/90 text-white font-bold text-sm shadow-lg shadow-accent-red/25 transition-all"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-bold text-sm shadow-lg shadow-accent-red/25 transition-all"
                 >
                   <span>{t.nextRound}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -560,7 +560,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsFinished(true)}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/25 transition-all"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-green hover:bg-accent-green-hover text-text-inverted font-bold text-sm shadow-lg shadow-accent-green/25 transition-all"
                 >
                   <Trophy className="w-4 h-4" />
                   <span>{t.finishTrial}</span>
@@ -574,7 +574,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
             <button
               type="button"
               onClick={handleGiveUp}
-              className="text-xs text-zinc-500 hover:text-zinc-300 underline py-1 transition-colors"
+              className="text-xs text-text-muted hover:text-text-primary underline py-1 transition-colors"
             >
               {t.skipOrReveal}
             </button>

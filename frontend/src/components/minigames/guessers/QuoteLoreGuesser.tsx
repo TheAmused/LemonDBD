@@ -61,33 +61,33 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Quote / Lore Clue Card */}
-      <div className="w-full max-w-xl p-8 rounded-2xl bg-zinc-900 border border-zinc-700/80 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
+      <div className="w-full max-w-xl p-8 rounded-2xl bg-bg-surface border border-border-color shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         {/* Atmospheric Quote Icon Header */}
         <div className="flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-bold uppercase tracking-wider">
           {isPerkQuote ? <Quote className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
-          <span>{isPerkQuote ? 'Iconic In-Game Perk Quote' : 'Character Backstory Lore'}</span>
+          <span>{dict.minigames.modes.quote_lore}</span>
         </div>
 
         {/* The Quote / Lore Body */}
-        <blockquote className="text-base sm:text-lg font-medium text-zinc-100 italic leading-relaxed whitespace-pre-line max-h-72 overflow-y-auto px-2">
+        <blockquote className="text-base sm:text-lg font-medium text-text-primary italic leading-relaxed whitespace-pre-line max-h-72 overflow-y-auto px-2">
           {quoteText}
         </blockquote>
 
         {/* Unlocked Progressive Clues */}
         {(clue1 || clue2 || clue3) && (
-          <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-4 mt-4 border-t border-zinc-800">
+          <div className="w-full flex flex-wrap items-center justify-center gap-2 pt-4 mt-4 border-t border-border-color">
             {clue1 && (
-              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
                 {clue1}
               </span>
             )}
             {clue2 && (
-              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
                 {clue2}
               </span>
             )}
             {clue3 && (
-              <span className="px-3 py-1 rounded-lg bg-zinc-800 border border-zinc-700 text-xs font-medium text-zinc-300">
+              <span className="px-3 py-1 rounded-lg bg-bg-elevated border border-border-color text-xs font-medium text-text-secondary">
                 {clue3}
               </span>
             )}
@@ -96,14 +96,14 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
 
         {/* Solved Victory State */}
         {isSolved && (targetChar || targetPerk) && (
-          <div className="mt-6 px-4 py-2 rounded-xl bg-emerald-600/90 text-white font-bold text-sm flex items-center gap-3 shadow-lg">
+          <div className="mt-6 px-4 py-2 rounded-xl bg-accent-green text-text-inverted font-bold text-sm flex items-center gap-3 shadow-lg">
             {solvedImg && (
-              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/40">
+              <div className="relative w-8 h-8 rounded-full overflow-hidden border border-border-subtle">
                 <Image src={solvedImg} alt={targetName} fill className="object-cover" />
               </div>
             )}
             <Check className="w-4 h-4" />
-            <span>Solved: {targetName}</span>
+            <span>{dict.minigames.attributeValues.correct}: {targetName}</span>
           </div>
         )}
       </div>
@@ -121,15 +121,15 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({
                 key={`quote-g-${idx}`}
                 className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
                   isCorrect
-                    ? 'bg-emerald-600/90 text-white border-emerald-400 shadow-md'
-                    : 'bg-red-950/70 text-red-200 border-red-800/60'
+                    ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
+                    : 'bg-accent-red/20 text-accent-red border-accent-red/40'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs text-zinc-400">#{idx + 1}</span>
+                  <span className="text-xs text-text-muted">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
                   {g.guess.role && (
-                    <span className="text-2xs text-zinc-400 uppercase tracking-wider">
+                    <span className="text-2xs text-text-muted uppercase tracking-wider">
                       ({g.guess.role})
                     </span>
                   )}

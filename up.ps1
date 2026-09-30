@@ -177,7 +177,7 @@ if (-not $skipUpFlow) {
         for ($i = 1; $i -le 60; $i++) {
             $charCount = 0
             try {
-                $raw = docker compose exec -T db psql -U $pgUser -d $pgDb -tAc "SELECT COUNT(*) FROM characters;" 2>$null
+                $raw = docker compose exec -T db psql -U $pgUser -d $pgDb -tAc "SELECT (SELECT COUNT(*) FROM survivors) + (SELECT COUNT(*) FROM killers);" 2>$null
                 if ($raw -and ($raw.Trim() -match '^\d+$')) {
                     $charCount = [int]$raw.Trim()
                 }

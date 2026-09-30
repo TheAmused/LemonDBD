@@ -152,16 +152,16 @@ export function EntityEditor({
                 </span>
               ) : (
                 <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] text-text-muted font-mono italic">
-                  No role
+                  {c.noRole || 'No role'}
                 </span>
               )}
               {entity.gender ? (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider font-mono bg-purple-500/10 text-purple-400 border border-purple-500/25">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider font-mono bg-accent-amber/10 text-accent-amber border border-accent-amber/25">
                   {entity.gender}
                 </span>
               ) : (
                 <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] text-text-muted font-mono italic">
-                  No gender
+                  {c.noGender || 'No gender'}
                 </span>
               )}
               {entity.archetype && (
@@ -183,7 +183,7 @@ export function EntityEditor({
             }}
             aria-label={c.removeEntity || 'Remove'}
             className="flex h-9 w-9 items-center justify-center rounded-xl text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
-            title="Remove candidate"
+            title={c.removeCandidate || 'Remove candidate'}
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -217,7 +217,7 @@ export function EntityEditor({
                 ) : (
                   <div className="flex flex-col items-center gap-1 p-2 text-center text-text-muted">
                     <ImageIcon className="h-6 w-6 opacity-40" />
-                    <span className="text-[10px] font-mono uppercase tracking-wider">Preview</span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider">{c.preview || 'Preview'}</span>
                   </div>
                 )}
               </div>
@@ -255,11 +255,11 @@ export function EntityEditor({
                   <input
                     value={entity.role}
                     onChange={(e) => {
-                      const val = e.target.value;
-                      onChange({ role: val });
-                      if (val.trim()) onRegisterTaxonomy?.('role', val);
+                       const val = e.target.value;
+                       onChange({ role: val });
+                       if (val.trim()) onRegisterTaxonomy?.('role', val);
                     }}
-                    placeholder="e.g. Survivor, Hero, Killer"
+                    placeholder={c.rolePlaceholder || 'e.g. Survivor, Hero, Killer'}
                     list={`role-picks-${entity.key}`}
                     className={FIELD}
                   />
@@ -272,7 +272,7 @@ export function EntityEditor({
                 {/* Quick-Pick Role Chips */}
                 {availableRoles.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-[10px] text-text-muted font-mono mr-1">Quick:</span>
+                    <span className="text-[10px] text-text-muted font-mono mr-1">{c.quick || 'Quick:'}</span>
                     {availableRoles.slice(0, 5).map((r) => (
                       <button
                         key={r}
@@ -303,7 +303,7 @@ export function EntityEditor({
                       onChange({ gender: val });
                       if (val.trim()) onRegisterTaxonomy?.('gender', val);
                     }}
-                    placeholder="e.g. female, male, other"
+                    placeholder={c.genderPlaceholder || 'e.g. female, male, other'}
                     list={`gender-picks-${entity.key}`}
                     className={FIELD}
                   />
@@ -316,7 +316,7 @@ export function EntityEditor({
                 {/* Quick-Pick Gender Chips */}
                 {availableGenders.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-[10px] text-text-muted font-mono mr-1">Quick:</span>
+                    <span className="text-[10px] text-text-muted font-mono mr-1">{c.quick || 'Quick:'}</span>
                     {availableGenders.slice(0, 5).map((g) => (
                       <button
                         key={g}
@@ -325,7 +325,7 @@ export function EntityEditor({
                         className={cn(
                           'px-2 py-0.5 rounded text-[10px] font-mono transition-colors cursor-pointer',
                           entity.gender.toLowerCase() === g.toLowerCase()
-                            ? 'bg-purple-600 text-text-inverted font-bold'
+                            ? 'bg-accent-amber text-text-inverted font-bold'
                             : 'bg-bg-elevated hover:bg-bg-primary text-text-secondary hover:text-text-primary border border-border-color'
                         )}
                       >
@@ -346,42 +346,42 @@ export function EntityEditor({
                 value={entity.watermark_left}
                 max={SMASH_ROSTER_LIMITS.maxWatermark}
                 onChange={(v) => onChange({ watermark_left: v })}
-                placeholder="e.g. Raccoon City Police"
+                placeholder={c.watermarkLeftPlaceholder || 'e.g. Raccoon City Police'}
               />
               <TextField
                 label={c.entityWatermarkRightLabel || 'Character right text (watermark)'}
                 value={entity.watermark_right}
                 max={SMASH_ROSTER_LIMITS.maxWatermark}
                 onChange={(v) => onChange({ watermark_right: v })}
-                placeholder="e.g. R.P.D. Special Ops"
+                placeholder={c.watermarkRightPlaceholder || 'e.g. R.P.D. Special Ops'}
               />
               <TextField
                 label={customLabels.archetype || c.entityArchetypeLabel || 'Dating Archetype'}
                 value={entity.archetype}
                 max={SMASH_ROSTER_LIMITS.maxArchetype}
                 onChange={(v) => onChange({ archetype: v })}
-                placeholder="e.g. Stoic Protector"
+                placeholder={c.archetypePlaceholder || 'e.g. Stoic Protector'}
               />
               <TextField
                 label={customLabels.quote || c.entityQuoteLabel || 'Signature Quote'}
                 value={entity.quote}
                 max={SMASH_ROSTER_LIMITS.maxQuote}
                 onChange={(v) => onChange({ quote: v })}
-                placeholder='e.g. "Where is everyone going? Bingo?"'
+                placeholder={c.quotePlaceholder || 'e.g. "Where is everyone going? Bingo?"'}
               />
               <TextField
                 label={`${customLabels.turn_on || c.entityTurnOnLabel || 'Turn On'} (Optional)`}
                 value={entity.turn_on}
                 max={SMASH_ROSTER_LIMITS.maxTurnOn}
                 onChange={(v) => onChange({ turn_on: v })}
-                placeholder="What makes them irresistible?"
+                placeholder={c.turnOnPlaceholder || 'What makes them irresistible?'}
               />
               <TextField
                 label={`${customLabels.dealbreaker || c.entityDealbreakerLabel || 'Dealbreaker'} (Optional)`}
                 value={entity.dealbreaker}
                 max={SMASH_ROSTER_LIMITS.maxDealbreaker}
                 onChange={(v) => onChange({ dealbreaker: v })}
-                placeholder="What ruins the spark immediately?"
+                placeholder={c.dealbreakerPlaceholder || 'What ruins the spark immediately?'}
               />
             </div>
           )}

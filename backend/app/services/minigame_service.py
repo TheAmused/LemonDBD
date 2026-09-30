@@ -54,7 +54,7 @@ class MinigameService:
                 "raw_name": s.name,
                 "real_name": s.real_name or s.name,
                 "role": "Survivor",
-                "gender": (s.gender or "female").capitalize(),
+                "gender": (s.gender or "unknown").capitalize(),
                 "avatar_url": s.portrait_url or f"/static/{s.avatar_local_path}" if s.avatar_local_path else "",
                 "chapter_id": s.chapter_id,
                 "chapter_name": chap.localized_name(lang) if chap else "Base Game",
@@ -73,7 +73,7 @@ class MinigameService:
                 "raw_name": k.name,
                 "real_name": k.real_name or k.name,
                 "role": "Killer",
-                "gender": (k.gender or "male").capitalize(),
+                "gender": (k.gender or "unknown").capitalize(),
                 "avatar_url": k.portrait_url or f"/static/{k.avatar_local_path}" if k.avatar_local_path else "",
                 "chapter_id": k.chapter_id,
                 "chapter_name": chap.localized_name(lang) if chap else "Base Game",
@@ -472,7 +472,7 @@ class MinigameService:
             killers_with_emojis = [k for k in killers if k.emoji_riddle]
             chosen_killer = rng.choice(killers_with_emojis or killers) if killers else None
             killer_id = chosen_killer.id if chosen_killer else 1
-            emojis = chosen_killer.emoji_riddle if (chosen_killer and chosen_killer.emoji_riddle) else "🔪 💀 🩸"
+            emojis = (chosen_killer.emoji_riddle if chosen_killer else None) or ""
             return [{
                 "round_number": 1,
                 "mode": "emoji_riddle",
@@ -688,8 +688,10 @@ class MinigameService:
         license_match = "correct" if target_licensed == guess_licensed else "incorrect"
 
         # 6. Stature / Height
-        target_height = getattr(target, "height", "Tall") or "Tall"
-        guess_height = getattr(guess, "height", "Tall") or "Tall"
+        target_default_height = "Average" if target_type == "survivor" else "Tall"
+        guess_default_height = "Average" if guess_type == "survivor" else "Tall"
+        target_height = getattr(target, "height", target_default_height) or target_default_height
+        guess_height = getattr(guess, "height", guess_default_height) or guess_default_height
         height_match = "correct" if target_height == guess_height else "incorrect"
 
         # 7. Clues unlocking at thresholds
@@ -706,6 +708,11 @@ class MinigameService:
                 "id": guess.id,
                 "name": guess.name,
                 "role": guess_role,
+                "gender": (guess.gender or "unknown").capitalize(),
+                "chapter_name": guess_chap_name,
+                "release_year": guess_year,
+                "is_licensed": guess_licensed,
+                "height": guess_height,
                 "avatar_url": guess.portrait_url or f"/static/{guess.avatar_local_path}" if guess.avatar_local_path else "",
             },
             "attributes": {

@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { Tag, Plus, X, Sparkles, Shield, User } from 'lucide-react';
+import type { Dictionary } from '@/locales/types';
 import { FIELD, LABEL } from './styles';
 
 interface RosterTaxonomyBlockProps {
@@ -11,6 +12,7 @@ interface RosterTaxonomyBlockProps {
   onChangeRoles: (roles: string[]) => void;
   onChangeGenders: (genders: string[]) => void;
   onRegisterTerm?: (type: 'role' | 'gender', name: string) => void;
+  dict?: Dictionary;
 }
 
 export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
@@ -19,9 +21,28 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
   onChangeRoles,
   onChangeGenders,
   onRegisterTerm,
+  dict,
 }) => {
   const [newRoleInput, setNewRoleInput] = useState<string>('');
   const [newGenderInput, setNewGenderInput] = useState<string>('');
+
+  const tx = dict?.smashOrPass?.taxonomies || {
+    rolesTitle: 'Roster Roles',
+    rolesDesc: 'Define the roles available for characters in this roster. If left blank, standard Dead by Daylight roles (Survivor, Killer) will be used.',
+    customCount: 'Custom',
+    defaultRoles: 'Default: Survivor, Killer',
+    addRolePlaceholder: 'Add role (e.g. Hero, Villain, Killer)...',
+    add: 'Add',
+    quickPresets: 'Quick presets:',
+    noCustomRoles: 'No custom roles added — using standard Survivor / Killer.',
+    removeRoleAria: 'Remove',
+    gendersTitle: 'Roster Genders',
+    gendersDesc: 'Define genders for characters in this roster (e.g. Female, Male, ABC, Android). If left blank, standard options will be populated.',
+    defaultGenders: 'Default: Female, Male, Monster',
+    addGenderPlaceholder: 'Add gender (e.g. Female, Male, ABC)...',
+    noCustomGenders: 'No custom genders added — using standard Female / Male / Monster.',
+    removeGenderAria: 'Remove',
+  };
 
   const handleAddRole = (roleToAdd?: string) => {
     const val = (roleToAdd || newRoleInput).trim();
@@ -61,16 +82,16 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-accent-red" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
-              Roster Roles
+              {tx.rolesTitle}
             </h3>
           </div>
           <span className="text-[10px] font-bold text-text-muted">
-            {roles.length > 0 ? `${roles.length} Custom` : 'Default: Survivor, Killer'}
+            {roles.length > 0 ? `${roles.length} ${tx.customCount}` : tx.defaultRoles}
           </span>
         </div>
 
         <p className="text-xs text-text-secondary font-sans leading-relaxed">
-          Define the roles available for characters in this roster. If left blank, standard Dead by Daylight roles (Survivor, Killer) will be used.
+          {tx.rolesDesc}
         </p>
 
         {/* Input to add custom role */}
@@ -85,7 +106,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
                 handleAddRole();
               }
             }}
-            placeholder="Add role (e.g. Hero, Villain, Killer)..."
+            placeholder={tx.addRolePlaceholder}
             className={FIELD}
           />
           <button
@@ -94,13 +115,13 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-bold transition-all shrink-0 cursor-pointer shadow-sm active:scale-95"
           >
             <Plus className="h-3.5 w-3.5" />
-            <span>Add</span>
+            <span>{tx.add}</span>
           </button>
         </div>
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="text-[10px] text-text-muted uppercase">Quick presets:</span>
+          <span className="text-[10px] text-text-muted uppercase">{tx.quickPresets}</span>
           {['Survivor', 'Killer', 'Hero', 'Villain', 'Neutral'].map((preset) => {
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
@@ -121,7 +142,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px] items-center">
           {roles.length === 0 ? (
             <span className="text-xs text-text-muted italic font-sans">
-              No custom roles added — using standard Survivor / Killer.
+              {tx.noCustomRoles}
             </span>
           ) : (
             roles.map((role) => (
@@ -134,7 +155,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
                   type="button"
                   onClick={() => handleRemoveRole(role)}
                   className="hover:text-text-primary transition-colors cursor-pointer p-0.5 rounded-full hover:bg-accent-red/20"
-                  aria-label={`Remove ${role}`}
+                  aria-label={tx.removeRoleAria}
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -150,16 +171,16 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
           <div className="flex items-center gap-2">
             <User className="h-4 w-4 text-accent-green" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
-              Roster Genders
+              {tx.gendersTitle}
             </h3>
           </div>
           <span className="text-[10px] font-bold text-text-muted">
-            {genders.length > 0 ? `${genders.length} Custom` : 'Default: Female, Male, Monster'}
+            {genders.length > 0 ? `${genders.length} ${tx.customCount}` : tx.defaultGenders}
           </span>
         </div>
 
         <p className="text-xs text-text-secondary font-sans leading-relaxed">
-          Define genders for characters in this roster (e.g. Female, Male, ABC, Android). If left blank, standard options will be populated.
+          {tx.gendersDesc}
         </p>
 
         {/* Input to add custom gender */}
@@ -174,7 +195,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
                 handleAddGender();
               }
             }}
-            placeholder="Add gender (e.g. Female, Male, ABC)..."
+            placeholder={tx.addGenderPlaceholder}
             className={FIELD}
           />
           <button
@@ -183,13 +204,13 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-accent-green hover:brightness-110 text-text-inverted text-xs font-bold transition-all shrink-0 cursor-pointer shadow-sm active:scale-95"
           >
             <Plus className="h-3.5 w-3.5" />
-            <span>Add</span>
+            <span>{tx.add}</span>
           </button>
         </div>
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-          <span className="text-[10px] text-text-muted uppercase">Quick presets:</span>
+          <span className="text-[10px] text-text-muted uppercase">{tx.quickPresets}</span>
           {['Female', 'Male', 'Non-Binary', 'Monster / Other', 'ABC'].map((preset) => {
             const isAdded = genders.some((g) => g.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
@@ -210,7 +231,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
         <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border-color/60 min-h-[36px] items-center">
           {genders.length === 0 ? (
             <span className="text-xs text-text-muted italic font-sans">
-              No custom genders added — using standard Female / Male / Monster.
+              {tx.noCustomGenders}
             </span>
           ) : (
             genders.map((gender) => (
@@ -223,7 +244,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
                   type="button"
                   onClick={() => handleRemoveGender(gender)}
                   className="hover:text-text-primary transition-colors cursor-pointer p-0.5 rounded-full hover:bg-accent-green/20"
-                  aria-label={`Remove ${gender}`}
+                  aria-label={tx.removeGenderAria}
                 >
                   <X className="h-3 w-3" />
                 </button>

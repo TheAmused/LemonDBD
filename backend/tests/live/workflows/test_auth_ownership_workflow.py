@@ -72,14 +72,14 @@ class TestAuthOwnershipWorkflow:
         trapper = next(c for c in chars if c["name"] == "The Trapper")
         lock_res = live_client.post(
             f"/api/v1/users/{user_id}/characters",
-            json={"character_id": trapper["id"], "is_owned": False},
+            json={"character_id": trapper["id"], "role": trapper.get("role", "Killer"), "is_owned": False},
             headers=headers,
         )
         assert lock_res.status_code == 200
 
         with live_app.app_context():
             trapper_perks = db.session.scalars(
-                select(Perk.id).where(Perk.character_id == trapper["id"])
+                select(Perk.id).where(Perk.killer_id == trapper["id"])
             ).all()
             perks_res = live_client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
             assert perks_res.status_code == 200
@@ -90,7 +90,7 @@ class TestAuthOwnershipWorkflow:
 
         unlock_res = live_client.post(
             f"/api/v1/users/{user_id}/characters",
-            json={"character_id": trapper["id"], "is_owned": True},
+            json={"character_id": trapper["id"], "role": trapper.get("role", "Killer"), "is_owned": True},
             headers=headers,
         )
         assert unlock_res.status_code == 200

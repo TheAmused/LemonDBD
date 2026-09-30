@@ -4,7 +4,7 @@ from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy import func, select
 from app.core.extensions import db
-from app.models import Addon, Character, Item, Perk
+from app.models import Item, Killer, KillerAddon, Perk, Survivor
 
 
 @pytest.mark.live
@@ -14,10 +14,12 @@ class TestLiveSmoke:
     def test_live_postgres_clone_integrity(self, live_app: Flask) -> None:
         """Verify live test clone contains real DBD data and functions under real PostgreSQL."""
         with live_app.app_context():
-            char_count = db.session.scalar(select(func.count(Character.id)))
+            survivor_count = db.session.scalar(select(func.count(Survivor.id))) or 0
+            killer_count = db.session.scalar(select(func.count(Killer.id))) or 0
+            char_count = survivor_count + killer_count
             perk_count = db.session.scalar(select(func.count(Perk.id)))
             item_count = db.session.scalar(select(func.count(Item.id)))
-            addon_count = db.session.scalar(select(func.count(Addon.id)))
+            addon_count = db.session.scalar(select(func.count(KillerAddon.id)))
 
             assert char_count is not None and char_count > 50, f"Expected >50 characters, got {char_count}"
             assert perk_count is not None and perk_count > 200, f"Expected >200 perks, got {perk_count}"

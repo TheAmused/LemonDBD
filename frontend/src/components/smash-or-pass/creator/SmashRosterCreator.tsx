@@ -439,7 +439,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-accent-red shrink-0" />
                 <span className="font-mono text-xs font-black uppercase tracking-wider text-accent-red">
-                  Admin Configuration
+                  {c.adminConfig}
                 </span>
               </div>
               <label className="inline-flex items-center gap-2 cursor-pointer select-none">
@@ -450,7 +450,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   className="h-4 w-4 rounded accent-accent-red cursor-pointer"
                 />
                 <span className="text-xs font-mono font-bold text-text-primary hover:text-accent-red transition-colors">
-                  Publish as Official Roster (Public on Hub)
+                  {c.officialPublicHub}
                 </span>
               </label>
             </div>
@@ -468,7 +468,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   )}
                 >
                   <Zap className="h-3.5 w-3.5" />
-                  <span>Simple Version</span>
+                  <span>{c.simpleVersion}</span>
                 </button>
                 <button
                   type="button"
@@ -481,14 +481,14 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   )}
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>Full Version</span>
+                  <span>{c.fullVersion}</span>
                 </button>
               </div>
 
               <div className="text-xs text-text-muted font-mono px-2">
                 {draft.roster_mode === 'simple'
-                  ? 'Simple: Fast cards + optional turn-on & dealbreaker'
-                  : 'Full: Complete lore dossier, rumors, vibe & custom archetype stats'}
+                  ? c.simpleVersionDesc
+                  : c.fullVersionDesc}
               </div>
             </div>
           </div>
@@ -549,11 +549,11 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 <button
                   type="button"
                   onClick={() => setIsCropModalOpen(true)}
-                  title="Crop / Reframe cover image"
+                  title={c.cropCoverTitle}
                   className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
                 >
                   <Crop className="h-4 w-4 text-accent-red" />
-                  <span className="hidden sm:inline">Crop 16:9</span>
+                  <span className="hidden sm:inline">{c.cropCoverBadge}</span>
                 </button>
               </div>
 
@@ -561,7 +561,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 <div
                   onClick={() => setIsCropModalOpen(true)}
                   className="mt-3 relative group overflow-hidden rounded-2xl border border-border-color bg-bg-elevated aspect-video max-w-md shadow-md cursor-pointer"
-                  title="Click to crop or reframe cover image"
+                  title={c.cropCoverTitle}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
                   <img
@@ -570,9 +570,9 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                     referrerPolicy="no-referrer"
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-white font-mono text-xs font-bold">
+                  <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted font-mono text-xs font-bold">
                     <Crop className="h-5 w-5 text-accent-red" />
-                    <span>Click to Crop / Reframe (16:9)</span>
+                    <span>{c.cropClickPrompt}</span>
                   </div>
                 </div>
               ) : isUserAdmin ? (
@@ -582,7 +582,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed border-border-color text-xs font-mono text-text-secondary hover:text-accent-red hover:border-accent-red/50 transition-colors cursor-pointer"
                 >
                   <Crop className="h-3.5 w-3.5" />
-                  <span>Select &amp; Crop Local Cover Image</span>
+                  <span>{c.selectCropLocal}</span>
                 </button>
               ) : null}
             </div>
@@ -668,14 +668,15 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
 
         {/* BLOCK 2: ROLES & GENDERS (Collapsible Accordion) */}
         <CollapsibleSection
-          title="Roles & Genders"
-          subtitle="Define custom roles and genders for candidates or use DBD presets"
+          title={c.rolesGendersTitle}
+          subtitle={c.rolesGendersSubtitle}
           badge={`${effectiveRoles.length} roles • ${effectiveGenders.length} genders`}
           isOpen={taxonomiesOpen}
           onToggle={() => setTaxonomiesOpen((v) => !v)}
           icon={Tag}
         >
           <RosterTaxonomyBlock
+            dict={dict}
             roles={draft.custom_roles || []}
             genders={draft.custom_genders || []}
             onChangeRoles={(roles) => patch({ custom_roles: roles })}
@@ -687,7 +688,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         {/* BLOCK 3: CANDIDATES (Collapsible Accordion) */}
         <CollapsibleSection
           title={c.stepEntities || 'Candidates'}
-          subtitle="Characters participating in this smash or pass trial"
+          subtitle={c.candidatesSubtitle}
           badge={draft.entities.length}
           isOpen={candidatesOpen}
           onToggle={() => setCandidatesOpen((v) => !v)}
@@ -704,7 +705,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               className={cn(BTN_SECONDARY, 'h-8 px-2.5 text-xs font-mono')}
             >
               <Plus className="h-3.5 w-3.5" />
-              <span>Add</span>
+              <span>{c.add}</span>
             </button>
           }
         >
@@ -745,14 +746,15 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
 
         {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES (Collapsible Accordion) */}
         <CollapsibleSection
-          title="Custom Romance Archetypes & Personality Rules"
-          subtitle="Personality personas, rule triggers, and custom diagnoses"
+          title={c.customArchetypesTitle}
+          subtitle={c.customArchetypesSubtitle}
           badge={draft.romance_archetypes.length}
           isOpen={archetypesOpen}
           onToggle={() => setArchetypesOpen((v) => !v)}
           icon={HeartHandshake}
         >
           <RomanceArchetypeBuilder
+            dict={dict}
             archetypes={draft.romance_archetypes}
             onChange={(archetypes) => patch({ romance_archetypes: archetypes })}
             availableRoles={effectiveRoles}
@@ -782,6 +784,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         imageUrl={draft.cover_image_url}
         themeColor={draft.theme_color}
         isAdmin={isUserAdmin}
+        dict={dict}
         onApplyCrop={(croppedUrl) => {
           patch({ cover_image_url: croppedUrl });
           setIsCropModalOpen(false);

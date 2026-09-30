@@ -50,7 +50,7 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
   return (
     <div className="w-full flex flex-col items-center my-6">
       {/* Blurred Portrait Frame */}
-      <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-2xl overflow-hidden border-2 border-zinc-700/80 shadow-2xl bg-zinc-950 flex items-center justify-center">
+      <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-2xl overflow-hidden border-2 border-border-color shadow-2xl bg-bg-surface flex items-center justify-center">
         {imageUrl ? (
           <div
             className="relative w-full h-full transition-all duration-500 ease-out"
@@ -61,24 +61,24 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
           >
             <Image
               src={imageUrl}
-              alt="Pixelated Character Avatar"
+              alt={targetChar?.name || dict.minigames.modes.pixel_avatar}
               fill
               unoptimized
               className="object-cover select-none pointer-events-none"
             />
           </div>
         ) : (
-          <ShieldAlert className="w-12 h-12 text-zinc-600" />
+          <ShieldAlert className="w-12 h-12 text-text-muted" />
         )}
 
-        <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-zinc-900/80 backdrop-blur-md border border-zinc-700/60 text-[11px] font-semibold text-zinc-300 flex items-center gap-1 shadow-md">
+        <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-bg-surface/80 backdrop-blur-md border border-border-subtle text-[11px] font-semibold text-text-secondary flex items-center gap-1 shadow-md">
           <Sparkles className="w-3 h-3 text-accent-red" />
-          <span>Blur: {blurAmount.toFixed(1)}px</span>
+          <span>{blurAmount.toFixed(1)}</span>
         </div>
 
         {isSolved && targetChar && (
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center">
-            <div className="px-4 py-2 rounded-xl bg-emerald-600/90 text-white font-bold text-base shadow-xl border border-emerald-400/60 flex items-center gap-2">
+          <div className="absolute inset-0 bg-bg-primary/40 backdrop-blur-xs flex items-center justify-center">
+            <div className="px-4 py-2 rounded-xl bg-accent-green text-text-inverted font-bold text-base shadow-xl border border-accent-green/60 flex items-center gap-2">
               <Check className="w-4 h-4" />
               <span>{targetChar.name}</span>
             </div>
@@ -99,12 +99,12 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({
                 key={`avatar-g-${idx}`}
                 className={`flex items-center justify-between px-4 py-2.5 rounded-xl border font-semibold text-sm transition-all ${
                   isCorrect
-                    ? 'bg-emerald-600/90 text-white border-emerald-400 shadow-md'
-                    : 'bg-red-950/70 text-red-200 border-red-800/60'
+                    ? 'bg-accent-green text-text-inverted border-accent-green shadow-md'
+                    : 'bg-accent-red/20 text-accent-red border-accent-red/40'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs text-zinc-400">#{idx + 1}</span>
+                  <span className="text-xs text-text-muted">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
                 </div>
                 {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}

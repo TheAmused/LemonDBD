@@ -24,7 +24,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({
     <div className="w-full overflow-x-auto pb-4 my-6">
       <table className="w-full min-w-[600px] border-separate border-spacing-2 text-center select-none">
         <thead>
-          <tr className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">
+          <tr className="text-xs uppercase tracking-wider text-text-muted font-semibold">
             <th className="p-2 w-32 text-left">{dict.filters.perks}</th>
             <th className="p-2 w-24">{t.attributes.role}</th>
             <th className="p-2 w-36">{dict.sidebar.characters}</th>
@@ -43,9 +43,9 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({
                 key={`perk-guess-${rowIdx}-${guess.id}`}
                 className="animate-in fade-in slide-in-from-top-3 duration-300 font-medium text-sm"
               >
-                <td className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-left">
+                <td className="p-2 rounded-xl bg-bg-surface border border-border-color text-left">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700/60 flex-shrink-0 flex items-center justify-center">
+                    <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
                       {imgSrc ? (
                         <Image
                           src={imgSrc}
@@ -56,10 +56,10 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({
                           className="object-contain w-full h-full p-0.5"
                         />
                       ) : (
-                        <span className="text-xs text-zinc-500">?</span>
+                        <span className="text-xs text-text-muted">?</span>
                       )}
                     </div>
-                    <span className="truncate text-zinc-100 font-semibold text-xs leading-snug">
+                    <span className="truncate text-text-primary font-semibold text-xs leading-snug">
                       {guess.name}
                     </span>
                   </div>
@@ -99,16 +99,16 @@ const PerkAttrCell: React.FC<{ evaluation: any; value?: string | null }> = ({ ev
   const isPartial = status === 'partial';
 
   const bgStyle = isCorrect
-    ? 'bg-emerald-600/90 text-white border-emerald-400/80 shadow-emerald-950/40'
+    ? 'bg-accent-green text-text-inverted border-accent-green shadow-accent-green/20'
     : isPartial
-    ? 'bg-amber-600/90 text-white border-amber-400/80 shadow-amber-950/40'
-    : 'bg-red-950/80 text-red-200 border-red-800/60 shadow-red-950/40';
+    ? 'bg-accent-amber text-text-inverted border-accent-amber shadow-accent-amber/20'
+    : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-accent-red/10';
 
   return (
     <td className={`p-2.5 rounded-xl border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
       <div className="flex items-center justify-center gap-1">
         <span className="truncate max-w-[140px]">{value ?? '-'}</span>
-        {isCorrect && <Check className="w-3.5 h-3.5 text-white/80 flex-shrink-0" />}
+        {isCorrect && <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />}
       </div>
     </td>
   );

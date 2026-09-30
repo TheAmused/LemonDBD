@@ -106,12 +106,12 @@ function PlayTrialContent() {
       {loading ? (
         <div className="flex flex-col items-center justify-center p-12 gap-4">
           <DbdSpinner size="lg" />
-          <p className="text-sm font-semibold text-zinc-400">Loading trial...</p>
+          <p className="text-sm font-semibold text-text-muted">{dict.app.loading}</p>
         </div>
       ) : error ? (
-        <div className="p-8 rounded-2xl bg-red-950/40 border border-red-800 text-center max-w-md mx-auto my-12">
-          <h2 className="text-lg font-bold text-red-300 mb-2">Error Loading Trial</h2>
-          <p className="text-xs text-red-400">{error}</p>
+        <div className="p-8 rounded-2xl bg-accent-red/10 border border-accent-red/30 text-center max-w-md mx-auto my-12">
+          <h2 className="text-lg font-bold text-accent-red mb-2">{dict.app.notice}</h2>
+          <p className="text-xs text-text-muted">{error}</p>
         </div>
       ) : challenge && catalog ? (
         <ChallengeRunner

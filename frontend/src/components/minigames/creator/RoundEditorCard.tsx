@@ -165,8 +165,8 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             type="button"
             onClick={onMoveUp}
             disabled={index === 0}
-            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            title="Move Up"
+            className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            title={c.moveUp}
           >
             <ChevronUp className="w-4 h-4" />
           </button>
@@ -174,15 +174,15 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             type="button"
             onClick={onMoveDown}
             disabled={index === totalRounds - 1}
-            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            title="Move Down"
+            className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            title={c.moveDown}
           >
             <ChevronDown className="w-4 h-4" />
           </button>
           <button
             type="button"
             onClick={onRemove}
-            className="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900/80 text-red-400 border border-red-900/40 transition-colors ml-1"
+            className="p-1.5 rounded-lg bg-accent-red/20 hover:bg-accent-red/30 text-accent-red border border-accent-red/40 transition-colors ml-1"
             title={c.removeRound}
           >
             <Trash2 className="w-4 h-4" />
@@ -193,13 +193,13 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
       {/* Mode & Max Attempts Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="sm:col-span-2">
-          <label className="block text-xs font-semibold text-zinc-400 mb-1.5">
+          <label className="block text-xs font-semibold text-text-muted mb-1.5">
             {c.selectMode}
           </label>
           <select
             value={round.mode}
             onChange={(e) => handleModeChange(e.target.value as MinigameMode)}
-            className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
           >
             {ALL_MODES.map((mode) => (
               <option key={mode} value={mode}>
@@ -210,7 +210,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-zinc-400 mb-1.5">
+          <label className="block text-xs font-semibold text-text-muted mb-1.5">
             {c.maxAttemptsLabel}
           </label>
           <input
@@ -224,21 +224,21 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
                 max_attempts: Math.max(1, parseInt(e.target.value, 10) || 6),
               })
             }
-            className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
           />
         </div>
       </div>
 
       {/* Target Answer Selection */}
       <div>
-        <label className="block text-xs font-semibold text-zinc-400 mb-1.5">
+        <label className="block text-xs font-semibold text-text-muted mb-1.5">
           {c.targetItem}
         </label>
 
         {selectedTargetItem ? (
-          <div className="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-border-color">
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 flex items-center justify-center">
+              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-bg-elevated border border-border-subtle flex-shrink-0 flex items-center justify-center">
                 {targetImgSrc ? (
                   <Image
                     src={targetImgSrc}
@@ -249,21 +249,21 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
                     className="object-cover w-full h-full"
                   />
                 ) : (
-                  <Sparkles className="w-4 h-4 text-zinc-500" />
+                  <Sparkles className="w-4 h-4 text-text-muted" />
                 )}
               </div>
               <div>
-                <div className="text-sm font-bold text-zinc-100">{selectedTargetItem.name}</div>
-                <div className="text-xs text-zinc-400 capitalize">{targetType}</div>
+                <div className="text-sm font-bold text-text-primary">{selectedTargetItem.name}</div>
+                <div className="text-xs text-text-muted capitalize">{targetType}</div>
               </div>
             </div>
 
             <button
               type="button"
               onClick={() => onUpdate({ ...round, target_id: undefined })}
-              className="text-xs text-zinc-400 hover:text-zinc-200 underline font-semibold px-2 py-1"
+              className="text-xs text-text-muted hover:text-text-primary underline font-semibold px-2 py-1"
             >
-              Change
+              {c.change}
             </button>
           </div>
         ) : (
@@ -278,9 +278,9 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
 
       {/* Mode-Specific Custom Inputs */}
       {round.mode === 'quote_lore' && (
-        <div className="space-y-3 pt-2 border-t border-zinc-800">
+        <div className="space-y-3 pt-2 border-t border-border-color">
           <div>
-            <label className="block text-xs font-semibold text-zinc-400 mb-1">
+            <label className="block text-xs font-semibold text-text-muted mb-1">
               {c.customQuoteLabel}
             </label>
             <textarea
@@ -288,11 +288,11 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
               value={round.custom_data?.quote || ''}
               onChange={(e) => handleCustomDataChange('quote', e.target.value)}
               placeholder={c.customQuotePlaceholder}
-              className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+              className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-zinc-400 mb-1">
+            <label className="block text-xs font-semibold text-text-muted mb-1">
               {c.customSpeakerLabel}
             </label>
             <input
@@ -300,15 +300,15 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
               value={round.custom_data?.speaker || ''}
               onChange={(e) => handleCustomDataChange('speaker', e.target.value)}
               placeholder={c.customSpeakerPlaceholder}
-              className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+              className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
             />
           </div>
         </div>
       )}
 
       {round.mode === 'emoji_riddle' && (
-        <div className="pt-2 border-t border-zinc-800">
-          <label className="block text-xs font-semibold text-zinc-400 mb-1">
+        <div className="pt-2 border-t border-border-color">
+          <label className="block text-xs font-semibold text-text-muted mb-1">
             {c.customEmojisLabel}
           </label>
           <input
@@ -316,22 +316,22 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             value={round.custom_data?.emojis || ''}
             onChange={(e) => handleCustomDataChange('emojis', e.target.value)}
             placeholder={c.customEmojisPlaceholder}
-            className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-accent-red/50"
           />
         </div>
       )}
 
       {round.mode === 'killer_power' && (
-        <div className="pt-2 border-t border-zinc-800">
-          <label className="block text-xs font-semibold text-zinc-400 mb-1">
-            Custom Power Name (Optional override)
+        <div className="pt-2 border-t border-border-color">
+          <label className="block text-xs font-semibold text-text-muted mb-1">
+            {c.customPowerName}
           </label>
           <input
             type="text"
             value={round.custom_data?.power_name || ''}
             onChange={(e) => handleCustomDataChange('power_name', e.target.value)}
-            placeholder="e.g., Bear Trap, Evil Within..."
-            className="w-full px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-200 text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            placeholder={c.customPowerPlaceholder}
+            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
           />
         </div>
       )}

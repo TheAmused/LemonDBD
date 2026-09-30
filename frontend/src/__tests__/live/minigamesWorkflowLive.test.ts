@@ -77,29 +77,30 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
   assert.ok("role" in guessResult.attributes, "Attributes must include role");
   assert.ok("gender" in guessResult.attributes, "Attributes must include gender");
 
-  // 4b. Cross-Role Guessing (Survivor guessed when secret target is Killer)
-  const laraCroft = (catalog.survivors || []).find((s: any) => s.name === "Lara Croft");
-  assert.ok(laraCroft, "Lara Croft must exist in catalog.survivors");
-  assert.strictEqual(laraCroft.role, "Survivor");
+  // 4b. Cross-Role Guessing (Opposite role guessed against secret target)
+  const isTargetSurvivor = targetType === "survivor";
+  const crossChar = isTargetSurvivor
+    ? (catalog.killers || [])[0]
+    : (catalog.survivors || []).find((s: any) => s.name === "Lara Croft") || (catalog.survivors || [])[0];
+  assert.ok(crossChar, "Cross-role candidate must exist in catalog");
 
-  const survivorGuessRes = await fetch(`${API_BASE}/api/v1/minigames/guess`, {
+  const crossGuessRes = await fetch(`${API_BASE}/api/v1/minigames/guess`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       challenge_id: daily.id,
       challenge_type: "daily",
       round_index: 0,
-      guess_type: "survivor",
-      guess_id: laraCroft.id,
+      guess_type: crossChar.type || (isTargetSurvivor ? "killer" : "survivor"),
+      guess_id: crossChar.id,
       attempt_number: 2,
     }),
   });
-  assert.strictEqual(survivorGuessRes.status, 200, "Survivor guess against daily target must succeed");
-  const survivorGuessResult = await survivorGuessRes.json();
-  assert.strictEqual(survivorGuessResult.is_correct, false);
-  assert.strictEqual(survivorGuessResult.guess.name, "Lara Croft");
-  assert.strictEqual(survivorGuessResult.guess.role, "Survivor");
-  assert.strictEqual(survivorGuessResult.attributes.role, "incorrect", "Role must be incorrect when guessing Survivor against Killer target");
+  assert.strictEqual(crossGuessRes.status, 200, "Cross-role guess against daily target must succeed");
+  const crossGuessResult = await crossGuessRes.json();
+  assert.strictEqual(crossGuessResult.is_correct, false);
+  assert.strictEqual(crossGuessResult.guess.name, crossChar.name);
+  assert.strictEqual(crossGuessResult.attributes.role, "incorrect", "Role must be incorrect when guessing opposite role against secret target");
 
   // Submit correct guess
   const correctGuessRes = await fetch(`${API_BASE}/api/v1/minigames/guess`, {

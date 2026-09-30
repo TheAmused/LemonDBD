@@ -389,7 +389,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               )}
             >
               <Flame className="h-3 w-3" />
-              <span>Official ({officialRosters.length})</span>
+              <span>{dict?.smashOrPass?.picker?.officialTab} ({officialRosters.length})</span>
             </button>
             <button
               type="button"
@@ -402,7 +402,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               )}
             >
               <Sparkles className="h-3 w-3" />
-              <span>Custom ({customRosters.length})</span>
+              <span>{dict?.smashOrPass?.picker?.customTab} ({customRosters.length})</span>
             </button>
           </div>
         </div>
@@ -493,12 +493,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             <div className="relative z-10 flex flex-col items-center justify-center gap-3 p-8 rounded-3xl border border-dashed border-border-color bg-bg-elevated/40 text-center max-w-md mx-auto">
               <Sparkles className="h-10 w-10 text-accent-red animate-pulse" />
               <h3 className="text-base font-bold font-mono text-text-primary uppercase tracking-wide">
-                {filter === 'custom' ? 'No Custom Rosters Found' : 'No Rosters Found'}
+                {filter === 'custom'
+                  ? dict?.smashOrPass?.picker?.noCustomRostersFound
+                  : dict?.smashOrPass?.picker?.noRostersFound}
               </h3>
               <p className="text-xs text-text-muted font-mono">
                 {filter === 'custom'
-                  ? "You haven't created any custom rosters yet in this browser."
-                  : 'No rosters match this filter.'}
+                  ? dict?.smashOrPass?.picker?.noCustomRostersDesc
+                  : dict?.smashOrPass?.picker?.noRostersMatchDesc}
               </p>
               {onCreateRoster && filter === 'custom' && (
                 <button
@@ -510,7 +512,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold uppercase tracking-wider shadow-md hover:bg-accent-red-hover transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>Create Your First Roster</span>
+                  <span>{dict?.smashOrPass?.picker?.createFirstRoster}</span>
                 </button>
               )}
             </div>

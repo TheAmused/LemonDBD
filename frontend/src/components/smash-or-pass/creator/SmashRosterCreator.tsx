@@ -21,17 +21,13 @@ import {
   ChevronDown,
   ChevronLeft,
   Crop,
-  HeartHandshake,
   Plus,
   SearchX,
-  ShieldCheck,
-  Sparkles,
-  Tag,
   TriangleAlert,
-  Users,
-  Zap,
 } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
+import { Switch } from '@/components/common/Switch';
+import { Tooltip } from '@/components/common/Tooltip';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -44,7 +40,13 @@ import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS, TRANSLATABLE
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
 import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEntity } from '@/types/smashOrPass';
 import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL, TEXTAREA_FIELD } from './styles';
-import { DraftEntity, EntityEditor, emptyDraftEntity, type EntityTranslationDraft } from './EntityEditor';
+import {
+  CandidateFormInputs,
+  CandidateTiles,
+  DraftEntity,
+  emptyDraftEntity,
+  type EntityTranslationDraft,
+} from './EntityEditor';
 import { CoverImageCropModal } from './CoverImageCropModal';
 import { RosterTaxonomyBlock } from './RosterTaxonomyBlock';
 import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
@@ -82,11 +84,6 @@ function freshDraft(): Draft {
     custom_roles: [],
     custom_genders: [],
     romance_archetypes: [],
-    // A fixed, non-random key -- this runs as the `useState` initializer, so
-    // it executes during SSR too. `newKey()` (crypto.randomUUID/Math.random)
-    // would render a different id server- vs. client-side and trigger a
-    // hydration mismatch; every *later* entity is added from a click handler
-    // (client-only), where `newKey()` is safe.
     entities: [emptyDraftEntity('seed-0')],
   };
 }
@@ -205,10 +202,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   const editingRoster = editId ? storeState.custom[editId] : undefined;
 
   const [draft, setDraft] = useState<Draft>(freshDraft);
-  const [basicsOpen, setBasicsOpen] = useState(true);
-  const [taxonomiesOpen, setTaxonomiesOpen] = useState(false);
-  const [candidatesOpen, setCandidatesOpen] = useState(true);
-  const [archetypesOpen, setArchetypesOpen] = useState(false);
+  const [selectedEntityKey, setSelectedEntityKey] = useState<string>('seed-0');
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [attempted, setAttempted] = useState(false);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
@@ -227,6 +221,9 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
     if (!editId || !storeHydrated || editSeeded.current === editId) return;
     editSeeded.current = editId;
     if (!editingRoster) return;
+    const seededEntities = editingRoster.entities.length
+      ? editingRoster.entities.map(entityFromDocument)
+      : [emptyDraftEntity(newKey())];
     setDraft({
       name: editingRoster.name,
       description: editingRoster.description || '',
@@ -234,20 +231,48 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
       theme_color: editingRoster.theme_color || '#ff0055',
       category: editingRoster.category || '',
       is_nsfw: editingRoster.is_nsfw || false,
-      roster_mode: editingRoster.roster_mode || 'full',
+      roster_mode: editingRoster.roster_mode || 'simple',
       custom_labels: editingRoster.custom_labels || {},
       custom_roles: editingRoster.custom_roles || [],
       custom_genders: editingRoster.custom_genders || [],
       romance_archetypes: editingRoster.romance_archetypes || [],
-      entities: editingRoster.entities.length ? editingRoster.entities.map(entityFromDocument) : [emptyDraftEntity(newKey())],
+      entities: seededEntities,
     });
+    if (seededEntities.length > 0) {
+      setSelectedEntityKey(seededEntities[0].key);
+    }
   }, [editId, storeHydrated, editingRoster]);
 
   const patch = (next: Partial<Draft>) => setDraft((d) => ({ ...d, ...next }));
   const patchEntity = (key: string, next: Partial<DraftEntity>) =>
     setDraft((d) => ({ ...d, entities: d.entities.map((e) => (e.key === key ? { ...e, ...next } : e)) }));
-  const removeEntity = (key: string) => setDraft((d) => ({ ...d, entities: d.entities.filter((e) => e.key !== key) }));
-  const addEntity = () => setDraft((d) => ({ ...d, entities: [...d.entities, emptyDraftEntity(newKey())] }));
+
+  const addEntity = () => {
+    if (draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities) return;
+    const k = newKey();
+    setDraft((d) => ({ ...d, entities: [...d.entities, emptyDraftEntity(k)] }));
+    setSelectedEntityKey(k);
+  };
+
+  const removeEntity = (key: string) => {
+    setDraft((d) => {
+      const next = d.entities.filter((e) => e.key !== key);
+      return { ...d, entities: next };
+    });
+    if (selectedEntityKey === key) {
+      const remaining = draft.entities.filter((e) => e.key !== key);
+      setSelectedEntityKey(remaining[0]?.key || '');
+    }
+  };
+
+  const activeEntity = useMemo(() => {
+    return draft.entities.find((e) => e.key === selectedEntityKey) || draft.entities[0];
+  }, [draft.entities, selectedEntityKey]);
+
+  const activeEntityIndex = useMemo(() => {
+    const idx = draft.entities.findIndex((e) => e.key === (activeEntity?.key ?? selectedEntityKey));
+    return idx >= 0 ? idx : 0;
+  }, [draft.entities, selectedEntityKey, activeEntity]);
 
   const setEntityTranslation = (entityKey: string, loc: string, field: string, value: string) => {
     setEntityTranslations((prev) => ({
@@ -278,7 +303,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   const validEntityCount = draft.entities.filter((e) => e.name.trim()).length;
   const entitiesMissing = validEntityCount === 0;
 
-  const isSimpleMode = !isUserAdmin || draft.roster_mode === 'simple';
+  const isSimpleMode = draft.roster_mode === 'simple';
   const showTranslations = isUserAdmin && official;
 
   // Editing a roster the store doesn't have (deleted, or a stale link): send
@@ -401,10 +426,29 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
 
   const publishingNow = publishing && official && isUserAdmin;
   const submitLabel = publishingNow
-    ? (c.saving || 'Publishing...')
+    ? (c.saving || 'Saving...')
     : official && isUserAdmin
-      ? (c.publishOfficial || 'Publish Official Roster')
-      : (c.save || 'Save Roster');
+      ? (c.publish || 'Publish')
+      : editId
+        ? (c.saveShort || 'Save')
+        : (c.create || 'Create');
+
+  const submitButton = (extra?: string) => (
+    <button
+      type="button"
+      onClick={submit}
+      disabled={publishingNow}
+      data-roster-create=""
+      className={cn(
+        BTN_PRIMARY,
+        'transition-colors',
+        publishingNow && 'opacity-60 cursor-not-allowed',
+        extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg'
+      )}
+    >
+      {submitLabel}
+    </button>
+  );
 
   const errors = attempted
     ? [
@@ -415,265 +459,276 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
     : [];
 
   return (
-    <div className="relative z-10 flex flex-col gap-6 w-full max-w-7xl 2xl:max-w-[1800px] mx-auto">
-      <header className="flex items-center justify-between min-h-[44px]">
-        <Link
-          href={`/${locale}/smash-or-pass`}
-          className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          {c.title || 'Create a Roster'}
-        </Link>
+    <div className="relative z-10 flex flex-col gap-6 2xl:gap-8 max-w-7xl 2xl:max-w-[1700px] mx-auto w-full px-4 sm:px-6">
+      <h1 className="sr-only">{editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}</h1>
+
+      {/* TOP ROW: IN-LINE NAVIGATION (LEFT), THE BASICS BLOCK (MIDDLE), CREATE (RIGHT) */}
+      <header className="flex flex-col lg:flex-row items-stretch lg:items-start justify-between gap-3 lg:gap-4 w-full">
+        {/* Mobile top bar (< lg) */}
+        <div className="flex lg:hidden items-center justify-between gap-2 w-full">
+          <Link
+            href={`/${locale}/smash-or-pass`}
+            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            {c.backToHub || 'Smash or Pass'}
+          </Link>
+          <div className="flex items-center gap-2">
+            {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
+          </div>
+        </div>
+
+        {/* Desktop top left navigation (>= lg) */}
+        <div className="hidden lg:flex shrink-0 lg:w-48 pt-2.5">
+          <Link
+            href={`/${locale}/smash-or-pass`}
+            className="inline-flex min-h-[44px] items-center gap-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+          >
+            <ChevronLeft className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />
+            {c.backToHub || 'Smash or Pass'}
+          </Link>
+        </div>
+
+        {/* MIDDLE: THE BASICS BLOCK */}
+        <div className="flex-1 w-full min-w-0 max-w-4xl 2xl:max-w-5xl mx-auto">
+          <Section title={c.stepBasics || 'The Basics'}>
+            <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+              <label>
+                <span className={LABEL}>{c.nameLabel || 'Roster name'}</span>
+                <input
+                  value={draft.name}
+                  maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
+                  onChange={(e) => patch({ name: e.target.value })}
+                  placeholder={c.namePlaceholder || 'e.g. Chapter 34 Cast'}
+                  aria-invalid={attempted && nameMissing}
+                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && nameMissing && 'border-accent-red')}
+                />
+              </label>
+              <label>
+                <span className={LABEL}>{c.categoryLabel || 'Category'}</span>
+                <input
+                  value={draft.category}
+                  maxLength={64}
+                  onChange={(e) => patch({ category: e.target.value })}
+                  placeholder={c.categoryPlaceholder || 'e.g. Custom'}
+                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                />
+              </label>
+              <label className="md:col-span-2">
+                <span className={LABEL}>{c.descriptionLabel || 'Description (optional)'}</span>
+                <textarea
+                  value={draft.description}
+                  maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
+                  onChange={(e) => patch({ description: e.target.value })}
+                  placeholder={c.descriptionPlaceholder || 'What is this roster about?'}
+                  rows={2}
+                  className={cn(TEXTAREA_FIELD, '2xl:text-base')}
+                />
+              </label>
+              <div className="md:col-span-2">
+                <span className={LABEL}>{c.coverImageLabel || 'Cover image URL (optional)'}</span>
+                <div className="flex gap-2">
+                  <input
+                    value={draft.cover_image_url}
+                    onChange={(e) => patch({ cover_image_url: e.target.value })}
+                    placeholder={c.coverImagePlaceholder || 'https://...'}
+                    inputMode="url"
+                    aria-invalid={attempted && coverInvalid}
+                    className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && coverInvalid && 'border-accent-red')}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsCropModalOpen(true)}
+                    title={c.cropCoverTitle}
+                    className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
+                  >
+                    <Crop className="h-4 w-4 text-accent-red" />
+                    <span className="hidden sm:inline">{c.cropCoverBadge}</span>
+                  </button>
+                </div>
+
+                {safeCover ? (
+                  <div
+                    onClick={() => setIsCropModalOpen(true)}
+                    className="mt-3 relative group overflow-hidden rounded-xl border border-border-color bg-bg-elevated aspect-video max-w-md mx-auto shadow-xs cursor-pointer"
+                    title={c.cropCoverTitle}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
+                    <img
+                      src={safeCover}
+                      alt=""
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted font-mono text-xs font-bold">
+                      <Crop className="h-5 w-5 text-accent-red" />
+                      <span>{c.cropClickPrompt}</span>
+                    </div>
+                  </div>
+                ) : isUserAdmin ? (
+                  <div className="flex justify-center mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsCropModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed border-border-color text-xs font-mono text-text-secondary hover:text-accent-red hover:border-accent-red/50 transition-colors cursor-pointer"
+                    >
+                      <Crop className="h-3.5 w-3.5" />
+                      <span>{c.selectCropLocal}</span>
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+
+              <label className="md:col-span-2">
+                <span className={LABEL}>{c.themeColorLabel || 'Theme color'}</span>
+                <input
+                  type="color"
+                  value={draft.theme_color || '#ff0055'}
+                  onChange={(e) => patch({ theme_color: e.target.value })}
+                  className="h-11 w-full max-w-xs cursor-pointer rounded-xl border border-border-color bg-bg-primary"
+                />
+              </label>
+
+              {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}
+              <div className="md:col-span-2 pt-3 border-t border-border-color/60 flex flex-wrap items-center gap-5 sm:gap-6">
+                {/* Simple Version Switch */}
+                <Tooltip
+                  title={c.simpleVersion || 'Simple Version'}
+                  description={c.simpleVersionDesc || 'Fast cards + optional turn-on & dealbreaker'}
+                >
+                  <div
+                    onClick={() => patch({ roster_mode: draft.roster_mode === 'simple' ? 'full' : 'simple' })}
+                    className="flex items-center gap-2.5 cursor-pointer group select-none"
+                  >
+                    <Switch
+                      checked={draft.roster_mode === 'simple'}
+                      onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
+                      ariaLabel={c.simpleVersion || 'Simple Version'}
+                    />
+                    <span className="text-xs sm:text-sm font-mono font-bold text-text-primary group-hover:text-accent-red transition-colors">
+                      {c.simpleVersion || 'Simple Version'}
+                    </span>
+                  </div>
+                </Tooltip>
+
+                {/* NSFW Content Switch */}
+                <Tooltip
+                  title={c.nsfwLabel || 'Contains NSFW content'}
+                  description="Mark this roster as containing mature or sensitive material."
+                >
+                  <div
+                    onClick={() => patch({ is_nsfw: !draft.is_nsfw })}
+                    className="flex items-center gap-2.5 cursor-pointer group select-none"
+                  >
+                    <Switch
+                      checked={draft.is_nsfw}
+                      onChange={(checked) => patch({ is_nsfw: checked })}
+                      ariaLabel={c.nsfwLabel || 'Contains NSFW content'}
+                    />
+                    <span className="text-xs sm:text-sm font-mono font-bold text-text-primary group-hover:text-accent-red transition-colors">
+                      {c.nsfwLabel || 'Contains NSFW content'}
+                    </span>
+                  </div>
+                </Tooltip>
+
+                {/* Official Roster Switch (Admin only) */}
+                {isUserAdmin && (
+                  <Tooltip
+                    title={c.officialPublicHub || 'Official Roster (Public on Hub)'}
+                    description="Publish directly to the public Hub directory for all visitors."
+                  >
+                    <div
+                      onClick={() => setOfficial(!official)}
+                      className="flex items-center gap-2.5 cursor-pointer group select-none"
+                    >
+                      <Switch
+                        checked={official}
+                        onChange={(checked) => setOfficial(checked)}
+                        ariaLabel={c.officialPublicHub || 'Official Roster (Public on Hub)'}
+                      />
+                      <span className="text-xs sm:text-sm font-mono font-bold text-accent-red group-hover:underline transition-colors">
+                        {c.officialPublicHub || 'Official (Public on Hub)'}
+                      </span>
+                    </div>
+                  </Tooltip>
+                )}
+              </div>
+            </div>
+
+            {showTranslations && (
+              <div className="mt-4 flex flex-col gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-3">
+                <span className={LABEL}>{c.translationsHeading || 'Translations'}</span>
+                <p className="text-xs text-text-muted -mt-1">
+                  {c.translationsHint || 'Optional overrides shown to players using these languages. Anything left blank falls back to the default text above.'}
+                </p>
+                <div className="flex flex-wrap gap-1.5" role="tablist">
+                  {TRANSLATABLE_LOCALES.map((loc) => (
+                    <button
+                      key={loc}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeTranslationLocale === loc}
+                      onClick={() => setActiveTranslationLocale(loc)}
+                      className={cn(
+                        'rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer',
+                        activeTranslationLocale === loc
+                          ? 'bg-accent-red text-text-inverted'
+                          : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
+                      )}
+                    >
+                      {loc}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <label>
+                    <span className={LABEL}>{c.translationsRosterName || 'Roster name'}</span>
+                    <input
+                      value={rosterTranslations[activeTranslationLocale]?.name || ''}
+                      maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
+                      onChange={(e) =>
+                        setRosterTranslations((prev) => ({
+                          ...prev,
+                          [activeTranslationLocale]: { ...prev[activeTranslationLocale], name: e.target.value, description: prev[activeTranslationLocale]?.description || '' },
+                        }))
+                      }
+                      className={FIELD}
+                    />
+                  </label>
+                  <label>
+                    <span className={LABEL}>{c.translationsRosterDescription || 'Description'}</span>
+                    <input
+                      value={rosterTranslations[activeTranslationLocale]?.description || ''}
+                      maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
+                      onChange={(e) =>
+                        setRosterTranslations((prev) => ({
+                          ...prev,
+                          [activeTranslationLocale]: { ...prev[activeTranslationLocale], description: e.target.value, name: prev[activeTranslationLocale]?.name || '' },
+                        }))
+                      }
+                      className={FIELD}
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
+          </Section>
+        </div>
+
+        {/* Desktop top right buttons (>= lg) */}
+        <div className="hidden lg:flex shrink-0 lg:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
+          {submitButton(
+            'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
+          )}
+        </div>
       </header>
 
-      <div className="flex flex-col gap-6 w-full">
-        <h1 className="text-xl sm:text-2xl font-black font-mono uppercase tracking-wide text-text-primary">
-          {editId ? (c.editTitle || 'Edit Roster') : (c.title || 'Create a Roster')}
-        </h1>
-        <p className="text-sm text-text-muted -mt-4">{c.subtitle || "Name it, add candidates, and it's saved in this browser."}</p>
-
-        {/* Admin Controls (Only visible to admins - normal users/guests do not see mode switcher or hints) */}
-        {isUserAdmin && (
-          <div className="flex flex-col gap-3 p-4 rounded-3xl border border-accent-red/30 bg-accent-red/5 backdrop-blur-md shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-accent-red/20 pb-3">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-accent-red shrink-0" />
-                <span className="font-mono text-xs font-black uppercase tracking-wider text-accent-red">
-                  {c.adminConfig}
-                </span>
-              </div>
-              <label className="inline-flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={official}
-                  onChange={(e) => setOfficial(e.target.checked)}
-                  className="h-4 w-4 rounded accent-accent-red cursor-pointer"
-                />
-                <span className="text-xs font-mono font-bold text-text-primary hover:text-accent-red transition-colors">
-                  {c.officialPublicHub}
-                </span>
-              </label>
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-              <div className="flex items-center gap-1.5 p-1 bg-bg-primary rounded-2xl border border-border-color">
-                <button
-                  type="button"
-                  onClick={() => patch({ roster_mode: 'simple' })}
-                  className={cn(
-                    'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider font-mono transition-all cursor-pointer touch-manipulation',
-                    draft.roster_mode === 'simple'
-                      ? 'bg-accent-red text-text-inverted shadow-md shadow-accent-red/20'
-                      : 'text-text-muted hover:text-text-primary'
-                  )}
-                >
-                  <Zap className="h-3.5 w-3.5" />
-                  <span>{c.simpleVersion}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => patch({ roster_mode: 'full' })}
-                  className={cn(
-                    'flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider font-mono transition-all cursor-pointer touch-manipulation',
-                    draft.roster_mode === 'full'
-                      ? 'bg-accent-red text-text-inverted shadow-md shadow-accent-red/20'
-                      : 'text-text-muted hover:text-text-primary'
-                  )}
-                >
-                  <Sparkles className="h-3.5 w-3.5" />
-                  <span>{c.fullVersion}</span>
-                </button>
-              </div>
-
-              <div className="text-xs text-text-muted font-mono px-2">
-                {draft.roster_mode === 'simple'
-                  ? c.simpleVersionDesc
-                  : c.fullVersionDesc}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* BLOCK 1: THE BASICS (Collapsible Accordion) */}
-        <CollapsibleSection
-          title={c.stepBasics || 'The Basics'}
-          subtitle="Roster name, category, description, cover image & theme"
-          isOpen={basicsOpen}
-          onToggle={() => setBasicsOpen((v) => !v)}
-          icon={Sparkles}
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            <label>
-              <span className={LABEL}>{c.nameLabel || 'Roster name'}</span>
-              <input
-                value={draft.name}
-                maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
-                onChange={(e) => patch({ name: e.target.value })}
-                placeholder={c.namePlaceholder || 'e.g. Chapter 34 Cast'}
-                aria-invalid={attempted && nameMissing}
-                className={cn(FIELD, attempted && nameMissing && 'border-accent-red')}
-              />
-            </label>
-            <label>
-              <span className={LABEL}>{c.categoryLabel || 'Category'}</span>
-              <input
-                value={draft.category}
-                maxLength={64}
-                onChange={(e) => patch({ category: e.target.value })}
-                placeholder={c.categoryPlaceholder || 'e.g. Custom'}
-                className={FIELD}
-              />
-            </label>
-            <label className="md:col-span-2">
-              <span className={LABEL}>{c.descriptionLabel || 'Description (optional)'}</span>
-              <textarea
-                value={draft.description}
-                maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
-                onChange={(e) => patch({ description: e.target.value })}
-                placeholder={c.descriptionPlaceholder || 'What is this roster about?'}
-                rows={2}
-                className={TEXTAREA_FIELD}
-              />
-            </label>
-            <div>
-              <span className={LABEL}>{c.coverImageLabel || 'Cover image URL (optional)'}</span>
-              <div className="flex gap-2">
-                <input
-                  value={draft.cover_image_url}
-                  onChange={(e) => patch({ cover_image_url: e.target.value })}
-                  placeholder={c.coverImagePlaceholder || 'https://...'}
-                  inputMode="url"
-                  aria-invalid={attempted && coverInvalid}
-                  className={cn(FIELD, attempted && coverInvalid && 'border-accent-red')}
-                />
-                <button
-                  type="button"
-                  onClick={() => setIsCropModalOpen(true)}
-                  title={c.cropCoverTitle}
-                  className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
-                >
-                  <Crop className="h-4 w-4 text-accent-red" />
-                  <span className="hidden sm:inline">{c.cropCoverBadge}</span>
-                </button>
-              </div>
-
-              {safeCover ? (
-                <div
-                  onClick={() => setIsCropModalOpen(true)}
-                  className="mt-3 relative group overflow-hidden rounded-2xl border border-border-color bg-bg-elevated aspect-video max-w-md shadow-md cursor-pointer"
-                  title={c.cropCoverTitle}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
-                  <img
-                    src={safeCover}
-                    alt=""
-                    referrerPolicy="no-referrer"
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted font-mono text-xs font-bold">
-                    <Crop className="h-5 w-5 text-accent-red" />
-                    <span>{c.cropClickPrompt}</span>
-                  </div>
-                </div>
-              ) : isUserAdmin ? (
-                <button
-                  type="button"
-                  onClick={() => setIsCropModalOpen(true)}
-                  className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-dashed border-border-color text-xs font-mono text-text-secondary hover:text-accent-red hover:border-accent-red/50 transition-colors cursor-pointer"
-                >
-                  <Crop className="h-3.5 w-3.5" />
-                  <span>{c.selectCropLocal}</span>
-                </button>
-              ) : null}
-            </div>
-            <label>
-              <span className={LABEL}>{c.themeColorLabel || 'Theme color'}</span>
-              <input
-                type="color"
-                value={draft.theme_color || '#ff0055'}
-                onChange={(e) => patch({ theme_color: e.target.value })}
-                className="h-11 w-full cursor-pointer rounded-xl border border-border-color bg-bg-primary"
-              />
-            </label>
-            <label className="md:col-span-2 flex items-center gap-2.5">
-              <input
-                type="checkbox"
-                checked={draft.is_nsfw}
-                onChange={(e) => patch({ is_nsfw: e.target.checked })}
-                className="h-4 w-4 shrink-0 accent-accent-red"
-              />
-              <span className={cn(LABEL, 'mb-0')}>{c.nsfwLabel || 'Contains NSFW content'}</span>
-            </label>
-
-          </div>
-
-          {showTranslations && (
-            <div className="mt-4 flex flex-col gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-3">
-              <span className={LABEL}>{c.translationsHeading || 'Translations'}</span>
-              <p className="text-xs text-text-muted -mt-1">
-                {c.translationsHint || 'Optional overrides shown to players using these languages. Anything left blank falls back to the default text above.'}
-              </p>
-              <div className="flex flex-wrap gap-1.5" role="tablist">
-                {TRANSLATABLE_LOCALES.map((loc) => (
-                  <button
-                    key={loc}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeTranslationLocale === loc}
-                    onClick={() => setActiveTranslationLocale(loc)}
-                    className={cn(
-                      'rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer',
-                      activeTranslationLocale === loc
-                        ? 'bg-accent-red text-text-inverted'
-                        : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
-                    )}
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <label>
-                  <span className={LABEL}>{c.translationsRosterName || 'Roster name'}</span>
-                  <input
-                    value={rosterTranslations[activeTranslationLocale]?.name || ''}
-                    maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
-                    onChange={(e) =>
-                      setRosterTranslations((prev) => ({
-                        ...prev,
-                        [activeTranslationLocale]: { ...prev[activeTranslationLocale], name: e.target.value, description: prev[activeTranslationLocale]?.description || '' },
-                      }))
-                    }
-                    className={FIELD}
-                  />
-                </label>
-                <label>
-                  <span className={LABEL}>{c.translationsRosterDescription || 'Description'}</span>
-                  <input
-                    value={rosterTranslations[activeTranslationLocale]?.description || ''}
-                    maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
-                    onChange={(e) =>
-                      setRosterTranslations((prev) => ({
-                        ...prev,
-                        [activeTranslationLocale]: { ...prev[activeTranslationLocale], description: e.target.value, name: prev[activeTranslationLocale]?.name || '' },
-                      }))
-                    }
-                    className={FIELD}
-                  />
-                </label>
-              </div>
-            </div>
-          )}
-        </CollapsibleSection>
-
-        {/* BLOCK 2: ROLES & GENDERS (Collapsible Accordion) */}
-        <CollapsibleSection
+      {/* BLOCK 2: ROLES & GENDERS */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+        <Section
           title={c.rolesGendersTitle}
-          subtitle={c.rolesGendersSubtitle}
           badge={`${effectiveRoles.length} roles • ${effectiveGenders.length} genders`}
-          isOpen={taxonomiesOpen}
-          onToggle={() => setTaxonomiesOpen((v) => !v)}
-          icon={Tag}
+          defaultOpen={false}
         >
           <RosterTaxonomyBlock
             dict={dict}
@@ -683,75 +738,95 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
             onChangeGenders={(genders) => patch({ custom_genders: genders })}
             onRegisterTerm={registerTerm}
           />
-        </CollapsibleSection>
+        </Section>
+      </div>
 
-        {/* BLOCK 3: CANDIDATES (Collapsible Accordion) */}
-        <CollapsibleSection
+      {/* BLOCK 3: CANDIDATES */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+        <Section
           title={c.stepEntities || 'Candidates'}
-          subtitle={c.candidatesSubtitle}
           badge={draft.entities.length}
-          isOpen={candidatesOpen}
-          onToggle={() => setCandidatesOpen((v) => !v)}
-          icon={Users}
-          headerRight={
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                addEntity();
-                setCandidatesOpen(true);
-              }}
-              disabled={draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities}
-              className={cn(BTN_SECONDARY, 'h-8 px-2.5 text-xs font-mono')}
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span>{c.add}</span>
-            </button>
-          }
-        >
-          <div className="flex flex-col gap-3">
-            {draft.entities.length === 0 && (
-              <p className="text-sm text-text-muted">{c.noEntitiesYet || 'No candidates yet. Add your first one above.'}</p>
-            )}
-            {draft.entities.map((entity, i) => (
-              <EntityEditor
-                key={entity.key}
-                entity={entity}
-                index={i}
-                onChange={(patchValue) => patchEntity(entity.key, patchValue)}
-                onRemove={() => removeEntity(entity.key)}
-                showTranslations={showTranslations}
-                translations={entityTranslations[entity.key] || {}}
-                onTranslationChange={(loc, field, value) => setEntityTranslation(entity.key, loc, field, value)}
-                locale={locale}
-                dict={dict}
-                isSimpleMode={isSimpleMode}
-                customLabels={draft.custom_labels}
-                availableRoles={effectiveRoles}
-                availableGenders={effectiveGenders}
-                onRegisterTaxonomy={registerTerm}
-              />
-            ))}
+          defaultOpen={true}
+          headerAction={
             <button
               type="button"
               onClick={addEntity}
               disabled={draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities}
-              className={cn(BTN_SECONDARY, 'w-fit')}
+              className={cn(
+                BTN_SECONDARY,
+                'min-h-[32px] sm:min-h-[36px] px-3 sm:px-4 py-1 sm:py-1.5 text-xs font-bold uppercase tracking-wider'
+              )}
             >
-              <Plus className="h-4 w-4" aria-hidden="true" />
-              {c.addEntity || 'Add Candidate'}
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{c.addEntity || 'Add Candidate'}</span>
             </button>
-          </div>
-        </CollapsibleSection>
+          }
+        >
+          <div className="flex flex-col gap-6">
+            {draft.entities.length === 0 ? (
+              <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl border border-dashed border-border-color bg-bg-elevated/20">
+                <p className="text-sm text-text-muted mb-3 font-mono">
+                  {c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
+                </p>
+                <button
+                  type="button"
+                  onClick={addEntity}
+                  className={cn(BTN_SECONDARY, 'min-h-[36px] px-4 text-xs font-bold uppercase tracking-wider')}
+                >
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  <span>{c.addEntity || 'Add Candidate'}</span>
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Part 1: All Inputs for Currently Selected Candidate */}
+                {activeEntity && (
+                  <CandidateFormInputs
+                    key={activeEntity.key}
+                    entity={activeEntity}
+                    index={activeEntityIndex}
+                    totalCount={draft.entities.length}
+                    onChange={(patchValue) => patchEntity(activeEntity.key, patchValue)}
+                    onRemove={() => removeEntity(activeEntity.key)}
+                    showTranslations={showTranslations}
+                    translations={entityTranslations[activeEntity.key] || {}}
+                    onTranslationChange={(loc, field, value) => setEntityTranslation(activeEntity.key, loc, field, value)}
+                    locale={locale}
+                    dict={dict}
+                    isSimpleMode={isSimpleMode}
+                    customLabels={draft.custom_labels}
+                    availableRoles={effectiveRoles}
+                    availableGenders={effectiveGenders}
+                    onRegisterTaxonomy={registerTerm}
+                  />
+                )}
 
-        {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES (Collapsible Accordion) */}
-        <CollapsibleSection
+                {/* Horizontal divider between inputs and candidate tiles */}
+                <div className="border-t border-border-color my-1" />
+
+                {/* Part 2: Squished Candidate Tiles (matching Tier Lists items) */}
+                <CandidateTiles
+                  entities={draft.entities}
+                  selectedKey={activeEntity?.key || ''}
+                  onSelect={(k) => setSelectedEntityKey(k)}
+                  onRename={(k, name) => patchEntity(k, { name })}
+                  onRemove={(k) => removeEntity(k)}
+                  onAdd={addEntity}
+                  canAdd={draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities}
+                  dict={dict}
+                />
+              </>
+            )}
+          </div>
+        </Section>
+      </div>
+
+      {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto">
+        <Section
           title={c.customArchetypesTitle}
-          subtitle={c.customArchetypesSubtitle}
           badge={draft.romance_archetypes.length}
-          isOpen={archetypesOpen}
-          onToggle={() => setArchetypesOpen((v) => !v)}
-          icon={HeartHandshake}
+          defaultOpen={false}
         >
           <RomanceArchetypeBuilder
             dict={dict}
@@ -761,20 +836,12 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
             availableGenders={effectiveGenders}
             embedded={true}
           />
-        </CollapsibleSection>
+        </Section>
+      </div>
 
+      {/* Feedback Alerts */}
+      <div className="w-full max-w-4xl 2xl:max-w-5xl mx-auto flex flex-col gap-4">
         <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} dict={dict} />
-
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={submit}
-            disabled={publishingNow}
-            className={cn(BTN_PRIMARY, 'w-full sm:w-auto min-h-[48px] px-8 text-base', publishingNow && 'opacity-60 cursor-not-allowed')}
-          >
-            {submitLabel}
-          </button>
-        </div>
       </div>
 
       {/* Cover Image 16:9 Viewport Crop Modal */}
@@ -794,79 +861,69 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
   );
 }
 
-interface CollapsibleSectionProps {
+interface SectionProps {
   title: string;
-  subtitle?: string;
   badge?: string | number;
-  isOpen: boolean;
-  onToggle: () => void;
+  defaultOpen?: boolean;
+  headerAction?: React.ReactNode;
+  toggleAria?: string;
   children: React.ReactNode;
-  icon?: React.ComponentType<{ className?: string }>;
-  headerRight?: React.ReactNode;
 }
 
-function CollapsibleSection({
-  title,
-  subtitle,
-  badge,
-  isOpen,
-  onToggle,
-  children,
-  icon: Icon,
-  headerRight,
-}: CollapsibleSectionProps) {
-  return (
-    <section className="rounded-3xl border border-border-color bg-bg-surface/90 backdrop-blur-xl shadow-md overflow-hidden flex flex-col transition-all">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        className="w-full flex items-center justify-between py-4 px-5 sm:py-4.5 sm:px-7 cursor-pointer group select-none transition-colors text-left border-b border-border-color/60 hover:bg-bg-elevated/40"
-      >
-        <div className="flex items-center gap-3 min-w-0">
-          {Icon && (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red">
-              <Icon className="h-4.5 w-4.5" />
-            </div>
-          )}
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary font-mono group-hover:text-accent-red transition-colors">
-                {title}
-              </h2>
-              {badge !== undefined && (
-                <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded-full bg-bg-elevated border border-border-color text-text-secondary">
-                  {badge}
-                </span>
-              )}
-            </div>
-            {subtitle && (
-              <p className="text-xs text-text-muted mt-0.5 font-mono truncate">{subtitle}</p>
-            )}
-          </div>
-        </div>
+function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, children }: SectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
-        <div className="flex items-center gap-2 shrink-0 ml-3">
-          {headerRight}
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary group-hover:text-accent-red transition-colors">
+  return (
+    <section className="rounded-xl border border-border-color bg-bg-surface shadow-xs overflow-hidden transition-colors flex flex-col">
+      <div className="relative w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-3.5 bg-bg-surface hover:bg-bg-elevated/40 transition-colors">
+        {/* Left spacer to balance right side controls on wider screens */}
+        <div className="w-24 sm:w-32 hidden sm:block pointer-events-none" aria-hidden="true" />
+
+        {/* Center toggle clickable area */}
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-expanded={isOpen}
+          className="flex-1 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 min-w-0 px-1 sm:px-2 cursor-pointer select-none text-center"
+        >
+          <h2 className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary hover:text-accent-red transition-colors font-mono">
+            {title}
+          </h2>
+          {badge !== undefined && (
+            <span className="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-bg-elevated border border-border-color text-text-secondary whitespace-nowrap">
+              {badge}
+            </span>
+          )}
+        </button>
+
+        {/* Right side controls: headerAction sticky beside chevron */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {headerAction}
+          <button
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+            aria-label={toggleAria || title}
+            className="flex items-center justify-center p-1 text-accent-red hover:text-accent-red-hover transition-colors cursor-pointer"
+          >
             <ChevronDown
               className={cn(
                 'h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 ease-in-out',
                 isOpen ? 'rotate-180' : 'rotate-0'
               )}
             />
-          </div>
+          </button>
         </div>
-      </button>
+      </div>
 
       <div
-        className={cn(
-          'grid transition-[grid-template-rows,opacity] duration-300 ease-in-out',
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
           isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        )}
+        }`}
       >
         <div className="overflow-hidden">
-          <div className="p-4 sm:p-6">{children}</div>
+          <div className="p-4 sm:p-6 2xl:p-7 border-t border-border-color">
+            {children}
+          </div>
         </div>
       </div>
     </section>
@@ -891,10 +948,10 @@ function Feedback({
   const messages = [...errors, ...(saveErrorText ? [saveErrorText] : []), ...(submitError ? [submitError] : []), ...(publishError ? [publishError] : [])];
   if (messages.length === 0) return null;
   return (
-    <div role="alert" className="flex flex-col gap-1 rounded-2xl border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red">
+    <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 text-sm font-semibold text-accent-red text-center">
       {messages.map((m) => (
-        <p key={m} className="flex items-start gap-2">
-          <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+        <p key={m} className="flex items-center justify-center gap-2">
+          <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
           {m}
         </p>
       ))}

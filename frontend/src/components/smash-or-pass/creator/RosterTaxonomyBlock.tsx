@@ -75,9 +75,9 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 font-mono">
+    <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border-color font-mono">
       {/* 1. ROLES SECTION */}
-      <div className="flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-bg-primary/50 border border-border-color shadow-inner">
+      <div className="flex flex-col gap-3 pb-6 md:pb-0 md:pr-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-accent-red" />
@@ -166,7 +166,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
       </div>
 
       {/* 2. GENDERS SECTION */}
-      <div className="flex flex-col gap-3 p-4 sm:p-5 rounded-2xl bg-bg-primary/50 border border-border-color shadow-inner">
+      <div className="flex flex-col gap-3 pt-6 md:pt-0 md:pl-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="h-4 w-4 text-accent-green" />

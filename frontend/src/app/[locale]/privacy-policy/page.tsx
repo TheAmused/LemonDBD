@@ -45,10 +45,13 @@ interface BlockCardProps {
 
 /** Collapsible card, the same drawer pattern the About page uses (state remembered per block). */
 function BlockCard({ id, title, accent, children }: BlockCardProps) {
-  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_privacy_${id}`, true);
+  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_privacy_${id}`, false);
 
   return (
-    <div id={id} className="grid scroll-mt-6 grid-cols-1 grid-rows-1">
+    <div
+      id={id}
+      className="grid w-full scroll-mt-6 grid-cols-1 grid-rows-1 md:w-[calc(50%-0.75rem)] xl:w-[calc((100%-3rem)/3)]"
+    >
       <section
         className={`col-start-1 row-start-1 z-10 flex flex-col overflow-hidden rounded-3xl border bg-bg-surface backdrop-blur-xl shadow-md transition-colors ${
           accent ? 'border-accent-red/30' : 'border-border-color'
@@ -129,10 +132,14 @@ export default function PrivacyPolicyPage() {
       );
     }
     const section = privacy.sections[id as (typeof PRIVACY_SECTION_ORDER)[number]];
+    const P = 'text-text-muted text-justify [text-justify:inter-word] hyphens-auto';
+    // Lead-in paragraph, then the list, then any closing paragraphs (e.g. how to use your rights).
+    const lead = section.items.length > 0 ? section.paragraphs.slice(0, 1) : section.paragraphs;
+    const closing = section.items.length > 0 ? section.paragraphs.slice(1) : [];
     return (
       <>
-        {section.paragraphs.map((text, i) => (
-          <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
+        {lead.map((text, i) => (
+          <p key={i} className={P}>
             <RichText text={fill(text)} />
           </p>
         ))}
@@ -145,6 +152,11 @@ export default function PrivacyPolicyPage() {
             ))}
           </ul>
         ) : null}
+        {closing.map((text, i) => (
+          <p key={`c${i}`} className={P}>
+            <RichText text={fill(text)} />
+          </p>
+        ))}
       </>
     );
   };
@@ -158,25 +170,24 @@ export default function PrivacyPolicyPage() {
     >
       <CampfireParticles />
       <div className="relative z-10 mx-auto flex w-full max-w-[110rem] flex-col gap-6 py-6 sm:gap-8 sm:py-10">
-        <Link
-          href={`/${locale}/about`}
-          className="inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-text-muted transition-colors hover:text-accent-red sm:text-sm"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {privacy?.backToAbout}
-        </Link>
-
-        <header className="flex flex-col items-center gap-2.5 text-center sm:gap-3">
-          <h1 className="font-mono text-2xl font-black tracking-tight text-text-primary sm:text-3xl md:text-4xl">
+        <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
+          <Link
+            href={`/${locale}/about`}
+            className="inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-text-muted transition-colors hover:text-accent-red sm:text-sm"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {privacy?.backToAbout}
+          </Link>
+          <h1 className="col-span-2 row-start-2 text-center font-mono text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
             {privacy?.heading}
           </h1>
-          <p className="font-mono text-[11px] uppercase tracking-widest text-text-muted sm:text-xs">
+          <p className="justify-self-end text-right font-mono text-[11px] uppercase tracking-widest text-text-muted sm:col-start-3 sm:row-start-1 sm:text-xs">
             {privacy?.lastUpdatedLabel}: {privacy?.lastUpdated}
           </p>
         </header>
 
         {privacy ? (
-          <div className="grid grid-cols-1 items-stretch gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="flex flex-wrap items-start justify-center gap-6">
             {ALL_BLOCK_IDS.map((id) => (
               <BlockCard key={id} id={id} title={blockTitle(id)} accent={id === SUMMARY_BLOCK}>
                 {renderBlockBody(id)}

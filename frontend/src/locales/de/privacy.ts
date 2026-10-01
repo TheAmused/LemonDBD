@@ -98,6 +98,7 @@ export default {
       heading: "Deine Rechte",
       paragraphs: [
         "Je nach Wohnort (z. B. im EWR oder im Vereinigten Königreich) hast du das Recht auf:",
+        "Du kannst deine Profildaten selbst ändern und dein Konto auf deiner Profilseite löschen. Für eine Kopie deiner Daten oder zur Ausübung eines anderen Rechts schreibe an [{contactEmail}](mailto:{contactEmail}); wir antworten innerhalb eines Monats.",
       ],
       items: [
         "Auskunft über die von uns gespeicherten personenbezogenen Daten und eine Kopie;",

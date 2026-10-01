@@ -98,6 +98,7 @@ export default {
       heading: "Your rights",
       paragraphs: [
         "Depending on where you live (for example in the EEA or UK), you have the right to:",
+        "You can update your profile details and delete your account yourself on your profile page. For a copy of your data, or to use any other right, email [{contactEmail}](mailto:{contactEmail}); we answer within one month.",
       ],
       items: [
         "access the personal data we hold about you and get a copy;",

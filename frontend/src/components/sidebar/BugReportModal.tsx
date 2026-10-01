@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -252,7 +253,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           >
             {isSubmitting ? (
               <>
-                <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" aria-hidden="true" />
+                <Spinner size="xs" tone="inverted" />
                 <span>{t.bugSubmitting || ''}</span>
               </>
             ) : (

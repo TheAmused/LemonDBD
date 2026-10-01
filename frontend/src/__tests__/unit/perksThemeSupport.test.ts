@@ -5,7 +5,7 @@ import React from 'react';
 import fs from 'node:fs';
 import path from 'node:path';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { Pagination } from '@/components/Pagination';
+import { Pagination } from '@/components/common/Pagination';
 import { PerkDescription } from '@/components/PerkDescription';
 import { PerkCard } from '@/components/PerkCard';
 import { Perk } from '@/types/perks';

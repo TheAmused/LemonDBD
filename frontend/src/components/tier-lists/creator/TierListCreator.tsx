@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronLeft, History, SearchX, TriangleAlert, X } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
@@ -28,6 +28,7 @@ import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
+import { Checkbox } from '@/components/common/Checkbox';
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -447,18 +448,12 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
                 )}
               </label>
               {isAdmin && !editId && (
-                <label className="md:col-span-2 flex items-center justify-center gap-2.5 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={official}
-                    onChange={(e) => setOfficial(e.target.checked)}
-                    className="h-4 w-4 shrink-0 accent-accent-red"
-                  />
+                <Checkbox checked={official} onChange={setOfficial} className="md:col-span-2 justify-center gap-2.5">
                   <span className="text-center">
                     <span className={cn(LABEL, 'inline')}>{c.official}</span>
                     <span className="ml-2 text-xs 2xl:text-sm text-text-muted">{c.officialHint}</span>
                   </span>
-                </label>
+                </Checkbox>
               )}
             </div>
           </Section>

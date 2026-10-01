@@ -1,11 +1,11 @@
 'use client';
-// frontend/src/components/common/ToggleSwitch.tsx
+// frontend/src/components/common/SegmentedControl.tsx
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 
-export interface ToggleSwitchOption<T extends string> {
+export interface SegmentedControlOption<T extends string> {
   value: T;
   label: React.ReactNode;
   icon?: React.ReactNode;
@@ -21,9 +21,9 @@ export interface ToggleSwitchOption<T extends string> {
   href?: string;
 }
 
-export interface ToggleSwitchProps<T extends string> {
+export interface SegmentedControlProps<T extends string> {
   value: T;
-  options: readonly ToggleSwitchOption<T>[];
+  options: readonly SegmentedControlOption<T>[];
   onChange: (value: T) => void;
   ariaLabel: string;
   size?: 'sm' | 'md';
@@ -34,20 +34,20 @@ const DEFAULT_THUMB = 'bg-accent-red text-text-inverted';
 
 export function resolveActiveIndex<T extends string>(
   value: T,
-  options: readonly ToggleSwitchOption<T>[]
+  options: readonly SegmentedControlOption<T>[]
 ): number {
   const index = options.findIndex((opt) => opt.value === value);
   return index === -1 ? 0 : index;
 }
 
-export function ToggleSwitch<T extends string>({
+export function SegmentedControl<T extends string>({
   value,
   options,
   onChange,
   ariaLabel,
   size = 'md',
   className,
-}: ToggleSwitchProps<T>) {
+}: SegmentedControlProps<T>) {
   const activeIndex = resolveActiveIndex(value, options);
   // Below sm (640px) these run noticeably smaller than the desktop size --
   // a phone screen has no room to render every control at full desktop

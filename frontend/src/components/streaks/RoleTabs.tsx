@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { Puzzle } from 'lucide-react';
-import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface RoleTabsProps {
@@ -28,7 +28,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
   const survivorLabel = dict?.characterDetail?.roleSurvivor || 'Survivor';
   const killerLabel = dict?.characterDetail?.roleKiller || 'Killer';
 
-  const options: readonly ToggleSwitchOption<StreakRole>[] = [
+  const options: readonly SegmentedControlOption<StreakRole>[] = [
     {
       value: 'survivor',
       href: `/${locale}/streaks/survivor`,
@@ -53,7 +53,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale, dict }) => {
   ];
 
   return (
-    <ToggleSwitch
+    <SegmentedControl
       ariaLabel={dict?.streaks?.streakRoleTabs || 'Streak Role Tabs'}
       value={activeRole}
       onChange={noop}

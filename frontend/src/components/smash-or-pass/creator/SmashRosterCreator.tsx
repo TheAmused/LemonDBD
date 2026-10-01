@@ -27,7 +27,7 @@ import {
   TriangleAlert,
   X,
 } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import { Switch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
 import type { Dictionary } from '@/locales/types';

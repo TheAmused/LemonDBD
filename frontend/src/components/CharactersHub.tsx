@@ -27,7 +27,7 @@ import { CharactersGridSkeleton } from '@/components/character-detail/Characters
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchJson, invalidate } from '@/services/dataCache';
 
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),

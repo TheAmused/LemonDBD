@@ -11,6 +11,7 @@ import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { SkeletonBlock } from '@/components/common/Skeleton';
 export interface CharacterRosterGridProps {
   role: Role;
   characters: OwnedCharacterItem[];
@@ -79,9 +80,9 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-4 animate-pulse">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-4">
           {Array.from({ length: 16 }).map((_, i) => (
-            <div key={i} className="aspect-square rounded-2xl bg-bg-elevated" />
+            <SkeletonBlock key={i} rounded="rounded-2xl" className="aspect-square" />
           ))}
         </div>
       ) : characters.length === 0 ? (

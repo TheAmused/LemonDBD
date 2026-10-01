@@ -16,7 +16,7 @@ import {
   Upload,
   X,
 } from 'lucide-react';
-import { ConfirmModal } from '@/components/ConfirmModal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import type { TierDefinition, TierItem, TierListDocument, TierPlacements } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { usePersistentString } from '@/hooks/usePersistentString';

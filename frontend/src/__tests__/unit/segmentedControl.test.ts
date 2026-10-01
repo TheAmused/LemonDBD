@@ -1,15 +1,15 @@
-// frontend/src/__tests__/unit/toggleSwitch.test.ts
+// frontend/src/__tests__/unit/segmentedControl.test.ts
 import test from 'node:test';
 import assert from 'node:assert';
-import { ToggleSwitch, resolveActiveIndex, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { SegmentedControl, resolveActiveIndex, SegmentedControlOption } from '@/components/common/SegmentedControl';
 
-test('ToggleSwitch is properly exported', () => {
-  assert.strictEqual(typeof ToggleSwitch, 'function');
+test('SegmentedControl is properly exported', () => {
+  assert.strictEqual(typeof SegmentedControl, 'function');
   assert.strictEqual(typeof resolveActiveIndex, 'function');
 });
 
 test('resolveActiveIndex resolves to the left option (0) when value matches it', () => {
-  const options: readonly [ToggleSwitchOption<'a' | 'b'>, ToggleSwitchOption<'a' | 'b'>] = [
+  const options: readonly [SegmentedControlOption<'a' | 'b'>, SegmentedControlOption<'a' | 'b'>] = [
     { value: 'a', label: 'A' },
     { value: 'b', label: 'B' },
   ];
@@ -17,7 +17,7 @@ test('resolveActiveIndex resolves to the left option (0) when value matches it',
 });
 
 test('resolveActiveIndex resolves to the right option (1) when value matches it', () => {
-  const options: readonly [ToggleSwitchOption<'a' | 'b'>, ToggleSwitchOption<'a' | 'b'>] = [
+  const options: readonly [SegmentedControlOption<'a' | 'b'>, SegmentedControlOption<'a' | 'b'>] = [
     { value: 'a', label: 'A' },
     { value: 'b', label: 'B' },
   ];
@@ -25,7 +25,7 @@ test('resolveActiveIndex resolves to the right option (1) when value matches it'
 });
 
 test('resolveActiveIndex works for the real Survivor/Killer role pair', () => {
-  const options: readonly [ToggleSwitchOption<'Survivor' | 'Killer'>, ToggleSwitchOption<'Survivor' | 'Killer'>] = [
+  const options: readonly [SegmentedControlOption<'Survivor' | 'Killer'>, SegmentedControlOption<'Survivor' | 'Killer'>] = [
     { value: 'Survivor', label: 'Survivors' },
     { value: 'Killer', label: 'Killers' },
   ];
@@ -34,7 +34,7 @@ test('resolveActiveIndex works for the real Survivor/Killer role pair', () => {
 });
 
 test('resolveActiveIndex works for the real All/Owned ownership pair', () => {
-  const options: readonly [ToggleSwitchOption<'all' | 'owned'>, ToggleSwitchOption<'all' | 'owned'>] = [
+  const options: readonly [SegmentedControlOption<'all' | 'owned'>, SegmentedControlOption<'all' | 'owned'>] = [
     { value: 'all', label: 'All' },
     { value: 'owned', label: 'Owned' },
   ];
@@ -43,7 +43,7 @@ test('resolveActiveIndex works for the real All/Owned ownership pair', () => {
 });
 
 test('resolveActiveIndex works for the real asc/desc sort-order pair', () => {
-  const options: readonly [ToggleSwitchOption<'asc' | 'desc'>, ToggleSwitchOption<'asc' | 'desc'>] = [
+  const options: readonly [SegmentedControlOption<'asc' | 'desc'>, SegmentedControlOption<'asc' | 'desc'>] = [
     { value: 'asc', label: 'A-Z' },
     { value: 'desc', label: 'Z-A' },
   ];

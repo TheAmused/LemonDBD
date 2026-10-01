@@ -17,10 +17,11 @@ import {
 } from 'lucide-react';
 import { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
-import { Pagination } from '@/components/Pagination';
+import { Pagination } from '@/components/common/Pagination';
 import { staticUrl } from '@/utils/api';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { EmptyState } from '@/components/common/EmptyState';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -176,18 +177,16 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       {loading ? (
         <UserBugReportsSkeleton dict={dict} count={3} />
       ) : reports.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-border-color bg-bg-surface p-6 sm:p-8 text-center space-y-2.5 shadow-sm">
-          <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-accent-red/10 text-accent-red">
-            <FogReportIcon className="h-5 w-5" />
-          </div>
-          <h3 className="text-sm sm:text-base font-black text-text-primary font-mono">
-            {t.noReportsTitle || 'No Bug Reports Submitted'}
-          </h3>
-          <p className="text-xs text-text-secondary max-w-sm mx-auto">
-            {t.noReportsSubtitle ||
-              'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'}
-          </p>
-        </div>
+        <EmptyState
+          variant="compact"
+          icon={FogReportIcon}
+          iconClassName="mx-auto mb-2 h-8 w-8 text-accent-red"
+          title={t.noReportsTitle || 'No Bug Reports Submitted'}
+          subtitle={
+            t.noReportsSubtitle ||
+            'You have not reported any glitches yet. If you spot incorrect perk numbers or map callout issues, report them!'
+          }
+        />
       ) : (
         /* Scrollable and Drag-to-Scroll container on PC & Mobile */
         <div

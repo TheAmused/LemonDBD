@@ -49,7 +49,7 @@ const ScraperConfigModal = dynamic(
   () => import('@/components/ScraperConfigModal').then((m) => m.ScraperConfigModal),
   { ssr: false }
 );
-const ConfirmModal = dynamic(() => import('@/components/ConfirmModal').then((m) => m.ConfirmModal), {
+const ConfirmModal = dynamic(() => import('@/components/common/ConfirmModal').then((m) => m.ConfirmModal), {
   ssr: false,
 });
 

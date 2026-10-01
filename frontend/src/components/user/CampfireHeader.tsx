@@ -18,6 +18,7 @@ import type { Dictionary } from '@/locales/types';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { Spinner } from '@/components/common/Spinner';
 interface CampfireHeaderProps {
   user: {
     id: number;
@@ -85,7 +86,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 </div>
                 {isUploadingAvatar && (
                   <div className="absolute inset-0 z-20 flex items-center justify-center rounded-2xl sm:rounded-3xl bg-bg-primary/70 backdrop-blur-xs">
-                    <span className="h-7 w-7 animate-spin rounded-full border-2 border-accent-red border-t-transparent" />
+                    <Spinner size="lg" tone="accent" className="h-7 w-7" />
                   </div>
                 )}
               </div>

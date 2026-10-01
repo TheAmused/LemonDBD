@@ -22,6 +22,7 @@ import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
+import { EmptyState } from '@/components/common/EmptyState';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -372,9 +373,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         </div>
 
         {sortedAndFilteredOfferings.length === 0 ? (
-          <div className="flex items-center justify-center p-12 text-center text-text-muted text-xs italic">
-            {t.noOfferingsFound || 'No offerings found in this category matching your active filter.'}
-          </div>
+          <EmptyState variant="inline" title={t.noOfferingsFound || 'No offerings found in this category matching your active filter.'} />
         ) : (
           <div className="flex flex-wrap items-center justify-center gap-3.5" role="list">
             {sortedAndFilteredOfferings.map((offering, idx) => {

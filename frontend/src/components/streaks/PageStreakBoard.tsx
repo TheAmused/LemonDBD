@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
-import { ConfirmModal } from '@/components/ConfirmModal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
 import { fetchRoster, resetAllRuns } from '@/services/pageStreakApi';
 import { RosterEntry } from '@/types/pageStreak';

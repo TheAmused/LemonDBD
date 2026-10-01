@@ -2,7 +2,7 @@
 'use client';
 import type { Dictionary } from '@/locales/types';
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 interface UserBugReportsSkeletonProps {
   dict?: Dictionary | null;

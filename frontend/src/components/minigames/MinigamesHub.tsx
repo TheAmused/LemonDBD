@@ -37,6 +37,8 @@ import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigame
 import { createSharedLink } from '@/services/minigameApi';
 
 import { tip } from '@/components/common/Tooltip';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
+import { EmptyState } from '@/components/common/EmptyState';
 interface MinigamesHubProps {
   locale: string;
   dict: Dictionary;
@@ -63,11 +65,15 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const isCompletedToday = streakData.lastCompletedDate === todayStr;
 
-  const handleDelete = (id: string | number) => {
-    if (window.confirm(t.confirmDelete)) {
-      deleteCustomChallenge(id);
-      setCustomTrials(getCustomChallenges());
-    }
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | number | null>(null);
+
+  const handleDelete = (id: string | number) => setPendingDeleteId(id);
+
+  const confirmDelete = () => {
+    if (pendingDeleteId === null) return;
+    deleteCustomChallenge(pendingDeleteId);
+    setCustomTrials(getCustomChallenges());
+    setPendingDeleteId(null);
   };
 
   const handleExport = (trial: ChallengeDefinition) => {
@@ -403,9 +409,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
         </div>
 
         {customTrials.length === 0 ? (
-          <div className="w-full p-8 rounded-3xl bg-bg-surface border border-dashed border-border-color text-center">
-            <p className="text-sm text-text-muted">{t.noCustomTrials}</p>
-          </div>
+          <EmptyState variant="compact" title={t.noCustomTrials} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {customTrials.map((trial) => {
@@ -481,6 +485,15 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
           </div>
         )}
       </div>
+      <ConfirmModal
+        open={pendingDeleteId !== null}
+        title={t.deleteTrial}
+        message={t.confirmDelete}
+        confirmLabel={t.deleteTrial}
+        cancelLabel={t.cancel}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </div>
   );
 };

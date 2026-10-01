@@ -3,7 +3,7 @@
 
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 interface AdminTabContentSkeletonProps {
   dict?: Dictionary | null;

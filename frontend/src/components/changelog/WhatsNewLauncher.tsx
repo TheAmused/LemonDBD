@@ -7,7 +7,6 @@ import {
   Plus,
   Pencil,
   Trash2,
-  Loader2,
   Sparkles,
   Skull,
   ChevronDown,
@@ -31,12 +30,13 @@ import dynamic from 'next/dynamic';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { RichText } from '@/components/common/RichText';
+import { Spinner } from '@/components/common/Spinner';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
 );
 const ConfirmModal = dynamic(
-  () => import('@/components/ConfirmModal').then((m) => m.ConfirmModal),
+  () => import('@/components/common/ConfirmModal').then((m) => m.ConfirmModal),
   { ssr: false }
 );
 
@@ -77,6 +77,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
   const [editingPost, setEditingPost] = useState<ChangelogPost | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editorError, setEditorError] = useState<string | null>(null);
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -129,6 +130,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
   const handleSave = async (draft: ChangelogPostDraft) => {
     if (!token) return;
     setSaving(true);
+    setEditorError(null);
     try {
       if (editingPost) {
         await updateChangelogPost(token, editingPost.id, draft);
@@ -139,7 +141,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       setEditingPost(null);
       await loadPosts();
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : t?.saveError || 'Failed to save changelog entry.');
+      setEditorError(err instanceof Error ? err.message : t?.saveError || 'Failed to save changelog entry.');
     } finally {
       setSaving(false);
     }
@@ -154,7 +156,8 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       setEditingPost(null);
       await loadPosts();
     } catch (err) {
-      window.alert(err instanceof Error ? err.message : t?.deleteError || 'Failed to delete changelog entry.');
+      setPendingDeleteId(null);
+      setEditorError(err instanceof Error ? err.message : t?.deleteError || 'Failed to delete changelog entry.');
     }
   };
 
@@ -345,7 +348,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         <div className="relative px-6 py-5 space-y-3">
         {loading && (
           <div className="flex items-center justify-center py-16 text-text-muted">
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Spinner size="md" />
           </div>
         )}
 
@@ -492,8 +495,10 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
         open={editorOpen}
         post={editingPost}
         saving={saving}
+        error={editorError}
         dict={dict}
         onClose={() => {
+          setEditorError(null);
           setEditorOpen(false);
           setEditingPost(null);
         }}

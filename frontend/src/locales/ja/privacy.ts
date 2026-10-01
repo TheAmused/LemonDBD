@@ -3,6 +3,11 @@ export default {
   pageTitle: "LemonDBD - プライバシーポリシー",
   heading: "プライバシーポリシー",
   backToAbout: "私たちについてへ戻る",
+  layoutHide: "このブロックを非表示",
+  layoutShow: "表示",
+  layoutDrag: "ドラッグして並べ替え",
+  layoutHiddenHeading: "非表示のブロック",
+  layoutReset: "レイアウトをリセット",
   lastUpdatedLabel: "最終更新日",
   lastUpdated: "2026年10月1日",
   intro:

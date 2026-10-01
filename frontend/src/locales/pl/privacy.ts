@@ -3,6 +3,11 @@ export default {
   pageTitle: "LemonDBD - Polityka prywatności",
   heading: "Polityka prywatności",
   backToAbout: "Wróć do strony O nas",
+  layoutHide: "Ukryj ten blok",
+  layoutShow: "Pokaż",
+  layoutDrag: "Przeciągnij, aby zmienić kolejność",
+  layoutHiddenHeading: "Ukryte bloki",
+  layoutReset: "Przywróć układ",
   lastUpdatedLabel: "Ostatnia aktualizacja",
   lastUpdated: "1 października 2026",
   intro:

@@ -3,6 +3,11 @@ export default {
   pageTitle: "LemonDBD - Datenschutzerklärung",
   heading: "Datenschutzerklärung",
   backToAbout: "Zurück zu Über uns",
+  layoutHide: "Diesen Block ausblenden",
+  layoutShow: "Einblenden",
+  layoutDrag: "Zum Umsortieren ziehen",
+  layoutHiddenHeading: "Ausgeblendete Blöcke",
+  layoutReset: "Layout zurücksetzen",
   lastUpdatedLabel: "Zuletzt aktualisiert",
   lastUpdated: "1. Oktober 2026",
   intro:

@@ -28,7 +28,7 @@ export default {
       paragraphs: ["You can use most of the site without an account. Depending on what you do, we process:"],
       items: [
         "<b>Account data:</b> username, email address, a hash of your password (never the password itself), avatar, preferred language, and short-lived verification and password-reset codes.",
-        "<b>What you save:</b> character and perk ownership, your profile showcase, tier lists, custom challenges, streaks, achievements and Smash or Pass votes. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
+        "<b>What you save:</b> character and perk ownership, your profile showcase, streak runs, challenge achievements, minigame stats and Smash or Pass votes. Your tier lists, Smash or Pass rosters and custom minigames stay in your own browser and are not sent to our servers. Visitors without an account get a random session ID so their Smash or Pass votes can be remembered.",
         "<b>Bug reports and messages:</b> the text, screenshots, name and email address you send us. Guests must give an email address so we can answer.",
         "<b>Technical data:</b> your IP address, browser type and request details, used for rate limiting, abuse prevention and fixing errors.",
         "<b>Voice commands (maps):</b> if you turn them on, your microphone audio is used to recognize map names. See the section on storage and third parties below for how this works.",
@@ -66,7 +66,7 @@ export default {
       heading: "Who sees your data",
       paragraphs: ["We do not sell your personal data or use it for advertising. We share it only as needed:"],
       items: [
-        "<b>Public content:</b> things you choose to publish, such as public tier lists or rosters and leaderboards, are visible to other visitors together with your username and avatar.",
+        "<b>Links you share:</b> when you share a tier list, roster or custom minigame, it is packed into the link itself (the part after the “#”, which your browser never sends to us). We do not store it and cannot see it; only people who receive the link can open it.",
         "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request.",
         "<b>Discord:</b> when you submit a bug report, its content (including your name, email address and screenshots) is forwarded to a private channel used by our team.",
         "<b>Legal reasons:</b> if the law requires it or to protect the site and its users from abuse.",
@@ -83,7 +83,7 @@ export default {
       heading: "How long we keep it",
       paragraphs: [
         "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. Analytics data is anonymous.",
-        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, saved content and uploaded avatar are then removed. Your bug reports are kept for our records, but your name and email address are removed from them. Copies already sent to our private Discord channel or stored in backups may remain for a limited time, and anything you posted publicly may be anonymized instead of removed.",
+        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, character and perk ownership, showcase, streak runs, minigame stats, challenge achievements and uploaded avatar are then removed. Smash or Pass votes stay as anonymous entries that are no longer tied to you. Your bug reports are kept for our records, but your name and email address are removed from them. Copies already sent to our private Discord channel may remain.",
       ],
       items: [],
     },
@@ -98,7 +98,7 @@ export default {
       heading: "Your rights",
       paragraphs: [
         "Depending on where you live (for example in the EEA or UK), you have the right to:",
-        "You can update your profile details and delete your account yourself on your profile page. For a copy of your data, or to use any other right, email [{contactEmail}](mailto:{contactEmail}); we answer within one month.",
+        "On your profile page you can update your profile details, download a copy of your data and delete your account yourself. To use any other right, email [{contactEmail}](mailto:{contactEmail}); we answer within one month.",
       ],
       items: [
         "access the personal data we hold about you and get a copy;",

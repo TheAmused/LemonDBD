@@ -15,7 +15,6 @@ from app.models.character import Killer
 from app.models.minigame import (
     MinigameDailyChallenge,
     MinigameRepeatableChallenge,
-    MinigameSharedLink,
     MinigameUserStat,
 )
 from app.services.minigame_service import MinigameService
@@ -25,12 +24,6 @@ logger = logging.getLogger(__name__)
 
 minigames_bp = Blueprint("minigames", __name__, url_prefix="/api/v1/minigames")
 minigame_service = MinigameService()
-
-
-def _generate_short_code(length: int = 7) -> str:
-    """Generates a URL-safe random alphanumeric short code."""
-    chars = string.ascii_lowercase + string.digits
-    return "".join(secrets.choice(chars) for _ in range(length))
 
 
 @minigames_bp.route("/catalog", methods=["GET"])
@@ -117,67 +110,6 @@ def submit_guess():
         attempt_number=attempt_number,
     )
     return jsonify(result), 200
-
-
-@minigames_bp.route("/share", methods=["POST"])
-@limiter.limit("15 per minute")
-def share_custom_challenge():
-    """Generates a shareable short-link and caches the challenge payload in PostgreSQL."""
-    data = request.get_json(silent=True) or {}
-    payload = (
-        data.get("payload")
-        or data.get("challenge_payload")
-        or (data if "rounds" in data else {})
-    )
-    title = (payload.get("title", "") or "").strip() or "Custom DBD Trial"
-    if len(title) > 100:
-        title = title[:100]
-    payload["title"] = title
-    rounds = payload.get("rounds", [])
-
-    if not rounds or not isinstance(rounds, list) or len(rounds) > 20:
-        return jsonify({"error": "A custom challenge must have between 1 and 20 rounds"}), 400
-
-    user = get_current_user()
-    creator_id = user.id if user else None
-
-    # Generate unique short code
-    code = _generate_short_code()
-    while db.session.query(MinigameSharedLink).filter_by(short_code=code).first():
-        code = _generate_short_code()
-
-    link = MinigameSharedLink(
-        short_code=code,
-        creator_user_id=creator_id,
-        payload=payload,
-        views_count=0,
-    )
-
-    db.session.add(link)
-    db.session.commit()
-
-    return jsonify({
-        "short_code": code,
-        "share_url": f"/minigames/play?c={code}",
-        "created_at": link.created_at.isoformat(),
-    }), 201
-
-
-@minigames_bp.route("/share/<short_code>", methods=["GET"])
-@minigames_bp.route("/shared/<short_code>", methods=["GET"])
-def get_shared_challenge(short_code: str):
-    """Retrieves a cached custom challenge by its short code."""
-    link = db.session.query(MinigameSharedLink).filter_by(short_code=short_code).first()
-    if not link:
-        return jsonify({"error": "Challenge link not found or expired"}), 404
-
-    link.views_count += 1
-    db.session.commit()
-
-    challenge_data = dict(link.payload) if isinstance(link.payload, dict) else {}
-    challenge_data["id"] = f"shared_{link.short_code}"
-    challenge_data["short_code"] = link.short_code
-    return jsonify(challenge_data), 200
 
 
 @minigames_bp.route("/official", methods=["POST"])

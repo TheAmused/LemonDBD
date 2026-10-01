@@ -15,7 +15,6 @@ from app.models.map import Realm
 from app.models.minigame import (
     MinigameDailyChallenge,
     MinigameRepeatableChallenge,
-    MinigameSharedLink,
     MinigameUserStat,
 )
 from app.models.perk import Perk

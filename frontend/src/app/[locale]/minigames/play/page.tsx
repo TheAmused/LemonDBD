@@ -13,9 +13,9 @@ import {
   fetchMinigameCatalog,
   fetchDailyChallenge,
   fetchRepeatableChallenge,
-  fetchSharedChallenge,
 } from '@/services/minigameApi';
 import { getCustomChallenges } from '@/utils/minigames/storage';
+import { decodeChallengeShare, readChallengeFragment } from '@/utils/minigames/shareLink';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 const CampfireParticles = dynamic(
@@ -31,7 +31,6 @@ function PlayTrialContent() {
   const type = searchParams.get('type');
   const mode = searchParams.get('mode');
   const customId = searchParams.get('id');
-  const shortCode = searchParams.get('c');
 
   const [challenge, setChallenge] = useState<ChallengeDefinition | null>(null);
   const [catalog, setCatalog] = useState<MinigameCatalog | null>(null);
@@ -54,8 +53,10 @@ function PlayTrialContent() {
         // Fetch challenge
         let loadedChallenge: ChallengeDefinition | null = null;
 
-        if (shortCode) {
-          loadedChallenge = await fetchSharedChallenge(shortCode);
+        // A shared challenge lives in the URL fragment, so it never reaches a server.
+        const sharedPayload = readChallengeFragment(window.location.hash);
+        if (sharedPayload) {
+          loadedChallenge = await decodeChallengeShare(sharedPayload);
         } else if (customId) {
           const list = getCustomChallenges();
           loadedChallenge = list.find((c) => String(c.id) === String(customId)) || null;
@@ -90,7 +91,7 @@ function PlayTrialContent() {
     return () => {
       isMounted = false;
     };
-  }, [type, mode, customId, shortCode, locale]);
+  }, [type, mode, customId, locale]);
 
 
   useDocumentTitle(challenge ? `${challenge.title} - LemonDBD` : dict.minigames.pageTitle);

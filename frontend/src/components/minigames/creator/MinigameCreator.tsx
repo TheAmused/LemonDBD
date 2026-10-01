@@ -25,7 +25,8 @@ import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { saveCustomChallenge } from '@/utils/minigames/storage';
 import { exportChallengeToJson } from '@/utils/minigames/jsonExportImport';
-import { createSharedLink, publishOfficialChallenge } from '@/services/minigameApi';
+import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
+import { publishOfficialChallenge } from '@/services/minigameApi';
 import { RoundEditorCard } from './RoundEditorCard';
 import { copyTextWithFallback } from '@/utils/clipboard';
 
@@ -171,9 +172,8 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
 
     setIsSharing(true);
     try {
-      const res = await createSharedLink(validated);
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullUrl = res.share_url.startsWith('http') ? res.share_url : `${origin}${res.share_url}`;
+      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(validated));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Failed to copy share link.');
       setShareSuccess(true);
       setTimeout(() => setShareSuccess(false), 4000);

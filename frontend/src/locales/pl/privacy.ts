@@ -28,7 +28,7 @@ export default {
       paragraphs: ["Z większości strony możesz korzystać bez konta. W zależności od tego, co robisz, przetwarzamy:"],
       items: [
         "<b>Dane konta:</b> nazwę użytkownika, adres e-mail, skrót (hash) hasła (nigdy samo hasło), awatar, preferowany język oraz krótkotrwałe kody weryfikacyjne i resetu hasła.",
-        "<b>To, co zapisujesz:</b> posiadane postacie i perki, prezentację profilu, tier listy, własne wyzwania, serie, osiągnięcia i głosy w Smash or Pass. Osoby bez konta otrzymują losowy identyfikator sesji, aby zapamiętać ich głosy w Smash or Pass.",
+        "<b>To, co zapisujesz:</b> posiadane postacie i perki, prezentację profilu, serie, osiągnięcia w wyzwaniach, statystyki minigier i głosy w Smash or Pass. Twoje tier listy, rostery Smash or Pass i własne minigry zostają w Twojej przeglądarce i nie są wysyłane na nasze serwery. Osoby bez konta otrzymują losowy identyfikator sesji, aby zapamiętać ich głosy w Smash or Pass.",
         "<b>Zgłoszenia błędów i wiadomości:</b> treść, zrzuty ekranu, imię i adres e-mail, które nam wysyłasz. Goście muszą podać e-mail, abyśmy mogli odpowiedzieć.",
         "<b>Dane techniczne:</b> adres IP, typ przeglądarki i szczegóły żądań, używane do ograniczania liczby zapytań, zapobiegania nadużyciom i naprawiania błędów.",
         "<b>Komendy głosowe (mapy):</b> po ich włączeniu dźwięk z mikrofonu służy do rozpoznawania nazw map. Jak to działa, opisujemy w sekcji o pamięci przeglądarki i podmiotach trzecich poniżej.",
@@ -66,7 +66,7 @@ export default {
       heading: "Kto widzi Twoje dane",
       paragraphs: ["Nie sprzedajemy danych osobowych ani nie używamy ich do reklam. Udostępniamy je tylko w razie potrzeby:"],
       items: [
-        "<b>Treści publiczne:</b> rzeczy, które sam publikujesz, np. publiczne tier listy, rostery i rankingi, są widoczne dla innych odwiedzających wraz z Twoją nazwą użytkownika i awatarem.",
+        "<b>Linki, które udostępniasz:</b> gdy udostępniasz tier listę, roster lub własną minigrę, jest ona zapakowana w sam link (część po znaku „#”, której przeglądarka nigdy do nas nie wysyła). Nie zapisujemy jej i nie możemy jej zobaczyć; otworzyć ją mogą tylko osoby, które dostaną link.",
         "<b>Dostawcy usług:</b> nasz dostawca hostingu oraz {mailProvider} (który dostarcza nasze e-maile weryfikacyjne i do resetu hasła) przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz.",
         "<b>Discord:</b> gdy wysyłasz zgłoszenie błędu, jego treść (w tym imię, adres e-mail i zrzuty ekranu) trafia na prywatny kanał naszego zespołu.",
         "<b>Powody prawne:</b> jeśli wymaga tego prawo lub aby chronić stronę i użytkowników przed nadużyciami.",
@@ -83,7 +83,7 @@ export default {
       heading: "Jak długo je przechowujemy",
       paragraphs: [
         "Dane konta i zapisane treści są przechowywane, dopóki istnieje Twoje konto. Kody weryfikacyjne wygasają po {verificationWindow}, linki do resetu hasła po {resetWindow}, a sesje logowania po {sessionWindow}. Serie nieaktywne przez {streakPrune} są kończone automatycznie. Zgłoszenia błędów przechowujemy tak długo, jak trzeba do rozwiązania problemu i do naszej dokumentacji. Logi serwera są przechowywane tylko krótko. Dane analityczne są anonimowe.",
-        "Konto możesz usunąć samodzielnie na stronie profilu albo poprosić nas o to. Wtedy usuwamy dane konta, zapisane treści i wgrany awatar. Twoje zgłoszenia błędów zostają w naszej dokumentacji, ale usuwamy z nich Twoje imię i adres e-mail. Kopie przesłane już na nasz prywatny kanał Discord lub zapisane w kopiach zapasowych mogą pozostać przez ograniczony czas, a to, co opublikowałeś publicznie, może zostać zanonimizowane zamiast usunięte.",
+        "Konto możesz usunąć samodzielnie na stronie swojego profilu lub poprosić nas o to. Usuwamy wtedy dane konta, posiadane postacie i perki, prezentację, serie, statystyki minigier, osiągnięcia w wyzwaniach i wgrany awatar. Głosy w Smash or Pass zostają jako anonimowe wpisy, niepowiązane już z Tobą. Zgłoszenia błędów zostają w naszych zapisach, ale usuwamy z nich Twoje imię i adres e-mail. Kopie wysłane już na nasz prywatny kanał Discord mogą pozostać.",
       ],
       items: [],
     },
@@ -98,7 +98,7 @@ export default {
       heading: "Twoje prawa",
       paragraphs: [
         "W zależności od miejsca zamieszkania (np. w EOG lub Wielkiej Brytanii) masz prawo do:",
-        "Dane profilu możesz zmieniać, a konto usunąć samodzielnie na stronie swojego profilu. Aby otrzymać kopię swoich danych lub skorzystać z innego prawa, napisz na [{contactEmail}](mailto:{contactEmail}); odpowiadamy w ciągu miesiąca.",
+        "Na stronie profilu możesz zmienić dane profilu, pobrać kopię swoich danych i samodzielnie usunąć konto. Aby skorzystać z innego prawa, napisz na [{contactEmail}](mailto:{contactEmail}); odpowiadamy w ciągu miesiąca.",
       ],
       items: [
         "dostępu do danych osobowych, które o Tobie przechowujemy, i otrzymania ich kopii;",

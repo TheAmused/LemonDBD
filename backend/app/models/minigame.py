@@ -65,29 +65,6 @@ class MinigameRepeatableChallenge(Base):
         }
 
 
-class MinigameSharedLink(Base):
-    """Short-link cache for shared custom minigames and multi-round challenges."""
-
-    __tablename__ = "minigame_shared_links"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    short_code: Mapped[str] = mapped_column(String(16), unique=True, index=True, nullable=False)
-    creator_user_id: Mapped[int | None] = mapped_column(
-        ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
-    )
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON_DICT, default=dict, nullable=False)
-    views_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, nullable=False)
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "short_code": self.short_code,
-            "payload": self.payload,
-            "views_count": self.views_count,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
-
 class MinigameUserStat(Base):
     """User progress and streaks for minigames and daily trials."""
 

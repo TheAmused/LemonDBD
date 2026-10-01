@@ -33,7 +33,6 @@ from app.models.smash_or_pass import (
 from app.models.minigame import (
     MinigameDailyChallenge,
     MinigameRepeatableChallenge,
-    MinigameSharedLink,
     MinigameUserStat,
 )
 from app.models.user import (
@@ -84,6 +83,5 @@ __all__ = [
     "TierList",
     "MinigameDailyChallenge",
     "MinigameRepeatableChallenge",
-    "MinigameSharedLink",
     "MinigameUserStat",
 ]

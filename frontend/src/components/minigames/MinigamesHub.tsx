@@ -35,7 +35,7 @@ import {
   type DailyStreakData,
 } from '@/utils/minigames/storage';
 import { exportChallengeToJson, importChallengeFromJson } from '@/utils/minigames/jsonExportImport';
-import { createSharedLink } from '@/services/minigameApi';
+import { buildChallengeShareUrl, encodeChallengeShare } from '@/utils/minigames/shareLink';
 
 import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
@@ -86,9 +86,8 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
     if (!trial.id) return;
     setShareLoadingId(trial.id);
     try {
-      const res = await createSharedLink(trial);
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
-      const fullUrl = res.share_url.startsWith('http') ? res.share_url : `${origin}${res.share_url}`;
+      const fullUrl = buildChallengeShareUrl(origin, await encodeChallengeShare(trial));
       if (!(await copyTextWithFallback(fullUrl))) throw new Error('Copy failed');
       setCopiedId(trial.id);
       setTimeout(() => setCopiedId(null), 3000);

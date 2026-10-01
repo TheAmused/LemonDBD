@@ -193,3 +193,27 @@ class TestDeleteOwnAccount:
             headers={"Authorization": f"Bearer {token}"},
         )
         assert res.status_code == 400
+
+
+class TestExportOwnData:
+    def test_requires_login(self, client: FlaskClient) -> None:
+        assert client.get("/api/v1/auth/account/export").status_code == 401
+
+    def test_exports_own_records_without_secrets(self, client: FlaskClient) -> None:
+        data = _register(client, "exporter").get_json()
+        user_id = data["user"]["id"]
+        db.session.add(
+            BugReport(user_id=user_id, reporter_name="exporter", title="t", message="m")
+        )
+        db.session.commit()
+
+        res = client.get("/api/v1/auth/account/export")
+        assert res.status_code == 200
+        assert "attachment" in res.headers["Content-Disposition"]
+        body = res.get_json()
+        assert body["account"]["username"] == "exporter"
+        assert "password_hash" not in body["account"]
+        assert "reset_token" not in body["account"]
+        assert "verification_code" not in body["account"]
+        assert [r["title"] for r in body["bug_reports"]] == ["t"]
+        assert body["streak_runs"]["chaos"] == {"runs": [], "match_log": []}

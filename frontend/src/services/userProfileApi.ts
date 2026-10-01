@@ -120,6 +120,26 @@ export async function uploadAvatar(file: File): Promise<any> {
   return data;
 }
 
+/** Downloads everything the server holds about the signed-in account as a JSON file. */
+export async function downloadMyData(): Promise<void> {
+  const res = await fetch(`${apiBase()}/api/v1/auth/account/export`, {
+    credentials: 'include',
+    headers: { Accept: 'application/json', ...authHeaders() },
+  });
+  if (!res.ok) {
+    const data = await parseJsonSafely(res);
+    throw new ApiError(data.error || 'Failed to export data.', res.status, data.error_code);
+  }
+  const url = URL.createObjectURL(await res.blob());
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lemondbd-my-data.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 /** Permanently deletes the signed-in account; the server re-checks the password. */
 export async function deleteAccount(password: string): Promise<void> {
   const res = await fetch(`${apiBase()}/api/v1/auth/account`, {

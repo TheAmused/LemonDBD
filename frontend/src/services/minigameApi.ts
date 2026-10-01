@@ -100,49 +100,6 @@ export async function submitGuess(params: SubmitGuessParams): Promise<GuessEvalu
   return res.json();
 }
 
-export interface SharedLinkResponse {
-  short_code: string;
-  share_url: string;
-}
-
-export async function createSharedLink(challenge: ChallengeDefinition): Promise<SharedLinkResponse> {
-  const res = await fetch(apiUrl('/api/v1/minigames/share'), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      challenge_payload: {
-        title: challenge.title,
-        description: challenge.description || '',
-        game_mode: challenge.game_mode || 'custom',
-        rounds: challenge.rounds,
-      },
-    }),
-  });
-
-  if (!res.ok) {
-    const errorBody = await res.json().catch(() => ({}));
-    throw new Error(errorBody.error || `Failed to create share link (${res.status})`);
-  }
-
-  return res.json();
-}
-
-export async function fetchSharedChallenge(shortCode: string): Promise<ChallengeDefinition> {
-  const res = await fetch(apiUrl(`/api/v1/minigames/share/${encodeURIComponent(shortCode)}`), {
-    headers: { Accept: 'application/json' },
-  });
-
-  if (!res.ok) {
-    const errorBody = await res.json().catch(() => ({}));
-    throw new Error(errorBody.error || `Shared challenge not found (${res.status})`);
-  }
-
-  return res.json();
-}
-
 export async function publishOfficialChallenge(
   token: string,
   challenge: ChallengeDefinition

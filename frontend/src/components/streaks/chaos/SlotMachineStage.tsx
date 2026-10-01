@@ -157,6 +157,18 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const [leverPulled, setLeverPulled] = useState(false);
   const [hasSpunThisBuild, setHasSpunThisBuild] = useState(revealed);
   const pendingSpinRef = useRef(false);
+  const leverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (revealed) {
+      if (leverTimerRef.current) clearTimeout(leverTimerRef.current);
+      setLeverPulled(false);
+    }
+  }, [revealed]);
+
+  useEffect(() => () => {
+    if (leverTimerRef.current) clearTimeout(leverTimerRef.current);
+  }, []);
 
   useEffect(() => {
     if (!revealed) {
@@ -177,7 +189,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
     if (revealed || loading || locked) return;
     pendingSpinRef.current = true;
     setLeverPulled(true);
-    setTimeout(() => setLeverPulled(false), 550);
+    leverTimerRef.current = setTimeout(() => setLeverPulled(false), LEVER_PENDING_MS);
     onPullLever();
   };
 
@@ -228,8 +240,9 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   );
 };
 
-const LEVER_STICK_PX = 56;
-const LEVER_BALL_PX = 30;
+/** Keeps the lever down while the reveal request is in flight; releases it if the request never lands. */
+const LEVER_PENDING_MS = 4000;
+const LEVER_BALL_PX = 26;
 const LEVER_EASE = 'cubic-bezier(0.34, 1.3, 0.64, 1)';
 const LEVER_ROD_GRADIENT = 'linear-gradient(90deg, #5a5f73, #f4f6fb 45%, #6b7087)';
 
@@ -250,7 +263,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
       style={{ perspective: '170px', perspectiveOrigin: '50% 50%' }}
     >
       <div
-        className="relative h-[160px] w-[78px] rounded-2xl border border-border-color"
+        className="relative h-24 sm:h-28 md:h-32 w-16 sm:w-[72px] rounded-2xl border border-border-color"
         style={{
           background: 'linear-gradient(180deg, #0a0b0e, #1b1c22)',
           boxShadow: 'inset 0 8px 16px rgba(0,0,0,0.7), inset 0 -2px 4px rgba(255,255,255,0.04)',
@@ -258,14 +271,14 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
         }}
       >
         <div
-          className="absolute left-1/2 top-1/2 h-[44px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{ background: '#050608', boxShadow: 'inset 0 3px 8px #000, 0 1px 0 rgba(255,255,255,0.06)' }}
         />
         <div
           className="absolute left-1/2 w-[12px] -ml-[6px]"
           style={{
-            top: `calc(50% - ${LEVER_STICK_PX}px)`,
-            height: LEVER_STICK_PX,
+            top: '12%',
+            height: '38%',
             transformOrigin: '50% 100%',
             transformStyle: 'preserve-3d',
             transform: down ? 'rotateX(-180deg)' : 'rotateX(0deg)',

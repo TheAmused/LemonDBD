@@ -46,11 +46,7 @@ const ChaosModeModal = dynamic(
   { ssr: false }
 );
 
-interface ChaosBoardProps {
-  locale: string;
-}
-
-export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
+export const ChaosBoard: React.FC = () => {
   const dict = useStreaksDict();
   const completionStatus = useChallengeCompletionStatus();
   const searchParams = useSearchParams();

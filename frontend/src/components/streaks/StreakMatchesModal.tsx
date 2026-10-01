@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { Pagination } from '@/components/Pagination';
 import { StreakMatchRow } from './StreakMatchRow';
 import type { StreakMatchLogBase } from './StreakStatsDrawer';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 const DEFAULT_PAGE_SIZE = 15;
 
@@ -32,14 +33,12 @@ export function StreakMatchesModal<TLog extends StreakMatchLogBase>({
   const [limit, setLimit] = useState(DEFAULT_PAGE_SIZE);
 
   useEffect(() => {
-    if (!isOpen) return;
-    setPage(1);
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+    if (isOpen) {
+      setPage(1);
+    }
+  }, [isOpen]);
+
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen) return null;
 

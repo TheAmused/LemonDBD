@@ -21,7 +21,6 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
   <StreakStatsDrawer<HistoryMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    accent="amber"
     stats={stats}
     attempts={attempts}
     dict={dict}

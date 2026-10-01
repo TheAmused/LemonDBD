@@ -22,7 +22,6 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
   <StreakStatsDrawer<ChaosMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    accent="amber"
     stats={stats}
     attempts={attempts}
     dict={dict}

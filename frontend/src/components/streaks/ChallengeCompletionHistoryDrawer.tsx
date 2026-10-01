@@ -2,9 +2,10 @@
 // frontend/src/components/streaks/ChallengeCompletionHistoryDrawer.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, RotateCcw, Users, Swords } from 'lucide-react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -30,14 +31,7 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
   subjectLabel,
   dict,
 }) => {
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen) return null;
 

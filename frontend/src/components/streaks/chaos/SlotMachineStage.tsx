@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/chaos/SlotMachineStage.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { AddonRarity } from '@/types/chaosStreak';
@@ -271,7 +271,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
 
   // Projects the rod tip, swinging about the horizontal pivot axis toward the viewer, with a
   // manual perspective divide. Plain 2D transforms only, so no 3D layer is ever re-rasterised.
-  const render = useRef((angle: number) => {
+  const render = useCallback((angle: number) => {
     const panel = panelRef.current;
     const rod = rodRef.current;
     const ball = ballRef.current;
@@ -299,7 +299,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
     ball.style.height = `${ballSize}px`;
     ball.style.left = `calc(50% - ${ballSize / 2}px)`;
     ball.style.top = `${tipY - ballSize / 2}px`;
-  });
+  }, []);
 
   useEffect(() => {
     const target = down ? Math.PI : 0;
@@ -307,7 +307,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced || from === target) {
       angleRef.current = target;
-      render.current(target);
+      render(target);
       return;
     }
     const start = performance.now();
@@ -315,20 +315,20 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / LEVER_SWING_MS);
       angleRef.current = from + (target - from) * easeOutBack(t);
-      render.current(angleRef.current);
+      render(angleRef.current);
       if (t < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [down]);
+  }, [down, render]);
 
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
-    const ro = new ResizeObserver(() => render.current(angleRef.current));
+    const ro = new ResizeObserver(() => render(angleRef.current));
     ro.observe(panel);
     return () => ro.disconnect();
-  }, []);
+  }, [render]);
 
   return (
     <button

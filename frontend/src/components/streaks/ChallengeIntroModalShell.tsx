@@ -3,9 +3,10 @@
 
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, BookOpen, ChevronLeft } from 'lucide-react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 export const NEUTRAL_TILE_ACCENT = 'border-border-color bg-bg-elevated hover:bg-bg-elevated/80 text-text-secondary';
 
@@ -72,14 +73,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
   backLabel,
   dict,
 }) => {
-  useEffect(() => {
-    if (!isOpen || escapeDisabled) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, escapeDisabled, onClose]);
+  useEscapeKey(isOpen && !escapeDisabled, onClose);
 
   if (!isOpen) return null;
 

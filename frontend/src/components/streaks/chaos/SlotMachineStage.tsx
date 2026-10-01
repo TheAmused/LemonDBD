@@ -250,7 +250,7 @@ const LEVER_SWING_MS = 600;
 const LEVER_ROD_FILL =
   'linear-gradient(90deg, var(--text-muted) 55%, color-mix(in srgb, var(--text-muted) 65%, var(--bg-primary)) 55%)';
 const LEVER_BALL_FILL =
-  'radial-gradient(circle at 32% 30%, color-mix(in srgb, var(--accent-red) 55%, white) 0 13%, transparent 14%), var(--accent-red)';
+  'radial-gradient(circle at 32% 30%, var(--accent-red-hover) 0 13%, transparent 14%), color-mix(in srgb, var(--accent-red) 72%, black)';
 
 const easeOutBack = (t: number): number => {
   const c1 = 1.3;

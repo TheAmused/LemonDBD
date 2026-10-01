@@ -2,8 +2,12 @@
 // frontend/src/components/streaks/StreakStatsDrawer.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
-import { X, Percent, Clock } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, Percent } from 'lucide-react';
+import { StreakMatchRow } from './StreakMatchRow';
+import { StreakMatchesModal } from './StreakMatchesModal';
+
+const VISIBLE_MATCHES = 10;
 
 export interface StreakMatchLogBase {
   id: number;
@@ -70,14 +74,16 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
   renderMeta,
   dict,
 }: StreakStatsDrawerProps<TLog>) {
+  const [isAllOpen, setIsAllOpen] = useState(false);
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isAllOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, isAllOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -164,53 +170,32 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
               </div>
             ) : (
               <div className="space-y-2.5">
-                {recentLogs.map((log) => {
-                  const isWin = log.result === 'win';
-                  return (
-                    <div
-                      key={log.id}
-                      className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-bg-elevated border border-border-color hover:border-border-subtle transition-colors shadow-sm"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="pl-1">
-                          {log.triggered_by === 'inactivity' ? (
-                            <div className="flex items-center gap-1 text-sm font-bold text-text-secondary">
-                              <Clock className="w-3.5 h-3.5" />
-                              {dict?.streaks?.autoLossInactive || 'Auto-loss, run was inactive'}
-                            </div>
-                          ) : (
-                            renderLabel(log)
-                          )}
-                          <div className="text-xs text-text-secondary mt-1.5 font-mono">
-                            {renderMeta(log)}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-right">
-                        <div
-                          className={`text-xs font-black uppercase px-2 py-0.5 rounded-full inline-block ${
-                            isWin
-                              ? 'bg-accent-green/20 text-accent-green border border-accent-green/30'
-                              : 'bg-accent-red/20 text-accent-red border border-accent-red/30'
-                          }`}
-                        >
-                          {log.result}
-                        </div>
-                        {log.timestamp && (
-                          <div className="text-[11px] text-text-secondary mt-1 font-mono">
-                            {new Date(log.timestamp).toLocaleDateString()}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
+                {recentLogs.slice(0, VISIBLE_MATCHES).map((log) => (
+                  <StreakMatchRow key={log.id} log={log} renderLabel={renderLabel} renderMeta={renderMeta} dict={dict} />
+                ))}
+                {recentLogs.length > VISIBLE_MATCHES && (
+                  <button
+                    type="button"
+                    onClick={() => setIsAllOpen(true)}
+                    className="w-full rounded-xl border border-border-color bg-bg-surface py-2.5 text-sm font-bold text-text-primary transition-colors hover:bg-bg-elevated cursor-pointer"
+                  >
+                    {dict?.streaks?.viewAllWins || 'View all'} ({recentLogs.length})
+                  </button>
+                )}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <StreakMatchesModal
+        isOpen={isAllOpen}
+        onClose={() => setIsAllOpen(false)}
+        logs={recentLogs}
+        renderLabel={renderLabel}
+        renderMeta={renderMeta}
+        dict={dict}
+      />
     </div>
   );
 }

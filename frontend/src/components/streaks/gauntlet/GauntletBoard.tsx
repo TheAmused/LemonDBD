@@ -1,34 +1,32 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 import type { Dictionary } from '@/locales/types';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { RotateCcw } from 'lucide-react';
 import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
-import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters, OwnedCharacterItem } from './useOwnedCharacters';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
+import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { ChallengeProgress } from '../ChallengeProgress';
+import { gauntletCheckpoints, gauntletRunLength } from '@/utils/challengeCheckpoints';
+import {
+  CheckpointCelebrationModal,
+  ChallengeCompletionHistoryDrawer,
+  Confetti,
+  ResetConfirmModal,
+} from '../lazyChallengeParts';
+import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { GauntletHeader } from './GauntletHeader';
 import { ActiveTargetStage } from './ActiveTargetStage';
 import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { saveGauntletMode } from '@/utils/streakDifficultyPrefs';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
-const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
-const ResetConfirmModal = dynamic(
-  () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
-  { ssr: false }
-);
 const GauntletStatsDrawer = dynamic(
   () => import('./GauntletStatsDrawer').then((m) => m.GauntletStatsDrawer),
-  { ssr: false }
-);
-const ChallengeCompletionHistoryDrawer = dynamic(
-  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
   { ssr: false }
 );
 const GauntletRulesModal = dynamic(
@@ -37,10 +35,6 @@ const GauntletRulesModal = dynamic(
 );
 const GauntletModeModal = dynamic(
   () => import('./GauntletModeModal').then((m) => m.GauntletModeModal),
-  { ssr: false }
-);
-const CheckpointModal = dynamic(
-  () => import('./CheckpointModal').then((m) => m.CheckpointModal),
   { ssr: false }
 );
 
@@ -107,38 +101,17 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const [isChangeModeOpen, setIsChangeModeOpen] = useState(false);
   // Solo picks in two steps: click a character in the roster, then accept.
   const [pendingPick, setPendingPick] = useState<string | null>(null);
-  const [celebrating, setCelebrating] = useState(false);
+  const { celebrating, celebrate } = useCelebration();
   const [confirmingReset, setConfirmingReset] = useState(false);
   // The target the reel has actually finished landing on, kept separate from
   // run.current_character_id so the roster grid can't out-race the animation.
   const [shownTarget, setShownTarget] = useState<string | null>(null);
 
-  // Fire once when the run flips to completed, not on every later render or reload.
-  const wasCompletedRef = useRef(false);
-  useEffect(() => {
-    const completed = run?.status === 'completed';
-    if (completed && !wasCompletedRef.current) {
-      setCelebrating(true);
-      wasCompletedRef.current = true;
-      const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
-      return () => clearTimeout(timer);
-    }
-    if (!completed) {
-      wasCompletedRef.current = false;
-    }
-  }, [run?.status]);
-
-  // Rides along with the checkpoint modal. Kept for the same duration as the
-  // win celebration below so the burst finishes its fall instead of being
-  // unmounted mid-flight.
-  useEffect(() => {
-    if (justBankedCheckpoint == null) return;
-    setCelebrating(true);
-    const timer = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
-    return () => clearTimeout(timer);
-  }, [justBankedCheckpoint]);
-
   const isCompleted = run?.status === 'completed';
+  const runLength = gauntletRunLength(gameMode, run?.owned_characters?.length ?? rosterCharacters.length);
+  useCelebrateOnRise(isCompleted, celebrate);
+  // Rides along with the checkpoint modal.
+  useCelebrateOnRise(justBankedCheckpoint != null, celebrate);
   const pickCharacter = PICK_CHARACTER_MODES.includes(gameMode);
   // Must equal the current target, not just be non-null -- otherwise a
   // stale shownTarget from the previous reveal lets the roster jump ahead
@@ -155,24 +128,28 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   }, [awaitingPick]);
 
   return (
-    <div className="pb-24">
+    <div className="pb-16">
       <GauntletFireBackground tierLevel={isCompleted ? 0 : run?.tier_info?.tier_level ?? 0} />
       <Confetti active={celebrating} />
 
       <div>
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-accent-red/15 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-xs">
-            <span>{error}</span>
-          </div>
-        )}
+        {error && <ChallengeErrorBanner message={error} />}
 
+        <ChallengePanel
+          progress={
+            <ChallengeProgress
+              current={run?.current_streak ?? 0}
+              total={runLength}
+              checkpoints={gauntletCheckpoints(gameMode, runLength)}
+              dict={dict}
+            />
+          }
+          header={
         <GauntletHeader
-          role={role}
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
-          lastCheckpointStreak={run?.last_checkpoint_streak || 0}
           poolFrozen={Boolean(run?.pool_frozen) && Boolean(run?.target_revealed)}
-          modeLabel={gameMode !== 'original' ? gameModeLabel(gameMode, dict?.streaks) : undefined}
+          modeLabel={gameMode !== 'original' || role === 'survivor' ? gameModeLabel(gameMode, dict?.streaks) : undefined}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
           onOpenRules={() => setIsRulesOpen(true)}
@@ -180,27 +157,15 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           onChangeMode={role === 'survivor' ? () => setIsChangeModeOpen(true) : undefined}
           dict={dict}
         />
-
+          }
+        >
         {isCompleted ? (
-          <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-gradient-to-b from-accent-green/10 to-accent-green/[0.03] px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-              <AdeptBadgeIcon className="h-8 w-8" />
-            </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
-              {dict?.streaks?.victoryCongrats || 'Congratulations'}
-            </p>
-            <h2 className="text-2xl font-black tracking-tight text-text-primary">
-              {dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
-            </h2>
-            <button
-              onClick={reset}
-              disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
-            >
-              <RotateCcw className="h-4 w-4" />
-              {dict?.streaks?.startNewRun || 'Start a new run'}
-            </button>
-          </div>
+          <ChallengeVictoryCard
+            title={dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
+            onRestart={reset}
+            busy={busy}
+            dict={dict}
+          />
         ) : (
           <ActiveTargetStage
             run={run}
@@ -221,6 +186,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             dict={dict}
           />
         )}
+        </ChallengePanel>
 
         <CharacterRosterGrid
           role={role}
@@ -290,12 +256,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           gameMode={gameMode}
           dict={dict}
         />
-        <CheckpointModal
-          checkpoint={justBankedCheckpoint}
-          role={role}
-          onClose={dismissCheckpointCelebration}
-          dict={dict}
-        />
+        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
       </div>
     </div>
   );

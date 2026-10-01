@@ -56,29 +56,13 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     staticUrl(char.avatar_local_path) ||
     avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
 
-  const completedCount = characters.filter((c) => isCompleted(c.name)).length;
-  const roleLabel = role === 'survivor'
-    ? (dict?.streaks?.survivor || dict?.generator?.survivor || 'Survivor')
-    : (dict?.streaks?.killer || dict?.generator?.killer || 'Killer');
-
   const completedText = dict?.stats?.completed || dict?.streaks?.completed || 'Completed';
   const activeTargetText = dict?.streaks?.activeGauntletTarget || dict?.streaks?.target || 'Active Target';
 
   return (
     <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 shadow-sm dark:shadow-xl backdrop-blur-md">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 border-b border-border-color pb-4">
-        <div>
-          <h3 className="text-xl font-bold text-text-primary">
-            <span>{roleLabel}</span> {dict?.streaks?.rosterProgress || 'Roster Progress'}
-          </h3>
-        </div>
-        <div className="px-4 py-1.5 rounded-xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary shadow-sm">
-          {completedText}: <span className="text-accent-green font-extrabold">{completedCount}</span> / {characters.length}
-        </div>
-      </div>
-
       {loading ? (
-        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-4 animate-pulse">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(13,minmax(0,1fr))] gap-4 animate-pulse">
           {Array.from({ length: 16 }).map((_, i) => (
             <div key={i} className="aspect-square rounded-2xl bg-bg-elevated" />
           ))}
@@ -88,7 +72,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
           {dict?.streaks?.noOwnedCharacters || `You don't own any ${role} characters yet. Head to the Characters tab to mark what you own.`}
         </div>
       ) : (
-        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(15,minmax(0,1fr))] gap-3 sm:gap-4">
+        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(13,minmax(0,1fr))] gap-3 sm:gap-4">
           {characters.map((char) => {
             const completed = isCompleted(char.name);
             const active = isActiveTarget(char.name);

@@ -15,9 +15,10 @@ import {
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
-import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { useCharacterDisplayName, usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
+import { UnifiedHoverModal, type ActiveHoverState, type UnifiedHoverItem } from '@/components/common/UnifiedHoverModal';
 
 export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -106,7 +107,7 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
 type SlotSize = 'large' | 'small' | 'compact';
 
 const SLOT_ICON_BASE: Record<SlotSize, string> = {
-  large: 'w-20 h-20',
+  large: 'w-[4.5rem] h-[4.5rem]',
   small: 'w-16 h-16',
   compact: 'w-12 h-12',
 };
@@ -132,24 +133,40 @@ const SlotChip: React.FC<{
   size: SlotSize;
   badge?: string;
   badgeColor?: 'amber' | 'red';
+  /** A real perk: hovering shows the same tooltip as the perks page, in place of the plain title. */
+  hoverPerk?: Perk;
+  hoverT?: Record<string, string>;
   children: React.ReactNode;
-}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
-  <div className="relative inline-flex shrink-0" title={title || caption}>
-    {badge && (
-      <div
-        className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
-      >
-        {badge}
+}> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', hoverPerk, hoverT, children }) => {
+  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
+  return (
+    <div
+      className="relative inline-flex shrink-0"
+      title={hoverPerk ? undefined : title || caption}
+      onMouseEnter={
+        hoverPerk
+          ? (e) => setActiveHover({ item: hoverPerk as unknown as UnifiedHoverItem, rect: e.currentTarget.getBoundingClientRect() })
+          : undefined
+      }
+      onMouseLeave={hoverPerk ? () => setActiveHover(null) : undefined}
+    >
+      {hoverPerk && <UnifiedHoverModal activeHover={activeHover} placement="auto" t={hoverT} isPerk />}
+      {badge && (
+        <div
+          className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
+        >
+          {badge}
+        </div>
+      )}
+      <div className={`${slotIconBase(size)} ${iconClassName}`}>
+        <div className="-rotate-45 flex items-center justify-center">{children}</div>
       </div>
-    )}
-    <div className={`${slotIconBase(size)} ${iconClassName}`}>
-      <div className="-rotate-45 flex items-center justify-center">{children}</div>
     </div>
-  </div>
-);
+  );
+};
 
 const SLOT_ICON_SIZE: Record<SlotSize, string> = {
-  large: 'w-8 h-8',
+  large: 'w-7 h-7',
   small: 'w-6 h-6',
   compact: 'w-4 h-4',
 };
@@ -196,9 +213,25 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
   const slots = [0, 1, 2, 3];
   const slotLabel = dict?.streaks?.slotLabel || 'Slot';
   const perkDisplayName = usePerkDisplayName();
+  const perkLabel = usePerkLabel();
+  const characterDisplayName = useCharacterDisplayName();
   const large = size === 'large';
   const iconSize = SLOT_ICON_SIZE[size];
-  const perkArtSize = large ? 'w-32 h-32' : size === 'compact' ? 'w-14 h-14' : 'w-20 h-20';
+  const perkArtSize = large ? 'w-28 h-28' : size === 'compact' ? 'w-14 h-14' : 'w-20 h-20';
+  // The perks page tooltip, with no "click to inspect" prompt since these are not clickable.
+  const hoverT = { ...(dict?.modal as unknown as Record<string, string>), clickToInspectPerk: '', clickToInspect: '' };
+  const hoverProps = (perk: Perk) => {
+    const label = perkLabel(perk);
+    return {
+      hoverPerk: {
+        ...perk,
+        name: label?.name ?? perk.name,
+        description: label?.description ?? perk.description,
+        character: perk.character ? characterDisplayName(perk.character) : perk.character,
+      },
+      hoverT,
+    };
+  };
 
   return (
     <div>
@@ -208,7 +241,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
           {dict?.streaks?.goesInBare || 'goes in bare.'}
         </p>
       )}
-      <div className={large ? 'flex items-center gap-16' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
+      <div className={large ? 'flex items-center gap-12' : size === 'compact' ? 'flex items-center gap-6' : 'flex items-center gap-10'} role="list">
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
@@ -219,6 +252,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 iconClassName="border-transparent"
                 caption={perkDisplayName(perk.name)}
                 title={perkDisplayName(perk.name)}
+                {...hoverProps(perk)}
               >
                 <PerkArt perk={perk} size={perkArtSize} />
               </SlotChip>
@@ -248,6 +282,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, charPerks, random
                 size={size}
                 iconClassName={ownPerk ? 'border-transparent' : 'bg-accent-red/10 border-accent-red/40 text-accent-red'}
                 caption={ownPerk ? perkDisplayName(ownPerk.name) : (dict?.streaks?.ownPerkOf || 'Own perk').replace(/:$/, '')}
+                {...(ownPerk ? hoverProps(ownPerk) : {})}
               >
                 {ownPerk ? <PerkArt perk={ownPerk} size={perkArtSize} /> : <HelpCircle className={iconSize} />}
               </SlotChip>
@@ -333,7 +368,7 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
     return (
       <div className="flex w-full items-center gap-8">
         <div className="w-1/3 shrink-0 flex flex-col items-center gap-3 border-r border-border-color pr-8">
-          {avatarBox('w-28 h-28 sm:w-36 sm:h-36', 'w-14 h-14')}
+          {avatarBox('w-24 h-24 sm:w-28 sm:h-28', 'w-12 h-12')}
           <span className="text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
         </div>
         <div className="flex-1 min-w-0 flex items-center justify-center">
@@ -476,7 +511,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   if (!run || !run.current_loadout) {
     return (
-      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 text-center backdrop-blur-md mb-4">
+      <div className="w-full rounded-xl p-6 text-center">
         <div className="animate-spin text-accent-red mx-auto w-6 h-6 mb-2 flex items-center justify-center">
           <RefreshCw className="w-6 h-6" />
         </div>
@@ -490,13 +525,13 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (pickCharacter && !run.target_revealed) {
     return (
       <>
-        <div className="w-full flex items-center justify-center bg-bg-surface border border-border-color rounded-xl px-4 py-[92px] shadow-sm backdrop-blur-md mb-4">
+        <div className="w-full flex items-center justify-center rounded-xl px-4 py-[92px]">
           <h2 className="text-sm sm:text-base font-black text-text-primary">
             {dict?.streaks?.soloPickTitle || 'Choose your survivor'}
           </h2>
         </div>
         <StreakActionBar>
-          <StreakActionButton variant="red" compact onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
+          <StreakActionButton variant="red" onClick={() => onAcceptPick?.()} disabled={loading || !pendingPick}>
             {dict?.streaks?.acceptPick || 'ACCEPT PICK'}
           </StreakActionButton>
         </StreakActionBar>
@@ -535,22 +570,22 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       </button>
     );
 
-    if (!isTeam && !drawing) {
+    if (!drawing) {
       return (
-        <div className="w-full flex items-center justify-center bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-6 shadow-sm backdrop-blur-md mb-4">
+        <div className="w-full flex items-center justify-center rounded-xl p-2 min-h-[148px] sm:min-h-[164px]">
           {startButton}
         </div>
       );
     }
 
-    if (!isTeam && drawing) {
+    if (!isTeam) {
       const reel = reels[0];
       const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
       return (
-        <div className="w-full flex items-center justify-center gap-3 bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-4 shadow-sm backdrop-blur-md mb-4">
+        <div className="w-full flex items-center justify-center gap-3 rounded-xl p-2 min-h-[148px] sm:min-h-[164px]">
           <div className="flex flex-col items-center gap-3">
             <div
-              className={`w-28 h-28 sm:w-36 sm:h-36 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+              className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
                 displayPhase === 'landed' ? 'gn-land-glow' : ''
               }`}
             >
@@ -571,40 +606,32 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     }
 
     return (
-      <div className="w-full flex flex-wrap items-center gap-4 bg-bg-surface border border-border-color rounded-xl px-4 sm:px-6 py-6 shadow-sm backdrop-blur-md mb-4 min-h-[210px]">
+      <div className="w-full flex flex-wrap items-center gap-4 rounded-xl p-2 min-h-[194px]">
         <div className="flex-1 flex items-center justify-center gap-4 flex-wrap">
-        <div className="flex items-center gap-24">
-          {reels.map((reel, idx) => {
-            // A reel that finished before its partner reverts to 'idle' on its own;
-            // while the pair is still drawing overall, treat that as still landed.
-            const displayPhase = drawing && reel.phase === 'idle' ? 'landed' : reel.phase;
-            return (
-              <div
-                key={idx}
-                className={`w-28 h-28 sm:w-32 sm:h-32 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
-                  displayPhase === 'landed' ? 'gn-land-glow' : ''
-                }`}
-              >
-                <RevealPortrait
-                  key={drawing ? reel.name ?? 'idle' : 'idle'}
-                  name={drawing ? reel.name ?? undefined : undefined}
-                  role={role}
-                  phase={drawing ? displayPhase : 'idle'}
-                  characters={characters}
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {!drawing && (
-          <div className="text-sm sm:text-base font-black text-text-primary">
-            {dict?.streaks?.readyForGauntlet || 'Ready for the Gauntlet?'}
+          <div className="flex items-center gap-24">
+            {reels.map((reel, idx) => {
+              // A reel that finished before its partner reverts to 'idle' on its own;
+              // while the pair is still drawing overall, treat that as still landed.
+              const displayPhase = reel.phase === 'idle' ? 'landed' : reel.phase;
+              return (
+                <div
+                  key={idx}
+                  className={`w-28 h-28 sm:w-32 sm:h-32 rounded-xl p-1 bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden ${
+                    displayPhase === 'landed' ? 'gn-land-glow' : ''
+                  }`}
+                >
+                  <RevealPortrait
+                    key={reel.name ?? 'idle'}
+                    name={reel.name ?? undefined}
+                    role={role}
+                    phase={displayPhase}
+                    characters={characters}
+                  />
+                </div>
+              );
+            })}
           </div>
-        )}
         </div>
-
-        {!drawing && startButton}
       </div>
     );
   }
@@ -619,10 +646,10 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const actionButtons = (
     <StreakActionBar>
-      <StreakActionButton variant="green" compact onClick={onWin} disabled={loading}>
+      <StreakActionButton variant="green" onClick={onWin} disabled={loading}>
         {dict?.streaks?.winMatch || 'WON'}
       </StreakActionButton>
-      <StreakActionButton variant="red" compact onClick={onLoss} disabled={loading}>
+      <StreakActionButton variant="red" onClick={onLoss} disabled={loading}>
         {dict?.streaks?.loseMatch || 'LOST'}
       </StreakActionButton>
     </StreakActionBar>
@@ -634,7 +661,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
 
   return (
     <>
-      <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-4 shadow-sm dark:shadow-2xl backdrop-blur-md mb-4">
+      <div className="w-full rounded-xl p-2 min-h-[148px] sm:min-h-[164px]">
         <div className={isTeam ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 divide-y sm:divide-y-0 sm:divide-x divide-border-color' : ''}>
           {players.map((player, index) => (
             <CompactPlayerBuild

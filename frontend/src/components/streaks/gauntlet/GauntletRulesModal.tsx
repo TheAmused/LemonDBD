@@ -2,11 +2,10 @@
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
-import { BookOpen, AlertTriangle, Flame, Lock, Snowflake, Clock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
-import { RulesModalShell, RulesModalNotices, RulesModalListSection } from '../RulesModalShell';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { RulesModalConcept, RulesModalFooter, RulesModalHowItWorks, RulesModalShell } from '../RulesModalShell';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
@@ -279,59 +278,41 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      icon={BookOpen}
       title={modalTitle}
-      iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
-      footerButtonClassName="bg-accent-red hover:bg-accent-red-hover"
-      footerButtonLabel={rawStreaks.gotItLetsPlay || "Got It, Let's Play!"}
       dict={dict}
     >
-      <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
-        <h3 className="text-sm font-bold text-accent-red uppercase tracking-wider mb-2 flex items-center gap-2">
-          <AdeptBadgeIcon className="w-4 h-4" aria-hidden="true" />
-          <span>
-            {isSolo || isDuo || isSquad
-              ? rawStreaks.devNoteTitle || 'Note from the devs'
-              : rawStreaks.gauntletConcept || 'Gauntlet Concept'}
-          </span>
-        </h3>
-        <p className="leading-relaxed text-xs sm:text-sm text-text-secondary">
-          {concept}
-        </p>
-      </div>
+      <RulesModalConcept
+        title={
+          isSolo || isDuo || isSquad
+            ? rawStreaks.devNoteTitle || 'Note from the devs'
+            : rawStreaks.gauntletConcept || 'Gauntlet Concept'
+        }
+      >
+        {concept}
+      </RulesModalConcept>
 
-      <div>
-        <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-3">
-          {rawStreaks.howItWorks || 'How it works'}
-        </h3>
-        <ul className="space-y-2 text-xs sm:text-sm text-text-secondary leading-relaxed list-disc pl-4 marker:text-accent-red">
-          <li>{winCondition}</li>
-          {isSolo && <li>{rawStreaks.soloHalfWinRule}</li>}
-          {isSolo && <li>{rawStreaks.soloPickRule}</li>}
-          {isDuo && <li>{rawStreaks.duoCharactersRule}</li>}
-          {isDuo && <li>{rawStreaks.duoRematchRule}</li>}
-          {isDuo && <li>{rawStreaks.duoHatchRule}</li>}
-          {isSquad && <li>{rawStreaks.squadCharactersRule}</li>}
-          {isSquad && <li>{rawStreaks.squadRematchRule}</li>}
-          {isSquad && <li>{rawStreaks.squadUniquePerkRule}</li>}
-          <li>{perkRule}</li>
-          <li>
-            {isSolo
-              ? rawStreaks.soloCheckpointRule
-              : isDuo
-              ? rawStreaks.duoCheckpointRule
-              : isSquad
-              ? rawStreaks.squadCheckpointRule
-              : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far, not to zero.'}
-          </li>
-          {isSolo && <li>{rawStreaks.soloPerkTierRule}</li>}
-          <li>{rosterCapNote}</li>
-        </ul>
-      </div>
+      <RulesModalHowItWorks
+        title={rawStreaks.howItWorks || 'How it works'}
+        items={[
+          winCondition,
+          ...(isSolo ? [rawStreaks.soloHalfWinRule, rawStreaks.soloPickRule] : []),
+          ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule, rawStreaks.duoHatchRule] : []),
+          ...(isSquad ? [rawStreaks.squadCharactersRule, rawStreaks.squadRematchRule, rawStreaks.squadUniquePerkRule] : []),
+          perkRule,
+          isSolo
+            ? rawStreaks.soloCheckpointRule
+            : isDuo
+            ? rawStreaks.duoCheckpointRule
+            : isSquad
+            ? rawStreaks.squadCheckpointRule
+            : rawStreaks.gauntletCheckpointRule || 'You get a checkpoint every 10 wins, so a loss only falls back that far, not to zero.',
+          ...(isSolo ? [rawStreaks.soloPerkTierRule] : []),
+          rosterCapNote,
+        ]}
+      />
 
       <div>
         <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-3 flex items-center gap-2">
-          <Flame className="w-4 h-4 text-accent-red" aria-hidden="true" />
           <span>{rawStreaks.progressiveTierRestrictions || 'Progressive Tier Restrictions'}</span>
         </h3>
         <div className="grid grid-cols-1 gap-2.5" role="list">
@@ -377,26 +358,16 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
         </div>
       </div>
 
-      <RulesModalListSection
-        icon={AlertTriangle}
-        title={rawStreaks.exceptions || 'Exceptions'}
-        intro={(isSolo && rawStreaks.soloVoidMatchNotice) || rawStreaks.voidMatchNotice || 'These void the match. Replay it.'}
-        headerColorClassName="text-accent-red"
-        boxClassName="border-accent-red/20"
-        items={exceptions
+      <RulesModalFooter
+        dict={dict}
+        voidNotice={(isSolo && rawStreaks.soloVoidMatchNotice) || undefined}
+        exceptions={exceptions
           .map((item) => ({
             label: rawStreaks[item.labelKey] || item.defaultLabel,
             text: rawStreaks[item.textKey] || item.defaultText,
           }))
           .filter((item) => item.label || item.text)}
-      />
-
-      <RulesModalListSection
-        icon={AlertTriangle}
-        title={rawStreaks.clarifications || 'Clarifications'}
-        headerColorClassName="text-accent-red"
-        boxClassName="border-border-color"
-        items={clarifications
+        clarifications={clarifications
           .map((item) => ({
             label: rawStreaks[item.labelKey] || item.defaultLabel,
             text:
@@ -408,21 +379,6 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({
               ] || item.defaultText,
           }))
           .filter((item) => item.label || item.text)}
-      />
-
-      <RulesModalNotices
-        accentClassName="border-accent-amber/20 bg-accent-amber/5 text-accent-amber"
-        notices={[
-          {
-            icon: Snowflake,
-            text: rawStreaks.runFreezeNotice ||
-              'Your run freezes. New unlocks join after your next reset, loss to zero, or completion.',
-          },
-          {
-            icon: Clock,
-            text: rawStreaks.inactivityLossNotice || 'An in-progress run untouched for 90 days automatically counts as a loss.',
-          },
-        ]}
       />
     </RulesModalShell>
   );

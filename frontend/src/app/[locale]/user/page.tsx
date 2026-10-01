@@ -16,6 +16,7 @@ import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
+import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserCampfireParticles } from '@/components/user/UserCampfireParticles';
 import { Locale } from '@/i18n/config';
@@ -234,7 +235,8 @@ export default function UserProfilePage() {
             onPageChange={handleReportsPageChange}
           />
 
-          {/* 4. Danger zone: delete account */}
+          {/* 4. Your data: export and delete */}
+          <DownloadDataSection dict={dict} />
           <DeleteAccountSection dict={dict} />
         </div>
 

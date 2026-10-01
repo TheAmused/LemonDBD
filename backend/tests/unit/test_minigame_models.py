@@ -5,7 +5,6 @@ from app.core.extensions import db
 from app.models.minigame import (
     MinigameDailyChallenge,
     MinigameRepeatableChallenge,
-    MinigameSharedLink,
     MinigameUserStat,
 )
 
@@ -37,19 +36,6 @@ def test_create_minigame_daily_challenge(app, test_db):
     assert retrieved.title == "The Fog Infiltration Trial"
     assert len(retrieved.rounds) == 1
     assert retrieved.rounds[0]["mode"] == "realm_guesser"
-
-def test_shared_link_model(app, test_db):
-    link = MinigameSharedLink(
-        short_code="dbd-test1",
-        payload={"title": "Custom Test", "rounds": []}
-    )
-    db.session.add(link)
-    db.session.commit()
-
-    retrieved = db.session.query(MinigameSharedLink).filter_by(short_code="dbd-test1").first()
-    assert retrieved is not None
-    assert retrieved.payload["title"] == "Custom Test"
-    assert retrieved.views_count == 0
 
 def test_minigame_repeatable_challenge(app, test_db):
     rep = MinigameRepeatableChallenge(

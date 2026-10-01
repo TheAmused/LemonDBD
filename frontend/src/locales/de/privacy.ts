@@ -28,7 +28,7 @@ export default {
       paragraphs: ["Du kannst den Großteil der Seite ohne Konto nutzen. Je nachdem, was du tust, verarbeiten wir:"],
       items: [
         "<b>Kontodaten:</b> Benutzername, E-Mail-Adresse, einen Hash deines Passworts (nie das Passwort selbst), Avatar, bevorzugte Sprache sowie kurzlebige Bestätigungs- und Passwort-Zurücksetzen-Codes.",
-        "<b>Was du speicherst:</b> Charakter- und Perk-Besitz, dein Profil-Showcase, Tier Lists, eigene Challenges, Streaks, Erfolge und Smash-or-Pass-Stimmen. Besucher ohne Konto erhalten eine zufällige Sitzungs-ID, damit ihre Smash-or-Pass-Stimmen gemerkt werden können.",
+        "<b>Was du speicherst:</b> Charakter- und Perk-Besitz, dein Profil-Showcase, Streak-Läufe, Challenge-Erfolge, Minispiel-Statistiken und Smash-or-Pass-Stimmen. Deine Tier Lists, Smash-or-Pass-Roster und eigenen Minispiele bleiben in deinem Browser und werden nicht an unsere Server gesendet. Besucher ohne Konto erhalten eine zufällige Sitzungs-ID, damit ihre Smash-or-Pass-Stimmen gemerkt werden können.",
         "<b>Fehlermeldungen und Nachrichten:</b> Text, Screenshots, Name und E-Mail-Adresse, die du uns schickst. Gäste müssen eine E-Mail-Adresse angeben, damit wir antworten können.",
         "<b>Technische Daten:</b> deine IP-Adresse, Browsertyp und Anfragedetails, genutzt für Ratenbegrenzung, Missbrauchsschutz und Fehlerbehebung.",
         "<b>Sprachbefehle (Karten):</b> Wenn du sie einschaltest, wird dein Mikrofonton zur Erkennung von Kartennamen verwendet. Wie das funktioniert, steht unten im Abschnitt zu Speicher und Dritten.",
@@ -66,7 +66,7 @@ export default {
       heading: "Wer deine Daten sieht",
       paragraphs: ["Wir verkaufen deine personenbezogenen Daten nicht und nutzen sie nicht für Werbung. Wir teilen sie nur, soweit nötig:"],
       items: [
-        "<b>Öffentliche Inhalte:</b> Dinge, die du veröffentlichst, etwa öffentliche Tier Lists, Roster und Ranglisten, sind für andere Besucher zusammen mit deinem Benutzernamen und Avatar sichtbar.",
+        "<b>Links, die du teilst:</b> Wenn du eine Tier List, ein Roster oder ein eigenes Minispiel teilst, steckt der Inhalt im Link selbst (dem Teil nach dem „#“, den dein Browser nie an uns sendet). Wir speichern ihn nicht und können ihn nicht sehen; nur wer den Link erhält, kann ihn öffnen.",
         "<b>Dienstleister:</b> Unser Hosting-Anbieter und {mailProvider} (der unsere Bestätigungs- und Passwort-Zurücksetzen-E-Mails zustellt) verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden.",
         "<b>Discord:</b> Wenn du eine Fehlermeldung einreichst, wird ihr Inhalt (einschließlich Name, E-Mail-Adresse und Screenshots) an einen privaten Kanal unseres Teams weitergeleitet.",
         "<b>Rechtliche Gründe:</b> wenn das Gesetz es verlangt oder um die Seite und ihre Nutzer vor Missbrauch zu schützen.",
@@ -83,7 +83,7 @@ export default {
       heading: "Wie lange wir sie aufbewahren",
       paragraphs: [
         "Kontodaten und gespeicherte Inhalte bleiben, solange dein Konto besteht. Bestätigungscodes verfallen nach {verificationWindow}, Passwort-Zurücksetzen-Links nach {resetWindow} und Anmeldesitzungen nach {sessionWindow}. Streaks, die {streakPrune} inaktiv bleiben, werden automatisch beendet. Fehlermeldungen werden so lange aufbewahrt, wie sie zur Lösung und für unsere Unterlagen nötig sind. Serverprotokolle werden nur kurz gespeichert. Analysedaten sind anonym.",
-        "Du kannst dein Konto selbst auf deiner Profilseite löschen oder uns darum bitten. Danach entfernen wir deine Kontodaten, gespeicherten Inhalte und den hochgeladenen Avatar. Deine Fehlermeldungen bleiben für unsere Unterlagen erhalten, aber dein Name und deine E-Mail-Adresse werden daraus entfernt. Kopien, die bereits an unseren privaten Discord-Kanal gesendet oder in Backups gespeichert wurden, können für begrenzte Zeit bestehen bleiben, und öffentlich Veröffentlichtes kann anonymisiert statt entfernt werden.",
+        "Du kannst dein Konto auf deiner Profilseite selbst löschen oder uns darum bitten. Dann werden Kontodaten, Charakter- und Perk-Besitz, Showcase, Streak-Läufe, Minispiel-Statistiken, Challenge-Erfolge und hochgeladener Avatar entfernt. Smash-or-Pass-Stimmen bleiben als anonyme Einträge bestehen, die nicht mehr mit dir verknüpft sind. Fehlermeldungen bleiben für unsere Unterlagen erhalten, dein Name und deine E-Mail-Adresse werden daraus entfernt. Bereits an unseren privaten Discord-Kanal gesendete Kopien können bestehen bleiben.",
       ],
       items: [],
     },
@@ -98,7 +98,7 @@ export default {
       heading: "Deine Rechte",
       paragraphs: [
         "Je nach Wohnort (z. B. im EWR oder im Vereinigten Königreich) hast du das Recht auf:",
-        "Du kannst deine Profildaten selbst ändern und dein Konto auf deiner Profilseite löschen. Für eine Kopie deiner Daten oder zur Ausübung eines anderen Rechts schreibe an [{contactEmail}](mailto:{contactEmail}); wir antworten innerhalb eines Monats.",
+        "Auf deiner Profilseite kannst du deine Profildaten ändern, eine Kopie deiner Daten herunterladen und dein Konto selbst löschen. Für jedes andere Recht schreibe an [{contactEmail}](mailto:{contactEmail}); wir antworten innerhalb eines Monats.",
       ],
       items: [
         "Auskunft über die von uns gespeicherten personenbezogenen Daten und eine Kopie;",

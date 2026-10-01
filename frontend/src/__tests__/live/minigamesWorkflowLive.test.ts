@@ -136,48 +136,7 @@ test("Live Frontend Workflow: Minigames & DBD Idle End-to-End Suite", async () =
   const attempt4Result = await attempt4Res.json();
   assert.ok(attempt4Result.unlocked_clues, "Unlocked clues map must be returned");
 
-  // 6. Custom Challenge Sharing API
-  const customPayload = {
-    title: "Test Community Guuntlet",
-    description: "Player created gauntlet for testing",
-    game_mode: "custom",
-    rounds: [
-      {
-        round_number: 1,
-        mode: "pixel_avatar",
-        target_id: 1,
-        target_type: "killer",
-        max_attempts: 5,
-        target_name: "The Trapper",
-      },
-      {
-        round_number: 2,
-        mode: "realm_guesser",
-        target_id: 1,
-        target_type: "realm",
-        max_attempts: 4,
-        target_name: "MacMillan Estate",
-      },
-    ],
-  };
-
-  const shareRes = await fetch(`${API_BASE}/api/v1/minigames/share`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ payload: customPayload }),
-  });
-  assert.strictEqual(shareRes.status, 201, "Share endpoint must return 201");
-  const shareData = await shareRes.json();
-  assert.ok(shareData.short_code, "Share response must contain short_code");
-  assert.ok(shareData.share_url, "Share response must contain share_url");
-
-  // Fetch shared challenge by short code
-  const getSharedRes = await fetch(`${API_BASE}/api/v1/minigames/shared/${shareData.short_code}`);
-  assert.strictEqual(getSharedRes.status, 200, "Fetch shared challenge must return 200");
-  const sharedRecord = await getSharedRes.json();
-  assert.strictEqual(sharedRecord.short_code, shareData.short_code);
-  assert.strictEqual(sharedRecord.title, customPayload.title);
-  assert.strictEqual(sharedRecord.rounds.length, 2);
+  // 6. (Custom challenge sharing is client-side: the challenge lives in the URL fragment.)
 
   // 7. User Registration & Stats Tracking API
   const testUser = `minigamer_${Date.now()}`;

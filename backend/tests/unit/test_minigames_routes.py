@@ -66,30 +66,6 @@ def test_get_daily_challenge_endpoint(app, test_db, auth_tokens):
     assert len(data["rounds"]) >= 1
 
 
-def test_share_custom_challenge_and_retrieve(app, test_db, auth_tokens):
-    client = app.test_client()
-    payload = {
-        "title": "My Custom Fog Trial",
-        "description": "Multi-stage trial",
-        "rounds": [
-            {"round_number": 1, "mode": "realm_guesser", "target_id": 1}
-        ]
-    }
-    # Share
-    res = client.post("/api/v1/minigames/share", json=payload)
-    assert res.status_code == 201
-    data = res.get_json()
-    assert "short_code" in data
-    code = data["short_code"]
-
-    # Retrieve by short_code
-    res_get = client.get(f"/api/v1/minigames/share/{code}")
-    assert res_get.status_code == 200
-    retrieved = res_get.get_json()
-    assert retrieved["title"] == "My Custom Fog Trial"
-    assert retrieved["short_code"] == code
-
-
 def test_admin_post_official_challenge_permissions(app, test_db, auth_tokens):
     client = app.test_client()
     admin_token = auth_tokens["admin"]

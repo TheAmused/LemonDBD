@@ -45,7 +45,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
   const [failed, setFailed] = useState(false);
   const src = perkIconFor(perk);
   return (
-    <div className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-accent-red/30 overflow-hidden">
+    <div className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
       <div className="w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40">
         {src && !failed ? (
           <img

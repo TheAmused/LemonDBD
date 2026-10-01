@@ -1,5 +1,5 @@
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Gift,
   Coins,
@@ -15,7 +15,6 @@ import {
   getRarityTileStyle,
   getRarityRank,
 } from '../types';
-import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 import { CategoryPicker } from './CategoryPicker';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';
@@ -152,7 +151,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         value
       )
   );
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_offerings', true);
 
   const activeCategoryConfig =
@@ -395,11 +393,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                       onSelectOffering?.(offering);
                     }
                   }}
-                  onMouseEnter={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    setActiveHover({ item: offering, rect, category: activeCategoryConfig.label });
-                  }}
-                  onMouseLeave={() => setActiveHover(null)}
+                  {...tip(offering.name, undefined, 'item')}
                   className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
@@ -417,14 +411,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           </div>
         )}
       </CollapsibleDrawer>
-
-      {/* Unified Hover Modal */}
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="above"
-        t={t}
-        actionPrompt={t.clickOfferingForDetails || t.clickToInspect || 'Click offering for details'}
-      />
     </section>
   );
 };

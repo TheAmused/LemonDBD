@@ -43,7 +43,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             ? 'border-accent-red/80 bg-bg-elevated hover:scale-105 hover:border-accent-red'
             : 'border-dashed border-border-color bg-bg-elevated/40 hover:border-accent-amber/60 hover:bg-accent-amber/5 hover:scale-105'
         }`}
-        {...tip(perk?.name || emptyLabel)}
+        {...tip(perk?.name || emptyLabel, undefined, perk ? 'item' : undefined)}
         aria-label={perk?.name || emptyLabel}
       >
         {/* Un-rotated inside content */}

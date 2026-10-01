@@ -1,5 +1,5 @@
 // frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Flame } from 'lucide-react';
 import {
   AddonItem,
@@ -8,7 +8,7 @@ import {
   getRarityTileStyle,
   getRarityRank,
 } from '../types';
-import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
+import { tip } from '@/components/common/Tooltip';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
@@ -26,7 +26,6 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
   onSelectEquipment,
   t,
 }) => {
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_killer_addons', true);
 
   const sortedAddons = useMemo(() => {
@@ -89,15 +88,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             return (
               <div
                 key={`${item.name}-${idx}`}
-                onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setActiveHover({
-                    item: displayItem,
-                    rect,
-                    accentColor: 'text-accent-red',
-                  });
-                }}
-                onMouseLeave={() => setActiveHover(null)}
+                {...tip(displayItem.name, undefined, 'item')}
                 onClick={() => onSelectEquipment(displayItem)}
                 className={`relative group rounded-3xl border-2 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
               >
@@ -114,14 +105,6 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
           })}
         </div>
       </CollapsibleDrawer>
-
-      {/* Unified Hover Modal */}
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="above"
-        t={t}
-        actionPrompt={t.clickAddonForDetails || t.clickToInspect || 'Click add-on for details'}
-      />
     </section>
   );
 };

@@ -6,7 +6,7 @@ import { CharacterItem, PerkItem, getAssetUrl } from '../types';
 import { Perk } from '@/types/perks';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
-import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
+import { tip } from '@/components/common/Tooltip';
 
 interface CharacterPerksSectionProps {
   perks: PerkItem[];
@@ -23,7 +23,6 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   onSelectPerk,
   t,
 }) => {
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [disabledModalPerk, setDisabledModalPerk] = useState<PerkItem | null>(null);
 
   if (perks.length === 0) return null;
@@ -37,21 +36,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
           <div
             key={`${perk.name}-${idx}`}
             className="relative"
-            onMouseEnter={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const isSurvivor = perk.category === 'Survivor';
-              const localizedBadge = isSurvivor
-                ? t.survivorPerk || 'Survivor Perk'
-                : t.killerPerk || 'Killer Perk';
-              setActiveHover({
-                item: perk,
-                rect,
-                badge: localizedBadge,
-                category: character.name || perk.character || localizedBadge,
-                accentColor: isSurvivor ? 'text-accent-green' : 'text-accent-red',
-              });
-            }}
-            onMouseLeave={() => setActiveHover(null)}
+            {...tip(perk.name, undefined, 'item')}
           >
             <button
               type="button"
@@ -88,15 +73,6 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
           </div>
         );
       })}
-
-      {/* Unified Hover Modal */}
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="auto"
-        t={t}
-        isPerk={true}
-        actionPrompt={t.clickToInspectPerk || t.clickToInspect || 'Click to inspect full perk values'}
-      />
 
       <DisabledReasonModal
         isOpen={disabledModalPerk !== null}

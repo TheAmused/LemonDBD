@@ -199,7 +199,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
             ))}
           </div>
 
-          <SlotLever pulled={leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
+          <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} onPull={handlePull} />
 
           <div className="w-40 sm:w-48 shrink-0 pl-2 sm:pl-3">
             {revealed ? (
@@ -228,8 +228,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   );
 };
 
-const SlotLever: React.FC<{ pulled: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
-  pulled,
+const LEVER_STICK_PX = 54;
+
+const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
+  down,
   disabled,
   onPull,
   label = 'Pull the lever',
@@ -239,32 +241,42 @@ const SlotLever: React.FC<{ pulled: boolean; disabled: boolean; onPull: () => vo
     onClick={onPull}
     disabled={disabled}
     aria-label={label}
-    className="group relative flex flex-col items-center pb-1 disabled:opacity-50 cursor-pointer"
+    className="relative shrink-0 cursor-pointer disabled:cursor-default"
+    style={{ perspective: '420px' }}
   >
     <div
-      className={`relative ${pulled ? 'chaos-lever-pull' : ''}`}
-      style={{ transformOrigin: '50% 100%' }}
+      className="relative h-[150px] w-[74px] rounded-2xl border border-border-color transition-shadow duration-500"
+      style={{
+        background: 'linear-gradient(180deg, #0c0d11, #191a20)',
+        boxShadow: down
+          ? 'inset 0 6px 14px rgba(0,0,0,0.65), 0 0 26px rgba(239,68,68,0.35)'
+          : 'inset 0 6px 14px rgba(0,0,0,0.65)',
+      }}
     >
-      <svg width="28" height="72" viewBox="0 0 28 72" className="drop-shadow-md">
-        <defs>
-          <linearGradient id="chaosLeverRail" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#94a3b8" />
-            <stop offset="45%" stopColor="#f1f5f9" />
-            <stop offset="100%" stopColor="#475569" />
-          </linearGradient>
-          <radialGradient id="chaosLeverBall" cx="35%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#fca5a5" />
-            <stop offset="45%" stopColor="#ef4444" />
-            <stop offset="100%" stopColor="#7f1d1d" />
-          </radialGradient>
-        </defs>
-        <rect x="11" y="19" width="6" height="48" rx="3" fill="url(#chaosLeverRail)" />
-        <circle cx="14" cy="15" r="14" fill="url(#chaosLeverBall)" stroke="#fecaca" strokeWidth="1" />
-        <ellipse cx="9" cy="10" rx="4.2" ry="2.8" fill="#fff" opacity="0.55" />
-      </svg>
+      <div
+        className="absolute left-1/2 top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
+        style={{ background: '#2c2e38', borderColor: '#5a5f73' }}
+      />
+      <div
+        className="absolute left-1/2 w-[10px] -ml-[5px] rounded-full"
+        style={{
+          top: `calc(50% - ${LEVER_STICK_PX}px)`,
+          height: LEVER_STICK_PX,
+          transformOrigin: '50% 100%',
+          transformStyle: 'preserve-3d',
+          transform: down ? 'rotateX(-180deg)' : 'rotateX(0deg)',
+          transition: 'transform 550ms cubic-bezier(0.34, 1.35, 0.64, 1)',
+          background: 'linear-gradient(90deg, #8d93a8, #eef0f6, #5a5f73)',
+        }}
+      >
+        <div
+          className="absolute -top-[15px] -left-[10px] h-[30px] w-[30px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle at 35% 30%, #fca5a5, #ef4444 50%, #7f1d1d)',
+            boxShadow: '0 0 14px rgba(239,68,68,0.45)',
+          }}
+        />
+      </div>
     </div>
-    <svg width="42" height="14" viewBox="0 0 42 14" className="-mt-0.5">
-      <ellipse cx="21" cy="6" rx="19.5" ry="4.9" fill="#1e293b" stroke="#475569" strokeWidth="1.4" />
-    </svg>
   </button>
 );

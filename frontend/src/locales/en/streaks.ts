@@ -146,7 +146,7 @@ export default {
   pickYourKiller: "Pick your killer",
   acceptPick: "ACCEPT PICK",
   accept: "ACCEPT",
-  searchPerksPlaceholder: "Search perks by name...",
+  searchPerksPlaceholder: "Search...",
   noPerksMatchSearch: "No perks match your search.",
   clearSearch: "Clear search",
   unlockedPerksOne: "You unlocked {count} new perk",

@@ -45,7 +45,6 @@
   --animate-ps-pulse: psCompletePulse 800ms ease-in-out 1;
   --animate-gn-frame: gnLandFrame 520ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-gn-glow: gnLandGlow 900ms ease-out both;
-  --animate-chaos-lever: chaosLeverPull 550ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-chaos-pop: chaosBadgePop 380ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
   --animate-lock-shake: historyLockShake 380ms ease-in-out;
   --animate-lock-break: historyLockBreak 380ms cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
@@ -449,24 +448,6 @@
   }
 }
 
-@keyframes chaosLeverPull {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  35% {
-    transform: rotate(32deg);
-  }
-
-  62% {
-    transform: rotate(-6deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
 @keyframes chaosBadgePop {
   0% {
     transform: scale(0.6);
@@ -586,10 +567,6 @@
 
 .entity-coffee-spawn {
   animation: entityCoffeeSpawn 400ms ease-out both;
-}
-
-.chaos-lever-pull {
-  animation: chaosLeverPull 550ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 .chaos-badge-pop {
@@ -800,7 +777,6 @@
   .gn-name-in,
   .freeze-badge-in,
   .entity-coffee-spawn,
-  .chaos-lever-pull,
   .chaos-badge-pop,
   .history-lock-shake,
   .history-lock-break,

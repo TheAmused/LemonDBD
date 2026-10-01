@@ -22,7 +22,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ArrowLeft, Eye, EyeOff, GripVertical, RotateCcw, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Eye, EyeOff, GripVertical, RotateCcw, ShieldCheck } from 'lucide-react';
 import { SidewaysPointerSensor } from '@/components/tier-lists/touchSensors';
 import {
   PRIVACY_LAYOUT_STORAGE_KEY,
@@ -35,6 +35,7 @@ import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { apiUrl } from '@/utils/api';
 import { fillPrivacyPlaceholders, type PrivacyInfo } from '@/utils/privacyPlaceholders';
 
@@ -72,46 +73,75 @@ interface BlockCardProps {
 function BlockCard({ id, label, title, accent, hideLabel, dragLabel, onHide, children }: BlockCardProps) {
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } =
     useSortable({ id });
+  // Same collapsible drawer the About page cards use, remembered per block.
+  const [isExpanded, toggleExpanded] = usePersistentDrawer(`lemondbd_drawer_privacy_${id}`, true);
 
   return (
-    <section
+    <div
       ref={setNodeRef}
       id={id}
-      aria-label={label}
       style={{ transform: CSS.Translate.toString(transform), transition }}
-      className={`scroll-mt-6 flex h-full flex-col rounded-3xl border bg-bg-surface backdrop-blur-xl shadow-md ${
-        accent ? 'border-accent-red/30' : 'border-border-color'
-      } ${isDragging ? 'relative z-20 opacity-90 shadow-2xl ring-1 ring-accent-red/50' : ''}`}
+      className={`grid scroll-mt-6 grid-cols-1 grid-rows-1 ${isDragging ? 'relative z-30 opacity-90' : ''}`}
     >
-      <header className="flex items-center gap-2 border-b border-border-color px-3 py-3 sm:px-4">
-        <button
-          type="button"
-          ref={setActivatorNodeRef}
-          aria-label={dragLabel}
-          title={dragLabel}
-          className="shrink-0 cursor-grab touch-none rounded-lg p-1.5 text-text-muted transition-colors hover:bg-bg-elevated hover:text-accent-red active:cursor-grabbing"
-          {...attributes}
-          {...listeners}
+      <section
+        aria-label={label}
+        className={`col-start-1 row-start-1 z-10 flex flex-col overflow-hidden rounded-3xl border bg-bg-surface backdrop-blur-xl shadow-md transition-colors ${
+          accent ? 'border-accent-red/30' : 'border-border-color'
+        } ${isExpanded ? 'h-full self-stretch' : 'h-fit self-start'} ${
+          isDragging ? 'shadow-2xl ring-1 ring-accent-red/50' : ''
+        }`}
+      >
+        <div className="relative flex shrink-0 items-center justify-center">
+          <button
+            type="button"
+            onClick={toggleExpanded}
+            aria-expanded={isExpanded}
+            className="relative flex w-full cursor-pointer select-none items-center justify-center px-20 py-4 text-center sm:px-24"
+          >
+            <h2 className="flex flex-wrap items-baseline justify-center gap-x-2 text-center font-mono text-xs font-bold uppercase tracking-widest text-accent-red sm:text-sm">
+              {title}
+            </h2>
+          </button>
+          <button
+            type="button"
+            ref={setActivatorNodeRef}
+            aria-label={dragLabel}
+            title={dragLabel}
+            className="absolute left-2 top-1/2 -translate-y-1/2 cursor-grab touch-none rounded-lg p-2 text-text-muted transition-colors hover:bg-bg-elevated hover:text-accent-red active:cursor-grabbing sm:left-4"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onHide}
+            aria-label={hideLabel}
+            title={hideLabel}
+            className="absolute right-10 top-1/2 -translate-y-1/2 rounded-lg p-2 text-text-muted transition-colors hover:bg-bg-elevated hover:text-accent-red sm:right-14"
+          >
+            <EyeOff className="h-4 w-4" />
+          </button>
+          <ChevronDown
+            aria-hidden="true"
+            className={`pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-accent-red transition-transform duration-300 ease-in-out sm:right-7 sm:h-5 sm:w-5 ${
+              isExpanded ? 'rotate-180' : 'rotate-0'
+            }`}
+          />
+        </div>
+        <div
+          className={`grid flex-1 transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+            isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
         >
-          <GripVertical className="h-4 w-4" />
-        </button>
-        <h2 className="flex min-w-0 flex-1 items-baseline gap-2 text-xs sm:text-sm font-bold uppercase tracking-widest text-accent-red font-mono">
-          {title}
-        </h2>
-        <button
-          type="button"
-          onClick={onHide}
-          aria-label={hideLabel}
-          title={hideLabel}
-          className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-bg-elevated hover:text-accent-red"
-        >
-          <EyeOff className="h-4 w-4" />
-        </button>
-      </header>
-      <div className="flex flex-1 flex-col gap-2.5 p-4 sm:p-5 text-sm leading-relaxed text-text-muted">
-        {children}
-      </div>
-    </section>
+          <div className="h-full overflow-hidden">
+            <div className="flex h-full flex-col gap-2 border-t border-border-color p-4 text-sm leading-relaxed sm:p-6">
+              {children}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -200,7 +230,7 @@ export default function PrivacyPolicyPage() {
     if (!privacy) return null;
     if (id === SUMMARY_BLOCK) {
       return (
-        <ul className="flex list-disc flex-col gap-1.5 pl-5 marker:text-accent-red">
+        <ul className="flex list-disc flex-col gap-1.5 pl-5 text-text-muted marker:text-accent-red">
           {privacy.summary.map((line, i) => (
             <li key={i}>
               <RichText text={fill(line)} />
@@ -213,12 +243,12 @@ export default function PrivacyPolicyPage() {
     return (
       <>
         {section.paragraphs.map((text, i) => (
-          <p key={i}>
+          <p key={i} className="text-text-muted text-justify [text-justify:inter-word] hyphens-auto">
             <RichText text={fill(text)} />
           </p>
         ))}
         {section.items.length > 0 ? (
-          <ul className="flex list-disc flex-col gap-1.5 pl-5 marker:text-accent-red">
+          <ul className="flex list-disc flex-col gap-1.5 pl-5 text-text-muted marker:text-accent-red">
             {section.items.map((text, i) => (
               <li key={i}>
                 <RichText text={fill(text)} />
@@ -279,7 +309,7 @@ export default function PrivacyPolicyPage() {
                         title={
                           <>
                             {num ? <span className="text-text-muted">{num}</span> : null}
-                            <span className="truncate">{blockTitle(id)}</span>
+                            <span>{blockTitle(id)}</span>
                           </>
                         }
                       >

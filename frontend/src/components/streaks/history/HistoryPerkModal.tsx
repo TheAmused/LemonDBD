@@ -6,7 +6,17 @@ import React, { useEffect, useState } from 'react';
 import { PartyPopper, Sparkles, Lock } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
-import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+
+const PLURAL_SUFFIX = { one: 'One', few: 'Few', many: 'Many' } as const;
+
+/** "You unlocked 3 new perks", worded and declined for the locale. */
+function unlockedPerksMessage(dict: Dictionary | undefined, locale: string, count: number): string {
+  const category = new Intl.PluralRules(locale).select(count);
+  const suffix = PLURAL_SUFFIX[category as keyof typeof PLURAL_SUFFIX] ?? 'Other';
+  const template = dict?.streaks?.[`unlockedPerks${suffix}` as 'unlockedPerksOther'] || 'You unlocked {count} new perks';
+  return template.replace('{count}', String(count));
+}
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
 
@@ -25,11 +35,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 
   return (
     <div
-      className={`relative flex flex-col items-center gap-1.5 p-2 rounded-lg border transition-colors duration-500 overflow-hidden ${
-        isRevealed
-          ? 'bg-accent-green/10 border-accent-green/40'
-          : 'bg-bg-elevated border-border-color'
-      }`}
+      className="relative flex flex-col items-center gap-1.5 p-2 rounded-lg border border-border-color bg-bg-elevated overflow-hidden"
       style={delay}
     >
       <div
@@ -46,7 +52,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
             onError={() => setFailed(true)}
           />
         ) : (
-          <Sparkles className="w-5 h-5 text-accent-green" />
+          <Sparkles className="w-5 h-5 text-text-muted" />
         )}
       </div>
       <span className="text-[10px] font-bold text-text-secondary truncate w-full text-center">
@@ -76,13 +82,14 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
 export interface HistoryPerkModalProps {
   killerName: string | null;
   perks: Perk[];
+  locale: string;
   onClose: () => void;
   dict?: Dictionary;
 }
 
-export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
+export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, locale, onClose, dict }) => {
   const [phase, setPhase] = useState<LockPhase>('locked');
-  const killerDisplayName = useCharacterDisplayName()(killerName || '');
+  const unlockedMessage = unlockedPerksMessage(dict, locale, perks.length);
 
   useEffect(() => {
     if (!killerName) {
@@ -115,16 +122,14 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
           <PartyPopper className="h-8 w-8" />
         </div>
 
-        <h2 className="text-xl font-black tracking-tight text-text-primary">{killerDisplayName} {dict?.stats?.win || 'beaten'}!</h2>
-        <p className="mt-1 text-xs text-text-muted uppercase tracking-wider font-bold">
-          {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
+        <h2 className="text-2xl font-black tracking-tight text-text-primary">
+          {dict?.streaks?.victoryCongrats || 'Congratulations'}!
+        </h2>
+        <p className="mt-1 text-sm font-semibold text-text-secondary">
+          {perks.length > 0 ? unlockedMessage : dict?.streaks?.noNewPerks || 'No new perks this time.'}
         </p>
 
-        {perks.length === 0 ? (
-          <p className="mt-4 text-sm text-text-secondary">
-            {dict?.streaks?.noNewPerks || 'No new perks this time.'}
-          </p>
-        ) : (
+        {perks.length > 0 && (
           <div className="mt-4 grid grid-cols-3 gap-2.5">
             {perks.map((perk, i) => (
               <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />

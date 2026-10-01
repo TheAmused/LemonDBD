@@ -71,8 +71,7 @@ export function TierPool({
       aria-label={t.unranked}
       className={cn(
         'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-3xl transition-all',
-        'sticky bottom-0 z-20 -mx-3 w-[calc(100%+1.5rem)] sm:static sm:z-auto sm:mx-0 sm:w-full lg:shrink-0 [@media(max-height:500px)]:sticky [@media(max-height:500px)]:bottom-0 [@media(max-height:500px)]:z-20',
-        'backdrop-blur-md bg-bg-surface/95 sm:backdrop-blur-none sm:shadow-sm'
+        'shrink-0 bg-bg-surface/95 shadow-sm'
       )}
     >
       {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
@@ -125,9 +124,9 @@ export function TierPool({
           </Badge>
         </div>
 
+        {/* No onClick of its own: the click bubbles to the header, which toggles (keyboard Enter/Space included). */}
         <button
           type="button"
-          onClick={() => setCollapsed((c) => !c)}
           aria-expanded={!collapsed}
           aria-label={collapsed ? t.showPool : t.hidePool}
           className="relative z-10 order-2 sm:order-3 justify-self-end flex min-h-[40px] items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
@@ -165,7 +164,7 @@ export function TierPool({
             ref={setNodeRef}
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
-              'min-h-[100px] max-h-[45dvh] sm:max-h-[min(500px,45dvh)] lg:max-h-[30dvh] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
+              'min-h-[100px] max-h-[calc(var(--pool-h)-var(--pool-head))] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}

@@ -8,7 +8,6 @@ import {
   KeyboardSensor,
   MeasuringStrategy,
   MouseSensor,
-  TouchSensor,
   closestCorners,
   pointerWithin,
   useSensor,
@@ -27,6 +26,7 @@ import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
 import { TierItemPreviewModal } from './TierItemPreviewModal';
 import { TierItemTile, type TierTileShape } from './TierItemTile';
 import { TierPool } from './TierPool';
+import { PoolPointerSensor, RowTouchSensor } from './touchSensors';
 import { TierRow } from './TierRow';
 import { parseContainerDndId, parseItemDndId } from './dndIds';
 
@@ -105,8 +105,10 @@ export function TierListBoard({
   const sensors = useSensors(
     // A few pixels of travel before a mouse drag starts, so a click selects.
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
-    // A short hold before a touch drag starts, so a swipe still scrolls the page.
-    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 8 } }),
+    // Touch on the pool strip: a vertical drag starts at once, a sideways swipe scrolls it.
+    useSensor(PoolPointerSensor, { activationConstraint: { distance: { y: 10 } } }),
+    // Touch on a tier row: a short hold (with room for finger drift) so a swipe still scrolls the rows.
+    useSensor(RowTouchSensor, { activationConstraint: { delay: 200, tolerance: 14 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -240,7 +242,7 @@ export function TierListBoard({
       accessibility={{ announcements, screenReaderInstructions: { draggable: t.dnd.instructions } }}
     >
       {/* The page never scrolls (short landscape screens excepted). The rows take the height they need and scroll in their own area once they would overflow; the pool header sits right under them. The rows' cap always leaves room for the OPEN pool, so collapsing or expanding the pool never moves anything above or at its header. */}
-      <div className="flex flex-col w-full flex-1 min-h-0 gap-3 sm:gap-4 [--pool-h:min(40dvh,26rem)] [--pool-head:6.5rem] sm:[--pool-head:4rem]">
+      <div className="flex flex-col w-full flex-1 min-h-0 gap-3 sm:gap-4 [--pool-h:min(40dvh,26rem)] [@media(pointer:coarse)]:[--pool-h:min(46dvh,22rem)] [--pool-head:6.5rem] sm:[--pool-head:4rem]">
         <div className="flex flex-col gap-2 w-full min-h-0 flex-initial overflow-y-auto overscroll-contain pr-1 [&>*]:shrink-0 max-h-[calc(100%-var(--pool-h)-1rem)] [@media(max-height:559px)]:max-h-none [@media(max-height:559px)]:overflow-visible">
           {tiers.map((tier) => (
             <TierRow

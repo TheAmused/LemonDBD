@@ -1,7 +1,6 @@
 // frontend/src/components/character-detail/types.tsx
 import React from 'react';
-import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
-import type { AddonRarity } from '@/types/chaosStreak';
+import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
 
 export interface CharacterItem {
   id?: number;
@@ -231,10 +230,10 @@ export function getAvatarUrl(
   return char.avatar_url || char.portrait_url || '';
 }
 
-function rarityImageTile(rarity: AddonRarity): Pick<RarityTileStyle, 'bg' | 'style'> {
+function rarityImageTile(rarity: keyof typeof RARITY_TILE_IMAGES): Pick<RarityTileStyle, 'bg' | 'style'> {
   return {
     bg: 'border-transparent bg-no-repeat bg-center bg-[length:100%_100%]',
-    style: { backgroundImage: `url(${ADDON_RARITY_ICONS[rarity]})` },
+    style: { backgroundImage: `url(${RARITY_TILE_IMAGES[rarity]})` },
   };
 }
 
@@ -277,15 +276,16 @@ export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   }
   if (r.includes('event')) {
     return {
-      bg: 'bg-gradient-to-br from-[#d97706] via-[#92400e] to-[#451a03] border-[#f59e0b] shadow-[0_0_14px_rgba(245,158,11,0.45)]',
+      ...rarityImageTile('Event'),
       badge: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
       text: 'text-orange-400',
     };
   }
+  // Unknown / unrated rarities (e.g. "Special") look like Common.
   return {
-    bg: 'bg-slate-900 border-slate-700 shadow-md',
-    badge: 'bg-slate-500/20 text-slate-400 border-slate-500/40',
-    text: 'text-slate-400',
+    ...rarityImageTile('Common'),
+    badge: 'bg-amber-800/30 text-amber-200 border-amber-700/40',
+    text: 'text-amber-300',
   };
 }
 

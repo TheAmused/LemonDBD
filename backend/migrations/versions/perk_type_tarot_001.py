@@ -73,7 +73,14 @@ def upgrade():
     # 3. Add new CHECK constraint if not already present.
     existing_checks = {c["name"] for c in _inspector().get_check_constraints("perks")}
     if _CHECK_NAME not in existing_checks:
-        allowed_sql = ", ".join(f"'{v}'" for v in _NEW_ALLOWED)
+        # A fresh database is seeded from the current perks.json before the
+        # migrations run, so rows may already carry 'hooks' (added later by
+        # perk_type_hooks_001). Keep it allowed in that case, otherwise this
+        # constraint is violated by the seed itself.
+        allowed = _NEW_ALLOWED
+        if conn.execute(sa.text("SELECT 1 FROM perks WHERE perk_type = 'hooks' LIMIT 1")).first():
+            allowed = allowed + ("hooks",)
+        allowed_sql = ", ".join(f"'{v}'" for v in allowed)
         with op.batch_alter_table("perks", schema=None) as batch_op:
             batch_op.create_check_constraint(
                 _CHECK_NAME,

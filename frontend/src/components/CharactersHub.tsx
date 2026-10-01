@@ -40,6 +40,7 @@ import {
   EquipmentItem,
   getCharacterSlug,
   getAvatarUrl as resolveAvatarUrl,
+  getAvatarThumbUrl,
 } from '@/components/character-detail/types';
 import { RoleCategory, PerkDictionary } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
@@ -449,6 +450,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
             const showLockedOverlay = !isOwned;
             const avatarSrc = resolveAvatarUrl(backendBase, char, isSurvivor);
+            const avatarThumbSrc = getAvatarThumbUrl(backendBase, char, isSurvivor);
             const detailHref = `/${locale}/characters/${getCharacterSlug(char.name)}`;
 
             return (
@@ -496,7 +498,7 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
                 <div className="relative h-full w-full overflow-hidden bg-bg-elevated">
                   <img
-                    src={avatarSrc}
+                    src={avatarThumbSrc}
                     alt={char.name}
                     loading="lazy"
                     decoding="async"
@@ -505,7 +507,11 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
                     } ${ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'}`}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      if (!target.dataset.triedFallback) {
+                      if (!target.dataset.triedFull && avatarThumbSrc !== avatarSrc) {
+                        // Thumbnail route unavailable: use the full image instead.
+                        target.dataset.triedFull = '1';
+                        target.src = avatarSrc;
+                      } else if (!target.dataset.triedFallback) {
                         target.dataset.triedFallback = '1';
                         target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${getCharacterSlug(char.name)}.webp`;
                       } else if (target.dataset.triedFallback === '1') {

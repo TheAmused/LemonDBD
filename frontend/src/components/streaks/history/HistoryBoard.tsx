@@ -195,11 +195,11 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 </StreakActionButton>
               ) : (
                 <>
-                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
-                    {dict?.streaks?.winMatch || 'WIN MATCH'}
-                  </StreakActionButton>
                   <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
                     {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                  </StreakActionButton>
+                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                    {dict?.streaks?.winMatch || 'WIN MATCH'}
                   </StreakActionButton>
                 </>
               )}

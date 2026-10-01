@@ -646,11 +646,11 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
     { name: 'The Warm Up', tier_level: 0, perk_limit: 4, character_perks_only: false, description: '' };
   const actionButtons = (
     <StreakActionBar>
-      <StreakActionButton variant="green" onClick={onWin} disabled={loading}>
-        {dict?.streaks?.winMatch || 'WON'}
-      </StreakActionButton>
       <StreakActionButton variant="red" onClick={onLoss} disabled={loading}>
         {dict?.streaks?.loseMatch || 'LOST'}
+      </StreakActionButton>
+      <StreakActionButton variant="green" onClick={onWin} disabled={loading}>
+        {dict?.streaks?.winMatch || 'WON'}
       </StreakActionButton>
     </StreakActionBar>
   );

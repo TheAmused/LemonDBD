@@ -44,15 +44,16 @@ const DEFAULT_TYPE_NAMES: Record<TarotType, string> = {
   chase: 'The Chase',
   stealth: 'The Shadow',
   entity: 'The Entity',
+  hooks: 'The Hanged Man',
 };
 
 /** The on-disk card-back filenames (public/images/tarot/the-*.webp) follow
  * each type's *display* name, not its internal TarotType key -- most line
- * up (hex/boon/sacrifice/exhaustion/obsession/chase/entity), but four
- * don't: 'aura' ships as the-watcher.png, 'generator' as the-machinist.png,
- * 'healing' as the-caregiver.png, and 'stealth' as the-shadow.png. Using
- * the raw type key directly 404'd those four and silently fell back to
- * the solid-gradient placeholder. */
+ * up (hex/boon/sacrifice/exhaustion/obsession/chase/entity), but five
+ * don't: 'aura' ships as the-watcher.webp, 'generator' as the-machinist.webp,
+ * 'healing' as the-caregiver.webp, 'stealth' as the-shadow.webp, and 'hooks'
+ * as the-hanged-man.webp. Using the raw type key directly 404'd those five
+ * and silently fell back to the solid-gradient placeholder. */
 const TAROT_IMAGE_SLUG: Record<TarotType, string> = {
   hex: 'hex',
   boon: 'boon',
@@ -65,6 +66,7 @@ const TAROT_IMAGE_SLUG: Record<TarotType, string> = {
   chase: 'chase',
   stealth: 'shadow',
   entity: 'entity',
+  hooks: 'hanged-man',
 };
 
 /**

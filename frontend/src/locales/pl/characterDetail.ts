@@ -87,7 +87,7 @@ export default {
   survivorComparison: "Porównanie Prędkości Ocalałego",
   survivorComparisonDesc: "Standardowa prędkość sprintu ocalałego wynosi 4.0 m/s (100%).",
   viewLore: "Przeczytaj Historię i Biografię",
-  view3DModel: "Kliknij, aby Zobaczyć Pełny Model 3D",
+  view3DModel: "Kliknij, aby powiększyć",
   loreModalTitle: "Archiwa Bytu — Kodeks Wiedzy",
   equipmentDetails: "Szczegóły Wyposażenia",
   equipment: "Wyposażenie",

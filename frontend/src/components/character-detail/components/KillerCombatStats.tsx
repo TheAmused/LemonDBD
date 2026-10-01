@@ -24,9 +24,6 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
           <Activity className="h-3.5 w-3.5" />
           {t.combatAttributes || 'Combat Attributes & Threat Scale'}
         </span>
-        <span className="text-[10px] text-text-muted">
-          {t.clickTerrorRadiusVisualizer || 'Click Terror Radius for visualizer'}
-        </span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -45,27 +42,20 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
           </div>
         </div>
 
-        {/* Terror Radius */}
-        <button
-          type="button"
-          id="btn-terror-radius-modal"
-          onClick={onOpenTerrorRadiusModal}
-          className="group flex items-center gap-3 p-2.5 rounded-xl bg-accent-red/10 hover:bg-accent-red/15 border border-accent-red/30 hover:border-accent-red/50 transition-all cursor-pointer text-left shadow-sm active:scale-95 focus:outline-none focus:ring-1 focus:ring-accent-red"
-          title={t.terrorRadiusVisualizer || 'Click to view visual terror radius scale'}
-        >
-          <div className="h-9 w-9 rounded-xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red shrink-0 group-hover:scale-110 transition-transform">
-            <Radio className="h-4 w-4 animate-pulse" />
+        {/* Terror Radius (Visualizer disabled for now) */}
+        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated border border-border-color">
+          <div className="h-9 w-9 rounded-xl bg-bg-surface border border-border-color flex items-center justify-center text-text-secondary shrink-0">
+            <Radio className="h-4 w-4" />
           </div>
-          <div className="flex-1 min-w-0">
-            <span className="block text-[10px] font-mono text-accent-red font-bold uppercase flex items-center gap-1">
+          <div>
+            <span className="block text-[10px] font-mono text-text-secondary uppercase">
               {t.terrorRadius || 'Terror Radius'}
-              <Eye className="h-2.5 w-2.5 opacity-80" />
             </span>
-            <span className="block text-xs sm:text-sm font-black text-accent-red underline decoration-dotted underline-offset-2 truncate">
+            <span className="block text-xs sm:text-sm font-black text-text-primary">
               {killerTerrorRadius}
             </span>
           </div>
-        </button>
+        </div>
 
         {/* Height */}
         <div className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-elevated border border-border-color">

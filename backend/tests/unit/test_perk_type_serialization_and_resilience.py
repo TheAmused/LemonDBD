@@ -40,14 +40,14 @@ def test_to_dict_exposes_perk_type_when_set(app, survivor) -> None:
 
 
 @pytest.mark.unit
-def test_to_dict_degrades_missing_perk_type_to_general_not_none_or_crash(app, survivor) -> None:
+def test_to_dict_degrades_missing_perk_type_to_entity_not_none_or_crash(app, survivor) -> None:
     with app.app_context():
         perk = Perk(name="No Perk Type Perk", role="Survivor", perk_type=None, survivor_id=survivor)
         db.session.add(perk)
         db.session.commit()
 
         d = perk.to_dict()  # must not raise
-        assert d["perk_type"] == "general"
+        assert d["perk_type"] == "entity"
 
 
 @pytest.mark.unit
@@ -58,7 +58,7 @@ def test_perk_response_schema_validates_and_defaults_perk_type(app, survivor) ->
         db.session.commit()
 
         response = PerkResponse.model_validate(perk.to_dict())
-        assert response.perk_type == "general"
+        assert response.perk_type == "entity"
 
         perk2 = Perk(name="Schema Perk 2", role="Survivor", perk_type="chase", survivor_id=survivor)
         db.session.add(perk2)

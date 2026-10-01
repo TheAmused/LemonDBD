@@ -27,6 +27,7 @@ import changelog from './changelog';
 import onboarding from './onboarding';
 import achievements from './achievements';
 import about from './about';
+import tierLists from './tierLists';
 
 const ja = {
   app,
@@ -57,6 +58,7 @@ const ja = {
   onboarding,
   achievements,
   about,
+  tierLists,
 };
 
 export default ja;

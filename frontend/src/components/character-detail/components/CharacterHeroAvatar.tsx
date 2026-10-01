@@ -2,7 +2,7 @@
 // frontend/src/components/character-detail/components/CharacterHeroAvatar.tsx
 
 import React, { useState } from 'react';
-import { Eye, User } from 'lucide-react';
+import { User, ZoomIn } from 'lucide-react';
 import type { CharacterItem } from '../types';
 import { getAvatarUrl } from '../types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
@@ -71,14 +71,11 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         )}
 
         <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center transition-opacity duration-200">
-          <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg">
-            <Eye className="h-6 w-6" />
+          <div className="h-12 w-12 rounded-2xl bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
+            <ZoomIn className="h-6 w-6" />
           </div>
-          <span className="text-xs font-black text-text-inverted uppercase tracking-wider">
-            {t.view3DModel || ''}
-          </span>
-          <span className="text-[10px] text-text-inverted/70 mt-1">
-            {t.interactiveViewer || ''}
+          <span className="text-xs font-black text-text-inverted uppercase tracking-wider font-mono">
+            {t.view3DModel || 'Click to Expand'}
           </span>
         </div>
 

@@ -273,7 +273,7 @@ describe('User Profile Drawers: DualMainsShowcase & UserBugReportsDrawer', () =>
     assert.ok(html.includes('text-center'), 'Must center header text in Account Management drawer');
     assert.ok(html.includes('Account Management'), 'Must display Account Management title');
     assert.ok(!html.includes('Account Sanctum'), 'Must not display legacy Account Sanctum title');
-    assert.ok(html.includes('banner_account.jpg'), 'Must display account banner image');
+    assert.ok(html.includes('banner_account.webp'), 'Must display account banner image');
 
     // Smooth drawer grid animation
     assert.ok(html.includes('grid-rows-[0fr]'), 'Must start in collapsed 0fr grid state');

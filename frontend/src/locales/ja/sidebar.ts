@@ -4,6 +4,7 @@ export default {
   challenges: "チャレンジ",
   mapExplorer: "マップエクスプローラー",
   characters: "キャラクター",
+  tierLists: "ティアリスト",
   smashOrPass: "スマッシュ・オア・パス",
   trophies: "トロフィー",
   draftRoom: "🏆 ドラフトルーム",

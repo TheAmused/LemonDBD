@@ -33,7 +33,13 @@ export interface FitState {
 const FITS: FitState = { scale: 1, mode: 'single', index: 0 };
 
 /** Largest scale in [lo, 1] for which wrapped text fits `maxLines` (bisection). */
-function fitWrapped(inner: HTMLElement, available: number, maxLines: number, lo: number): number | null {
+function fitWrapped(
+  inner: HTMLElement,
+  available: number,
+  maxLines: number,
+  lo: number,
+  breakWords = true
+): number | null {
   const fits = (scale: number) => {
     inner.style.fontSize = `${scale}em`;
     const cs = getComputedStyle(inner);
@@ -45,7 +51,7 @@ function fitWrapped(inner: HTMLElement, available: number, maxLines: number, lo:
   inner.style.position = 'static';
   inner.style.transform = 'none';
   inner.style.whiteSpace = 'normal';
-  inner.style.overflowWrap = 'break-word';
+  inner.style.overflowWrap = breakWords ? 'break-word' : 'normal';
   if (fits(1)) return 1;
   if (!fits(lo)) return null;
   let good = lo;
@@ -76,7 +82,8 @@ export function measureFit(
   inner: HTMLElement,
   variants: string[],
   minScale: number,
-  maxLines: number
+  maxLines: number,
+  wrapFirst = false
 ): FitState {
   // Measure from a clean slate: drop any clamp styling left by the last render.
   inner.style.overflow = 'visible';
@@ -102,12 +109,18 @@ export function measureFit(
       if (natural <= available + 0.5) return { scale: 1, mode: 'single', index };
 
       const scale = Math.floor((available / natural) * 98) / 100; // 2% slack: glyph widths are not perfectly linear
+      // Multi-word text that does not fit at full size is stacked on centred
+      // lines before it is shrunk ("THE / SINGULARITY" beats a tiny one-liner).
+      if (wrapFirst && maxLines > 1 && /\s/.test(variants[index].trim())) {
+        const wrapped = fitWrapped(inner, available, maxLines, minScale * 0.6, false); // never split a word; shrink to the longest word
+        if (wrapped !== null) return { scale: wrapped, mode: 'wrap', index };
+      }
       if (scale >= minScale) return { scale, mode: 'single', index };
       if (index < last) continue;
 
       if (maxLines > 1) {
         // Wrapped text may go below the single-line floor: losing a word to a clamp is worse than small type.
-        const wrapped = fitWrapped(inner, available, maxLines, minScale * 0.6);
+        const wrapped = fitWrapped(inner, available, maxLines, minScale * 0.6, !wrapFirst);
         if (wrapped !== null) return { scale: wrapped, mode: 'wrap', index };
       }
       return { scale: maxLines > 1 ? minScale * 0.6 : minScale, mode: 'clamp', index };
@@ -129,6 +142,11 @@ export interface FitTextProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
    * ["Lemon"]). Used instead of shrinking below `minScale`.
    */
   alternatives?: readonly string[];
+  /**
+   * Break multi-word text onto separate lines (up to `maxLines`) as soon as it
+   * does not fit at full size, instead of shrinking a single line first.
+   */
+  wrapFirst?: boolean;
 }
 
 export const FitText: React.FC<FitTextProps> = ({
@@ -136,6 +154,7 @@ export const FitText: React.FC<FitTextProps> = ({
   minScale = 0.5,
   maxLines = 1,
   alternatives,
+  wrapFirst = false,
   className,
   style,
   title,
@@ -156,14 +175,14 @@ export const FitText: React.FC<FitTextProps> = ({
     const saved = inner.style.cssText;
     let next: FitState;
     try {
-      next = measureFit(wrapper, inner, variantsKey.split('\u0001'), minScale, maxLines);
+      next = measureFit(wrapper, inner, variantsKey.split('\u0001'), minScale, maxLines, wrapFirst);
     } finally {
       inner.style.cssText = saved;
     }
     setFit((prev) =>
       prev.scale === next.scale && prev.mode === next.mode && prev.index === next.index ? prev : next
     );
-  }, [minScale, maxLines, variantsKey]);
+  }, [minScale, maxLines, variantsKey, wrapFirst]);
 
   useIsoLayoutEffect(() => {
     run();
@@ -196,7 +215,7 @@ export const FitText: React.FC<FitTextProps> = ({
   const innerStyle: React.CSSProperties = {
     fontSize: `${fit.scale}em`,
     whiteSpace: fit.mode === 'wrap' ? 'normal' : 'nowrap',
-    overflowWrap: fit.mode === 'single' ? 'normal' : 'break-word',
+    overflowWrap: fit.mode === 'single' || (wrapFirst && fit.mode === 'wrap') ? 'normal' : 'break-word',
     ...(clamped && maxLines <= 1
       ? { overflow: 'hidden', textOverflow: 'ellipsis' }
       : clamped

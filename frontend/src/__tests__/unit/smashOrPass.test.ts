@@ -907,6 +907,8 @@ test('SmashOrPass: Dual-Identity Watermarks & Clamping Helper', async (t) => {
     const { readFileSync } = await import('node:fs');
     const src = readFileSync(new URL('../../components/smash-or-pass/FloatingLoreScattered.tsx', import.meta.url), 'utf8');
     assert.match(src, /<FitText[\s\S]*?maxLines=\{[2-4]\}/);
+    assert.match(src, /wrapFirst/);
+    assert.match(src, /text-center/);
     assert.doesNotMatch(src, /whitespace-nowrap/);
   });
 

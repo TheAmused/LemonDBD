@@ -18,6 +18,7 @@ import type { Dictionary } from '@/locales/types';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { cn } from '@/utils/cn';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
@@ -47,6 +48,8 @@ const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
 // `translations`, `title` next to `archetype`). EntityMetadata is now that description.
 
 const FLIP_HALF_MS = 190;
+/** The dating-profile back face is not ready yet: its content sits blurred behind a "Soon..." badge. */
+const BACK_FACE_COMING_SOON = true;
 
 interface CharacterCardProps {
   character: EntityItem;
@@ -531,8 +534,15 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             </div>
 
             {/* Scrollable Back Content */}
+            <div className="relative my-2 flex-1 min-h-0">
             <div
-              className="space-y-2.5 my-2 flex-1 overflow-y-auto pr-1 select-text scrollbar-thin scrollbar-thumb-border-color pointer-events-auto"
+              className={cn(
+                'space-y-2.5 h-full pr-1 scrollbar-thin scrollbar-thumb-border-color',
+                BACK_FACE_COMING_SOON
+                  ? 'overflow-hidden blur-sm opacity-40 select-none pointer-events-none'
+                  : 'overflow-y-auto select-text pointer-events-auto'
+              )}
+              aria-hidden={BACK_FACE_COMING_SOON || undefined}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Archetype / Dating Vibe */}
@@ -596,6 +606,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
                 </Surface>
               )}
+            </div>
+            {BACK_FACE_COMING_SOON && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                <div className="px-6 py-3 rounded-2xl bg-bg-primary/80 border border-border-color/60 backdrop-blur-md shadow-2xl">
+                  <span className="text-2xl sm:text-3xl font-black font-mono tracking-widest text-text-primary uppercase drop-shadow-md">
+                    {rawSmashDict?.soon || 'Soon...'}
+                  </span>
+                </div>
+              </div>
+            )}
             </div>
 
             {/* Bottom Actions Bar */}

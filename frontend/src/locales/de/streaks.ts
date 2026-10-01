@@ -180,7 +180,6 @@ export default {
   usedTab: "Verwendet",
   remainingTab: "Verbleibend",
   streakLabel: "Streak:",
-  streakArrow: "→",
   middotSeparator: "·",
   bulletSeparator: "•",
   tierLabel: "Stufe",

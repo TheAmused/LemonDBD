@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, BarChart2, CheckCircle2, XCircle, Percent, Clock } from 'lucide-react';
+import { X, Check, Percent, Clock } from 'lucide-react';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -18,6 +18,11 @@ export interface StreakStatsBase<TLog extends StreakMatchLogBase> {
   losses: number;
   win_rate: number;
   recent_logs: TLog[];
+}
+
+/** The streak value worth showing for a match: the new streak on a win, the streak that was lost on a defeat. */
+export function streakAtResult(log: { result: 'win' | 'loss'; streak_before: number; streak_after: number }): number {
+  return log.result === 'win' ? log.streak_after : log.streak_before;
 }
 
 export type StreakAccent = 'amber' | 'violet' | 'slate' | 'orange';
@@ -37,14 +42,13 @@ const ACCENT_CLASSES: Record<StreakAccent, { icon: string; ring: string }> = {
 export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
   accent: StreakAccent;
   stats: StreakStatsBase<TLog> | null;
   /** Losses since the current run's pool was last (re)frozen -- from the live run, not the match-log aggregate, so it survives independently of `stats`. */
   attempts?: number;
   /** The main label for a match row: character/killer name, or the "Auto-loss" badge is handled for you. */
   renderLabel: (log: TLog) => React.ReactNode;
-  /** Secondary line under the label, e.g. "Streak: 3 -> 4" or "Attempt 2, Page 3". */
+  /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". */
   renderMeta: (log: TLog) => React.ReactNode;
   dict?: Dictionary;
 }
@@ -59,7 +63,6 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
 export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
   isOpen,
   onClose,
-  title,
   accent,
   stats,
   attempts,
@@ -92,12 +95,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
       <div className="relative w-full max-w-lg bg-bg-surface border-l border-border-color h-full shadow-2xl flex flex-col z-10 overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-border-color bg-bg-elevated">
           <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-xl border ${accentClasses.icon}`}>
-              <BarChart2 className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-text-primary">{title} {dict?.streaks?.stats || 'Statistics'}</h2>
-            </div>
+            <h2 className="text-xl font-bold text-text-primary">{dict?.streaks?.stats || 'Statistics'}</h2>
           </div>
           <button
             onClick={onClose}
@@ -140,19 +138,18 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
               </div>
             )}
 
-            <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-4 flex justify-between items-center shadow-sm">
-              <div>
-                <div className="text-xs uppercase font-bold text-accent-green">
-                  {dict?.streaks?.wins || 'Wins'}
-                </div>
-                <div className="text-xl font-black text-accent-green mt-1">{wins}</div>
+            <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+              <div className="text-xs uppercase font-bold text-accent-green">
+                {dict?.streaks?.wins || 'Wins'}
               </div>
-              <div className="text-right">
-                <div className="text-xs uppercase font-bold text-accent-red">
-                  {dict?.streaks?.losses || 'Losses'}
-                </div>
-                <div className="text-xl font-black text-accent-red mt-1">{losses}</div>
+              <div className="text-2xl font-black text-accent-green mt-1">{wins}</div>
+            </div>
+
+            <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
+              <div className="text-xs uppercase font-bold text-accent-red">
+                {dict?.streaks?.losses || 'Losses'}
               </div>
+              <div className="text-2xl font-black text-accent-red mt-1">{losses}</div>
             </div>
           </div>
 
@@ -176,13 +173,13 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`p-2 rounded-lg ${
+                          className={`w-10 h-10 p-1.5 rounded-lg ${
                             isWin
                               ? 'bg-accent-green/10 text-accent-green border border-accent-green/20'
                               : 'bg-accent-red/10 text-accent-red border border-accent-red/20'
                           }`}
                         >
-                          {isWin ? <CheckCircle2 className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
+                          {isWin ? <Check className="w-full h-full" strokeWidth={3.5} /> : <X className="w-full h-full" strokeWidth={3.5} />}
                         </div>
                         <div>
                           {log.triggered_by === 'inactivity' ? (

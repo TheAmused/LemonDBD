@@ -180,7 +180,6 @@ export default {
   usedTab: "Usados",
   remainingTab: "Restantes",
   streakLabel: "Racha:",
-  streakArrow: "→",
   middotSeparator: "·",
   bulletSeparator: "•",
   tierLabel: "Nivel",

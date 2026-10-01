@@ -198,7 +198,6 @@ export default {
   usedTab: "Used",
   remainingTab: "Remaining",
   streakLabel: "Streak:",
-  streakArrow: "→",
   middotSeparator: "·",
   bulletSeparator: "•",
   tierLabel: "Tier",

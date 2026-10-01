@@ -885,7 +885,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
           {/* RIGHT: Action Cluster (Icons with Tooltips and >=44px Touch Targets) */}
           <div className="flex items-center justify-center lg:justify-end gap-1.5 sm:gap-2 w-full lg:w-auto order-3 shrink-0 flex-wrap">
             {/* Filter Settings Drawer Toggle */}
-            <Tooltip
+            <Tooltip variant="action"
               title={dict?.smashOrPass?.tooltips?.filter || 'Filter Candidates'}
               description={dict?.smashOrPass?.tooltips?.filterDesc || 'Filter by survivor/killer role and character gender.'}
               placement="bottom"
@@ -907,7 +907,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* Dynamic Sound Toggle */}
-            <Tooltip
+            <Tooltip variant="action"
               title={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudio || 'Mute Audio (M / B)') : (dict?.smashOrPass?.tooltips?.unmuteAudio || 'Enable Audio (M / B)')}
               description={isSoundActive ? (dict?.smashOrPass?.tooltips?.muteAudioDesc || 'Mute all background music and sound effects.') : (dict?.smashOrPass?.tooltips?.unmuteAudioDesc || 'Enable dark synth ambience and sound effects.')}
               placement="bottom"
@@ -926,7 +926,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* Archetype Modal */}
-            <Tooltip
+            <Tooltip variant="action"
               title={dict?.smashOrPass?.modals?.personaTitle || 'Trial Romance Archetype'}
               description={dict?.smashOrPass?.tooltips?.archetypeDesc || 'Discover your personal dating archetype based on your voting tendencies.'}
               placement="bottom"
@@ -942,7 +942,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* Hall of Fame Leaderboard Modal */}
-            <Tooltip
+            <Tooltip variant="action"
               title={dict?.smashOrPass?.modals?.leaderboardTitle || 'Hall of Fame'}
               description={dict?.smashOrPass?.tooltips?.leaderboardDesc || 'View community rankings and smash statistics across the realm.'}
               placement="bottom"
@@ -958,7 +958,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* Shuffle */}
-            <Tooltip
+            <Tooltip variant="action"
               title={dict?.smashOrPass?.tooltips?.shuffle || 'Shuffle Remaining'}
               description={dict?.smashOrPass?.tooltips?.shuffleDesc || 'Randomize the remaining candidates in your deck.'}
               placement="bottom"
@@ -974,7 +974,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* Reset */}
-            <Tooltip
+            <Tooltip variant="action"
               title={dict?.smashOrPass?.tooltips?.resetAllVotes || 'Reset Voting Data'}
               description={dict?.smashOrPass?.tooltips?.resetDesc || 'Clear your votes and restore all candidate cards.'}
               placement="bottom"
@@ -990,7 +990,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
             </Tooltip>
 
             {/* How to Play */}
-            <Tooltip
+            <Tooltip variant="action"
               title={dict?.smashOrPass?.tooltips?.howToPlay || 'How to Play'}
               description={dict?.smashOrPass?.tooltips?.howToPlayDesc || 'View keyboard shortcuts, voting controls, and trial mechanics.'}
               placement="bottom"

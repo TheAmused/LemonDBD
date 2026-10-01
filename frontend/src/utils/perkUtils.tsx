@@ -1,16 +1,6 @@
 // frontend/src/utils/perkUtils.tsx
 import { Perk, RoleCategory } from '@/types/perks';
 
-export {
-  ACTION_KEYWORDS,
-  DBD_KEYWORDS,
-  TOKEN_REGEX,
-  createDbdTokenRegex,
-  createPerkTokenRegex,
-  parseLineTokens,
-  renderFormattedDbdText,
-} from './textFormatter';
-
 import { getBackendBaseUrl, apiUrl } from './api';
 export { getBackendBaseUrl, apiUrl } from './api';
 

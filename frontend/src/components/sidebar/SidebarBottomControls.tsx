@@ -229,7 +229,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
                   }}
-                  {...tip(opt.label)} aria-label={opt.label}
+                  {...tip(opt.label, undefined, 'action')} aria-label={opt.label}
                   className={
                     `flex w-full items-center gap-2.5 px-3 py-2 text-xs font-semibold transition-colors cursor-pointer ${FOCUS_RING} ` +
                     (isMounted && theme === opt.id

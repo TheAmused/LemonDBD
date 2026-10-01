@@ -83,7 +83,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
           <button
             onClick={onOpenRules}
             className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.rules || 'Rules')} aria-label={dict?.streaks?.rules || 'Rules'}
+            {...tip(dict?.streaks?.rules || 'Rules', undefined, 'action')} aria-label={dict?.streaks?.rules || 'Rules'}
           >
             <BookOpen className="w-4 h-4" />
             <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
@@ -93,7 +93,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
             <button
               onClick={onChangeMode}
               className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
-              {...tip(dict?.streaks?.changeMode || 'Change Mode')} aria-label={dict?.streaks?.changeMode || 'Change Mode'}
+              {...tip(dict?.streaks?.changeMode || 'Change Mode', undefined, 'action')} aria-label={dict?.streaks?.changeMode || 'Change Mode'}
             >
               <Gauge className="w-4 h-4" />
               <span className="hidden sm:inline">{dict?.streaks?.changeMode || 'Change Mode'}</span>
@@ -103,7 +103,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
           <button
             onClick={onOpenStats}
             className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary border border-border-color transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.stats || 'Statistics')} aria-label={dict?.streaks?.stats || 'Statistics'}
+            {...tip(dict?.streaks?.stats || 'Statistics', undefined, 'action')} aria-label={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" />
           </button>
@@ -111,7 +111,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
           <button
             onClick={onOpenHistory}
             className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary border border-border-color transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.pastWins || 'Past Wins')} aria-label={dict?.streaks?.pastWins || 'Past Wins'}
+            {...tip(dict?.streaks?.pastWins || 'Past Wins', undefined, 'action')} aria-label={dict?.streaks?.pastWins || 'Past Wins'}
           >
             <History className="w-5 h-5" />
           </button>
@@ -119,7 +119,7 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
           <button
             onClick={onOpenReset}
             className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.resetRun || 'Reset this run')} aria-label={dict?.streaks?.resetRun || 'Reset this run'}
+            {...tip(dict?.streaks?.resetRun || 'Reset this run', undefined, 'action')} aria-label={dict?.streaks?.resetRun || 'Reset this run'}
           >
             <RotateCcw className="w-5 h-5" />
           </button>

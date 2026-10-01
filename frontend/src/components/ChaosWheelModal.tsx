@@ -361,7 +361,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
               <button
                 type="button"
                 onClick={handleClearCurse}
-                {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
+                {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse', undefined, 'action')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
                 className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1.5 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer shrink-0"
               >
                 <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -388,7 +388,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({
                 <button
                   type="button"
                   onClick={handleClearCurse}
-                  {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
+                  {...tip(dict?.generator?.clearMutatorTooltip || 'Remove active curse', undefined, 'action')} aria-label={dict?.generator?.clearMutatorTooltip || 'Remove active curse'}
                   className="flex items-center gap-1 text-xs sm:text-sm text-accent-red hover:text-accent-red-hover font-bold px-2 py-1 rounded-lg hover:bg-accent-red/10 transition-colors cursor-pointer"
                 >
                   <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />

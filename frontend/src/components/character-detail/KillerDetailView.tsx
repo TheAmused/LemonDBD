@@ -115,7 +115,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                   type="button"
                   onClick={() => setIsPowerModalOpen(true)}
                   className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-2xl bg-bg-elevated border-2 border-accent-red/60 hover:border-accent-red p-2.5 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-                  {...tip(powerTitle)}
+                  {...tip(powerTitle, undefined, 'item')}
                   aria-label={powerAriaLabel}
                 >
                   {killerPower.icon_url || killerPower.icon_local_path ? (

@@ -403,7 +403,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   startFlip();
                 }}
-                {...tip(rawSmashDict?.flipToDatingProfile || '')}
+                {...tip(rawSmashDict?.flipToDatingProfile || '', undefined, 'action')}
                 aria-label={rawSmashDict?.flipToDatingProfile || ''}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
@@ -419,7 +419,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playHoverTick();
                   setIsZoomed(true);
                 }}
-                {...tip(rawSmashDict?.zoomFullPortrait || '')}
+                {...tip(rawSmashDict?.zoomFullPortrait || '', undefined, 'action')}
                 aria-label={rawSmashDict?.zoomFullPortrait || ''}
                 className="flex min-h-[48px] min-w-[48px] h-12 w-12 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-bg-primary/85 border border-border-color text-text-secondary hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
@@ -437,7 +437,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                {...tip(rawSmashDict?.pass || '')}
+                {...tip(rawSmashDict?.pass || '', undefined, 'action')}
                 aria-label={rawSmashDict?.pass || ''}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-bg-primary/90 border-2 border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle hover:scale-110 active:scale-95 transition-all shadow-2xl backdrop-blur-md cursor-pointer touch-manipulation"
               >
@@ -453,7 +453,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                {...tip(rawSmashDict?.smash || '')}
+                {...tip(rawSmashDict?.smash || '', undefined, 'action')}
                 aria-label={rawSmashDict?.smash || ''}
                 className="flex min-h-[48px] min-w-[48px] h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted hover:scale-110 active:scale-95 transition-all cursor-pointer touch-manipulation"
               >
@@ -485,7 +485,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   SmashSounds.playFlipSound();
                   startFlip();
                 }}
-                {...tip(rawSmashDict?.flipBack || '')}
+                {...tip(rawSmashDict?.flipBack || '', undefined, 'action')}
                 aria-label={rawSmashDict?.flipBack || ''}
                 className="flex min-h-[40px] min-w-[40px] h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-bg-elevated border border-accent-red/40 text-accent-red hover:text-text-inverted hover:border-accent-red hover:scale-110 active:scale-95 transition-all shadow-lg cursor-pointer touch-manipulation"
               >

@@ -50,7 +50,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
          * (Wheel, Instant, Slot Machine, Tarot, Loot Crate) since this toolbar
          * is mounted regardless of which one is active. Purely informational --
          * onClick is a no-op, the tooltip (hover/focus/touch) is the point. */}
-        <Tooltip
+        <Tooltip variant="action"
           title={dict?.generator?.coordinateLegendTooltipTitle || 'Page / Slot'}
           description={
             dict?.generator?.coordinateLegendTooltipDesc ||
@@ -64,7 +64,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           />
         </Tooltip>
 
-        <Tooltip
+        <Tooltip variant="action"
           title={dict?.generator?.noRepeatTooltipTitle || 'No-Repeat Perks'}
           description={
             noRepeatPerks
@@ -81,7 +81,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           />
         </Tooltip>
 
-        <Tooltip
+        <Tooltip variant="action"
           title={dict?.generator?.blindModeTooltipTitle || 'Blind Mode'}
           description={dict?.generator?.blindModeTooltipDesc || "Hides every perk icon behind a '?' until you tap a slot to reveal it in-run."}
         >
@@ -93,7 +93,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           />
         </Tooltip>
 
-        <Tooltip
+        <Tooltip variant="action"
           title={activeMutator
             ? getLocalizedMutator(activeMutator, dict).name
             : (dict?.generator?.chaosMutatorTooltip || 'Chaos Mutator')}
@@ -113,7 +113,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           />
         </Tooltip>
 
-        <Tooltip
+        <Tooltip variant="action"
           title={dict?.generator?.soundTooltipTitle || 'Sound Effects'}
           description={
             audioEnabled
@@ -133,7 +133,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           />
         </Tooltip>
 
-        <Tooltip
+        <Tooltip variant="action"
           title={dict?.generator?.resetAllTooltipTitle || 'Reset Everything'}
           align="end"
           description={dict?.generator?.resetAllTooltipDesc || 'Clears your wheels, loadout slots, and drawn-perk memory. Cannot be undone.'}

@@ -757,7 +757,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   <button
                     type="button"
                     onClick={() => setIsCropModalOpen(true)}
-                    {...tip(c.cropCoverTitle)} aria-label={c.cropCoverTitle}
+                    {...tip(c.cropCoverTitle, undefined, 'action')} aria-label={c.cropCoverTitle}
                     className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
                   >
                     <Crop className="h-4 w-4 text-accent-red" />
@@ -769,7 +769,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   <div
                     onClick={() => setIsCropModalOpen(true)}
                     className="mt-3 relative group overflow-hidden rounded-xl border border-border-color bg-bg-elevated aspect-video max-w-md 2xl:max-w-lg wide:max-w-xl mx-auto shadow-xs cursor-pointer"
-                    {...tip(c.cropCoverTitle)}
+                    {...tip(c.cropCoverTitle, undefined, 'action')}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
                     <img
@@ -799,7 +799,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
               {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}
               <div className="md:col-span-2 pt-4 border-t border-border-color/60 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
                 {/* Simple Version Switch */}
-                <Tooltip
+                <Tooltip variant="action"
                   title={c.simpleVersion || 'Simple Version'}
                   description={c.simpleVersionDesc || 'Fast cards + optional turn-on & dealbreaker'}
                 >
@@ -819,7 +819,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 </Tooltip>
 
                 {/* NSFW Content Switch */}
-                <Tooltip
+                <Tooltip variant="action"
                   title={c.nsfwLabel || 'Contains NSFW content'}
                   description="Mark this roster as containing mature or sensitive material."
                 >
@@ -840,7 +840,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
 
                 {/* Official Roster Switch (Admin only) */}
                 {isUserAdmin && (
-                  <Tooltip
+                  <Tooltip variant="action"
                     title={c.officialPublicHub || 'Official Roster (Public on Hub)'}
                     description="Publish directly to the public Hub directory for all visitors."
                   >

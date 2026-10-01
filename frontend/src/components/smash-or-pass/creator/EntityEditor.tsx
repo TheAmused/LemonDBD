@@ -127,7 +127,7 @@ export function CandidateFormInputs({
             onClick={onRemove}
             aria-label={(c.removeCandidateAria || 'Remove {name}').replace('{name}', entity.name || displayIndex)}
             className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold text-text-muted hover:text-accent-red hover:bg-accent-red/10 rounded-lg transition-colors cursor-pointer shrink-0"
-            {...tip(c.removeCandidate || 'Remove candidate')}
+            {...tip(c.removeCandidate || 'Remove candidate', undefined, 'action')}
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">{c.removeCandidate || 'Remove'}</span>

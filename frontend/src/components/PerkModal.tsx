@@ -156,7 +156,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({
           >
             <PerkDescription
               description={perk.description}
-              perkName={perk.name}
               variant="modal"
             />
           </div>

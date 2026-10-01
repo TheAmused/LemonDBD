@@ -290,7 +290,7 @@ const ToolbarButton: React.FC<{
 }> = ({ icon: Icon, onClick, label, active }) => (
   <button
     type="button"
-    {...tip(label)} aria-label={label}
+    {...tip(label, undefined, 'action')} aria-label={label}
     onMouseDown={(e) => e.preventDefault()}
     onClick={onClick}
     className={`flex h-7 w-7 items-center justify-center rounded-lg text-text-muted transition-colors cursor-pointer hover:bg-bg-elevated hover:text-text-primary ${
@@ -313,7 +313,7 @@ const SwatchPopover: React.FC<{
     {onClear && (
       <button
         type="button"
-        {...tip(clearLabel || 'No highlight')} aria-label={clearLabel || 'No highlight'}
+        {...tip(clearLabel || 'No highlight', undefined, 'action')} aria-label={clearLabel || 'No highlight'}
         onMouseDown={(e) => e.preventDefault()}
         onClick={onClear}
         className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed border-border-color text-[9px] text-text-muted cursor-pointer hover:border-accent-red"
@@ -325,7 +325,7 @@ const SwatchPopover: React.FC<{
       <button
         key={c.value}
         type="button"
-        {...tip(c.name)} aria-label={c.name}
+        {...tip(c.name, undefined, 'action')} aria-label={c.name}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => onPick(c.value)}
         className="h-6 w-6 rounded-full border border-border-color cursor-pointer hover:scale-110 transition-transform"

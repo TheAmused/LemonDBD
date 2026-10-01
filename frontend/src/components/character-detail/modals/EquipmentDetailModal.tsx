@@ -1,7 +1,8 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
 import { X } from 'lucide-react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity, renderFormattedDbdText } from '../types';
+import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, getLocalizedRarity } from '../types';
+import { RichText } from '@/components/common/RichText';
 
 interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
@@ -17,6 +18,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
   t,
 }) => {
   if (!item) return null;
+  const rarityTile = getRarityTileStyle(item.rarity);
 
   return (
     <div
@@ -34,9 +36,8 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
         <div className="p-5 border-b border-border-color flex items-center justify-between">
           <div className="flex items-center gap-3.5">
             <div
-              className={`h-14 w-14 rounded-2xl border-2 p-1.5 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${getRarityTileStyle(
-                item.rarity
-              ).bg}`}
+              className={`h-14 w-14 rounded-2xl border-2 p-1.5 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
+              style={rarityTile.style}
             >
               <img
                 src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
@@ -72,7 +73,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
             </div>
           )}
           <div className="p-4 rounded-2xl bg-bg-elevated border border-border-color space-y-2 text-sm">
-            {renderFormattedDbdText(item.description || '', false)}
+            <RichText text={item.description} block variant="game" />
           </div>
         </div>
       </div>

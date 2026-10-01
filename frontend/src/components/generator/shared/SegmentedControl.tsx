@@ -81,7 +81,7 @@ export function SegmentedControl<T extends string>({
         if (!opt.tooltip) return button;
 
         return (
-          <Tooltip key={opt.value} title={opt.tooltip.title || opt.label} description={opt.tooltip.description}>
+          <Tooltip variant="action" key={opt.value} title={opt.tooltip.title || opt.label} description={opt.tooltip.description}>
             {button}
           </Tooltip>
         );

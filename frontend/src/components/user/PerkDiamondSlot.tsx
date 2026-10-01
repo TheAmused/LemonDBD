@@ -43,7 +43,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             ? 'border-accent-red/80 bg-bg-elevated hover:scale-105 hover:border-accent-red'
             : 'border-dashed border-border-color bg-bg-elevated/40 hover:border-accent-amber/60 hover:bg-accent-amber/5 hover:scale-105'
         }`}
-        {...tip(perk?.name || emptyLabel, undefined, perk ? 'item' : undefined)}
+        {...tip(perk?.name || emptyLabel, undefined, perk ? 'item' : 'action')}
         aria-label={perk?.name || emptyLabel}
       >
         {/* Un-rotated inside content */}
@@ -74,7 +74,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             e.stopPropagation();
             onClear(e);
           }}
-          {...tip(clearLabel)} aria-label={clearLabel}
+          {...tip(clearLabel, undefined, 'action')} aria-label={clearLabel}
           className="absolute -top-1 -right-1 z-20 flex h-5 w-5 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md opacity-0 group-hover:opacity-100 hover:opacity-90 transition-all cursor-pointer"
         >
           <X className="h-3 w-3" />

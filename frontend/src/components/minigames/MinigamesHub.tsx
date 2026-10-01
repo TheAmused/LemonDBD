@@ -446,7 +446,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
                         type="button"
                         onClick={() => handleShare(trial)}
                         disabled={isShareLoading}
-                        {...tip(t.shareTrial)} aria-label={t.shareTrial}
+                        {...tip(t.shareTrial, undefined, 'action')} aria-label={t.shareTrial}
                         className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary transition-colors"
                       >
                         {isCopied ? (
@@ -459,7 +459,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
                       <button
                         type="button"
                         onClick={() => handleExport(trial)}
-                        {...tip(t.exportJson)} aria-label={t.exportJson}
+                        {...tip(t.exportJson, undefined, 'action')} aria-label={t.exportJson}
                         className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary transition-colors"
                       >
                         <Download className="w-4 h-4" />
@@ -468,7 +468,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
                       <button
                         type="button"
                         onClick={() => handleDelete(id)}
-                        {...tip(t.deleteTrial)} aria-label={t.deleteTrial}
+                        {...tip(t.deleteTrial, undefined, 'action')} aria-label={t.deleteTrial}
                         className="p-1.5 rounded-lg bg-accent-red/20 hover:bg-accent-red/30 text-accent-red border border-accent-red/40 transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />

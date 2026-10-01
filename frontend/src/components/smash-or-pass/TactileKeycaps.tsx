@@ -199,7 +199,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({
               type="button"
               disabled={disabled}
               onClick={() => triggerAction(cap.id, cap.action)}
-              {...tip(`${cap.label} (${cap.primaryKey} / ${cap.subKey})`)} aria-label={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
+              {...tip(`${cap.label} (${cap.primaryKey} / ${cap.subKey})`, undefined, 'action')} aria-label={`${cap.label} (${cap.primaryKey} / ${cap.subKey})`}
               className={`group relative flex flex-col items-center justify-center rounded-xl transition-all duration-150 cursor-pointer ${
                 isReset ? 'w-14 sm:w-16 h-14 sm:h-16' : 'w-12 sm:w-14 h-14 sm:h-16'
               } ${

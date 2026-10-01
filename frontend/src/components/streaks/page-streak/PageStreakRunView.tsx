@@ -135,16 +135,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 {confirmed ? (
                   <>
                     <StreakActionButton
-                      variant="green"
-                      disabled={busy}
-                      onClick={() => {
-                        setLastWasLoss(false);
-                        submitResult(run.current_page, selected, 'win');
-                      }}
-                    >
-                      {dict?.streaks?.winMatch || 'WIN MATCH'}
-                    </StreakActionButton>
-                    <StreakActionButton
                       variant="red"
                       disabled={busy}
                       onClick={() => {
@@ -153,6 +143,16 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       }}
                     >
                       {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                    </StreakActionButton>
+                    <StreakActionButton
+                      variant="green"
+                      disabled={busy}
+                      onClick={() => {
+                        setLastWasLoss(false);
+                        submitResult(run.current_page, selected, 'win');
+                      }}
+                    >
+                      {dict?.streaks?.winMatch || 'WIN MATCH'}
                     </StreakActionButton>
                   </>
                 ) : (

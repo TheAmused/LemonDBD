@@ -238,11 +238,11 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                 </StreakActionButton>
               ) : (
                 <>
-                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
-                    {dict?.streaks?.winMatch || ''}
-                  </StreakActionButton>
                   <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
                     {dict?.streaks?.loseMatch || ''}
+                  </StreakActionButton>
+                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                    {dict?.streaks?.winMatch || ''}
                   </StreakActionButton>
                 </>
               )}

@@ -103,7 +103,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
       <button
         type="button"
         onClick={() => onSelect(perk)}
-        {...tip(perk.name)}
+        {...tip(perk.name, undefined, 'perk')}
         aria-label={ariaLabel}
         className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
           size === 'tarot' || size === 'compact' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'

@@ -137,7 +137,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
     const { leftWatermark, rightWatermark } = resolveWatermarks(character);
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden select-none">
+    <div className="pointer-events-none absolute inset-0 z-10 overflow-x-clip select-none">
       {/* 1. FLANKING WATERMARK TYPOGRAPHY (DUAL-IDENTITY: LEFT & RIGHT AROUND CARD) */}
       <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
         {/* Left Side: Watermark Left */}
@@ -175,7 +175,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="absolute left-4 xl:left-8 2xl:left-14 top-24 bottom-6 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="absolute left-4 xl:left-8 2xl:left-14 top-24 bottom-12 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
@@ -225,7 +225,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="absolute right-4 xl:right-8 2xl:right-14 top-24 bottom-6 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="absolute right-4 xl:right-8 2xl:right-14 top-24 bottom-12 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}

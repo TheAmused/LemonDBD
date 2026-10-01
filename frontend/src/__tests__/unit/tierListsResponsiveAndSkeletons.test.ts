@@ -133,11 +133,13 @@ describe('Tier lists: pages and navigation', () => {
     assert.ok(sidebar.includes('href: `/${currentLocale}/tier-lists`'));
   });
 
-  it('the pool is responsive at the bottom of the board across phone and desktop', () => {
+  it('the page is viewport-locked and the pool keeps a reserved height so toggling it never moves its header', () => {
     const pool = read('components/tier-lists/TierPool.tsx');
-    assert.ok(pool.includes('sticky bottom-0'));
-    assert.ok(pool.includes('sm:static'));
+    assert.ok(pool.includes('var(--pool-h)'));
     const board = read('components/tier-lists/TierListBoard.tsx');
+    assert.ok(board.includes('--pool-h:'));
+    assert.ok(board.includes('max-h-[calc(100%-var(--pool-h)'));
+    assert.ok(read('app/[locale]/tier-lists/[slug]/page.tsx').includes('h-dvh overflow-hidden'));
     assert.ok(board.includes('TouchSensor') && board.includes('KeyboardSensor'), 'touch and keyboard dragging');
   });
 });

@@ -239,9 +239,9 @@ export function TierListBoard({
       onDragCancel={finishDrag}
       accessibility={{ announcements, screenReaderInstructions: { draggable: t.dnd.instructions } }}
     >
-      {/* Desktop: the page never scrolls. The rows take the height they need (and scroll inside their own area once they would overflow); the pool sits right under them with its own scroller. */}
-      <div className="flex flex-col gap-5 sm:gap-6 w-full lg:flex-1 lg:min-h-0 lg:gap-4">
-        <div className="flex flex-col gap-2 w-full lg:flex-initial lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1 [&>*]:shrink-0">
+      {/* The page never scrolls (short landscape screens excepted). The rows take the height they need and scroll in their own area once they would overflow; the pool header sits right under them. The rows' cap always leaves room for the OPEN pool, so collapsing or expanding the pool never moves anything above or at its header. */}
+      <div className="flex flex-col w-full flex-1 min-h-0 gap-3 sm:gap-4 [--pool-h:min(40dvh,26rem)] [--pool-head:6.5rem] sm:[--pool-head:4rem]">
+        <div className="flex flex-col gap-2 w-full min-h-0 flex-initial overflow-y-auto overscroll-contain pr-1 [&>*]:shrink-0 max-h-[calc(100%-var(--pool-h)-1rem)] [@media(max-height:559px)]:max-h-none [@media(max-height:559px)]:overflow-visible">
           {tiers.map((tier) => (
             <TierRow
               key={tier.id}

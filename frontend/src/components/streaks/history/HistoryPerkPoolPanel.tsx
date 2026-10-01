@@ -62,8 +62,8 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
         {displayName}
       </span>
       <div className="absolute inset-0 flex items-center justify-center bg-bg-primary/50">
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-red/20 border border-accent-red/40 shadow-md">
-          <Lock className="w-3.5 h-3.5 text-accent-red" />
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-bg-elevated border border-border-color">
+          <Lock className="w-3.5 h-3.5 text-text-muted" />
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
         </div>
       </div>
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-text-secondary">
+      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-accent-green">
         <CheckCircle2 className="w-3.5 h-3.5" />
         {dict?.streaks?.availableLabel || 'Available'}
       </div>
@@ -165,7 +165,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
         </div>
       )}
 
-      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-accent-red">
+      <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-text-muted">
         <Lock className="w-3.5 h-3.5" />
         {dict?.streaks?.lockedLabel || 'Locked'}
       </div>

@@ -165,13 +165,11 @@ export function TierPool({
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
               'min-h-[100px] max-h-[calc(var(--pool-h)-var(--pool-head))] flex-1 overflow-y-auto overscroll-contain p-3 sm:p-4 transition-colors',
-              // Touch screens: one sideways-scrolling strip (see touchSensors.ts)
-              '[@media(pointer:coarse)]:overflow-x-auto [@media(pointer:coarse)]:overflow-y-hidden',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div data-pool-grid="" className="flex flex-wrap content-start justify-start gap-1.5 sm:gap-2 [@media(pointer:coarse)]:grid [@media(pointer:coarse)]:w-max [@media(pointer:coarse)]:grid-flow-col [@media(pointer:coarse)]:grid-rows-2 [@media(pointer:coarse)]:justify-start">
+          <div className="flex flex-wrap content-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2">
             <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);

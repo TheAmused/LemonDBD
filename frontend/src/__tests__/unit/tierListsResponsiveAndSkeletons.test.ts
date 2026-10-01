@@ -38,10 +38,10 @@ describe('Tier lists: tiles and colors', () => {
     assert.ok(html.includes('aria-label="Dwight Fairfield"'));
   });
 
-  it('tiles are at least 56px on phones (w-14/h-14), above the 44px touch minimum', () => {
+  it('tiles are 48px on the smallest phones (w-12/h-12) and 56px from 480px up, above the 44px touch minimum', () => {
     const source = read('components/tier-lists/TierItemTile.tsx');
-    assert.match(source, /square: 'w-14 /);
-    assert.match(source, /square: 'h-14 /);
+    assert.match(source, /square: 'w-12 min-\[480px\]:w-14 /);
+    assert.match(source, /square: 'h-12 min-\[480px\]:h-14 /);
   });
 
   it('size breakpoints never let an sm..xl rule shadow a wide*/wide-2k rule on the same property', () => {

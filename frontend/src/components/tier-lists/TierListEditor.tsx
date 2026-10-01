@@ -201,7 +201,7 @@ export function TierListEditor(props: TierListEditorProps) {
               </h1>
             </div>
             {description && (
-              <p className="mt-1 text-xs sm:text-sm text-text-secondary max-w-2xl mx-auto text-center line-clamp-2">
+              <p className="mt-1 hidden sm:block text-xs sm:text-sm text-text-secondary max-w-2xl mx-auto text-center line-clamp-2">
                 {description}
               </p>
             )}

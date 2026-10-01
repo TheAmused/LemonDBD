@@ -30,7 +30,7 @@ export interface StreakStatTilesProps {
 /**
  * The Current / Best pair shared by every challenge header. Best turns amber while the running
  * streak is the record (with a burst the moment a win sets it). Current flashes green on a win and
- * red on a loss, and stays amber like Best while the streak is the record. Nothing fires on first
+ * red on a loss (amber when the win sets a record); only its icon stays amber during a record. Nothing fires on first
  * render, only on changes after it.
  */
 export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
@@ -74,7 +74,7 @@ export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
     return () => clearTimeout(timer);
   }, [flash.type, flash.key]);
 
-  const flashClass = flash.type ? FLASH_VALUE_CLASSES[flash.type] : record ? 'text-accent-amber' : '';
+  const flashClass = flash.type ? FLASH_VALUE_CLASSES[flash.type] : '';
   const bestClass = record
     ? `border-accent-amber/60 bg-accent-amber/10 stat-record-shimmer ${bursting ? 'stat-record-burst' : ''}`
     : '';

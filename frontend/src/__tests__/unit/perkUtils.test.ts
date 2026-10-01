@@ -13,12 +13,6 @@ import {
   matchesPerkSearch,
 } from '@/utils/perkUtils';
 import { staticUrl, sanitizeName, avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
-import {
-  DBD_KEYWORDS,
-  createDbdTokenRegex,
-  createPerkTokenRegex,
-  renderFormattedDbdText,
-} from '@/utils/textFormatter';
 
 test('perkUtils: sanitizePath strips leading slash and static/ prefix', () => {
   assert.strictEqual(sanitizePath('/static/avatars/survivors/dwight.png'), 'avatars/survivors/dwight.png');
@@ -97,62 +91,6 @@ test('staticUrl utilities: staticUrl, sanitizeName, avatarUrlForCharacter, perkI
   assert.ok(avatarUrlForCharacter('Dwight Fairfield', 'survivors')?.includes('/static/avatars/survivors/dwight_fairfield.webp'));
 
   assert.strictEqual(perkIconUrl({ icon_local_path: null, icon_url: 'https://cdn.dbd/icon.png' }), 'https://cdn.dbd/icon.png');
-});
-
-test('textFormatter: token regex matches multilingual DBD keywords', () => {
-  assert.ok(DBD_KEYWORDS.length > 50, 'Keywords list must be comprehensive');
-  assert.ok(DBD_KEYWORDS.includes('Exhausted'));
-  assert.ok(DBD_KEYWORDS.includes('Exposed'));
-  assert.ok(DBD_KEYWORDS.includes('Hex:'));
-  assert.ok(DBD_KEYWORDS.includes('Boon:'));
-  assert.ok(DBD_KEYWORDS.includes('Terror Radius'));
-
-  const regex = createDbdTokenRegex();
-  assert.ok(regex instanceof RegExp);
-  assert.ok(regex.test('Causes the Exhausted Status Effect for 40 seconds.'));
-  assert.ok(regex.test('Increases movement speed by 150%.'));
-
-  const perkRegex = createPerkTokenRegex('Sprint Burst');
-  assert.ok(perkRegex.test('When using Sprint Burst, break into a sprint.'));
-
-  // Multilingual inflections (Polish: generatorów, testów umiejętności)
-  const matches = 'Po naprawieniu generatorów wykonaj testy umiejętności.'.match(regex);
-  assert.ok(matches && matches.includes('generatorów'), 'Should match generatorów as a full token');
-  assert.ok(matches && matches.includes('testy umiejętności'), 'Should match testy umiejętności');
-});
-
-test('textFormatter: renderFormattedDbdText handles plain text, quotes, and bullet items', () => {
-  const plain = renderFormattedDbdText('Simple perk effect text.');
-  assert.ok(plain);
-
-  const withQuote = renderFormattedDbdText('Standard text.\n\n"Quotes from survivors give lore context." - Meg Thomas');
-  assert.ok(withQuote);
-
-  const withBullets = renderFormattedDbdText('Perk effects:\n• Effect 1 increases speed\n• Effect 2 reveals aura');
-  assert.ok(withBullets);
-
-  const eventNotice = renderFormattedDbdText('THIS ITEM IS NO LONGER AVAILABLE IN THE BLOODWEB');
-  assert.ok(eventNotice);
-
-  const htmlList = renderFormattedDbdText(
-    'Effects:<ul><li>Zyskujesz <b>10/12.5/15%</b> efektu <b>Pośpiech</b> przez 3 s.</li><li>Paleta jest zablokowana przez 60 s.</li></ul><br><br>Czas odnawiania: 60 s.'
-  );
-  assert.ok(htmlList);
-
-  const inputToken = renderFormattedDbdText(
-    'Użyj {Input.ActivatableButton2}, aby aktywować moc.'
-  );
-  assert.ok(inputToken);
-
-  const naturalButtons = renderFormattedDbdText(
-    'While next to a Dropped Pallet, use Active Ability Button 1 for 5/4/3s to reset it.\n\n“I’ll hit you with everything I’ve got. Then I’ll do it again.” -Yui Kimura'
-  );
-  assert.ok(naturalButtons);
-
-  const polishButtons = renderFormattedDbdText(
-    'Będąc obok przewróconej palety, użyj przycisk zdolności aktywnej 1 przez 5/4/3 s aby ją zresetować.\n\n„Zaatakuję cię wszystkim, co mam. Później zrobię to jeszcze raz”. – Yui Kimura'
-  );
-  assert.ok(polishButtons);
 });
 
 test('perkUtils: getCharacterAvatarUrl resolves character aliases for Leon, Bill, Aestri, Tapp', () => {

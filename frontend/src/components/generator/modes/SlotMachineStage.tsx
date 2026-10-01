@@ -629,7 +629,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 
                     {/* Horizontal Reel Window */}
                     {landedBroken ? (
-                      <Tooltip
+                      <Tooltip variant="action"
                         title={dict?.generator?.slotJammedTitle || 'Jammed'}
                         description={
                           dict?.generator?.slotJammedDesc ||
@@ -766,7 +766,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
                         of a clipped ancestor gets clipped right along with it. */}
                     <div className="relative">
                       {landedBroken ? (
-                        <Tooltip
+                        <Tooltip variant="action"
                           title={dict?.generator?.slotJammedTitle || 'Jammed'}
                           description={
                             dict?.generator?.slotJammedDesc ||

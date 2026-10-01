@@ -1,7 +1,8 @@
 // frontend/src/components/character-detail/modals/KillerPowerModal.tsx
 import React from 'react';
 import { BookOpen, Flame, X } from 'lucide-react';
-import { KillerPowerInfo, CharacterItem, getAssetUrl, renderFormattedDbdText } from '../types';
+import { KillerPowerInfo, CharacterItem, getAssetUrl } from '../types';
+import { RichText } from '@/components/common/RichText';
 
 interface KillerPowerModalProps {
   isOpen: boolean;
@@ -101,10 +102,11 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
               {t.killerPowerDesc || 'Special ability and combat mechanics'}
             </span>
             <div className="space-y-2 text-sm sm:text-base leading-relaxed">
-              {renderFormattedDbdText(
-                killerPower.description || 'Detailed mechanical power breakdown cataloged from Trial archives.',
-                false
-              )}
+              <RichText
+                text={killerPower.description || 'Detailed mechanical power breakdown cataloged from Trial archives.'}
+                block
+                variant="game"
+              />
             </div>
           </div>
         </div>

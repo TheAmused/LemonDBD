@@ -37,7 +37,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
               key={i}
               src={ADDON_RARITY_ICONS[rarity]}
               alt={rarity}
-              {...tip(rarity)}
+              {...tip(rarity, undefined, 'rarity')}
               className="h-3.5 w-3.5 rounded object-cover border border-border-color"
             />
           ))}

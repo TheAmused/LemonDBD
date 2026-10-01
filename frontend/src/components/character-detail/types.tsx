@@ -1,5 +1,7 @@
 // frontend/src/components/character-detail/types.tsx
 import React from 'react';
+import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
+import type { AddonRarity } from '@/types/chaosStreak';
 
 export interface CharacterItem {
   id?: number;
@@ -111,7 +113,10 @@ export interface CharacterViewBaseProps {
 }
 
 export interface RarityTileStyle {
+  /** Tile classes. Image-backed rarities only carry a transparent border here. */
   bg: string;
+  /** Inline background (the rarity artwork) for rarities that have an image. */
+  style?: React.CSSProperties;
   badge: string;
   text: string;
 }
@@ -226,39 +231,46 @@ export function getAvatarUrl(
   return char.avatar_url || char.portrait_url || '';
 }
 
+function rarityImageTile(rarity: AddonRarity): Pick<RarityTileStyle, 'bg' | 'style'> {
+  return {
+    bg: 'border-transparent bg-no-repeat bg-center bg-[length:100%_100%]',
+    style: { backgroundImage: `url(${ADDON_RARITY_ICONS[rarity]})` },
+  };
+}
+
 export function getRarityTileStyle(rarity?: string): RarityTileStyle {
   const r = (rarity || '').toLowerCase();
   if (r.includes('ultra') || r.includes('iridescent')) {
     return {
-      bg: 'bg-gradient-to-br from-[#c9245e] via-[#85123d] to-[#45051e] border-[#f24483] shadow-[0_0_16px_rgba(242,68,131,0.5)]',
+      ...rarityImageTile('Ultra Rare'),
       badge: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
       text: 'text-pink-400',
     };
   }
   if (r.includes('very rare') || r.includes('purple')) {
     return {
-      bg: 'bg-gradient-to-br from-[#7e2ba3] via-[#52176e] to-[#2b083b] border-[#ad43e3] shadow-[0_0_14px_rgba(173,67,227,0.45)]',
+      ...rarityImageTile('Very Rare'),
       badge: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
       text: 'text-purple-400',
     };
   }
   if (r.includes('rare') || r.includes('blue')) {
     return {
-      bg: 'bg-gradient-to-br from-[#1f6fb2] via-[#154d7a] to-[#0a2740] border-[#3b9fe0] shadow-[0_0_12px_rgba(59,159,224,0.4)]',
+      ...rarityImageTile('Rare'),
       badge: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
       text: 'text-sky-400',
     };
   }
   if (r.includes('uncommon') || r.includes('green')) {
     return {
-      bg: 'bg-gradient-to-br from-[#277a3c] via-[#1a5328] to-[#0c2a13] border-[#38b259] shadow-[0_0_12px_rgba(56,178,89,0.4)]',
+      ...rarityImageTile('Uncommon'),
       badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
       text: 'text-emerald-400',
     };
   }
   if (r.includes('common') || r.includes('brown')) {
     return {
-      bg: 'bg-gradient-to-br from-[#5c4033] via-[#432d24] to-[#251710] border-[#8b5a3e] shadow-[0_0_12px_rgba(139,90,62,0.35)]',
+      ...rarityImageTile('Common'),
       badge: 'bg-amber-800/30 text-amber-200 border-amber-700/40',
       text: 'text-amber-300',
     };
@@ -308,13 +320,5 @@ export function getLocalizedItemCategory(category?: string, t?: Record<string, s
   return (key && t?.[key]) || category;
 }
 
-export {
-  DBD_KEYWORDS,
-  ACTION_KEYWORDS,
-  TOKEN_REGEX,
-  createDbdTokenRegex,
-  parseLineTokens,
-  renderFormattedDbdText,
-} from '@/utils/textFormatter';
 
 

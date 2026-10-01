@@ -726,14 +726,14 @@ export function ScraperConfigModal({
                 ) : importFile ? (
                   <div className="space-y-1">
                     <div className="flex items-center justify-center gap-2">
-                      <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name)}>
+                      <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
                         {importFile.name}
                       </p>
                       <button
                         type="button"
                         onClick={handleClearFile}
                         className="rounded-full p-1 text-text-muted hover:bg-accent-red/20 hover:text-accent-red transition-colors cursor-pointer"
-                        {...tip(dict?.admin?.removeFile || 'Remove file')}
+                        {...tip(dict?.admin?.removeFile || 'Remove file', undefined, 'action')}
                         aria-label={dict?.admin?.removeFile || 'Remove file'}
                       >
                         <X className="h-3.5 w-3.5" />

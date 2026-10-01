@@ -65,7 +65,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
             <div
               className="relative group cursor-pointer shrink-0"
               onClick={onAvatarClick}
-              {...tip(dict?.user?.changeAvatar || 'Change Avatar')}
+              {...tip(dict?.user?.changeAvatar || 'Change Avatar', undefined, 'action')}
               aria-label={dict?.user?.changeAvatar || 'Change Avatar'}
             >
               <div className="relative rounded-2xl sm:rounded-3xl p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">

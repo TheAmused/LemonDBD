@@ -214,7 +214,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                     ? 'bg-accent-green/20 border-2 border-accent-green text-accent-green shadow-lg scale-105'
                     : 'bg-bg-surface border border-border-color hover:border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
                 }`}
-                {...tip(`${cat.label} - ${cat.desc}`)}
+                {...tip(`${cat.label} - ${cat.desc}`, undefined, 'default')}
                 aria-label={cat.label}
               >
                 <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
@@ -272,6 +272,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       }}
                       {...tip(item.name, undefined, 'item')}
                       className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      style={rarityStyle.style}
                       aria-label={`${t.inspectItemPrefix || 'Inspect item:'} ${item.name}`}
                     >
                       <img
@@ -342,6 +343,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                       }}
                       {...tip(displayItem.name, undefined, 'item')}
                       className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                      style={rarityStyle.style}
                       aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
                     >
                       <img

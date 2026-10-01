@@ -20,7 +20,7 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   const src = avatarUrlFor(name);
   return (
     <div
-      {...tip(name)}
+      {...tip(name, undefined, 'character')}
       className="flex flex-col items-center gap-1.5 rounded-lg border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
     >
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">

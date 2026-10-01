@@ -322,7 +322,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           type="button"
           onClick={toggleSidebar}
           data-testid="sidebar-toggle-button"
-          {...tip(dict?.sidebar?.toggleSidebar || 'Toggle Sidebar')}
+          {...tip(dict?.sidebar?.toggleSidebar || 'Toggle Sidebar', undefined, 'action')}
           aria-label={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
           aria-expanded={!isCollapsed}
           className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-surface text-text-primary shadow-md hover:bg-bg-elevated hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"

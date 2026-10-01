@@ -170,7 +170,7 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
                   e.stopPropagation();
                   onDelete(list.id, customTitle);
                 }}
-                {...tip(t.deleteTier)}
+                {...tip(t.deleteTier, undefined, 'action')}
                 aria-label={`${t.deleteTier} ${customTitle}`}
                 className="p-1.5 rounded-xl border border-border-color bg-bg-surface text-text-muted hover:text-accent-red hover:border-accent-red/40 hover:bg-accent-red/10 transition-colors cursor-pointer"
               >

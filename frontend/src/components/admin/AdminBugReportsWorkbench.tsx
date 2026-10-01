@@ -366,7 +366,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   <button
                     type="button"
                     onClick={() => onDeleteBug(selectedBug.id)}
-                    {...tip(dict?.admin?.deleteBugReportTitle || '')}
+                    {...tip(dict?.admin?.deleteBugReportTitle || '', undefined, 'action')}
                     aria-label={dict?.admin?.deleteBugReportTitle || ''}
                     className="p-2 rounded-xl border border-accent-red/40 text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
                   >

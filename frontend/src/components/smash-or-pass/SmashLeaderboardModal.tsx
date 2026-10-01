@@ -203,7 +203,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           {hasUserSmashed && (
             <div
               className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted ring-2 ring-bg-surface"
-              {...tip(rawSmashDict?.youSmashedThis || '')}
+              {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'status')}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
               <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
@@ -220,7 +220,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
 
             {/* Role Icon Badge (Accessible native tooltip) */}
             <span
-              {...tip(isSurvivor ? survivorsLabel : killersLabel)}
+              {...tip(isSurvivor ? survivorsLabel : killersLabel, undefined, 'action')}
               aria-label={isSurvivor ? survivorsLabel : killersLabel}
               className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
                 isSurvivor
@@ -234,7 +234,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
             {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
             {tier ? (
               <span
-                {...tip(`${tier.name} (${tier.range})`)}
+                {...tip(`${tier.name} (${tier.range})`, undefined, 'status')}
                 aria-label={`${tier.name} (${tier.range})`}
                 className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
               >
@@ -242,7 +242,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
               </span>
             ) : (
               <span
-                {...tip(`${unratedLabel} - ${noVotesDesc}`)}
+                {...tip(`${unratedLabel} - ${noVotesDesc}`, undefined, 'status')}
                 aria-label={`${unratedLabel} - ${noVotesDesc}`}
                 className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
               >
@@ -671,7 +671,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           />
 
           {/* 6. View Mode Toggle with Reusable Tooltip Component */}
-          <Tooltip
+          <Tooltip variant="action"
             title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
             description={
               viewMode === 'flat'

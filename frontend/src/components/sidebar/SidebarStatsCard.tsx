@@ -86,12 +86,12 @@ const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
           <div
             style={{ width: `${survivorPct}%` }}
             className="bg-accent-green transition-all duration-500"
-            {...tip(`${dict?.generator?.survivor || 'Survivors'}: ${survivorPct}%`)}
+            {...tip(`${dict?.generator?.survivor || 'Survivors'}: ${survivorPct}%`, undefined, 'default')}
           />
           <div
             style={{ width: `${killerPct}%` }}
             className="bg-accent-red transition-all duration-500"
-            {...tip(`${dict?.generator?.killer || 'Killers'}: ${killerPct}%`)}
+            {...tip(`${dict?.generator?.killer || 'Killers'}: ${killerPct}%`, undefined, 'default')}
           />
         </div>
       </div>

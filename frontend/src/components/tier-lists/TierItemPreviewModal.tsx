@@ -63,7 +63,7 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
           </div>
         )}
         {item.description && (
-          <PerkDescription description={item.description} perkName={item.name} />
+          <PerkDescription description={item.description} />
         )}
       </div>
     </Modal>

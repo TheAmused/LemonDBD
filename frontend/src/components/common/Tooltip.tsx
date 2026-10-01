@@ -41,6 +41,30 @@ export const TOOLTIP_CONFIG = {
       title: 'font-mono text-xs sm:text-sm normal-case tracking-normal text-accent-amber',
       arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
     },
+    /** Buttons, toggles and other controls: a short verb-like label. */
+    action: {
+      content: '',
+      title: 'normal-case tracking-normal text-xs',
+      arrowBorder: 'var(--border-color)',
+    },
+    /** Character / killer names. */
+    character: {
+      content: 'border-accent-red/40',
+      title: 'tracking-wide',
+      arrowBorder: 'color-mix(in srgb, var(--accent-red) 40%, transparent)',
+    },
+    /** State badges: trophies, ownership, admin, completion. */
+    status: {
+      content: 'border-accent-green/40',
+      title: 'normal-case tracking-normal text-accent-green',
+      arrowBorder: 'color-mix(in srgb, var(--accent-green) 40%, transparent)',
+    },
+    /** Add-on / item rarity labels. */
+    rarity: {
+      content: 'border-purple-500/50',
+      title: 'tracking-widest text-purple-300',
+      arrowBorder: 'color-mix(in srgb, rgb(168 85 247) 50%, transparent)',
+    },
   },
 } as const;
 
@@ -52,7 +76,8 @@ const resolveVariant = (name?: string | null) =>
 type MaybeText = string | false | null | undefined;
 
 /** Spread onto any native element to give it the global tooltip. */
-export const tip = (title?: MaybeText, description?: MaybeText, variant?: TooltipVariant) => ({
+/** `variant` is required on purpose: every tooltip picks its look explicitly. */
+export const tip = (title: MaybeText, description: MaybeText, variant: TooltipVariant) => ({
   [TOOLTIP_CONFIG.attr.title]: title || undefined,
   [TOOLTIP_CONFIG.attr.description]: description || undefined,
   [TOOLTIP_CONFIG.attr.variant]: variant,

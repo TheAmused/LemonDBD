@@ -359,7 +359,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                       : 'bg-accent-green/20 border border-accent-green/60 text-accent-green shadow-md scale-105'
                     : 'bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:bg-bg-surface'
                 }`}
-                {...tip(`${cat.label} - ${cat.desc}`)} aria-label={`${cat.label} - ${cat.desc}`}
+                {...tip(`${cat.label} - ${cat.desc}`, undefined, 'default')} aria-label={`${cat.label} - ${cat.desc}`}
               >
                 <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {/* The count only shows on the selected tab, same idea as
@@ -395,6 +395,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                   }}
                   {...tip(offering.name, undefined, 'item')}
                   className={`relative group rounded-2xl border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                  style={rarityStyle.style}
                   aria-label={`${t.inspectOfferingPrefix || 'Inspect offering:'} ${offering.name}`}
                 >
                   <img

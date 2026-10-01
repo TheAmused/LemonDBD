@@ -370,7 +370,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               type="button"
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z - 0.25).toFixed(2)))))}
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-surface border border-border-color hover:border-accent-red text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-              {...tip(cm.zoomOut)} aria-label={cm.zoomOut}
+              {...tip(cm.zoomOut, undefined, 'action')} aria-label={cm.zoomOut}
             >
               <ZoomOut className="h-4 w-4" />
             </button>
@@ -394,7 +394,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               type="button"
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z + 0.25).toFixed(2)))))}
               className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-surface border border-border-color hover:border-accent-red text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-              {...tip(cm.zoomIn)} aria-label={cm.zoomIn}
+              {...tip(cm.zoomIn, undefined, 'action')} aria-label={cm.zoomIn}
             >
               <ZoomIn className="h-4 w-4" />
             </button>
@@ -405,7 +405,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               type="button"
               onClick={handleReset}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-              {...tip(cm.resetTitle)} aria-label={cm.resetTitle}
+              {...tip(cm.resetTitle, undefined, 'action')} aria-label={cm.resetTitle}
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span>{cm.reset}</span>
@@ -417,7 +417,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary hover:text-accent-red transition-colors cursor-pointer"
-                  {...tip(cm.uploadPrompt)} aria-label={cm.uploadPrompt}
+                  {...tip(cm.uploadPrompt, undefined, 'action')} aria-label={cm.uploadPrompt}
                 >
                   <Upload className="h-3.5 w-3.5 text-accent-red" />
                   <span>{cm.uploadFile}</span>

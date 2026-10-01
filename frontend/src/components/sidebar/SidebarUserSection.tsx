@@ -89,7 +89,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               <button
                 type="button"
                 onClick={onLogout}
-                {...tip(dict?.sidebar?.signOut || 'Sign Out')}
+                {...tip(dict?.sidebar?.signOut || 'Sign Out', undefined, 'action')}
                 aria-label={dict?.sidebar?.signOut || 'Sign Out'}
                 className="p-1 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
               >

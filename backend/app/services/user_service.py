@@ -9,6 +9,7 @@ from app.services.user import (
     authenticate_user_credentials,
     clear_user_avatar,
     create_user_account,
+    delete_own_account,
     fetch_admin_metrics,
     fetch_user_by_id,
     get_avatar_storage_directory,
@@ -107,6 +108,9 @@ class UserService:
 
     def admin_delete_user(self, user_id: int) -> bool:
         return admin_remove_user(user_id)
+
+    def delete_own_account(self, user_id: int, password: str) -> tuple[bool, str | None]:
+        return delete_own_account(user_id, password)
 
     def get_admin_system_stats(self) -> dict[str, Any]:
         return fetch_admin_metrics()

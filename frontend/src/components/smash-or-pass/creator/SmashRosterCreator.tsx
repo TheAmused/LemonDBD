@@ -527,7 +527,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({
             name: result.doc.name,

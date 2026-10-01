@@ -254,7 +254,6 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({
             title: payload.title,

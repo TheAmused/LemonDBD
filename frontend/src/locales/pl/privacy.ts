@@ -56,8 +56,8 @@ export default {
     storage: {
       heading: "Cookie, pamięć lokalna i podmioty trzecie",
       paragraphs: [
-        "W chwili pisania LemonDBD nie ustawia własnych plików cookie. Zamiast tego pamięć lokalna przeglądarki przechowuje drobne dane, dzięki którym strona działa lub pamięta Twoje wybory, np. token logowania, stan paska bocznego i paneli, ustawienia dźwięku, wersje robocze, wybrane rostery i identyfikator sesji Smash or Pass.",
-        "Są to dane ściśle niezbędne lub wyłącznie wygodnościowe i zostają na Twoim urządzeniu. Możesz je w każdej chwili usunąć w przeglądarce, a wylogowanie usuwa token logowania.",
+        "Po zalogowaniu LemonDBD ustawia jeden ściśle niezbędny plik cookie: ciasteczko sesji, które utrzymuje Cię zalogowanym przez {sessionWindow} lub do wylogowania. Ma ono flagę HttpOnly, więc skrypty na stronie nie mogą go odczytać, i nigdy nie służy do śledzenia. Poza nim pamięć lokalna przeglądarki przechowuje drobne dane, dzięki którym strona działa lub pamięta Twoje wybory, np. znacznik zalogowania, stan paska bocznego i paneli, ustawienia dźwięku, wersje robocze, wybrane rostery i identyfikator sesji Smash or Pass.",
+        "Są to dane ściśle niezbędne lub wyłącznie wygodnościowe, więc baner ze zgodą nie jest potrzebny. Pamięć lokalna zostaje na Twoim urządzeniu i możesz ją w każdej chwili wyczyścić w przeglądarce; wylogowanie usuwa ciasteczko sesji.",
         "<b>Komendy głosowe:</b> w Chrome, Edge i Safari rozpoznawanie mowy zapewnia producent przeglądarki (np. Google lub Apple), więc dźwięk może być do niego wysyłany zgodnie z jego polityką prywatności. W innych przeglądarkach LemonDBD pobiera mały model mowy i przetwarza dźwięk wyłącznie na Twoim urządzeniu.",
       ],
       items: [],
@@ -67,7 +67,7 @@ export default {
       paragraphs: ["Nie sprzedajemy danych osobowych ani nie używamy ich do reklam. Udostępniamy je tylko w razie potrzeby:"],
       items: [
         "<b>Treści publiczne:</b> rzeczy, które sam publikujesz, np. publiczne tier listy, rostery i rankingi, są widoczne dla innych odwiedzających wraz z Twoją nazwą użytkownika i awatarem.",
-        "<b>Dostawcy usług:</b> nasi dostawcy hostingu i wysyłki e-maili przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz.",
+        "<b>Dostawcy usług:</b> nasz dostawca hostingu oraz {mailProvider} (który dostarcza nasze e-maile weryfikacyjne i do resetu hasła) przetwarzają dane w naszym imieniu, wyłącznie by utrzymać stronę i wysłać e-maile, o które prosisz.",
         "<b>Discord:</b> gdy wysyłasz zgłoszenie błędu, jego treść (w tym imię, adres e-mail i zrzuty ekranu) trafia na prywatny kanał naszego zespołu.",
         "<b>Powody prawne:</b> jeśli wymaga tego prawo lub aby chronić stronę i użytkowników przed nadużyciami.",
       ],
@@ -82,8 +82,8 @@ export default {
     retention: {
       heading: "Jak długo je przechowujemy",
       paragraphs: [
-        "Dane konta i zapisane treści są przechowywane, dopóki istnieje Twoje konto. Kody weryfikacyjne i resetu hasła szybko wygasają. Zgłoszenia błędów przechowujemy tak długo, jak trzeba do rozwiązania problemu i do naszej dokumentacji. Logi serwera są przechowywane tylko krótko. Dane analityczne są anonimowe.",
-        "Po usunięciu konta usuwamy Twoje dane konta i wgrany awatar. Zgłoszenia błędów i kopie w kopiach zapasowych mogą pozostać przez ograniczony czas, a to, co opublikowałeś publicznie, może zostać zanonimizowane zamiast usunięte.",
+        "Dane konta i zapisane treści są przechowywane, dopóki istnieje Twoje konto. Kody weryfikacyjne wygasają po {verificationWindow}, linki do resetu hasła po {resetWindow}, a sesje logowania po {sessionWindow}. Serie nieaktywne przez {streakPrune} są kończone automatycznie. Zgłoszenia błędów przechowujemy tak długo, jak trzeba do rozwiązania problemu i do naszej dokumentacji. Logi serwera są przechowywane tylko krótko. Dane analityczne są anonimowe.",
+        "Konto możesz usunąć samodzielnie na stronie profilu albo poprosić nas o to. Wtedy usuwamy dane konta, zapisane treści i wgrany awatar. Twoje zgłoszenia błędów zostają w naszej dokumentacji, ale usuwamy z nich Twoje imię i adres e-mail. Kopie przesłane już na nasz prywatny kanał Discord lub zapisane w kopiach zapasowych mogą pozostać przez ograniczony czas, a to, co opublikowałeś publicznie, może zostać zanonimizowane zamiast usunięte.",
       ],
       items: [],
     },
@@ -126,7 +126,7 @@ export default {
     contact: {
       heading: "Kontakt",
       paragraphs: [
-        "Aby skorzystać z jakiegokolwiek prawa, zadać pytanie o prywatność lub poprosić o usunięcie konta, napisz do nas przez formularz zgłoszenia błędu w LemonDBD (wybierz kategorię General i wpisz „Privacy”). Zalogowani użytkownicy mogą pisać ze swojego konta, abyśmy mogli potwierdzić tożsamość.",
+        "Aby skorzystać z jakiegokolwiek prawa, zadać pytanie o prywatność lub poprosić o usunięcie konta, napisz do nas na [{contactEmail}](mailto:{contactEmail}). Zalogowani użytkownicy mogą też sami usunąć konto na stronie profilu. Pisz z adresu przypisanego do konta, abyśmy mogli potwierdzić tożsamość.",
         "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
       ],
       items: [],

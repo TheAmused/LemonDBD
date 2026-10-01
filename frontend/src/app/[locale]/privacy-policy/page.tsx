@@ -2,7 +2,7 @@
 // frontend/src/app/[locale]/privacy-policy/page.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
@@ -12,6 +12,8 @@ import { RichText } from '@/components/common/RichText';
 import { Locale } from '@/i18n/config';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { apiUrl } from '@/utils/api';
+import { fillPrivacyPlaceholders, type PrivacyInfo } from '@/utils/privacyPlaceholders';
 
 /** Render order of the policy sections (keys of `dict.privacy.sections`). */
 export const PRIVACY_SECTION_ORDER = [
@@ -37,6 +39,23 @@ export default function PrivacyPolicyPage() {
   const privacy = dict?.privacy;
 
   useDocumentTitle(privacy?.pageTitle || 'LemonDBD - Privacy Policy');
+
+  // Contact address, lifetimes and mail provider come from the backend (admin-editable),
+  // so the translated text only holds placeholders for them.
+  const [info, setInfo] = useState<PrivacyInfo | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(apiUrl('/api/v1/privacy-info'))
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: PrivacyInfo | null) => {
+        if (!cancelled && data) setInfo(data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const fill = (text?: string | null) => (text ? fillPrivacyPlaceholders(text, info, locale) : text);
 
   return (
     <PageShell
@@ -64,7 +83,7 @@ export default function PrivacyPolicyPage() {
             {privacy?.lastUpdatedLabel}: {privacy?.lastUpdated}
           </p>
           <p className="max-w-2xl text-xs sm:text-sm text-text-muted leading-relaxed px-2">
-            <RichText text={privacy?.intro} />
+            <RichText text={fill(privacy?.intro)} />
           </p>
         </header>
 
@@ -77,7 +96,7 @@ export default function PrivacyPolicyPage() {
               <ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm leading-relaxed text-text-muted marker:text-accent-red">
                 {privacy.summary.map((line, i) => (
                   <li key={i}>
-                    <RichText text={line} />
+                    <RichText text={fill(line)} />
                   </li>
                 ))}
               </ul>
@@ -99,14 +118,14 @@ export default function PrivacyPolicyPage() {
                     <div className="flex flex-col gap-2.5 text-sm leading-relaxed text-text-muted">
                       {section.paragraphs.map((text, i) => (
                         <p key={i}>
-                          <RichText text={text} />
+                          <RichText text={fill(text)} />
                         </p>
                       ))}
                       {section.items.length > 0 ? (
                         <ul className="flex list-disc flex-col gap-1.5 pl-5 marker:text-accent-red">
                           {section.items.map((text, i) => (
                             <li key={i}>
-                              <RichText text={text} />
+                              <RichText text={fill(text)} />
                             </li>
                           ))}
                         </ul>

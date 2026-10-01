@@ -57,7 +57,7 @@ export function useOwnedRoster(role: OwnedRosterRole, rosterLimit?: number) {
     setLoading(true);
     try {
       const res = await fetch(`${backendBase}/api/v1/users/${user.id}/characters?role=${role}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();

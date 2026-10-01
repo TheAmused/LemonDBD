@@ -192,15 +192,24 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     [N, normalizeIndex, displayedRosters, onSelectRoster, onClose]
   );
 
-  // Closing the modal (X button, backdrop click, Escape) must always be able
-  // to dismiss it, regardless of which roster happens to be centered. Unlike
-  // commitSelection, this never validates `is_active`, so browsing to a
-  // locked/inactive roster and then closing can't get stuck -- it just
-  // discards the in-progress browse and falls back to whatever roster was
-  // selected before the modal was opened.
+  // Closing (X, backdrop, Escape) confirms the roster centered in the carousel.
+  // If that roster is locked/inactive (or nothing is centered), nothing changes
+  // and the roster that was active when the modal opened stays selected.
   const handleClose = useCallback(() => {
+    if (N > 0) {
+      const centered = displayedRosters[normalizeIndex(targetIndexRef.current)];
+      if (centered && centered.is_active !== false) {
+        if (centered.slug !== activeSelectedSlug) {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, centered.slug);
+          }
+          setActiveSelectedSlug(centered.slug);
+          onSelectRoster(centered.slug);
+        }
+      }
+    }
     onClose();
-  }, [onClose]);
+  }, [N, displayedRosters, normalizeIndex, activeSelectedSlug, onSelectRoster, onClose]);
 
   const stepPrev = useCallback(
     (e?: React.MouseEvent | React.PointerEvent) => {
@@ -367,7 +376,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict?.modal?.close || ''}
       backdrop="blur"
-      className="h-[92dvh] max-h-[860px] min-h-[580px] max-w-[1300px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
+      className="h-[94dvh] max-h-[1100px] min-h-[580px] max-w-[1600px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
       bodyClassName="flex flex-col overflow-hidden"
     >
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
@@ -440,8 +449,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className="relative w-full flex-1 max-h-[580px] flex items-center justify-center overflow-visible touch-none cursor-grab active:cursor-grabbing my-2"
-          style={{ perspective: 1200 }}
+          className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-visible touch-none cursor-grab active:cursor-grabbing my-2"
+          style={{
+            perspective: 1200,
+            ['--card-h' as string]: 'clamp(340px, calc(94dvh - 330px), 760px)',
+            ['--card-w' as string]: 'calc(var(--card-h) * 0.685)',
+          }}
           role="region"
           aria-label={selectRosterTitle}
         >
@@ -492,7 +505,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    handleClose();
+                    onClose();
                     onCreateRoster();
                   }}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold uppercase tracking-wider shadow-md hover:bg-accent-red-hover transition-colors cursor-pointer"
@@ -520,7 +533,11 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   ? 145
                   : typeof window !== 'undefined' && window.innerWidth < 1024
                     ? 205
-                    : 260;
+                    : window.innerWidth >= 1536
+                      ? 360
+                      : window.innerWidth >= 1280
+                        ? 310
+                        : 260;
 
               const translateX = visualOffset * spreadUnit;
               const rotateY = Math.max(-55, Math.min(55, -visualOffset * 30));
@@ -555,7 +572,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                       if (isRosterEnabled) commitSelection();
                     }
                   }}
-                  className={`absolute w-[240px] sm:w-[300px] md:w-[350px] lg:w-[370px] h-[360px] sm:h-[450px] md:h-[500px] lg:h-[540px] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
+                  className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-[28px] sm:rounded-[36px] overflow-hidden cursor-pointer ${isCenter
                     ? isRosterEnabled
                       ? 'border-2 sm:border-[3px] border-accent-red'
                       : 'border-2 border-border-color'

@@ -75,7 +75,7 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
       </div>
 
       <div className="p-4 sm:p-6 space-y-4 text-sm text-text-secondary leading-relaxed">
-        <div className="p-4 rounded-2xl bg-bg-elevated border border-border-color space-y-2">
+        <div className="space-y-2">
           <span className="flex items-center gap-2 text-xs font-mono font-bold text-text-secondary uppercase mb-2">
             <BookOpen className="h-3.5 w-3.5 text-accent-red" />
             {t.killerPowerDesc || 'Special ability and combat mechanics'}

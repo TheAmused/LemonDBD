@@ -8,6 +8,7 @@ import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
+import { tip } from '@/components/common/Tooltip';
 export interface ChaosStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -36,7 +37,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
               key={i}
               src={ADDON_RARITY_ICONS[rarity]}
               alt={rarity}
-              title={rarity}
+              {...tip(rarity)}
               className="h-3.5 w-3.5 rounded object-cover border border-border-color"
             />
           ))}

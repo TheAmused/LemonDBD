@@ -20,7 +20,7 @@ import type { LeaderboardItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
-import { Tooltip } from '@/components/common/Tooltip';
+import { Tooltip, tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
@@ -203,7 +203,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           {hasUserSmashed && (
             <div
               className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted ring-2 ring-bg-surface"
-              title={rawSmashDict?.youSmashedThis || ''}
+              {...tip(rawSmashDict?.youSmashedThis || '')}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
               <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
@@ -220,7 +220,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
 
             {/* Role Icon Badge (Accessible native tooltip) */}
             <span
-              title={isSurvivor ? survivorsLabel : killersLabel}
+              {...tip(isSurvivor ? survivorsLabel : killersLabel)}
               aria-label={isSurvivor ? survivorsLabel : killersLabel}
               className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${
                 isSurvivor
@@ -234,7 +234,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
             {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
             {tier ? (
               <span
-                title={`${tier.name} (${tier.range})`}
+                {...tip(`${tier.name} (${tier.range})`)}
                 aria-label={`${tier.name} (${tier.range})`}
                 className={`flex h-6 w-6 items-center justify-center rounded-lg border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
               >
@@ -242,7 +242,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
               </span>
             ) : (
               <span
-                title={`${unratedLabel} - ${noVotesDesc}`}
+                {...tip(`${unratedLabel} - ${noVotesDesc}`)}
                 aria-label={`${unratedLabel} - ${noVotesDesc}`}
                 className="flex h-6 w-6 items-center justify-center rounded-lg border border-border-color bg-bg-elevated text-text-muted font-black font-mono text-xs shadow-inner shrink-0 transition-transform hover:scale-110"
               >

@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface UserAvatarProps {
   user?: {
     username?: string;
@@ -142,7 +143,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       {showAdminBadge && user?.role === 'admin' && (
         <span
           className={`absolute flex items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-xs border border-accent-red/40 ${sizeConfig.badge}`}
-          title={adminTitle}
+          {...tip(adminTitle)}
           aria-label={adminAriaLabel}
         >
           <OverseerEyeIcon className={sizeConfig.badgeIcon} />

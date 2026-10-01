@@ -10,6 +10,7 @@ import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export interface CharacterRosterGridProps {
   role: Role;
   characters: OwnedCharacterItem[];
@@ -116,7 +117,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                 className={`relative group rounded-xl border p-2 flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
                   selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
                 }`}
-                title={`${displayName(char.name)}${statusSuffix}`}
+                {...tip(`${displayName(char.name)}${statusSuffix}`)}
                 {...(selectable
                   ? {
                       role: 'button',

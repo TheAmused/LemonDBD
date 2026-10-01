@@ -30,6 +30,7 @@ import {
 import { CHANGELOG_TAG_THEME } from './changelogTheme';
 import dynamic from 'next/dynamic';
 
+import { tip } from '@/components/common/Tooltip';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -292,7 +293,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
       <button
         type="button"
         onClick={handleOpen}
-        title={t?.triggerTitle || "What's New?"}
+        {...tip(t?.triggerTitle || "What's New?")}
         aria-label={t?.triggerTitle || "What's New?"}
         className={`group relative flex h-9 w-9 items-center justify-center rounded-xl border border-border-color text-text-muted transition-all hover:border-accent-red/50 hover:text-accent-red hover:bg-accent-red/10 cursor-pointer ${className}`}
       >
@@ -336,7 +337,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         setEditingPost(null);
                         setEditorOpen(true);
                       }}
-                      title={t?.newEntry || 'New entry'}
+                      {...tip(t?.newEntry || 'New entry')} aria-label={t?.newEntry || 'New entry'}
                       className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-subtle text-text-secondary hover:border-accent-red/50 hover:text-accent-red cursor-pointer"
                     >
                       <Plus className="h-4 w-4" />
@@ -418,7 +419,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         {canReorder && (
                           <button
                             type="button"
-                            title={t?.dragToReorder || 'Drag to reorder'}
+                            {...tip(t?.dragToReorder || 'Drag to reorder')}
                             aria-label={t?.dragToReorder || 'Drag to reorder'}
                             onPointerDown={(e) => beginDrag(e, post.id)}
                             style={{ touchAction: 'none' }}
@@ -586,7 +587,7 @@ const IconButton: React.FC<{
 }> = ({ icon: Icon, label, onClick, disabled, hoverClass = 'hover:text-text-secondary' }) => (
   <button
     type="button"
-    title={label}
+    {...tip(label)}
     aria-label={label}
     disabled={disabled}
     onClick={onClick}

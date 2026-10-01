@@ -26,6 +26,7 @@ import { toTitleCase } from '@/utils/textCase';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
+import { tip } from '@/components/common/Tooltip';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -215,7 +216,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                     ? 'bg-accent-green/20 border-2 border-accent-green text-accent-green shadow-lg scale-105'
                     : 'bg-bg-surface border border-border-color hover:border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
                 }`}
-                title={`${cat.label} - ${cat.desc}`}
+                {...tip(`${cat.label} - ${cat.desc}`)}
                 aria-label={cat.label}
               >
                 <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />

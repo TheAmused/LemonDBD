@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { AlertTriangle } from 'lucide-react';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
 const DisabledReasonModal = dynamic(
@@ -92,7 +93,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <span
           className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-red/50 bg-accent-red/15 px-2 py-1 text-accent-red shadow-sm"
           aria-label={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
-          title={dict?.streaks?.completedFullRoster || 'Completed with the entire roster'}
+          {...tip(dict?.streaks?.completedFullRoster || 'Completed with the entire roster')}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedFullCount != null && (
@@ -103,7 +104,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <span
           className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-accent-amber/40 bg-accent-amber/15 px-2 py-1 text-accent-amber shadow-sm"
           aria-label={dict?.streaks?.completed || 'Completed'}
-          title={dict?.streaks?.completed || 'Completed'}
+          {...tip(dict?.streaks?.completed || 'Completed')}
         >
           <AdeptBadgeIcon className="h-3.5 w-3.5" />
           {completedCount != null && (

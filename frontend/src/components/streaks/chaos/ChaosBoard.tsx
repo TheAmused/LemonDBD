@@ -22,6 +22,7 @@ import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
+import { tip } from '@/components/common/Tooltip';
 const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
 const ResetConfirmModal = dynamic(
   () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
@@ -294,7 +295,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
               type="button"
               onClick={handleDevSkipToWin}
               disabled={busy || !killers.length}
-              title={dict?.streaks?.devSkipWinTitle || ''}
+              {...tip(dict?.streaks?.devSkipWinTitle || '')} aria-label={dict?.streaks?.devSkipWinTitle || ''}
               className="inline-flex items-center gap-2 text-xs font-bold text-accent-amber border border-accent-amber/30 bg-accent-amber/10 hover:bg-accent-amber/20 disabled:opacity-50 transition-colors cursor-pointer rounded-lg px-2.5 py-1"
             >
               <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />

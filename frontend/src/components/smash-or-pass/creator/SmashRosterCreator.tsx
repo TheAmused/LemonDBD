@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { EmptyState } from '@/components/EmptyState';
 import { Switch } from '@/components/common/Switch';
-import { Tooltip } from '@/components/common/Tooltip';
+import { Tooltip, tip } from '@/components/common/Tooltip';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -757,7 +757,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   <button
                     type="button"
                     onClick={() => setIsCropModalOpen(true)}
-                    title={c.cropCoverTitle}
+                    {...tip(c.cropCoverTitle)} aria-label={c.cropCoverTitle}
                     className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
                   >
                     <Crop className="h-4 w-4 text-accent-red" />
@@ -769,7 +769,7 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                   <div
                     onClick={() => setIsCropModalOpen(true)}
                     className="mt-3 relative group overflow-hidden rounded-xl border border-border-color bg-bg-elevated aspect-video max-w-md 2xl:max-w-lg wide:max-w-xl mx-auto shadow-xs cursor-pointer"
-                    title={c.cropCoverTitle}
+                    {...tip(c.cropCoverTitle)}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- live preview of a user-supplied URL */}
                     <img

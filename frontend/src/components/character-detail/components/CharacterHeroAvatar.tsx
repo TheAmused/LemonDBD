@@ -7,6 +7,7 @@ import type { CharacterItem } from '../types';
 import { getAvatarUrl } from '../types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export interface CharacterHeroAvatarTranslations {
   view3DModel?: string;
   interactiveViewer?: string;
@@ -50,7 +51,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           }
         }}
         className="group relative w-full max-w-[280px] sm:max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
-        title={t.view3DModel || ''}
+        {...tip(t.view3DModel || '')}
         aria-label={heroAriaLabel}
       >
         {!imgFailed ? (

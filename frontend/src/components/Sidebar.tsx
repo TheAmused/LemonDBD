@@ -26,6 +26,7 @@ import { i18n, type Locale } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
   () => import('./sidebar/BugReportModal').then((m) => m.BugReportModal),
@@ -321,7 +322,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           type="button"
           onClick={toggleSidebar}
           data-testid="sidebar-toggle-button"
-          title={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
+          {...tip(dict?.sidebar?.toggleSidebar || 'Toggle Sidebar')}
           aria-label={dict?.sidebar?.toggleSidebar || 'Toggle Sidebar'}
           aria-expanded={!isCollapsed}
           className="hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-2xl border border-l-0 border-border-color bg-bg-surface text-text-primary shadow-md hover:bg-bg-elevated hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group"

@@ -17,6 +17,7 @@ import type { MapRealm } from '@/types/map';
 import type { Dictionary } from '@/locales/types';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 
+import { tip } from '@/components/common/Tooltip';
 interface FullscreenMapEngineProps {
   mapId: number;
   onClose: () => void;
@@ -297,7 +298,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             type="button"
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
             className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
-            title={dict?.maps?.zoomOut || 'Zoom Out'}
+            {...tip(dict?.maps?.zoomOut || 'Zoom Out')}
             aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
           >
             <ZoomOut className="w-4 h-4" />
@@ -311,7 +312,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             type="button"
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
             className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
-            title={dict?.maps?.zoomIn || 'Zoom In'}
+            {...tip(dict?.maps?.zoomIn || 'Zoom In')}
             aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
           >
             <ZoomIn className="w-4 h-4" />
@@ -323,7 +324,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
             type="button"
             onClick={handleResetView}
             className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
-            title={dict?.maps?.resetPanZoom || 'Reset Pan and Zoom'}
+            {...tip(dict?.maps?.resetPanZoom || 'Reset Pan and Zoom')}
             aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
           >
             <RotateCcw className="w-4 h-4" />

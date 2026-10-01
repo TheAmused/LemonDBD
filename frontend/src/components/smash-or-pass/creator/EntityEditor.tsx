@@ -14,6 +14,7 @@ import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS, TRANSLATABLE
 import type { RosterCustomLabels } from '@/types/smashOrPass';
 import { FIELD, LABEL, TEXTAREA_FIELD } from './styles';
 
+import { tip } from '@/components/common/Tooltip';
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
@@ -126,7 +127,7 @@ export function CandidateFormInputs({
             onClick={onRemove}
             aria-label={(c.removeCandidateAria || 'Remove {name}').replace('{name}', entity.name || displayIndex)}
             className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold text-text-muted hover:text-accent-red hover:bg-accent-red/10 rounded-lg transition-colors cursor-pointer shrink-0"
-            title={c.removeCandidate || 'Remove candidate'}
+            {...tip(c.removeCandidate || 'Remove candidate')}
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">{c.removeCandidate || 'Remove'}</span>

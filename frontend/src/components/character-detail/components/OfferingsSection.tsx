@@ -22,6 +22,7 @@ import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
+import { tip } from '@/components/common/Tooltip';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -360,7 +361,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                       : 'bg-accent-green/20 border border-accent-green/60 text-accent-green shadow-md scale-105'
                     : 'bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:bg-bg-surface'
                 }`}
-                title={`${cat.label} - ${cat.desc}`}
+                {...tip(`${cat.label} - ${cat.desc}`)} aria-label={`${cat.label} - ${cat.desc}`}
               >
                 <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {/* The count only shows on the selected tab, same idea as

@@ -7,8 +7,8 @@ import { ImageOff, Lock, HelpCircle } from 'lucide-react';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
-import { UnifiedHoverModal, ActiveHoverState } from '@/components/common/UnifiedHoverModal';
 
+import { tip } from '@/components/common/Tooltip';
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
   { ssr: false }
@@ -45,7 +45,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({
   const [imgError, setImgError] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
 
   const iconSrc = getPerkIconUrl(perk);
   const avatarSrc = getCharacterAvatarUrl(
@@ -65,11 +64,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({
       ? dict?.modal?.killerPerk
       : dict?.modal?.survivorPerk;
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setActiveHover({ item: perk, rect });
-  };
-  const handleMouseLeave = () => setActiveHover(null);
   const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
   const coordinateLabel = coordinate
@@ -109,8 +103,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
       <button
         type="button"
         onClick={() => onSelect(perk)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        {...tip(perk.name)}
         aria-label={ariaLabel}
         className={`relative flex cursor-pointer items-center justify-center transition-transform duration-200 ${
           size === 'tarot' || size === 'compact' ? 'group-hover:scale-102 active:scale-95' : 'group-hover:scale-105 active:scale-95'
@@ -191,7 +184,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({
           !isOwned && (
             <div
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
-              title={dict?.modal?.unownedPerk}
+              {...tip(dict?.modal?.unownedPerk)}
             >
               <Lock className="h-3.5 w-3.5 text-text-muted" />
             </div>
@@ -206,12 +199,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({
         reason={perk.disabled_reason}
       />
 
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="auto"
-        t={dict?.modal as unknown as Record<string, string>}
-        isPerk={true}
-      />
     </div>
   );
 };

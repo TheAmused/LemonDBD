@@ -10,6 +10,7 @@ import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface RunHeaderProps {
   run: PageStreakRun;
   avatarSrc?: string;
@@ -85,7 +86,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
             type="button"
             onClick={onOpenRules}
             className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            title={dict?.streaks?.rules || 'Rules'}
+            {...tip(dict?.streaks?.rules || 'Rules')}
             aria-label={dict?.streaks?.rules || 'Rules'}
           >
             <BookOpen className="w-4 h-4" aria-hidden="true" />
@@ -96,7 +97,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
             type="button"
             onClick={onOpenStats}
             className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            title={dict?.streaks?.stats || 'Statistics'}
+            {...tip(dict?.streaks?.stats || 'Statistics')}
             aria-label={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" aria-hidden="true" />
@@ -106,7 +107,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
             type="button"
             onClick={onOpenHistory}
             className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            title={dict?.streaks?.pastWins || 'Past Wins'}
+            {...tip(dict?.streaks?.pastWins || 'Past Wins')}
             aria-label={dict?.streaks?.pastWins || 'Past Wins'}
           >
             <History className="w-5 h-5" aria-hidden="true" />
@@ -116,7 +117,7 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
             type="button"
             onClick={onOpenReset}
             className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            title={dict?.streaks?.resetRun || 'Reset this streak'}
+            {...tip(dict?.streaks?.resetRun || 'Reset this streak')}
             aria-label={dict?.streaks?.resetRun || 'Reset this streak'}
           >
             <RotateCcw className="w-5 h-5" aria-hidden="true" />

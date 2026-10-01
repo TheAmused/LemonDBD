@@ -22,6 +22,7 @@ import type { Dictionary } from '@/locales/types';
 import { CharacterAutocomplete, type AutocompleteItem } from '../CharacterAutocomplete';
 import { staticUrl } from '@/utils/api';
 
+import { tip } from '@/components/common/Tooltip';
 const ALL_MODES: MinigameMode[] = [
   'classic_character',
   'classic_killer',
@@ -166,7 +167,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             onClick={onMoveUp}
             disabled={index === 0}
             className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            title={c.moveUp}
+            {...tip(c.moveUp)} aria-label={c.moveUp}
           >
             <ChevronUp className="w-4 h-4" />
           </button>
@@ -175,7 +176,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             onClick={onMoveDown}
             disabled={index === totalRounds - 1}
             className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            title={c.moveDown}
+            {...tip(c.moveDown)} aria-label={c.moveDown}
           >
             <ChevronDown className="w-4 h-4" />
           </button>
@@ -183,7 +184,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             type="button"
             onClick={onRemove}
             className="p-1.5 rounded-lg bg-accent-red/20 hover:bg-accent-red/30 text-accent-red border border-accent-red/40 transition-colors ml-1"
-            title={c.removeRound}
+            {...tip(c.removeRound)} aria-label={c.removeRound}
           >
             <Trash2 className="w-4 h-4" />
           </button>

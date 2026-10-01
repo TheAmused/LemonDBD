@@ -6,6 +6,7 @@ import type { Dictionary } from '@/locales/types';
 import { Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface AdminHeaderProps {
   isLoading: boolean;
   onOpenDbMaintenance: (tab?: 'export' | 'import' | 'purge') => void;
@@ -54,7 +55,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         <button
           type="button"
           onClick={() => onOpenDbMaintenance('export')}
-          title={dict?.admin?.exportBackupTitle || 'Export Database Backup'}
+          {...tip(dict?.admin?.exportBackupTitle || 'Export Database Backup')} aria-label={dict?.admin?.exportBackupTitle || 'Export Database Backup'}
           className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
         >
           <Download className="h-3.5 w-3.5 text-text-secondary" />
@@ -64,7 +65,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         <button
           type="button"
           onClick={() => onOpenDbMaintenance('import')}
-          title={dict?.admin?.importBackupTitle || 'Import Database Backup'}
+          {...tip(dict?.admin?.importBackupTitle || 'Import Database Backup')} aria-label={dict?.admin?.importBackupTitle || 'Import Database Backup'}
           className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
         >
           <Upload className="h-3.5 w-3.5 text-text-secondary" />
@@ -75,7 +76,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           href={pgAdminUrl}
           target="_blank"
           rel="noopener noreferrer"
-          title={dict?.admin?.pgAdminTitle || 'pgAdmin Database Manager'}
+          {...tip(dict?.admin?.pgAdminTitle || 'pgAdmin Database Manager')} aria-label={dict?.admin?.pgAdminTitle || 'pgAdmin Database Manager'}
           className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 text-xs font-bold transition-all cursor-pointer shadow-xs flex-1 sm:flex-initial"
         >
           <Database className="h-3.5 w-3.5 text-text-secondary" />
@@ -85,7 +86,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         <button
           type="button"
           onClick={onRefreshData}
-          title={dict?.admin?.refreshTitle || 'Refresh Data'}
+          {...tip(dict?.admin?.refreshTitle || 'Refresh Data')} aria-label={dict?.admin?.refreshTitle || 'Refresh Data'}
           className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -97,7 +98,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             href={umamiUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title={dict?.admin?.analyticsTitle || 'Analytics'}
+            {...tip(dict?.admin?.analyticsTitle || 'Analytics')} aria-label={dict?.admin?.analyticsTitle || 'Analytics'}
             className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
           >
             <LineChart className="h-3.5 w-3.5 text-text-secondary" />

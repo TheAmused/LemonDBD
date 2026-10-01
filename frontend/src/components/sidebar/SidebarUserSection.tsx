@@ -8,6 +8,7 @@ import { LogIn, LogOut, MailWarning } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export interface SidebarUserSectionProps {
   currentLocale: string;
   dict?: Dictionary;
@@ -88,7 +89,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
               <button
                 type="button"
                 onClick={onLogout}
-                title={dict?.sidebar?.signOut || 'Sign Out'}
+                {...tip(dict?.sidebar?.signOut || 'Sign Out')}
                 aria-label={dict?.sidebar?.signOut || 'Sign Out'}
                 className="p-1 rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
               >

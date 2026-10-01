@@ -4,7 +4,8 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { ChevronDown, ShieldCheck } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { CampfireParticles } from '@/components/common/CampfireParticles';
 import { RichText } from '@/components/common/RichText';
@@ -260,6 +261,17 @@ export default function AboutPage() {
               ))}
             </ul>
           </AboutSection>
+
+          {/* Privacy Policy pill (links to its own page) */}
+          <div className="lg:col-span-2 flex justify-center">
+            <Link
+              href={`/${locale}/privacy-policy`}
+              className="inline-flex items-center gap-2 rounded-full border border-border-color bg-bg-surface px-5 py-2.5 text-xs sm:text-sm font-bold uppercase tracking-widest font-mono text-accent-red shadow-md backdrop-blur-xl transition-colors hover:border-accent-red/50 hover:bg-bg-elevated"
+            >
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+              {dict?.privacy?.heading}
+            </Link>
+          </div>
         </div>
       </div>
     </PageShell>

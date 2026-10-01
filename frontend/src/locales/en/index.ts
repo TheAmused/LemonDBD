@@ -21,6 +21,7 @@ import achievements from './achievements';
 import about from './about';
 import tierLists from './tierLists';
 import minigames from './minigames';
+import privacy from './privacy';
 
 const en = {
   app,
@@ -45,6 +46,7 @@ const en = {
   about,
   tierLists,
   minigames,
+  privacy,
 };
 
 export default en;

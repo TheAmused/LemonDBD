@@ -754,12 +754,3 @@
     transition-duration: 0.01ms !important;
   }
 }
-
-/* Tier list pool on touch screens: a sideways-scrolling strip. Its tiles claim only horizontal panning, so a
-   vertical drag is handed to the drag-and-drop sensor (see tier-lists/touchSensors.ts). */
-@media (pointer: coarse) {
-  [data-pool-grid] [data-tier-tile] {
-    touch-action: pan-x;
-    -webkit-touch-callout: none;
-  }
-}

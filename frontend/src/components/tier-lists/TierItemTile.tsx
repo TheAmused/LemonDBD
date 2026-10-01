@@ -13,13 +13,13 @@ export type TierTileShape = 'square' | 'wide';
 // `lg:` rule would override `wide-2k:` on the same property.
 const SHAPE_CLASSES: Record<TierTileShape, string> = {
   // >= 56px on the smallest screens: comfortably above the 44px touch minimum.
-  square: 'w-14 sm:max-lg:w-16 lg:max-wide-2k:w-[72px] wide-2k:w-24',
-  wide: 'w-[88px] sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
+  square: 'w-12 min-[480px]:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-[72px] wide-2k:w-24',
+  wide: 'w-[76px] min-[480px]:w-[88px] sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
 };
 
 const IMAGE_CLASSES: Record<TierTileShape, string> = {
-  square: 'h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
-  wide: 'h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
+  square: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
+  wide: 'h-12 min-[480px]:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-[72px] wide-2k:h-24',
 };
 
 /** `William "Bill" Overbeck` -> `WB`: first letter of the first two words that have one. */
@@ -63,7 +63,6 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
   return (
     <div
       ref={ref}
-      data-tier-tile=""
       {...tip(item.name, undefined, 'item')}
       aria-label={item.name}
       className={cn(

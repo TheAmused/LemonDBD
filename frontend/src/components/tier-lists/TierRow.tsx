@@ -47,13 +47,13 @@ export const TierRow = React.memo(function TierRow({
   return (
     <section
       aria-label={t.tierAria.replace('{label}', tier.label)}
-      className="grid grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
+      className="grid grid-cols-[3.5rem_minmax(0,1fr)] min-[480px]:grid-cols-[4.75rem_minmax(0,1fr)] sm:max-wide-2k:grid-cols-[6.5rem_minmax(0,1fr)] wide-2k:grid-cols-[9rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-border-color bg-bg-surface shadow-xs"
     >
       <button
         type="button"
         onClick={() => onEdit(tier.id)}
         aria-label={t.editTierAria.replace('{label}', tier.label)}
-        className="group relative min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] overflow-hidden text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
+        className="group relative min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] overflow-hidden text-center cursor-pointer transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-amber"
       >
         <TierBadge
           label={tier.label}
@@ -72,7 +72,7 @@ export const TierRow = React.memo(function TierRow({
         ref={setNodeRef}
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
-          'relative flex min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] flex-wrap content-start items-start gap-1.5 sm:gap-2 p-2 transition-colors',
+          'relative flex min-h-[56px] min-[480px]:min-h-[72px] sm:max-wide-2k:min-h-[84px] wide-2k:min-h-[112px] flex-wrap content-start items-start gap-1 min-[480px]:gap-1.5 sm:gap-2 p-1.5 min-[480px]:p-2 transition-colors',
           keys.length === 0 && 'content-center items-center justify-center',
           isOver && 'bg-accent-red/10',
           canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/10'

@@ -346,9 +346,17 @@ export const TooltipProvider: React.FC = () => {
       };
     };
 
+    // A tap fires an emulated `mouseover`; on touch screens that would pop a hover bubble on every tap and leave it stuck.
+    let lastTouch = 0;
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') lastTouch = Date.now();
+    };
+    const hoverIsReal = () => window.matchMedia?.('(hover: hover)').matches !== false && Date.now() - lastTouch > 800;
+
     const show = (e: Event) => {
       const el = find(e.target);
       if (!el) return;
+      if (e.type === 'mouseover' && !hoverIsReal()) return;
       // Focus shows the bubble only for keyboard focus; pointer hover has its own event.
       if (e.type === 'focusin' && !(e.target as HTMLElement).matches?.(':focus-visible')) return;
       const next = read(el);
@@ -368,6 +376,7 @@ export const TooltipProvider: React.FC = () => {
       if (e.key === 'Escape') dismiss();
     };
 
+    document.addEventListener('pointerdown', onPointerDown, true);
     document.addEventListener('mouseover', show);
     document.addEventListener('focusin', show);
     document.addEventListener('mouseout', hide);
@@ -375,6 +384,7 @@ export const TooltipProvider: React.FC = () => {
     document.addEventListener('mousedown', dismiss);
     document.addEventListener('keydown', onKey);
     return () => {
+      document.removeEventListener('pointerdown', onPointerDown, true);
       document.removeEventListener('mouseover', show);
       document.removeEventListener('focusin', show);
       document.removeEventListener('mouseout', hide);

@@ -1,8 +1,9 @@
 'use client';
 // frontend/src/components/ConfirmModal.tsx
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { Modal } from '@/components/common/Modal';
 
 export interface ConfirmModalProps {
   open: boolean;
@@ -28,59 +29,46 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   busy = false,
   onConfirm,
   onCancel,
-}) => {
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, onCancel]);
-
-  if (!open) return null;
-
-  return (
-    <div
-      onClick={onCancel}
-      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border border-border-color bg-bg-surface p-8 text-center shadow-2xl text-text-primary cursor-default transition-colors"
-      >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-accent-red/30 bg-accent-red/15 text-accent-red shadow-xs">
-          <AlertTriangle className="h-8 w-8" />
-        </div>
-
-        {title && <h2 className="text-xl font-black tracking-tight text-text-primary">{title}</h2>}
-        {message && <div className="mt-2 text-sm text-text-secondary leading-relaxed">{message}</div>}
-
-        <div className="mt-6 flex items-center gap-3">
-          {cancelLabel && (
-            <button
-              type="button"
-              onClick={onCancel}
-              disabled={busy}
-              className="flex-1 rounded-xl border border-border-color bg-bg-surface py-3 text-sm font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
-            >
-              {cancelLabel}
-            </button>
-          )}
+}) => (
+  <Modal
+    isOpen={open}
+    onClose={onCancel}
+    variant="confirm"
+    layer="top"
+    tone="danger"
+    icon={<AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />}
+    title={title}
+    ariaLabel="Confirm"
+    closeButton="none"
+    busy={busy}
+    padded
+    bodyClassName="text-center"
+    footerClassName="flex-col-reverse sm:flex-row sm:justify-stretch p-4 sm:px-6"
+    footer={
+      <>
+        {cancelLabel && (
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={onCancel}
             disabled={busy}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red py-3 text-sm font-extrabold text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-red-600 disabled:opacity-50 cursor-pointer"
+            className="w-full sm:flex-1 rounded-xl border border-border-color bg-bg-surface py-3 text-sm font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
           >
-            {!busy && confirmIcon}
-            <span>{busy ? busyLabel : confirmLabel}</span>
+            {cancelLabel}
           </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
+        )}
+        <button
+          type="button"
+          data-autofocus
+          onClick={onConfirm}
+          disabled={busy}
+          className="w-full sm:flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red py-3 text-sm font-extrabold text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-red-600 disabled:opacity-50 cursor-pointer"
+        >
+          {!busy && confirmIcon}
+          <span>{busy ? busyLabel : confirmLabel}</span>
+        </button>
+      </>
+    }
+  >
+    {message && <div className="text-sm text-text-secondary leading-relaxed">{message}</div>}
+  </Modal>
+);

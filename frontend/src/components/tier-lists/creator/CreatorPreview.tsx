@@ -1,8 +1,8 @@
 'use client';
 // frontend/src/components/tier-lists/creator/CreatorPreview.tsx
 
-import React, { useEffect, useMemo } from 'react';
-import { X } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Modal } from '@/components/common/Modal';
 import type { StoredCustomList, TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { documentItemsToItems } from '@/utils/tierLists/items';
@@ -125,54 +125,25 @@ export function CreatorPreviewModal({
   locale,
   dict,
 }: CreatorPreviewModalProps) {
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-bg-primary/50 backdrop-blur-xs animate-in fade-in duration-200 cursor-pointer"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      variant="dialog"
+      size="5xl"
+      title={dict.tierLists.creator.previewHeading}
+      closeButtonAriaLabel={dict.characterDetail.close || 'Close'}
+      bodyClassName="p-4 sm:p-6"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl max-h-[90vh] flex flex-col rounded-3xl border-2 border-accent-red/60 bg-bg-surface/95 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 cursor-default"
-      >
-        <div className="flex items-center justify-between border-b border-border-color px-5 py-4 sm:px-6">
-          <span className="text-xs font-black uppercase tracking-widest text-text-muted font-mono">
-            {dict.tierLists.creator.previewHeading}
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={dict.characterDetail.close || 'Close'}
-            className="p-1.5 rounded-xl border border-border-color bg-bg-elevated text-text-secondary hover:text-text-primary hover:bg-bg-elevated/80 transition-colors"
-          >
-            <X className="h-5 w-5" aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <CreatorPreview
-            title={title}
-            description={description}
-            tiers={tiers}
-            items={items}
-            backgroundImage={backgroundImage}
-            locale={locale}
-            dict={dict}
-          />
-        </div>
-      </div>
-    </div>
+      <CreatorPreview
+        title={title}
+        description={description}
+        tiers={tiers}
+        items={items}
+        backgroundImage={backgroundImage}
+        locale={locale}
+        dict={dict}
+      />
+    </Modal>
   );
 }

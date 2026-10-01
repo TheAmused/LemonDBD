@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/changelog/ChangelogEditorModal.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Bold,
   Italic,
@@ -16,7 +16,6 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-  X,
   Loader2,
   Trash2,
 } from 'lucide-react';
@@ -30,6 +29,7 @@ import {
 } from './changelogTheme';
 
 import { tip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
 export interface ChangelogEditorModalProps {
   open: boolean;
   post: ChangelogPost | null;
@@ -64,7 +64,13 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
   dict,
 }) => {
   const t = dict?.changelog;
-  const editorRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  // Modal mounts its content one render after `open` flips, so the draft is applied once the editor exists.
+  const [editorEl, setEditorEl] = useState<HTMLDivElement | null>(null);
+  const setEditor = useCallback((el: HTMLDivElement | null) => {
+    editorRef.current = el;
+    setEditorEl(el);
+  }, []);
   const [title, setTitle] = useState('');
   const [tag, setTag] = useState<ChangelogTag>('feature');
   const [isPublished, setIsPublished] = useState(true);
@@ -78,17 +84,8 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
     setTitle(draft.title);
     setTag(draft.tag);
     setIsPublished(draft.is_published);
-    if (editorRef.current) editorRef.current.innerHTML = draft.content_html;
-  }, [open, post]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, onClose]);
+    if (editorEl) editorEl.innerHTML = draft.content_html;
+  }, [open, post, editorEl]);
 
   if (!open) return null;
 
@@ -119,166 +116,157 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
     onSave({ title: title.trim(), content_html: html, tag, is_published: isPublished });
   };
 
-  return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-bg-primary/85 backdrop-blur-md animate-in fade-in duration-200"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-3xl border-2 border-border-color bg-bg-surface shadow-2xl animate-in zoom-in-95 duration-200"
+  const footer = (
+    <>
+    {post && onDelete ? (
+      <button
+        type="button"
+        onClick={onDelete}
+        className="flex items-center gap-1.5 rounded-xl border border-accent-red/30 px-3 py-2 text-xs font-bold text-accent-red hover:bg-accent-red/10 cursor-pointer"
       >
-        <div className="flex items-center justify-between border-b border-border-color px-6 py-4">
-          <h2 className="text-lg font-black tracking-tight text-text-primary">
-            {post ? (t?.editTitle || 'Edit Changelog Entry') : (t?.newTitle || 'New Changelog Entry')}
-          </h2>
+        <Trash2 className="h-3.5 w-3.5" />
+        {t?.delete || 'Delete'}
+      </button>
+    ) : (
+      <span />
+    )}
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={onClose}
+        className="rounded-xl border border-border-color px-4 py-2 text-xs font-bold text-text-muted hover:text-text-secondary cursor-pointer"
+      >
+        {t?.cancel || 'Cancel'}
+      </button>
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={saving || !title.trim()}
+        className="flex items-center gap-1.5 rounded-xl bg-accent-red px-5 py-2 text-xs font-black text-text-inverted shadow-lg hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-wait cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform"
+      >
+        {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+        {post ? (t?.saveChanges || 'Save Changes') : (t?.publishEntry || 'Publish Entry')}
+      </button>
+    </div>
+    </>
+  );
+
+  return (
+    <Modal
+      isOpen
+      onClose={onClose}
+      variant="dialog"
+      size="2xl"
+      layer="top"
+      busy={saving}
+      title={post ? (t?.editTitle || 'Edit Changelog Entry') : (t?.newTitle || 'New Changelog Entry')}
+      closeButtonAriaLabel={dict?.modal?.close}
+      footer={footer}
+      footerClassName="gap-3 sm:py-4 text-sm"
+      padded
+      bodyClassName="space-y-4"
+    >
+    <input
+      data-autofocus
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+      placeholder={t?.titlePlaceholder || "Patch title, e.g. 'The Entity Stirs — Balance Update'"}
+      className="w-full rounded-xl border border-border-color bg-bg-elevated px-4 py-2.5 text-sm font-bold text-text-primary placeholder:text-text-muted outline-none focus:border-accent-red/60"
+    />
+
+    <div className="flex flex-wrap gap-2">
+      {CHANGELOG_TAGS.map((tg) => {
+        const theme = CHANGELOG_TAG_THEME[tg];
+        const active = tag === tg;
+        return (
           <button
+            key={tg}
             type="button"
-            onClick={onClose}
-            className="rounded-lg p-1.5 text-text-muted hover:bg-bg-elevated hover:text-text-primary cursor-pointer"
+            onClick={() => setTag(tg)}
+            className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all cursor-pointer ${
+              active ? theme.badgeClass : 'border-border-color text-text-muted hover:text-text-secondary'
+            }`}
           >
-            <X className="h-5 w-5" />
+            <span className={`h-1.5 w-1.5 rounded-full ${theme.dotClass}`} />
+            {theme.label}
           </button>
-        </div>
+        );
+      })}
+    </div>
 
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={t?.titlePlaceholder || "Patch title, e.g. 'The Entity Stirs — Balance Update'"}
-            className="w-full rounded-xl border border-border-color bg-bg-elevated px-4 py-2.5 text-sm font-bold text-text-primary placeholder:text-text-muted outline-none focus:border-accent-red/60"
+    <div className="rounded-xl border border-border-color bg-bg-elevated/50 overflow-hidden">
+      <div className="relative flex flex-wrap items-center gap-0.5 border-b border-border-color bg-bg-elevated/80 px-2 py-1.5">
+        <ToolbarButton icon={Bold} onClick={() => exec('bold')} label="Bold" />
+        <ToolbarButton icon={Italic} onClick={() => exec('italic')} label="Italic" />
+        <ToolbarButton icon={Underline} onClick={() => exec('underline')} label="Underline" />
+        <ToolbarDivider />
+        <ToolbarButton icon={AlignLeft} onClick={() => exec('justifyLeft')} label="Align left" />
+        <ToolbarButton icon={AlignCenter} onClick={() => exec('justifyCenter')} label="Align center" />
+        <ToolbarButton icon={AlignRight} onClick={() => exec('justifyRight')} label="Align right" />
+        <ToolbarButton icon={AlignJustify} onClick={() => exec('justifyFull')} label="Justify" />
+        <ToolbarDivider />
+        <ToolbarButton icon={Heading3} onClick={() => exec('formatBlock', '<h3>')} label="Heading" />
+        <ToolbarButton icon={List} onClick={() => exec('insertUnorderedList')} label="Bullet list" />
+        <ToolbarButton icon={ListOrdered} onClick={() => exec('insertOrderedList')} label="Numbered list" />
+        <ToolbarButton icon={Link2} onClick={handleLink} label="Link" />
+        <ToolbarDivider />
+        <div className="relative">
+          <ToolbarButton
+            icon={Palette}
+            onClick={() => setOpenPicker((v) => (v === 'color' ? null : 'color'))}
+            label="Text color"
+            active={openPicker === 'color'}
           />
-
-          <div className="flex flex-wrap gap-2">
-            {CHANGELOG_TAGS.map((tg) => {
-              const theme = CHANGELOG_TAG_THEME[tg];
-              const active = tag === tg;
-              return (
-                <button
-                  key={tg}
-                  type="button"
-                  onClick={() => setTag(tg)}
-                  className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all cursor-pointer ${
-                    active ? theme.badgeClass : 'border-border-color text-text-muted hover:text-text-secondary'
-                  }`}
-                >
-                  <span className={`h-1.5 w-1.5 rounded-full ${theme.dotClass}`} />
-                  {theme.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="rounded-xl border border-border-color bg-bg-elevated/50 overflow-hidden">
-            <div className="relative flex flex-wrap items-center gap-0.5 border-b border-border-color bg-bg-elevated/80 px-2 py-1.5">
-              <ToolbarButton icon={Bold} onClick={() => exec('bold')} label="Bold" />
-              <ToolbarButton icon={Italic} onClick={() => exec('italic')} label="Italic" />
-              <ToolbarButton icon={Underline} onClick={() => exec('underline')} label="Underline" />
-              <ToolbarDivider />
-              <ToolbarButton icon={AlignLeft} onClick={() => exec('justifyLeft')} label="Align left" />
-              <ToolbarButton icon={AlignCenter} onClick={() => exec('justifyCenter')} label="Align center" />
-              <ToolbarButton icon={AlignRight} onClick={() => exec('justifyRight')} label="Align right" />
-              <ToolbarButton icon={AlignJustify} onClick={() => exec('justifyFull')} label="Justify" />
-              <ToolbarDivider />
-              <ToolbarButton icon={Heading3} onClick={() => exec('formatBlock', '<h3>')} label="Heading" />
-              <ToolbarButton icon={List} onClick={() => exec('insertUnorderedList')} label="Bullet list" />
-              <ToolbarButton icon={ListOrdered} onClick={() => exec('insertOrderedList')} label="Numbered list" />
-              <ToolbarButton icon={Link2} onClick={handleLink} label="Link" />
-              <ToolbarDivider />
-              <div className="relative">
-                <ToolbarButton
-                  icon={Palette}
-                  onClick={() => setOpenPicker((v) => (v === 'color' ? null : 'color'))}
-                  label="Text color"
-                  active={openPicker === 'color'}
-                />
-                {openPicker === 'color' && (
-                  <SwatchPopover
-                    swatches={CHANGELOG_TEXT_COLORS}
-                    onPick={(c) => {
-                      exec('foreColor', c);
-                      setOpenPicker(null);
-                    }}
-                  />
-                )}
-              </div>
-              <div className="relative">
-                <ToolbarButton
-                  icon={Highlighter}
-                  onClick={() => setOpenPicker((v) => (v === 'highlight' ? null : 'highlight'))}
-                  label="Highlight"
-                  active={openPicker === 'highlight'}
-                />
-                {openPicker === 'highlight' && (
-                  <SwatchPopover
-                    swatches={CHANGELOG_HIGHLIGHT_COLORS}
-                    onPick={handleHighlight}
-                    onClear={() => handleHighlight(null)}
-                    clearLabel={t?.noHighlight || 'No highlight'}
-                  />
-                )}
-              </div>
-            </div>
-
-            <div
-              ref={editorRef}
-              contentEditable
-              suppressContentEditableWarning
-              className="dbd-changelog-body min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
-              data-placeholder={
-                t?.bodyPlaceholder ||
-                'Describe what changed... use the toolbar to bold key terms, align a callout, or highlight balance notes.'
-              }
+          {openPicker === 'color' && (
+            <SwatchPopover
+              swatches={CHANGELOG_TEXT_COLORS}
+              onPick={(c) => {
+                exec('foreColor', c);
+                setOpenPicker(null);
+              }}
             />
-          </div>
-
-          <label className="flex items-center gap-2 text-xs font-bold text-text-muted cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={isPublished}
-              onChange={(e) => setIsPublished(e.target.checked)}
-              className="h-4 w-4 rounded border-border-color bg-bg-elevated accent-accent-red"
-            />
-            {t?.publishedLabel || 'Published (visible in the "What\'s New?" feed)'}
-          </label>
-        </div>
-
-        <div className="flex items-center justify-between gap-3 border-t border-border-color px-6 py-4">
-          {post && onDelete ? (
-            <button
-              type="button"
-              onClick={onDelete}
-              className="flex items-center gap-1.5 rounded-xl border border-accent-red/30 px-3 py-2 text-xs font-bold text-accent-red hover:bg-accent-red/10 cursor-pointer"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              {t?.delete || 'Delete'}
-            </button>
-          ) : (
-            <span />
           )}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-xl border border-border-color px-4 py-2 text-xs font-bold text-text-muted hover:text-text-secondary cursor-pointer"
-            >
-              {t?.cancel || 'Cancel'}
-            </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving || !title.trim()}
-              className="flex items-center gap-1.5 rounded-xl bg-accent-red px-5 py-2 text-xs font-black text-text-inverted shadow-lg hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-wait cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform"
-            >
-              {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-              {post ? (t?.saveChanges || 'Save Changes') : (t?.publishEntry || 'Publish Entry')}
-            </button>
-          </div>
+        </div>
+        <div className="relative">
+          <ToolbarButton
+            icon={Highlighter}
+            onClick={() => setOpenPicker((v) => (v === 'highlight' ? null : 'highlight'))}
+            label="Highlight"
+            active={openPicker === 'highlight'}
+          />
+          {openPicker === 'highlight' && (
+            <SwatchPopover
+              swatches={CHANGELOG_HIGHLIGHT_COLORS}
+              onPick={handleHighlight}
+              onClear={() => handleHighlight(null)}
+              clearLabel={t?.noHighlight || 'No highlight'}
+            />
+          )}
         </div>
       </div>
+
+      <div
+        ref={setEditor}
+        contentEditable
+        suppressContentEditableWarning
+        className="dbd-changelog-body min-h-[180px] max-h-[40vh] overflow-y-auto px-4 py-3 text-sm text-text-secondary leading-relaxed outline-none [&_h3]:text-base [&_h3]:font-black [&_h3]:text-accent-red [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-accent-red [&_a]:underline"
+        data-placeholder={
+          t?.bodyPlaceholder ||
+          'Describe what changed... use the toolbar to bold key terms, align a callout, or highlight balance notes.'
+        }
+      />
     </div>
+
+    <label className="flex items-center gap-2 text-xs font-bold text-text-muted cursor-pointer select-none">
+      <input
+        type="checkbox"
+        checked={isPublished}
+        onChange={(e) => setIsPublished(e.target.checked)}
+        className="h-4 w-4 rounded border-border-color bg-bg-elevated accent-accent-red"
+      />
+      {t?.publishedLabel || 'Published (visible in the "What\'s New?" feed)'}
+    </label>
+    </Modal>
   );
 };
 

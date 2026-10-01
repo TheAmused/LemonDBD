@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/Sidebar.tsx
 
+import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
@@ -367,30 +368,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </header>
 
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-[60] lg:hidden"
-          role="dialog"
-          aria-modal="true"
+      <Modal
+        isOpen={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        variant="drawer-left"
+        size="xs"
+        layer="nested"
+        closeButton="none"
+        containerClassName="lg:hidden"
+        ariaLabel={dict?.sidebar?.openDrawer || 'Open Drawer'}
+        bodyClassName="p-0"
+      >
+        <button
+          type="button"
+          onClick={() => setMobileOpen(false)}
+          data-testid="mobile-drawer-close"
+          aria-label={dict?.sidebar?.closeDrawer || 'Close Drawer'}
+          className="absolute right-3 top-3 z-20 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer"
         >
-          <div
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 bg-bg-primary/60 backdrop-blur-sm animate-in fade-in duration-200"
-          />
-          <div className="fixed inset-y-0 left-0 w-72 max-w-[80vw] border-r border-border-color bg-bg-surface shadow-2xl animate-in slide-in-from-left duration-200">
-            <button
-              type="button"
-              onClick={() => setMobileOpen(false)}
-              data-testid="mobile-drawer-close"
-              aria-label={dict?.sidebar?.closeDrawer || 'Close Drawer'}
-              className="absolute right-3 top-3 z-20 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer"
-            >
-              <X className="h-5 w-5" />
-            </button>
-            {renderSidebarContent()}
-          </div>
-        </div>
-      )}
+          <X className="h-5 w-5" />
+        </button>
+        {renderSidebarContent()}
+      </Modal>
 
       {authModalOpen && (
         <AuthModal

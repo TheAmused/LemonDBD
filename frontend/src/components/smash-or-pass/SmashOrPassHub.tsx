@@ -19,7 +19,6 @@ import {
   Trash2,
   AlertTriangle,
   ThumbsDown,
-  X,
   RotateCw,
   Maximize2,
   Gamepad2,
@@ -27,6 +26,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tooltip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
 import { CharacterCard } from './CharacterCard';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { hasAcknowledgedNsfwRoster, acknowledgeNsfwRoster } from '@/utils/nsfwAck';
@@ -1294,109 +1294,87 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       </main>
 
       {/* HOW TO PLAY MODAL (CONTAINING THE KEYBOARD KEYCAPS & CONTROLS EXPLANATION) */}
-      {isHowToPlayOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="how-to-play-title"
-          onClick={() => setIsHowToPlayOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-lg rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-5 shadow-2xl text-left text-text-primary font-mono"
-          >
-            <div className="flex items-center justify-between border-b border-border-color pb-3">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-red/20 text-accent-red border border-accent-red/30">
-                  <Gamepad2 className="h-5 w-5" />
-                </span>
-                <h3 id="how-to-play-title" className="text-base font-black text-text-primary">
-                  {dict?.smashOrPass?.howToPlayModal?.title || hudLabels.howToPlay || 'How to Play Smash or Pass'}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsHowToPlayOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3.5 text-xs text-text-secondary font-sans">
-              {/* 1. Drag / Swipe */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
-                <div>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
-                  </span>
-                  <p className="text-text-muted leading-relaxed pt-0.5">
-                    {dict?.smashOrPass?.howToPlayModal?.swipeDesc || 'Drag card Right to Smash or drag Left to Pass.'}
-                  </p>
-                </div>
-              </div>
-
-              {/* 2. On-card Tactile Buttons */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
-                <div>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
-                  </span>
-                  <p className="text-text-muted leading-relaxed pt-0.5">
-                    {dict?.smashOrPass?.howToPlayModal?.iconsDesc || 'Click Flip to read bio and memes. Click Zoom for high-res portrait art.'}
-                  </p>
-                </div>
-              </div>
-
-              {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
-              <div className="space-y-2 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
-                  </span>
-                </div>
-                <TactileKeycaps
-                  onPass={() => {
-                    handleVote('pass');
-                    setIsHowToPlayOpen(false);
-                  }}
-                  onSmash={() => {
-                    handleVote('smash');
-                    setIsHowToPlayOpen(false);
-                  }}
-                  onStats={() => {
-                    setIsHowToPlayOpen(false);
-                    if (currentCharacter) setSelectedStatCharacter(currentCharacter);
-                  }}
-                  onReset={() => {
-                    setIsHowToPlayOpen(false);
-                    setIsResetConfirmOpen(true);
-                  }}
-                  dict={dict}
-                  className="my-1"
-                />
-              </div>
-
-              {/* 4. Background Lore & Atmosphere */}
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
-                <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
-                <div>
-                  <span className="font-bold text-accent-red block text-xs font-mono">
-                    {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
-                  </span>
-                  <p className="text-text-muted leading-relaxed pt-0.5">
-                    {dict?.smashOrPass?.howToPlayModal?.atmosphereDesc || 'Hover over background text elements to inspect quotes and lore with glowing effects.'}
-                  </p>
-                </div>
-              </div>
-            </div>
+      <Modal
+        isOpen={isHowToPlayOpen}
+        onClose={() => setIsHowToPlayOpen(false)}
+        variant="dialog"
+        size="lg"
+        icon={<Gamepad2 className="h-5 w-5" aria-hidden="true" />}
+        title={dict?.smashOrPass?.howToPlayModal?.title || hudLabels.howToPlay || 'How to Play Smash or Pass'}
+        closeButtonAriaLabel={dict?.modal?.close || ''}
+        bodyClassName="p-5 sm:p-6"
+      >
+      <div className="space-y-3.5 text-xs text-text-secondary font-sans">
+        {/* 1. Drag / Swipe */}
+        <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
+          <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.swipeIcon || '👆'}</span>
+          <div>
+            <span className="font-bold text-accent-red block text-xs font-mono">
+              {dict?.smashOrPass?.howToPlayModal?.swipeTitle || 'Swipe or Drag Cards'}
+            </span>
+            <p className="text-text-muted leading-relaxed pt-0.5">
+              {dict?.smashOrPass?.howToPlayModal?.swipeDesc || 'Drag card Right to Smash or drag Left to Pass.'}
+            </p>
           </div>
         </div>
-      )}
+
+        {/* 2. On-card Tactile Buttons */}
+        <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
+          <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.iconsIcon || '🎯'}</span>
+          <div>
+            <span className="font-bold text-accent-red block text-xs font-mono">
+              {dict?.smashOrPass?.howToPlayModal?.iconsTitle || 'On-Card Action Icons'}
+            </span>
+            <p className="text-text-muted leading-relaxed pt-0.5">
+              {dict?.smashOrPass?.howToPlayModal?.iconsDesc || 'Click Flip to read bio and memes. Click Zoom for high-res portrait art.'}
+            </p>
+          </div>
+        </div>
+
+        {/* 3. Keyboard Keycaps Component INSIDE the Modal */}
+        <div className="space-y-2 p-3 rounded-2xl bg-bg-elevated border border-border-color">
+          <div className="flex items-center gap-2">
+            <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.keycapsIcon || '⌨️'}</span>
+            <span className="font-bold text-accent-red block text-xs font-mono">
+              {dict?.smashOrPass?.howToPlayModal?.keycapsTitle || 'Tactile Keyboard Keycaps'}
+            </span>
+          </div>
+          <TactileKeycaps
+            onPass={() => {
+              handleVote('pass');
+              setIsHowToPlayOpen(false);
+            }}
+            onSmash={() => {
+              handleVote('smash');
+              setIsHowToPlayOpen(false);
+            }}
+            onStats={() => {
+              setIsHowToPlayOpen(false);
+              if (currentCharacter) setSelectedStatCharacter(currentCharacter);
+            }}
+            onReset={() => {
+              setIsHowToPlayOpen(false);
+              setIsResetConfirmOpen(true);
+            }}
+            dict={dict}
+            className="my-1"
+          />
+        </div>
+
+        {/* 4. Background Lore & Atmosphere */}
+        <div className="flex items-start gap-3 p-3 rounded-2xl bg-bg-elevated border border-border-color">
+          <span className="text-xl shrink-0">{dict?.smashOrPass?.howToPlayModal?.atmosphereIcon || '🌌'}</span>
+          <div>
+            <span className="font-bold text-accent-red block text-xs font-mono">
+              {dict?.smashOrPass?.howToPlayModal?.atmosphereTitle || 'Atmospheric Background & Music'}
+            </span>
+            <p className="text-text-muted leading-relaxed pt-0.5">
+              {dict?.smashOrPass?.howToPlayModal?.atmosphereDesc || 'Hover over background text elements to inspect quotes and lore with glowing effects.'}
+            </p>
+          </div>
+        </div>
+      </div>
+      </Modal>
 
       {/* MODALS */}
       <RosterSelectModal
@@ -1440,35 +1418,23 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
 
       {/* DELETE CUSTOM ROSTER CONFIRMATION */}
       {rosterPendingDelete && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setRosterPendingDelete(null)}
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-4 shadow-2xl text-center font-mono"
-          >
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
-              <Trash2 className="h-6 w-6" />
-            </div>
-            <div className="space-y-1 font-sans">
-              <h3 className="text-base font-black font-mono text-text-primary">
-                {dict?.smashOrPass?.picker?.deleteConfirmTitle || 'Delete this roster?'}
-              </h3>
-              <p className="text-xs text-text-muted leading-relaxed">
-                {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
-                  '{name}',
-                  rosterPendingDelete.name
-                )}
-              </p>
-            </div>
-            <div className="flex gap-2.5 pt-2 font-mono">
+        <Modal
+          isOpen
+          onClose={() => setRosterPendingDelete(null)}
+          variant="confirm"
+          tone="danger"
+          layer="top"
+          icon={<Trash2 className="h-5 w-5" aria-hidden="true" />}
+          title={dict?.smashOrPass?.picker?.deleteConfirmTitle || 'Delete this roster?'}
+          closeButtonAriaLabel={dict?.modal?.close || ''}
+          bodyClassName="p-5 text-center"
+          footerClassName="p-4"
+          footer={
+            <div className="flex w-full flex-col-reverse gap-2.5 sm:flex-row">
               <button
                 type="button"
                 onClick={() => setRosterPendingDelete(null)}
-                className="flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
+                className="flex-1 rounded-xl bg-bg-elevated py-2.5 text-xs font-bold text-text-secondary transition-colors hover:bg-bg-surface cursor-pointer"
               >
                 {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
               </button>
@@ -1486,13 +1452,20 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                   }
                   setRosterPendingDelete(null);
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
+                className="flex-1 rounded-xl bg-accent-red py-2.5 text-xs font-black text-text-inverted shadow-lg transition-colors hover:bg-accent-red-hover cursor-pointer"
               >
                 {dict?.smashOrPass?.picker?.deleteConfirmAction || 'Yes, Delete'}
               </button>
             </div>
-          </div>
-        </div>
+          }
+        >
+          <p className="text-xs text-text-muted leading-relaxed font-sans">
+            {(dict?.smashOrPass?.picker?.deleteConfirmDesc || 'This permanently removes "{name}" from this browser. This cannot be undone.').replace(
+              '{name}',
+              rosterPendingDelete.name
+            )}
+          </p>
+        </Modal>
       )}
 
       <SmashRosterImportModal
@@ -1571,49 +1544,40 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
       />
 
       {/* RESET CONFIRMATION MODAL */}
-      {isResetConfirmOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={() => setIsResetConfirmOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-sm rounded-3xl border border-accent-red/40 bg-bg-surface p-6 space-y-4 shadow-2xl text-center font-mono"
-          >
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-accent-red/15 border border-accent-red/30 text-accent-red">
-              <AlertTriangle className="h-6 w-6" />
-            </div>
-
-            <div className="space-y-1 font-sans">
-              <h3 className="text-base font-black font-mono text-text-primary">
-                {dict?.smashOrPass?.modals?.resetConfirmTitle || 'Reset All Votes?'}
-              </h3>
-              <p className="text-xs text-text-muted leading-relaxed">
-                {dict?.smashOrPass?.modals?.resetConfirmDesc || `This will clear your voting history for ${activeRoster.name || selectedRosterSlug} and restore all candidates to your deck.`}
-              </p>
-            </div>
-
-            <div className="flex gap-2.5 pt-2 font-mono">
-              <button
-                type="button"
-                onClick={() => setIsResetConfirmOpen(false)}
-                className="flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
-              >
-                {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
-              </button>
-              <button
-                type="button"
-                onClick={handleResetAllVotes}
-                className="flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
-              >
-                {dict?.smashOrPass?.modals?.confirm || 'Yes, Reset All'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isResetConfirmOpen}
+        onClose={() => setIsResetConfirmOpen(false)}
+        variant="confirm"
+        layer="top"
+        tone="danger"
+        icon={<AlertTriangle className="h-5 w-5" />}
+        title={dict?.smashOrPass?.modals?.resetConfirmTitle || 'Reset All Votes?'}
+        closeButton="none"
+        footerClassName="flex-col-reverse sm:flex-row sm:justify-center gap-2.5"
+        footer={
+          <>
+            <button
+              type="button"
+              data-autofocus
+              onClick={() => setIsResetConfirmOpen(false)}
+              className="w-full sm:flex-1 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-xs font-bold text-text-secondary transition-colors cursor-pointer"
+            >
+              {dict?.smashOrPass?.modals?.cancel || 'Cancel'}
+            </button>
+            <button
+              type="button"
+              onClick={handleResetAllVotes}
+              className="w-full sm:flex-1 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-xs font-black text-text-inverted transition-colors shadow-lg cursor-pointer"
+            >
+              {dict?.smashOrPass?.modals?.confirm || 'Yes, Reset All'}
+            </button>
+          </>
+        }
+      >
+        <p className="px-6 py-5 text-center text-xs text-text-muted leading-relaxed">
+          {dict?.smashOrPass?.modals?.resetConfirmDesc || `This will clear your voting history for ${activeRoster?.name || selectedRosterSlug} and restore all candidates to your deck.`}
+        </p>
+      </Modal>
     </div>
   );
 };

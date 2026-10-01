@@ -2,10 +2,11 @@
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PartyPopper, Sparkles, Lock } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { Modal } from '@/components/common/Modal';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 
 type LockPhase = 'locked' | 'shaking' | 'breaking' | 'unlocked';
@@ -82,7 +83,6 @@ export interface HistoryPerkModalProps {
 
 export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, onClose, dict }) => {
   const [phase, setPhase] = useState<LockPhase>('locked');
-  const killerDisplayName = useCharacterDisplayName()(killerName || '');
 
   useEffect(() => {
     if (!killerName) {
@@ -100,45 +100,49 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
     };
   }, [killerName]);
 
-  if (!killerName) return null;
+  // Keep the last name so the exit animation does not flash an empty title.
+  const lastNameRef = useRef<string>('');
+  if (killerName) lastNameRef.current = killerName;
+  const shownName = useCharacterDisplayName()(killerName || lastNameRef.current);
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-accent-green bg-bg-surface p-8 text-center shadow-2xl cursor-default"
-      >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-          <PartyPopper className="h-8 w-8" />
-        </div>
-
-        <h2 className="text-xl font-black tracking-tight text-text-primary">{killerDisplayName} {dict?.stats?.win || 'beaten'}!</h2>
-        <p className="mt-1 text-xs text-text-muted uppercase tracking-wider font-bold">
+    <Modal
+      isOpen={!!killerName}
+      onClose={onClose}
+      variant="confirm"
+      tone="success"
+      icon={<PartyPopper className="h-5 w-5" aria-hidden="true" />}
+      title={`${shownName} ${dict?.stats?.win || 'beaten'}!`}
+      subtitle={
+        <span className="font-bold uppercase tracking-wider text-text-muted">
           {dict?.streaks?.perksUnlocked || 'Perks unlocked'}
-        </p>
-
-        {perks.length === 0 ? (
-          <p className="mt-4 text-sm text-text-secondary">
-            {dict?.streaks?.noNewPerks || 'No new perks this time.'}
-          </p>
-        ) : (
-          <div className="mt-4 grid grid-cols-3 gap-2.5">
-            {perks.map((perk, i) => (
-              <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />
-            ))}
-          </div>
-        )}
-
+        </span>
+      }
+      closeButtonAriaLabel={dict?.modal?.close}
+      bodyClassName="p-5 sm:p-6"
+      footerClassName="!justify-stretch p-4"
+      footer={
         <button
+          type="button"
+          data-autofocus
           onClick={onClose}
-          className="mt-6 w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
+          className="w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
         >
           {dict?.streaks?.continueButton || 'Continue'}
         </button>
-      </div>
-    </div>
+      }
+    >
+      {perks.length === 0 ? (
+        <p className="text-center text-sm text-text-secondary">
+          {dict?.streaks?.noNewPerks || 'No new perks this time.'}
+        </p>
+      ) : (
+        <div className="grid grid-cols-3 gap-2.5">
+          {perks.map((perk, i) => (
+            <PerkTile key={perk.name} perk={perk} index={i} phase={phase} />
+          ))}
+        </div>
+      )}
+    </Modal>
   );
 };

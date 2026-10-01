@@ -2,8 +2,9 @@
 // frontend/src/components/streaks/chaos/ChaosCheckpointModal.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import { ShieldCheck, PartyPopper } from 'lucide-react';
+import { Modal } from '@/components/common/Modal';
 
 export interface ChaosCheckpointModalProps {
   checkpoint: number | null;
@@ -12,40 +13,32 @@ export interface ChaosCheckpointModalProps {
 }
 
 export const ChaosCheckpointModal: React.FC<ChaosCheckpointModalProps> = ({ checkpoint, onClose, dict }) => {
-  useEffect(() => {
-    if (checkpoint == null) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [checkpoint, onClose]);
-
-  if (checkpoint == null) return null;
+  // Keep the last value so the exit animation does not flash an empty number.
+  const lastRef = useRef<number>(0);
+  if (checkpoint != null) lastRef.current = checkpoint;
+  const value = checkpoint ?? lastRef.current;
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/80 backdrop-blur-md cursor-pointer"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-accent-green bg-gradient-to-b from-accent-green/15 via-bg-surface to-bg-primary p-8 text-center shadow-2xl cursor-default"
-      >
-        <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-          <ShieldCheck className="h-10 w-10" />
-        </div>
-        <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-wider text-accent-green">
-          <PartyPopper className="h-3.5 w-3.5" />
+    <Modal
+      isOpen={checkpoint != null}
+      onClose={onClose}
+      variant="confirm"
+      tone="success"
+      icon={<ShieldCheck className="h-5 w-5" aria-hidden="true" />}
+      title={`${value} ${dict?.streaks?.winsSuffix || 'wins'}`}
+      subtitle={
+        <span className="inline-flex items-center gap-1.5 font-black uppercase tracking-wider text-accent-green">
+          <PartyPopper className="h-3.5 w-3.5" aria-hidden="true" />
           {dict?.streaks?.checkpointBanked || 'Checkpoint reached'}
-        </div>
-        <h2 className="mt-2 text-3xl font-black tracking-tight text-text-primary">
-          {checkpoint} {dict?.streaks?.winsSuffix || 'wins'}
-        </h2>
-        <p className="mt-2 text-sm text-text-secondary">
-          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'} <strong className="text-accent-green">{checkpoint}</strong>.
-        </p>
-      </div>
-    </div>
+        </span>
+      }
+      closeButtonAriaLabel={dict?.modal?.close}
+      bodyClassName="p-6 text-center"
+    >
+      <p className="text-sm text-text-secondary">
+        {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'}{' '}
+        <strong className="text-accent-green">{value}</strong>.
+      </p>
+    </Modal>
   );
 };

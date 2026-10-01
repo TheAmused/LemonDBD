@@ -5,6 +5,7 @@
  * - CandidateFormInputs: Form inputs to edit the active candidate's profile, portrait, and taxonomy.
  * - CandidateTiles: Squished grid of candidates (avatar + name caption) matching the tier list items pattern.
  */
+import { Tabs } from '@/components/common/Tabs';
 import React, { useState } from 'react';
 import { ChevronDown, Trash2, Image as ImageIcon, Pencil, X, Plus } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
@@ -383,25 +384,17 @@ export function CandidateFormInputs({
             {showTranslations && (
               <div className="sm:col-span-2 flex flex-col gap-2 rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-3">
                 <span className={LABEL}>{c.translationsHeading || 'Translations'}</span>
-                <div className="flex flex-wrap gap-1.5" role="tablist">
-                  {TRANSLATABLE_LOCALES.map((loc) => (
-                    <button
-                      key={loc}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeLocale === loc}
-                      onClick={() => setActiveLocale(loc)}
-                      className={cn(
-                        'rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer',
-                        activeLocale === loc
-                          ? 'bg-accent-red text-text-inverted'
-                          : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
-                      )}
-                    >
-                      {loc}
-                    </button>
-                  ))}
-                </div>
+                <Tabs
+                  ariaLabel={c.translationsHeading || 'Translations'}
+                  value={activeLocale}
+                  onChange={setActiveLocale}
+                  panels={false}
+                  variant="boxed"
+                  size="sm"
+                  wrap
+                  tabClassName="uppercase tracking-wider"
+                  tabs={TRANSLATABLE_LOCALES.map((loc) => ({ value: loc, label: loc }))}
+                />
                 <div className="grid gap-2 sm:grid-cols-2">
                   {TRANSLATABLE_FIELDS.filter((f) => f !== 'red_flags' && f !== 'green_flags').map((field) => (
                     <TextField

@@ -1,4 +1,5 @@
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
+import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
 import {
   Package,
@@ -195,40 +196,27 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       >
       <div className="space-y-4">
       <div className="flex flex-col md:flex-row gap-4 items-stretch">
-        <div
-          role="tablist"
-          aria-label={t.equipmentCategories || 'Survivor item categories'}
-          className="hidden sm:flex md:flex-col items-center justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0 md:overflow-x-visible"
-        >
-          {categories.map((cat) => {
+        <Tabs
+          ariaLabel={t.equipmentCategories || 'Survivor item categories'}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          panels={false}
+          variant="pill"
+          accent="green"
+          className="hidden sm:flex md:flex-col md:items-stretch md:overflow-x-visible justify-start gap-2 p-2 rounded-2xl bg-bg-elevated border border-border-color shrink-0"
+          tabClassName="relative h-12 w-14 sm:h-14 sm:w-16 flex-col gap-0 rounded-2xl p-1.5"
+          tabs={categories.map((cat) => {
             const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                type="button"
-                key={cat.key}
-                role="tab"
-                aria-selected={isSelected}
-                onClick={() => setSelectedCategory(cat.key as SurvivorCategoryKey)}
-                className={`relative h-12 w-14 sm:h-14 sm:w-16 rounded-2xl flex flex-col items-center justify-center p-1.5 transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'bg-accent-green/20 border-2 border-accent-green text-accent-green shadow-lg scale-105'
-                    : 'bg-bg-surface border border-border-color hover:border-border-subtle text-text-secondary hover:text-text-primary hover:bg-bg-elevated'
-                }`}
-                {...tip(`${cat.label} - ${cat.desc}`, undefined, 'default')}
-                aria-label={cat.label}
-              >
-                <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-                <span className="text-[9px] font-mono font-bold truncate max-w-[56px] mt-0.5">
-                  {cat.label.split(' ')[0]}
-                </span>
-                {isSelected && (
-                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-accent-green ring-2 ring-bg-surface" aria-hidden="true" />
-                )}
-              </button>
-            );
+            return {
+              value: cat.key as SurvivorCategoryKey,
+              icon: <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />,
+              label: (
+                <span className="mt-0.5 block max-w-[56px] truncate font-mono text-[9px] font-bold">{cat.label.split(' ')[0]}</span>
+              ),
+              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': cat.label },
+            };
           })}
-        </div>
+        />
 
         <div className="flex-1 rounded-3xl bg-bg-surface border border-border-color shadow-sm dark:shadow-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-border-color">
           <div className="flex flex-col p-4">

@@ -1,7 +1,8 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
 
-import React, { useMemo, useState } from 'react';
+import { Tabs, TabPanel } from '@/components/common/Tabs';
+import React, { useId, useMemo, useState } from 'react';
 import { Layers, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { Perk } from '@/types/gauntletStreak';
@@ -55,6 +56,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
   const used = useMemo(() => pool.filter((p) => usedSet.has(p.name)), [pool, usedSet]);
   const remaining = useMemo(() => pool.filter((p) => !usedSet.has(p.name)), [pool, usedSet]);
   const shown = tab === 'used' ? used : remaining;
+  const tabsId = useId();
 
   return (
     <Modal
@@ -67,38 +69,33 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
       subtitle={`${used.length} ${dict?.streaks?.usedLabel || 'used'} ${dict?.streaks?.middotSeparator || '·'} ${remaining.length} ${dict?.streaks?.leftThisCycle || 'left this cycle'}`}
       closeButtonAriaLabel={dict?.modal?.close || 'Close perk pool modal'}
     >
-      <div className="flex items-center gap-2 px-5 pt-4" role="tablist" aria-label={dict?.streaks?.perkPoolTabs || 'Perk pool view tabs'}>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === 'used'}
-          onClick={() => setTab('used')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
-            tab === 'used'
-              ? 'bg-accent-green/15 text-accent-green border-accent-green/40'
-              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary'
-          }`}
-        >
-          <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>{dict?.streaks?.usedTab || 'Used'} ({used.length})</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === 'remaining'}
-          onClick={() => setTab('remaining')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
-            tab === 'remaining'
-              ? 'bg-accent-red/15 text-accent-red border-accent-red/40'
-              : 'bg-bg-elevated text-text-secondary border-border-color hover:text-text-primary'
-          }`}
-        >
-          <Circle className="w-3.5 h-3.5" aria-hidden="true" />
-          <span>{dict?.streaks?.remainingTab || 'Remaining'} ({remaining.length})</span>
-        </button>
-      </div>
+      <Tabs
+        ariaLabel={dict?.streaks?.perkPoolTabs || 'Perk pool view tabs'}
+        idBase={tabsId}
+        value={tab}
+        onChange={setTab}
+        variant="pill"
+        size="sm"
+        className="px-5 pt-4"
+        tabs={[
+          {
+            value: 'used',
+            accent: 'green',
+            icon: <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />,
+            label: dict?.streaks?.usedTab || 'Used',
+            count: used.length,
+          },
+          {
+            value: 'remaining',
+            accent: 'red',
+            icon: <Circle className="w-3.5 h-3.5" aria-hidden="true" />,
+            label: dict?.streaks?.remainingTab || 'Remaining',
+            count: remaining.length,
+          },
+        ]}
+      />
 
-      <div className="p-5">
+      <TabPanel value={tab} activeValue={tab} idBase={tabsId} className="p-5">
         {shown.length === 0 ? (
           <p className="text-xs text-text-muted">
             {tab === 'used'
@@ -112,7 +109,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
             ))}
           </div>
         )}
-      </div>
+      </TabPanel>
     </Modal>
   );
 };

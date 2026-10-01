@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/app/[locale]/admin/page.tsx
 
+import { Tabs } from '@/components/common/Tabs';
 import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -456,89 +457,33 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
           )}
 
           {/* Subtab Switcher */}
-          <nav
-            aria-label={dict?.admin?.adminSections || 'Admin Sections'}
-            className="flex flex-wrap sm:flex-nowrap items-center gap-2 border-b border-border-color pb-2"
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'users'}
-              onClick={() => setActiveTab('users')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'users'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <Users className="h-4 w-4" />
-              <span>
-                {dict?.admin?.userDirectoryLabel || 'Users'} ({totalUsers})
-              </span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'bugs'}
-              onClick={() => setActiveTab('bugs')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'bugs'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <FogReportIcon className="h-4 w-4" />
-              <span>
-                {dict?.admin?.bugReportsLabel || 'Bug Reports'} ({bugStats?.pending ?? 0} {dict?.admin?.pending || 'Pending'})
-              </span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'challenges'}
-              onClick={() => setActiveTab('challenges')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'challenges'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <ShieldAlert className="h-4 w-4" />
-              <span>{dict?.admin?.killSwitches || 'Kill Switches'}</span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'challenge_stats'}
-              onClick={() => setActiveTab('challenge_stats')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'challenge_stats'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <BarChart3 className="h-4 w-4" />
-              <span>{dict?.admin?.challengeStats || 'Challenge Stats'}</span>
-            </button>
-
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'audit'}
-              onClick={() => setActiveTab('audit')}
-              className={`min-h-[48px] flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-accent-red ${
-                activeTab === 'audit'
-                  ? 'bg-accent-red/15 text-accent-red border border-accent-red/40 shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface border border-transparent'
-              }`}
-            >
-              <ScrollText className="h-4 w-4" />
-              <span>{dict?.admin?.auditLog || 'Audit Log'}</span>
-            </button>
-          </nav>
+          <Tabs
+            ariaLabel={dict?.admin?.adminSections || 'Admin Sections'}
+            value={activeTab}
+            onChange={setActiveTab}
+            panels={false}
+            variant="pill"
+            size="lg"
+            wrap
+            className="border-b border-border-color pb-2"
+            tabClassName="flex-1 sm:flex-initial font-black uppercase tracking-wider"
+            tabs={[
+              {
+                value: 'users',
+                icon: <Users className="h-4 w-4" />,
+                label: dict?.admin?.userDirectoryLabel || 'Users',
+                count: totalUsers,
+              },
+              {
+                value: 'bugs',
+                icon: <FogReportIcon className="h-4 w-4" />,
+                label: `${dict?.admin?.bugReportsLabel || 'Bug Reports'} (${bugStats?.pending ?? 0} ${dict?.admin?.pending || 'Pending'})`,
+              },
+              { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict?.admin?.killSwitches || 'Kill Switches' },
+              { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict?.admin?.challengeStats || 'Challenge Stats' },
+              { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict?.admin?.auditLog || 'Audit Log' },
+            ]}
+          />
 
           {activeTab === 'users' ? (
             <div className="space-y-6">

@@ -3,8 +3,8 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { Snowflake } from 'lucide-react';
+import { Popover } from '@/components/common/Popover';
 
 export interface FreezeBadgeProps {
   frozen: boolean;
@@ -19,8 +19,6 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = fals
 
   if (!frozen) return null;
 
-  const rect = ref.current?.getBoundingClientRect();
-
   return (
     <div
       ref={ref}
@@ -32,26 +30,25 @@ export const FreezeBadge: React.FC<FreezeBadgeProps> = ({ frozen, compact = fals
     >
       <Snowflake className={compact ? 'w-5 h-5 text-accent-amber' : 'w-6 h-6 text-accent-amber'} />
 
-      {hovered &&
-        rect &&
-        typeof document !== 'undefined' &&
-        createPortal(
-          <div
-            style={{
-              position: 'fixed',
-              top: rect.bottom + 8,
-              left: Math.max(12, Math.min(window.innerWidth - 236, rect.left + rect.width / 2 - 112)),
-            }}
-            className="pointer-events-none w-56 z-[99999] rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-[11px] leading-snug text-text-secondary shadow-2xl backdrop-blur-md animate-in fade-in zoom-in-95 duration-150"
-          >
-            <span className="font-bold text-accent-amber">
-              {dict?.streaks?.challengeStarted || 'Challenge started.'}
-            </span>{' '}
-            {dict?.streaks?.freezeNotice ||
-              "Unlocking or locking perks/characters won't affect this run until a win, a loss back to 0, or a reset."}
-          </div>,
-          document.body
-        )}
+      <Popover
+        open={hovered}
+        anchorRef={ref}
+        align="center"
+        gap={8}
+        viewportMargin={12}
+        flip={false}
+        passive
+        closeOnOutsideClick={false}
+        closeOnEscape={false}
+        returnFocus={false}
+        className="w-56 rounded-xl border border-accent-amber/30 bg-bg-surface px-3 py-2.5 text-[11px] leading-snug text-text-secondary shadow-2xl backdrop-blur-md"
+      >
+        <span className="font-bold text-accent-amber">
+          {dict?.streaks?.challengeStarted || 'Challenge started.'}
+        </span>{' '}
+        {dict?.streaks?.freezeNotice ||
+          "Unlocking or locking perks/characters won't affect this run until a win, a loss back to 0, or a reset."}
+      </Popover>
     </div>
   );
 };

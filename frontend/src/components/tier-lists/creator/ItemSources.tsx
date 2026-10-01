@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/ItemSources.tsx
 
+import { Tabs } from '@/components/common/Tabs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Search, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -66,29 +67,15 @@ export function ItemSources({ onAdd, existingIds, locale, dict }: ItemSourcesPro
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-center w-full">
-        <div className="flex items-center gap-1.5 p-1 rounded-lg border border-border-color bg-bg-primary/50 w-fit max-w-full overflow-x-auto" role="tablist" aria-label={c.itemSourceAria}>
-        {options.map((opt) => {
-          const isActive = tab === opt.value;
-          return (
-            <button
-              key={opt.value}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => setTab(opt.value)}
-              className={cn(
-                'inline-flex min-h-[38px] items-center gap-2 rounded-md px-3.5 py-1.5 text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap',
-                isActive
-                  ? 'bg-accent-red text-text-inverted shadow-xs'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-bg-surface/80'
-              )}
-            >
-              {opt.icon}
-              {opt.label}
-            </button>
-          );
-        })}
-        </div>
+        <Tabs
+          ariaLabel={c.itemSourceAria}
+          value={tab}
+          onChange={setTab}
+          panels={false}
+          variant="boxed"
+          tabClassName="min-h-[38px] gap-2 rounded-md px-3.5 text-xs sm:text-sm"
+          tabs={options}
+        />
       </div>
       {tab === 'upload' && isAdmin && <UploadSource onAdd={onAdd} dict={dict} />}
       {tab === 'links' && <LinksSource onAdd={onAdd} dict={dict} />}

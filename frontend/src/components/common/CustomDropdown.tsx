@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/common/CustomDropdown.tsx
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useCallback } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
+import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 
 export interface DropdownOption<T extends string = string> {
   value: T;
@@ -67,6 +67,9 @@ export function CustomDropdown<T extends string = string>({
   const triggerLabel = label ?? selectedOption?.label;
   const triggerIcon = icon || selectedOption?.icon;
 
+  // The menu is portaled, so `w-full` would mean viewport width: map it to the trigger width.
+  const resolvedMenuClassName = menuClassName.replace(/(^|\s)w-full(?=\s|$)/g, '$1w-[var(--popover-anchor-width)]');
+
   const handleToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
@@ -79,37 +82,12 @@ export function CustomDropdown<T extends string = string>({
     [onChange]
   );
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('pointerdown', handleClickOutside);
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.removeEventListener('pointerdown', handleClickOutside);
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen]);
-
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>
       <button
         type="button"
         onClick={handleToggle}
-        aria-haspopup={children ? 'true' : 'listbox'}
-        aria-expanded={isOpen}
+        {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
         className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-bg-surface border border-border-color hover:border-accent-amber/50 hover:bg-bg-elevated text-xs font-mono font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? 'border-accent-amber bg-accent-amber/10 text-accent-amber shadow-xs' : ''
@@ -126,19 +104,17 @@ export function CustomDropdown<T extends string = string>({
         />
       </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.96 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
-            role={children ? 'group' : 'listbox'}
-            aria-label={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
-            className={`absolute top-full mt-1.5 ${
-              align === 'right' ? 'right-0' : 'left-0'
-            } z-50 ${minWidthClass} max-h-[70vh] overflow-y-auto rounded-2xl bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${menuClassName}`}
-          >
+      <Popover
+        open={isOpen}
+        anchorRef={containerRef}
+        onClose={() => setIsOpen(false)}
+        align={align === 'right' ? 'end' : 'start'}
+        gap={6}
+        maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
+        role={children ? 'group' : 'listbox'}
+        ariaLabel={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
+        className={`${minWidthClass} rounded-2xl bg-bg-surface border border-border-color p-1.5 shadow-xl backdrop-blur-2xl custom-scrollbar ${resolvedMenuClassName}`}
+      >
             {children
               ? children
               : (options ?? []).map((opt) => {
@@ -169,9 +145,7 @@ export function CustomDropdown<T extends string = string>({
                     </button>
                   );
                 })}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </Popover>
     </div>
   );
 }

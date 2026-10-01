@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { RefreshCw, Sparkles } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
@@ -19,7 +19,7 @@ const PerkImg: React.FC<{ perk: Perk | null; className: string }> = ({ perk, cla
   const displayName = usePerkDisplayName()(perk?.name || '');
   const src = perk ? perkIconFor(perk) : undefined;
   if (!perk || !src || failed) {
-    return <Sparkles className="w-5 h-5 text-text-muted" />;
+    return <span className="text-2xl font-black text-text-muted" aria-hidden="true">?</span>;
   }
   return (
     <img src={src} alt={displayName} className={className} draggable={false} onError={() => setFailed(true)} />
@@ -182,7 +182,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border-2 border-border-color bg-bg-elevated p-6 sm:p-8 shadow-sm">
+    <div className="relative w-full overflow-hidden rounded-xl p-6 sm:p-8">
       <div className="relative z-10">
         <div className="flex items-center justify-center gap-4 sm:gap-6">
           <div className="flex items-end gap-2">

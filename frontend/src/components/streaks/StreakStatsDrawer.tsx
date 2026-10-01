@@ -3,8 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, BarChart2, CheckCircle2, XCircle, Percent, Activity, Clock, RotateCcw } from 'lucide-react';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { X, BarChart2, CheckCircle2, XCircle, Percent, Clock } from 'lucide-react';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -26,10 +25,9 @@ export type StreakAccent = 'amber' | 'violet' | 'slate' | 'orange';
 const FLAT_ACCENT = {
   icon: 'bg-accent-red/10 text-accent-red border-accent-red/20',
   ring: 'border-accent-red',
-  trophy: 'text-accent-red',
 };
 
-const ACCENT_CLASSES: Record<StreakAccent, { icon: string; ring: string; trophy: string }> = {
+const ACCENT_CLASSES: Record<StreakAccent, { icon: string; ring: string }> = {
   amber: FLAT_ACCENT,
   violet: FLAT_ACCENT,
   slate: FLAT_ACCENT,
@@ -127,8 +125,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
             </div>
 
             <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
-              <div className="flex items-center gap-2 text-xs uppercase font-bold text-text-secondary">
-                <Activity className="w-4 h-4 text-text-secondary" />
+              <div className="text-xs uppercase font-bold text-text-secondary">
                 {dict?.streaks?.matches || 'Matches'}
               </div>
               <div className="text-2xl font-black text-text-primary mt-1">{totalMatches}</div>
@@ -136,8 +133,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
             {attempts !== undefined && (
               <div className="bg-bg-elevated border border-border-color rounded-xl p-4 shadow-sm">
-                <div className="flex items-center gap-2 text-xs uppercase font-bold text-text-secondary">
-                  <RotateCcw className="w-4 h-4 text-text-secondary" />
+                <div className="text-xs uppercase font-bold text-text-secondary">
                   {dict?.streaks?.attempts || 'Attempts'}
                 </div>
                 <div className="text-2xl font-black text-text-primary mt-1">{attempts}</div>
@@ -146,14 +142,14 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 
             <div className="col-span-2 bg-bg-elevated border border-border-color rounded-xl p-4 flex justify-between items-center shadow-sm">
               <div>
-                <div className="text-xs uppercase font-bold text-accent-green flex items-center gap-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> {dict?.streaks?.wins || 'Wins'}
+                <div className="text-xs uppercase font-bold text-accent-green">
+                  {dict?.streaks?.wins || 'Wins'}
                 </div>
                 <div className="text-xl font-black text-accent-green mt-1">{wins}</div>
               </div>
               <div className="text-right">
-                <div className="text-xs uppercase font-bold text-accent-red flex items-center gap-1 justify-end">
-                  <XCircle className="w-3.5 h-3.5" /> {dict?.streaks?.losses || 'Losses'}
+                <div className="text-xs uppercase font-bold text-accent-red">
+                  {dict?.streaks?.losses || 'Losses'}
                 </div>
                 <div className="text-xl font-black text-accent-red mt-1">{losses}</div>
               </div>
@@ -161,8 +157,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
           </div>
 
           <div>
-            <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4 flex items-center gap-2">
-              <AdeptBadgeIcon className={`w-4 h-4 ${accentClasses.trophy}`} />
+            <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-4">
               {dict?.streaks?.recentMatchHistory || 'Recent Match History'}
             </h3>
 

@@ -14,7 +14,7 @@ import {
   initClientSpeechModel,
   AudioCaptureSession,
 } from '@/utils/../services/clientSpeechModel';
-import { VoiceEngineInfoModal } from '@/utils/../components/maps/VoiceEngineInfoModal';
+import { VoiceEngineInfoBody } from '@/utils/../components/maps/VoiceEngineInfoModal';
 import { VoiceCommandBanner } from '@/utils/../components/maps/VoiceCommandBanner';
 import enDict from '@/utils/../locales/en';
 import esDict from '@/utils/../locales/es';
@@ -106,9 +106,7 @@ test('VoiceEngineInfoModal renders dual-engine explanation and compatibility det
   };
 
   const html = renderToStaticMarkup(
-    React.createElement(VoiceEngineInfoModal, {
-      isOpen: true,
-      onClose: () => {},
+    React.createElement(VoiceEngineInfoBody, {
       currentEngine: 'client-model',
       onSelectEngine: () => {},
       browserName: 'Mozilla Firefox',
@@ -119,8 +117,7 @@ test('VoiceEngineInfoModal renders dual-engine explanation and compatibility det
     })
   );
 
-  // Assert modal renders title and explanations
-  assert.ok(html.includes('Voice Recognition Engine &amp; Compatibility') || html.includes('Voice Recognition Engine'));
+  // Title is rendered by the shared Modal header; the body holds the explanations
   assert.ok(html.includes('Mozilla Firefox'));
   assert.ok(html.includes('Web Speech Framework'));
   assert.ok(html.includes('Client-Side AI Model') || html.includes('Client-Side'));
@@ -135,9 +132,7 @@ test('VoiceEngineInfoModal handles native Web Speech engine active state', () =>
   };
 
   const html = renderToStaticMarkup(
-    React.createElement(VoiceEngineInfoModal, {
-      isOpen: true,
-      onClose: () => {},
+    React.createElement(VoiceEngineInfoBody, {
       currentEngine: 'web-speech',
       onSelectEngine: () => {},
       browserName: 'Google Chrome',

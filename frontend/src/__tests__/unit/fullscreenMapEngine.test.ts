@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { FullscreenMapEngine } from '@/components/maps/FullscreenMapEngine';
+import { FullscreenMapEngineView as FullscreenMapEngine } from '@/components/maps/FullscreenMapEngine';
 import type { MapRealm } from '@/types/map';
 
 const sampleOutdoorMap: MapRealm = {

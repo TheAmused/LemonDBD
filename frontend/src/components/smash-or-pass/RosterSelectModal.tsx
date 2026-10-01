@@ -2,12 +2,13 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Check, Flame, X, Lock, AlertTriangle, Sparkles, Upload, Pencil, Trash2, Share2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Flame, Lock, AlertTriangle, Sparkles, Upload, Pencil, Trash2, Share2 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { SmashSounds } from './SmashSoundEffects';
+import { Modal } from '@/components/common/Modal';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
@@ -240,15 +241,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         commitSelection();
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        handleClose();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, commitSelection, handleClose, stepPrev, stepNext]);
+  }, [isOpen, commitSelection, stepPrev, stepNext]);
 
   const getRosterDisplayName = useCallback(
     (r: RosterItem) => {
@@ -354,27 +352,25 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
 
   const activeRosterInCenter = N > 0 ? displayedRosters[normalizeIndex(targetIndexRef.current)] : null;
 
-  if (!isOpen) return null;
-
   const rawSmash = dict?.smashOrPass;
   const selectRosterTitle = rawSmash?.selectRoster || '';
   const candidatesWord = rawSmash?.candidates || rawSmash?.candidatesWord || '';
   const selectPrefixText = rawSmash?.selectPrefix || rawSmash?.select || '';
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="roster-select-title"
-      onClick={() => handleClose()}
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-bg-primary/80 backdrop-blur-2xl animate-in fade-in duration-250 select-none overflow-y-auto"
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      variant="dialog"
+      size="full"
+      closeButton="floating"
+      ariaLabel={selectRosterTitle}
+      closeButtonAriaLabel={dict?.modal?.close || ''}
+      backdrop="blur"
+      className="h-[92dvh] max-h-[860px] min-h-[580px] max-w-[1300px] border-2 border-accent-red/35 rounded-[32px] sm:rounded-[44px]"
+      bodyClassName="flex flex-col overflow-hidden"
     >
-      <div className="absolute inset-0 bg-bg-primary/10 pointer-events-none" aria-hidden="true" />
-
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[1300px] h-[92vh] max-h-[860px] min-h-[580px] rounded-[32px] sm:rounded-[44px] bg-bg-surface border-2 border-accent-red/35 p-4 sm:p-6 md:p-8 flex flex-col items-center justify-between overflow-hidden animate-in zoom-in-95 duration-200"
-      >
+      <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
         {/* Top Left: Filter Toggle (Official vs Custom) */}
         <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
           <div className="inline-flex items-center gap-1 p-1 bg-bg-elevated/90 backdrop-blur-md rounded-2xl border border-border-color shadow-sm">
@@ -407,18 +403,8 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           </div>
         </div>
 
-        {/* Top Right: Close button */}
-        <button
-          type="button"
-          onClick={() => handleClose()}
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:border-accent-red hover:bg-accent-red/10 transition-all cursor-pointer z-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-          aria-label={dict?.modal?.close || ''}
-        >
-          <X className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />
-        </button>
-
         <div className="text-center pt-1 sm:pt-2 space-y-2.5">
-          <h2 id="roster-select-title" className="text-xl sm:text-3xl md:text-4xl font-black font-mono tracking-[0.25em] sm:tracking-[0.35em] text-text-primary uppercase">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black font-mono tracking-[0.25em] sm:tracking-[0.35em] text-text-primary uppercase">
             {selectRosterTitle}
           </h2>
 
@@ -770,6 +756,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };

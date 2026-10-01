@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import {
   X,
   ZoomIn,
@@ -18,6 +17,8 @@ import type { Dictionary } from '@/locales/types';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 
 import { tip } from '@/components/common/Tooltip';
+import { Modal } from '@/components/common/Modal';
+
 interface FullscreenMapEngineProps {
   mapId: number;
   onClose: () => void;
@@ -26,7 +27,8 @@ interface FullscreenMapEngineProps {
   dict?: Dictionary;
 }
 
-export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
+/** The map chrome + pan/zoom engine, without the Modal shell (also what the unit tests render). */
+export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
   mapId,
   onClose,
   availableMaps = [],
@@ -56,19 +58,6 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const pointerDownPosRef = useRef<{ x: number; y: number } | null>(null);
   const draggedRef = useRef<boolean>(false);
-
-  useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = prevOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
@@ -179,18 +168,8 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
     }
   };
 
-  // Portaled to document.body to avoid stacking context collisions with
-  // page background particle layers. Positioned beside the desktop sidebar
-  // via `left-[var(--sidebar-width)]` (expanding to 100% when collapsed),
-  // and covering 100% fullscreen on mobile screens (< 1024px).
-  const engineContent = (
-    <div
-      role="dialog"
-      aria-modal="true"
-      data-testid="fullscreen-map-engine"
-      aria-label={dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
-      className="fixed inset-y-0 right-0 left-[var(--sidebar-width,0rem)] z-40 lg:z-30 bg-bg-primary flex flex-col justify-between overflow-hidden select-none text-text-primary transition-[left] duration-300 ease-in-out"
-    >
+  return (
+    <div className="relative flex min-h-0 flex-1 flex-col justify-between overflow-hidden text-text-primary">
       <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           {activeMap && (
@@ -239,11 +218,12 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
+              data-modal-close
               onClick={onClose}
               aria-label={dict?.modal?.close || 'Close'}
-              className="rounded-xl p-2 text-text-muted hover:text-text-primary hover:bg-bg-elevated border border-transparent hover:border-border-subtle transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+              className="rounded-xl border border-transparent p-2 text-text-muted transition-all hover:border-border-subtle hover:bg-bg-elevated hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
-              <X className="w-5 h-5" />
+              <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -333,6 +313,29 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = ({
       </footer>
     </div>
   );
-
-  return typeof document !== 'undefined' ? createPortal(engineContent, document.body) : engineContent;
 };
+
+/**
+ * Shared fullscreen <Modal> (portal, scroll lock, Escape, focus trap) around the
+ * engine. Only the chrome is wrapped: the pan/zoom/pinch engine stays
+ * hand-written. The container is offset by the desktop sidebar width
+ * (`--sidebar-width`, 0 on mobile) so the sidebar stays reachable, like before.
+ */
+export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = (props) => (
+  <Modal
+    isOpen
+    onClose={props.onClose}
+    variant="fullscreen"
+    testId="fullscreen-map-engine"
+    ariaLabel={props.dict?.maps?.fullscreenEngineAria || 'Tactical Map Command Viewer'}
+    closeButton="none"
+    backdrop="none"
+    borderless
+    zIndexClassName="z-40 lg:z-30"
+    containerClassName="left-[var(--sidebar-width,0rem)] transition-[left] duration-300 ease-in-out"
+    className="bg-bg-primary"
+    bodyClassName="flex flex-col overflow-hidden"
+  >
+    <FullscreenMapEngineView {...props} />
+  </Modal>
+);

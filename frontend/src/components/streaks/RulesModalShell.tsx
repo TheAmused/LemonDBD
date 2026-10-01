@@ -3,8 +3,9 @@
 
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
-import { X, LucideIcon } from 'lucide-react';
+import React from 'react';
+import type { LucideIcon } from 'lucide-react';
+import { Modal, type ModalTone } from '@/components/common/Modal';
 
 export interface RulesModalShellProps {
   isOpen: boolean;
@@ -22,11 +23,20 @@ export interface RulesModalShellProps {
 
 /**
  * Shared chrome for every streak mode's Rules modal (Gauntlet/Chaos/History/
- * Page Streak): backdrop, header with icon + title + close button, scrolling
- * body, and footer confirm button. Each mode only supplies its own body
+ * Page Streak): the shared <Modal> with icon + title, scrolling body, and a
+ * footer confirm button. Each mode only supplies its own body
  * content as children plus a couple of color classes, instead of
  * re-declaring this same header/footer/backdrop markup four times.
  */
+/** Maps the legacy icon-chip colour classes onto a Modal tone. */
+export const toneFromIconClass = (cls?: string): ModalTone => {
+  if (!cls) return 'default';
+  if (cls.includes('accent-green')) return 'success';
+  if (cls.includes('accent-amber')) return 'warning';
+  if (cls.includes('cyan') || cls.includes('blue')) return 'info';
+  return 'default';
+};
+
 export interface RulesModalNotice {
   icon: LucideIcon;
   text: string;
@@ -97,57 +107,30 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   children,
   dict,
 }) => {
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/70 backdrop-blur-md overflow-y-auto cursor-pointer"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      variant="dialog"
+      size="3xl"
+      layer="top"
+      tone={toneFromIconClass(iconClassName)}
+      icon={<Icon className="h-5 w-5" aria-hidden="true" />}
+      title={<span className="capitalize">{title}</span>}
+      closeButtonAriaLabel={dict?.modal?.close || 'Close'}
+      bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
+      footerClassName="justify-end"
+      footer={
+        <button
+          type="button"
+          onClick={onClose}
+          className={`w-full rounded-xl px-5 py-2.5 text-sm font-bold text-text-inverted shadow-md transition-all cursor-pointer sm:w-auto ${footerButtonClassName}`}
+        >
+          {footerButtonLabel}
+        </button>
+      }
     >
-      <div
-        className="relative w-full max-w-3xl bg-bg-surface border border-border-color rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto cursor-default"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-border-color bg-bg-elevated">
-          <div className="flex items-center gap-3">
-            <div className={`p-2.5 border rounded-xl ${iconClassName}`}>
-              <Icon className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-text-primary tracking-tight capitalize">
-              {title}
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label={dict?.modal?.close || 'Close'}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-6 overflow-y-auto space-y-6 text-sm text-text-secondary">
-          {children}
-        </div>
-
-        <div className="p-4 border-t border-border-color bg-bg-elevated flex justify-end">
-          <button
-            onClick={onClose}
-            className={`px-5 py-2.5 text-text-inverted font-bold rounded-xl text-sm transition-all cursor-pointer shadow-md ${footerButtonClassName}`}
-          >
-            {footerButtonLabel}
-          </button>
-        </div>
-      </div>
-    </div>
+      {children}
+    </Modal>
   );
 };

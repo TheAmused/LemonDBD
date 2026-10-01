@@ -3,7 +3,7 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserBugReportsList.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { Modal, useModal } from '@/components/common/Modal';
 import {
   Plus,
   Clock,
@@ -57,11 +57,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 
   // Image popup lightbox state
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Drag-to-scroll and touch-scroll state for PC & Mobile
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -70,22 +65,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
   const scrollTopRef = useRef(0);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const hasDraggedRef = useRef(false);
-
-  // Close image modal on Escape key and prevent background scroll
-  useEffect(() => {
-    if (!previewImage) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setPreviewImage(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [previewImage]);
 
   const toggleReport = (id: number) => {
     if (hasDraggedRef.current) return;
@@ -354,41 +333,41 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       )}
 
       {/* Image Popup Lightbox Modal */}
-      {previewImage && mounted && typeof document !== 'undefined' &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-bg-primary/85 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
-            onClick={() => setPreviewImage(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t.imagePreview || 'Image Preview'}
-          >
-            <div
-              className="relative max-w-4xl max-h-[90vh] w-full flex flex-col items-center justify-center"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setPreviewImage(null)}
-                className="absolute -top-12 right-0 sm:-right-2 p-2 rounded-full bg-bg-surface/90 hover:bg-bg-surface text-text-primary hover:text-accent-red border border-border-color shadow-lg transition-all cursor-pointer z-10"
-                aria-label={dict?.modal?.close || t.close || 'Close image preview'}
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              {/* High-res Image Preview */}
-              <div className="relative max-h-[82vh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
-                <img
-                  src={previewImage}
-                  alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
-                  className="max-h-[82vh] max-w-full w-auto h-auto object-contain rounded-2xl"
-                />
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      <Modal
+        isOpen={!!previewImage}
+        onClose={() => setPreviewImage(null)}
+        variant="lightbox"
+        layer="system"
+        ariaLabel={t.imagePreview || 'Image Preview'}
+        className="overflow-visible"
+      >
+        <div className="relative flex items-center justify-center">
+          <PreviewCloseButton label={dict?.modal?.close || t.close || 'Close image preview'} />
+          <div className="relative max-h-[82dvh] w-auto max-w-full overflow-hidden rounded-2xl border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
+            {previewImage && (
+              <img
+                src={previewImage}
+                alt={t.attachmentPreview || 'Bug Report Attachment Full Preview'}
+                className="max-h-[82dvh] max-w-full w-auto h-auto object-contain rounded-2xl"
+              />
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
+  );
+};
+
+const PreviewCloseButton: React.FC<{ label: string }> = ({ label }) => {
+  const { close } = useModal();
+  return (
+    <button
+      type="button"
+      onClick={close}
+      className="absolute right-2 top-2 z-10 p-2 rounded-full bg-bg-surface/90 hover:bg-bg-surface text-text-primary hover:text-accent-red border border-border-color shadow-lg transition-all cursor-pointer"
+      aria-label={label}
+    >
+      <X className="h-5 w-5" />
+    </button>
   );
 };

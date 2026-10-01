@@ -24,6 +24,21 @@ import { localizedProfile } from '@/utils/entityProfile';
 import { sampleFlags } from '@/utils/smashWatermarks';
 
 import { tip } from '@/components/common/Tooltip';
+import { Modal, useModal } from '@/components/common/Modal';
+
+const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
+  const { close } = useModal();
+  return (
+    <button
+      type="button"
+      onClick={close}
+      aria-label={label}
+      className="absolute right-2 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary shadow-lg transition-colors hover:text-text-primary cursor-pointer"
+    >
+      <X className="h-5 w-5" aria-hidden="true" />
+    </button>
+  );
+};
 // The local CharacterMetadataLocale / CharacterMetadataContainer shapes are gone: they
 // only existed to describe the duplicated payload (camelCase twins, `i18n` next to
 // `translations`, `title` next to `archetype`). EntityMetadata is now that description.
@@ -615,54 +630,43 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         </div>
       </div>
 
-      {isZoomed && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={zoomAriaLabel}
-          onClick={() => setIsZoomed(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-primary/90 backdrop-blur-2xl animate-in fade-in duration-200"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-w-2xl w-full max-h-[90vh] flex flex-col items-center justify-center"
-          >
-            <button
-              type="button"
-              onClick={() => setIsZoomed(false)}
-              aria-label={dict?.modal?.close || ''}
-              className="absolute -top-12 right-0 sm:right-2 flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-lg z-10"
-            >
-              <X className="h-5 w-5" aria-hidden="true" />
-            </button>
-
-            <div className="relative overflow-hidden rounded-3xl border-2 border-accent-red/40 bg-bg-primary">
-              <img
-                src={avatarSrc}
-                alt={character.name}
-                className="max-h-[80vh] w-auto object-contain rounded-3xl"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (!target.dataset.fallback) {
-                    target.dataset.fallback = '1';
-                    // Backend writes avatars as WebP; retry that explicitly in case the
-                    // initial src (e.g. a stale DB path) pointed somewhere unexpected.
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
-                  } else if (target.dataset.fallback === '1') {
-                    target.dataset.fallback = '2';
-                    // Legacy fallback: some pre-normalization assets may still only exist as .png.
-                    target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
-                  }
-                }}
-              />
-              <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center font-mono">
-                <h3 className="text-lg font-black text-text-primary">{character.name}</h3>
-                {charTagline && <p className="text-xs text-accent-red font-sans italic">{charTagline}</p>}
-              </div>
-            </div>
+      <Modal
+        isOpen={isZoomed}
+        onClose={() => setIsZoomed(false)}
+        variant="lightbox"
+        size="2xl"
+        layer="top"
+        ariaLabel={zoomAriaLabel}
+        containerClassName="backdrop-blur-2xl"
+        className="overflow-visible"
+        bodyClassName="flex justify-center overflow-visible"
+      >
+        <ZoomCloseButton label={dict?.modal?.close || ''} />
+        <div className="relative overflow-hidden rounded-3xl border-2 border-accent-red/40 bg-bg-primary">
+          <img
+            src={avatarSrc}
+            alt={character.name}
+            className="max-h-[80vh] w-auto object-contain rounded-3xl"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              if (!target.dataset.fallback) {
+                target.dataset.fallback = '1';
+                // Backend writes avatars as WebP; retry that explicitly in case the
+                // initial src (e.g. a stale DB path) pointed somewhere unexpected.
+                target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`;
+              } else if (target.dataset.fallback === '1') {
+                target.dataset.fallback = '2';
+                // Legacy fallback: some pre-normalization assets may still only exist as .png.
+                target.src = `${backendBase}/static/avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.png`;
+              }
+            }}
+          />
+          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent text-center font-mono">
+            <h3 className="text-lg font-black text-text-primary">{character.name}</h3>
+            {charTagline && <p className="text-xs text-accent-red font-sans italic">{charTagline}</p>}
           </div>
         </div>
-      )}
+      </Modal>
     </>
   );
 };

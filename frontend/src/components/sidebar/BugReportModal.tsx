@@ -12,7 +12,6 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { i18n, type Locale } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import {
-  X,
   Upload,
   Image as ImageIcon,
   CheckCircle2,
@@ -22,6 +21,7 @@ import {
   Mail,
 } from 'lucide-react';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
+import { Modal } from '@/components/common/Modal';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -104,14 +104,10 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
-  const [isRendered, setIsRendered] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setIsRendered(true);
-    } else {
+    if (!isOpen) {
       const timer = setTimeout(() => {
-        setIsRendered(false);
         setTitle('');
         setCategory(DEFAULT_BUG_CATEGORIES[0]);
         setMessage('');
@@ -123,18 +119,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen && !isSubmitting) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, isSubmitting, onClose]);
-
-  if (!isRendered && !isOpen) return null;
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -245,243 +229,213 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="bug-modal-title"
-    >
-      <div
-        onClick={() => !isSubmitting && onClose()}
-        className="fixed inset-0 bg-bg-primary/80 backdrop-blur-md transition-opacity duration-300"
-        aria-hidden="true"
-      />
-
-      <div className="fixed -top-24 -left-24 h-80 w-80 rounded-full bg-accent-red/15 blur-[90px] pointer-events-none" aria-hidden="true" />
-      <div className="fixed -bottom-24 -right-24 h-80 w-80 rounded-full bg-accent-red/15 blur-[90px] pointer-events-none" aria-hidden="true" />
-
-      <div
-        className="relative w-full max-w-xl my-8 rounded-3xl border border-accent-red/40 bg-bg-surface p-6 sm:p-8 text-text-primary backdrop-blur-2xl z-10 space-y-6 overflow-hidden shadow-2xl"
-      >
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-red to-transparent opacity-80 pointer-events-none" aria-hidden="true" />
-
-        <button
-          type="button"
-          onClick={onClose}
-          disabled={isSubmitting}
-          aria-label={t.bugCloseButton || ''}
-          className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-accent-red/10 hover:text-accent-red transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-        >
-          <X className="h-5 w-5" aria-hidden="true" />
-        </button>
-
-        {isSuccess ? (
-          <div className="text-center py-8 space-y-5">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-green/10 border border-accent-green/30 text-accent-green shadow-lg" aria-hidden="true">
-              <CheckCircle2 className="h-9 w-9 animate-bounce" />
-            </div>
-            <div className="space-y-1.5">
-              <h3 className="text-xl font-black tracking-wide font-mono text-text-primary">
-                {t.bugSuccessMessage || ''}
-              </h3>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center gap-3.5 border-b border-accent-red/20 pb-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-red/10 border border-accent-red/40 text-accent-red shadow-md" aria-hidden="true">
-                <FogReportIcon className="h-6 w-6" />
-              </div>
-              <div>
-                <h2
-                  id="bug-modal-title"
-                  className="text-lg font-black tracking-wider font-mono text-text-primary flex items-center gap-2"
-                >
-                  <span>{t.bugReportModalTitle || ''}</span>
-                </h2>
-              </div>
-            </div>
-
-            {errorMsg && (
-              <div className="flex items-center gap-2.5 rounded-xl border border-accent-red/40 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm" role="alert">
-                <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" aria-hidden="true" />
-                <span>{errorMsg}</span>
-              </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      variant="sheet"
+      size="xl"
+      icon={isSuccess ? undefined : <FogReportIcon className="h-6 w-6" />}
+      title={isSuccess ? undefined : t.bugReportModalTitle || ''}
+      ariaLabel={t.bugReportModalTitle || 'Bug report'}
+      closeButtonAriaLabel={t.bugCloseButton || ''}
+      busy={isSubmitting}
+      padded
+      bodyClassName="space-y-5"
+      footerClassName="justify-end"
+      footer={
+        isSuccess ? undefined : (
+          <button
+            type="submit"
+            form="bug-report-form"
+            disabled={isSubmitting}
+            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
+          >
+            {isSubmitting ? (
+              <>
+                <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" aria-hidden="true" />
+                <span>{t.bugSubmitting || ''}</span>
+              </>
+            ) : (
+              <span>{t.bugSubmitButton || ''}</span>
             )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isAuthenticated && user ? (
-                <div className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/60 p-3 text-xs">
-                  <div className="flex items-center gap-2.5 text-text-secondary">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
-                      <LemonIcon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-text-primary">
-                        {t.bugLoggedInAs ? `${t.bugLoggedInAs} ${user.username}` : user.username}
-                      </p>
-                      <p className="text-[10px] text-text-muted">
-                        {user.email}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="rounded-md bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green border border-accent-green/20 flex items-center gap-1">
-                    <UserCheck className="h-3 w-3" aria-hidden="true" />
-                    {t.verified || ''}
-                  </span>
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-                    {t.bugGuestEmailLabel || ''} <span className="text-accent-red">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={guestEmail}
-                    onChange={(e) => setGuestEmail(e.target.value)}
-                    placeholder={t.bugGuestEmailPlaceholder || ''}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
-                  />
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
-                    {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder={t.bugTitlePlaceholder || ''}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
-                    {t.bugCategoryLabel || ''}
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    aria-label={t.bugCategoryLabel || ''}
-                    className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3 py-2.5 text-xs text-text-primary focus:border-accent-red focus:outline-none transition-all cursor-pointer shadow-inner [&>option]:bg-bg-surface"
-                  >
-                    {bugCategories.map((cat) => (
-                      <option key={cat.key} value={cat.key}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
-                  {t.bugDescriptionLabel || ''}{' '}
-                  <span className="text-accent-red">*</span>
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder={t.bugDescriptionPlaceholder || ''}
-                  className="w-full rounded-xl border border-border-color bg-bg-elevated/80 p-3.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner resize-y"
-                />
-              </div>
-
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
-                    <ImageIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-                    {t.bugScreenshotsLabel || ''}
-                  </label>
-                  <span className="text-[10px] text-text-muted font-mono">
-                    {images.length}/3
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3">
-                  {images.map((imgSrc, idx) => (
-                    <div
-                      key={idx}
-                      className="relative h-16 w-16 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-sm group"
-                    >
-                      <img
-                        src={imgSrc}
-                        alt={t.bugScreenshotAlt ? `${t.bugScreenshotAlt} #${idx + 1}` : `${idx + 1}`}
-                        className="h-full w-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage(idx)}
-                        aria-label={t.bugRemoveScreenshot ? `${t.bugRemoveScreenshot} ${idx + 1}` : `${idx + 1}`}
-                        className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-text-inverted transition-opacity focus:opacity-100"
-                      >
-                        <Trash2 className="h-4 w-4" aria-hidden="true" />
-                      </button>
-                    </div>
-                  ))}
-
-                  {images.length < 3 && (
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer text-[10px]"
-                    >
-                      <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
-                      <span>{t.bugUploadImage || ''}</span>
-                    </button>
-                  )}
-
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    aria-label={t.bugUploadImage || ''}
-                  />
-                </div>
-              </div>
-
-              {/* ALTCHA PoW Security & Honeypot Trap */}
-              <AltchaWidget
-                isVerifying={isAltchaVerifying}
-                isVerified={isAltchaVerified}
-                error={altchaError}
-                onRetry={refreshChallenge}
-                honeypotProps={honeypotProps}
-              />
-
-              <div className="flex items-center justify-end gap-3 pt-3">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" aria-hidden="true" />
-                      <span>{t.bugSubmitting || ''}</span>
-                    </>
-                  ) : (
-                    <span>{t.bugSubmitButton || ''}</span>
-                  )}
-                </button>
-              </div>
-            </form>
-          </>
-        )}
+          </button>
+        )
+      }
+    >
+      {isSuccess ? (
+    <div className="text-center py-8 space-y-5">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-green/10 border border-accent-green/30 text-accent-green shadow-lg" aria-hidden="true">
+        <CheckCircle2 className="h-9 w-9 animate-bounce" />
+      </div>
+      <div className="space-y-1.5">
+        <h3 className="text-xl font-black tracking-wide font-mono text-text-primary">
+          {t.bugSuccessMessage || ''}
+        </h3>
       </div>
     </div>
+      ) : (
+        <>
+    {errorMsg && (
+      <div className="flex items-center gap-2.5 rounded-xl border border-accent-red/40 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm" role="alert">
+        <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" aria-hidden="true" />
+        <span>{errorMsg}</span>
+      </div>
+    )}
+
+    <form id="bug-report-form" onSubmit={handleSubmit} className="space-y-4">
+      {isAuthenticated && user ? (
+        <div className="flex items-center justify-between rounded-xl border border-border-color bg-bg-elevated/60 p-3 text-xs">
+          <div className="flex items-center gap-2.5 text-text-secondary">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
+              <LemonIcon className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="font-bold text-text-primary">
+                {t.bugLoggedInAs ? `${t.bugLoggedInAs} ${user.username}` : user.username}
+              </p>
+              <p className="text-[10px] text-text-muted">
+                {user.email}
+              </p>
+            </div>
+          </div>
+          <span className="rounded-md bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green border border-accent-green/20 flex items-center gap-1">
+            <UserCheck className="h-3 w-3" aria-hidden="true" />
+            {t.verified || ''}
+          </span>
+        </div>
+      ) : (
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1 flex items-center gap-1.5">
+            <Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+            {t.bugGuestEmailLabel || ''} <span className="text-accent-red">*</span>
+          </label>
+          <input
+            type="email"
+            required
+            value={guestEmail}
+            onChange={(e) => setGuestEmail(e.target.value)}
+            placeholder={t.bugGuestEmailPlaceholder || ''}
+            className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
+          />
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="sm:col-span-2">
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
+            {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
+          </label>
+          <input
+            type="text"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={t.bugTitlePlaceholder || ''}
+            className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
+          />
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
+            {t.bugCategoryLabel || ''}
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            aria-label={t.bugCategoryLabel || ''}
+            className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3 py-2.5 text-xs text-text-primary focus:border-accent-red focus:outline-none transition-all cursor-pointer shadow-inner [&>option]:bg-bg-surface"
+          >
+            {bugCategories.map((cat) => (
+              <option key={cat.key} value={cat.key}>
+                {cat.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
+          {t.bugDescriptionLabel || ''}{' '}
+          <span className="text-accent-red">*</span>
+        </label>
+        <textarea
+          required
+          rows={4}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder={t.bugDescriptionPlaceholder || ''}
+          className="w-full rounded-xl border border-border-color bg-bg-elevated/80 p-3.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner resize-y"
+        />
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+            <ImageIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+            {t.bugScreenshotsLabel || ''}
+          </label>
+          <span className="text-[10px] text-text-muted font-mono">
+            {images.length}/3
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {images.map((imgSrc, idx) => (
+            <div
+              key={idx}
+              className="relative h-16 w-16 rounded-xl border border-border-color bg-bg-elevated overflow-hidden shadow-sm group"
+            >
+              <img
+                src={imgSrc}
+                alt={t.bugScreenshotAlt ? `${t.bugScreenshotAlt} #${idx + 1}` : `${idx + 1}`}
+                className="h-full w-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(idx)}
+                aria-label={t.bugRemoveScreenshot ? `${t.bugRemoveScreenshot} ${idx + 1}` : `${idx + 1}`}
+                className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-text-inverted transition-opacity focus:opacity-100"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          ))}
+
+          {images.length < 3 && (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex h-16 w-28 flex-col items-center justify-center rounded-xl border border-dashed border-border-color bg-bg-elevated/50 hover:bg-accent-red/10 hover:border-accent-red/50 text-text-muted hover:text-accent-red transition-all cursor-pointer text-[10px]"
+            >
+              <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
+              <span>{t.bugUploadImage || ''}</span>
+            </button>
+          )}
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className="hidden"
+            aria-label={t.bugUploadImage || ''}
+          />
+        </div>
+      </div>
+
+      {/* ALTCHA PoW Security & Honeypot Trap */}
+      <AltchaWidget
+        isVerifying={isAltchaVerifying}
+        isVerified={isAltchaVerified}
+        error={altchaError}
+        onRetry={refreshChallenge}
+        honeypotProps={honeypotProps}
+      />
+        </form>
+        </>
+      )}
+    </Modal>
   );
 };

@@ -21,6 +21,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import { Modal } from '@/components/common/Modal';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
 import { CharactersGridSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import { useCachedData } from '@/hooks/useCachedData';
@@ -120,24 +121,15 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   const [ownershipSaving, setOwnershipSaving] = useState<boolean>(false);
   const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
   const [savedModalOpen, setSavedModalOpen] = useState<boolean>(false);
-  const [savedModalExiting, setSavedModalExiting] = useState<boolean>(false);
   const savedModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const closeSavedModal = useCallback(() => {
     if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    setSavedModalExiting(true);
-    exitTimerRef.current = setTimeout(() => {
-      setSavedModalOpen(false);
-      setSavedModalExiting(false);
-    }, 300);
+    setSavedModalOpen(false);
   }, []);
 
   const triggerSavedModal = useCallback(() => {
     if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    setSavedModalExiting(false);
     setSavedModalOpen(true);
     savedModalTimerRef.current = setTimeout(() => {
       closeSavedModal();
@@ -147,20 +139,9 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
   useEffect(() => {
     return () => {
       if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     };
   }, []);
 
-  useEffect(() => {
-    if (!savedModalOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeSavedModal();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [savedModalOpen, closeSavedModal]);
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
@@ -610,53 +591,29 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
         </div>
       )}
 
-      {savedModalOpen && (
+      <Modal
+        isOpen={savedModalOpen}
+        onClose={closeSavedModal}
+        variant="confirm"
+        size="sm"
+        layer="top"
+        ariaLabel={dict?.characterDetail?.changesSaved}
+        closeButton="floating"
+        closeButtonAriaLabel={dict?.characterDetail?.dismiss || dict?.modal?.close}
+        padded
+        bodyClassName="flex flex-col items-center justify-center text-center sm:p-8"
+      >
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={dict?.characterDetail?.changesSaved}
-          className="fixed inset-y-0 left-[var(--sidebar-width,0rem)] right-0 z-50 flex items-center justify-center p-4 transition-[left] duration-300"
+          className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl border border-accent-green/40 bg-accent-green/15 text-accent-green mb-4 ring-4 ring-accent-green/15 shadow-inner"
+          aria-hidden="true"
         >
-          {/* Subtle dark backdrop with smooth 300ms fade */}
-          <div
-            onClick={closeSavedModal}
-            aria-hidden="true"
-            className={`fixed inset-y-0 left-[var(--sidebar-width,0rem)] right-0 bg-bg-primary/70 backdrop-blur-xs transition-opacity duration-300 cursor-pointer ${
-              savedModalExiting ? 'opacity-0' : 'opacity-100 animate-in fade-in duration-300'
-            }`}
-          />
-
-          {/* Modal card: sleek, DBD dark theme, centered, walk-in 300ms, walk-out 300ms */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`relative z-10 flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm rounded-3xl border border-border-color bg-bg-surface p-7 sm:p-8 text-center shadow-2xl transition-all duration-300 ${
-              savedModalExiting
-                ? 'opacity-0 scale-90 translate-y-3 duration-300 ease-in'
-                : 'opacity-100 scale-100 translate-y-0 animate-in zoom-in-95 fade-in slide-in-from-bottom-3 duration-300 ease-out'
-            }`}
-          >
-            <button
-              type="button"
-              onClick={closeSavedModal}
-              className="absolute top-3.5 right-3.5 p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
-              aria-label={dict?.characterDetail?.dismiss || dict?.modal?.close}
-            >
-              <X className="h-4 w-4 sm:h-5 sm:w-5" />
-            </button>
-
-            <div
-              className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-2xl border border-accent-green/40 bg-accent-green/15 text-accent-green mb-4 ring-4 ring-accent-green/15 shadow-inner"
-              aria-hidden="true"
-            >
-              <Check className="h-8 w-8 sm:h-10 sm:w-10 stroke-[2.5]" />
-            </div>
-
-            <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
-              {dict?.characterDetail?.changesSaved}
-            </h2>
-          </div>
+          <Check className="h-8 w-8 sm:h-10 sm:w-10 stroke-[2.5]" />
         </div>
-      )}
+
+        <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
+          {dict?.characterDetail?.changesSaved}
+        </h2>
+      </Modal>
 
       {verificationNoticeOpen && user && (
         <div className="fixed top-6 left-[var(--sidebar-width,0rem)] right-0 z-50 flex justify-center pointer-events-none transition-[left] duration-300 px-4">

@@ -3,6 +3,7 @@
 
 import React, { useState, useRef } from 'react';
 import type { Dictionary } from '@/locales/types';
+import { Modal } from '@/components/common/Modal';
 import {
   X,
   Trash2,
@@ -470,498 +471,478 @@ export function ScraperConfigModal({
 
   return (
     <>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="db-modal-title"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => e.preventDefault()}
+      <Modal
+        isOpen
+        onClose={onClose}
+        variant="dialog"
+        size="2xl"
+        busy={isExporting || isImporting || isPurging}
+        icon={<Database className="h-5 w-5" />}
+        title={dict?.admin?.dbBackupSnapshots}
+        closeButtonAriaLabel={dict?.admin?.closeDbModal || dict?.modal?.close}
+        padded
       >
         <div
-          className="fixed inset-0 bg-bg-primary/70 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
-          onClick={() => !isExporting && !isImporting && !isPurging && onClose()}
-        />
+          className="space-y-5"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => e.preventDefault()}
+        >
+    <div className="flex items-center gap-1 rounded-xl bg-bg-primary p-1 border border-border-color">
+      <button
+        type="button"
+        onClick={() => setActiveTab('export')}
+        className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+          activeTab === 'export'
+            ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
+            : 'text-text-secondary hover:text-text-primary'
+        }`}
+      >
+        <Download className="h-3.5 w-3.5 text-accent-red" />
+        <span>{dict?.admin?.exportJson}</span>
+      </button>
 
-        <div className="relative w-full max-w-2xl rounded-2xl border border-border-color bg-bg-surface p-6 text-text-primary shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 space-y-5 transition-colors">
+      <button
+        type="button"
+        onClick={() => setActiveTab('import')}
+        className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+          activeTab === 'import'
+            ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
+            : 'text-text-secondary hover:text-text-primary'
+        }`}
+      >
+        <Upload className="h-3.5 w-3.5 text-accent-green" />
+        <span>{dict?.admin?.importJson}</span>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setActiveTab('purge')}
+        className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+          activeTab === 'purge'
+            ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
+            : 'text-text-secondary hover:text-text-primary'
+        }`}
+      >
+        <Trash2 className="h-3.5 w-3.5 text-accent-red" />
+        <span>{dict?.admin?.purgeReset}</span>
+      </button>
+    </div>
+
+    {/* TAB 1: EXPORT JSON */}
+    {activeTab === 'export' && (
+      <div className="space-y-4">
+        {exportError && (
+          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            <span>{exportError}</span>
+          </div>
+        )}
+
+        {exportSuccess && (
+          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <span>{exportSuccess}</span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between pb-1 border-b border-border-color">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+            {dict?.admin?.selectBackupEntities}
+          </span>
           <button
             type="button"
-            onClick={() => !isExporting && !isImporting && !isPurging && onClose()}
-            className="absolute right-4 top-4 rounded-xl p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            aria-label={dict?.admin?.closeDbModal || dict?.modal?.close}
+            onClick={toggleAllExport}
+            className="text-xs font-bold text-accent-amber hover:underline cursor-pointer"
           >
-            <X className="h-5 w-5" />
+            {exportTargets.length === ALL_TARGETS.length
+              ? dict?.admin?.deselectAll
+              : dict?.admin?.selectAll}
           </button>
+        </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-red/15 border border-accent-red/30 text-accent-red shadow-xs">
-                <Database className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 id="db-modal-title" className="text-lg font-black tracking-wider text-text-primary font-mono">
-                  {dict?.admin?.dbBackupSnapshots}
-                </h2>
-              </div>
-            </div>
-          </div>
+        <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+          {TARGET_GROUPS_CONFIG.map((group) => {
+            const groupTargets = localizedTargets.filter((t) => t.category === group.key);
+            const selectedInGroup = groupTargets.filter((t) => exportTargets.includes(t.id));
+            const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
+            const GroupIcon = group.icon;
+            const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
 
-          <div className="flex items-center gap-1 rounded-xl bg-bg-primary p-1 border border-border-color">
-            <button
-              type="button"
-              onClick={() => setActiveTab('export')}
-              className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'export'
-                  ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
-            >
-              <Download className="h-3.5 w-3.5 text-accent-red" />
-              <span>{dict?.admin?.exportJson}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('import')}
-              className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'import'
-                  ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
-            >
-              <Upload className="h-3.5 w-3.5 text-accent-green" />
-              <span>{dict?.admin?.importJson}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('purge')}
-              className={`flex items-center justify-center gap-2 flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeTab === 'purge'
-                  ? 'bg-bg-surface text-text-primary shadow-xs border border-border-color'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
-            >
-              <Trash2 className="h-3.5 w-3.5 text-accent-red" />
-              <span>{dict?.admin?.purgeReset}</span>
-            </button>
-          </div>
-
-          {/* TAB 1: EXPORT JSON */}
-          {activeTab === 'export' && (
-            <div className="space-y-4">
-              {exportError && (
-                <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
-                  <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <span>{exportError}</span>
-                </div>
-              )}
-
-              {exportSuccess && (
-                <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0" />
-                  <span>{exportSuccess}</span>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between pb-1 border-b border-border-color">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
-                  {dict?.admin?.selectBackupEntities}
-                </span>
-                <button
-                  type="button"
-                  onClick={toggleAllExport}
-                  className="text-xs font-bold text-accent-amber hover:underline cursor-pointer"
-                >
-                  {exportTargets.length === ALL_TARGETS.length
-                    ? dict?.admin?.deselectAll
-                    : dict?.admin?.selectAll}
-                </button>
-              </div>
-
-              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
-                {TARGET_GROUPS_CONFIG.map((group) => {
-                  const groupTargets = localizedTargets.filter((t) => t.category === group.key);
-                  const selectedInGroup = groupTargets.filter((t) => exportTargets.includes(t.id));
-                  const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
-                  const GroupIcon = group.icon;
-                  const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
-
-                  return (
-                    <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
-                          <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
-                            {groupLabel}
-                          </span>
-                          <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
-                            {selectedInGroup.length}/{groupTargets.length}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => toggleGroupExport(group.key)}
-                          className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
-                        >
-                          {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {groupTargets.map((target) => {
-                          const isSelected = exportTargets.includes(target.id);
-                          return (
-                            <div
-                              key={target.id}
-                              onClick={() => toggleExportTarget(target.id)}
-                              className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                                isSelected
-                                  ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
-                                  : 'border-border-color bg-bg-surface hover:border-border-subtle'
-                              }`}
-                            >
-                              <div className="pt-0.5">
-                                {isSelected ? (
-                                  <CheckSquare className="h-4 w-4 text-accent-red" />
-                                ) : (
-                                  <Square className="h-4 w-4 text-text-muted" />
-                                )}
-                              </div>
-                              <div>
-                                <p className="text-xs font-bold">{target.label}</p>
-                                <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="flex items-center justify-end pt-3">
-                <button
-                  type="button"
-                  onClick={handleExecuteExport}
-                  disabled={isExporting || exportTargets.length === 0}
-                  className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
-                >
-                  {isExporting ? (
-                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Download className="h-3.5 w-3.5" />
-                  )}
-                  <span>
-                    {isExporting ? dict?.admin?.exportingStatus : dict?.admin?.downloadBackup} ({exportTargets.length})
-                  </span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: IMPORT JSON */}
-          {activeTab === 'import' && (
-            <div className="space-y-4">
-              {importError && (
-                <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
-                  <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <span>{importError}</span>
-                </div>
-              )}
-
-              {importSuccess && (
-                <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0" />
-                  <span>{importSuccess}</span>
-                </div>
-              )}
-
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept=".json,application/json"
-                className="hidden"
-              />
-
-              <div
-                role="button"
-                tabIndex={0}
-                aria-label={dict?.admin?.clickOrDragBackup || 'Upload JSON backup file'}
-                onClick={() => fileInputRef.current?.click()}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    fileInputRef.current?.click();
-                  }
-                }}
-                onDragEnter={handleDragEnter}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-                className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center group select-none ${
-                  isDragging
-                    ? 'border-accent-green bg-accent-green/20 ring-4 ring-accent-green/30 scale-[1.01] shadow-xl'
-                    : 'border-border-color bg-bg-primary hover:border-accent-green hover:bg-bg-elevated/40'
-                }`}
-              >
-                <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all mb-2 ${
-                    isDragging
-                      ? 'bg-accent-green/25 text-accent-green scale-125 ring-2 ring-accent-green/40 animate-pulse'
-                      : 'bg-accent-green/10 text-accent-green group-hover:scale-110'
-                  }`}
-                >
-                  <FileJson className="h-7 w-7" />
-                </div>
-
-                {isDragging ? (
-                  <div>
-                    <p className="text-sm font-black text-accent-green animate-bounce">
-                      {dict?.admin?.dropFilePrompt || 'Drop the .json backup file here...'}
-                    </p>
+            return (
+              <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
+                    <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
+                      {groupLabel}
+                    </span>
+                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
+                      {selectedInGroup.length}/{groupTargets.length}
+                    </span>
                   </div>
-                ) : importFile ? (
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-center gap-2">
-                      <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
-                        {importFile.name}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={handleClearFile}
-                        className="rounded-full p-1 text-text-muted hover:bg-accent-red/20 hover:text-accent-red transition-colors cursor-pointer"
-                        {...tip(dict?.admin?.removeFile || 'Remove file', undefined, 'action')}
-                        aria-label={dict?.admin?.removeFile || 'Remove file'}
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                    <p className="text-[11px] text-accent-green font-semibold">
-                      {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
-                    </p>
-                    <p className="text-[10px] text-text-muted hover:text-text-secondary transition-colors">
-                      {dict?.admin?.changeFile || 'Click or drag another file to replace'}
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-xs font-bold text-text-secondary">
-                      {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
-                      <span className="text-accent-green font-mono font-black">.json</span>{' '}
-                      {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
-                    </p>
-                  </div>
-                )}
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleGroupExport(group.key)}
+                    className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
+                  >
+                    {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
+                  </button>
+                </div>
 
-              <div className="space-y-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
-                  {dict?.admin?.chooseImportStrategy}
-                </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <div
-                    onClick={() => setImportMode('merge')}
-                    className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
-                      importMode === 'merge'
-                        ? 'border-accent-green/50 bg-accent-green/10 text-accent-green'
-                        : 'border-border-color bg-bg-primary'
-                    }`}
-                  >
-                    <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-xs font-bold">{dict?.admin?.mergeUpdate}</p>
-                      <p className="text-[10px] text-text-muted">{dict?.admin?.mergeUpdateDesc}</p>
-                    </div>
-                  </div>
-
-                  <div
-                    onClick={() => setImportMode('replace')}
-                    className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
-                      importMode === 'replace'
-                        ? 'border-accent-amber/50 bg-accent-amber/10 text-accent-amber'
-                        : 'border-border-color bg-bg-primary'
-                    }`}
-                  >
-                    <RotateCcw className="h-4 w-4 text-accent-amber mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-xs font-bold">{dict?.admin?.wipeReplace}</p>
-                      <p className="text-[10px] text-text-muted">{dict?.admin?.wipeReplaceDesc}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {importSummary && (
-                <div className="rounded-xl border border-border-color bg-bg-primary p-3 max-h-36 overflow-y-auto space-y-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
-                    {dict?.admin?.importResultsBreakdown}
-                  </span>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
-                    {Object.entries(importSummary).map(([key, counts]) => (
-                      <div key={key} className="rounded-lg bg-bg-surface p-1.5 border border-border-color">
-                        <p className="text-[10px] font-bold text-text-muted capitalize">{key}</p>
-                        <p className="text-xs font-bold text-accent-green">
-                          {dict?.admin?.createdCountPrefix || '+'}
-                          {counts.created}{' '}
-                          <span className="text-text-muted font-normal">
-                            ({counts.updated} {dict?.admin?.updatedCountSuffix || 'updated'})
-                          </span>
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center justify-end pt-3">
-                <button
-                  type="button"
-                  onClick={handleExecuteImport}
-                  disabled={isImporting || !importFile}
-                  className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
-                >
-                  {isImporting ? (
-                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Upload className="h-3.5 w-3.5" />
-                  )}
-                  <span>
-                    {isImporting ? dict?.admin?.importingStatus || 'Importing...' : dict?.admin?.executeImport || 'Execute Import'}
-                  </span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: PURGE & RESET */}
-          {activeTab === 'purge' && (
-            <div className="space-y-4">
-              {purgeError && (
-                <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
-                  <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <span>{purgeError}</span>
-                </div>
-              )}
-
-              {purgeSuccess && (
-                <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
-                  <CheckCircle2 className="h-4 w-4 shrink-0" />
-                  <span>{purgeSuccess}</span>
-                </div>
-              )}
-
-              <div className="flex items-center justify-between pb-1 border-b border-border-color">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
-                  {dict?.admin?.selectTablesToWipe}
-                </span>
-                <button
-                  type="button"
-                  onClick={toggleAllPurge}
-                  className="text-xs font-bold text-accent-amber hover:underline cursor-pointer"
-                >
-                  {purgeTargets.length === ALL_TARGETS.length
-                    ? dict?.admin?.deselectAll
-                    : dict?.admin?.selectAll}
-                </button>
-              </div>
-
-              <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
-                {TARGET_GROUPS_CONFIG.map((group) => {
-                  const groupTargets = localizedTargets.filter((t) => t.category === group.key);
-                  const selectedInGroup = groupTargets.filter((t) => purgeTargets.includes(t.id));
-                  const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
-                  const GroupIcon = group.icon;
-                  const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
-
-                  return (
-                    <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
-                          <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
-                            {groupLabel}
-                          </span>
-                          <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
-                            {selectedInGroup.length}/{groupTargets.length}
-                          </span>
+                  {groupTargets.map((target) => {
+                    const isSelected = exportTargets.includes(target.id);
+                    return (
+                      <div
+                        key={target.id}
+                        onClick={() => toggleExportTarget(target.id)}
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                          isSelected
+                            ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
+                            : 'border-border-color bg-bg-surface hover:border-border-subtle'
+                        }`}
+                      >
+                        <div className="pt-0.5">
+                          {isSelected ? (
+                            <CheckSquare className="h-4 w-4 text-accent-red" />
+                          ) : (
+                            <Square className="h-4 w-4 text-text-muted" />
+                          )}
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => toggleGroupPurge(group.key)}
-                          className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
-                        >
-                          {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
-                        </button>
+                        <div>
+                          <p className="text-xs font-bold">{target.label}</p>
+                          <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+                        </div>
                       </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {groupTargets.map((target) => {
-                          const isSelected = purgeTargets.includes(target.id);
-                          return (
-                            <div
-                              key={target.id}
-                              onClick={() => togglePurgeTarget(target.id)}
-                              className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
-                                isSelected
-                                  ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
-                                  : 'border-border-color bg-bg-surface hover:border-border-subtle'
-                              }`}
-                            >
-                              <div className="pt-0.5">
-                                {isSelected ? (
-                                  <Square className="h-4 w-4 text-accent-red" />
-                                ) : (
-                                  <Square className="h-4 w-4 text-text-muted" />
-                                )}
-                              </div>
-                              <div>
-                                <p className="text-xs font-bold">{target.label}</p>
-                                <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
+            );
+          })}
+        </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-border-color">
+        <div className="flex items-center justify-end pt-3">
+          <button
+            type="button"
+            onClick={handleExecuteExport}
+            disabled={isExporting || exportTargets.length === 0}
+            className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
+          >
+            {isExporting ? (
+              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Download className="h-3.5 w-3.5" />
+            )}
+            <span>
+              {isExporting ? dict?.admin?.exportingStatus : dict?.admin?.downloadBackup} ({exportTargets.length})
+            </span>
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* TAB 2: IMPORT JSON */}
+    {activeTab === 'import' && (
+      <div className="space-y-4">
+        {importError && (
+          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            <span>{importError}</span>
+          </div>
+        )}
+
+        {importSuccess && (
+          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <span>{importSuccess}</span>
+          </div>
+        )}
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".json,application/json"
+          className="hidden"
+        />
+
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={dict?.admin?.clickOrDragBackup || 'Upload JSON backup file'}
+          onClick={() => fileInputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
+          onDragEnter={handleDragEnter}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`relative flex flex-col items-center justify-center p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center group select-none ${
+            isDragging
+              ? 'border-accent-green bg-accent-green/20 ring-4 ring-accent-green/30 scale-[1.01] shadow-xl'
+              : 'border-border-color bg-bg-primary hover:border-accent-green hover:bg-bg-elevated/40'
+          }`}
+        >
+          <div
+            className={`flex h-14 w-14 items-center justify-center rounded-2xl transition-all mb-2 ${
+              isDragging
+                ? 'bg-accent-green/25 text-accent-green scale-125 ring-2 ring-accent-green/40 animate-pulse'
+                : 'bg-accent-green/10 text-accent-green group-hover:scale-110'
+            }`}
+          >
+            <FileJson className="h-7 w-7" />
+          </div>
+
+          {isDragging ? (
+            <div>
+              <p className="text-sm font-black text-accent-green animate-bounce">
+                {dict?.admin?.dropFilePrompt || 'Drop the .json backup file here...'}
+              </p>
+            </div>
+          ) : importFile ? (
+            <div className="space-y-1">
+              <div className="flex items-center justify-center gap-2">
+                <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
+                  {importFile.name}
+                </p>
                 <button
                   type="button"
-                  onClick={onClose}
-                  disabled={isPurging}
-                  className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
+                  onClick={handleClearFile}
+                  className="rounded-full p-1 text-text-muted hover:bg-accent-red/20 hover:text-accent-red transition-colors cursor-pointer"
+                  {...tip(dict?.admin?.removeFile || 'Remove file', undefined, 'action')}
+                  aria-label={dict?.admin?.removeFile || 'Remove file'}
                 >
-                  {dict?.admin?.close}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleExecutePurge}
-                  disabled={isPurging || purgeTargets.length === 0}
-                  className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-40"
-                >
-                  {isPurging ? (
-                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-3.5 w-3.5" />
-                  )}
-                  <span>
-                    {isPurging
-                      ? dict?.admin?.purgingStatus || 'Purging...'
-                      : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace('{count}', String(purgeTargets.length))}
-                  </span>
+                  <X className="h-3.5 w-3.5" />
                 </button>
               </div>
+              <p className="text-[11px] text-accent-green font-semibold">
+                {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
+              </p>
+              <p className="text-[10px] text-text-muted hover:text-text-secondary transition-colors">
+                {dict?.admin?.changeFile || 'Click or drag another file to replace'}
+              </p>
+            </div>
+          ) : (
+            <div>
+              <p className="text-xs font-bold text-text-secondary">
+                {dict?.admin?.clickOrDragBackupPrefix || 'Click or drag & drop a'}{' '}
+                <span className="text-accent-green font-mono font-black">.json</span>{' '}
+                {dict?.admin?.clickOrDragBackupSuffix || 'backup file'}
+              </p>
             </div>
           )}
         </div>
+
+        <div className="space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+            {dict?.admin?.chooseImportStrategy}
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div
+              onClick={() => setImportMode('merge')}
+              className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+                importMode === 'merge'
+                  ? 'border-accent-green/50 bg-accent-green/10 text-accent-green'
+                  : 'border-border-color bg-bg-primary'
+              }`}
+            >
+              <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs font-bold">{dict?.admin?.mergeUpdate}</p>
+                <p className="text-[10px] text-text-muted">{dict?.admin?.mergeUpdateDesc}</p>
+              </div>
+            </div>
+
+            <div
+              onClick={() => setImportMode('replace')}
+              className={`flex items-start gap-2.5 p-3 rounded-xl border cursor-pointer transition-all ${
+                importMode === 'replace'
+                  ? 'border-accent-amber/50 bg-accent-amber/10 text-accent-amber'
+                  : 'border-border-color bg-bg-primary'
+              }`}
+            >
+              <RotateCcw className="h-4 w-4 text-accent-amber mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs font-bold">{dict?.admin?.wipeReplace}</p>
+                <p className="text-[10px] text-text-muted">{dict?.admin?.wipeReplaceDesc}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {importSummary && (
+          <div className="rounded-xl border border-border-color bg-bg-primary p-3 max-h-36 overflow-y-auto space-y-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
+              {dict?.admin?.importResultsBreakdown}
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs">
+              {Object.entries(importSummary).map(([key, counts]) => (
+                <div key={key} className="rounded-lg bg-bg-surface p-1.5 border border-border-color">
+                  <p className="text-[10px] font-bold text-text-muted capitalize">{key}</p>
+                  <p className="text-xs font-bold text-accent-green">
+                    {dict?.admin?.createdCountPrefix || '+'}
+                    {counts.created}{' '}
+                    <span className="text-text-muted font-normal">
+                      ({counts.updated} {dict?.admin?.updatedCountSuffix || 'updated'})
+                    </span>
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-center justify-end pt-3">
+          <button
+            type="button"
+            onClick={handleExecuteImport}
+            disabled={isImporting || !importFile}
+            className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
+          >
+            {isImporting ? (
+              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Upload className="h-3.5 w-3.5" />
+            )}
+            <span>
+              {isImporting ? dict?.admin?.importingStatus || 'Importing...' : dict?.admin?.executeImport || 'Execute Import'}
+            </span>
+          </button>
+        </div>
       </div>
+    )}
+
+    {/* TAB 3: PURGE & RESET */}
+    {activeTab === 'purge' && (
+      <div className="space-y-4">
+        {purgeError && (
+          <div role="alert" className="rounded-xl border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red flex items-center gap-2 font-semibold">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            <span>{purgeError}</span>
+          </div>
+        )}
+
+        {purgeSuccess && (
+          <div role="status" className="rounded-xl border border-accent-green/30 bg-accent-green/10 p-3 text-xs text-accent-green flex items-center gap-2 font-semibold">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <span>{purgeSuccess}</span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between pb-1 border-b border-border-color">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-text-secondary">
+            {dict?.admin?.selectTablesToWipe}
+          </span>
+          <button
+            type="button"
+            onClick={toggleAllPurge}
+            className="text-xs font-bold text-accent-amber hover:underline cursor-pointer"
+          >
+            {purgeTargets.length === ALL_TARGETS.length
+              ? dict?.admin?.deselectAll
+              : dict?.admin?.selectAll}
+          </button>
+        </div>
+
+        <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+          {TARGET_GROUPS_CONFIG.map((group) => {
+            const groupTargets = localizedTargets.filter((t) => t.category === group.key);
+            const selectedInGroup = groupTargets.filter((t) => purgeTargets.includes(t.id));
+            const allGroupSelected = selectedInGroup.length === groupTargets.length && groupTargets.length > 0;
+            const GroupIcon = group.icon;
+            const groupLabel = dict?.admin?.[group.labelKey] || group.fallbackLabel;
+
+            return (
+              <div key={group.key} className="rounded-xl border border-border-color bg-bg-primary/40 p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
+                    <span className="text-[11px] font-black uppercase tracking-wider text-text-primary">
+                      {groupLabel}
+                    </span>
+                    <span className="rounded-md bg-bg-surface px-1.5 py-0.5 text-[10px] font-mono font-bold text-text-secondary border border-border-color">
+                      {selectedInGroup.length}/{groupTargets.length}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleGroupPurge(group.key)}
+                    className="text-[11px] font-bold text-accent-amber hover:underline cursor-pointer"
+                  >
+                    {allGroupSelected ? dict?.admin?.deselectAll : dict?.admin?.selectAll}
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {groupTargets.map((target) => {
+                    const isSelected = purgeTargets.includes(target.id);
+                    return (
+                      <div
+                        key={target.id}
+                        onClick={() => togglePurgeTarget(target.id)}
+                        className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                          isSelected
+                            ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
+                            : 'border-border-color bg-bg-surface hover:border-border-subtle'
+                        }`}
+                      >
+                        <div className="pt-0.5">
+                          {isSelected ? (
+                            <Square className="h-4 w-4 text-accent-red" />
+                          ) : (
+                            <Square className="h-4 w-4 text-text-muted" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold">{target.label}</p>
+                          <p className="text-[10px] text-text-muted line-clamp-1">{target.desc}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex items-center justify-between pt-3 border-t border-border-color">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isPurging}
+            className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
+          >
+            {dict?.admin?.close}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleExecutePurge}
+            disabled={isPurging || purgeTargets.length === 0}
+            className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-40"
+          >
+            {isPurging ? (
+              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Trash2 className="h-3.5 w-3.5" />
+            )}
+            <span>
+              {isPurging
+                ? dict?.admin?.purgingStatus || 'Purging...'
+                : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace('{count}', String(purgeTargets.length))}
+            </span>
+          </button>
+        </div>
+      </div>
+    )}
+        </div>
+      </Modal>
 
       <ConfirmModal
         open={showReplaceConfirm}

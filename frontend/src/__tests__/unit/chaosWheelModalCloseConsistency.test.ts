@@ -18,17 +18,14 @@ import path from 'node:path';
 const MODAL_PATH = path.resolve(__dirname, '../../components/ChaosWheelModal.tsx');
 const src = fs.readFileSync(MODAL_PATH, 'utf-8');
 
-test('backdrop click closes the modal via onClose', () => {
-  assert.match(
-    src,
-    /aria-labelledby="chaos-modal-title"[\s\S]{0,120}onClick=\{onClose\}/,
-    'the modal backdrop is no longer wired to call onClose directly on click'
-  );
+test('backdrop click closes the modal via onClose (shared <Modal> handles the backdrop)', () => {
+  assert.match(src, /<Modal[\s\S]{0,200}onClose=\{onClose\}/, 'the shared Modal is no longer wired to onClose');
+  assert.doesNotMatch(src, /closeOnBackdropClick=\{false\}/, 'backdrop click must stay enabled');
 });
 
 test('the X button closes the modal via onClose', () => {
-  const xButtonBlock = src.match(/<button[\s\S]{0,80}onClick=\{onClose\}[\s\S]{0,120}aria-label=\{dict\?\.modal\?\.close\}/);
-  assert.ok(xButtonBlock, 'the X (close) button is no longer wired to call onClose directly');
+  assert.match(src, /closeButtonAriaLabel=\{dict\?\.modal\?\.close\}/, 'the Modal close button lost its localized label');
+  assert.doesNotMatch(src, /closeButton="none"|hideCloseButton/, 'the X button must stay visible');
 });
 
 test('the in-panel "Close" button (chaosApplyAndClose) was removed from the spin-result card', () => {
@@ -47,9 +44,10 @@ test('the effect-pill explanation text (locWon.effect) was removed from the spin
   );
 });
 
-test('onClose is called by exactly two distinct UI affordances (backdrop, X) -- not more, not fewer, and none of them call a different function', () => {
-  const onCloseCallSites = (src.match(/onClick=\{onClose\}/g) || []).length;
-  assert.strictEqual(onCloseCallSites, 2, `expected exactly 2 onClick={onClose} call sites (backdrop, X button), found ${onCloseCallSites}`);
+test('onClose is wired exactly once, into the shared Modal (backdrop, X and Escape all go through it)', () => {
+  const onCloseCallSites = (src.match(/onClose=\{onClose\}/g) || []).length;
+  assert.strictEqual(onCloseCallSites, 1, `expected exactly 1 onClose={onClose} call site, found ${onCloseCallSites}`);
+  assert.doesNotMatch(src, /onClick=\{onClose\}/, 'no hand-written close affordance should remain');
 });
 
 test('there is exactly ONE spin action ("Spin Chaos Wheel!" / spinChaosWheel) -- no separate "Spin Again" that re-spins through a different code path', () => {
@@ -65,11 +63,9 @@ test('there is exactly ONE spin action ("Spin Chaos Wheel!" / spinChaosWheel) --
   );
 });
 
-test('SANITY: the call-site-count assertion would catch a close affordance being wired to a different handler (proves it is not vacuous)', () => {
-  const lastIdx = src.lastIndexOf('onClick={onClose}');
-  assert.ok(lastIdx !== -1);
-  const corrupted = src.slice(0, lastIdx) + 'onClick={() => {}}' + src.slice(lastIdx + 'onClick={onClose}'.length);
-  const corruptedCallSites = (corrupted.match(/onClick=\{onClose\}/g) || []).length;
-  assert.strictEqual(corruptedCallSites, 1);
-  assert.notStrictEqual(corruptedCallSites, 2, 'the exactly-2 assertion would NOT have caught a close affordance wired to a different handler -- test is vacuous');
+test('SANITY: the call-site-count assertion would catch the Modal being wired to a different handler (proves it is not vacuous)', () => {
+  const idx = src.indexOf('onClose={onClose}');
+  assert.ok(idx !== -1);
+  const corrupted = src.slice(0, idx) + 'onClose={() => {}}' + src.slice(idx + 'onClose={onClose}'.length);
+  assert.strictEqual((corrupted.match(/onClose=\{onClose\}/g) || []).length, 0);
 });

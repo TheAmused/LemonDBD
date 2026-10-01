@@ -4,6 +4,7 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 import { Spinner } from '@/components/common/Spinner';
+import { FitText } from '@/components/common/FitText';
 
 export type ButtonVariant =
   | 'primary' //   solid red call to action
@@ -38,7 +39,7 @@ export const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
 };
 
 export const BUTTON_BASE =
-  'inline-flex shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
 
 export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
   variant?: ButtonVariant;
@@ -51,6 +52,8 @@ export interface ButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonE
   rightIcon?: React.ReactNode;
   /** Square, icon-only button. Requires `aria-label`. */
   icon?: boolean;
+  /** Shrink a plain-text label to fit a narrow button (default), or leave it alone. */
+  fit?: boolean;
   children?: React.ReactNode;
 }
 
@@ -62,6 +65,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     leftIcon,
     rightIcon,
     icon = false,
+    fit = true,
     className,
     disabled,
     type = 'button',
@@ -81,7 +85,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       {...rest}
     >
       {loading ? <Spinner size={size === 'lg' ? 'sm' : 'xs'} tone={spinnerTone} /> : leftIcon}
-      {children}
+      {fit && !icon && (typeof children === 'string' || typeof children === 'number') ? (
+        <FitText minScale={0.7} maxLines={2}>{children}</FitText>
+      ) : (
+        children
+      )}
       {!loading && rightIcon}
     </button>
   );

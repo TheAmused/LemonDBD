@@ -37,7 +37,7 @@ export const LoreModal: React.FC<LoreModalProps> = ({
       <p className="italic text-text-secondary border-l-2 border-border-color pl-4 py-1">
         {t.quoteOpen || '"'}{character.name} {t.emDashSeparator || '—'} {t.enteredTheFog || 'Entered The Fog.'}{t.quoteClose || '"'}
       </p>
-      <div className="text-sm leading-relaxed whitespace-pre-line text-text-primary font-medium">
+      <div className="text-sm leading-relaxed whitespace-pre-line text-justify hyphens-auto text-text-primary font-medium">
         {rawLoreText}
       </div>
     </Modal>

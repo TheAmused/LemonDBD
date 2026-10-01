@@ -3,6 +3,7 @@
 // flat tinted label -- never put a Badge inside another bordered pill.
 import React from 'react';
 import { cn } from '@/utils/cn';
+import { FitText } from '@/components/common/FitText';
 
 export type BadgeTone = 'neutral' | 'red' | 'amber' | 'green' | 'blue' | 'purple';
 export type BadgeSize = 'xs' | 'sm' | 'md';
@@ -44,7 +45,7 @@ export const Badge: React.FC<BadgeProps> = ({
 }) => (
   <span
     className={cn(
-      'inline-flex shrink-0 items-center gap-1 border font-black tracking-wider whitespace-nowrap',
+      'inline-flex max-w-full shrink-0 items-center gap-1 border font-black tracking-wider whitespace-nowrap',
       !plain && 'font-mono uppercase',
       square ? 'rounded-md' : 'rounded-full',
       BADGE_TONES[tone],
@@ -54,7 +55,11 @@ export const Badge: React.FC<BadgeProps> = ({
     {...rest}
   >
     {icon}
-    {children}
+    {typeof children === 'string' || typeof children === 'number' ? (
+      <FitText minScale={0.7} maxLines={2}>{children}</FitText>
+    ) : (
+      children
+    )}
   </span>
 );
 

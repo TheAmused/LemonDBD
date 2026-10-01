@@ -15,6 +15,16 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 
+function PresetSwatch({ colors }: { colors: readonly string[] }) {
+  return (
+    <span className="flex overflow-hidden rounded-xs" aria-hidden="true">
+      {colors.map((color, i) => (
+        <span key={i} className={cn('h-3.5 w-2', tierColorProps(color).className)} />
+      ))}
+    </span>
+  );
+}
+
 interface LadderEditorProps {
   tiers: TierDefinition[];
   onChange: (tiers: TierDefinition[]) => void;
@@ -66,28 +76,40 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col items-center">
-        <p className="mb-2 text-xs font-bold uppercase tracking-wider text-text-secondary font-mono text-center">{c.presetsLabel}</p>
-        <CustomDropdown
-          value={activePreset ?? ''}
-          onChange={(id) => onPreset(id as LadderPresetId)}
-          options={LADDER_PRESETS.map((preset) => ({
-            value: preset.id,
-            label: c.presets[preset.id],
-            icon: (
-              <span className="flex overflow-hidden rounded-xs" aria-hidden="true">
-                {preset.colors.map((color, i) => (
-                  <span key={i} className={cn('h-3.5 w-2', tierColorProps(color).className)} />
-                ))}
-              </span>
-            ),
-          }))}
-          label={activePreset ? undefined : c.presetsLabel}
-          icon={activePreset ? undefined : <ListOrdered className="h-4 w-4" aria-hidden="true" />}
-          ariaLabel={c.presetsLabel}
-          buttonClassName="min-h-[40px]"
-          minWidthClass="min-w-[220px]"
-        />
+      {/* Phones: the label and a dropdown share one row. Wide screens: the label above every preset. */}
+      <div className="flex items-center justify-center gap-2.5 sm:flex-col sm:gap-0">
+        <p className="text-xs font-bold uppercase tracking-wider text-text-secondary font-mono text-center sm:mb-2">{c.presetsLabel}</p>
+        <div className="sm:hidden">
+          <CustomDropdown
+            value={activePreset ?? ''}
+            onChange={(id) => onPreset(id as LadderPresetId)}
+            options={LADDER_PRESETS.map((preset) => ({ value: preset.id, label: c.presets[preset.id], icon: <PresetSwatch colors={preset.colors} /> }))}
+            label={activePreset ? undefined : '—'}
+            icon={activePreset ? undefined : <ListOrdered className="h-4 w-4" aria-hidden="true" />}
+            ariaLabel={c.presetsLabel}
+            buttonClassName="min-h-[40px]"
+            minWidthClass="min-w-[220px]"
+          />
+        </div>
+        <div className="hidden sm:flex flex-wrap justify-center gap-2">
+          {LADDER_PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              type="button"
+              onClick={() => onPreset(preset.id)}
+              aria-pressed={activePreset === preset.id}
+              className={cn(
+                'inline-flex min-h-[38px] items-center gap-2 rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
+                activePreset === preset.id
+                  ? 'border-accent-red bg-accent-red/10 text-accent-red'
+                  : 'border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated'
+              )}
+            >
+              <PresetSwatch colors={preset.colors} />
+              {c.presets[preset.id]}
+            </button>
+          ))}
+        </div>
       </div>
 
       <ol className="flex flex-col gap-2">

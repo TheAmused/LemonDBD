@@ -80,5 +80,9 @@ export default {
   themeLightLemon: 'Modo claro (Limón)',
   themeDark: 'Modo oscuro',
   themeSystem: 'Tema del sistema',
+  themeLightShort: 'Claro',
+  themeLightLemonShort: 'Limón',
+  themeDarkShort: 'Oscuro',
+  themeSystemShort: 'Sistema',
 } as const;
 

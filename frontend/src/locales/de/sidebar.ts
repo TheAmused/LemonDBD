@@ -80,5 +80,9 @@ export default {
   themeLightLemon: 'Heller Modus (Zitrone)',
   themeDark: 'Dunkler Modus',
   themeSystem: 'Systemdesign',
+  themeLightShort: 'Hell',
+  themeLightLemonShort: 'Zitrone',
+  themeDarkShort: 'Dunkel',
+  themeSystemShort: 'System',
 } as const;
 

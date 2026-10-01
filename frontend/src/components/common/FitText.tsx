@@ -26,9 +26,11 @@ export type FitMode = 'single' | 'wrap' | 'clamp';
 export interface FitState {
   scale: number;
   mode: FitMode;
+  /** Which of [text, ...alternatives] is shown. */
+  index: number;
 }
 
-const FITS: FitState = { scale: 1, mode: 'single' };
+const FITS: FitState = { scale: 1, mode: 'single', index: 0 };
 
 /** Largest scale in [lo, 1] for which wrapped text fits `maxLines` (bisection). */
 function fitWrapped(inner: HTMLElement, available: number, maxLines: number, lo: number): number | null {
@@ -61,10 +63,18 @@ function fitWrapped(inner: HTMLElement, available: number, maxLines: number, lo:
   return Math.floor(good * 100) / 100;
 }
 
-/** Pure measurement; leaves inline styles for React to re-apply from the returned state. */
+/**
+ * Pure measurement; leaves inline styles (and the text node) for the caller to restore.
+ *
+ * `variants` are the same label from most to least important wording. The first
+ * one that fits on one line at `minScale` or larger wins, so a long label gives
+ * way to a short one before it is shrunk past readability. Only the last
+ * variant is allowed the wrap / clamp fallbacks.
+ */
 export function measureFit(
   wrapper: HTMLElement,
   inner: HTMLElement,
+  variants: string[],
   minScale: number,
   maxLines: number
 ): FitState {
@@ -77,21 +87,35 @@ export function measureFit(
   inner.style.whiteSpace = 'nowrap';
   inner.style.overflowWrap = 'normal';
   const available = wrapper.clientWidth;
-  // Range, not scrollWidth: right-aligned text overflows to the left, which scrollWidth ignores.
-  const range = document.createRange();
-  range.selectNodeContents(inner);
-  const natural = range.getBoundingClientRect().width;
-  if (available <= 0 || natural <= available + 0.5) return FITS;
+  if (available <= 0) return FITS;
 
-  const scale = Math.floor((available / natural) * 98) / 100; // 2% slack: glyph widths are not perfectly linear
-  if (scale >= minScale) return { scale, mode: 'single' };
+  const textNode = inner.firstChild;
+  const original = textNode?.nodeValue ?? '';
+  const last = variants.length - 1;
+  try {
+    for (let index = 0; index <= last; index++) {
+      if (textNode) textNode.nodeValue = variants[index];
+      // Range, not scrollWidth: right-aligned text overflows to the left, which scrollWidth ignores.
+      const range = document.createRange();
+      range.selectNodeContents(inner);
+      const natural = range.getBoundingClientRect().width;
+      if (natural <= available + 0.5) return { scale: 1, mode: 'single', index };
 
-  if (maxLines > 1) {
-    // Wrapped text may go below the single-line floor: losing a word to a clamp is worse than small type.
-    const wrapped = fitWrapped(inner, available, maxLines, minScale * 0.6);
-    if (wrapped !== null) return { scale: wrapped, mode: 'wrap' };
+      const scale = Math.floor((available / natural) * 98) / 100; // 2% slack: glyph widths are not perfectly linear
+      if (scale >= minScale) return { scale, mode: 'single', index };
+      if (index < last) continue;
+
+      if (maxLines > 1) {
+        // Wrapped text may go below the single-line floor: losing a word to a clamp is worse than small type.
+        const wrapped = fitWrapped(inner, available, maxLines, minScale * 0.6);
+        if (wrapped !== null) return { scale: wrapped, mode: 'wrap', index };
+      }
+      return { scale: maxLines > 1 ? minScale * 0.6 : minScale, mode: 'clamp', index };
+    }
+    return FITS;
+  } finally {
+    if (textNode) textNode.nodeValue = original;
   }
-  return { scale: minScale, mode: 'clamp' };
 }
 
 export interface FitTextProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
@@ -100,18 +124,25 @@ export interface FitTextProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
   minScale?: number;
   /** Lines allowed once the single-line scale would drop below `minScale`. Default 1. */
   maxLines?: number;
+  /**
+   * Shorter wordings of the same label, longest first ("Light mode (Lemon)" ->
+   * ["Lemon"]). Used instead of shrinking below `minScale`.
+   */
+  alternatives?: readonly string[];
 }
 
 export const FitText: React.FC<FitTextProps> = ({
   children,
   minScale = 0.5,
   maxLines = 1,
+  alternatives,
   className,
   style,
   title,
   ...rest
 }) => {
   const text = String(children);
+  const variantsKey = [text, ...(alternatives ?? [])].join('\u0001');
   const wrapperRef = React.useRef<HTMLSpanElement>(null);
   const innerRef = React.useRef<HTMLSpanElement>(null);
   const [fit, setFit] = React.useState<FitState>(FITS);
@@ -125,16 +156,18 @@ export const FitText: React.FC<FitTextProps> = ({
     const saved = inner.style.cssText;
     let next: FitState;
     try {
-      next = measureFit(wrapper, inner, minScale, maxLines);
+      next = measureFit(wrapper, inner, variantsKey.split('\u0001'), minScale, maxLines);
     } finally {
       inner.style.cssText = saved;
     }
-    setFit((prev) => (prev.scale === next.scale && prev.mode === next.mode ? prev : next));
-  }, [minScale, maxLines]);
+    setFit((prev) =>
+      prev.scale === next.scale && prev.mode === next.mode && prev.index === next.index ? prev : next
+    );
+  }, [minScale, maxLines, variantsKey]);
 
   useIsoLayoutEffect(() => {
     run();
-  }, [run, text]);
+  }, [run]);
 
   React.useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -182,7 +215,7 @@ export const FitText: React.FC<FitTextProps> = ({
       ref={wrapperRef}
       data-text={text}
       data-flow={flowing ? 'static' : 'overlay'}
-      title={title ?? (clamped ? text : undefined)}
+      title={title ?? (clamped || fit.index > 0 ? text : undefined)}
       className={cn(
         'relative inline-block min-w-0 max-w-full align-bottom',
         // Reserves the natural one-line size; see the header comment.
@@ -198,7 +231,7 @@ export const FitText: React.FC<FitTextProps> = ({
         className={flowing ? 'block' : 'absolute inset-x-0 top-1/2 block -translate-y-1/2'}
         style={innerStyle}
       >
-        {text}
+        {(alternatives?.[fit.index - 1] && fit.index > 0 ? alternatives[fit.index - 1] : text)}
       </span>
     </span>
   );

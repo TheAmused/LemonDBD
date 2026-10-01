@@ -173,7 +173,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="absolute left-4 xl:left-8 2xl:left-14 top-16 bottom-6 hidden lg:flex flex-col justify-end max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="absolute left-4 xl:left-8 2xl:left-14 top-24 bottom-6 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
@@ -223,7 +223,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="absolute right-4 xl:right-8 2xl:right-14 top-16 bottom-6 hidden lg:flex flex-col justify-end max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
+      <div className="absolute right-4 xl:right-8 2xl:right-14 top-24 bottom-6 hidden lg:flex flex-col justify-between max-w-[270px] xl:max-w-[310px] pointer-events-none space-y-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}

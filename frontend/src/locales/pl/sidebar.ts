@@ -80,5 +80,9 @@ export default {
   themeLightLemon: 'Tryb jasny (Cytryna)',
   themeDark: 'Tryb ciemny',
   themeSystem: 'Motyw systemowy',
+  themeLightShort: 'Jasny',
+  themeLightLemonShort: 'Cytryna',
+  themeDarkShort: 'Ciemny',
+  themeSystemShort: 'System',
 } as const;
 

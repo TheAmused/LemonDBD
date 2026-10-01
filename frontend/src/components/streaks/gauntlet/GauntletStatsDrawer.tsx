@@ -27,7 +27,7 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
     attempts={attempts}
     dict={dict}
     renderLabel={(log: MatchLog) => (
-      <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.character_id)}</div>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.character_id)}</div>
     )}
     renderMeta={(log: MatchLog) => (
       <span className="inline-flex items-center gap-1">

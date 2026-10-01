@@ -10,6 +10,7 @@ import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
+import { formatDate } from '@/utils/format';
 const CARD =
   'group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-red/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
@@ -101,7 +102,7 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
   const t = dict.tierLists;
   const ranked = Object.values(list.placements).reduce((n, keys) => n + keys.length, 0);
   const preview = list.items.filter((i) => i.image).slice(0, 5);
-  const date = list.updatedAt ? new Date(list.updatedAt).toLocaleDateString(locale) : null;
+  const date = formatDate(list.updatedAt, locale) || null;
   const customTitle = list.title || t.untitled;
   const isDuplicateCustomKind = Boolean(
     t.kinds.custom && customTitle && t.kinds.custom.trim().toLowerCase() === customTitle.trim().toLowerCase()

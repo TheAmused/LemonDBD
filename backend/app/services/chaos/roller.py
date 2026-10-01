@@ -5,21 +5,22 @@ from typing import Any
 from sqlalchemy import select
 
 from app.core.extensions import db
-from app.models import Killer, Perk
+from app.models import Perk
 from app.services.chaos.constants import ADDON_RARITY_POOL
+from app.services.ownership.characters import get_owned_killers, resolve_killer_names_by_ids
 from app.services.ownership_service import OwnershipService
+
+__all__ = ["resolve_killer_names_by_ids"]
 
 
 def get_owned_killer_names(user_id: int, ownership_service: OwnershipService) -> list[str]:
     """Every killer the user owns. Unlike Gauntlet Original, no roster cap."""
-    owned = ownership_service.get_user_characters(user_id, role="Killer")
-    return [c["name"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
+    return get_owned_killers(user_id, ownership_service, shape="names")
 
 
 def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> list[int]:
     """Same as get_owned_killer_names, but keyed by the killer's stable id."""
-    owned = ownership_service.get_user_characters(user_id, role="Killer")
-    return [c["id"] for c in owned if c["is_owned"] and not c.get("is_disabled")]
+    return get_owned_killers(user_id, ownership_service, shape="ids")
 
 
 def get_unlocked_killer_perks(user_id: int, ownership_service: OwnershipService) -> list[dict[str, Any]]:
@@ -55,17 +56,6 @@ def resolve_perks_by_ids(ids: list[int]) -> list[dict[str, Any]]:
 def resolve_perk_names_by_ids(ids: list[int]) -> list[str]:
     """Frozen perk id list -> current names."""
     return [p["name"] for p in resolve_perks_by_ids(ids)]
-
-
-def resolve_killer_names_by_ids(ids: list[int]) -> list[str]:
-    """Turns a frozen killer id list back into current names."""
-    if not ids:
-        return []
-    # Chaos is a killer mode, so these ids are `killers.id`. They used to be
-    # `characters.id`, which also covered the 54 survivors this never meant.
-    rows = db.session.scalars(select(Killer).where(Killer.id.in_(ids))).all()
-    by_id = {c.id: c.name for c in rows}
-    return [by_id[i] for i in ids if i in by_id]
 
 
 def draw_chaos_perks(

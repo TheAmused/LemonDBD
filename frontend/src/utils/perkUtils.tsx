@@ -2,6 +2,7 @@
 import { Perk, RoleCategory } from '@/types/perks';
 
 import { getBackendBaseUrl, apiUrl } from './api';
+import { isSurvivor } from '@/utils/characterUtils';
 export { getBackendBaseUrl, apiUrl } from './api';
 
 export function sanitizePath(rawPath: string): string {
@@ -69,7 +70,7 @@ export function getCharacterAvatarUrl(
 
   if (!rawPath && perk.character && !isGeneral) {
     const role = (perk.category as RoleCategory) || fallbackRole || 'Survivor';
-    const subDir = role === 'Survivor' ? 'survivors' : 'killers';
+    const subDir = isSurvivor(role) ? 'survivors' : 'killers';
     const sanitized = sanitizeCharacterNameForAvatar(perk.character);
     const mapped = CHARACTER_AVATAR_NAME_MAP[sanitized] || sanitized;
     // Backend writes character avatars as WebP (see backend/app/services/image_conversion.py).

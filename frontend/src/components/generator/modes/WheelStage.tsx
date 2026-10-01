@@ -11,6 +11,7 @@ import { isPerkBlockedByMutator, getPerkWeight } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
+import { isSurvivor } from '@/utils/characterUtils';
 
 export interface WheelStageProps {
   totalPages: number;
@@ -237,7 +238,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         if (isBlocked) {
           grad.addColorStop(0, '#1f1924');
           grad.addColorStop(1, '#0f0a12');
-        } else if (role === 'Survivor') {
+        } else if (isSurvivor(role)) {
           grad.addColorStop(0, i % 2 === 0 ? '#064e3b' : '#022c22');
           grad.addColorStop(1, i % 2 === 0 ? '#022c22' : '#0f172a');
         } else {
@@ -248,7 +249,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
         ctx.fillStyle = grad;
         ctx.fill();
         ctx.lineWidth = 4;
-        ctx.strokeStyle = isBlocked ? '#e11d48' : role === 'Survivor' ? '#15803d' : '#991b1b';
+        ctx.strokeStyle = isBlocked ? '#e11d48' : isSurvivor(role) ? '#15803d' : '#991b1b';
         ctx.stroke();
 
         ctx.save();
@@ -271,7 +272,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           ctx.save();
           ctx.translate(0, iconRadiusPos);
           ctx.rotate(Math.PI / 4);
-          ctx.fillStyle = isBlocked ? '#4c0519' : role === 'Survivor' ? '#15803d' : '#7f1d1d';
+          ctx.fillStyle = isBlocked ? '#4c0519' : isSurvivor(role) ? '#15803d' : '#7f1d1d';
           ctx.fillRect(-24, -24, 48, 48);
           ctx.strokeStyle = '#f59e0b';
           ctx.lineWidth = 2.5;
@@ -301,10 +302,10 @@ export const WheelStage: React.FC<WheelStageProps> = ({
       ctx.fillStyle = '#0f172a';
       ctx.fill();
       ctx.lineWidth = 5;
-      ctx.strokeStyle = role === 'Survivor' ? '#16a34a' : '#b91c1c';
+      ctx.strokeStyle = isSurvivor(role) ? '#16a34a' : '#b91c1c';
       ctx.stroke();
 
-      ctx.fillStyle = role === 'Survivor' ? '#22c55e' : '#dc2626';
+      ctx.fillStyle = isSurvivor(role) ? '#22c55e' : '#dc2626';
       ctx.font = '900 16px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -731,7 +732,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               className={`w-[min(62vw,36dvh)] h-[min(62vw,36dvh)] min-w-[200px] min-h-[200px] sm:w-[min(285px,38dvh)] sm:h-[min(285px,38dvh)] md:w-[min(320px,38dvh)] md:h-[min(320px,38dvh)] lg:w-[min(350px,38dvh)] lg:h-[min(350px,38dvh)] xl:w-[min(480px,46dvh)] xl:h-[min(480px,46dvh)] 2xl:w-[min(600px,52dvh)] 2xl:h-[min(600px,52dvh)] wide:w-[min(720px,58dvh)]! wide:h-[min(720px,58dvh)]! wide-2k:w-[min(900px,60dvh)]! wide-2k:h-[min(900px,60dvh)]! wide-4k:w-[min(1100px,62dvh)]! wide-4k:h-[min(1100px,62dvh)]! transition-all duration-300 ease-out transform select-none ${
                 !isSpinning && sortedPerks.length > 0
                   ? `cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
-                      role === 'Survivor'
+                      isSurvivor(role)
                         ? 'hover:drop-shadow-[0_0_24px_var(--color-accent-green)]'
                         : 'hover:drop-shadow-[0_0_24px_var(--color-accent-red)]'
                     }`

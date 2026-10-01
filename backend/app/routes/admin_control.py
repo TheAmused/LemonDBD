@@ -6,6 +6,7 @@ from sqlalchemy import and_, case, select
 from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
+from app.utils.pagination import paginate_args
 from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
 from app.services.admin_control_service import (
@@ -252,6 +253,5 @@ def update_challenge_mode(mode: str):
 @admin_control_bp.route("/audit-logs", methods=["GET"])
 @admin_required
 def list_audit_logs():
-    page = request.args.get("page", 1, type=int)
-    per_page = request.args.get("per_page", 25, type=int)
+    page, per_page = paginate_args(default_per_page=25)
     return jsonify(get_audit_logs(page=page, per_page=per_page)), 200

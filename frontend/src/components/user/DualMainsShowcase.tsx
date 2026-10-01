@@ -10,6 +10,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import type { UserShowcaseState } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
+import { isSurvivor } from '@/utils/characterUtils';
 
 interface DualMainsShowcaseProps {
   showcase: UserShowcaseState;
@@ -138,12 +139,12 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
           isOpen={Boolean(characterModalRole)}
           role={characterModalRole}
           currentCharacter={
-            characterModalRole === 'Survivor'
+            isSurvivor(characterModalRole)
               ? showcase.survivorMain.characterName
               : showcase.killerMain.characterName
           }
           onSelect={(name) => {
-            if (characterModalRole === 'Survivor') {
+            if (isSurvivor(characterModalRole)) {
               onSurvivorCharacterChange(name);
             } else {
               onKillerCharacterChange(name);
@@ -163,14 +164,14 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
           slotIndex={perkModalConfig.slotIndex}
           currentPerkId={perkModalConfig.currentPerkId}
           onSelect={(perkId) => {
-            if (perkModalConfig.role === 'Survivor') {
+            if (isSurvivor(perkModalConfig.role)) {
               onSurvivorPerkChange(perkModalConfig.slotIndex, perkId);
             } else {
               onKillerPerkChange(perkModalConfig.slotIndex, perkId);
             }
           }}
           onClear={() => {
-            if (perkModalConfig.role === 'Survivor') {
+            if (isSurvivor(perkModalConfig.role)) {
               onSurvivorPerkChange(perkModalConfig.slotIndex, null);
             } else {
               onKillerPerkChange(perkModalConfig.slotIndex, null);

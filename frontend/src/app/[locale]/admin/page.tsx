@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
 import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { getBackendBaseUrl } from '@/utils/api';
+import { getBackendBaseUrl, authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { PageShell } from '@/components/layout/PageShell';
 import { AdminHeader } from '@/components/admin/AdminHeader';
@@ -110,11 +110,6 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     }
   }, [isLoading, isAuthenticated, isAdmin, currentLocale, router]);
 
-  const getAuthToken = (): string | null => {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('lemondbd_token');
-  };
-
   const fetchAdminData = useCallback(async () => {
     const token = getAuthToken();
     if (!token) return;
@@ -124,7 +119,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
       const timestamp = Date.now();
       const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats?_t=${timestamp}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache, no-store, must-revalidate',
         },
         cache: 'no-store',
@@ -144,7 +139,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       const usersRes = await fetch(`${API_BASE}/api/v1/users?${query.toString()}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache, no-store, must-revalidate',
         },
         cache: 'no-store',
@@ -176,7 +171,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
 
       const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports?${query.toString()}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache',
         },
       });
@@ -227,7 +222,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ role: newRole }),
       });
@@ -241,7 +236,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -256,7 +251,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ is_active: newActive }),
       });
@@ -270,7 +265,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -289,7 +284,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${targetUser.id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: authHeaders(token),
       });
       if (res.ok) {
         setActionMessage({
@@ -299,7 +294,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         await fetchAdminData();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingUser(false);
@@ -321,7 +316,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify(userData),
       });
@@ -341,7 +336,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         });
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Network error.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Network error.');
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -361,7 +356,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify(payload),
       });
@@ -374,7 +369,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Failed to update report.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Failed to update report.');
       setActionMessage({ type: 'error', text: msg });
     }
   };
@@ -393,7 +388,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
     try {
       const res = await fetch(`${API_BASE}/api/v1/admin/bug-reports/${reportId}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: authHeaders(token),
       });
 
       if (res.ok) {
@@ -404,7 +399,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
         await fetchBugReports();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.ticketDeleteFailed || 'Failed to delete report.';
+      const msg = getErrorMessage(err, dict?.admin?.ticketDeleteFailed || 'Failed to delete report.');
       setActionMessage({ type: 'error', text: msg });
     } finally {
       setIsDeletingBugReport(false);

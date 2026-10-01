@@ -40,8 +40,8 @@ const GauntletModeModal = dynamic(
   () => import('./GauntletModeModal').then((m) => m.GauntletModeModal),
   { ssr: false }
 );
-const CheckpointModal = dynamic(
-  () => import('./CheckpointModal').then((m) => m.CheckpointModal),
+const StreakCheckpointModal = dynamic(
+  () => import('../StreakCheckpointModal').then((m) => m.StreakCheckpointModal),
   { ssr: false }
 );
 
@@ -293,9 +293,10 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           gameMode={gameMode}
           dict={dict}
         />
-        <CheckpointModal
+        <StreakCheckpointModal
           checkpoint={justBankedCheckpoint}
-          role={role}
+          className="gn-land-frame"
+          valueClassName="font-mono"
           onClose={dismissCheckpointCelebration}
           dict={dict}
         />

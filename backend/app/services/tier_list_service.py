@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import json
 import logging
-import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -22,12 +21,11 @@ from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
+from app.models.slug import slugify, unique_slug
 from app.models.tier_list import RESERVED_SLUGS, TierList
 from app.services.db.serializers import serialize_tier_list
 
 logger = logging.getLogger(__name__)
-
-_SLUG_INVALID = re.compile(r"[^a-z0-9]+")
 
 
 def validate_tier_list(tier_list: TierList) -> None:
@@ -76,26 +74,15 @@ def get_tier_list(slug: str, lang: str | None = None) -> dict[str, Any] | None:
     return row.to_dict(lang) if row else None
 
 
-def _slugify(text: str) -> str:
+def _new_slug(title: str) -> str:
     """`"Best Chase Music!"` -> `"best-chase-music"`, matching `TierList`'s own
-    `SLUG_PATTERN` exactly (a run of anything else collapses to one hyphen)."""
-    slug = _SLUG_INVALID.sub("-", (text or "").strip().lower()).strip("-")
-    slug = slug[:80].strip("-")
-    return slug or "tier-list"
-
-
-def _unique_slug(base: str) -> str:
-    """The first `base`, `base-2`, `base-3`... that is neither reserved nor
-    already taken. Slugs are the stable public identity of a row (the model's
-    own docstring), so a collision here must never silently overwrite one."""
-    candidate = base
-    n = 2
-    while candidate in RESERVED_SLUGS or db.session.scalar(
-        select(TierList.id).where(TierList.slug == candidate)
-    ):
-        candidate = f"{base}-{n}"
-        n += 1
-    return candidate
+    `SLUG_PATTERN` exactly, made unique against reserved and existing slugs."""
+    base = slugify(title, sep="-", fold_unicode=False, strip_symbols=False, max_len=80, fallback="tier-list")
+    return unique_slug(
+        base,
+        lambda c: db.session.scalar(select(TierList.id).where(TierList.slug == c)),
+        reserved=RESERVED_SLUGS,
+    )
 
 
 def create_tier_list(
@@ -115,7 +102,7 @@ def create_tier_list(
     `validate_tier_list()`'s cross-field rules reject (a bad color, a
     duplicate tier id, no items at all) -- the route turns that into a 400.
     """
-    slug = _unique_slug(_slugify(title))
+    slug = _new_slug(title)
     next_sort_order = (db.session.scalar(select(func.max(TierList.sort_order))) or 0) + 10
 
     row = TierList(

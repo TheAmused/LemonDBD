@@ -19,6 +19,8 @@ import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
+import { formatNumber } from '@/utils/format';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 interface CharacterStatsModalProps {
   isOpen: boolean;
@@ -52,7 +54,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
 
   const name = rawCharacter?.name || rawCharacter?.character_name || 'Candidate';
   const role = rawCharacter?.role || 'Survivor';
-  const isSurvivor = role === 'Survivor';
+  const isSurvivor = isSurvivorRole(role);
   // The old `title` chain (locMeta.title || meta.title || meta.archetype || ...tagline) is
   // dropped entirely: it was never rendered here — the modal header shows `name`.
 
@@ -203,10 +205,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         <Surface tone="elevated" radius="2xl" padding="none" className="space-y-1.5 p-3.5 font-mono">
           <div className="flex justify-between text-xs font-bold">
             <span className="flex items-center gap-1 text-accent-red">
-              <Heart className="h-3.5 w-3.5 fill-accent-red" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{percentSign})
+              <Heart className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
             </span>
             <span className="flex items-center gap-1 text-text-muted">
-              <ThumbsDown className="h-3.5 w-3.5" /> {passCount.toLocaleString()} {passesLabel} ({passPct}{percentSign})
+              <ThumbsDown className="h-3.5 w-3.5" /> {formatNumber(passCount)} {passesLabel} ({passPct}{percentSign})
             </span>
           </div>
           <div className="h-3 w-full bg-bg-elevated rounded-full overflow-hidden flex shadow-inner">
@@ -220,7 +222,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             />
           </div>
           <div className="flex justify-between text-[10px] text-text-muted pt-1">
-            <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
+            <span>{totalVotesLabel}: {formatNumber(totalVotes)}</span>
             {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
           </div>
         </Surface>

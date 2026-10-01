@@ -2,7 +2,7 @@
 """add tier_lists: official tier-list templates for the /tier-lists hub
 
 Revision ID: tier_lists_001
-Revises: merge_challenge_perk_map_001
+Revises: challenge_json_columns_001
 Create Date: 2026-09-26 00:00:00.000000
 
 Idempotent, like the rest of the chain: `create_app()` runs `db.create_all()`
@@ -21,7 +21,7 @@ from sqlalchemy.dialects import postgresql
 
 
 revision = "tier_lists_001"
-down_revision = "merge_challenge_perk_map_001"
+down_revision = "challenge_json_columns_001"
 branch_labels = None
 depends_on = None
 

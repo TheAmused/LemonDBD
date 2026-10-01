@@ -27,6 +27,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Modal, useModal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
@@ -94,7 +95,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const cardRef = useRef<HTMLDivElement | null>(null);
   const backendBase = getBackendBaseUrl();
 
-  const isSurvivor = character.role === 'Survivor';
+  const isSurvivor = isSurvivorRole(character.role);
 
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);

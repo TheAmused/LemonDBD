@@ -55,6 +55,20 @@ export function normalizeRole(role?: string | null): string {
   return (role ?? '').trim().toLowerCase().replace(/s$/, '') === 'killer' ? 'killer' : 'survivor';
 }
 
+function roleToken(role?: string | null): string {
+  return (role ?? '').trim().toLowerCase().replace(/s$/, '');
+}
+
+/** Case-insensitive; `"Killer"`, `"killers"`, `"KILLER"` are true, anything else (incl. undefined) is false. */
+export function isKiller(role?: string | null): boolean {
+  return roleToken(role) === 'killer';
+}
+
+/** Case-insensitive; `"Survivor"`, `"survivors"` are true, anything else (incl. undefined) is false. */
+export function isSurvivor(role?: string | null): boolean {
+  return roleToken(role) === 'survivor';
+}
+
 /**
  * Whether a perk is taught by this character.
  *

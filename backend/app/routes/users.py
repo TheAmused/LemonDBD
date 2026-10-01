@@ -23,6 +23,7 @@ from app.models import (
     UserPerkOwnership,
 )
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
 from app.services.db.export_import import DatabaseExportImportService
 from app.services.ownership_service import OwnershipService
@@ -51,8 +52,7 @@ def list_users():
     """List all registered users with optional search filtering and pagination."""
     search = request.args.get("search")
     role = request.args.get("role")
-    page = request.args.get("page", default=1, type=int)
-    per_page = request.args.get("per_page", default=20, type=int)
+    page, per_page = paginate_args(default_per_page=20)
 
     result = user_service.get_all_users(search=search, role=role, page=page, per_page=per_page)
     return jsonify(result), 200

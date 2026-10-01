@@ -27,10 +27,11 @@ import {
 import { CHANGELOG_TAG_THEME } from './changelogTheme';
 import dynamic from 'next/dynamic';
 
-import { tip } from '@/components/common/Tooltip';
+import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { RichText } from '@/components/common/RichText';
 import { Spinner } from '@/components/common/Spinner';
+import { formatDate } from '@/utils/format';
 const ChangelogEditorModal = dynamic(
   () => import('./ChangelogEditorModal').then((m) => m.ChangelogEditorModal),
   { ssr: false }
@@ -43,14 +44,8 @@ const ConfirmModal = dynamic(
 const LAST_SEEN_KEY = 'lemondbd_changelog_last_seen';
 const TOUCH_HOLD_MS = 220;
 
-function formatDate(iso: string | null): string {
-  if (!iso) return '';
-  try {
-    return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch {
-    return '';
-  }
-}
+const formatPostDate = (iso: string | null) =>
+  formatDate(iso, undefined, { month: 'short', day: 'numeric', year: 'numeric' });
 
 export interface WhatsNewLauncherProps {
   /** Extra classes for the icon-only trigger button (sizing/positioning). */
@@ -419,7 +414,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ className = 
                         </span>
                       )}
                       <span className="text-[10px] font-bold uppercase tracking-wide text-text-muted">
-                        {formatDate(post.created_at)}
+                        {formatPostDate(post.created_at)}
                       </span>
                     </div>
                     <h3 className="mt-1.5 truncate text-sm font-black text-text-primary">{post.title}</h3>

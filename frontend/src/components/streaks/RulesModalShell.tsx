@@ -14,9 +14,7 @@ export interface RulesModalShellProps {
   icon: LucideIcon;
   title: string;
   /** Tailwind classes for the header icon chip, e.g. "bg-accent-red/10 border-accent-red/20 text-accent-red". */
-  iconClassName: string;
-  /** Tailwind classes for the footer button, e.g. "bg-accent-red hover:bg-accent-red-hover". */
-  footerButtonClassName: string;
+  iconClassName?: string;
   footerButtonLabel?: string;
   children: React.ReactNode;
   dict?: Dictionary;

@@ -59,6 +59,8 @@ interface AuthContextType {
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
+import { safeSetItem, safeRemoveItem } from '@/utils/safeStorage';
+import { AUTH_TOKEN_KEY, authHeaders, getAuthToken } from '@/utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -74,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/me`, {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          ...authHeaders(authToken),
         },
       });
       if (res.ok) {
@@ -90,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // If token expired or invalid
       setUser(null);
       setToken(null);
-      localStorage.removeItem('lemondbd_token');
+      safeRemoveItem(AUTH_TOKEN_KEY);
     } catch (err) {
       console.error('Failed to fetch auth state:', err);
     } finally {
@@ -99,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    const savedToken = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const savedToken = getAuthToken();
     if (savedToken) {
       setToken(savedToken);
       fetchCurrentUser(savedToken);
@@ -122,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(data.token);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
-      localStorage.setItem('lemondbd_token', data.token);
+      safeSetItem(AUTH_TOKEN_KEY, data.token);
       return { success: true, user: data.user as UserProfile };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
@@ -143,7 +145,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setToken(data.token);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
-      localStorage.setItem('lemondbd_token', data.token);
+      safeSetItem(AUTH_TOKEN_KEY, data.token);
       return { success: true, user: data.user as UserProfile };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
@@ -223,7 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(null);
     setOwnership(null);
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('lemondbd_token');
+      safeRemoveItem(AUTH_TOKEN_KEY);
       const path = window.location.pathname;
       const localeMatch = path.match(/^\/([a-z]{2})/);
       const locale = localeMatch ? localeMatch[1] : 'en';
@@ -248,7 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ character_id: characterId, is_owned: isOwned }),
       });
@@ -272,7 +274,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ updates }),
       });
@@ -294,7 +296,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ perk_id: perkId, is_unlocked: isUnlocked }),
       });
@@ -318,7 +320,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({ updates }),
       });
@@ -338,7 +340,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${user.id}/onboarding/complete`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: authHeaders(token),
       });
       if (res.ok) {
         await refreshUser();
@@ -356,7 +358,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`${API_BASE}/api/v1/users/${user.id}/language`, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        headers: authHeaders(token, { json: true }),
         body: JSON.stringify({ language }),
       });
       if (res.ok) {

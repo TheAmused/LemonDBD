@@ -5,8 +5,9 @@ import type {
   GuessEvaluationResult,
   RoundConfig,
 } from '@/types/minigame';
-import { apiUrl } from '@/utils/api';
+import { apiUrl, authHeaders } from '@/utils/api';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { isKiller, isSurvivor } from '@/utils/characterUtils';
 
 export function minigameCatalogCacheKey(lang: string = 'en'): string {
   return catalogKey('minigames/catalog', { lang });
@@ -23,10 +24,10 @@ export async function fetchMinigameCatalog(lang: string = 'en'): Promise<Minigam
   const rawChars = data.characters || [];
   const killers = (data.killers && data.killers.length > 0)
     ? data.killers
-    : rawChars.filter((c: any) => c.role === 'Killer' || c.type === 'killer');
+    : rawChars.filter((c: any) => isKiller(c.role) || c.type === 'killer');
   const survivors = (data.survivors && data.survivors.length > 0)
     ? data.survivors
-    : rawChars.filter((c: any) => c.role === 'Survivor' || c.type === 'survivor');
+    : rawChars.filter((c: any) => isSurvivor(c.role) || c.type === 'survivor');
 
   return {
     characters: rawChars,
@@ -151,7 +152,7 @@ export async function publishOfficialChallenge(
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeaders(token),
     },
     body: JSON.stringify({
       title: challenge.title,

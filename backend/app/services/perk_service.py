@@ -9,7 +9,6 @@ from app.services.perks import (
     ItemModel,
     MapModel,
     PerkModel,
-    clean_description as _clean_description_fn,
     fetch_addons as _fetch_addons_fn,
     fetch_character_detail as _fetch_character_detail_fn,
     fetch_character_suggestions as _fetch_character_suggestions_fn,
@@ -53,10 +52,6 @@ class PerkService:
         self._maps_cache: list[dict[str, Any]] = []
 
         self.reload_data()
-
-    @staticmethod
-    def clean_description(text: str) -> str:
-        return _clean_description_fn(text)
 
     def reload_data(self) -> None:
         _reload_service_data_fn(self)

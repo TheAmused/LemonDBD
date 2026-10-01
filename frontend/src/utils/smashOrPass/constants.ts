@@ -38,13 +38,9 @@ export const SMASH_ROSTER_LIMITS = {
   shareLinkWarnChars: 8_000,
 } as const;
 
-/** Allowed inline image types. SVG is excluded: it is a document, not a picture. */
-export const DATA_IMAGE_PATTERN = /^data:image\/(png|jpe?g|webp|gif|avif);base64,[A-Za-z0-9+/]+={0,2}$/;
 
 export const ENTITY_ID_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
-/** Hash parameter a share link carries its payload in (`/smash-or-pass#import=...`). */
-export const SHARE_HASH_PARAM = 'import';
 
 /** Quick-pick chips in the creator; the field itself is free text on both ends. */
 export const ROLE_QUICK_PICKS = ['Survivor', 'Killer'] as const;
@@ -71,3 +67,6 @@ export const TRANSLATABLE_FIELDS = [
   'red_flags',
   'green_flags',
 ] as const;
+
+// Shared with the other portable-JSON codec; re-exported so callers keep one import site.
+export { DATA_IMAGE_PATTERN, SHARE_HASH_PARAM } from '@/utils/shareCodec';

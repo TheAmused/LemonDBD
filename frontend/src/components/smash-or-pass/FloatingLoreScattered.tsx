@@ -17,6 +17,7 @@ import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks, getWatermarkFontSize } from '@/utils/smashWatermarks';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
@@ -52,8 +53,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
 }) => {
   if (!character) return null;
 
-  const isSurvivor = character.role === 'Survivor';
-  const isKiller = character.role === 'Killer';
+  const isSurvivor = isSurvivorRole(character.role);
+  const isKiller = isKillerRole(character.role);
   const isMonster = character.gender === 'monster_other';
   const isFemale = character.gender === 'female';
 

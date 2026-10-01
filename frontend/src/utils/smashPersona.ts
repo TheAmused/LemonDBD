@@ -1,6 +1,7 @@
 // frontend/src/utils/smashPersona.ts
 
 import type { EntityItem, CustomRomanceArchetype, ArchetypeRule } from '@/types/smashOrPass';
+import { isKiller, isSurvivor } from '@/utils/characterUtils';
 
 export interface VoteRecord {
   character: EntityItem;
@@ -288,11 +289,11 @@ export function calculateRomancePersona(
   const total = votes.length;
   const smashRate = Math.round((smashes.length / total) * 100);
 
-  const evaluatedKillers = votes.filter((v) => v.character?.role === 'Killer').length;
-  const evaluatedSurvivors = votes.filter((v) => v.character?.role === 'Survivor').length;
+  const evaluatedKillers = votes.filter((v) => isKiller(v.character?.role)).length;
+  const evaluatedSurvivors = votes.filter((v) => isSurvivor(v.character?.role)).length;
 
-  const smashedKillers = smashes.filter((v) => v.character?.role === 'Killer').length;
-  const smashedSurvivors = smashes.filter((v) => v.character?.role === 'Survivor').length;
+  const smashedKillers = smashes.filter((v) => isKiller(v.character?.role)).length;
+  const smashedSurvivors = smashes.filter((v) => isSurvivor(v.character?.role)).length;
   const smashedMonsters = smashes.filter((v) => v.character?.gender === 'monster_other').length;
 
   let survivorAffinity = 0;
@@ -510,44 +511,4 @@ export function buildFacebookShareUrl(shareUrl: string, shareText?: string): str
   return base;
 }
 
-/**
- * Robust clipboard copy with fallback to document.execCommand('copy').
- */
-export async function copyTextWithFallback(text: string): Promise<boolean> {
-  if (
-    typeof navigator !== 'undefined' &&
-    navigator.clipboard &&
-    typeof navigator.clipboard.writeText === 'function'
-  ) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch (err) {
-      console.warn('navigator.clipboard.writeText failed, trying execCommand fallback:', err);
-    }
-  }
-
-  // Fallback to hidden textarea with document.execCommand('copy')
-  if (typeof document !== 'undefined') {
-    try {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'fixed';
-      textarea.style.top = '-9999px';
-      textarea.style.left = '-9999px';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return Boolean(successful);
-    } catch (err) {
-      console.error('execCommand copy fallback failed:', err);
-      return false;
-    }
-  }
-
-  return false;
-}
+export { copyTextWithFallback } from '@/utils/clipboard';

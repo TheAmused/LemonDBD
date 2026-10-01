@@ -16,6 +16,8 @@
  *   - Resolves to INTERNAL_API_URL (http://backend:5000) or NEXT_PUBLIC_API_URL.
  */
 
+import { safeGetItem } from '@/utils/safeStorage';
+
 export function getBackendBaseUrl(): string {
   if (typeof window !== 'undefined') {
     const envUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -56,3 +58,59 @@ export function staticUrl(rawPath?: string | null): string | undefined {
 }
 
 export const backendBase = typeof window !== 'undefined' ? '' : (process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://backend:5000');
+
+// ---------------------------------------------------------------------------
+// Auth + error helpers shared by every client-side API caller.
+// ---------------------------------------------------------------------------
+
+/** localStorage key under which AuthContext persists the JWT. */
+export const AUTH_TOKEN_KEY = 'lemondbd_token';
+
+/** The persisted JWT, or null (SSR, signed out, storage blocked). */
+export function getAuthToken(): string | null {
+  return safeGetItem(AUTH_TOKEN_KEY) || null;
+}
+
+/**
+ * Authorization header (+ optional JSON content type).
+ * `token` undefined -> read the persisted token; null/'' -> no Authorization header.
+ */
+export function authHeaders(
+  token?: string | null,
+  opts: { json?: boolean } = {}
+): Record<string, string> {
+  const t = token === undefined ? getAuthToken() : token;
+  const headers: Record<string, string> = {};
+  if (t) headers.Authorization = `Bearer ${t}`;
+  if (opts.json) headers['Content-Type'] = 'application/json';
+  return headers;
+}
+
+/** fetch() with the Bearer header attached; caller-supplied headers win. */
+export function authFetch(
+  input: RequestInfo | URL,
+  init: RequestInit & { token?: string | null } = {}
+): Promise<Response> {
+  const { token, headers, ...rest } = init;
+  const merged = new Headers(authHeaders(token));
+  new Headers(headers).forEach((value, key) => merged.set(key, value));
+  return fetch(input, { ...rest, headers: merged });
+}
+
+/** `err.message` for Error instances, otherwise the fallback. */
+export function getErrorMessage(err: unknown, fallback: string): string {
+  return err instanceof Error && err.message ? err.message : fallback;
+}
+
+/** Error thrown by the user-profile / showcase API clients. */
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.code = code;
+  }
+}

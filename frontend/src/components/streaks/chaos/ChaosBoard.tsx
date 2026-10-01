@@ -29,8 +29,8 @@ const ResetConfirmModal = dynamic(
   () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
   { ssr: false }
 );
-const ChaosCheckpointModal = dynamic(
-  () => import('./ChaosCheckpointModal').then((m) => m.ChaosCheckpointModal),
+const StreakCheckpointModal = dynamic(
+  () => import('../StreakCheckpointModal').then((m) => m.StreakCheckpointModal),
   { ssr: false }
 );
 const ChaosStatsDrawer = dynamic(
@@ -339,7 +339,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           usedPerkNames={run?.used_perks || []}
           dict={dict}
         />
-        <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
+        <StreakCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
         <ChaosModeModal
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}

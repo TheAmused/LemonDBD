@@ -11,6 +11,7 @@ from app.core.http_cache import cache_catalog
 from app.core.security import get_current_user
 from app.services.perk_service import PerkService
 from app.utils.lang import extract_lang as _extract_lang
+from app.utils.pagination import paginate_args
 from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
@@ -59,8 +60,7 @@ def list_perks():
     search = request.args.get("search")
     sort_by = request.args.get("sort_by", default="name", type=str)
     order = request.args.get("order", default="asc", type=str)
-    page = request.args.get("page", default=1, type=int)
-    limit = request.args.get("limit", default=50, type=int)
+    page, limit = paginate_args(default_per_page=50, max_per_page=10000, per_page_arg="limit")
     lang = _extract_lang()
 
     owned_only_param = request.args.get("owned_only", "false").lower()

@@ -12,6 +12,7 @@ import { getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 
 import { tip } from '@/components/common/Tooltip';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 interface MainCardProps {
   role: RoleCategory;
   loadout: MainLoadout;
@@ -35,7 +36,7 @@ export const MainCard: React.FC<MainCardProps> = ({
   dict,
   locale = 'en',
 }) => {
-  const isSurvivor = role === 'Survivor';
+  const isSurvivor = isSurvivorRole(role);
   const [allPerks, setAllPerks] = useState<Perk[]>([]);
   const [imgError, setImgError] = useState(false);
 

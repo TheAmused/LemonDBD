@@ -3,11 +3,23 @@ import re
 
 from flask import request
 
-SUPPORTED_LANGS = {"pl", "de", "es", "fr", "it", "ja", "en"}
+#: THE list of site languages (onboarding / settings). Content text for these
+#: locales lives in the seed JSON files (`translations` key of each row) and
+#: the frontend ships matching `src/locales/<code>` bundles. Every other locale
+#: constant below is derived from this one -- add a language here only.
+SUPPORTED_LOCALES: tuple[str, ...] = ("en", "pl", "de", "es", "ja")
 
-#: Site languages a user may choose (onboarding / settings). Content text for
-#: these locales lives in the seed JSON files (`translations` key of each row).
-SUPPORTED_LOCALES: list[str] = ["en", "pl", "de", "es", "ja"]
+#: Locale-code lookup set (same members as `SUPPORTED_LOCALES`).
+SUPPORTED_LANGS: frozenset[str] = frozenset(SUPPORTED_LOCALES)
+
+#: The language stored in the base columns; it never appears in a
+#: `translations` blob, where an "en" entry could only restate a column.
+SOURCE_LOCALE = "en"
+
+#: The locales a `translations` blob may carry (alphabetical, as always).
+TRANSLATABLE_LOCALES: tuple[str, ...] = tuple(sorted(loc for loc in SUPPORTED_LOCALES if loc != SOURCE_LOCALE))
+
+_REFERER_LANG_RE = re.compile(r"/(" + "|".join(SUPPORTED_LOCALES) + r")(?:/|$|\?)", re.IGNORECASE)
 
 
 def extract_lang() -> str | None:
@@ -18,7 +30,7 @@ def extract_lang() -> str | None:
 
     referer = request.headers.get("Referer", "")
     if referer:
-        m = re.search(r"/(pl|de|es|fr|it|ja|en)(?:/|$|\?)", referer, re.IGNORECASE)
+        m = _REFERER_LANG_RE.search(referer)
         if m:
             return m.group(1).lower()
 

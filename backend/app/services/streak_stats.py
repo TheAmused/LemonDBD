@@ -18,6 +18,10 @@ from app.models import (
 from app.schemas.streak import StreakStats
 
 
+# Most recent matches returned with the stats; the UI shows 10 and paginates the rest.
+RECENT_LOGS_LIMIT = 200
+
+
 type StreakLog = ChaosMatchLog | GauntletMatchLog | HistoryMatchLog | PageStreakPageLog
 
 
@@ -25,7 +29,7 @@ def fetch_streak_stats[LogModel: StreakLog, LogT](
     run_ids: Sequence[int],
     match_log_model: type[LogModel],
     serialize_log: Callable[[LogModel], LogT],
-    limit: int = 10,
+    limit: int = RECENT_LOGS_LIMIT,
 ) -> StreakStats[LogT]:
     """Shared match-log aggregation for every streak mode's stats endpoint."""
     if not run_ids:

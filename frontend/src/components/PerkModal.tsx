@@ -2,14 +2,18 @@
 // frontend/src/components/PerkModal.tsx
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { X, User, ImageOff, Repeat } from 'lucide-react';
+import { X, ImageOff } from 'lucide-react';
 import { Perk, PerkDictionary } from '@/types/perks';
 import {
   getPerkIconUrl,
   getCharacterAvatarUrl,
 } from '@/utils/perkUtils';
 import { PerkDescription } from '@/components/PerkDescription';
+import { tip } from '@/components/common/Tooltip';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+
+/** Perk icon and owner avatar share this size. */
+const SLOT_SIZE = 'h-20 w-20 sm:h-24 sm:w-24';
 
 interface PerkModalProps {
   perk: Perk | null;
@@ -65,91 +69,71 @@ export const PerkModal: React.FC<PerkModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl rounded-3xl border border-border-color bg-bg-surface/95 p-6 sm:p-8 shadow-2xl text-text-primary cursor-default animate-in zoom-in-95 duration-200 backdrop-blur-2xl transition-colors"
+        className="relative w-full max-w-2xl rounded-3xl border border-border-color bg-bg-surface/95 px-6 pb-6 pt-12 sm:px-8 sm:pb-8 shadow-2xl text-text-primary cursor-default animate-in zoom-in-95 duration-200 backdrop-blur-2xl transition-colors"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label={dict?.modal?.close}
-          className="absolute right-5 top-5 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red cursor-pointer"
+          className="absolute right-3 top-3 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pr-8">
-          <div className="relative flex h-20 w-20 sm:h-24 sm:w-24 shrink-0 items-center justify-center rounded-2xl bg-bg-elevated border border-border-color p-2 shadow-inner">
+        {/* Perk icon | title | owner avatar. Both sides share one size so the title stays centred. */}
+        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4 sm:gap-6">
+          <div className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}>
             {!imgError && iconSrc ? (
               <img
                 src={iconSrc}
                 alt={perk.name}
                 onError={() => setImgError(true)}
-                className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-lg"
+                className="h-full w-full object-contain drop-shadow-lg"
               />
             ) : (
               <ImageOff className="h-8 w-8 text-text-muted" />
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="min-w-0 text-center">
             <h2
               id="perk-modal-title"
-              className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight leading-tight"
+              className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight leading-tight text-balance"
             >
               {perk.name}
             </h2>
+            {perk.alternate_name && (
+              <p className="mt-1.5 text-xs font-bold text-accent-amber">
+                {dict?.modal?.alias && `${dict.modal.alias}: `}
+                {perk.alternate_name}
+              </p>
+            )}
+          </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <span
-                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-black uppercase tracking-wider ${
-                  isSurvivor
-                    ? 'bg-accent-green/10 text-accent-green border border-accent-green/30'
-                    : 'bg-accent-red/10 text-accent-red border border-accent-red/30'
-                }`}
-              >
-                {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
-                <span>
-                  {isSurvivor ? dict?.modal?.survivorPerk : dict?.modal?.killerPerk}
-                </span>
-              </span>
-
-              <div className="flex items-center gap-1.5 rounded-lg bg-bg-elevated text-text-primary border border-border-color px-2.5 py-1 text-xs font-bold shadow-xs">
-                {avatarSrc && !avatarError ? (
-                  <img
-                    src={avatarSrc}
-                    alt={perk.character}
-                    onError={() => setAvatarError(true)}
-                    className="h-5 w-5 rounded-full object-cover border border-accent-amber/40 shrink-0 shadow-xs"
-                  />
-                ) : (
-                  <User className="h-3.5 w-3.5 text-text-muted shrink-0" />
-                )}
-                <span>
-                  {isGeneral ? dict?.modal?.generalPerk : perk.character}
-                </span>
-              </div>
-
-              {perk.alternate_name && (
-                <div className="flex items-center gap-1 rounded-lg bg-accent-amber/10 px-2.5 py-1 text-xs font-bold text-accent-amber border border-accent-amber/30">
-                  <Repeat className="h-3 w-3 text-accent-amber" />
-                  <span>
-                    {dict?.modal?.alias && `${dict.modal.alias}: `}
-                    {perk.alternate_name}
-                  </span>
-                </div>
-              )}
-            </div>
+          <div
+            className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}
+            {...tip(
+              isGeneral ? dict?.modal?.generalPerk : perk.character,
+              undefined,
+              'character'
+            )}
+          >
+            {!isGeneral && avatarSrc && !avatarError ? (
+              <img
+                src={avatarSrc}
+                alt={perk.character}
+                onError={() => setAvatarError(true)}
+                className="h-full w-full rounded-full object-cover ring-2 ring-accent-amber/40 shadow-lg"
+              />
+            ) : isSurvivor ? (
+              <SurvivorIcon className="h-1/2 w-1/2 text-accent-green" />
+            ) : (
+              <KillerIcon className="h-1/2 w-1/2 text-accent-red" />
+            )}
           </div>
         </div>
 
         <div className="mt-6 border-t border-border-color pt-5">
-          {dict?.modal?.perkDescription && (
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-text-muted font-mono">
-                {dict.modal.perkDescription}
-              </h3>
-            </div>
-          )}
-
           <div
             id="perk-modal-description"
             className="max-h-[360px] overflow-y-auto pr-2 custom-scrollbar scrollbar-track-bg-elevated"
@@ -164,4 +148,3 @@ export const PerkModal: React.FC<PerkModalProps> = ({
     </div>
   );
 };
-

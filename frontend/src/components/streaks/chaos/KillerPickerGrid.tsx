@@ -54,7 +54,7 @@ const KillerTile: React.FC<{
           <KillerIcon className="w-6 h-6 text-text-muted" />
         )}
       </div>
-      <span className="text-[11px] font-medium text-center text-text-secondary truncate w-full">
+      <span className="text-[11px] leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-[2.4em] w-full">
         {displayName}
       </span>
     </button>
@@ -115,7 +115,7 @@ export const KillerPickerGrid: React.FC<KillerPickerGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+    <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-[repeat(13,minmax(0,1fr))] gap-2">
       {tiles}
     </div>
   );

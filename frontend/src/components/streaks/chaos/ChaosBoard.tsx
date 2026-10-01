@@ -1,17 +1,24 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, RotateCcw } from 'lucide-react';
 import type { Difficulty } from '@/types/chaosStreak';
 import type { Perk } from '@/types/gauntletStreak';
-import { CONFETTI_LIFETIME_MS } from '../Confetti';
 import { useChaosRun } from './useChaosRun';
 import { useOwnedKillers } from './useOwnedKillers';
 import { useKillerPerkPool } from './useKillerPerkPool';
+import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { ChallengeProgress } from '../ChallengeProgress';
+import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
+import {
+  CheckpointCelebrationModal,
+  ChallengeCompletionHistoryDrawer,
+  Confetti,
+  ResetConfirmModal,
+} from '../lazyChallengeParts';
+import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { ChaosHeader } from './ChaosHeader';
 import { SlotMachineStage } from './SlotMachineStage';
 import { KillerPickerGrid } from './KillerPickerGrid';
@@ -22,21 +29,8 @@ import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
-const Confetti = dynamic(() => import('../Confetti').then((m) => m.Confetti), { ssr: false });
-const ResetConfirmModal = dynamic(
-  () => import('../ResetConfirmModal').then((m) => m.ResetConfirmModal),
-  { ssr: false }
-);
-const ChaosCheckpointModal = dynamic(
-  () => import('./ChaosCheckpointModal').then((m) => m.ChaosCheckpointModal),
-  { ssr: false }
-);
 const ChaosStatsDrawer = dynamic(
   () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
-  { ssr: false }
-);
-const ChallengeCompletionHistoryDrawer = dynamic(
-  () => import('../ChallengeCompletionHistoryDrawer').then((m) => m.ChallengeCompletionHistoryDrawer),
   { ssr: false }
 );
 const ChaosRulesModal = dynamic(
@@ -115,7 +109,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
 
   const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
   const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
-  const [celebrating, setCelebrating] = useState<boolean>(false);
   const [confirmingReset, setConfirmingReset] = useState<boolean>(false);
   const [isStatsOpen, setIsStatsOpen] = useState<boolean>(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
@@ -123,21 +116,8 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const [isPerkPoolOpen, setIsPerkPoolOpen] = useState<boolean>(false);
   const [isChangeDifficultyOpen, setIsChangeDifficultyOpen] = useState<boolean>(false);
 
-  const celebrationTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const celebrate = () => {
-    if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
-    setCelebrating(true);
-    celebrationTimerRef.current = setTimeout(() => setCelebrating(false), CONFETTI_LIFETIME_MS);
-  };
-
-  useEffect(() => () => {
-    if (celebrationTimerRef.current) clearTimeout(celebrationTimerRef.current);
-  }, []);
-
-  useEffect(() => {
-    if (justBankedCheckpoint == null) return;
-    celebrate();
-  }, [justBankedCheckpoint]);
+  const { celebrating, celebrate } = useCelebration();
+  useCelebrateOnRise(justBankedCheckpoint != null, celebrate);
 
   const isCompleted = run?.status === 'completed';
 
@@ -177,29 +157,26 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
   const completionTitle = dict?.streaks?.chaosVictoryTitle || 'You won the Chaos Streak';
 
   return (
-    <div>
+    <div className="pb-16">
       <Confetti active={celebrating} />
 
-      <Link
-        href={`/${locale}/streaks/killer`}
-        className="inline-flex items-center gap-1.5 rounded text-xs font-bold text-text-secondary hover:text-accent-red transition-colors focus:outline-none focus:ring-2 focus:ring-accent-red"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-        <span>{dict?.streaks?.backToKillerStreaks || ''}</span>
-      </Link>
+      <div className="[&>*:last-child]:mb-0">
+        {error && <ChallengeErrorBanner message={error} />}
 
-      <div className="mt-4">
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-accent-red/15 border border-accent-red/40 text-accent-red text-sm flex items-center justify-between shadow-xs" role="alert">
-            <span>{error}</span>
-          </div>
-        )}
-
+        <ChallengePanel
+          progress={
+            <ChallengeProgress
+              current={run?.current_streak ?? 0}
+              total={run?.owned_killers.length ?? rosterKillers.length}
+              checkpoints={everyNthCheckpoint(run?.checkpoint_interval ?? 0, run?.owned_killers.length ?? rosterKillers.length)}
+              dict={dict}
+            />
+          }
+          header={
         <ChaosHeader
           difficulty={difficulty}
           currentStreak={run?.current_streak || 0}
           bestStreak={run?.best_streak || 0}
-          lastCheckpointStreak={run?.last_checkpoint_streak || 0}
           poolFrozen={poolFrozen}
           onOpenStats={() => setIsStatsOpen(true)}
           onOpenHistory={() => setIsHistoryOpen(true)}
@@ -209,42 +186,27 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           onChangeDifficulty={() => setIsChangeDifficultyOpen(true)}
           dict={dict}
         />
+          }
+        >
 
         {isCompleted ? (
-          <div className="mb-8 rounded-2xl border-2 border-accent-green/40 bg-gradient-to-b from-accent-green/10 to-accent-green/[0.03] px-6 py-10 text-center shadow-lg">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green" aria-hidden="true">
-              <AdeptBadgeIcon className="h-8 w-8" />
-            </div>
-            <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
-              {dict?.streaks?.victoryCongrats || 'Congratulations'}
-            </p>
-            <h2 className="text-2xl font-black tracking-tight text-text-primary">
-              {completionTitle}
-            </h2>
-            <button
-              type="button"
-              onClick={reset}
-              disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
-            >
-              <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              <span>{dict?.streaks?.startNewRun || ''}</span>
-            </button>
-          </div>
+          <ChallengeVictoryCard title={completionTitle} onRestart={reset} busy={busy} dict={dict} />
         ) : (
+          <SlotMachineStage
+            perks={run?.current_perks || []}
+            addonRarities={run?.current_addon_rarities || []}
+            revealed={Boolean(run?.perks_revealed)}
+            onPullLever={reveal}
+            loading={loading || busy}
+            locked={Boolean(acceptedKillerId)}
+            dict={dict}
+          />
+        )}
+        </ChallengePanel>
+
+        {!isCompleted && (
           <>
-            <div className="mb-6">
-              <SlotMachineStage
-                perks={run?.current_perks || []}
-                addonRarities={run?.current_addon_rarities || []}
-                revealed={Boolean(run?.perks_revealed)}
-                onPullLever={reveal}
-                loading={loading || busy}
-                locked={Boolean(acceptedKillerId)}
-                dict={dict}
-              />
-            </div>
-            <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 pb-24 shadow-sm">
+            <div className="rounded-2xl border border-border-color bg-bg-surface/90 backdrop-blur-sm p-5 shadow-sm">
               <h3 className="text-sm font-bold text-text-secondary uppercase tracking-wider mb-3">
                 {dict?.streaks?.pickYourKiller || ''}
               </h3>
@@ -272,7 +234,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
                   onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
                   disabled={busy || !run?.perks_revealed || !selectedKillerId}
                 >
-                  {dict?.streaks?.acceptPick || ''}
+                  {dict?.streaks?.accept || 'ACCEPT'}
                 </StreakActionButton>
               ) : (
                 <>
@@ -289,7 +251,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         )}
 
         {!isCompleted && isAdmin && (
-          <div className="mt-10 rounded-2xl border border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
+          <div className="mt-6 rounded-2xl border border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
             <button
               type="button"
               onClick={handleDevSkipToWin}
@@ -336,7 +298,7 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
           usedPerkNames={run?.used_perks || []}
           dict={dict}
         />
-        <ChaosCheckpointModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
+        <CheckpointCelebrationModal checkpoint={justBankedCheckpoint} onClose={dismissCheckpointCelebration} dict={dict} />
         <ChaosModeModal
           isOpen={isChangeDifficultyOpen}
           onClose={() => setIsChangeDifficultyOpen(false)}

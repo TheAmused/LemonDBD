@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { X, Layers, CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { X, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
@@ -79,21 +79,9 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-border-color bg-bg-elevated/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-bg-elevated border border-border-color rounded-xl text-text-secondary" aria-hidden="true">
-              <Layers className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 id="chaos-perk-pool-title" className="text-lg font-black text-text-primary tracking-tight">
-                {dict?.streaks?.perkPool || 'Perk Pool'}
-              </h2>
-              <p className="text-xs text-text-secondary">
-                {used.length} {dict?.streaks?.usedLabel || 'used'} {dict?.streaks?.middotSeparator || '·'}{' '}
-                {remaining.length}{' '}
-                {dict?.streaks?.leftThisCycle || 'left this cycle'}
-              </p>
-            </div>
-          </div>
+          <h2 id="chaos-perk-pool-title" className="text-lg font-black text-text-primary tracking-tight">
+            {dict?.streaks?.perkPool || 'Perk Pool'}
+          </h2>
           <button
             type="button"
             onClick={onClose}

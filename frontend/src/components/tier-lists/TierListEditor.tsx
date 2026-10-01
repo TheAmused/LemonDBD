@@ -175,8 +175,8 @@ export function TierListEditor(props: TierListEditorProps) {
   const showKindBadge = Boolean(kindLabel && !isDuplicateKind);
 
   return (
-    <div className="relative z-10 flex flex-col gap-4">
-      <header className="flex flex-col gap-3">
+    <div className="relative z-10 flex flex-col gap-4 lg:h-full lg:min-h-0">
+      <header className="flex flex-col gap-3 shrink-0">
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:min-w-[160px]">
             <Link

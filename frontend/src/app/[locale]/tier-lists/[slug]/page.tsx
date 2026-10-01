@@ -24,7 +24,8 @@ export default function OfficialTierListPage({ params }: { params: Promise<{ slu
       activeCategory="tier-lists"
       padding="tight"
       decoration={<CampfireParticles />}
-      mainClassName="relative flex flex-col"
+      outerClassName="min-h-screen lg:h-dvh lg:overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      mainClassName="relative flex flex-col lg:h-full lg:min-h-0 lg:overflow-hidden"
     >
       {/* Keyed by slug: moving between lists must not carry one list's selection or dialogs into the next. */}
       <OfficialTierListView key={slug} slug={decodeURIComponent(slug)} locale={locale} dict={dict} />

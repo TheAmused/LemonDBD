@@ -24,7 +24,8 @@ export default function CustomTierListPage({ params }: { params: Promise<{ id: s
       activeCategory="tier-lists"
       padding="tight"
       decoration={<CampfireParticles />}
-      mainClassName="relative flex flex-col"
+      outerClassName="min-h-screen lg:h-dvh lg:overflow-hidden bg-bg-primary text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
+      mainClassName="relative flex flex-col lg:h-full lg:min-h-0 lg:overflow-hidden"
     >
       <CustomTierListView key={id} id={decodeURIComponent(id)} locale={locale} dict={dict} />
     </PageShell>

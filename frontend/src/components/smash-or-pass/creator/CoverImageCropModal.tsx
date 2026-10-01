@@ -8,6 +8,8 @@ import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 
 import { tip } from '@/components/common/Tooltip';
+import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 interface CoverImageCropModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -332,14 +334,13 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                     {cm.uploadPrompt}
                   </p>
                 </div>
-                <button
-                  type="button"
+                <Button
+                  variant="primary" size="sm"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-red text-text-inverted text-xs font-bold uppercase tracking-wider hover:bg-accent-red-hover transition-colors cursor-pointer shadow-md"
                 >
                   <Upload className="h-3.5 w-3.5" />
                   <span>{cm.uploadLocalFile}</span>
-                </button>
+                </Button>
               </div>
             )}
 
@@ -364,16 +365,15 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
         </div>
 
         {/* Controls Bar: Zoom Slider & Quick Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5 rounded-2xl bg-bg-elevated border border-border-color">
+        <Surface tone="elevated" radius="2xl" padding="none" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5">
           <div className="flex items-center gap-2.5 w-full sm:w-auto">
-            <button
-              type="button"
+            <Button
+              variant="secondary" size="sm" icon
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z - 0.25).toFixed(2)))))}
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-surface border border-border-color hover:border-accent-red text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               {...tip(cm.zoomOut, undefined, 'action')} aria-label={cm.zoomOut}
             >
               <ZoomOut className="h-4 w-4" />
-            </button>
+            </Button>
 
             <span className="text-xs font-bold text-text-muted flex items-center gap-1 shrink-0 w-24">
               <ZoomIn className="h-3.5 w-3.5 text-accent-red" />
@@ -390,38 +390,35 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               className="w-full sm:w-44 accent-accent-red cursor-pointer"
             />
 
-            <button
-              type="button"
+            <Button
+              variant="secondary" size="sm" icon
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z + 0.25).toFixed(2)))))}
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-bg-surface border border-border-color hover:border-accent-red text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               {...tip(cm.zoomIn, undefined, 'action')} aria-label={cm.zoomIn}
             >
               <ZoomIn className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-            <button
-              type="button"
+            <Button
+              variant="secondary" size="sm"
               onClick={handleReset}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               {...tip(cm.resetTitle, undefined, 'action')} aria-label={cm.resetTitle}
             >
               <RotateCcw className="h-3.5 w-3.5" />
               <span>{cm.reset}</span>
-            </button>
+            </Button>
 
             {isAdmin && (
               <>
-                <button
-                  type="button"
+                <Button
+                  variant="secondary" size="sm"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary hover:text-accent-red transition-colors cursor-pointer"
                   {...tip(cm.uploadPrompt, undefined, 'action')} aria-label={cm.uploadPrompt}
                 >
                   <Upload className="h-3.5 w-3.5 text-accent-red" />
                   <span>{cm.uploadFile}</span>
-                </button>
+                </Button>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -432,7 +429,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
               </>
             )}
           </div>
-        </div>
+        </Surface>
 
         {/* CORS Notice if canvas export fails on external domains */}
         {corsError && (
@@ -453,16 +450,15 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
                     {cm.uploadFile}
                   </button>
                 )}
-                <button
-                  type="button"
+                <Button
+                  variant="secondary" size="xs"
                   onClick={() => {
                     onApplyCrop(currentUrl);
                     onClose();
                   }}
-                  className="px-3 py-1 rounded-lg bg-bg-surface border border-border-color text-text-primary text-xs font-bold hover:bg-bg-elevated transition-colors cursor-pointer"
                 >
                   {cm.useUncropped}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -470,22 +466,20 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center justify-end gap-3 pt-3 border-t border-border-color">
-          <button
-            type="button"
+          <Button
+            variant="ghost" size="md"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-text-muted hover:text-text-primary transition-colors cursor-pointer"
           >
             {cm.cancel}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="primary" size="md"
             onClick={handleApplyCrop}
             disabled={!imageLoaded && !currentUrl}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent-red text-text-inverted text-xs font-extrabold uppercase tracking-wider shadow-md hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all cursor-pointer"
           >
             <Check className="h-4 w-4" />
             <span>{cm.applyCrop}</span>
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

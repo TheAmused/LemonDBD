@@ -8,7 +8,9 @@ import type { SmashRosterDocument } from '@/types/smashOrPass';
 import type { Dictionary } from '@/locales/types';
 import { buildShareUrl, encodeSharePayload, exportFileName, serializeSmashRosterDocument } from '@/utils/smashOrPass/codec';
 import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './creator/styles';
+import { LABEL } from './creator/styles';
+import { Button } from '@/components/common/Button';
+import { Input, Textarea } from '@/components/common/Field';
 
 interface SmashRosterExportModalProps {
   doc: SmashRosterDocument | null;
@@ -87,23 +89,24 @@ export function SmashRosterExportModal({ doc, onClose, locale, dict }: SmashRost
             {t.shareLinkLabel || 'Shareable link'}
           </label>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <input
+            <Input
+              fieldSize="md"
               id="smash-roster-share-link"
               readOnly
               value={shareUrl || t.preparingLink || 'Preparing link...'}
               onFocus={(e) => e.currentTarget.select()}
-              className={`${FIELD} font-mono text-xs`}
+              className="font-mono sm:text-xs min-h-[44px]"
             />
-            <button
-              type="button"
+            <Button
+              variant="primary" size="md"
               disabled={!shareUrl}
               onClick={async () => setLinkCopy((await copyText(shareUrl)) ? 'copied' : 'failed')}
-              className={`${BTN_PRIMARY} shrink-0`}
+              className="min-h-[44px]"
               aria-live="polite"
             >
               {linkCopy === 'copied' ? <Check className="h-4 w-4" aria-hidden="true" /> : <Link2 className="h-4 w-4" aria-hidden="true" />}
               {copyLabel(linkCopy, t.copyLink || 'Copy Link')}
-            </button>
+            </Button>
           </div>
           {shareUrl.length > SMASH_ROSTER_LIMITS.shareLinkWarnChars && (
             <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 text-xs font-semibold text-accent-amber">
@@ -117,28 +120,29 @@ export function SmashRosterExportModal({ doc, onClose, locale, dict }: SmashRost
           <label htmlFor="smash-roster-json" className={LABEL}>
             {t.jsonLabel || 'Roster JSON'}
           </label>
-          <textarea
+          <Textarea
+            fieldSize="md"
             id="smash-roster-json"
             readOnly
             value={json}
             rows={10}
             onFocus={(e) => e.currentTarget.select()}
-            className={`${FIELD} py-2 font-mono text-xs leading-relaxed`}
+            className="font-mono sm:text-xs leading-relaxed"
           />
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={download} className={BTN_SECONDARY}>
+            <Button variant="secondary" size="md" onClick={download} className="min-h-[44px]">
               <Download className="h-4 w-4" aria-hidden="true" />
               {t.downloadFile || 'Download File'}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="secondary" size="md"
               onClick={async () => setJsonCopy((await copyText(json)) ? 'copied' : 'failed')}
-              className={BTN_SECONDARY}
+              className="min-h-[44px]"
               aria-live="polite"
             >
               {jsonCopy === 'copied' ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
               {copyLabel(jsonCopy, t.copyJson || 'Copy JSON')}
-            </button>
+            </Button>
           </div>
         </section>
       </div>

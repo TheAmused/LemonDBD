@@ -1,6 +1,8 @@
 // frontend/src/components/minigames/creator/MinigameCreator.tsx
 'use client';
 
+import { Input, Textarea } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -237,12 +239,12 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
           <label className="block text-xs font-semibold text-text-secondary mb-1.5">
             {c.challengeTitleLabel} *
           </label>
-          <input
+          <Input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={c.challengeTitlePlaceholder}
-            className="w-full px-4 py-2.5 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="font-semibold"
           />
         </div>
 
@@ -250,12 +252,12 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
           <label className="block text-xs font-semibold text-text-secondary mb-1.5">
             {c.descriptionLabel}
           </label>
-          <textarea
+          <Textarea
             rows={2}
+            fieldSize="sm"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder={c.descriptionPlaceholder}
-            className="w-full px-4 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
           />
         </div>
       </div>
@@ -296,38 +298,38 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
 
       {/* Action Buttons Row */}
       <div className="w-full max-w-2xl flex flex-wrap gap-3 justify-center mb-8">
-        <button
-          type="button"
+        <Button
+          variant="secondary"
+          size="lg"
           onClick={handleSaveToMyTrials}
-          className="flex items-center gap-2 py-3 px-5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-primary font-bold text-sm border border-border-color shadow-md transition-all active:scale-95"
         >
           <Save className="w-4 h-4" />
           <span>{c.saveToMyTrials}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="success"
+          size="lg"
           onClick={handleSaveAndPlay}
-          className="flex items-center gap-2 py-3 px-6 rounded-xl bg-accent-green hover:bg-accent-green-hover text-text-inverted font-bold text-sm shadow-lg shadow-accent-green/25 transition-all active:scale-95"
         >
           <Play className="w-4 h-4 fill-current" />
           <span>{c.saveAndPlay}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="secondary"
+          size="md"
           onClick={handleExportJson}
-          className="flex items-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary hover:text-text-primary font-semibold text-sm border border-border-color transition-colors"
         >
           <Download className="w-4 h-4" />
           <span>{t.exportJson}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="secondary"
+          size="md"
           onClick={handleShareLink}
           disabled={isSharing}
-          className="flex items-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary hover:text-text-primary font-semibold text-sm border border-border-color transition-colors"
         >
           {shareSuccess ? (
             <>
@@ -340,7 +342,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
               <span>{t.shareTrial}</span>
             </>
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Admin Official Publishing Section */}
@@ -359,11 +361,12 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({
               <label className="block text-xs font-semibold text-text-muted mb-1">
                 {c.publishDateLabel}
               </label>
-              <input
+              <Input
                 type="date"
+                fieldSize="sm"
                 value={officialDate}
                 onChange={(e) => setOfficialDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-amber/50"
+                className="font-semibold"
               />
             </div>
 

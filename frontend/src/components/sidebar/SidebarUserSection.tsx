@@ -3,6 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
+import { Button } from '@/components/common/Button';
 import Link from 'next/link';
 import { LogIn, LogOut, MailWarning } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
@@ -35,14 +36,14 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
   return (
     <div className="mt-4 pt-3 border-t border-border-color">
       {!isAuthenticated || !user ? (
-        <button
-          type="button"
+        <Button
+          variant="soft"
           onClick={onOpenAuthModal}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-accent-red/10 border border-accent-red/30 hover:border-accent-red/60 p-2.5 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-all cursor-pointer shadow-sm group"
+          leftIcon={<LogIn className="h-4 w-4" />}
+          className="w-full"
         >
-          <LogIn className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
           <span>{dict?.sidebar?.signIn || 'Sign In / Register'}</span>
-        </button>
+        </Button>
       ) : (
         <div className="rounded-xl border border-border-color bg-bg-elevated p-2.5 space-y-2">
           <div className="flex items-center justify-between">

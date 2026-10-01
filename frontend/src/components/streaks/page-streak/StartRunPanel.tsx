@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/page-streak/StartRunPanel.tsx
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
@@ -49,14 +50,14 @@ export const StartRunPanel: React.FC<StartRunPanelProps> = ({ killer, busy, onSt
         <span>{dict?.streaks?.pagesCount || 'pages'} <b className="text-text-primary tabular-nums">{pageCount ?? '—'}</b></span>
         <span>{dict?.streaks?.lastPage || 'last page'} <b className="text-text-primary tabular-nums">{lastPageSize ?? '—'}</b> {dict?.streaks?.perksCount || 'perks'}</span>
       </div>
-      <button
-        type="button"
+      <Button
+        variant="primary"
+        size="sm"
         onClick={onStart}
         disabled={busy}
-        className="rounded-lg bg-accent-red hover:bg-accent-red-hover px-5 py-2.5 text-xs font-extrabold text-text-inverted disabled:opacity-60 shadow-sm cursor-pointer"
       >
         {busy ? (dict?.streaks?.starting || 'Starting…') : (dict?.streaks?.startStreak || 'Start streak')}
-      </button>
+      </Button>
     </div>
   );
 };

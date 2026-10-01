@@ -22,7 +22,8 @@ import {
 } from 'lucide-react';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
-import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/common/Button';
+import { Input, Select, Textarea } from '@/components/common/Field';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -245,21 +246,15 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       footerClassName="justify-end"
       footer={
         isSuccess ? undefined : (
-          <button
+          <Button
             type="submit"
             form="bug-report-form"
-            disabled={isSubmitting}
-            className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-xs font-black tracking-wider text-text-inverted shadow-lg transition-all cursor-pointer disabled:opacity-50"
+            variant="primary"
+            loading={isSubmitting}
+            className="w-full sm:w-auto"
           >
-            {isSubmitting ? (
-              <>
-                <Spinner size="xs" tone="inverted" />
-                <span>{t.bugSubmitting || ''}</span>
-              </>
-            ) : (
-              <span>{t.bugSubmitButton || ''}</span>
-            )}
-          </button>
+            {isSubmitting ? <span>{t.bugSubmitting || ''}</span> : <span>{t.bugSubmitButton || ''}</span>}
+          </Button>
         )
       }
     >
@@ -310,13 +305,12 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             <Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
             {t.bugGuestEmailLabel || ''} <span className="text-accent-red">*</span>
           </label>
-          <input
+          <Input
             type="email"
             required
             value={guestEmail}
             onChange={(e) => setGuestEmail(e.target.value)}
             placeholder={t.bugGuestEmailPlaceholder || ''}
-            className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
           />
         </div>
       )}
@@ -326,13 +320,12 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
             {t.bugTitleLabel || ''} <span className="text-accent-red">*</span>
           </label>
-          <input
+          <Input
             type="text"
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t.bugTitlePlaceholder || ''}
-            className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3.5 py-2.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
           />
         </div>
 
@@ -340,18 +333,18 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           <label className="block text-[11px] font-bold uppercase tracking-wider text-text-muted mb-1">
             {t.bugCategoryLabel || ''}
           </label>
-          <select
+          <Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             aria-label={t.bugCategoryLabel || ''}
-            className="w-full rounded-xl border border-border-color bg-bg-elevated/80 px-3 py-2.5 text-xs text-text-primary focus:border-accent-red focus:outline-none transition-all cursor-pointer shadow-inner [&>option]:bg-bg-surface"
+            className="[&>option]:bg-bg-surface"
           >
             {bugCategories.map((cat) => (
               <option key={cat.key} value={cat.key}>
                 {cat.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -360,13 +353,12 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           {t.bugDescriptionLabel || ''}{' '}
           <span className="text-accent-red">*</span>
         </label>
-        <textarea
+        <Textarea
           required
           rows={4}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={t.bugDescriptionPlaceholder || ''}
-          className="w-full rounded-xl border border-border-color bg-bg-elevated/80 p-3.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner resize-y"
         />
       </div>
 

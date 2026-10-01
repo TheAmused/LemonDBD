@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryHeader.tsx
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
@@ -105,47 +106,60 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             </div>
           </div>
 
-          <button
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onOpenRules}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.rules || 'Rules', undefined, 'action')} aria-label={dict?.streaks?.rules || 'Rules'}
+            {...tip(dict?.streaks?.rules || 'Rules', undefined, 'action')}
+            aria-label={dict?.streaks?.rules || 'Rules'}
           >
             <BookOpen className="w-4 h-4 text-text-muted" />
             <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onChangeMode}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.changeMode || 'Change Mode', undefined, 'action')} aria-label={dict?.streaks?.changeMode || 'Change Mode'}
+            {...tip(dict?.streaks?.changeMode || 'Change Mode', undefined, 'action')}
+            aria-label={dict?.streaks?.changeMode || 'Change Mode'}
           >
             <Gauge className="w-4 h-4 text-text-muted" />
             <span className="hidden sm:inline">{dict?.streaks?.changeMode || 'Change Mode'}</span>
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="secondary"
+            size="md"
+            icon
             onClick={onOpenStats}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.stats || 'Statistics', undefined, 'action')} aria-label={dict?.streaks?.stats || 'Statistics'}
+            {...tip(dict?.streaks?.stats || 'Statistics', undefined, 'action')}
+            aria-label={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" />
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="secondary"
+            size="md"
+            icon
             onClick={onOpenHistory}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.pastWins || 'Past Wins', undefined, 'action')} aria-label={dict?.streaks?.pastWins || 'Past Wins'}
+            {...tip(dict?.streaks?.pastWins || 'Past Wins', undefined, 'action')}
+            aria-label={dict?.streaks?.pastWins || 'Past Wins'}
           >
             <History className="w-5 h-5" />
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="secondary"
+            size="md"
+            icon
             onClick={onOpenReset}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color transition-colors shadow-sm cursor-pointer"
-            {...tip(dict?.streaks?.resetRun || 'Reset this run', undefined, 'action')} aria-label={dict?.streaks?.resetRun || 'Reset this run'}
+            {...tip(dict?.streaks?.resetRun || 'Reset this run', undefined, 'action')}
+            aria-label={dict?.streaks?.resetRun || 'Reset this run'}
           >
             <RotateCcw className="w-5 h-5" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

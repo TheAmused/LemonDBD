@@ -1,6 +1,8 @@
 // frontend/src/components/minigames/creator/RoundEditorCard.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
+import { Input, Select, Textarea } from '@/components/common/Field';
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import {
@@ -162,32 +164,39 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
         </div>
 
         <div className="flex items-center gap-1">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
+            icon
             onClick={onMoveUp}
             disabled={index === 0}
-            className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            {...tip(c.moveUp, undefined, 'action')} aria-label={c.moveUp}
+            {...tip(c.moveUp, undefined, 'action')}
+            aria-label={c.moveUp}
           >
             <ChevronUp className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon
             onClick={onMoveDown}
             disabled={index === totalRounds - 1}
-            className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-            {...tip(c.moveDown, undefined, 'action')} aria-label={c.moveDown}
+            {...tip(c.moveDown, undefined, 'action')}
+            aria-label={c.moveDown}
           >
             <ChevronDown className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            icon
             onClick={onRemove}
-            className="p-1.5 rounded-lg bg-accent-red/20 hover:bg-accent-red/30 text-accent-red border border-accent-red/40 transition-colors ml-1"
-            {...tip(c.removeRound, undefined, 'action')} aria-label={c.removeRound}
+            {...tip(c.removeRound, undefined, 'action')}
+            aria-label={c.removeRound}
+            className="ml-1"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -197,24 +206,26 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
           <label className="block text-xs font-semibold text-text-muted mb-1.5">
             {c.selectMode}
           </label>
-          <select
+          <Select
+            fieldSize="sm"
             value={round.mode}
             onChange={(e) => handleModeChange(e.target.value as MinigameMode)}
-            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="font-semibold"
           >
             {ALL_MODES.map((mode) => (
               <option key={mode} value={mode}>
                 {(t.modes as any)[mode] || mode}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div>
           <label className="block text-xs font-semibold text-text-muted mb-1.5">
             {c.maxAttemptsLabel}
           </label>
-          <input
+          <Input
+            fieldSize="sm"
             type="number"
             min={1}
             max={20}
@@ -225,7 +236,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
                 max_attempts: Math.max(1, parseInt(e.target.value, 10) || 6),
               })
             }
-            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="font-semibold"
           />
         </div>
       </div>
@@ -284,24 +295,24 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
             <label className="block text-xs font-semibold text-text-muted mb-1">
               {c.customQuoteLabel}
             </label>
-            <textarea
+            <Textarea
+              fieldSize="sm"
               rows={2}
               value={round.custom_data?.quote || ''}
               onChange={(e) => handleCustomDataChange('quote', e.target.value)}
               placeholder={c.customQuotePlaceholder}
-              className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
             />
           </div>
           <div>
             <label className="block text-xs font-semibold text-text-muted mb-1">
               {c.customSpeakerLabel}
             </label>
-            <input
+            <Input
+              fieldSize="sm"
               type="text"
               value={round.custom_data?.speaker || ''}
               onChange={(e) => handleCustomDataChange('speaker', e.target.value)}
               placeholder={c.customSpeakerPlaceholder}
-              className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
             />
           </div>
         </div>
@@ -312,12 +323,13 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
           <label className="block text-xs font-semibold text-text-muted mb-1">
             {c.customEmojisLabel}
           </label>
-          <input
+          <Input
+            fieldSize="sm"
             type="text"
             value={round.custom_data?.emojis || ''}
             onChange={(e) => handleCustomDataChange('emojis', e.target.value)}
             placeholder={c.customEmojisPlaceholder}
-            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-accent-red/50"
+            className="text-lg sm:text-lg tracking-widest"
           />
         </div>
       )}
@@ -327,12 +339,12 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({
           <label className="block text-xs font-semibold text-text-muted mb-1">
             {c.customPowerName}
           </label>
-          <input
+          <Input
+            fieldSize="sm"
             type="text"
             value={round.custom_data?.power_name || ''}
             onChange={(e) => handleCustomDataChange('power_name', e.target.value)}
             placeholder={c.customPowerPlaceholder}
-            className="w-full px-3 py-2 rounded-xl bg-bg-elevated border border-border-color text-text-primary text-xs focus:outline-none focus:ring-2 focus:ring-accent-red/50"
           />
         </div>
       )}

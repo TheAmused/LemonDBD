@@ -42,7 +42,7 @@ import { sanitizeImageUrl, validateSmashRosterDocument, type SmashRosterErrorCod
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
 import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEntity } from '@/types/smashOrPass';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL, TEXTAREA_FIELD } from './styles';
+import { LABEL } from './styles';
 import {
   CandidateFormInputs,
   CandidateTiles,
@@ -53,6 +53,9 @@ import {
 import { CoverImageCropModal } from './CoverImageCropModal';
 import { RosterTaxonomyBlock } from './RosterTaxonomyBlock';
 import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
+import { Button } from '@/components/common/Button';
+import { Input, Textarea } from '@/components/common/Field';
+import { Badge } from '@/components/common/Badge';
 
 function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -628,20 +631,16 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         : (c.create || 'Create');
 
   const submitButton = (extra?: string) => (
-    <button
-      type="button"
+    <Button
+      variant="primary"
+      size="lg"
       onClick={submit}
-      disabled={publishingNow}
+      loading={publishingNow}
       data-roster-create=""
-      className={cn(
-        BTN_PRIMARY,
-        'transition-colors',
-        publishingNow && 'opacity-60 cursor-not-allowed',
-        extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg'
-      )}
+      className={extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 2xl:text-lg'}
     >
       {submitLabel}
-    </button>
+    </Button>
   );
 
   const errors = attempted
@@ -663,21 +662,20 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
         >
           <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
           <span className="flex-1 text-accent-amber">{c.draftRestored || 'Your unfinished draft was restored.'}</span>
-          <button
-            type="button"
+          <Button
+            variant="secondary" size="xs"
             onClick={startOver}
-            className={cn(BTN_SECONDARY, 'text-xs min-h-[32px] px-2.5 py-1 whitespace-nowrap')}
+            className="whitespace-nowrap"
           >
             {c.startOver || 'Start over'}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost" size="sm" icon
             onClick={() => setRestored(false)}
             aria-label={c.closeToast || 'Dismiss'}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
           >
             <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       )}
 
@@ -714,56 +712,60 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
             <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
               <label>
                 <span className={LABEL}>{c.nameLabel || 'Roster name'}</span>
-                <input
+                <Input
+                  fieldSize="md" invalid={attempted && nameMissing}
                   value={draft.name}
                   maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
                   onChange={(e) => patch({ name: e.target.value })}
                   placeholder={c.namePlaceholder || 'e.g. Chapter 34 Cast'}
-                  aria-invalid={attempted && nameMissing}
-                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && nameMissing && 'border-accent-red')}
+                  
+                  className="2xl:min-h-[50px] 2xl:text-base"
                 />
               </label>
               <label>
                 <span className={LABEL}>{c.categoryLabel || 'Category'}</span>
-                <input
+                <Input
+                  fieldSize="md"
                   value={draft.category}
                   maxLength={64}
                   onChange={(e) => patch({ category: e.target.value })}
                   placeholder={c.categoryPlaceholder || 'e.g. Custom'}
-                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                  className="2xl:min-h-[50px] 2xl:text-base"
                 />
               </label>
               <label className="md:col-span-2">
                 <span className={LABEL}>{c.descriptionLabel || 'Description (optional)'}</span>
-                <textarea
+                <Textarea
+                  fieldSize="md"
                   value={draft.description}
                   maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
                   onChange={(e) => patch({ description: e.target.value })}
                   placeholder={c.descriptionPlaceholder || 'What is this roster about?'}
                   rows={2}
-                  className={cn(TEXTAREA_FIELD, '2xl:text-base')}
+                  className="2xl:text-base"
                 />
               </label>
               <div className="md:col-span-2">
                 <span className={LABEL}>{c.coverImageLabel || 'Cover image URL (optional)'}</span>
                 <div className="flex gap-2">
-                  <input
+                  <Input
+                    fieldSize="md" invalid={attempted && coverInvalid}
                     value={draft.cover_image_url}
                     onChange={(e) => patch({ cover_image_url: e.target.value })}
                     placeholder={c.coverImagePlaceholder || 'https://...'}
                     inputMode="url"
-                    aria-invalid={attempted && coverInvalid}
-                    className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && coverInvalid && 'border-accent-red')}
+                    
+                    className="2xl:min-h-[50px] 2xl:text-base"
                   />
-                  <button
-                    type="button"
+                  <Button
+                    variant="secondary" size="md"
                     onClick={() => setIsCropModalOpen(true)}
                     {...tip(c.cropCoverTitle, undefined, 'action')} aria-label={c.cropCoverTitle}
-                    className={cn(BTN_SECONDARY, 'shrink-0 px-3')}
+                    className="shrink-0 px-3"
                   >
                     <Crop className="h-4 w-4 text-accent-red" />
                     <span className="hidden sm:inline">{c.cropCoverBadge}</span>
-                  </button>
+                  </Button>
                 </div>
 
                 {safeCover && (
@@ -883,7 +885,8 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 <div className="grid gap-2 sm:grid-cols-2">
                   <label>
                     <span className={LABEL}>{c.translationsRosterName || 'Roster name'}</span>
-                    <input
+                    <Input
+                      fieldSize="md"
                       value={rosterTranslations[activeTranslationLocale]?.name || ''}
                       maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
                       onChange={(e) =>
@@ -892,12 +895,12 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                           [activeTranslationLocale]: { ...prev[activeTranslationLocale], name: e.target.value, description: prev[activeTranslationLocale]?.description || '' },
                         }))
                       }
-                      className={FIELD}
                     />
                   </label>
                   <label>
                     <span className={LABEL}>{c.translationsRosterDescription || 'Description'}</span>
-                    <input
+                    <Input
+                      fieldSize="md"
                       value={rosterTranslations[activeTranslationLocale]?.description || ''}
                       maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
                       onChange={(e) =>
@@ -906,7 +909,6 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                           [activeTranslationLocale]: { ...prev[activeTranslationLocale], description: e.target.value, name: prev[activeTranslationLocale]?.name || '' },
                         }))
                       }
-                      className={FIELD}
                     />
                   </label>
                 </div>
@@ -948,18 +950,15 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
           badge={draft.entities.length}
           defaultOpen={true}
           headerAction={
-            <button
-              type="button"
+            <Button
+              variant="secondary" size="sm"
               onClick={addEntity}
               disabled={draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities}
-              className={cn(
-                BTN_SECONDARY,
-                'min-h-[32px] sm:min-h-[36px] px-3 sm:px-4 py-1 sm:py-1.5 text-xs font-bold uppercase tracking-wider'
-              )}
+              className="uppercase tracking-wider"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
               <span>{c.addEntity || 'Add Candidate'}</span>
-            </button>
+            </Button>
           }
         >
           <div className="flex flex-col gap-6">
@@ -968,14 +967,14 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 <p className="text-sm text-text-muted mb-3 font-mono">
                   {c.noEntitiesYet || 'No candidates yet. Add your first one above.'}
                 </p>
-                <button
-                  type="button"
+                <Button
+                  variant="secondary" size="sm"
                   onClick={addEntity}
-                  className={cn(BTN_SECONDARY, 'min-h-[36px] px-4 text-xs font-bold uppercase tracking-wider')}
+                  className="uppercase tracking-wider"
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
                   <span>{c.addEntity || 'Add Candidate'}</span>
-                </button>
+                </Button>
               </div>
             ) : (
               <>
@@ -1090,9 +1089,9 @@ function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, c
             {title}
           </h2>
           {badge !== undefined && (
-            <span className="font-mono text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-bg-elevated border border-border-color text-text-secondary whitespace-nowrap">
+            <Badge size="sm" plain className="font-mono">
               {badge}
-            </span>
+            </Badge>
           )}
         </button>
 

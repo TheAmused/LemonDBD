@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -122,14 +123,15 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
       bodyClassName="p-5 sm:p-6"
       footerClassName="!justify-stretch p-4"
       footer={
-        <button
-          type="button"
+        <Button
+          variant="success"
+          size="lg"
           data-autofocus
           onClick={onClose}
-          className="w-full rounded-xl bg-accent-green py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-all hover:bg-accent-green-hover cursor-pointer"
+          className="w-full"
         >
           {dict?.streaks?.continueButton || 'Continue'}
-        </button>
+        </Button>
       }
     >
       {perks.length === 0 ? (

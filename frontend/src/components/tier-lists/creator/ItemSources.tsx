@@ -14,8 +14,10 @@ import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { nameFromFileName, nameFromUrl, parseLinkLines } from '@/utils/tierLists/creator';
 import { fileToTileImage } from '@/utils/tierLists/imageFiles';
 import { TierItemTile } from '../TierItemTile';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from '../styles';
+import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 export interface IncomingItem {
   name: string;
@@ -137,15 +139,15 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
           <p className="text-base font-black text-text-primary">{c.dropTitle}</p>
           <p className="mt-1 max-w-md text-xs text-text-muted">{c.dropSubtitle}</p>
         </div>
-        <button
-          type="button"
-          disabled={processing}
+        <Button
+          variant="primary"
+          loading={processing}
           onClick={() => inputRef.current?.click()}
-          className={cn(BTN_PRIMARY, processing && 'cursor-wait opacity-70')}
+          leftIcon={<Upload className="h-4 w-4" aria-hidden="true" />}
+          className={TOUCH_BTN}
         >
-          {processing ? <Spinner size="sm" tone="current" /> : <Upload className="h-4 w-4" aria-hidden="true" />}
           {c.chooseFiles}
-        </button>
+        </Button>
         <input
           ref={inputRef}
           type="file"
@@ -211,7 +213,7 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
           <span className={LABEL}>{t.itemName}</span>
-          <input
+          <Input
             type="text"
             value={itemName}
             onChange={(e) => {
@@ -220,12 +222,12 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
             placeholder={t.itemName}
-            className={FIELD}
+            className={TOUCH_FIELD}
           />
         </label>
         <label className="flex flex-col gap-1.5">
           <span className={LABEL}>{t.itemImage}</span>
-          <input
+          <Input
             type="url"
             value={imageUrl}
             onChange={(e) => {
@@ -234,7 +236,7 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
             }}
             onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
             placeholder={t.itemImagePlaceholder}
-            className={FIELD}
+            className={TOUCH_FIELD}
           />
         </label>
       </div>
@@ -245,15 +247,15 @@ function LinksSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void; 
         </p>
       )}
       <div className="flex justify-center w-full pt-1">
-        <button
-          type="button"
+        <Button
+          variant="primary"
           disabled={!itemName.trim() && !imageUrl.trim()}
           onClick={handleAdd}
-          className={cn(BTN_PRIMARY, 'min-h-[40px] px-6 text-xs sm:text-sm font-bold')}
+          leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
+          className="min-h-[40px] rounded-lg px-6"
         >
-          <Plus className="h-4 w-4" aria-hidden="true" />
           {t.addItemTitle}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -328,28 +330,29 @@ function CatalogSource({
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-          <input
+          <Input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={c.catalogSearch}
             aria-label={c.catalogSearchAria}
-            className={`${FIELD} pl-9`}
+            className={`${TOUCH_FIELD} pl-9`}
           />
         </div>
         <div className="flex justify-center gap-2">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() =>
               setSelected((prev) => new Set([...prev, ...visible.filter((i) => !existingIds.has(i.key)).map((i) => i.key)]))
             }
-            className={cn(BTN_SECONDARY, 'min-h-[38px] text-xs font-bold')}
+            className="min-h-[38px]"
           >
             {c.selectAll}
-          </button>
-          <button type="button" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className={cn(BTN_SECONDARY, 'min-h-[38px] text-xs font-bold')}>
+          </Button>
+          <Button variant="secondary" size="sm" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className="min-h-[38px]">
             {c.clearSelection}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -396,10 +399,9 @@ function CatalogSource({
       </div>
 
       <div className="flex justify-center w-full">
-        <button type="button" disabled={selected.size === 0} onClick={add} className={cn(BTN_PRIMARY, 'min-h-[40px] px-6 text-xs sm:text-sm font-bold')}>
-          <Plus className="h-4 w-4" aria-hidden="true" />
+        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-[40px] rounded-lg px-6">
           {c.addSelected.replace('{count}', String(selected.size))}
-        </button>
+        </Button>
       </div>
     </div>
   );

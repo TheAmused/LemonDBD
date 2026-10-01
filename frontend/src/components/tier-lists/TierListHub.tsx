@@ -16,7 +16,9 @@ import { createCustomListId, deleteCustomList, saveCustomList, saveRanking, type
 import { CustomTierListCard, OfficialTierListCard } from './TierListCards';
 import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
-import { BTN_PRIMARY, BTN_SECONDARY } from './styles';
+import { TOUCH_BTN } from './styles';
+import { Button } from '@/components/common/Button';
+import { Badge } from '@/components/common/Badge';
 
 interface TierListHubProps {
   locale: string;
@@ -128,9 +130,9 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
               <h2 id="tier-lists-official" className="text-xs sm:text-sm 2xl:text-base font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
                 {t.officialSection}
               </h2>
-              <span className="inline-flex items-center rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25 font-mono">
+              <Badge tone="red" plain className="font-mono text-[11px] font-bold">
                 {lists.length}
-              </span>
+              </Badge>
             </div>
             <p className="text-[11px] sm:text-xs 2xl:text-sm text-text-secondary mt-0.5 font-mono truncate">
               {lists.length === 1
@@ -264,14 +266,14 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
             </div>
 
             <div className="pointer-events-auto flex shrink-0 items-center justify-end gap-2 lg:w-56">
-              <button type="button" onClick={() => setImportOpen(true)} className={BTN_SECONDARY}>
+              <Button variant="secondary" onClick={() => setImportOpen(true)} className={TOUCH_BTN}>
                 <FileJson className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.importJson}</span>
-              </button>
-              <button type="button" onClick={createBlank} className={BTN_PRIMARY}>
+              </Button>
+              <Button variant="primary" onClick={createBlank} className={TOUCH_BTN}>
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.newCustomList}</span>
-              </button>
+              </Button>
               <ChevronDown
                 className={`h-4 w-4 sm:h-5 sm:w-5 2xl:h-6 2xl:w-6 text-accent-red transition-transform duration-300 ease-in-out shrink-0 ${
                   isCustomOpen ? 'rotate-180' : 'rotate-0'
@@ -330,19 +332,19 @@ export function TierListHub({ locale, dict }: TierListHubProps) {
           size="sm"
           footer={
             <div className="flex w-full justify-end gap-2">
-              <button type="button" onClick={() => setListToDelete(null)} className={BTN_SECONDARY}>
+              <Button variant="secondary" onClick={() => setListToDelete(null)} className={TOUCH_BTN}>
                 {t.cancel}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="primary"
                 onClick={() => {
                   deleteCustomList(listToDelete.id);
                   setListToDelete(null);
                 }}
-                className={BTN_PRIMARY}
+                className={TOUCH_BTN}
               >
                 {t.deleteTier}
-              </button>
+              </Button>
             </div>
           }
         >

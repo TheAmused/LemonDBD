@@ -23,12 +23,14 @@ import {
   estimateStoredBytes,
 } from '@/utils/tierLists/creator';
 import { createCustomListId, migrateTierListState, saveCustomList } from '@/utils/tierLists/storage';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from '../styles';
+import { LABEL, TOUCH_FIELD } from '../styles';
 import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
 import { Checkbox } from '@/components/common/Checkbox';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -314,20 +316,18 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
   const publishingNow = publishing && official && isAdmin && !editId;
   const submitLabel = editId ? t.save : official && isAdmin ? (publishingNow ? c.publishing : c.publish) : c.create;
   const submitButton = (extra?: string) => (
-    <button
-      type="button"
+    <Button
+      variant="primary"
       data-tier-create=""
       onClick={submit}
       disabled={publishingNow}
       className={cn(
-        BTN_PRIMARY,
-        'transition-colors',
-        publishingNow && 'opacity-60 cursor-not-allowed',
+        'rounded-lg',
         extra ?? 'min-h-[48px] 2xl:min-h-[54px] px-8 2xl:px-10 text-base 2xl:text-lg'
       )}
     >
       {submitLabel}
-    </button>
+    </Button>
   );
 
   const errors = attempted
@@ -345,21 +345,12 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
         >
           <History className="h-4 w-4 2xl:h-5 2xl:w-5 text-accent-amber shrink-0" aria-hidden="true" />
           <span className="flex-1 text-accent-amber">{c.draftRestored}</span>
-          <button
-            type="button"
-            onClick={startOver}
-            className={cn(BTN_SECONDARY, 'text-xs min-h-[32px] px-2.5 py-1 whitespace-nowrap')}
-          >
+          <Button variant="secondary" size="sm" onClick={startOver} className="min-h-[32px] whitespace-nowrap">
             {c.startOver}
-          </button>
-          <button
-            type="button"
-            onClick={() => setRestored(false)}
-            aria-label={c.closeToast}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
-          >
+          </Button>
+          <Button icon size="sm" variant="ghost" onClick={() => setRestored(false)} aria-label={c.closeToast}>
             <X className="h-4 w-4" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       )}
 
@@ -375,13 +366,14 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             {t.backToHub}
           </Link>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => setPreviewOpen(true)}
-              className={cn(BTN_SECONDARY, 'min-h-[40px] px-3 py-1.5 text-xs font-bold uppercase tracking-wider')}
+              className="min-h-[40px] uppercase tracking-wider"
             >
               {c.previewHeading}
-            </button>
+            </Button>
             {submitButton('min-h-[40px] px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider')}
           </div>
         </div>
@@ -403,34 +395,34 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
             <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
               <label className="md:col-span-1">
                 <span className={LABEL}>{c.titleLabel}</span>
-                <input
+                <Input
                   value={draft.title}
                   maxLength={TIER_LIST_LIMITS.maxTitle}
                   onChange={(e) => patch({ title: e.target.value })}
                   placeholder={c.titlePlaceholder}
-                  aria-invalid={attempted && titleMissing}
-                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && titleMissing && 'border-accent-red')}
+                  invalid={attempted && titleMissing}
+                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
                 />
               </label>
               <label className="md:col-span-1">
                 <span className={LABEL}>{c.descriptionLabel}</span>
-                <input
+                <Input
                   value={draft.description}
                   maxLength={TIER_LIST_LIMITS.maxDescription}
                   onChange={(e) => patch({ description: e.target.value })}
                   placeholder={c.descriptionPlaceholder}
-                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base')}
+                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
                 />
               </label>
               <label className="md:col-span-2">
                 <span className={LABEL}>{c.backgroundImageLabel}</span>
-                <input
+                <Input
                   value={draft.backgroundImage}
                   onChange={(e) => patch({ backgroundImage: e.target.value })}
                   placeholder={c.backgroundImagePlaceholder}
                   inputMode="url"
-                  aria-invalid={attempted && backgroundInvalid}
-                  className={cn(FIELD, '2xl:min-h-[50px] 2xl:text-base', attempted && backgroundInvalid && 'border-accent-red')}
+                  invalid={attempted && backgroundInvalid}
+                  className={cn(TOUCH_FIELD, '2xl:min-h-[50px] 2xl:text-base')}
                 />
                 <span
                   className={cn(
@@ -461,16 +453,14 @@ export function TierListCreator({ locale, dict, editId }: TierListCreatorProps) 
 
         {/* Desktop top right buttons (>= lg) */}
         <div className="hidden lg:flex shrink-0 lg:max-wide-2k:w-48 wide-2k:w-48 items-center justify-end gap-2.5 sm:gap-3 pt-2">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => setPreviewOpen(true)}
-            className={cn(
-              BTN_SECONDARY,
-              'min-h-[40px] 2xl:min-h-[46px] px-3.5 2xl:px-5 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
-            )}
+            className="min-h-[40px] 2xl:min-h-[46px] 2xl:px-5 2xl:text-sm uppercase tracking-wider"
           >
             {c.previewHeading}
-          </button>
+          </Button>
           {submitButton(
             'min-h-[40px] 2xl:min-h-[46px] px-4 2xl:px-6 py-1.5 text-xs 2xl:text-sm font-bold uppercase tracking-wider'
           )}

@@ -45,6 +45,8 @@ import { RoleCategory, PerkDictionary } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface OwnedCharacter {
   id: number;
@@ -382,13 +384,13 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
 
         <div className="order-3 relative w-full sm:w-72">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-          <input
+          <Input
             type="text"
             placeholder={dict?.filters?.filterByCharacter}
             aria-label={dict?.filters?.filterByCharacter}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-10 py-2.5 min-h-[44px] rounded-2xl border border-border-color bg-bg-primary text-xs font-semibold text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red/50 transition-all shadow-inner"
+            className="pl-10 pr-10 min-h-[44px] rounded-2xl bg-bg-primary font-semibold shadow-inner"
           />
           {searchQuery && (
             <button
@@ -571,22 +573,12 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
             </p>
           )}
           <div className="flex items-center justify-center gap-3 px-5 sm:px-7 lg:px-9 py-2.5">
-            <button
-              type="button"
-              onClick={handleCancelOwnershipMode}
-              disabled={ownershipSaving}
-              className="px-5 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary transition-colors disabled:opacity-60 cursor-pointer border border-border-color bg-bg-surface hover:bg-bg-elevated"
-            >
+            <Button variant="secondary" size="sm" onClick={handleCancelOwnershipMode} disabled={ownershipSaving} className="px-5">
               {dict?.admin?.cancel || dict?.modal?.close}
-            </button>
-            <button
-              type="button"
-              onClick={handleSaveOwnership}
-              disabled={ownershipSaving}
-              className="px-6 py-2 rounded-xl text-xs font-bold bg-accent-green text-text-inverted shadow-md hover:bg-accent-green-hover transition-colors disabled:opacity-60 disabled:cursor-wait cursor-pointer"
-            >
+            </Button>
+            <Button variant="success" size="sm" onClick={handleSaveOwnership} disabled={ownershipSaving} className="px-6">
               {ownershipSaving ? dict?.characterDetail?.saving : dict?.characterDetail?.accept}
-            </button>
+            </Button>
           </div>
         </div>
       )}

@@ -19,8 +19,10 @@ import {
 import { cn } from '@/utils/cn';
 import type { Dictionary } from '@/locales/types';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL, TEXTAREA_FIELD } from './styles';
+import { LABEL } from './styles';
 import { Checkbox } from '@/components/common/Checkbox';
+import { Button } from '@/components/common/Button';
+import { Input, Select, Textarea } from '@/components/common/Field';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -130,14 +132,14 @@ export function RomanceArchetypeBuilder({
             {ab.sectionDesc}
           </p>
         </div>
-        <button
-          type="button"
+        <Button
+          variant="secondary" size="md"
           onClick={addArchetype}
-          className={cn(BTN_SECONDARY, 'self-start sm:self-auto')}
+          className="self-start sm:self-auto"
         >
           <Plus className="h-4 w-4" />
           <span>{ab.addArchetype}</span>
-        </button>
+        </Button>
       </div>
 
       {archetypes.length === 0 ? (
@@ -184,16 +186,15 @@ export function RomanceArchetypeBuilder({
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                    <button
-                      type="button"
+                    <Button
+                      variant="ghost" size="sm" icon
                       onClick={(e) => {
                         e.stopPropagation();
                         removeArchetype(arch.id);
                       }}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer"
                     >
                       <Trash2 className="h-4 w-4" />
-                    </button>
+                    </Button>
                     <ChevronDown
                       className={cn(
                         'h-4 w-4 text-text-muted transition-transform',
@@ -209,32 +210,32 @@ export function RomanceArchetypeBuilder({
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
                         <label className={LABEL}>{ab.titleLabel}</label>
-                        <input
+                        <Input
+                          fieldSize="md"
                           value={arch.title}
                           onChange={(e) => updateArchetype(arch.id, { title: e.target.value })}
                           placeholder={ab.titlePlaceholder}
-                          className={FIELD}
                         />
                       </div>
                       <div>
                         <label className={LABEL}>{ab.subtitleLabel}</label>
-                        <input
+                        <Input
+                          fieldSize="md"
                           value={arch.subtitle}
                           onChange={(e) => updateArchetype(arch.id, { subtitle: e.target.value })}
                           placeholder={ab.subtitlePlaceholder}
-                          className={FIELD}
                         />
                       </div>
                     </div>
 
                     <div>
                       <label className={LABEL}>{ab.descriptionLabel}</label>
-                      <textarea
+                      <Textarea
+                        fieldSize="md"
                         value={arch.description}
                         onChange={(e) => updateArchetype(arch.id, { description: e.target.value })}
                         placeholder={ab.descriptionPlaceholder}
                         rows={3}
-                        className={TEXTAREA_FIELD}
                       />
                     </div>
 
@@ -276,11 +277,12 @@ export function RomanceArchetypeBuilder({
                             {ab.customIconUrl}
                           </label>
                           <div className="relative">
-                            <input
+                            <Input
+                              fieldSize="md"
                               value={arch.icon_url || ''}
                               onChange={(e) => updateArchetype(arch.id, { icon_url: e.target.value })}
                               placeholder="https://... or data:image"
-                              className={cn(FIELD, 'pl-8 text-xs')}
+                              className="pl-8 sm:text-xs"
                             />
                             <LinkIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
                           </div>
@@ -339,14 +341,15 @@ export function RomanceArchetypeBuilder({
                           key={rIdx}
                           className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl border border-border-color bg-bg-primary/50 text-xs"
                         >
-                          <select
+                          <Select
+                            fieldSize="sm"
                             value={rule.target}
                             onChange={(e) =>
                               updateRule(arch.id, rIdx, {
                                 target: e.target.value as ArchetypeRule['target'],
                               })
                             }
-                            className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary font-bold"
+                            className="w-auto font-bold"
                           >
                             <option value="smash_rate">{ab.smashRate}</option>
                             <option value="total_votes">{ab.totalVotes}</option>
@@ -354,25 +357,27 @@ export function RomanceArchetypeBuilder({
                             <option value="gender_affinity">{ab.genderAffinity}</option>
                             <option value="role_count">{ab.roleCount}</option>
                             <option value="gender_count">{ab.genderCount}</option>
-                          </select>
+                          </Select>
 
                           {(rule.target === 'role_affinity' || rule.target === 'role_count') && (
-                            <input
+                            <Input
+                              fieldSize="sm"
                               value={rule.target_value || ''}
                               placeholder={ab.rolePlaceholder}
                               list={`roles-list-${arch.id}`}
                               onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
-                              className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary max-w-[130px]"
+                              className="w-auto max-w-[130px]"
                             />
                           )}
 
                           {(rule.target === 'gender_affinity' || rule.target === 'gender_count') && (
-                            <input
+                            <Input
+                              fieldSize="sm"
                               value={rule.target_value || ''}
                               placeholder={ab.genderPlaceholder}
                               list={`genders-list-${arch.id}`}
                               onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
-                              className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary max-w-[130px]"
+                              className="w-auto max-w-[130px]"
                             />
                           )}
 
@@ -387,36 +392,38 @@ export function RomanceArchetypeBuilder({
                             ))}
                           </datalist>
 
-                          <select
+                          <Select
+                            fieldSize="sm"
                             value={rule.operator}
                             onChange={(e) =>
                               updateRule(arch.id, rIdx, {
                                 operator: e.target.value as ArchetypeRule['operator'],
                               })
                             }
-                            className="bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary font-bold"
+                            className="w-auto font-bold"
                           >
                             <option value=">=">{ab.opGte}</option>
                             <option value="<=">{ab.opLte}</option>
                             <option value="==">{ab.opEq}</option>
-                          </select>
+                          </Select>
 
-                          <input
+                          <Input
+                            fieldSize="sm"
                             type="number"
                             value={rule.value}
                             onChange={(e) =>
                               updateRule(arch.id, rIdx, { value: Number(e.target.value) || 0 })
                             }
-                            className="w-16 bg-bg-surface border border-border-color rounded-lg px-2 py-1 text-text-primary font-bold text-center"
+                            className="w-16 text-center font-bold"
                           />
 
-                          <button
-                            type="button"
+                          <Button
+                            variant="ghost" size="xs" icon
                             onClick={() => removeRule(arch.id, rIdx)}
-                            className="ml-auto text-text-muted hover:text-accent-red p-1 cursor-pointer"
+                            className="ml-auto"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
-                          </button>
+                          </Button>
                         </div>
                       ))}
                     </div>

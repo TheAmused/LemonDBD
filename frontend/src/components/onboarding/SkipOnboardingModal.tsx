@@ -4,6 +4,7 @@ import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
 
 export interface SkipOnboardingModalProps {
   isOpen: boolean;
@@ -35,14 +36,9 @@ export const SkipOnboardingModal: React.FC<SkipOnboardingModalProps> = ({
       footerClassName="flex-col-reverse sm:flex-row sm:justify-stretch p-4 sm:px-6"
       footer={
         <>
-          <button
-            type="button"
-            onClick={onCancel}
-            data-autofocus
-            className="w-full sm:flex-1 rounded-xl border border-border-color bg-bg-elevated py-2.5 text-xs font-black uppercase tracking-wider text-text-secondary hover:bg-bg-elevated/80 transition-colors cursor-pointer"
-          >
+          <Button variant="secondary" onClick={onCancel} data-autofocus className="w-full sm:flex-1">
             {t?.skipModalCancel || 'Go back'}
-          </button>
+          </Button>
           <button
             type="button"
             onClick={onConfirm}

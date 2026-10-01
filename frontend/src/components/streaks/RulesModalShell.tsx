@@ -1,6 +1,7 @@
 // frontend/src/components/streaks/RulesModalShell.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
@@ -102,7 +103,6 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   icon: Icon,
   title,
   iconClassName,
-  footerButtonClassName,
   footerButtonLabel = "Got It, Let's Play!",
   children,
   dict,
@@ -121,13 +121,9 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
       bodyClassName="space-y-6 p-5 text-sm text-text-secondary sm:p-6"
       footerClassName="justify-end"
       footer={
-        <button
-          type="button"
-          onClick={onClose}
-          className={`w-full rounded-xl px-5 py-2.5 text-sm font-bold text-text-inverted shadow-md transition-all cursor-pointer sm:w-auto ${footerButtonClassName}`}
-        >
+        <Button variant="primary" onClick={onClose} className="w-full sm:w-auto">
           {footerButtonLabel}
-        </button>
+        </Button>
       }
     >
       {children}

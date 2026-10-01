@@ -2,8 +2,9 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
-import { Search, UserCheck, Sparkles } from 'lucide-react';
+import { UserCheck, Sparkles } from 'lucide-react';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
@@ -163,17 +164,13 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
     >
       {/* Search Bar */}
       <div className="p-4 bg-bg-elevated/40 shrink-0">
-        <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={dict?.user?.searchCharacters || 'Search characters...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none transition-colors font-mono"
-            autoFocus
-          />
-        </div>
+        <SearchInput
+          className="font-mono"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={dict?.user?.searchCharacters || 'Search characters...'}
+          autoFocus
+        />
       </div>
 
       {/* Characters Grid */}

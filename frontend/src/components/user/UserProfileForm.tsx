@@ -7,7 +7,8 @@ import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle, ChevronDown } from 
 import { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
-import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface UserProfileFormProps {
   initialEmail: string;
@@ -165,12 +166,13 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
                       <Mail className="h-4 w-4" />
                     </div>
-                    <input
+                    <Input
                       type="email"
                       required
+                      fieldSize="sm"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border-color bg-bg-elevated pl-10 pr-4 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
+                      className="pl-10 font-mono"
                     />
                   </div>
                 </div>
@@ -194,11 +196,12 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         {t.newPassword || 'New Password'}
                       </label>
                       <div className="relative">
-                        <input
+                        <Input
                           type={showNewPassword ? 'text' : 'password'}
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
-                          className="w-full rounded-xl border border-border-color bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner font-mono"
+                          fieldSize="sm"
+                          className="pr-9 font-mono"
                         />
                         <button
                           type="button"
@@ -217,16 +220,16 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                         {t.confirmPassword || 'Confirm New Password'}
                       </label>
                       <div className="relative">
-                        <input
+                        <Input
                           type={showConfirmPassword ? 'text' : 'password'}
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className={`w-full rounded-xl border bg-bg-elevated px-3 pr-9 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none transition-all shadow-inner font-mono ${
-                            !confirmPassword
-                              ? 'border-border-color focus:border-accent-red focus:ring-1 focus:ring-accent-red'
-                              : passwordsMatch
-                                ? 'border-accent-green/50 focus:border-accent-green focus:ring-1 focus:ring-accent-green'
-                                : 'border-accent-red/50 focus:border-accent-red focus:ring-1 focus:ring-accent-red'
+                          fieldSize="sm"
+                          invalid={!!confirmPassword && !passwordsMatch}
+                          className={`pr-9 font-mono ${
+                            confirmPassword && passwordsMatch
+                              ? 'border-accent-green/50 focus:border-accent-green focus:ring-accent-green'
+                              : ''
                           }`}
                         />
                         <button
@@ -245,17 +248,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
               {/* Action Button */}
               <div className="pt-3 flex items-center justify-end border-t border-border-color">
-                <button
-                  type="submit"
-                  disabled={isUpdating}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black tracking-wider text-text-inverted shadow-xs disabled:opacity-50 transition-all cursor-pointer font-mono"
-                >
-                  {isUpdating ? (
-                    <Spinner size="sm" tone="inverted" />
-                  ) : (
-                    <span>{t.saveChanges || 'Save'}</span>
-                  )}
-                </button>
+                <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="w-full sm:w-auto">
+                  <span>{t.saveChanges || 'Save'}</span>
+                </Button>
               </div>
             </form>
           </div>

@@ -25,18 +25,20 @@ import { sampleFlags } from '@/utils/smashWatermarks';
 
 import { tip } from '@/components/common/Tooltip';
 import { Modal, useModal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
+import { Surface } from '@/components/common/Surface';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
   return (
-    <button
-      type="button"
+    <Button
+      variant="secondary" size="md" icon
       onClick={close}
       aria-label={label}
-      className="absolute right-2 top-2 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary shadow-lg transition-colors hover:text-text-primary cursor-pointer"
+      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
     >
       <X className="h-5 w-5" aria-hidden="true" />
-    </button>
+    </Button>
   );
 };
 // The local CharacterMetadataLocale / CharacterMetadataContainer shapes are gone: they
@@ -576,29 +578,29 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
               {/* Full Mode Extras */}
               {rosterMode !== 'simple' && charBio && (
-                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
+                <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-1">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-text-muted">
                     {rawSmashDict?.loreAndPersonality || 'Lore'}
                   </span>
                   <p className="text-xs text-text-secondary leading-relaxed">{charBio}</p>
-                </div>
+                </Surface>
               )}
 
               {rosterMode !== 'simple' && charMeme && (
-                <div className="p-2.5 rounded-2xl bg-bg-elevated border border-border-color space-y-0.5">
+                <Surface tone="elevated" radius="2xl" padding="none" className="p-2.5 space-y-0.5">
                   <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-text-secondary">
                     <Sparkles className="h-3 w-3 text-text-muted" aria-hidden="true" />
                     {customLabels?.meme || rawSmashDict?.trialRumor || 'Meme'}
                   </span>
                   <p className="text-[11px] text-text-secondary italic leading-snug">{charMeme}</p>
-                </div>
+                </Surface>
               )}
             </div>
 
             {/* Bottom Actions Bar */}
             <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0 gap-2 pointer-events-auto">
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="sm"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -606,13 +608,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                className="flex-1 py-2 px-3 rounded-xl bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:border-border-subtle active:scale-95"
+                className="flex-1"
               >
                 <ThumbsDown className="h-4 w-4" aria-hidden="true" />
                 <span>{rawSmashDict?.pass || 'Pass'}</span>
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="primary" size="sm"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={(e) => {
@@ -620,11 +622,11 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                className="flex-1 py-2 px-3 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:bg-accent-red-hover active:scale-95"
+                className="flex-1"
               >
                 <Heart className="h-4 w-4 fill-text-inverted" aria-hidden="true" />
                 <span>{rawSmashDict?.smash || 'Smash'}</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>

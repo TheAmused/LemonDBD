@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -192,14 +193,16 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             <h2 className="text-2xl font-black tracking-tight text-text-primary">
               {dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
             </h2>
-            <button
+            <Button
+              variant="success"
+              size="lg"
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
+              className="mt-6"
             >
               <RotateCcw className="h-4 w-4" />
               {dict?.streaks?.startNewRun || 'Start a new run'}
-            </button>
+            </Button>
           </div>
         ) : (
           <ActiveTargetStage

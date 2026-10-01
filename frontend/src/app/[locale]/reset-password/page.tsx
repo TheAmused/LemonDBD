@@ -3,6 +3,8 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { Suspense, useEffect, useState } from 'react';
+import { Input } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
@@ -11,7 +13,6 @@ import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { Spinner } from '@/components/common/Spinner';
 
 export default function ResetPasswordPage() {
   return (
@@ -108,13 +109,13 @@ function ResetPasswordContent() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <input
+                <Input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-sm"
+                  className="pl-10"
                 />
               </div>
             </div>
@@ -125,28 +126,20 @@ function ResetPasswordContent() {
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <input
+                <Input
                   type="password"
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-sm"
+                  className="pl-10"
                 />
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent-red py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:bg-accent-red-hover focus:outline-none focus:ring-2 focus:ring-accent-red disabled:opacity-50 transition-all cursor-pointer"
-            >
-              {loading ? (
-                <Spinner size="sm" tone="inverted" />
-              ) : (
-                <span>{dict?.user?.resetPassword || 'Reset Password'}</span>
-              )}
-            </button>
+            <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+              <span>{dict?.user?.resetPassword || 'Reset Password'}</span>
+            </Button>
           </form>
         )}
       </div>

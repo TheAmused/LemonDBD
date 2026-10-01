@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 import { EmailVerificationForm } from '@/components/EmailVerificationForm';
 import { Modal } from '@/components/common/Modal';
-import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -243,13 +244,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               )}
               <div className="relative">
                 <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <input
+                <Input
                   type="text"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder={dict?.user?.usernameOrEmailPlaceholder}
-                  className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
+                  className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
                 />
               </div>
             </div>
@@ -264,13 +265,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               )}
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <input
+                <Input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={dict?.user?.emailPlaceholder}
-                  className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
+                  className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
                 />
               </div>
             </div>
@@ -285,13 +286,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               )}
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <input
+                <Input
                   type="password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-xl border border-border-color bg-bg-primary py-2.5 pl-10 pr-3.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none focus:ring-1 focus:ring-accent-red transition-all shadow-inner"
+                  className="bg-bg-primary pl-10 pr-3.5 shadow-inner"
                 />
               </div>
             </div>
@@ -317,14 +318,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             honeypotProps={honeypotProps}
           />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red disabled:opacity-50 transition-all cursor-pointer"
-          >
-            {loading ? (
-              <Spinner size="sm" tone="inverted" />
-            ) : mode === 'login' ? (
+          <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">
+            {mode === 'login' ? (
               <>
                 <LogIn className="h-4 w-4" />
                 <span>{dict?.user?.signIn}</span>
@@ -340,7 +335,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <span>{dict?.user?.sendResetLink}</span>
               </>
             )}
-          </button>
+          </Button>
         </form>
       )}
 
@@ -352,14 +347,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </p>
           )}
           <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleFillDemo('admin')}
-              className="flex items-center justify-center gap-1.5 rounded-lg border border-accent-red/30 bg-accent-red/10 px-2.5 py-1.5 text-[11px] font-semibold text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-            >
-              <ShieldAlert className="h-3 w-3 text-accent-red" />
+            <Button variant="soft" size="xs" onClick={() => handleFillDemo('admin')} leftIcon={<ShieldAlert className="h-3 w-3" />}>
               <span>{dict?.user?.adminDemo}</span>
-            </button>
+            </Button>
             <button
               type="button"
               onClick={() => handleFillDemo('player')}

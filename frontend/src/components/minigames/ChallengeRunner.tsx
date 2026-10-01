@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/ChallengeRunner.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Trophy,
@@ -548,23 +549,23 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({
               </div>
 
               {currentRoundIndex < rounds.length - 1 ? (
-                <button
-                  type="button"
+                <Button
+                  variant="primary"
+                  size="lg"
                   onClick={handleNextRound}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-bold text-sm shadow-lg shadow-accent-red/25 transition-all"
                 >
                   <span>{t.nextRound}</span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </Button>
               ) : (
-                <button
-                  type="button"
+                <Button
+                  variant="success"
+                  size="lg"
                   onClick={() => setIsFinished(true)}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-green hover:bg-accent-green-hover text-text-inverted font-bold text-sm shadow-lg shadow-accent-green/25 transition-all"
                 >
                   <Trophy className="w-4 h-4" />
                   <span>{t.finishTrial}</span>
-                </button>
+                </Button>
               )}
             </div>
           )}

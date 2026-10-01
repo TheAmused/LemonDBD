@@ -18,6 +18,7 @@ import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
+import { Surface } from '@/components/common/Surface';
 
 interface CharacterStatsModalProps {
   isOpen: boolean;
@@ -199,7 +200,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
         </div>
 
         {/* 2. Vote Breakdown Progress Bar */}
-        <div className="space-y-1.5 p-3.5 rounded-2xl bg-bg-elevated border border-border-color font-mono">
+        <Surface tone="elevated" radius="2xl" padding="none" className="space-y-1.5 p-3.5 font-mono">
           <div className="flex justify-between text-xs font-bold">
             <span className="flex items-center gap-1 text-accent-red">
               <Heart className="h-3.5 w-3.5 fill-accent-red" /> {smashCount.toLocaleString()} {smashesLabel} ({smashPct}{percentSign})
@@ -222,11 +223,11 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             <span>{totalVotesLabel}: {totalVotes.toLocaleString()}</span>
             {stats?.rank && <span>{globalRankLabel}: #{stats.rank}</span>}
           </div>
-        </div>
+        </Surface>
 
         {/* 3. Lore Quote */}
         {quote && (
-          <div className="p-3.5 rounded-2xl bg-bg-elevated border border-border-color space-y-1">
+          <Surface tone="elevated" radius="2xl" padding="none" className="p-3.5 space-y-1">
             <div className="flex items-center gap-1 text-accent-amber text-[10px] uppercase font-bold font-mono">
               <Quote className="h-3.5 w-3.5" />
               <span>{loreQuoteLabel}</span>
@@ -234,7 +235,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
             <p className="text-xs text-text-secondary font-serif italic leading-relaxed">
               {quote}
             </p>
-          </div>
+          </Surface>
         )}
 
         {/* 4. Bio Profile */}

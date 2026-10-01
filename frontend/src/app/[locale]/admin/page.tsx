@@ -3,6 +3,7 @@
 
 import { Tabs } from '@/components/common/Tabs';
 import React, { useState, useEffect, useCallback, use, Suspense } from 'react';
+import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { getBackendBaseUrl } from '@/utils/api';
@@ -445,14 +446,16 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               }`}
             >
               <span>{actionMessage.text}</span>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="xs"
+                icon
                 onClick={() => setActionMessage(null)}
-                className="text-text-muted hover:text-text-primary text-sm leading-none ml-3 cursor-pointer p-1 rounded-md focus:outline-none"
+                className="ml-3"
                 aria-label={dict?.admin?.closeSymbol || 'Close'}
               >
                 {dict?.admin?.closeSymbol || '×'}
-              </button>
+              </Button>
             </div>
           )}
 

@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/app/[locale]/user/page.tsx
 
 import React, { useState, useEffect, useCallback, useRef, Suspense } from 'react';
+import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
@@ -141,14 +142,14 @@ export default function UserProfilePage() {
             {dict?.user?.authRequiredDesc || 'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">
-            <button
-              type="button"
+            <Button
+              variant="primary"
               onClick={() => setAuthModalOpen(true)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer font-mono"
+              leftIcon={<User className="h-4 w-4" />}
+              className="w-full"
             >
-              <User className="h-4 w-4" />
               <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
-            </button>
+            </Button>
             <Link
               href={`/${currentLocale}`}
               className="text-xs text-text-muted hover:text-accent-amber transition-colors py-1 font-mono"

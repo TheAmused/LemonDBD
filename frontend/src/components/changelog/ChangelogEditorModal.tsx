@@ -29,8 +29,9 @@ import {
 
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
-import { Spinner } from '@/components/common/Spinner';
 import { Checkbox } from '@/components/common/Checkbox';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 export interface ChangelogEditorModalProps {
   open: boolean;
   post: ChangelogPost | null;
@@ -123,34 +124,19 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
   const footer = (
     <>
     {post && onDelete ? (
-      <button
-        type="button"
-        onClick={onDelete}
-        className="flex items-center gap-1.5 rounded-xl border border-accent-red/30 px-3 py-2 text-xs font-bold text-accent-red hover:bg-accent-red/10 cursor-pointer"
-      >
-        <Trash2 className="h-3.5 w-3.5" />
+      <Button variant="danger" size="sm" onClick={onDelete} leftIcon={<Trash2 className="h-3.5 w-3.5" />}>
         {t?.delete || 'Delete'}
-      </button>
+      </Button>
     ) : (
       <span />
     )}
     <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={onClose}
-        className="rounded-xl border border-border-color px-4 py-2 text-xs font-bold text-text-muted hover:text-text-secondary cursor-pointer"
-      >
+      <Button variant="secondary" size="sm" onClick={onClose}>
         {t?.cancel || 'Cancel'}
-      </button>
-      <button
-        type="button"
-        onClick={handleSave}
-        disabled={saving || !title.trim()}
-        className="flex items-center gap-1.5 rounded-xl bg-accent-red px-5 py-2 text-xs font-black text-text-inverted shadow-lg hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-wait cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform"
-      >
-        {saving && <Spinner size="xs" />}
+      </Button>
+      <Button variant="primary" size="sm" onClick={handleSave} loading={saving} disabled={!title.trim()}>
         {post ? (t?.saveChanges || 'Save Changes') : (t?.publishEntry || 'Publish Entry')}
-      </button>
+      </Button>
     </div>
     </>
   );
@@ -170,12 +156,12 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
       padded
       bodyClassName="space-y-4"
     >
-    <input
+    <Input
       data-autofocus
       value={title}
       onChange={(e) => setTitle(e.target.value)}
       placeholder={t?.titlePlaceholder || "Patch title, e.g. 'The Entity Stirs — Balance Update'"}
-      className="w-full rounded-xl border border-border-color bg-bg-elevated px-4 py-2.5 text-sm font-bold text-text-primary placeholder:text-text-muted outline-none focus:border-accent-red/60"
+      className="px-4 font-bold"
     />
 
     <div className="flex flex-wrap gap-2">

@@ -4,7 +4,9 @@
 import React, { useState } from 'react';
 import { Tag, Plus, X, Sparkles, Shield, User } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
-import { FIELD, LABEL } from './styles';
+import { LABEL } from './styles';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface RosterTaxonomyBlockProps {
   roles: string[];
@@ -96,7 +98,8 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
 
         {/* Input to add custom role */}
         <div className="flex items-center justify-center gap-2 max-w-sm xl:max-w-md wide:max-w-lg mx-auto w-full">
-          <input
+          <Input
+            fieldSize="md"
             type="text"
             value={newRoleInput}
             onChange={(e) => setNewRoleInput(e.target.value)}
@@ -107,16 +110,15 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
               }
             }}
             placeholder={tx.addRolePlaceholder}
-            className={FIELD}
           />
-          <button
-            type="button"
+          <Button
+            variant="primary" size="md"
             onClick={() => handleAddRole()}
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-bold transition-all shrink-0 cursor-pointer shadow-sm active:scale-95"
+            className="shrink-0"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>{tx.add}</span>
-          </button>
+          </Button>
         </div>
 
         {/* Quick Suggestion Chips */}
@@ -185,7 +187,8 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
 
         {/* Input to add custom gender */}
         <div className="flex items-center justify-center gap-2 max-w-sm xl:max-w-md wide:max-w-lg mx-auto w-full">
-          <input
+          <Input
+            fieldSize="md"
             type="text"
             value={newGenderInput}
             onChange={(e) => setNewGenderInput(e.target.value)}
@@ -196,16 +199,15 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({
               }
             }}
             placeholder={tx.addGenderPlaceholder}
-            className={FIELD}
           />
-          <button
-            type="button"
+          <Button
+            variant="success" size="md"
             onClick={() => handleAddGender()}
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-accent-green hover:brightness-110 text-text-inverted text-xs font-bold transition-all shrink-0 cursor-pointer shadow-sm active:scale-95"
+            className="shrink-0"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>{tx.add}</span>
-          </button>
+          </Button>
         </div>
 
         {/* Quick Suggestion Chips */}

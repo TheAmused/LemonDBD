@@ -24,6 +24,7 @@ import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';
+import { Button } from '@/components/common/Button';
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
 const KillerPowerModal = dynamic(() => import('./modals/KillerPowerModal').then((m) => m.KillerPowerModal), { ssr: false });
@@ -154,14 +155,14 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
             </div>
 
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-              <button
-                type="button"
+              <Button
+                variant="secondary"
                 onClick={() => setIsLoreModalOpen(true)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+                leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}
+                className="rounded-2xl"
               >
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
                 <span>{t.viewLore || ''}</span>
-              </button>
+              </Button>
 
               {chapterName && (
                 <span className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-bg-elevated border border-border-color text-xs font-bold text-text-secondary select-none">

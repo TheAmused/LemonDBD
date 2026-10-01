@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/guessers/AudioGuesser.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { Volume2, VolumeX, Play, Pause, Activity, Check, X, Disc3 } from 'lucide-react';
@@ -205,14 +206,10 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
           )}
 
           <div className="flex items-center justify-center gap-3">
-            <button
-              type="button"
+            <Button
+              variant={isPlaying ? 'secondary' : 'primary'}
+              size="md"
               onClick={togglePlay}
-              className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm tracking-wide shadow-lg transition-all transform active:scale-95 ${
-                isPlaying
-                  ? 'bg-bg-elevated text-text-primary border border-border-color hover:bg-bg-surface'
-                  : 'bg-accent-red text-text-inverted hover:bg-accent-red-hover shadow-accent-red/30'
-              }`}
             >
               {isPlaying ? (
                 <>
@@ -225,16 +222,18 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
                   <span>{dict.minigames.audio.listenTheme}</span>
                 </>
               )}
-            </button>
+            </Button>
 
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="md"
+              icon
               onClick={toggleMute}
-              {...tip(isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute, undefined, 'action')} aria-label={isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute}
-              className="p-2.5 rounded-xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors"
+              {...tip(isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute, undefined, 'action')}
+              aria-label={isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute}
             >
               {isMuted ? <VolumeX className="w-4 h-4 text-accent-red" /> : <Volume2 className="w-4 h-4" />}
-            </button>
+            </Button>
           </div>
         </div>
 

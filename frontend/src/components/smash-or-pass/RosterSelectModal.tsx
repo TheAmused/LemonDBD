@@ -9,6 +9,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { cn } from '@/utils/cn';
 import { SmashSounds } from './SmashSoundEffects';
 import { Modal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
@@ -502,17 +503,16 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   : dict?.smashOrPass?.picker?.noRostersMatchDesc}
               </p>
               {onCreateRoster && filter === 'custom' && (
-                <button
-                  type="button"
+                <Button
+                  variant="primary" size="sm"
                   onClick={() => {
                     onClose();
                     onCreateRoster();
                   }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-accent-red text-text-inverted text-xs font-mono font-bold uppercase tracking-wider shadow-md hover:bg-accent-red-hover transition-colors cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
                   <span>{dict?.smashOrPass?.picker?.createFirstRoster}</span>
-                </button>
+                </Button>
               )}
             </div>
           ) : (
@@ -711,61 +711,61 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             // Select/Edit/Export/Delete even though they render visually above it.
             <div className="relative z-50 flex flex-wrap items-center justify-center gap-2.5">
               {activeRosterInCenter.is_active !== false ? (
-                <button
-                  type="button"
+                <Button
+                  variant="primary" size="lg"
                   onClick={() => commitSelection()}
-                  className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-accent-red text-text-inverted font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase border border-accent-red/60 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                  className="rounded-2xl px-8 sm:px-10 uppercase tracking-widest font-mono"
                 >
                   <Check className="h-4 w-4 sm:h-5 sm:w-5 stroke-[3]" aria-hidden="true" />
                   <span>
                     {selectPrefixText ? `${selectPrefixText} ` : ''}
                     {getRosterDisplayName(activeRosterInCenter)}
                   </span>
-                </button>
+                </Button>
               ) : (
-                <button
-                  type="button"
+                <Button
+                  variant="secondary" size="lg"
                   disabled
-                  className="inline-flex items-center gap-2.5 px-8 sm:px-10 py-3 sm:py-3.5 rounded-2xl bg-bg-elevated border border-border-color text-text-muted font-mono font-black text-xs sm:text-sm md:text-base tracking-widest uppercase cursor-not-allowed opacity-75"
+                  className="rounded-2xl px-8 sm:px-10 uppercase tracking-widest font-mono"
                 >
                   <Lock className="h-4 w-4 sm:h-5 sm:w-5 text-text-muted" aria-hidden="true" />
                   <span>
                     {getRosterDisplayName(activeRosterInCenter)} ({dict?.smashOrPass?.comingSoon || 'Coming Soon'})
                   </span>
-                </button>
+                </Button>
               )}
 
               {activeRosterInCenter.is_local && (onEditRoster || onExportRoster || onDeleteRoster) && (
                 <>
                   {onEditRoster && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => onEditRoster((activeRosterInCenter as RosterItem).id)}
                       aria-label={dict?.smashOrPass?.picker?.editRoster || 'Edit this roster'}
-                      className="flex h-11 w-11 sm:h-[52px] sm:w-[52px] items-center justify-center rounded-2xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer"
+                      className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Pencil className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                   {onExportRoster && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => onExportRoster((activeRosterInCenter as RosterItem).id)}
                       aria-label={dict?.smashOrPass?.picker?.exportRoster || 'Export this roster'}
-                      className="flex h-11 w-11 sm:h-[52px] sm:w-[52px] items-center justify-center rounded-2xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:border-border-subtle transition-all cursor-pointer"
+                      className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Share2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                   {onDeleteRoster && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => onDeleteRoster((activeRosterInCenter as RosterItem).id)}
                       aria-label={dict?.smashOrPass?.picker?.deleteRoster || 'Delete this roster'}
-                      className="flex h-11 w-11 sm:h-[52px] sm:w-[52px] items-center justify-center rounded-2xl bg-bg-elevated border border-border-color text-text-secondary hover:text-accent-red hover:border-accent-red/40 transition-all cursor-pointer"
+                      className="h-11 w-11 sm:h-[52px] sm:w-[52px] rounded-2xl"
                     >
                       <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                 </>
               )}

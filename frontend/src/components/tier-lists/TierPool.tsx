@@ -13,6 +13,8 @@ import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
 import { SortableTierItem } from './SortableTierItem';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
+import { Input } from '@/components/common/Field';
+import { Badge } from '@/components/common/Badge';
 
 interface TierPoolProps {
   keys: string[];
@@ -97,9 +99,9 @@ export function TierPool({
             <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
               {t.unranked}
             </h2>
-            <span className="inline-flex items-center rounded-full bg-accent-red/10 px-2 py-0.5 text-[11px] font-bold text-accent-red border border-accent-red/25 font-mono">
+            <Badge tone="red" plain className="font-mono text-[11px] font-bold">
               {t.unrankedCount.replace('{count}', String(keys.length))}
-            </span>
+            </Badge>
           </div>
         </div>
 
@@ -126,13 +128,14 @@ export function TierPool({
           <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
             <div className="relative flex-1 sm:max-w-xs">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-              <input
+              <Input
                 type="search"
+                fieldSize="sm"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t.searchPool}
                 aria-label={t.searchPoolAria}
-                className="h-8.5 w-full rounded-xl border border-border-color bg-bg-primary pl-9 pr-8 text-xs sm:text-sm text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
+                className="h-8.5 rounded-xl bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
               />
               {query && (
                 <button

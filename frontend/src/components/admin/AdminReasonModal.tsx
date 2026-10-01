@@ -2,6 +2,8 @@
 // frontend/src/components/admin/AdminReasonModal.tsx
 
 import React, { useEffect, useState } from 'react';
+import { Textarea } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import { Ban } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
@@ -47,34 +49,26 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({
       footerClassName="justify-end flex-col-reverse sm:flex-row"
       footer={
         <>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary border border-border-color bg-bg-surface hover:bg-bg-elevated transition-colors cursor-pointer shadow-xs"
-          >
+          <Button size="sm" onClick={onCancel} className="w-full sm:w-auto">
             {dict?.admin?.cancel || 'Cancel'}
-          </button>
-          <button
-            type="button"
-            onClick={() => onConfirm(reason.trim())}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-bold bg-accent-red hover:bg-red-600 text-text-inverted transition-all cursor-pointer shadow-md shadow-accent-red/20"
-          >
+          </Button>
+          <Button variant="primary" size="sm" onClick={() => onConfirm(reason.trim())} className="w-full sm:w-auto">
             {confirmLabel}
-          </button>
+          </Button>
         </>
       }
     >
       <label className="block text-[11px] font-bold uppercase tracking-wider text-text-secondary">
         {dict?.admin?.reasonShownToPlayers || 'Reason'}
       </label>
-      <textarea
+      <Textarea
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         rows={3}
         maxLength={255}
         data-autofocus
         placeholder={dict?.admin?.reasonPlaceholder || ''}
-        className="w-full rounded-xl bg-bg-primary border border-border-color text-sm text-text-primary placeholder:text-text-muted p-3 focus:outline-none focus:ring-2 focus:ring-accent-red resize-none"
+        className="resize-none"
       />
       <p className="text-right text-[10px] text-text-muted font-mono">{reason.length}/255</p>
     </Modal>

@@ -38,7 +38,9 @@ import { TierListBoard } from './TierListBoard';
 import { TierListExportModal } from './TierListExportModal';
 import { type ImportTarget, TierListImportModal } from './TierListImportModal';
 import type { TierTileShape } from './TierItemTile';
-import { BTN_DANGER_GHOST, BTN_SECONDARY } from './styles';
+import { TOUCH_BTN } from './styles';
+import { Button, BUTTON_BASE, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
+import { cn } from '@/utils/cn';
 
 export interface TierListEditorProps {
   mode: 'official' | 'custom';
@@ -206,39 +208,39 @@ export function TierListEditor(props: TierListEditorProps) {
           </div>
 
           <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-wrap items-center gap-2 shrink-0 xl:min-w-[160px] justify-center xl:justify-end">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}
               aria-pressed={showNames}
               aria-label={showNames ? t.hideNames : t.showNames}
-              className={BTN_SECONDARY}
+              className={TOUCH_BTN}
             >
               {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
               <span className="hidden sm:inline">{showNames ? t.hideNames : t.showNames}</span>
-            </button>
-            <button type="button" onClick={() => setDialog('import')} aria-label={t.import} className={BTN_SECONDARY}>
+            </Button>
+            <Button variant="secondary" onClick={() => setDialog('import')} aria-label={t.import} className={TOUCH_BTN}>
               <Upload className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t.import}</span>
-            </button>
-            <button type="button" onClick={() => setDialog('export')} aria-label={t.export} className={BTN_SECONDARY}>
+            </Button>
+            <Button variant="secondary" onClick={() => setDialog('export')} aria-label={t.export} className={TOUCH_BTN}>
               <Share2 className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t.export}</span>
-            </button>
-            <button type="button" onClick={() => setDialog('reset')} aria-label={t.reset} className={BTN_SECONDARY}>
+            </Button>
+            <Button variant="secondary" onClick={() => setDialog('reset')} aria-label={t.reset} className={TOUCH_BTN}>
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">{t.reset}</span>
-            </button>
+            </Button>
             {mode === 'custom' && editHref && (
-              <Link href={editHref} aria-label={t.editDetails} className={BTN_SECONDARY}>
+              <Link href={editHref} aria-label={t.editDetails} className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN)}>
                 <Pencil className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.editDetails}</span>
               </Link>
             )}
             {mode === 'custom' && onDelete && (
-              <button type="button" onClick={() => setDialog('delete')} aria-label={t.deleteList} className={BTN_DANGER_GHOST}>
+              <Button variant="soft" onClick={() => setDialog('delete')} aria-label={t.deleteList} className={TOUCH_BTN}>
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden sm:inline">{t.deleteList}</span>
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -274,21 +276,21 @@ export function TierListEditor(props: TierListEditorProps) {
             <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
             <span className="min-w-0">{t.selectedHint.replace('{name}', selectedItem.name)}</span>
             {mode === 'custom' && onRemoveItem && (
-              <button
-                type="button"
+              <Button
+                variant="soft"
                 onClick={() => {
                   report(onRemoveItem(selectedItem.key));
                   setSelectedKey(null);
                 }}
-                className={BTN_DANGER_GHOST}
+                className={TOUCH_BTN}
               >
                 <Trash2 className="h-4 w-4" aria-hidden="true" />
                 {t.removeItem}
-              </button>
+              </Button>
             )}
-            <button type="button" onClick={() => setSelectedKey(null)} className={BTN_SECONDARY}>
+            <Button variant="secondary" onClick={() => setSelectedKey(null)} className={TOUCH_BTN}>
               {t.cancelSelection}
-            </button>
+            </Button>
           </div>
         </div>
       )}

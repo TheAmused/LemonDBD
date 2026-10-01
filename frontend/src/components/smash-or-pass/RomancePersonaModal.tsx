@@ -33,6 +33,9 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { VeiledCompassIcon, EntityMarkIcon, RedStainIcon, CampfireIcon, EntityHeartIcon, SkillCheckGaugeIcon, FogDriftIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
+import { Surface } from '@/components/common/Surface';
 interface PersonaArchetypeEntry {
   title?: string;
   subtitle?: string;
@@ -304,15 +307,14 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
       centerTitle={!isSharingView}
       headerLeft={
         isSharingView ? (
-          <button
-            type="button"
+          <Button
+            variant="secondary" size="md" icon
             onClick={() => setIsSharingView(false)}
-            className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-all cursor-pointer"
             {...tip(rawSmash?.sharing?.backToBreakdownTitle || 'Back to breakdown', undefined, 'action')}
             aria-label={rawSmash?.sharing?.backAriaLabel || 'Back'}
           >
             <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red" />
-          </button>
+          </Button>
         ) : null
       }
       ariaLabel={isSharingView ? 'Share Archetype' : personaModalTitle}
@@ -337,14 +339,14 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
               </p>
             </div>
 
-            <button
-              type="button"
+            <Button
+              variant="primary" size="md"
               onClick={onClose}
-              className="mt-2 flex items-center gap-2 py-3 px-6 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
+              className="mt-2 rounded-2xl"
             >
               <span>{startVotingLabel}</span>
               <ArrowRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         ) : isSharingView ? (
           /* DYNAMIC INLINE SHARE VIEW (DIRECTLY IN THIS SAME MODAL - NO SECOND MODAL) */
@@ -428,34 +430,34 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                 {rawSmash?.sharing?.directLink || 'Direct Link to Archetype'}
               </span>
               <div className="flex items-center gap-2">
-                <input
+                <Input
+                  fieldSize="md"
                   type="text"
                   readOnly
                   value={shareUrl}
                   onFocus={(e) => e.target.select()}
-                  className="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl bg-bg-elevated border border-border-color text-xs font-mono text-text-secondary focus:outline-none focus:border-accent-red select-all"
+                  className="min-w-0 flex-1 font-mono sm:text-xs select-all"
                 />
-                <button
-                  type="button"
+                <Button
+                  variant="primary" size="md"
                   onClick={handleCopyLinkOnly}
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted text-xs font-mono font-bold transition-all cursor-pointer shrink-0 active:scale-95"
                 >
                   {copiedLink ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : <Copy className="h-3.5 w-3.5" />}
                   <span>{copiedLink ? (rawSmash?.sharing?.copied || 'Copied!') : (rawSmash?.sharing?.copyLink || 'Copy Link')}</span>
-                </button>
+                </Button>
               </div>
             </div>
 
             {/* Return to Breakdown Action */}
             <div className="pt-2 border-t border-border-color">
-              <button
-                type="button"
+              <Button
+                variant="secondary" size="md"
                 onClick={() => setIsSharingView(false)}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-primary font-mono text-xs sm:text-sm font-bold transition-all cursor-pointer active:scale-98"
+                className="w-full rounded-2xl"
               >
                 <ArrowLeft className="h-4 w-4 text-accent-red" />
                 <span>{rawSmash?.sharing?.backToBreakdown || 'Back to Archetype Breakdown'}</span>
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
@@ -498,7 +500,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             {/* Dating Psychology Card */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-elevated border border-border-color space-y-2 shadow-inner">
+            <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-2 shadow-inner">
               <span className="font-bold text-accent-red uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5" />
                 {datingPsychologyLabel}
@@ -506,7 +508,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
               <p className="text-text-secondary leading-relaxed text-xs sm:text-sm font-sans">
                 {persona.description}
               </p>
-            </div>
+            </Surface>
 
             {/* Telemetry Matrix */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono">
@@ -543,7 +545,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             </div>
 
             {/* Role Affinity Scale (Survivor vs Killer) */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-bg-elevated border border-border-color space-y-3">
+            <Surface tone="elevated" radius="2xl" padding="none" className="p-4 sm:p-5 space-y-3">
               <div className="flex items-center justify-between pb-0.5 border-b border-border-color/40">
                 <span className="font-bold text-text-secondary uppercase tracking-wider text-[11px] font-mono flex items-center gap-1.5">
                   <Compass className="h-3.5 w-3.5 text-accent-red" />
@@ -597,43 +599,43 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                   </>
                 )}
               </div>
-            </div>
+            </Surface>
 
             {/* Bottom Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
               {isSharedView ? (
-                  <button
-                    type="button"
+                  <Button
+                    variant="primary" size="md"
                     onClick={onClose}
-                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
+                    className="flex-1 rounded-2xl"
                   >
                     <Gamepad2 className="h-4 w-4" />
                     <span>{playToDiscoverLabel}</span>
-                  </button>
+                  </Button>
               ) : (
                 <>
-                  <button
-                    type="button"
+                  <Button
+                    variant="primary" size="md"
                     onClick={handleShare}
-                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-5 rounded-2xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-black font-mono text-xs sm:text-sm transition-all cursor-pointer active:scale-98"
+                    className="flex-1 rounded-2xl"
                   >
                     {copied ? <Check className="h-4 w-4 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
                     <span>{copied ? copiedToClipboardLabel : shareArchetypeLabel}</span>
-                  </button>
+                  </Button>
 
                   {onResetAll && (
-                    <button
-                      type="button"
+                    <Button
+                      variant="secondary" size="lg" icon
                       onClick={() => {
                         onClose();
                         onResetAll();
                       }}
-                      className="flex h-12 w-12 items-center justify-center rounded-2xl bg-bg-surface border border-border-color hover:bg-bg-elevated hover:border-accent-red text-text-muted hover:text-text-primary transition-all cursor-pointer shrink-0 shadow-md"
+                      className="rounded-2xl"
                       {...tip(resetVotesLabel, undefined, 'action')}
                       aria-label={resetVotesLabel}
                     >
                       <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                    </button>
+                    </Button>
                   )}
                 </>
               )}

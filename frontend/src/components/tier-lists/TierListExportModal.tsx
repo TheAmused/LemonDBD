@@ -13,7 +13,9 @@ import {
   serializeTierListDocument,
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './styles';
+import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
+import { Button } from '@/components/common/Button';
+import { Input, Textarea } from '@/components/common/Field';
 
 interface TierListExportModalProps {
   doc: TierListDocument | null;
@@ -92,23 +94,23 @@ export function TierListExportModal({ doc, onClose, locale, dict }: TierListExpo
             {t.shareLinkLabel}
           </label>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <input
+            <Input
               id="tier-list-share-link"
               readOnly
               value={shareUrl || t.preparingLink}
               onFocus={(e) => e.currentTarget.select()}
-              className={`${FIELD} font-mono text-xs`}
+              className={`${TOUCH_FIELD} font-mono text-xs`}
             />
-            <button
-              type="button"
+            <Button
+              variant="primary"
               disabled={!shareUrl}
               onClick={async () => setLinkCopy((await copyText(shareUrl)) ? 'copied' : 'failed')}
-              className={`${BTN_PRIMARY} shrink-0`}
+              className={TOUCH_BTN}
               aria-live="polite"
             >
               {linkCopy === 'copied' ? <Check className="h-4 w-4" aria-hidden="true" /> : <Link2 className="h-4 w-4" aria-hidden="true" />}
               {copyLabel(linkCopy, t.copyLink)}
-            </button>
+            </Button>
           </div>
           {shareUrl.length > TIER_LIST_LIMITS.shareLinkWarnChars && (
             <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 text-xs font-semibold text-accent-amber">
@@ -122,28 +124,28 @@ export function TierListExportModal({ doc, onClose, locale, dict }: TierListExpo
           <label htmlFor="tier-list-json" className={LABEL}>
             {t.jsonLabel}
           </label>
-          <textarea
+          <Textarea
             id="tier-list-json"
             readOnly
             value={json}
             rows={10}
             onFocus={(e) => e.currentTarget.select()}
-            className={`${FIELD} py-2 font-mono text-xs leading-relaxed`}
+            className={`${TOUCH_FIELD} py-2 font-mono text-xs leading-relaxed`}
           />
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <button type="button" onClick={download} className={BTN_SECONDARY}>
+            <Button variant="secondary" onClick={download} className={TOUCH_BTN}>
               <Download className="h-4 w-4" aria-hidden="true" />
               {t.downloadJson}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="secondary"
               onClick={async () => setJsonCopy((await copyText(json)) ? 'copied' : 'failed')}
-              className={BTN_SECONDARY}
+              className={TOUCH_BTN}
               aria-live="polite"
             >
               {jsonCopy === 'copied' ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
               {copyLabel(jsonCopy, t.copyJson)}
-            </button>
+            </Button>
           </div>
         </section>
       </div>

@@ -222,7 +222,7 @@ describe('User Profile Theme Support', () => {
       'Unauthenticated card must support light and dark theme'
     );
     assert.ok(
-      source.includes('bg-accent-red') || source.includes('bg-rose-50'),
+      source.includes('bg-accent-red') || source.includes('variant="primary"') || source.includes('bg-rose-50'),
       'Action button must support theme contrast'
     );
   });

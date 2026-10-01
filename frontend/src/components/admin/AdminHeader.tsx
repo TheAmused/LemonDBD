@@ -2,6 +2,7 @@
 // frontend/src/components/admin/AdminHeader.tsx
 
 import React from 'react';
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import { Database, RefreshCw, Download, Upload, LineChart } from 'lucide-react';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
@@ -52,25 +53,23 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
+        <Button
+          size="sm"
           onClick={() => onOpenDbMaintenance('export')}
           {...tip(dict?.admin?.exportBackupTitle || 'Export Database Backup', undefined, 'action')} aria-label={dict?.admin?.exportBackupTitle || 'Export Database Backup'}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
+          leftIcon={<Download className="h-3.5 w-3.5 text-text-secondary" />}
         >
-          <Download className="h-3.5 w-3.5 text-text-secondary" />
           <span className="hidden md:inline">{dict?.admin?.export || 'Export'}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          size="sm"
           onClick={() => onOpenDbMaintenance('import')}
           {...tip(dict?.admin?.importBackupTitle || 'Import Database Backup', undefined, 'action')} aria-label={dict?.admin?.importBackupTitle || 'Import Database Backup'}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
+          leftIcon={<Upload className="h-3.5 w-3.5 text-text-secondary" />}
         >
-          <Upload className="h-3.5 w-3.5 text-text-secondary" />
           <span className="hidden md:inline">{dict?.admin?.import || 'Import'}</span>
-        </button>
+        </Button>
 
         <a
           href={pgAdminUrl}
@@ -83,15 +82,14 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <span>{dict?.admin?.pgAdmin || 'pgAdmin (DB)'}</span>
         </a>
 
-        <button
-          type="button"
+        <Button
+          size="sm"
           onClick={onRefreshData}
           {...tip(dict?.admin?.refreshTitle || 'Refresh Data', undefined, 'action')} aria-label={dict?.admin?.refreshTitle || 'Refresh Data'}
-          className="flex items-center justify-center gap-2 rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer shadow-xs"
+          leftIcon={<RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />}
         >
-          <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           <span className="hidden sm:inline">{dict?.admin?.refresh || 'Refresh'}</span>
-        </button>
+        </Button>
 
         {umamiUrl && (
           <a

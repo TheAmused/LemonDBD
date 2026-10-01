@@ -102,10 +102,10 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
     li: (c) => cn('leading-relaxed text-text-secondary marker:text-accent-amber', c ? 'text-xs' : 'text-xs sm:text-sm'),
     quote: (c) =>
       cn(
-        'rounded-2xl border-l-3 border-accent-amber/90 bg-gradient-to-r from-accent-amber/10 via-bg-primary/80 to-transparent px-3.5 py-2.5 italic text-text-secondary font-serif shadow-inner',
+        'rounded-2xl border-l-3 border-accent-amber/90 bg-gradient-to-r from-accent-amber/10 via-bg-primary/80 to-transparent px-3.5 py-2.5 italic text-left text-text-secondary font-serif shadow-inner',
         c ? 'my-1.5 text-[11px]' : 'my-3 text-xs sm:text-sm'
       ),
-    notice: 'p-3 my-2 rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs font-semibold text-accent-amber flex items-start gap-2.5 shadow-sm',
+    notice: 'p-3 my-2 text-left text-left rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs font-semibold text-accent-amber flex items-start gap-2.5 shadow-sm',
     noticeLabel: 'shrink-0 font-mono font-bold uppercase tracking-wider text-[10px] bg-accent-amber/25 px-2 py-0.5 rounded-lg text-accent-amber',
   },
 };

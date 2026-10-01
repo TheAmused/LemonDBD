@@ -23,7 +23,7 @@ export const PerkDescription: React.FC<PerkDescriptionProps> = ({
       className={
         isTooltip
           ? 'space-y-1 text-xs text-text-primary'
-          : 'space-y-2.5 text-xs sm:text-sm leading-relaxed font-normal text-text-secondary [&_p]:text-text-secondary [&_li]:text-text-secondary [&_strong]:text-accent-amber [&_strong]:font-bold [&_b]:text-accent-amber [&_b]:font-bold'
+          : 'space-y-2.5 text-xs sm:text-sm leading-relaxed text-justify hyphens-auto [overflow-wrap:break-word] font-normal text-text-secondary [&_p]:text-text-secondary [&_li]:text-text-secondary [&_strong]:text-accent-amber [&_strong]:font-bold [&_b]:text-accent-amber [&_b]:font-bold'
       }
     >
       <RichText text={description} block variant="game" compact={isTooltip} />

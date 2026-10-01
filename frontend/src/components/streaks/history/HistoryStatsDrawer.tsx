@@ -26,7 +26,7 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
     attempts={attempts}
     dict={dict}
     renderLabel={(log) => (
-      <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer_id)}</div>
     )}
     renderMeta={(log) => (
       <span>

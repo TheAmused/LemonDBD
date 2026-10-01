@@ -3,7 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, Check, Percent, Clock } from 'lucide-react';
+import { X, Percent, Clock } from 'lucide-react';
 
 export interface StreakMatchLogBase {
   id: number;
@@ -169,19 +169,10 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                   return (
                     <div
                       key={log.id}
-                      className="flex items-center justify-between p-3.5 rounded-xl bg-bg-elevated border border-border-color hover:border-border-subtle transition-colors shadow-sm"
+                      className="flex items-center justify-between px-4 py-3.5 rounded-xl bg-bg-elevated border border-border-color hover:border-border-subtle transition-colors shadow-sm"
                     >
                       <div className="flex items-center gap-3">
-                        <div
-                          className={`w-10 h-10 p-1.5 rounded-lg ${
-                            isWin
-                              ? 'bg-accent-green/10 text-accent-green border border-accent-green/20'
-                              : 'bg-accent-red/10 text-accent-red border border-accent-red/20'
-                          }`}
-                        >
-                          {isWin ? <Check className="w-full h-full" strokeWidth={3.5} /> : <X className="w-full h-full" strokeWidth={3.5} />}
-                        </div>
-                        <div>
+                        <div className="pl-1">
                           {log.triggered_by === 'inactivity' ? (
                             <div className="flex items-center gap-1 text-sm font-bold text-text-secondary">
                               <Clock className="w-3.5 h-3.5" />
@@ -190,7 +181,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                           ) : (
                             renderLabel(log)
                           )}
-                          <div className="text-[11px] text-text-secondary mt-1 font-mono">
+                          <div className="text-xs text-text-secondary mt-1.5 font-mono">
                             {renderMeta(log)}
                           </div>
                         </div>

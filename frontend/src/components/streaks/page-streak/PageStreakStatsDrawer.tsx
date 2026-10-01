@@ -24,7 +24,7 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
     stats={stats}
     dict={dict}
     renderLabel={(log) => (
-      <div className="text-sm font-bold text-text-primary">{characterDisplayName(log.killer)}</div>
+      <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer)}</div>
     )}
     renderMeta={(log) => (
       <span>

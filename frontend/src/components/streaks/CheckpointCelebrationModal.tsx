@@ -4,6 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Trophy } from 'lucide-react';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 export interface CheckpointCelebrationModalProps {
   checkpoint: number | null;
@@ -64,14 +65,7 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
 }) => {
   const counted = useCountUp(checkpoint);
 
-  useEffect(() => {
-    if (checkpoint == null) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [checkpoint, onClose]);
+  useEscapeKey(checkpoint != null, onClose);
 
   if (checkpoint == null) return null;
 

@@ -20,7 +20,6 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
   <StreakStatsDrawer<PageStreakMatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    accent="amber"
     stats={stats}
     dict={dict}
     renderLabel={(log) => (

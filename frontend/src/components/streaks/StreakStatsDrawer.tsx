@@ -2,10 +2,11 @@
 // frontend/src/components/streaks/StreakStatsDrawer.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { X, Percent } from 'lucide-react';
 import { StreakMatchRow } from './StreakMatchRow';
 import { StreakMatchesModal } from './StreakMatchesModal';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 const VISIBLE_MATCHES = 10;
 
@@ -29,24 +30,9 @@ export function streakAtResult(log: { result: 'win' | 'loss'; streak_before: num
   return log.result === 'win' ? log.streak_after : log.streak_before;
 }
 
-export type StreakAccent = 'amber' | 'violet' | 'slate' | 'orange';
-
-const FLAT_ACCENT = {
-  icon: 'bg-accent-red/10 text-accent-red border-accent-red/20',
-  ring: 'border-accent-red',
-};
-
-const ACCENT_CLASSES: Record<StreakAccent, { icon: string; ring: string }> = {
-  amber: FLAT_ACCENT,
-  violet: FLAT_ACCENT,
-  slate: FLAT_ACCENT,
-  orange: FLAT_ACCENT,
-};
-
 export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   isOpen: boolean;
   onClose: () => void;
-  accent: StreakAccent;
   stats: StreakStatsBase<TLog> | null;
   /** Losses since the current run's pool was last (re)frozen -- from the live run, not the match-log aggregate, so it survives independently of `stats`. */
   attempts?: number;
@@ -67,7 +53,6 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
 export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
   isOpen,
   onClose,
-  accent,
   stats,
   attempts,
   renderLabel,
@@ -76,18 +61,10 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
 }: StreakStatsDrawerProps<TLog>) {
   const [isAllOpen, setIsAllOpen] = useState(false);
 
-  useEffect(() => {
-    if (!isOpen || isAllOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, isAllOpen, onClose]);
+  useEscapeKey(isOpen && !isAllOpen, onClose);
 
   if (!isOpen) return null;
 
-  const accentClasses = ACCENT_CLASSES[accent];
   const winRate = stats ? stats.win_rate : 0;
   const totalMatches = stats ? stats.total_matches : 0;
   const wins = stats ? stats.wins : 0;
@@ -123,7 +100,7 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({
                   {winRate.toFixed(1)}{dict?.streaks?.percentSign || '%'}
                 </div>
               </div>
-              <div className={`relative w-16 h-16 flex items-center justify-center rounded-full bg-bg-elevated border-4 ${accentClasses.ring} font-bold text-lg shadow-sm`}>
+              <div className={`relative w-16 h-16 flex items-center justify-center rounded-full bg-bg-elevated border-4 border-accent-red font-bold text-lg shadow-sm`}>
                 <Percent className="w-8 h-8 opacity-80" />
               </div>
             </div>

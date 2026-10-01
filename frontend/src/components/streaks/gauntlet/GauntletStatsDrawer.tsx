@@ -21,7 +21,6 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
   <StreakStatsDrawer<MatchLog>
     isOpen={isOpen}
     onClose={onClose}
-    accent="amber"
     stats={stats}
     attempts={attempts}
     dict={dict}

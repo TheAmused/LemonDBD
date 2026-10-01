@@ -1,12 +1,13 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { X, CheckCircle2, Circle, Sparkles } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
   const [failed, setFailed] = useState<boolean>(false);
@@ -48,14 +49,7 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({
   dict,
 }) => {
   const displayName = usePerkDisplayName();
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  useEscapeKey(isOpen, onClose);
 
   const [tab, setTab] = useState<'used' | 'remaining'>('used');
 

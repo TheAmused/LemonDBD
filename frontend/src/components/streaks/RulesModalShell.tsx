@@ -3,8 +3,9 @@
 
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { X, AlertTriangle, Clock, Snowflake, LucideIcon } from 'lucide-react';
+import { useEscapeKey } from '@/hooks/useEscapeKey';
 
 export interface RulesModalShellProps {
   isOpen: boolean;
@@ -87,14 +88,7 @@ export const RulesModalShell: React.FC<RulesModalShellProps> = ({
   children,
   dict,
 }) => {
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  useEscapeKey(isOpen, onClose);
 
   if (!isOpen) return null;
 

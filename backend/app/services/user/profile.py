@@ -75,7 +75,7 @@ def mark_onboarding_complete(user_id: int) -> tuple[User | None, str | None]:
 def set_preferred_language(user_id: int, language: str) -> tuple[User | None, str | None]:
     """Set a user's preferred site language, chosen from the onboarding
     wizard's language step (or any future settings UI)."""
-    from app.services.translations.translation_service import SUPPORTED_LOCALES
+    from app.utils.lang import SUPPORTED_LOCALES
 
     if language not in SUPPORTED_LOCALES:
         return None, f"Unsupported language '{language}'."

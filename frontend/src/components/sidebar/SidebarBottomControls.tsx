@@ -12,7 +12,7 @@ import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
-// backend/app/services/translations/translation_service.py. No shared
+// backend/app/utils/lang.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
 // only one side means the backend can reject a language this list offers
 // (or vice versa).

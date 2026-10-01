@@ -34,7 +34,7 @@ def record_challenge_completion(
 
 
 def fetch_challenge_completions(
-    user_id: int, mode: str, variant: str, limit: int = 25
+    user_id: int, mode: str, variant: str, limit: int = 200
 ) -> list[ChallengeCompletionDict]:
     """Retrieve past completions for a user/mode/variant, newest first."""
     records = db.session.scalars(

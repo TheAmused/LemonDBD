@@ -80,5 +80,9 @@ export default {
   themeLightLemon: 'ライトモード（レモン）',
   themeDark: 'ダークモード',
   themeSystem: 'システムテーマ',
+  themeLightShort: 'ライト',
+  themeLightLemonShort: 'レモン',
+  themeDarkShort: 'ダーク',
+  themeSystemShort: 'システム',
 } as const;
 

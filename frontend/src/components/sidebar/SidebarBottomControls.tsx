@@ -103,11 +103,12 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   const darkLabel = dict?.sidebar?.themeDark || 'Dark mode';
   const systemLabel = dict?.sidebar?.themeSystem || 'System theme';
 
-  const THEME_OPTIONS: { id: ThemeOptionId; label: string; icon: React.ReactNode }[] = [
-    { id: 'light', label: lightLabel, icon: <Sun className="h-4 w-4" /> },
-    { id: 'light-lemon', label: lightLemonLabel, icon: <Citrus className="h-4 w-4" /> },
-    { id: 'dark', label: darkLabel, icon: <Moon className="h-4 w-4" /> },
-    { id: 'system', label: systemLabel, icon: <Laptop className="h-4 w-4" /> },
+  // Short wordings for the narrow trigger button ("Light mode (Lemon)" -> "Lemon").
+  const THEME_OPTIONS: { id: ThemeOptionId; label: string; short: string; icon: React.ReactNode }[] = [
+    { id: 'light', label: lightLabel, short: dict?.sidebar?.themeLightShort || 'Light', icon: <Sun className="h-4 w-4" /> },
+    { id: 'light-lemon', label: lightLemonLabel, short: dict?.sidebar?.themeLightLemonShort || 'Lemon', icon: <Citrus className="h-4 w-4" /> },
+    { id: 'dark', label: darkLabel, short: dict?.sidebar?.themeDarkShort || 'Dark', icon: <Moon className="h-4 w-4" /> },
+    { id: 'system', label: systemLabel, short: dict?.sidebar?.themeSystemShort || 'System', icon: <Laptop className="h-4 w-4" /> },
   ];
   const currentThemeOption =
     THEME_OPTIONS.find((t) => t.id === theme) ?? THEME_OPTIONS.find((t) => t.id === 'system')!;
@@ -211,7 +212,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             <span className="shrink-0">
               {isMounted ? currentThemeOption.icon : THEME_OPTIONS[THEME_OPTIONS.length - 1].icon}
             </span>
-            <FitText minScale={0.6} className="min-w-0 text-center">{isMounted ? currentThemeOption.label : ''}</FitText>
+            <FitText minScale={0.8} alternatives={isMounted ? [currentThemeOption.short] : undefined} className="min-w-0 text-center">{isMounted ? currentThemeOption.label : ''}</FitText>
           </button>
 
           {isThemeMenuOpen && (

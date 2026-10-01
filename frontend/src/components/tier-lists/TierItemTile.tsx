@@ -63,7 +63,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
   return (
     <div
       ref={ref}
-      {...tip(item.name)}
+      {...tip(item.name, undefined, 'item')}
       aria-label={item.name}
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',

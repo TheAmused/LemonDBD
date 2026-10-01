@@ -1,5 +1,5 @@
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Package,
   ShieldAlert,
@@ -19,7 +19,6 @@ import {
   getRarityTileStyle,
   getRarityRank,
 } from '../types';
-import { UnifiedHoverModal, ActiveHoverState } from './UnifiedHoverModal';
 import { CategoryPicker } from './CategoryPicker';
 import { CollapsibleDrawer } from './CollapsibleDrawer';
 import { toTitleCase } from '@/utils/textCase';
@@ -125,7 +124,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
     'medkit',
     isSurvivorCategoryKey
   );
-  const [activeHover, setActiveHover] = useState<ActiveHoverState | null>(null);
   const [isDrawerOpen, , setDrawerOpen] = usePersistentDrawer('lemondbd_drawer_survivor_items', true);
 
   const categories = useMemo(
@@ -272,11 +270,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                           onSelectEquipment(item);
                         }
                       }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item, rect, accentColor: 'text-accent-green' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
+                      {...tip(item.name, undefined, 'item')}
                       className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       aria-label={`${t.inspectItemPrefix || 'Inspect item:'} ${item.name}`}
                     >
@@ -346,11 +340,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                           onSelectEquipment(displayItem);
                         }
                       }}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setActiveHover({ item: displayItem, rect, accentColor: 'text-amber-400' });
-                      }}
-                      onMouseLeave={() => setActiveHover(null)}
+                      {...tip(displayItem.name, undefined, 'item')}
                       className={`relative group rounded-2xl border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500 h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
                       aria-label={`${t.inspectAddonPrefix || 'Inspect addon:'} ${displayItem.name}`}
                     >
@@ -372,14 +362,6 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
       </div>
       </div>
       </CollapsibleDrawer>
-
-      {/* Unified Hover Modal */}
-      <UnifiedHoverModal
-        activeHover={activeHover}
-        placement="above"
-        t={t}
-        actionPrompt={t.clickItemForDetails || t.clickToInspect || 'Click item for details'}
-      />
     </section>
   );
 };

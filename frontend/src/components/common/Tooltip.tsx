@@ -8,8 +8,8 @@
 //  2. {...tip(title, description)}             – spread onto any native element; the
 //                                                 app-wide <TooltipProvider/> (mounted
 //                                                 once in the root layout) shows the bubble.
-//  3. <TooltipBubble anchor={rect}>…</…>       – low-level, for rich/state-driven cards
-//                                                 (see UnifiedHoverModal).
+//  3. <TooltipBubble anchor={rect}>…</…>       – low-level, for rich/state-driven bodies
+//                                                 (custom card bodies).
 //
 // All sizing / timing / attribute names live in TOOLTIP_CONFIG below.
 
@@ -36,7 +36,7 @@ export const TOOLTIP_CONFIG = {
       title: '',
       arrowBorder: 'var(--border-color)',
     },
-    perk: {
+    item: {
       content: 'border-accent-amber/50',
       title: 'font-mono text-xs sm:text-sm normal-case tracking-normal text-accent-amber',
       arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',

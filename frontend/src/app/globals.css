@@ -25,6 +25,9 @@
   --color-accent-green: var(--accent-green);
   --color-accent-green-hover: var(--accent-green-hover);
 
+  /* Dusty tan lettering of the tarot card art (same in every theme: the cards are always dark). */
+  --color-tarot-ink: #b39e82;
+
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);

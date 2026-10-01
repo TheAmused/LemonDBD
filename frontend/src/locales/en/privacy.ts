@@ -56,8 +56,8 @@ export default {
     storage: {
       heading: "Cookies, local storage and third parties",
       paragraphs: [
-        "At the time of writing, LemonDBD does not set cookies of its own. Instead, your browser's local storage keeps small items that make the site work or remember your choices, for example your login token, sidebar and panel states, sound settings, drafts, selected rosters and your Smash or Pass session ID.",
-        "These items are strictly necessary or purely convenience settings and stay on your device. You can clear them in your browser at any time, and logging out removes your login token.",
+        "When you sign in, LemonDBD sets one strictly necessary cookie: a session cookie that keeps you signed in for {sessionWindow} or until you log out. It is HttpOnly, so scripts running on the page cannot read it, and it is never used for tracking. Besides it, your browser's local storage keeps small items that make the site work or remember your choices, for example a marker that you are signed in, sidebar and panel states, sound settings, drafts, selected rosters and your Smash or Pass session ID.",
+        "These items are strictly necessary or purely convenience settings, so no consent banner is needed. Local storage stays on your device and you can clear it in your browser at any time; logging out deletes the session cookie.",
         "<b>Voice commands:</b> in Chrome, Edge and Safari, speech recognition is provided by your browser vendor (for example Google or Apple), so audio may be sent to them under their own privacy policies. In other browsers, LemonDBD downloads a small speech model and processes audio only on your device.",
       ],
       items: [],
@@ -67,7 +67,7 @@ export default {
       paragraphs: ["We do not sell your personal data or use it for advertising. We share it only as needed:"],
       items: [
         "<b>Public content:</b> things you choose to publish, such as public tier lists or rosters and leaderboards, are visible to other visitors together with your username and avatar.",
-        "<b>Service providers:</b> our hosting and email delivery providers handle data on our behalf, only to run the site and send you the emails you request.",
+        "<b>Service providers:</b> our hosting provider and {mailProvider} (which delivers our verification and password-reset emails) handle data on our behalf, only to run the site and send you the emails you request.",
         "<b>Discord:</b> when you submit a bug report, its content (including your name, email address and screenshots) is forwarded to a private channel used by our team.",
         "<b>Legal reasons:</b> if the law requires it or to protect the site and its users from abuse.",
       ],
@@ -82,8 +82,8 @@ export default {
     retention: {
       heading: "How long we keep it",
       paragraphs: [
-        "Account data and what you save are kept while your account exists. Verification and password-reset codes expire quickly. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. Analytics data is anonymous.",
-        "When your account is deleted, we remove your account data and uploaded avatar. Bug reports and copies in backups may remain for a limited time, and anything you posted publicly may be anonymized instead of removed.",
+        "Account data and what you save are kept while your account exists. Verification codes expire after {verificationWindow}, password-reset links after {resetWindow} and login sessions after {sessionWindow}. Streak runs that stay inactive for {streakPrune} are ended automatically. Bug reports are kept for as long as they are needed to resolve the issue and for our records. Server logs are kept only briefly. Analytics data is anonymous.",
+        "You can delete your account yourself from your profile page, or ask us to do it. Your account data, saved content and uploaded avatar are then removed. Your bug reports are kept for our records, but your name and email address are removed from them. Copies already sent to our private Discord channel or stored in backups may remain for a limited time, and anything you posted publicly may be anonymized instead of removed.",
       ],
       items: [],
     },
@@ -126,7 +126,7 @@ export default {
     contact: {
       heading: "Contact us",
       paragraphs: [
-        "To use any of your rights, ask a privacy question or request account deletion, send us a message through the bug report form on LemonDBD (use the General category and mention \"Privacy\"). Signed-in users can write from their account so we can verify who they are.",
+        "To use any of your rights, ask a privacy question or request account deletion, email us at [{contactEmail}](mailto:{contactEmail}). Signed-in users can also delete their account themselves from their profile page. Please write from the address registered on your account so we can verify who you are.",
         "If the translated versions of this page differ from the English one, the English version prevails.",
       ],
       items: [],

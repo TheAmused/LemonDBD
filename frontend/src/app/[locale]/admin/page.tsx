@@ -22,7 +22,7 @@ import type {
   BugReportStats,
   ActionMessage,
 } from '@/types/admin';
-import { Users, ShieldAlert, BarChart3, ScrollText } from 'lucide-react';
+import { Users, ShieldAlert, BarChart3, ScrollText, Settings2 } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
@@ -43,6 +43,10 @@ const AdminAuditLogView = dynamic(
   () => import('@/components/admin/AdminAuditLogView').then((m) => m.AdminAuditLogView),
   { ssr: false, loading: () => <AdminTabContentSkeleton /> }
 );
+const AdminSettingsPanel = dynamic(
+  () => import('@/components/admin/AdminSettingsPanel').then((m) => m.AdminSettingsPanel),
+  { ssr: false, loading: () => <AdminTabContentSkeleton /> }
+);
 const AdminCreateUserModal = dynamic(
   () => import('@/components/admin/AdminCreateUserModal').then((m) => m.AdminCreateUserModal),
   { ssr: false }
@@ -59,7 +63,7 @@ interface AdminPageProps {
   params: Promise<{ locale: string }>;
 }
 
-type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit';
+type AdminTab = 'users' | 'bugs' | 'challenges' | 'challenge_stats' | 'audit' | 'settings';
 
 export default function AdminPanelPage({ params }: AdminPageProps) {
   const resolvedParams = use(params);
@@ -480,6 +484,7 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
               { value: 'challenges', icon: <ShieldAlert className="h-4 w-4" />, label: dict?.admin?.killSwitches || 'Kill Switches' },
               { value: 'challenge_stats', icon: <BarChart3 className="h-4 w-4" />, label: dict?.admin?.challengeStats || 'Challenge Stats' },
               { value: 'audit', icon: <ScrollText className="h-4 w-4" />, label: dict?.admin?.auditLog || 'Audit Log' },
+              { value: 'settings', icon: <Settings2 className="h-4 w-4" />, label: dict?.admin?.configTab || 'Configuration' },
             ]}
           />
 
@@ -517,6 +522,10 @@ export default function AdminPanelPage({ params }: AdminPageProps) {
           ) : activeTab === 'challenge_stats' ? (
             <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
               <AdminChallengeStats stats={stats} dict={dict} />
+            </Suspense>
+          ) : activeTab === 'settings' ? (
+            <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>
+              <AdminSettingsPanel onActionMessage={setActionMessage} dict={dict} />
             </Suspense>
           ) : activeTab === 'audit' ? (
             <Suspense fallback={<AdminTabContentSkeleton dict={dict} />}>

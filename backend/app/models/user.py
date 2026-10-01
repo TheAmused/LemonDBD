@@ -86,8 +86,9 @@ class User(Base):
     perk_ownerships: Mapped[list["UserPerkOwnership"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
+    # Reports outlive the account (FK is SET NULL); delete_own_account anonymizes them.
     bug_reports: Mapped[list["BugReport"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan"
+        back_populates="user", cascade="save-update, merge"
     )
     showcase: Mapped["UserShowcase | None"] = relationship(
         back_populates="user", uselist=False, cascade="all, delete-orphan"

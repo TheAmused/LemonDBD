@@ -32,6 +32,19 @@ class ChallengeModeSetting(Base):
         }
 
 
+class SiteSetting(Base):
+    """Admin-editable site setting overriding the config/env default (one row per key)."""
+
+    __tablename__ = "site_settings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    key: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
+    value: Mapped[str] = mapped_column(String(255), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
+    )
+
+
 class AdminAuditLog(Base):
     """Append-only record of administrative actions (who did what, when),
     e.g. disabling a character, toggling a challenge mode, changing a user's role."""

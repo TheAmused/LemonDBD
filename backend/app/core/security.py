@@ -15,6 +15,83 @@ DEFAULT_JWT_ALGORITHM = "HS256"
 DEFAULT_SECRET_KEY = "dbd-lemon-secret-key-2026"
 DEFAULT_EXPIRATION = timedelta(hours=24)
 
+# The browser session lives in an HttpOnly cookie (JavaScript can never read it, so an XSS bug
+# cannot steal it). `Authorization: Bearer` stays supported for API clients and tests.
+SESSION_COOKIE_NAME = "lemondbd_session"
+_SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
+
+
+def _cookie_secure() -> bool:
+    configured = str(current_app.config.get("SESSION_COOKIE_SECURE_MODE", "auto")).lower()
+    if configured in ("true", "1", "yes"):
+        return True
+    if configured in ("false", "0", "no"):
+        return False
+    return request.is_secure or request.headers.get("X-Forwarded-Proto", "").lower() == "https"
+
+
+def set_session_cookie(response, token: str):
+    """Attach the login cookie (HttpOnly, SameSite=Lax, Secure over HTTPS) to `response`."""
+    max_age = int(DEFAULT_EXPIRATION.total_seconds())
+    try:
+        from app.services.site_settings import session_lifetime
+
+        max_age = int(session_lifetime().total_seconds())
+    except Exception:
+        pass
+    response.set_cookie(
+        SESSION_COOKIE_NAME,
+        token,
+        max_age=max_age,
+        httponly=True,
+        secure=_cookie_secure(),
+        samesite="Lax",
+        path="/api",
+    )
+    return response
+
+
+def clear_session_cookie(response):
+    response.delete_cookie(SESSION_COOKIE_NAME, path="/api", samesite="Lax")
+    return response
+
+
+def _allowed_request_origin(origin: str) -> bool:
+    """Same host as the request, or one of the configured CORS origins."""
+    from urllib.parse import urlsplit
+
+    host = (urlsplit(origin).netloc or "").lower()
+    request_hosts = {request.host.lower(), request.headers.get("X-Forwarded-Host", "").lower()}
+    if host and host in request_hosts:
+        return True
+    configured = str(current_app.config.get("CORS_ORIGINS", "*"))
+    return configured != "*" and origin.rstrip("/") in {o.strip().rstrip("/") for o in configured.split(",")}
+
+
+def enforce_cookie_csrf_protection():
+    """before_request: block cross-site writes that ride on the session cookie.
+
+    SameSite=Lax already stops most of them; this also covers same-site siblings. Requests
+    authenticated with an explicit Authorization header are not CSRF-able and pass through.
+    """
+    if request.method in _SAFE_METHODS or SESSION_COOKIE_NAME not in request.cookies:
+        return None
+    if request.headers.get("Authorization"):
+        return None
+    origin = request.headers.get("Origin")
+    if not origin:
+        referer = request.headers.get("Referer", "")
+        if referer:
+            from urllib.parse import urlsplit
+
+            parts = urlsplit(referer)
+            origin = f"{parts.scheme}://{parts.netloc}" if parts.netloc else None
+    if origin and not _allowed_request_origin(origin):
+        return jsonify({"error": "Cross-site request blocked.", "status": 403}), 403
+    if not origin and request.headers.get("Sec-Fetch-Site", "same-origin") == "cross-site":
+        return jsonify({"error": "Cross-site request blocked.", "status": 403}), 403
+    return None
+
 
 def hash_password(password: str) -> str:
     """Hash a plaintext password for secure database storage."""
@@ -42,6 +119,12 @@ def generate_token(user_id: int, role: str = "user", extra_claims: dict[str, Any
 
     if current_app:
         expires_delta = current_app.config.get("JWT_ACCESS_TOKEN_EXPIRES") or DEFAULT_EXPIRATION
+        try:  # admin-editable session length (falls back to the config value above)
+            from app.services.site_settings import session_lifetime
+
+            expires_delta = session_lifetime()
+        except Exception:
+            pass
         secret_key = current_app.config.get("JWT_SECRET_KEY") or current_app.config.get("SECRET_KEY") or DEFAULT_SECRET_KEY
         algorithm = current_app.config.get("JWT_ALGORITHM") or DEFAULT_JWT_ALGORITHM
     else:
@@ -89,12 +172,14 @@ def decode_token(token: str) -> dict[str, Any] | None:
 
 
 def get_current_user() -> User | None:
-    """Extract and verify the current user from the Authorization Bearer header or query string."""
+    """Extract and verify the current user from the Authorization Bearer header, the session cookie or the query string."""
     auth_header = request.headers.get("Authorization")
     token: str | None = None
 
     if auth_header and auth_header.startswith("Bearer "):
         token = auth_header.split(" ", 1)[1].strip()
+    elif request.cookies.get(SESSION_COOKIE_NAME):
+        token = request.cookies.get(SESSION_COOKIE_NAME, "").strip()
     elif request.args.get("token"):
         token = request.args.get("token", "").strip()
 

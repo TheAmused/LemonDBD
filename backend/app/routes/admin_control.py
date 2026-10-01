@@ -9,6 +9,7 @@ from app.core.security import admin_required
 from app.utils.pagination import paginate_args
 from app.models import Killer, Perk, Survivor
 from app.models.admin import CHALLENGE_MODES
+from app.services import site_settings
 from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
@@ -255,3 +256,31 @@ def update_challenge_mode(mode: str):
 def list_audit_logs():
     page, per_page = paginate_args(default_per_page=25)
     return jsonify(get_audit_logs(page=page, per_page=per_page)), 200
+
+
+@admin_control_bp.route("/settings", methods=["GET"])
+@admin_required
+def list_site_settings():
+    return jsonify({"settings": site_settings.list_settings()}), 200
+
+
+@admin_control_bp.route("/settings", methods=["PUT"])
+@admin_required
+def update_site_settings():
+    """Body: ``{"settings": {key: value | null}}``; ``null`` restores the config default."""
+    data = request.get_json(silent=True) or {}
+    changes = data.get("settings")
+    if not isinstance(changes, dict) or not changes:
+        return jsonify({"error": "Field 'settings' (object) is required."}), 400
+    try:
+        applied = site_settings.update_settings(changes)
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    log_admin_action(
+        g.current_user.id,
+        action="site_settings_updated",
+        target_type="site_settings",
+        details={"changes": {k: ("<default>" if changes[k] is None else applied[k]) for k in applied}},
+    )
+    return jsonify({"message": "Settings saved.", "settings": site_settings.list_settings()}), 200

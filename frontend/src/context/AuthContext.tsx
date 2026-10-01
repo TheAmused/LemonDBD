@@ -59,8 +59,7 @@ interface AuthContextType {
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
-import { safeSetItem, safeRemoveItem } from '@/utils/safeStorage';
-import { AUTH_TOKEN_KEY, authHeaders, getAuthToken } from '@/utils/api';
+import { SESSION_MARKER, authHeaders, setSessionFlag } from '@/utils/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -72,16 +71,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [ownership, setOwnership] = useState<OwnershipSummary | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchCurrentUser = useCallback(async (authToken: string) => {
+  const fetchCurrentUser = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/v1/auth/me`, {
-        headers: {
-          ...authHeaders(authToken),
-        },
-      });
+      const res = await fetch(`${API_BASE}/api/v1/auth/me`, { credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         if (data.authenticated && data.user) {
+          setToken(SESSION_MARKER);
+          setSessionFlag(true);
           setUser(data.user);
           if (data.ownership) {
             setOwnership(data.ownership);
@@ -89,10 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return;
         }
       }
-      // If token expired or invalid
+      // No (or an expired) session cookie
       setUser(null);
       setToken(null);
-      safeRemoveItem(AUTH_TOKEN_KEY);
+      setSessionFlag(false);
     } catch (err) {
       console.error('Failed to fetch auth state:', err);
     } finally {
@@ -101,19 +98,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    const savedToken = getAuthToken();
-    if (savedToken) {
-      setToken(savedToken);
-      fetchCurrentUser(savedToken);
-    } else {
-      setIsLoading(false);
-    }
+    // The session cookie is HttpOnly, so ask the server who we are.
+    fetchCurrentUser();
   }, [fetchCurrentUser]);
 
   const login = async (usernameOrEmail: string, password: string, extra?: Record<string, any>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username_or_email: usernameOrEmail, password, ...extra }),
       });
@@ -121,10 +114,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.error || 'Login failed' };
       }
-      setToken(data.token);
+      setToken(SESSION_MARKER);
+      setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
-      safeSetItem(AUTH_TOKEN_KEY, data.token);
       return { success: true, user: data.user as UserProfile };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
@@ -135,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/register`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, ...extra }),
       });
@@ -142,10 +136,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.error || 'Registration failed' };
       }
-      setToken(data.token);
+      setToken(SESSION_MARKER);
+      setSessionFlag(true);
       setUser(data.user);
       if (data.ownership) setOwnership(data.ownership);
-      safeSetItem(AUTH_TOKEN_KEY, data.token);
       return { success: true, user: data.user as UserProfile };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error occurred.' };
@@ -221,26 +215,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    // Clears the HttpOnly cookie server-side (JavaScript cannot delete it).
+    const cleared = fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
     setUser(null);
     setToken(null);
     setOwnership(null);
     if (typeof window !== 'undefined') {
-      safeRemoveItem(AUTH_TOKEN_KEY);
+      setSessionFlag(false);
       const path = window.location.pathname;
       const localeMatch = path.match(/^\/([a-z]{2})/);
       const locale = localeMatch ? localeMatch[1] : 'en';
       if (path.includes('/admin') || path.includes('/user')) {
-        window.location.href = `/${locale}`;
+        cleared.finally(() => {
+          window.location.href = `/${locale}`;
+        });
         return;
       }
     }
-    fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST' }).catch(() => {});
   };
 
   const refreshUser = async () => {
-    if (token) {
-      await fetchCurrentUser(token);
-    }
+    await fetchCurrentUser();
   };
 
   const updateCharacterOwnership = async (characterId: number, isOwned: boolean): Promise<boolean> => {

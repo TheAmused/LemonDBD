@@ -2,6 +2,7 @@
 from app.services.user.admin import (
     admin_modify_user,
     admin_remove_user,
+    delete_own_account,
     fetch_admin_metrics,
     list_all_users_paginated,
     seed_default_admin_if_empty,
@@ -57,6 +58,7 @@ __all__ = [
     "list_all_users_paginated",
     "admin_modify_user",
     "admin_remove_user",
+    "delete_own_account",
     "fetch_admin_metrics",
     "seed_default_admin_if_empty",
 ]

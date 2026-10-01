@@ -56,8 +56,8 @@ export default {
     storage: {
       heading: "Cookies, almacenamiento local y terceros",
       paragraphs: [
-        "En el momento de redactar esto, LemonDBD no establece cookies propias. En su lugar, el almacenamiento local de tu navegador guarda pequeños elementos que hacen funcionar el sitio o recuerdan tus elecciones, por ejemplo tu token de inicio de sesión, el estado de la barra lateral y los paneles, los ajustes de sonido, borradores, rosters seleccionados y tu ID de sesión de Smash or Pass.",
-        "Estos elementos son estrictamente necesarios o simples ajustes de comodidad y permanecen en tu dispositivo. Puedes borrarlos en el navegador cuando quieras, y al cerrar sesión se elimina tu token de inicio de sesión.",
+        "Al iniciar sesión, LemonDBD establece una cookie estrictamente necesaria: una cookie de sesión que te mantiene conectado durante {sessionWindow} o hasta que cierres sesión. Es HttpOnly, por lo que los scripts de la página no pueden leerla, y nunca se usa para rastrearte. Además, el almacenamiento local de tu navegador guarda pequeños elementos que hacen funcionar el sitio o recuerdan tus elecciones, por ejemplo una marca de que has iniciado sesión, el estado de la barra lateral y los paneles, los ajustes de sonido, borradores, rosters seleccionados y tu ID de sesión de Smash or Pass.",
+        "Estos elementos son estrictamente necesarios o simples ajustes de comodidad, por lo que no hace falta un banner de consentimiento. El almacenamiento local permanece en tu dispositivo y puedes borrarlo en el navegador cuando quieras; al cerrar sesión se elimina la cookie de sesión.",
         "<b>Comandos de voz:</b> en Chrome, Edge y Safari, el reconocimiento de voz lo proporciona el fabricante del navegador (por ejemplo Google o Apple), por lo que el audio puede enviarse a ellos según su propia política de privacidad. En otros navegadores, LemonDBD descarga un pequeño modelo de voz y procesa el audio solo en tu dispositivo.",
       ],
       items: [],
@@ -67,7 +67,7 @@ export default {
       paragraphs: ["No vendemos tus datos personales ni los usamos para publicidad. Los compartimos solo cuando es necesario:"],
       items: [
         "<b>Contenido público:</b> lo que decides publicar, como tier lists, rosters y clasificaciones públicos, es visible para otros visitantes junto con tu nombre de usuario y avatar.",
-        "<b>Proveedores de servicios:</b> nuestros proveedores de alojamiento y de envío de correo tratan datos en nuestro nombre, solo para mantener el sitio y enviarte los correos que solicitas.",
+        "<b>Proveedores de servicios:</b> nuestro proveedor de alojamiento y {mailProvider} (que entrega nuestros correos de verificación y de restablecimiento de contraseña) tratan datos en nuestro nombre, solo para mantener el sitio y enviarte los correos que solicitas.",
         "<b>Discord:</b> cuando envías un informe de error, su contenido (incluidos tu nombre, correo y capturas) se reenvía a un canal privado de nuestro equipo.",
         "<b>Motivos legales:</b> si la ley lo exige o para proteger el sitio y a sus usuarios de abusos.",
       ],
@@ -82,8 +82,8 @@ export default {
     retention: {
       heading: "Cuánto tiempo los conservamos",
       paragraphs: [
-        "Los datos de la cuenta y lo que guardas se conservan mientras exista tu cuenta. Los códigos de verificación y de restablecimiento caducan pronto. Los informes de errores se conservan el tiempo necesario para resolver el problema y para nuestros registros. Los registros del servidor se guardan solo brevemente. Los datos de analítica son anónimos.",
-        "Cuando se elimina tu cuenta, borramos tus datos de cuenta y el avatar subido. Los informes de errores y las copias en respaldos pueden permanecer un tiempo limitado, y lo que hayas publicado puede anonimizarse en lugar de eliminarse.",
+        "Los datos de la cuenta y lo que guardas se conservan mientras exista tu cuenta. Los códigos de verificación caducan a los {verificationWindow}, los enlaces de restablecimiento de contraseña a los {resetWindow} y las sesiones de inicio de sesión a los {sessionWindow}. Las rachas que permanecen inactivas durante {streakPrune} se terminan automáticamente. Los informes de errores se conservan el tiempo necesario para resolver el problema y para nuestros registros. Los registros del servidor se guardan solo brevemente. Los datos de analítica son anónimos.",
+        "Puedes eliminar tu cuenta tú mismo desde tu página de perfil o pedírnoslo. Entonces borramos tus datos de cuenta, el contenido guardado y el avatar subido. Tus informes de errores se conservan en nuestros registros, pero les quitamos tu nombre y correo electrónico. Las copias ya enviadas a nuestro canal privado de Discord o guardadas en respaldos pueden permanecer un tiempo limitado, y lo que hayas publicado puede anonimizarse en lugar de eliminarse.",
       ],
       items: [],
     },
@@ -126,7 +126,7 @@ export default {
     contact: {
       heading: "Contacto",
       paragraphs: [
-        "Para ejercer tus derechos, hacer una pregunta de privacidad o pedir la eliminación de tu cuenta, escríbenos mediante el formulario de informe de errores de LemonDBD (elige la categoría General y menciona «Privacy»). Los usuarios con sesión iniciada pueden escribir desde su cuenta para que podamos verificar su identidad.",
+        "Para ejercer tus derechos, hacer una pregunta de privacidad o pedir la eliminación de tu cuenta, escríbenos a [{contactEmail}](mailto:{contactEmail}). Los usuarios con sesión iniciada también pueden eliminar su cuenta desde su página de perfil. Escribe desde la dirección registrada en tu cuenta para que podamos verificar tu identidad.",
         "Si las versiones traducidas de esta página difieren de la inglesa, prevalece la versión en inglés.",
       ],
       items: [],

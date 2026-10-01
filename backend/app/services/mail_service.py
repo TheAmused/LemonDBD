@@ -9,6 +9,8 @@ from flask_mail import Message
 
 from app.core.extensions import mail
 from app.models import User
+from app.services.site_settings import reset_lifetime, verification_lifetime
+from app.utils.durations import describe_duration
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +95,7 @@ def _email_shell(preheader: str, body_html: str) -> str:
 
 def send_verification_email(user: User) -> None:
     """Best-effort send of the email verification code. Never raises."""
+    expires_in = describe_duration(verification_lifetime())
     code_boxes = "".join(
         f"""<td style="width:38px; height:46px; border:1px solid #e2e8f0; border-radius:8px; text-align:center; vertical-align:middle; font-family:'Courier New', monospace; font-size:20px; font-weight:700; color:#0f172a;">{digit}</td>"""
         + ('<td style="width:6px;"></td>' if i < len(user.verification_code or "") - 1 else "")
@@ -108,7 +111,7 @@ def send_verification_email(user: User) -> None:
   <tr>{code_boxes}</tr>
 </table>
 <p style="margin:0; font-size:12px; color:#94a3b8; text-align:center;">
-  This code expires in 24 hours.
+  This code expires in {expires_in}.
 </p>
 """
 
@@ -119,7 +122,7 @@ def send_verification_email(user: User) -> None:
             body=(
                 f"Hi {user.username},\n\n"
                 f"Your verification code is: {user.verification_code}\n\n"
-                "Enter it in LemonDBD to verify your email. This code expires in 24 hours."
+                f"Enter it in LemonDBD to verify your email. This code expires in {expires_in}."
             ),
             html=_email_shell(f"Your verification code: {user.verification_code}", body_html),
             charset=_BASE64_CHARSET,
@@ -134,6 +137,7 @@ def send_password_reset_email(user: User) -> None:
     """Best-effort send of the password reset link. Never raises."""
     frontend_url = current_app.config.get("FRONTEND_URL", "http://localhost:3000")
     link = f"{frontend_url}/en/reset-password?token={user.reset_token}"
+    expires_in = describe_duration(reset_lifetime())
 
     body_html = f"""\
 <p style="margin:0 0 4px; font-size:14px; color:#0f172a;">Hi {_greeting_name(user)},</p>
@@ -150,7 +154,7 @@ def send_password_reset_email(user: User) -> None:
   </tr>
 </table>
 <p style="margin:0; font-size:12px; color:#94a3b8; text-align:center;">
-  This link expires in 1 hour. If you didn't request this, you can ignore this email.
+  This link expires in {expires_in}. If you didn't request this, you can ignore this email.
 </p>
 """
 
@@ -161,7 +165,7 @@ def send_password_reset_email(user: User) -> None:
             body=(
                 f"Hi {user.username},\n\n"
                 f"Click the link below to set a new password:\n{link}\n\n"
-                "This link expires in 1 hour. If you didn't request this, you can ignore this email."
+                f"This link expires in {expires_in}. If you didn't request this, you can ignore this email."
             ),
             html=_email_shell("Reset your LemonDBD password", body_html),
             charset=_BASE64_CHARSET,

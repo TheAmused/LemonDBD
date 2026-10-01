@@ -16,7 +16,7 @@ export function useKillerPerkPool() {
     setLoading(true);
     try {
       const res = await fetch(`${backendBase}/api/v1/users/${user.id}/perks?category=Killer`, {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();

@@ -56,8 +56,8 @@ export default {
     storage: {
       heading: "Cookies, lokaler Speicher und Dritte",
       paragraphs: [
-        "Zum Zeitpunkt der Erstellung setzt LemonDBD keine eigenen Cookies. Stattdessen speichert der lokale Speicher deines Browsers kleine Einträge, die die Seite funktionieren lassen oder deine Auswahl merken, zum Beispiel dein Login-Token, Zustände von Seitenleiste und Panels, Soundeinstellungen, Entwürfe, gewählte Roster und deine Smash-or-Pass-Sitzungs-ID.",
-        "Diese Einträge sind unbedingt erforderlich oder reine Komforteinstellungen und bleiben auf deinem Gerät. Du kannst sie jederzeit im Browser löschen, und beim Abmelden wird dein Login-Token entfernt.",
+        "Beim Anmelden setzt LemonDBD ein unbedingt erforderliches Cookie: ein Sitzungs-Cookie, das dich {sessionWindow} lang oder bis zum Abmelden angemeldet hält. Es ist HttpOnly, sodass Skripte auf der Seite es nicht lesen können, und wird nie zum Tracking verwendet. Daneben speichert der lokale Speicher deines Browsers kleine Einträge, die die Seite funktionieren lassen oder deine Auswahl merken, zum Beispiel eine Markierung, dass du angemeldet bist, Zustände von Seitenleiste und Panels, Soundeinstellungen, Entwürfe, gewählte Roster und deine Smash-or-Pass-Sitzungs-ID.",
+        "Diese Einträge sind unbedingt erforderlich oder reine Komforteinstellungen, ein Einwilligungsbanner ist daher nicht nötig. Der lokale Speicher bleibt auf deinem Gerät und kann jederzeit im Browser gelöscht werden; beim Abmelden wird das Sitzungs-Cookie gelöscht.",
         "<b>Sprachbefehle:</b> In Chrome, Edge und Safari übernimmt der Browserhersteller (z. B. Google oder Apple) die Spracherkennung, sodass Audio gemäß deren Datenschutzerklärung dorthin gesendet werden kann. In anderen Browsern lädt LemonDBD ein kleines Sprachmodell herunter und verarbeitet Audio ausschließlich auf deinem Gerät.",
       ],
       items: [],
@@ -67,7 +67,7 @@ export default {
       paragraphs: ["Wir verkaufen deine personenbezogenen Daten nicht und nutzen sie nicht für Werbung. Wir teilen sie nur, soweit nötig:"],
       items: [
         "<b>Öffentliche Inhalte:</b> Dinge, die du veröffentlichst, etwa öffentliche Tier Lists, Roster und Ranglisten, sind für andere Besucher zusammen mit deinem Benutzernamen und Avatar sichtbar.",
-        "<b>Dienstleister:</b> Unsere Hosting- und E-Mail-Versandanbieter verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden.",
+        "<b>Dienstleister:</b> Unser Hosting-Anbieter und {mailProvider} (der unsere Bestätigungs- und Passwort-Zurücksetzen-E-Mails zustellt) verarbeiten Daten in unserem Auftrag, nur um die Seite zu betreiben und die von dir angeforderten E-Mails zu senden.",
         "<b>Discord:</b> Wenn du eine Fehlermeldung einreichst, wird ihr Inhalt (einschließlich Name, E-Mail-Adresse und Screenshots) an einen privaten Kanal unseres Teams weitergeleitet.",
         "<b>Rechtliche Gründe:</b> wenn das Gesetz es verlangt oder um die Seite und ihre Nutzer vor Missbrauch zu schützen.",
       ],
@@ -82,8 +82,8 @@ export default {
     retention: {
       heading: "Wie lange wir sie aufbewahren",
       paragraphs: [
-        "Kontodaten und gespeicherte Inhalte bleiben, solange dein Konto besteht. Bestätigungs- und Passwort-Zurücksetzen-Codes verfallen schnell. Fehlermeldungen werden so lange aufbewahrt, wie sie zur Lösung und für unsere Unterlagen nötig sind. Serverprotokolle werden nur kurz gespeichert. Analysedaten sind anonym.",
-        "Wenn dein Konto gelöscht wird, entfernen wir deine Kontodaten und den hochgeladenen Avatar. Fehlermeldungen und Kopien in Backups können für begrenzte Zeit bestehen bleiben, und öffentlich Veröffentlichtes kann anonymisiert statt entfernt werden.",
+        "Kontodaten und gespeicherte Inhalte bleiben, solange dein Konto besteht. Bestätigungscodes verfallen nach {verificationWindow}, Passwort-Zurücksetzen-Links nach {resetWindow} und Anmeldesitzungen nach {sessionWindow}. Streaks, die {streakPrune} inaktiv bleiben, werden automatisch beendet. Fehlermeldungen werden so lange aufbewahrt, wie sie zur Lösung und für unsere Unterlagen nötig sind. Serverprotokolle werden nur kurz gespeichert. Analysedaten sind anonym.",
+        "Du kannst dein Konto selbst auf deiner Profilseite löschen oder uns darum bitten. Danach entfernen wir deine Kontodaten, gespeicherten Inhalte und den hochgeladenen Avatar. Deine Fehlermeldungen bleiben für unsere Unterlagen erhalten, aber dein Name und deine E-Mail-Adresse werden daraus entfernt. Kopien, die bereits an unseren privaten Discord-Kanal gesendet oder in Backups gespeichert wurden, können für begrenzte Zeit bestehen bleiben, und öffentlich Veröffentlichtes kann anonymisiert statt entfernt werden.",
       ],
       items: [],
     },
@@ -126,7 +126,7 @@ export default {
     contact: {
       heading: "Kontakt",
       paragraphs: [
-        "Um deine Rechte auszuüben, eine Datenschutzfrage zu stellen oder die Löschung deines Kontos zu beantragen, schreibe uns über das Fehlermeldungsformular auf LemonDBD (Kategorie General wählen und „Privacy“ erwähnen). Angemeldete Nutzer können aus ihrem Konto schreiben, damit wir ihre Identität prüfen können.",
+        "Um deine Rechte auszuüben, eine Datenschutzfrage zu stellen oder die Löschung deines Kontos zu beantragen, schreibe uns an [{contactEmail}](mailto:{contactEmail}). Angemeldete Nutzer können ihr Konto auch selbst auf der Profilseite löschen. Bitte schreibe von der Adresse, die in deinem Konto hinterlegt ist, damit wir deine Identität prüfen können.",
         "Falls die übersetzten Fassungen dieser Seite von der englischen abweichen, gilt die englische Fassung.",
       ],
       items: [],

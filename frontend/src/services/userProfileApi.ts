@@ -120,3 +120,16 @@ export async function uploadAvatar(file: File): Promise<any> {
   return data;
 }
 
+/** Permanently deletes the signed-in account; the server re-checks the password. */
+export async function deleteAccount(password: string): Promise<void> {
+  const res = await fetch(`${apiBase()}/api/v1/auth/account`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ password }),
+  });
+  const data = await parseJsonSafely(res);
+  if (!res.ok) {
+    throw new ApiError(data.error || 'Failed to delete account.', res.status, data.error_code);
+  }
+}

@@ -15,6 +15,7 @@ import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
+import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserCampfireParticles } from '@/components/user/UserCampfireParticles';
 import { Locale } from '@/i18n/config';
@@ -232,6 +233,9 @@ export default function UserProfilePage() {
             totalPages={reportsTotalPages}
             onPageChange={handleReportsPageChange}
           />
+
+          {/* 4. Danger zone: delete account */}
+          <DeleteAccountSection dict={dict} />
         </div>
 
       <BugReportModal

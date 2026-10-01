@@ -16,7 +16,7 @@
  *   - Resolves to INTERNAL_API_URL (http://backend:5000) or NEXT_PUBLIC_API_URL.
  */
 
-import { safeGetItem } from '@/utils/safeStorage';
+import { safeGetItem, safeRemoveItem, safeSetItem } from '@/utils/safeStorage';
 
 export function getBackendBaseUrl(): string {
   if (typeof window !== 'undefined') {
@@ -63,30 +63,45 @@ export const backendBase = typeof window !== 'undefined' ? '' : (process.env.INT
 // Auth + error helpers shared by every client-side API caller.
 // ---------------------------------------------------------------------------
 
-/** localStorage key under which AuthContext persists the JWT. */
-export const AUTH_TOKEN_KEY = 'lemondbd_token';
+/**
+ * The login session is an HttpOnly cookie set by the backend: JavaScript never sees the
+ * token, so a script-injection bug cannot steal it. The only thing kept in localStorage is
+ * this non-secret flag meaning "this browser signed in", used to skip pointless requests.
+ */
+export const SESSION_FLAG_KEY = 'lemondbd_signed_in';
+/** Pre-cookie versions stored the JWT itself under this key; it is wiped on load. */
+export const LEGACY_AUTH_TOKEN_KEY = 'lemondbd_token';
+/** Opaque, non-secret stand-in for "a session exists" (never sent to the server). */
+export const SESSION_MARKER = 'cookie-session';
 
-/** The persisted JWT, or null (SSR, signed out, storage blocked). */
+/** `SESSION_MARKER` when this browser is signed in, else null (SSR, signed out, storage blocked). */
 export function getAuthToken(): string | null {
-  return safeGetItem(AUTH_TOKEN_KEY) || null;
+  return safeGetItem(SESSION_FLAG_KEY) === '1' ? SESSION_MARKER : null;
+}
+
+/** Remember / forget that this browser has a session; also drops any legacy stored token. */
+export function setSessionFlag(signedIn: boolean): void {
+  safeRemoveItem(LEGACY_AUTH_TOKEN_KEY);
+  if (signedIn) safeSetItem(SESSION_FLAG_KEY, '1');
+  else safeRemoveItem(SESSION_FLAG_KEY);
 }
 
 /**
- * Authorization header (+ optional JSON content type).
- * `token` undefined -> read the persisted token; null/'' -> no Authorization header.
+ * Request headers (+ optional JSON content type). Browser requests are authenticated by the
+ * session cookie, so nothing is added for `undefined`, empty or `SESSION_MARKER` tokens. An
+ * explicit real JWT (scripts, API clients, tests) is still sent as `Authorization: Bearer`.
  */
 export function authHeaders(
   token?: string | null,
   opts: { json?: boolean } = {}
 ): Record<string, string> {
-  const t = token === undefined ? getAuthToken() : token;
   const headers: Record<string, string> = {};
-  if (t) headers.Authorization = `Bearer ${t}`;
+  if (token && token !== SESSION_MARKER) headers.Authorization = `Bearer ${token}`;
   if (opts.json) headers['Content-Type'] = 'application/json';
   return headers;
 }
 
-/** fetch() with the Bearer header attached; caller-supplied headers win. */
+/** fetch() that sends the session cookie (and an explicit Bearer token, if given); caller headers win. */
 export function authFetch(
   input: RequestInfo | URL,
   init: RequestInit & { token?: string | null } = {}
@@ -94,7 +109,7 @@ export function authFetch(
   const { token, headers, ...rest } = init;
   const merged = new Headers(authHeaders(token));
   new Headers(headers).forEach((value, key) => merged.set(key, value));
-  return fetch(input, { ...rest, headers: merged });
+  return fetch(input, { credentials: 'include', ...rest, headers: merged });
 }
 
 /** `err.message` for Error instances, otherwise the fallback. */

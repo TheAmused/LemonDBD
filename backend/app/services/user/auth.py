@@ -16,11 +16,11 @@ from app.core.security import (
 )
 from app.models import User
 from app.services.mail_service import send_password_reset_email, send_verification_email
+from app.services.site_settings import reset_lifetime, verification_lifetime
 
 logger = logging.getLogger(__name__)
 
-VERIFICATION_CODE_LIFETIME = timedelta(hours=24)
-RESET_TOKEN_LIFETIME = timedelta(hours=1)
+# Lifetimes are admin-editable: see app.services.site_settings (read at use time).
 RESEND_COOLDOWN = timedelta(seconds=60)
 MAX_VERIFICATION_ATTEMPTS = 5
 
@@ -83,7 +83,7 @@ def create_user_account(
     if require_verification:
         is_verified = False
         verif_code = _generate_verification_code()
-        verif_expires = datetime.now(timezone.utc) + VERIFICATION_CODE_LIFETIME
+        verif_expires = datetime.now(timezone.utc) + verification_lifetime()
     else:
         is_verified = True
         verif_code = None
@@ -170,14 +170,14 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
         expires_at = user.verification_code_expires_at
         if expires_at.tzinfo is None:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
-        last_sent_at = expires_at - VERIFICATION_CODE_LIFETIME
+        last_sent_at = expires_at - verification_lifetime()
         elapsed = datetime.now(timezone.utc) - last_sent_at
         if elapsed < RESEND_COOLDOWN:
             wait_seconds = int((RESEND_COOLDOWN - elapsed).total_seconds()) + 1
             return False, f"Please wait {wait_seconds}s before requesting another code."
 
     user.verification_code = _generate_verification_code()
-    user.verification_code_expires_at = datetime.now(timezone.utc) + VERIFICATION_CODE_LIFETIME
+    user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
     user.verification_attempts = 0
     db.session.commit()
     send_verification_email(user)
@@ -200,14 +200,14 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
         expires_at = user.reset_token_expires_at
         if expires_at.tzinfo is None:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
-        last_sent_at = expires_at - RESET_TOKEN_LIFETIME
+        last_sent_at = expires_at - reset_lifetime()
         elapsed = datetime.now(timezone.utc) - last_sent_at
         if elapsed < RESEND_COOLDOWN:
             wait_seconds = int((RESEND_COOLDOWN - elapsed).total_seconds()) + 1
             return False, f"Please wait {wait_seconds}s before requesting another reset email."
 
     user.reset_token = secrets.token_urlsafe(32)
-    user.reset_token_expires_at = datetime.now(timezone.utc) + RESET_TOKEN_LIFETIME
+    user.reset_token_expires_at = datetime.now(timezone.utc) + reset_lifetime()
     db.session.commit()
     send_password_reset_email(user)
     return True, None

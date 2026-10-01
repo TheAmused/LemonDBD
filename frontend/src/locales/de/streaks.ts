@@ -137,7 +137,7 @@ export default {
   pickYourKiller: "Wähle deinen Killer",
   acceptPick: "AUSWAHL BESTÄTIGEN",
   accept: "BESTÄTIGEN",
-  searchPerksPlaceholder: "Perks nach Namen suchen...",
+  searchPerksPlaceholder: "Suchen...",
   noPerksMatchSearch: "Keine Perks entsprechen deiner Suche.",
   clearSearch: "Suche löschen",
   unlockedPerksOne: "Du hast {count} neuen Perk freigeschaltet",

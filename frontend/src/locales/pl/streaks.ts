@@ -137,7 +137,7 @@ export default {
   pickYourKiller: "Wybierz zabójcę",
   acceptPick: "ZAAKCEPTUJ WYBÓR",
   accept: "ZAAKCEPTUJ",
-  searchPerksPlaceholder: "Szukaj perków po nazwie...",
+  searchPerksPlaceholder: "Szukaj...",
   noPerksMatchSearch: "Żaden perk nie pasuje do wyszukiwania.",
   clearSearch: "Wyczyść wyszukiwanie",
   unlockedPerksOne: "Odblokowałeś {count} nowy perk",

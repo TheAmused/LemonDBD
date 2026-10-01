@@ -127,8 +127,8 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={dict?.streaks?.searchPerksPlaceholder || 'Search perks by name...'}
-            aria-label={dict?.streaks?.searchPerksPlaceholder || 'Search perks by name...'}
+            placeholder={dict?.streaks?.searchPerksPlaceholder || 'Search...'}
+            aria-label={dict?.streaks?.searchPerksPlaceholder || 'Search...'}
             className="w-full rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-8 text-xs text-text-primary shadow-inner placeholder:text-text-muted focus:border-accent-red focus:outline-none [&::-webkit-search-cancel-button]:hidden"
           />
           {query && (

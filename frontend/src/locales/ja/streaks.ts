@@ -137,7 +137,7 @@ export default {
   pickYourKiller: "キラーを選択",
   acceptPick: "選択を確定",
   accept: "決定",
-  searchPerksPlaceholder: "名前でパークを検索...",
+  searchPerksPlaceholder: "検索...",
   noPerksMatchSearch: "検索に一致するパークはありません。",
   clearSearch: "検索をクリア",
   unlockedPerksOne: "{count}個の新しいパークを解除しました",

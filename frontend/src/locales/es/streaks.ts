@@ -137,7 +137,7 @@ export default {
   pickYourKiller: "Elige a tu asesino",
   acceptPick: "ACEPTAR ELECCIÓN",
   accept: "ACEPTAR",
-  searchPerksPlaceholder: "Buscar habilidades por nombre...",
+  searchPerksPlaceholder: "Buscar...",
   noPerksMatchSearch: "Ninguna habilidad coincide con tu búsqueda.",
   clearSearch: "Borrar búsqueda",
   unlockedPerksOne: "Desbloqueaste {count} nueva habilidad",

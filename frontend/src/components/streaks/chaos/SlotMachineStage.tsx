@@ -268,6 +268,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
           background: 'linear-gradient(180deg, #0a0b0e, #1b1c22)',
           boxShadow: 'inset 0 8px 16px rgba(0,0,0,0.7), inset 0 -2px 4px rgba(255,255,255,0.04)',
           transformStyle: 'preserve-3d',
+          willChange: 'transform',
         }}
       >
         <div
@@ -283,6 +284,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
             transformStyle: 'preserve-3d',
             transform: down ? 'rotateX(-180deg)' : 'rotateX(0deg)',
             transition: swing,
+            willChange: 'transform',
           }}
         >
           <div className="absolute inset-0 rounded-full" style={{ background: LEVER_ROD_GRADIENT }} />
@@ -300,6 +302,7 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
               background: 'radial-gradient(circle at 35% 30%, #fecaca, #ef4444 45%, #6b1414)',
               transform: down ? 'rotateX(180deg)' : 'rotateX(0deg)',
               transition: swing,
+              willChange: 'transform',
             }}
           />
         </div>

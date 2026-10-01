@@ -85,14 +85,14 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="ck-card-in relative w-full max-w-sm overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary px-8 pb-8 pt-10 text-center shadow-[0_0_60px_-12px_var(--accent-amber)] cursor-default"
+        className="ck-card-in relative w-full max-w-sm overflow-hidden rounded-3xl border border-accent-amber/60 bg-gradient-to-b from-accent-amber/20 via-bg-surface to-bg-primary flex min-h-[26rem] flex-col items-center justify-center px-8 py-14 text-center cursor-default"
       >
-        <div
-          aria-hidden="true"
-          className="ck-rays pointer-events-none absolute left-1/2 top-[88px] h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 opacity-40"
-        />
-
         <div className="relative mx-auto h-24 w-24" aria-hidden="true">
+          <div
+            aria-hidden="true"
+            className="ck-rays pointer-events-none absolute left-1/2 top-1/2 h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 opacity-40"
+          />
+
           <span className="ck-ring absolute inset-0 rounded-full border-2 border-accent-amber" />
           <span className="ck-ring absolute inset-0 rounded-full border-2 border-accent-amber" style={{ animationDelay: '900ms' }} />
           {SPARKS.map((spark, i) => (
@@ -127,10 +127,6 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
           {counted}
           <span className="ml-2 text-lg font-bold text-text-secondary">{dict?.streaks?.winsSuffix || 'wins'}</span>
         </h2>
-        <p className="relative mt-3 text-sm text-text-secondary">
-          {dict?.streaks?.checkpointLoseFallback || 'Lose from here and you fall back to'}{' '}
-          <strong className="font-mono text-accent-amber">{checkpoint}</strong>.
-        </p>
       </div>
     </div>
   );

@@ -126,7 +126,6 @@ export default {
   rosterProgress: "Postęp Listy Postaci",
   rosterProgressDesc: "Rozgrywaj mecze każdą posiadaną postacią, aby opanować całą listę.",
   checkpointBanked: "Punkt kontrolny zapisany",
-  checkpointLoseFallback: "Porażka cofnie Cię do",
   gauntletComplete: "Wygrałeś Serię Gauntlet",
   startNewRun: "Rozpocznij nowe podejście",
   gauntlet: "Gauntlet",

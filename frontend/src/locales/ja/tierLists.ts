@@ -27,6 +27,7 @@ export default {
   loading: "ティアリストを読み込み中...",
   loadingItems: "キャラクターを集めています...",
   backToHub: "すべてのティアリスト",
+  backShort: "戻る",
   notFoundTitle: "ティアリストが見つかりません",
   notFoundSubtitle: "公開が終了したか、リンクが間違っている可能性があります。",
   customNotFoundTitle: "カスタムリストが見つかりません",

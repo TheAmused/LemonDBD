@@ -27,6 +27,7 @@ export default {
   loading: "Tierlisten werden geladen...",
   loadingItems: "Die Riege wird versammelt...",
   backToHub: "Alle Tierlisten",
+  backShort: "Zurück",
   notFoundTitle: "Tierliste nicht gefunden",
   notFoundSubtitle: "Sie wurde vielleicht entfernt, oder der Link ist falsch.",
   customNotFoundTitle: "Eigene Liste nicht gefunden",

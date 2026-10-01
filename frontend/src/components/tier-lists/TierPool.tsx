@@ -169,7 +169,7 @@ export function TierPool({
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div className="flex flex-wrap content-start justify-start gap-1 min-[480px]:gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap content-start justify-center gap-1 min-[480px]:gap-1.5 sm:gap-2">
             <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);

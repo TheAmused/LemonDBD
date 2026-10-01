@@ -67,7 +67,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       aria-label={item.name}
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',
-        'touch-manipulation focus-visible:ring-2 focus-visible:ring-accent-amber',
+        'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
         size === 'sm' ? 'w-11' : SHAPE_CLASSES[shape],
         ghost && 'opacity-30',
         overlay && 'cursor-grabbing scale-105 drop-shadow-2xl',

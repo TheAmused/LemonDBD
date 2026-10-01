@@ -88,7 +88,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({
                 src={iconSrc}
                 alt={perk.name}
                 onError={() => setImgError(true)}
-                className="h-full w-full object-contain drop-shadow-lg"
+                className="h-full w-full scale-[1.3] object-contain drop-shadow-lg"
               />
             ) : (
               <ImageOff className="h-8 w-8 text-text-muted" />

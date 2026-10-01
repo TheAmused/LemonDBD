@@ -2,7 +2,7 @@
 // frontend/src/components/sidebar/BugReportModal.tsx
 
 import React, { useState, useEffect, useRef } from 'react';
-import { getBackendBaseUrl } from '@/utils/api';
+import { getBackendBaseUrl, authHeaders, getAuthToken } from '@/utils/api';
 import { useParams, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
@@ -176,17 +176,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
     setIsSubmitting(true);
     try {
       const backendBase = getBackendBaseUrl();
-      const token =
-        typeof window !== 'undefined'
-          ? localStorage.getItem('lemondbd_token')
-          : null;
-
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
+      const headers: Record<string, string> = authHeaders(getAuthToken(), { json: true });
 
       const payload = {
         title: title.trim(),

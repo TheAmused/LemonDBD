@@ -47,6 +47,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { authHeaders } from '@/utils/api';
 
 interface OwnedCharacter {
   id: number;
@@ -182,10 +183,10 @@ export const CharactersHub: React.FC<CharactersHubProps> = ({ dict }) => {
     try {
       const [charsRes, perksRes] = await Promise.all([
         fetch(`${backendBase}/api/v1/users/${user.id}/characters`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: authHeaders(token),
         }),
         fetch(`${backendBase}/api/v1/users/${user.id}/perks?lang=${locale}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: authHeaders(token),
         }),
       ]);
 

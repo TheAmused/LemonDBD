@@ -3,9 +3,10 @@
 
 import type { Dictionary } from '@/locales/types';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { BookOpen } from 'lucide-react';
-import { ChallengeIntroModalShell, ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
+import { NEUTRAL_TILE_ACCENT, type ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import { ChallengeModeModal } from '../ChallengeModeModal';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
 
 export interface PageStreakModeModalProps {
@@ -16,8 +17,6 @@ export interface PageStreakModeModalProps {
 }
 
 export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen, onClose, onStart, dict }) => {
-  const [isRulesOpen, setIsRulesOpen] = useState(false);
-
   const tiles: ChallengeIntroTile[] = [
     {
       value: 'normal',
@@ -29,26 +28,18 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
   ];
 
   return (
-    <>
-      <ChallengeIntroModalShell
-        isOpen={isOpen}
-        onClose={onClose}
-        title={dict?.streaks?.chooseMode || 'Choose a mode'}
-        intro={
-          dict?.streaks?.pageStreakIntro ||
-          'Pick a killer and build the strongest loadout you can from their current perk page. After a win you move to the next page, after a loss you start over.'
-        }
-        rulesLabel={dict?.streaks?.readFullRules || 'Read full rules'}
-        onOpenRules={() => setIsRulesOpen(true)}
-        tiles={tiles}
-        onSelectTile={() => onStart()}
-        tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto"
-        escapeDisabled={isRulesOpen}
-        currentLabel={dict?.streaks?.current || 'Current'}
-        dict={dict}
-      />
-
-      <PageStreakRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} dict={dict} />
-    </>
+    <ChallengeModeModal
+      isOpen={isOpen}
+      onClose={onClose}
+      intro={
+        dict?.streaks?.pageStreakIntro ||
+        'Pick a killer and build the strongest loadout you can from their current perk page. After a win you move to the next page, after a loss you start over.'
+      }
+      tiles={tiles}
+      onSelectTile={() => onStart()}
+      tileGridClassName="sm:grid-cols-1 max-w-xs mx-auto"
+      renderRules={(rules) => <PageStreakRulesModal {...rules} dict={dict} />}
+      dict={dict}
+    />
   );
 };

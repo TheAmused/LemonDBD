@@ -40,6 +40,7 @@ import { createSharedLink } from '@/services/minigameApi';
 import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
+import { copyTextWithFallback } from '@/utils/clipboard';
 interface MinigamesHubProps {
   locale: string;
   dict: Dictionary;
@@ -88,7 +89,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
       const res = await createSharedLink(trial);
       const origin = typeof window !== 'undefined' ? window.location.origin : '';
       const fullUrl = res.share_url.startsWith('http') ? res.share_url : `${origin}${res.share_url}`;
-      await navigator.clipboard.writeText(fullUrl);
+      if (!(await copyTextWithFallback(fullUrl))) throw new Error('Copy failed');
       setCopiedId(trial.id);
       setTimeout(() => setCopiedId(null), 3000);
     } catch (err) {

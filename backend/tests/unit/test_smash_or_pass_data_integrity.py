@@ -12,8 +12,8 @@ checks for free.
 """
 import pytest
 from app.seeds.smash_roster_seeder import load_rosters_from_json_files
+from app.utils.lang import TRANSLATABLE_LOCALES
 
-TRANSLATABLE_LOCALES = ("de", "es", "ja", "pl")
 VALID_ROLES = {"Survivor", "Killer"}
 VALID_GENDERS = {"male", "female", "monster_other"}
 

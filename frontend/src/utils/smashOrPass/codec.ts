@@ -31,7 +31,19 @@ import {
   type SmashRosterDocument,
   type SmashRosterDocumentEntity,
 } from '@/types/smashOrPass';
-import { DATA_IMAGE_PATTERN, ENTITY_ID_PATTERN, SHARE_HASH_PARAM, SMASH_ROSTER_LIMITS } from './constants';
+import { slugify } from '@/utils/slug';
+import {
+  cleanText,
+  decodeShareText,
+  encodeShareText,
+  isRecord,
+  readShareFragment as readShareFragmentFrom,
+  sanitizeImageUrl as sanitizeImageUrlWith,
+  uniqueId,
+} from '@/utils/shareCodec';
+import { ENTITY_ID_PATTERN, SHARE_HASH_PARAM, SMASH_ROSTER_LIMITS } from './constants';
+
+export { uniqueId };
 
 export type SmashRosterErrorCode =
   | 'invalidJson'
@@ -57,70 +69,18 @@ export type SmashRosterParseResult =
 // Small sanitizers
 // ---------------------------------------------------------------------------
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-/** Collapses whitespace and control characters, then caps the length. */
-function cleanText(value: unknown, max: number, counter?: { truncated: number }): string {
-  if (typeof value !== 'string' && typeof value !== 'number') return '';
-  // eslint-disable-next-line no-control-regex
-  const text = String(value).replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/\s+/g, ' ').trim();
-  if (text.length > max) {
-    if (counter) counter.truncated += 1;
-    return text.slice(0, max).trimEnd();
-  }
-  return text;
-}
-
 /**
  * Returns a displayable image/media source, or null if `raw` is not one we
  * allow. Accepted: `https:` URLs, raster `data:image/*;base64` up to the
  * size cap, and backend-relative `/static/...` paths.
  */
 export function sanitizeImageUrl(raw: unknown): string | null {
-  if (typeof raw !== 'string') return null;
-  const value = raw.trim();
-  if (!value) return null;
-
-  if (value.startsWith('data:')) {
-    return value.length <= SMASH_ROSTER_LIMITS.maxDataImageChars && DATA_IMAGE_PATTERN.test(value)
-      ? value
-      : null;
-  }
-
-  if (value.startsWith('/static/')) {
-    return !value.includes('..') && !value.includes('//') && !/[\s"'<>\\]/.test(value) ? value : null;
-  }
-
-  if (value.length > 2048) return null;
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' && !url.username && !url.password ? url.href : null;
-  } catch {
-    return null;
-  }
+  return sanitizeImageUrlWith(raw, SMASH_ROSTER_LIMITS.maxDataImageChars);
 }
 
 /** A stable, pattern-safe id from arbitrary text (`"Leon S. Kennedy"` -> `leon-s-kennedy`). */
 export function slugifyEntityId(text: string): string {
-  return (
-    text
-      .normalize('NFKD')
-      .replace(/[̀-ͯ]/g, '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .slice(0, 48) || 'entity'
-  );
-}
-
-/** Returns the first `${base}`, `${base}-2`, `${base}-3`... not already in `taken`. */
-export function uniqueId(base: string, taken: Set<string>): string {
-  let candidate = base;
-  let n = 2;
-  while (taken.has(candidate)) candidate = `${base}-${n++}`;
-  return candidate;
+  return slugify(text, 'entity');
 }
 
 function cleanFlags(raw: unknown, max: number, maxCount: number): string[] {
@@ -421,55 +381,16 @@ export function exportFileName(doc: Pick<SmashRosterDocument, 'name'>): string {
 // is the uncompressed fallback for a runtime without it.
 // ---------------------------------------------------------------------------
 
-function bytesToBase64Url(bytes: Uint8Array): string {
-  let binary = '';
-  const chunk = 0x8000;
-  for (let i = 0; i < bytes.length; i += chunk) {
-    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
-  }
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-function base64UrlToBytes(value: string): Uint8Array {
-  const b64 = value.replace(/-/g, '+').replace(/_/g, '/');
-  const binary = atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4));
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes;
-}
-
-async function pipeThrough(bytes: Uint8Array, stream: CompressionStream | DecompressionStream): Promise<Uint8Array> {
-  const piped = new Blob([bytes as BlobPart]).stream().pipeThrough(stream);
-  return new Uint8Array(await new Response(piped).arrayBuffer());
-}
-
-const canCompress = () =>
-  typeof CompressionStream !== 'undefined' && typeof DecompressionStream !== 'undefined';
-
 /** Encodes a document for the `#import=` fragment. Compact JSON, compressed when possible. */
 export async function encodeSharePayload(doc: SmashRosterDocument): Promise<string> {
-  const bytes = new TextEncoder().encode(JSON.stringify(doc));
-  if (canCompress()) {
-    return `z.${bytesToBase64Url(await pipeThrough(bytes, new CompressionStream('deflate-raw')))}`;
-  }
-  return `j.${bytesToBase64Url(bytes)}`;
+  return encodeShareText(JSON.stringify(doc));
 }
 
 /** Decodes an `#import=` payload back to a validated document. Never throws. */
 export async function decodeSharePayload(payload: string): Promise<SmashRosterParseResult> {
   try {
-    const [scheme, body] = [payload.slice(0, 2), payload.slice(2)];
-    if (!body || body.length > SMASH_ROSTER_LIMITS.maxPayloadChars) {
-      return { ok: false, error: body ? 'tooLarge' : 'invalidShareLink' };
-    }
-    let bytes = base64UrlToBytes(body);
-    if (scheme === 'z.') {
-      if (!canCompress()) return { ok: false, error: 'invalidShareLink' };
-      bytes = await pipeThrough(bytes, new DecompressionStream('deflate-raw'));
-    } else if (scheme !== 'j.') {
-      return { ok: false, error: 'invalidShareLink' };
-    }
-    return parseSmashRosterJson(new TextDecoder().decode(bytes));
+    const decoded = await decodeShareText(payload, SMASH_ROSTER_LIMITS.maxPayloadChars);
+    return decoded.ok ? parseSmashRosterJson(decoded.text) : decoded;
   } catch {
     return { ok: false, error: 'invalidShareLink' };
   }
@@ -477,9 +398,7 @@ export async function decodeSharePayload(payload: string): Promise<SmashRosterPa
 
 /** Reads the share payload out of a `location.hash`, or null if there is none. */
 export function readShareFragment(hash: string): string | null {
-  const params = new URLSearchParams(hash.replace(/^#/, ''));
-  const value = params.get(SHARE_HASH_PARAM);
-  return value && value.length > 2 ? value : null;
+  return readShareFragmentFrom(hash);
 }
 
 export function buildShareUrl(origin: string, locale: string, payload: string): string {

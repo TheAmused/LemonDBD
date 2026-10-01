@@ -1,4 +1,4 @@
-# backend/tests/unit/test_phase2_services.py
+# backend/tests/unit/test_synergy_service.py
 import pytest
 from flask.testing import FlaskClient
 from app import create_app
@@ -6,8 +6,8 @@ from app.services.synergy_service import SynergyService, calculate_synergy
 
 
 @pytest.mark.unit
-class TestPhase2Services:
-    """Tests for Phase 2 Synergy scoring, anti-synergy warnings, and tactical badges."""
+class TestSynergyService:
+    """Tests for Synergy scoring, anti-synergy warnings, and tactical badges."""
 
     @pytest.fixture
     def client(self) -> FlaskClient:

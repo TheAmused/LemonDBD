@@ -3,29 +3,10 @@
 
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { ApiError, authHeaders, getAuthToken } from '@/utils/api';
 
-const TOKEN_KEY = 'lemondbd_token';
-
-export class ShowcaseApiError extends Error {
-  status: number;
-  code?: string;
-
-  constructor(message: string, status: number, code?: string) {
-    super(message);
-    this.name = 'ShowcaseApiError';
-    this.status = status;
-    this.code = code;
-  }
-}
-
-function getToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    return localStorage.getItem(TOKEN_KEY);
-  } catch {
-    return null;
-  }
-}
+/** Kept for existing importers; showcase errors are the shared ApiError. */
+export { ApiError, ApiError as ShowcaseApiError };
 
 function apiBase(): string {
   return getBackendBaseUrl();
@@ -81,13 +62,11 @@ export async function fetchUserShowcase(
   userId: number | string,
   signal?: AbortSignal
 ): Promise<UserShowcaseState> {
-  const token = getToken();
+  const token = getAuthToken();
   const headers: Record<string, string> = {
     'Cache-Control': 'no-cache, no-store, must-revalidate',
+    ...authHeaders(token),
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
   const res = await fetch(`${apiBase()}/api/v1/users/${userId}/showcase?_t=${Date.now()}`, {
     headers,
@@ -102,7 +81,7 @@ export async function fetchUserShowcase(
   }
 
   if (!res.ok) {
-    throw new ShowcaseApiError(data.error || 'Failed to fetch showcase', res.status, data.error_code);
+    throw new ApiError(data.error || 'Failed to fetch showcase', res.status, data.error_code);
   }
 
   return mapBackendToShowcaseState(data.data);
@@ -113,9 +92,9 @@ export async function updateUserShowcaseApi(
   state: UserShowcaseState,
   signal?: AbortSignal
 ): Promise<UserShowcaseState> {
-  const token = getToken();
+  const token = getAuthToken();
   if (!token) {
-    throw new ShowcaseApiError('Authentication token missing.', 401, 'authTokenMissing');
+    throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
 
   const payload = mapShowcaseStateToBackend(state);
@@ -124,7 +103,7 @@ export async function updateUserShowcaseApi(
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeaders(token),
     },
     body: JSON.stringify(payload),
     signal,
@@ -138,7 +117,7 @@ export async function updateUserShowcaseApi(
   }
 
   if (!res.ok) {
-    throw new ShowcaseApiError(data.error || 'Failed to update showcase', res.status, data.error_code);
+    throw new ApiError(data.error || 'Failed to update showcase', res.status, data.error_code);
   }
 
   return mapBackendToShowcaseState(data.data);

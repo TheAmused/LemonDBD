@@ -34,36 +34,19 @@ import {
   type SmashRosterStoreState,
   type StoredCustomRoster,
 } from '@/types/smashOrPass';
+import { createRandomId, createVersionedStore, isRecord, readNumber, type SaveResult } from '@/utils/versionedStore';
 import { sanitizeImageUrl } from './codec';
 import { ENTITY_ID_PATTERN, SMASH_ROSTER_LIMITS } from './constants';
 
 export const SMASH_ROSTER_STORAGE_KEY = 'lemondbd_smash_rosters';
 export const SMASH_ROSTER_STORE_VERSION = 1 as const;
 
-export type SaveResult = { ok: true } | { ok: false; reason: 'quota' | 'unavailable' };
+export type { SaveResult };
 
 export const EMPTY_SMASH_ROSTER_STATE: SmashRosterStoreState = Object.freeze({
   version: SMASH_ROSTER_STORE_VERSION,
   custom: Object.freeze({}) as Record<string, StoredCustomRoster>,
 }) as SmashRosterStoreState;
-
-function getStorage(): Storage | null {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) return window.localStorage;
-    const g = globalThis as { localStorage?: Storage };
-    return g.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function readNumber(raw: unknown, fallback: number): number {
-  return typeof raw === 'number' && Number.isFinite(raw) ? raw : fallback;
-}
 
 // ---------------------------------------------------------------------------
 // Parsing stored data defensively. localStorage is user-editable and survives
@@ -148,100 +131,20 @@ export function migrateSmashRosterState(raw: unknown): SmashRosterStoreState {
   return { version: SMASH_ROSTER_STORE_VERSION, custom };
 }
 
-export function loadSmashRosterState(storage: Storage | null = getStorage()): SmashRosterStoreState {
-  if (!storage) return EMPTY_SMASH_ROSTER_STATE;
-  try {
-    const raw = storage.getItem(SMASH_ROSTER_STORAGE_KEY);
-    if (!raw) return EMPTY_SMASH_ROSTER_STATE;
-    return migrateSmashRosterState(JSON.parse(raw));
-  } catch {
-    // Corrupt JSON: start empty rather than crash the page. The bad value is
-    // left in place until the next successful save overwrites it.
-    return EMPTY_SMASH_ROSTER_STATE;
-  }
-}
+const store = createVersionedStore<SmashRosterStoreState>({
+  key: SMASH_ROSTER_STORAGE_KEY,
+  empty: EMPTY_SMASH_ROSTER_STATE,
+  migrate: migrateSmashRosterState,
+});
 
-function isQuotaError(err: unknown): boolean {
-  return (
-    err instanceof Error &&
-    (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED' || /quota/i.test(err.message))
-  );
-}
-
-export function saveSmashRosterState(
-  state: SmashRosterStoreState,
-  storage: Storage | null = getStorage()
-): SaveResult {
-  if (!storage) return { ok: false, reason: 'unavailable' };
-  try {
-    storage.setItem(SMASH_ROSTER_STORAGE_KEY, JSON.stringify(state));
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, reason: isQuotaError(err) ? 'quota' : 'unavailable' };
-  }
-}
-
-// ---------------------------------------------------------------------------
-// External store
-// ---------------------------------------------------------------------------
-
-const listeners = new Set<() => void>();
-let snapshot: SmashRosterStoreState | null = null;
-let storageListenerAttached = false;
-
-function emit(): void {
-  listeners.forEach((cb) => {
-    try {
-      cb();
-    } catch {
-      // One broken subscriber must not stop the rest.
-    }
-  });
-}
-
-function onStorageEvent(event: StorageEvent): void {
-  if (event.key !== null && event.key !== SMASH_ROSTER_STORAGE_KEY) return;
-  snapshot = null; // another tab wrote -- re-read lazily
-  emit();
-}
-
-export function subscribeSmashRosterStore(cb: () => void): () => void {
-  listeners.add(cb);
-  if (!storageListenerAttached && typeof window !== 'undefined') {
-    window.addEventListener('storage', onStorageEvent);
-    storageListenerAttached = true;
-  }
-  return () => {
-    listeners.delete(cb);
-    if (listeners.size === 0 && storageListenerAttached && typeof window !== 'undefined') {
-      window.removeEventListener('storage', onStorageEvent);
-      storageListenerAttached = false;
-    }
-  };
-}
-
+export const loadSmashRosterState = store.load;
+export const saveSmashRosterState = store.save;
+export const subscribeSmashRosterStore = store.subscribe;
 /** Cached: `useSyncExternalStore` requires the same object until something changes. */
-export function getSmashRosterSnapshot(): SmashRosterStoreState {
-  if (snapshot === null) snapshot = loadSmashRosterState();
-  return snapshot;
-}
-
-export function getSmashRosterServerSnapshot(): SmashRosterStoreState {
-  return EMPTY_SMASH_ROSTER_STATE;
-}
-
+export const getSmashRosterSnapshot = store.getSnapshot;
+export const getSmashRosterServerSnapshot = store.getServerSnapshot;
 /** Applies `mutate` to the current state, persists it, and notifies subscribers. */
-export function updateSmashRosterState(
-  mutate: (state: SmashRosterStoreState) => SmashRosterStoreState
-): SaveResult {
-  const next = mutate(getSmashRosterSnapshot());
-  const result = saveSmashRosterState(next);
-  // Keep the in-memory copy even when saving failed, so the roster the user
-  // is looking at does not jump back; the caller surfaces the "not saved" notice.
-  snapshot = next;
-  emit();
-  return result;
-}
+export const updateSmashRosterState = store.update;
 
 // ---------------------------------------------------------------------------
 // Mutations
@@ -264,12 +167,4 @@ export function deleteCustomRoster(id: string): SaveResult {
 }
 
 /** A short random id for a new custom roster. */
-export function createCustomRosterId(): string {
-  const bytes = new Uint8Array(6);
-  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
-    crypto.getRandomValues(bytes);
-  } else {
-    for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
-  }
-  return Array.from(bytes, (b) => b.toString(36).padStart(2, '0')).join('').slice(0, 10);
-}
+export const createCustomRosterId = createRandomId;

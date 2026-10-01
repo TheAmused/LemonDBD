@@ -24,6 +24,7 @@ import { FogReportIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
+import { formatDate, formatDateTime } from '@/utils/format';
 interface StatusConfigItem {
   label: string;
   badge: string;
@@ -283,7 +284,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                             {report.images.length}
                           </span>
                         )}
-                        <span>{new Date(report.created_at).toLocaleDateString()}</span>
+                        <span>{formatDate(report.created_at)}</span>
                       </div>
                     </div>
                   </div>
@@ -336,7 +337,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                       {selectedBug.category}
                     </span>
                     <span className="text-[11px] text-text-muted">
-                      {new Date(selectedBug.created_at).toLocaleString()}
+                      {formatDateTime(selectedBug.created_at)}
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-black text-text-primary">

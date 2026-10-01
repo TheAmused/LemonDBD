@@ -12,6 +12,7 @@ import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/d
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
+import { isSurvivor } from '@/utils/characterUtils';
 
 interface ShowcaseCharacterModalProps {
   isOpen: boolean;
@@ -157,7 +158,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       onClose={onClose}
       size="2xl"
       title={`${dict?.user?.selectCharacter || 'Select Character'} (${role})`}
-      icon={<Sparkles className={`h-5 w-5 ${role === 'Survivor' ? 'text-accent-green' : 'text-accent-red'}`} />}
+      icon={<Sparkles className={`h-5 w-5 ${isSurvivor(role) ? 'text-accent-green' : 'text-accent-red'}`} />}
       className="max-h-[85vh] flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless

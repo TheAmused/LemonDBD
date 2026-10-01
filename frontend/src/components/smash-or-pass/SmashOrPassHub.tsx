@@ -63,6 +63,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { IridescentShardIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 // Dynamic client-side imports for heavy visual layers and interactive modals
 const SmashAnimations = dynamic(
@@ -1028,8 +1029,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
                     {allRolesLabel}
                   </button>
                   {availableRoles.map((role) => {
-                    const isSurvivor = role === 'Survivor';
-                    const isKiller = role === 'Killer';
+                    const isSurvivor = isSurvivorRole(role);
+                    const isKiller = isKillerRole(role);
                     const label = isSurvivor ? survivorsLabel : isKiller ? killersLabel : role;
                     return (
                       <button

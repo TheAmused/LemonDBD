@@ -23,6 +23,7 @@ import { staticUrl } from '@/utils/api';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { EmptyState } from '@/components/common/EmptyState';
+import { formatDate } from '@/utils/format';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -228,7 +229,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                       </span>
                       <span>
                         {t.reportedOn || 'Reported on'}{' '}
-                        {new Date(report.created_at).toLocaleDateString()}
+                        {formatDate(report.created_at)}
                       </span>
                     </div>
                   </div>

@@ -5,6 +5,8 @@ import unicodedata
 from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.models.slug import slugify as _shared_slugify
+
 HEADER_EXCLUSIONS: set[str] = {
     "uncommon items",
     "rare items",
@@ -64,15 +66,8 @@ def sanitize_name(name: str) -> str:
 
 
 def slugify(text: str) -> str:
-    """Creates a URL-safe alphanumeric slug."""
-    if not text:
-        return ""
-    normalized = unicodedata.normalize("NFKD", text).encode("ASCII", "ignore").decode("utf-8")
-    clean = normalized.lower().strip()
-    clean = re.sub(r"[\s\-/]+", "_", clean)
-    clean = re.sub(r"[^a-z0-9_]", "", clean)
-    clean = re.sub(r"_+", "_", clean)
-    return clean.strip("_")
+    """Perk/character lookup slug: punctuation is dropped, not a word break."""
+    return _shared_slugify(text, strip_symbols=False, drop_punct=True)
 
 
 def clean_description(text: str) -> str:

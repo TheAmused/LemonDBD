@@ -30,6 +30,8 @@ import { IridescentShardIcon } from '@/components/icons/DbdIcons';
 import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { formatNumber } from '@/utils/format';
+import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -100,7 +102,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
 }) => {
   const itemSlug = item.slug || item.character_slug || '';
   const itemName = item.name || item.character_name || itemSlug;
-  const isSurvivor = item.role === 'Survivor';
+  const isSurvivor = isSurvivorRole(item.role);
   const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
   const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
   const smashCount = item.smash_count ?? item.stat?.smash_count ?? 0;
@@ -291,7 +293,7 @@ const CandidateRow = React.memo<CandidateRowProps>(({
           </div>
 
           <span className="text-[10px] font-mono text-text-muted text-right">
-            {totalVotes.toLocaleString()} {votesWord}
+            {formatNumber(totalVotes)} {votesWord}
           </span>
         </div>
 

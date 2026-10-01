@@ -1,6 +1,7 @@
 // frontend/src/services/changelogApi.ts
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { ChangelogListResponse, ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
+import { authHeaders } from '@/utils/api';
 
 const API_BASE = () => `${getBackendBaseUrl()}/api/v1/changelog`;
 
@@ -24,7 +25,7 @@ export async function fetchChangelogPostsAdmin(
 ): Promise<ChangelogListResponse> {
   const res = await fetch(`${API_BASE()}/admin?page=${page}&per_page=${perPage}`, {
     cache: 'no-store',
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(token),
   });
   return parseOrThrow(res);
 }
@@ -35,7 +36,7 @@ export async function createChangelogPost(
 ): Promise<{ status: string; data: ChangelogPost }> {
   const res = await fetch(`${API_BASE()}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    headers: authHeaders(token, { json: true }),
     body: JSON.stringify(draft),
   });
   return parseOrThrow(res);
@@ -48,7 +49,7 @@ export async function updateChangelogPost(
 ): Promise<{ status: string; data: ChangelogPost }> {
   const res = await fetch(`${API_BASE()}/${id}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    headers: authHeaders(token, { json: true }),
     body: JSON.stringify(draft),
   });
   return parseOrThrow(res);
@@ -57,7 +58,7 @@ export async function updateChangelogPost(
 export async function deleteChangelogPost(token: string, id: number): Promise<{ status: string }> {
   const res = await fetch(`${API_BASE()}/${id}`, {
     method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(token),
   });
   return parseOrThrow(res);
 }
@@ -68,7 +69,7 @@ export async function reorderChangelogPosts(
 ): Promise<{ status: string }> {
   const res = await fetch(`${API_BASE()}/reorder`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    headers: authHeaders(token, { json: true }),
     body: JSON.stringify({ ordered_ids: orderedIds }),
   });
   return parseOrThrow(res);

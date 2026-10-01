@@ -1,14 +1,11 @@
 # backend/app/services/history_service.py
 import logging
 
-from sqlalchemy import select
-
 from app.core.extensions import db
 from app.models import HistoryMatchLog, HistoryRun
 from app.schemas.history import HistoryMatchLogDict, HistoryRunState
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
-from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.history import fetch_history_user_stats
 from app.services.history.roster import (
     ROW_SIZE,
@@ -19,12 +16,16 @@ from app.services.history.roster import (
     resolve_killer_names_by_ids,
 )
 from app.services.ownership_service import OwnershipService
-from app.services.roster_milestone import get_full_roster_milestone
+from app.services.streak_run import StreakRunService
 
 logger = logging.getLogger(__name__)
 
 
-class HistoryService:
+class HistoryService(StreakRunService):
+    mode = "history"
+    run_model = HistoryRun
+    variant_fields = ("mode",)
+
     def __init__(self, ownership_service: OwnershipService | None = None):
         self.ownership_service = ownership_service or OwnershipService()
 
@@ -93,17 +94,15 @@ class HistoryService:
         }
 
     def get_or_create_run(self, user_id: int, mode: str) -> HistoryRunState:
-        run = db.session.scalars(
-            select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
-        ).first()
-        if run:
-            return self._augment(run)
+        return self._get_or_create_run(user_id, mode)
 
-        assert_challenge_mode_enabled("history")
+    def _present(self, run: HistoryRun) -> HistoryRunState:
+        return self._augment(run)
 
+    def _build_run(self, user_id: int, mode: str) -> HistoryRun:
         general = get_general_killer_perk_names()
         owned_killer_ids = get_owned_killer_ids_by_release(user_id, self.ownership_service)
-        run = HistoryRun(
+        return HistoryRun(
             user_id=user_id,
             mode=mode,
             status="in_progress",
@@ -118,35 +117,14 @@ class HistoryService:
             checkpoint_completed_killers=[],
             checkpoint_unlocked_perk_names=general,
         )
-        db.session.add(run)
-        db.session.commit()
-        return self._augment(run)
 
     def reset_run(self, user_id: int, mode: str) -> HistoryRunState:
-        assert_challenge_mode_enabled("history")
-        run = db.session.scalars(
-            select(HistoryRun).where(HistoryRun.user_id == user_id, HistoryRun.mode == mode)
-        ).first()
-        if not run:
-            raise ValueError("Run not found")
-        db.session.delete(run)
-        db.session.commit()
-        return self.get_or_create_run(user_id, mode)
+        return self._reset_run(user_id, mode)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> HistoryRunState:
         assert_challenge_mode_enabled("history")
-        if result not in ("win", "loss"):
-            raise ValueError("Result must be 'win' or 'loss'")
-        if not killer_id:
-            raise ValueError("killer_id is required")
-
-        run = db.session.scalars(
-            select(HistoryRun).where(HistoryRun.id == run_id, HistoryRun.user_id == user_id)
-        ).first()
-        if not run:
-            raise ValueError("Run not found")
-        if run.status == "completed":
-            raise ValueError("This run is already completed. Reset it to play again.")
+        self._validate_killer_submission(result, killer_id)
+        run = self._load_run_for_result(user_id, run_id)
 
         if self._is_unfrozen(run):
             self._freeze_pool(run)
@@ -204,20 +182,8 @@ class HistoryService:
         ))
 
         if result == "win" and run.status == "completed":
-            # owned_ids was captured before this refreeze -- doing it after
-            # would silently pull in a newly-owned character, inflating the count.
-            is_full, _ = get_full_roster_milestone(owned_ids, role="Killer")
-            record_challenge_completion(
-                user_id=user_id,
-                mode="history",
-                variant=run.mode,
-                attempts_taken=run.attempts + 1,
-                matches_played=len(run.match_logs),
-                unlocked_characters_count=len(owned_ids),
-                full_roster=is_full,
-            )
+            self._complete_run(run, user_id, run.mode, owned_ids, role="Killer")
             self._freeze_pool(run)
-            run.attempts = 0
 
         db.session.commit()
 
@@ -227,8 +193,8 @@ class HistoryService:
         return data
 
     def apply_inactivity_loss(self, run_id: int) -> None:
-        run = db.session.scalars(select(HistoryRun).where(HistoryRun.id == run_id)).first()
-        if not run or run.status == "completed":
+        run = self._load_run_for_inactivity(run_id)
+        if not run:
             return
 
         streak_before = run.total_killers_beaten
@@ -256,4 +222,4 @@ class HistoryService:
         return fetch_history_user_stats(user_id, mode)
 
     def get_completions(self, user_id: int, mode: str) -> list[ChallengeCompletionDict]:
-        return fetch_challenge_completions(user_id, "history", mode)
+        return self._completions(user_id, mode)

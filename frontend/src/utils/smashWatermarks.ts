@@ -1,4 +1,5 @@
 // frontend/src/utils/smashWatermarks.ts
+import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 
 /**
  * Strips unwanted characters such as parentheses, brackets, and quotes from watermark text.
@@ -44,8 +45,8 @@ export function resolveWatermarks(character: {
   real_name?: string;
   role?: string;
 }): { leftWatermark: string; rightWatermark: string } {
-  const isSurvivor = character.role === 'Survivor';
-  const isKiller = character.role === 'Killer';
+  const isSurvivor = isSurvivorRole(character.role);
+  const isKiller = isKillerRole(character.role);
 
   let leftWatermark = cleanWatermark(
     character.watermark_left || (isSurvivor ? (character.name || '').split(' ')[0] : character.name || '')

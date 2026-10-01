@@ -4,7 +4,8 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
 import { Swords, Lock, Sparkles, User, Users, UsersRound } from 'lucide-react';
-import { ChallengeIntroModalShell, ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
+import { ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
+import { ChallengeModeModal } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
 import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
 
@@ -94,7 +95,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   showIntro = true,
   dict,
 }) => {
-  const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [stage, setStage] = useState<Stage>('root');
 
   useEffect(() => {
@@ -123,45 +123,39 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   const rootSelected = currentMode === 'original' ? 'original' : currentMode ? 'lemon' : undefined;
 
   return (
-    <>
-      <ChallengeIntroModalShell
-        isOpen={isOpen}
-        onClose={onClose}
-        title={
-          isLemonStage
-            ? dict?.streaks?.chooseLemonPlayers || 'How many players?'
-            : dict?.streaks?.chooseMode || 'Choose a mode'
+    <ChallengeModeModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={
+        isLemonStage
+          ? dict?.streaks?.chooseLemonPlayers || 'How many players?'
+          : dict?.streaks?.chooseMode || 'Choose a mode'
+      }
+      intro={
+        isLemonStage || !showIntro
+          ? undefined
+          : role === 'killer'
+            ? dict?.streaks?.gauntletIntroKiller ||
+              'Face a random owned killer with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
+            : dict?.streaks?.gauntletIntroSurvivor ||
+              'Face a random owned survivor with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
+      }
+      showRules={!isLemonStage && showIntro}
+      tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
+      onSelectTile={(value) => {
+        if (value === 'lemon') {
+          setStage('lemon');
+          return;
         }
-        intro={
-          isLemonStage || !showIntro
-            ? undefined
-            : role === 'killer'
-              ? dict?.streaks?.gauntletIntroKiller ||
-                'Face a random owned killer with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
-              : dict?.streaks?.gauntletIntroSurvivor ||
-                'Face a random owned survivor with a shrinking perk loadout. Win to raise your streak, lose and fall back to your last checkpoint.'
-        }
-        rulesLabel={dict?.streaks?.readFullRules || 'Read full rules'}
-        onOpenRules={isLemonStage || !showIntro ? undefined : () => setIsRulesOpen(true)}
-        tiles={isLemonStage ? lemonPlayerTiles(dict) : rootTiles}
-        onSelectTile={(value) => {
-          if (value === 'lemon') {
-            setStage('lemon');
-            return;
-          }
-          const mode = GAUNTLET_GAME_MODES.find((candidate) => candidate === value);
-          if (mode) onSelectMode(mode);
-        }}
-        tileGridClassName={isLemonStage ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}
-        escapeDisabled={isRulesOpen}
-        selectedValue={isLemonStage ? currentMode : rootSelected}
-        currentLabel={dict?.streaks?.current || 'Current'}
-        onBack={isLemonStage ? () => setStage('root') : undefined}
-        backLabel={dict?.streaks?.back || 'Back'}
-        dict={dict}
-      />
-
-      <GauntletRulesModal isOpen={isRulesOpen} onClose={() => setIsRulesOpen(false)} role={role} dict={dict} />
-    </>
+        const mode = GAUNTLET_GAME_MODES.find((candidate) => candidate === value);
+        if (mode) onSelectMode(mode);
+      }}
+      tileGridClassName={isLemonStage ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}
+      selectedValue={isLemonStage ? currentMode : rootSelected}
+      onBack={isLemonStage ? () => setStage('root') : undefined}
+      backLabel={dict?.streaks?.back || 'Back'}
+      renderRules={(rules) => <GauntletRulesModal {...rules} role={role} dict={dict} />}
+      dict={dict}
+    />
   );
 };

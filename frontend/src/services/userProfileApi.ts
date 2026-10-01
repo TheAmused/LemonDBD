@@ -12,24 +12,9 @@
 
 import type { UserBugReport } from '@/types/userProfile';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { ApiError, authHeaders, getAuthToken } from '@/utils/api';
 
-const TOKEN_KEY = 'lemondbd_token';
-
-export class ApiError extends Error {
-  status: number;
-  code?: string;
-
-  constructor(message: string, status: number, code?: string) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.code = code;
-  }
-}
-
-function getToken(): string | null {
-  return typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
-}
+export { ApiError };
 
 function apiBase(): string {
   return getBackendBaseUrl();
@@ -56,7 +41,7 @@ export async function fetchMyBugReports(
   perPage = 10,
   signal?: AbortSignal
 ): Promise<MyBugReportsPage> {
-  const token = getToken();
+  const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
@@ -65,7 +50,7 @@ export async function fetchMyBugReports(
     `${apiBase()}/api/v1/bug-reports/my?page=${page}&per_page=${perPage}&_t=${Date.now()}`,
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...authHeaders(token),
         'Cache-Control': 'no-cache, no-store, must-revalidate',
       },
       signal,
@@ -92,7 +77,7 @@ export interface UpdateProfilePayload {
 }
 
 export async function updateUserProfile(payload: UpdateProfilePayload): Promise<any> {
-  const token = getToken();
+  const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
@@ -101,7 +86,7 @@ export async function updateUserProfile(payload: UpdateProfilePayload): Promise<
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      ...authHeaders(token),
     },
     body: JSON.stringify(payload),
   });
@@ -114,7 +99,7 @@ export async function updateUserProfile(payload: UpdateProfilePayload): Promise<
 }
 
 export async function uploadAvatar(file: File): Promise<any> {
-  const token = getToken();
+  const token = getAuthToken();
   if (!token) {
     throw new ApiError('Authentication token missing.', 401, 'authTokenMissing');
   }
@@ -124,7 +109,7 @@ export async function uploadAvatar(file: File): Promise<any> {
 
   const res = await fetch(`${apiBase()}/api/v1/auth/avatar`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
+    headers: authHeaders(token),
     body: formData,
   });
 

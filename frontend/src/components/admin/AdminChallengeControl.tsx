@@ -17,13 +17,10 @@ import { AdminReasonModal } from './AdminReasonModal';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
   dict?: Dictionary;
-}
-
-function authHeaders(token: string): HeadersInit {
-  return { Authorization: `Bearer ${token}` };
 }
 
 type PendingAction =
@@ -48,10 +45,8 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
     page_streak: dict?.streaks?.pageStreak || 'Page Streak',
   };
 
-  const getToken = () => (typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null);
-
   const loadModes = useCallback(async () => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/challenge-modes`, { headers: authHeaders(token) });
@@ -62,7 +57,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   }, []);
 
   const loadRoster = useCallback(async (searchTerm: string, role: 'Survivor' | 'Killer') => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     setLoading(true);
     try {
@@ -95,7 +90,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
   }, [search, roleFilter, loadRoster]);
 
   const applyModeToggle = async (mode: ChallengeMode, isEnabled: boolean, reason: string | null) => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/challenge-modes/${mode}`, {
@@ -114,12 +109,12 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         onActionMessage({ type: 'error', text: err.error || 'Failed to update challenge mode.' });
       }
     } catch (err) {
-      onActionMessage({ type: 'error', text: err instanceof Error ? err.message : 'Network error.' });
+      onActionMessage({ type: 'error', text: getErrorMessage(err, 'Network error.') });
     }
   };
 
   const applyCharacterToggle = async (character: AdminCharacterRow, nextDisabled: boolean, reason: string | null) => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/characters/${character.id}/disable`, {
@@ -138,12 +133,12 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         onActionMessage({ type: 'error', text: err.error || 'Failed to update character.' });
       }
     } catch (err) {
-      onActionMessage({ type: 'error', text: err instanceof Error ? err.message : 'Network error.' });
+      onActionMessage({ type: 'error', text: getErrorMessage(err, 'Network error.') });
     }
   };
 
   const applyPerkToggle = async (perk: AdminPerkRow, nextDisabled: boolean, reason: string | null) => {
-    const token = getToken();
+    const token = getAuthToken();
     if (!token) return;
     try {
       const res = await fetch(`${backendBase}/api/v1/admin/perks/${perk.id}/disable`, {
@@ -162,7 +157,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
         onActionMessage({ type: 'error', text: err.error || 'Failed to update perk.' });
       }
     } catch (err) {
-      onActionMessage({ type: 'error', text: err instanceof Error ? err.message : 'Network error.' });
+      onActionMessage({ type: 'error', text: getErrorMessage(err, 'Network error.') });
     }
   };
 

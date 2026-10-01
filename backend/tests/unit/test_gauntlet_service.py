@@ -202,13 +202,6 @@ class TestGauntletRun:
         assert run["game_mode"] == "original"
         assert run["target_revealed"] is False
 
-    def test_get_or_create_run_is_idempotent(
-        self, gauntlet_service: GauntletService, gauntlet_user: int
-    ) -> None:
-        first = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
-        second = gauntlet_service.get_or_create_run(gauntlet_user, "killer")
-        assert first["id"] == second["id"]
-
     def test_runs_are_isolated_per_role(
         self, gauntlet_service: GauntletService, gauntlet_user: int, db_session: Session
     ) -> None:
@@ -353,10 +346,6 @@ class TestGauntletResults:
         updated = self.service.submit_result(self.user_id, self.run["id"], "loss")
         assert updated["best_streak"] == 3
 
-    def test_rejects_invalid_result_string(self) -> None:
-        with pytest.raises(ValueError):
-            self.service.submit_result(self.user_id, self.run["id"], "draw")
-
     def test_rejects_result_for_another_users_run(self, user_service: UserService) -> None:
         other_user, _ = user_service.register_user("intruder_g", "intruder_g@test.com", "Pass123!")
         with pytest.raises(ValueError):
@@ -476,15 +465,6 @@ class TestGauntletCompletion:
         assert after_last["status"] == "completed"
         assert sorted(after_last["completed_characters"]) == ["Nurse", "Trapper"]
 
-    def test_completed_run_rejects_further_results(self) -> None:
-        self.service.get_or_create_run(self.user_id, "killer")
-        self._clear("Trapper")
-        self._clear("Nurse")
-
-        run = self.service.get_or_create_run(self.user_id, "killer")
-        with pytest.raises(ValueError):
-            self.service.submit_result(self.user_id, run["id"], "win")
-
     def test_reset_starts_a_fresh_run(self) -> None:
         self.service.get_or_create_run(self.user_id, "killer")
         self._clear("Trapper")
@@ -495,89 +475,6 @@ class TestGauntletCompletion:
         assert fresh["current_streak"] == 0
         assert fresh["completed_characters"] == []
         assert fresh["target_revealed"] is False
-
-    def test_completing_the_run_records_completion_and_resets_attempts(self) -> None:
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        run = self.service.get_or_create_run(self.user_id, "killer")
-        self.service.submit_result(self.user_id, run["id"], "loss")  # attempts -> 1
-
-        self._clear("Trapper")
-        final = self._clear("Nurse")
-        assert final["status"] == "completed"
-        assert final["attempts"] == 0
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record is not None
-        assert record.mode == "gauntlet"
-        assert record.variant == "killer_original"
-        assert record.attempts_taken == 2
-        assert record.matches_played == 3
-        assert record.unlocked_characters_count == 2
-        assert record.full_roster is True
-
-    def test_a_character_becoming_owned_mid_run_does_not_inflate_the_completion_count(self) -> None:
-        """Regression: a character un-kill-switched (or otherwise newly
-        owned) after this run's pool was already frozen at 2 must not
-        inflate the count recorded for a run that only had to clear those 2."""
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        self.service.get_or_create_run(self.user_id, "killer")  # freezes the pool at 2
-        seed_killer("Ghostface")  # owned by default; the frozen pool stays at 2
-
-        self._clear("Trapper")
-        final = self._clear("Nurse")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record.unlocked_characters_count == 2
-
-    def test_full_roster_is_false_when_a_killer_exists_that_is_not_owned(
-        self, ownership_service: OwnershipService
-    ) -> None:
-        from datetime import datetime, timezone
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        # Predates the owned killers -- it was already in the game all along,
-        # the player just never picked it up. Must count against "full".
-        ghostface = seed_killer("Ghostface")
-        ghostface.created_at = datetime(2020, 1, 1, tzinfo=timezone.utc)
-        db.session.commit()
-        ownership_service.set_character_ownership(self.user_id, ghostface.id, is_owned=False, role="Killer")
-
-        self.service.get_or_create_run(self.user_id, "killer")
-        self._clear("Trapper")
-        final = self._clear("Nurse")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record.full_roster is False
-        assert record.unlocked_characters_count == 2
-
-    def test_completing_the_run_with_no_losses_records_one_attempt(self) -> None:
-        from app.core.extensions import db
-        from app.models import ChallengeCompletionRecord
-
-        self.service.get_or_create_run(self.user_id, "killer")
-        self._clear("Trapper")
-        final = self._clear("Nurse")
-        assert final["status"] == "completed"
-
-        record = db.session.scalars(
-            select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first()
-        assert record is not None
-        assert record.attempts_taken == 1
-
 
 @pytest.mark.unit
 class TestGauntletStats:

@@ -1,22 +1,13 @@
 // frontend/src/utils/minigames/storage.ts
 import type { ChallengeDefinition, ChallengeProgress } from '@/types/minigame';
+import { getLocalStorage } from '@/utils/safeStorage';
 
 const CUSTOM_CHALLENGES_KEY = 'lemondbd_custom_minigames';
 const PROGRESS_KEY_PREFIX = 'lemondbd_minigame_progress_';
 const DAILY_STREAK_KEY = 'lemondbd_minigames_daily_streak';
 
-function getStorage(): Storage | null {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) return window.localStorage;
-    const g = globalThis as { localStorage?: Storage };
-    return g.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-
 export function getCustomChallenges(): ChallengeDefinition[] {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return [];
   try {
     const raw = storage.getItem(CUSTOM_CHALLENGES_KEY);
@@ -30,7 +21,7 @@ export function getCustomChallenges(): ChallengeDefinition[] {
 }
 
 export function saveCustomChallenge(challenge: ChallengeDefinition): ChallengeDefinition {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   const id = challenge.id || `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   const now = new Date().toISOString();
   const updated: ChallengeDefinition = {
@@ -59,7 +50,7 @@ export function saveCustomChallenge(challenge: ChallengeDefinition): ChallengeDe
 }
 
 export function deleteCustomChallenge(id: string | number): void {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return;
   try {
     const list = getCustomChallenges();
@@ -72,7 +63,7 @@ export function deleteCustomChallenge(id: string | number): void {
 }
 
 export function getChallengeProgress(challengeId: string | number): ChallengeProgress | null {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return null;
   try {
     const raw = storage.getItem(`${PROGRESS_KEY_PREFIX}${challengeId}`);
@@ -85,7 +76,7 @@ export function getChallengeProgress(challengeId: string | number): ChallengePro
 }
 
 export function saveChallengeProgress(progress: ChallengeProgress): void {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return;
   try {
     storage.setItem(
@@ -98,7 +89,7 @@ export function saveChallengeProgress(progress: ChallengeProgress): void {
 }
 
 export function clearChallengeProgress(challengeId: string | number): void {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return;
   try {
     storage.removeItem(`${PROGRESS_KEY_PREFIX}${challengeId}`);
@@ -114,7 +105,7 @@ export interface DailyStreakData {
 }
 
 export function getDailyStreak(): DailyStreakData {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) {
     return { currentStreak: 0, maxStreak: 0, lastCompletedDate: null };
   }
@@ -158,7 +149,7 @@ export function recordDailyCompletion(dateStr: string): DailyStreakData {
     lastCompletedDate: dateStr,
   };
 
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (storage) {
     try {
       storage.setItem(DAILY_STREAK_KEY, JSON.stringify(updated));
@@ -178,7 +169,7 @@ export function recordDailyLoss(dateStr: string): DailyStreakData {
     lastCompletedDate: dateStr,
   };
 
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (storage) {
     try {
       storage.setItem(DAILY_STREAK_KEY, JSON.stringify(updated));

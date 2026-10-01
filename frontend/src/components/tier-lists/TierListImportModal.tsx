@@ -1,9 +1,8 @@
 'use client';
 // frontend/src/components/tier-lists/TierListImportModal.tsx
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CircleAlert, FileJson, Info, Upload } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
+import React from 'react';
+import { ImportModal, ImportPreview, Notice, useImportDraft } from '@/components/common/ImportModal';
 import type { TierListDocument } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import {
@@ -14,10 +13,7 @@ import {
   serializeTierListDocument,
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { cn } from '@/utils/cn';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
-import { Button } from '@/components/common/Button';
-import { Textarea } from '@/components/common/Field';
 
 /**
  * Where the import is going, which decides what a payload is allowed to be:
@@ -60,55 +56,25 @@ function contextFor(doc: TierListDocument, target: ImportTarget, t: Dictionary['
   return { tone: 'info', text: t.importAsCustom };
 }
 
+const TOO_LARGE: TierListParseResult = { ok: false, error: 'tooLarge' };
+const toText = (r: TierListParseResult) => (r.ok ? serializeTierListDocument(r.doc) : null);
+
 export function TierListImportModal({ open, target, sharePayload, onClose, onImport, dict }: TierListImportModalProps) {
   const t = dict.tierLists;
-  const [text, setText] = useState<string>('');
-  const [linkResult, setLinkResult] = useState<TierListParseResult | null>(null);
-  const [fileError, setFileError] = useState<boolean>(false);
-  const fileInput = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    setText('');
-    setFileError(false);
-    setLinkResult(null);
-    if (!sharePayload) return;
-    let cancelled = false;
-    decodeSharePayload(sharePayload).then((result) => {
-      if (cancelled) return;
-      setLinkResult(result);
-      if (result.ok) setText(serializeTierListDocument(result.doc));
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [open, sharePayload]);
-
-  const result = useMemo<TierListParseResult | null>(() => {
-    if (!text.trim()) return linkResult && !linkResult.ok ? linkResult : null;
-    return parseTierListJson(text);
-  }, [text, linkResult]);
+  const { text, result, fileError, changeText, readFile } = useImportDraft<TierListParseResult>({
+    isOpen: open,
+    sharePayload,
+    decodeShare: decodeSharePayload,
+    parse: parseTierListJson,
+    toText,
+    tooLarge: TOO_LARGE,
+    maxPayloadChars: TIER_LIST_LIMITS.maxPayloadChars,
+  });
 
   const note = result?.ok ? contextFor(result.doc, target, t) : null;
   const canImport = Boolean(result?.ok && note?.tone !== 'error');
 
   const errorText = (code: TierListErrorCode) => t.errors[code];
-
-  const readFile = async (file: File | undefined) => {
-    setFileError(false);
-    if (!file) return;
-    if (file.size > TIER_LIST_LIMITS.maxPayloadChars) {
-      setText('');
-      setLinkResult({ ok: false, error: 'tooLarge' });
-      return;
-    }
-    try {
-      setLinkResult(null);
-      setText(await file.text());
-    } catch {
-      setFileError(true);
-    }
-  };
 
   const preview = result?.ok
     ? t.importPreview
@@ -119,107 +85,46 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
     : '';
 
   return (
-    <Modal
+    <ImportModal
       isOpen={open}
       onClose={onClose}
-      size="2xl"
-      title={t.importTitle}
-      subtitle={t.importSubtitle}
-      icon={<FileJson className="h-5 w-5" aria-hidden="true" />}
-      bodyClassName="p-4 sm:p-6 font-sans"
-      footer={
-        <div className="flex w-full flex-wrap items-center justify-center gap-3">
-          <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
-            {t.cancel}
-          </Button>
-          <Button
-            variant="primary"
-            disabled={!canImport}
-            onClick={() => {
-              if (result?.ok && canImport) onImport(result.doc);
-            }}
-            className={cn(TOUCH_BTN, 'min-h-[42px] px-6')}
-          >
-            <Upload className="h-4 w-4" aria-hidden="true" />
-            {t.importAction}
-          </Button>
-        </div>
-      }
+      idPrefix="tier-list"
+      labels={{
+        title: t.importTitle,
+        subtitle: t.importSubtitle,
+        sharedLinkDetected: t.sharedLinkDetected,
+        pasteLabel: t.pasteLabel,
+        uploadFile: t.uploadFile,
+        pastePlaceholder: t.pastePlaceholder,
+        cancel: t.cancel,
+        importAction: t.importAction,
+      }}
+      text={text}
+      onTextChange={changeText}
+      onFile={(file) => void readFile(file)}
+      sharedLink={Boolean(sharePayload)}
+      canImport={canImport}
+      onImport={() => {
+        if (result?.ok && canImport) onImport(result.doc);
+      }}
+      labelClassName={LABEL}
+      fieldClassName={`${TOUCH_FIELD} py-2 font-mono text-xs leading-relaxed`}
+      buttonClassName={TOUCH_BTN}
+      cancelClassName={`${TOUCH_BTN} min-h-[42px] px-5`}
+      importClassName={`${TOUCH_BTN} min-h-[42px] px-6`}
+      footerClassName="flex w-full flex-wrap items-center justify-center gap-3"
     >
-      <div className="flex flex-col gap-4">
-        {sharePayload && (
-          <p className="flex items-start gap-2 rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-3 text-sm font-semibold text-accent-amber">
-            <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-            {t.sharedLinkDetected}
-          </p>
-        )}
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-end justify-between gap-2">
-            <label htmlFor="tier-list-import-json" className={LABEL}>
-              {t.pasteLabel}
-            </label>
-            <Button variant="secondary" onClick={() => fileInput.current?.click()} className={TOUCH_BTN}>
-              <Upload className="h-4 w-4" aria-hidden="true" />
-              {t.uploadFile}
-            </Button>
-            <input
-              ref={fileInput}
-              type="file"
-              accept="application/json,.json"
-              className="hidden"
-              onChange={(e) => {
-                void readFile(e.target.files?.[0]);
-                e.target.value = '';
-              }}
-            />
-          </div>
-          <Textarea
-            id="tier-list-import-json"
-            value={text}
-            onChange={(e) => {
-              setLinkResult(null);
-              setText(e.target.value);
-            }}
-            rows={10}
-            spellCheck={false}
-            placeholder={t.pastePlaceholder}
-            className={`${TOUCH_FIELD} py-2 font-mono text-xs leading-relaxed`}
-          />
-        </div>
-
-        <div aria-live="polite" className="flex flex-col gap-2">
-          {fileError && <Notice tone="error" text={t.errors.readFile} />}
-          {result && !result.ok && <Notice tone="error" text={errorText(result.error)} />}
-          {result?.ok && (
-            <>
-              <p className="rounded-xl border border-border-color bg-bg-elevated/60 p-3 text-sm font-bold text-text-primary">
-                {preview}
-              </p>
-              {note && <Notice tone={note.tone} text={note.text} />}
-              {result.warnings.map((w) => (
-                <Notice key={w.code} tone="warning" text={t.warnings[w.code].replace('{count}', String(w.count))} />
-              ))}
-            </>
-          )}
-        </div>
-      </div>
-    </Modal>
-  );
-}
-
-function Notice({ tone, text }: { tone: 'info' | 'warning' | 'error'; text: string }) {
-  const classes =
-    tone === 'error'
-      ? 'border-accent-red/40 bg-accent-red/10 text-accent-red'
-      : tone === 'warning'
-        ? 'border-accent-amber/40 bg-accent-amber/10 text-accent-amber'
-        : 'border-border-color bg-bg-elevated/60 text-text-secondary';
-  const Icon = tone === 'info' ? Info : CircleAlert;
-  return (
-    <p role={tone === 'error' ? 'alert' : undefined} className={`flex items-start gap-2 rounded-xl border p-3 text-xs font-semibold ${classes}`}>
-      <Icon className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-      {text}
-    </p>
+      {fileError && <Notice tone="error" text={t.errors.readFile} />}
+      {result && !result.ok && <Notice tone="error" text={errorText(result.error)} />}
+      {result?.ok && (
+        <>
+          <ImportPreview text={preview} />
+          {note && <Notice tone={note.tone} text={note.text} />}
+          {result.warnings.map((w) => (
+            <Notice key={w.code} tone="warning" text={t.warnings[w.code].replace('{count}', String(w.count))} />
+          ))}
+        </>
+      )}
+    </ImportModal>
   );
 }

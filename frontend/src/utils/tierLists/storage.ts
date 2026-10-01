@@ -27,33 +27,20 @@ import type {
   TierListStoreState,
   TierPlacements,
 } from '@/types/tierList';
+import { createRandomId, createVersionedStore, isRecord, readNumber, type SaveResult } from '@/utils/versionedStore';
 import { isTierColor, normalizePlacements, sanitizeImageUrl } from './codec';
 import { ITEM_ID_PATTERN, TIER_LIST_LIMITS } from './constants';
 
 export const TIER_LIST_STORAGE_KEY = 'lemondbd_tier_lists';
 export const TIER_LIST_STORE_VERSION = 1 as const;
 
-export type SaveResult = { ok: true } | { ok: false; reason: 'quota' | 'unavailable' };
+export type { SaveResult };
 
 export const EMPTY_TIER_LIST_STATE: TierListStoreState = Object.freeze({
   version: TIER_LIST_STORE_VERSION,
   rankings: Object.freeze({}) as Record<string, StoredRanking>,
   custom: Object.freeze({}) as Record<string, StoredCustomList>,
 }) as TierListStoreState;
-
-function getStorage(): Storage | null {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) return window.localStorage;
-    const g = globalThis as { localStorage?: Storage };
-    return g.localStorage ?? null;
-  } catch {
-    return null;
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
 
 // ---------------------------------------------------------------------------
 // Parsing stored data defensively. localStorage is user-editable and survives
@@ -97,10 +84,6 @@ function readItems(raw: unknown): TierListDocumentItem[] {
     items.push(image ? { id: item.id, name: item.name, image } : { id: item.id, name: item.name });
   }
   return items;
-}
-
-function readNumber(raw: unknown, fallback: number): number {
-  return typeof raw === 'number' && Number.isFinite(raw) ? raw : fallback;
 }
 
 /**
@@ -149,102 +132,22 @@ export function migrateTierListState(raw: unknown): TierListStoreState {
   return { version: TIER_LIST_STORE_VERSION, rankings, custom };
 }
 
-export function loadTierListState(storage: Storage | null = getStorage()): TierListStoreState {
-  if (!storage) return EMPTY_TIER_LIST_STATE;
-  try {
-    const raw = storage.getItem(TIER_LIST_STORAGE_KEY);
-    if (!raw) return EMPTY_TIER_LIST_STATE;
-    return migrateTierListState(JSON.parse(raw));
-  } catch {
-    // Corrupt JSON: start empty rather than crash the page. The bad value is
-    // left in place until the next successful save overwrites it.
-    return EMPTY_TIER_LIST_STATE;
-  }
-}
+const store = createVersionedStore<TierListStoreState>({
+  key: TIER_LIST_STORAGE_KEY,
+  empty: EMPTY_TIER_LIST_STATE,
+  migrate: migrateTierListState,
+});
 
-function isQuotaError(err: unknown): boolean {
-  return (
-    err instanceof Error &&
-    (err.name === 'QuotaExceededError' || err.name === 'NS_ERROR_DOM_QUOTA_REACHED' || /quota/i.test(err.message))
-  );
-}
-
-export function saveTierListState(state: TierListStoreState, storage: Storage | null = getStorage()): SaveResult {
-  if (!storage) return { ok: false, reason: 'unavailable' };
-  try {
-    storage.setItem(TIER_LIST_STORAGE_KEY, JSON.stringify(state));
-    return { ok: true };
-  } catch (err) {
-    return { ok: false, reason: isQuotaError(err) ? 'quota' : 'unavailable' };
-  }
-}
-
-// ---------------------------------------------------------------------------
-// External store
-// ---------------------------------------------------------------------------
-
-const listeners = new Set<() => void>();
-let snapshot: TierListStoreState | null = null;
-let storageListenerAttached = false;
-
-function emit(): void {
-  listeners.forEach((cb) => {
-    try {
-      cb();
-    } catch {
-      // One broken subscriber must not stop the rest.
-    }
-  });
-}
-
-function onStorageEvent(event: StorageEvent): void {
-  if (event.key !== null && event.key !== TIER_LIST_STORAGE_KEY) return;
-  snapshot = null; // another tab wrote -- re-read lazily
-  emit();
-}
-
-export function subscribeTierListStore(cb: () => void): () => void {
-  listeners.add(cb);
-  if (!storageListenerAttached && typeof window !== 'undefined') {
-    window.addEventListener('storage', onStorageEvent);
-    storageListenerAttached = true;
-  }
-  return () => {
-    listeners.delete(cb);
-    if (listeners.size === 0 && storageListenerAttached && typeof window !== 'undefined') {
-      window.removeEventListener('storage', onStorageEvent);
-      storageListenerAttached = false;
-    }
-  };
-}
-
+export const loadTierListState = store.load;
+export const saveTierListState = store.save;
+export const subscribeTierListStore = store.subscribe;
 /** Cached: `useSyncExternalStore` requires the same object until something changes. */
-export function getTierListSnapshot(): TierListStoreState {
-  if (snapshot === null) snapshot = loadTierListState();
-  return snapshot;
-}
-
-export function getTierListServerSnapshot(): TierListStoreState {
-  return EMPTY_TIER_LIST_STATE;
-}
-
+export const getTierListSnapshot = store.getSnapshot;
+export const getTierListServerSnapshot = store.getServerSnapshot;
 /** Applies `mutate` to the current state, persists it, and notifies subscribers. */
-export function updateTierListState(
-  mutate: (state: TierListStoreState) => TierListStoreState
-): SaveResult {
-  const next = mutate(getTierListSnapshot());
-  const result = saveTierListState(next);
-  // Keep the in-memory copy even when saving failed, so the board the user is
-  // looking at does not jump back; the caller surfaces the "not saved" notice.
-  snapshot = next;
-  emit();
-  return result;
-}
-
+export const updateTierListState = store.update;
 /** Test hook: forget the cached snapshot so the next read hits storage. */
-export function resetTierListStoreCache(): void {
-  snapshot = null;
-}
+export const resetTierListStoreCache = store.resetCache;
 
 // ---------------------------------------------------------------------------
 // Mutations
@@ -283,12 +186,4 @@ export function deleteCustomList(id: string): SaveResult {
 }
 
 /** A short random id for a new custom list (`/tier-lists/custom/<id>`). */
-export function createCustomListId(): string {
-  const bytes = new Uint8Array(6);
-  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
-    crypto.getRandomValues(bytes);
-  } else {
-    for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
-  }
-  return Array.from(bytes, (b) => b.toString(36).padStart(2, '0')).join('').slice(0, 10);
-}
+export const createCustomListId = createRandomId;

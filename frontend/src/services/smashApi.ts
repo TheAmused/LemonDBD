@@ -9,20 +9,9 @@ import {
   SmashLeaderboardOptions,
 } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { authHeaders } from '@/utils/api';
 
 const SESSION_KEY = 'smash_session_id';
-
-/**
- * Retrieves the stored JWT authentication token from localStorage if available.
- */
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    return localStorage.getItem('lemondbd_token') || null;
-  } catch {
-    return null;
-  }
-}
 
 /**
  * Constructs universal request headers attaching both persistent Session ID and Bearer Auth Token.
@@ -33,11 +22,7 @@ function getRequestHeaders(customHeaders: Record<string, string> = {}): Record<s
     'X-Session-ID': getSessionId(),
     ...customHeaders,
   };
-  const token = getAuthToken();
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  return headers;
+  return { ...headers, ...authHeaders() };
 }
 
 /**

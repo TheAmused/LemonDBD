@@ -24,6 +24,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
+import { isKiller as isKillerRole } from '@/utils/characterUtils';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -50,7 +51,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   onSelectOffering,
   t,
 }) => {
-  const isKiller = role === 'Killer';
+  const isKiller = isKillerRole(role);
 
   const categories = useMemo<OfferingCategoryConfig[]>(() => {
     if (isKiller) {

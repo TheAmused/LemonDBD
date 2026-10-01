@@ -7,10 +7,8 @@ import type { Dictionary } from '@/locales/types';
 import { ScrollText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AdminAuditLogEntry } from '@/types/admin';
 import { backendBase } from '@/utils/staticUrl';
-
-function authHeaders(token: string): HeadersInit {
-  return { Authorization: `Bearer ${token}` };
-}
+import { authHeaders, getAuthToken } from '@/utils/api';
+import { formatDateTime } from '@/utils/format';
 
 const ACTION_COLORS: Record<string, string> = {
   character_disabled: 'text-accent-red',
@@ -30,7 +28,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
   const perPage = 25;
 
   const load = useCallback(async () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) return;
     setLoading(true);
     try {
@@ -117,7 +115,7 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
                     {describeDetails(log) || '-'}
                   </td>
                   <td className="py-3 text-right text-text-muted font-mono whitespace-nowrap">
-                    {new Date(log.created_at).toLocaleString()}
+                    {formatDateTime(log.created_at)}
                   </td>
                 </tr>
               ))}

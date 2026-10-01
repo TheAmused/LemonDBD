@@ -24,7 +24,6 @@ import {
   reconstructSharedPersona,
   buildArchetypeShareUrl,
   buildTelegramShareUrl,
-  copyTextWithFallback,
   type VoteRecord,
   type SharedArchetypePayload,
   type RomancePersonaResult,
@@ -36,6 +35,8 @@ import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { Surface } from '@/components/common/Surface';
+import { copyTextWithFallback } from '@/utils/clipboard';
+import { isSurvivor } from '@/utils/characterUtils';
 interface PersonaArchetypeEntry {
   title?: string;
   subtitle?: string;
@@ -278,9 +279,9 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
           {
             name: persona.favoriteChar.name,
             category: (persona.favoriteChar.role || 'Survivor') as any,
-            avatar_local_path: `avatars/${persona.favoriteChar.role === 'Survivor' ? 'survivors' : 'killers'}/${persona.favoriteChar.slug || 'unknown'}.png`,
+            avatar_local_path: `avatars/${isSurvivor(persona.favoriteChar.role) ? 'survivors' : 'killers'}/${persona.favoriteChar.slug || 'unknown'}.png`,
           },
-          persona.favoriteChar.role === 'Survivor'
+          isSurvivor(persona.favoriteChar.role)
         )
     : null;
 

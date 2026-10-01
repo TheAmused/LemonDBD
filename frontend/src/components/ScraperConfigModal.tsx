@@ -27,6 +27,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
+import { authHeaders, getAuthToken, getErrorMessage } from '@/utils/api';
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -204,7 +205,7 @@ export function ScraperConfigModal({
       return;
     }
 
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) {
       setExportError(dict?.admin?.tokenNotFound || 'Unauthorized.');
       return;
@@ -221,7 +222,7 @@ export function ScraperConfigModal({
 
       const res = await fetch(`${apiBase}/api/v1/admin/database/export?${query.toString()}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache',
         },
       });
@@ -247,7 +248,7 @@ export function ScraperConfigModal({
 
       setExportSuccess(`Successfully exported ${exportTargets.length} categories.`);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Export error.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Export error.');
       setExportError(msg);
     } finally {
       setIsExporting(false);
@@ -367,7 +368,7 @@ export function ScraperConfigModal({
 
   const runImport = async () => {
     setShowReplaceConfirm(false);
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) {
       setImportError(dict?.admin?.tokenNotFound || 'Unauthorized.');
       return;
@@ -390,7 +391,7 @@ export function ScraperConfigModal({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
         },
         body: JSON.stringify({
           mode: importMode,
@@ -410,7 +411,7 @@ export function ScraperConfigModal({
         await onPurgeSuccess();
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : dict?.admin?.networkError || 'Import error.';
+      const msg = getErrorMessage(err, dict?.admin?.networkError || 'Import error.');
       setImportError(msg);
     } finally {
       setIsImporting(false);
@@ -428,7 +429,7 @@ export function ScraperConfigModal({
 
   const runPurge = async () => {
     setShowPurgeConfirm(false);
-    const token = typeof window !== 'undefined' ? localStorage.getItem('lemondbd_token') : null;
+    const token = getAuthToken();
     if (!token) {
       setPurgeError(dict?.admin?.tokenNotFound || 'Unauthorized.');
       return;
@@ -443,7 +444,7 @@ export function ScraperConfigModal({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          ...authHeaders(token),
           'Cache-Control': 'no-cache, no-store',
           Pragma: 'no-cache',
         },
@@ -462,7 +463,7 @@ export function ScraperConfigModal({
         setPurgeError(data.error || 'Purge failed.');
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : dict?.admin?.networkError || 'Purge network error.';
+      const message = getErrorMessage(err, dict?.admin?.networkError || 'Purge network error.');
       setPurgeError(message);
     } finally {
       setIsPurging(false);

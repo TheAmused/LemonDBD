@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
+import { ownershipKey, ownsPerk, isSurvivor } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, ChevronDown, Info, Search, User as UserIcon, X } from 'lucide-react';
@@ -30,6 +30,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { SwitchTrack } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { authHeaders } from '@/utils/api';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -225,7 +226,7 @@ function resolveOnboardingAvatar(backendBase: string, c: OnboardingCharacter): s
       avatar_url: c.avatar_url,
       avatar_local_path: c.avatar_local_path,
     },
-    c.role === 'Survivor'
+    isSurvivor(c.role)
   );
 }
 
@@ -395,7 +396,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     // by id, so the canonical structure used for grouping never changes.
     if (!user || !token) return;
     let cancelled = false;
-    const headers = { Authorization: `Bearer ${token}` };
+    const headers = authHeaders(token);
     // The two /users/... reads stay bare: they carry the bearer token, so they
     // are personalised and neither cache will touch them. The third is the
     // public catalog under the same key the roster page uses, so a visitor who

@@ -19,6 +19,7 @@ import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
+import { formatDate } from '@/utils/format';
 interface CampfireHeaderProps {
   user: {
     id: number;
@@ -140,7 +141,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   <span>
                     {dict?.user?.memberSince || 'Member since'}{' '}
                     <strong className="text-text-primary font-normal">
-                      {new Date(user.created_at).toLocaleDateString()}
+                      {formatDate(user.created_at)}
                     </strong>
                   </span>
                 </span>

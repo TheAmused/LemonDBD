@@ -11,6 +11,7 @@ from app.core.extensions import db
 from app.core import redis_cache
 from app.core.redis_cache import bump_catalog_version
 from app.models.base import utcnow
+from app.models.slug import slugify, unique_slug
 from app.models.smash_or_pass import (
     Entity,
     EntityStat,
@@ -22,7 +23,6 @@ from app.seeds.smash_roster_seeder import ROSTERS_DIR, seed_smash_rosters
 
 logger = logging.getLogger(__name__)
 
-_SLUG_INVALID = re.compile(r"[^a-z0-9]+")
 
 #: Not enforced by the model (unlike `TierList.slug`'s own reserved set --
 #: there is no per-roster frontend route to collide with, since smash-or-pass
@@ -794,26 +794,19 @@ class SmashOrPassService:
     @staticmethod
     def _slugify(text: str, *, max_len: int, fallback: str) -> str:
         """`"Hooked on You"` -> `"hooked-on-you"` (a run of anything else
-        collapses to one hyphen), truncated to `max_len` and re-stripped so a
-        cut mid-word never leaves a trailing hyphen."""
-        slug = _SLUG_INVALID.sub("-", (text or "").strip().lower()).strip("-")
-        slug = slug[:max_len].strip("-")
-        return slug or fallback
+        collapses to one hyphen), truncated to `max_len` and re-stripped."""
+        return slugify(text, sep="-", fold_unicode=False, strip_symbols=False, max_len=max_len, fallback=fallback)
 
     @staticmethod
     def _unique_roster_slug(base: str) -> str:
-        """The first `base`, `base-2`, `base-3`... that is neither reserved
-        nor already taken. A roster's slug is its stable public identity (the
-        picker, the seed filename, any future deep link), so a collision here
-        must never silently overwrite one."""
-        candidate = base
-        n = 2
-        while candidate in RESERVED_ROSTER_SLUGS or db.session.scalar(
-            select(Roster.id).where(Roster.slug == candidate)
-        ):
-            candidate = f"{base}-{n}"
-            n += 1
-        return candidate
+        """A roster's slug is its stable public identity (the picker, the seed
+        filename, any future deep link), so a collision must never silently
+        overwrite one."""
+        return unique_slug(
+            base,
+            lambda c: db.session.scalar(select(Roster.id).where(Roster.slug == c)),
+            reserved=RESERVED_ROSTER_SLUGS,
+        )
 
     @staticmethod
     def _write_roster_seed_file(roster: Roster, entities: list[Entity]) -> None:

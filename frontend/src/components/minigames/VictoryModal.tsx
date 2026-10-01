@@ -9,6 +9,7 @@ import Link from 'next/link';
 import type { ChallengeDefinition, GuessRecord } from '@/types/minigame';
 import type { Dictionary } from '@/locales/types';
 import { Modal } from '@/components/common/Modal';
+import { copyTextWithFallback } from '@/utils/clipboard';
 
 interface VictoryModalProps {
   challenge: ChallengeDefinition;
@@ -69,7 +70,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   const handleCopy = async () => {
     const text = generateShareText();
     try {
-      await navigator.clipboard.writeText(text);
+      if (!(await copyTextWithFallback(text))) return;
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     } catch {}

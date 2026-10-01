@@ -1,4 +1,5 @@
 // frontend/src/utils/onboardingStorage.ts
+import { getLocalStorage } from '@/utils/safeStorage';
 
 export interface OnboardingStoredDraft {
   ownershipDraft: Record<string, boolean>;
@@ -13,18 +14,8 @@ export function getOnboardingStorageKey(userId?: string | number | null): string
   return 'lemondbd_onboarding_draft_guest';
 }
 
-function getStorage(): Storage | null {
-  if (typeof window !== 'undefined' && window.localStorage) {
-    return window.localStorage;
-  }
-  if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
-    return (globalThis as any).localStorage;
-  }
-  return null;
-}
-
 export function loadOnboardingDraft(userId?: string | number | null): OnboardingStoredDraft | null {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return null;
   try {
     const raw = storage.getItem(getOnboardingStorageKey(userId));
@@ -48,7 +39,7 @@ export function saveOnboardingDraft(
     perkUnlockDraft: Record<number, boolean>;
   }
 ): void {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return;
   try {
     const payload: OnboardingStoredDraft = {
@@ -63,7 +54,7 @@ export function saveOnboardingDraft(
 }
 
 export function clearOnboardingDraft(userId?: string | number | null): void {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return;
   try {
     storage.removeItem(getOnboardingStorageKey(userId));

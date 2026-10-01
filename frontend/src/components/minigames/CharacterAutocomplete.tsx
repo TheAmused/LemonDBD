@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Search, ChevronDown, Sparkles } from 'lucide-react';
 import type { MinigameCatalog, TargetType, GuessedItem } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
+import { isKiller, isSurvivor } from '@/utils/characterUtils';
 
 export type AutocompleteItem = GuessedItem;
 
@@ -66,11 +67,11 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
 
     const rawKillers = (catalog.killers && catalog.killers.length > 0)
       ? catalog.killers
-      : ((catalog as any).characters || []).filter((c: any) => c.role === 'Killer' || c.type === 'killer');
+      : ((catalog as any).characters || []).filter((c: any) => isKiller(c.role) || c.type === 'killer');
 
     const rawSurvivors = (catalog.survivors && catalog.survivors.length > 0)
       ? catalog.survivors
-      : ((catalog as any).characters || []).filter((c: any) => c.role === 'Survivor' || c.type === 'survivor');
+      : ((catalog as any).characters || []).filter((c: any) => isSurvivor(c.role) || c.type === 'survivor');
 
     if (targetType === 'realm') {
       return (catalog.realms || [])
@@ -296,9 +297,9 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                 {item.role && (
                   <span
                     className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
-                      item.role === 'Killer'
+                      isKiller(item.role)
                         ? 'bg-accent-red/20 text-accent-red border border-accent-red/40'
-                        : item.role === 'Survivor'
+                        : isSurvivor(item.role)
                         ? 'bg-accent-green/20 text-accent-green border border-accent-green/40'
                         : 'bg-bg-elevated text-text-secondary border border-border-color'
                     }`}

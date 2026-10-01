@@ -1,6 +1,7 @@
 // frontend/src/components/generator/lib/generatorStorage.ts
 import { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
+import { getLocalStorage } from '@/utils/safeStorage';
 
 export const GENERATOR_STORAGE_KEY = 'lemon_dbd_generator_v9';
 
@@ -15,20 +16,8 @@ export interface GeneratorStoredState {
   activeMutator: ChaosMutator | null;
 }
 
-function getStorage(): Storage | null {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return window.localStorage;
-    }
-    if (typeof localStorage !== 'undefined') {
-      return localStorage;
-    }
-  } catch {}
-  return null;
-}
-
 export function safeGetJSON<T>(key: string, fallback: T): T {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return fallback;
   try {
     const raw = storage.getItem(key);
@@ -51,7 +40,7 @@ export function safeGetJSON<T>(key: string, fallback: T): T {
 }
 
 export function safeSetJSON(key: string, value: unknown): boolean {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return false;
   try {
     const serialized = JSON.stringify(value);
@@ -64,7 +53,7 @@ export function safeSetJSON(key: string, value: unknown): boolean {
 }
 
 export function safeRemoveItem(key: string): void {
-  const storage = getStorage();
+  const storage = getLocalStorage();
   if (!storage) return;
   try {
     storage.removeItem(key);

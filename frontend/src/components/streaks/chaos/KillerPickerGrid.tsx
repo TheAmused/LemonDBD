@@ -8,6 +8,7 @@ import { avatarUrlForCharacter } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
 
 const KillerTile: React.FC<{
@@ -32,7 +33,7 @@ const KillerTile: React.FC<{
       type="button"
       onClick={() => onSelect(name)}
       disabled={disabled || isCompleted}
-      title={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
+      {...tip(`${displayName}${isCompleted ? ' (Cleared)' : ''}`)} aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
       className={`relative flex flex-col items-center gap-1.5 rounded-lg border p-1.5 transition-all cursor-pointer disabled:cursor-not-allowed ${
         isCompleted ? '' : 'disabled:opacity-40'
       } ${cardBorder}`}

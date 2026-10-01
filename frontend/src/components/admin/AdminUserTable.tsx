@@ -18,6 +18,7 @@ import { UserRow } from '@/types/admin';
 import { UserAvatar } from '@/components/UserAvatar';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface AdminUserTableProps {
   users: UserRow[];
   totalUsers: number;
@@ -155,7 +156,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   <button
                     type="button"
                     onClick={() => onToggleRole(u)}
-                    title={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
+                    {...tip(u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote')}
                     aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
                     className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer"
                   >
@@ -164,7 +165,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                   <button
                     type="button"
                     onClick={() => onToggleActive(u)}
-                    title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
+                    {...tip(u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable')}
                     aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
                     className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border-color bg-bg-surface text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer"
                   >
@@ -174,7 +175,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <button
                       type="button"
                       onClick={() => onDeleteUser(u)}
-                      title={dict?.admin?.deleteUserTitle || 'Delete'}
+                      {...tip(dict?.admin?.deleteUserTitle || 'Delete')}
                       aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
                       className="relative min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-accent-red/30 bg-accent-red/10 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer"
                     >
@@ -260,7 +261,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onToggleRole(u)}
-                        title={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
+                        {...tip(u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote')}
                         aria-label={u.role === 'admin' ? dict?.admin?.demote || 'Demote' : dict?.admin?.promote || 'Promote'}
                         className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-amber hover:text-accent-amber transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
@@ -270,7 +271,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                       <button
                         type="button"
                         onClick={() => onToggleActive(u)}
-                        title={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
+                        {...tip(u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable')}
                         aria-label={u.is_active ? dict?.admin?.disableAccount || 'Disable' : dict?.admin?.enableAccount || 'Enable'}
                         className="relative rounded-lg border border-border-color bg-bg-surface p-1.5 text-text-primary hover:border-accent-red hover:text-accent-red transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                       >
@@ -281,7 +282,7 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
                         <button
                           type="button"
                           onClick={() => onDeleteUser(u)}
-                          title={dict?.admin?.deleteUserTitle || 'Delete'}
+                          {...tip(dict?.admin?.deleteUserTitle || 'Delete')}
                           aria-label={dict?.admin?.deleteUserTitle || 'Delete'}
                           className="relative rounded-lg border border-accent-red/30 bg-accent-red/10 p-1.5 text-accent-red hover:bg-accent-red/20 transition-colors shadow-xs cursor-pointer before:absolute before:-inset-2.5 before:content-['']"
                         >

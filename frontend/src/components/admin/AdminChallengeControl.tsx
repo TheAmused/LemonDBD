@@ -15,6 +15,7 @@ import { backendBase, staticUrl } from '@/utils/staticUrl';
 import { AdminReasonModal } from './AdminReasonModal';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface AdminChallengeControlProps {
   onActionMessage: (msg: ActionMessage) => void;
   dict?: Dictionary;
@@ -325,7 +326,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     key={c.id}
                     type="button"
                     onClick={() => requestCharacterToggle(c)}
-                    title={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
+                    {...tip(c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name)} aria-label={c.disabled_reason ? `${c.name} — ${c.disabled_reason}` : c.name}
                     className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
                       c.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'
@@ -360,7 +361,7 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
                     key={p.id}
                     type="button"
                     onClick={() => requestPerkToggle(p)}
-                    title={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
+                    {...tip(p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name)} aria-label={p.disabled_reason ? `${p.name} — ${p.disabled_reason}` : p.name}
                     className={`relative aspect-square rounded-xl border cursor-pointer transition-all overflow-hidden ${
                       p.is_disabled
                         ? 'border-accent-red bg-accent-red/10 hover:bg-accent-red/20'

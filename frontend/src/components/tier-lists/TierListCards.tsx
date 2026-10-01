@@ -9,6 +9,7 @@ import type { Dictionary } from '@/locales/types';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { staticUrl } from '@/utils/api';
 
+import { tip } from '@/components/common/Tooltip';
 const CARD =
   'group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl border border-border-color bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-red/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
@@ -169,7 +170,7 @@ export function CustomTierListCard({ list, locale, dict, onDelete, disabled }: C
                   e.stopPropagation();
                   onDelete(list.id, customTitle);
                 }}
-                title={t.deleteTier}
+                {...tip(t.deleteTier)}
                 aria-label={`${t.deleteTier} ${customTitle}`}
                 className="p-1.5 rounded-xl border border-border-color bg-bg-surface text-text-muted hover:text-accent-red hover:border-accent-red/40 hover:bg-accent-red/10 transition-colors cursor-pointer"
               >

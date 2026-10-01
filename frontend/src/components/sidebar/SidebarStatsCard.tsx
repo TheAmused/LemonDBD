@@ -6,6 +6,7 @@ import { Database, Layers, Users } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export interface SidebarStatsCardProps {
   dict?: Dictionary;
   totalPerksCount: number;
@@ -85,12 +86,12 @@ const SidebarStatsCardBase: React.FC<SidebarStatsCardProps> = ({
           <div
             style={{ width: `${survivorPct}%` }}
             className="bg-accent-green transition-all duration-500"
-            title={`${dict?.generator?.survivor || 'Survivors'}: ${survivorPct}%`}
+            {...tip(`${dict?.generator?.survivor || 'Survivors'}: ${survivorPct}%`)}
           />
           <div
             style={{ width: `${killerPct}%` }}
             className="bg-accent-red transition-all duration-500"
-            title={`${dict?.generator?.killer || 'Killers'}: ${killerPct}%`}
+            {...tip(`${dict?.generator?.killer || 'Killers'}: ${killerPct}%`)}
           />
         </div>
       </div>

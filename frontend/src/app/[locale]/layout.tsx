@@ -9,6 +9,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { DictionaryProvider } from '@/context/DictionaryContext';
 import { VaultStatsProvider } from '@/context/VaultStatsContext';
 import { ImagePreloadProvider } from '@/components/ImagePreloadProvider';
+import { TooltipProvider } from '@/components/common/Tooltip';
 import '@/app/globals.css';
 
 export const metadata: Metadata = {
@@ -74,6 +75,7 @@ export default async function RootLayout({
             <DictionaryProvider dict={dict} locale={locale}>
               <VaultStatsProvider>
                 <ImagePreloadProvider>{children}</ImagePreloadProvider>
+                <TooltipProvider />
               </VaultStatsProvider>
             </DictionaryProvider>
           </AuthProvider>

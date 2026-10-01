@@ -19,6 +19,7 @@ import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNa
 import { KillerIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
+import { tip } from '@/components/common/Tooltip';
 export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
   const owned = characters.find((c) => c.name === name)?.avatar_local_path;
@@ -134,7 +135,7 @@ const SlotChip: React.FC<{
   badgeColor?: 'amber' | 'red';
   children: React.ReactNode;
 }> = ({ iconClassName, caption, title, size, badge, badgeColor = 'amber', children }) => (
-  <div className="relative inline-flex shrink-0" title={title || caption}>
+  <div className="relative inline-flex shrink-0" {...tip(title || caption)}>
     {badge && (
       <div
         className={`absolute -top-2.5 left-1/2 -translate-x-1/2 z-10 ${BADGE_BG[badgeColor]} text-text-primary ${BADGE_TEXT_SIZE[size]} font-black uppercase tracking-wide px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap`}
@@ -311,7 +312,7 @@ const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({
 
   const avatarBox = (sizeClass: string, iconClass: string) => (
     <div
-      title={displayName}
+      {...tip(displayName)}
       className={`${sizeClass} shrink-0 rounded-xl bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
     >
       {avatarSrc && !avatarError ? (

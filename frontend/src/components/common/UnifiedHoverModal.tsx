@@ -1,8 +1,11 @@
 'use client';
 // frontend/src/components/common/UnifiedHoverModal.tsx
+//
+// Rich item card (perk / add-on / equipment / offering). It owns only the CARD
+// CONTENT; positioning, chrome, animation and z-index come from the global
+// <TooltipBubble> in Tooltip.tsx so there is a single tooltip implementation.
 
-import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import React from 'react';
 import { Repeat } from 'lucide-react';
 import {
   PerkItem,
@@ -16,6 +19,7 @@ import {
 } from '@/components/character-detail/types';
 import { Perk } from '@/types/perks';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { TOOLTIP_CONFIG, TooltipBubble, type TooltipPlacement } from '@/components/common/Tooltip';
 
 export type HoverPlacement = 'above' | 'below' | 'auto';
 
@@ -55,6 +59,22 @@ export interface UnifiedHoverModalProps {
   isPerk?: boolean;
 }
 
+/** Card width grows with description length: [min description length, width px]. */
+const CARD_WIDTH_STEPS: ReadonlyArray<readonly [number, number]> = [
+  [240, 440],
+  [120, 380],
+  [50, 320],
+  [0, 270],
+];
+const CARD_MAX_WIDTH = 460;
+const CARD_MIN_WIDTH = 270;
+
+const PLACEMENT_MAP: Record<HoverPlacement, TooltipPlacement> = {
+  above: 'top',
+  below: 'bottom',
+  auto: 'auto',
+};
+
 export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
   activeHover,
   placement = 'auto',
@@ -62,65 +82,19 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
   actionPrompt,
   isPerk = false,
 }) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!activeHover || !mounted || typeof document === 'undefined') {
+  if (!activeHover || typeof window === 'undefined') {
     return null;
   }
 
   const { item, rect, accentColor } = activeHover;
-  const rawDesc = item.description || '';
-  const descLen = rawDesc.length;
+  const descLen = (item.description || '').length;
+  const edge = TOOLTIP_CONFIG.viewportMargin * 2;
 
-  const maxAllowedWidth = Math.min(460, window.innerWidth - 24);
-  const minIdealWidth = Math.min(270, window.innerWidth - 24);
+  const stepWidth = CARD_WIDTH_STEPS.find(([min]) => descLen > min)?.[1] ?? CARD_MIN_WIDTH;
   const tooltipWidth = Math.max(
-    minIdealWidth,
-    Math.min(
-      maxAllowedWidth,
-      descLen > 240 ? 440 : descLen > 120 ? 380 : descLen > 50 ? 320 : 270
-    )
+    Math.min(CARD_MIN_WIDTH, window.innerWidth - edge),
+    Math.min(Math.min(CARD_MAX_WIDTH, window.innerWidth - edge), stepWidth)
   );
-
-  const tileCenter = rect.left + rect.width / 2;
-  const left = Math.max(
-    12,
-    Math.min(window.innerWidth - tooltipWidth - 12, tileCenter - tooltipWidth / 2)
-  );
-
-  const spaceAbove = rect.top;
-  const spaceBelow = window.innerHeight - rect.bottom;
-
-  let showAbove = false;
-  if (placement === 'above') {
-    showAbove = spaceAbove >= 240 || spaceAbove >= spaceBelow;
-  } else if (placement === 'below') {
-    showAbove = spaceBelow < 200 && spaceAbove > spaceBelow;
-  } else {
-    showAbove = spaceAbove >= 240 || spaceAbove >= spaceBelow;
-  }
-
-  const positionStyles: React.CSSProperties = showAbove
-    ? {
-      position: 'fixed',
-      bottom: `${Math.max(12, window.innerHeight - rect.top + 10)}px`,
-      left: `${left}px`,
-      width: `${tooltipWidth}px`,
-      maxHeight: `${Math.min(window.innerHeight - 24, Math.max(180, rect.top - 20))}px`,
-      zIndex: 99999,
-    }
-    : {
-      position: 'fixed',
-      top: `${Math.max(12, rect.bottom + 10)}px`,
-      left: `${left}px`,
-      width: `${tooltipWidth}px`,
-      maxHeight: `${Math.min(window.innerHeight - rect.bottom - 20, window.innerHeight - 24)}px`,
-      zIndex: 99999,
-    };
 
   const isPerkItem = isPerk || 'character' in item;
 
@@ -170,12 +144,15 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
       ? t.clickToInspectPerk || t.clickToInspect
       : t.clickToInspect);
 
-  return createPortal(
-    <div
-      style={positionStyles}
-      className={`p-3.5 sm:p-4 rounded-2xl bg-bg-surface border ${
-        isPerkItem ? 'border-accent-amber/50' : 'border-border-color'
-      } text-text-primary shadow-2xl backdrop-blur-md pointer-events-none animate-in fade-in zoom-in-95 duration-150 flex flex-col justify-between overflow-hidden`}
+  return (
+    <TooltipBubble
+      anchor={rect}
+      placement={PLACEMENT_MAP[placement]}
+      width={tooltipWidth}
+      maxHeight={window.innerHeight - edge}
+      contentClassName={`p-3.5 sm:p-4 rounded-2xl text-text-primary ${
+        isPerkItem ? 'border-accent-amber/50' : ''
+      }`}
     >
       <div className="flex items-start justify-between gap-2 border-b border-border-color pb-2.5 mb-2.5">
         <div className="min-w-0 flex-1">
@@ -279,8 +256,6 @@ export const UnifiedHoverModal: React.FC<UnifiedHoverModalProps> = ({
           </span>
         )}
       </div>
-    </div>,
-    document.body
+    </TooltipBubble>
   );
 };
-

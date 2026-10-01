@@ -9,6 +9,7 @@ import type { Dictionary } from '@/locales/types';
 import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import { staticUrl } from '@/utils/api';
 
+import { tip } from '@/components/common/Tooltip';
 interface AudioGuesserProps {
   roundConfig: RoundConfig;
   characters: CatalogCharacter[];
@@ -229,7 +230,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({
             <button
               type="button"
               onClick={toggleMute}
-              title={isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute}
+              {...tip(isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute)} aria-label={isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute}
               className="p-2.5 rounded-xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:bg-bg-surface transition-colors"
             >
               {isMuted ? <VolumeX className="w-4 h-4 text-accent-red" /> : <Volume2 className="w-4 h-4" />}

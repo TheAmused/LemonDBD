@@ -38,6 +38,7 @@ import {
 } from '@/services/clientSpeechModel';
 import dynamic from 'next/dynamic';
 
+import { tip } from '@/components/common/Tooltip';
 const VoiceEngineInfoModal = dynamic(
   () => import('./VoiceEngineInfoModal').then((m) => m.VoiceEngineInfoModal),
   { ssr: false }
@@ -877,11 +878,9 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
-            title={
-              activeEngine === 'web-speech'
+            {...tip(activeEngine === 'web-speech'
                 ? dict?.voice?.webSpeechTooltip || ''
-                : dict?.voice?.clientModelTooltip || ''
-            }
+                : dict?.voice?.clientModelTooltip || '')}
             aria-label={dict?.voice?.viewEngineInfo || ''}
             className="inline-flex items-center gap-2 rounded-full border border-accent-red/30 bg-accent-red/10 px-3.5 py-1.5 text-[13px] font-bold font-mono text-accent-red transition-all cursor-pointer shadow-sm hover:scale-105 hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >
@@ -901,7 +900,7 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            title={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            {...tip(soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || '')}
             aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
           >
@@ -925,11 +924,9 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setIsInfoModalOpen(true)}
-            title={
-              activeEngine === 'web-speech'
+            {...tip(activeEngine === 'web-speech'
                 ? dict?.voice?.webSpeechTooltip || ''
-                : dict?.voice?.clientModelTooltip || ''
-            }
+                : dict?.voice?.clientModelTooltip || '')}
             aria-label={dict?.voice?.viewEngineInfo || ''}
             className="inline-flex items-center gap-1.5 rounded-full border border-accent-red/30 bg-accent-red/10 px-2.5 py-1 text-xs font-bold font-mono text-accent-red transition-all cursor-pointer hover:bg-accent-red/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red shadow-xs"
           >
@@ -949,7 +946,7 @@ export function VoiceCommandBanner({
           <button
             type="button"
             onClick={() => setSoundEnabled((prev) => !prev)}
-            title={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
+            {...tip(soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || '')}
             aria-label={soundEnabled ? dict?.voice?.muteSound || '' : dict?.voice?.enableSound || ''}
             className="flex h-7 w-7 items-center justify-center rounded-full border border-border-color bg-bg-elevated text-text-secondary transition hover:border-border-subtle hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red shadow-xs"
           >
@@ -997,7 +994,7 @@ export function VoiceCommandBanner({
             <button
               type="button"
               disabled
-              title={dict?.maps?.lemonDbdSourceLocked || ''}
+              {...tip(dict?.maps?.lemonDbdSourceLocked || '')} aria-label={dict?.maps?.lemonDbdSourceLocked || ''}
               aria-disabled="true"
               className="flex items-center gap-1.5 rounded-full px-3 py-1 text-[13px] font-extrabold font-mono text-text-muted cursor-not-allowed"
             >

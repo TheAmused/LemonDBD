@@ -32,6 +32,7 @@ import {
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { VeiledCompassIcon, EntityMarkIcon, RedStainIcon, CampfireIcon, EntityHeartIcon, SkillCheckGaugeIcon, FogDriftIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface PersonaArchetypeEntry {
   title?: string;
   subtitle?: string;
@@ -307,7 +308,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
             type="button"
             onClick={() => setIsSharingView(false)}
             className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-bg-surface hover:bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary transition-all cursor-pointer"
-            title={rawSmash?.sharing?.backToBreakdownTitle || 'Back to breakdown'}
+            {...tip(rawSmash?.sharing?.backToBreakdownTitle || 'Back to breakdown')}
             aria-label={rawSmash?.sharing?.backAriaLabel || 'Back'}
           >
             <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red" />
@@ -628,7 +629,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({
                         onResetAll();
                       }}
                       className="flex h-12 w-12 items-center justify-center rounded-2xl bg-bg-surface border border-border-color hover:bg-bg-elevated hover:border-accent-red text-text-muted hover:text-text-primary transition-all cursor-pointer shrink-0 shadow-md"
-                      title={resetVotesLabel}
+                      {...tip(resetVotesLabel)}
                       aria-label={resetVotesLabel}
                     >
                       <RotateCcw className="h-4 w-4" aria-hidden="true" />

@@ -17,6 +17,7 @@ import type { StatusFeedback } from '@/types/userProfile';
 import type { Dictionary } from '@/locales/types';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 interface CampfireHeaderProps {
   user: {
     id: number;
@@ -64,7 +65,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
             <div
               className="relative group cursor-pointer shrink-0"
               onClick={onAvatarClick}
-              title={dict?.user?.changeAvatar || 'Change Avatar'}
+              {...tip(dict?.user?.changeAvatar || 'Change Avatar')}
               aria-label={dict?.user?.changeAvatar || 'Change Avatar'}
             >
               <div className="relative rounded-2xl sm:rounded-3xl p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">

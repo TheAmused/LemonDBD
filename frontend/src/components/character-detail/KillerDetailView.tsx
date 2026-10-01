@@ -23,6 +23,7 @@ import { OfferingsSection } from './components/OfferingsSection';
 import { Perk, PerkDictionary } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
+import { tip } from '@/components/common/Tooltip';
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
 const KillerPowerModal = dynamic(() => import('./modals/KillerPowerModal').then((m) => m.KillerPowerModal), { ssr: false });
@@ -114,7 +115,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({
                   type="button"
                   onClick={() => setIsPowerModalOpen(true)}
                   className="group relative h-20 w-20 sm:h-24 sm:w-24 shrink-0 rounded-2xl bg-bg-elevated border-2 border-accent-red/60 hover:border-accent-red p-2.5 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
-                  title={powerTitle}
+                  {...tip(powerTitle)}
                   aria-label={powerAriaLabel}
                 >
                   {killerPower.icon_url || killerPower.icon_local_path ? (

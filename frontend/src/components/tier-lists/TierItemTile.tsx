@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import type { TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 
+import { tip } from '@/components/common/Tooltip';
 export type TierTileShape = 'square' | 'wide';
 
 // Breakpoints are written as non-overlapping ranges on purpose: Tailwind emits the
@@ -62,7 +63,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
   return (
     <div
       ref={ref}
-      title={item.name}
+      {...tip(item.name)}
       aria-label={item.name}
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-xl outline-none',

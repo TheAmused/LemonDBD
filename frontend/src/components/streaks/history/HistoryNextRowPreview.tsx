@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-react';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
 import { KillerIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 export interface HistoryNextRowPreviewProps {
   killers: string[];
   rowSize: number;
@@ -19,7 +20,7 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
   const src = avatarUrlFor(name);
   return (
     <div
-      title={name}
+      {...tip(name)}
       className="flex flex-col items-center gap-1.5 rounded-lg border border-border-color bg-bg-surface p-1.5 grayscale opacity-50"
     >
       <div className="relative w-full aspect-square rounded-md overflow-hidden bg-bg-elevated flex items-center justify-center">

@@ -10,6 +10,7 @@ import { Sun, Moon, Laptop, Citrus } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
+import { tip } from '@/components/common/Tooltip';
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
 // backend/app/services/translations/translation_service.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
@@ -228,7 +229,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
                   }}
-                  title={opt.label}
+                  {...tip(opt.label)} aria-label={opt.label}
                   className={
                     `flex w-full items-center gap-2.5 px-3 py-2 text-xs font-semibold transition-colors cursor-pointer ${FOCUS_RING} ` +
                     (isMounted && theme === opt.id

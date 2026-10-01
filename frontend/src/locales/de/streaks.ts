@@ -126,7 +126,6 @@ export default {
   rosterProgress: "Roster-Fortschritt",
   rosterProgressDesc: "Schließe Matches mit allen Charakteren ab.",
   checkpointBanked: "Kontrollpunkt gesichert",
-  checkpointLoseFallback: "Bei Niederlage Rückfall auf",
   gauntletComplete: "Du hast den Gauntlet-Streak gewonnen",
   startNewRun: "Neuen Lauf starten",
   gauntlet: "Gauntlet",

@@ -126,7 +126,6 @@ export default {
   rosterProgress: "Progreso de la Lista",
   rosterProgressDesc: "Completa partidas con cada personaje adquirido.",
   checkpointBanked: "Punto de control guardado",
-  checkpointLoseFallback: "Si pierdes, retrocedes hasta",
   gauntletComplete: "Ganaste la Racha del Guantelete",
   startNewRun: "Iniciar nuevo intento",
   gauntlet: "Guantelete",

@@ -135,7 +135,6 @@ export default {
   rosterProgress: "Roster Progress",
   rosterProgressDesc: "Complete matches with each owned character to master the roster.",
   checkpointBanked: "Checkpoint reached",
-  checkpointLoseFallback: "Lose from here and you fall back to",
   gauntletComplete: "You won the Gauntlet Streak",
   startNewRun: "Start a new run",
   gauntlet: "Gauntlet",

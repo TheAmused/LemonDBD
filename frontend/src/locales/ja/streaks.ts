@@ -126,7 +126,6 @@ export default {
   rosterProgress: "名簿の進捗",
   rosterProgressDesc: "所持する全キャラクターで対戦してマスターを目指します。",
   checkpointBanked: "チェックポイント到達",
-  checkpointLoseFallback: "ここから敗北した場合の後退先:",
   gauntletComplete: "ガントレット・ストリークに勝利しました",
   startNewRun: "新しい挑戦を始める",
   gauntlet: "ガントレット",

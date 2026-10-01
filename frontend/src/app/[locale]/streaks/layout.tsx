@@ -3,6 +3,7 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import { useParams, usePathname } from 'next/navigation';
 import { Lock, MailWarning } from 'lucide-react';
@@ -83,16 +84,17 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
               {dict?.streaks?.verifyEmailToTrack || 'Verify your email to track challenges'}
             </h2>
-            <button
+            <Button
+              variant="primary"
               onClick={() => {
 
                 setAuthModalIntent('verify');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-4 rounded-xl bg-accent-red px-5 py-2.5 text-xs font-bold text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors cursor-pointer"
+              className="mt-4"
             >
               {dict?.streaks?.verifyEmail || 'Verify email'}
-            </button>
+            </Button>
           </div>
         ) : (
 
@@ -106,16 +108,17 @@ export default function StreaksLayout({ children }: { children: React.ReactNode 
             <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-text-muted">
               {dict?.streaks?.loginToTrackDesc || 'Challenges use the killers and perks you own, so we need to know who you are first.'}
             </p>
-            <button
+            <Button
+              variant="primary"
               onClick={() => {
 
                 setAuthModalIntent('login');
                 setIsAuthModalOpen(true);
               }}
-              className="mt-5 rounded-xl bg-accent-red px-5 py-2.5 text-xs font-bold text-text-inverted shadow-xs hover:bg-accent-red-hover transition-colors"
+              className="mt-5"
             >
               {dict?.streaks?.logIn || 'Log in'}
-            </button>
+            </Button>
           </div>
         )}
 

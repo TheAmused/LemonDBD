@@ -15,7 +15,9 @@ import {
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { cn } from '@/utils/cn';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './styles';
+import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
+import { Button } from '@/components/common/Button';
+import { Textarea } from '@/components/common/Field';
 
 /**
  * Where the import is going, which decides what a payload is allowed to be:
@@ -127,20 +129,20 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
       bodyClassName="p-4 sm:p-6 font-sans"
       footer={
         <div className="flex w-full flex-wrap items-center justify-center gap-3">
-          <button type="button" onClick={onClose} className={cn(BTN_SECONDARY, 'min-h-[42px] px-5')}>
+          <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
             {t.cancel}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="primary"
             disabled={!canImport}
             onClick={() => {
               if (result?.ok && canImport) onImport(result.doc);
             }}
-            className={cn(BTN_PRIMARY, 'min-h-[42px] px-6')}
+            className={cn(TOUCH_BTN, 'min-h-[42px] px-6')}
           >
             <Upload className="h-4 w-4" aria-hidden="true" />
             {t.importAction}
-          </button>
+          </Button>
         </div>
       }
     >
@@ -157,10 +159,10 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
             <label htmlFor="tier-list-import-json" className={LABEL}>
               {t.pasteLabel}
             </label>
-            <button type="button" onClick={() => fileInput.current?.click()} className={BTN_SECONDARY}>
+            <Button variant="secondary" onClick={() => fileInput.current?.click()} className={TOUCH_BTN}>
               <Upload className="h-4 w-4" aria-hidden="true" />
               {t.uploadFile}
-            </button>
+            </Button>
             <input
               ref={fileInput}
               type="file"
@@ -172,7 +174,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
               }}
             />
           </div>
-          <textarea
+          <Textarea
             id="tier-list-import-json"
             value={text}
             onChange={(e) => {
@@ -182,7 +184,7 @@ export function TierListImportModal({ open, target, sharePayload, onClose, onImp
             rows={10}
             spellCheck={false}
             placeholder={t.pastePlaceholder}
-            className={`${FIELD} py-2 font-mono text-xs leading-relaxed`}
+            className={`${TOUCH_FIELD} py-2 font-mono text-xs leading-relaxed`}
           />
         </div>
 

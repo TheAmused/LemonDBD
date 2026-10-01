@@ -10,7 +10,9 @@ import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { TierItemTile } from '../TierItemTile';
-import { BTN_DANGER_GHOST, BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from '../styles';
+import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface TierItemEditModalProps {
   item: TierListDocumentItem | null;
@@ -71,18 +73,18 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
       bodyClassName="p-4 sm:p-6 font-sans"
       footer={
         <div className="flex w-full items-center justify-center gap-3 pt-1">
-          <button type="button" onClick={onClose} className={cn(BTN_SECONDARY, 'min-h-[42px] px-5')}>
+          <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
             {t.cancel}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="primary"
             disabled={nameInvalid || urlInvalid}
             onClick={handleSave}
-            className={cn(BTN_PRIMARY, 'min-h-[42px] px-6')}
+            leftIcon={<Check className="h-4 w-4" aria-hidden="true" />}
+            className={cn(TOUCH_BTN, 'min-h-[42px] px-6')}
           >
-            <Check className="h-4 w-4" aria-hidden="true" />
             {t.save}
-          </button>
+          </Button>
         </div>
       }
     >
@@ -119,27 +121,25 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
           </span>
 
           {safeImage && (
-            <button
-              type="button"
+            <Button
+              variant="soft"
+              size="sm"
               onClick={() => {
                 setImageUrl('');
                 if (error === t.invalidImage) setError(null);
               }}
-              className={cn(
-                BTN_DANGER_GHOST,
-                'mt-2.5 inline-flex items-center gap-1.5 rounded-md text-xs py-1 px-3 min-h-[32px]'
-              )}
+              leftIcon={<ImageOff className="h-3.5 w-3.5" aria-hidden="true" />}
+              className="mt-2.5 min-h-[32px]"
             >
-              <ImageOff className="h-3.5 w-3.5" aria-hidden="true" />
               {c.removeImage}
-            </button>
+            </Button>
           )}
         </div>
 
         <div className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5">
             <span className={LABEL}>{t.itemName}</span>
-            <input
+            <Input
               type="text"
               value={name}
               maxLength={TIER_LIST_LIMITS.maxItemName}
@@ -148,14 +148,14 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
                 if (error) setError(null);
               }}
               placeholder={t.itemName}
-              aria-invalid={nameInvalid}
-              className={cn(FIELD, nameInvalid && 'border-accent-red')}
+              invalid={nameInvalid}
+              className={TOUCH_FIELD}
             />
           </label>
 
           <label className="flex flex-col gap-1.5">
             <span className={LABEL}>{t.itemImage}</span>
-            <input
+            <Input
               type="url"
               value={imageUrl}
               onChange={(e) => {
@@ -164,8 +164,8 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave, dict }: TierI
               }}
               placeholder={t.itemImagePlaceholder}
               inputMode="url"
-              aria-invalid={urlInvalid}
-              className={cn(FIELD, urlInvalid && 'border-accent-red')}
+              invalid={urlInvalid}
+              className={TOUCH_FIELD}
             />
             <span
               className={cn(

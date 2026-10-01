@@ -2,11 +2,12 @@
 // frontend/src/components/admin/AdminBugReportsWorkbench.tsx
 
 import React from 'react';
+import { Input, Select, SearchInput } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import {
   HelpCircle,
   Clock,
   CheckCircle,
-  Search,
   Filter,
   ChevronLeft,
   ChevronRight,
@@ -186,35 +187,32 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
         {/* Left Pane: Ticket Feed */}
         <div className="lg:col-span-5 flex flex-col rounded-3xl border border-border-color bg-bg-surface p-4 shadow-sm space-y-4">
           <div className="flex flex-col gap-2.5 pb-3 border-b border-border-color">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
-              <input
-                type="text"
-                aria-label={dict?.admin?.searchTicketsPlaceholder || ''}
-                value={bugSearch}
-                onChange={(e) => onSearchChange(e.target.value)}
-                placeholder={dict?.admin?.searchTicketsPlaceholder || ''}
-                className="w-full rounded-xl border border-border-color bg-bg-primary py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
-              />
-            </div>
+            <SearchInput
+              fieldSize="sm"
+              aria-label={dict?.admin?.searchTicketsPlaceholder || ''}
+              value={bugSearch}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder={dict?.admin?.searchTicketsPlaceholder || ''}
+            />
 
             <div className="flex items-center justify-between gap-2">
               <label htmlFor="bug-status-filter-select" className="flex items-center gap-1 text-[11px] font-bold text-text-secondary">
                 <Filter className="h-3 w-3" />
                 <span>{dict?.admin?.filterLabel || ''}</span>
               </label>
-              <select
+              <Select
                 id="bug-status-filter-select"
+                fieldSize="sm"
                 value={bugStatusFilter}
                 onChange={(e) => onStatusFilterChange(e.target.value)}
-                className="rounded-lg border border-border-color bg-bg-primary py-1.5 px-3 text-xs text-text-primary focus:border-accent-red focus:outline-none cursor-pointer"
+                className="w-auto"
               >
                 <option value="all">{dict?.admin?.statusAll || ''}</option>
                 <option value="pending">{dict?.admin?.statusPending || ''}</option>
                 <option value="in_progress">{dict?.admin?.statusInProgress || ''}</option>
                 <option value="resolved">{dict?.admin?.statusResolved || ''}</option>
                 <option value="rejected">{dict?.admin?.statusRejected || ''}</option>
-              </select>
+              </Select>
             </div>
           </div>
 
@@ -301,24 +299,24 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 {Math.ceil(totalBugReports / 20)}
               </span>
               <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
+                <Button
+                  icon
+                  size="xs"
                   onClick={() => onPageChange(Math.max(1, bugPage - 1))}
                   disabled={bugPage === 1}
                   aria-label={dict?.admin?.prevPage || ''}
-                  className="p-1.5 rounded-lg border border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated disabled:opacity-30 cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red shadow-xs"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
-                </button>
-                <button
-                  type="button"
+                </Button>
+                <Button
+                  icon
+                  size="xs"
                   onClick={() => onPageChange(bugPage + 1)}
                   disabled={bugPage * 20 >= totalBugReports}
                   aria-label={dict?.admin?.nextPage || ''}
-                  className="p-1.5 rounded-lg border border-border-color bg-bg-surface text-text-primary hover:bg-bg-elevated disabled:opacity-30 cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red shadow-xs"
                 >
                   <ChevronRight className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -352,27 +350,29 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                 </div>
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
-                  <select
+                  <Select
                     value={selectedBug.status}
+                    fieldSize="sm"
                     aria-label={dict?.admin?.updateStatus || ''}
                     onChange={(e) => onUpdateBug(selectedBug.id, e.target.value)}
-                    className="rounded-xl px-3 py-1.5 text-xs font-black uppercase tracking-wider border border-border-color bg-bg-primary text-text-primary focus:border-accent-red focus:outline-none cursor-pointer shadow-xs"
+                    className="w-auto rounded-xl font-black uppercase tracking-wider"
                   >
                     <option value="pending">{dict?.admin?.statusPending || ''}</option>
                     <option value="in_progress">{dict?.admin?.statusInProgress || ''}</option>
                     <option value="resolved">{dict?.admin?.statusResolved || ''}</option>
                     <option value="rejected">{dict?.admin?.statusRejected || ''}</option>
-                  </select>
+                  </Select>
 
-                  <button
-                    type="button"
+                  <Button
+                    variant="danger"
+                    icon
+                    size="sm"
                     onClick={() => onDeleteBug(selectedBug.id)}
                     {...tip(dict?.admin?.deleteBugReportTitle || '', undefined, 'action')}
                     aria-label={dict?.admin?.deleteBugReportTitle || ''}
-                    className="p-2 rounded-xl border border-accent-red/40 text-accent-red hover:bg-accent-red/10 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -421,22 +421,23 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
                   {dict?.admin?.devFeedbackLabel || ''}
                 </label>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                  <input
+                  <Input
                     id={`dev-feedback-${selectedBug.id}`}
                     type="text"
+                    fieldSize="sm"
                     value={editingNotes[selectedBug.id] ?? ''}
                     onChange={(e) => onNoteChange(selectedBug.id, e.target.value)}
                     placeholder={dict?.admin?.reasonPlaceholder || ''}
-                    className="flex-1 rounded-xl border border-border-color bg-bg-primary px-3.5 py-2 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
+                    className="flex-1 sm:w-auto"
                   />
-                  <button
-                    type="button"
+                  <Button
+                    variant="primary"
+                    size="sm"
                     onClick={() => onUpdateBug(selectedBug.id)}
-                    className="flex items-center justify-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted px-4 py-2 text-xs font-bold shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans focus:outline-none focus:ring-2 focus:ring-accent-red"
+                    leftIcon={<Save className="h-3.5 w-3.5" />}
                   >
-                    <Save className="h-3.5 w-3.5" />
                     <span>{dict?.admin?.saveNote || dict?.user?.saveChanges || ''}</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

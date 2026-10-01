@@ -11,7 +11,8 @@ import { sanitizeImageUrl, slugifyItemId, uniqueId } from '@/utils/tierLists/cod
 import { LADDER_PRESETS, type LadderPresetId } from '@/utils/tierLists/creator';
 import { TierBadge } from '../TierBadge';
 import { tierColorProps } from '../tierColor';
-import { BTN_SECONDARY, FIELD } from '../styles';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface LadderEditorProps {
   tiers: TierDefinition[];
@@ -196,13 +197,13 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
                   </label>
                   <label className="flex min-w-0 basis-full flex-col gap-1 mt-1">
                     <span className="text-xs font-bold text-text-secondary">{t.tierBackgroundImage}</span>
-                    <input
+                    <Input
                       value={bgDraft}
                       onChange={(e) => setBackgroundImage(tier, e.target.value)}
                       placeholder={t.tierBackgroundImagePlaceholder}
                       inputMode="url"
-                      aria-invalid={bgInvalid}
-                      className={cn(FIELD, 'min-h-[38px] text-xs', bgInvalid && 'border-accent-red')}
+                      invalid={bgInvalid}
+                      className="min-h-[38px] rounded-lg bg-bg-primary"
                     />
                     <span className={cn('text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
                       {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}
@@ -216,15 +217,15 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset, dict }: 
       </ol>
 
       <div className="flex justify-center w-full">
-        <button
-          type="button"
+        <Button
+          variant="secondary"
           onClick={add}
           disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
-          className={cn(BTN_SECONDARY, 'min-h-[40px] px-6 text-xs sm:text-sm font-bold')}
+          leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
+          className="min-h-[40px] rounded-lg px-6"
         >
-          <Plus className="h-4 w-4" aria-hidden="true" />
           {t.addTier}
-        </button>
+        </Button>
       </div>
     </div>
   );

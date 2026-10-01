@@ -28,6 +28,8 @@ import {
 } from '@/utils/onboardingStorage';
 import { Spinner } from '@/components/common/Spinner';
 import { SwitchTrack } from '@/components/common/Switch';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -723,14 +725,14 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               'Please sign in or create an account to view your LemonDBD profile, manage your teachables, and track game challenges.'}
           </p>
           <div className="flex flex-col gap-3 pt-2">
-            <button
-              type="button"
+            <Button
+              variant="primary"
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all"
+              leftIcon={<UserIcon className="h-4 w-4" />}
+              className="w-full"
             >
-              <UserIcon className="h-4 w-4" />
               <span>{dict?.user?.signIn || 'Sign In / Register'}</span>
-            </button>
+            </Button>
             <Link
               href={`/${locale}`}
               className="py-1 text-xs text-text-muted transition-colors hover:text-accent-red"
@@ -762,13 +764,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             {t?.introBody ||
               'To tailor the site to your progress in the game, please mark which chapters, characters, and perks you already own.'}
           </p>
-          <button
-            type="button"
-            onClick={() => setView('language')}
-            className="w-full rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted cursor-pointer"
-          >
+          <Button variant="primary" onClick={() => setView('language')} className="w-full">
             {t?.introContinueButton || 'Get Started'}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -801,16 +799,11 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            disabled={savingLanguage}
-            onClick={handleLanguageContinue}
-            className="w-full rounded-xl bg-accent-red hover:bg-accent-red-hover py-3 text-sm font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer"
-          >
+          <Button variant="primary" disabled={savingLanguage} onClick={handleLanguageContinue} className="w-full">
             {savingLanguage
               ? t?.savingLabel || 'Saving...'
               : t?.languageContinueButton || 'Continue'}
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -947,12 +940,13 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <div className="relative flex-1 sm:w-56">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
-                  <input
+                  <Input
                     type="text"
+                    fieldSize="sm"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t?.searchPlaceholder || 'Search chapters or characters...'}
-                    className="w-full rounded-lg border border-border-color bg-bg-elevated pl-8 pr-7 py-1.5 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
+                    className="pl-8 pr-7"
                   />
                   {searchQuery && (
                     <button
@@ -992,18 +986,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     </span>
                   </button>
 
-                  <button
-                    type="button"
-                    disabled={!hasAnySelection}
-                    onClick={handleDeselectAllChapters}
-                    className={`rounded-lg border px-2.5 sm:px-3 py-1.5 text-xs font-bold transition-all ${
-                      !hasAnySelection
-                        ? 'border-border-color/40 bg-bg-surface/40 text-text-muted/40 cursor-not-allowed'
-                        : 'border-border-color bg-bg-surface text-text-muted hover:border-accent-red hover:text-accent-red cursor-pointer'
-                    }`}
-                  >
+                  <Button variant="secondary" size="sm" disabled={!hasAnySelection} onClick={handleDeselectAllChapters}>
                     {t?.deselectAllButton || 'Clear all'}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -1181,14 +1166,9 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}
       <div className="fixed bottom-0 inset-x-0 z-30 w-full border-t border-border-color bg-bg-surface/95 backdrop-blur-md shadow-2xl">
         <div className="mx-auto flex w-full max-w-7xl justify-center px-4 py-3 sm:py-4">
-          <button
-            type="button"
-            disabled={saving}
-            onClick={handleContinue}
-            className="w-full max-w-sm sm:max-w-md rounded-xl bg-accent-red hover:bg-accent-red-hover px-6 py-2.5 text-sm sm:text-base font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 cursor-pointer shadow-lg transition-colors"
-          >
+          <Button variant="primary" disabled={saving} onClick={handleContinue} className="w-full max-w-sm sm:max-w-md">
             {saving ? t?.savingLabel || 'Saving...' : t?.continueButton || 'Continue'}
-          </button>
+          </Button>
         </div>
       </div>
 

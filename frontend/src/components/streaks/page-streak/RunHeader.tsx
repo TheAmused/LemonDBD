@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/RunHeader.tsx
 
+import { Button } from '@/components/common/Button';
 import React, { useState } from 'react';
 import { RotateCcw, Flame, BookOpen, BarChart2, History } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
@@ -82,46 +83,49 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
             </div>
           </div>
 
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="md"
             onClick={onOpenRules}
-            className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             {...tip(dict?.streaks?.rules || 'Rules', undefined, 'action')}
             aria-label={dict?.streaks?.rules || 'Rules'}
           >
             <BookOpen className="w-4 h-4" aria-hidden="true" />
             <span className="hidden sm:inline">{dict?.streaks?.rules || 'Rules'}</span>
-          </button>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="md"
+            icon
             onClick={onOpenStats}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             {...tip(dict?.streaks?.stats || 'Statistics', undefined, 'action')}
             aria-label={dict?.streaks?.stats || 'Statistics'}
           >
             <BarChart2 className="w-5 h-5" aria-hidden="true" />
-          </button>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="md"
+            icon
             onClick={onOpenHistory}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-bg-elevated/70 text-text-secondary hover:text-text-primary border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             {...tip(dict?.streaks?.pastWins || 'Past Wins', undefined, 'action')}
             aria-label={dict?.streaks?.pastWins || 'Past Wins'}
           >
             <History className="w-5 h-5" aria-hidden="true" />
-          </button>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="md"
+            icon
             onClick={onOpenReset}
-            className="flex items-center justify-center p-2.5 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color transition-colors shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             {...tip(dict?.streaks?.resetRun || 'Reset this streak', undefined, 'action')}
             aria-label={dict?.streaks?.resetRun || 'Reset this streak'}
           >
             <RotateCcw className="w-5 h-5" aria-hidden="true" />
-          </button>
+          </Button>
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import {
   X,
@@ -216,15 +217,16 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
           )}
 
           <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="md"
+              icon
               data-modal-close
               onClick={onClose}
               aria-label={dict?.modal?.close || 'Close'}
-              className="rounded-xl border border-transparent p-2 text-text-muted transition-all hover:border-border-subtle hover:bg-bg-elevated hover:text-text-primary cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <X className="h-5 w-5" aria-hidden="true" />
-            </button>
+            </Button>
           </div>
         </div>
       </header>
@@ -274,41 +276,44 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({
           aria-label={dict?.maps?.engineControlsAria || 'Viewport Zoom Toolbar'}
           className="pointer-events-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 border border-border-color p-2 rounded-2xl backdrop-blur-xl shadow-2xl"
         >
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
             onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             {...tip(dict?.maps?.zoomOut || 'Zoom Out', undefined, 'action')}
             aria-label={dict?.maps?.zoomOutAria || 'Zoom Out'}
           >
             <ZoomOut className="w-4 h-4" />
-          </button>
+          </Button>
 
           <span className="text-xs font-mono font-bold text-text-primary px-2 min-w-[50px] text-center">
             {Math.round(zoom * 100)}{dict?.maps?.percentSign || '%'}
           </span>
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
             onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             {...tip(dict?.maps?.zoomIn || 'Zoom In', undefined, 'action')}
             aria-label={dict?.maps?.zoomInAria || 'Zoom In'}
           >
             <ZoomIn className="w-4 h-4" />
-          </button>
+          </Button>
 
           <div className="w-px h-4 bg-border-color my-auto" />
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
+            icon
             onClick={handleResetView}
-            className="p-2 rounded-xl text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red"
             {...tip(dict?.maps?.resetPanZoom || 'Reset Pan and Zoom', undefined, 'action')}
             aria-label={dict?.maps?.resetPanAndZoomAria || 'Reset Pan and Zoom'}
           >
             <RotateCcw className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </footer>
     </div>

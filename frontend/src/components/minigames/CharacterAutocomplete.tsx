@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/CharacterAutocomplete.tsx
 'use client';
 
+import { Input } from '@/components/common/Field';
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Search, ChevronDown, Sparkles } from 'lucide-react';
@@ -209,8 +210,9 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
         <div className="absolute left-3.5 text-text-muted pointer-events-none">
           <Search className="w-5 h-5" />
         </div>
-        <input
+        <Input
           ref={inputRef}
+          fieldSize="lg"
           type="text"
           value={query}
           onChange={(e) => {
@@ -227,7 +229,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           disabled={disabled}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          className="w-full pl-11 pr-10 py-3 rounded-xl bg-bg-surface border border-border-color text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red/50 focus:border-accent-red shadow-lg transition-all text-base disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-bg-surface pl-11 pr-10 shadow-lg"
         />
         <button
           type="button"

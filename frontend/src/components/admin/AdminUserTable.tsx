@@ -2,10 +2,11 @@
 // frontend/src/components/admin/AdminUserTable.tsx
 
 import React from 'react';
+import { Select, SearchInput } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import {
   Users,
-  Search,
   UserPlus,
   Lock,
   Trash2,
@@ -65,35 +66,33 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-          <div className="relative flex-1 sm:flex-initial">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder={dict?.admin?.searchUserPlaceholder || ''}
-              className="w-full sm:w-64 rounded-xl border border-border-color bg-bg-elevated py-2 pl-9 pr-3 text-xs text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none shadow-inner"
-            />
-          </div>
+          <SearchInput
+            fieldSize="sm"
+            wrapperClassName="flex-1 sm:w-64 sm:flex-initial"
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder={dict?.admin?.searchUserPlaceholder || ''}
+          />
 
-          <select
+          <Select
+            fieldSize="sm"
             value={roleFilter}
             onChange={(e) => onRoleFilterChange(e.target.value)}
-            className="rounded-xl border border-border-color bg-bg-primary py-2 px-3 text-xs text-text-primary focus:border-accent-red focus:outline-none cursor-pointer shadow-inner [&>option]:bg-bg-surface [&>option]:text-text-primary"
+            className="w-auto [&>option]:bg-bg-surface [&>option]:text-text-primary"
           >
             <option value="all">{dict?.admin?.allRoles || 'All Roles'}</option>
             <option value="admin">{dict?.admin?.admins || 'Admins'}</option>
             <option value="user">{dict?.admin?.standardUsers || 'Standard Users'}</option>
-          </select>
+          </Select>
 
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="sm"
             onClick={onOpenCreateUser}
-            className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-3.5 py-2 text-xs font-bold text-text-inverted shadow-xs hover:scale-105 active:scale-95 transition-all cursor-pointer font-sans"
+            leftIcon={<UserPlus className="h-3.5 w-3.5" />}
           >
-            <UserPlus className="h-3.5 w-3.5" />
             <span>{dict?.admin?.createUser || 'Create User'}</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -304,24 +303,22 @@ export const AdminUserTable: React.FC<AdminUserTableProps> = ({
             {dict?.pagination?.showing || 'Showing'} {(page - 1) * 15 + 1} {dict?.pagination?.to || 'to'} {Math.min(page * 15, totalUsers)} {dict?.pagination?.of || 'of'} {totalUsers}
           </span>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              size="sm"
               onClick={() => onPageChange(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="flex items-center gap-1 rounded-xl border border-border-color bg-bg-surface px-3 py-1.5 font-semibold text-text-primary disabled:opacity-40 hover:bg-bg-elevated transition-colors cursor-pointer shadow-xs"
+              leftIcon={<ChevronLeft className="h-4 w-4" />}
             >
-              <ChevronLeft className="h-4 w-4" />
               <span>{dict?.pagination?.previous || 'Previous'}</span>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="sm"
               onClick={() => onPageChange(page + 1)}
               disabled={page * 15 >= totalUsers}
-              className="flex items-center gap-1 rounded-xl border border-border-color bg-bg-surface px-3 py-1.5 font-semibold text-text-primary disabled:opacity-40 hover:bg-bg-elevated transition-colors cursor-pointer shadow-xs"
+              rightIcon={<ChevronRight className="h-4 w-4" />}
             >
               <span>{dict?.pagination?.next || 'Next'}</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
         </div>
       )}

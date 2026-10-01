@@ -15,7 +15,9 @@ import {
 import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { localRosterSlug } from '@/utils/smashOrPass/localRoster';
 import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
-import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './creator/styles';
+import { LABEL } from './creator/styles';
+import { Button } from '@/components/common/Button';
+import { Textarea } from '@/components/common/Field';
 
 interface SmashRosterImportModalProps {
   isOpen: boolean;
@@ -105,13 +107,13 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
       bodyClassName="p-4 sm:p-6 font-sans"
       footer={
         <div className="flex w-full flex-wrap items-center justify-end gap-2">
-          <button type="button" onClick={onClose} className={BTN_SECONDARY}>
+          <Button variant="secondary" size="md" onClick={onClose} className="min-h-[44px]">
             {t.cancel || 'Cancel'}
-          </button>
-          <button type="button" disabled={!canImport} onClick={doImport} className={BTN_PRIMARY}>
+          </Button>
+          <Button variant="primary" size="md" disabled={!canImport} onClick={doImport} className="min-h-[44px]">
             <Upload className="h-4 w-4" aria-hidden="true" />
             {t.importAction || 'Import'}
-          </button>
+          </Button>
         </div>
       }
     >
@@ -128,10 +130,10 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
             <label htmlFor="smash-roster-import-json" className={LABEL}>
               {t.pasteLabel || 'Paste roster JSON'}
             </label>
-            <button type="button" onClick={() => fileInput.current?.click()} className={BTN_SECONDARY}>
+            <Button variant="secondary" size="md" onClick={() => fileInput.current?.click()} className="min-h-[44px]">
               <Upload className="h-4 w-4" aria-hidden="true" />
               {t.uploadFile || 'Upload file'}
-            </button>
+            </Button>
             <input
               ref={fileInput}
               type="file"
@@ -143,7 +145,8 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
               }}
             />
           </div>
-          <textarea
+          <Textarea
+            fieldSize="md"
             id="smash-roster-import-json"
             value={text}
             onChange={(e) => {
@@ -153,7 +156,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
             rows={10}
             spellCheck={false}
             placeholder={t.pastePlaceholder || 'Paste a roster JSON document here...'}
-            className={`${FIELD} py-2 font-mono text-xs leading-relaxed`}
+            className="font-mono sm:text-xs leading-relaxed"
           />
         </div>
 

@@ -2,6 +2,8 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { SearchInput } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import Image from 'next/image';
 import { Search, Trash2, Sparkles, Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
@@ -141,30 +143,26 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
     >
       {/* Search & Actions Bar */}
       <div className="p-4 bg-bg-elevated/40 flex flex-col sm:flex-row items-center gap-3 shrink-0">
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={dict?.user?.searchPerks || 'Search perks...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-bg-surface rounded-xl text-xs sm:text-sm text-text-primary placeholder-text-muted focus:outline-none transition-colors"
-            autoFocus
-          />
-        </div>
+        <SearchInput
+          wrapperClassName="flex-1 w-full"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={dict?.user?.searchPerks || 'Search perks...'}
+          autoFocus
+        />
 
         {currentPerkId && (
-          <button
-            type="button"
+          <Button
+            variant="danger"
             onClick={() => {
               onClear();
               onClose();
             }}
-            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-accent-red/10 text-xs font-bold text-accent-red hover:bg-accent-red/20 transition-colors cursor-pointer"
+            leftIcon={<Trash2 className="h-3.5 w-3.5" />}
+            className="w-full sm:w-auto"
           >
-            <Trash2 className="h-3.5 w-3.5" />
             <span>{dict?.user?.clearPerk || 'Clear Slot'}</span>
-          </button>
+          </Button>
         )}
       </div>
 

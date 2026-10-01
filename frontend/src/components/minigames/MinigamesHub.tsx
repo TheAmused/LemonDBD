@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/MinigamesHub.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import {
@@ -390,14 +391,14 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
 
           </div>
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated hover:bg-bg-surface text-text-secondary border border-border-color transition-colors"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>{t.importJson}</span>
-            </button>
+            </Button>
             <Link
               href={`/${locale}/minigames/creator`}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-semibold text-xs shadow-md transition-colors"
@@ -446,37 +447,43 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale, dict }) => {
                     </Link>
 
                     <div className="flex items-center gap-1">
-                      <button
-                        type="button"
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon
                         onClick={() => handleShare(trial)}
                         disabled={isShareLoading}
-                        {...tip(t.shareTrial, undefined, 'action')} aria-label={t.shareTrial}
-                        className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary transition-colors"
+                        {...tip(t.shareTrial, undefined, 'action')}
+                        aria-label={t.shareTrial}
                       >
                         {isCopied ? (
                           <Check className="w-4 h-4 text-accent-green" />
                         ) : (
                           <Share2 className="w-4 h-4" />
                         )}
-                      </button>
+                      </Button>
 
-                      <button
-                        type="button"
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon
                         onClick={() => handleExport(trial)}
-                        {...tip(t.exportJson, undefined, 'action')} aria-label={t.exportJson}
-                        className="p-1.5 rounded-lg bg-bg-elevated hover:bg-bg-surface text-text-secondary transition-colors"
+                        {...tip(t.exportJson, undefined, 'action')}
+                        aria-label={t.exportJson}
                       >
                         <Download className="w-4 h-4" />
-                      </button>
+                      </Button>
 
-                      <button
-                        type="button"
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        icon
                         onClick={() => handleDelete(id)}
-                        {...tip(t.deleteTrial, undefined, 'action')} aria-label={t.deleteTrial}
-                        className="p-1.5 rounded-lg bg-accent-red/20 hover:bg-accent-red/30 text-accent-red border border-accent-red/40 transition-colors"
+                        {...tip(t.deleteTrial, undefined, 'action')}
+                        aria-label={t.deleteTrial}
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </div>

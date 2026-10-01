@@ -26,7 +26,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 
 import { tip } from '@/components/common/Tooltip';
-import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/common/Button';
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -623,21 +623,18 @@ export function ScraperConfigModal({
         </div>
 
         <div className="flex items-center justify-end pt-3">
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="sm"
             onClick={handleExecuteExport}
-            disabled={isExporting || exportTargets.length === 0}
-            className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
+            loading={isExporting}
+            disabled={exportTargets.length === 0}
+            leftIcon={<Download className="h-3.5 w-3.5" />}
           >
-            {isExporting ? (
-              <Spinner size="xs" tone="current" />
-            ) : (
-              <Download className="h-3.5 w-3.5" />
-            )}
             <span>
               {isExporting ? dict?.admin?.exportingStatus : dict?.admin?.downloadBackup} ({exportTargets.length})
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     )}
@@ -710,15 +707,17 @@ export function ScraperConfigModal({
                 <p className="text-xs font-bold text-text-primary max-w-[280px] sm:max-w-md truncate" {...tip(importFile.name, undefined, 'default')}>
                   {importFile.name}
                 </p>
-                <button
-                  type="button"
+                <Button
+                  icon
+                  size="xs"
+                  variant="ghost"
                   onClick={handleClearFile}
-                  className="rounded-full p-1 text-text-muted hover:bg-accent-red/20 hover:text-accent-red transition-colors cursor-pointer"
+                  className="rounded-full"
                   {...tip(dict?.admin?.removeFile || 'Remove file', undefined, 'action')}
                   aria-label={dict?.admin?.removeFile || 'Remove file'}
                 >
                   <X className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               </div>
               <p className="text-[11px] text-accent-green font-semibold">
                 {(importFile.size / 1024).toFixed(1)} {dict?.admin?.kbReadySuffix || 'KB, ready to restore'}
@@ -798,21 +797,18 @@ export function ScraperConfigModal({
         )}
 
         <div className="flex items-center justify-end pt-3">
-          <button
-            type="button"
+          <Button
+            variant="success"
+            size="sm"
             onClick={handleExecuteImport}
-            disabled={isImporting || !importFile}
-            className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
+            loading={isImporting}
+            disabled={!importFile}
+            leftIcon={<Upload className="h-3.5 w-3.5" />}
           >
-            {isImporting ? (
-              <Spinner size="xs" tone="current" />
-            ) : (
-              <Upload className="h-3.5 w-3.5" />
-            )}
             <span>
               {isImporting ? dict?.admin?.importingStatus || 'Importing...' : dict?.admin?.executeImport || 'Execute Import'}
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     )}
@@ -912,32 +908,24 @@ export function ScraperConfigModal({
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-border-color">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isPurging}
-            className="rounded-xl border border-border-color bg-bg-surface hover:bg-bg-elevated px-4 py-2 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors cursor-pointer shadow-xs"
-          >
+          <Button variant="secondary" size="sm" onClick={onClose} disabled={isPurging}>
             {dict?.admin?.close}
-          </button>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            size="sm"
             onClick={handleExecutePurge}
-            disabled={isPurging || purgeTargets.length === 0}
-            className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-40"
+            loading={isPurging}
+            disabled={purgeTargets.length === 0}
+            leftIcon={<Trash2 className="h-3.5 w-3.5" />}
           >
-            {isPurging ? (
-              <Spinner size="xs" tone="current" />
-            ) : (
-              <Trash2 className="h-3.5 w-3.5" />
-            )}
             <span>
               {isPurging
                 ? dict?.admin?.purgingStatus || 'Purging...'
                 : (dict?.admin?.purgeSelected || 'Purge Selected ({count})').replace('{count}', String(purgeTargets.length))}
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     )}

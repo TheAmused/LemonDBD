@@ -23,6 +23,7 @@ import {
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Checkbox } from '@/components/common/Checkbox';
+import { Button } from '@/components/common/Button';
 
 export function computeHasActiveFilters(state: {
   search: string;
@@ -339,17 +340,19 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           className="w-full rounded-full border border-border-color bg-bg-elevated/60 py-2 pl-9 pr-8 text-[11px] sm:py-2.5 sm:pl-10 sm:pr-9 sm:text-xs lg:py-3 lg:text-sm wide:py-3.5 font-medium text-text-primary placeholder:text-text-muted focus:border-accent-red focus:bg-bg-surface focus:outline-none focus:ring-2 focus:ring-accent-red/20 transition-all"
         />
         {search && (
-          <button
-            type="button"
+          <Button
+            icon
+            size="xs"
+            variant="ghost"
             onClick={() => {
               setSearch('');
               setIsPerkSuggestionsOpen(false);
             }}
             aria-label={dict?.filters?.clearSearch}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-text-muted hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-full"
           >
             <X className="h-3 w-3" />
-          </button>
+          </Button>
         )}
 
         {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (

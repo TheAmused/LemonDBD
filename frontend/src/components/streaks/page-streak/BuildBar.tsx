@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/BuildBar.tsx
 
+import { Button } from '@/components/common/Button';
 import React from 'react';
 import type { Dictionary } from '@/locales/types';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
@@ -65,16 +66,16 @@ export const BuildBar: React.FC<BuildBarProps> = ({
         </div>
       ))}
 
-      <button
-        type="button"
+      <Button
+        variant="primary"
+        size="sm"
         onClick={onConfirm}
         disabled={selected.length !== size || confirmed}
-        className="rounded-lg bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-extrabold text-text-inverted transition-opacity disabled:opacity-40 shadow-sm cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
       >
         {confirmed
           ? (dict?.streaks?.buildLocked || 'Build locked')
           : (dict?.streaks?.confirmBuild || 'Confirm build')}
-      </button>
+      </Button>
     </div>
   );
 };

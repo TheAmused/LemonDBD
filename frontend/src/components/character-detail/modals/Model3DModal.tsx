@@ -3,6 +3,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { CharacterItem, getAvatarUrl } from '../types';
 import { Modal, useModal } from '@/components/common/Modal';
+import { Button } from '@/components/common/Button';
 
 interface Model3DModalProps {
   isOpen: boolean;
@@ -17,15 +18,16 @@ const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, cl
   const { close } = useModal();
   return (
     <div className="relative mx-auto w-fit max-w-full rounded-3xl border-2 border-accent-red/60 bg-bg-surface/95 shadow-2xl p-4 sm:p-6 flex items-center justify-center">
-      <button
-        type="button"
+      <Button
+        icon
+        variant="secondary"
         data-modal-close
         onClick={close}
-        className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 p-2 rounded-xl bg-bg-elevated border border-border-color text-text-secondary hover:text-text-primary hover:bg-bg-elevated/80 transition-all cursor-pointer shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 shadow-md"
         aria-label={closeLabel}
       >
         <X className="w-5 h-5" />
-      </button>
+      </Button>
       <img
         src={src}
         alt=""

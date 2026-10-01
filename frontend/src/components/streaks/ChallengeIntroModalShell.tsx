@@ -1,6 +1,7 @@
 // frontend/src/components/streaks/ChallengeIntroModalShell.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
@@ -87,14 +88,15 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
       closeButtonAriaLabel={dict?.modal?.close || 'Close'}
       headerLeft={
         onBack ? (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="md"
+            icon
             onClick={onBack}
             aria-label={backLabel || 'Back'}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-primary cursor-pointer sm:h-10 sm:w-10"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-          </button>
+          </Button>
         ) : undefined
       }
       bodyClassName="p-5 sm:p-6"
@@ -106,14 +108,15 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
               {intro}
             </p>
             {onOpenRules && (
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="xs"
                 onClick={onOpenRules}
-                className="mt-3 inline-flex items-center justify-center gap-1.5 text-xs font-bold text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+                className="mt-3"
               >
                 <BookOpen className="w-3.5 h-3.5" />
                 {rulesLabel}
-              </button>
+              </Button>
             )}
           </div>
         </div>

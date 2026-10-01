@@ -9,9 +9,11 @@ import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { HEX_COLOR_PATTERN, TIER_COLOR_TOKENS, TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { BTN_DANGER_GHOST, BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from './styles';
+import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
 import { TierBadge } from './TierBadge';
 import { tierColorProps } from './tierColor';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 interface TierEditModalProps {
   tier: TierDefinition | null;
@@ -74,18 +76,18 @@ export function TierEditModal({
       bodyClassName="p-4 sm:p-6 font-sans"
       footer={
         <div className="flex w-full flex-wrap items-center justify-center gap-3">
-          <button type="button" onClick={onClose} className={cn(BTN_SECONDARY, 'min-h-[42px] px-5')}>
+          <Button variant="secondary" onClick={onClose} className={cn(TOUCH_BTN, 'min-h-[42px] px-5')}>
             {t.cancel}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="primary"
             disabled={!trimmed || bgInvalid}
             onClick={run(() => onSave(tier.id, { label: trimmed, color, backgroundImage: safeBg ?? undefined }))}
-            className={cn(BTN_PRIMARY, 'min-h-[42px] px-6')}
+            leftIcon={<Check className="h-4 w-4" aria-hidden="true" />}
+            className={cn(TOUCH_BTN, 'min-h-[42px] px-6')}
           >
-            <Check className="h-4 w-4" aria-hidden="true" />
             {t.save}
-          </button>
+          </Button>
         </div>
       }
     >
@@ -106,11 +108,11 @@ export function TierEditModal({
           />
           <label className="min-w-0 flex-1">
             <span className={LABEL}>{t.tierLabel}</span>
-            <input
+            <Input
               value={label}
               maxLength={TIER_LIST_LIMITS.maxTierLabel}
               onChange={(e) => setLabel(e.target.value)}
-              className={FIELD}
+              className={TOUCH_FIELD}
               autoFocus
             />
           </label>
@@ -118,13 +120,13 @@ export function TierEditModal({
 
         <label>
           <span className={LABEL}>{t.tierBackgroundImage}</span>
-          <input
+          <Input
             value={backgroundImage}
             onChange={(e) => setBackgroundImage(e.target.value)}
             placeholder={t.tierBackgroundImagePlaceholder}
             inputMode="url"
-            aria-invalid={bgInvalid}
-            className={cn(FIELD, bgInvalid && 'border-accent-red')}
+            invalid={bgInvalid}
+            className={TOUCH_FIELD}
           />
           <span className={cn('mt-1 block text-xs', bgInvalid ? 'font-semibold text-accent-red' : 'text-text-muted')}>
             {bgInvalid ? t.invalidImage : t.tierBackgroundImageHint}
@@ -171,41 +173,41 @@ export function TierEditModal({
         </fieldset>
 
         <div className="grid grid-cols-2 gap-2 border-t border-border-color pt-4">
-          <button type="button" disabled={index === 0} onClick={run(() => onMove(tier.id, -1))} className={BTN_SECONDARY}>
+          <Button variant="secondary" disabled={index === 0} onClick={run(() => onMove(tier.id, -1))} className={TOUCH_BTN}>
             <ChevronUp className="h-4 w-4" aria-hidden="true" />
             {t.moveUp}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="secondary"
             disabled={index >= tierCount - 1}
             onClick={run(() => onMove(tier.id, 1))}
-            className={BTN_SECONDARY}
+            className={TOUCH_BTN}
           >
             <ChevronDown className="h-4 w-4" aria-hidden="true" />
             {t.moveDown}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="secondary"
             disabled={tierCount >= TIER_LIST_LIMITS.maxTiers}
             onClick={run(() => onAddBelow(index + 1))}
-            className={BTN_SECONDARY}
+            className={TOUCH_BTN}
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
             {t.addTier}
-          </button>
-          <button type="button" onClick={run(() => onClear(tier.id))} className={BTN_SECONDARY}>
+          </Button>
+          <Button variant="secondary" onClick={run(() => onClear(tier.id))} className={TOUCH_BTN}>
             <Eraser className="h-4 w-4" aria-hidden="true" />
             {t.clearTier}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="soft"
             disabled={tierCount <= 1}
             onClick={run(() => onDelete(tier.id))}
-            className={cn(BTN_DANGER_GHOST, 'col-span-2')}
+            className={cn(TOUCH_BTN, 'col-span-2')}
           >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
             {t.deleteTier}
-          </button>
+          </Button>
         </div>
       </form>
     </Modal>

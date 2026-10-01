@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
+import { Button } from '@/components/common/Button';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ChevronRight, RotateCcw } from 'lucide-react';
@@ -137,42 +138,45 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               <p className="mt-1 text-sm font-semibold text-text-secondary">
                 {dict?.streaks?.pageStreakVictoryPrefix || 'on'} {killerDisplayName}
               </p>
-              <button
-                type="button"
+              <Button
+                variant="success"
+                size="lg"
                 onClick={() => setConfirmingReset(true)}
                 disabled={busy}
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
+                className="mt-6"
               >
                 <RotateCcw className="h-4 w-4" />
                 {dict?.streaks?.startNewRun || 'Start a new run'}
-              </button>
+              </Button>
             </div>
           ) : (
             <>
               {confirmed && (
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-3 ps-rise">
-                  <button
-                    type="button"
+                  <Button
+                    variant="success"
+                    size="lg"
                     disabled={busy}
                     onClick={() => {
                       setLastWasLoss(false);
                       submitResult(run.current_page, selected, 'win');
                     }}
-                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
+                    className="flex-1 max-w-xs"
                   >
                     {dict?.streaks?.winMatch || 'WIN MATCH'}
-                  </button>
-                  <button
-                    type="button"
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="lg"
                     disabled={busy}
                     onClick={() => {
                       setLastWasLoss(true);
                       submitResult(run.current_page, selected, 'loss');
                     }}
-                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
+                    className="flex-1 max-w-xs"
                   >
                     {dict?.streaks?.loseMatch || 'LOSE MATCH'}
-                  </button>
+                  </Button>
                 </div>
               )}
               <SectionLabel>

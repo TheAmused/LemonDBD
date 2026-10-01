@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import type { UserProfile } from '@/context/AuthContext';
 import type { Dictionary } from '@/locales/types';
+import { Button } from '@/components/common/Button';
 
 interface EmailVerificationFormProps {
   email: string;
@@ -124,13 +125,14 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({
         ))}
       </div>
       {resolvedSubmitLabel && (
-        <button
+        <Button
           type="submit"
+          variant="primary"
           disabled={verifying || code.length !== CODE_LENGTH}
-          className="w-full max-w-xs rounded-xl bg-accent-red hover:bg-accent-red-hover py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted disabled:opacity-50 transition-all cursor-pointer shadow-xs"
+          className="w-full max-w-xs"
         >
           {verifying ? t?.verifying : resolvedSubmitLabel}
-        </button>
+        </Button>
       )}
       {(t?.resendCodeIn || t?.resendCode) && (
         <button

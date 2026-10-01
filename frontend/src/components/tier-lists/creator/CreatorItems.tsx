@@ -6,9 +6,10 @@ import { Pencil, Trash2, X } from 'lucide-react';
 import type { TierListDocumentItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { BTN_DANGER_GHOST } from '../styles';
+import { TOUCH_BTN } from '../styles';
 import { TierItemEditModal } from './TierItemEditModal';
 import { EmptyState } from '@/components/common/EmptyState';
+import { Button } from '@/components/common/Button';
 
 interface CreatorItemsProps {
   items: TierListDocumentItem[];
@@ -33,10 +34,10 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
         </h3>
         <div className="w-20 flex justify-end">
           {items.length > 0 && (
-            <button type="button" onClick={onClear} className={BTN_DANGER_GHOST}>
+            <Button variant="soft" onClick={onClear} className={TOUCH_BTN}>
               <Trash2 className="h-4 w-4" aria-hidden="true" />
               {c.removeAll}
-            </button>
+            </Button>
           )}
         </div>
       </div>

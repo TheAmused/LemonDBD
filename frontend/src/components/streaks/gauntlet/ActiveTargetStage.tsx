@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/ActiveTargetStage.tsx
 
+import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { GauntletPlayerLoadout, GauntletRun, Perk, Role, TierInfo } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from './useOwnedCharacters';
@@ -513,8 +514,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
       : [{ name: reelName, displayName: reelDisplayName, phase }];
 
     const startButton = (
-      <button
-        type="button"
+      <Button
+        variant="primary"
+        size="md"
         onClick={() => {
           if (skipDraw) {
             onShownTargetChange(targetName);
@@ -528,10 +530,9 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
           });
         }}
         disabled={loading}
-        className="bg-accent-red hover:bg-accent-red-hover disabled:opacity-60 text-text-inverted font-extrabold text-sm py-2.5 px-6 rounded-xl shadow-sm transition-all cursor-pointer"
       >
         {dict?.streaks?.startGame || 'START GAME'}
-      </button>
+      </Button>
     );
 
     if (!isTeam && !drawing) {

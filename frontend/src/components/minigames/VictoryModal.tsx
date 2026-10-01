@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/VictoryModal.tsx
 'use client';
 
+import { Button } from '@/components/common/Button';
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { Trophy, Share2, Check, RotateCcw, Home } from 'lucide-react';
@@ -92,10 +93,11 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
       footerClassName="p-4 sm:px-6"
       footer={
         <div className="flex w-full flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
+            <Button
+              variant="primary"
+              size="lg"
               onClick={handleCopy}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-accent-red hover:bg-accent-red-hover text-text-inverted font-bold text-sm shadow-lg shadow-accent-red/25 transition-all active:scale-95"
+              className="flex-1"
             >
               {copied ? (
                 <>
@@ -108,17 +110,17 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
                   <span>{t.copyResults}</span>
                 </>
               )}
-            </button>
+            </Button>
 
             {onPlayAgain && (
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                size="lg"
                 onClick={onPlayAgain}
-                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-bg-elevated hover:bg-bg-surface border border-border-color text-text-primary font-semibold text-sm transition-all"
               >
                 <RotateCcw className="w-4 h-4" />
                 <span>{t.playAgain}</span>
-              </button>
+              </Button>
             )}
 
             <Link

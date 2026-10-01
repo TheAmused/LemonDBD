@@ -28,6 +28,8 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
 import { IridescentShardIcon } from '@/components/icons/DbdIcons';
 import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
+import { Button } from '@/components/common/Button';
+import { Input } from '@/components/common/Field';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -610,22 +612,23 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
           {/* 1. Search Bar */}
           <div className="relative flex-1 min-w-[140px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
-            <input
+            <Input
+              fieldSize="sm"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={searchPlaceholder}
               aria-label={searchPlaceholder}
-              className="w-full pl-9 pr-8 py-2 rounded-xl bg-bg-surface border border-border-color text-xs text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-red font-mono shadow-inner transition-colors"
+              className="pl-9 pr-8 font-mono"
             />
             {searchQuery && (
-              <button
-                type="button"
+              <Button
+                variant="ghost" size="xs" icon
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary cursor-pointer p-0.5"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
                 <X className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             )}
           </div>
 
@@ -680,18 +683,14 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             }
             placement="bottom"
           >
-            <button
-              type="button"
+            <Button
+              variant={viewMode === 'grouped' ? 'soft' : 'secondary'} size="sm" icon
               onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
               aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
-              className={`flex items-center justify-center h-8 w-8 sm:h-9 sm:w-9 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer shrink-0 hover:scale-105 active:scale-95 ${
-                viewMode === 'grouped'
-                  ? 'bg-accent-red/20 border-accent-red/60 text-accent-red'
-                  : 'bg-bg-surface border-border-color text-text-muted hover:text-text-primary hover:border-border-subtle'
-              }`}
+              className="h-8 w-8 sm:h-9 sm:w-9 rounded-xl"
             >
               <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            </button>
+            </Button>
           </Tooltip>
         </div>
       </div>

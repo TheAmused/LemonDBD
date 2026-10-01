@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/maps/VoiceEngineInfoModal.tsx
 
+import { Button } from '@/components/common/Button';
 import React from 'react';
 import {
   Cpu,
@@ -241,14 +242,14 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
       {modelProgress.status !== 'ready' && modelProgress.status !== 'downloading' && (
         <div className="flex items-center justify-end pt-1">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={onPreloadModel}
-            className="flex items-center gap-1.5 rounded-xl bg-bg-surface hover:bg-bg-elevated px-3 py-1.5 text-xs font-bold text-text-primary transition-colors cursor-pointer font-mono"
           >
             <RefreshCw className="h-3 w-3" aria-hidden="true" />
             <span>{dict?.maps?.preloadModel || ''}</span>
-          </button>
+          </Button>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/components/user/UserBugReportsList.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/common/Button';
 import { Modal, useModal } from '@/components/common/Modal';
 import {
   Plus,
@@ -164,14 +165,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
           </div>
         )}
 
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="sm"
           onClick={onOpenReportModal}
-          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-3.5 py-1.5 text-xs font-bold text-text-inverted shadow-xs transition-all cursor-pointer font-mono"
+          leftIcon={<Plus className="h-3.5 w-3.5" />}
         >
-          <Plus className="h-3.5 w-3.5" />
           <span>{t.reportNewBug || 'Report New Bug'}</span>
-        </button>
+        </Button>
       </div>
 
       {loading ? (
@@ -360,13 +361,13 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 const PreviewCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
   return (
-    <button
-      type="button"
+    <Button
+      icon
       onClick={close}
-      className="absolute right-2 top-2 z-10 p-2 rounded-full bg-bg-surface/90 hover:bg-bg-surface text-text-primary hover:text-accent-red border border-border-color shadow-lg transition-all cursor-pointer"
+      className="absolute right-2 top-2 z-10 rounded-full shadow-lg"
       aria-label={label}
     >
       <X className="h-5 w-5" />
-    </button>
+    </Button>
   );
 };

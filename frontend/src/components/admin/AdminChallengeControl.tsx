@@ -2,8 +2,9 @@
 // frontend/src/components/admin/AdminChallengeControl.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Input, Select, SearchInput } from '@/components/common/Field';
 import type { Dictionary } from '@/locales/types';
-import { CheckCircle2, Power, Search, Sparkles, XCircle } from 'lucide-react';
+import { CheckCircle2, Power, Sparkles, XCircle } from 'lucide-react';
 import {
   AdminCharacterRow,
   AdminPerkRow,
@@ -304,15 +305,13 @@ export const AdminChallengeControl: React.FC<AdminChallengeControlProps> = ({ on
               <span>{dict?.admin?.roleKiller || 'Killer'}</span>
             </button>
           </div>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
-              className="pl-7 pr-3 py-1.5 rounded-lg bg-bg-primary border border-border-color text-xs text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent-red"
-            />
-          </div>
+          <SearchInput
+            fieldSize="sm"
+            wrapperClassName="w-full sm:w-56"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={dict?.admin?.searchGenericPlaceholder || 'Search...'}
+          />
         </div>
 
         {characters.length === 0 && perks.length === 0 && loading ? (

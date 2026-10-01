@@ -13,9 +13,11 @@ import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { RosterCustomLabels } from '@/types/smashOrPass';
-import { FIELD, LABEL, TEXTAREA_FIELD } from './styles';
+import { LABEL } from './styles';
 
 import { tip } from '@/components/common/Tooltip';
+import { Button } from '@/components/common/Button';
+import { Input, Textarea } from '@/components/common/Field';
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
@@ -123,16 +125,16 @@ export function CandidateFormInputs({
           </h3>
         </div>
         <div className="w-24 flex justify-end">
-          <button
-            type="button"
+          <Button
+            variant="ghost" size="xs"
             onClick={onRemove}
             aria-label={(c.removeCandidateAria || 'Remove {name}').replace('{name}', entity.name || displayIndex)}
-            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold text-text-muted hover:text-accent-red hover:bg-accent-red/10 rounded-lg transition-colors cursor-pointer shrink-0"
+            className="font-mono"
             {...tip(c.removeCandidate || 'Remove candidate', undefined, 'action')}
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">{c.removeCandidate || 'Remove'}</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -170,12 +172,13 @@ export function CandidateFormInputs({
               <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
                 {c.entityNameLabel || 'Candidate Name'}
               </span>
-              <input
+              <Input
+                fieldSize="md"
                 value={entity.name}
                 maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
                 onChange={(e) => onChange({ name: e.target.value })}
                 placeholder={c.entityNamePlaceholder || 'e.g. Leon S. Kennedy'}
-                className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm font-semibold text-text-primary focus:border-accent-red focus:outline-none"
+                className="font-semibold"
               />
             </label>
 
@@ -183,16 +186,12 @@ export function CandidateFormInputs({
               <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
                 {c.entityMediaLabel || 'Portrait Image URL'}
               </span>
-              <input
+              <Input
+                fieldSize="md" invalid={mediaInvalid}
                 value={entity.media_url}
                 onChange={(e) => onChange({ media_url: e.target.value })}
                 placeholder="https://images.example.com/character.png"
                 inputMode="url"
-                aria-invalid={mediaInvalid}
-                className={cn(
-                  'w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none',
-                  mediaInvalid && 'border-accent-red'
-                )}
               />
             </label>
 
@@ -203,7 +202,8 @@ export function CandidateFormInputs({
                   <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
                     {c.entityRoleLabel || 'Role'}
                   </span>
-                  <input
+                  <Input
+                    fieldSize="md"
                     value={entity.role}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -212,7 +212,6 @@ export function CandidateFormInputs({
                     }}
                     placeholder={c.rolePlaceholder || 'e.g. Survivor, Hero, Killer'}
                     list={`role-picks-${entity.key}`}
-                    className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
                   />
                   <datalist id={`role-picks-${entity.key}`}>
                     {availableRoles.map((r) => (
@@ -249,7 +248,8 @@ export function CandidateFormInputs({
                   <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">
                     {c.entityGenderLabel || 'Gender'}
                   </span>
-                  <input
+                  <Input
+                    fieldSize="md"
                     value={entity.gender}
                     onChange={(e) => {
                       const val = e.target.value;
@@ -258,7 +258,6 @@ export function CandidateFormInputs({
                     }}
                     placeholder={c.genderPlaceholder || 'e.g. female, male, other'}
                     list={`gender-picks-${entity.key}`}
-                    className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
                   />
                   <datalist id={`gender-picks-${entity.key}`}>
                     {availableGenders.map((g) => (
@@ -343,15 +342,15 @@ export function CandidateFormInputs({
         {/* Full Mode: Collapsible Profile Details Toggle */}
         {!isSimpleMode && (
           <div className="pt-2 border-t border-border-color/60 flex justify-center">
-            <button
-              type="button"
+            <Button
+              variant="secondary" size="sm"
               onClick={() => setProfileOpen((v) => !v)}
               aria-expanded={profileOpen}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-bg-elevated hover:bg-bg-primary border border-border-color text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+              className="uppercase tracking-wider"
             >
               <ChevronDown className={cn('h-3.5 w-3.5 text-accent-red transition-transform', profileOpen && 'rotate-180')} aria-hidden="true" />
               <span>{c.entityProfileToggle || 'Profile & Lore Details'}</span>
-            </button>
+            </Button>
           </div>
         )}
 
@@ -594,12 +593,12 @@ function TextField({
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
       <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">{label}</span>
-      <input
+      <Input
+        fieldSize="md"
         value={value}
         maxLength={max}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full min-h-[38px] rounded-lg border border-border-color bg-bg-primary px-3 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
       />
     </label>
   );
@@ -623,13 +622,13 @@ function TextAreaField({
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
       <span className="mb-1 block text-[11px] font-black uppercase tracking-wider text-text-secondary font-mono">{label}</span>
-      <textarea
+      <Textarea
+        fieldSize="md"
         value={value}
         maxLength={max}
         rows={3}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-border-color bg-bg-primary px-3 py-2 text-xs sm:text-sm text-text-primary focus:border-accent-red focus:outline-none"
       />
     </label>
   );

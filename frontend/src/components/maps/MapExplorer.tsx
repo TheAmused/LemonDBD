@@ -1,6 +1,8 @@
 'use client';
 // frontend/src/components/maps/MapExplorer.tsx
 
+import { SearchInput } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Search, ImageOff, Compass, Maximize2, ArrowDownAZ, X } from 'lucide-react';
@@ -312,18 +314,15 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             )}
 
             <div className="flex-1 flex flex-col items-center justify-center space-y-4 py-1">
-              <div className="relative w-full sm:max-w-lg sm:mx-auto">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
-                <input
-                  type="text"
+              <SearchInput
+                  wrapperClassName="w-full sm:max-w-lg sm:mx-auto"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder={dict?.maps?.searchPlaceholder || 'Search...'}
                   aria-label={dict?.maps?.searchAria || 'Search map or realm'}
                   tabIndex={hideSearch ? -1 : undefined}
-                  className="w-full rounded-2xl border border-border-color bg-bg-surface py-2.5 pl-10 pr-4 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent-red"
+                  className="rounded-2xl bg-bg-surface"
                 />
-              </div>
 
               {/* `inert` keeps the hidden filter row out of the tab order while the voice slot is shown. */}
               <div
@@ -381,14 +380,14 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 }
               />
               {filtersActive && (
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={clearFilters}
-                  className="inline-flex cursor-pointer items-center gap-1 rounded-xl px-3 py-2 text-xs font-mono font-bold text-text-secondary transition-colors hover:bg-bg-elevated hover:text-accent-red"
                 >
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                   {mapsDict?.clearFilters || 'Clear filters'}
-                </button>
+                </Button>
               )}
             </div>
           </div>

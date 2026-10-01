@@ -28,6 +28,7 @@ import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { Button } from '@/components/common/Button';
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
   () => import('./sidebar/BugReportModal').then((m) => m.BugReportModal),
@@ -355,16 +356,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className="flex items-center gap-2">
           <WhatsNewLauncher dict={dict} />
-          <button
-            type="button"
+          <Button
+            icon
+            variant="secondary"
             onClick={() => setMobileOpen(true)}
             data-testid="mobile-drawer-toggle"
             aria-expanded={mobileOpen}
             aria-label={dict?.sidebar?.openDrawer || 'Open Drawer'}
-            className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-color text-text-secondary hover:text-text-primary hover:bg-bg-elevated transition-colors cursor-pointer"
           >
             <Menu className="h-5 w-5" />
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -379,15 +380,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ariaLabel={dict?.sidebar?.openDrawer || 'Open Drawer'}
         bodyClassName="p-0"
       >
-        <button
-          type="button"
+        <Button
+          icon
+          size="sm"
+          variant="ghost"
           onClick={() => setMobileOpen(false)}
           data-testid="mobile-drawer-close"
           aria-label={dict?.sidebar?.closeDrawer || 'Close Drawer'}
-          className="absolute right-3 top-3 z-20 rounded-full p-2 text-text-muted hover:bg-bg-elevated hover:text-text-primary transition-colors cursor-pointer"
+          className="absolute right-3 top-3 z-20 rounded-full"
         >
           <X className="h-5 w-5" />
-        </button>
+        </Button>
         {renderSidebarContent()}
       </Modal>
 

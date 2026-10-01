@@ -2,6 +2,7 @@
 // frontend/src/components/admin/AdminAuditLogView.tsx
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 import { ScrollText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AdminAuditLogEntry } from '@/types/admin';
@@ -127,25 +128,27 @@ export const AdminAuditLogView: React.FC<{ dict?: Dictionary }> = ({ dict }) => 
 
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-3 mt-5 pt-3 border-t border-border-color">
-          <button
-            type="button"
+          <Button
+            icon
+            size="sm"
             disabled={page <= 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="p-2 rounded-lg border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+            aria-label={dict?.admin?.prevPage || 'Previous page'}
           >
             <ChevronLeft className="h-4 w-4" />
-          </button>
+          </Button>
           <span className="text-xs text-text-secondary font-mono font-medium">
             {dict?.admin?.pageLabel || 'Page'} {page} {dict?.admin?.ofLabel || 'of'} {totalPages}
           </span>
-          <button
-            type="button"
+          <Button
+            icon
+            size="sm"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="p-2 rounded-lg border border-border-color bg-bg-surface hover:bg-bg-elevated text-text-primary disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shadow-xs"
+            aria-label={dict?.admin?.nextPage || 'Next page'}
           >
             <ChevronRight className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       )}
     </div>

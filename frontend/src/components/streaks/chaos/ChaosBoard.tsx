@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 
+import { Button } from '@/components/common/Button';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -222,15 +223,16 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
             <h2 className="text-2xl font-black tracking-tight text-text-primary">
               {completionTitle}
             </h2>
-            <button
-              type="button"
+            <Button
+              variant="success"
+              size="lg"
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
+              className="mt-6"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               <span>{dict?.streaks?.startNewRun || ''}</span>
-            </button>
+            </Button>
           </div>
         ) : (
           <>

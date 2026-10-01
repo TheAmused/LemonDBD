@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryBoard.tsx
+import { Button } from '@/components/common/Button';
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
@@ -166,14 +167,16 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
             <h2 className="text-2xl font-black tracking-tight text-text-primary">
               {dict?.streaks?.historyStreakComplete || 'You won the History Streak'}
             </h2>
-            <button
+            <Button
+              variant="success"
+              size="lg"
               onClick={reset}
               disabled={busy}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
+              className="mt-6"
             >
               <RotateCcw className="h-4 w-4" />
               {dict?.streaks?.startNewRun || 'Start a new run'}
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="mb-6 rounded-2xl border border-border-color bg-bg-surface backdrop-blur-sm p-5 shadow-sm">

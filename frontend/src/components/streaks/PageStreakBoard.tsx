@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/streaks/PageStreakBoard.tsx
+import { Button } from '@/components/common/Button';
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
@@ -77,14 +78,14 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
           </h2>
         </div>
 
-        <button
-          type="button"
+        <Button
+          variant="secondary"
+          size="sm"
           onClick={() => setConfirmingResetAll(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-elevated hover:bg-accent-red/10 text-text-secondary hover:text-accent-red border border-border-color font-bold text-xs transition-colors shadow-sm cursor-pointer"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           {dict?.streaks?.resetAllRuns || 'Reset all killers'}
-        </button>
+        </Button>
       </div>
 
       <ConfirmModal

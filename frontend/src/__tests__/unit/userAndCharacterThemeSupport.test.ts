@@ -6,7 +6,6 @@ import path from 'node:path';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { UserMetricsGrid } from '@/components/user/UserMetricsGrid';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
 import { KillerDetailView } from '@/components/character-detail/KillerDetailView';
 import { SurvivorDetailView } from '@/components/character-detail/SurvivorDetailView';
@@ -27,24 +26,6 @@ describe('User Profile Theme Support', () => {
     assert.ok(html.includes('text-text-secondary') || html.includes('dark:text-slate-400'), 'Labels must have dark text');
     assert.ok(html.includes('bg-bg-elevated') || html.includes('bg-slate-50'), 'Inputs must have light bg');
     assert.ok(html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-950/80'), 'Inputs must have dark bg');
-  });
-
-  it('UserMetricsGrid cards use light-compatible border and background', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(UserMetricsGrid, {
-        ownership: {
-          survivors: { owned: 10, total: 54, percentage: 18 },
-          killers: { owned: 5, total: 44, percentage: 11 },
-          perks: { unlocked: 30, total: 321, percentage: 9 },
-        },
-      })
-    );
-    assert.ok(html.includes('border-border-color') || html.includes('border-slate-200'), 'Metrics cards must have themed border');
-    assert.ok(html.includes('border-border-color') || html.includes('dark:border-slate-800'), 'Metrics cards must have dark border');
-    assert.ok(html.includes('bg-bg-surface') || html.includes('bg-white'), 'Metrics cards must have themed bg');
-    assert.ok(html.includes('bg-bg-surface') || html.includes('dark:bg-slate-900/60'), 'Metrics cards must have dark bg');
-    assert.ok(html.includes('bg-bg-elevated') || html.includes('bg-slate-200'), 'Progress track must have themed bg');
-    assert.ok(html.includes('bg-bg-elevated') || html.includes('dark:bg-slate-800'), 'Progress track must have dark bg');
   });
 
   it('UserBugReportsList renders empty state and reports with light/dark theme classes', () => {

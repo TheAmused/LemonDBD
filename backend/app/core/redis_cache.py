@@ -23,7 +23,7 @@ from __future__ import annotations
 import logging
 import os
 import threading
-from typing import Any, Callable
+from typing import Any
 
 from app.core.cache import SimpleTTLCache
 from app.core.json_provider import safe_json_dumps, safe_json_loads
@@ -180,16 +180,6 @@ def set(key: str, value: Any, ttl: int | None = None) -> None:
     # Deliberately capped: the fallback is per-worker and un-invalidatable
     # across workers, so it holds things for a minute, not a day.
     _local.set(full, value, ttl=min(duration, 60.0))
-
-
-def get_or_set(key: str, producer: Callable[[], Any], ttl: int | None = None) -> Any:
-    hit = get(key)
-    if hit is not None:
-        return hit
-    value = producer()
-    if value is not None:
-        set(key, value, ttl=ttl)
-    return value
 
 
 def stats() -> dict[str, Any]:

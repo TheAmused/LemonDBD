@@ -7,7 +7,6 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { DictionaryProvider } from '@/context/DictionaryContext';
-import { VaultStatsProvider } from '@/context/VaultStatsContext';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
 import '@/app/globals.css';
@@ -73,10 +72,8 @@ export default async function RootLayout({
         >
           <AuthProvider>
             <DictionaryProvider dict={dict} locale={locale}>
-              <VaultStatsProvider>
-                <ImagePreloadProvider>{children}</ImagePreloadProvider>
-                <TooltipProvider />
-              </VaultStatsProvider>
+              <ImagePreloadProvider>{children}</ImagePreloadProvider>
+              <TooltipProvider />
             </DictionaryProvider>
           </AuthProvider>
         </ThemeProvider>

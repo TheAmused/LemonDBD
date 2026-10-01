@@ -13,7 +13,6 @@
     "test:workflows": "tsx --test src/__tests__/live/*.test.ts",
     "test:minigames:live": "tsx --test src/__tests__/live/minigamesWorkflowLive.test.ts",
     "test:minigames:e2e": "node scripts/verify-minigames.mjs",
-    "check:perk-format": "tsx scripts/analyze-perk-formatting.tsx --size 12000",
     "check:i18n": "tsx scripts/check-hardcoded-strings.ts",
     "check:i18n:strict": "tsx scripts/check-hardcoded-strings.ts --strict",
     "check:styles": "tsx scripts/check-global-styles.ts",

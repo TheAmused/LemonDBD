@@ -59,10 +59,6 @@ def normalize_role(role: str | None) -> str:
     return key
 
 
-def is_free(role: str, character_id: int) -> bool:
-    return character_id in _FREE_BY_ROLE[normalize_role(role)]
-
-
 def _ownership_filter(role: str, character_id: int):
     """The column that holds this character's key, and the value to match."""
     column = (

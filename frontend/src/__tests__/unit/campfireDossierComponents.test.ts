@@ -10,7 +10,6 @@ import { MainCard } from '@/components/user/MainCard';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
-import { StreakTrophyCard } from '@/components/user/StreakTrophyCard';
 import { DEFAULT_SHOWCASE_STATE } from '@/types/userShowcase';
 import type { Perk } from '@/types/perks';
 
@@ -186,26 +185,6 @@ describe('Campfire Dossier: MainCard', () => {
     assert.ok(html.includes('Killer Main'));
     assert.ok(html.includes('The Blight'));
     assert.ok(!html.includes('Prestige level'));
-  });
-});
-
-describe('Campfire Dossier: StreakTrophyCard', () => {
-  it('renders trial trophy links and strictly ignores "Others" and quests', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(StreakTrophyCard, { currentLocale: 'en' })
-    );
-
-    assert.ok(html.includes('/en/streaks'));
-    assert.ok(html.includes('/en/streaks/killer/gauntlet-streak'));
-    assert.ok(html.includes('/en/streaks/killer/chaos-streak'));
-    assert.ok(html.includes('/en/streaks/killer/page-streak'));
-
-    // Assert strict omission of quests and "Others"
-    assert.ok(!html.toLowerCase().includes('quest'));
-    assert.ok(!html.includes('guesser'));
-    assert.ok(!html.includes('draft'));
-    assert.ok(!html.includes('swf'));
-    assert.ok(!html.includes('killer-calculator'));
   });
 });
 

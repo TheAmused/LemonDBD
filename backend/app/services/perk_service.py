@@ -15,16 +15,11 @@ from app.services.perks import (
     fetch_character_suggestions as _fetch_character_suggestions_fn,
     fetch_characters as _fetch_characters_fn,
     fetch_items as _fetch_items_fn,
-    fetch_map_detail as _fetch_map_detail_fn,
     fetch_maps as _fetch_maps_fn,
     fetch_perk_by_identifier as _fetch_perk_by_identifier_fn,
     fetch_perk_suggestions as _fetch_perk_suggestions_fn,
     fetch_perks as _fetch_perks_fn,
-    fetch_perks_fallback as _fetch_perks_fallback_fn,
-    load_fallback_files as _load_fallback_files_fn,
     reload_service_data as _reload_service_data_fn,
-    sanitize_name as _sanitize_name_fn,
-    slugify as _slugify_fn,
 )
 
 logger = logging.getLogger(__name__)
@@ -60,22 +55,11 @@ class PerkService:
         self.reload_data()
 
     @staticmethod
-    def _sanitize_name(name: str) -> str:
-        return _sanitize_name_fn(name)
-
-    @staticmethod
-    def _slugify(text: str) -> str:
-        return _slugify_fn(text)
-
-    @staticmethod
     def clean_description(text: str) -> str:
         return _clean_description_fn(text)
 
     def reload_data(self) -> None:
         _reload_service_data_fn(self)
-
-    def _load_fallback_files(self) -> None:
-        _load_fallback_files_fn(self)
 
     def get_perks(
         self,
@@ -104,29 +88,6 @@ class PerkService:
             user_id=user_id,
             owned_only=owned_only,
             lang=lang,
-        )
-
-    def _get_perks_fallback(
-        self,
-        category: str | None,
-        character: str | None,
-        scope: str | None,
-        search: str | None,
-        sort_by: str,
-        order: str,
-        page: int,
-        limit: int,
-    ) -> dict[str, Any]:
-        return _fetch_perks_fallback_fn(
-            self,
-            category=category,
-            character=character,
-            scope=scope,
-            search=search,
-            sort_by=sort_by,
-            order=order,
-            page=page,
-            limit=limit,
         )
 
     def get_perk_suggestions(
@@ -185,17 +146,3 @@ class PerkService:
         source: str | None = None,
     ) -> list[dict[str, Any]]:
         return _fetch_maps_fn(self, realm=realm, search=search, source=source)
-
-    def get_map_detail(
-        self,
-        map_id: str,
-        seed: str | None = None,
-        floor: int | None = None,
-    ) -> dict[str, Any] | None:
-        """Look one map up by the same string handle the map routes take.
-
-        `map_realms.map_id` no longer exists: a numeric value is the integer
-        primary key and anything else is matched against the map's name, which
-        is unique across all 58.
-        """
-        return _fetch_map_detail_fn(self, map_id=map_id, seed=seed, floor=floor)

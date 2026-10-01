@@ -85,25 +85,3 @@ export function getChallengeStreakPanels(dict?: Dictionary): StreakPanelDef[] {
   ];
 }
 
-/**
- * Convenience selector by streak role tab.
- */
-export function getStreakPanelsByRole(
-  role: 'killer' | 'survivor' | 'challenge',
-  dict?: Dictionary
-): StreakPanelDef[] {
-  switch (role) {
-    case 'survivor':
-      return getSurvivorStreakPanels(dict);
-    case 'challenge':
-      return getChallengeStreakPanels(dict);
-    case 'killer':
-    default:
-      return getKillerStreakPanels(dict);
-  }
-}
-
-/** Static fallbacks for legacy consumers */
-export const KILLER_STREAK_PANELS = getKillerStreakPanels();
-export const SURVIVOR_STREAK_PANELS = getSurvivorStreakPanels();
-export const CHALLENGE_STREAK_PANELS = getChallengeStreakPanels();

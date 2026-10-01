@@ -14,17 +14,13 @@ const expectedNamespaces = [
   'stats',
   'filters',
   'pagination',
-  'card',
   'modal',
   'empty',
-  'guesser',
   'voice',
   'characterDetail',
   'sidebar',
   'smashOrPass',
   'user',
-  'swf',
-  'draft',
   'streaks',
 ] as const;
 

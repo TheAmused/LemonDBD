@@ -55,7 +55,6 @@ export const GENDER_QUICK_PICKS = ['female', 'male', 'monster_other'] as const;
  * rosters never carry this at all -- translation authoring is an official,
  * admin-only capability. */
 export const TRANSLATABLE_LOCALES = ['de', 'es', 'ja', 'pl'] as const;
-export type TranslatableLocale = (typeof TRANSLATABLE_LOCALES)[number];
 
 /** Entity fields an admin can override per locale. Mirrors the backend's own
  * `TRANSLATABLE_FIELDS` (backend/app/models/smash_or_pass.py) exactly -- role,
@@ -72,4 +71,3 @@ export const TRANSLATABLE_FIELDS = [
   'red_flags',
   'green_flags',
 ] as const;
-export type TranslatableField = (typeof TRANSLATABLE_FIELDS)[number];

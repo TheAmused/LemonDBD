@@ -26,8 +26,6 @@ _LEGAL_SYMBOLS = re.compile(r"[®™©]")
 # to `lerys_memorial_institute` -- matching the slugs already present in the
 # map export -- instead of splitting into `lery_s_memorial_institute`.
 _APOSTROPHES = re.compile("['‘’ʼ`]")
-_PARENTHETICAL_CHAPTER = re.compile(r"\s*\(\s*chapter\s*\)\s*", re.IGNORECASE)
-_BARE_CHAPTER_WORD = re.compile(r"(^|\s)chapter(\s|$)", re.IGNORECASE)
 _LEADING_ARTICLE = re.compile(r"^the\s+", re.IGNORECASE)
 _NON_SLUG = re.compile(r"[^a-z0-9]+")
 
@@ -52,39 +50,3 @@ def slugify(value: str | None, *, strip_article: bool = False) -> str:
         text = _LEADING_ARTICLE.sub("", text)
 
     return _NON_SLUG.sub("_", text).strip("_")
-
-
-def chapter_slug(name: str | None) -> str:
-    """Slug for a chapter, collapsing every "Chapter" spelling the wiki uses.
-
-    "SAW(TM) Chapter", "The SAW(TM) Chapter" and "SAW (Chapter)" all become
-    `saw`; "The Last Breath Chapter" and "Last Breath Chapter" both become
-    `last_breath`.
-    """
-    if not name:
-        return ""
-
-    text = unicodedata.normalize("NFKD", str(name))
-    text = _LEGAL_SYMBOLS.sub("", text)
-    text = _APOSTROPHES.sub("", text)
-    text = text.encode("ascii", "ignore").decode("ascii")
-    text = _PARENTHETICAL_CHAPTER.sub(" ", text)
-    text = _BARE_CHAPTER_WORD.sub(" ", text)
-    text = _LEADING_ARTICLE.sub("", text.strip())
-
-    return _NON_SLUG.sub("_", text.lower()).strip("_")
-
-
-def unique_slug(base: str, taken: set[str], *, fallback: str = "item") -> str:
-    """Append `_2`, `_3`, ... until `base` is free, then reserve it in `taken`."""
-    candidate = base or fallback
-    if candidate not in taken:
-        taken.add(candidate)
-        return candidate
-
-    suffix = 2
-    while f"{candidate}_{suffix}" in taken:
-        suffix += 1
-    result = f"{candidate}_{suffix}"
-    taken.add(result)
-    return result

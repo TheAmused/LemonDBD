@@ -3,10 +3,11 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
-import { PartyPopper, Sparkles, Lock } from 'lucide-react';
+import { Sparkles, Lock } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';
 
 const PLURAL_SUFFIX = { one: 'One', few: 'Few', many: 'Many' } as const;
 
@@ -116,18 +117,14 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm rounded-2xl border-2 border-accent-green bg-bg-surface p-8 text-center shadow-2xl cursor-default"
+        className={`relative w-full max-w-sm ${CELEBRATION_CARD_CLASSES} px-8 py-10 cursor-default`}
       >
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-          <PartyPopper className="h-8 w-8" />
-        </div>
+        <CelebrationBadge />
 
-        <h2 className="text-2xl font-black tracking-tight text-text-primary">
-          {dict?.streaks?.victoryCongrats || 'Congratulations'}!
-        </h2>
-        <p className="mt-1 text-sm font-semibold text-text-secondary">
+        <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
+        <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">
           {perks.length > 0 ? unlockedMessage : dict?.streaks?.noNewPerks || 'No new perks this time.'}
-        </p>
+        </h2>
 
         {perks.length > 0 && (
           <div className="mt-4 grid grid-cols-3 gap-2.5">

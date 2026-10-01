@@ -3,7 +3,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { BarChart2, ChevronDown, History, RotateCcw } from 'lucide-react';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
@@ -187,23 +187,16 @@ interface ChallengeVictoryCardProps {
 
 /** The win screen every challenge shows once its run is completed. */
 export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ title, subtitle, onRestart, busy, dict }) => (
-  <div className="rounded-xl border-2 border-accent-green/40 bg-bg-elevated px-6 py-10 text-center shadow-lg">
-    <div
-      className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green"
-      aria-hidden="true"
-    >
-      <AdeptBadgeIcon className="h-8 w-8" />
-    </div>
-    <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
-      {dict?.streaks?.victoryCongrats || 'Congratulations'}
-    </p>
-    <h2 className="text-2xl font-black tracking-tight text-text-primary">{title}</h2>
+  <div className={`${CELEBRATION_CARD_CLASSES} px-6 py-10`}>
+    <CelebrationBadge />
+    <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict?.streaks?.victoryCongrats || 'Congratulations'}</p>
+    <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">{title}</h2>
     {subtitle && <p className="mt-1 text-sm font-semibold text-text-secondary">{subtitle}</p>}
     <button
       type="button"
       onClick={onRestart}
       disabled={busy}
-      className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-red px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
+      className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-amber px-6 py-3 text-sm font-extrabold text-text-inverted shadow-xs transition-colors hover:bg-accent-amber-hover disabled:opacity-50 cursor-pointer"
     >
       {dict?.streaks?.startNewRun || 'Start a new run'}
     </button>

@@ -4,7 +4,7 @@
 import React, { useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { ArrowDownToLine, ChevronDown, LayoutList, Search, X } from 'lucide-react';
+import { ArrowDownToLine, ChevronDown, Search, X } from 'lucide-react';
 import type { TierItem } from '@/types/tierList';
 import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
@@ -75,47 +75,69 @@ export function TierPool({
         'backdrop-blur-md bg-bg-surface/95 sm:backdrop-blur-none sm:shadow-sm'
       )}
     >
-      {/* Full-width Collapsible Drawer Banner Button */}
-      <button
-        type="button"
-        onClick={() => setCollapsed((c) => !c)}
-        aria-expanded={!collapsed}
-        aria-label={collapsed ? t.showPool : t.hidePool}
-        className="relative w-full flex items-center justify-between py-3 px-4 sm:py-3.5 sm:px-6 min-h-[56px] sm:min-h-[64px] cursor-pointer group select-none overflow-hidden transition-colors text-left"
-      >
+      {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
+      <div className="relative grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 overflow-hidden px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[64px]">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
+          className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
           style={{ backgroundImage: "url('/images/banners/banner_loadouts.webp')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
 
-        <div className="relative z-10 flex items-center gap-2.5">
-          <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-accent-red/10 border border-accent-red/25 text-accent-red shrink-0">
-            <LayoutList className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono group-hover:text-accent-red transition-colors">
-              {t.unranked}
-            </h2>
-            <Badge tone="red" plain className="font-mono text-[11px] font-bold">
-              {t.unrankedCount.replace('{count}', String(keys.length))}
-            </Badge>
-          </div>
+        <div className="relative z-10 order-3 col-span-2 sm:order-1 sm:col-span-1 sm:max-w-xs">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
+          <Input
+            type="search"
+            fieldSize="sm"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              if (e.target.value) setCollapsed(false);
+            }}
+            placeholder={t.searchPool}
+            aria-label={t.searchPoolAria}
+            className="h-8.5 rounded-xl bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              aria-label={t.clearSearch}
+              className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted hover:text-text-primary cursor-pointer"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          )}
         </div>
 
-        <div className="relative z-10 flex items-center gap-2.5">
-          <span className="text-xs text-text-secondary font-mono hidden sm:inline">
-            {collapsed ? t.showPool : t.hidePool}
-          </span>
+        <div
+          onClick={() => setCollapsed((c) => !c)}
+          className="relative z-10 order-1 sm:order-2 flex items-center justify-start sm:justify-center gap-2 cursor-pointer select-none"
+        >
+          <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono">
+            {t.unranked}
+          </h2>
+          <Badge tone="red" plain className="font-mono text-[11px] font-bold">
+            {t.unrankedCount.replace('{count}', String(keys.length))}
+          </Badge>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-expanded={!collapsed}
+          aria-label={collapsed ? t.showPool : t.hidePool}
+          className="relative z-10 order-2 sm:order-3 justify-self-end flex min-h-[40px] items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
+        >
+          <span className="text-xs font-mono hidden sm:inline">{collapsed ? t.showPool : t.hidePool}</span>
           <ChevronDown
             className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
               collapsed ? 'rotate-0' : 'rotate-180'
             }`}
           />
-        </div>
-      </button>
+        </button>
+      </div>
 
       {/* Drawer Content */}
       <div
@@ -124,32 +146,8 @@ export function TierPool({
         }`}
       >
         <div className="overflow-hidden flex flex-col">
-          {/* Unranked Pool Toolbar (Search + Selection Move) */}
-          <div className="flex flex-wrap items-center justify-center sm:justify-between gap-2.5 border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
-            <div className="relative flex-1 sm:max-w-xs">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-              <Input
-                type="search"
-                fieldSize="sm"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t.searchPool}
-                aria-label={t.searchPoolAria}
-                className="h-8.5 rounded-xl bg-bg-primary pl-9 pr-8 text-xs sm:text-sm"
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => setQuery('')}
-                  aria-label={t.clearSearch}
-                  className="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-text-muted hover:text-text-primary cursor-pointer"
-                >
-                  <X className="h-3.5 w-3.5" aria-hidden="true" />
-                </button>
-              )}
-            </div>
-
-            {canReceiveSelection && (
+          {canReceiveSelection && (
+            <div className="flex items-center justify-center border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
               <button
                 type="button"
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
@@ -158,8 +156,8 @@ export function TierPool({
                 <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
                 {t.moveHere}
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <div
             ref={setNodeRef}

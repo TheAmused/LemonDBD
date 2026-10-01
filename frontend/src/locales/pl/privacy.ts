@@ -98,6 +98,7 @@ export default {
       heading: "Twoje prawa",
       paragraphs: [
         "W zależności od miejsca zamieszkania (np. w EOG lub Wielkiej Brytanii) masz prawo do:",
+        "Dane profilu możesz zmieniać, a konto usunąć samodzielnie na stronie swojego profilu. Aby otrzymać kopię swoich danych lub skorzystać z innego prawa, napisz na [{contactEmail}](mailto:{contactEmail}); odpowiadamy w ciągu miesiąca.",
       ],
       items: [
         "dostępu do danych osobowych, które o Tobie przechowujemy, i otrzymania ich kopii;",

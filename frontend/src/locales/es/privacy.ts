@@ -98,6 +98,7 @@ export default {
       heading: "Tus derechos",
       paragraphs: [
         "Según dónde vivas (por ejemplo, en el EEE o el Reino Unido), tienes derecho a:",
+        "Puedes actualizar los datos de tu perfil y eliminar tu cuenta tú mismo en tu página de perfil. Para recibir una copia de tus datos o ejercer cualquier otro derecho, escribe a [{contactEmail}](mailto:{contactEmail}); respondemos en el plazo de un mes.",
       ],
       items: [
         "acceder a los datos personales que tenemos sobre ti y obtener una copia;",

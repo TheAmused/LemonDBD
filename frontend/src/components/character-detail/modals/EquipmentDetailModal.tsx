@@ -49,9 +49,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
           {t.compatibleTarget || 'Compatible Target:'} <span className="text-text-primary">{item.associated_target}</span>
         </div>
       )}
-      <div className="p-4 rounded-2xl bg-bg-elevated border border-border-color space-y-2 text-sm">
-        <RichText text={item.description} block variant="game" />
-      </div>
+      <RichText text={item.description} block variant="game" />
     </Modal>
   );
 };

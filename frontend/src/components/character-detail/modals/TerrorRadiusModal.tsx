@@ -125,7 +125,7 @@ export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
       </div>
     </div>
 
-    <div className="p-4 rounded-2xl bg-bg-elevated border border-border-color space-y-2">
+    <div className="space-y-2">
       <span className="text-xs font-mono font-bold text-text-secondary uppercase">
         {t.survivorComparison || 'Survivor Speed Comparison'}
       </span>

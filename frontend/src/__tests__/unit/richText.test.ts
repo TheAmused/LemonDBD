@@ -52,3 +52,9 @@ test('seed descriptions are markup-free (no leaked html)', () => {
     assert.doesNotMatch(raw, /"(?:description|power_description)": "[^"]*<(?:br|b|i|li|ul|p|span)\b/, f);
   }
 });
+
+test('RichText: "## " renders a section heading, not a bold paragraph', () => {
+  const out = html('## SPECIAL TRAP: BEAR TRAP\nBody text.', { block: true, variant: 'game' });
+  assert.match(out, /<p class="[^"]*uppercase[^"]*">SPECIAL TRAP: BEAR TRAP<\/p>/);
+  assert.doesNotMatch(out, /##/);
+});

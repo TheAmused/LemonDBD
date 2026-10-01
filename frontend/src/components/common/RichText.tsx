@@ -71,6 +71,8 @@ interface RichVariant {
   quote: (compact: boolean) => string;
   notice: string;
   noticeLabel: string;
+  /** "# " section heading (block mode). */
+  heading: string;
 }
 
 const NONE = '';
@@ -88,6 +90,7 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
     li: () => NONE,
     quote: () => 'border-l-2 border-border-color pl-3 italic text-text-secondary',
     notice: 'rounded-xl border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber',
+    heading: 'mt-3 first:mt-0 font-bold text-text-primary',
     noticeLabel: 'mr-2 rounded-lg bg-accent-amber/25 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider',
   },
   game: {
@@ -106,6 +109,7 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
         c ? 'my-1.5 text-[11px]' : 'my-3 text-xs sm:text-sm'
       ),
     notice: 'p-3 my-2 text-left text-left rounded-2xl bg-accent-amber/10 border border-accent-amber/30 text-xs font-semibold text-accent-amber flex items-start gap-2.5 shadow-sm',
+    heading: 'mt-4 first:mt-0 mb-1 text-left font-mono text-[11px] font-black uppercase tracking-[0.18em] text-accent-amber',
     noticeLabel: 'shrink-0 font-mono font-bold uppercase tracking-wider text-[10px] bg-accent-amber/25 px-2 py-0.5 rounded-lg text-accent-amber',
   },
 };
@@ -425,7 +429,7 @@ function renderBlocks(nodes: Node[], ctx: Ctx, key: string): React.ReactNode[] {
       } else if (/^\s*>\s?/.test(first)) {
         out.push(<blockquote key={k} className={ctx.v.quote(ctx.compact)}>{renderInline(stripPrefix(para, /^\s*>\s?/), ctx, k)}</blockquote>);
       } else if (/^\s*#{1,6}\s+/.test(first)) {
-        out.push(<p key={k} className={cn(ctx.v.p(ctx.compact), 'font-bold')}>{renderInline(stripPrefix(para, /^\s*#{1,6}\s+/), ctx, k)}</p>);
+        out.push(<p key={k} className={ctx.v.heading}>{renderInline(stripPrefix(para, /^\s*#{1,6}\s+/), ctx, k)}</p>);
       } else {
         out.push(<p key={k} className={ctx.v.p(ctx.compact) || undefined}>{renderInline(para, ctx, k)}</p>);
       }

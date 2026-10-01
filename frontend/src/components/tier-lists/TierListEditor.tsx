@@ -177,8 +177,8 @@ export function TierListEditor(props: TierListEditorProps) {
   return (
     <div className="relative z-10 flex flex-col gap-4 lg:h-full lg:min-h-0">
       <header className="flex flex-col gap-3 shrink-0">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
-          <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:min-w-[160px]">
+        <div className="flex flex-col gap-3 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] xl:items-center">
+          <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:justify-self-start">
             <Link
               href={`/${locale}/tier-lists`}
               className="inline-flex min-h-[44px] w-fit items-center gap-1 rounded-xl pr-3 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
@@ -189,7 +189,7 @@ export function TierListEditor(props: TierListEditorProps) {
             {badges}
           </div>
 
-          <div className="flex-1 min-w-0 text-center px-2">
+          <div className="min-w-0 text-center px-2">
             <div className="inline-flex flex-wrap items-center justify-center gap-2">
               {showKindBadge && (
                 <span className="rounded-lg border border-accent-red/30 bg-accent-red/10 px-2 py-0.5 text-[11px] font-black uppercase tracking-wider text-accent-red">
@@ -207,7 +207,7 @@ export function TierListEditor(props: TierListEditorProps) {
             )}
           </div>
 
-          <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-wrap items-center gap-2 shrink-0 xl:min-w-[160px] justify-center xl:justify-end">
+          <div role="toolbar" aria-label={t.toolbarAria} className="flex flex-wrap items-center gap-2 shrink-0 justify-center xl:justify-self-end xl:justify-end">
             <Button
               variant="secondary"
               onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}

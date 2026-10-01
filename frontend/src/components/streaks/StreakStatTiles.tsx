@@ -14,7 +14,7 @@ const FLASH_MS = 900;
 
 const FLASH_VALUE_CLASSES: Record<Exclude<StatFlash, null>, string> = {
   win: 'text-accent-green stat-bump',
-  record: 'stat-bump',
+  record: 'text-accent-amber stat-bump',
   loss: 'text-accent-red',
 };
 
@@ -29,8 +29,9 @@ export interface StreakStatTilesProps {
 
 /**
  * The Current / Best pair shared by every challenge header. Best turns amber while the running
- * streak is the record (with a burst the moment a win sets it); Current flashes green on a win and
- * red on a loss. Nothing fires on first render, only on changes after it.
+ * streak is the record (with a burst the moment a win sets it). Current flashes green on a win and
+ * red on a loss, and stays amber like Best while the streak is the record. Nothing fires on first
+ * render, only on changes after it.
  */
 export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
   current,
@@ -73,7 +74,7 @@ export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
     return () => clearTimeout(timer);
   }, [flash.type, flash.key]);
 
-  const flashClass = flash.type ? FLASH_VALUE_CLASSES[flash.type] : '';
+  const flashClass = flash.type ? FLASH_VALUE_CLASSES[flash.type] : record ? 'text-accent-amber' : '';
   const bestClass = record
     ? `border-accent-amber/60 bg-accent-amber/10 stat-record-shimmer ${bursting ? 'stat-record-burst' : ''}`
     : '';
@@ -82,6 +83,7 @@ export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
     <>
       <StatTile
         icon={currentIcon}
+        iconClassName={record ? 'text-accent-amber' : ''}
         label={currentLabel}
         value={
           <span key={flash.key} className={`inline-block transition-colors duration-300 ${flashClass}`}>

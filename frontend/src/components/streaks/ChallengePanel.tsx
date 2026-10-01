@@ -83,15 +83,29 @@ interface StatTileProps {
   icon: React.ReactNode;
   label: string;
   value: React.ReactNode;
+  className?: string;
+  iconClassName?: string;
+  valueClassName?: string;
 }
 
 /** One header stat: icon, small label over a large value. */
-export const StatTile: React.FC<StatTileProps> = ({ icon, label, value }) => (
-  <div className="flex items-center gap-2.5 rounded-xl border border-border-color bg-bg-elevated px-3.5 py-2 text-text-secondary shadow-sm">
-    {icon}
+export const StatTile: React.FC<StatTileProps> = ({
+  icon,
+  label,
+  value,
+  className = '',
+  iconClassName = '',
+  valueClassName = '',
+}) => (
+  <div
+    className={`flex items-center gap-2.5 rounded-xl border border-border-color bg-bg-elevated px-3.5 py-2 text-text-secondary shadow-sm transition-colors duration-500 ${className}`}
+  >
+    <span className={`flex transition-colors duration-500 ${iconClassName}`}>{icon}</span>
     <div className="flex flex-col">
       <span className="text-[10px] font-bold uppercase leading-none tracking-wider text-text-muted">{label}</span>
-      <span className="mt-0.5 font-mono text-lg font-black leading-none text-text-primary">{value}</span>
+      <span className={`mt-0.5 font-mono text-lg font-black leading-none text-text-primary transition-colors duration-500 ${valueClassName}`}>
+        {value}
+      </span>
     </div>
   </div>
 );

@@ -6,7 +6,8 @@ import { Flame } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { PageStreakRun } from '@/types/pageStreak';
 import { FreezeBadge } from '../FreezeBadge';
-import { ChallengeHeaderLayout, StandardHeaderActions, StatTile } from '../ChallengePanel';
+import { StreakStatTiles } from '../StreakStatTiles';
+import { ChallengeHeaderLayout, StandardHeaderActions } from '../ChallengePanel';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { AdeptBadgeIcon, KillerIcon } from '@/components/icons/DbdIcons';
 
@@ -52,11 +53,13 @@ export const RunHeader: React.FC<RunHeaderProps> = ({
             </div>
             <span className="text-sm font-black tracking-wide text-text-primary">{killerDisplayName}</span>
           </div>
-          <StatTile icon={<Flame className="h-5 w-5" aria-hidden="true" />} label={dict?.stats?.current || 'Current'} value={cleared} />
-          <StatTile
-            icon={<AdeptBadgeIcon className="h-5 w-5" aria-hidden="true" />}
-            label={dict?.stats?.best || 'Best'}
-            value={run.best_page}
+          <StreakStatTiles
+            current={cleared}
+            best={run.best_page}
+            currentLabel={dict?.stats?.current || 'Current'}
+            bestLabel={dict?.stats?.best || 'Best'}
+            currentIcon={<Flame className="h-5 w-5" aria-hidden="true" />}
+            bestIcon={<AdeptBadgeIcon className="h-5 w-5" aria-hidden="true" />}
           />
           <FreezeBadge frozen={run.pool_frozen} dict={dict} />
         </>

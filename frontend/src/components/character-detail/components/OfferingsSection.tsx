@@ -1,4 +1,5 @@
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
+import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
 import {
   Gift,
@@ -338,39 +339,29 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
           />
         </div>
 
-        <div
-          role="tablist"
-          aria-label={t.offeringCategories || 'Offering categories'}
-          className="hidden sm:flex flex-wrap items-center justify-center gap-1.5 mb-6"
-        >
-          {categories.map((cat) => {
+        <Tabs
+          ariaLabel={t.offeringCategories || 'Offering categories'}
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          panels={false}
+          variant="pill"
+          accent={isKiller ? 'red' : 'green'}
+          wrap
+          centered
+          className="hidden sm:flex mb-6"
+          tabs={categories.map((cat) => {
             const Icon = cat.icon;
-            const isSelected = selectedCategory === cat.key;
-            return (
-              <button
-                type="button"
-                key={cat.key}
-                role="tab"
-                aria-selected={isSelected}
-                onClick={() => setSelectedCategory(cat.key)}
-                className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer text-xs font-bold ${
-                  isSelected
-                    ? isKiller
-                      ? 'bg-accent-red/20 border border-accent-red/60 text-accent-red shadow-md scale-105'
-                      : 'bg-accent-green/20 border border-accent-green/60 text-accent-green shadow-md scale-105'
-                    : 'bg-bg-elevated border border-border-color text-text-muted hover:text-text-primary hover:bg-bg-surface'
-                }`}
-                {...tip(`${cat.label} - ${cat.desc}`, undefined, 'default')} aria-label={`${cat.label} - ${cat.desc}`}
-              >
-                <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                {/* The count only shows on the selected tab, same idea as
-                    the mobile dropdown's countLabel — one place per tab
-                    for that information, not a separate heading below. */}
-                <span>{cat.label}{isSelected ? ` (${sortedAndFilteredOfferings.length})` : ''}</span>
-              </button>
-            );
+            return {
+              value: cat.key,
+              label: cat.label,
+              icon: <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />,
+              // The count only shows on the selected tab, same idea as the
+              // mobile dropdown's countLabel.
+              count: selectedCategory === cat.key ? sortedAndFilteredOfferings.length : undefined,
+              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
+            };
           })}
-        </div>
+        />
 
         {sortedAndFilteredOfferings.length === 0 ? (
           <EmptyState variant="inline" title={t.noOfferingsFound || 'No offerings found in this category matching your active filter.'} />

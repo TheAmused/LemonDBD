@@ -14,6 +14,7 @@
  * `TRANSLATABLE_FIELDS`) is admin+official only -- a custom roster is always
  * single-locale, matching the agreed plan's explicit non-goal.
  */
+import { Tabs } from '@/components/common/Tabs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -868,25 +869,17 @@ export function SmashRosterCreator({ locale, dict, editId }: SmashRosterCreatorP
                 <p className="text-xs text-text-muted -mt-1">
                   {c.translationsHint || 'Optional overrides shown to players using these languages. Anything left blank falls back to the default text above.'}
                 </p>
-                <div className="flex flex-wrap gap-1.5" role="tablist">
-                  {TRANSLATABLE_LOCALES.map((loc) => (
-                    <button
-                      key={loc}
-                      type="button"
-                      role="tab"
-                      aria-selected={activeTranslationLocale === loc}
-                      onClick={() => setActiveTranslationLocale(loc)}
-                      className={cn(
-                        'rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-colors cursor-pointer',
-                        activeTranslationLocale === loc
-                          ? 'bg-accent-red text-text-inverted'
-                          : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
-                      )}
-                    >
-                      {loc}
-                    </button>
-                  ))}
-                </div>
+                <Tabs
+                  ariaLabel={c.translationsHeading || 'Translations'}
+                  value={activeTranslationLocale}
+                  onChange={setActiveTranslationLocale}
+                  panels={false}
+                  variant="boxed"
+                  size="sm"
+                  wrap
+                  tabClassName="uppercase tracking-wider"
+                  tabs={TRANSLATABLE_LOCALES.map((loc) => ({ value: loc, label: loc }))}
+                />
                 <div className="grid gap-2 sm:grid-cols-2">
                   <label>
                     <span className={LABEL}>{c.translationsRosterName || 'Roster name'}</span>

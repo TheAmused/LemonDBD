@@ -432,7 +432,7 @@
         },
         "pl": {
           "name": "Pędzel zamoczony szkarłatną farbą",
-          "description": "Duży pędzel zamoczony w szkarłatnej farbie.\n• **Ujawnia** **aurę ocalałych** w Świecie Snu, gdy znajdują się dalej niż **32 m**.\n• **Zwiększa** miernik snu każdego ocalałego o **50%**."
+          "description": "Duży pędzel zamoczony w szkarłatnej farbie.\n• **Ujawnia aurę ocalałych** w Świecie Snu, gdy znajdują się dalej niż **32 m**.\n• **Zwiększa** miernik snu każdego ocalałego o **50%**."
         }
       }
     },
@@ -521,7 +521,7 @@
       "id": 808,
       "name": "Jump Rope (The Nightmare)",
       "killer_id": 10,
-      "description": "A long double dutch jump rope, stained with many years of use.\n• **Increases** duration of **Hindered** when a Survivor is hit with a Dream Snare by **11%**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "A long double dutch jump rope, stained with many years of use.\n• **Increases** duration of **Hindered** when a Survivor is hit with a Dream Snare by **11%**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_jumpRopeDreamDemon.png?3c3857",
       "icon_local_path": "icons/addons/jump_rope_(the_nightmare).webp",
       "rarity": "Uncommon",
@@ -535,7 +535,7 @@
         },
         "es": {
           "name": "Comba",
-          "description": "Una larga *comba* doble, manchada por años de uso.\n• **Aumenta** la duración de **Entorpecimiento** de un superviviente golpeado por una trampa de los sueños un **11 %**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Una larga *comba* doble, manchada por años de uso.\n• **Aumenta** la duración de **Entorpecimiento** de un superviviente golpeado por una trampa de los sueños un **11 %**.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "縄跳び用の縄",

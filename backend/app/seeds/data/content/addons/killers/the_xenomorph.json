@@ -99,7 +99,7 @@
         },
         "es": {
           "name": "Pájaro bebedor",
-          "description": "Uno de los muchos adornos inútiles esparcidos por los dormitorios de la Nostromo. Un toque hortera en un entorno estéril.\n• Tras salir de un túnel, la duración de **Instinto asesino** **aumenta** en **3 segundos**.\nEl **Instinto asesino** **revela** la posición de los supervivientes de manera intermitente."
+          "description": "Uno de los muchos adornos inútiles esparcidos por los dormitorios de la Nostromo. Un toque hortera en un entorno estéril.\n• Tras salir de un túnel, la duración de **Instinto asesino aumenta** en **3 segundos**.\nEl **Instinto asesino revela** la posición de los supervivientes de manera intermitente."
         },
         "ja": {
           "name": "水飲み鳥",
@@ -250,7 +250,7 @@
       "id": 588,
       "name": "Harpoon Gun",
       "killer_id": 33,
-      "description": "Barely a weapon, its use is only viable in a situation of last resort.\n• Exiting a tunnel and hitting a Survivor within **30 seconds** **causes** all Survivors further than **16 meters** from you to scream and **reveal** their locations.",
+      "description": "Barely a weapon, its use is only viable in a situation of last resort.\n• Exiting a tunnel and hitting a Survivor within **30 seconds causes** all Survivors further than **16 meters** from you to scream and **reveal** their locations.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_harpoonGun.png?a37244",
       "icon_local_path": "icons/addons/harpoon_gun.webp",
       "rarity": "Very Rare",
@@ -284,7 +284,7 @@
       "translations": {
         "de": {
           "name": "Katzenbox",
-          "description": "Die Katze zu retten ist ein hehres Ziel. Wenn auch eine gewisse Ablenkung.\n• Wenn du den Kriechmodus aufgrund eines Geschützangriffs beenden musst, wirst du für **30 Sekunden** **unentdeckbar**.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers."
+          "description": "Die Katze zu retten ist ein hehres Ziel. Wenn auch eine gewisse Ablenkung.\n• Wenn du den Kriechmodus aufgrund eines Geschützangriffs beenden musst, wirst du für **30 Sekunden unentdeckbar**.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers."
         },
         "es": {
           "name": "Transportín de gato",
@@ -304,7 +304,7 @@
       "id": 590,
       "name": "Self-Destruct Bolt",
       "killer_id": 33,
-      "description": "They needed to be removed to start, and replaced to end, the self-destruct sequence. Just seeing them evokes a sense of urgency.\n• While in Crawler Mode, you basic-vault **Windows** **30%** faster.",
+      "description": "They needed to be removed to start, and replaced to end, the self-destruct sequence. Just seeing them evokes a sense of urgency.\n• While in Crawler Mode, you basic-vault **Windows 30%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_selfDestructBolt.png?a6be4e",
       "icon_local_path": "icons/addons/self_destruct_bolt.webp",
       "rarity": "Very Rare",
@@ -331,7 +331,7 @@
       "id": 591,
       "name": "Improvised Cattle Prod",
       "killer_id": 33,
-      "description": "A brutal and noisy weapon, which might have been more effective against a cow.\n• Each time a **generator** is completed, a 15-second timer starts. Any Survivor who comes within **10 meters** of a Control Station during that time has their **aura** **revealed** for the remainder of the timer.\n> “It shouldn't damage the little bastard, unless its skin's thinner than ours.” –Brett",
+      "description": "A brutal and noisy weapon, which might have been more effective against a cow.\n• Each time a **generator** is completed, a 15-second timer starts. Any Survivor who comes within **10 meters** of a Control Station during that time has their **aura revealed** for the remainder of the timer.\n> “It shouldn't damage the little bastard, unless its skin's thinner than ours.” –Brett",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_improvisedCattleProd.png?9cc0c5",
       "icon_local_path": "icons/addons/improvised_cattle_prod.webp",
       "rarity": "Ultra Rare",
@@ -452,7 +452,7 @@
       "translations": {
         "de": {
           "name": "Lamberts Sternenkarte",
-          "description": "Lebensnotwendig für interstellare Reisen, aber für kleinere Maßstäbe nicht besonders nützlich.\n• Die Flammenreichweite von Geschützen wird um **2 Meter** **verringert**."
+          "description": "Lebensnotwendig für interstellare Reisen, aber für kleinere Maßstäbe nicht besonders nützlich.\n• Die Flammenreichweite von Geschützen wird um **2 Meter verringert**."
         },
         "en": {
           "name": "Lambert’s Star Map"
@@ -475,14 +475,14 @@
       "id": 827,
       "name": "Kane's Helmet",
       "killer_id": 33,
-      "description": "A thin layer of glass was the difference between a minor inconvenience and the tragic destruction of the Nostromo’s crew.\n• Survivors hit with a Tail Attack are **Mangled** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "A thin layer of glass was the difference between a minor inconvenience and the tragic destruction of the Nostromo’s crew.\n• Survivors hit with a Tail Attack are **Mangled** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_kanesHelmet.png?8a4701",
       "icon_local_path": "icons/addons/kanes_helmet.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Kanes Helm",
-          "description": "Eine dünne Glasschicht machte den Unterschied zwischen einer kleinen Unannehmlichkeit und der tragischen Vernichtung der Besatzung der Nostromo aus.\n• Überlebende, die von einem Schwanzangriff getroffen werden, werden für **70 Sekunden** **zerfleischt**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält für eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Eine dünne Glasschicht machte den Unterschied zwischen einer kleinen Unannehmlichkeit und der tragischen Vernichtung der Besatzung der Nostromo aus.\n• Überlebende, die von einem Schwanzangriff getroffen werden, werden für **70 Sekunden zerfleischt**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält für eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "en": {
           "name": "Kane’s Helmet"
@@ -535,21 +535,21 @@
       "id": 829,
       "name": "Parker's Headband",
       "killer_id": 33,
-      "description": "A bold fashion choice that doubled as a handy way to wick sweat from the eyes.\n• After exiting a tunnel, gain **5%** **Haste** for **3 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "A bold fashion choice that doubled as a handy way to wick sweat from the eyes.\n• After exiting a tunnel, gain **5% Haste** for **3 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_parkersHeadband.png?572eee",
       "icon_local_path": "icons/addons/parkers_headband.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Parkers Stirnband",
-          "description": "Ein auffälliges Modestatement, das auch praktisch ist, um die Augen vor Schweiß zu schützen.\n• Nach dem Verlassen eines Tunnels erhältst du für **3 Sekunden** **5 %** **Eile**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Ein auffälliges Modestatement, das auch praktisch ist, um die Augen vor Schweiß zu schützen.\n• Nach dem Verlassen eines Tunnels erhältst du für **3 Sekunden 5 % Eile**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "en": {
           "name": "Parker’s Headband"
         },
         "es": {
           "name": "Cinta de Parker",
-          "description": "Una elección algo atrevida, pero es muy útil para evitar que el sudor caiga en los ojos.\n• Tras salir de un túnel, obtienes un **5 %** de **Celeridad** durante **3 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Una elección algo atrevida, pero es muy útil para evitar que el sudor caiga en los ojos.\n• Tras salir de un túnel, obtienes un **5 %** de **Celeridad** durante **3 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "パーカーのヘッドバンド",
@@ -557,7 +557,7 @@
         },
         "pl": {
           "name": "Opaska Parkera",
-          "description": "Odważny wybór, a jednocześnie dobry sposób na osłonięcie oczu przed potem.\n• Po wyjściu z tunelu zyskujesz efekt **Pośpiechu** **zwiększający** na **3 sekundy** bazową prędkość ruchu o **5%**Po.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Odważny wybór, a jednocześnie dobry sposób na osłonięcie oczu przed potem.\n• Po wyjściu z tunelu zyskujesz efekt **Pośpiechu zwiększający** na **3 sekundy** bazową prędkość ruchu o **5%**Po.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     }

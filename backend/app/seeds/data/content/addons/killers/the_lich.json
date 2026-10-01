@@ -123,7 +123,7 @@
       "translations": {
         "de": {
           "name": "Laterne der Enthüllung",
-          "description": "Selbst diejenigen, die deinen Angriffen ausweichen, können sich deinem Blick nicht entziehen.\n• **Enthüllt** **3 Sekunden** lang die **Auren** von Überlebenden, die von „Flug der Verdammten“ knapp verfehlt wurden."
+          "description": "Selbst diejenigen, die deinen Angriffen ausweichen, können sich deinem Blick nicht entziehen.\n• **Enthüllt 3 Sekunden** lang die **Auren** von Überlebenden, die von „Flug der Verdammten“ knapp verfehlt wurden."
         },
         "es": {
           "name": "Linterna de revelación",
@@ -135,7 +135,7 @@
         },
         "pl": {
           "name": "Latarnia ujawnienia",
-          "description": "Nawet ci, co unikają twoich ataków, nie mogą uniknąć twego spojrzenia.\n• **Ujawnia** **aurę ocalałych**, którzy niemal zostali trafieni przez Przelot Potępionych, na **3 s**."
+          "description": "Nawet ci, co unikają twoich ataków, nie mogą uniknąć twego spojrzenia.\n• **Ujawnia aurę ocalałych**, którzy niemal zostali trafieni przez Przelot Potępionych, na **3 s**."
         }
       }
     },
@@ -170,14 +170,14 @@
       "id": 635,
       "name": "Ring of Telekinesis",
       "killer_id": 36,
-      "description": "Its arcane energy crackles to life when its user manipulates objects from afar.\n• Whenever you cast Mage Hand on an upright **Pallet**, for **10 seconds**, you basic-vault **Windows** **10%** faster.",
+      "description": "Its arcane energy crackles to life when its user manipulates objects from afar.\n• Whenever you cast Mage Hand on an upright **Pallet**, for **10 seconds**, you basic-vault **Windows 10%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RingOfTelekinesis.png?b169cc",
       "icon_local_path": "icons/addons/ring_of_telekinesis.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Ring der Telekinese",
-          "description": "Seine arkane Energie erwacht knisternd zum Leben, wenn der Träger Objekte aus der Ferne beeinflusst.\n• Immer wenn du „Hand des Magiers“ auf eine stehende **Palette** wirkst, sind deine Grundfähigkeit-Sprünge durch **Fenster** **10 Sek**. lang um **10 %** schneller."
+          "description": "Seine arkane Energie erwacht knisternd zum Leben, wenn der Träger Objekte aus der Ferne beeinflusst.\n• Immer wenn du „Hand des Magiers“ auf eine stehende **Palette** wirkst, sind deine Grundfähigkeit-Sprünge durch **Fenster 10 Sek**. lang um **10 %** schneller."
         },
         "es": {
           "name": "Anillo de telequinesis",
@@ -278,7 +278,7 @@
       "id": 639,
       "name": "Cloak of Elvenkind",
       "killer_id": 36,
-      "description": "Its colors are constantly shifting, making you more difficult to detect from afar.\n• **Reduces** **Terror Radius** by **22 meters** while the Fly spell is active.",
+      "description": "Its colors are constantly shifting, making you more difficult to detect from afar.\n• **Reduces Terror Radius** by **22 meters** while the Fly spell is active.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_CloakOfElvenkind.png?589e0d",
       "icon_local_path": "icons/addons/cloak_of_elvenkind.webp",
       "rarity": "Rare",
@@ -297,7 +297,7 @@
         },
         "pl": {
           "name": "Elficki płaszcz",
-          "description": "Stale zmieniające się barwy utrudniają dostrzeżenie cię z daleka.\n• **Zmniejsza** **zasięg terroru** o **22 m** w trakcie działania zaklęcia Lot."
+          "description": "Stale zmieniające się barwy utrudniają dostrzeżenie cię z daleka.\n• **Zmniejsza zasięg terroru** o **22 m** w trakcie działania zaklęcia Lot."
         }
       }
     },
@@ -305,18 +305,18 @@
       "id": 640,
       "name": "Boots of Speed",
       "killer_id": 36,
-      "description": "A simple click of their heels **grants** their wearer incredible pace.\n• Casting Mage Hand **grants** you **3%** **Haste** for **2 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "A simple click of their heels **grants** their wearer incredible pace.\n• Casting Mage Hand **grants** you **3% Haste** for **2 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BootsOfSpeed.png?5bda97",
       "icon_local_path": "icons/addons/boots_of_speed.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Stiefel der Hast",
-          "description": "Schlägt der Träger die Hacken zusammen, kann er sich mit unglaublicher Geschwindigkeit fortbewegen.\n• Wenn du „Hand des Magiers“ wirkst, erhältst du **2 Sekunden** lang **3 %** **Eile**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Schlägt der Träger die Hacken zusammen, kann er sich mit unglaublicher Geschwindigkeit fortbewegen.\n• Wenn du „Hand des Magiers“ wirkst, erhältst du **2 Sekunden** lang **3 % Eile**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Botas de velocidad",
-          "description": "Un simple chasquido de sus talones otorga una gran velocidad a quien se los pone.\n• Lanzar Mano de mago te otorga un **3 %** de **Celeridad** durante **2 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Un simple chasquido de sus talones otorga una gran velocidad a quien se los pone.\n• Lanzar Mano de mago te otorga un **3 %** de **Celeridad** durante **2 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "スピード・ブーツ",
@@ -324,7 +324,7 @@
         },
         "pl": {
           "name": "Buty szybkości",
-          "description": "Proste stuknięcie obcasami zapewnia ich użytkownikowi niesamowitą szybkość.\n• Rzucenie Magicznej Dłoni zapewnia ci **3%** Pędu na **2 s**.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Proste stuknięcie obcasami zapewnia ich użytkownikowi niesamowitą szybkość.\n• Rzucenie Magicznej Dłoni zapewnia ci **3%** Pędu na **2 s**.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -332,7 +332,7 @@
       "id": 641,
       "name": "Staff of Withering",
       "killer_id": 36,
-      "description": "Its necrotic power brings its targets closer to death.\n• Dispelling Sphere **causes** the **Exhausted** **status effect** for **30 seconds** to Survivors who enter its radius.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
+      "description": "Its necrotic power brings its targets closer to death.\n• Dispelling Sphere **causes** the **Exhausted status effect** for **30 seconds** to Survivors who enter its radius.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_StaffOfWithering.png?cc3d7c",
       "icon_local_path": "icons/addons/staff_of_withering.webp",
       "rarity": "Rare",
@@ -405,7 +405,7 @@
         },
         "pl": {
           "name": "Zasłona oczu",
-          "description": "Gdy jest noszona, nikt nie może uciec przed nieugiętym spojrzeniem.\n• **Ujawnia** **aury ocalałych** w promieniu **6 m** od **skrzyni** skarbów na **4 s** za każdym razem, gdy rzucasz zaklęcie."
+          "description": "Gdy jest noszona, nikt nie może uciec przed nieugiętym spojrzeniem.\n• **Ujawnia aury ocalałych** w promieniu **6 m** od **skrzyni** skarbów na **4 s** za każdym razem, gdy rzucasz zaklęcie."
         }
       }
     },
@@ -413,14 +413,14 @@
       "id": 644,
       "name": "Dragontooth Dagger",
       "killer_id": 36,
-      "description": "Made from the actual tooth of a dragon, its edge is jagged and cruel.\n• **Applies** **Hemorrhage** and **Mangled** **status effects** to Survivors hit with a basic attack while holding a Magic Item for **60 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "Made from the actual tooth of a dragon, its edge is jagged and cruel.\n• **Applies Hemorrhage** and **Mangled status effects** to Survivors hit with a basic attack while holding a Magic Item for **60 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_DragontoothDagger.png?feb06f",
       "icon_local_path": "icons/addons/dragontooth_dagger.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Drachenzahndolch",
-          "description": "Aus einem echten Drachenzahn gefertigt und mit einer gezackten, bösartigen Klinge versehen.\n• Belegt Überlebende, die mit einem Grundangriff getroffen werden, während sie einen magischen Gegenstand bei sich tragen, **60 Sekunden** lang mit den Statuseffekten Blutung und **Zerfleischt**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Aus einem echten Drachenzahn gefertigt und mit einer gezackten, bösartigen Klinge versehen.\n• Belegt Überlebende, die mit einem Grundangriff getroffen werden, während sie einen magischen Gegenstand bei sich tragen, **60 Sekunden** lang mit den Statuseffekten Blutung und **Zerfleischt**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Daga de diente de dragón",
@@ -467,7 +467,7 @@
       "id": 646,
       "name": "Bag of Holding",
       "killer_id": 36,
-      "description": "The realm itself bends to its astounding capacity, populating **trials** with even more to take.\n• Two Treasure **Chests** are guaranteed to roll 1 on the dice roll.\n• Opening Treasure **Chests** **grants** the **Oblivious** **status effect** to Survivors for **15 seconds**.\n**Oblivious** prevents Survivors from hearing and being **affected** by the Killer's **Terror Radius**.",
+      "description": "The realm itself bends to its astounding capacity, populating **trials** with even more to take.\n• Two Treasure **Chests** are guaranteed to roll 1 on the dice roll.\n• Opening Treasure **Chests grants** the **Oblivious status effect** to Survivors for **15 seconds**.\n**Oblivious** prevents Survivors from hearing and being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BagOfHolding.png?aae9ab",
       "icon_local_path": "icons/addons/bag_of_holding.webp",
       "rarity": "Very Rare",

@@ -440,7 +440,7 @@
       "id": 382,
       "name": "Vigo's Journal",
       "killer_id": 21,
-      "description": "The journal of a man who claimed to have returned from the Void. The knowledge within has practical applications.\n• **Grants** **Undetectable** while Rushing.\n**Undetectable** hides the Killer's **aura**, **terror radius** and red stain.\n> \"In a wasteland of forgotten dreams and endless routine, the man with a way out is God.\" —Talbot Grimes",
+      "description": "The journal of a man who claimed to have returned from the Void. The knowledge within has practical applications.\n• **Grants Undetectable** while Rushing.\n**Undetectable** hides the Killer's **aura**, **terror radius** and red stain.\n> \"In a wasteland of forgotten dreams and endless routine, the man with a way out is God.\" —Talbot Grimes",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vigosJournal.png?ae7ba9",
       "icon_local_path": "icons/addons/vigos_journal.webp",
       "rarity": "Very Rare",
@@ -451,7 +451,7 @@
         },
         "es": {
           "name": "Diario de Vigo",
-          "description": "El diario de un hombre que decía haber vuelto desde el Vacío. Los conocimientos que alberga tienen **aplicaciones** prácticas.\n• Se te **aplica** **Indetectable** mientras usas Acometida.\n**Indetectable** oculta el **aura**, **radio de terror** y marca roja del asesino.\n> \"En un páramo de sueños olvidados y de rutinas interminables, el hombre que tiene una salida es Dios\". (Talbot Grimes)"
+          "description": "El diario de un hombre que decía haber vuelto desde el Vacío. Los conocimientos que alberga tienen **aplicaciones** prácticas.\n• Se te **aplica Indetectable** mientras usas Acometida.\n**Indetectable** oculta el **aura**, **radio de terror** y marca roja del asesino.\n> \"En un páramo de sueños olvidados y de rutinas interminables, el hombre que tiene una salida es Dios\". (Talbot Grimes)"
         },
         "ja": {
           "name": "ヴィゴの手記",

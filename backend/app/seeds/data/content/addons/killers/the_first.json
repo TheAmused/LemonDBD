@@ -15,7 +15,7 @@
       "translations": {
         "de": {
           "name": "Pflegerausweis",
-          "description": "Zeigt das Gesicht von Henry Creel, so wie es aussah, bevor er von einer anderen Dimension verändert wurde.\nAußerhalb des Weltenbrechermodus ist die Zielreichweite des Rankenangriffs um **2 Meter** **erhöht**."
+          "description": "Zeigt das Gesicht von Henry Creel, so wie es aussah, bevor er von einer anderen Dimension verändert wurde.\nAußerhalb des Weltenbrechermodus ist die Zielreichweite des Rankenangriffs um **2 Meter erhöht**."
         },
         "es": {
           "name": "Carné de celador",
@@ -143,18 +143,18 @@
       "id": 735,
       "name": "Bloody Roller Skate",
       "killer_id": 42,
-      "description": "A memento of the fury that Eleven was capable of.\nWhen **activating** the Undergate Attack, the Killer gains a **20%** **Haste status effect** for **1.5 seconds** upon exiting.\n**Haste** **increases** Killer movement speed.",
+      "description": "A memento of the fury that Eleven was capable of.\nWhen **activating** the Undergate Attack, the Killer gains a **20% Haste status effect** for **1.5 seconds** upon exiting.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BloodyRollerSkate.png?d4979d",
       "icon_local_path": "icons/addons/bloody_roller_skate.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Blutiger Rollschuh",
-          "description": "Eine Erinnerung an die Wut, die in Elf schlummerte.\nBei Aktivierung des Untertor-Angriffs erhält der Killer beim Verlassen der anderen Seite für **1,5 Sek**. den Statuseffekt **Eile** mit **20 %**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Eine Erinnerung an die Wut, die in Elf schlummerte.\nBei Aktivierung des Untertor-Angriffs erhält der Killer beim Verlassen der anderen Seite für **1,5 Sek**. den Statuseffekt **Eile** mit **20 %**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Patín ensangrentado",
-          "description": "Un recuerdo de la furia que era capaz de desatar Once.\nAl **activar** el ataque bajo la puerta, el asesino obtiene un efecto de estado del **20 %** de **Celeridad** durante **1,5 segundos** tras salir.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Un recuerdo de la furia que era capaz de desatar Once.\nAl **activar** el ataque bajo la puerta, el asesino obtiene un efecto de estado del **20 %** de **Celeridad** durante **1,5 segundos** tras salir.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "血塗れのローラースケート",
@@ -162,7 +162,7 @@
         },
         "pl": {
           "name": "Zakrwawione wrotki",
-          "description": "Memento po furii, jaką była w stanie wykrzesać z siebie Jedenastka.\nPo aktywacji ataku spod bramy, zabójca otrzymuje efekt **20%** **Pośpiechu** na **1,5 s** podczas wychodzenia.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Memento po furii, jaką była w stanie wykrzesać z siebie Jedenastka.\nPo aktywacji ataku spod bramy, zabójca otrzymuje efekt **20% Pośpiechu** na **1,5 s** podczas wychodzenia.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -197,7 +197,7 @@
       "id": 737,
       "name": "Mid-Century Radio",
       "killer_id": 42,
-      "description": "It sat silent in the Creel's dining room until the slaughter was about to begin.\nWhile in Worldbreaker Mode, Grandfather Clocks more than **32 meters** away being worked on by Survivors have their **auras** **revealed**.",
+      "description": "It sat silent in the Creel's dining room until the slaughter was about to begin.\nWhile in Worldbreaker Mode, Grandfather Clocks more than **32 meters** away being worked on by Survivors have their **auras revealed**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_Mid-CenturyRadio.png?bf7518",
       "icon_local_path": "icons/addons/mid_century_radio.webp",
       "rarity": "Common",
@@ -224,7 +224,7 @@
       "id": 738,
       "name": "Clock Hands",
       "killer_id": 42,
-      "description": "Hands of the Creel family's grandfather clock, corrupted by Henry's dark power.\nSurvivors gain the **Oblivious** **status effect** when interacting with Grandfather Clocks, and for **12 seconds** after.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "Hands of the Creel family's grandfather clock, corrupted by Henry's dark power.\nSurvivors gain the **Oblivious status effect** when interacting with Grandfather Clocks, and for **12 seconds** after.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ClockHands.png?6306f3",
       "icon_local_path": "icons/addons/clock_hands.webp",
       "rarity": "Uncommon",
@@ -251,7 +251,7 @@
       "id": 739,
       "name": "Electrode Cap",
       "killer_id": 42,
-      "description": "Used to measure the brain's electrical activity. In the lab, nothing goes unnoticed.\nAt the start of the second phase of Worldbreaker Mode (or when Survivors complete the Grandfather Clock interactions), Survivors more than **26 meters** away from the Killer have their **aura** **revealed** for **6 seconds**.",
+      "description": "Used to measure the brain's electrical activity. In the lab, nothing goes unnoticed.\nAt the start of the second phase of Worldbreaker Mode (or when Survivors complete the Grandfather Clock interactions), Survivors more than **26 meters** away from the Killer have their **aura revealed** for **6 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ElectrodeCap.png?da14f1",
       "icon_local_path": "icons/addons/electrode_cap.webp",
       "rarity": "Rare",
@@ -278,7 +278,7 @@
       "id": 740,
       "name": "Forged Death Certificate",
       "killer_id": 42,
-      "description": "A piece of paper used to prove the death of a powerful person who was very much alive.\nWhenever you successfully place a Worldbreaker Token on a Survivor via Vine Attack, you gain **Undetectable** **Status Effect** until the next Worldbreaker Mode **activation**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "A piece of paper used to prove the death of a powerful person who was very much alive.\nWhenever you successfully place a Worldbreaker Token on a Survivor via Vine Attack, you gain **Undetectable Status Effect** until the next Worldbreaker Mode **activation**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ForgedDeathCertificate.png?c2b2f7",
       "icon_local_path": "icons/addons/forged_death_certificate.webp",
       "rarity": "Rare",
@@ -305,7 +305,7 @@
       "id": 741,
       "name": "Rabbit Remains",
       "killer_id": 42,
-      "description": "Before massacring his family, Henry started small, killing rabbits and leaving their corpses strewn about town.\nSurvivors gain the **Exhausted** **status effect** when standing in or entering the Undergate's attack radius, and for **10 seconds** after.\n**Increases** the cooldown of Upside Down traversal by **5 seconds**\n**Exhausted** prevents Survivors from **activating** certain perks.",
+      "description": "Before massacring his family, Henry started small, killing rabbits and leaving their corpses strewn about town.\nSurvivors gain the **Exhausted status effect** when standing in or entering the Undergate's attack radius, and for **10 seconds** after.\n**Increases** the cooldown of Upside Down traversal by **5 seconds**\n**Exhausted** prevents Survivors from **activating** certain perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_RabbitRemains.png?a71531",
       "icon_local_path": "icons/addons/rabbit_remains.webp",
       "rarity": "Very Rare",
@@ -332,14 +332,14 @@
       "id": 742,
       "name": "Neck Tendril",
       "killer_id": 42,
-      "description": "He was furious when the tendril was torn from his neck as Max escaped his mind realm.\nSurvivors hit by the Vine Attack while in Worldbreaker Mode receive **Hemorrhage** and **Mangled** **status effects** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "He was furious when the tendril was torn from his neck as Max escaped his mind realm.\nSurvivors hit by the Vine Attack while in Worldbreaker Mode receive **Hemorrhage** and **Mangled status effects** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_NeckTendril.png?741a59",
       "icon_local_path": "icons/addons/neck_tendril.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Halstentakel",
-          "description": "Er war wütend, als der Tentakel von seinem Hals gerissen wurde und Max aus dem Gedankenreich fliehen konnte.\nÜberlebende, die im Weltenbrechermodus vom Rankenangriff getroffen werden, leiden **70 Sek**. lang unter den Statuseffekten Blutung und **Zerfleischt**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Er war wütend, als der Tentakel von seinem Hals gerissen wurde und Max aus dem Gedankenreich fliehen konnte.\nÜberlebende, die im Weltenbrechermodus vom Rankenangriff getroffen werden, leiden **70 Sek**. lang unter den Statuseffekten Blutung und **Zerfleischt**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Tentáculo del cuello",
@@ -359,7 +359,7 @@
       "id": 743,
       "name": "Victor's Razor Blade",
       "killer_id": 42,
-      "description": "In his grief, Henry's father used a hidden blade to take out his own eyes.\nWhen Worldbreaker Mode ends, injured Survivors become afflicted with the **Broken** **status effect** for the next **20 seconds**.\n**Broken** prevents Survivors from being healed.",
+      "description": "In his grief, Henry's father used a hidden blade to take out his own eyes.\nWhen Worldbreaker Mode ends, injured Survivors become afflicted with the **Broken status effect** for the next **20 seconds**.\n**Broken** prevents Survivors from being healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_VictorsRazorBlade.png?60dd74",
       "icon_local_path": "icons/addons/victors_razor_blade.webp",
       "rarity": "Rare",
@@ -386,14 +386,14 @@
       "id": 744,
       "name": "Broken Skateboard",
       "killer_id": 42,
-      "description": "A cool way to get around, smashed by a furious brother as a means of control.\nWhen Worldbreaker Mode starts, you basic-vault **Windows** **30%** faster and **auras** of **Pallets** and **Windows** are **revealed** to you within **32 meters** for the next **65 seconds**.",
+      "description": "A cool way to get around, smashed by a furious brother as a means of control.\nWhen Worldbreaker Mode starts, you basic-vault **Windows 30%** faster and **auras** of **Pallets** and **Windows** are **revealed** to you within **32 meters** for the next **65 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_BrokenSkateboard.png?aab300",
       "icon_local_path": "icons/addons/broken_skateboard.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Kaputtes Skateboard",
-          "description": "Ein cooles Fortbewegungsmittel, das von einem wütenden Bruder zerstört wurde, der beweisen wollte, wer das Sagen hat.\nWenn der Weltenbrechermodus beginnt, sind deine Grundfähigkeit-Sprünge durch **Fenster** **30 %** schneller und die **Auren** von **Paletten** und **Fenstern** in einem Umkreis von **32 Metern** werden dir für die nächsten **65 Sek**. angezeigt."
+          "description": "Ein cooles Fortbewegungsmittel, das von einem wütenden Bruder zerstört wurde, der beweisen wollte, wer das Sagen hat.\nWenn der Weltenbrechermodus beginnt, sind deine Grundfähigkeit-Sprünge durch **Fenster 30 %** schneller und die **Auren** von **Paletten** und **Fenstern** in einem Umkreis von **32 Metern** werden dir für die nächsten **65 Sek**. angezeigt."
         },
         "es": {
           "name": "Patineta destrozada",
@@ -405,7 +405,7 @@
         },
         "pl": {
           "name": "Popsuta deskorolka",
-          "description": "Fajny sposób na przemieszczanie się, zniszczony przez rozwścieczonego brata, który chciał to ograniczyć.\nGdy tryb Niszczyciela światów rozpoczyna się, wykonujesz podstawowe przeskoki przez okna o **30%** szybciej i **aury** **palet** i okien są **ujawniane** tobie w zasięgu **32 m** przez następne **65 s**."
+          "description": "Fajny sposób na przemieszczanie się, zniszczony przez rozwścieczonego brata, który chciał to ograniczyć.\nGdy tryb Niszczyciela światów rozpoczyna się, wykonujesz podstawowe przeskoki przez okna o **30%** szybciej i **aury palet** i okien są **ujawniane** tobie w zasięgu **32 m** przez następne **65 s**."
         }
       }
     },
@@ -447,7 +447,7 @@
       "translations": {
         "de": {
           "name": "Pizzabrille",
-          "description": "Wurde während Elfs Reizentzug verwendet. Sie vermindert Ablenkungen und fokussiert den Verstand.\nDer Wirkungsbereich des Untertor-Angriffs wird um **90 %** **verringert** und seine Abklingzeit wird um **25 Sek**. verkürzt.\nDeine Abklingzeit nach dem Verlassen der anderen Seite nach dem Untertor-Angriff ist um **80 %** verkürzt."
+          "description": "Wurde während Elfs Reizentzug verwendet. Sie vermindert Ablenkungen und fokussiert den Verstand.\nDer Wirkungsbereich des Untertor-Angriffs wird um **90 % verringert** und seine Abklingzeit wird um **25 Sek**. verkürzt.\nDeine Abklingzeit nach dem Verlassen der anderen Seite nach dem Untertor-Angriff ist um **80 %** verkürzt."
         },
         "es": {
           "name": "Gafas de buceo de pizza",
@@ -474,7 +474,7 @@
       "translations": {
         "de": {
           "name": "Elektroschockband",
-          "description": "Eine grausam effiziente Methode, die Gefangenen in der Einrichtung auszubilden und zu bestrafen.\nBeim Verlassen der anderen Seite werden alle **Fenster** in einem Umkreis von **32 Metern** **12 Sek**. lang **blockiert**."
+          "description": "Eine grausam effiziente Methode, die Gefangenen in der Einrichtung auszubilden und zu bestrafen.\nBeim Verlassen der anderen Seite werden alle **Fenster** in einem Umkreis von **32 Metern 12 Sek**. lang **blockiert**."
         },
         "es": {
           "name": "Collar de electrochoque",
@@ -521,7 +521,7 @@
       "id": 749,
       "name": "Iridescent Soteria Chip",
       "killer_id": 42,
-      "description": "A chip that once limited his powers is now a source of even greater power.\nWhen Worldbreaker **activates**, the Killer gains **Undetectable**, and Survivors with at least one Worldbreaker Token have their **aura** **revealed** when coming within **12 meters** of the Killer.\nThis lasts until the Killer performs a Vine Attack, enters the Upside Down, or Worldbreaker ends.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "A chip that once limited his powers is now a source of even greater power.\nWhen Worldbreaker **activates**, the Killer gains **Undetectable**, and Survivors with at least one Worldbreaker Token have their **aura revealed** when coming within **12 meters** of the Killer.\nThis lasts until the Killer performs a Vine Attack, enters the Upside Down, or Worldbreaker ends.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_IridescentSoteriaChip.png?127c91",
       "icon_local_path": "icons/addons/iridescent_soteria_chip.webp",
       "rarity": "Ultra Rare",

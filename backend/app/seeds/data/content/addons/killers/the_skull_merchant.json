@@ -8,7 +8,7 @@
       "id": 544,
       "name": "High-Power Floodlight",
       "killer_id": 31,
-      "description": "A sudden and overwhelming light that discombobulates anyone foolish enough to approach.\n• Survivors with a Claw Trap suffer from the **Blindness** **status effect**. This effect lasts until the Claw Trap is removed.\n**Blindness** prevents Survivors from seeing **auras**.",
+      "description": "A sudden and overwhelming light that discombobulates anyone foolish enough to approach.\n• Survivors with a Claw Trap suffer from the **Blindness status effect**. This effect lasts until the Claw Trap is removed.\n**Blindness** prevents Survivors from seeing **auras**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_high-PowerFloodlight.png?8760ec",
       "icon_local_path": "icons/addons/high_power_floodlight.webp",
       "rarity": "Common",
@@ -34,14 +34,14 @@
       "id": 545,
       "name": "Geographical Readout",
       "killer_id": 31,
-      "description": "The drones generate and communicate a detailed three-dimensional map of the terrain, making traversal easier.\n• Whenever you deploy a Drone, for **8 seconds**, you basic-vault **Windows**, basic-break **Pallets** or Breakable Walls, and damage **Generators** **20%** faster.",
+      "description": "The drones generate and communicate a detailed three-dimensional map of the terrain, making traversal easier.\n• Whenever you deploy a Drone, for **8 seconds**, you basic-vault **Windows**, basic-break **Pallets** or Breakable Walls, and damage **Generators 20%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_geographicalReadout.png?46b540",
       "icon_local_path": "icons/addons/geographical_readout.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Topografische Datenerfassung",
-          "description": "Die Drohnen erzeugen und übermitteln eine detaillierte, dreidimensionale Karte des Geländes, sodass es leichter zu durchqueren ist.\n• Immer wenn du eine Drohne einsetzt, sind Grundfähigkeit-Sprünge durch **Fenster**, das Zerstören von **Paletten** oder zerstörbaren Mauern mit der Grundfähigkeit und das Beschädigen von **Generatoren** **8 Sek**. lang um **20 %** schneller."
+          "description": "Die Drohnen erzeugen und übermitteln eine detaillierte, dreidimensionale Karte des Geländes, sodass es leichter zu durchqueren ist.\n• Immer wenn du eine Drohne einsetzt, sind Grundfähigkeit-Sprünge durch **Fenster**, das Zerstören von **Paletten** oder zerstörbaren Mauern mit der Grundfähigkeit und das Beschädigen von **Generatoren 8 Sek**. lang um **20 %** schneller."
         },
         "es": {
           "name": "Lector geográfico",
@@ -88,7 +88,7 @@
       "id": 547,
       "name": "Adaptive Lighting",
       "killer_id": 31,
-      "description": "The drone takes account of the surrounding area and casts lights in a bewildering manner that obscures movement.\n• **Increases** the duration of the **Undetectable** **status effect** by **20%**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "The drone takes account of the surrounding area and casts lights in a bewildering manner that obscures movement.\n• **Increases** the duration of the **Undetectable status effect** by **20%**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_adaptiveLighting.png?f1f18a",
       "icon_local_path": "icons/addons/adaptive_lighting.webp",
       "rarity": "Uncommon",
@@ -223,14 +223,14 @@
       "id": 552,
       "name": "Powdered Glass",
       "killer_id": 31,
-      "description": "Once used on the strings used for battle kites, this *powdered glass* took on a much more nefarious purpose on her blade.\n• Claw Trapped Survivors you hit suffer from the **Hemorrhage** and **Mangled** **status effects** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "Once used on the strings used for battle kites, this *powdered glass* took on a much more nefarious purpose on her blade.\n• Claw Trapped Survivors you hit suffer from the **Hemorrhage** and **Mangled status effects** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_powderedGlass.png?2f7f71",
       "icon_local_path": "icons/addons/powdered_glass.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Glaspulver",
-          "description": "Dieses zerstoßene Glas wurde einst für die Leinen von Kampfdrachen benutzt und fand nun auf ihrer Klinge eine deutlich grausamere Verwendung.\n• Triffst du mit einer Klammerfalle versehene Überlebende mit einem Angriff, erleiden diese die Statuseffekte Blutung und **Zerfleischt** für **70 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Dieses zerstoßene Glas wurde einst für die Leinen von Kampfdrachen benutzt und fand nun auf ihrer Klinge eine deutlich grausamere Verwendung.\n• Triffst du mit einer Klammerfalle versehene Überlebende mit einem Angriff, erleiden diese die Statuseffekte Blutung und **Zerfleischt** für **70 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Polvo de vidrio",
@@ -250,7 +250,7 @@
       "id": 553,
       "name": "Vital Targeting Processor",
       "killer_id": 31,
-      "description": "An additional process in the drone’s programming more accurately predicts the weaknesses of potential prey.\n• **Increases** the **Hindered** **status effect** gained by Claw Trapped Survivors when detected by a Drone by **2%**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "An additional process in the drone’s programming more accurately predicts the weaknesses of potential prey.\n• **Increases** the **Hindered status effect** gained by Claw Trapped Survivors when detected by a Drone by **2%**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vitalTargetingProcessor.png?e00397",
       "icon_local_path": "icons/addons/vital_targeting_processor.webp",
       "rarity": "Rare",
@@ -261,7 +261,7 @@
         },
         "es": {
           "name": "Procesador vital de objetivos",
-          "description": "Un proceso adicional en la programación del dron predice con más precisión las debilidades de la posible presa.\n• **Aumenta** un **2 %** el efecto de estado **Entorpecimiento** que obtienen los supervivientes con una tecnotrampa cuando un dron los detecta.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Un proceso adicional en la programación del dron predice con más precisión las debilidades de la posible presa.\n• **Aumenta** un **2 %** el efecto de estado **Entorpecimiento** que obtienen los supervivientes con una tecnotrampa cuando un dron los detecta.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "ターゲット分析プロセッサ",
@@ -277,7 +277,7 @@
       "id": 554,
       "name": "Brown Noise Generator",
       "killer_id": 31,
-      "description": "An ominous hum disseminates from the drone, blanketing the soundscape and making it difficult to hear anything else.\n• Survivors with a Claw Trap suffer from the **Oblivious** **status effect**. This lasts until the Claw Trap is removed.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
+      "description": "An ominous hum disseminates from the drone, blanketing the soundscape and making it difficult to hear anything else.\n• Survivors with a Claw Trap suffer from the **Oblivious status effect**. This lasts until the Claw Trap is removed.\n**Oblivious** prevents Survivors from hearing or being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_brownNoiseGenerator.png?5f1a10",
       "icon_local_path": "icons/addons/brown_noise_generator.webp",
       "rarity": "Rare",
@@ -304,7 +304,7 @@
       "id": 555,
       "name": "Loose Screw",
       "killer_id": 31,
-      "description": "A bone-chilling rattling emanates from the drone, and it seems like it make fall at any minute, distracting Survivors from complicated tasks.\n• Survivors with a Claw Trap suffer from the **Exhausted** **status effect** for **6 seconds**.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
+      "description": "A bone-chilling rattling emanates from the drone, and it seems like it make fall at any minute, distracting Survivors from complicated tasks.\n• Survivors with a Claw Trap suffer from the **Exhausted status effect** for **6 seconds**.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_looseScrew.png?36a982",
       "icon_local_path": "icons/addons/loose_screw.webp",
       "rarity": "Rare",
@@ -419,7 +419,7 @@
       "translations": {
         "de": {
           "name": "Leere Batterien",
-          "description": "Die Batterien dieser Klammerfallen wurden gegen alte Alkalibatterien ausgetauscht. Nicht wiederaufladbar.\n• Alle Überlebenden starten die **Prüfung** mit einer Klammerfalle, die über **50 %** weniger Akku verfügt.\n• Der Akku der Klammerfalle wird pro erhaltener Klammerfalle um **10 %** **erhöht**, bis zu **150 %**."
+          "description": "Die Batterien dieser Klammerfallen wurden gegen alte Alkalibatterien ausgetauscht. Nicht wiederaufladbar.\n• Alle Überlebenden starten die **Prüfung** mit einer Klammerfalle, die über **50 %** weniger Akku verfügt.\n• Der Akku der Klammerfalle wird pro erhaltener Klammerfalle um **10 % erhöht**, bis zu **150 %**."
         },
         "es": {
           "name": "Pilas caducadas",
@@ -466,7 +466,7 @@
       "id": 561,
       "name": "Iridescent Unpublished Manuscript",
       "killer_id": 31,
-      "description": "Before he disappeared, Adriana’s father had started a newer, darker manga, Sonhadores Sombrios.\n• When a Drone is disabled, it gains a 32-meter **Terror Radius** for **15 seconds**. During this time, gain the **Undetectable** **status effect**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.\n> “When evil is on the loose, it cannot escape from Adi Valente!” – Quote on the cover of Adi Valente #1",
+      "description": "Before he disappeared, Adriana’s father had started a newer, darker manga, Sonhadores Sombrios.\n• When a Drone is disabled, it gains a 32-meter **Terror Radius** for **15 seconds**. During this time, gain the **Undetectable status effect**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.\n> “When evil is on the loose, it cannot escape from Adi Valente!” – Quote on the cover of Adi Valente #1",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentUnpublishedManuscript.png?44807e",
       "icon_local_path": "icons/addons/iridescent_unpublished_manuscript.webp",
       "rarity": "Ultra Rare",
@@ -523,7 +523,7 @@
       "id": 813,
       "name": "Randomised Strobes",
       "killer_id": 31,
-      "description": "Lights flash randomly on the ground, making it harder to find purchase on the uneven terrain.\n• **Increases** the duration of the **Hindered** **status effect** Claw Trapped Survivors suffer from when detected by a Drone by **1 second**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "Lights flash randomly on the ground, making it harder to find purchase on the uneven terrain.\n• **Increases** the duration of the **Hindered status effect** Claw Trapped Survivors suffer from when detected by a Drone by **1 second**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_randomisedStrobes.png?60929e",
       "icon_local_path": "icons/addons/randomised_strobes.webp",
       "rarity": "Very Rare",
@@ -537,7 +537,7 @@
         },
         "es": {
           "name": "Luz aleatoria",
-          "description": "Las luces iluminan el suelo aleatoriamente, lo que dificulta moverse por terreno inestable.\n• **Aumenta** en un **1 segundo** la duración del efecto de estado **Entorpecimiento** que sufren los supervivientes con una tecnotrampa cuando un dron los detecta.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Las luces iluminan el suelo aleatoriamente, lo que dificulta moverse por terreno inestable.\n• **Aumenta** en un **1 segundo** la duración del efecto de estado **Entorpecimiento** que sufren los supervivientes con una tecnotrampa cuando un dron los detecta.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "不規則発光装置",

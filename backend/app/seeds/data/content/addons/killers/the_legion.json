@@ -224,14 +224,14 @@
       "id": 248,
       "name": "Defaced Smiley Pin",
       "killer_id": 14,
-      "description": "A once friendly-looking bright yellow button of a defaced smiley. A signature icon of The Legion.\n• Survivors who self-mend a **Deep Wound** from Feral Frenzy are inflicted with **Mangled** for **60 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "A once friendly-looking bright yellow button of a defaced smiley. A signature icon of The Legion.\n• Survivors who self-mend a **Deep Wound** from Feral Frenzy are inflicted with **Mangled** for **60 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_defacedSmileyPin.png?1f6357",
       "icon_local_path": "icons/addons/defaced_smiley_pin.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Entstellter Smiley-Button",
-          "description": "Ein einstmals freundlich dreinblickender, leuchtend gelber Anstecker mit einem entstellten Smiley. Ein Erkennungszeichen der Legion.\n• Überlebende, die eine durch Wilde Raserei verursachte **Tiefe Wunde** selbst heilen, erleiden den Statuseffekt **Zerfleischt** für **60 Sekunden**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Ein einstmals freundlich dreinblickender, leuchtend gelber Anstecker mit einem entstellten Smiley. Ein Erkennungszeichen der Legion.\n• Überlebende, die eine durch Wilde Raserei verursachte **Tiefe Wunde** selbst heilen, erleiden den Statuseffekt **Zerfleischt** für **60 Sekunden**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Chapa de carita sonriente desfigurada",
@@ -251,7 +251,7 @@
       "id": 249,
       "name": "Susie's Mix Tape",
       "killer_id": 14,
-      "description": "A thrilling mix tape with energizing songs and intricate guitar riffs.\n• **Increases** **Killer Instinct** detection range by **20 meters**.",
+      "description": "A thrilling mix tape with energizing songs and intricate guitar riffs.\n• **Increases Killer Instinct** detection range by **20 meters**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_susiesMixTape.png?c2b32b",
       "icon_local_path": "icons/addons/susies_mix_tape.webp",
       "rarity": "Rare",
@@ -440,17 +440,17 @@
       "id": 256,
       "name": "BFFs",
       "killer_id": 14,
-      "description": "An unnaturally cold silver necklace split into four, one for each best friend.\nEarn tokens for hitting Survivors during Feral Frenzy:\n• Second chained hit: **2 tokens**\n• Third chained hit: **3 tokens**\n• Fourth chained hit: **4 tokens**\n• Fifth chained hit: **5 tokens**\nOnce the gates are powered, if 15 or more tokens have been collected, gain **6%** **Haste** when not using Feral Frenzy.\n**Haste** **increases** Killer movement speed.",
+      "description": "An unnaturally cold silver necklace split into four, one for each best friend.\nEarn tokens for hitting Survivors during Feral Frenzy:\n• Second chained hit: **2 tokens**\n• Third chained hit: **3 tokens**\n• Fourth chained hit: **4 tokens**\n• Fifth chained hit: **5 tokens**\nOnce the gates are powered, if 15 or more tokens have been collected, gain **6% Haste** when not using Feral Frenzy.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_bffs.png?e4e8d2",
       "icon_local_path": "icons/addons/bffs.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
-          "description": "Eine unnatürlich kalte Silberhalskette, die in vier Stücke zerbrochen wurde, eines für jeden der besten Freunde.\nVerdiene Zähler, wenn du Überlebende während Wilde Raserei triffst:\n• Zweiter Treffer in Folge: 2 Zähler\n• Dritter Treffer in Folge: 3 Zähler\n• Vierter Treffer in Folge: 4 Zähler\n• Fünfter Treffer in Folge: 5 Zähler\nWenn die Ausgangstore mit Strom versorgt werden und du mindestens 15 Zähler gesammelt hast, erhältst du **6 %** **Eile**, solange du nicht Wilde Raserei verwendest.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Eine unnatürlich kalte Silberhalskette, die in vier Stücke zerbrochen wurde, eines für jeden der besten Freunde.\nVerdiene Zähler, wenn du Überlebende während Wilde Raserei triffst:\n• Zweiter Treffer in Folge: 2 Zähler\n• Dritter Treffer in Folge: 3 Zähler\n• Vierter Treffer in Folge: 4 Zähler\n• Fünfter Treffer in Folge: 5 Zähler\nWenn die Ausgangstore mit Strom versorgt werden und du mindestens 15 Zähler gesammelt hast, erhältst du **6 % Eile**, solange du nicht Wilde Raserei verwendest.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Amigos del alma",
-          "description": "Un colgante de plata sorprendentemente frío dividido en 4 partes, una para cada amigo del alma.\nGana distintivos por golpear a supervivientes durante Frenesí salvaje:\n• Segundo golpe encadenado: 2 distintivos\n• Tercer golpe encadenado: 3 distintivos\n• Cuarto golpe encadenado: 4 distintivos\n• Quinto golpe encadenado: 5 distintivos\nCuando se activen las puertas, si has reunido 15 distintivos o más, obtienes un **6 %** de **Celeridad** mientras uses Frenesí salvaje.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Un colgante de plata sorprendentemente frío dividido en 4 partes, una para cada amigo del alma.\nGana distintivos por golpear a supervivientes durante Frenesí salvaje:\n• Segundo golpe encadenado: 2 distintivos\n• Tercer golpe encadenado: 3 distintivos\n• Cuarto golpe encadenado: 4 distintivos\n• Quinto golpe encadenado: 5 distintivos\nCuando se activen las puertas, si has reunido 15 distintivos o más, obtienes un **6 %** de **Celeridad** mientras uses Frenesí salvaje.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "永遠のベストフレンド",
@@ -458,7 +458,7 @@
         },
         "pl": {
           "name": "Przyjaciele na zawsze",
-          "description": "Nienaturalnie zimny srebrny wisiorek podzielony na cztery części – po jednej dla każdego najlepszego przyjaciela.\nOtrzymujesz żeton za każde trafienie ocalałego podczas trwania Dzikiego Szału:\n• Drugie trafienie z rzędu: **2 żetony**.\n• Trzecie trafienie z rzędu: **3 żetony**.\n• Czwarte trafienie z rzędu: **4 żetony**.\n• Piąte trafienie z rzędu: **5 żeton**ów.\nGdy bramy zostaną zasilone, a tobie uda się zebrać co najmniej **15 żeton**ów, zyskujesz premię **6%** **Pośpiechu**, kiedy nie korzystasz z Dzikiego Szału.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Nienaturalnie zimny srebrny wisiorek podzielony na cztery części – po jednej dla każdego najlepszego przyjaciela.\nOtrzymujesz żeton za każde trafienie ocalałego podczas trwania Dzikiego Szału:\n• Drugie trafienie z rzędu: **2 żetony**.\n• Trzecie trafienie z rzędu: **3 żetony**.\n• Czwarte trafienie z rzędu: **4 żetony**.\n• Piąte trafienie z rzędu: **5 żeton**ów.\nGdy bramy zostaną zasilone, a tobie uda się zebrać co najmniej **15 żeton**ów, zyskujesz premię **6% Pośpiechu**, kiedy nie korzystasz z Dzikiego Szału.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },

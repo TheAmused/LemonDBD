@@ -69,7 +69,7 @@
       "translations": {
         "de": {
           "name": "Heiliges Flügelsymbol",
-          "description": "„Drücke es an deine Brust und bete, auf dass es die Wahrheit in deinem Herzen erkennt.“ (II Zur Ketzerei, Kapitel 14)\nWährend du „Göttliches Licht“ lenkst, erhältst du die Fähigkeit, es mithilfe der Taste für die Killer-Fähigkeit zurück zu dir zu wirken.\nIn diesem Fall gilt:\n• Die Mindestverzögerung, bis es tödlich wird, wird auf **0,5 Sek**. festgesetzt.\n• Seine Höchstgeschwindigkeit wird um **10 %** **erhöht**.\n• Es fügt nur Ketzern Schaden zu."
+          "description": "„Drücke es an deine Brust und bete, auf dass es die Wahrheit in deinem Herzen erkennt.“ (II Zur Ketzerei, Kapitel 14)\nWährend du „Göttliches Licht“ lenkst, erhältst du die Fähigkeit, es mithilfe der Taste für die Killer-Fähigkeit zurück zu dir zu wirken.\nIn diesem Fall gilt:\n• Die Mindestverzögerung, bis es tödlich wird, wird auf **0,5 Sek**. festgesetzt.\n• Seine Höchstgeschwindigkeit wird um **10 % erhöht**.\n• Es fügt nur Ketzern Schaden zu."
         },
         "es": {
           "name": "Icono alado sagrado",
@@ -96,7 +96,7 @@
       "translations": {
         "de": {
           "name": "Gebetsbank",
-          "description": "„Ertragt die Qual des Gebets und wisset, dass die Qual der Ungläubigen noch viel größer ist.“ (II Zur Ketzerei, Kapitel 8)\nWenn du „Göttliches Licht“ lenkst, das von einem Hindernis verlangsamt wird, gilt:\n• Seine Höchstgeschwindigkeit wird weiter um **99 %** **verringert**.\n• Beim Wirken erreicht es die Höchstgeschwindigkeit **25 %** schneller und **erhöht** diese noch um **10 %**."
+          "description": "„Ertragt die Qual des Gebets und wisset, dass die Qual der Ungläubigen noch viel größer ist.“ (II Zur Ketzerei, Kapitel 8)\nWenn du „Göttliches Licht“ lenkst, das von einem Hindernis verlangsamt wird, gilt:\n• Seine Höchstgeschwindigkeit wird weiter um **99 % verringert**.\n• Beim Wirken erreicht es die Höchstgeschwindigkeit **25 %** schneller und **erhöht** diese noch um **10 %**."
         },
         "es": {
           "name": "Reclinatorio de oración",
@@ -177,7 +177,7 @@
       "translations": {
         "de": {
           "name": "Auroras Telerezeptor",
-          "description": "„Niemand darf mit den erbärmlichen Geräten der Ketzer in den Abgrund blicken.“ (III Zur Ketzerei, Kapitel 12)\nImmer wenn ein Überlebender „Ketzerei“ erhält, wird seine **Aura** **4 Sek**. lang **enthüllt**. Zusätzlich sieht er deine **Aura** **4 Sek**. lang."
+          "description": "„Niemand darf mit den erbärmlichen Geräten der Ketzer in den Abgrund blicken.“ (III Zur Ketzerei, Kapitel 12)\nImmer wenn ein Überlebender „Ketzerei“ erhält, wird seine **Aura 4 Sek**. lang **enthüllt**. Zusätzlich sieht er deine **Aura 4 Sek**. lang."
         },
         "es": {
           "name": "Telerreceptor de Aurora",
@@ -243,7 +243,7 @@
         },
         "pl": {
           "name": "Opaska na oczy oddanego",
-          "description": "> „Ci, którzy podążają drogą Gerhardta powinni nosić opaski na oczy, by pamiętać o poświęceniu, jakie poczynił dla swojego proroctwa” – O herezji III, rozdział 61\nZa każdym razem, gdy wygnasz ocalałego z najmniejszą liczbą faz **haka**, **ujawniasz** na **5 s** **aury** wszystkich pozostałych ocalałych z najmniejszą liczbą faz **haka** w odległości większej, niż **32 m**."
+          "description": "> „Ci, którzy podążają drogą Gerhardta powinni nosić opaski na oczy, by pamiętać o poświęceniu, jakie poczynił dla swojego proroctwa” – O herezji III, rozdział 61\nZa każdym razem, gdy wygnasz ocalałego z najmniejszą liczbą faz **haka**, **ujawniasz** na **5 s aury** wszystkich pozostałych ocalałych z najmniejszą liczbą faz **haka** w odległości większej, niż **32 m**."
         }
       }
     },
@@ -305,7 +305,7 @@
       "id": 780,
       "name": "Confessor's War Horn",
       "killer_id": 44,
-      "description": "“The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.” (Witness to Koenrad, ch. 33)\nSurvivors gaining Heresy additionally gain **Exhausted** for **10 seconds**.\n**Exhausted** prevents Survivors from **activating** other perks that **cause** **Exhausted**.",
+      "description": "“The sound of the horn shall strike fear into the hearts of unbelievers and muster the will of the faithful.” (Witness to Koenrad, ch. 33)\nSurvivors gaining Heresy additionally gain **Exhausted** for **10 seconds**.\n**Exhausted** prevents Survivors from **activating** other perks that **cause Exhausted**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ConfessorsWarHorn.png?787ec7",
       "icon_local_path": "icons/addons/confessors_war_horn.webp",
       "rarity": "Uncommon",
@@ -366,7 +366,7 @@
       "translations": {
         "de": {
           "name": "Ketzerketten",
-          "description": "„An den lautesten Abtrünnigen soll ein Exempel statuiert werden. In Ketten sollen sie durch die Straßen gezerrt werden.“ (Zeuge zu Koenrad, Kapitel 41)\nWährend „Eifrig“ gilt:\n• Die Mindestverzögerung, bis „Göttliches Licht“ tödlich wird, wird auf **0,5 Sek**. festgesetzt.\n• Die Höchstgeschwindigkeit von gelenktem „Göttlichen Licht“ wird um **100 %** **erhöht**.\n• Die Höchstgeschwindigkeit von gewirktem „Göttlichen Licht“ wird um **50 %** **erhöht**.\n• Gewirktes „Göttliches Licht“ wird immer zu dir gelenkt."
+          "description": "„An den lautesten Abtrünnigen soll ein Exempel statuiert werden. In Ketten sollen sie durch die Straßen gezerrt werden.“ (Zeuge zu Koenrad, Kapitel 41)\nWährend „Eifrig“ gilt:\n• Die Mindestverzögerung, bis „Göttliches Licht“ tödlich wird, wird auf **0,5 Sek**. festgesetzt.\n• Die Höchstgeschwindigkeit von gelenktem „Göttlichen Licht“ wird um **100 % erhöht**.\n• Die Höchstgeschwindigkeit von gewirktem „Göttlichen Licht“ wird um **50 % erhöht**.\n• Gewirktes „Göttliches Licht“ wird immer zu dir gelenkt."
         },
         "es": {
           "name": "Cadenas del hereje",

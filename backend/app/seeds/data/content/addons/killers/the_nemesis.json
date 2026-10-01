@@ -197,7 +197,7 @@
       "id": 428,
       "name": "Serotonin Injector",
       "killer_id": 24,
-      "description": "A hormone that **slightly** relaxes the user for when stealth is required.\n• **Grants** **Undetectable** for **15 seconds** when a zombie is destroyed.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "A hormone that **slightly** relaxes the user for when stealth is required.\n• **Grants Undetectable** for **15 seconds** when a zombie is destroyed.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_serotoninInjector.png?ac7852",
       "icon_local_path": "icons/addons/serotonin_injector.webp",
       "rarity": "Rare",
@@ -278,7 +278,7 @@
       "id": 431,
       "name": "Licker Tongue",
       "killer_id": 24,
-      "description": "A sticky prehensile tongue that easily wraps around anything it touches.\n• Survivors are **Hindered** for an extra **1 second** after being Contaminated.\n**Hindered** **reduces** Survivor movement speed.\n> \"It’s like... a nightmare.\" —Claire Redfield",
+      "description": "A sticky prehensile tongue that easily wraps around anything it touches.\n• Survivors are **Hindered** for an extra **1 second** after being Contaminated.\n**Hindered reduces** Survivor movement speed.\n> \"It’s like... a nightmare.\" —Claire Redfield",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lickerTongue.png?141149",
       "icon_local_path": "icons/addons/licker_tongue.webp",
       "rarity": "Rare",
@@ -289,7 +289,7 @@
         },
         "es": {
           "name": "Lengua de Licker",
-          "description": "Una lengua prensil y pegajosa que envuelve ágilmente todo lo que toca.\n• Los supervivientes son víctimas de **Entorpecimiento** durante **1 segundo** más después de sufrir Ponzoña.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente.\n> \"Esto es... como una pesadilla\". (Claire Redfield)"
+          "description": "Una lengua prensil y pegajosa que envuelve ágilmente todo lo que toca.\n• Los supervivientes son víctimas de **Entorpecimiento** durante **1 segundo** más después de sufrir Ponzoña.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente.\n> \"Esto es... como una pesadilla\". (Claire Redfield)"
         },
         "ja": {
           "name": "リッカーの舌",

@@ -280,7 +280,7 @@
       "rarity": "Rare",
       "translations": {
         "de": {
-          "description": "Dünne Wunderkerzen, die Sommernächte erhellen und die Schönheit vergänglicher Momente im Leben demonstrieren.\n• Wenn Yamaokas Spuk endet, explodiert die Hülle des Gespensts und Sprünge innerhalb von **4 Metern** werden für **5 Sekunden** **blockiert**."
+          "description": "Dünne Wunderkerzen, die Sommernächte erhellen und die Schönheit vergänglicher Momente im Leben demonstrieren.\n• Wenn Yamaokas Spuk endet, explodiert die Hülle des Gespensts und Sprünge innerhalb von **4 Metern** werden für **5 Sekunden blockiert**."
         },
         "es": {
           "name": "Senko hanabi",
@@ -311,7 +311,7 @@
         },
         "es": {
           "name": "Gafas de madre",
-          "description": "Unas gafas que pertenecieron a una madre cariñosa que padecía una enfermedad crónica.\n• Los supervivientes **activan** **Instinto asesino** cuando se acercan a **2 metros** de la cáscara."
+          "description": "Unas gafas que pertenecieron a una madre cariñosa que padecía una enfermedad crónica.\n• Los supervivientes **activan Instinto asesino** cuando se acercan a **2 metros** de la cáscara."
         },
         "ja": {
           "name": "母の眼鏡",
@@ -419,7 +419,7 @@
         },
         "es": {
           "name": "Flor de cerezo seca",
-          "description": "Una *flor de cerezo seca*. En el pasado simbolizaba la mortalidad.\n• Los supervivientes **activan** **Instinto asesino** cuando se acercan a **3 metros** del Espíritu cuando cambia de plano.\n• Las marcas de arañazos ya no se ven cuando utilizas Fantasma de Yamaoka."
+          "description": "Una *flor de cerezo seca*. En el pasado simbolizaba la mortalidad.\n• Los supervivientes **activan Instinto asesino** cuando se acercan a **3 metros** del Espíritu cuando cambia de plano.\n• Las marcas de arañazos ya no se ven cuando utilizas Fantasma de Yamaoka."
         },
         "ja": {
           "name": "桜のドライフラワー",

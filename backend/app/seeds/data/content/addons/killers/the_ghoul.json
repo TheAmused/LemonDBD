@@ -186,7 +186,7 @@
         },
         "pl": {
           "name": "Okulary Rize",
-          "description": "Sprawiali, że wyglądała na niewinną – dokładnie tak, jak chciała.\n• Po wejściu w Tryb Szału **ujawnia** **aury** zdrowych ocalałych naprawiających **generatory** na **8 s**."
+          "description": "Sprawiali, że wyglądała na niewinną – dokładnie tak, jak chciała.\n• Po wejściu w Tryb Szału **ujawnia aury** zdrowych ocalałych naprawiających **generatory** na **8 s**."
         }
       }
     },
@@ -194,7 +194,7 @@
       "id": 691,
       "name": "Aogiri Tree Robe",
       "killer_id": 39,
-      "description": "Garments worn by an anti-human ghoul organization.\n• If a **generator** is completed while The Ghoul is in Enraged Mode, gain the **Undetectable** **status effect** for **20 seconds**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "Garments worn by an anti-human ghoul organization.\n• If a **generator** is completed while The Ghoul is in Enraged Mode, gain the **Undetectable status effect** for **20 seconds**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AogiriTreeRobe.png?52eb23",
       "icon_local_path": "icons/addons/aogiri_tree_robe.webp",
       "rarity": "Rare",
@@ -221,7 +221,7 @@
       "id": 692,
       "name": "Red Spider Lily",
       "killer_id": 39,
-      "description": "The white flowers turned red as blood.\n• While in Enraged Mode, base attacks afflict Survivors with the **Hemorrhage** **status effect** for **60 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
+      "description": "The white flowers turned red as blood.\n• While in Enraged Mode, base attacks afflict Survivors with the **Hemorrhage status effect** for **60 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured Survivors. This lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_redSpiderLily.png?aad5fa",
       "icon_local_path": "icons/addons/red_spider_lily.webp",
       "rarity": "Rare",
@@ -302,18 +302,18 @@
       "id": 695,
       "name": "Torture Apparatus",
       "killer_id": 39,
-      "description": "A cutting tool used every time his extremities grew back.\n• When Enraged Mode ends, The Ghoul gains **5%** **Haste** for **6 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "A cutting tool used every time his extremities grew back.\n• When Enraged Mode ends, The Ghoul gains **5% Haste** for **6 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_medicalApparatus.png?b5d425",
       "icon_local_path": "icons/addons/torture_apparatus.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Foltergerät",
-          "description": "Ein Schneidwerkzeug, das immer zum Einsatz kam, wenn seine Extremitäten nachwuchsen.\n• Wenn der erzürnte Modus endet, erhält der Ghul **5 %** **Eile** für **6 Sek**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Ein Schneidwerkzeug, das immer zum Einsatz kam, wenn seine Extremitäten nachwuchsen.\n• Wenn der erzürnte Modus endet, erhält der Ghul **5 % Eile** für **6 Sek**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Aparato de tortura",
-          "description": "Una herramienta cortante que utilizaba cada vez que le volvían a crecer las extremidades.\n• Cuando termina el modo furia, el Ghoul obtiene un **5 %** de **Celeridad** durante **6 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Una herramienta cortante que utilizaba cada vez que le volvían a crecer las extremidades.\n• Cuando termina el modo furia, el Ghoul obtiene un **5 %** de **Celeridad** durante **6 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "拷問器具",
@@ -321,7 +321,7 @@
         },
         "pl": {
           "name": "Narzędzie tortur",
-          "description": "Narzędzie tnące używane za każdym razem, gdy jego kończyny odrastały.\n• Gdy Tryb Szału się kończy, Ghul zyskuje **5%** **Pośpiechu** na **6 s**.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Narzędzie tnące używane za każdym razem, gdy jego kończyny odrastały.\n• Gdy Tryb Szału się kończy, Ghul zyskuje **5% Pośpiechu** na **6 s**.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -416,7 +416,7 @@
       "id": 839,
       "name": "Hide's Headphones",
       "killer_id": 39,
-      "description": "They belonged to his best friend, who he tried to keep safe at all costs.\n• Survivors **affected** by Kagune Mark are afflicted with the **Oblivious** **status effect**.\n**Oblivious** prevents Survivors from hearing and being **affected** by the Killer's **Terror Radius**.",
+      "description": "They belonged to his best friend, who he tried to keep safe at all costs.\n• Survivors **affected** by Kagune Mark are afflicted with the **Oblivious status effect**.\n**Oblivious** prevents Survivors from hearing and being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_HidesHeadphones.png?5f5a5b",
       "icon_local_path": "icons/addons/hides_headphones.webp",
       "rarity": "Uncommon",
@@ -498,7 +498,7 @@
         },
         "pl": {
           "name": "Krawat Amona",
-          "description": "Zimny, wyrachowany, precyzyjny. Miał pełną kontrolę nad każdą sytuacją.\n• Podczas celowania w trakcie skoku **ujawnia** **aury** **palet** i okien w promieniu **32 m**."
+          "description": "Zimny, wyrachowany, precyzyjny. Miał pełną kontrolę nad każdą sytuacją.\n• Podczas celowania w trakcie skoku **ujawnia aury palet** i okien w promieniu **32 m**."
         }
       }
     },
@@ -506,7 +506,7 @@
       "id": 842,
       "name": "Mado's Glove",
       "killer_id": 39,
-      "description": "A glove worn by a ghoul investigator.\n• Upon removing Kagune Mark, Survivors suffer from the **Exhausted** **status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
+      "description": "A glove worn by a ghoul investigator.\n• Upon removing Kagune Mark, Survivors suffer from the **Exhausted status effect** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** exhausting perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MadosGlove.png?198bd1",
       "icon_local_path": "icons/addons/mados_glove.webp",
       "rarity": "Rare",

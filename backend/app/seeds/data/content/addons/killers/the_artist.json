@@ -19,7 +19,7 @@
         },
         "es": {
           "name": "Pinturas al óleo",
-          "description": "Apenas quedan unos pocos pegotes de negro y gris, pero Carmina podría pintar un amplio paisaje con ellos.\n• **Aumenta** el alcance de detección del **Instinto asesino** de los cuervos funestos en **1,5 metros**.\nEl **Instinto asesino** **revela** la posición de los supervivientes de manera intermitente."
+          "description": "Apenas quedan unos pocos pegotes de negro y gris, pero Carmina podría pintar un amplio paisaje con ellos.\n• **Aumenta** el alcance de detección del **Instinto asesino** de los cuervos funestos en **1,5 metros**.\nEl **Instinto asesino revela** la posición de los supervivientes de manera intermitente."
         },
         "ja": {
           "name": "油絵の具",
@@ -35,7 +35,7 @@
       "id": 453,
       "name": "Vibrant Obituary",
       "killer_id": 26,
-      "description": "Scrap newspaper, speckled with bright, eye-catching paint. It seems tragedy is a daily thing.\n• **Increases** the length of time a Dire Crow's **Killer Instinct** **reveals** Survivors by **3 seconds**.\n**Killer Instinct** intermittently **reveals** the location of Survivors.",
+      "description": "Scrap newspaper, speckled with bright, eye-catching paint. It seems tragedy is a daily thing.\n• **Increases** the length of time a Dire Crow's **Killer Instinct reveals** Survivors by **3 seconds**.\n**Killer Instinct** intermittently **reveals** the location of Survivors.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_vibrantObituary.png?fee784",
       "icon_local_path": "icons/addons/vibrant_obituary.webp",
       "rarity": "Common",
@@ -46,7 +46,7 @@
         },
         "es": {
           "name": "Esquela llamativa",
-          "description": "Un trozo de periódico salpicado con motas de pintura llamativa. Al parecer, la tragedia es algo cotidiano.\n• **Aumenta** el lapso de tiempo durante el cual el **Instinto asesino** de los cuervos funestos delata a los supervivientes en **3 segundos**.\nEl **Instinto asesino** **revela** la posición de los supervivientes de manera intermitente."
+          "description": "Un trozo de periódico salpicado con motas de pintura llamativa. Al parecer, la tragedia es algo cotidiano.\n• **Aumenta** el lapso de tiempo durante el cual el **Instinto asesino** de los cuervos funestos delata a los supervivientes en **3 segundos**.\nEl **Instinto asesino revela** la posición de los supervivientes de manera intermitente."
         },
         "ja": {
           "name": "鮮やかな死亡記事",
@@ -224,7 +224,7 @@
       "id": 460,
       "name": "Untitled Agony",
       "killer_id": 26,
-      "description": "A canvas that was targeted with swipes and thrashes of black paint following Matias' death. It radiates with heavy, crippling sorrow.\n• When Dire Crows swarm a Survivor, it afflicts them with a **15%** **Hindered** **status effect** for **1.5 seconds**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "A canvas that was targeted with swipes and thrashes of black paint following Matias' death. It radiates with heavy, crippling sorrow.\n• When Dire Crows swarm a Survivor, it afflicts them with a **15% Hindered status effect** for **1.5 seconds**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_untitledAgony.png?b0f8cb",
       "icon_local_path": "icons/addons/untitled_agony.webp",
       "rarity": "Uncommon",
@@ -235,7 +235,7 @@
         },
         "es": {
           "name": "Agonía sin título",
-          "description": "Un lienzo castigado con brochazos y salpicaduras de pintura negra tras la muerte de Matías. Exuda una pena devastadora.\n• Cuando los cuervos funestos acosan a un superviviente, este sufre un **15 %** del efecto de estado **Entorpecimiento** durante **1,5 segundos**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Un lienzo castigado con brochazos y salpicaduras de pintura negra tras la muerte de Matías. Exuda una pena devastadora.\n• Cuando los cuervos funestos acosan a un superviviente, este sufre un **15 %** del efecto de estado **Entorpecimiento** durante **1,5 segundos**.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "無題の悲痛",
@@ -278,7 +278,7 @@
       "id": 462,
       "name": "Darkest Ink",
       "killer_id": 26,
-      "description": "An unnatural ink, so wretched and dark that it seems to pull in light around it.\n• When Dire Crows swarm a Survivor, it afflicts them with the **Blindness** **status effect**. The effect persists for **15 seconds** after Dire Crows are repelled from a Survivor.\n**Blindness** prevents survivors from seeing **auras**.",
+      "description": "An unnatural ink, so wretched and dark that it seems to pull in light around it.\n• When Dire Crows swarm a Survivor, it afflicts them with the **Blindness status effect**. The effect persists for **15 seconds** after Dire Crows are repelled from a Survivor.\n**Blindness** prevents survivors from seeing **auras**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_darkestInk.png?af7273",
       "icon_local_path": "icons/addons/darkest_ink.webp",
       "rarity": "Rare",
@@ -305,7 +305,7 @@
       "id": 463,
       "name": "O Grief, O Lover",
       "killer_id": 26,
-      "description": "An abstract ink drawing that Carmina drew before walking to the Death Leap.\n• When Dire Crows swarm a Survivor, it afflicts them with the **Exhausted** **status effect**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
+      "description": "An abstract ink drawing that Carmina drew before walking to the Death Leap.\n• When Dire Crows swarm a Survivor, it afflicts them with the **Exhausted status effect**.\n**Exhausted** prevents Survivors from **activating** certain perks.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_oGriefOLover.png?af9b00",
       "icon_local_path": "icons/addons/o_grief_o_lover.webp",
       "rarity": "Rare",
@@ -332,14 +332,14 @@
       "id": 464,
       "name": "Thorny Nest",
       "killer_id": 26,
-      "description": "A nest that remained empty near Carmina's home. There are sharp thorns embedded in it.\n• Survivors damaged by a Dire Crow are afflicted with the **Hemorrhage** and **Mangled** **status effects** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "A nest that remained empty near Carmina's home. There are sharp thorns embedded in it.\n• Survivors damaged by a Dire Crow are afflicted with the **Hemorrhage** and **Mangled status effects** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_thornyNest.png?c9f5b6",
       "icon_local_path": "icons/addons/thorny_nest.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Dornennest",
-          "description": "Ein Nest in der Nähe von Carminas Haus, das leer blieb. Spitze Stacheln sind darin eingearbeitet.\n• Überlebende, die von einer Düsterkrähe **verletzt** werden, erleiden die Statuseffekte Blutung und **Zerfleischt** für **70 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Ein Nest in der Nähe von Carminas Haus, das leer blieb. Spitze Stacheln sind darin eingearbeitet.\n• Überlebende, die von einer Düsterkrähe **verletzt** werden, erleiden die Statuseffekte Blutung und **Zerfleischt** für **70 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Nido espinoso",
@@ -359,7 +359,7 @@
       "id": 465,
       "name": "Silver Bell",
       "killer_id": 26,
-      "description": "A shiny trinket that a crow took a liking to. The clinking of the bell was a distraction to all but Carmina.\n• When Dire Crows swarm a Survivor it afflicts them with the **Oblivious** **status effect**.\n**Oblivious** prevents Survivors from hearing and being **affected** by the Killer's **Terror Radius**.",
+      "description": "A shiny trinket that a crow took a liking to. The clinking of the bell was a distraction to all but Carmina.\n• When Dire Crows swarm a Survivor it afflicts them with the **Oblivious status effect**.\n**Oblivious** prevents Survivors from hearing and being **affected** by the Killer's **Terror Radius**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_silverBell.png?fb8329",
       "icon_local_path": "icons/addons/silver_bell.webp",
       "rarity": "Rare",
@@ -386,7 +386,7 @@
       "id": 466,
       "name": "Matias' Baby Shoes",
       "killer_id": 26,
-      "description": "A grieving reminder to Carmina that Matias would be with her, always watching.\n• Survivors within **5 meters** of an idle Dire Crow have their **auras** **revealed** for **3 seconds**.\n> \"See you soon, Matias.\" —Carmina Mora",
+      "description": "A grieving reminder to Carmina that Matias would be with her, always watching.\n• Survivors within **5 meters** of an idle Dire Crow have their **auras revealed** for **3 seconds**.\n> \"See you soon, Matias.\" —Carmina Mora",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_matiasBabyShoes.png?5f8ca6",
       "icon_local_path": "icons/addons/matias_baby_shoes.webp",
       "rarity": "Very Rare",
@@ -440,7 +440,7 @@
       "id": 468,
       "name": "Garden of Rot",
       "killer_id": 26,
-      "description": "A nude self-portrait in which Carmina depicts a rotting darkness growing outwards from within.\n• When a Survivor **affected** by Dire Crows completes the repel action, they are afflicted by the **Exposed** **status effect** for **4 seconds**.\n**Exposed** Survivors are downed by basic attacks, even if uninjured.\n> \"I see no salvation in the rot.\"—Carmina Mora",
+      "description": "A nude self-portrait in which Carmina depicts a rotting darkness growing outwards from within.\n• When a Survivor **affected** by Dire Crows completes the repel action, they are afflicted by the **Exposed status effect** for **4 seconds**.\n**Exposed** Survivors are downed by basic attacks, even if uninjured.\n> \"I see no salvation in the rot.\"—Carmina Mora",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gardenOfRot.png?6aa819",
       "icon_local_path": "icons/addons/garden_of_rot.webp",
       "rarity": "Ultra Rare",
@@ -521,7 +521,7 @@
       "id": 471,
       "name": "Iridescent Feather",
       "killer_id": 26,
-      "description": "A glass-like feather molded from The Fog itself. Simple as it may be, it's a symbol of those who watch over Carmina.\n• The Artist gains the **Undetectable** **status effect** when Birds of **Torment** is in cooldown and she holds no Dire Crows.\n• **Decreases** the maximum capacity of Dire Crows by 1.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.\n> \"They saved me when I couldn't save myself.\" — Carmina Mora",
+      "description": "A glass-like feather molded from The Fog itself. Simple as it may be, it's a symbol of those who watch over Carmina.\n• The Artist gains the **Undetectable status effect** when Birds of **Torment** is in cooldown and she holds no Dire Crows.\n• **Decreases** the maximum capacity of Dire Crows by 1.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.\n> \"They saved me when I couldn't save myself.\" — Carmina Mora",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentFeather.png?25246f",
       "icon_local_path": "icons/addons/iridescent_feather.webp",
       "rarity": "Ultra Rare",

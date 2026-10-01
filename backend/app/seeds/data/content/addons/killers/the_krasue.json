@@ -258,7 +258,7 @@
       "translations": {
         "de": {
           "name": "Janjiras Hand",
-          "description": "Eines der wenigen erkennbaren Teile, das von ihrer Freundin zurückblieb.\n• Du erhältst **2 Aufladungen** für Kopfflug, wenn ein **Generator** repariert wird. Die Aufladegeschwindigkeit von Kopfflug wird **15 Sekunden** lang um **25 %** **erhöht**.\n• Wenn 5 **Generatoren** repariert wurden, ist Kopfflug vollständig aufgeladen und die Aufladegeschwindigkeit ist dauerhaft um **25 %** **erhöht**."
+          "description": "Eines der wenigen erkennbaren Teile, das von ihrer Freundin zurückblieb.\n• Du erhältst **2 Aufladungen** für Kopfflug, wenn ein **Generator** repariert wird. Die Aufladegeschwindigkeit von Kopfflug wird **15 Sekunden** lang um **25 % erhöht**.\n• Wenn 5 **Generatoren** repariert wurden, ist Kopfflug vollständig aufgeladen und die Aufladegeschwindigkeit ist dauerhaft um **25 % erhöht**."
         },
         "es": {
           "name": "Mano de Janjira",
@@ -278,18 +278,18 @@
       "id": 722,
       "name": "Dulled Knife",
       "killer_id": 41,
-      "description": "A stage prop, symbolic of a woman's gambit in an attempt to save her lover on death's row.\n• **Decreases** Headlong Flight's charge consumption by **25%**.\n• Glowing Fungus **grants** Survivors **10%** **Haste** for **5 seconds** while preventing scratch marks, pools of blood, grunts of pain, and **aura** **reveals**.\n**Haste** **increases** Survivor's movement speed.",
+      "description": "A stage prop, symbolic of a woman's gambit in an attempt to save her lover on death's row.\n• **Decreases** Headlong Flight's charge consumption by **25%**.\n• Glowing Fungus **grants** Survivors **10% Haste** for **5 seconds** while preventing scratch marks, pools of blood, grunts of pain, and **aura reveals**.\n**Haste increases** Survivor's movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dulledKnife.png?b66200",
       "icon_local_path": "icons/addons/dulled_knife.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Stumpfes Messer",
-          "description": "Eine Requisite, die für den Schachzug einer Frau steht, die ihren Liebsten aus dem Todestrakt befreien will.\n• **Verringert** den Verbrauch von Aufladungen von Kopfflug um **25 %**.\n• Leuchtpilze gewähren Überlebenden **5 Sek**. lang **10 %** **Eile** und verhindern gleichzeitig Kratzspuren, Blutpfützen, Schmerzenslaute und **Aura**-Enthüllungen.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit von Überlebenden."
+          "description": "Eine Requisite, die für den Schachzug einer Frau steht, die ihren Liebsten aus dem Todestrakt befreien will.\n• **Verringert** den Verbrauch von Aufladungen von Kopfflug um **25 %**.\n• Leuchtpilze gewähren Überlebenden **5 Sek**. lang **10 % Eile** und verhindern gleichzeitig Kratzspuren, Blutpfützen, Schmerzenslaute und **Aura**-Enthüllungen.\n**Eile erhöht** die Bewegungsgeschwindigkeit von Überlebenden."
         },
         "es": {
           "name": "Cuchillo romo",
-          "description": "Un decorado de escena, símbolo de la apuesta desesperada de una mujer por salvar a su amante en el corredor de la muerte.\n• **Reduce** el consumo de carga de Vuelo de cabeza un **25 %**.\n• El hongo brillante otorga a los supervivientes un **10 %** de **Celeridad** durante **5 segundos**, evitando marcas de arañazos, charcos de sangre, gruñidos de dolor y **auras** **reveladas**.\n**Celeridad** **aumenta** la velocidad de movimiento del superviviente."
+          "description": "Un decorado de escena, símbolo de la apuesta desesperada de una mujer por salvar a su amante en el corredor de la muerte.\n• **Reduce** el consumo de carga de Vuelo de cabeza un **25 %**.\n• El hongo brillante otorga a los supervivientes un **10 %** de **Celeridad** durante **5 segundos**, evitando marcas de arañazos, charcos de sangre, gruñidos de dolor y **auras reveladas**.\n**Celeridad aumenta** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "刃の鈍いナイフ",
@@ -297,7 +297,7 @@
         },
         "pl": {
           "name": "Stępiony nóż",
-          "description": "Rekwizyt sceniczny symbolizujący desperacki gambit kobiety, by ocalić ukochanego skazanego na śmierć.\n• **Zmniejsza** zużycie ładunku Lotu na Oślep o **25%**.\n• Świecący Grzyb zapewnia ocalałym **10%** **Pośpiechu** na **5 s**, jednocześnie ukrywając czerwone zarysowania, ślady krwi, jęki bólu i **aurę**.\n**Pośpiech** **zwiększa** prędkość ruchu ocalałego."
+          "description": "Rekwizyt sceniczny symbolizujący desperacki gambit kobiety, by ocalić ukochanego skazanego na śmierć.\n• **Zmniejsza** zużycie ładunku Lotu na Oślep o **25%**.\n• Świecący Grzyb zapewnia ocalałym **10% Pośpiechu** na **5 s**, jednocześnie ukrywając czerwone zarysowania, ślady krwi, jęki bólu i **aurę**.\n**Pośpiech zwiększa** prędkość ruchu ocalałego."
         }
       }
     },
@@ -359,7 +359,7 @@
       "id": 725,
       "name": "Lorenza's Remains",
       "killer_id": 41,
-      "description": "Even her pet bird would fall victim to the Krasue's thirst for blood.\n• Leeched I **applies** **Blindness**.\n• Leeched II **applies** **4%** **Hindered**.\n**Blindness** prevents Survivors from seeing **auras**.\n**Hindered** **reduces** Survivor movement speed.",
+      "description": "Even her pet bird would fall victim to the Krasue's thirst for blood.\n• Leeched I **applies Blindness**.\n• Leeched II **applies 4% Hindered**.\n**Blindness** prevents Survivors from seeing **auras**.\n**Hindered reduces** Survivor movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_lorenzasRemains.png?dd64c9",
       "icon_local_path": "icons/addons/lorenzas_remains.webp",
       "rarity": "Very Rare",
@@ -370,7 +370,7 @@
         },
         "es": {
           "name": "Restos de Lorenza",
-          "description": "Hasta su ave mascota cayó víctima de la **sed de sangre** de la Krasue.\n• Exangüe I **aplica** **Ceguera**.\n• Exangüe II **aplica** un **4 %** de **Entorpecimiento**.\n**Ceguera** impide que los supervivientes vean **auras**.\n**Entorpecimiento** **reduce** la velocidad de movimiento del superviviente."
+          "description": "Hasta su ave mascota cayó víctima de la **sed de sangre** de la Krasue.\n• Exangüe I **aplica Ceguera**.\n• Exangüe II **aplica** un **4 %** de **Entorpecimiento**.\n**Ceguera** impide que los supervivientes vean **auras**.\n**Entorpecimiento reduce** la velocidad de movimiento del superviviente."
         },
         "ja": {
           "name": "ロレンザの屍",
@@ -378,7 +378,7 @@
         },
         "pl": {
           "name": "Szczątki Lorenzy",
-          "description": "Nawet jej ptak domowy padł ofiarą pragnienia krwi Krasue.\n• Pasożyt I **nakłada** **Oślepienie**.\n• Pasożyt II **nakłada** **4%** Skrępowanie.\n**Oślepienie** uniemożliwia ocalałym widzenie aur.\nSkrępowanie **zmniejsza** prędkość ruchu ocalałego."
+          "description": "Nawet jej ptak domowy padł ofiarą pragnienia krwi Krasue.\n• Pasożyt I **nakłada Oślepienie**.\n• Pasożyt II **nakłada 4%** Skrępowanie.\n**Oślepienie** uniemożliwia ocalałym widzenie aur.\nSkrępowanie **zmniejsza** prędkość ruchu ocalałego."
         }
       }
     },
@@ -386,7 +386,7 @@
       "id": 726,
       "name": "Mysterious Elixir",
       "killer_id": 41,
-      "description": "A liquid moulded from The Fog itself. Though similar to the concoction she drank, there seem to be slight alterations.\n• Whenever you hit a **Window** with Leeching Gland, it is **marked**\n• Whenever you vault the **marked** **Window**, it is **blocked** for **10 seconds**, then the mark is removed.\n• Only one **Window** can be **marked** at a time.",
+      "description": "A liquid moulded from The Fog itself. Though similar to the concoction she drank, there seem to be slight alterations.\n• Whenever you hit a **Window** with Leeching Gland, it is **marked**\n• Whenever you vault the **marked Window**, it is **blocked** for **10 seconds**, then the mark is removed.\n• Only one **Window** can be **marked** at a time.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentElixir.png?b568d4",
       "icon_local_path": "icons/addons/mysterious_elixir.webp",
       "rarity": "Very Rare",
@@ -501,7 +501,7 @@
       "translations": {
         "de": {
           "name": "Opernglas",
-          "description": "Eine Brille, die viele Tragödien gesehen hat.\n• Wird ein nicht ausgesaugter Überlebender mit Darmpeitsche getroffen, werden die **Auren** von anderen Überlebenden in einem Umkreis von **24 Metern** **5 Sekunden** lang **enthüllt**."
+          "description": "Eine Brille, die viele Tragödien gesehen hat.\n• Wird ein nicht ausgesaugter Überlebender mit Darmpeitsche getroffen, werden die **Auren** von anderen Überlebenden in einem Umkreis von **24 Metern 5 Sekunden** lang **enthüllt**."
         },
         "en": {
           "name": "Theater Binoculars"
@@ -516,7 +516,7 @@
         },
         "pl": {
           "name": "Lornetka teatralna",
-          "description": "Para okularów, które były świadkiem wielu tragedii.\n• Trafienie ocalałego, który nie jest zainfekowany Pasożytem, umiejętnością Flakowego Bata **ujawnia** **aury** innych ocalałych w promieniu **24 m** na **5 s**."
+          "description": "Para okularów, które były świadkiem wielu tragedii.\n• Trafienie ocalałego, który nie jest zainfekowany Pasożytem, umiejętnością Flakowego Bata **ujawnia aury** innych ocalałych w promieniu **24 m** na **5 s**."
         }
       }
     },

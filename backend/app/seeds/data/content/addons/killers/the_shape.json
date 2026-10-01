@@ -35,7 +35,7 @@
       "id": 96,
       "name": "Dead Rabbit",
       "killer_id": 5,
-      "description": "A grey rabbit which has been opened from neck to tail.\n• **Decreases** **Terror Radius** in Pursuer Mode by **25%**.\n• **Increases** **Terror Radius** in Evil Incarnate mode by **25%**.",
+      "description": "A grey rabbit which has been opened from neck to tail.\n• **Decreases Terror Radius** in Pursuer Mode by **25%**.\n• **Increases Terror Radius** in Evil Incarnate mode by **25%**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_deadRabbit.png?882841",
       "icon_local_path": "icons/addons/dead_rabbit.webp",
       "rarity": "Uncommon",
@@ -54,7 +54,7 @@
         },
         "pl": {
           "name": "Martwy królik",
-          "description": "Szary królik. Został rozcięty od szyi aż po ogon.\n• **Zmniejsza** **zasięg terroru** w trybie Gonitwy o **25%**.\n• **Zwiększa** **zasięg terroru** w trybie Wcielonego Zła o **25%**."
+          "description": "Szary królik. Został rozcięty od szyi aż po ogon.\n• **Zmniejsza zasięg terroru** w trybie Gonitwy o **25%**.\n• **Zwiększa zasięg terroru** w trybie Wcielonego Zła o **25%**."
         }
       }
     },
@@ -69,7 +69,7 @@
       "translations": {
         "de": {
           "name": "Duftendes Haarbüschel",
-          "description": "Ein Büschel blonder Haare, das jemandem gewaltsam vom Kopf gerissen wurde. Verströmt einen leichten, femininen Blütenduft.\nIm „Inkarnation des Bösen“-Modus gilt:\n• Überlebende sind **gefährdet**.\n• Die Reichweite des Sprungangriffs ist um **50 %** **erhöht**.\n• Schlachterhieb kann nicht verwendet werden.\n**Gefährdete** Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht **verletzt** sind."
+          "description": "Ein Büschel blonder Haare, das jemandem gewaltsam vom Kopf gerissen wurde. Verströmt einen leichten, femininen Blütenduft.\nIm „Inkarnation des Bösen“-Modus gilt:\n• Überlebende sind **gefährdet**.\n• Die Reichweite des Sprungangriffs ist um **50 % erhöht**.\n• Schlachterhieb kann nicht verwendet werden.\n**Gefährdete** Überlebende werden von Grundangriffen niedergestreckt, auch wenn sie nicht **verletzt** sind."
         },
         "es": {
           "name": "Mata de pelo perfumada",
@@ -359,7 +359,7 @@
       "id": 108,
       "name": "Scratched Mirror",
       "killer_id": 5,
-      "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• **Reveal** the **auras** of Survivors within **32 meters** while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits **grant** **100%** more Brutality and **200%** more Deviousness Bloodpoints.",
+      "description": "A standing portable vanity mirror which has been violently scratched with a sharp metallic object.\n• **Reveal** the **auras** of Survivors within **32 meters** while stalking.\n• Cannot leave Stalker Mode.\n• Score events for hits **grant 100%** more Brutality and **200%** more Deviousness Bloodpoints.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_scratchedMirror.png?5ca294",
       "icon_local_path": "icons/addons/scratched_mirror.webp",
       "rarity": "Ultra Rare",
@@ -378,7 +378,7 @@
         },
         "pl": {
           "name": "Strzaskane lusterko",
-          "description": "Stojące lusterko przenośne do makijażu. Zostało zarysowane ostrym, metalowym narzędziem.\n• **Ujawnia** **aury ocalałych** w zasięgu **32 metr**ów podczas śledzenia.\n• Nie można opuścić trybu śledzenia.\n• Wydarzenia punktowane za trafienia dodają **100%** więcej Punktów Krwi w kategorii „Brutalność” i **200%** więcej Punktów Krwi w kategorii „Przebiegłość”."
+          "description": "Stojące lusterko przenośne do makijażu. Zostało zarysowane ostrym, metalowym narzędziem.\n• **Ujawnia aury ocalałych** w zasięgu **32 metr**ów podczas śledzenia.\n• Nie można opuścić trybu śledzenia.\n• Wydarzenia punktowane za trafienia dodają **100%** więcej Punktów Krwi w kategorii „Brutalność” i **200%** więcej Punktów Krwi w kategorii „Przebiegłość”."
         }
       }
     },

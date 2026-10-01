@@ -131,14 +131,14 @@
       "id": 406,
       "name": "Lucky Blade",
       "killer_id": 23,
-      "description": "The first throwing knife Ji-woon ever owned. Purchased by his father, he was expected to put on a show for those frequenting the family restaurant.\nOn every eighth Blade Hit, an additional bonus is assigned at random:\n• **Increases** Throw Speed by **5%** for **5 seconds**.\n• Gain **3%** **Haste** for **6 seconds**.\n• Gain an additional Style Point.",
+      "description": "The first throwing knife Ji-woon ever owned. Purchased by his father, he was expected to put on a show for those frequenting the family restaurant.\nOn every eighth Blade Hit, an additional bonus is assigned at random:\n• **Increases** Throw Speed by **5%** for **5 seconds**.\n• Gain **3% Haste** for **6 seconds**.\n• Gain an additional Style Point.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_luckyBlade.png?cb6b34",
       "icon_local_path": "icons/addons/lucky_blade.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Glücksklinge",
-          "description": "Das erste Wurfmesser, das Ji-woon je besaß. Sein Vater hatte es ihm gekauft, damit er den Gästen im Familienrestaurant eine Show bieten konnte.\nBei jedem achten Klingentreffer wird zufällig ein zusätzlicher Bonus zugewiesen:\n• **Erhöht** die Wurfgeschwindigkeit **8 Sek**. lang um **8 %**.\n• Erhalte **3 %** **Eile** für **3 Sek**.\n• Erhalte einen zusätzlichen Stilpunkt."
+          "description": "Das erste Wurfmesser, das Ji-woon je besaß. Sein Vater hatte es ihm gekauft, damit er den Gästen im Familienrestaurant eine Show bieten konnte.\nBei jedem achten Klingentreffer wird zufällig ein zusätzlicher Bonus zugewiesen:\n• **Erhöht** die Wurfgeschwindigkeit **8 Sek**. lang um **8 %**.\n• Erhalte **3 % Eile** für **3 Sek**.\n• Erhalte einen zusätzlichen Stilpunkt."
         },
         "es": {
           "name": "Hoja de la suerte",
@@ -150,7 +150,7 @@
         },
         "pl": {
           "name": "Szczęśliwe ostrze",
-          "description": "Pierwszy nóż do rzucania należący do Ji-woona. Kupił go jego ojciec z zamiarem zrobienia pokazu dla odwiedzających rodzinną restaurację.\nCo ósme trafienie ostrzem, przydzielana jest losowo dodatkowa premia:\n• **Zwiększa** prędkość rzucania o **5%** przez **5 s**.\n• Zyskujesz **3%** **Pośpiechu** przez **6 s**.\n• Zyskujesz dodatkowy punkt stylu."
+          "description": "Pierwszy nóż do rzucania należący do Ji-woona. Kupił go jego ojciec z zamiarem zrobienia pokazu dla odwiedzających rodzinną restaurację.\nCo ósme trafienie ostrzem, przydzielana jest losowo dodatkowa premia:\n• **Zwiększa** prędkość rzucania o **5%** przez **5 s**.\n• Zyskujesz **3% Pośpiechu** przez **6 s**.\n• Zyskujesz dodatkowy punkt stylu."
         }
       }
     },
@@ -185,7 +185,7 @@
       "id": 408,
       "name": "Ripper Brace",
       "killer_id": 23,
-      "description": "A wrist brace worn by Ji-woon during the filming of his music video Ripper. Though unintentional, the design stabilizes the wrist better than many medical braces.\n• For each Style Rank, you basic-vault **Windows**, basic-break **Pallets** or Breakable Walls, and damage **Generators** **6%** faster.",
+      "description": "A wrist brace worn by Ji-woon during the filming of his music video Ripper. Though unintentional, the design stabilizes the wrist better than many medical braces.\n• For each Style Rank, you basic-vault **Windows**, basic-break **Pallets** or Breakable Walls, and damage **Generators 6%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_ripperBrace.png?bec53e",
       "icon_local_path": "icons/addons/ripper_brace.webp",
       "rarity": "Uncommon",
@@ -298,7 +298,7 @@
       "translations": {
         "de": {
           "name": "„One Caged Heart“-Schuhe",
-          "description": "Die Schuhe, die Ji-woon im Musikvideo für „One Caged Heart“ trug. Erlauben glatte, anmutige Tanzbewegungen.\n• Wenn du **Paletten** oder zerstörbare Mauern mit deiner Grundfähigkeit zerstörst oder **Generatoren** beschädigst, wird die Bewegungsgeschwindigkeit beim nächsten Wurfzustand **10 Sek**. lang um **5 %** **erhöht**."
+          "description": "Die Schuhe, die Ji-woon im Musikvideo für „One Caged Heart“ trug. Erlauben glatte, anmutige Tanzbewegungen.\n• Wenn du **Paletten** oder zerstörbare Mauern mit deiner Grundfähigkeit zerstörst oder **Generatoren** beschädigst, wird die Bewegungsgeschwindigkeit beim nächsten Wurfzustand **10 Sek**. lang um **5 % erhöht**."
         },
         "es": {
           "name": "Zapatos \"Corazón enjaulado\"",
@@ -379,7 +379,7 @@
       "translations": {
         "de": {
           "name": "Trickklingen",
-          "description": "Spezialklingen, die nur von jenen als fehlerhaft angesehen werden, denen es an Vorstellungskraft mangelt. Der junge Ji-woon verzauberte Zuschauer mit seinen Tricks.\n• Klingen können einmal von der Umgebung abprallen.\n• Bei jedem achten Klingentreffer nach dem Abprallen wird ein zusätzlicher Bonus zufällig zugewiesen:\n• Die Schnittwunden-Anzeige wird um **100 %** **erhöht**.\n• Die **Auren** von Überlebenden in einem Umkreis von **12 Metern** werden **4,4 Sek**. lang **enthüllt**.\n• Du erhältst einen zusätzlichen Stilpunkt."
+          "description": "Spezialklingen, die nur von jenen als fehlerhaft angesehen werden, denen es an Vorstellungskraft mangelt. Der junge Ji-woon verzauberte Zuschauer mit seinen Tricks.\n• Klingen können einmal von der Umgebung abprallen.\n• Bei jedem achten Klingentreffer nach dem Abprallen wird ein zusätzlicher Bonus zufällig zugewiesen:\n• Die Schnittwunden-Anzeige wird um **100 % erhöht**.\n• Die **Auren** von Überlebenden in einem Umkreis von **12 Metern** werden **4,4 Sek**. lang **enthüllt**.\n• Du erhältst einen zusätzlichen Stilpunkt."
         },
         "es": {
           "name": "Hojas engañosas",
@@ -406,7 +406,7 @@
       "translations": {
         "de": {
           "name": "„Cut Thru U“-Single",
-          "description": "Die erste von NO SPIN veröffentlichte Single nach Ji-woons Beitritt zur Band. Ein immenser Erfolg in den koreanischen Charts.\n• Beim Erreichen von Rang A werden Überlebende in einem Umkreis von **32 Metern** **4,4 Sek**. lang vom Killerinstinkt **enthüllt**.\n\"„Can’t stop this love\nThat’s tearing your heart\nWherever you go\nI will cut you apart.“\n– „Cut Thru U“ von NO SPIN\""
+          "description": "Die erste von NO SPIN veröffentlichte Single nach Ji-woons Beitritt zur Band. Ein immenser Erfolg in den koreanischen Charts.\n• Beim Erreichen von Rang A werden Überlebende in einem Umkreis von **32 Metern 4,4 Sek**. lang vom Killerinstinkt **enthüllt**.\n\"„Can’t stop this love\nThat’s tearing your heart\nWherever you go\nI will cut you apart.“\n– „Cut Thru U“ von NO SPIN\""
         },
         "es": {
           "name": "Sencillo \"Atravesando tu corazón\"",
@@ -437,7 +437,7 @@
         },
         "es": {
           "name": "Gemelos de diamante",
-          "description": "Unos gemelos clavados en los ojos de una fan obsesiva que cometió el error de acosar a Ji-woon. Al quitar la sangre, puede apreciarse su espectacular brillo.\n• **Revela** **auras** de supervivientes durante **6 segundos** cuando su desgarro esté a un ataque con cuchillo para llegar al máximo.\n> \"Shh... Ya no tendrás que ver tu propia sangre\". (Hak Ji-woon)"
+          "description": "Unos gemelos clavados en los ojos de una fan obsesiva que cometió el error de acosar a Ji-woon. Al quitar la sangre, puede apreciarse su espectacular brillo.\n• **Revela auras** de supervivientes durante **6 segundos** cuando su desgarro esté a un ataque con cuchillo para llegar al máximo.\n> \"Shh... Ya no tendrás que ver tu propia sangre\". (Hak Ji-woon)"
         },
         "ja": {
           "name": "ダイヤのカフスボタン",
@@ -445,7 +445,7 @@
         },
         "pl": {
           "name": "Diamentowe spinki",
-          "description": "Spinki do mankietów wbite w oczy psychofana, który popełnił błąd i śledził Ji-woona. Po wytarciu krwi można wiele zobaczyć w ich niezwykłym blasku.\n• **Ujawnia** **aury ocalałych** na **6 sekund**, gdy Poszarpanie osiąga poziom jednego ostrza od wartości maksymalnej.\n> „Ciii… Nie musisz już patrzeć na swoją krew”. – Hak Ji-woon"
+          "description": "Spinki do mankietów wbite w oczy psychofana, który popełnił błąd i śledził Ji-woona. Po wytarciu krwi można wiele zobaczyć w ich niezwykłym blasku.\n• **Ujawnia aury ocalałych** na **6 sekund**, gdy Poszarpanie osiąga poziom jednego ostrza od wartości maksymalnej.\n> „Ciii… Nie musisz już patrzeć na swoją krew”. – Hak Ji-woon"
         }
       }
     },
@@ -514,7 +514,7 @@
       "translations": {
         "de": {
           "name": "Schillernde Fotokarte",
-          "description": "Ein glasähnliches Foto, das aus dem Nebel selbst erschaffen wurde. Ji-woons Augen glitzern holografisch in seinem grinsenden Gesicht.\n• Verlängert die Dauer von Hauptevent um **100 %**.\n• Wenn Hauptevent **aktiviert** wird, wird deine **Aura** **6 Sek**. lang für alle Überlebenden **enthüllt**, du siehst die **Auren** aller Überlebenden und alle **Generatoren** werden **blockiert**.\n> „Schon okay, schrei meinen Namen. Lass mich alles hören, was der Schmerz in dir weckt...“ – Hak Ji-woon"
+          "description": "Ein glasähnliches Foto, das aus dem Nebel selbst erschaffen wurde. Ji-woons Augen glitzern holografisch in seinem grinsenden Gesicht.\n• Verlängert die Dauer von Hauptevent um **100 %**.\n• Wenn Hauptevent **aktiviert** wird, wird deine **Aura 6 Sek**. lang für alle Überlebenden **enthüllt**, du siehst die **Auren** aller Überlebenden und alle **Generatoren** werden **blockiert**.\n> „Schon okay, schrei meinen Namen. Lass mich alles hören, was der Schmerz in dir weckt...“ – Hak Ji-woon"
         },
         "es": {
           "name": "Fotografía iridiscente",
@@ -526,7 +526,7 @@
         },
         "pl": {
           "name": "Opalizujące zdjęcie",
-          "description": "Zdjęcie przypominające szkło, uformowane z Mgły. Holograficzne oczy Ji-woona błyszczą na jego wyszczerzonej twarzy.\n• **Zwiększa** czas trwania Gwoździa Programu o **100%**.\n• Gdy Gwóźdź Programu jest aktywowany: **ujawnia** twoją **aurę** wszystkim ocalałym, **ujawnia** **aury** wszystkich ocalałych i blokuje wszystkie **generatory** przez **6 s**.\n> „W porządku, krzycz moje imię. Chcę usłyszeć wszystko, co budzi w tobie ból…” – Ji-woon Hak"
+          "description": "Zdjęcie przypominające szkło, uformowane z Mgły. Holograficzne oczy Ji-woona błyszczą na jego wyszczerzonej twarzy.\n• **Zwiększa** czas trwania Gwoździa Programu o **100%**.\n• Gdy Gwóźdź Programu jest aktywowany: **ujawnia** twoją **aurę** wszystkim ocalałym, **ujawnia aury** wszystkich ocalałych i blokuje wszystkie **generatory** przez **6 s**.\n> „W porządku, krzycz moje imię. Chcę usłyszeć wszystko, co budzi w tobie ból…” – Ji-woon Hak"
         }
       }
     }

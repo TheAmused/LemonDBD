@@ -89,18 +89,18 @@
       "id": 753,
       "name": "Orderly's Shoe",
       "killer_id": 43,
-      "description": "It hung from her twitching foot as the knife plunged into her belly.\n**Increases** the duration of **Haste** after a Jump Scare by **5 seconds**.\n**Haste** **increases** Killer movement speed.",
+      "description": "It hung from her twitching foot as the knife plunged into her belly.\n**Increases** the duration of **Haste** after a Jump Scare by **5 seconds**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_OrderlysShoe.png?619042",
       "icon_local_path": "icons/addons/orderlys_shoe.webp",
       "rarity": "Common",
       "translations": {
         "de": {
           "name": "Pflegerinnenschuh",
-          "description": "Er hing an ihrem zuckenden Fuß, während sich das Messer in ihren Bauch bohrte.\nVerlängert die Dauer von **Eile** nach einem Schockmoment um **5 Sek**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Er hing an ihrem zuckenden Fuß, während sich das Messer in ihren Bauch bohrte.\nVerlängert die Dauer von **Eile** nach einem Schockmoment um **5 Sek**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Zapato de celador",
-          "description": "Le colgaba de su pie tembloroso mientras el cuchillo se hundía en su vientre.\n**Aumenta** la duración de **Celeridad** tras un sobresalto en **5 segundos**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Le colgaba de su pie tembloroso mientras el cuchillo se hundía en su vientre.\n**Aumenta** la duración de **Celeridad** tras un sobresalto en **5 segundos**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "看護師の靴",
@@ -108,7 +108,7 @@
         },
         "pl": {
           "name": "But sanitariuszki",
-          "description": "Zwisał z jej drżącej nogi, gdy nóż przeszył jej brzuch.\n**Zwiększa** czas trwania **Pośpiechu** po Wystraszeniu o **5 s**.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Zwisał z jej drżącej nogi, gdy nóż przeszył jej brzuch.\n**Zwiększa** czas trwania **Pośpiechu** po Wystraszeniu o **5 s**.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -216,7 +216,7 @@
         },
         "pl": {
           "name": "Źródło hałasu na imprezie",
-          "description": "Istrument imprezowy, który przekuł oko kobiety i wydłubał jej mózg.\nZniszczenie **palety** lub rozbijalnej ściany przy pomocy Wystraszenia **ujawnia** **aury ocalałych** oddalonych o więcej, niż **32 m** przez **6 s**."
+          "description": "Istrument imprezowy, który przekuł oko kobiety i wydłubał jej mózg.\nZniszczenie **palety** lub rozbijalnej ściany przy pomocy Wystraszenia **ujawnia aury ocalałych** oddalonych o więcej, niż **32 m** przez **6 s**."
         }
       }
     },
@@ -224,18 +224,18 @@
       "id": 758,
       "name": "Coroner's Coffee",
       "killer_id": 43,
-      "description": "A cup of coffee that went unfinished.\n**Increases** the distance Survivors are pushed by Spikes by **25%**.\nGain **13%** **Haste** for **3 seconds** after injuring a Survivor with a Spike if they do not collide with the environment.\n**Haste** **increases** Killer movement speed.",
+      "description": "A cup of coffee that went unfinished.\n**Increases** the distance Survivors are pushed by Spikes by **25%**.\nGain **13% Haste** for **3 seconds** after injuring a Survivor with a Spike if they do not collide with the environment.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CoronersCoffee.png?23f8ec",
       "icon_local_path": "icons/addons/coroners_coffee.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Kaffee des Gerichtsmediziners",
-          "description": "Eine Tasse Kaffee, die nie ausgetrunken wurde.\n**Erhöht** die Distanz, die Überlebende durch Spieße vorangetrieben werden, um **25 %**.\nDu erhältst **13 %** **Eile** für **3 Sek**., nachdem du einen Überlebenden mit einem Spieß **verletzt** hast, wenn er nicht gegen eine Oberfläche in der Umgebung geschleudert wird.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Eine Tasse Kaffee, die nie ausgetrunken wurde.\n**Erhöht** die Distanz, die Überlebende durch Spieße vorangetrieben werden, um **25 %**.\nDu erhältst **13 % Eile** für **3 Sek**., nachdem du einen Überlebenden mit einem Spieß **verletzt** hast, wenn er nicht gegen eine Oberfläche in der Umgebung geschleudert wird.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Café de forense",
-          "description": "Una taza de café que nadie se acabó.\n**Aumenta** la distancia a la que los clavos empujan a los supervivientes un **25 %**.\nObtienes un **13 %** de **Celeridad** durante **3 segundos** tras herir a un superviviente con un clavo si no chocan con el entorno.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Una taza de café que nadie se acabó.\n**Aumenta** la distancia a la que los clavos empujan a los supervivientes un **25 %**.\nObtienes un **13 %** de **Celeridad** durante **3 segundos** tras herir a un superviviente con un clavo si no chocan con el entorno.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "検死官のコーヒー",
@@ -243,7 +243,7 @@
         },
         "pl": {
           "name": "Kawa koronera",
-          "description": "Niedopita filiżanka kawy.\n**Zwiększa** odległość, o którą ocalali są odpychani przez kolce o **25%**.\nZyskujesz **13%** **Pośpiechu** przez **3 s** po zranieniu ocalałego za pomocą kolca, jeśli nie koliduje z otoczeniem.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Niedopita filiżanka kawy.\n**Zwiększa** odległość, o którą ocalali są odpychani przez kolce o **25%**.\nZyskujesz **13% Pośpiechu** przez **3 s** po zranieniu ocalałego za pomocą kolca, jeśli nie koliduje z otoczeniem.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -278,14 +278,14 @@
       "id": 760,
       "name": "Imprinted Aluminum",
       "killer_id": 43,
-      "description": "It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\nInjuring a healthy Survivor with a Spike inflicts the **Mangled** and **Hemorrhage** **status effects** for **70 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.",
+      "description": "It's either avant-garde artwork, or the horrified imprint of a woman whose face was slammed into it.\nInjuring a healthy Survivor with a Spike inflicts the **Mangled** and **Hemorrhage status effects** for **70 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ImprintedAluminum.png?97b5cf",
       "icon_local_path": "icons/addons/imprinted_aluminum.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Aluminiumabbild",
-          "description": "Entweder ist es moderne Kunst oder das entsetzte Abbild einer Frau, deren Gesicht hineingeschleudert wurde.\nWird ein gesunder Überlebender mit einem Spieß **verletzt**, erhält er die Statuseffekte **Zerfleischt** und Blutung für **70 Sek**.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Entweder ist es moderne Kunst oder das entsetzte Abbild einer Frau, deren Gesicht hineingeschleudert wurde.\nWird ein gesunder Überlebender mit einem Spieß **verletzt**, erhält er die Statuseffekte **Zerfleischt** und Blutung für **70 Sek**.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Aluminio marcado",
@@ -393,7 +393,7 @@
       "translations": {
         "de": {
           "name": "Verbrannte Lunte",
-          "description": "Der Stromschlag war überwältigend. Der Körper des Mannes war danach verkohlt und roch nach gekochtem Fleisch.\nSolange ein Überlebender aufgespießt ist und für **5 Sek**., nachdem er den Spieß herausgezogen hat, werden die Ausgangstore für ihn und Überlebende in einem Umkreis von **13 Metern** **blockiert**."
+          "description": "Der Stromschlag war überwältigend. Der Körper des Mannes war danach verkohlt und roch nach gekochtem Fleisch.\nSolange ein Überlebender aufgespießt ist und für **5 Sek**., nachdem er den Spieß herausgezogen hat, werden die Ausgangstore für ihn und Überlebende in einem Umkreis von **13 Metern blockiert**."
         },
         "es": {
           "name": "Fusible quemado",
@@ -413,7 +413,7 @@
       "id": 765,
       "name": "Missing Corkscrew",
       "killer_id": 43,
-      "description": "It seems to always be missing when you need it on-hand.\nImpaled Survivors emit a **32 meter** **Terror Radius** until the Spike is extracted.\nGain **Undetectable** from the time a Survivor is Impaled to **13 seconds** after they extract the Spike.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
+      "description": "It seems to always be missing when you need it on-hand.\nImpaled Survivors emit a **32 meter Terror Radius** until the Spike is extracted.\nGain **Undetectable** from the time a Survivor is Impaled to **13 seconds** after they extract the Spike.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MissingCorkscrew.png?55c365",
       "icon_local_path": "icons/addons/missing_corkscrew.webp",
       "rarity": "Very Rare",
@@ -494,14 +494,14 @@
       "id": 768,
       "name": "Iridescent Boat Motor",
       "killer_id": 43,
-      "description": "The blades are chipped and cracked, as if having cut through something solid.\nPassing through **Windows** while in Omnipresent Evil mode marks them for **13 seconds**. When you perform a Jump Scare, all **marked** **Windows** become **blocked** for **13 seconds**.",
+      "description": "The blades are chipped and cracked, as if having cut through something solid.\nPassing through **Windows** while in Omnipresent Evil mode marks them for **13 seconds**. When you perform a Jump Scare, all **marked Windows** become **blocked** for **13 seconds**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_IridescentBoatMotor.png?ead49a",
       "icon_local_path": "icons/addons/iridescent_boat_motor.webp",
       "rarity": "Ultra Rare",
       "translations": {
         "de": {
           "name": "Schillernder Bootsmotor",
-          "description": "Die Propellerflügel sind schartig und rissig, als hätten sie etwas Festes durchtrennt.\nWenn du im Modus Allgegenwärtiges Böses durch **Fenster** springst, markierst du sie für **13 Sek**. Löst du einen Schockmoment aus, werden alle markierten **Fenster** **13 Sek**. lang **blockiert**."
+          "description": "Die Propellerflügel sind schartig und rissig, als hätten sie etwas Festes durchtrennt.\nWenn du im Modus Allgegenwärtiges Böses durch **Fenster** springst, markierst du sie für **13 Sek**. Löst du einen Schockmoment aus, werden alle markierten **Fenster 13 Sek**. lang **blockiert**."
         },
         "es": {
           "name": "Motor de lancha iridiscente",

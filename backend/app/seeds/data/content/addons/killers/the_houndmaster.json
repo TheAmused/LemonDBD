@@ -42,7 +42,7 @@
       "translations": {
         "de": {
           "name": "Klebriges Pech",
-          "description": "Nützliches Material, damit ein Schiff stets seetüchtig bleibt.\n• Beim Laufen auf dem Suchpfad wird die Bonusbewegungsgeschwindigkeit der Hundegebieterin um **2 %** **erhöht**."
+          "description": "Nützliches Material, damit ein Schiff stets seetüchtig bleibt.\n• Beim Laufen auf dem Suchpfad wird die Bonusbewegungsgeschwindigkeit der Hundegebieterin um **2 % erhöht**."
         },
         "es": {
           "name": "Brea pegajosa",
@@ -312,7 +312,7 @@
       "translations": {
         "de": {
           "name": "Signalglocke",
-          "description": "Selbst auf große Entfernung informiert sie einen Hund darüber, wo sich sein Besitzer befindet.\n• Wenn der Hund betäubt wird, wird die **Aura** des dafür verantwortlichen Überlebenden für **8 Sekunden** **enthüllt**."
+          "description": "Selbst auf große Entfernung informiert sie einen Hund darüber, wo sich sein Besitzer befindet.\n• Wenn der Hund betäubt wird, wird die **Aura** des dafür verantwortlichen Überlebenden für **8 Sekunden enthüllt**."
         },
         "es": {
           "name": "Campana de adiestramiento",
@@ -332,14 +332,14 @@
       "id": 676,
       "name": "Spiked Collar",
       "killer_id": 38,
-      "description": "A dangerous accessory worn by dogs sent to battle.\n• Survivors injured while in the Dog's grab suffer from **Mangled** and **Hemorrhage** for **60 seconds**.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.",
+      "description": "A dangerous accessory worn by dogs sent to battle.\n• Survivors injured while in the Dog's grab suffer from **Mangled** and **Hemorrhage** for **60 seconds**.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_spikedCollar.png?3e0946",
       "icon_local_path": "icons/addons/spiked_collar.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "Stachelhalsband",
-          "description": "Ein gefährliches Accessoire von Hunden, die in den Kampf geschickt werden.\n• Überlebende, die während der Bring-Aktion des Hunds **verletzt** werden, leiden für **60 Sekunden** unter den Statuseffekten **Zerfleischt** und Blutung.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Ein gefährliches Accessoire von Hunden, die in den Kampf geschickt werden.\n• Überlebende, die während der Bring-Aktion des Hunds **verletzt** werden, leiden für **60 Sekunden** unter den Statuseffekten **Zerfleischt** und Blutung.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Collar con pinchos",
@@ -413,7 +413,7 @@
       "id": 679,
       "name": "Gunpowder Tin",
       "killer_id": 38,
-      "description": "Useful for all manner of explosive schemes.\n• Whenever at least one Survivor becomes **affected** by Houndsense, for **20 seconds**, you basic-break **Pallets** or Breakable walls, and damage **Generators** **30%** faster.",
+      "description": "Useful for all manner of explosive schemes.\n• Whenever at least one Survivor becomes **affected** by Houndsense, for **20 seconds**, you basic-break **Pallets** or Breakable walls, and damage **Generators 30%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_gunpowderTin.png?847ecf",
       "icon_local_path": "icons/addons/gunpowder_tin.webp",
       "rarity": "Very Rare",
@@ -432,7 +432,7 @@
         },
         "pl": {
           "name": "Puszka z prochem",
-          "description": "Przydatne do wszelkiego rodzaju wybuchowych planów.\n• Za każdym razem, gdy co najmniej jeden ocalały ma efekt Psiego Zmysłu, przez **20 s** niszczysz **palety** lub rozbijalne ściany w podstawowy sposób oraz uszkadzasz **generatory** **30%** szybciej."
+          "description": "Przydatne do wszelkiego rodzaju wybuchowych planów.\n• Za każdym razem, gdy co najmniej jeden ocalały ma efekt Psiego Zmysłu, przez **20 s** niszczysz **palety** lub rozbijalne ściany w podstawowy sposób oraz uszkadzasz **generatory 30%** szybciej."
         }
       }
     },
@@ -478,7 +478,7 @@
         },
         "es": {
           "name": "Mascarón de proa",
-          "description": "Un trofeo arrancado de la proa de otro barco.\n• Mientras el perro esté siguiendo a la Adiestradora Canina, el **radio de terror** **aumenta** en **8 metros**.\n• Mientras el perro esté lejos de la Adiestradora Canina, el **radio de terror** se **reduce** en **8 metros**."
+          "description": "Un trofeo arrancado de la proa de otro barco.\n• Mientras el perro esté siguiendo a la Adiestradora Canina, el **radio de terror aumenta** en **8 metros**.\n• Mientras el perro esté lejos de la Adiestradora Canina, el **radio de terror** se **reduce** en **8 metros**."
         },
         "ja": {
           "name": "船首像",
@@ -486,7 +486,7 @@
         },
         "pl": {
           "name": "Galion",
-          "description": "Trofeum wyrwane z dziobu innego statku.\n• Gdy Pies podąża za Mistrzynią Ogarów, **zasięg terroru** **zwiększa** się o **8 m**.\n• Gdy Pies jest daleko od Mistrzyni Ogarów, **zasięg terroru** **zmniejsza** się o **8 metr**ów."
+          "description": "Trofeum wyrwane z dziobu innego statku.\n• Gdy Pies podąża za Mistrzynią Ogarów, **zasięg terroru zwiększa** się o **8 m**.\n• Gdy Pies jest daleko od Mistrzyni Ogarów, **zasięg terroru zmniejsza** się o **8 metr**ów."
         }
       }
     },
@@ -494,7 +494,7 @@
       "id": 682,
       "name": "Torn Novel",
       "killer_id": 38,
-      "description": "A book given to her by her father. All but destroyed after a raid.\n• While aiming the Chase Redirect, **auras** of Survivors within **10 meters** of the Dog are **revealed**.\n• Upon reassuming control of The Houndmaster, Survivors' **auras** **revealed** this way are shown for an additional **2 seconds**.\n> \"“I’ll find out who they are… and they’ll pay. Every last one.”\n• Portia Maye\"",
+      "description": "A book given to her by her father. All but destroyed after a raid.\n• While aiming the Chase Redirect, **auras** of Survivors within **10 meters** of the Dog are **revealed**.\n• Upon reassuming control of The Houndmaster, Survivors' **auras revealed** this way are shown for an additional **2 seconds**.\n> \"“I’ll find out who they are… and they’ll pay. Every last one.”\n• Portia Maye\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_tornNovel.png?621bd0",
       "icon_local_path": "icons/addons/torn_novel.webp",
       "rarity": "Ultra Rare",
@@ -521,7 +521,7 @@
       "id": 683,
       "name": "Iridescent Wheel Handle",
       "killer_id": 38,
-      "description": "Once used to guide a great vessel across the open seas, its remnants now serve as a memory of times past.\n• **Increases** the time the Dog lingers at a Search destination by **20%**.\n• While the Dog is running to and from the Search destination, The Houndmaster gains the **Undetectable** **status effect**.\n• Standing on the Search Path removes the **Undetectable** **status effect**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.\n> “I fear no obstacle, be it man or storm.” - Portia Maye",
+      "description": "Once used to guide a great vessel across the open seas, its remnants now serve as a memory of times past.\n• **Increases** the time the Dog lingers at a Search destination by **20%**.\n• While the Dog is running to and from the Search destination, The Houndmaster gains the **Undetectable status effect**.\n• Standing on the Search Path removes the **Undetectable status effect**.\n**Undetectable** hides the Killer's **aura**, **Terror Radius**, and Red Stain.\n> “I fear no obstacle, be it man or storm.” - Portia Maye",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_iridescentWheelHandle.png?31a79f",
       "icon_local_path": "icons/addons/iridescent_wheel_handle.webp",
       "rarity": "Ultra Rare",

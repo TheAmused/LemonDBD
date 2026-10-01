@@ -312,7 +312,7 @@
       "translations": {
         "de": {
           "name": "Schmieriges schwarzes Brillenglas",
-          "description": "Das Glas einer Sonnenbrille eines übergewichtigen Zenobiten, dessen Fleischwulste über Gesicht und Hals hängen.\n• Überlebende, die von einer besessenen Kette getroffen werden, werden für **6 Sekunden** **enthüllt**."
+          "description": "Das Glas einer Sonnenbrille eines übergewichtigen Zenobiten, dessen Fleischwulste über Gesicht und Hals hängen.\n• Überlebende, die von einer besessenen Kette getroffen werden, werden für **6 Sekunden enthüllt**."
         },
         "es": {
           "name": "Lente negra grasienta",
@@ -339,7 +339,7 @@
       "translations": {
         "de": {
           "name": "Ursprünglicher Schmerz",
-          "description": "Die erste Nadel, die in Pinheads Schädel gestoßen wurde. So ein Vergnügen, so ein Schmerz.\n• Wenn sich ein Überlebender von einer besessenen Kette losreißt, wird seine **Aura** **8 Sek**. lang **enthüllt**.\n> „Keine Tränen, bitte. Das wäre eine Verschwendung guten Leidens.“ – Pinhead"
+          "description": "Die erste Nadel, die in Pinheads Schädel gestoßen wurde. So ein Vergnügen, so ein Schmerz.\n• Wenn sich ein Überlebender von einer besessenen Kette losreißt, wird seine **Aura 8 Sek**. lang **enthüllt**.\n> „Keine Tränen, bitte. Das wäre eine Verschwendung guten Leidens.“ – Pinhead"
         },
         "es": {
           "name": "Dolor primigenio",
@@ -503,7 +503,7 @@
       "id": 862,
       "name": "Chatterer's Tooth",
       "killer_id": 25,
-      "description": "A fragment from a cenobite whose mouth chatters endlessly. This tooth, having **broken** from his jaw, is finally silent.\n• **Reveal** the Lament Configuration.\n• Picking up the Lament Configuration deactivates Chain Hunts.\n• Gain the **Undetectable** **status effect** for **25 seconds** after picking up the Lament Configuration.\n**Undetectable** hides the Killer's **aura**, **Terror Radius** and Red Stain.",
+      "description": "A fragment from a cenobite whose mouth chatters endlessly. This tooth, having **broken** from his jaw, is finally silent.\n• **Reveal** the Lament Configuration.\n• Picking up the Lament Configuration deactivates Chain Hunts.\n• Gain the **Undetectable status effect** for **25 seconds** after picking up the Lament Configuration.\n**Undetectable** hides the Killer's **aura**, **Terror Radius** and Red Stain.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_chatterersTooth.png?46debf",
       "icon_local_path": "icons/addons/chatterers_tooth.webp",
       "rarity": "Very Rare",

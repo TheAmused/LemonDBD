@@ -27,7 +27,7 @@
         },
         "pl": {
           "name": "Światło stroboskopowe",
-          "description": "Po odpowiednim szkoleniu może posłużyć do **zwiększania** podatności ludzi na sugestie.\n• **Zmniejsza** **zasięg terroru** o **8 metr**ów podczas odnawiania trybu „Dzieńdoberka”."
+          "description": "Po odpowiednim szkoleniu może posłużyć do **zwiększania** podatności ludzi na sugestie.\n• **Zmniejsza zasięg terroru** o **8 metr**ów podczas odnawiania trybu „Dzieńdoberka”."
         }
       }
     },
@@ -35,7 +35,7 @@
       "id": 594,
       "name": "Doll Eyes",
       "killer_id": 34,
-      "description": "One of the advantages of possessing a mass-produced doll is easy access to replacement parts.\n• While in Hidey-Ho Mode, **reveals** **auras** of all **windows** and downed **pallets** within **20 meters**.",
+      "description": "One of the advantages of possessing a mass-produced doll is easy access to replacement parts.\n• While in Hidey-Ho Mode, **reveals auras** of all **windows** and downed **pallets** within **20 meters**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_dollEyes.png?ad076f",
       "icon_local_path": "icons/addons/doll_eyes.webp",
       "rarity": "Common",
@@ -54,7 +54,7 @@
         },
         "pl": {
           "name": "Oczy lalki",
-          "description": "Jedną z zalet posiadania masowo produkowanej lalki jest łatwy dostęp do części zamiennych.\n• W trybie „Dzieńdoberka” **ujawnia** **aury** wszystkich okien i powalonych **palet** w promieniu **20 metr**ów."
+          "description": "Jedną z zalet posiadania masowo produkowanej lalki jest łatwy dostęp do części zamiennych.\n• W trybie „Dzieńdoberka” **ujawnia aury** wszystkich okien i powalonych **palet** w promieniu **20 metr**ów."
         }
       }
     },
@@ -204,7 +204,7 @@
       "translations": {
         "de": {
           "name": "Automatischer Schraubenzieher",
-          "description": "Eine gute Möglichkeit, um im Handumdrehen mechanische Anpassungen vorzunehmen.\n• Wenn ein Scheibenschneider-Angriff fehlschlägt, wird die Abklingzeit des Versteckmodus um **8 %** **verringert**."
+          "description": "Eine gute Möglichkeit, um im Handumdrehen mechanische Anpassungen vorzunehmen.\n• Wenn ein Scheibenschneider-Angriff fehlschlägt, wird die Abklingzeit des Versteckmodus um **8 % verringert**."
         },
         "es": {
           "name": "Destornillador automático",
@@ -305,7 +305,7 @@
       "id": 604,
       "name": "Plastic Bag",
       "killer_id": 34,
-      "description": "Nothing tires out a kill like a lack of oxygen.\n• If a Survivor walks through an illusory Footfall, they suffer from **Exhausted** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** other perks that **cause** **Exhausted**.",
+      "description": "Nothing tires out a kill like a lack of oxygen.\n• If a Survivor walks through an illusory Footfall, they suffer from **Exhausted** for **15 seconds**.\n**Exhausted** prevents Survivors from **activating** other perks that **cause Exhausted**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_plasticBag.png?c38945",
       "icon_local_path": "icons/addons/plastic_bag.webp",
       "rarity": "Very Rare",
@@ -339,7 +339,7 @@
       "translations": {
         "de": {
           "name": "Nagelhaufen",
-          "description": "Es ist viel einfacher, verborgen zu bleiben, wenn sich dein Ziel um einen Haufen Nägel kümmern muss, der auf seinen Kopf zufliegt.\n• Wenn du den Versteckmodus manuell beendest, bleibt der Good Guy für **3 Sekunden** **Unentdeckbar**.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers."
+          "description": "Es ist viel einfacher, verborgen zu bleiben, wenn sich dein Ziel um einen Haufen Nägel kümmern muss, der auf seinen Kopf zufliegt.\n• Wenn du den Versteckmodus manuell beendest, bleibt der Good Guy für **3 Sekunden Unentdeckbar**.\n**Unentdeckbar** verbirgt **Aura**, **Terrorradius** und roten Fleck des Killers."
         },
         "es": {
           "name": "Montón de clavos",
@@ -378,7 +378,7 @@
         },
         "pl": {
           "name": "Miarka",
-          "description": "Dobry do mierzenia odległości. Jeszcze lepszy do bicia.\n• Człapanie **ujawnia** **aury ocalałych** w promieniu **16 metr**ów na **3 sekundy**."
+          "description": "Dobry do mierzenia odległości. Jeszcze lepszy do bicia.\n• Człapanie **ujawnia aury ocalałych** w promieniu **16 metr**ów na **3 sekundy**."
         }
       }
     },
@@ -440,14 +440,14 @@
       "id": 609,
       "name": "Straight Razor",
       "killer_id": 34,
-      "description": "For when a close shave needs to be really, really close.\n• Slice & Dice attacks inflict the **Hemorrhage** and **Mangled** **status effects** for **80 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "For when a close shave needs to be really, really close.\n• Slice & Dice attacks inflict the **Hemorrhage** and **Mangled status effects** for **80 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_straightRazor.png?fb4a00",
       "icon_local_path": "icons/addons/straight_razor.webp",
       "rarity": "Very Rare",
       "translations": {
         "de": {
           "name": "Gerades Rasiermesser",
-          "description": "Wenn etwas im wahrsten Sinne haarscharf ist.\n• Angriffe mit Scheibenschneider verursachen die Statuseffekte Blutung und **Zerfleischt** für **80 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Wenn etwas im wahrsten Sinne haarscharf ist.\n• Angriffe mit Scheibenschneider verursachen die Statuseffekte Blutung und **Zerfleischt** für **80 Sekunden**.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "Cuchilla recta",

@@ -8,7 +8,7 @@
       "id": 1,
       "name": "Trapper Gloves",
       "killer_id": 1,
-      "description": "Protective padded leather gloves.\n• **Increases** **Bear Trap** setting speed by **30%**.",
+      "description": "Protective padded leather gloves.\n• **Increases Bear Trap** setting speed by **30%**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_trapperGloves.png?e0115d",
       "icon_local_path": "icons/addons/trapper_gloves.webp",
       "rarity": "Common",
@@ -42,7 +42,7 @@
       "translations": {
         "de": {
           "name": "Gepolsterte Bügel",
-          "description": "Diese gepolsterten Bügel sollen festhalten, nicht verwunden.\n• Bärenfallen fügen gefangenen Überlebenden keinen Schaden zu. Wenn du diesen Zusatz ausrüstest, wird die Wirkung von Rostige Bügel und Gezahnte Bügel aufgehoben.\n• Die Punkte für gefangene Überlebende werden um **100 %** **erhöht**."
+          "description": "Diese gepolsterten Bügel sollen festhalten, nicht verwunden.\n• Bärenfallen fügen gefangenen Überlebenden keinen Schaden zu. Wenn du diesen Zusatz ausrüstest, wird die Wirkung von Rostige Bügel und Gezahnte Bügel aufgehoben.\n• Die Punkte für gefangene Überlebende werden um **100 % erhöht**."
         },
         "es": {
           "name": "Mandíbulas acolchadas",
@@ -116,18 +116,18 @@
       "id": 5,
       "name": "Coffee Grounds",
       "killer_id": 1,
-      "description": "An old rusted can containing damp *coffee grounds*.\n• **Increases** the **Haste status effect** gained after setting a **Bear Trap** by **5%**.\n**Haste** **increases** Killer movement speed.",
+      "description": "An old rusted can containing damp *coffee grounds*.\n• **Increases** the **Haste status effect** gained after setting a **Bear Trap** by **5%**.\n**Haste increases** Killer movement speed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_coffeeGrounds.png?79c520",
       "icon_local_path": "icons/addons/coffee_grounds.webp",
       "rarity": "Uncommon",
       "translations": {
         "de": {
           "name": "Kaffeesatz",
-          "description": "Eine alte, rostige Dose mit feuchtem *Kaffeesatz*.\n• **Erhöht** den Statuseffekt „**Eile**“ nach dem Legen einer Bärenfalle um **5 %**.\n**Eile** **erhöht** die Bewegungsgeschwindigkeit des Killers."
+          "description": "Eine alte, rostige Dose mit feuchtem *Kaffeesatz*.\n• **Erhöht** den Statuseffekt „**Eile**“ nach dem Legen einer Bärenfalle um **5 %**.\n**Eile erhöht** die Bewegungsgeschwindigkeit des Killers."
         },
         "es": {
           "name": "Café molido",
-          "description": "Una lata vieja y oxidada que contiene *café molido*.\n• **Aumenta** el efecto de estado **Celeridad** obtenido tras colocar una trampa para osos un **5 %**.\n**Celeridad** **aumenta** la velocidad de movimiento del asesino."
+          "description": "Una lata vieja y oxidada que contiene *café molido*.\n• **Aumenta** el efecto de estado **Celeridad** obtenido tras colocar una trampa para osos un **5 %**.\n**Celeridad aumenta** la velocidad de movimiento del asesino."
         },
         "ja": {
           "name": "コーヒーかす",
@@ -135,7 +135,7 @@
         },
         "pl": {
           "name": "Fusy kawy",
-          "description": "Stara zardzewiała puszka zawierająca wilgotne *fusy kawy*.\n• **Zwiększa** **Pośpiech** o **5%** po zastawieniu **pułapki na niedźwiedzie**.\n**Pośpiech** **zwiększa** prędkość ruchu zabójcy."
+          "description": "Stara zardzewiała puszka zawierająca wilgotne *fusy kawy*.\n• **Zwiększa Pośpiech** o **5%** po zastawieniu **pułapki na niedźwiedzie**.\n**Pośpiech zwiększa** prędkość ruchu zabójcy."
         }
       }
     },
@@ -170,7 +170,7 @@
       "id": 7,
       "name": "Serrated Jaws",
       "killer_id": 1,
-      "description": "Add small, jagged blades to the trap jaws to maximize damage.\n• Survivors caught in a **Bear Trap** suffer from the **Mangled** and **Hemorrhage** **Status Effects** until fully healed.",
+      "description": "Add small, jagged blades to the trap jaws to maximize damage.\n• Survivors caught in a **Bear Trap** suffer from the **Mangled** and **Hemorrhage Status Effects** until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_serratedJaws.png?da1d7a",
       "icon_local_path": "icons/addons/serrated_jaws.webp",
       "rarity": "Uncommon",
@@ -251,7 +251,7 @@
       "id": 10,
       "name": "Rusted Jaws",
       "killer_id": 1,
-      "description": "A heavily rusted pair of trap jaws that replaces the normal ones on the **Bear Trap**.\n• Survivors caught in a **Bear Trap** suffer from the **Broken** **Status Effect** until fully healed.",
+      "description": "A heavily rusted pair of trap jaws that replaces the normal ones on the **Bear Trap**.\n• Survivors caught in a **Bear Trap** suffer from the **Broken Status Effect** until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_rustedJaws.png?ee3927",
       "icon_local_path": "icons/addons/rusted_jaws.webp",
       "rarity": "Rare",
@@ -405,7 +405,7 @@
         },
         "pl": {
           "name": "Naoliwiona sprężyna",
-          "description": "*Naoliwiona sprężyna*, która brudzi ręce tych, co majstrują przy **pułapce na niedźwiedzie**.\n• Podczas ponownego zastawiania **pułapki na niedźwiedzie** **aura** ostatniego ocalałego, który próbował ją rozbroić, zostanie ujawniona na **5 sekund**."
+          "description": "*Naoliwiona sprężyna*, która brudzi ręce tych, co majstrują przy **pułapce na niedźwiedzie**.\n• Podczas ponownego zastawiania **pułapki na niedźwiedzie aura** ostatniego ocalałego, który próbował ją rozbroić, zostanie ujawniona na **5 sekund**."
         }
       }
     },

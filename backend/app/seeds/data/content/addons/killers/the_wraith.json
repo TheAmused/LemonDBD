@@ -62,7 +62,7 @@
       "id": 21,
       "name": "\"Shadow Dance\" - White",
       "killer_id": 2,
-      "description": "The Yiwarick symbol, representing dark synergy, is finger-drawn in white ink on the body of the Bell.\n• While Cloaked, you basic-vault **Windows**, basic-break **Pallets** and Breakable Walls, and damage **Generators** **40%** faster.",
+      "description": "The Yiwarick symbol, representing dark synergy, is finger-drawn in white ink on the body of the Bell.\n• While Cloaked, you basic-vault **Windows**, basic-break **Pallets** and Breakable Walls, and damage **Generators 40%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shadowDance-White.png?2ea0b9",
       "icon_local_path": "icons/addons/shadow_dance_white.webp",
       "rarity": "Rare",
@@ -81,7 +81,7 @@
         },
         "pl": {
           "name": "„Taniec Cienia” – Biel",
-          "description": "Symbol Yiwarick, reprezentujący mroczną jedność, jest ręcznie narysowany białym tuszem na korpusie Dzwonu.\n• W trybie niewidzialności, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób **palety** i rozbijalne ściany oraz uszkadzasz **generatory** **40%** szybciej."
+          "description": "Symbol Yiwarick, reprezentujący mroczną jedność, jest ręcznie narysowany białym tuszem na korpusie Dzwonu.\n• W trybie niewidzialności, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób **palety** i rozbijalne ściany oraz uszkadzasz **generatory 40%** szybciej."
         }
       }
     },
@@ -89,7 +89,7 @@
       "id": 22,
       "name": "\"Shadow Dance\" - Blood",
       "killer_id": 2,
-      "description": "The Yiwarick symbol, representing dark synergy, is stamped in blood on the body of the Bell.\n• While Cloaked, you basic-vault **Windows**, basic-break **Pallets** and Breakable Walls, and damage **Generators** **60%** faster.",
+      "description": "The Yiwarick symbol, representing dark synergy, is stamped in blood on the body of the Bell.\n• While Cloaked, you basic-vault **Windows**, basic-break **Pallets** and Breakable Walls, and damage **Generators 60%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_shadowDance-Blood.png?a518d7",
       "icon_local_path": "icons/addons/shadow_dance_blood.webp",
       "rarity": "Very Rare",
@@ -108,7 +108,7 @@
         },
         "pl": {
           "name": "„Taniec Cienia” – Krew",
-          "description": "Symbol Yiwarick odciśnięty krwią na korpusie Dzwonu. Reprezentuje mroczną jedność.\n• W trybie niewidzialności, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób **palety** i rozbijalne ściany oraz uszkadzasz **generatory** **60%** szybciej."
+          "description": "Symbol Yiwarick odciśnięty krwią na korpusie Dzwonu. Reprezentuje mroczną jedność.\n• W trybie niewidzialności, wykonujesz podstawowe przeskoki przez okna, niszczysz w podstawowy sposób **palety** i rozbijalne ściany oraz uszkadzasz **generatory 60%** szybciej."
         }
       }
     },
@@ -116,14 +116,14 @@
       "id": 23,
       "name": "\"Blind Warrior\" - White",
       "killer_id": 2,
-      "description": "The Baikra-Kaeug symbol, representing ferocity, is finger-drawn in white ink on the body of the Bell.\n• Uncloak surprise attacks inflict **Mangled** and **Hemorrhage** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.\n**Mangled** **increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
+      "description": "The Baikra-Kaeug symbol, representing ferocity, is finger-drawn in white ink on the body of the Bell.\n• Uncloak surprise attacks inflict **Mangled** and **Hemorrhage** for **70 seconds**.\n**Hemorrhage** regresses healing progress when not healing, and **increases** blood trails left by injured survivors. This lasts for a set duration or until fully healed.\n**Mangled increases** time required to heal by **25%** and lasts for a set duration or until fully healed.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconAddon_blindWarrior-White.png?cf8ab3",
       "icon_local_path": "icons/addons/blind_warrior_white.webp",
       "rarity": "Rare",
       "translations": {
         "de": {
           "name": "„Blinder Krieger“ – Weiß",
-          "description": "Das Baikra-Kaeug-Symbol, das für Wildheit steht, wurde mit lehmigen Fingern auf den Glockenkörper gemalt.\n• **Enthüllte** Überraschungsangriffe fügen die Statuseffekte **Zerfleischt** und Blutung für **70 Sekunden** zu.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt** **erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
+          "description": "Das Baikra-Kaeug-Symbol, das für Wildheit steht, wurde mit lehmigen Fingern auf den Glockenkörper gemalt.\n• **Enthüllte** Überraschungsangriffe fügen die Statuseffekte **Zerfleischt** und Blutung für **70 Sekunden** zu.\nBlutung setzt den Heilungsfortschritt zurück, wenn nicht gerade geheilt wird, und verstärkt Blutspuren, die **verletzte** Überlebende hinterlassen. Dieser Effekt hält eine festgelegte Zeit oder bis zur vollständigen Heilung an.\n**Zerfleischt erhöht** die Heilungsdauer um **25 %** und hält eine festgelegte Zeit oder bis zur vollständigen Heilung an."
         },
         "es": {
           "name": "\"Guerrero ciego\" - Blanco",
@@ -393,7 +393,7 @@
       "translations": {
         "de": {
           "name": "„Die Bestie“ – Ruß",
-          "description": "Das Kunwulju-Symbol, das für das Reich der Furcht steht, wurde mit rußigen Fingern auf den Glockenkörper gemalt.\n• Der **Terrorradius** des Geists wird nicht mehr unterdrückt, wenn er verhüllt ist.\n• Blutpunkte für Verfolgungen und Überraschungsangriffe sind um **100 %** **erhöht**."
+          "description": "Das Kunwulju-Symbol, das für das Reich der Furcht steht, wurde mit rußigen Fingern auf den Glockenkörper gemalt.\n• Der **Terrorradius** des Geists wird nicht mehr unterdrückt, wenn er verhüllt ist.\n• Blutpunkte für Verfolgungen und Überraschungsangriffe sind um **100 % erhöht**."
         },
         "es": {
           "name": "\"La bestia\" - Hollín",

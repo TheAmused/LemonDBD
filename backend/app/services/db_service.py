@@ -28,7 +28,8 @@ class DatabaseService:
         return create_sqlite_connection(self.db_path)
 
     def init_db(self) -> None:
-        """Initializes database schema, baseline configurations, seed data, and multi-language translations."""
+        """Initializes database schema, baseline configurations and seed data. Content text, including every locale's
+        `translations`, comes only from the seed JSON files (seeds/data/content)."""
         if self.db_path != ":memory:":
             try:
                 conn = self.get_connection()
@@ -51,13 +52,6 @@ class DatabaseService:
                         perk_service.reload_data()
                     except Exception as seed_err:
                         logger.debug(f"Baseline data seeding notice: {seed_err}")
-
-                    try:
-                        from app.services.translations import TranslationService
-                        trans_service = TranslationService()
-                        trans_service.sync_all_locales_to_db(locales=["en", "pl", "de", "es", "ja"])
-                    except Exception as trans_err:
-                        logger.warning(f"Auto-sync translations during init_db notice: {trans_err}")
         except Exception as e:
             logger.debug(f"SQLAlchemy init_db skipped or failed (falling back): {e}")
 

@@ -12,7 +12,6 @@ from app.core.http_cache import cache_catalog
 from app.core.security import admin_required, get_current_user
 from app.seeds.static_db_seeder import seed_from_static_json
 from app.services.perk_service import PerkService
-from app.services.translations import TranslationService
 from app.utils.lang import extract_lang as _extract_lang
 from sqlalchemy import select
 
@@ -296,25 +295,6 @@ def get_scrape_status():
         "last_used_source": "offline_static_json",
     }), 200
 
-
-
-@perks_bp.route("/api/v1/scrape/translations/game-dumps", methods=["POST"])
-@admin_required
-def sync_game_dump_translations_route():
-    """Synchronize official translations (EN, PL, DE, ES, JA) to the database (Admin only)."""
-    try:
-        data = request.get_json(silent=True) or {}
-        locales = data.get("locales") or ["en", "pl", "de", "es", "ja"]
-        trans_service = TranslationService()
-        result = trans_service.sync_all_locales_to_db(locales=locales)
-        return jsonify({
-            "status": "success",
-            "message": "Game dump translations successfully synchronized to database",
-            "result": result,
-        }), 200
-    except Exception as e:
-        logger.error(f"Error syncing game dump translations: {e}")
-        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @perks_bp.route("/static/<path:filename>", methods=["GET"])

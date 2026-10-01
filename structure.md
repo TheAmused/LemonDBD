@@ -174,9 +174,6 @@ LemonDBD/
 │   │   │   │   ├── badges.py
 │   │   │   │   ├── evaluator.py
 │   │   │   │   └── rules.py
-│   │   │   ├── translations/
-│   │   │   │   ├── __init__.py
-│   │   │   │   └── translation_service.py
 │   │   │   ├── user/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── admin.py
@@ -201,9 +198,6 @@ LemonDBD/
 │   │   │   ├── synergy_service.py
 │   │   │   └── user_service.py
 │   │   ├── static/ [Contains only media across subdirectories (1824 files)]
-│   │   ├── translations/
-│   │   │   ├── translations.json
-│   │   │   └── translations.min.json
 │   │   ├── __init__.py
 │   │   └── fix_missing_translations.py
 │   ├── instance/

@@ -5,6 +5,10 @@ from flask import request
 
 SUPPORTED_LANGS = {"pl", "de", "es", "fr", "it", "ja", "en"}
 
+#: Site languages a user may choose (onboarding / settings). Content text for
+#: these locales lives in the seed JSON files (`translations` key of each row).
+SUPPORTED_LOCALES: list[str] = ["en", "pl", "de", "es", "ja"]
+
 
 def extract_lang() -> str | None:
     """Extract requested language from query parameter, Referer path, or Accept-Language header."""

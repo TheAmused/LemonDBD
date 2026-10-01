@@ -27,15 +27,35 @@ export const TOOLTIP_CONFIG = {
   attr: {
     title: 'data-tooltip',
     description: 'data-tooltip-desc',
+    variant: 'data-tooltip-variant',
+  },
+  /** Visual presets. Add a key here to give a family of tooltips its own look. */
+  variants: {
+    default: {
+      content: '',
+      title: '',
+      arrowBorder: 'var(--border-color)',
+    },
+    perk: {
+      content: 'border-accent-amber/50',
+      title: 'font-mono text-xs sm:text-sm normal-case tracking-normal text-accent-amber',
+      arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
+    },
   },
 } as const;
+
+export type TooltipVariant = keyof typeof TOOLTIP_CONFIG.variants;
+
+const resolveVariant = (name?: string | null) =>
+  TOOLTIP_CONFIG.variants[(name as TooltipVariant) in TOOLTIP_CONFIG.variants ? (name as TooltipVariant) : 'default'];
 
 type MaybeText = string | false | null | undefined;
 
 /** Spread onto any native element to give it the global tooltip. */
-export const tip = (title?: MaybeText, description?: MaybeText) => ({
+export const tip = (title?: MaybeText, description?: MaybeText, variant?: TooltipVariant) => ({
   [TOOLTIP_CONFIG.attr.title]: title || undefined,
   [TOOLTIP_CONFIG.attr.description]: description || undefined,
+  [TOOLTIP_CONFIG.attr.variant]: variant,
 });
 
 export type TooltipPlacement = 'top' | 'bottom' | 'auto';
@@ -56,6 +76,7 @@ export interface TooltipBubbleProps {
   /** Custom body; replaces title/description. */
   children?: React.ReactNode;
   placement?: TooltipPlacement;
+  variant?: TooltipVariant;
   /** Fixed width in px; otherwise sized to content up to defaultMaxWidth. */
   width?: number;
   /** Cap on the bubble height in px (body should scroll itself). */
@@ -70,11 +91,13 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
   description,
   children,
   placement = 'top',
+  variant,
   width,
   maxHeight,
   className,
   contentClassName,
 }) => {
+  const look = resolveVariant(variant);
   const bubbleRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [coords, setCoords] = useState<Coords | null>(null);
@@ -140,6 +163,9 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
       role="tooltip"
       style={{
         zIndex: TOOLTIP_CONFIG.zIndex,
+        // Position is computed, never animated: app-wide transitions on
+        // top/left would otherwise make the bubble slide in from off-screen.
+        transition: 'none',
         maxWidth: `min(${TOOLTIP_CONFIG.defaultMaxWidth}, calc(100vw - ${TOOLTIP_CONFIG.viewportMargin * 2}px))`,
         ...(width
           ? { width, maxWidth: `calc(100vw - ${TOOLTIP_CONFIG.viewportMargin * 2}px)` }
@@ -158,6 +184,7 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
       <div
         className={cn(
           'relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border-color bg-bg-surface px-3.5 py-2.5 shadow-lg backdrop-blur-sm',
+          look.content,
           contentClassName
         )}
       >
@@ -168,7 +195,12 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
         ) : (
           <>
             {title && (
-              <span className="relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-text-primary">
+              <span
+                className={cn(
+                  'relative block whitespace-normal text-[11px] font-black uppercase tracking-wider text-text-primary',
+                  look.title
+                )}
+              >
                 {title}
               </span>
             )}
@@ -197,10 +229,10 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
             bottom: coords.side === 'bottom' ? '100%' : undefined,
             marginTop: coords.side === 'top' ? -arrow / 2 : undefined,
             marginBottom: coords.side === 'bottom' ? -arrow / 2 : undefined,
-            borderRight: coords.side === 'top' ? '1px solid var(--border-color)' : undefined,
-            borderBottom: coords.side === 'top' ? '1px solid var(--border-color)' : undefined,
-            borderLeft: coords.side === 'bottom' ? '1px solid var(--border-color)' : undefined,
-            borderTop: coords.side === 'bottom' ? '1px solid var(--border-color)' : undefined,
+            borderRight: coords.side === 'top' ? `1px solid ${look.arrowBorder}` : undefined,
+            borderBottom: coords.side === 'top' ? `1px solid ${look.arrowBorder}` : undefined,
+            borderLeft: coords.side === 'bottom' ? `1px solid ${look.arrowBorder}` : undefined,
+            borderTop: coords.side === 'bottom' ? `1px solid ${look.arrowBorder}` : undefined,
           }}
         />
       )}
@@ -214,6 +246,7 @@ export interface TooltipProps {
   description?: string;
   children: React.ReactNode;
   placement?: 'top' | 'bottom';
+  variant?: TooltipVariant;
   align?: 'start' | 'center' | 'end';
   className?: string;
   disabled?: boolean;
@@ -224,6 +257,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   description,
   children,
   placement = 'top',
+  variant,
   className,
   disabled = false,
 }) => {
@@ -250,6 +284,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           title={title}
           description={description}
           placement={placement}
+          variant={variant}
           className={className}
         />
       )}
@@ -261,6 +296,7 @@ interface ActiveTip {
   el: HTMLElement;
   title: string;
   description?: string;
+  variant?: string;
 }
 
 /** Mount once (root layout). Shows the bubble for any element carrying tip() attributes. */
@@ -268,7 +304,7 @@ export const TooltipProvider: React.FC = () => {
   const [active, setActive] = useState<ActiveTip | null>(null);
 
   useEffect(() => {
-    const { title: titleAttr, description: descAttr } = TOOLTIP_CONFIG.attr;
+    const { title: titleAttr, description: descAttr, variant: variantAttr } = TOOLTIP_CONFIG.attr;
     const selector = `[${titleAttr}]`;
 
     const find = (target: EventTarget | null) =>
@@ -277,7 +313,12 @@ export const TooltipProvider: React.FC = () => {
     const read = (el: HTMLElement): ActiveTip | null => {
       const title = el.getAttribute(titleAttr);
       if (!title) return null;
-      return { el, title, description: el.getAttribute(descAttr) || undefined };
+      return {
+        el,
+        title,
+        description: el.getAttribute(descAttr) || undefined,
+        variant: el.getAttribute(variantAttr) || undefined,
+      };
     };
 
     const show = (e: Event) => {
@@ -319,7 +360,7 @@ export const TooltipProvider: React.FC = () => {
   // Drop the bubble if its trigger unmounts, or keep text in sync if it changes.
   useEffect(() => {
     if (!active) return;
-    const { title: titleAttr, description: descAttr } = TOOLTIP_CONFIG.attr;
+    const { title: titleAttr, description: descAttr, variant: variantAttr } = TOOLTIP_CONFIG.attr;
     const observer = new MutationObserver(() => {
       const { el } = active;
       if (!el.isConnected) return setActive(null);
@@ -327,18 +368,25 @@ export const TooltipProvider: React.FC = () => {
       if (!title) return setActive(null);
       const description = el.getAttribute(descAttr) || undefined;
       if (title !== active.title || description !== active.description) {
-        setActive({ el, title, description });
+        setActive({ el, title, description, variant: el.getAttribute(variantAttr) || undefined });
       }
     });
     observer.observe(document.body, {
       subtree: true,
       childList: true,
       attributes: true,
-      attributeFilter: [titleAttr, descAttr],
+      attributeFilter: [titleAttr, descAttr, variantAttr],
     });
     return () => observer.disconnect();
   }, [active]);
 
   if (!active) return null;
-  return <TooltipBubble anchor={active.el} title={active.title} description={active.description} />;
+  return (
+    <TooltipBubble
+      anchor={active.el}
+      title={active.title}
+      description={active.description}
+      variant={active.variant as TooltipVariant | undefined}
+    />
+  );
 };

@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   ChevronLeft,
+  Ellipsis,
   Eye,
   EyeOff,
   MousePointerClick,
@@ -41,6 +42,7 @@ import type { TierTileShape } from './TierItemTile';
 import { TOUCH_BTN } from './styles';
 import { Button, BUTTON_BASE, BUTTON_SIZES, BUTTON_VARIANTS } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
+import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 
 export interface TierListEditorProps {
   mode: 'official' | 'custom';
@@ -70,6 +72,9 @@ export interface TierListEditorProps {
   locale: string;
   dict: Dictionary;
 }
+
+const MENU_ITEM =
+  'flex w-full min-h-[44px] items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-semibold text-text-primary hover:bg-bg-elevated cursor-pointer transition-colors';
 
 type Dialog = 'reset' | 'export' | 'import' | 'delete' | null;
 
@@ -109,6 +114,8 @@ export function TierListEditor(props: TierListEditorProps) {
   const t = dict.tierLists;
 
   const [dialog, setDialog] = useState<Dialog>(null);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const menuRef = React.useRef<HTMLButtonElement>(null);
   const [editingTierId, setEditingTierId] = useState<string | null>(null);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<'quota' | 'unavailable' | null>(null);
@@ -176,7 +183,69 @@ export function TierListEditor(props: TierListEditorProps) {
 
   return (
     <div className="relative z-10 flex flex-col gap-3 sm:gap-4 h-full min-h-0">
-      <header className="flex flex-col gap-3 shrink-0">
+      {/* Phones: one compact row (back, title, actions menu). Wider screens use the full header below. */}
+      <div className="flex shrink-0 items-center gap-2 sm:hidden">
+        <Link
+          href={`/${locale}/tier-lists`}
+          className="inline-flex min-h-[44px] shrink-0 items-center gap-0.5 rounded-xl pr-1 text-xs font-bold uppercase tracking-wider text-text-secondary hover:text-accent-red transition-colors"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          {t.backShort}
+        </Link>
+        <h1 className="min-w-0 flex-1 truncate text-center text-sm font-black uppercase tracking-wider font-mono text-text-primary">
+          {pageTitle}
+        </h1>
+        <button
+          ref={menuRef}
+          type="button"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label={t.toolbarAria}
+          {...popoverTriggerProps(menuOpen, 'menu')}
+          className={cn(BUTTON_BASE, BUTTON_VARIANTS.secondary, BUTTON_SIZES.md, TOUCH_BTN, 'shrink-0')}
+        >
+          <Ellipsis className="h-4 w-4" aria-hidden="true" />
+        </button>
+        <Popover
+          open={menuOpen}
+          anchorRef={menuRef}
+          onClose={() => setMenuOpen(false)}
+          align="end"
+          role="menu"
+          ariaLabel={t.toolbarAria}
+          className="min-w-[13rem] rounded-2xl border border-border-color bg-bg-surface p-1.5 shadow-xl"
+        >
+          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
+            {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+            {showNames ? t.hideNames : t.showNames}
+          </button>
+          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('import'); }}>
+            <Upload className="h-4 w-4" aria-hidden="true" />
+            {t.import}
+          </button>
+          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('export'); }}>
+            <Share2 className="h-4 w-4" aria-hidden="true" />
+            {t.export}
+          </button>
+          <button type="button" role="menuitem" className={MENU_ITEM} onClick={() => { setMenuOpen(false); setDialog('reset'); }}>
+            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+            {t.reset}
+          </button>
+          {mode === 'custom' && editHref && (
+            <Link href={editHref} role="menuitem" className={MENU_ITEM} onClick={() => setMenuOpen(false)}>
+              <Pencil className="h-4 w-4" aria-hidden="true" />
+              {t.editDetails}
+            </Link>
+          )}
+          {mode === 'custom' && onDelete && (
+            <button type="button" role="menuitem" className={cn(MENU_ITEM, 'text-accent-red')} onClick={() => { setMenuOpen(false); setDialog('delete'); }}>
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+              {t.deleteList}
+            </button>
+          )}
+        </Popover>
+      </div>
+
+      <header className="hidden sm:flex flex-col gap-3 shrink-0">
         <div className="flex flex-col gap-3 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,1fr)] xl:items-center">
           <div className="flex items-center justify-center xl:justify-start gap-3 shrink-0 xl:justify-self-start">
             <Link

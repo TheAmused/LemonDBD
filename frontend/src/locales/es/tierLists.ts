@@ -27,6 +27,7 @@ export default {
   loading: "Cargando tier lists...",
   loadingItems: "Reuniendo al elenco...",
   backToHub: "Todas las tier lists",
+  backShort: "Volver",
   notFoundTitle: "Tier list no encontrada",
   notFoundSubtitle: "Puede que se haya retirado o que el enlace sea incorrecto.",
   customNotFoundTitle: "Lista personalizada no encontrada",

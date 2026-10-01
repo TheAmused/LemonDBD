@@ -27,6 +27,7 @@ export default {
   loading: "Loading tier lists...",
   loadingItems: "Gathering the roster...",
   backToHub: "All tier lists",
+  backShort: "Return",
   notFoundTitle: "Tier list not found",
   notFoundSubtitle: "It may have been retired, or the link is wrong.",
   customNotFoundTitle: "Custom list not found",

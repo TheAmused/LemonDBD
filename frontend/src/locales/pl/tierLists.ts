@@ -27,6 +27,7 @@ export default {
   loading: "Wczytywanie tier list...",
   loadingItems: "Zbieranie obsady...",
   backToHub: "Wszystkie tier listy",
+  backShort: "Wróć",
   notFoundTitle: "Nie znaleziono tier listy",
   notFoundSubtitle: "Mogła zostać wycofana albo link jest błędny.",
   customNotFoundTitle: "Nie znaleziono własnej listy",

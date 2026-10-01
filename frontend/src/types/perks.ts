@@ -40,12 +40,6 @@ export interface CharacterItem {
   disabled_reason?: string | null;
 }
 
-export interface CharacterOption {
-  value: string;
-  label: string;
-  real_name?: string;
-}
-
 export interface PerkSuggestion {
   id?: number;
   name: string;
@@ -71,20 +65,6 @@ export interface GeneratorStoredState {
   activeSlotIdx: number;
   blindMode: boolean;
   activeMutator?: any;
-}
-
-export interface GeneratorConfigResponse {
-  role?: RoleCategory;
-  gen_mode?: GeneratorMode;
-  no_repeat_perks?: number | boolean;
-  spin_duration_sec?: number;
-}
-
-export interface PaginationInfo {
-  page: number;
-  limit: number;
-  total_pages: number;
-  total: number;
 }
 
 export interface PerkDictionary {

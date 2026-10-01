@@ -148,18 +148,6 @@ export interface LeaderboardItem {
   edition?: string;
 }
 
-export interface VotePayload {
-  entity_id?: string;
-  character_slug?: string;
-  slug?: string;
-  vote_type: VoteType;
-  vote?: VoteType;
-  roster_slug?: string;
-  edition?: string;
-  session_id?: string;
-  user_id?: number;
-}
-
 export interface VoteResponse {
   status?: string;
   data: EntityItem & {
@@ -174,14 +162,6 @@ export interface VoteResponse {
     chaos_rating?: number;
     [key: string]: any;
   };
-}
-
-export interface ChaosPersonaScore {
-  chaos_score: number;
-  danger_rating: string;
-  persona_archetype: string;
-  flavor_text: string;
-  compatibility_percent: number;
 }
 
 export interface SmashFilterOptions {

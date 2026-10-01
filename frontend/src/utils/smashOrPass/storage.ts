@@ -243,11 +243,6 @@ export function updateSmashRosterState(
   return result;
 }
 
-/** Test hook: forget the cached snapshot so the next read hits storage. */
-export function resetSmashRosterStoreCache(): void {
-  snapshot = null;
-}
-
 // ---------------------------------------------------------------------------
 // Mutations
 // ---------------------------------------------------------------------------

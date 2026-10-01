@@ -5,7 +5,6 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
 import { UserBugReportsSkeleton } from '@/components/user/UserBugReportsSkeleton';
-import { UserMetricsGrid, UserMetricsGridSkeleton } from '@/components/user/UserMetricsGrid';
 import { UserBugReportsList } from '@/components/user/UserBugReportsList';
 import type { UserBugReport } from '@/types/userProfile';
 import enDict from '@/locales/en';
@@ -32,41 +31,6 @@ describe('User Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
     assert.ok(html.includes('viewBox="0 0 160 160"'));
   });
 
-  it('UserMetricsGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderToStaticMarkup(React.createElement(UserMetricsGridSkeleton, {}));
-    assert.ok(html.includes('role="status"'));
-    assert.ok(html.includes('aria-busy="true"'));
-    assert.ok(html.includes('viewBox="0 0 160 160"'));
-  });
-});
-
-describe('User Page: UserMetricsGrid data rendering', () => {
-  it('renders owned/total counts and percentages from ownership data', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(UserMetricsGrid, {
-        dict: enDict,
-        ownership: {
-          survivors: { owned: 10, total: 54, percentage: 19 },
-          killers: { owned: 5, total: 44, percentage: 11 },
-          perks: { unlocked: 100, total: 321, percentage: 31 },
-        },
-      })
-    );
-
-    assert.ok(html.includes('10 / 54'));
-    assert.ok(html.includes('5 / 44'));
-    assert.ok(html.includes('100 / 321'));
-    assert.ok(html.includes('19%'));
-  });
-
-  it('falls back to safe zero/default values when ownership is null', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(UserMetricsGrid, { dict: enDict, ownership: null })
-    );
-    assert.ok(html.includes('0 / 54'));
-    assert.ok(html.includes('0 / 44'));
-    assert.ok(html.includes('0%'));
-  });
 });
 
 describe('User Page: UserBugReportsList status badges & pagination', () => {

@@ -21,8 +21,6 @@ export const isTopModal = (id: string): boolean => stack[stack.length - 1] === i
 
 export const modalDepth = (id: string): number => stack.indexOf(id);
 
-export const openModalCount = (): number => stack.length;
-
 /* ------------------------------ scroll lock ------------------------------ */
 
 export interface ScrollLockTarget {

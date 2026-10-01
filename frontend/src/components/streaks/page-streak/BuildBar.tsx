@@ -62,7 +62,7 @@ export const BuildBar: React.FC<BuildBarProps> = ({
               </span>
             </span>
           )}
-          <span>{name ? displayName(name) : `${dict?.swf?.slot || 'Slot'} ${index + 1}`}</span>
+          <span>{name ? displayName(name) : `${dict?.streaks?.slotLabel || 'Slot'} ${index + 1}`}</span>
         </div>
       ))}
 

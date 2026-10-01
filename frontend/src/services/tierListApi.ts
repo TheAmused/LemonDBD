@@ -1,6 +1,6 @@
 // frontend/src/services/tierListApi.ts
 import type { TierListSummary, TierListTemplate } from '@/types/tierList';
-import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
+import { catalogKey } from '@/services/dataCache';
 
 /*
  * Official tier lists are seed content, served by `@cache_catalog` endpoints
@@ -29,16 +29,6 @@ export function tierListsCacheKey(lang: string): string {
 
 export function tierListCacheKey(slug: string, lang: string): string {
   return catalogKey(`tier-lists/${encodeURIComponent(slug)}`, { lang });
-}
-
-export function fetchTierLists(lang: string): Promise<TierListsResponse> {
-  const url = tierListsCacheKey(lang);
-  return fetchCached(url, () => fetchJson<TierListsResponse>(url), { ttlMs: CATALOG_TTL_MS });
-}
-
-export function fetchTierList(slug: string, lang: string): Promise<TierListResponse> {
-  const url = tierListCacheKey(slug, lang);
-  return fetchCached(url, () => fetchJson<TierListResponse>(url), { ttlMs: CATALOG_TTL_MS });
 }
 
 /** True when a `fetchJson` rejection was a 404 rather than a network or server failure. */

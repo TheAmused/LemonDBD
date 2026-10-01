@@ -143,4 +143,4 @@ Backend API: `http://localhost:5000/api/v1/health`
 ---
 
 ## 📜 Roadmap & Masterplan Document
-For the complete list of features and implemented milestones, see [`featuresPlan.md`](./featuresPlan.md).
+For the complete list of features and implemented milestones, see [`featuresPlan.md`](./docs/featuresPlan.md).

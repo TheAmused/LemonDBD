@@ -1,6 +1,5 @@
 # backend/app/core/config.py
 import os
-import tempfile
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
@@ -69,12 +68,6 @@ class Config:
         "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
     }
 
-    INITIAL_SCRAPE_ENABLED: bool = os.getenv("INITIAL_SCRAPE_ENABLED", "false").lower() in ("true", "1", "yes")
-    SCRAPE_LOCK_FILE: str = os.getenv(
-        "SCRAPE_LOCK_FILE",
-        str(Path(tempfile.gettempdir()) / "dbd_initial_scrape.lock"),
-    )
-
     SCHEDULER_ENABLED: bool = os.getenv("SCHEDULER_ENABLED", "true").lower() in ("true", "1", "yes")
     STREAK_INACTIVITY_PRUNE_DAYS: int = int(os.getenv("STREAK_INACTIVITY_PRUNE_DAYS", "90"))
 
@@ -96,6 +89,5 @@ class TestingConfig(Config):
     DEBUG: bool = False
     SQLALCHEMY_DATABASE_URI: str = "sqlite:///:memory:"
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}
-    INITIAL_SCRAPE_ENABLED: bool = False
     RATELIMIT_ENABLED: bool = False
     SCHEDULER_ENABLED: bool = False

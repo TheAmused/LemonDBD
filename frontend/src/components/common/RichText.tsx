@@ -91,7 +91,7 @@ export const RICH_VARIANTS: Readonly<Record<'ui' | 'game', RichVariant>> = {
     noticeLabel: 'mr-2 rounded-lg bg-accent-amber/25 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider',
   },
   game: {
-    strong: 'font-bold text-accent-amber inline-block drop-shadow-xs',
+    strong: 'font-bold text-accent-amber drop-shadow-xs',
     em: 'italic text-text-secondary',
     kbd: 'inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap',
     code: 'inline-flex items-center px-1.5 py-0.5 mx-0.5 rounded-md text-[10px] sm:text-[11px] font-mono font-bold bg-bg-elevated border border-accent-amber/50 text-accent-amber shadow-xs align-baseline whitespace-nowrap',

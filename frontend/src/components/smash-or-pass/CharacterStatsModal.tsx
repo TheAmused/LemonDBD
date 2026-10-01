@@ -249,36 +249,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({
           </div>
         )}
 
-        {/* 5. Complete Green & Red Flags Dossier (renders full 4-6 flag pool without sampling) */}
-        {(profile.green_flags.length > 0 || profile.red_flags.length > 0) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            {profile.green_flags.length > 0 && (
-              <div className="space-y-1.5 bg-accent-green/10 border border-accent-green/20 p-3 rounded-2xl">
-                <span className="flex items-center gap-1.5 font-black text-accent-green text-[11px] uppercase font-mono">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> {greenFlagsLabel}
-                </span>
-                <ul className="text-xs text-accent-green/90 space-y-1 pl-4 list-disc font-sans">
-                  {profile.green_flags.map((f: string, i: number) => (
-                    <li key={i}>{f}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {profile.red_flags.length > 0 && (
-              <div className="space-y-1.5 bg-accent-red/10 border border-accent-red/20 p-3 rounded-2xl">
-                <span className="flex items-center gap-1.5 font-black text-accent-red text-[11px] uppercase font-mono">
-                  <AlertTriangle className="h-3.5 w-3.5" /> {redFlagsLabel}
-                </span>
-                <ul className="text-xs text-accent-red/90 space-y-1 pl-4 list-disc font-sans">
-                  {profile.red_flags.map((f: string, i: number) => (
-                    <li key={i}>{f}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
+        {/* 5. Complete Green & Red Flags Dossier - Hidden for now */}
 
         {/* 6. Turn On & Dealbreaker */}
         {(profile.turn_on || dealbreaker) && (

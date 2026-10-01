@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { Difficulty } from '@/types/chaosStreak';
-import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import { ChallengeIntroModalShell, ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
 import { ChaosRulesModal } from './ChaosRulesModal';
 import { cascadeCompletedTiers, tierCompletionCount, CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
 import { TierEasyIcon, TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
@@ -48,7 +48,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       description: dict?.streaks?.chaosEasyDesc || 'A checkpoint every 5 wins.',
       icon: TierEasyIcon,
       image: '/images/streaks/modes/chaos-easy.webp',
-      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
+      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: completedTiers.has('easy'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'easy'),
       completedFull: completedFullTiers.has('easy'),
@@ -60,7 +60,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       description: dict?.streaks?.chaosMediumDesc || 'A checkpoint every 10 wins.',
       icon: TierMediumIcon,
       image: '/images/streaks/modes/chaos-medium.webp',
-      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
+      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: completedTiers.has('medium'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'medium'),
       completedFull: completedFullTiers.has('medium'),
@@ -72,7 +72,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
       description: dict?.streaks?.chaosHellDesc || 'No checkpoints. One loss resets everything.',
       icon: TierHellIcon,
       image: '/images/streaks/modes/chaos-hell.webp',
-      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
+      accentClassName: NEUTRAL_TILE_ACCENT,
       completed: completedTiers.has('hell'),
       completedCount: tierCompletionCount(CHAOS_DIFFICULTY_ORDER, completedCounts, 'hell'),
       completedFull: completedFullTiers.has('hell'),
@@ -92,7 +92,7 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
               'Pull the lever to draw 4 random perks and 2 addon rarities from your unlocked pool, then pick which owned killer plays the round. Win 3 kills or more to keep your streak alive.'
             : undefined
         }
-        rulesLabel={showIntro ? dict?.streaks?.rules || 'Rules' : undefined}
+        rulesLabel={showIntro ? dict?.streaks?.readFullRules || 'Read full rules' : undefined}
         onOpenRules={showIntro ? () => setIsRulesOpen(true) : undefined}
         tiles={tiles}
         onSelectTile={(value) => onSelectDifficulty(value as Difficulty)}

@@ -39,6 +39,7 @@ from sqlalchemy import (
     SmallInteger,
     String,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -352,5 +353,36 @@ class Vote(Base):
             "session_id": self.session_id,
             "user_id": self.user_id,
             "vote_type": self.vote_type,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class SmashTaxonomy(Base):
+    """Catalog of known roles and genders for smash-or-pass entities."""
+
+    __tablename__ = "smash_taxonomies"
+    __table_args__ = (
+        UniqueConstraint("type", "slug", name="uq_smash_taxonomies_type_slug"),
+        Index("idx_smash_taxonomies_type", "type"),
+    )
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    type: Mapped[str] = mapped_column(String(16), nullable=False)  # 'role' or 'gender'
+    name: Mapped[str] = mapped_column(String(64), nullable=False)  # e.g. 'Survivor', 'ABC'
+    slug: Mapped[str] = mapped_column(String(64), nullable=False)  # normalized lowercase
+    is_predefined: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, nullable=False
+    )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "type": self.type,
+            "name": self.name,
+            "slug": self.slug,
+            "is_predefined": self.is_predefined,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }

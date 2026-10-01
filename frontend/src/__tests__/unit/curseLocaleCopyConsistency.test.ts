@@ -41,13 +41,12 @@ const MUTATOR_TARGET_TYPE: Record<string, string> = {
 };
 
 function expectedBadgeFragment(weight: number): string {
-  // getPerkWeight only ever produces a reduction (<1, expressed as -N%) or a
-  // boost (>1, expressed as Nx) relative to the baseline weight of 1.0.
   if (weight < 1) {
     const pct = Math.round((1 - weight) * 100);
     return `-${pct}%`;
   }
-  return `${Math.round(weight)}x`;
+  const pct = Math.round((weight - 1) * 100);
+  return `+${pct}%`;
 }
 
 for (const mutatorId of Object.keys(MUTATOR_TARGET_TYPE)) {

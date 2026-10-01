@@ -87,7 +87,7 @@ export default {
   survivorComparison: "Überlebenden-Geschwindigkeitsvergleich",
   survivorComparisonDesc: "Die Standard-Sprintgeschwindigkeit von Überlebenden beträgt 4.0 m/s (100%).",
   viewLore: "Biografie & Lore Lesen",
-  view3DModel: "Klicken für Vollständiges 3D-Modell",
+  view3DModel: "Klicken zum Vergrößern",
   loreModalTitle: "Archive des Entitus — Kodex-Wissen",
   equipmentDetails: "Ausrüstungsdetails",
   equipment: "Ausrüstung",

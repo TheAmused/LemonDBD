@@ -4,6 +4,7 @@ export default {
   challenges: "Desafíos",
   mapExplorer: "Explorador de Mapas",
   characters: "Personajes",
+  tierLists: "Tier lists",
   smashOrPass: "Smash or Pass",
   trophies: "Trofeos",
   draftRoom: "🏆 Sala de Draft",

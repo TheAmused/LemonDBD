@@ -5,7 +5,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
 import { BookOpen } from 'lucide-react';
-import { ChallengeIntroModalShell, ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import { ChallengeIntroModalShell, ChallengeIntroTile, NEUTRAL_TILE_ACCENT } from '../ChallengeIntroModalShell';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
 
 export interface PageStreakModeModalProps {
@@ -22,9 +22,9 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
     {
       value: 'normal',
       label: dict?.streaks?.normal || 'Normal',
-      description: dict?.streaks?.pageStreakNormalDesc || 'Every perk page counts.',
       icon: BookOpen,
-      accentClassName: 'border-accent-red/30 bg-accent-red/5 hover:bg-accent-red/10 text-accent-red',
+      image: '/images/streaks/page-streak.webp',
+      accentClassName: NEUTRAL_TILE_ACCENT,
     },
   ];
 
@@ -33,14 +33,12 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
       <ChallengeIntroModalShell
         isOpen={isOpen}
         onClose={onClose}
-        icon={BookOpen}
-        iconClassName="bg-accent-red/10 border-accent-red/20 text-accent-red"
-        title={dict?.streaks?.pageStreak || 'Page streak'}
+        title={dict?.streaks?.chooseMode || 'Choose a mode'}
         intro={
           dict?.streaks?.pageStreakIntro ||
-          'Pick a killer and build the strongest loadout you can from their current perk page. Win to move to the next page, lose and start over from page 1.'
+          'Pick a killer and build the strongest loadout you can from their current perk page. After a win you move to the next page, after a loss you start over.'
         }
-        rulesLabel={dict?.streaks?.rules || 'Rules'}
+        rulesLabel={dict?.streaks?.readFullRules || 'Read full rules'}
         onOpenRules={() => setIsRulesOpen(true)}
         tiles={tiles}
         onSelectTile={() => onStart()}

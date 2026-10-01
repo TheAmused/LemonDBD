@@ -3,13 +3,16 @@ import logging
 import threading
 import time
 from collections import defaultdict
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, g, jsonify, request
+from pydantic import ValidationError
 from sqlalchemy import select
 
 from app.core.extensions import db
 from app.core.limiter import get_client_ip
-from app.core.security import get_current_user
+from app.core.security import admin_required, get_current_user
 from app.models.smash_or_pass import Roster
+from app.schemas.smash_or_pass import SmashRosterAdminCreate
+from app.services.admin_control_service import log_admin_action
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
 
@@ -90,6 +93,92 @@ def get_rosters():
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/taxonomies", methods=["GET"])
+def get_taxonomies():
+    """Retrieve all available roles and genders (cached)."""
+    try:
+        data = smash_service.get_taxonomies()
+        return jsonify({"data": data}), 200
+    except Exception as e:
+        logger.error(f"Error fetching smash taxonomies: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/taxonomies", methods=["POST"])
+def register_taxonomy():
+    """Register a custom role or gender in the database."""
+    body = request.get_json(silent=True) or {}
+    term_type = (body.get("type") or "").strip().lower()
+    name = (body.get("name") or "").strip()
+    if term_type not in ("role", "gender"):
+        return jsonify({"error": "Type must be 'role' or 'gender'"}), 400
+    if not name or len(name) > 64:
+        return jsonify({"error": "Name must be between 1 and 64 characters"}), 400
+
+    try:
+        term = smash_service.register_taxonomy(term_type, name)
+        return jsonify({"data": term}), 201
+    except Exception as e:
+        logger.error(f"Error registering taxonomy: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@smash_or_pass_bp.route("/rosters", methods=["POST"])
+@admin_required
+def create_roster():
+    """Admin-authored official roster: the "Official?" checkbox in the roster
+    creator posts here instead of saving to this browser's localStorage. The
+    roster (and every entity in it) is live for every visitor the moment this
+    returns -- picked up by the data-driven roster picker on its next fetch.
+    """
+    body = request.get_json(silent=True) or {}
+    try:
+        payload = SmashRosterAdminCreate(**body)
+    except ValidationError as err:
+        return jsonify({"error": "Invalid roster", "details": err.errors()}), 400
+
+    try:
+        row = smash_service.create_roster(
+            name=payload.name,
+            description=payload.description,
+            cover_image_url=payload.cover_image_url,
+            theme_color=payload.theme_color,
+            category=payload.category,
+            is_nsfw=payload.is_nsfw,
+            translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
+            entities=[
+                {
+                    **e.model_dump(exclude={"translations"}, exclude_none=True),
+                    "translations": {
+                        loc: t.model_dump(exclude_none=True) for loc, t in e.translations.items()
+                    },
+                }
+                for e in payload.entities
+            ],
+        )
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    log_admin_action(
+        g.current_user.id,
+        "smash_roster.create",
+        target_type="roster",
+        target_id=row.id,
+        details={"slug": row.slug, "name": row.name, "entity_count": len(payload.entities)},
+    )
+    # `Roster.to_dict()` never carries its entities -- every other read path
+    # fetches them through a separate Entity/EntityStat select (get_feed,
+    # get_characters_with_stats) instead of eager-loading the relationship on
+    # every roster row. The creator UI wants confirmation of what it just
+    # built, so this one response assembles both by hand rather than adding
+    # entities to the model's own general-purpose `to_dict()`.
+    data = row.to_dict()
+    data["entity_count"] = len(row.entities)
+    data["character_count"] = len(row.entities)
+    data["entities"] = [e.to_dict() for e in row.entities]
+    return jsonify({"status": "success", "data": data}), 201
 
 
 @smash_or_pass_bp.route("/rosters/<slug>/feed", methods=["GET"])
@@ -425,4 +514,72 @@ def get_user_votes():
     except Exception as e:
         logger.error(f"Error fetching user/session smash-or-pass votes: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+def _is_private_host(hostname: str) -> bool:
+    import ipaddress
+    try:
+        ip = ipaddress.ip_address(hostname)
+        return ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_unspecified
+    except ValueError:
+        lower = hostname.lower()
+        if lower in ("localhost", "backend", "frontend", "db", "redis", "nginx", "umami"):
+            return True
+        if lower.endswith(".local") or lower.endswith(".internal"):
+            return True
+        return False
+
+
+@smash_or_pass_bp.route("/proxy-image", methods=["GET"])
+def proxy_image():
+    """Proxies third-party images with CORS headers so canvas can safely crop them."""
+    import requests
+    from urllib.parse import urlparse
+    from flask import Response
+
+    target_url = request.args.get("url")
+    if not target_url:
+        return jsonify({"error": "Missing url parameter"}), 400
+
+    try:
+        parsed = urlparse(target_url)
+    except Exception:
+        return jsonify({"error": "Invalid URL"}), 400
+
+    if parsed.scheme not in ("http", "https"):
+        return jsonify({"error": "Only http and https protocols supported"}), 400
+
+    if not parsed.hostname or _is_private_host(parsed.hostname):
+        return jsonify({"error": "Host not allowed"}), 403
+
+    try:
+        resp = requests.get(
+            target_url,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/124.0.0.0 Safari/537.36"
+                ),
+                "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                "Referer": f"{parsed.scheme}://{parsed.netloc}/",
+            },
+            timeout=12,
+        )
+        if not resp.ok:
+            return jsonify({"error": f"Upstream returned status {resp.status_code}"}), resp.status_code
+
+        content_type = resp.headers.get("content-type", "image/jpeg")
+        if not content_type.startswith("image/"):
+            content_type = "image/jpeg"
+
+        response = Response(resp.content, status=200, mimetype=content_type)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response.headers["Cache-Control"] = "public, max-age=86400"
+        return response
+    except Exception as e:
+        logger.error(f"Image proxy error: {e}")
+        return jsonify({"error": str(e)}), 502
+
 

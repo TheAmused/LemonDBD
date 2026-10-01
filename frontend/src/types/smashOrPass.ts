@@ -106,6 +106,17 @@ export interface RosterItem {
   character_count?: number;
   total_votes?: number;
   created_at?: string | null;
+  /** True for a roster synthesized client-side from localStorage (slug is
+   * `local:<id>`, never a real backend roster). Never sent to or read from
+   * the API -- purely a UI marker so the picker and hub can tell the two
+   * apart (no leaderboard fetch, no server vote, an "Edit"/"Delete" action
+   * instead of nothing). */
+  is_local?: boolean;
+  roster_mode?: 'simple' | 'full';
+  custom_roles?: string[];
+  custom_genders?: string[];
+  custom_labels?: RosterCustomLabels;
+  romance_archetypes?: CustomRomanceArchetype[];
 }
 
 export interface FeedResponse {
@@ -184,4 +195,111 @@ export interface SmashLeaderboardOptions {
   gender?: string;
   sortBy?: 'smash_rate' | 'total_votes' | 'smash_count' | 'chaos_rating' | string;
   limit?: number;
+}
+
+// ---------------------------------------------------------------------------
+// Portable JSON document (import / export / share links / admin creator)
+//
+// A local, self-contained roster never has a server-side counterpart to
+// "customize" the way a tier-list ranking customizes an official template --
+// there is no official-roster-plus-user-overrides concept here. So unlike
+// `TierListDocument`, this document is always the whole roster: a custom
+// roster IS its entities, not a diff against one.
+// ---------------------------------------------------------------------------
+
+export const SMASH_ROSTER_FORMAT = 'lemondbd-smash-roster' as const;
+export const SMASH_ROSTER_FORMAT_VERSION = 1 as const;
+
+/**
+ * One entity inside a portable roster document. Mirrors `EntityProfile` plus
+ * the identity/media columns, but every field is optional except `id`/`name`
+ * -- a hand-written or partially-filled draft should still round-trip.
+ */
+export interface SmashRosterDocumentEntity {
+  /** Stable, slug-shaped key unique within this document. Never sent to translations. */
+  id: string;
+  name: string;
+  real_name?: string;
+  role: string;
+  gender: string;
+  media_url?: string;
+  media_type?: string;
+  watermark_left?: string;
+  watermark_right?: string;
+  archetype?: string;
+  bio?: string;
+  tagline?: string;
+  quote?: string;
+  meme?: string;
+  turn_on?: string;
+  dealbreaker?: string;
+  dating_vibe?: string;
+  red_flags?: string[];
+  green_flags?: string[];
+  chapter?: string;
+  danger_level?: string;
+  chaos_score?: number;
+}
+
+export interface RosterCustomLabels {
+  turn_on?: string;
+  dealbreaker?: string;
+  dating_vibe?: string;
+  meme?: string;
+  archetype?: string;
+  quote?: string;
+  [key: string]: string | undefined;
+}
+
+export interface ArchetypeRule {
+  target: 'smash_rate' | 'total_votes' | 'role_affinity' | 'gender_affinity' | 'role_count' | 'gender_count';
+  target_value?: string;
+  operator: '>=' | '<=' | '==' | '>';
+  value: number;
+}
+
+export interface CustomRomanceArchetype {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  badge_color: string;
+  icon_name?: 'flame' | 'skull' | 'heart' | 'zap' | 'sparkles' | 'shield' | 'compass' | string;
+  icon_url?: string;
+  badge_image_url?: string;
+  is_fallback?: boolean;
+  rules: ArchetypeRule[];
+}
+
+export interface SmashRosterDocument {
+  format: typeof SMASH_ROSTER_FORMAT;
+  version: typeof SMASH_ROSTER_FORMAT_VERSION;
+  name: string;
+  description?: string;
+  /** An https:/data: image shown on the roster's card in the picker. */
+  cover_image_url?: string;
+  theme_color?: string;
+  category?: string;
+  is_nsfw?: boolean;
+  roster_mode?: 'simple' | 'full';
+  custom_roles?: string[];
+  custom_genders?: string[];
+  custom_labels?: RosterCustomLabels;
+  romance_archetypes?: CustomRomanceArchetype[];
+  entities: SmashRosterDocumentEntity[];
+}
+
+// ---------------------------------------------------------------------------
+// localStorage shape
+// ---------------------------------------------------------------------------
+
+export interface StoredCustomRoster extends SmashRosterDocument {
+  id: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface SmashRosterStoreState {
+  version: 1;
+  custom: Record<string, StoredCustomRoster>;
 }

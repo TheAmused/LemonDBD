@@ -17,10 +17,10 @@ export const PageStreakRulesModal: React.FC<PageStreakRulesModalProps> = ({ isOp
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={s?.pageStreakRulesTitle || 'Page Streak Rules'}
+      title={s?.rules || 'Rules'}
       dict={dict}
     >
-      <RulesModalConcept title={s?.pageStreakConceptLabel || 'Page Streak Concept'}>
+      <RulesModalConcept title={s?.pageStreakConceptLabel || 'Concept'}>
         {s?.pageStreakConceptShort || 'Pick a killer, then build a loadout from your perks, split across pages.'}
       </RulesModalConcept>
 

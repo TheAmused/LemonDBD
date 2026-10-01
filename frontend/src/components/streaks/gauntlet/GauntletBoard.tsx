@@ -161,7 +161,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         >
         {isCompleted ? (
           <ChallengeVictoryCard
-            title={dict?.streaks?.gauntletComplete || 'You won the Gauntlet Streak'}
+            title={dict?.streaks?.gauntletComplete || 'You won The Gauntlet'}
             onRestart={reset}
             busy={busy}
             dict={dict}

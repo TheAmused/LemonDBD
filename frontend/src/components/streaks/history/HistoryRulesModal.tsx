@@ -23,10 +23,10 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={s?.historyRulesTitle || 'History Streak Rules'}
+      title={s?.rules || 'Rules'}
       dict={dict}
     >
-      <RulesModalConcept title={s?.historyConceptLabel || 'History Concept'}>
+      <RulesModalConcept title={s?.historyConceptLabel || 'Concept'}>
         {s?.historyConceptShort || 'Killers are grouped into rows of 5, sorted by release order. Clear a row to unlock the next.'}
       </RulesModalConcept>
 

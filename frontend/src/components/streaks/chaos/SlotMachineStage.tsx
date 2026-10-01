@@ -228,55 +228,77 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   );
 };
 
-const LEVER_STICK_PX = 54;
+const LEVER_STICK_PX = 56;
+const LEVER_BALL_PX = 30;
+const LEVER_EASE = 'cubic-bezier(0.34, 1.3, 0.64, 1)';
+const LEVER_ROD_GRADIENT = 'linear-gradient(90deg, #5a5f73, #f4f6fb 45%, #6b7087)';
 
 const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
   down,
   disabled,
   onPull,
   label = 'Pull the lever',
-}) => (
-  <button
-    type="button"
-    onClick={onPull}
-    disabled={disabled}
-    aria-label={label}
-    className="relative shrink-0 cursor-pointer disabled:cursor-default"
-    style={{ perspective: '420px' }}
-  >
-    <div
-      className="relative h-[150px] w-[74px] rounded-2xl border border-border-color transition-shadow duration-500"
-      style={{
-        background: 'linear-gradient(180deg, #0c0d11, #191a20)',
-        boxShadow: down
-          ? 'inset 0 6px 14px rgba(0,0,0,0.65), 0 0 26px rgba(239,68,68,0.35)'
-          : 'inset 0 6px 14px rgba(0,0,0,0.65)',
-      }}
+}) => {
+  const swing = `transform 600ms ${LEVER_EASE}`;
+  return (
+    <button
+      type="button"
+      onClick={onPull}
+      disabled={disabled}
+      aria-label={label}
+      className="relative shrink-0 cursor-pointer disabled:cursor-default"
+      style={{ perspective: '170px', perspectiveOrigin: '50% 50%' }}
     >
       <div
-        className="absolute left-1/2 top-1/2 h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
-        style={{ background: '#2c2e38', borderColor: '#5a5f73' }}
-      />
-      <div
-        className="absolute left-1/2 w-[10px] -ml-[5px] rounded-full"
+        className="relative h-[160px] w-[78px] rounded-2xl border border-border-color"
         style={{
-          top: `calc(50% - ${LEVER_STICK_PX}px)`,
-          height: LEVER_STICK_PX,
-          transformOrigin: '50% 100%',
+          background: 'linear-gradient(180deg, #0a0b0e, #1b1c22)',
+          boxShadow: 'inset 0 8px 16px rgba(0,0,0,0.7), inset 0 -2px 4px rgba(255,255,255,0.04)',
           transformStyle: 'preserve-3d',
-          transform: down ? 'rotateX(-180deg)' : 'rotateX(0deg)',
-          transition: 'transform 550ms cubic-bezier(0.34, 1.35, 0.64, 1)',
-          background: 'linear-gradient(90deg, #8d93a8, #eef0f6, #5a5f73)',
         }}
       >
         <div
-          className="absolute -top-[15px] -left-[10px] h-[30px] w-[30px] rounded-full"
+          className="absolute left-1/2 top-1/2 h-[44px] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{ background: '#050608', boxShadow: 'inset 0 3px 8px #000, 0 1px 0 rgba(255,255,255,0.06)' }}
+        />
+        <div
+          className="absolute left-1/2 w-[12px] -ml-[6px]"
           style={{
-            background: 'radial-gradient(circle at 35% 30%, #fca5a5, #ef4444 50%, #7f1d1d)',
-            boxShadow: '0 0 14px rgba(239,68,68,0.45)',
+            top: `calc(50% - ${LEVER_STICK_PX}px)`,
+            height: LEVER_STICK_PX,
+            transformOrigin: '50% 100%',
+            transformStyle: 'preserve-3d',
+            transform: down ? 'rotateX(-180deg)' : 'rotateX(0deg)',
+            transition: swing,
+          }}
+        >
+          <div className="absolute inset-0 rounded-full" style={{ background: LEVER_ROD_GRADIENT }} />
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{ background: LEVER_ROD_GRADIENT, transform: 'rotateY(90deg)' }}
+          />
+          <div
+            className="absolute left-1/2 rounded-full"
+            style={{
+              top: -LEVER_BALL_PX / 2,
+              width: LEVER_BALL_PX,
+              height: LEVER_BALL_PX,
+              marginLeft: -LEVER_BALL_PX / 2,
+              background: 'radial-gradient(circle at 35% 30%, #fecaca, #ef4444 45%, #6b1414)',
+              transform: down ? 'rotateX(180deg)' : 'rotateX(0deg)',
+              transition: swing,
+            }}
+          />
+        </div>
+        <div
+          className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{
+            background: 'radial-gradient(circle at 35% 30%, #8d93a8, #3a3d4b 60%, #1c1d24)',
+            boxShadow: '0 3px 6px rgba(0,0,0,0.6)',
+            transform: 'translateZ(2px)',
           }}
         />
       </div>
-    </div>
-  </button>
-);
+    </button>
+  );
+};

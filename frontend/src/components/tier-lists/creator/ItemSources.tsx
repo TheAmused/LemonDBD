@@ -306,31 +306,55 @@ function CatalogSource({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex justify-center">
-        <CustomDropdown
-          value={kind}
-          onChange={(k) => {
-            setKind(k as CatalogKind);
-            setSelected(new Set());
-          }}
-          options={CATALOG_KINDS.map((k) => ({ value: k, label: t.kinds[k] }))}
-          ariaLabel={c.catalogSource}
-          buttonClassName="min-h-[40px] min-w-[200px] justify-between"
-          minWidthClass="min-w-[220px]"
-        />
+      {/* Wide screens: every type as a pill. Phones: a dropdown next to the search box, to save rows. */}
+      <div className="hidden sm:flex flex-wrap justify-center gap-2" role="group" aria-label={c.catalogSource}>
+        {CATALOG_KINDS.map((k) => (
+          <button
+            key={k}
+            type="button"
+            onClick={() => {
+              setKind(k);
+              setSelected(new Set());
+            }}
+            aria-pressed={kind === k}
+            className={cn(
+              'min-h-[38px] rounded-lg border px-3 text-xs sm:text-sm font-bold transition-colors cursor-pointer',
+              kind === k
+                ? 'border-accent-red bg-accent-red/10 text-accent-red'
+                : 'border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+            )}
+          >
+            {t.kinds[k]}
+          </button>
+        ))}
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
-          <Input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={c.catalogSearch}
-            aria-label={c.catalogSearchAria}
-            className={`${TOUCH_FIELD} pl-9`}
-          />
+        <div className="flex gap-2 sm:contents">
+          <div className="shrink-0 sm:hidden">
+            <CustomDropdown
+              value={kind}
+              onChange={(k) => {
+                setKind(k as CatalogKind);
+                setSelected(new Set());
+              }}
+              options={CATALOG_KINDS.map((k) => ({ value: k, label: t.kinds[k] }))}
+              ariaLabel={c.catalogSource}
+              buttonClassName="min-h-[44px] justify-between"
+              minWidthClass="min-w-[200px]"
+            />
+          </div>
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
+            <Input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={c.catalogSearch}
+              aria-label={c.catalogSearchAria}
+              className={`${TOUCH_FIELD} pl-9`}
+            />
+          </div>
         </div>
         <div className="flex justify-center gap-2">
           <Button

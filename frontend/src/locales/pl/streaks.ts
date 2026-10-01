@@ -163,6 +163,7 @@ export default {
   recentMatchHistory: "Ostatnia Historia Meczów",
   noMatchesLogged: "Brak zarejestrowanych meczów. Rozegraj swój pierwszy mecz!",
   pastWins: "Historia zwycięstw",
+  viewAllWins: "Zobacz wszystkie",
   noCompletionsLogged: "Brak ukończonych przejść. Ukończ całe wyzwanie, aby zobaczyć je tutaj!",
   killersLabel: "zabójców",
   survivorsLabel: "ocalałych",

@@ -2,9 +2,13 @@
 // frontend/src/components/streaks/ChallengeCompletionHistoryDrawer.tsx
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect } from 'react';
-import { X, RotateCcw, Users, Swords } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
+import { ChallengeAllWinsModal } from './ChallengeAllWinsModal';
+import { ChallengeCompletionRow } from './ChallengeCompletionRow';
+
+const VISIBLE_COMPLETIONS = 10;
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -30,14 +34,16 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
   subjectLabel,
   dict,
 }) => {
+  const [isAllOpen, setIsAllOpen] = useState(false);
+
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isAllOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, isAllOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -66,38 +72,30 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
             </div>
           ) : (
             <div className="space-y-2.5">
-              {completions.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-bg-elevated border border-border-color shadow-sm"
-                >
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-text-secondary">
-                      <Swords className="w-3.5 h-3.5 text-text-muted" />
-                      {entry.matches_played} {dict?.streaks?.matches || 'Matches'}
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-text-secondary">
-                      <RotateCcw className="w-3.5 h-3.5 text-text-muted" />
-                      {entry.attempts_taken} {dict?.streaks?.attempts || 'Attempts'}
-                    </div>
-                    {subjectLabel && (
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-text-secondary">
-                        <Users className="w-3.5 h-3.5 text-text-muted" />
-                        {entry.unlocked_characters_count} {subjectLabel}
-                      </div>
-                    )}
-                  </div>
-                  {entry.completed_at && (
-                    <div className="text-[11px] text-text-secondary font-mono">
-                      {new Date(entry.completed_at).toLocaleDateString()}
-                    </div>
-                  )}
-                </div>
+              {completions.slice(0, VISIBLE_COMPLETIONS).map((entry) => (
+                <ChallengeCompletionRow key={entry.id} entry={entry} subjectLabel={subjectLabel} dict={dict} />
               ))}
+              {completions.length > VISIBLE_COMPLETIONS && (
+                <button
+                  type="button"
+                  onClick={() => setIsAllOpen(true)}
+                  className="w-full rounded-xl border border-border-color bg-bg-surface py-2.5 text-sm font-bold text-text-primary transition-colors hover:bg-bg-elevated cursor-pointer"
+                >
+                  {dict?.streaks?.viewAllWins || 'View all'} ({completions.length})
+                </button>
+              )}
             </div>
           )}
         </div>
       </div>
+
+      <ChallengeAllWinsModal
+        isOpen={isAllOpen}
+        onClose={() => setIsAllOpen(false)}
+        completions={completions}
+        subjectLabel={subjectLabel}
+        dict={dict}
+      />
     </div>
   );
 };

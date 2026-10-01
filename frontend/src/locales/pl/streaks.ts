@@ -180,7 +180,6 @@ export default {
   usedTab: "Użyte",
   remainingTab: "Pozostałe",
   streakLabel: "Seria:",
-  streakArrow: "→",
   middotSeparator: "·",
   bulletSeparator: "•",
   tierLabel: "Poziom",

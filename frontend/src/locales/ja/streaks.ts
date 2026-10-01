@@ -180,7 +180,6 @@ export default {
   usedTab: "使用済み",
   remainingTab: "残り一覧",
   streakLabel: "ストリーク:",
-  streakArrow: "→",
   middotSeparator: "·",
   bulletSeparator: "•",
   tierLabel: "ティア",

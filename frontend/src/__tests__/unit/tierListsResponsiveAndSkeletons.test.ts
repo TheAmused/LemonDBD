@@ -140,7 +140,7 @@ describe('Tier lists: pages and navigation', () => {
     assert.ok(board.includes('--pool-h:'));
     assert.ok(board.includes('max-h-[calc(100%-var(--pool-h)'));
     assert.ok(read('app/[locale]/tier-lists/[slug]/page.tsx').includes('h-dvh overflow-hidden'));
-    assert.ok(board.includes('TouchSensor') && board.includes('KeyboardSensor'), 'touch and keyboard dragging');
+    assert.ok(board.includes('SidewaysPointerSensor') && board.includes('KeyboardSensor'), 'touch and keyboard dragging');
   });
 });
 

@@ -231,8 +231,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
-          title={dict?.streaks?.historyStreak || 'History Streak'}
-          accent="amber"
           completions={completions}
           subjectLabel={dict?.streaks?.killersLabel || 'killers'}
           dict={dict}

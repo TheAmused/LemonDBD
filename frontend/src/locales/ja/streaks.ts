@@ -162,7 +162,7 @@ export default {
   losses: "敗北数",
   recentMatchHistory: "直近の対戦履歴",
   noMatchesLogged: "対戦履歴がありません。最初の試合を完了してください！",
-  pastWins: "過去の勝利",
+  pastWins: "勝利履歴",
   noCompletionsLogged: "完了した挑戦はまだありません。チャレンジ全体をクリアするとここに表示されます！",
   killersLabel: "キラー",
   survivorsLabel: "サバイバー",

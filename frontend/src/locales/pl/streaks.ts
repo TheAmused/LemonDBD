@@ -162,7 +162,7 @@ export default {
   losses: "Porażki",
   recentMatchHistory: "Ostatnia Historia Meczów",
   noMatchesLogged: "Brak zarejestrowanych meczów. Rozegraj swój pierwszy mecz!",
-  pastWins: "Poprzednie zwycięstwa",
+  pastWins: "Historia zwycięstw",
   noCompletionsLogged: "Brak ukończonych przejść. Ukończ całe wyzwanie, aby zobaczyć je tutaj!",
   killersLabel: "zabójców",
   survivorsLabel: "ocalałych",

@@ -235,8 +235,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
           <ChallengeCompletionHistoryDrawer
             isOpen={isHistoryOpen}
             onClose={() => setIsHistoryOpen(false)}
-            title={killerDisplayName}
-            accent="amber"
             completions={completions}
             dict={dict}
           />

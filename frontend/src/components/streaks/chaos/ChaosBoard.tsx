@@ -284,8 +284,6 @@ export const ChaosBoard: React.FC<ChaosBoardProps> = ({ locale }) => {
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
-          title={dict?.streaks?.chaosStreak || 'Chaos Streak'}
-          accent="amber"
           completions={completions}
           subjectLabel={dict?.streaks?.killersLabel || 'killers'}
           dict={dict}

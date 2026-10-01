@@ -222,8 +222,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
-          title={dict?.streaks?.gauntlet || 'Gauntlet'}
-          accent="amber"
           completions={completions}
           subjectLabel={
             role === 'killer'

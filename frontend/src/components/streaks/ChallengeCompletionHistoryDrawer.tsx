@@ -3,24 +3,12 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect } from 'react';
-import { X, History, RotateCcw, Users, Swords } from 'lucide-react';
+import { X, RotateCcw, Users, Swords } from 'lucide-react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
-import type { StreakAccent } from './StreakStatsDrawer';
-
-const FLAT_ICON_CLASSES = 'bg-accent-red/10 text-accent-red border-accent-red/20';
-
-const ACCENT_ICON_CLASSES: Record<StreakAccent, string> = {
-  amber: FLAT_ICON_CLASSES,
-  violet: FLAT_ICON_CLASSES,
-  slate: FLAT_ICON_CLASSES,
-  orange: FLAT_ICON_CLASSES,
-};
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  accent: StreakAccent;
   completions: ChallengeCompletion[];
   /** Translated plural noun for `unlocked_characters_count`, e.g. "killers" or "survivors".
    *  Omit to hide that stat entirely -- not every mode tracks it meaningfully (Page Streak
@@ -38,8 +26,6 @@ export interface ChallengeCompletionHistoryDrawerProps {
 export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHistoryDrawerProps> = ({
   isOpen,
   onClose,
-  title,
-  accent,
   completions,
   subjectLabel,
   dict,
@@ -61,16 +47,9 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
 
       <div className="relative w-full max-w-lg bg-bg-surface border-l border-border-color h-full shadow-2xl flex flex-col z-10 overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-border-color bg-bg-elevated">
-          <div className="flex items-center gap-3">
-            <div className={`p-2.5 rounded-xl border ${ACCENT_ICON_CLASSES[accent]}`}>
-              <History className="w-6 h-6" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-text-primary">
-                {title} {dict?.streaks?.pastWins || 'Past Wins'}
-              </h2>
-            </div>
-          </div>
+          <h2 className="text-xl font-bold text-text-primary">
+            {dict?.streaks?.pastWins || 'Win History'}
+          </h2>
           <button
             onClick={onClose}
             aria-label={dict?.modal?.close || 'Close'}

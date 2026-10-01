@@ -162,7 +162,7 @@ export default {
   losses: "Niederlagen",
   recentMatchHistory: "Letzter Matchverlauf",
   noMatchesLogged: "Noch keine Matches eingetragen.",
-  pastWins: "Vergangene Siege",
+  pastWins: "Siegeshistorie",
   noCompletionsLogged: "Noch keine abgeschlossenen Läufe. Beende die ganze Challenge, um sie hier zu sehen!",
   killersLabel: "Killer",
   survivorsLabel: "Überlebende",

@@ -180,7 +180,7 @@ export default {
   losses: "Losses",
   recentMatchHistory: "Recent Match History",
   noMatchesLogged: "No matches logged yet. Complete your first match!",
-  pastWins: "Past Wins",
+  pastWins: "Win History",
   noCompletionsLogged: "No completed runs yet. Finish the whole challenge to see it here!",
   killersLabel: "killers",
   survivorsLabel: "survivors",

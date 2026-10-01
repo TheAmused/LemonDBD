@@ -162,7 +162,7 @@ export default {
   losses: "Derrotas",
   recentMatchHistory: "Historial Reciente",
   noMatchesLogged: "Aún no hay partidas registradas.",
-  pastWins: "Victorias anteriores",
+  pastWins: "Historial de victorias",
   noCompletionsLogged: "Aún no hay retos completados. ¡Termina todo el desafío para verlo aquí!",
   killersLabel: "asesinos",
   survivorsLabel: "supervivientes",

@@ -154,7 +154,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({
     />
     <HeaderButton
       onClick={onOpenHistory}
-      title={dict?.streaks?.pastWins || 'Past Wins'}
+      title={dict?.streaks?.pastWins || 'Win History'}
       icon={<History className="h-5 w-5" aria-hidden="true" />}
     />
     <HeaderButton

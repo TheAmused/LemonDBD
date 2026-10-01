@@ -787,7 +787,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ dict, locale = '
   const hudLabels: any = dict?.smashOrPass?.hud || {};
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-5rem)] flex flex-col justify-start space-y-3 pb-12 overflow-x-clip">
       {/* Interactive Reactive Background */}
       <Suspense fallback={null}>
         <InteractiveDragBackground

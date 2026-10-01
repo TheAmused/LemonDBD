@@ -76,7 +76,9 @@ export function TierPool({
       )}
     >
       {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
-      <div className="relative grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 overflow-hidden px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[64px]">
+      <div
+        onClick={() => setCollapsed((c) => !c)}
+        className="relative grid w-full cursor-pointer select-none grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 overflow-hidden px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-[64px]">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15 dark:opacity-25 mix-blend-luminosity filter pointer-events-none"
@@ -85,7 +87,10 @@ export function TierPool({
         <div className="absolute inset-0 bg-gradient-to-r from-bg-surface via-bg-surface/85 to-bg-surface pointer-events-none" />
         <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
 
-        <div className="relative z-10 order-3 col-span-2 sm:order-1 sm:col-span-1 sm:max-w-xs">
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="relative z-10 order-3 col-span-2 cursor-auto sm:order-1 sm:col-span-1 sm:max-w-xs"
+        >
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" aria-hidden="true" />
           <Input
             type="search"
@@ -111,10 +116,7 @@ export function TierPool({
           )}
         </div>
 
-        <div
-          onClick={() => setCollapsed((c) => !c)}
-          className="relative z-10 order-1 sm:order-2 flex items-center justify-start sm:justify-center gap-2 cursor-pointer select-none"
-        >
+        <div className="relative z-10 order-1 sm:order-2 flex items-center justify-start sm:justify-center gap-2">
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary font-mono">
             {t.unranked}
           </h2>

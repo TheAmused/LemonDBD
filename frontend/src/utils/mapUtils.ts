@@ -33,6 +33,22 @@ export function getMapImageSrc(
   return resolveLocalOrRemoteImage(map.callout_image_local_path, map.callout_image_url || map.image_url, backendBase);
 }
 
+/**
+ * A small (~320 px) copy of a map's callout image for thumbnails. The full
+ * images are ~2000x2200 px, and a grid of tiny tiles must not decode dozens
+ * of them. Falls back to the full source when the map has no local file.
+ */
+export function getMapThumbSrc(
+  map: Partial<MapRealm> | null | undefined,
+  backendBase: string = DEFAULT_BACKEND_BASE
+): string {
+  const local = map?.callout_image_local_path;
+  if (!local) return getMapImageSrc(map, backendBase);
+  const clean = local.replace(/^\/?(static\/)?(maps\/)?/, '');
+  const cleanBase = (backendBase || DEFAULT_BACKEND_BASE).replace(/\/+$/, '');
+  return `${cleanBase}/api/v1/maps/thumb/${clean}`;
+}
+
 export interface ChapterBannerImage {
   banner_url: string | null;
   banner_local_path: string | null;

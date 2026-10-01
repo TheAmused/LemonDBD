@@ -80,6 +80,8 @@ export interface TierItem {
   key: string;
   name: string;
   image: string | null;
+  /** Larger picture for the preview modal when `image` is a thumbnail. */
+  fullImage?: string | null;
   subtitle?: string;
   description?: string;
 }

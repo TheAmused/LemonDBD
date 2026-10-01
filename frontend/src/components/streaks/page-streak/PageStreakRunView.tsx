@@ -2,33 +2,26 @@
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
 import { BuildBar } from './BuildBar';
-import { StartRunPanel } from './StartRunPanel';
+import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
 import { PageStreakStatsDrawer } from './PageStreakStatsDrawer';
-import { Confetti } from '../Confetti';
-import { ResetConfirmModal } from '../ResetConfirmModal';
-import { ChallengeCompletionHistoryDrawer } from '../ChallengeCompletionHistoryDrawer';
+import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { ChallengeProgress } from '../ChallengeProgress';
+import { ChallengeCompletionHistoryDrawer, Confetti, ResetConfirmModal } from '../lazyChallengeParts';
+import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { staticUrl } from '@/utils/staticUrl';
 import { useStreaksDict } from '@/context/StreaksDictContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 interface PageStreakRunViewProps {
   locale: string;
   killer: string;
 }
-
-const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mb-2.5 mt-6 flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-widest text-text-muted">
-    <span>{children}</span>
-    <span className="h-px flex-1 bg-border-color" />
-  </div>
-);
 
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, killer }) => {
   const dict = useStreaksDict();
@@ -48,7 +41,20 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [lastWasLoss, setLastWasLoss] = useState(false);
-  const [celebrating, setCelebrating] = useState(false);
+  const { celebrating, celebrate } = useCelebration();
+
+  // Opening a killer with no run starts one straight away. A failed start sets `error`,
+  // which stops this from retrying in a loop.
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (loading || run || busy || error || autoStartedRef.current) return;
+    autoStartedRef.current = true;
+    startRun();
+  }, [loading, run, busy, error, startRun]);
+  // A reset (or another killer) leaves no run again, so allow the next auto-start.
+  useEffect(() => {
+    if (run) autoStartedRef.current = false;
+  }, [run, killer]);
 
   // A new page (or a new attempt) always starts from an empty, unconfirmed build.
   useEffect(() => {
@@ -56,20 +62,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
     setConfirmed(false);
   }, [run?.current_page, run?.attempt, run?.status]);
 
-  // Fire once when the run flips to completed, not on every later render or reload.
-  const wasCompletedRef = useRef(false);
-  useEffect(() => {
-    const isCompleted = run?.status === 'completed';
-    if (isCompleted && !wasCompletedRef.current) {
-      setCelebrating(true);
-      const timer = setTimeout(() => setCelebrating(false), 3500);
-      wasCompletedRef.current = true;
-      return () => clearTimeout(timer);
-    }
-    if (!isCompleted) {
-      wasCompletedRef.current = false;
-    }
-  }, [run?.status]);
+  useCelebrateOnRise(run?.status === 'completed', celebrate);
 
   const currentPagePerks = run ? run.pages[run.current_page - 1] ?? [] : [];
   const buildSize = Math.min(4, currentPagePerks.length);
@@ -83,7 +76,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
     });
 
   return (
-    <div>
+    <div className={run && run.status !== 'completed' ? 'pb-16' : ''}>
       <Confetti active={celebrating} />
       <Link
         href={`/${locale}/streaks/killer/page-streak`}
@@ -94,9 +87,9 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
       </Link>
 
       {error && (
-        <p className="mt-4 rounded-xl border border-accent-red/30 bg-accent-red/[0.07] px-4 py-3 text-xs text-accent-red">
-          {error}
-        </p>
+        <div className="mt-4">
+          <ChallengeErrorBanner message={error} />
+        </div>
       )}
 
       {loading && (
@@ -105,80 +98,73 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
         </p>
       )}
 
-      {!loading && !run && (
-        <div className="mt-5">
-          <StartRunPanel killer={killerDisplayName} busy={busy} onStart={startRun} dict={dict} />
-        </div>
-      )}
-
       {!loading && run && (
-        <div className="mt-5">
-          <RunHeader
-            run={run}
-            avatarSrc={staticUrl(run.killer_avatar)}
-            onOpenReset={() => setConfirmingReset(true)}
-            onOpenRules={() => setIsRulesOpen(true)}
-            onOpenStats={() => setIsStatsOpen(true)}
-            onOpenHistory={() => setIsHistoryOpen(true)}
-            dict={dict}
-          />
-
+        <div className="mt-4 [&>*:last-child]:mb-0">
+          <ChallengePanel
+            progress={
+              <ChallengeProgress
+                current={run.status === 'completed' ? run.page_count : run.current_page - 1}
+                total={run.page_count}
+                checkpoints={[]}
+                dict={dict}
+              />
+            }
+            header={
+              <RunHeader
+                run={run}
+                avatarSrc={staticUrl(run.killer_avatar)}
+                onOpenReset={() => setConfirmingReset(true)}
+                onOpenRules={() => setIsRulesOpen(true)}
+                onOpenStats={() => setIsStatsOpen(true)}
+                onOpenHistory={() => setIsHistoryOpen(true)}
+                dict={dict}
+              />
+            }
+          >
           {run.status === 'completed' ? (
-            <div className="mb-8 mt-6 rounded-2xl border-2 border-accent-green/40 bg-accent-green/[0.07] px-6 py-10 text-center shadow-lg">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-accent-green bg-accent-green/15 text-accent-green">
-                <AdeptBadgeIcon className="h-8 w-8" />
-              </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-accent-green">
-                {dict?.streaks?.victoryCongrats || 'Congratulations'}
-              </p>
-              <h2 className="text-2xl font-black tracking-tight text-text-primary">
-                {dict?.streaks?.pageStreakVictoryTitle || 'You won the Page Streak'}
-              </h2>
-              <p className="mt-1 text-sm font-semibold text-text-secondary">
-                {dict?.streaks?.pageStreakVictoryPrefix || 'on'} {killerDisplayName}
-              </p>
-              <button
-                type="button"
-                onClick={() => setConfirmingReset(true)}
-                disabled={busy}
-                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accent-green px-6 py-3 text-sm font-extrabold text-text-inverted shadow-lg transition-colors hover:bg-accent-green-hover disabled:opacity-50 cursor-pointer"
-              >
-                <RotateCcw className="h-4 w-4" />
-                {dict?.streaks?.startNewRun || 'Start a new run'}
-              </button>
-            </div>
+            <ChallengeVictoryCard
+              title={dict?.streaks?.pageStreakVictoryTitle || 'You won the Page Streak'}
+              subtitle={`${dict?.streaks?.pageStreakVictoryPrefix || 'on'} ${killerDisplayName}`}
+              onRestart={() => setConfirmingReset(true)}
+              busy={busy}
+              dict={dict}
+            />
           ) : (
             <>
-              {confirmed && (
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-3 ps-rise">
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => {
-                      setLastWasLoss(false);
-                      submitResult(run.current_page, selected, 'win');
-                    }}
-                    className="flex-1 max-w-xs bg-accent-green hover:bg-accent-green-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
+              <StreakActionBar>
+                {confirmed ? (
+                  <>
+                    <StreakActionButton
+                      variant="green"
+                      disabled={busy}
+                      onClick={() => {
+                        setLastWasLoss(false);
+                        submitResult(run.current_page, selected, 'win');
+                      }}
+                    >
+                      {dict?.streaks?.winMatch || 'WIN MATCH'}
+                    </StreakActionButton>
+                    <StreakActionButton
+                      variant="red"
+                      disabled={busy}
+                      onClick={() => {
+                        setLastWasLoss(true);
+                        submitResult(run.current_page, selected, 'loss');
+                      }}
+                    >
+                      {dict?.streaks?.loseMatch || 'LOSE MATCH'}
+                    </StreakActionButton>
+                  </>
+                ) : (
+                  <StreakActionButton
+                    variant="red"
+                    disabled={busy || selected.length !== buildSize}
+                    onClick={() => setConfirmed(true)}
                   >
-                    {dict?.streaks?.winMatch || 'WIN MATCH'}
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => {
-                      setLastWasLoss(true);
-                      submitResult(run.current_page, selected, 'loss');
-                    }}
-                    className="flex-1 max-w-xs bg-accent-red hover:bg-accent-red-hover disabled:opacity-50 text-text-inverted font-extrabold text-base py-3.5 px-6 rounded-xl shadow-lg transition-all cursor-pointer motion-reduce:transition-none"
-                  >
-                    {dict?.streaks?.loseMatch || 'LOSE MATCH'}
-                  </button>
-                </div>
-              )}
-              <SectionLabel>
-                {dict?.streaks?.pageLabel || 'Page'} {run.current_page}
-                {dict?.streaks?.pickCountSeparator || ', pick'} {buildSize} {dict?.streaks?.perksCount || 'perks'}
-              </SectionLabel>
+                    {dict?.streaks?.confirmBuild || 'Confirm build'}
+                  </StreakActionButton>
+                )}
+              </StreakActionBar>
               <PerkPageGrid
                 key={`${run.attempt}-${run.current_page}`}
                 perks={currentPagePerks}
@@ -188,15 +174,14 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                 iconByPerk={iconByPerk}
               />
 
-              <SectionLabel>{dict?.streaks?.yourBuild || 'Your build'}</SectionLabel>
-              <BuildBar
-                selected={selected}
-                size={buildSize}
-                confirmed={confirmed}
-                onConfirm={() => setConfirmed(true)}
-                iconByPerk={iconByPerk}
-                dict={dict}
-              />
+              <div className="mt-4">
+                <BuildBar
+                  selected={selected}
+                  size={buildSize}
+                  iconByPerk={iconByPerk}
+                  dict={dict}
+                />
+              </div>
 
               {nextPagePerks.length > 0 && (
                 <>
@@ -204,7 +189,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                     type="button"
                     onClick={() => setShowNextPage((open) => !open)}
                     aria-expanded={showNextPage}
-                    className="mb-2.5 mt-6 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none"
+                    className={`mt-4 flex w-full items-center gap-2 rounded font-mono text-[10.5px] uppercase tracking-widest text-text-muted transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red motion-reduce:transition-none ${showNextPage ? 'mb-2.5' : ''}`}
                   >
                     <ChevronRight
                       className={`h-3.5 w-3.5 transition-transform duration-300 motion-reduce:transition-none ${
@@ -212,7 +197,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
                       }`}
                     />
                     <span>
-                      {dict?.streaks?.nextUpPagePrefix || 'Next up, page'} {run.current_page + 1}
+                      {dict?.streaks?.pageLabel || 'Page'} {run.current_page + 1}
                     </span>
                     <span className="h-px flex-1 bg-border-color" />
                   </button>
@@ -231,11 +216,12 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ locale, ki
               )}
             </>
           )}
+          </ChallengePanel>
 
           <ResetConfirmModal
             open={confirmingReset}
             busy={busy}
-            message={`${dict?.streaks?.pageStreakResetConfirmPrefix || 'Reset'} ${killerDisplayName} ${dict?.streaks?.pageStreakResetConfirmSuffix || 'to page 1? History is kept.'}`}
+            message={`${dict?.streaks?.pageStreakResetConfirmPrefix || 'Reset'} ${killerDisplayName} ${dict?.streaks?.pageStreakResetConfirmSuffix || 'to page 1?'}`}
             onCancel={() => setConfirmingReset(false)}
             onConfirm={() => {
               setConfirmingReset(false);

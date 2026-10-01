@@ -7,6 +7,7 @@ import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle, ChevronDown } from 
 import { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
+import { Spinner } from '@/components/common/Spinner';
 
 interface UserProfileFormProps {
   initialEmail: string;
@@ -250,7 +251,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                   className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black tracking-wider text-text-inverted shadow-xs disabled:opacity-50 transition-all cursor-pointer font-mono"
                 >
                   {isUpdating ? (
-                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />
+                    <Spinner size="sm" tone="inverted" />
                   ) : (
                     <span>{t.saveChanges || 'Save'}</span>
                   )}

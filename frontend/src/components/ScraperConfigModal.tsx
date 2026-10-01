@@ -9,7 +9,6 @@ import {
   Trash2,
   Database,
   AlertTriangle,
-  RefreshCw,
   CheckSquare,
   Square,
   Download,
@@ -24,9 +23,10 @@ import {
   Globe,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { ConfirmModal } from '@/components/ConfirmModal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 
 import { tip } from '@/components/common/Tooltip';
+import { Spinner } from '@/components/common/Spinner';
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -630,7 +630,7 @@ export function ScraperConfigModal({
             className="flex items-center gap-2 rounded-xl bg-accent-red hover:bg-accent-red-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
           >
             {isExporting ? (
-              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+              <Spinner size="xs" tone="current" />
             ) : (
               <Download className="h-3.5 w-3.5" />
             )}
@@ -805,7 +805,7 @@ export function ScraperConfigModal({
             className="flex items-center gap-2 rounded-xl bg-accent-green hover:bg-accent-green-hover px-5 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-md transition-all cursor-pointer disabled:opacity-40"
           >
             {isImporting ? (
-              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+              <Spinner size="xs" tone="current" />
             ) : (
               <Upload className="h-3.5 w-3.5" />
             )}
@@ -928,7 +928,7 @@ export function ScraperConfigModal({
             className="flex items-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-40"
           >
             {isPurging ? (
-              <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+              <Spinner size="xs" tone="current" />
             ) : (
               <Trash2 className="h-3.5 w-3.5" />
             )}

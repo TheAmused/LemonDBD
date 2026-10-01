@@ -4,7 +4,7 @@ import type { Dictionary } from '@/locales/types';
 
 import React from 'react';
 import { Sparkles } from 'lucide-react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 interface MetricItem {

@@ -43,6 +43,7 @@ export default {
   linkCopied: "Link skopiowany do schowka!",
   deleteTrial: "Usuń",
   confirmDelete: "Czy na pewno chcesz usunąć to własne wyzwanie?",
+  cancel: "Anuluj",
   playTrial: "Graj",
   editTrial: "Edytuj",
   adminPublish: "Opublikuj jako Oficjalne",

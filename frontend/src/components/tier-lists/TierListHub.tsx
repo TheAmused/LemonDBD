@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronDown, FileJson, LayoutList, Plus, RotateCcw, Sparkles, Trash2, TriangleAlert } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import { Modal } from '@/components/common/Modal';
 import type { Dictionary } from '@/locales/types';
 import type { TierListDocument } from '@/types/tierList';

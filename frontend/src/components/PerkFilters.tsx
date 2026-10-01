@@ -9,7 +9,7 @@ import {
   ArrowUpAZ,
   ArrowDownZA,
 } from 'lucide-react';
-import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import {
   RoleCategory,
@@ -22,6 +22,7 @@ import {
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { Checkbox } from '@/components/common/Checkbox';
 
 export function computeHasActiveFilters(state: {
   search: string;
@@ -122,7 +123,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     return () => clearTimeout(timer);
   }, [search, role, backendBase, locale]);
 
-  const roleOptions: readonly [ToggleSwitchOption<RoleCategory>, ToggleSwitchOption<RoleCategory>] = [
+  const roleOptions: readonly [SegmentedControlOption<RoleCategory>, SegmentedControlOption<RoleCategory>] = [
     {
       value: 'Survivor',
       icon: <SurvivorIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
@@ -155,7 +156,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
   ];
 
-  const ownershipOptions: readonly [ToggleSwitchOption<OwnershipFilter>, ToggleSwitchOption<OwnershipFilter>] = [
+  const ownershipOptions: readonly [SegmentedControlOption<OwnershipFilter>, SegmentedControlOption<OwnershipFilter>] = [
     {
       value: 'all',
       activeClassName: 'bg-accent-red text-text-inverted',
@@ -186,7 +187,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
   ];
 
-  const sortFieldOptions: readonly [ToggleSwitchOption<SortField>, ToggleSwitchOption<SortField>] = [
+  const sortFieldOptions: readonly [SegmentedControlOption<SortField>, SegmentedControlOption<SortField>] = [
     {
       value: 'name',
       label: dict?.filters?.sortByName,
@@ -199,7 +200,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
   ];
 
-  const sortOrderOptions: readonly [ToggleSwitchOption<SortOrder>, ToggleSwitchOption<SortOrder>] = [
+  const sortOrderOptions: readonly [SegmentedControlOption<SortOrder>, SegmentedControlOption<SortOrder>] = [
     {
       value: 'asc',
       icon: <ArrowUpAZ className="h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5" />,
@@ -215,19 +216,19 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   ];
 
   // Shared between the desktop inline row and the mobile Settings panel --
-  // same controls, same state, just two separate ToggleSwitch elements
+  // same controls, same state, just two separate SegmentedControl elements
   // (safe: no ids, no per-instance state) rendered in whichever one is
   // actually visible at the current width.
   const generalOnlyLabel = (
-    <label className="inline-flex w-full shrink-0 cursor-pointer select-none items-center gap-1.5 whitespace-nowrap rounded-full border border-border-color bg-bg-elevated/60 px-3 py-2 text-[11px] font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm">
-      <input
-        type="checkbox"
-        checked={scope === 'general'}
-        onChange={(e) => setScope(e.target.checked ? 'general' : 'all')}
-        className="h-3.5 w-3.5 shrink-0 rounded border-border-color accent-accent-red wide:h-4 wide:w-4"
-      />
+    <Checkbox
+      checked={scope === 'general'}
+      onChange={(checked) => setScope(checked ? 'general' : 'all')}
+      ariaLabel={dict?.filters?.generalOnly}
+      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-full border border-border-color bg-bg-elevated/60 px-3 py-2 text-[11px] font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
+      boxClassName="h-3.5 w-3.5 wide:h-4 wide:w-4"
+    >
       {dict?.filters?.generalOnly && <span>{dict.filters.generalOnly}</span>}
-    </label>
+    </Checkbox>
   );
 
   return (
@@ -254,14 +255,14 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           minWidthClass=""
         >
           <div className="flex flex-col gap-2 p-1">
-            <ToggleSwitch
+            <SegmentedControl
               className="w-full"
               ariaLabel={dict?.filters?.sortByRole || ''}
               value={role}
               onChange={setRole}
               options={roleOptions}
             />
-            <ToggleSwitch
+            <SegmentedControl
               className="w-full"
               ariaLabel={dict?.filters?.ownershipFilter || ''}
               value={ownershipFilter}
@@ -269,7 +270,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               options={ownershipOptions}
             />
             {generalOnlyLabel}
-            <ToggleSwitch
+            <SegmentedControl
               className="w-full"
               ariaLabel={dict?.filters?.sortFields || ''}
               value={sortBy}
@@ -277,7 +278,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
               options={sortFieldOptions}
               size="sm"
             />
-            <ToggleSwitch
+            <SegmentedControl
               className="w-full"
               ariaLabel={dict?.filters?.sortOrderLabel || ''}
               value={order}
@@ -290,14 +291,14 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       </div>
 
       <div className="hidden sm:contents">
-        <ToggleSwitch
+        <SegmentedControl
           ariaLabel={dict?.filters?.sortByRole || ''}
           value={role}
           onChange={setRole}
           options={roleOptions}
         />
 
-        <ToggleSwitch
+        <SegmentedControl
           ariaLabel={dict?.filters?.ownershipFilter || ''}
           value={ownershipFilter}
           onChange={setOwnershipFilter}
@@ -306,7 +307,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
 
         {generalOnlyLabel}
 
-        <ToggleSwitch
+        <SegmentedControl
           ariaLabel={dict?.filters?.sortFields || ''}
           value={sortBy}
           onChange={setSortBy}
@@ -314,7 +315,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           size="sm"
         />
 
-        <ToggleSwitch
+        <SegmentedControl
           ariaLabel={dict?.filters?.sortOrderLabel || ''}
           value={order}
           onChange={setOrder}

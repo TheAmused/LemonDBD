@@ -33,7 +33,7 @@ import { StageFrame } from './shared/StageFrame';
 import type { ChaosMutator } from '../ChaosWheelModal';
 
 const ChaosWheelModal = dynamic(() => import('../ChaosWheelModal').then((m) => m.ChaosWheelModal), { ssr: false });
-const ConfirmModal = dynamic(() => import('../ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
+const ConfirmModal = dynamic(() => import('../common/ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
 const WheelStage = dynamic(() => import('./modes/WheelStage').then((m) => m.WheelStage), { ssr: false });
 const InstantStage = dynamic(() => import('./modes/InstantStage').then((m) => m.InstantStage), { ssr: false });
 const SlotMachineStage = dynamic(() => import('./modes/SlotMachineStage').then((m) => m.SlotMachineStage), { ssr: false });

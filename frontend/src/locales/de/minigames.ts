@@ -43,6 +43,7 @@ export default {
   linkCopied: "Link in die Zwischenablage kopiert!",
   deleteTrial: "Löschen",
   confirmDelete: "Möchtest du diese eigene Prüfung wirklich löschen?",
+  cancel: "Abbrechen",
   playTrial: "Spielen",
   editTrial: "Bearbeiten",
   adminPublish: "Als offiziell veröffentlichen",

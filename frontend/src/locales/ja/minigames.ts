@@ -43,6 +43,7 @@ export default {
   linkCopied: "リンクをクリップボードにコピーしました！",
   deleteTrial: "削除",
   confirmDelete: "このカスタム試練を削除してもよろしいですか？",
+  cancel: "キャンセル",
   playTrial: "プレイ",
   editTrial: "編集",
   adminPublish: "公式試練として公開",

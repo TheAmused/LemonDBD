@@ -1,5 +1,5 @@
 'use client';
-// frontend/src/components/ConfirmModal.tsx
+// frontend/src/components/common/ConfirmModal.tsx
 
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';

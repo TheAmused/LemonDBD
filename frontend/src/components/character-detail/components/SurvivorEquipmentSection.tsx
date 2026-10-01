@@ -26,6 +26,7 @@ import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 import { tip } from '@/components/common/Tooltip';
+import { EmptyState } from '@/components/common/EmptyState';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -249,9 +250,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             </div>
 
             {categorizedData.displayedItems.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center p-8 text-center text-text-muted text-xs italic">
-                {t.noItemsFound || 'No items found in this category matching your filter.'}
-              </div>
+              <EmptyState variant="inline" className="flex-1 py-8 text-center" title={t.noItemsFound || 'No items found in this category matching your filter.'} />
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-3 p-1" role="list">
                 {categorizedData.displayedItems.map((item, idx) => {

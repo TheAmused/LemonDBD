@@ -43,6 +43,7 @@ export default {
   linkCopied: "Link copied to clipboard!",
   deleteTrial: "Delete",
   confirmDelete: "Are you sure you want to delete this custom trial?",
+  cancel: "Cancel",
   playTrial: "Play",
   editTrial: "Edit",
   adminPublish: "Publish as Official",

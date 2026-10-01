@@ -39,6 +39,7 @@ import {
 import dynamic from 'next/dynamic';
 
 import { tip } from '@/components/common/Tooltip';
+import { Spinner } from '@/components/common/Spinner';
 const VoiceEngineInfoModal = dynamic(
   () => import('./VoiceEngineInfoModal').then((m) => m.VoiceEngineInfoModal),
   { ssr: false }
@@ -1169,7 +1170,7 @@ export function VoiceCommandBanner({
             {voiceStatus === 'processing' && (
               <div className="flex flex-col text-center items-center w-full max-w-full px-2">
                 <div className="flex items-center justify-center gap-2 max-w-full">
-                  <RefreshCw className="h-3.5 w-3.5 text-accent-amber animate-spin shrink-0" aria-hidden="true" />
+                  <Spinner size="xs" tone="amber" />
                   <span className="text-xs sm:text-sm font-bold text-accent-amber font-mono truncate max-w-[280px] sm:max-w-xl">
                     {liveTranscript
                       ? `${rawVoiceDict.transcribingPrefix || ''} “${liveTranscript}”`

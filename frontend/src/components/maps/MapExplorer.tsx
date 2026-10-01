@@ -21,6 +21,7 @@ import {
 } from '@/utils/mapUtils';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { MapCard } from './MapCard';
+import { EmptyState } from '@/components/common/EmptyState';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -64,7 +65,7 @@ export interface MapExplorerProps {
    * sets the slot's height instead of the shorter one collapsing to its
    * own height and shifting the map grid below on every swap. */
   voiceSlot?: React.ReactNode;
-  /** Optional mode switcher (e.g. Search / Voice ToggleSwitch) rendered centered at the top of the command deck */
+  /** Optional mode switcher (e.g. Search / Voice SegmentedControl) rendered centered at the top of the command deck */
   modeSwitcherSlot?: React.ReactNode;
 }
 
@@ -412,9 +413,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
       )}
 
       {!loading && displayedGroups.length === 0 && (
-        <div className="py-16 text-center text-xs text-text-muted font-mono">
-          {dict?.maps?.noMapsFound || 'No Maps Found'}
-        </div>
+        <EmptyState variant="inline" title={dict?.maps?.noMapsFound || 'No Maps Found'} />
       )}
 
       {!loading && displayedGroups.length > 0 && (

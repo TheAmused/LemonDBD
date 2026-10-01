@@ -16,7 +16,6 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-  Loader2,
   Trash2,
 } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
@@ -30,10 +29,14 @@ import {
 
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
+import { Checkbox } from '@/components/common/Checkbox';
 export interface ChangelogEditorModalProps {
   open: boolean;
   post: ChangelogPost | null;
   saving?: boolean;
+  /** Failure message from the last save/delete attempt. */
+  error?: string | null;
   onClose: () => void;
   onSave: (draft: ChangelogPostDraft) => void;
   onDelete?: () => void;
@@ -58,6 +61,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
   open,
   post,
   saving = false,
+  error = null,
   onClose,
   onSave,
   onDelete,
@@ -144,7 +148,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
         disabled={saving || !title.trim()}
         className="flex items-center gap-1.5 rounded-xl bg-accent-red px-5 py-2 text-xs font-black text-text-inverted shadow-lg hover:bg-accent-red-hover disabled:opacity-50 disabled:cursor-wait cursor-pointer hover:scale-[1.02] active:scale-95 transition-transform"
       >
-        {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+        {saving && <Spinner size="xs" />}
         {post ? (t?.saveChanges || 'Save Changes') : (t?.publishEntry || 'Publish Entry')}
       </button>
     </div>
@@ -257,15 +261,15 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({
       />
     </div>
 
-    <label className="flex items-center gap-2 text-xs font-bold text-text-muted cursor-pointer select-none">
-      <input
-        type="checkbox"
-        checked={isPublished}
-        onChange={(e) => setIsPublished(e.target.checked)}
-        className="h-4 w-4 rounded border-border-color bg-bg-elevated accent-accent-red"
-      />
+    {error && (
+      <p role="alert" className="rounded-xl border border-accent-red/40 bg-accent-red/10 px-3 py-2 text-xs font-bold text-accent-red">
+        {error}
+      </p>
+    )}
+
+    <Checkbox checked={isPublished} onChange={setIsPublished} className="text-xs font-bold text-text-muted">
       {t?.publishedLabel || 'Published (visible in the "What\'s New?" feed)'}
-    </label>
+    </Checkbox>
     </Modal>
   );
 };

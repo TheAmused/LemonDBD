@@ -3,13 +3,14 @@
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { RefreshCw, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { Perk } from '@/types/gauntletStreak';
 import { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { Spinner } from '@/components/common/Spinner';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -221,7 +222,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
           loading ? 'visible' : 'invisible'
         }`}
       >
-        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+        <Spinner size="xs" tone="current" />
         <span>{dict?.app?.loading || 'Loading...'}</span>
       </div>
     </div>

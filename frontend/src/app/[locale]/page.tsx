@@ -9,8 +9,8 @@ import { LemonIcon } from '@/components/LemonIcon';
 import { i18n, type Locale } from '@/i18n/config';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { FogHeartbeatBackground } from '@/components/landing/FogHeartbeatBackground';
-import { DbdSpinner } from '@/components/DbdSpinner';
-import { useImagePrefetch } from '@/components/ImagePreloadProvider';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
+import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary } from '@/context/DictionaryContext';
 
 function LandingContent() {

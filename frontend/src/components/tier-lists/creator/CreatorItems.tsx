@@ -8,6 +8,7 @@ import type { Dictionary } from '@/locales/types';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { BTN_DANGER_GHOST } from '../styles';
 import { TierItemEditModal } from './TierItemEditModal';
+import { EmptyState } from '@/components/common/EmptyState';
 
 interface CreatorItemsProps {
   items: TierListDocumentItem[];
@@ -41,7 +42,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear,
       </div>
 
       {items.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-border-color p-6 text-center text-xs sm:text-sm text-text-muted">{c.noItems}</p>
+        <EmptyState variant="compact" title={c.noItems} />
       ) : (
         <ul className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(6.5rem,1fr))] md:grid-cols-[repeat(auto-fill,minmax(7.5rem,1fr))] wide:grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] wide-2k:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))] gap-2 sm:gap-2.5 justify-center">
           {items.map((item) => (

@@ -1,6 +1,6 @@
 // frontend/src/app/[locale]/perks/loading.tsx
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 
 export default function PerksLoading() {

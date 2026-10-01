@@ -5,7 +5,7 @@ import React, { useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, SearchX } from 'lucide-react';
-import { EmptyState } from '@/components/EmptyState';
+import { EmptyState } from '@/components/common/EmptyState';
 import type { Dictionary } from '@/locales/types';
 import {
   TIER_LIST_FORMAT,

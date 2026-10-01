@@ -16,7 +16,7 @@ import {
   fetchSharedChallenge,
 } from '@/services/minigameApi';
 import { getCustomChallenges } from '@/utils/minigames/storage';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 const CampfireParticles = dynamic(
   () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),

@@ -2,7 +2,7 @@
 // frontend/src/components/tier-lists/creator/ItemSources.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ClipboardPaste, Gamepad2, ImagePlus, Loader2, Plus, Search, Upload } from 'lucide-react';
+import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Search, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
@@ -14,6 +14,7 @@ import { nameFromFileName, nameFromUrl, parseLinkLines } from '@/utils/tierLists
 import { fileToTileImage } from '@/utils/tierLists/imageFiles';
 import { TierItemTile } from '../TierItemTile';
 import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL } from '../styles';
+import { Spinner } from '@/components/common/Spinner';
 
 export interface IncomingItem {
   name: string;
@@ -155,7 +156,7 @@ function UploadSource({ onAdd, dict }: { onAdd: (items: IncomingItem[]) => void;
           onClick={() => inputRef.current?.click()}
           className={cn(BTN_PRIMARY, processing && 'cursor-wait opacity-70')}
         >
-          {processing ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Upload className="h-4 w-4" aria-hidden="true" />}
+          {processing ? <Spinner size="sm" tone="current" /> : <Upload className="h-4 w-4" aria-hidden="true" />}
           {c.chooseFiles}
         </button>
         <input
@@ -368,7 +369,7 @@ function CatalogSource({
       <div className="max-h-[360px] overflow-y-auto overscroll-contain rounded-lg border border-border-color bg-bg-primary/40 p-2">
         {loading ? (
           <p className="flex items-center justify-center gap-2 py-10 text-sm font-semibold text-text-muted">
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+            <Spinner size="sm" tone="current" />
             {c.catalogLoading}
           </p>
         ) : (

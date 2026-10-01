@@ -6,7 +6,6 @@ import type { GauntletPlayerLoadout, GauntletRun, Perk, Role, TierInfo } from '@
 import type { OwnedCharacterItem } from './useOwnedCharacters';
 import { useTargetDraw, DrawPhase } from './useTargetDraw';
 import {
-  RefreshCw,
   User,
   Sparkles,
   Star,
@@ -20,6 +19,7 @@ import { KillerIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 
 import { tip } from '@/components/common/Tooltip';
+import { Spinner } from '@/components/common/Spinner';
 export const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
   const owned = characters.find((c) => c.name === name)?.avatar_local_path;
@@ -478,9 +478,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   if (!run || !run.current_loadout) {
     return (
       <div className="w-full bg-bg-surface border border-border-color rounded-2xl p-6 text-center backdrop-blur-md mb-4">
-        <div className="animate-spin text-accent-red mx-auto w-6 h-6 mb-2 flex items-center justify-center">
-          <RefreshCw className="w-6 h-6" />
-        </div>
+        <Spinner size="md" tone="accent" className="mx-auto mb-2" />
         <p className="text-text-muted text-sm">
           {dict?.streaks?.loadingStreak || 'Loading active gauntlet stage...'}
         </p>

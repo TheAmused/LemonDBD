@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import type { Dictionary } from '@/locales/types';
 import { UserPlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
 
 interface AdminCreateUserModalProps {
   isOpen: boolean;
@@ -74,7 +75,7 @@ export const AdminCreateUserModal: React.FC<AdminCreateUserModalProps> = ({
             className="flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl bg-accent-red hover:bg-accent-red-hover px-4 py-2 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs transition-all cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />
+              <Spinner size="xs" tone="inverted" />
             ) : (
               <>
                 <UserPlus className="h-3.5 w-3.5" />

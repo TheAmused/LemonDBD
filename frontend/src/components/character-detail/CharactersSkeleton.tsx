@@ -2,7 +2,7 @@
 // frontend/src/components/character-detail/CharactersSkeleton.tsx
 
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 import type { Dictionary } from '@/locales/types';
 
 interface CharactersSkeletonProps {

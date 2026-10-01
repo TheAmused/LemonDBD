@@ -2,7 +2,8 @@
 // frontend/src/components/common/AltchaWidget.tsx
 
 import React from 'react';
-import { ShieldCheck, ShieldAlert, Loader2 } from 'lucide-react';
+import { ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Spinner } from '@/components/common/Spinner';
 
 export interface AltchaWidgetProps {
   isVerifying: boolean;
@@ -42,7 +43,7 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
         >
           {isVerifying ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-accent-amber shrink-0" />
+              <Spinner size="xs" tone="amber" />
               {verifyingText && <span>{verifyingText}</span>}
             </>
           ) : isVerified ? (

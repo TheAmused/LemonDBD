@@ -1,6 +1,6 @@
 // frontend/src/app/[locale]/streaks/loading.tsx
 import React from 'react';
-import { DbdSpinner } from '@/components/DbdSpinner';
+import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 export default function StreaksLoading() {
   return (

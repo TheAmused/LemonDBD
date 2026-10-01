@@ -10,8 +10,8 @@ import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
-import { EmptyState } from '@/components/EmptyState';
-import { Pagination } from '@/components/Pagination';
+import { EmptyState } from '@/components/common/EmptyState';
+import { Pagination } from '@/components/common/Pagination';
 import { Locale } from '@/i18n/config';
 import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
@@ -26,7 +26,7 @@ import {
   PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { useImagePrefetch } from '@/components/ImagePreloadProvider';
+import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
 import { fetchCached, fetchJson } from '@/services/dataCache';

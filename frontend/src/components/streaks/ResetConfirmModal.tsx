@@ -3,7 +3,7 @@ import type { Dictionary } from '@/locales/types';
 // frontend/src/components/streaks/ResetConfirmModal.tsx
 
 import React from 'react';
-import { ConfirmModal } from '@/components/ConfirmModal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 
 export interface ResetConfirmModalProps {
   open: boolean;

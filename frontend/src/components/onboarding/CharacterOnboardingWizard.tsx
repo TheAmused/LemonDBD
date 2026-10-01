@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, ChevronDown, Info, Loader2, Search, User as UserIcon, X } from 'lucide-react';
+import { Check, ChevronDown, Info, Search, User as UserIcon, X } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -26,6 +26,8 @@ import {
   loadOnboardingDraft,
   saveOnboardingDraft,
 } from '@/utils/onboardingStorage';
+import { Spinner } from '@/components/common/Spinner';
+import { SwitchTrack } from '@/components/common/Switch';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -745,7 +747,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   if (loading || authLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-red" />
+        <Spinner size="lg" tone="accent" />
       </div>
     );
   }
@@ -1071,8 +1073,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                   </button>
                   {/* The whole footer toggles ownership, not just the small
                       switch -- Switch renders its own <button>, so it can't
-                      be nested here; its visuals are reproduced on a plain
-                      <span> instead. */}
+                      be nested here; SwitchTrack is its presentational half. */}
                   <button
                     type="button"
                     onClick={() => toggleChapter(group, !chapterOwned)}
@@ -1084,18 +1085,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                     <h3 className="flex-1 text-[9px] sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-[22px] sm:min-h-[32px] flex items-center text-text-primary break-words">
                       {chapterDisplayName}
                     </h3>
-                    <span
-                      aria-hidden="true"
-                      className={`relative inline-flex h-3.5 w-6 sm:h-5 sm:w-9 shrink-0 items-center rounded-full transition-colors ${
-                        chapterOwned ? 'bg-accent-green' : 'bg-bg-elevated border border-border-color'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-2.5 w-2.5 sm:h-3.5 sm:w-3.5 transform rounded-full bg-text-inverted shadow transition-transform ${
-                          chapterOwned ? 'translate-x-2.5 sm:translate-x-4' : 'translate-x-0.5'
-                        }`}
-                      />
-                    </span>
+                    <SwitchTrack checked={chapterOwned} size="sm" />
                   </button>
                 </div>
 

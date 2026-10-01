@@ -9,6 +9,8 @@ import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
+import { EmptyState } from '@/components/common/EmptyState';
 
 interface ShowcaseCharacterModalProps {
   isOpen: boolean;
@@ -178,15 +180,13 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
-            <span className="h-8 w-8 animate-spin rounded-full border-2 border-accent-amber border-t-transparent" />
+            <Spinner size="lg" tone="amber" />
             <p className="text-xs text-text-muted font-mono">
               {dict?.user?.loadingCharacters || 'Consulting the Fog...'}
             </p>
           </div>
         ) : filteredCharacters.length === 0 ? (
-          <div className="text-center py-16 text-text-muted text-xs sm:text-sm font-mono">
-            {dict?.user?.noCharactersFound || 'No matching characters found.'}
-          </div>
+          <EmptyState variant="inline" title={dict?.user?.noCharactersFound || 'No matching characters found.'} />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredCharacters.map((char) => (

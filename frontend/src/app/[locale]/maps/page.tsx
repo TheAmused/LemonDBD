@@ -8,7 +8,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
-import { ToggleSwitch, ToggleSwitchOption } from '@/components/common/ToggleSwitch';
+import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
 import { Locale } from '@/i18n/config';
@@ -58,8 +58,8 @@ function MapsPageInner() {
   const backendBase = getBackendBaseUrl();
 
   const searchModeOptions: readonly [
-    ToggleSwitchOption<'text' | 'voice'>,
-    ToggleSwitchOption<'text' | 'voice'>,
+    SegmentedControlOption<'text' | 'voice'>,
+    SegmentedControlOption<'text' | 'voice'>,
   ] = [
     {
       value: 'text',
@@ -84,7 +84,7 @@ function MapsPageInner() {
   const handleAction = useCallback(() => {}, []);
 
   const toggleSwitchElement = (
-    <ToggleSwitch
+    <SegmentedControl
       value={searchMode}
       onChange={setSearchMode}
       ariaLabel={dict?.maps?.searchModeAria || 'Search mode'}

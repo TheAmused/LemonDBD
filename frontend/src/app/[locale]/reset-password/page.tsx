@@ -11,6 +11,7 @@ import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { Spinner } from '@/components/common/Spinner';
 
 export default function ResetPasswordPage() {
   return (
@@ -141,7 +142,7 @@ function ResetPasswordContent() {
               className="w-full mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent-red py-2.5 text-xs font-black uppercase tracking-wider text-text-inverted shadow-xs hover:bg-accent-red-hover focus:outline-none focus:ring-2 focus:ring-accent-red disabled:opacity-50 transition-all cursor-pointer"
             >
               {loading ? (
-                <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-text-inverted border-t-transparent" />
+                <Spinner size="sm" tone="inverted" />
               ) : (
                 <span>{dict?.user?.resetPassword || 'Reset Password'}</span>
               )}

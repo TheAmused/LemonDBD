@@ -9,6 +9,8 @@ import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl, getPerkIconUrl, matchesPerkSearch } from '@/utils/perkUtils';
 import { fetchCached, fetchJson } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
+import { EmptyState } from '@/components/common/EmptyState';
 
 interface ShowcasePerkModalProps {
   isOpen: boolean;
@@ -170,7 +172,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
-            <span className="h-8 w-8 animate-spin rounded-full border-2 border-accent-red border-t-transparent" />
+            <Spinner size="lg" tone="accent" />
             <p className="text-xs text-text-muted font-mono">
               {dict?.user?.loadingPerks || 'Channeling teachable knowledge...'}
             </p>
@@ -190,9 +192,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({
             </p>
           </div>
         ) : filteredPerks.length === 0 ? (
-          <div className="text-center py-16 text-text-muted text-xs sm:text-sm font-mono">
-            {dict?.user?.noPerksFound || 'No matching perks found.'}
-          </div>
+          <EmptyState variant="inline" title={dict?.user?.noPerksFound || 'No matching perks found.'} />
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {filteredPerks.map((perk) => (

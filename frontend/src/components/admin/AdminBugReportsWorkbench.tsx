@@ -22,6 +22,7 @@ import type { Dictionary } from '@/locales/types';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { EmptyState } from '@/components/common/EmptyState';
 interface StatusConfigItem {
   label: string;
   badge: string;
@@ -440,12 +441,7 @@ export const AdminBugReportsWorkbench: React.FC<AdminBugReportsWorkbenchProps> =
               </div>
             </div>
           ) : (
-            <div className="rounded-3xl border border-dashed border-border-color p-12 text-center text-text-muted">
-              <Eye className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-xs font-medium">
-                {dict?.user?.noReportsSubtitle || ''}
-              </p>
-            </div>
+            <EmptyState variant="compact" icon={Eye} title={dict?.user?.noReportsSubtitle || ''} />
           )}
         </div>
       </div>

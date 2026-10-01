@@ -1,5 +1,5 @@
 'use client';
-// frontend/src/components/Pagination.tsx
+// frontend/src/components/common/Pagination.tsx
 
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';

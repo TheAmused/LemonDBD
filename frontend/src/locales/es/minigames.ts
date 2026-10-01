@@ -43,6 +43,7 @@ export default {
   linkCopied: "¡Enlace copiado al portapapeles!",
   deleteTrial: "Eliminar",
   confirmDelete: "¿Seguro que deseas eliminar este desafío personalizado?",
+  cancel: "Cancelar",
   playTrial: "Jugar",
   editTrial: "Editar",
   adminPublish: "Publicar como Oficial",

@@ -20,6 +20,7 @@ import { cn } from '@/utils/cn';
 import type { Dictionary } from '@/locales/types';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { BTN_PRIMARY, BTN_SECONDARY, FIELD, LABEL, TEXTAREA_FIELD } from './styles';
+import { Checkbox } from '@/components/common/Checkbox';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -310,21 +311,13 @@ export function RomanceArchetypeBuilder({
                         </div>
                       </div>
 
-                      <div className="pt-1 flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id={`fallback-${arch.id}`}
-                          checked={arch.is_fallback || false}
-                          onChange={(e) => updateArchetype(arch.id, { is_fallback: e.target.checked })}
-                          className="h-4 w-4 rounded border-border-color accent-accent-red cursor-pointer"
-                        />
-                        <label
-                          htmlFor={`fallback-${arch.id}`}
-                          className="text-xs font-bold text-text-secondary cursor-pointer select-none"
-                        >
-                          {ab.markAsFallback}
-                        </label>
-                      </div>
+                      <Checkbox
+                        checked={arch.is_fallback || false}
+                        onChange={(checked) => updateArchetype(arch.id, { is_fallback: checked })}
+                        className="pt-1 text-xs font-bold text-text-secondary"
+                      >
+                        {ab.markAsFallback}
+                      </Checkbox>
                     </div>
 
                     {/* Rule Engine Conditions */}

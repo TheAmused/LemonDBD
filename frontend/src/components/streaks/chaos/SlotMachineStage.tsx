@@ -243,8 +243,17 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
 /** Keeps the lever down while the reveal request is in flight; releases it if the request never lands. */
 const LEVER_PENDING_MS = 4000;
 const LEVER_BALL_PX = 26;
-const LEVER_EASE = 'cubic-bezier(0.34, 1.3, 0.64, 1)';
+const LEVER_ROD_PX = 12;
+const LEVER_ROD_FRACTION = 0.38;
+const LEVER_PERSPECTIVE_PX = 130;
+const LEVER_SWING_MS = 600;
 const LEVER_ROD_GRADIENT = 'linear-gradient(90deg, #5a5f73, #f4f6fb 45%, #6b7087)';
+
+const easeOutBack = (t: number): number => {
+  const c1 = 1.3;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
 
 const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void; label?: string }> = ({
   down,
@@ -252,7 +261,72 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
   onPull,
   label = 'Pull the lever',
 }) => {
-  const swing = `transform 600ms ${LEVER_EASE}`;
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const rodRef = useRef<HTMLDivElement | null>(null);
+  const ballRef = useRef<HTMLDivElement | null>(null);
+  const angleRef = useRef(down ? Math.PI : 0);
+
+  // Projects the rod tip, swinging about the horizontal pivot axis toward the viewer, with a
+  // manual perspective divide. Plain 2D transforms only, so no 3D layer is ever re-rasterised.
+  const render = useRef((angle: number) => {
+    const panel = panelRef.current;
+    const rod = rodRef.current;
+    const ball = ballRef.current;
+    if (!panel || !rod || !ball) return;
+    const pivotY = panel.clientHeight / 2;
+    const length = panel.clientHeight * LEVER_ROD_FRACTION;
+    const scale = LEVER_PERSPECTIVE_PX / (LEVER_PERSPECTIVE_PX - length * Math.sin(angle));
+    const tipY = pivotY - length * Math.cos(angle) * scale;
+    const rodHeight = Math.abs(tipY - pivotY);
+    const rodWidth = LEVER_ROD_PX * Math.max(1, scale);
+    const tipHalf = (LEVER_ROD_PX / 2) * scale;
+    const pivotHalf = LEVER_ROD_PX / 2;
+    const mid = rodWidth / 2;
+    const tipUp = tipY < pivotY;
+    const top = tipUp ? tipY : pivotY;
+    const [topHalf, bottomHalf] = tipUp ? [tipHalf, pivotHalf] : [pivotHalf, tipHalf];
+    rod.style.top = `${top}px`;
+    rod.style.height = `${rodHeight}px`;
+    rod.style.width = `${rodWidth}px`;
+    rod.style.marginLeft = `${-rodWidth / 2}px`;
+    rod.style.opacity = rodHeight < 1 ? '0' : '1';
+    rod.style.clipPath = `polygon(${mid - topHalf}px 0, ${mid + topHalf}px 0, ${mid + bottomHalf}px 100%, ${mid - bottomHalf}px 100%)`;
+    const ballSize = LEVER_BALL_PX * scale;
+    ball.style.width = `${ballSize}px`;
+    ball.style.height = `${ballSize}px`;
+    ball.style.left = `calc(50% - ${ballSize / 2}px)`;
+    ball.style.top = `${tipY - ballSize / 2}px`;
+  });
+
+  useEffect(() => {
+    const target = down ? Math.PI : 0;
+    const from = angleRef.current;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || from === target) {
+      angleRef.current = target;
+      render.current(target);
+      return;
+    }
+    const start = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / LEVER_SWING_MS);
+      angleRef.current = from + (target - from) * easeOutBack(t);
+      render.current(angleRef.current);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [down]);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const ro = new ResizeObserver(() => render.current(angleRef.current));
+    ro.observe(panel);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <button
       type="button"
@@ -260,59 +334,31 @@ const SlotLever: React.FC<{ down: boolean; disabled: boolean; onPull: () => void
       disabled={disabled}
       aria-label={label}
       className="relative shrink-0 cursor-pointer disabled:cursor-default"
-      style={{ perspective: '170px', perspectiveOrigin: '50% 50%' }}
     >
       <div
+        ref={panelRef}
         className="relative h-24 sm:h-28 md:h-32 w-16 sm:w-[72px] rounded-2xl border border-border-color"
         style={{
           background: 'linear-gradient(180deg, #0a0b0e, #1b1c22)',
           boxShadow: 'inset 0 8px 16px rgba(0,0,0,0.7), inset 0 -2px 4px rgba(255,255,255,0.04)',
-          transformStyle: 'preserve-3d',
-          willChange: 'transform',
         }}
       >
         <div
           className="absolute left-1/2 top-1/2 h-[40%] w-[22px] -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{ background: '#050608', boxShadow: 'inset 0 3px 8px #000, 0 1px 0 rgba(255,255,255,0.06)' }}
         />
-        <div
-          className="absolute left-1/2 w-[12px] -ml-[6px]"
-          style={{
-            top: '12%',
-            height: '38%',
-            transformOrigin: '50% 100%',
-            transformStyle: 'preserve-3d',
-            transform: down ? 'rotateX(-180deg)' : 'rotateX(0deg)',
-            transition: swing,
-            willChange: 'transform',
-          }}
-        >
-          <div className="absolute inset-0 rounded-full" style={{ background: LEVER_ROD_GRADIENT }} />
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{ background: LEVER_ROD_GRADIENT, transform: 'rotateY(90deg)' }}
-          />
-          <div
-            className="absolute left-1/2 rounded-full"
-            style={{
-              top: -LEVER_BALL_PX / 2,
-              width: LEVER_BALL_PX,
-              height: LEVER_BALL_PX,
-              marginLeft: -LEVER_BALL_PX / 2,
-              background: 'radial-gradient(circle at 35% 30%, #fecaca, #ef4444 45%, #6b1414)',
-              transform: down ? 'rotateX(180deg)' : 'rotateX(0deg)',
-              transition: swing,
-              willChange: 'transform',
-            }}
-          />
-        </div>
+        <div ref={rodRef} className="absolute left-1/2" style={{ background: LEVER_ROD_GRADIENT }} />
         <div
           className="absolute left-1/2 top-1/2 h-[26px] w-[26px] -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{
             background: 'radial-gradient(circle at 35% 30%, #8d93a8, #3a3d4b 60%, #1c1d24)',
             boxShadow: '0 3px 6px rgba(0,0,0,0.6)',
-            transform: 'translateZ(2px)',
           }}
+        />
+        <div
+          ref={ballRef}
+          className="absolute rounded-full"
+          style={{ background: 'radial-gradient(circle at 35% 30%, #fecaca, #ef4444 45%, #6b1414)' }}
         />
       </div>
     </button>

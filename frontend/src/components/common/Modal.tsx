@@ -458,6 +458,10 @@ export const Modal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (!isOpen || !mounted) return;
     const opener = document.activeElement as HTMLElement | null;
+    // Only hand focus back to a keyboard user. After a mouse click the opener
+    // is plain :focus (not :focus-visible); re-focusing it left a focus ring and
+    // its tooltip stuck on screen after the modal closed.
+    const openerWasKeyboard = Boolean(opener?.matches?.(':focus-visible'));
     const raf = requestAnimationFrame(() => {
       const panel = panelRef.current;
       if (!panel) return;
@@ -470,7 +474,9 @@ export const Modal: React.FC<ModalProps> = ({
     });
     return () => {
       cancelAnimationFrame(raf);
-      if (restoreFocus && opener && opener.isConnected) opener.focus({ preventScroll: true });
+      if (restoreFocus && openerWasKeyboard && opener && opener.isConnected) {
+        opener.focus({ preventScroll: true });
+      }
     };
     // Focus once per open.
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -349,6 +349,8 @@ export const TooltipProvider: React.FC = () => {
     const show = (e: Event) => {
       const el = find(e.target);
       if (!el) return;
+      // Focus shows the bubble only for keyboard focus; pointer hover has its own event.
+      if (e.type === 'focusin' && !(e.target as HTMLElement).matches?.(':focus-visible')) return;
       const next = read(el);
       if (next) setActive((prev) => (prev?.el === el && prev.title === next.title ? prev : next));
     };

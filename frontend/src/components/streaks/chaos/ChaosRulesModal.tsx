@@ -23,10 +23,10 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
     <RulesModalShell
       isOpen={isOpen}
       onClose={onClose}
-      title={s?.chaosRulesTitle || 'Chaos Streak Rules'}
+      title={s?.rules || 'Rules'}
       dict={dict}
     >
-      <RulesModalConcept title={s?.chaosConcept || 'Chaos Concept'}>
+      <RulesModalConcept title={s?.chaosConcept || 'Concept'}>
         {s?.chaosConceptShort ||
           'Pull the lever for 4 random perks plus 2 add-on rarities. Pick a killer to run the build, then play the trial.'}
       </RulesModalConcept>
